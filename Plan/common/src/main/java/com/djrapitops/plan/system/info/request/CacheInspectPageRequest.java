@@ -18,17 +18,18 @@ package com.djrapitops.plan.system.info.request;
 
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.system.export.HtmlExport;
+import com.djrapitops.plan.system.export.JSONExport;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.ExportSettings;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
 import com.djrapitops.plan.utilities.Base64Util;
-import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.utilities.Verify;
 import org.apache.commons.text.StringSubstitutor;
 
@@ -47,6 +48,7 @@ public class CacheInspectPageRequest extends InfoRequestWithVariables implements
     private final Processing processing;
     private final ServerInfo serverInfo;
     private final HtmlExport htmlExport;
+    private final JSONExport jsonExport;
 
     private UUID player;
     private String html;
@@ -55,12 +57,14 @@ public class CacheInspectPageRequest extends InfoRequestWithVariables implements
             PlanConfig config,
             Processing processing,
             ServerInfo serverInfo,
-            HtmlExport htmlExport
+            HtmlExport htmlExport,
+            JSONExport jsonExport
     ) {
         this.config = config;
         this.processing = processing;
         this.serverInfo = serverInfo;
         this.htmlExport = htmlExport;
+        this.jsonExport = jsonExport;
     }
 
     CacheInspectPageRequest(
@@ -68,12 +72,14 @@ public class CacheInspectPageRequest extends InfoRequestWithVariables implements
             PlanConfig config,
             Processing processing,
             ServerInfo serverInfo,
-            HtmlExport htmlExport
+            HtmlExport htmlExport,
+            JSONExport jsonExport
     ) {
         this.config = config;
         this.processing = processing;
         this.serverInfo = serverInfo;
         this.htmlExport = htmlExport;
+        this.jsonExport = jsonExport;
 
         Verify.nullCheck(player, html);
         variables.put("player", player.toString());
@@ -101,8 +107,11 @@ public class CacheInspectPageRequest extends InfoRequestWithVariables implements
 
     private void cache(UUID uuid, String html) {
         ResponseCache.cacheResponse(PageId.PLAYER.of(uuid), () -> new InspectPageResponse(uuid, html));
-        if (config.isTrue(Settings.ANALYSIS_EXPORT)) {
+        if (config.get(ExportSettings.PLAYER_PAGES)) {
             processing.submitNonCritical(() -> htmlExport.exportPlayer(uuid));
+        }
+        if (config.get(ExportSettings.PLAYER_JSON)) {
+            processing.submitNonCritical(() -> jsonExport.exportPlayerJSON(uuid));
         }
     }
 

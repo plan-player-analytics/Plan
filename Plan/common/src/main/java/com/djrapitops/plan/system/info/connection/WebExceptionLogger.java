@@ -59,8 +59,7 @@ public class WebExceptionLogger {
             if (shouldLog(e)) {
                 logger.debug(e.getMessage());
             }
-        } catch (UnsupportedTransferDatabaseException | UnauthorizedServerException
-                | NotFoundException | NoServersException e) {
+        } catch (UnauthorizedServerException | NotFoundException | NoServersException e) {
             logger.debug(e.getMessage());
         } catch (WebException e) {
             errorHandler.log(L.WARN, definingClass, e);

@@ -25,6 +25,7 @@ import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.settings.config.Config;
 
 import java.util.*;
 
@@ -134,5 +135,7 @@ public interface FetchOperations {
 
     Map<Integer, List<TPS>> getPlayersOnlineForServers(Collection<Server> servers);
 
-    Map<Integer, Integer> getPlayersRegisteredForServers(Collection<Server> servers);
+    Map<UUID, Integer> getPlayersRegisteredForServers(Collection<Server> servers);
+
+    Optional<Config> getNewConfig(long updatedAfter, UUID serverUUID);
 }

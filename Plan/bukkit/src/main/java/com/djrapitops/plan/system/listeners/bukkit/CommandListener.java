@@ -20,8 +20,8 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DataGatheringSettings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.bukkit.command.Command;
@@ -77,8 +77,8 @@ public class CommandListener implements Listener {
     private void actOnCommandEvent(PlayerCommandPreprocessEvent event) {
         String commandName = event.getMessage().substring(1).split(" ")[0].toLowerCase();
 
-        boolean logUnknownCommands = config.isTrue(Settings.LOG_UNKNOWN_COMMANDS);
-        boolean combineCommandAliases = config.isTrue(Settings.COMBINE_COMMAND_ALIASES);
+        boolean logUnknownCommands = config.isTrue(DataGatheringSettings.LOG_UNKNOWN_COMMANDS);
+        boolean combineCommandAliases = config.isTrue(DataGatheringSettings.COMBINE_COMMAND_ALIASES);
 
         if (!logUnknownCommands || combineCommandAliases) {
             Command command = getBukkitCommand(commandName);

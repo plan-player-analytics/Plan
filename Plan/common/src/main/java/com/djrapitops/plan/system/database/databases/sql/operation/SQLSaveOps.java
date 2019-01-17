@@ -22,6 +22,7 @@ import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.settings.config.Config;
 
 import java.util.List;
 import java.util.Map;
@@ -151,5 +152,10 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
     @Override
     public void setAsUninstalled(UUID serverUUID) {
         serverTable.setAsUninstalled(serverUUID);
+    }
+
+    @Override
+    public void saveConfig(UUID serverUUID, Config config, long lastModified) {
+        settingsTable.storeConfig(serverUUID, config, lastModified);
     }
 }

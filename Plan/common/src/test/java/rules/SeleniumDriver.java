@@ -24,9 +24,13 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import utilities.CIProperties;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import static org.openqa.selenium.remote.CapabilityType.SUPPORTS_JAVASCRIPT;
 
 public class SeleniumDriver extends ExternalResource {
 
@@ -39,16 +43,28 @@ public class SeleniumDriver extends ExternalResource {
         Assume.assumeTrue("rules.SeleniumDriver: Chrome driver not found at " + driverLocation, new File(driverLocation).exists());
 
         System.setProperty("webdriver.chrome.driver", driverLocation);
-        driver = new ChromeDriver();
+        driver = getChromeWebDriver();
+    }
+
+    private WebDriver getChromeWebDriver() {
+        if (Boolean.parseBoolean(System.getenv(CIProperties.IS_TRAVIS))) {
+            ChromeOptions chromeOptions = new ChromeOptions();
+            chromeOptions.setBinary("/usr/bin/google-chrome-stable");
+            chromeOptions.setHeadless(true);
+            chromeOptions.addArguments("--no-sandbox");
+            chromeOptions.setCapability(SUPPORTS_JAVASCRIPT, true);
+
+            return new ChromeDriver(chromeOptions);
+        } else {
+            return new ChromeDriver();
+        }
     }
 
     private String getChromeDriverLocation() {
-        if (SystemUtils.IS_OS_LINUX) {
-            return "/usr/local/share/chromedriver";
-        } else if (SystemUtils.IS_OS_WINDOWS) {
+        if (SystemUtils.IS_OS_WINDOWS) {
             return "C:\\chromedriver.exe";
         }
-        return null;
+        return System.getenv(CIProperties.CHROME_DRIVER);
     }
 
     public void newTab() {

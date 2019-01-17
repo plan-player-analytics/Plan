@@ -24,10 +24,12 @@ import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.mutators.health.NetworkHealthInformation;
 import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.ProxySettings;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.formatting.Formatters;
@@ -42,10 +44,7 @@ import dagger.Lazy;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -107,17 +106,28 @@ public class NetworkContainer extends DataContainer {
         putSupplier(NetworkKeys.SERVERS_TAB, () -> {
             StringBuilder serverBoxes = new StringBuilder();
             Map<Integer, List<TPS>> playersOnlineData = getValue(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA).orElse(new HashMap<>());
-            Map<Integer, Integer> registerData = getValue(NetworkKeys.SERVER_REGISTER_DATA).orElse(new HashMap<>());
-            getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>())
-                    .stream()
+            Map<UUID, Integer> registerData = getValue(NetworkKeys.SERVER_REGISTER_DATA).orElse(new HashMap<>());
+            Collection<Server> servers = getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>());
+            servers.stream()
                     .sorted((one, two) -> String.CASE_INSENSITIVE_ORDER.compare(one.getName(), two.getName()))
                     .forEach(server -> {
-                        int serverId = server.getId();
-                        TPSMutator tpsMutator = new TPSMutator(playersOnlineData.getOrDefault(serverId, new ArrayList<>()));
-                        int registered = registerData.getOrDefault(serverId, 0);
+                        TPSMutator tpsMutator = new TPSMutator(playersOnlineData.getOrDefault(server.getId(), new ArrayList<>()));
+                        int registered = registerData.getOrDefault(server.getUuid(), 0);
                         NetworkServerBox serverBox = new NetworkServerBox(server, registered, tpsMutator, graphs);
                         serverBoxes.append(serverBox.toHtml());
                     });
+            if (servers.isEmpty()) {
+                serverBoxes.append("<div class=\"row clearfix\">" +
+                        "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\">" +
+                        "<div class=\"card\">" +
+                        "<div class=\"header\">" +
+                        "<div class=\"row clearfix\">" +
+                        "<div class=\"col-xs-6 col-sm-6 col-lg-6\">" +
+                        "<h2><i class=\"col-light-green fa fa-servers\"></i> No Servers</h2>" +
+                        "</div><div class=\"body\">" +
+                        "<p>No Bukkit/Sponge servers connected to Plan.</p>" +
+                        "</div></div></div></div>");
+            }
             return serverBoxes.toString();
         });
     }
@@ -127,8 +137,8 @@ public class NetworkContainer extends DataContainer {
         putCachingSupplier(healthInformation, () -> new NetworkHealthInformation(
                 this,
                 locale,
-                config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD),
-                config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD),
+                config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD),
+                config.get(TimeSettings.ACTIVE_LOGIN_THRESHOLD),
                 formatters.timeAmount(), formatters.decimals(), formatters.percentage()
         ));
         putCachingSupplier(NetworkKeys.HEALTH_INDEX, () -> getUnsafe(healthInformation).getServerHealth());
@@ -148,7 +158,7 @@ public class NetworkContainer extends DataContainer {
 
         putCachingSupplier(NetworkKeys.NETWORK_NAME, () ->
                 Check.isBungeeAvailable() || Check.isVelocityAvailable() ?
-                        config.getString(Settings.BUNGEE_NETWORK_NAME) :
+                        config.get(ProxySettings.NETWORK_NAME) :
                         bungeeContainer.getValue(ServerKeys.NAME).orElse("Plan")
         );
         putSupplier(NetworkKeys.PLAYERS_ONLINE, serverProperties::getOnlinePlayers);
@@ -171,7 +181,7 @@ public class NetworkContainer extends DataContainer {
                 graphs.line().playersOnlineGraph(TPSMutator.forContainer(bungeeContainer)).toHighChartsSeries()
         );
         Key<StackGraph> activityStackGraph = new Key<>(StackGraph.class, "ACTIVITY_STACK_GRAPH");
-        putSupplier(NetworkKeys.ACTIVITY_DATA, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR).toActivityDataMap(getUnsafe(NetworkKeys.REFRESH_TIME), config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD), config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD)));
+        putSupplier(NetworkKeys.ACTIVITY_DATA, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR).toActivityDataMap(getUnsafe(NetworkKeys.REFRESH_TIME), config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD), config.get(TimeSettings.ACTIVE_LOGIN_THRESHOLD)));
         putSupplier(activityStackGraph, () -> graphs.stack().activityStackGraph(getUnsafe(NetworkKeys.ACTIVITY_DATA)));
         putSupplier(NetworkKeys.ACTIVITY_STACK_CATEGORIES, () -> getUnsafe(activityStackGraph).toHighChartsLabels());
         putSupplier(NetworkKeys.ACTIVITY_STACK_SERIES, () -> getUnsafe(activityStackGraph).toHighChartsSeries());

@@ -1,8 +1,24 @@
+/*
+ *  This file is part of Player Analytics (Plan).
+ *
+ *  Plan is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Plan is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.djrapitops.plan.system.listeners;
 
 import com.djrapitops.plan.system.listeners.bukkit.AFKListener;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import org.bukkit.entity.Player;
@@ -11,6 +27,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import utilities.TestConstants;
+
+import java.util.concurrent.TimeUnit;
 
 import static org.mockito.Mockito.*;
 
@@ -26,7 +44,7 @@ public class AFKListenerTest {
     @Before
     public void setUp() {
         PlanConfig config = Mockito.mock(PlanConfig.class);
-        when(config.getNumber(Settings.AFK_THRESHOLD_MINUTES)).thenReturn(3);
+        when(config.get(TimeSettings.AFK_THRESHOLD)).thenReturn(TimeUnit.MINUTES.toMillis(3));
         underTest = new AFKListener(config, new ConsoleErrorLogger(new TestPluginLogger()));
     }
 

@@ -27,8 +27,8 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -135,7 +135,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
 
     @Override
     public boolean isServerAvailable() {
-        return mainServer != null && config.isFalse(Settings.BUNGEE_OVERRIDE_STANDALONE_MODE);
+        return mainServer != null;
     }
 
     @Override
@@ -150,7 +150,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
         refreshServerMap();
 
         boolean usingBungeeWebServer = isServerAvailable();
-        boolean usingAlternativeIP = config.isTrue(Settings.SHOW_ALTERNATIVE_IP);
+        boolean usingAlternativeIP = config.isTrue(WebserverSettings.SHOW_ALTERNATIVE_IP);
 
         if (!usingAlternativeIP && serverInfo.getServerProperties().getIp().isEmpty()) {
             pluginLogger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.ENABLE_NOTIFY_EMPTY_IP));

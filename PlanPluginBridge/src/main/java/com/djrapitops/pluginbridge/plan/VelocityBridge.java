@@ -29,7 +29,7 @@ import javax.inject.Singleton;
  * @author Rsl1122
  */
 @Singleton
-public class VelocityBridge extends Bridge {
+public class VelocityBridge extends AbstractBridge {
 
     private final BuyCraftHook buyCraftHook;
 

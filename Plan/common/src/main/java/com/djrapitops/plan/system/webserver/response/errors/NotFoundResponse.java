@@ -26,7 +26,6 @@ import java.io.IOException;
  * Generic 404 response.
  *
  * @author Rsl1122
- * @since 3.5.2
  */
 public class NotFoundResponse extends ErrorResponse {
 

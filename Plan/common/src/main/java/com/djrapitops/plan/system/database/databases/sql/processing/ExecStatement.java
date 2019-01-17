@@ -34,10 +34,19 @@ public abstract class ExecStatement extends AbstractSQLStatement {
         startBenchmark();
         try {
             prepare(statement);
-            return statement.executeUpdate() > 0;
+            return callExecute(statement);
         } finally {
             statement.close();
             stopBenchmark();
+        }
+    }
+
+    private boolean callExecute(PreparedStatement statement) throws SQLException {
+        if (sql.startsWith("UPDATE") || sql.startsWith("INSERT") || sql.startsWith("DELETE") || sql.startsWith("REPLACE")) {
+            return statement.executeUpdate() > 0;
+        } else {
+            statement.execute();
+            return false;
         }
     }
 

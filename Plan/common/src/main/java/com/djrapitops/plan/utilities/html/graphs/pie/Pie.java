@@ -25,7 +25,6 @@ import java.util.List;
  * This is a PieChart for any set of PieSlices, thus it is Abstract.
  *
  * @author Rsl1122
- * @since 4.2.0
  */
 public class Pie implements HighChart {
 

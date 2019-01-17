@@ -24,7 +24,6 @@ import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plugin.utilities.ArrayUtil;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.Serializable;
 import java.util.*;
@@ -39,31 +38,35 @@ class PluginPlayersTable extends TableContainer {
     private Collection<PlayerContainer> players;
 
     private final int maxPlayers;
+    private final boolean openPlayerPageInNewTab;
 
     PluginPlayersTable(
             Map<PluginData, AnalysisContainer> containers,
             Collection<PlayerContainer> players,
-            int maxPlayers
+            int maxPlayers,
+            boolean openPlayerPageInNewTab
     ) {
-        this(getPluginDataSet(containers), players, maxPlayers);
+        this(getPluginDataSet(containers), players, maxPlayers, openPlayerPageInNewTab);
     }
 
     private PluginPlayersTable(
             TreeMap<String, Map<UUID, ? extends Serializable>> pluginDataSet,
             Collection<PlayerContainer> players,
-            int maxPlayers
+            int maxPlayers,
+            boolean openPlayerPageInNewTab
     ) {
         super(true, getHeaders(pluginDataSet.keySet()));
 
         this.players = players;
         this.maxPlayers = maxPlayers;
+        this.openPlayerPageInNewTab = openPlayerPageInNewTab;
 
         useJqueryDataTables("player-plugin-table");
 
         if (players.isEmpty()) {
             addRow("No Players");
         } else {
-            Map<UUID, String[]> rows = getRows(pluginDataSet);
+            Map<UUID, Serializable[]> rows = getRows(pluginDataSet);
             addValues(rows);
         }
     }
@@ -85,40 +88,40 @@ class PluginPlayersTable extends TableContainer {
         return data;
     }
 
-    private void addValues(Map<UUID, String[]> rows) {
+    private void addValues(Map<UUID, Serializable[]> rows) {
         int i = 0;
         for (PlayerContainer profile : players) {
             if (i >= maxPlayers) {
                 break;
             }
+
             UUID uuid = profile.getUnsafe(PlayerKeys.UUID);
             String name = profile.getValue(PlayerKeys.NAME).orElse("Unknown");
-            String link = Html.LINK_EXTERNAL.parse(PlanAPI.getInstance().getPlayerInspectPageLink(name), name);
+            Html link = openPlayerPageInNewTab ? Html.LINK_EXTERNAL : Html.LINK;
+            String linkHtml = link.parse(PlanAPI.getInstance().getPlayerInspectPageLink(name), name);
 
-            String[] playerData = ArrayUtil.merge(new String[]{link}, rows.getOrDefault(uuid, new String[]{}));
-            addRow(ArrayUtils.addAll(playerData));
+            Serializable[] playerData = ArrayUtil.merge(new Serializable[]{linkHtml}, rows.getOrDefault(uuid, new Serializable[]{}));
+            addRow(playerData);
 
             i++;
         }
     }
 
-    private Map<UUID, String[]> getRows(TreeMap<String, Map<UUID, ? extends Serializable>> data) {
-        Map<UUID, String[]> rows = new HashMap<>();
+    private Map<UUID, Serializable[]> getRows(TreeMap<String, Map<UUID, ? extends Serializable>> data) {
+        Map<UUID, Serializable[]> rows = new HashMap<>();
 
         int size = header.length - 1;
         for (PlayerContainer profile : players) {
             UUID uuid = profile.getUnsafe(PlayerKeys.UUID);
 
-            String[] row = new String[size];
+            Serializable[] row = new Serializable[size];
             for (int i = 0; i < size; i++) {
                 String label = header[i + 1];
 
                 Map<UUID, ? extends Serializable> playerSpecificData = data.getOrDefault(label, new HashMap<>());
                 Serializable value = playerSpecificData.get(uuid);
                 if (value != null) {
-                    row[i] = value.toString();
-                } else {
-                    row[i] = "-";
+                    row[i] = value;
                 }
             }
             rows.put(uuid, row);

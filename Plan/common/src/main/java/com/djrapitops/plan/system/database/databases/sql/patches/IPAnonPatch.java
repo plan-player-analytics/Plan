@@ -23,7 +23,6 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.tables.GeoInfoTable;
-import com.djrapitops.plan.system.database.databases.sql.tables.move.Version18TransferTable;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -37,13 +36,22 @@ import java.util.UUID;
 
 public class IPAnonPatch extends Patch {
 
+    private String tableName;
+    private String tempTableName;
+
     public IPAnonPatch(SQLDB db) {
         super(db);
+        tableName = GeoInfoTable.TABLE_NAME;
+        tempTableName = "plan_ips_temp";
     }
 
     @Override
     public boolean hasBeenApplied() {
-        String sql = "SELECT * FROM " + GeoInfoTable.TABLE_NAME +
+        return !containsUnAnonymizedIPs() && !hasTable(tempTableName);
+    }
+
+    private Boolean containsUnAnonymizedIPs() {
+        String sql = "SELECT * FROM " + tableName +
                 " WHERE " + GeoInfoTable.Col.IP + " NOT LIKE ? LIMIT 1";
 
         return query(new QueryStatement<Boolean>(sql) {
@@ -54,13 +62,13 @@ public class IPAnonPatch extends Patch {
 
             @Override
             public Boolean processResults(ResultSet set) throws SQLException {
-                return !set.next();
+                return set.next();
             }
         });
     }
 
     @Override
-    public void apply() {
+    protected void applyPatch() {
         Map<UUID, List<GeoInfo>> allGeoInfo = db.getGeoInfoTable().getAllGeoInfo();
         anonymizeIPs(allGeoInfo);
         groupHashedIPs();
@@ -106,9 +114,29 @@ public class IPAnonPatch extends Patch {
 
     private void groupHashedIPs() {
         try {
-            new Version18TransferTable(db).alterTableV18();
+            if (!hasTable(tempTableName)) {
+                tempOldTable();
+            }
+            db.getGeoInfoTable().createTable();
+
+            boolean hasUserIdColumn = hasColumn(tempTableName, "user_id");
+            String identifiers = hasUserIdColumn ? "user_id" : "id, uuid";
+
+            db.execute("INSERT INTO plan_ips (" +
+                    identifiers + ", ip, ip_hash, geolocation, last_used" +
+                    ") SELECT " +
+                    identifiers + ", ip, ip_hash, geolocation, MAX(last_used) FROM plan_ips_temp GROUP BY ip_hash, " +
+                    (hasUserIdColumn ? "user_id" : "uuid") +
+                    ", ip, geolocation");
+            dropTable(tempTableName);
         } catch (DBInitException e) {
             throw new DBOpException(e.getMessage(), e);
+        }
+    }
+
+    private void tempOldTable() {
+        if (!hasTable(tempTableName)) {
+            renameTable(tableName, tempTableName);
         }
     }
 }

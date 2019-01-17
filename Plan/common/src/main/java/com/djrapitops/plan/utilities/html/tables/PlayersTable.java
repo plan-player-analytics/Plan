@@ -41,16 +41,18 @@ class PlayersTable extends TableContainer {
 
     private final List<PlayerContainer> players;
     private final int maxPlayers;
-    private final int activeMinuteThreshold;
+    private final long activeMsThreshold;
     private final int activeLoginThreshold;
+    private final boolean openPlayerPageInNewTab;
 
     private final Formatter<Double> decimalFormatter;
 
     PlayersTable(
             List<PlayerContainer> players,
             int maxPlayers,
-            int activeMinuteThreshold,
+            long activeMsThreshold,
             int activeLoginThreshold,
+            boolean openPlayerPageInNewTab,
             Formatter<Long> timeAmountFormatter,
             Formatter<Long> yearLongFormatter,
             Formatter<Double> decimalFormatter
@@ -66,8 +68,9 @@ class PlayersTable extends TableContainer {
         );
         this.players = players;
         this.maxPlayers = maxPlayers;
-        this.activeMinuteThreshold = activeMinuteThreshold;
+        this.activeMsThreshold = activeMsThreshold;
         this.activeLoginThreshold = activeLoginThreshold;
+        this.openPlayerPageInNewTab = openPlayerPageInNewTab;
         this.decimalFormatter = decimalFormatter;
         useJqueryDataTables("player-table");
 
@@ -97,15 +100,17 @@ class PlayersTable extends TableContainer {
             long registered = player.getValue(PlayerKeys.REGISTERED).orElse(0L);
             long lastSeen = sessionsMutator.toLastSeen();
 
-            ActivityIndex activityIndex = player.getActivityIndex(now, activeMinuteThreshold, activeLoginThreshold);
+            ActivityIndex activityIndex = player.getActivityIndex(now, activeMsThreshold, activeLoginThreshold);
             boolean isBanned = player.getValue(PlayerKeys.BANNED).orElse(false);
             String activityString = activityIndex.getFormattedValue(decimalFormatter)
                     + (isBanned ? " (<b>Banned</b>)" : " (" + activityIndex.getGroup() + ")");
 
             String geolocation = GeoInfoMutator.forContainer(player).mostRecent().map(GeoInfo::getGeolocation).orElse("-");
 
+            Html link = openPlayerPageInNewTab ? Html.LINK_EXTERNAL : Html.LINK;
+
             addRow(
-                    Html.LINK_EXTERNAL.parse(url, name),
+                    link.parse(url, name),
                     activityString,
                     playtime,
                     loginTimes,

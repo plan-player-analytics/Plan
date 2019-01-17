@@ -24,7 +24,6 @@ import java.util.function.Supplier;
  * without a reload.
  *
  * @author Rsl1122
- * @since 3.4.1
  */
 public abstract class ServerProperties {
 

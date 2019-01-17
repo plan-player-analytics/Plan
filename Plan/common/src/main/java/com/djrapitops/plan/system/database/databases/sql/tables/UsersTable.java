@@ -38,14 +38,16 @@ import java.util.*;
  * <p>
  * Table Name: plan_users
  * <p>
- * For contained columns {@see Col}
+ * For contained columns {@link Col}
  *
  * @author Rsl1122
  */
-public class UsersTable extends UserIDTable {
+public class UsersTable extends UserUUIDTable {
+
+    public static final String TABLE_NAME = "plan_users";
 
     public UsersTable(SQLDB db) {
-        super("plan_users", db);
+        super(TABLE_NAME, db);
         statementSelectID = "(" + Select.from(tableName, tableName + "." + Col.ID).where(Col.UUID + "=?").toString() + " LIMIT 1)";
         insertStatement = Insert.values(tableName,
                 Col.UUID,
@@ -84,23 +86,6 @@ public class UsersTable extends UserIDTable {
                     uuids.add(uuid);
                 }
                 return uuids;
-            }
-        });
-    }
-
-    /**
-     * Remove a user from Users Table.
-     *
-     * @param uuid the UUID of the user that should be removed.
-     */
-    @Override
-    public void removeUser(UUID uuid) {
-        String sql = "DELETE FROM " + tableName + " WHERE (" + Col.UUID + "=?)";
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
             }
         });
     }
@@ -266,7 +251,7 @@ public class UsersTable extends UserIDTable {
         String sql = "SELECT DISTINCT " + Col.USER_NAME + " FROM " + tableName +
                 " WHERE LOWER(" + Col.USER_NAME + ") LIKE LOWER(?)" +
                 " UNION SELECT DISTINCT " + Col.USER_NAME + " FROM " + tableName +
-                " INNER JOIN " + nicknamesTable + " on " + Col.ID + "=" + nicknamesTable + "." + NicknamesTable.Col.USER_ID +
+                " INNER JOIN " + nicknamesTable + " on " + tableName + "." + Col.UUID + "=" + nicknamesTable + "." + NicknamesTable.Col.UUID +
                 " WHERE LOWER(" + NicknamesTable.Col.NICKNAME + ") LIKE LOWER(?)";
 
         return query(new QueryStatement<List<String>>(sql, 5000) {
@@ -397,25 +382,6 @@ public class UsersTable extends UserIDTable {
         });
     }
 
-    public Map<Integer, UUID> getUUIDsByID() {
-        String sql = Select.from(tableName, Col.ID, Col.UUID).toString();
-
-        return query(new QueryAllStatement<Map<Integer, UUID>>(sql, 20000) {
-            @Override
-            public Map<Integer, UUID> processResults(ResultSet set) throws SQLException {
-                Map<Integer, UUID> uuidsByID = new TreeMap<>();
-
-                while (set.next()) {
-                    int id = set.getInt(Col.ID.get());
-                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
-                    uuidsByID.put(id, uuid);
-                }
-
-                return uuidsByID;
-            }
-        });
-    }
-
     /**
      * Gets the {@code UUID} and the name of the player mapped to the user ID
      *
@@ -438,7 +404,6 @@ public class UsersTable extends UserIDTable {
             }
         });
     }
-
 
     public DataContainer getUserInformation(UUID uuid) {
         Key<DataContainer> user_data = new Key<>(DataContainer.class, "plan_users_data");

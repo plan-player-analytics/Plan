@@ -24,7 +24,6 @@ import java.util.Comparator;
  * Comparator for Points for ascending x value order.
  *
  * @author Rsl1122
- * @since 3.5.2
  */
 public class PointComparator implements Comparator<Point> {
 

@@ -22,7 +22,6 @@ import java.util.Objects;
  * Object containing webserver security user information.
  *
  * @author Rsl1122
- * @since 3.5.2
  */
 public class WebUser {
 

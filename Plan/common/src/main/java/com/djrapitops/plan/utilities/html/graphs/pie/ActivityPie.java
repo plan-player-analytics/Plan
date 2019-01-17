@@ -25,7 +25,6 @@ import java.util.*;
  *
  * @author Rsl1122
  * @see ActivityIndex
- * @since 4.2.0
  */
 public class ActivityPie extends Pie {
 

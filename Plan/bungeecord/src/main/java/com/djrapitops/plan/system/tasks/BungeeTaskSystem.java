@@ -17,13 +17,13 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.tasks.bungee.BungeeTPSCountTimer;
 import com.djrapitops.plan.system.tasks.bungee.PingCountTimerBungee;
+import com.djrapitops.plan.system.tasks.proxy.NetworkConfigStoreTask;
 import com.djrapitops.plan.system.tasks.proxy.NetworkPageRefreshTask;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 
 import javax.inject.Inject;
@@ -42,6 +42,7 @@ public class BungeeTaskSystem extends TaskSystem {
     private final PingCountTimerBungee pingCountTimer;
     private final LogsFolderCleanTask logsFolderCleanTask;
     private final PlayersPageRefreshTask playersPageRefreshTask;
+    private final NetworkConfigStoreTask networkConfigStoreTask;
 
     @Inject
     public BungeeTaskSystem(
@@ -52,7 +53,9 @@ public class BungeeTaskSystem extends TaskSystem {
             NetworkPageRefreshTask networkPageRefreshTask,
             PingCountTimerBungee pingCountTimer,
             LogsFolderCleanTask logsFolderCleanTask,
-            PlayersPageRefreshTask playersPageRefreshTask) {
+            PlayersPageRefreshTask playersPageRefreshTask,
+            NetworkConfigStoreTask networkConfigStoreTask
+    ) {
         super(runnableFactory, bungeeTPSCountTimer);
         this.plugin = plugin;
         this.config = config;
@@ -61,6 +64,7 @@ public class BungeeTaskSystem extends TaskSystem {
         this.pingCountTimer = pingCountTimer;
         this.logsFolderCleanTask = logsFolderCleanTask;
         this.playersPageRefreshTask = playersPageRefreshTask;
+        this.networkConfigStoreTask = networkConfigStoreTask;
     }
 
     @Override
@@ -72,18 +76,16 @@ public class BungeeTaskSystem extends TaskSystem {
         registerTask(tpsCountTimer).runTaskTimerAsynchronously(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
         registerTask(networkPageRefreshTask).runTaskTimerAsynchronously(1500, TimeAmount.toTicks(5L, TimeUnit.MINUTES));
         registerTask(logsFolderCleanTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
-        registerTask("Settings Save", new AbsRunnable() {
-            @Override
-            public void run() {
-                config.getNetworkSettings().placeSettingsToDB();
-            }
-        }).runTaskAsynchronously();
 
         plugin.registerListener(pingCountTimer);
-        long startDelay = TimeAmount.toTicks(config.getNumber(Settings.PING_SERVER_ENABLE_DELAY), TimeUnit.SECONDS);
+        long startDelay = TimeAmount.toTicks(config.get(TimeSettings.PING_SERVER_ENABLE_DELAY), TimeUnit.MILLISECONDS);
         runnableFactory.create("PingCountTimer", pingCountTimer).runTaskTimer(startDelay, PingCountTimerBungee.PING_INTERVAL);
 
         registerTask(playersPageRefreshTask)
                 .runTaskTimerAsynchronously(TimeAmount.toTicks(5L, TimeUnit.MINUTES), TimeAmount.toTicks(5L, TimeUnit.MINUTES));
+
+        // +40 ticks / 2 seconds so that update check task runs first.
+        long storeDelay = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS) + 40;
+        registerTask("Config Store Task", networkConfigStoreTask).runTaskLaterAsynchronously(storeDelay);
     }
 }

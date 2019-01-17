@@ -17,6 +17,7 @@
 package com.djrapitops.pluginbridge.plan.griefprevention;
 
 import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.pluginbridge.plan.Hook;
 import me.ryanhamshire.GriefPrevention.DataStore;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
@@ -36,14 +37,23 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 @Singleton
 public class GriefPreventionHook extends Hook {
 
+    private final PluginLogger logger;
+
     @Inject
-    public GriefPreventionHook() {
+    public GriefPreventionHook(
+            PluginLogger logger
+    ) {
         super("me.ryanhamshire.GriefPrevention.GriefPrevention");
+        this.logger = logger;
     }
 
     public void hook(HookHandler handler) throws NoClassDefFoundError {
         if (enabled) {
             DataStore dataStore = getPlugin(GriefPrevention.class).dataStore;
+            if (dataStore == null) {
+                logger.warn("GriefPrevention DataStore was not initialized yet. Run '/plan reload' to try to re-hook.");
+                return;
+            }
             handler.addPluginDataSource(new GriefPreventionData(dataStore));
         }
     }

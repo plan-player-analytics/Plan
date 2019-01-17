@@ -20,8 +20,8 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.locale.lang.*;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plan.system.webserver.auth.FailReason;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -95,7 +95,7 @@ public class LocaleSystem implements SubSystem {
     public void enable() {
         File localeFile = files.getLocaleFile();
 
-        if (config.isTrue(Settings.WRITE_NEW_LOCALE)) {
+        if (config.isTrue(PluginSettings.WRITE_NEW_LOCALE)) {
             writeNewDefaultLocale(localeFile);
         }
 
@@ -120,7 +120,7 @@ public class LocaleSystem implements SubSystem {
 
     private void resetWriteConfigSetting() {
         try {
-            config.set(Settings.WRITE_NEW_LOCALE, false);
+            config.set(PluginSettings.WRITE_NEW_LOCALE, false);
             config.save();
         } catch (IOException | IllegalStateException e) {
             logger.error("Failed set WriteNewLocaleFileOnEnable back to false");
@@ -130,12 +130,12 @@ public class LocaleSystem implements SubSystem {
 
     private Optional<Locale> loadSettingLocale() {
         try {
-            String setting = config.getString(Settings.LOCALE);
-            if (!setting.equalsIgnoreCase("default")) {
+            String setting = config.get(PluginSettings.LOCALE);
+            if (!"default".equalsIgnoreCase(setting)) {
                 return Optional.of(Locale.forLangCodeString(plugin, setting));
             }
         } catch (IOException e) {
-            logger.warn("Failed to read locale from jar: " + config.getString(Settings.LOCALE) + ", " + e.toString());
+            logger.warn("Failed to read locale from jar: " + config.get(PluginSettings.LOCALE) + ", " + e.toString());
             logger.warn("Using Default Locale as a fallback (EN)");
         }
         return Optional.empty();

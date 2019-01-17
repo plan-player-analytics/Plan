@@ -36,7 +36,6 @@ import javax.inject.Inject;
  * This SubCommand is used to reload the plugin.
  *
  * @author Rsl1122
- * @since 2.0.0
  */
 public class ReloadCommand extends CommandNode {
 

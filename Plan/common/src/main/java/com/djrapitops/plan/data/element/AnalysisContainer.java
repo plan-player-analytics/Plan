@@ -38,7 +38,6 @@ import java.util.UUID;
  * @author Rsl1122
  * @see TableContainer
  * @see InspectContainer
- * @since 4.1.0
  */
 public final class AnalysisContainer extends InspectContainer {
 

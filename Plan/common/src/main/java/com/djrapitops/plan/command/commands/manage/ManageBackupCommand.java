@@ -48,7 +48,6 @@ import java.util.UUID;
  * This command is used to backup a database to a .db file.
  *
  * @author Rsl1122
- * @since 2.3.0
  */
 @Singleton
 public class ManageBackupCommand extends CommandNode {

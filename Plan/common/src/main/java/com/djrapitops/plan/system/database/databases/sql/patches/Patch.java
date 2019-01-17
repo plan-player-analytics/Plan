@@ -16,16 +16,21 @@
  */
 package com.djrapitops.plan.system.database.databases.sql.patches;
 
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.DBType;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
+import com.djrapitops.plan.system.database.databases.sql.objects.ForeignKeyConstraint;
+import com.djrapitops.plan.system.database.databases.sql.operation.Queries;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
-import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 
 public abstract class Patch {
@@ -40,13 +45,27 @@ public abstract class Patch {
 
     public abstract boolean hasBeenApplied();
 
-    public abstract void apply();
+    protected abstract void applyPatch();
+
+    public void apply() {
+        if (dbType == DBType.MYSQL) disableForeignKeyChecks();
+        applyPatch();
+        if (dbType == DBType.MYSQL) enableForeignKeyChecks();
+    }
+
+    private void enableForeignKeyChecks() {
+        db.execute("SET FOREIGN_KEY_CHECKS=1");
+    }
+
+    private void disableForeignKeyChecks() {
+        db.execute("SET FOREIGN_KEY_CHECKS=0");
+    }
 
     public <T> T query(QueryStatement<T> query) {
         return db.query(query);
     }
 
-    public boolean hasTable(String tableName) {
+    protected boolean hasTable(String tableName) {
         boolean secondParameter;
 
         String sql;
@@ -66,7 +85,7 @@ public abstract class Patch {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tableName);
                 if (secondParameter) {
-                    statement.setString(2, db.getConfig().getString(Settings.DB_DATABASE));
+                    statement.setString(2, db.getConfig().get(DatabaseSettings.MYSQL_DATABASE));
                 }
             }
 
@@ -95,7 +114,7 @@ public abstract class Patch {
                     statement.setString(1, tableName);
                     statement.setString(2, columnName);
                     if (dbType != DBType.H2) {
-                        statement.setString(3, db.getConfig().getString(Settings.DB_DATABASE));
+                        statement.setString(3, db.getConfig().get(DatabaseSettings.MYSQL_DATABASE));
                     }
                 }
 
@@ -120,18 +139,54 @@ public abstract class Patch {
     }
 
     protected void addColumn(String tableName, String columnInfo) {
-        db.executeUnsafe("ALTER TABLE " + tableName + " ADD " + (dbType.supportsMySQLQueries() ? "" : "COLUMN ") + columnInfo);
+        db.execute("ALTER TABLE " + tableName + " ADD " + (dbType.supportsMySQLQueries() ? "" : "COLUMN ") + columnInfo);
     }
 
     protected void dropTable(String name) {
-        db.executeUnsafe(TableSqlParser.dropTable(name));
+        db.execute(TableSqlParser.dropTable(name));
     }
 
     protected void renameTable(String from, String to) {
-        String sql = dbType.supportsMySQLQueries() ?
-                "RENAME TABLE " + from + " TO " + to :
-                "ALTER TABLE " + from + " RENAME TO " + to;
-        db.execute(sql);
+        db.execute(getRenameTableSQL(from, to));
+    }
+
+    private String getRenameTableSQL(String from, String to) {
+        switch (dbType) {
+            case SQLITE:
+                return "ALTER TABLE " + from + " RENAME TO " + to;
+            case MYSQL:
+                return "RENAME TABLE " + from + " TO " + to;
+            case H2:
+                return "ALTER TABLE " + from + " RENAME TO " + to;
+            default:
+                throw new IllegalArgumentException("DBType: " + dbType.getName() + " does not have rename table sql");
+        }
+    }
+
+    protected void dropForeignKeys(String referencedTable) {
+        if (dbType != DBType.MYSQL) {
+            return;
+        }
+
+        String schema = db.getConfig().get(DatabaseSettings.MYSQL_DATABASE);
+        List<ForeignKeyConstraint> constraints = query(Queries.foreignKeyConstraintsOf(schema, referencedTable));
+
+        for (ForeignKeyConstraint constraint : constraints) {
+            // Uses information from https://stackoverflow.com/a/34574758
+            db.execute("ALTER TABLE " + constraint.getTable() +
+                    " DROP FOREIGN KEY " + constraint.getConstraintName());
+        }
+    }
+
+    protected void ensureNoForeignKeyConstraints(String table) {
+        if (dbType != DBType.MYSQL) {
+            return;
+        }
+
+        String schema = db.getConfig().get(DatabaseSettings.MYSQL_DATABASE);
+        List<ForeignKeyConstraint> constraints = query(Queries.foreignKeyConstraintsOf(schema, table));
+
+        Verify.isTrue(constraints.isEmpty(), () -> new DBOpException("Table '" + table + "' has constraints '" + constraints + "'"));
     }
 
     protected UUID getServerUUID() {

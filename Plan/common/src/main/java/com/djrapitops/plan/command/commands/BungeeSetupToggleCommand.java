@@ -59,7 +59,7 @@ public class BungeeSetupToggleCommand extends CommandNode {
             connectionSystem.setSetupAllowed(true);
         }
 
-        String msg = locale.getString(connectionSystem.isSetupAllowed() ? CommandLang.SETUP_ALLOWED : CommandLang.CONNECT_FORBIDDEN);
+        String msg = locale.getString(connectionSystem.isSetupAllowed() ? CommandLang.SETUP_ALLOWED : CommandLang.SETUP_FORBIDDEN);
         sender.sendMessage(msg);
     }
 }

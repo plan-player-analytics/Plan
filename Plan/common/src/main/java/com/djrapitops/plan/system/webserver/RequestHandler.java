@@ -19,8 +19,8 @@ package com.djrapitops.plan.system.webserver;
 import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.auth.BasicAuthentication;
@@ -89,7 +89,7 @@ public class RequestHandler implements HttpHandler {
         timings.start(requestString);
         int responseCode = -1;
 
-        boolean inDevMode = config.isTrue(Settings.DEV_MODE);
+        boolean inDevMode = config.isTrue(PluginSettings.DEV_MODE);
         try {
             Response response = responseHandler.getResponse(request);
             responseCode = response.getCode();

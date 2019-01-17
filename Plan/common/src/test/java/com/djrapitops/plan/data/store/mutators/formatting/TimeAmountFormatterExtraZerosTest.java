@@ -1,7 +1,23 @@
+/*
+ *  This file is part of Player Analytics (Plan).
+ *
+ *  Plan is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Plan is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.djrapitops.plan.data.store.mutators.formatting;
 
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.FormatSettings;
 import com.djrapitops.plan.utilities.formatting.time.TimeAmountFormatter;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -24,16 +40,16 @@ public class TimeAmountFormatterExtraZerosTest {
     @BeforeClass
     public static void setUpClass() {
         PlanConfig config = Mockito.mock(PlanConfig.class);
-        when(config.getString(Settings.FORMAT_YEAR)).thenReturn("1 year, ");
-        when(config.getString(Settings.FORMAT_YEARS)).thenReturn("%years% years, ");
-        when(config.getString(Settings.FORMAT_MONTH)).thenReturn("1 month, ");
-        when(config.getString(Settings.FORMAT_MONTHS)).thenReturn("%months% months, ");
-        when(config.getString(Settings.FORMAT_DAY)).thenReturn("1d ");
-        when(config.getString(Settings.FORMAT_DAYS)).thenReturn("%days%d ");
-        when(config.getString(Settings.FORMAT_HOURS)).thenReturn("%zero%%hours%:");
-        when(config.getString(Settings.FORMAT_MINUTES)).thenReturn("%hours%%zero%%minutes%:");
-        when(config.getString(Settings.FORMAT_SECONDS)).thenReturn("%minutes%%zero%%seconds%");
-        when(config.getString(Settings.FORMAT_ZERO_SECONDS)).thenReturn("00:00:00");
+        when(config.get(FormatSettings.YEAR)).thenReturn("1 year, ");
+        when(config.get(FormatSettings.YEARS)).thenReturn("%years% years, ");
+        when(config.get(FormatSettings.MONTH)).thenReturn("1 month, ");
+        when(config.get(FormatSettings.MONTHS)).thenReturn("%months% months, ");
+        when(config.get(FormatSettings.DAY)).thenReturn("1d ");
+        when(config.get(FormatSettings.DAYS)).thenReturn("%days%d ");
+        when(config.get(FormatSettings.HOURS)).thenReturn("%zero%%hours%:");
+        when(config.get(FormatSettings.MINUTES)).thenReturn("%hours%%zero%%minutes%:");
+        when(config.get(FormatSettings.SECONDS)).thenReturn("%minutes%%zero%%seconds%");
+        when(config.get(FormatSettings.ZERO_SECONDS)).thenReturn("00:00:00");
         underTest = new TimeAmountFormatter(config);
     }
 

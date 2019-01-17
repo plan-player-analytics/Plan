@@ -24,8 +24,8 @@ import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.system.cache.DataCache;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.PluginDataSettings;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
@@ -128,7 +128,7 @@ class TownyData extends PluginData {
     private List<Town> getTopTowns() {
         List<Town> topTowns = TownyUniverse.getDataSource().getTowns();
         topTowns.sort(new TownComparator());
-        List<String> hide = config.getStringList(Settings.HIDE_TOWNS);
+        List<String> hide = config.get(PluginDataSettings.HIDE_TOWNS);
         return topTowns.stream()
                 .filter(town -> !hide.contains(town.getName()))
                 .collect(Collectors.toList());

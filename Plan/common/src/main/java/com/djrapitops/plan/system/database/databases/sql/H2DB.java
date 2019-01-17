@@ -22,8 +22,8 @@ import com.djrapitops.plan.system.database.databases.DBType;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.L;
@@ -45,7 +45,6 @@ import java.util.Objects;
  * Implementation of the H2 database
  *
  * @author Fuzzlemann
- * @since 4.5.1
  */
 public class H2DB extends SQLDB {
 
@@ -92,8 +91,8 @@ public class H2DB extends SQLDB {
     }
 
     private Connection getConnectionFor(String dbFilePath) throws SQLException {
-        String username = config.getString(Settings.DB_USER);
-        String password = config.getString(Settings.DB_PASS);
+        String username = config.get(DatabaseSettings.MYSQL_USER);
+        String password = config.get(DatabaseSettings.MYSQL_PASS);
 
         JdbcDataSource jdbcDataSource = new JdbcDataSource();
         jdbcDataSource.setURL("jdbc:h2:file:" + dbFilePath + ";mode=MySQL");
@@ -105,10 +104,14 @@ public class H2DB extends SQLDB {
 
     private void startConnectionPingTask() {
         stopConnectionPingTask();
-        // Maintains Connection.
-        connectionPingTask = runnableFactory.create("DBConnectionPingTask " + getType().getName(),
-                new KeepAliveTask(connection, () -> getNewConnection(databaseFile), logger, errorHandler)
-        ).runTaskTimerAsynchronously(60L * 20L, 60L * 20L);
+        try {
+            // Maintains Connection.
+            connectionPingTask = runnableFactory.create("DBConnectionPingTask " + getType().getName(),
+                    new KeepAliveTask(connection, () -> getNewConnection(databaseFile), logger, errorHandler)
+            ).runTaskTimerAsynchronously(60L * 20L, 60L * 20L);
+        } catch (Exception ignored) {
+            // Task failed to register because plugin is being disabled
+        }
     }
 
     private void stopConnectionPingTask() {

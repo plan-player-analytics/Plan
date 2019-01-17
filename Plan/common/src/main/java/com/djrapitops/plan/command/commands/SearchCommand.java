@@ -42,7 +42,6 @@ import java.util.List;
  * This SubCommand is used to search for a user.
  *
  * @author Rsl1122
- * @since 2.0.0
  */
 @Singleton
 public class SearchCommand extends CommandNode {

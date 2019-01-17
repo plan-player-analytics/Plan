@@ -24,8 +24,9 @@ import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.*;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DisplaySettings;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plugin.api.TimeAmount;
@@ -164,7 +165,7 @@ public class PlanPlaceholders extends PlaceholderExpansion {
                     return TPSMutator.forContainer(serverContainer).filterDataBetween(dayAgo, now).averageTPS();
                 case "tps_drops_week":
                     return TPSMutator.forContainer(serverContainer).filterDataBetween(weekAgo, now)
-                            .lowTpsSpikeCount(config.getNumber(Settings.THEME_GRAPH_TPS_THRESHOLD_MED));
+                            .lowTpsSpikeCount(config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED));
                 default:
                     break;
             }
@@ -199,8 +200,8 @@ public class PlanPlaceholders extends PlaceholderExpansion {
                 case "activity_index":
                     ActivityIndex activityIndex = playerContainer.getActivityIndex(
                             now,
-                            config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD),
-                            config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD)
+                            config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD),
+                            config.get(TimeSettings.ACTIVE_LOGIN_THRESHOLD)
                     );
                     return activityIndex.getValue() + " (" + activityIndex.getGroup() + ")";
                 case "registered":

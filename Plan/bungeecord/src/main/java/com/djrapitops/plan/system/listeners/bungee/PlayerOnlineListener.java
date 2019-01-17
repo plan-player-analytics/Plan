@@ -21,8 +21,8 @@ import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DataGatheringSettings;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plugin.logging.L;
@@ -80,7 +80,7 @@ public class PlayerOnlineListener implements Listener {
 
             sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, "", ""));
 
-            boolean gatheringGeolocations = config.isTrue(Settings.DATA_GEOLOCATIONS);
+            boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
 
             processing.submit(processors.player().proxyRegisterProcessor(uuid, name, time,
                     gatheringGeolocations ? processors.player().ipUpdateProcessor(uuid, address, time) : null

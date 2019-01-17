@@ -21,8 +21,9 @@ import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.PluginSettings;
+import com.djrapitops.plan.system.settings.paths.ProxySettings;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.utilities.html.tables.HtmlTables;
@@ -74,9 +75,9 @@ public class PlayersPage implements Page {
             placeholderReplacer.put("version", versionCheckSystem.getCurrentVersion());
             placeholderReplacer.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
             if (Check.isBukkitAvailable()) {
-                placeholderReplacer.put("networkName", serverInfo.getServer().getName());
+                placeholderReplacer.put("networkName", config.get(PluginSettings.SERVER_NAME));
             } else {
-                placeholderReplacer.put("networkName", config.getString(Settings.BUNGEE_NETWORK_NAME));
+                placeholderReplacer.put("networkName", config.get(ProxySettings.NETWORK_NAME));
             }
 
             timings.start("Players page players table parsing");

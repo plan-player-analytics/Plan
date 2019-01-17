@@ -17,10 +17,11 @@
 package com.djrapitops.plan.system.export;
 
 import com.djrapitops.plan.system.SubSystem;
+import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.utilities.file.export.HtmlExport;
+import com.djrapitops.plan.system.settings.paths.ExportSettings;
+import com.djrapitops.plugin.api.Check;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -36,22 +37,39 @@ public class ExportSystem implements SubSystem {
     private final PlanConfig config;
     private final Processing processing;
     private final HtmlExport htmlExport;
+    private final ConnectionSystem connectionSystem;
 
     @Inject
     public ExportSystem(
             PlanConfig config,
             Processing processing,
-            HtmlExport htmlExport
+            HtmlExport htmlExport,
+            ConnectionSystem connectionSystem
     ) {
         this.config = config;
         this.processing = processing;
         this.htmlExport = htmlExport;
+        this.connectionSystem = connectionSystem;
     }
 
     @Override
     public void enable() {
-        if (config.isTrue(Settings.ANALYSIS_EXPORT)) {
-            processing.submitNonCritical(htmlExport);
+        if (Check.isBukkitAvailable() && connectionSystem.isServerAvailable()) {
+            return;
+        }
+        if (config.isTrue(ExportSettings.JS_AND_CSS)) {
+            processing.submitNonCritical(htmlExport::exportJs);
+            processing.submitNonCritical(htmlExport::exportCss);
+            processing.submitNonCritical(htmlExport::exportPlugins);
+        }
+        if (config.isTrue(ExportSettings.PLAYERS_PAGE)) {
+            processing.submitNonCritical(htmlExport::exportPlayersPage);
+        }
+        if (config.isTrue(ExportSettings.PLAYER_PAGES)) {
+            processing.submitNonCritical(htmlExport::exportAvailablePlayers);
+        }
+        if (config.isTrue(ExportSettings.SERVER_PAGE)) {
+            processing.submitNonCritical(htmlExport::exportAvailableServerPages);
         }
     }
 

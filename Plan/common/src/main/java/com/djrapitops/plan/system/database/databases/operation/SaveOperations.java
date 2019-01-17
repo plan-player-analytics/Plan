@@ -20,6 +20,7 @@ import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.settings.config.Config;
 
 import java.util.List;
 import java.util.Map;
@@ -83,4 +84,6 @@ public interface SaveOperations {
     void ping(UUID uuid, Ping ping);
 
     void setAsUninstalled(UUID serverUUID);
+
+    void saveConfig(UUID serverUUID, Config config, long lastModified);
 }

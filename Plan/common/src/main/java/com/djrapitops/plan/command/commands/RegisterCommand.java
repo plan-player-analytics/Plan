@@ -48,7 +48,6 @@ import java.util.Arrays;
  * {@code Permissions.MANAGE_WEB} required for registering other users.
  *
  * @author Rsl1122
- * @since 3.5.2
  */
 @Singleton
 public class RegisterCommand extends CommandNode {
@@ -97,6 +96,8 @@ public class RegisterCommand extends CommandNode {
             sender.sendMessage("§cPassword hash error.");
         } catch (NumberFormatException e) {
             throw new NumberFormatException(args[2]);
+        } catch (IllegalArgumentException e) {
+            throw e;
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
         }
@@ -152,7 +153,7 @@ public class RegisterCommand extends CommandNode {
                     return;
                 }
                 database.save().webUser(webUser);
-                sender.sendMessage(locale.getString(CommandLang.WEB_USER_REGISTER_SUCCESS));
+                sender.sendMessage(locale.getString(CommandLang.WEB_USER_REGISTER_SUCCESS, userName));
                 logger.info(locale.getString(CommandLang.WEB_USER_REGISTER_NOTIFY, userName, webUser.getPermLevel()));
             } catch (Exception e) {
                 errorHandler.log(L.WARN, this.getClass(), e);

@@ -35,8 +35,11 @@ public class KillsServerIDPatch extends Patch {
     @Override
     public boolean hasBeenApplied() {
         String tableName = KillsTable.TABLE_NAME;
-        String columnName = KillsTable.Col.SERVER_ID.get();
-        return hasColumn(tableName, columnName) && allValuesHaveServerID(tableName, columnName);
+        String columnName = "server_id";
+
+        // KillsOptimizationPatch makes this patch incompatible with newer patch versions.
+        return hasColumn(tableName, KillsTable.Col.SERVER_UUID.get())
+                || hasColumn(tableName, columnName) && allValuesHaveServerID(tableName, columnName);
     }
 
     private Boolean allValuesHaveServerID(String tableName, String columnName) {
@@ -55,14 +58,12 @@ public class KillsServerIDPatch extends Patch {
     }
 
     @Override
-    public void apply() {
-        addColumn(KillsTable.TABLE_NAME, KillsTable.Col.SERVER_ID + " integer NOT NULL DEFAULT 0");
+    protected void applyPatch() {
+        addColumn(KillsTable.TABLE_NAME, "server_id integer NOT NULL DEFAULT 0");
 
         Map<Integer, Integer> sessionIDServerIDRelation = db.getSessionsTable().getIDServerIDRelation();
 
-        String sql = "UPDATE " + KillsTable.TABLE_NAME + " SET " +
-                KillsTable.Col.SERVER_ID + "=?" +
-                " WHERE " + KillsTable.Col.SESSION_ID + "=?";
+        String sql = "UPDATE " + KillsTable.TABLE_NAME + " SET server_id=? WHERE " + KillsTable.Col.SESSION_ID + "=?";
 
         db.executeBatch(new ExecStatement(sql) {
             @Override

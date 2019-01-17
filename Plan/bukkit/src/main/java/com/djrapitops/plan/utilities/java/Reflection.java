@@ -270,7 +270,7 @@ public final class Reflection {
      * <p>
      * Strings enclosed with curly brackets - such as {TEXT} - will be replaced according to the following table:
      * </p>
-     * <table border="1">
+     * <table border="1" summary="Variables and description">
      * <tr>
      * <th>Variable</th>
      * <th>Content</th>

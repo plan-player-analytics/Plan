@@ -43,7 +43,7 @@ public abstract class TaskSystem implements SubSystem {
         return registerTask(taskName, runnable);
     }
 
-    protected PluginRunnable registerTask(String name, AbsRunnable runnable) {
+    public PluginRunnable registerTask(String name, AbsRunnable runnable) {
         return runnableFactory.create(name, runnable);
     }
 

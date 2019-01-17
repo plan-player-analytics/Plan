@@ -41,4 +41,8 @@ public interface PlanPlugin extends IPlugin {
     boolean isReloading();
 
     PlanSystem getSystem();
+
+    default boolean isSystemEnabled() {
+        return getSystem().isEnabled();
+    }
 }

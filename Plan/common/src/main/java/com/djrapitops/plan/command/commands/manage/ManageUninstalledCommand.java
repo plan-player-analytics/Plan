@@ -42,7 +42,6 @@ import java.util.UUID;
  * This SubCommand is used to set a server as uninstalled on Plan.
  *
  * @author Rsl1122
- * @since 2.0.0
  */
 @Singleton
 public class ManageUninstalledCommand extends CommandNode {

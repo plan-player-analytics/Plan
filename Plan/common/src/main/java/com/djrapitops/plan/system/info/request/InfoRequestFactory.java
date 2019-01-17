@@ -17,13 +17,14 @@
 package com.djrapitops.plan.system.info.request;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.system.export.HtmlExport;
+import com.djrapitops.plan.system.export.JSONExport;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.webserver.response.ResponseFactory;
-import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plan.utilities.html.pages.PageFactory;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.task.RunnableFactory;
@@ -50,6 +51,7 @@ public class InfoRequestFactory {
     private final Lazy<ResponseFactory> responseFactory;
     private final Lazy<PageFactory> pageFactory;
     private final Lazy<HtmlExport> htmlExport;
+    private final Lazy<JSONExport> jsonExport;
     private final Lazy<PluginLogger> logger;
     private final Lazy<RunnableFactory> runnableFactory;
 
@@ -64,6 +66,7 @@ public class InfoRequestFactory {
             Lazy<ResponseFactory> responseFactory,
             Lazy<PageFactory> pageFactory,
             Lazy<HtmlExport> htmlExport,
+            Lazy<JSONExport> jsonExport,
             Lazy<PluginLogger> logger,
             Lazy<RunnableFactory> runnableFactory
     ) {
@@ -76,24 +79,31 @@ public class InfoRequestFactory {
         this.responseFactory = responseFactory;
         this.pageFactory = pageFactory;
         this.htmlExport = htmlExport;
+        this.jsonExport = jsonExport;
         this.logger = logger;
         this.runnableFactory = runnableFactory;
     }
 
     public CacheRequest cacheAnalysisPageRequest(UUID serverUUID, String html) {
-        return new CacheAnalysisPageRequest(serverUUID, html, config.get(), processing.get(), htmlExport.get(), serverInfo.get().getServerUUID());
+        return new CacheAnalysisPageRequest(
+                serverUUID, html,
+                config.get(), processing.get(),
+                htmlExport.get(), jsonExport.get(),
+                serverInfo.get().getServerUUID()
+        );
     }
 
     public CacheRequest cacheInspectPageRequest(UUID uuid, String html) {
-        return new CacheInspectPageRequest(uuid, html, config.get(), processing.get(), serverInfo.get(), htmlExport.get());
+        return new CacheInspectPageRequest(
+                uuid, html,
+                config.get(), processing.get(),
+                serverInfo.get(),
+                htmlExport.get(), jsonExport.get()
+        );
     }
 
     public CacheRequest cacheInspectPluginsTabRequest(UUID uuid, String nav, String html) {
         return new CacheInspectPluginsTabRequest(uuid, nav, html, serverInfo.get());
-    }
-
-    public CacheRequest cacheNetworkPageContentRequest(UUID serverUUID, String html) {
-        return new CacheNetworkPageContentRequest(serverUUID, html, serverInfo.get());
     }
 
     public GenerateRequest generateAnalysisPageRequest(UUID serverUUID) {
@@ -113,7 +123,7 @@ public class InfoRequestFactory {
     }
 
     public SetupRequest sendDBSettingsRequest(String addressOfThisServer) {
-        return new SendDBSettingsRequest(addressOfThisServer, config.get(), this, connectionSystem.get());
+        return new SendDBSettingsRequest(addressOfThisServer, this, connectionSystem.get());
     }
 
     public CheckConnectionRequest checkConnectionRequest(String webAddress) {
@@ -135,6 +145,7 @@ public class InfoRequestFactory {
                     factory.config.get(),
                     factory.processing.get(),
                     factory.htmlExport.get(),
+                    factory.jsonExport.get(),
                     factory.serverInfo.get().getServerUUID()
             );
         }
@@ -144,16 +155,13 @@ public class InfoRequestFactory {
                     factory.config.get(),
                     factory.processing.get(),
                     factory.serverInfo.get(),
-                    factory.htmlExport.get()
+                    factory.htmlExport.get(),
+                    factory.jsonExport.get()
             );
         }
 
         CacheRequest cacheInspectPluginsTabRequest() {
             return new CacheInspectPluginsTabRequest(factory.serverInfo.get());
-        }
-
-        CacheRequest cacheNetworkPageContentRequest() {
-            return new CacheNetworkPageContentRequest(factory.serverInfo.get());
         }
 
         CheckConnectionRequest checkConnectionRequest() {
@@ -197,7 +205,6 @@ public class InfoRequestFactory {
 
         SetupRequest sendDBSettingsRequest() {
             return new SendDBSettingsRequest(
-                    factory.config.get(),
                     factory,
                     factory.connectionSystem.get()
             );

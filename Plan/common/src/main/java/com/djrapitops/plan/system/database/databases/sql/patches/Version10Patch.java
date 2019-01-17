@@ -37,7 +37,7 @@ public class Version10Patch extends Patch {
     }
 
     @Override
-    public void apply() {
+    protected void applyPatch() {
         try {
             Optional<Integer> fetchedServerID = db.getServerTable().getServerID(getServerUUID());
             if (!fetchedServerID.isPresent()) {

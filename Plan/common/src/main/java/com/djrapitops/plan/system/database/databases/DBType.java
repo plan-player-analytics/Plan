@@ -22,7 +22,6 @@ import java.util.Optional;
  * An enum which stores the name, the config name and if the Database supports MySQL Queries
  *
  * @author Fuzzlemann
- * @since 4.5.1
  */
 public enum DBType {
 

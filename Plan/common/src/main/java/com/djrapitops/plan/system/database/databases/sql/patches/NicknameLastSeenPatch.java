@@ -20,8 +20,9 @@ import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
+import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.tables.NicknamesTable;
-import com.djrapitops.plan.system.database.databases.sql.tables.UserIDTable;
+import com.djrapitops.plan.system.database.databases.sql.tables.ServerTable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,16 +41,21 @@ public class NicknameLastSeenPatch extends Patch {
     }
 
     @Override
-    public void apply() {
+    protected void applyPatch() {
         addColumn(NicknamesTable.TABLE_NAME,
                 NicknamesTable.Col.LAST_USED + " bigint NOT NULL DEFAULT '0'"
         );
+
+        if (hasColumn(NicknamesTable.TABLE_NAME, NicknamesTable.Col.UUID.get())) {
+            // NicknamesOptimizationPatch makes this patch incompatible with newer patch versions.
+            return;
+        }
 
         // Create table if has failed already
         db.executeUnsafe("CREATE TABLE IF NOT EXISTS plan_actions " +
                 "(action_id integer, date bigint, server_id integer, user_id integer, additional_info varchar(1))");
 
-        Map<Integer, UUID> serverUUIDsByID = db.getServerTable().getServerUUIDsByID();
+        Map<Integer, UUID> serverUUIDsByID = getServerUUIDsByID();
         Map<UUID, Integer> serverIDsByUUID = new HashMap<>();
         for (Map.Entry<Integer, UUID> entry : serverUUIDsByID.entrySet()) {
             serverIDsByUUID.put(entry.getValue(), entry.getKey());
@@ -61,6 +67,24 @@ public class NicknameLastSeenPatch extends Patch {
         db.executeUnsafe("DROP TABLE plan_actions");
     }
 
+    private Map<Integer, UUID> getServerUUIDsByID() {
+        String sql = Select.from(ServerTable.TABLE_NAME,
+                ServerTable.Col.SERVER_ID, ServerTable.Col.SERVER_UUID)
+                .toString();
+
+        return query(new QueryAllStatement<Map<Integer, UUID>>(sql) {
+            @Override
+            public Map<Integer, UUID> processResults(ResultSet set) throws SQLException {
+                Map<Integer, UUID> uuids = new HashMap<>();
+                while (set.next()) {
+                    int id = set.getInt(ServerTable.Col.SERVER_ID.get());
+                    uuids.put(id, UUID.fromString(set.getString(ServerTable.Col.SERVER_UUID.get())));
+                }
+                return uuids;
+            }
+        });
+    }
+
     private Map<Integer, Set<Nickname>> getNicknamesByUserID(Map<Integer, UUID> serverUUIDsByID) {
         String fetchSQL = "SELECT * FROM plan_actions WHERE action_id=3 ORDER BY date DESC";
         return query(new QueryAllStatement<Map<Integer, Set<Nickname>>>(fetchSQL, 10000) {
@@ -70,7 +94,7 @@ public class NicknameLastSeenPatch extends Patch {
 
                 while (set.next()) {
                     long date = set.getLong("date");
-                    int userID = set.getInt(UserIDTable.Col.USER_ID.get());
+                    int userID = set.getInt("user_id");
                     int serverID = set.getInt("server_id");
                     UUID serverUUID = serverUUIDsByID.get(serverID);
                     Nickname nick = new Nickname(set.getString("additional_info"), date, serverUUID);
@@ -90,8 +114,8 @@ public class NicknameLastSeenPatch extends Patch {
     private void updateLastUsed(Map<UUID, Integer> serverIDsByUUID, Map<Integer, Set<Nickname>> nicknames) {
         String updateSQL = "UPDATE " + NicknamesTable.TABLE_NAME + " SET " + NicknamesTable.Col.LAST_USED + "=?" +
                 " WHERE " + NicknamesTable.Col.NICKNAME + "=?" +
-                " AND " + NicknamesTable.Col.USER_ID + "=?" +
-                " AND " + NicknamesTable.Col.SERVER_ID + "=?";
+                " AND user_id=?" +
+                " AND server_id=?";
 
         db.executeBatch(new ExecStatement(updateSQL) {
             @Override

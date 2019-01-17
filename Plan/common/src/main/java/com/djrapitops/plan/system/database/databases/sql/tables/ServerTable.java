@@ -35,7 +35,7 @@ import java.util.*;
  * <p>
  * Table Name: plan_servers
  * <p>
- * For contained columns {@see Col}
+ * For contained columns {@link Col}
  *
  * @author Rsl1122
  * @see Server
@@ -201,24 +201,6 @@ public class ServerTable extends Table {
                     names.put(serverUUID, set.getString(Col.NAME.get()));
                 }
                 return names;
-            }
-        });
-    }
-
-    public Map<Integer, UUID> getServerUUIDsByID() {
-        String sql = Select.from(tableName,
-                Col.SERVER_ID, Col.SERVER_UUID)
-                .toString();
-
-        return query(new QueryAllStatement<Map<Integer, UUID>>(sql) {
-            @Override
-            public Map<Integer, UUID> processResults(ResultSet set) throws SQLException {
-                Map<Integer, UUID> uuids = new HashMap<>();
-                while (set.next()) {
-                    int id = set.getInt(Col.SERVER_ID.get());
-                    uuids.put(id, UUID.fromString(set.getString(Col.SERVER_UUID.get())));
-                }
-                return uuids;
             }
         });
     }

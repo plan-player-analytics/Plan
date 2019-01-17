@@ -39,7 +39,6 @@ import java.util.Optional;
  * This manage SubCommand is used to import data from 3rd party plugins.
  *
  * @author Rsl1122
- * @since 2.3.0
  */
 @Singleton
 public class ManageImportCommand extends CommandNode {
@@ -72,20 +71,24 @@ public class ManageImportCommand extends CommandNode {
 
         String importArg = args[0];
 
-        if (importArg.equals("list")) {
+        if ("list".equals(importArg)) {
             sender.sendMessage(locale.getString(ManageLang.IMPORTERS));
             importSystem.getImporterNames().forEach(name -> sender.sendMessage("- " + name));
             return;
         }
 
-        findImporter(sender, importArg);
+        findAndProcessImporter(sender, importArg);
     }
 
-    private void findImporter(Sender sender, String importArg) {
+    private void findAndProcessImporter(Sender sender, String importArg) {
         Optional<Importer> foundImporter = importSystem.getImporter(importArg);
         if (foundImporter.isPresent()) {
             Importer importer = foundImporter.get();
-            processing.submitNonCritical(importer::processImport);
+            processing.submitNonCritical(() -> {
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
+                importer.processImport();
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
+            });
         } else {
             sender.sendMessage(locale.getString(ManageLang.FAIL_IMPORTER_NOT_FOUND, importArg));
         }

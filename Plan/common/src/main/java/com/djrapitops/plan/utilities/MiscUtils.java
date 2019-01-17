@@ -27,7 +27,6 @@ import java.io.IOException;
  * Utility method class containing various static methods.
  *
  * @author Rsl1122
- * @since 2.0.0
  */
 public class MiscUtils {
 

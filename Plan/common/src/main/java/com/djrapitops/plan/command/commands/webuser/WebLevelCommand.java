@@ -30,7 +30,6 @@ import javax.inject.Inject;
  * Subcommand for info about permission levels.
  *
  * @author Rsl1122
- * @since 3.5.2
  */
 public class WebLevelCommand extends CommandNode {
 

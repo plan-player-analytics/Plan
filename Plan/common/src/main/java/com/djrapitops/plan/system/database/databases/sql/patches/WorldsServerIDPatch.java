@@ -40,8 +40,11 @@ public class WorldsServerIDPatch extends Patch {
     @Override
     public boolean hasBeenApplied() {
         String tableName = WorldTable.TABLE_NAME;
-        String columnName = WorldTable.Col.SERVER_ID.get();
-        return hasColumn(tableName, columnName)
+        String columnName = "server_id";
+
+        // WorldsOptimizationPatch makes this patch incompatible with newer patch versions.
+        return hasColumn(tableName, "server_uuid")
+                || hasColumn(tableName, columnName)
                 && allValuesHaveServerID(tableName, columnName);
     }
 
@@ -61,7 +64,7 @@ public class WorldsServerIDPatch extends Patch {
     }
 
     @Override
-    public void apply() {
+    protected void applyPatch() {
         WorldTable worldTable = db.getWorldTable();
 
         List<UUID> serverUUIDs = db.getServerTable().getServerUUIDs();
@@ -79,26 +82,24 @@ public class WorldsServerIDPatch extends Patch {
         }
 
         updateWorldTimesTableWorldIDs();
-        db.executeUnsafe("DELETE FROM " + WorldTable.TABLE_NAME + " WHERE " + WorldTable.Col.SERVER_ID + "=0");
+        db.executeUnsafe("DELETE FROM " + WorldTable.TABLE_NAME + " WHERE server_id=0");
     }
 
     private Set<String> getWorldNamesOld(UUID serverUUID) {
         WorldTimesTable worldTimesTable = db.getWorldTimesTable();
         SessionsTable sessionsTable = db.getSessionsTable();
 
-        String statementSelectServerID = db.getServerTable().statementSelectServerID;
-
         String worldIDColumn = worldTimesTable + "." + WorldTimesTable.Col.WORLD_ID;
         String worldSessionIDColumn = worldTimesTable + "." + WorldTimesTable.Col.SESSION_ID;
         String sessionIDColumn = sessionsTable + "." + SessionsTable.Col.ID;
-        String sessionServerIDColumn = sessionsTable + "." + SessionsTable.Col.SERVER_ID;
+        String sessionServerUUIDColumn = sessionsTable + "." + SessionsTable.Col.SERVER_UUID;
 
         String sql = "SELECT DISTINCT " +
                 WorldTable.Col.NAME + " FROM " +
                 WorldTable.TABLE_NAME +
                 " INNER JOIN " + worldTimesTable + " on " + worldIDColumn + "=" + WorldTable.TABLE_NAME + "." + WorldTable.Col.ID +
                 " INNER JOIN " + sessionsTable + " on " + worldSessionIDColumn + "=" + sessionIDColumn +
-                " WHERE " + statementSelectServerID + "=" + sessionServerIDColumn;
+                " WHERE " + sessionServerUUIDColumn + "=?";
 
         return query(new QueryStatement<Set<String>>(sql, 1000) {
             @Override
@@ -134,7 +135,7 @@ public class WorldsServerIDPatch extends Patch {
         String sql = "UPDATE " + worldTimesTable + " SET " +
                 WorldTimesTable.Col.WORLD_ID + "=?" +
                 " WHERE " + WorldTimesTable.Col.WORLD_ID + "=?" +
-                " AND " + WorldTimesTable.Col.SERVER_ID + "=?";
+                " AND " + "server_id=?";
         db.executeBatch(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -159,7 +160,7 @@ public class WorldsServerIDPatch extends Patch {
                 List<WorldObj> objects = new ArrayList<>();
                 while (set.next()) {
                     int worldID = set.getInt(WorldTable.Col.ID.get());
-                    int serverID = set.getInt(WorldTable.Col.SERVER_ID.get());
+                    int serverID = set.getInt("server_id");
                     String worldName = set.getString(WorldTable.Col.NAME.get());
                     objects.add(new WorldObj(worldID, serverID, worldName));
                 }

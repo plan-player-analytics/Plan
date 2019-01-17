@@ -32,7 +32,6 @@ import java.util.function.Supplier;
  * This is especially useful in situations where multiple clients are accessing the server.
  *
  * @author Fuzzlemann
- * @since 3.6.0
  */
 public class ResponseCache {
 

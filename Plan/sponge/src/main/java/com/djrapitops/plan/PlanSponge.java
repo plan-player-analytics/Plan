@@ -42,7 +42,7 @@ import java.io.InputStream;
 @Plugin(
         id = "plan",
         name = "Plan",
-        version = "4.5.2",
+        version = "4.6.0",
         description = "Player Analytics Plugin by Rsl1122",
         authors = {"Rsl1122"},
         dependencies = {
@@ -105,6 +105,9 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
         PlanCommand command = component.planCommand();
         command.registerCommands();
         registerCommand("plan", command);
+        if (system != null) {
+            system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
+        }
     }
 
     @Override

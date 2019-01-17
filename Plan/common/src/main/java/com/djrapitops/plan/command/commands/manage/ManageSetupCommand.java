@@ -24,8 +24,8 @@ import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -42,7 +42,6 @@ import java.util.Arrays;
  * This manage SubCommand is used to request settings from Bungee so that connection can be established.
  *
  * @author Rsl1122
- * @since 2.3.0
  */
 @Singleton
 public class ManageSetupCommand extends CommandNode {
@@ -101,8 +100,7 @@ public class ManageSetupCommand extends CommandNode {
     private void requestSetup(Sender sender, String address) {
         processing.submitNonCritical(() -> {
             try {
-                config.set(Settings.BUNGEE_OVERRIDE_STANDALONE_MODE, false);
-                config.set(Settings.BUNGEE_COPY_CONFIG, true);
+                config.set(PluginSettings.BUNGEE_COPY_CONFIG, true);
 
                 infoSystem.requestSetUp(address);
 

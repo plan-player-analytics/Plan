@@ -45,7 +45,6 @@ import java.util.UUID;
  * This manage SubCommand is used to request settings from Bungee so that connection can be established.
  *
  * @author Rsl1122
- * @since 2.3.0
  */
 @Singleton
 public class ManageConDebugCommand extends CommandNode {
@@ -85,7 +84,7 @@ public class ManageConDebugCommand extends CommandNode {
         setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_CON));
     }
 
-    private void testServer(Sender sender, String accessAddress, Server server, Locale locale) {
+    private void testServer(Sender sender, Server server, Locale locale) {
         String address = server.getWebAddress().toLowerCase();
         boolean usingHttps = address.startsWith("https");
         boolean local = address.contains("localhost")
@@ -96,9 +95,6 @@ public class ManageConDebugCommand extends CommandNode {
         try {
             connectionSystem.sendInfoRequest(infoRequestFactory.checkConnectionRequest(address), server);
             sender.sendMessage(getMsgFor(address, usingHttps, local, true, true));
-        } catch (ForbiddenException | BadRequestException | InternalErrorException e) {
-            sender.sendMessage(getMsgFor(address, usingHttps, local, false, false));
-            sender.sendMessage(locale.getString(ManageLang.CON_EXCEPTION, e.getClass().getSimpleName()));
         } catch (UnauthorizedServerException e) {
             sender.sendMessage(getMsgFor(address, usingHttps, local, true, false));
             sender.sendMessage(locale.getString(ManageLang.CON_UNAUTHORIZED));
@@ -142,7 +138,7 @@ public class ManageConDebugCommand extends CommandNode {
             if (thisServer.equals(server.getUuid())) {
                 continue;
             }
-            testServer(sender, accessAddress, server, locale);
+            testServer(sender, server, locale);
         }
     }
 

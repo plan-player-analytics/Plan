@@ -35,8 +35,11 @@ public class WorldTimesSeverIDPatch extends Patch {
     @Override
     public boolean hasBeenApplied() {
         String tableName = WorldTimesTable.TABLE_NAME;
-        String columnName = WorldTimesTable.Col.SERVER_ID.get();
-        return hasColumn(tableName, columnName)
+        String columnName = "server_id";
+
+        // WorldTimesOptimizationPatch makes this patch incompatible with newer patch versions.
+        return hasColumn(tableName, "server_uuid")
+                || hasColumn(tableName, columnName)
                 && allValuesHaveServerID(tableName, columnName);
     }
 
@@ -56,11 +59,11 @@ public class WorldTimesSeverIDPatch extends Patch {
     }
 
     @Override
-    public void apply() {
+    protected void applyPatch() {
         Map<Integer, Integer> sessionIDServerIDRelation = db.getSessionsTable().getIDServerIDRelation();
 
         String sql = "UPDATE " + WorldTimesTable.TABLE_NAME + " SET " +
-                WorldTimesTable.Col.SERVER_ID + "=?" +
+                "server_id=?" +
                 " WHERE " + WorldTimesTable.Col.SESSION_ID + "=?";
 
         db.executeBatch(new ExecStatement(sql) {

@@ -24,7 +24,6 @@ import java.util.*;
 
 /**
  * @author Fuzzlemann
- * @since 4.0.0
  */
 public class UserImportData {
 

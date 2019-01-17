@@ -39,7 +39,7 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
     public NetworkHealthInformation(
             NetworkContainer container,
             Locale locale,
-            int activeMinuteThreshold,
+            long activeMsThreshold,
             int activeLoginThreshold,
             Formatter<Long> timeAmountFormatter,
             Formatter<Double> decimalFormatter,
@@ -49,7 +49,7 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
                 container.getUnsafe(NetworkKeys.REFRESH_TIME),
                 container.getUnsafe(NetworkKeys.REFRESH_TIME_MONTH_AGO),
                 locale,
-                activeMinuteThreshold, activeLoginThreshold,
+                activeMsThreshold, activeLoginThreshold,
                 timeAmountFormatter, decimalFormatter, percentageFormatter
         );
         this.container = container;

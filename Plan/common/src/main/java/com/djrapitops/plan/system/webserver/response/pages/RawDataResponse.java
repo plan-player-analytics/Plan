@@ -73,16 +73,14 @@ public class RawDataResponse extends Response {
         return values;
     }
 
-    private List handleList(List object) {
-        List<Object> list = object;
+    private List handleList(List list) {
         if (list.stream().findAny().orElse(null) instanceof DataContainer) {
-            return list.stream().map((obj) -> mapToNormalMap((DataContainer) obj)).collect(Collectors.toList());
+            return (List) list.stream().map((obj) -> mapToNormalMap((DataContainer) obj)).collect(Collectors.toList());
         }
         return list;
     }
 
-    private Map handleMap(Map object) {
-        Map<Object, Object> map = object;
+    private Map handleMap(Map map) {
         if (map.values().stream().findAny().orElse(null) instanceof DataContainer) {
             Map<Object, Object> newMap = new HashMap<>();
             map.forEach((key, value) -> newMap.put(key, mapToNormalMap((DataContainer) value)));

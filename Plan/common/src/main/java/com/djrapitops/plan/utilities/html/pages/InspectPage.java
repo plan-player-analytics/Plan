@@ -26,8 +26,10 @@ import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DisplaySettings;
+import com.djrapitops.plan.system.settings.paths.ProxySettings;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
@@ -43,6 +45,7 @@ import com.djrapitops.plan.utilities.html.structure.Accordions;
 import com.djrapitops.plan.utilities.html.structure.ServerAccordion;
 import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
 import com.djrapitops.plan.utilities.html.tables.HtmlTables;
+import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.benchmarking.Timings;
 
@@ -150,9 +153,8 @@ public class InspectPage implements Page {
         String playerName = player.getValue(PlayerKeys.NAME).orElse("Unknown");
         int timesKicked = player.getValue(PlayerKeys.KICK_COUNT).orElse(0);
 
-        replacer.addAllPlaceholdersFrom(player, yearLongFormatter,
-                PlayerKeys.REGISTERED, PlayerKeys.LAST_SEEN
-        );
+        replacer.addPlaceholderFrom(player, yearLongFormatter, PlayerKeys.REGISTERED);
+        replacer.addPlaceholderFrom(player, yearLongFormatter, PlayerKeys.LAST_SEEN);
 
         replacer.put("playerName", playerName);
         replacer.put("kickCount", timesKicked);
@@ -191,7 +193,7 @@ public class InspectPage implements Page {
         if (allSessions.isEmpty()) {
             replacer.put("accordionSessions", "<div class=\"body\">" + "<p>No Sessions</p>" + "</div>");
         } else {
-            if (config.isTrue(Settings.DISPLAY_SESSIONS_AS_TABLE)) {
+            if (config.isTrue(DisplaySettings.REPLACE_SESSION_ACCORDION_WITH_TABLE)) {
                 replacer.put("accordionSessions", tables.playerSessionTable(playerName, allSessions).parseHtml());
             } else {
                 SessionAccordion sessionAccordion = accordions.playerSessionAccordion(allSessions, () -> serverNames);
@@ -233,7 +235,7 @@ public class InspectPage implements Page {
         pvpAndPve(replacer, sessionsMutator, weekSessionsMutator, monthSessionsMutator);
 
         ActivityIndex activityIndex = player.getActivityIndex(
-                now, config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD), config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD)
+                now, config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD), config.get(TimeSettings.ACTIVE_LOGIN_THRESHOLD)
         );
 
         replacer.put("activityIndexNumber", activityIndex.getFormattedValue(decimalFormatter));
@@ -246,10 +248,16 @@ public class InspectPage implements Page {
 
         String serverName = serverNames.get(serverUUID);
         replacer.put("networkName",
-                serverName.equalsIgnoreCase("bungeecord")
-                        ? config.getString(Settings.BUNGEE_NETWORK_NAME)
+                "bungeecord".equalsIgnoreCase(serverName)
+                        ? config.get(ProxySettings.NETWORK_NAME)
                         : serverName
         );
+
+        if (Check.isBungeeAvailable() || Check.isVelocityAvailable()) {
+            replacer.put("backButton", "<li><a title=\"to Network page\" href=\"/network\"><i class=\"material-icons\">arrow_back</i><i class=\"material-icons\">cloud</i></a></li>");
+        } else {
+            replacer.put("backButton", "<li><a title=\"to Server page\" href=\"/server\"><i class=\"material-icons\">arrow_back</i><i class=\"material-icons\">storage</i></a></li>");
+        }
 
         return replacer.apply(files.readCustomizableResourceFlat("web/player.html"));
     }

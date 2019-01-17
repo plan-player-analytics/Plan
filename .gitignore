@@ -2,8 +2,12 @@ temporaryTestFolder/
 Plan.iml
 PlanPluginBridge.iml
 .sonar/
+builds/
 
 *.db
+
+**/.gradle
+out/
 
 # Created by https://www.gitignore.io/api/maven,eclipse,intellij,netbeans,osx,windows,notepadpp,windows,java
 

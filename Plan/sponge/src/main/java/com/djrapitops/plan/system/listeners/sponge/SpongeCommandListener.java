@@ -19,8 +19,8 @@ package com.djrapitops.plan.system.listeners.sponge;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DataGatheringSettings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.Sponge;
@@ -75,8 +75,8 @@ public class SpongeCommandListener {
     private void actOnCommandEvent(SendCommandEvent event) {
         String commandName = event.getCommand();
 
-        boolean logUnknownCommands = config.isTrue(Settings.LOG_UNKNOWN_COMMANDS);
-        boolean combineCommandAliases = config.isTrue(Settings.COMBINE_COMMAND_ALIASES);
+        boolean logUnknownCommands = config.isTrue(DataGatheringSettings.LOG_UNKNOWN_COMMANDS);
+        boolean combineCommandAliases = config.isTrue(DataGatheringSettings.COMBINE_COMMAND_ALIASES);
 
         if (!logUnknownCommands || combineCommandAliases) {
             Optional<? extends CommandMapping> existingCommand = Sponge.getCommandManager().get(commandName);

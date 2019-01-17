@@ -18,9 +18,10 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.ShutdownHook;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.tasks.server.BootAnalysisTask;
+import com.djrapitops.plan.system.tasks.server.ConfigStoreTask;
 import com.djrapitops.plan.system.tasks.server.PeriodicAnalysisTask;
 import com.djrapitops.plan.system.tasks.sponge.PingCountTimerSponge;
 import com.djrapitops.plan.system.tasks.sponge.SpongeTPSCountTimer;
@@ -37,6 +38,7 @@ public class SpongeTaskSystem extends ServerTaskSystem {
     private final PlanSponge plugin;
     private final ShutdownHook shutdownHook;
     private final PingCountTimerSponge pingCountTimer;
+    private final ConfigStoreTask configStoreTask;
 
     @Inject
     public SpongeTaskSystem(
@@ -49,7 +51,8 @@ public class SpongeTaskSystem extends ServerTaskSystem {
             PeriodicAnalysisTask periodicAnalysisTask,
             PingCountTimerSponge pingCountTimer,
             LogsFolderCleanTask logsFolderCleanTask,
-            PlayersPageRefreshTask playersPageRefreshTask
+            PlayersPageRefreshTask playersPageRefreshTask,
+            ConfigStoreTask configStoreTask
     ) {
         super(
                 runnableFactory,
@@ -62,6 +65,7 @@ public class SpongeTaskSystem extends ServerTaskSystem {
         this.plugin = plugin;
         this.shutdownHook = shutdownHook;
         this.pingCountTimer = pingCountTimer;
+        this.configStoreTask = configStoreTask;
     }
 
     @Override
@@ -69,9 +73,13 @@ public class SpongeTaskSystem extends ServerTaskSystem {
         super.enable();
 
         plugin.registerListener(pingCountTimer);
-        long startDelay = TimeAmount.toTicks(config.getNumber(Settings.PING_SERVER_ENABLE_DELAY), TimeUnit.SECONDS);
+        long startDelay = TimeAmount.toTicks(config.get(TimeSettings.PING_SERVER_ENABLE_DELAY), TimeUnit.MILLISECONDS);
         runnableFactory.create("PingCountTimer", pingCountTimer)
                 .runTaskTimer(startDelay, PingCountTimerSponge.PING_INTERVAL);
+
+        // +40 ticks / 2 seconds so that update check task runs first.
+        long storeDelay = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS) + 40;
+        registerTask("Config Store Task", configStoreTask).runTaskLaterAsynchronously(storeDelay);
 
         shutdownHook.register();
     }

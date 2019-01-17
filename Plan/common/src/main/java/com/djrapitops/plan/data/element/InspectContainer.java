@@ -35,7 +35,6 @@ import java.util.TreeMap;
  *
  * @author Rsl1122
  * @see TableContainer
- * @since 4.1.0
  */
 public class InspectContainer {
 
@@ -93,7 +92,7 @@ public class InspectContainer {
     }
 
     public boolean isEmpty() {
-        return values.isEmpty() && html.isEmpty() && tables.isEmpty();
+        return values.isEmpty() && hasOnlyValues();
     }
 
     public final boolean hasValues() {

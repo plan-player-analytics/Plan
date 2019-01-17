@@ -27,8 +27,9 @@ import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DisplaySettings;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.formatting.Formatters;
@@ -137,10 +138,10 @@ public class AnalysisContainer extends DataContainer {
         putRawData(AnalysisKeys.VERSION, version);
         putSupplier(AnalysisKeys.TIME_ZONE, config::getTimeZoneOffsetHours);
         putRawData(AnalysisKeys.FIRST_DAY, 1);
-        putRawData(AnalysisKeys.TPS_MEDIUM, config.getNumber(Settings.THEME_GRAPH_TPS_THRESHOLD_MED));
-        putRawData(AnalysisKeys.TPS_HIGH, config.getNumber(Settings.THEME_GRAPH_TPS_THRESHOLD_HIGH));
-        putRawData(AnalysisKeys.DISK_MEDIUM, config.getNumber(Settings.THEME_GRAPH_DISK_THRESHOLD_MED));
-        putRawData(AnalysisKeys.DISK_HIGH, config.getNumber(Settings.THEME_GRAPH_DISK_THRESHOLD_HIGH));
+        putRawData(AnalysisKeys.TPS_MEDIUM, config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED));
+        putRawData(AnalysisKeys.TPS_HIGH, config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_HIGH));
+        putRawData(AnalysisKeys.DISK_MEDIUM, config.get(DisplaySettings.GRAPH_DISK_THRESHOLD_MED));
+        putRawData(AnalysisKeys.DISK_HIGH, config.get(DisplaySettings.GRAPH_DISK_THRESHOLD_HIGH));
 
         addServerProperties();
         addThemeColors();
@@ -258,8 +259,8 @@ public class AnalysisContainer extends DataContainer {
         putCachingSupplier(retentionDay, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).compareAndFindThoseLikelyToBeRetained(
                 getUnsafe(newDay).all(), getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO),
                 getUnsafe(AnalysisKeys.PLAYERS_ONLINE_RESOLVER),
-                config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD),
-                config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD)
+                config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD),
+                config.get(TimeSettings.ACTIVE_LOGIN_THRESHOLD)
                 ).count()
         );
         putSupplier(AnalysisKeys.PLAYERS_RETAINED_DAY, () -> {
@@ -404,7 +405,7 @@ public class AnalysisContainer extends DataContainer {
                 getUnsafe(AnalysisKeys.NEW_PLAYERS_PER_DAY)
         ).toCalendarSeries());
 
-        putCachingSupplier(AnalysisKeys.ACTIVITY_DATA, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).toActivityDataMap(getUnsafe(AnalysisKeys.ANALYSIS_TIME), config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD), config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD)));
+        putCachingSupplier(AnalysisKeys.ACTIVITY_DATA, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).toActivityDataMap(getUnsafe(AnalysisKeys.ANALYSIS_TIME), config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD), config.get(TimeSettings.ACTIVE_LOGIN_THRESHOLD)));
         Key<StackGraph> activityStackGraph = new Key<>(StackGraph.class, "ACTIVITY_STACK_GRAPH");
         putCachingSupplier(activityStackGraph, () -> graphs.stack().activityStackGraph(getUnsafe(AnalysisKeys.ACTIVITY_DATA)));
         putSupplier(AnalysisKeys.ACTIVITY_STACK_CATEGORIES, () -> getUnsafe(activityStackGraph).toHighChartsLabels());
@@ -439,7 +440,7 @@ public class AnalysisContainer extends DataContainer {
 
         putCachingSupplier(AnalysisKeys.PLAYERS_ONLINE_RESOLVER, () -> new PlayersOnlineResolver(getUnsafe(AnalysisKeys.TPS_MUTATOR)));
 
-        int threshold = config.getNumber(Settings.THEME_GRAPH_TPS_THRESHOLD_MED);
+        int threshold = config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED);
 
         putSupplier(AnalysisKeys.TPS_SPIKE_MONTH, () -> getUnsafe(tpsMonth).lowTpsSpikeCount(threshold));
         putSupplier(AnalysisKeys.AVG_TPS_MONTH, () -> getUnsafe(tpsMonth).averageTPS());
@@ -483,9 +484,9 @@ public class AnalysisContainer extends DataContainer {
         putCachingSupplier(healthInformation, () -> new HealthInformation(
                 this,
                 locale,
-                config.getNumber(Settings.THEME_GRAPH_TPS_THRESHOLD_MED),
-                config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD),
-                config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD),
+                config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED),
+                config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD),
+                config.get(TimeSettings.ACTIVE_LOGIN_THRESHOLD),
                 formatters.timeAmount(), formatters.decimals(), formatters.percentage()
         ));
         putSupplier(AnalysisKeys.HEALTH_INDEX, () -> getUnsafe(healthInformation).getServerHealth());

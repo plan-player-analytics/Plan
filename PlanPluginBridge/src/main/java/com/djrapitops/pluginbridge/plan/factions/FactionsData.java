@@ -23,8 +23,8 @@ import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.PluginDataSettings;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Color;
@@ -129,7 +129,7 @@ class FactionsData extends PluginData {
         topFactions.remove(FactionColl.get().getWarzone());
         topFactions.remove(FactionColl.get().getSafezone());
         topFactions.remove(FactionColl.get().getNone());
-        List<String> hide = config.getStringList(Settings.HIDE_FACTIONS);
+        List<String> hide = config.get(PluginDataSettings.HIDE_FACTIONS);
         return topFactions.stream()
                 .filter(faction -> !hide.contains(faction.getName()))
                 .sorted(new FactionComparator())

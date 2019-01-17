@@ -86,8 +86,8 @@ public class PlayersMutator {
         );
     }
 
-    public PlayersMutator filterActive(long date, int minuteThreshold, int loginThreshold, double limit) {
-        return filterBy(player -> player.getActivityIndex(date, minuteThreshold, loginThreshold).getValue() >= limit);
+    public PlayersMutator filterActive(long date, long msThreshold, int loginThreshold, double limit) {
+        return filterBy(player -> player.getActivityIndex(date, msThreshold, loginThreshold).getValue() >= limit);
     }
 
     public PlayersMutator filterPlayedOnServer(UUID serverUUID) {
@@ -139,7 +139,7 @@ public class PlayersMutator {
         return pingPerCountry;
     }
 
-    public TreeMap<Long, Map<String, Set<UUID>>> toActivityDataMap(long date, int minuteThreshold, int loginThreshold) {
+    public TreeMap<Long, Map<String, Set<UUID>>> toActivityDataMap(long date, long msThreshold, int loginThreshold) {
         TreeMap<Long, Map<String, Set<UUID>>> activityData = new TreeMap<>();
         for (long time = date; time >= date - TimeAmount.MONTH.toMillis(2L); time -= TimeAmount.WEEK.toMillis(1L)) {
             Map<String, Set<UUID>> map = activityData.getOrDefault(time, new HashMap<>());
@@ -148,7 +148,7 @@ public class PlayersMutator {
                     if (player.getValue(PlayerKeys.REGISTERED).orElse(0L) > time) {
                         continue;
                     }
-                    ActivityIndex activityIndex = player.getActivityIndex(time, minuteThreshold, loginThreshold);
+                    ActivityIndex activityIndex = player.getActivityIndex(time, msThreshold, loginThreshold);
                     String activityGroup = activityIndex.getGroup();
 
                     Set<UUID> uuids = map.getOrDefault(activityGroup, new HashSet<>());
@@ -195,7 +195,7 @@ public class PlayersMutator {
             Iterable<PlayerContainer> compareTo,
             long dateLimit,
             PlayersOnlineResolver onlineResolver,
-            int activityMinuteThreshold,
+            long activityMsThreshold,
             int activityLoginThreshold
     ) {
         Collection<PlayerContainer> retainedAfterMonth = new ArrayList<>();
@@ -223,10 +223,10 @@ public class PlayersMutator {
         }
 
         List<RetentionData> retained = retainedAfterMonth.stream()
-                .map(player -> new RetentionData(player, onlineResolver, activityMinuteThreshold, activityLoginThreshold))
+                .map(player -> new RetentionData(player, onlineResolver, activityMsThreshold, activityLoginThreshold))
                 .collect(Collectors.toList());
         List<RetentionData> notRetained = notRetainedAfterMonth.stream()
-                .map(player -> new RetentionData(player, onlineResolver, activityMinuteThreshold, activityLoginThreshold))
+                .map(player -> new RetentionData(player, onlineResolver, activityMsThreshold, activityLoginThreshold))
                 .collect(Collectors.toList());
 
         RetentionData avgRetained = RetentionData.average(retained);
@@ -234,7 +234,7 @@ public class PlayersMutator {
 
         List<PlayerContainer> toBeRetained = new ArrayList<>();
         for (PlayerContainer player : compareTo) {
-            RetentionData retentionData = new RetentionData(player, onlineResolver, activityMinuteThreshold, activityLoginThreshold);
+            RetentionData retentionData = new RetentionData(player, onlineResolver, activityMsThreshold, activityLoginThreshold);
             if (retentionData.distance(avgRetained) < retentionData.distance(avgNotRetained)) {
                 toBeRetained.add(player);
             }

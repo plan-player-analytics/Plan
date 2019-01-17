@@ -17,8 +17,8 @@
 package com.djrapitops.plan.utilities.formatting.time;
 
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.FormatSettings;
 
 /**
  * Formatter for a timestamp that only includes a clock.
@@ -37,7 +37,7 @@ public class ClockFormatter extends DateFormatter {
     }
 
     private String format(Long date) {
-        String format = config.getString(Settings.FORMAT_DATE_CLOCK);
+        String format = config.get(FormatSettings.DATE_CLOCK);
 
         return format(date, format);
     }

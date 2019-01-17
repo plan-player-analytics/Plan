@@ -24,7 +24,6 @@ import java.util.Comparator;
  * Orders WebUsers in descending order by permission level.
  *
  * @author Rsl1122
- * @since 3.5.2
  */
 public class WebUserComparator implements Comparator<WebUser> {
 

@@ -63,7 +63,7 @@ public class Processing implements SubSystem {
     }
 
     public void submitNonCritical(Runnable runnable) {
-        if (nonCriticalExecutor.isShutdown()) {
+        if (runnable == null || nonCriticalExecutor.isShutdown()) {
             return;
         }
         CompletableFuture.supplyAsync(() -> {
@@ -73,6 +73,7 @@ public class Processing implements SubSystem {
     }
 
     public void submitCritical(Runnable runnable) {
+        if (runnable == null) return;
         CompletableFuture.supplyAsync(() -> {
             runnable.run();
             return true;
@@ -87,7 +88,7 @@ public class Processing implements SubSystem {
     }
 
     public <T> Future<T> submitNonCritical(Callable<T> task) {
-        if (nonCriticalExecutor.isShutdown()) {
+        if (task == null || nonCriticalExecutor.isShutdown()) {
             return null;
         }
         return CompletableFuture.supplyAsync(() -> {
@@ -114,6 +115,7 @@ public class Processing implements SubSystem {
     }
 
     public <T> Future<T> submitCritical(Callable<T> task) {
+        if (task == null) return null;
         return CompletableFuture.supplyAsync(() -> {
             try {
                 return task.call();
@@ -139,6 +141,7 @@ public class Processing implements SubSystem {
         List<Runnable> criticalTasks = criticalExecutor.shutdownNow();
         logger.info(locale.get().getString(PluginLang.DISABLED_PROCESSING, criticalTasks.size()));
         for (Runnable runnable : criticalTasks) {
+            if (runnable == null) continue;
             try {
                 runnable.run();
             } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {

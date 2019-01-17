@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
  * Bubble Chart that represents login "punches" of players.
  *
  * @author Rsl1122
- * @since 4.2.0
  */
 public class PunchCard implements HighChart {
 

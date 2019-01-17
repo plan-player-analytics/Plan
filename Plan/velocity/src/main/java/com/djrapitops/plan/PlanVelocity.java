@@ -46,7 +46,7 @@ import java.nio.file.Path;
 @Plugin(
         id = "plan",
         name = "Plan",
-        version = "4.5.2",
+        version = "4.6.0",
         description = "Player Analytics Plugin by Rsl1122",
         authors = {"Rsl1122"}
 )
@@ -96,6 +96,9 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
         PlanProxyCommand command = component.planCommand();
         command.registerCommands();
         registerCommand("planvelocity", command);
+        if (system != null) {
+            system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
+        }
     }
 
     @Override

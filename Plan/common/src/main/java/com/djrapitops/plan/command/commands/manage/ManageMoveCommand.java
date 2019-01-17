@@ -43,7 +43,6 @@ import java.util.Arrays;
  * Destination database will be cleared.
  *
  * @author Rsl1122
- * @since 2.3.0
  */
 @Singleton
 public class ManageMoveCommand extends CommandNode {

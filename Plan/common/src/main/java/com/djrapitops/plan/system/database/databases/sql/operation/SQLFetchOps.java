@@ -30,6 +30,7 @@ import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.settings.config.Config;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -493,7 +494,12 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
     }
 
     @Override
-    public Map<Integer, Integer> getPlayersRegisteredForServers(Collection<Server> servers) {
+    public Map<UUID, Integer> getPlayersRegisteredForServers(Collection<Server> servers) {
         return userInfoTable.getPlayersRegisteredForServers(servers);
+    }
+
+    @Override
+    public Optional<Config> getNewConfig(long updatedAfter, UUID serverUUID) {
+        return settingsTable.fetchNewerConfig(updatedAfter, serverUUID);
     }
 }

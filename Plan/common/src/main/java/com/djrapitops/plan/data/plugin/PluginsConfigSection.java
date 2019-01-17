@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.data.plugin;
 
+import com.djrapitops.plan.system.settings.config.ConfigNode;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plugin.config.ConfigNode;
 
 import java.io.IOException;
 
@@ -26,7 +26,6 @@ import java.io.IOException;
  * objects to the config.
  *
  * @author Rsl1122
- * @since 3.5.0
  */
 public class PluginsConfigSection {
 
@@ -41,12 +40,12 @@ public class PluginsConfigSection {
     public boolean hasSection(PluginData dataSource) {
         ConfigNode section = getPluginsSection();
         String pluginName = dataSource.getSourcePlugin();
-        return section.getChildren().containsKey(pluginName)
-                && section.getConfigNode(pluginName).getChildren().containsKey("Enabled");
+        return section.getNode(pluginName + ".Enabled").isPresent();
     }
 
     private ConfigNode getPluginsSection() {
-        return config.getConfigNode("Plugins");
+        return config.getNode("Plugins")
+                .orElse(config.addNode("Plugins"));
     }
 
     public void createSection(PluginData dataSource) throws IOException {

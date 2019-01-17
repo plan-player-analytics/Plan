@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.utilities.formatting.time;
 
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.FormatSettings;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -66,9 +66,9 @@ public class TimeAmountFormatter implements Formatter<Long> {
         appendMonths(builder, months);
         appendDays(builder, days);
 
-        String hourFormat = config.getString(Settings.FORMAT_HOURS);
-        String minuteFormat = config.getString(Settings.FORMAT_MINUTES);
-        String secondFormat = config.getString(Settings.FORMAT_SECONDS);
+        String hourFormat = config.get(FormatSettings.HOURS);
+        String minuteFormat = config.get(FormatSettings.MINUTES);
+        String secondFormat = config.get(FormatSettings.SECONDS);
 
         appendHours(builder, hours, hourFormat);
         appendMinutes(builder, minutes, hours, hourFormat, minuteFormat);
@@ -76,7 +76,7 @@ public class TimeAmountFormatter implements Formatter<Long> {
 
         String formattedTime = StringUtils.remove(builder.toString(), ZERO_PH);
         if (formattedTime.isEmpty()) {
-            return config.getString(Settings.FORMAT_ZERO_SECONDS);
+            return config.get(FormatSettings.ZERO_SECONDS);
         }
         return formattedTime;
     }
@@ -124,21 +124,21 @@ public class TimeAmountFormatter implements Formatter<Long> {
     }
 
     private void appendDays(StringBuilder builder, long days) {
-        String singular = config.getString(Settings.FORMAT_DAY);
-        String plural = config.getString(Settings.FORMAT_DAYS);
+        String singular = config.get(FormatSettings.DAY);
+        String plural = config.get(FormatSettings.DAYS);
         appendValue(builder, days, singular, plural, DAYS_PH);
     }
 
     private void appendMonths(StringBuilder builder, long months) {
-        String singular = config.getString(Settings.FORMAT_MONTH);
-        String plural = config.getString(Settings.FORMAT_MONTHS);
+        String singular = config.get(FormatSettings.MONTH);
+        String plural = config.get(FormatSettings.MONTHS);
 
         appendValue(builder, months, singular, plural, MONTHS_PH);
     }
 
     private void appendYears(StringBuilder builder, long years) {
-        String singular = config.getString(Settings.FORMAT_YEAR);
-        String plural = config.getString(Settings.FORMAT_YEARS);
+        String singular = config.get(FormatSettings.YEAR);
+        String plural = config.get(FormatSettings.YEARS);
 
         appendValue(builder, years, singular, plural, YEARS_PH);
     }

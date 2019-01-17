@@ -55,7 +55,7 @@ public abstract class Table {
 
     protected void createTable(String sql) throws DBInitException {
         try {
-            execute(sql);
+            db.execute(sql);
         } catch (DBOpException e) {
             throw new DBInitException("Failed to create table: " + tableName, e);
         }
@@ -82,7 +82,9 @@ public abstract class Table {
      *
      * @param statementString Statement to execute in the database.
      * @return true if rows were updated.
+     * @deprecated Use {@code db.execute(statements)}
      */
+    @Deprecated
     protected boolean execute(String statementString) {
         return db.execute(statementString);
     }
@@ -91,7 +93,9 @@ public abstract class Table {
      * Used to execute statements while possible exceptions are suppressed.
      *
      * @param statements SQL statements to setUp
+     * @deprecated Use {@code db.executeUnsafe(statements)}
      */
+    @Deprecated
     protected void executeUnsafe(String... statements) {
         db.executeUnsafe(statements);
     }
@@ -113,28 +117,7 @@ public abstract class Table {
      * Removes all data from the table.
      */
     public void removeAllData() {
-        execute("DELETE FROM " + tableName);
-    }
-
-    protected void addColumns(String... columnInfo) {
-        for (int i = 0; i < columnInfo.length; i++) {
-            columnInfo[i] = "ALTER TABLE " + tableName + " ADD " + (supportsMySQLQueries ? "" : "COLUMN ") + columnInfo[i];
-        }
-        executeUnsafe(columnInfo);
-    }
-
-    protected void removeColumns(String... columnNames) {
-        if (supportsMySQLQueries) {
-            StringBuilder sqlBuild = new StringBuilder();
-            sqlBuild.append("ALTER TABLE ").append(tableName);
-            for (int i = 0; i < columnNames.length; i++) {
-                sqlBuild.append(" DROP COLUMN ").append(columnNames[i]);
-                if (i < columnNames.length - 1) {
-                    sqlBuild.append(",");
-                }
-            }
-            executeUnsafe(sqlBuild.toString());
-        }
+        db.execute("DELETE FROM " + tableName);
     }
 
     @Override

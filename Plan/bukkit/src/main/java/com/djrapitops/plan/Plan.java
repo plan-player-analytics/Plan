@@ -35,7 +35,6 @@ import java.util.logging.Logger;
  * Main class for Bukkit that manages the plugin.
  *
  * @author Rsl1122
- * @since 1.0.0
  */
 public class Plan extends BukkitPlugin implements PlanPlugin {
 
@@ -74,6 +73,9 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
         command.registerCommands();
         registerCommand("plan", command);
         new RegisterCommandFilter().registerFilter();
+        if (system != null) {
+            system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
+        }
     }
 
     @Override

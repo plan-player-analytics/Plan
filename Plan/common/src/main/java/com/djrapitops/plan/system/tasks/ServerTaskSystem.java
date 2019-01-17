@@ -16,12 +16,11 @@
  */
 package com.djrapitops.plan.system.tasks;
 
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.tasks.server.BootAnalysisTask;
 import com.djrapitops.plan.system.tasks.server.PeriodicAnalysisTask;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 
 import java.util.concurrent.TimeUnit;
@@ -62,9 +61,9 @@ public abstract class ServerTaskSystem extends TaskSystem {
 
     private void registerTasks() {
         // Analysis refresh settings
-        int analysisRefreshMinutes = config.getNumber(Settings.ANALYSIS_AUTO_REFRESH);
-        boolean analysisRefreshTaskIsEnabled = analysisRefreshMinutes > 0;
-        long analysisPeriod = TimeAmount.toTicks(analysisRefreshMinutes, TimeUnit.MINUTES);
+        long analysisRefreshMs = config.get(TimeSettings.ANALYSIS_REFRESH_PERIOD);
+        boolean analysisRefreshTaskIsEnabled = analysisRefreshMs > 0;
+        long analysisPeriod = TimeAmount.toTicks(analysisRefreshMs, TimeUnit.MILLISECONDS);
 
         registerTask(tpsCountTimer).runTaskTimer(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
         registerTask(bootAnalysisTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
@@ -74,12 +73,6 @@ public abstract class ServerTaskSystem extends TaskSystem {
         }
 
         registerTask(logsFolderCleanTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
-        registerTask("Settings Load", new AbsRunnable() {
-            @Override
-            public void run() {
-                config.getNetworkSettings().loadSettingsFromDB();
-            }
-        }).runTaskAsynchronously();
         registerTask(playersPageRefreshTask)
                 .runTaskTimerAsynchronously(TimeAmount.toTicks(5L, TimeUnit.MINUTES), TimeAmount.toTicks(5L, TimeUnit.MINUTES));
     }

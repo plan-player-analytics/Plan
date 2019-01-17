@@ -24,7 +24,6 @@ import java.util.Objects;
  * Class that tracks the time spent in each World based on GMTimes.
  *
  * @author Rsl1122
- * @since 4.0.0
  */
 public class WorldTimes {
 
@@ -78,7 +77,7 @@ public class WorldTimes {
      */
     public void updateState(String worldName, String gameMode, long changeTime) {
         GMTimes currentGMTimes = times.get(currentWorld);
-        if (worldName.equals(currentWorld)) {
+        if (currentWorld.equals(worldName)) {
             currentGMTimes.changeState(gameMode, changeTime);
         } else {
             GMTimes newGMTimes = times.get(worldName);

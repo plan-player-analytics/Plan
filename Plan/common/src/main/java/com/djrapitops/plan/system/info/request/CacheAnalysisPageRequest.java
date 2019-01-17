@@ -18,16 +18,17 @@ package com.djrapitops.plan.system.info.request;
 
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.system.export.HtmlExport;
+import com.djrapitops.plan.system.export.JSONExport;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.ExportSettings;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
 import com.djrapitops.plan.utilities.Base64Util;
-import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Map;
@@ -43,6 +44,7 @@ public class CacheAnalysisPageRequest extends InfoRequestWithVariables implement
     private final PlanConfig config;
     private final Processing processing;
     private final HtmlExport htmlExport;
+    private final JSONExport jsonExport;
 
     private final UUID networkUUID;
 
@@ -53,10 +55,12 @@ public class CacheAnalysisPageRequest extends InfoRequestWithVariables implement
             PlanConfig config,
             Processing processing,
             HtmlExport htmlExport,
+            JSONExport jsonExport,
             UUID networkUUID
     ) {
         this.config = config;
         this.processing = processing;
+        this.jsonExport = jsonExport;
         this.networkUUID = networkUUID;
         this.htmlExport = htmlExport;
     }
@@ -66,10 +70,12 @@ public class CacheAnalysisPageRequest extends InfoRequestWithVariables implement
             PlanConfig config,
             Processing processing,
             HtmlExport htmlExport,
+            JSONExport jsonExport,
             UUID networkUUID
     ) {
         this.config = config;
         this.processing = processing;
+        this.jsonExport = jsonExport;
         this.networkUUID = networkUUID;
         this.htmlExport = htmlExport;
 
@@ -98,8 +104,11 @@ public class CacheAnalysisPageRequest extends InfoRequestWithVariables implement
             ResponseCache.clearResponse(PageId.SERVER.of(networkUUID));
         }
 
-        if (config.isTrue(Settings.ANALYSIS_EXPORT)) {
+        if (config.get(ExportSettings.SERVER_PAGE)) {
             processing.submitNonCritical(() -> htmlExport.exportServer(serverUUID));
+        }
+        if (config.get(ExportSettings.SERVER_JSON)) {
+            processing.submitNonCritical(() -> jsonExport.exportServerJSON(serverUUID));
         }
     }
 

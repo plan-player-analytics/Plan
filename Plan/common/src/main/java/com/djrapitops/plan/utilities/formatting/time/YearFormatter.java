@@ -17,8 +17,8 @@
 package com.djrapitops.plan.utilities.formatting.time;
 
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.FormatSettings;
 
 /**
  * Formatter for a timestamp which includes year, but not seconds.
@@ -37,9 +37,9 @@ public class YearFormatter extends DateFormatter {
     }
 
     private String format(Long date) {
-        String format = config.getString(Settings.FORMAT_DATE_NO_SECONDS);
+        String format = config.get(FormatSettings.DATE_NO_SECONDS);
 
-        if (config.isTrue(Settings.FORMAT_DATE_RECENT_DAYS)) {
+        if (config.isTrue(FormatSettings.DATE_RECENT_DAYS)) {
             format = replaceRecentDays(date, format);
         }
         return format(date, format);

@@ -18,7 +18,6 @@ package com.djrapitops.plan.system.webserver.response.pages;
 
 /**
  * @author Rsl1122
- * @since 3.5.2
  */
 public class AnalysisPageResponse extends PageResponse {
 

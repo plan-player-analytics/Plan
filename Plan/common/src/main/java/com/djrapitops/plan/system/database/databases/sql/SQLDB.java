@@ -28,8 +28,9 @@ import com.djrapitops.plan.system.database.databases.sql.processing.QueryStateme
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.PluginSettings;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.L;
@@ -55,7 +56,6 @@ import java.util.stream.Collectors;
  * Class containing main logic for different data related save and load functionality.
  *
  * @author Rsl1122
- * @since 2.0.0
  */
 public abstract class SQLDB extends Database {
 
@@ -81,8 +81,8 @@ public abstract class SQLDB extends Database {
     private final WorldTable worldTable;
     private final WorldTimesTable worldTimesTable;
     private final ServerTable serverTable;
-    private final TransferTable transferTable;
     private final PingTable pingTable;
+    private final SettingsTable settingsTable;
 
     private final SQLBackupOps backupOps;
     private final SQLCheckOps checkOps;
@@ -91,7 +91,6 @@ public abstract class SQLDB extends Database {
     private final SQLSearchOps searchOps;
     private final SQLCountOps countOps;
     private final SQLSaveOps saveOps;
-    private final SQLTransferOps transferOps;
 
     private PluginTask dbCleanTask;
 
@@ -127,8 +126,8 @@ public abstract class SQLDB extends Database {
         killsTable = new KillsTable(this);
         worldTable = new WorldTable(this);
         worldTimesTable = new WorldTimesTable(this);
-        transferTable = new TransferTable(this);
         pingTable = new PingTable(this);
+        settingsTable = new SettingsTable(this);
 
         backupOps = new SQLBackupOps(this);
         checkOps = new SQLCheckOps(this);
@@ -137,7 +136,6 @@ public abstract class SQLDB extends Database {
         countOps = new SQLCountOps(this);
         searchOps = new SQLSearchOps(this);
         saveOps = new SQLSaveOps(this);
-        transferOps = new SQLTransferOps(this);
     }
 
     /**
@@ -152,9 +150,13 @@ public abstract class SQLDB extends Database {
      */
     @Override
     public void init() throws DBInitException {
-        open = true;
+        setOpen(true);
         setupDataSource();
         setupDatabase();
+    }
+
+    void setOpen(boolean value) {
+        open = value;
     }
 
     @Override
@@ -171,7 +173,36 @@ public abstract class SQLDB extends Database {
                     cancel();
                 }
             }
-        }).runTaskTimerAsynchronously(TimeAmount.toTicks(secondsDelay, TimeUnit.SECONDS), TimeAmount.toTicks(5L, TimeUnit.MINUTES));
+        }).runTaskTimerAsynchronously(
+                TimeAmount.toTicks(secondsDelay, TimeUnit.SECONDS),
+                TimeAmount.toTicks(config.get(TimeSettings.CLEAN_DATABASE_PERIOD), TimeUnit.MILLISECONDS)
+        );
+    }
+
+    Patch[] patches() {
+        return new Patch[]{
+                new Version10Patch(this),
+                new GeoInfoLastUsedPatch(this),
+                new SessionAFKTimePatch(this),
+                new KillsServerIDPatch(this),
+                new WorldTimesSeverIDPatch(this),
+                new WorldsServerIDPatch(this),
+                new NicknameLastSeenPatch(this),
+                new VersionTableRemovalPatch(this),
+                new DiskUsagePatch(this),
+                new WorldsOptimizationPatch(this),
+                new WorldTimesOptimizationPatch(this),
+                new KillsOptimizationPatch(this),
+                new SessionsOptimizationPatch(this),
+                new PingOptimizationPatch(this),
+                new NicknamesOptimizationPatch(this),
+                new UserInfoOptimizationPatch(this),
+                new GeoInfoOptimizationPatch(this),
+                new TransferTableRemovalPatch(this),
+                new IPHashPatch(this),
+                new IPAnonPatch(this),
+                new BadAFKThresholdValuePatch(this)
+        };
     }
 
     /**
@@ -181,33 +212,32 @@ public abstract class SQLDB extends Database {
      *
      * @throws DBInitException if something goes wrong.
      */
-    public void setupDatabase() throws DBInitException {
+    private void setupDatabase() throws DBInitException {
         try {
             createTables();
-
-            Patch[] patches = new Patch[]{
-                    new Version10Patch(this),
-                    new GeoInfoLastUsedPatch(this),
-                    new TransferPartitionPatch(this),
-                    new SessionAFKTimePatch(this),
-                    new KillsServerIDPatch(this),
-                    new WorldTimesSeverIDPatch(this),
-                    new WorldsServerIDPatch(this),
-                    new IPHashPatch(this),
-                    new IPAnonPatch(this),
-                    new NicknameLastSeenPatch(this),
-                    new VersionTableRemovalPatch(this),
-                    new DiskUsagePatch(this)
-            };
-
-            try {
-                runnableFactory.create("Database Patch", new PatchTask(patches, locale, logger, errorHandler))
-                        .runTaskLaterAsynchronously(TimeAmount.toTicks(5L, TimeUnit.SECONDS));
-            } catch (Exception ignore) {
-                // Task failed to register because plugin is being disabled
-            }
-        } catch (DBOpException e) {
+            registerIndexCreationTask();
+            registerPatchTask();
+        } catch (DBOpException | IllegalArgumentException e) {
             throw new DBInitException("Failed to set-up Database", e);
+        }
+    }
+
+    private void registerPatchTask() {
+        Patch[] patches = patches();
+        try {
+            runnableFactory.create("Database Patch", new PatchTask(patches, locale, logger, errorHandler))
+                    .runTaskLaterAsynchronously(TimeAmount.toTicks(5L, TimeUnit.SECONDS));
+        } catch (Exception ignore) {
+            // Task failed to register because plugin is being disabled
+        }
+    }
+
+    private void registerIndexCreationTask() {
+        try {
+            runnableFactory.create("Database Index Creation", new CreateIndexTask(this))
+                    .runTaskLaterAsynchronously(TimeAmount.toTicks(1, TimeUnit.MINUTES));
+        } catch (Exception ignore) {
+            // Task failed to register because plugin is being disabled
         }
     }
 
@@ -216,7 +246,7 @@ public abstract class SQLDB extends Database {
      * <p>
      * Updates table columns to latest schema.
      */
-    private void createTables() throws DBInitException {
+    void createTables() throws DBInitException {
         for (Table table : getAllTables()) {
             table.createTable();
         }
@@ -232,7 +262,7 @@ public abstract class SQLDB extends Database {
                 serverTable, usersTable, userInfoTable, geoInfoTable,
                 nicknamesTable, sessionsTable, killsTable, pingTable,
                 commandUseTable, tpsTable, worldTable,
-                worldTimesTable, securityTable, transferTable
+                worldTimesTable, securityTable, settingsTable
         };
     }
 
@@ -243,7 +273,7 @@ public abstract class SQLDB extends Database {
      */
     public Table[] getAllTablesInRemoveOrder() {
         return new Table[]{
-                transferTable, geoInfoTable, nicknamesTable, killsTable,
+                settingsTable, geoInfoTable, nicknamesTable, killsTable,
                 worldTimesTable, sessionsTable, worldTable, pingTable,
                 userInfoTable, usersTable, commandUseTable,
                 tpsTable, securityTable, serverTable
@@ -254,7 +284,7 @@ public abstract class SQLDB extends Database {
 
     @Override
     public void close() {
-        open = false;
+        setOpen(false);
         if (dbCleanTask != null) {
             dbCleanTask.cancel();
         }
@@ -262,11 +292,10 @@ public abstract class SQLDB extends Database {
 
     private void clean() {
         tpsTable.clean();
-        transferTable.clean();
         pingTable.clean();
 
         long now = System.currentTimeMillis();
-        long keepActiveAfter = now - TimeUnit.DAYS.toMillis(config.getNumber(Settings.KEEP_INACTIVE_PLAYERS_DAYS));
+        long keepActiveAfter = now - config.get(TimeSettings.KEEP_INACTIVE_PLAYERS);
 
         List<UUID> inactivePlayers = sessionsTable.getLastSeenForAllPlayers().entrySet().stream()
                 .filter(entry -> entry.getValue() < keepActiveAfter)
@@ -296,7 +325,7 @@ public abstract class SQLDB extends Database {
         try {
             connection = getConnection();
             // Inject Timings to the statement for benchmarking
-            if (config.isTrue(Settings.DEV_MODE)) {
+            if (config.isTrue(PluginSettings.DEV_MODE)) {
                 statement.setTimings(timings);
             }
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
@@ -324,7 +353,7 @@ public abstract class SQLDB extends Database {
             try {
                 execute(statement);
             } catch (DBOpException e) {
-                if (config.isTrue(Settings.DEV_MODE)) {
+                if (config.isTrue(PluginSettings.DEV_MODE)) {
                     errorHandler.log(L.ERROR, this.getClass(), e);
                 }
             }
@@ -340,7 +369,7 @@ public abstract class SQLDB extends Database {
         try {
             connection = getConnection();
             // Inject Timings to the statement for benchmarking
-            if (config.isTrue(Settings.DEV_MODE)) {
+            if (config.isTrue(PluginSettings.DEV_MODE)) {
                 statement.setTimings(timings);
             }
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
@@ -362,7 +391,7 @@ public abstract class SQLDB extends Database {
         try {
             connection = getConnection();
             // Inject Timings to the statement for benchmarking
-            if (config.isTrue(Settings.DEV_MODE)) {
+            if (config.isTrue(PluginSettings.DEV_MODE)) {
                 statement.setTimings(timings);
             }
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
@@ -423,12 +452,12 @@ public abstract class SQLDB extends Database {
         return userInfoTable;
     }
 
-    public TransferTable getTransferTable() {
-        return transferTable;
-    }
-
     public PingTable getPingTable() {
         return pingTable;
+    }
+
+    public SettingsTable getSettingsTable() {
+        return settingsTable;
     }
 
     @Override
@@ -464,11 +493,6 @@ public abstract class SQLDB extends Database {
     @Override
     public SaveOperations save() {
         return saveOps;
-    }
-
-    @Override
-    public TransferOperations transfer() {
-        return transferOps;
     }
 
     @Override

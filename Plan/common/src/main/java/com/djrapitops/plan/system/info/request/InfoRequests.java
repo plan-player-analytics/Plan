@@ -45,7 +45,6 @@ public class InfoRequests {
         putRequest(handlerFactory.cacheAnalysisPageRequest());
         putRequest(handlerFactory.cacheInspectPageRequest());
         putRequest(handlerFactory.cacheInspectPluginsTabRequest());
-        putRequest(handlerFactory.cacheNetworkPageContentRequest());
 
         putRequest(handlerFactory.generateAnalysisPageRequest());
         putRequest(handlerFactory.generateInspectPageRequest());

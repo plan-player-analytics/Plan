@@ -29,7 +29,7 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
 import com.djrapitops.plan.system.locale.LocaleSystem;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.settings.config.ConfigSystem;
+import com.djrapitops.plan.system.settings.ConfigSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
@@ -48,6 +48,8 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class PlanSystem implements SubSystem {
+
+    private boolean enabled = false;
 
     private final PlanFiles files;
     private final ConfigSystem configSystem;
@@ -130,6 +132,7 @@ public class PlanSystem implements SubSystem {
                 taskSystem,
                 hookHandler
         );
+        enabled = true;
     }
 
     private void enableSystems(SubSystem... systems) throws EnableException {
@@ -140,6 +143,7 @@ public class PlanSystem implements SubSystem {
 
     @Override
     public void disable() {
+        enabled = false;
         disableSystems(
                 taskSystem,
                 hookHandler,
@@ -239,5 +243,9 @@ public class PlanSystem implements SubSystem {
 
     public HtmlUtilities getHtmlUtilities() {
         return htmlUtilities;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 }

@@ -18,8 +18,8 @@ package com.djrapitops.plan.utilities.html.structure;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DisplaySettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
@@ -73,8 +73,8 @@ public class Accordions {
             List<Session> sessions,
             Supplier<Map<UUID, String>> serverNamesSupplier
     ) {
-        boolean appendWorldPercentage = config.isTrue(Settings.APPEND_WORLD_PERC);
-        int maxSessions = config.getNumber(Settings.MAX_SESSIONS);
+        boolean appendWorldPercentage = config.isTrue(DisplaySettings.SESSION_MOST_PLAYED_WORLD_IN_TITLE);
+        int maxSessions = config.get(DisplaySettings.SESSIONS_PER_PAGE);
         return new SessionAccordion(
                 true, sessions,
                 serverNamesSupplier, HashMap::new,
@@ -97,8 +97,8 @@ public class Accordions {
             Supplier<Map<UUID, String>> serverNamesSupplier,
             Supplier<Map<UUID, String>> playerNamesSupplier
     ) {
-        boolean appendWorldPercentage = config.isTrue(Settings.APPEND_WORLD_PERC);
-        int maxSessions = config.getNumber(Settings.MAX_SESSIONS);
+        boolean appendWorldPercentage = config.isTrue(DisplaySettings.SESSION_MOST_PLAYED_WORLD_IN_TITLE);
+        int maxSessions = config.get(DisplaySettings.SESSIONS_PER_PAGE);
         return new SessionAccordion(
                 false, sessions,
                 serverNamesSupplier, playerNamesSupplier,

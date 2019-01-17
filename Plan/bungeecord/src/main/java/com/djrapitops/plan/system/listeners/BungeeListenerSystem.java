@@ -17,6 +17,8 @@
 package com.djrapitops.plan.system.listeners;
 
 import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.events.PlanBungeeEnableEvent;
 import com.djrapitops.plan.system.listeners.bungee.PlayerOnlineListener;
 
 import javax.inject.Inject;
@@ -40,5 +42,11 @@ public class BungeeListenerSystem extends ListenerSystem {
     @Override
     protected void unregisterListeners() {
         plugin.getProxy().getPluginManager().unregisterListeners(plugin);
+    }
+
+    @Override
+    public void callEnableEvent(PlanPlugin plugin) {
+        PlanBungeeEnableEvent event = new PlanBungeeEnableEvent(plugin.isSystemEnabled());
+        ((PlanBungee) plugin).getProxy().getPluginManager().callEvent(event);
     }
 }

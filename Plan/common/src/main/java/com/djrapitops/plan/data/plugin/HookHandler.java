@@ -26,14 +26,12 @@ import com.djrapitops.pluginbridge.plan.Bridge;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Class responsible for hooking to other plugins and managing the %plugins%
  * placeholder on Analysis and Inspect pages.
  *
  * @author Rsl1122
- * @since 2.6.0
  */
 @Singleton
 public class HookHandler implements SubSystem {
@@ -94,6 +92,10 @@ public class HookHandler implements SubSystem {
                 configHandler.createSection(dataSource);
             }
             if (configHandler.isEnabled(dataSource)) {
+                additionalDataSources.stream()
+                        .filter(pluginData -> pluginData.getSourcePlugin().equals(dataSource.getSourcePlugin()))
+                        .findAny()
+                        .ifPresent(additionalDataSources::remove);
                 logger.debug("Registered a new datasource: " + dataSource.getSourcePlugin());
                 additionalDataSources.add(dataSource);
             }
@@ -110,13 +112,6 @@ public class HookHandler implements SubSystem {
      */
     public List<PluginData> getAdditionalDataSources() {
         return additionalDataSources;
-    }
-
-    public List<BanData> getBanDataSources() {
-        return additionalDataSources.stream()
-                .filter(p -> p instanceof BanData)
-                .map(p -> (BanData) p)
-                .collect(Collectors.toList());
     }
 
     public Map<PluginData, InspectContainer> getInspectContainersFor(UUID uuid) {

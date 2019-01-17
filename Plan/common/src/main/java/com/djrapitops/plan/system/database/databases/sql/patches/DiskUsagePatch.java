@@ -31,7 +31,7 @@ public class DiskUsagePatch extends Patch {
     }
 
     @Override
-    public void apply() {
+    protected void applyPatch() {
         addColumn(TPSTable.TABLE_NAME,
                 TPSTable.Col.FREE_DISK + " bigint NOT NULL DEFAULT -1"
         );

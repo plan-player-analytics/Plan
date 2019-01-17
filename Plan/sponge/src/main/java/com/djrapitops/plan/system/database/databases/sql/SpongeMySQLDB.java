@@ -20,8 +20,8 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -63,18 +63,18 @@ public class SpongeMySQLDB extends MySQLDB {
             return;
         }
 
-        String host = config.getString(Settings.DB_HOST);
-        String port = config.getString(Settings.DB_PORT);
-        String database = config.getString(Settings.DB_DATABASE);
-        String launchOptions = config.getString(Settings.DB_LAUNCH_OPTIONS);
+        String host = config.get(DatabaseSettings.MYSQL_HOST);
+        String port = config.get(DatabaseSettings.MYSQL_PORT);
+        String database = config.get(DatabaseSettings.MYSQL_DATABASE);
+        String launchOptions = config.get(DatabaseSettings.MYSQL_LAUNCH_OPTIONS);
         if (launchOptions.isEmpty() || !launchOptions.startsWith("?") || launchOptions.endsWith("&")) {
             logger.error("Launch Options were faulty, using default (?rewriteBatchedStatements=true&useSSL=false)");
             launchOptions = "?rewriteBatchedStatements=true&useSSL=false";
         }
 
         String url = host + ":" + port + "/" + database + launchOptions;
-        String username = config.getString(Settings.DB_USER);
-        String password = config.getString(Settings.DB_PASS);
+        String username = config.get(DatabaseSettings.MYSQL_USER);
+        String password = config.get(DatabaseSettings.MYSQL_PASS);
         try {
             this.dataSource = sqlServiceProvider.get().getDataSource(
                     "jdbc:mysql://" + username + ":" + password + "@" + url
@@ -90,15 +90,19 @@ public class SpongeMySQLDB extends MySQLDB {
             return super.getConnection();
         } catch (SQLException e) {
             if (e.getMessage().contains("has been closed")) {
-                try {
-                    setupDataSource();
-                } catch (DBInitException setupException) {
-                    throw new IllegalStateException("Failed to set up a new datasource after connection failure.", setupException);
-                }
+                restartDataSource();
                 return super.getConnection();
             } else {
                 throw e;
             }
+        }
+    }
+
+    private void restartDataSource() {
+        try {
+            setupDataSource();
+        } catch (DBInitException setupException) {
+            throw new IllegalStateException("Failed to set up a new datasource after connection failure.", setupException);
         }
     }
 }

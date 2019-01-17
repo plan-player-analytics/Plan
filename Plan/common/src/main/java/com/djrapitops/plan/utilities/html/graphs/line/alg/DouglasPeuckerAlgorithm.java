@@ -29,7 +29,6 @@ import java.util.List;
  * https://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm
  *
  * @author Rsl1122
- * @since 3.5.2
  */
 public class DouglasPeuckerAlgorithm {
 

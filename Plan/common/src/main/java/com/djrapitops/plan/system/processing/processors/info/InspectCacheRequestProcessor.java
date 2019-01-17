@@ -16,7 +16,10 @@
  */
 package com.djrapitops.plan.system.processing.processors.info;
 
-import com.djrapitops.plan.api.exceptions.connection.*;
+import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
+import com.djrapitops.plan.api.exceptions.connection.NoServersException;
+import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
+import com.djrapitops.plan.api.exceptions.connection.UnauthorizedServerException;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
@@ -63,7 +66,7 @@ public class InspectCacheRequestProcessor implements Runnable {
             try {
                 infoSystem.generateAndCachePlayerPage(uuid);
                 msgSender.accept(sender, playerName);
-            } catch (ConnectionFailException | UnsupportedTransferDatabaseException | UnauthorizedServerException
+            } catch (ConnectionFailException | UnauthorizedServerException
                     | NotFoundException | NoServersException e) {
                 sender.sendMessage("§c" + e.getMessage());
             }

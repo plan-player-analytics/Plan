@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.djrapitops</groupId>
     <artifactId>PlanPluginBridge</artifactId>
-    <version>4.5.0-SNAPSHOT</version>
+    <version>4.6.0-1</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -173,7 +173,7 @@
         <dependency>
             <groupId>io.github.nucleuspowered</groupId>
             <artifactId>nucleus-api</artifactId>
-            <version>1.6.3-S7.1</version>
+            <version>1.8.2-S7.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency> <!-- Maven Central -->
@@ -185,7 +185,7 @@
         <dependency>
             <groupId>com.discordsrv</groupId>
             <artifactId>discordsrv</artifactId>
-            <version>1.16.4</version>
+            <version>1.16.6</version>
             <scope>provided</scope>
         </dependency>
 

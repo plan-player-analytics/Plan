@@ -32,7 +32,7 @@ import javax.inject.Singleton;
  * @author Rsl1122
  */
 @Singleton
-public class SpongeBridge extends Bridge {
+public class SpongeBridge extends AbstractBridge {
 
     private final BuyCraftHook buyCraftHook;
     private final LuckPermsHook luckPermsHook;

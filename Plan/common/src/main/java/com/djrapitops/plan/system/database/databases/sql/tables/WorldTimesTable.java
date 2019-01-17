@@ -41,14 +41,19 @@ import java.util.stream.Collectors;
  * <p>
  * Table Name: plan_world_times
  * <p>
- * For contained columns {@see Col}
+ * For contained columns {@link Col}
+ * <p>
+ * Patches related to this table:
+ * {@link com.djrapitops.plan.system.database.databases.sql.patches.Version10Patch}
+ * {@link com.djrapitops.plan.system.database.databases.sql.patches.WorldTimesSeverIDPatch}
+ * {@link com.djrapitops.plan.system.database.databases.sql.patches.WorldsServerIDPatch}
+ * {@link com.djrapitops.plan.system.database.databases.sql.patches.WorldTimesOptimizationPatch}
  *
  * @author Rsl1122
  */
-public class WorldTimesTable extends UserIDTable {
+public class WorldTimesTable extends UserUUIDTable {
 
     public static final String TABLE_NAME = "plan_world_times";
-    private final ServerTable serverTable;
     private final WorldTable worldTable;
     private final SessionsTable sessionsTable;
     private String insertStatement;
@@ -57,37 +62,34 @@ public class WorldTimesTable extends UserIDTable {
         super(TABLE_NAME, db);
         worldTable = db.getWorldTable();
         sessionsTable = db.getSessionsTable();
-        serverTable = db.getServerTable();
         insertStatement = "INSERT INTO " + tableName + " (" +
-                Col.USER_ID + ", " +
+                Col.UUID + ", " +
                 Col.WORLD_ID + ", " +
-                Col.SERVER_ID + ", " +
+                Col.SERVER_UUID + ", " +
                 Col.SESSION_ID + ", " +
                 Col.SURVIVAL + ", " +
                 Col.CREATIVE + ", " +
                 Col.ADVENTURE + ", " +
                 Col.SPECTATOR +
-                ") VALUES (" +
-                usersTable.statementSelectID + ", " +
+                ") VALUES (?, " +
                 worldTable.statementSelectID + ", " +
-                serverTable.statementSelectServerID + ", " +
-                "?, ?, ?, ?, ?)";
+                "?, ?, ?, ?, ?, ?)";
     }
 
     @Override
     public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
-                .column(Col.USER_ID, Sql.INT).notNull()
+                .primaryKeyIDColumn(supportsMySQLQueries, Col.ID)
+                .column(Col.UUID, Sql.varchar(36)).notNull()
                 .column(Col.WORLD_ID, Sql.INT).notNull()
-                .column(Col.SERVER_ID, Sql.INT).notNull()
+                .column(Col.SERVER_UUID, Sql.varchar(36)).notNull()
                 .column(Col.SESSION_ID, Sql.INT).notNull()
                 .column(Col.SURVIVAL, Sql.LONG).notNull().defaultValue("0")
                 .column(Col.CREATIVE, Sql.LONG).notNull().defaultValue("0")
                 .column(Col.ADVENTURE, Sql.LONG).notNull().defaultValue("0")
                 .column(Col.SPECTATOR, Sql.LONG).notNull().defaultValue("0")
-                .foreignKey(Col.USER_ID, usersTable.getTableName(), UsersTable.Col.ID)
+                .primaryKey(supportsMySQLQueries, Col.ID)
                 .foreignKey(Col.WORLD_ID, worldTable.getTableName(), WorldTable.Col.ID)
-                .foreignKey(Col.SERVER_ID, serverTable.getTableName(), ServerTable.Col.SERVER_ID)
                 .foreignKey(Col.SESSION_ID, sessionsTable.getTableName(), SessionsTable.Col.ID)
                 .toString()
         );
@@ -105,7 +107,7 @@ public class WorldTimesTable extends UserIDTable {
                 worldNameColumn +
                 " FROM " + tableName +
                 " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + Col.WORLD_ID +
-                " WHERE " + Col.USER_ID + "=" + usersTable.statementSelectID;
+                " WHERE " + Col.UUID + "=?";
 
         query(new QueryStatement<Object>(sql, 2000) {
             @Override
@@ -185,7 +187,7 @@ public class WorldTimesTable extends UserIDTable {
                 worldNameColumn +
                 " FROM " + tableName +
                 " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + Col.WORLD_ID +
-                " WHERE " + tableName + "." + Col.SERVER_ID + "=" + db.getServerTable().statementSelectServerID +
+                " WHERE " + tableName + "." + Col.SERVER_UUID + "=?" +
                 " GROUP BY " + Col.WORLD_ID;
 
         return query(new QueryStatement<WorldTimes>(sql, 1000) {
@@ -227,7 +229,7 @@ public class WorldTimesTable extends UserIDTable {
                 worldNameColumn +
                 " FROM " + tableName +
                 " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + Col.WORLD_ID +
-                " WHERE " + Col.USER_ID + "=" + usersTable.statementSelectID +
+                " WHERE " + Col.UUID + "=?" +
                 " GROUP BY " + Col.WORLD_ID;
 
         return query(new QueryStatement<WorldTimes>(sql) {
@@ -366,9 +368,26 @@ public class WorldTimesTable extends UserIDTable {
         });
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof WorldTimesTable)) return false;
+        if (!super.equals(o)) return false;
+        WorldTimesTable that = (WorldTimesTable) o;
+        return Objects.equals(worldTable, that.worldTable) &&
+                Objects.equals(sessionsTable, that.sessionsTable) &&
+                Objects.equals(insertStatement, that.insertStatement);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), worldTable, sessionsTable, insertStatement);
+    }
+
     public enum Col implements Column {
-        USER_ID(UserIDTable.Col.USER_ID.get()),
-        SERVER_ID("server_id"),
+        ID("id"),
+        UUID(UserUUIDTable.Col.UUID.get()),
+        SERVER_UUID("server_uuid"),
         SESSION_ID("session_id"),
         WORLD_ID("world_id"),
         SURVIVAL("survival_time"),
@@ -391,22 +410,5 @@ public class WorldTimesTable extends UserIDTable {
         public String toString() {
             return column;
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof WorldTimesTable)) return false;
-        if (!super.equals(o)) return false;
-        WorldTimesTable that = (WorldTimesTable) o;
-        return Objects.equals(serverTable, that.serverTable) &&
-                Objects.equals(worldTable, that.worldTable) &&
-                Objects.equals(sessionsTable, that.sessionsTable) &&
-                Objects.equals(insertStatement, that.insertStatement);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), serverTable, worldTable, sessionsTable, insertStatement);
     }
 }

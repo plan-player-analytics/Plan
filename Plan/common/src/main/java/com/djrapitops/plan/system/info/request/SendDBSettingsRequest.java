@@ -16,20 +16,19 @@
  */
 package com.djrapitops.plan.system.info.request;
 
-import com.djrapitops.plan.api.exceptions.connection.*;
+import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
+import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
+import com.djrapitops.plan.api.exceptions.connection.GatewayException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.errors.BadRequestResponse;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.utilities.Verify;
 
-import java.io.IOException;
 import java.net.SocketException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -40,33 +39,25 @@ import java.util.UUID;
  */
 public class SendDBSettingsRequest extends InfoRequestWithVariables implements SetupRequest {
 
-    private final PlanConfig config;
     private final InfoRequestFactory infoRequestFactory;
     private final ConnectionSystem connectionSystem;
 
     SendDBSettingsRequest(
-            PlanConfig config,
             InfoRequestFactory infoRequestFactory, ConnectionSystem connectionSystem
     ) {
-        this.config = config;
         this.infoRequestFactory = infoRequestFactory;
         this.connectionSystem = connectionSystem;
     }
 
     SendDBSettingsRequest(
             String webServerAddress,
-            PlanConfig config,
             InfoRequestFactory infoRequestFactory, ConnectionSystem connectionSystem
     ) {
-        this.config = config;
         this.infoRequestFactory = infoRequestFactory;
         this.connectionSystem = connectionSystem;
 
         Verify.nullCheck(webServerAddress, () -> new IllegalArgumentException("webServerAddress can not be null."));
         variables.put("address", webServerAddress);
-        variables.put("WebServerPort", config.getString(Settings.WEBSERVER_PORT));
-        variables.put("ServerName", config.getString(Settings.SERVER_NAME).replaceAll("[^a-zA-Z0-9_\\s]", "_"));
-        variables.put("ThemeBase", config.getString(Settings.THEME_BASE));
     }
 
     @Override
@@ -87,17 +78,9 @@ public class SendDBSettingsRequest extends InfoRequestWithVariables implements S
         String address = variables.get("address");
         Verify.nullCheck(address, () -> new BadRequestException("WebServer Address ('address') not specified in the request."));
 
-        String webServerPortS = variables.get("WebServerPort");
-        String serverName = variables.get("ServerName");
-        String themeBase = variables.get("ThemeBase");
-        Verify.nullCheck(webServerPortS, () -> new BadRequestException("WebServer Port ('WebServerPort') not specified in the request."));
-        Verify.nullCheck(serverName, () -> new BadRequestException("Server Name ('ServerName') not specified in the request."));
-        Verify.nullCheck(themeBase, () -> new BadRequestException("Theme Base ('ThemeBase') not specified in the request."));
-
         UUID serverUUID = UUID.fromString(variables.get("sender"));
-        setOriginalSettings(serverUUID, webServerPortS, serverName, themeBase);
 
-        Server bukkit = new Server(-1, serverUUID, serverName, address, -1);
+        Server bukkit = new Server(-1, serverUUID, null, address, -1);
 
         try {
             connectionSystem.sendInfoRequest(infoRequestFactory.saveDBSettingsRequest(), bukkit);
@@ -109,19 +92,5 @@ public class SendDBSettingsRequest extends InfoRequestWithVariables implements S
         }
 
         return DefaultResponses.SUCCESS.get();
-    }
-
-    private void setOriginalSettings(UUID serverUUID, String webServerPortS, String serverName, String themeBase) throws InternalErrorException {
-        Map<String, Object> settings = new HashMap<>();
-        int webServerPort = Integer.parseInt(webServerPortS);
-        settings.put("WebServerPort", webServerPort);
-        settings.put("ServerName", serverName);
-        settings.put("ThemeBase", themeBase);
-
-        try {
-            config.getNetworkSettings().getServerSpecificSettings().addOriginalBukkitSettings(serverUUID, settings);
-        } catch (IOException e) {
-            throw new InternalErrorException("Failed to add Bukkit settings to config", e);
-        }
     }
 }

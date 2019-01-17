@@ -35,9 +35,13 @@ import java.util.*;
  * Table class representing database table plan_worlds.
  * <p>
  * Used for storing id references to world names.
+ * <p>
+ * Patches related to this table:
+ * {@link com.djrapitops.plan.system.database.databases.sql.patches.Version10Patch}
+ * {@link com.djrapitops.plan.system.database.databases.sql.patches.WorldsServerIDPatch}
+ * {@link com.djrapitops.plan.system.database.databases.sql.patches.WorldsOptimizationPatch}
  *
- * @author Rsl1122
- * @since 3.6.0 / Database version 7
+ * @author Rsl1122 / Database version 7
  */
 public class WorldTable extends Table {
 
@@ -50,7 +54,7 @@ public class WorldTable extends Table {
         serverTable = db.getServerTable();
         statementSelectID = "(SELECT " + Col.ID + " FROM " + tableName +
                 " WHERE (" + Col.NAME + "=?)" +
-                " AND (" + Col.SERVER_ID + "=" + serverTable.statementSelectServerID + ")" +
+                " AND (" + Col.SERVER_UUID + "=?)" +
                 " LIMIT 1)";
     }
 
@@ -59,9 +63,8 @@ public class WorldTable extends Table {
         createTable(TableSqlParser.createTable(tableName)
                 .primaryKeyIDColumn(supportsMySQLQueries, Col.ID)
                 .column(Col.NAME, Sql.varchar(100)).notNull()
-                .column(Col.SERVER_ID, Sql.INT).notNull()
+                .column(Col.SERVER_UUID, Sql.varchar(36)).notNull()
                 .primaryKey(supportsMySQLQueries, Col.ID)
-                .foreignKey(Col.SERVER_ID, ServerTable.TABLE_NAME, ServerTable.Col.SERVER_ID)
                 .toString()
         );
     }
@@ -93,7 +96,7 @@ public class WorldTable extends Table {
 
     public List<String> getWorlds(UUID serverUUID) {
         String sql = "SELECT * FROM " + tableName +
-                " WHERE " + Col.SERVER_ID + "=" + serverTable.statementSelectServerID;
+                " WHERE " + Col.SERVER_UUID + "=?";
 
         return query(new QueryStatement<List<String>>(sql) {
 
@@ -137,8 +140,8 @@ public class WorldTable extends Table {
 
         String sql = "INSERT INTO " + tableName + " ("
                 + Col.NAME + ", "
-                + Col.SERVER_ID
-                + ") VALUES (?, " + serverTable.statementSelectServerID + ")";
+                + Col.SERVER_UUID
+                + ") VALUES (?, ?)";
 
         executeBatch(new ExecStatement(sql) {
             @Override
@@ -154,7 +157,7 @@ public class WorldTable extends Table {
 
     public Set<String> getWorldNames(UUID serverUUID) {
         String sql = "SELECT DISTINCT " + Col.NAME + " FROM " + tableName +
-                " WHERE " + Col.SERVER_ID + "=" + serverTable.statementSelectServerID;
+                " WHERE " + Col.SERVER_UUID + "=?";
         return query(new QueryStatement<Set<String>>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -174,7 +177,7 @@ public class WorldTable extends Table {
 
     public enum Col implements Column {
         ID("id"),
-        SERVER_ID("server_id"),
+        SERVER_UUID("server_uuid"),
         NAME("world_name");
 
         private final String column;

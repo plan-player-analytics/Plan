@@ -18,11 +18,10 @@ package com.djrapitops.plan.system.afk;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Keeps track how long player has been afk during a session
@@ -33,12 +32,12 @@ public class AFKTracker {
 
     private final Set<UUID> usedAFKCommand;
     private final Map<UUID, Long> lastMovement;
-    private final long afkThresholdMs;
+    private final PlanConfig config;
 
     public AFKTracker(PlanConfig config) {
+        this.config = config;
         usedAFKCommand = new HashSet<>();
         lastMovement = new HashMap<>();
-        afkThresholdMs = TimeUnit.MINUTES.toMillis(config.getNumber(Settings.AFK_THRESHOLD_MINUTES));
     }
 
     public void hasIgnorePermission(UUID uuid) {
@@ -47,7 +46,7 @@ public class AFKTracker {
 
     public void usedAfkCommand(UUID uuid, long time) {
         usedAFKCommand.add(uuid);
-        lastMovement.put(uuid, time - afkThresholdMs);
+        lastMovement.put(uuid, time - config.get(TimeSettings.AFK_THRESHOLD));
     }
 
     public void performedAction(UUID uuid, long time) {
@@ -58,12 +57,12 @@ public class AFKTracker {
         lastMovement.put(uuid, time);
 
         try {
-            if (time - lastMoved < afkThresholdMs) {
+            if (time - lastMoved < config.get(TimeSettings.AFK_THRESHOLD)) {
                 // Threshold not crossed, no action required.
                 return;
             }
 
-            long removeAfkCommandEffect = usedAFKCommand.contains(uuid) ? afkThresholdMs : 0;
+            long removeAfkCommandEffect = usedAFKCommand.contains(uuid) ? config.get(TimeSettings.AFK_THRESHOLD) : 0;
             long timeAFK = time - lastMoved - removeAfkCommandEffect;
 
             Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
@@ -90,6 +89,6 @@ public class AFKTracker {
         if (lastMoved == null || lastMoved == -1) {
             return false;
         }
-        return time - lastMoved > afkThresholdMs;
+        return time - lastMoved > config.get(TimeSettings.AFK_THRESHOLD);
     }
 }

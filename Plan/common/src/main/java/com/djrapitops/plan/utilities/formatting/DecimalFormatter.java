@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.utilities.formatting;
 
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.FormatSettings;
 
 import java.text.DecimalFormat;
 
@@ -28,14 +28,15 @@ import java.text.DecimalFormat;
  */
 public class DecimalFormatter implements Formatter<Double> {
 
-    private volatile DecimalFormat decimalFormat;
+    private final PlanConfig config;
 
     public DecimalFormatter(PlanConfig config) {
-        decimalFormat = new DecimalFormat(config.getString(Settings.FORMAT_DECIMALS));
+        this.config = config;
     }
 
     @Override
     public String apply(Double value) {
-        return decimalFormat.format(value);
+        // DecimalFormat is initialized here because config is not fully enabled in the constructor
+        return new DecimalFormat(config.get(FormatSettings.DECIMALS)).format(value);
     }
 }

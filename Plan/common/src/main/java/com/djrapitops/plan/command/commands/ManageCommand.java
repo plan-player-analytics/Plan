@@ -34,7 +34,6 @@ import javax.inject.Named;
  * This SubCommand is used to manage the the plugin's database and components.
  *
  * @author Rsl1122
- * @since 2.3.0
  */
 public class ManageCommand extends TreeCmdNode {
 

@@ -39,7 +39,7 @@ import java.util.UUID;
  * <p>
  * Table Name: plan_commandusages
  * <p>
- * For contained columns {@see Col}
+ * For contained columns {@link Col}
  *
  * @author Rsl1122
  */

@@ -39,7 +39,6 @@ import java.util.UUID;
  * </ul>
  *
  * @author Rsl1122
- * @since 4.0.0
  */
 @Singleton
 public class DataCache extends SessionCache implements SubSystem {

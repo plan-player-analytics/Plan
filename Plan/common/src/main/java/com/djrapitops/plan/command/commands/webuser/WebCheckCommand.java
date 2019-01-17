@@ -40,7 +40,6 @@ import java.util.Arrays;
  * Subcommand for checking WebUser permission level.
  *
  * @author Rsl1122
- * @since 3.5.2
  */
 @Singleton
 public class WebCheckCommand extends CommandNode {

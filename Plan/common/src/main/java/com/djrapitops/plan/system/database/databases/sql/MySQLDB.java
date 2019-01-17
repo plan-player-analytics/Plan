@@ -23,8 +23,8 @@ import com.djrapitops.plan.system.database.databases.DBType;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -32,9 +32,11 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import com.zaxxer.hikari.pool.HikariPool;
 import dagger.Lazy;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -44,6 +46,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Rsl1122
  */
+@Singleton
 public class MySQLDB extends SQLDB {
 
     private static int increment = 1;
@@ -81,18 +84,18 @@ public class MySQLDB extends SQLDB {
         try {
             HikariConfig hikariConfig = new HikariConfig();
 
-            String host = config.getString(Settings.DB_HOST);
-            String port = config.getString(Settings.DB_PORT);
-            String database = config.getString(Settings.DB_DATABASE);
-            String launchOptions = config.getString(Settings.DB_LAUNCH_OPTIONS);
+            String host = config.get(DatabaseSettings.MYSQL_HOST);
+            String port = config.get(DatabaseSettings.MYSQL_PORT);
+            String database = config.get(DatabaseSettings.MYSQL_DATABASE);
+            String launchOptions = config.get(DatabaseSettings.MYSQL_LAUNCH_OPTIONS);
             if (launchOptions.isEmpty() || !launchOptions.startsWith("?") || launchOptions.endsWith("&")) {
                 launchOptions = "?rewriteBatchedStatements=true&useSSL=false";
                 logger.error(locale.getString(PluginLang.DB_MYSQL_LAUNCH_OPTIONS_FAIL, launchOptions));
             }
             hikariConfig.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + launchOptions);
 
-            String username = config.getString(Settings.DB_USER);
-            String password = config.getString(Settings.DB_PASS);
+            String username = config.get(DatabaseSettings.MYSQL_USER);
+            String password = config.get(DatabaseSettings.MYSQL_PASS);
 
             hikariConfig.setUsername(username);
             hikariConfig.setPassword(password);
@@ -108,7 +111,7 @@ public class MySQLDB extends SQLDB {
             this.dataSource = new HikariDataSource(hikariConfig);
 
             getConnection();
-        } catch (SQLException e) {
+        } catch (HikariPool.PoolInitializationException | SQLException e) {
             throw new DBInitException("Failed to set-up HikariCP Datasource: " + e.getMessage(), e);
         }
     }

@@ -17,53 +17,48 @@
 package com.djrapitops.plan.system.settings.theme;
 
 import com.djrapitops.plan.system.file.PlanFiles;
-import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.Config;
+import com.djrapitops.plan.system.settings.config.ConfigNode;
+import com.djrapitops.plan.system.settings.config.ConfigReader;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plugin.config.Config;
-import com.djrapitops.plugin.config.ConfigNode;
+import com.djrapitops.plan.system.settings.paths.DisplaySettings;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Config that keeps track of theme.yml.
  *
  * @author Rsl1122
  */
-@Singleton
 public class ThemeConfig extends Config {
 
-    @Inject
     public ThemeConfig(PlanFiles files, PlanConfig config, PluginLogger logger) {
         this(getConfigFile(files), getDefaults(files, config, logger));
     }
 
-    private ThemeConfig(File configFile, List<String> defaults) {
+    private ThemeConfig(File configFile, ConfigNode defaults) {
         super(configFile, defaults);
 
-        if (defaults.isEmpty()) {
+        if (defaults.isLeafNode()) {
             ConfigNode util = new ConfigNode("", null, "");
             for (ThemeVal themeVal : ThemeVal.values()) {
                 util.set(themeVal.getThemePath(), themeVal.getDefaultValue());
             }
-            copyDefaults(util);
+            copyMissing(util);
         }
     }
 
-    private static List<String> getDefaults(PlanFiles files, PlanConfig config, PluginLogger logger) {
-        String fileName = config.getString(Settings.THEME_BASE);
+    private static ConfigNode getDefaults(PlanFiles files, PlanConfig config, PluginLogger logger) {
+        String fileName = config.get(DisplaySettings.THEME);
         String fileLocation = getFileLocation(fileName);
 
-        try {
-            return files.readFromResource(fileLocation);
+        try (ConfigReader reader = new ConfigReader(files.readStreamFromResource(fileLocation))) {
+            return reader.read();
         } catch (IOException e) {
             logger.error("Could not find theme " + fileLocation + ". Attempting to use default.");
-            return new ArrayList<>();
+            return new ConfigNode(null, null, null);
         }
     }
 

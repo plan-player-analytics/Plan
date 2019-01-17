@@ -1,12 +1,24 @@
 /*
- * License is provided in the jar as LICENSE also here:
- * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/LICENSE
+ *  This file is part of Player Analytics (Plan).
+ *
+ *  Plan is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Plan is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
@@ -15,6 +27,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import rules.BukkitComponentMocker;
 import rules.BungeeComponentMocker;
 import rules.ComponentMocker;
+import utilities.RandomData;
 
 import java.util.UUID;
 
@@ -31,14 +44,13 @@ public class BungeeBukkitConnectionTest {
     @ClassRule
     public static ComponentMocker bungeeComponent = new BungeeComponentMocker(temporaryFolder);
 
+    private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     private PlanSystem bukkitSystem;
     private PlanSystem bungeeSystem;
-
-    private UUID bukkitUUID;
-    private UUID bungeeUUID;
 
     @After
     public void tearDown() {
@@ -57,8 +69,8 @@ public class BungeeBukkitConnectionTest {
         bukkitSystem = bukkitComponent.getPlanSystem();
         bungeeSystem = bungeeComponent.getPlanSystem();
 
-        bukkitSystem.getConfigSystem().getConfig().set(Settings.WEBSERVER_PORT, 9005);
-        bungeeSystem.getConfigSystem().getConfig().set(Settings.WEBSERVER_PORT, 9250);
+        bukkitSystem.getConfigSystem().getConfig().set(WebserverSettings.PORT, TEST_PORT_NUMBER);
+        bungeeSystem.getConfigSystem().getConfig().set(WebserverSettings.PORT, 9250);
 
         DBSystem dbSystem = bungeeSystem.getDatabaseSystem();
         dbSystem.setActiveDatabase(dbSystem.getSqLiteFactory().usingDefaultFile());
@@ -66,8 +78,8 @@ public class BungeeBukkitConnectionTest {
         bukkitSystem.enable();
         bungeeSystem.enable();
 
-        bukkitUUID = bukkitSystem.getServerInfo().getServerUUID();
-        bungeeUUID = bungeeSystem.getServerInfo().getServerUUID();
+        UUID bukkitUUID = bukkitSystem.getServerInfo().getServerUUID();
+        UUID bungeeUUID = bungeeSystem.getServerInfo().getServerUUID();
 
         System.out.println("------------------------------");
         System.out.println("Enable Complete");
@@ -77,7 +89,7 @@ public class BungeeBukkitConnectionTest {
     }
 
     @Test
-    @Ignore("Causes next BungeeSystem test to fail")
+    @Ignore("InfoRequestFactory not available via getters")
     public void testRequest() throws Exception {
         enable();
 

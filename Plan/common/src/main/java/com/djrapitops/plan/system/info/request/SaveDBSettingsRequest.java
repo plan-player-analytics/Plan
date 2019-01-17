@@ -20,8 +20,9 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.InternalErrorException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
+import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.errors.BadRequestResponse;
@@ -59,12 +60,12 @@ public class SaveDBSettingsRequest extends InfoRequestWithVariables implements S
         this.logger = logger;
         this.runnableFactory = runnableFactory;
 
-        variables.put("DB_TYPE", "mysql"); // Settings.DB_TYPE
-        variables.put("DB_HOST", config.getString(Settings.DB_HOST));
-        variables.put("DB_USER", config.getString(Settings.DB_USER));
-        variables.put("DB_PASS", config.getString(Settings.DB_PASS));
-        variables.put("DB_DATABASE", config.getString(Settings.DB_DATABASE));
-        variables.put("DB_PORT", config.getString(Settings.DB_PORT));
+        variables.put("DB_TYPE", "mysql"); // DatabaseSettings.TYPE
+        variables.put("DB_HOST", config.get(DatabaseSettings.MYSQL_HOST));
+        variables.put("DB_USER", config.get(DatabaseSettings.MYSQL_USER));
+        variables.put("DB_PASS", config.get(DatabaseSettings.MYSQL_PASS));
+        variables.put("DB_DATABASE", config.get(DatabaseSettings.MYSQL_DATABASE));
+        variables.put("DB_PORT", config.get(DatabaseSettings.MYSQL_PORT));
     }
 
     @Override
@@ -80,7 +81,7 @@ public class SaveDBSettingsRequest extends InfoRequestWithVariables implements S
         if (Check.isVelocityAvailable()) {
             return new BadRequestResponse("Not supposed to be called on a Velocity server");
         }
-        if (config.isFalse(Settings.BUNGEE_COPY_CONFIG) || config.isTrue(Settings.BUNGEE_OVERRIDE_STANDALONE_MODE)) {
+        if (config.isFalse(PluginSettings.BUNGEE_COPY_CONFIG)) {
             return new BadRequestResponse("Bungee config settings overridden on this server.");
         }
 
@@ -115,16 +116,12 @@ public class SaveDBSettingsRequest extends InfoRequestWithVariables implements S
         Verify.nullCheck(database, () -> new BadRequestException("DB_DATABASE not specified in the request."));
         Verify.nullCheck(portS, () -> new BadRequestException("DB_PORT not specified in the request."));
 
-        try {
-            config.set(Settings.DB_PORT, Integer.valueOf(portS));
-        } catch (NumberFormatException e) {
-            throw new BadRequestException("DB_PORT was not a number.");
-        }
-        config.set(Settings.DB_TYPE, type);
-        config.set(Settings.DB_HOST, host);
-        config.set(Settings.DB_USER, user);
-        config.set(Settings.DB_PASS, pass);
-        config.set(Settings.DB_DATABASE, database);
+        config.set(DatabaseSettings.MYSQL_PORT, portS);
+        config.set(DatabaseSettings.TYPE, type);
+        config.set(DatabaseSettings.MYSQL_HOST, host);
+        config.set(DatabaseSettings.MYSQL_USER, user);
+        config.set(DatabaseSettings.MYSQL_PASS, pass);
+        config.set(DatabaseSettings.MYSQL_DATABASE, database);
         try {
             config.save();
         } catch (IOException e) {

@@ -31,7 +31,7 @@ public class SessionAFKTimePatch extends Patch {
     }
 
     @Override
-    public void apply() {
+    protected void applyPatch() {
         addColumn(SessionsTable.TABLE_NAME,
                 SessionsTable.Col.AFK_TIME + " bigint NOT NULL DEFAULT 0"
         );

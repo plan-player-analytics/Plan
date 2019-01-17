@@ -23,7 +23,6 @@ import com.djrapitops.plan.data.store.mutators.TPSMutator;
  *
  * @author Rsl1122
  * @see com.djrapitops.plan.system.tasks.TPSCountTimer
- * @since 4.2.0
  */
 class EntityGraph extends LineGraph {
 

@@ -28,7 +28,6 @@ import java.util.Map;
  * World Map that uses iso-a3 specification of Country codes.
  *
  * @author Rsl1122
- * @since 4.2.0
  */
 public class WorldMap implements HighChart {
 

@@ -1,6 +1,18 @@
 /*
- * License is provided in the jar as LICENSE also here:
- * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/LICENSE
+ *  This file is part of Player Analytics (Plan).
+ *
+ *  Plan is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Plan is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
 package utilities.mocks;
 
@@ -14,9 +26,10 @@ import com.djrapitops.plugin.logging.debug.DebugLogger;
 import com.djrapitops.plugin.logging.debug.MemoryDebugLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.plugin.task.thread.ThreadRunnableFactory;
+import com.djrapitops.plugin.task.RunnableFactory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.mockito.Mockito;
+import utilities.mocks.objects.TestRunnableFactory;
 
 import java.io.File;
 import java.net.InetSocketAddress;
@@ -48,7 +61,7 @@ public class PlanVelocityMocker extends Mocker {
         doReturn(new ColorScheme("§1", "§2", "§3")).when(planMock).getColorScheme();
         doReturn("1.0.0").when(planMock).getVersion();
 
-        ThreadRunnableFactory runnableFactory = new ThreadRunnableFactory();
+        RunnableFactory runnableFactory = new TestRunnableFactory();
         PluginLogger testPluginLogger = new TestPluginLogger();
         DebugLogger debugLogger = new CombineDebugLogger(new MemoryDebugLogger());
         ErrorHandler consoleErrorLogger = new ConsoleErrorLogger(testPluginLogger);

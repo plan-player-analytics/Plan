@@ -21,6 +21,7 @@ import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.store.mutators.PingMutator;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.icon.Icon;
+import com.djrapitops.plan.utilities.html.icon.Icons;
 
 import java.util.*;
 
@@ -36,9 +37,9 @@ class PingTable extends TableContainer {
     PingTable(Map<String, List<Ping>> pingPerCountry, Formatter<Double> decimalFormatter) {
         super(
                 Icon.called("globe") + " Country",
-                Icon.called("signal") + " Average Ping",
-                Icon.called("signal") + " Worst Ping",
-                Icon.called("signal") + " Best Ping"
+                Icons.SIGNAL + " Average Ping",
+                Icons.SIGNAL + " Worst Ping",
+                Icons.SIGNAL + " Best Ping"
         );
         this.decimalFormatter = decimalFormatter;
         setColor("amber");
