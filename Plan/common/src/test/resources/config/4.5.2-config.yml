@@ -76,7 +76,8 @@ Analysis:
     DestinationFolder: 'Analysis Results'
 Data:
   # How many minutes player has to stay still to be considered AFK
-  AFKThresholdMinutes: 3
+  # TEST: THIS NODE HAS BEEN INTENTIONALLY LEFT EMPTY TO TEST DEFAULT COPYING
+  AFKThresholdMinutes:
   Commands:
     LogUnknownCommands: false
     CombineCommandAliases: true
