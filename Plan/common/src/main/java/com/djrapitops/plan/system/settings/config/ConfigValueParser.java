@@ -93,7 +93,7 @@ public interface ConfigValueParser<T> {
 
             boolean surroundedByQuotes = value.startsWith("'") || value.endsWith("'");
             boolean surroundedByDoubleQuotes = value.startsWith("\"") || value.endsWith("\"");
-            boolean containsSpace = value.contains(" ");
+            boolean containsSpace = value.isEmpty() || value.contains(" ");
             boolean startsWithSpecialSymbol = value.startsWith("-") || value.startsWith("#") || value.startsWith("&");
 
             if (surroundedByDoubleQuotes || containsSpace || startsWithSpecialSymbol) {
