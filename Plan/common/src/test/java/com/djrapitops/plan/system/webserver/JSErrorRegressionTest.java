@@ -105,6 +105,14 @@ public class JSErrorRegressionTest {
     }
 
     @Test
+    public void playerPageAccessibleViaUUID() {
+        System.out.println("Testing Player Page via UUID");
+        WebDriver driver = seleniumDriver.getDriver();
+        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_UUID);
+        assertFalse(driver.getPageSource(), driver.getPageSource().contains("404 "));
+    }
+
+    @Test
     @Ignore("PlanPluginMocker displays network page for some reason. Investigate")
     public void serverPageDoesNotHaveJavascriptErrors() {
         System.out.println("Testing Server Page");
