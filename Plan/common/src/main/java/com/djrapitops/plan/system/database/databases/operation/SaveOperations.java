@@ -85,5 +85,5 @@ public interface SaveOperations {
 
     void setAsUninstalled(UUID serverUUID);
 
-    void saveConfig(UUID serverUUID, Config config);
+    void saveConfig(UUID serverUUID, Config config, long lastModified);
 }

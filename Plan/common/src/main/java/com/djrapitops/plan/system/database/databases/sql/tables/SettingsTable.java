@@ -66,22 +66,23 @@ public class SettingsTable extends Table {
      * <p>
      * Only one config is stored per server uuid.
      *
-     * @param serverUUID UUID of the server.
-     * @param config     Config of the server.
+     * @param serverUUID   UUID of the server.
+     * @param config       Config of the server.
+     * @param lastModified Epoch ms the config file was last modified.
      */
-    public void storeConfig(UUID serverUUID, Config config) {
+    public void storeConfig(UUID serverUUID, Config config, long lastModified) {
         TextStringBuilder configTextBuilder = new TextStringBuilder();
         List<String> lines = new ConfigWriter().parseLines(config);
         configTextBuilder.appendWithSeparators(lines, "\n");
         String configSettings = configTextBuilder.toString();
         if (isConfigStored(serverUUID)) {
-            updateConfig(serverUUID, configSettings);
+            updateConfig(serverUUID, configSettings, lastModified);
         } else {
-            insertConfig(serverUUID, configSettings);
+            insertConfig(serverUUID, configSettings, lastModified);
         }
     }
 
-    private void insertConfig(UUID serverUUID, String configSettings) {
+    private void insertConfig(UUID serverUUID, String configSettings, long lastModified) {
         String sql = "INSERT INTO " + tableName + " (" +
                 Col.SERVER_UUID + ", " +
                 Col.UPDATED + ", " +
@@ -91,13 +92,13 @@ public class SettingsTable extends Table {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
-                statement.setLong(2, System.currentTimeMillis());
+                statement.setLong(2, lastModified);
                 statement.setString(3, configSettings);
             }
         });
     }
 
-    private void updateConfig(UUID serverUUID, String configSettings) {
+    private void updateConfig(UUID serverUUID, String configSettings, long lastModified) {
         String sql = "UPDATE " + tableName + " SET " +
                 Col.CONFIG_CONTENT + "=?," +
                 Col.UPDATED + "=? WHERE " +
@@ -108,7 +109,7 @@ public class SettingsTable extends Table {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, configSettings);
-                statement.setLong(2, System.currentTimeMillis());
+                statement.setLong(2, lastModified);
                 statement.setString(3, serverUUID.toString());
                 statement.setString(4, configSettings);
             }

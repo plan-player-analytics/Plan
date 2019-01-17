@@ -109,7 +109,7 @@ public class ServerSettingsManager implements SubSystem {
 
         try (ConfigReader reader = new ConfigReader(file.toPath())) {
             Config config = reader.read();
-            database.save().saveConfig(serverInfo.getServerUUID(), config);
+            database.save().saveConfig(serverInfo.getServerUUID(), config, file.lastModified());
             logger.debug("Server config saved to database.");
         } catch (IOException e) {
             throw new UncheckedIOException(e);

@@ -17,6 +17,7 @@
 package com.djrapitops.plan.system.tasks.server;
 
 import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -33,6 +34,7 @@ import javax.inject.Singleton;
 @Singleton
 public class ConfigStoreTask extends AbsRunnable {
 
+    private final PlanFiles files;
     private final PlanConfig config;
     private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
@@ -40,11 +42,13 @@ public class ConfigStoreTask extends AbsRunnable {
 
     @Inject
     public ConfigStoreTask(
+            PlanFiles files,
             PlanConfig config,
             ServerInfo serverInfo,
             DBSystem dbSystem,
             PluginLogger logger
     ) {
+        this.files = files;
         this.config = config;
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
@@ -53,7 +57,8 @@ public class ConfigStoreTask extends AbsRunnable {
 
     @Override
     public void run() {
-        dbSystem.getDatabase().save().saveConfig(serverInfo.getServerUUID(), config);
+        long lastModified = files.getConfigFile().lastModified();
+        dbSystem.getDatabase().save().saveConfig(serverInfo.getServerUUID(), config, lastModified);
         logger.debug("Config Store Task - Config in db now up to date.");
         cancel();
     }

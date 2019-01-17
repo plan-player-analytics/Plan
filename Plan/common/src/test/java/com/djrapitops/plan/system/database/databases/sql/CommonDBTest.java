@@ -1039,7 +1039,7 @@ public abstract class CommonDBTest {
         PlanConfig config = system.getConfigSystem().getConfig();
 
         SettingsTable settingsTable = db.getSettingsTable();
-        settingsTable.storeConfig(serverUUID, config);
+        settingsTable.storeConfig(serverUUID, config, System.currentTimeMillis());
 
         Optional<Config> foundConfig = settingsTable.fetchNewerConfig(0, serverUUID);
         assertTrue(foundConfig.isPresent());
@@ -1054,7 +1054,7 @@ public abstract class CommonDBTest {
         PlanConfig config = system.getConfigSystem().getConfig();
 
         SettingsTable settingsTable = db.getSettingsTable();
-        settingsTable.storeConfig(serverUUID, config);
+        settingsTable.storeConfig(serverUUID, config, System.currentTimeMillis());
 
         assertFalse(settingsTable.fetchNewerConfig(savedMs, serverUUID).isPresent());
     }

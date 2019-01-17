@@ -155,7 +155,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
     }
 
     @Override
-    public void saveConfig(UUID serverUUID, Config config) {
-        settingsTable.storeConfig(serverUUID, config);
+    public void saveConfig(UUID serverUUID, Config config, long lastModified) {
+        settingsTable.storeConfig(serverUUID, config, lastModified);
     }
 }

@@ -203,7 +203,7 @@ public class NetworkSettingManager implements SubSystem {
 
         try (ConfigReader reader = new ConfigReader(file.toPath())) {
             Config config = reader.read();
-            database.save().saveConfig(serverUUID, config);
+            database.save().saveConfig(serverUUID, config, file.lastModified());
             String serverName = config.getNode(PluginSettings.SERVER_NAME.getPath()).map(ConfigNode::getString).orElse("Unknown");
             logger.debug("Server config '" + serverName + "' in db now up to date.");
         } catch (IOException e) {
