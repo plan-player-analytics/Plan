@@ -200,7 +200,8 @@ public abstract class SQLDB extends Database {
                 new GeoInfoOptimizationPatch(this),
                 new TransferTableRemovalPatch(this),
                 new IPHashPatch(this),
-                new IPAnonPatch(this)
+                new IPAnonPatch(this),
+                new BadAFKThresholdValuePatch(this)
         };
     }
 
