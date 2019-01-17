@@ -51,23 +51,46 @@ public class UUIDUtility {
      * @return UUID of the player
      */
     public UUID getUUIDOf(String playerName) {
-        UUID uuid = null;
-        UUID uuidOf = dataCache.getUUIDof(playerName);
-        if (uuidOf != null) {
-            return uuidOf;
+        UUID uuid = getUUIDFromString(playerName);
+        if (uuid != null) {
+            return uuid;
         }
+
+        uuid = dataCache.getUUIDof(playerName);
+        if (uuid != null) {
+            return uuid;
+        }
+
+        uuid = getUUIDFromDB(playerName);
+        if (uuid != null) {
+            return uuid;
+        }
+
+        return getUUIDViaUUIDFetcher(playerName);
+    }
+
+    private UUID getUUIDFromString(String playerName) {
         try {
-            uuid = dbSystem.getDatabase().fetch().getUuidOf(playerName);
+            return UUID.fromString(playerName);
+        } catch (IllegalArgumentException ignore) {
+            return null;
+        }
+    }
+
+    private UUID getUUIDViaUUIDFetcher(String playerName) {
+        try {
+            return UUIDFetcher.getUUIDOf(playerName);
+        } catch (Exception | NoClassDefFoundError ignored) {
+            return null;
+        }
+    }
+
+    private UUID getUUIDFromDB(String playerName) {
+        try {
+            return dbSystem.getDatabase().fetch().getUuidOf(playerName);
         } catch (DBOpException e) {
             errorHandler.log(L.ERROR, UUIDUtility.class, e);
+            return null;
         }
-        try {
-            if (uuid == null) {
-                uuid = UUIDFetcher.getUUIDOf(playerName);
-            }
-        } catch (Exception | NoClassDefFoundError ignored) {
-            /* Ignored */
-        }
-        return uuid;
     }
 }
