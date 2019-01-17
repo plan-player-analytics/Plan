@@ -192,12 +192,17 @@ public class ConfigNode {
         Collections.sort(nodeOrder);
     }
 
-    public boolean reorder(List<String> newOrder) {
-        if (nodeOrder.containsAll(newOrder)) {
-            nodeOrder = newOrder;
-            return true;
+    public void reorder(List<String> newOrder) {
+        List<String> oldOrder = nodeOrder;
+        nodeOrder = new ArrayList<>();
+        for (String key : newOrder) {
+            if (childNodes.containsKey(key)) {
+                nodeOrder.add(key);
+            }
         }
-        return false;
+        // Add those that were not in the new order, but are in the old order.
+        oldOrder.removeAll(nodeOrder);
+        nodeOrder.addAll(oldOrder);
     }
 
     /**

@@ -31,6 +31,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -73,6 +74,10 @@ public abstract class ConfigSystem implements SubSystem {
     public void enable() throws EnableException {
         try {
             copyDefaults();
+            config.reorder(Arrays.asList(
+                    "Server", "Network", "Plugin", "Database", "Webserver",
+                    "Data_gathering", "Time", "Display_options", "Formatting", "World_aliases", "Export", "Plugins"
+            ));
             config.save();
 
             if (logger.getDebugLogger() instanceof CombineDebugLogger) {
