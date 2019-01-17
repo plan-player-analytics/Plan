@@ -106,7 +106,7 @@ public class VersionCheckSystem implements SubSystem {
     public Optional<String> getUpdateHtml() {
         return getNewVersionAvailable()
                 .map(v -> v.isTrusted() ? "<a href=\"" + v.getChangeLogUrl() + "\" target=\"_blank\">" +
-                        "<h4 class=\"col-green\"><i class=\"" + (v.isRelease() ? "fa fa-download" : "fab fa-dev") + "\"></i> Update available!</h4></a>" : "");
+                        "<h4 class=\"col-green\"><i class=\"" + (v.isRelease() ? "fa fa-download" : "fab fa-dev") + "\"></i> v" + v.getVersion().getVersionString() + " available!</h4></a>" : "");
     }
 
     public String getCurrentVersion() {
