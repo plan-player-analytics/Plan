@@ -46,6 +46,8 @@ public class ConfigReader implements Closeable {
     private int indentMode = 4;
     private List<String> unboundComment = new ArrayList<>();
 
+    private int lastDepth = -1;
+
     /**
      * Create a new ConfigReader for a Path.
      *
@@ -115,13 +117,16 @@ public class ConfigReader implements Closeable {
             handleCommentLine(trimmed);
         } else {
             // Determine where the node belongs
-            parent = findParent(previousNode.getNodeDepth(), findCurrentDepth(line));
+
+            int currentDepth = findCurrentDepth(line);
+            parent = findParent(lastDepth, currentDepth);
             Verify.nullCheck(parent, () -> new IllegalStateException("Could not determine parent on line: \"" + line + "\""));
 
             // Get the node the line belongs to
             previousNode = parseNode(trimmed);
             Verify.nullCheck(previousNode, () -> new IllegalStateException("Could not parse node on line: \"" + line + "\""));
 
+            lastDepth = currentDepth;
             handleUnboundComments();
         }
     }

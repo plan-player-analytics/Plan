@@ -150,4 +150,28 @@ class ConfigWriterTest {
         assertEquals(expected, writtenLines);
     }
 
+    @Test
+    void valueAfterAList() throws IOException {
+        ConfigNode root = new ConfigNode(null, null, null);
+        ConfigNode test = root.addNode("Test");
+        test.addNode("List").set(Arrays.asList("First", "Second", "Third"));
+        test.addNode("Value").set("Example");
+        root.addNode("Second").set(2);
+
+        Path out = tempFolder.resolve("listIndent.yml");
+        new ConfigWriter(out).write(root);
+
+        List<String> writtenLines = FileUtil.lines(out.toFile());
+        List<String> expected = Arrays.asList(
+                "Test:",
+                "    List:",
+                "      - First",
+                "      - Second",
+                "      - Third",
+                "    Value: Example",
+                "Second: 2"
+        );
+        assertEquals(expected, writtenLines);
+    }
+
 }
