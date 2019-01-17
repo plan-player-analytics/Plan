@@ -14,6 +14,8 @@ dependencies {
 shadowJar {
     configurations = [project.configurations.compile]
 
+    relocate 'dagger', 'plan.dagger'
+
     destinationDir = file("$rootDir/builds/")
     baseName = "Plan"
     classifier = null
