@@ -75,7 +75,9 @@ public abstract class ConfigSystem implements SubSystem {
             copyDefaults();
             config.save();
 
-            setDebugMode();
+            if (logger.getDebugLogger() instanceof CombineDebugLogger) {
+                setDebugMode();
+            }
         } catch (IOException e) {
             throw new EnableException("Failed to save default config.", e);
         }
@@ -83,20 +85,21 @@ public abstract class ConfigSystem implements SubSystem {
     }
 
     private void setDebugMode() {
+        CombineDebugLogger debugLogger = (CombineDebugLogger) logger.getDebugLogger();
+
         String debugMode = config.get(PluginSettings.DEBUG);
 
         List<DebugLogger> loggers = new ArrayList<>();
-        if (Verify.equalsOne(debugMode, "true", "both", "console")) {
+        if (Verify.containsOne(debugMode, "true", "both", "all", "console")) {
             loggers.add(new ConsoleDebugLogger(logger));
         }
-        if (Verify.equalsOne(debugMode, "true", "both", "file")) {
+        if (Verify.containsOne(debugMode, "true", "both", "all", "file")) {
             loggers.add(new FolderTimeStampFileDebugLogger(files.getLogsFolder(), () -> errorHandler));
         }
-        if (logger.getDebugLogger() instanceof CombineDebugLogger) {
-            CombineDebugLogger debugLogger = (CombineDebugLogger) logger.getDebugLogger();
+        if (Verify.containsOne(debugMode, "true", "both", "all", "memory")) {
             loggers.add(debugLogger.getDebugLogger(MemoryDebugLogger.class).orElse(new MemoryDebugLogger()));
-            debugLogger.setDebugLoggers(loggers.toArray(new DebugLogger[0]));
         }
+        debugLogger.setDebugLoggers(loggers.toArray(new DebugLogger[0]));
     }
 
     /**
