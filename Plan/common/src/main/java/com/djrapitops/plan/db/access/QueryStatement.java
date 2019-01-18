@@ -44,7 +44,7 @@ public abstract class QueryStatement<T> implements Query<T> {
     }
 
     @Override
-    public T query(SQLDB db) {
+    public T executeQuery(SQLDB db) {
         Connection connection = null;
         try {
             connection = db.getConnection();

@@ -10,6 +10,6 @@ import com.djrapitops.plan.db.SQLDB;
  */
 public interface Query<T> {
 
-    T query(SQLDB db);
+    T executeQuery(SQLDB db);
 
 }

@@ -20,6 +20,7 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.db.access.ExecStatement;
+import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.*;
 import com.djrapitops.plan.db.sql.tables.*;
@@ -317,6 +318,7 @@ public abstract class SQLDB extends AbstractDatabase {
 
     public abstract void returnToPool(Connection connection);
 
+    @Deprecated
     public boolean execute(ExecStatement statement) {
         if (!isOpen()) {
             throw new DBOpException("SQL Statement tried to execute while connection closed");
@@ -335,6 +337,7 @@ public abstract class SQLDB extends AbstractDatabase {
         }
     }
 
+    @Deprecated
     public boolean execute(String sql) {
         return execute(new ExecStatement(sql) {
             @Override
@@ -344,6 +347,7 @@ public abstract class SQLDB extends AbstractDatabase {
         });
     }
 
+    @Deprecated
     public void executeUnsafe(String... statements) {
         Verify.nullCheck(statements);
         for (String statement : statements) {
@@ -357,6 +361,7 @@ public abstract class SQLDB extends AbstractDatabase {
         }
     }
 
+    @Deprecated
     public void executeBatch(ExecStatement statement) {
         if (!isOpen()) {
             throw new DBOpException("SQL Batch tried to execute while connection closed");
@@ -375,6 +380,7 @@ public abstract class SQLDB extends AbstractDatabase {
         }
     }
 
+    @Deprecated
     public <T> T query(QueryStatement<T> statement) {
         if (!isOpen()) {
             throw new DBOpException("SQL Query tried to execute while connection closed");
@@ -391,6 +397,11 @@ public abstract class SQLDB extends AbstractDatabase {
         } finally {
             returnToPool(connection);
         }
+    }
+
+    @Override
+    public <T> T query(Query<T> query) {
+        return query.executeQuery(this);
     }
 
     public UsersTable getUsersTable() {
