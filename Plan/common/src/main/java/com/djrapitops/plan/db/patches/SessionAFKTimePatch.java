@@ -17,7 +17,7 @@
 package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.tables.SessionsTable;
+import com.djrapitops.plan.db.sql.tables.SessionsTable;
 
 public class SessionAFKTimePatch extends Patch {
 

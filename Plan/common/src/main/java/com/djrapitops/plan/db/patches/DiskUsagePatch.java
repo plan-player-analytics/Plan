@@ -17,7 +17,7 @@
 package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.tables.TPSTable;
+import com.djrapitops.plan.db.sql.tables.TPSTable;
 
 public class DiskUsagePatch extends Patch {
 

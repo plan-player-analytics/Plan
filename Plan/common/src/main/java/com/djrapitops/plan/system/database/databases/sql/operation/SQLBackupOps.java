@@ -18,8 +18,8 @@ package com.djrapitops.plan.system.database.databases.sql.operation;
 
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.SQLDB;
+import com.djrapitops.plan.db.sql.tables.move.BatchOperationTable;
 import com.djrapitops.plan.system.database.databases.operation.BackupOperations;
-import com.djrapitops.plan.system.database.databases.sql.tables.move.BatchOperationTable;
 
 public class SQLBackupOps extends SQLOps implements BackupOperations {
 

@@ -18,8 +18,8 @@ package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.tables.NicknamesTable;
-import com.djrapitops.plan.system.database.databases.sql.tables.NicknamesTable.Col;
+import com.djrapitops.plan.db.sql.tables.NicknamesTable;
+import com.djrapitops.plan.db.sql.tables.NicknamesTable.Col;
 
 public class NicknamesOptimizationPatch extends Patch {
 

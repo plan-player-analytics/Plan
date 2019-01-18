@@ -17,7 +17,7 @@
 package com.djrapitops.plan.system.database.databases.sql.operation;
 
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.tables.*;
+import com.djrapitops.plan.db.sql.tables.*;
 
 public class SQLOps {
 

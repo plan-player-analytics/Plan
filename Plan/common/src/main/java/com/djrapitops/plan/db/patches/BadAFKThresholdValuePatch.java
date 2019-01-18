@@ -18,7 +18,7 @@ package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.QueryAllStatement;
-import com.djrapitops.plan.system.database.databases.sql.tables.SessionsTable;
+import com.djrapitops.plan.db.sql.tables.SessionsTable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

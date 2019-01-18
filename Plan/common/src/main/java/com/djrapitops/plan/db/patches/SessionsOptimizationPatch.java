@@ -18,8 +18,8 @@ package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.tables.SessionsTable;
-import com.djrapitops.plan.system.database.databases.sql.tables.SessionsTable.Col;
+import com.djrapitops.plan.db.sql.tables.SessionsTable;
+import com.djrapitops.plan.db.sql.tables.SessionsTable.Col;
 
 public class SessionsOptimizationPatch extends Patch {
 

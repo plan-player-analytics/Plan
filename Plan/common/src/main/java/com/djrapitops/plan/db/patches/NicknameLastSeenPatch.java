@@ -21,8 +21,8 @@ import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.sql.parsing.Select;
-import com.djrapitops.plan.system.database.databases.sql.tables.NicknamesTable;
-import com.djrapitops.plan.system.database.databases.sql.tables.ServerTable;
+import com.djrapitops.plan.db.sql.tables.NicknamesTable;
+import com.djrapitops.plan.db.sql.tables.ServerTable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

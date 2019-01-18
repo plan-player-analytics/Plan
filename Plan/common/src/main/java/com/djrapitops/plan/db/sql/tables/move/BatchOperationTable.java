@@ -14,13 +14,13 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.database.databases.sql.tables.move;
+package com.djrapitops.plan.db.sql.tables.move;
 
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.tables.ServerTable;
-import com.djrapitops.plan.system.database.databases.sql.tables.Table;
-import com.djrapitops.plan.system.database.databases.sql.tables.UsersTable;
+import com.djrapitops.plan.db.sql.tables.ServerTable;
+import com.djrapitops.plan.db.sql.tables.Table;
+import com.djrapitops.plan.db.sql.tables.UsersTable;
 import com.djrapitops.plan.system.info.server.Server;
 
 import java.util.ArrayList;

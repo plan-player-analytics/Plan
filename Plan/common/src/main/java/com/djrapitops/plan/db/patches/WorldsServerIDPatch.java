@@ -20,9 +20,9 @@ import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.system.database.databases.sql.tables.SessionsTable;
-import com.djrapitops.plan.system.database.databases.sql.tables.WorldTable;
-import com.djrapitops.plan.system.database.databases.sql.tables.WorldTimesTable;
+import com.djrapitops.plan.db.sql.tables.SessionsTable;
+import com.djrapitops.plan.db.sql.tables.WorldTable;
+import com.djrapitops.plan.db.sql.tables.WorldTimesTable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

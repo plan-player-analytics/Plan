@@ -17,7 +17,7 @@
 package com.djrapitops.plan.db;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.system.database.databases.sql.tables.ServerTable;
+import com.djrapitops.plan.db.sql.tables.ServerTable;
 import com.djrapitops.plan.system.info.server.Server;
 import org.junit.BeforeClass;
 import org.junit.Test;

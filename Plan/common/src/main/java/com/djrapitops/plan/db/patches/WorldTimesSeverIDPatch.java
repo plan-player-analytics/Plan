@@ -19,7 +19,7 @@ package com.djrapitops.plan.db.patches;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.system.database.databases.sql.tables.WorldTimesTable;
+import com.djrapitops.plan.db.sql.tables.WorldTimesTable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

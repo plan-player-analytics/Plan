@@ -17,9 +17,9 @@
 package com.djrapitops.plan.system.database.databases.sql.operation;
 
 import com.djrapitops.plan.db.SQLDB;
+import com.djrapitops.plan.db.sql.tables.Table;
+import com.djrapitops.plan.db.sql.tables.UserUUIDTable;
 import com.djrapitops.plan.system.database.databases.operation.RemoveOperations;
-import com.djrapitops.plan.system.database.databases.sql.tables.Table;
-import com.djrapitops.plan.system.database.databases.sql.tables.UserUUIDTable;
 
 import java.util.UUID;
 

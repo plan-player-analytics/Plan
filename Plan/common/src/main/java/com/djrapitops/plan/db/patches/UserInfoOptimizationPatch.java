@@ -18,8 +18,8 @@ package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.tables.UserInfoTable;
-import com.djrapitops.plan.system.database.databases.sql.tables.UserInfoTable.Col;
+import com.djrapitops.plan.db.sql.tables.UserInfoTable;
+import com.djrapitops.plan.db.sql.tables.UserInfoTable.Col;
 
 public class UserInfoOptimizationPatch extends Patch {
 
