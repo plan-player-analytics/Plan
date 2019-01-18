@@ -18,6 +18,8 @@ package com.djrapitops.plan.db;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.system.database.databases.operation.*;
 
 /**
@@ -32,6 +34,24 @@ public interface Database {
     void close() throws DBException;
 
     boolean isOpen();
+
+    /**
+     * Execute an SQL Query statement to get a result.
+     * <p>
+     * This method should only be called from an asynchronous thread.
+     *
+     * @param query QueryStatement to execute.
+     * @param <T>   Type of the object to be returned.
+     * @return Result of the query.
+     */
+    <T> T query(QueryStatement<T> query);
+
+    /**
+     * Execute an SQL Transaction.
+     *
+     * @param transaction Transaction to execute.
+     */
+    void executeTransaction(Transaction transaction);
 
     @Deprecated
     BackupOperations backup();
