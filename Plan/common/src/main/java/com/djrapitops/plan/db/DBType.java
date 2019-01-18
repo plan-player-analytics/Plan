@@ -58,10 +58,10 @@ public enum DBType {
     }
 
     /**
-     * Used to check if the {@code DBType} supports <b>most</b> MySQL Queries.<p>
+     * Used to check if the {@code DBType} supports <b>most</b> MySQL MySQLSchemaQueries.<p>
      * When specific Statements are not compatible, the {@code DBType} should be checked.
      *
-     * @return if the database supports MySQL Queries
+     * @return if the database supports MySQL MySQLSchemaQueries
      */
     public boolean supportsMySQLQueries() {
         return supportingMySQLQueries;

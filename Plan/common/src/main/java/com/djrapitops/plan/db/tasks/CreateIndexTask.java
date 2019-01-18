@@ -19,7 +19,7 @@ package com.djrapitops.plan.db.tasks;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.parsing.Column;
-import com.djrapitops.plan.system.database.databases.sql.operation.Queries;
+import com.djrapitops.plan.db.sql.queries.MySQLSchemaQueries;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plugin.task.AbsRunnable;
 import org.apache.commons.text.TextStringBuilder;
@@ -79,7 +79,7 @@ public class CreateIndexTask extends AbsRunnable {
 
         boolean isMySQL = db.getType() == DBType.MYSQL;
         if (isMySQL) {
-            boolean indexExists = db.query(Queries.doesIndexExist(indexName, tableName));
+            boolean indexExists = db.query(MySQLSchemaQueries.doesIndexExist(indexName, tableName));
             if (indexExists) return;
         }
 

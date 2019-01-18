@@ -22,8 +22,8 @@ import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
+import com.djrapitops.plan.db.sql.queries.MySQLSchemaQueries;
 import com.djrapitops.plan.system.database.databases.sql.objects.ForeignKeyConstraint;
-import com.djrapitops.plan.system.database.databases.sql.operation.Queries;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -169,7 +169,7 @@ public abstract class Patch {
         }
 
         String schema = db.getConfig().get(DatabaseSettings.MYSQL_DATABASE);
-        List<ForeignKeyConstraint> constraints = query(Queries.foreignKeyConstraintsOf(schema, referencedTable));
+        List<ForeignKeyConstraint> constraints = query(MySQLSchemaQueries.foreignKeyConstraintsOf(schema, referencedTable));
 
         for (ForeignKeyConstraint constraint : constraints) {
             // Uses information from https://stackoverflow.com/a/34574758
@@ -184,7 +184,7 @@ public abstract class Patch {
         }
 
         String schema = db.getConfig().get(DatabaseSettings.MYSQL_DATABASE);
-        List<ForeignKeyConstraint> constraints = query(Queries.foreignKeyConstraintsOf(schema, table));
+        List<ForeignKeyConstraint> constraints = query(MySQLSchemaQueries.foreignKeyConstraintsOf(schema, table));
 
         Verify.isTrue(constraints.isEmpty(), () -> new DBOpException("Table '" + table + "' has constraints '" + constraints + "'"));
     }
