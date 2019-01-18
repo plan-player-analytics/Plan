@@ -58,7 +58,7 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public abstract class SQLDB extends Database {
+public abstract class SQLDB extends AbstractDatabase {
 
     private final Supplier<UUID> serverUUIDSupplier;
 

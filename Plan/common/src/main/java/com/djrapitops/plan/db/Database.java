@@ -21,31 +21,38 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.databases.operation.*;
 
 /**
- * Abstract class representing a Database.
- * <p>
- * All Operations methods should be only called from an asynchronous thread.
+ * Interface for interacting with a Plan SQL database.
  *
  * @author Rsl1122
  */
-public abstract class Database {
+public interface Database {
 
-    protected volatile boolean open = false;
+    void init() throws DBInitException;
 
-    public abstract void init() throws DBInitException;
+    void close() throws DBException;
 
-    public abstract BackupOperations backup();
+    boolean isOpen();
 
-    public abstract CheckOperations check();
+    @Deprecated
+    BackupOperations backup();
 
-    public abstract FetchOperations fetch();
+    @Deprecated
+    CheckOperations check();
 
-    public abstract RemoveOperations remove();
+    @Deprecated
+    FetchOperations fetch();
 
-    public abstract SearchOperations search();
+    @Deprecated
+    RemoveOperations remove();
 
-    public abstract CountOperations count();
+    @Deprecated
+    SearchOperations search();
 
-    public abstract SaveOperations save();
+    @Deprecated
+    CountOperations count();
+
+    @Deprecated
+    SaveOperations save();
 
     /**
      * Used to get the {@code DBType} of the Database
@@ -53,14 +60,9 @@ public abstract class Database {
      * @return the {@code DBType}
      * @see DBType
      */
-    public abstract DBType getType();
+    @Deprecated
+    DBType getType();
 
-    public abstract void close() throws DBException;
-
-    public boolean isOpen() {
-        return open;
-    }
-
-    public abstract void scheduleClean(long delay);
-
+    @Deprecated
+    void scheduleClean(long delay);
 }
