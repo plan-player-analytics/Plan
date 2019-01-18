@@ -18,7 +18,7 @@ package com.djrapitops.plan.db;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.system.database.databases.operation.*;
 
@@ -44,7 +44,7 @@ public interface Database {
      * @param <T>   Type of the object to be returned.
      * @return Result of the query.
      */
-    <T> T query(QueryStatement<T> query);
+    <T> T query(Query<T> query);
 
     /**
      * Execute an SQL Transaction.

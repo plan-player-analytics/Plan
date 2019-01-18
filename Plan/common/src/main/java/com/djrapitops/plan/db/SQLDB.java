@@ -325,10 +325,6 @@ public abstract class SQLDB extends AbstractDatabase {
         Connection connection = null;
         try {
             connection = getConnection();
-            // Inject Timings to the statement for benchmarking
-            if (config.isTrue(PluginSettings.DEV_MODE)) {
-                statement.setTimings(timings);
-            }
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
                 return statement.execute(preparedStatement);
             }
@@ -369,10 +365,6 @@ public abstract class SQLDB extends AbstractDatabase {
         Connection connection = null;
         try {
             connection = getConnection();
-            // Inject Timings to the statement for benchmarking
-            if (config.isTrue(PluginSettings.DEV_MODE)) {
-                statement.setTimings(timings);
-            }
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
                 statement.executeBatch(preparedStatement);
             }
@@ -391,10 +383,6 @@ public abstract class SQLDB extends AbstractDatabase {
         Connection connection = null;
         try {
             connection = getConnection();
-            // Inject Timings to the statement for benchmarking
-            if (config.isTrue(PluginSettings.DEV_MODE)) {
-                statement.setTimings(timings);
-            }
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
                 return statement.executeQuery(preparedStatement);
             }

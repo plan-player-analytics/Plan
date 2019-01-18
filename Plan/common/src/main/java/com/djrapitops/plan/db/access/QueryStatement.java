@@ -16,6 +16,10 @@
  */
 package com.djrapitops.plan.db.access;
 
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.db.SQLDB;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,8 +29,9 @@ import java.sql.SQLException;
  *
  * @author Rsl1122
  */
-public abstract class QueryStatement<T> extends AbstractSQLStatement {
+public abstract class QueryStatement<T> implements Query<T> {
 
+    private final String sql;
     private final int fetchSize;
 
     public QueryStatement(String sql) {
@@ -34,12 +39,26 @@ public abstract class QueryStatement<T> extends AbstractSQLStatement {
     }
 
     public QueryStatement(String sql, int fetchSize) {
-        super(sql);
+        this.sql = sql;
         this.fetchSize = fetchSize;
     }
 
+    @Override
+    public T query(SQLDB db) {
+        Connection connection = null;
+        try {
+            connection = db.getConnection();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                return executeQuery(preparedStatement);
+            }
+        } catch (SQLException e) {
+            throw DBOpException.forCause(sql, e);
+        } finally {
+            db.returnToPool(connection);
+        }
+    }
+
     public T executeQuery(PreparedStatement statement) throws SQLException {
-        startBenchmark();
         try {
             statement.setFetchSize(fetchSize);
             prepare(statement);
@@ -48,7 +67,6 @@ public abstract class QueryStatement<T> extends AbstractSQLStatement {
             }
         } finally {
             statement.close();
-            stopBenchmark();
         }
     }
 
@@ -58,5 +76,10 @@ public abstract class QueryStatement<T> extends AbstractSQLStatement {
 
     public String getSql() {
         return sql;
+    }
+
+    @Override
+    public String toString() {
+        return "Query (" + sql + ')';
     }
 }

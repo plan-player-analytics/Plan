@@ -24,20 +24,20 @@ import java.sql.SQLException;
  *
  * @author Rsl1122
  */
-public abstract class ExecStatement extends AbstractSQLStatement {
+public abstract class ExecStatement {
+
+    private final String sql;
 
     public ExecStatement(String sql) {
-        super(sql);
+        this.sql = sql;
     }
 
     public boolean execute(PreparedStatement statement) throws SQLException {
-        startBenchmark();
         try {
             prepare(statement);
             return callExecute(statement);
         } finally {
             statement.close();
-            stopBenchmark();
         }
     }
 
@@ -51,13 +51,11 @@ public abstract class ExecStatement extends AbstractSQLStatement {
     }
 
     public void executeBatch(PreparedStatement statement) throws SQLException {
-        startBatchBenchmark();
         try {
             prepare(statement);
             statement.executeBatch();
         } finally {
             statement.close();
-            stopBatchBenchmark();
         }
     }
 
