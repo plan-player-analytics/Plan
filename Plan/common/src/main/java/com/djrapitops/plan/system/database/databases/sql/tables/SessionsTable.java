@@ -20,6 +20,9 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.db.SQLDB;
+import com.djrapitops.plan.db.patches.SessionAFKTimePatch;
+import com.djrapitops.plan.db.patches.SessionsOptimizationPatch;
+import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
@@ -40,9 +43,9 @@ import java.util.stream.Collectors;
  * Table that represents plan_sessions.
  *
  * Patches related to this table:
- * {@link com.djrapitops.plan.system.database.databases.sql.patches.Version10Patch}
- * {@link com.djrapitops.plan.system.database.databases.sql.patches.SessionAFKTimePatch}
- * {@link com.djrapitops.plan.system.database.databases.sql.patches.SessionsOptimizationPatch}
+ * {@link Version10Patch}
+ * {@link SessionAFKTimePatch}
+ * {@link SessionsOptimizationPatch}
  *
  * @author Rsl1122
  */

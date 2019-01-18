@@ -22,6 +22,10 @@ import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.SQLDB;
+import com.djrapitops.plan.db.patches.Version10Patch;
+import com.djrapitops.plan.db.patches.WorldTimesOptimizationPatch;
+import com.djrapitops.plan.db.patches.WorldTimesSeverIDPatch;
+import com.djrapitops.plan.db.patches.WorldsServerIDPatch;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
@@ -44,10 +48,10 @@ import java.util.stream.Collectors;
  * For contained columns {@link Col}
  * <p>
  * Patches related to this table:
- * {@link com.djrapitops.plan.system.database.databases.sql.patches.Version10Patch}
- * {@link com.djrapitops.plan.system.database.databases.sql.patches.WorldTimesSeverIDPatch}
- * {@link com.djrapitops.plan.system.database.databases.sql.patches.WorldsServerIDPatch}
- * {@link com.djrapitops.plan.system.database.databases.sql.patches.WorldTimesOptimizationPatch}
+ * {@link Version10Patch}
+ * {@link WorldTimesSeverIDPatch}
+ * {@link WorldsServerIDPatch}
+ * {@link WorldTimesOptimizationPatch}
  *
  * @author Rsl1122
  */

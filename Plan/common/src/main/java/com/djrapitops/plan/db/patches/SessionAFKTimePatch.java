@@ -14,23 +14,26 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.database.databases.sql.patches;
+package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.db.SQLDB;
+import com.djrapitops.plan.system.database.databases.sql.tables.SessionsTable;
 
-public class VersionTableRemovalPatch extends Patch {
+public class SessionAFKTimePatch extends Patch {
 
-    public VersionTableRemovalPatch(SQLDB db) {
+    public SessionAFKTimePatch(SQLDB db) {
         super(db);
     }
 
     @Override
     public boolean hasBeenApplied() {
-        return !hasTable("plan_version");
+        return hasColumn(SessionsTable.TABLE_NAME, SessionsTable.Col.AFK_TIME.get());
     }
 
     @Override
     protected void applyPatch() {
-        dropTable("plan_version");
+        addColumn(SessionsTable.TABLE_NAME,
+                SessionsTable.Col.AFK_TIME + " bigint NOT NULL DEFAULT 0"
+        );
     }
 }

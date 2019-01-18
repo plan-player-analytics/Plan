@@ -14,22 +14,22 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.database.databases.sql.patches;
+package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.tables.PingTable;
-import com.djrapitops.plan.system.database.databases.sql.tables.PingTable.Col;
+import com.djrapitops.plan.system.database.databases.sql.tables.UserInfoTable;
+import com.djrapitops.plan.system.database.databases.sql.tables.UserInfoTable.Col;
 
-public class PingOptimizationPatch extends Patch {
+public class UserInfoOptimizationPatch extends Patch {
 
     private String tempTableName;
     private String tableName;
 
-    public PingOptimizationPatch(SQLDB db) {
+    public UserInfoOptimizationPatch(SQLDB db) {
         super(db);
-        tableName = PingTable.TABLE_NAME;
-        tempTableName = "temp_ping";
+        tableName = UserInfoTable.TABLE_NAME;
+        tempTableName = "temp_user_info";
     }
 
     @Override
@@ -45,30 +45,26 @@ public class PingOptimizationPatch extends Patch {
     protected void applyPatch() {
         try {
             tempOldTable();
-            db.getPingTable().createTable();
+            db.getUserInfoTable().createTable();
 
             db.execute("INSERT INTO " + tableName + " (" +
                     Col.UUID + ", " +
                     Col.SERVER_UUID + ", " +
-                    Col.ID + ", " +
-                    Col.MIN_PING + ", " +
-                    Col.MAX_PING + ", " +
-                    Col.AVG_PING + ", " +
-                    Col.DATE +
+                    Col.REGISTERED + ", " +
+                    Col.BANNED + ", " +
+                    Col.OP +
                     ") SELECT " +
                     "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
                     "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
-                    Col.ID + ", " +
-                    Col.MIN_PING + ", " +
-                    Col.MAX_PING + ", " +
-                    Col.AVG_PING + ", " +
-                    Col.DATE +
+                    Col.REGISTERED + ", " +
+                    Col.BANNED + ", " +
+                    Col.OP +
                     " FROM " + tempTableName
             );
 
             dropTable(tempTableName);
         } catch (Exception e) {
-            throw new DBOpException(PingOptimizationPatch.class.getSimpleName() + " failed.", e);
+            throw new DBOpException(UserInfoOptimizationPatch.class.getSimpleName() + " failed.", e);
         }
     }
 

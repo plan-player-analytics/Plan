@@ -19,6 +19,7 @@ package com.djrapitops.plan.system.database.databases.sql.tables;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.db.SQLDB;
+import com.djrapitops.plan.db.patches.*;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
@@ -40,11 +41,11 @@ import java.util.*;
  * Table Name: plan_ips
  * <p>
  * Patches related to this table:
- * {@link com.djrapitops.plan.system.database.databases.sql.patches.Version10Patch}
- * {@link com.djrapitops.plan.system.database.databases.sql.patches.GeoInfoLastUsedPatch}
- * {@link com.djrapitops.plan.system.database.databases.sql.patches.IPAnonPatch}
- * {@link com.djrapitops.plan.system.database.databases.sql.patches.IPHashPatch}
- * {@link com.djrapitops.plan.system.database.databases.sql.patches.GeoInfoOptimizationPatch}
+ * {@link Version10Patch}
+ * {@link GeoInfoLastUsedPatch}
+ * {@link IPAnonPatch}
+ * {@link IPHashPatch}
+ * {@link GeoInfoOptimizationPatch}
  *
  * @author Rsl1122
  */

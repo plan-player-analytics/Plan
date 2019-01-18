@@ -14,28 +14,31 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.database.databases.sql.patches;
+package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.tables.WorldTable;
-import com.djrapitops.plan.system.database.databases.sql.tables.WorldTable.Col;
+import com.djrapitops.plan.system.database.databases.sql.tables.KillsTable;
+import com.djrapitops.plan.system.database.databases.sql.tables.KillsTable.Col;
 
-public class WorldsOptimizationPatch extends Patch {
+public class KillsOptimizationPatch extends Patch {
 
     private String tempTableName;
     private String tableName;
 
-    public WorldsOptimizationPatch(SQLDB db) {
+    public KillsOptimizationPatch(SQLDB db) {
         super(db);
-        tableName = WorldTable.TABLE_NAME;
-        tempTableName = "temp_worlds";
+        tableName = KillsTable.TABLE_NAME;
+        tempTableName = "temp_kills";
     }
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(tableName, Col.ID.get())
+        return hasColumn(tableName, Col.VICTIM_UUID.get())
+                && hasColumn(tableName, Col.KILLER_UUID.get())
                 && hasColumn(tableName, Col.SERVER_UUID.get())
+                && !hasColumn(tableName, "killer_id")
+                && !hasColumn(tableName, "victim_id")
                 && !hasColumn(tableName, "server_id")
                 && !hasTable(tempTableName); // If this table exists the patch has failed to finish.
     }
@@ -43,26 +46,29 @@ public class WorldsOptimizationPatch extends Patch {
     @Override
     protected void applyPatch() {
         try {
-            dropForeignKeys(tableName);
-            ensureNoForeignKeyConstraints(tableName);
-
             tempOldTable();
-            db.getWorldTable().createTable();
+            db.getKillsTable().createTable();
 
             db.execute("INSERT INTO " + tableName + " (" +
-                    Col.ID + ", " +
+                    Col.VICTIM_UUID + ", " +
+                    Col.KILLER_UUID + ", " +
                     Col.SERVER_UUID + ", " +
-                    Col.NAME +
+                    Col.DATE + ", " +
+                    Col.WEAPON + ", " +
+                    Col.SESSION_ID +
                     ") SELECT " +
-                    Col.ID + ", " +
+                    "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".victim_id LIMIT 1), " +
+                    "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".killer_id LIMIT 1), " +
                     "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
-                    Col.NAME +
+                    Col.DATE + ", " +
+                    Col.WEAPON + ", " +
+                    Col.SESSION_ID +
                     " FROM " + tempTableName
             );
 
             dropTable(tempTableName);
         } catch (Exception e) {
-            throw new DBOpException(WorldsOptimizationPatch.class.getSimpleName() + " failed.", e);
+            throw new DBOpException(KillsOptimizationPatch.class.getSimpleName() + " failed.", e);
         }
     }
 

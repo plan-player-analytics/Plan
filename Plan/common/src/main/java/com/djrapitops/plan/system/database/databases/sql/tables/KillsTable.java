@@ -22,6 +22,9 @@ import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.db.SQLDB;
+import com.djrapitops.plan.db.patches.KillsOptimizationPatch;
+import com.djrapitops.plan.db.patches.KillsServerIDPatch;
+import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
@@ -41,9 +44,9 @@ import java.util.*;
  * Table Name: plan_kills
  * <p>
  * Patches related to this table:
- * {@link com.djrapitops.plan.system.database.databases.sql.patches.Version10Patch}
- * {@link com.djrapitops.plan.system.database.databases.sql.patches.KillsServerIDPatch}
- * {@link com.djrapitops.plan.system.database.databases.sql.patches.KillsOptimizationPatch}
+ * {@link Version10Patch}
+ * {@link KillsServerIDPatch}
+ * {@link KillsOptimizationPatch}
  *
  * @author Rsl1122
  */

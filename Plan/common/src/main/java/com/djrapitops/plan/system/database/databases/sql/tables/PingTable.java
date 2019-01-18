@@ -19,6 +19,7 @@ package com.djrapitops.plan.system.database.databases.sql.tables;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.db.SQLDB;
+import com.djrapitops.plan.db.patches.PingOptimizationPatch;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
@@ -36,7 +37,7 @@ import java.util.*;
  * Table that represents plan_ping in the database.
  * <p>
  * Patches related to this table:
- * {@link com.djrapitops.plan.system.database.databases.sql.patches.PingOptimizationPatch}
+ * {@link PingOptimizationPatch}
  *
  * @author Rsl1122
  */

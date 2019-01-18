@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.database.databases.sql;
+package com.djrapitops.plan.db.tasks;
 
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;

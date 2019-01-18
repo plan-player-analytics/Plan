@@ -18,7 +18,7 @@ package com.djrapitops.plan.db;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
-import com.djrapitops.plan.system.database.databases.sql.KeepAliveTask;
+import com.djrapitops.plan.db.tasks.KeepAliveTask;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.db;
 
-import com.djrapitops.plan.system.database.databases.sql.patches.Patch;
+import com.djrapitops.plan.db.patches.Patch;
 import utilities.TestConstants;
 
 import java.util.ArrayList;

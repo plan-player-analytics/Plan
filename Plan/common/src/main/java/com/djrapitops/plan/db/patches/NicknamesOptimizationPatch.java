@@ -14,28 +14,27 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.database.databases.sql.patches;
+package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.tables.WorldTimesTable;
-import com.djrapitops.plan.system.database.databases.sql.tables.WorldTimesTable.Col;
+import com.djrapitops.plan.system.database.databases.sql.tables.NicknamesTable;
+import com.djrapitops.plan.system.database.databases.sql.tables.NicknamesTable.Col;
 
-public class WorldTimesOptimizationPatch extends Patch {
+public class NicknamesOptimizationPatch extends Patch {
 
     private String tempTableName;
     private String tableName;
 
-    public WorldTimesOptimizationPatch(SQLDB db) {
+    public NicknamesOptimizationPatch(SQLDB db) {
         super(db);
-        tableName = WorldTimesTable.TABLE_NAME;
-        tempTableName = "temp_world_times";
+        tableName = NicknamesTable.TABLE_NAME;
+        tempTableName = "temp_nicknames";
     }
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(tableName, Col.ID.get())
-                && hasColumn(tableName, Col.UUID.get())
+        return hasColumn(tableName, Col.UUID.get())
                 && hasColumn(tableName, Col.SERVER_UUID.get())
                 && !hasColumn(tableName, "user_id")
                 && !hasColumn(tableName, "server_id")
@@ -46,32 +45,24 @@ public class WorldTimesOptimizationPatch extends Patch {
     protected void applyPatch() {
         try {
             tempOldTable();
-            db.getWorldTimesTable().createTable();
+            db.getNicknamesTable().createTable();
 
             db.execute("INSERT INTO " + tableName + " (" +
                     Col.UUID + ", " +
                     Col.SERVER_UUID + ", " +
-                    Col.ADVENTURE + ", " +
-                    Col.CREATIVE + ", " +
-                    Col.SURVIVAL + ", " +
-                    Col.SPECTATOR + ", " +
-                    Col.SESSION_ID + ", " +
-                    Col.WORLD_ID +
+                    Col.NICKNAME + ", " +
+                    Col.LAST_USED +
                     ") SELECT " +
                     "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
                     "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
-                    Col.ADVENTURE + ", " +
-                    Col.CREATIVE + ", " +
-                    Col.SURVIVAL + ", " +
-                    Col.SPECTATOR + ", " +
-                    Col.SESSION_ID + ", " +
-                    Col.WORLD_ID +
+                    Col.NICKNAME + ", " +
+                    Col.LAST_USED +
                     " FROM " + tempTableName
             );
 
             dropTable(tempTableName);
         } catch (Exception e) {
-            throw new DBOpException(WorldTimesOptimizationPatch.class.getSimpleName() + " failed.", e);
+            throw new DBOpException(NicknamesOptimizationPatch.class.getSimpleName() + " failed.", e);
         }
     }
 

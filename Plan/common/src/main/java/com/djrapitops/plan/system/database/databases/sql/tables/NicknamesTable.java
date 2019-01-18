@@ -19,6 +19,9 @@ package com.djrapitops.plan.system.database.databases.sql.tables;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.SQLDB;
+import com.djrapitops.plan.db.patches.NicknameLastSeenPatch;
+import com.djrapitops.plan.db.patches.NicknamesOptimizationPatch;
+import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
@@ -38,9 +41,9 @@ import java.util.*;
  * Table Name: plan_nicknames
  * <p>
  * Patches related to this table:
- * {@link com.djrapitops.plan.system.database.databases.sql.patches.Version10Patch}
- * {@link com.djrapitops.plan.system.database.databases.sql.patches.NicknameLastSeenPatch}
- * {@link com.djrapitops.plan.system.database.databases.sql.patches.NicknamesOptimizationPatch}
+ * {@link Version10Patch}
+ * {@link NicknameLastSeenPatch}
+ * {@link NicknamesOptimizationPatch}
  *
  * @author Rsl1122
  */

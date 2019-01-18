@@ -14,26 +14,26 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.database.databases.sql.patches;
+package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.tables.GeoInfoTable;
+import com.djrapitops.plan.system.database.databases.sql.tables.TPSTable;
 
-public class GeoInfoLastUsedPatch extends Patch {
+public class DiskUsagePatch extends Patch {
 
-    public GeoInfoLastUsedPatch(SQLDB db) {
+    public DiskUsagePatch(SQLDB db) {
         super(db);
     }
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(GeoInfoTable.TABLE_NAME, GeoInfoTable.Col.LAST_USED.get());
+        return hasColumn(TPSTable.TABLE_NAME, TPSTable.Col.FREE_DISK.get());
     }
 
     @Override
     protected void applyPatch() {
-        addColumn(GeoInfoTable.TABLE_NAME,
-                GeoInfoTable.Col.LAST_USED + " bigint NOT NULL DEFAULT 0"
+        addColumn(TPSTable.TABLE_NAME,
+                TPSTable.Col.FREE_DISK + " bigint NOT NULL DEFAULT -1"
         );
     }
 }

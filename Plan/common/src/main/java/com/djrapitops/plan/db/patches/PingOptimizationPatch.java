@@ -14,22 +14,22 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.database.databases.sql.patches;
+package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.tables.SessionsTable;
-import com.djrapitops.plan.system.database.databases.sql.tables.SessionsTable.Col;
+import com.djrapitops.plan.system.database.databases.sql.tables.PingTable;
+import com.djrapitops.plan.system.database.databases.sql.tables.PingTable.Col;
 
-public class SessionsOptimizationPatch extends Patch {
+public class PingOptimizationPatch extends Patch {
 
     private String tempTableName;
     private String tableName;
 
-    public SessionsOptimizationPatch(SQLDB db) {
+    public PingOptimizationPatch(SQLDB db) {
         super(db);
-        tableName = SessionsTable.TABLE_NAME;
-        tempTableName = "temp_sessions";
+        tableName = PingTable.TABLE_NAME;
+        tempTableName = "temp_ping";
     }
 
     @Override
@@ -44,37 +44,31 @@ public class SessionsOptimizationPatch extends Patch {
     @Override
     protected void applyPatch() {
         try {
-            dropForeignKeys(tableName);
-            ensureNoForeignKeyConstraints(tableName);
-
             tempOldTable();
-
-            db.getSessionsTable().createTable();
+            db.getPingTable().createTable();
 
             db.execute("INSERT INTO " + tableName + " (" +
                     Col.UUID + ", " +
                     Col.SERVER_UUID + ", " +
                     Col.ID + ", " +
-                    Col.SESSION_START + ", " +
-                    Col.SESSION_END + ", " +
-                    Col.MOB_KILLS + ", " +
-                    Col.DEATHS + ", " +
-                    Col.AFK_TIME +
+                    Col.MIN_PING + ", " +
+                    Col.MAX_PING + ", " +
+                    Col.AVG_PING + ", " +
+                    Col.DATE +
                     ") SELECT " +
                     "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
                     "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
                     Col.ID + ", " +
-                    Col.SESSION_START + ", " +
-                    Col.SESSION_END + ", " +
-                    Col.MOB_KILLS + ", " +
-                    Col.DEATHS + ", " +
-                    Col.AFK_TIME +
+                    Col.MIN_PING + ", " +
+                    Col.MAX_PING + ", " +
+                    Col.AVG_PING + ", " +
+                    Col.DATE +
                     " FROM " + tempTableName
             );
 
             dropTable(tempTableName);
         } catch (Exception e) {
-            throw new DBOpException(SessionsOptimizationPatch.class.getSimpleName() + " failed.", e);
+            throw new DBOpException(PingOptimizationPatch.class.getSimpleName() + " failed.", e);
         }
     }
 
