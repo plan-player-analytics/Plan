@@ -17,7 +17,6 @@
 package com.djrapitops.plan.db.sql.queries;
 
 import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.system.database.databases.sql.objects.ForeignKeyConstraint;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -87,4 +86,57 @@ public class MySQLSchemaQueries {
         };
     }
 
+    /**
+     * Represents a FOREIGN KEY constraint in a MySQL database.
+     *
+     * @author Rsl1122
+     */
+    public static class ForeignKeyConstraint {
+
+        private final String table;
+        private final String referencedTable;
+        private final String column;
+        private final String refrencedColumn;
+        private final String constraintName;
+
+        public ForeignKeyConstraint(
+                String table, String referencedTable,
+                String column, String refrencedColumn,
+                String constraintName
+        ) {
+            this.table = table;
+            this.referencedTable = referencedTable;
+            this.column = column;
+            this.refrencedColumn = refrencedColumn;
+            this.constraintName = constraintName;
+        }
+
+        public String getTable() {
+            return table;
+        }
+
+        public String getReferencedTable() {
+            return referencedTable;
+        }
+
+        public String getColumn() {
+            return column;
+        }
+
+        public String getRefrencedColumn() {
+            return refrencedColumn;
+        }
+
+        public String getConstraintName() {
+            return constraintName;
+        }
+
+        @Override
+        public String toString() {
+            return "FK '" + constraintName + "' " +
+                    table + "." + column +
+                    " references " +
+                    referencedTable + "." + refrencedColumn;
+        }
+    }
 }
