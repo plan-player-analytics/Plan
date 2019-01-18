@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.db.Database;
 import org.bstats.sponge.Metrics;
 
 import java.io.Serializable;

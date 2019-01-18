@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import org.bstats.bungeecord.Metrics;
 

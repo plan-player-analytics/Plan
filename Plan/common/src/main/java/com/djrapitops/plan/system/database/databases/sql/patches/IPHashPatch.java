@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.database.databases.sql.patches;
 
-import com.djrapitops.plan.system.database.databases.sql.SQLDB;
+import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.GeoInfoTable;
 
 public class IPHashPatch extends Patch {

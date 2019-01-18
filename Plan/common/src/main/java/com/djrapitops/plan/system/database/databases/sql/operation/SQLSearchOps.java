@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.database.databases.sql.operation;
 
+import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.system.database.databases.operation.SearchOperations;
-import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 
 import java.util.Collections;
 import java.util.List;

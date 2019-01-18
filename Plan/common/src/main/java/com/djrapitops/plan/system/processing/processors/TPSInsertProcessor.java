@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.processing.processors;
 
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.system.processing.CriticalRunnable;
 
 import java.util.List;

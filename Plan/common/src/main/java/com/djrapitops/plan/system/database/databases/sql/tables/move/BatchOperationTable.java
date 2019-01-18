@@ -17,7 +17,7 @@
 package com.djrapitops.plan.system.database.databases.sql.tables.move;
 
 import com.djrapitops.plan.data.container.UserInfo;
-import com.djrapitops.plan.system.database.databases.sql.SQLDB;
+import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.ServerTable;
 import com.djrapitops.plan.system.database.databases.sql.tables.Table;
 import com.djrapitops.plan.system.database.databases.sql.tables.UsersTable;

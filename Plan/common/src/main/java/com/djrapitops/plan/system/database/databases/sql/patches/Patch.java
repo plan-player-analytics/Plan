@@ -17,8 +17,8 @@
 package com.djrapitops.plan.system.database.databases.sql.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.database.databases.DBType;
-import com.djrapitops.plan.system.database.databases.sql.SQLDB;
+import com.djrapitops.plan.db.DBType;
+import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.objects.ForeignKeyConstraint;
 import com.djrapitops.plan.system.database.databases.sql.operation.Queries;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;

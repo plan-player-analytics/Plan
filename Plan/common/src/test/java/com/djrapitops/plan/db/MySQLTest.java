@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.database.databases.sql;
+package com.djrapitops.plan.db;
 
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
@@ -24,7 +24,7 @@ import utilities.CIProperties;
 import static org.junit.Assume.assumeTrue;
 
 /**
- * Tests for {@link com.djrapitops.plan.system.database.databases.sql.MySQLDB}.
+ * Tests for {@link MySQLDB}.
  * <p>
  * These settings assume Travis CI environment with MySQL service running.
  * 'Plan' database should be created before the test.

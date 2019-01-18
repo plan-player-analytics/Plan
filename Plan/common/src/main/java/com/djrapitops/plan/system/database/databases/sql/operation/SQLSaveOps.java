@@ -19,8 +19,8 @@ package com.djrapitops.plan.system.database.databases.sql.operation;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.store.objects.Nickname;
+import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
-import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.settings.config.Config;
 

@@ -16,10 +16,10 @@
  */
 package com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plan.db.DBType;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.SQLiteDB;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.DBType;
-import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;

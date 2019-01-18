@@ -17,8 +17,8 @@
 package com.djrapitops.plan.system.processing.processors.player;
 
 import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.system.cache.GeolocationCache;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.CriticalRunnable;
 
 import java.net.InetAddress;

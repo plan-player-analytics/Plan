@@ -18,8 +18,8 @@ package com.djrapitops.plan.system.info.server;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.PluginSettings;

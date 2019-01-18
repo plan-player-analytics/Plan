@@ -14,39 +14,35 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.database.databases.sql;
+package com.djrapitops.plan.db;
 
-import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
-import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.database.databases.DBType;
+import com.djrapitops.plan.system.database.databases.sql.PatchTask;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
-import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import rules.PluginComponentMocker;
-import utilities.CIProperties;
 import utilities.OptionalAssert;
-import utilities.RandomData;
 import utilities.TestConstants;
 
-import static org.junit.Assume.assumeTrue;
+import java.sql.SQLException;
 
 /**
- * Test for the patching of Plan 4.5.2 MySQL DB into the newest schema.
+ * Test for the patching of Plan 4.5.2 H2 DB into the newest schema.
  *
  * @author Rsl1122
  */
-public class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
-
-    private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
+public class DBPatchH2RegressionTest extends DBPatchRegressionTest {
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -68,33 +64,20 @@ public class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
     String securityTable = "CREATE TABLE IF NOT EXISTS plan_security (username varchar(100) NOT NULL UNIQUE, salted_pass_hash varchar(100) NOT NULL UNIQUE, permission_level integer NOT NULL)";
     String transferTable = "CREATE TABLE IF NOT EXISTS plan_transfer (sender_server_id integer NOT NULL, expiry_date bigint NOT NULL DEFAULT 0, type varchar(100) NOT NULL, extra_variables varchar(255) DEFAULT '', content_64 MEDIUMTEXT, part bigint NOT NULL DEFAULT 0, FOREIGN KEY(sender_server_id) REFERENCES plan_servers(id))";
 
-    private MySQLDB underTest;
-
-    @BeforeClass
-    public static void ensureTravisInUse() {
-        boolean isTravis = Boolean.parseBoolean(System.getenv(CIProperties.IS_TRAVIS));
-        assumeTrue(isTravis);
-    }
+    private H2DB underTest;
 
     @Before
-    public void setUpDBWithOldSchema() throws DBInitException, EnableException {
-        PlanSystem system = component.getPlanSystem();
-        PlanConfig config = system.getConfigSystem().getConfig();
-        config.set(DatabaseSettings.MYSQL_DATABASE, "Plan");
-        config.set(DatabaseSettings.MYSQL_USER, "travis");
-        config.set(DatabaseSettings.MYSQL_PASS, "");
-        config.set(DatabaseSettings.MYSQL_HOST, "127.0.0.1");
-        config.set(DatabaseSettings.TYPE, "MySQL");
-        config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
+    public void setUpDBWithOldSchema() throws DBInitException, SQLException {
+        PlanConfig config = component.getPlanSystem().getConfigSystem().getConfig();
 
-        system.enable();
+        config.set(DatabaseSettings.MYSQL_USER, "user");
+        config.set(DatabaseSettings.MYSQL_PASS, "pass");
 
-        underTest = (MySQLDB) system.getDatabaseSystem().getActiveDatabaseByName(DBType.MYSQL.getName());
+        underTest = component.getPlanSystem().getDatabaseSystem().getH2Factory()
+                .usingFileCalled("test");
 
         underTest.setOpen(true);
         underTest.setupDataSource();
-
-        dropAllTables();
 
         // Initialize database with the old table schema
         underTest.execute(serverTable);
@@ -117,19 +100,13 @@ public class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
         insertData(underTest);
     }
 
-    private void dropAllTables() {
-        underTest.execute("DROP DATABASE Plan");
-        underTest.execute("CREATE DATABASE Plan");
-        underTest.execute("USE Plan");
-    }
-
     @After
     public void closeDatabase() {
         underTest.close();
     }
 
     @Test
-    public void mysqlPatchTaskWorksWithoutErrors() {
+    public void h2PatchTaskWorksWithoutErrors() {
         PatchTask patchTask = new PatchTask(underTest.patches(), new Locale(), new TestPluginLogger(), new ErrorHandler() {
             @Override
             public void log(L l, Class aClass, Throwable throwable) {

@@ -14,11 +14,12 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.database.databases.sql;
+package com.djrapitops.plan.db;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
+import com.djrapitops.plan.system.database.databases.sql.PatchTask;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;

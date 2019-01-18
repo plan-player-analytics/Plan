@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.database.databases.operation;
 
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.db.Database;
 
 public interface BackupOperations {
 

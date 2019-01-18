@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.processing.processors.player;
 
 import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.data.store.objects.DateObj;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.system.processing.CriticalRunnable;
 import com.djrapitops.plan.utilities.analysis.Median;
 

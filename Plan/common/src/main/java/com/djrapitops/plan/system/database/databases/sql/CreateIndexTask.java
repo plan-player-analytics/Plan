@@ -16,7 +16,8 @@
  */
 package com.djrapitops.plan.system.database.databases.sql;
 
-import com.djrapitops.plan.system.database.databases.DBType;
+import com.djrapitops.plan.db.DBType;
+import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.operation.Queries;
 import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;

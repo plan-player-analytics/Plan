@@ -17,7 +17,7 @@
 package com.djrapitops.plan.system.database.databases.sql.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.database.databases.sql.SQLDB;
+import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.PingTable;
 import com.djrapitops.plan.system.database.databases.sql.tables.PingTable.Col;
 

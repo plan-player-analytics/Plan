@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.settings.network;
 
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.Config;
