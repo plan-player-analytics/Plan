@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.database.databases.sql.operation;
 
+import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.objects.ForeignKeyConstraint;
-import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

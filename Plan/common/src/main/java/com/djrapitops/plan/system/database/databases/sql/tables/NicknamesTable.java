@@ -19,15 +19,15 @@ package com.djrapitops.plan.system.database.databases.sql.tables;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.SQLDB;
+import com.djrapitops.plan.db.access.ExecStatement;
+import com.djrapitops.plan.db.access.QueryAllStatement;
+import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.NicknameLastSeenPatch;
 import com.djrapitops.plan.db.patches.NicknamesOptimizationPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.sql.parsing.Column;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
-import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
-import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
-import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;

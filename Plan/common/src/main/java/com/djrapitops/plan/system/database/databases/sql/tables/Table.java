@@ -19,8 +19,8 @@ package com.djrapitops.plan.system.database.databases.sql.tables;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
-import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
+import com.djrapitops.plan.db.access.ExecStatement;
+import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.google.common.base.Objects;
 

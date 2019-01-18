@@ -20,8 +20,8 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
-import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
+import com.djrapitops.plan.db.access.ExecStatement;
+import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.tables.GeoInfoTable;
 
 import java.net.InetAddress;

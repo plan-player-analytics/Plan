@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.database.databases.sql.processing;
+package com.djrapitops.plan.db.access;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
