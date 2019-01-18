@@ -21,10 +21,10 @@ import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.patches.UserInfoOptimizationPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
+import com.djrapitops.plan.db.sql.parsing.*;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
-import com.djrapitops.plan.system.database.databases.sql.statements.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plugin.utilities.Verify;
 

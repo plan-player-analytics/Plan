@@ -14,37 +14,19 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.database.databases.sql.statements;
+package com.djrapitops.plan.db.sql.parsing;
 
-/**
- * Class for parsing different SQL strings.
- *
- * @author Rsl1122
- */
-public class SqlParser {
+public class Sql {
+    public static final String INT = "integer";
+    public static final String DOUBLE = "double";
+    public static final String LONG = "bigint";
+    public static final String BOOL = "boolean";
 
-    private final StringBuilder s;
-
-    public SqlParser() {
-        s = new StringBuilder();
+    private Sql() {
+        throw new IllegalStateException("Variable Class");
     }
 
-    public SqlParser(String start) {
-        s = new StringBuilder(start);
-    }
-
-    public SqlParser addSpace() {
-        s.append(" ");
-        return this;
-    }
-
-    public SqlParser append(String string) {
-        s.append(string);
-        return this;
-    }
-
-    @Override
-    public String toString() {
-        return s.toString();
+    public static String varchar(int length) {
+        return "varchar(" + length + ")";
     }
 }

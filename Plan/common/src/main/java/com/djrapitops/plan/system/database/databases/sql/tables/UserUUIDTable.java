@@ -17,8 +17,8 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
 import com.djrapitops.plan.db.SQLDB;
+import com.djrapitops.plan.db.sql.parsing.Column;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
-import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

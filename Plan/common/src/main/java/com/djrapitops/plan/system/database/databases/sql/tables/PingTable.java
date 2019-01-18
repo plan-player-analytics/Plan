@@ -20,12 +20,12 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.patches.PingOptimizationPatch;
+import com.djrapitops.plan.db.sql.parsing.Column;
+import com.djrapitops.plan.db.sql.parsing.Sql;
+import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
-import com.djrapitops.plan.system.database.databases.sql.statements.Column;
-import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
-import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.sql.PreparedStatement;

@@ -19,10 +19,10 @@ package com.djrapitops.plan.system.database.databases.sql.tables;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.db.SQLDB;
+import com.djrapitops.plan.db.sql.parsing.*;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
-import com.djrapitops.plan.system.database.databases.sql.statements.*;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;

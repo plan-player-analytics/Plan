@@ -20,13 +20,13 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.patches.*;
+import com.djrapitops.plan.db.sql.parsing.Column;
+import com.djrapitops.plan.db.sql.parsing.Select;
+import com.djrapitops.plan.db.sql.parsing.Sql;
+import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
-import com.djrapitops.plan.system.database.databases.sql.statements.Column;
-import com.djrapitops.plan.system.database.databases.sql.statements.Select;
-import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
-import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
 import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
 import com.djrapitops.plugin.utilities.Verify;
 

@@ -14,19 +14,19 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.database.databases.sql.statements;
+package com.djrapitops.plan.db.sql.parsing;
 
-public class Sql {
-    public static final String INT = "integer";
-    public static final String DOUBLE = "double";
-    public static final String LONG = "bigint";
-    public static final String BOOL = "boolean";
+/**
+ * Interface for SQL column enum compatibility.
+ *
+ * @author Rsl1122
+ */
+public interface Column {
 
-    private Sql() {
-        throw new IllegalStateException("Variable Class");
+    default String get() {
+        return toString();
     }
 
-    public static String varchar(int length) {
-        return "varchar(" + length + ")";
-    }
+    String toString();
+
 }

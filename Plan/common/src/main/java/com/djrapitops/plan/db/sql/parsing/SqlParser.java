@@ -14,19 +14,37 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.database.databases.sql.statements;
+package com.djrapitops.plan.db.sql.parsing;
 
 /**
- * Interface for SQL column enum compatibility.
+ * Class for parsing different SQL strings.
  *
  * @author Rsl1122
  */
-public interface Column {
+public class SqlParser {
 
-    default String get() {
-        return toString();
+    private final StringBuilder s;
+
+    public SqlParser() {
+        s = new StringBuilder();
     }
 
-    String toString();
+    public SqlParser(String start) {
+        s = new StringBuilder(start);
+    }
 
+    public SqlParser addSpace() {
+        s.append(" ");
+        return this;
+    }
+
+    public SqlParser append(String string) {
+        s.append(string);
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return s.toString();
+    }
 }

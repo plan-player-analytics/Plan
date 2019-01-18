@@ -14,35 +14,40 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.database.databases.sql.statements;
+package com.djrapitops.plan.db.sql.parsing;
 
 import java.util.Arrays;
 
-/**
- * @author Fuzzlemann
- */
-public class Update extends WhereParser {
+public class Insert extends SqlParser {
 
-    public Update(String table) {
-        super("UPDATE " + table + " SET");
+    public Insert(String table) {
+        super("INSERT INTO " + table);
         addSpace();
     }
 
-    public static Update values(String table, Column... values) {
-        String[] cols = Arrays.stream(values).map(Column::get).toArray(String[]::new);
+    public static String values(String table, Column... columns) {
+        String[] cols = Arrays.stream(columns).map(Column::get).toArray(String[]::new);
         return values(table, cols);
     }
-    public static Update values(String table, String... values) {
-        Update parser = new Update(table);
 
-        int size = values.length;
+    public static String values(String table, String... columns) {
+        Insert parser = new Insert(table);
+        parser.append("(");
+        int size = columns.length;
         for (int i = 0; i < size; i++) {
             if (size > 1 && i > 0) {
                 parser.append(", ");
             }
-            parser.append(values[i] + "=?");
+            parser.append(columns[i]);
         }
-
-        return parser;
+        parser.append(") VALUES (");
+        for (int i = 0; i < size; i++) {
+            if (size > 1 && i > 0) {
+                parser.append(", ");
+            }
+            parser.append("?");
+        }
+        parser.append(")");
+        return parser.toString();
     }
 }
