@@ -16,6 +16,17 @@
  */
 package com.djrapitops.plan.db.access.transactions;
 
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.db.SQLDB;
+import com.djrapitops.plan.db.access.ExecStatement;
+import com.djrapitops.plan.db.access.Query;
+import com.djrapitops.plugin.utilities.Verify;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Savepoint;
+
 /**
  * Represents a database transaction.
  *
@@ -23,4 +34,105 @@ package com.djrapitops.plan.db.access.transactions;
  */
 public abstract class Transaction {
 
+    private SQLDB db;
+
+    private Connection connection;
+    private Savepoint savepoint;
+
+    private boolean success;
+
+    protected Transaction() {
+        success = false;
+    }
+
+    public void executeTransaction(SQLDB db) {
+        Verify.nullCheck(db, () -> new IllegalArgumentException("Given database was null"));
+        Verify.isFalse(success, () -> new IllegalStateException("Transaction has already been executed"));
+
+        try {
+            initializeTransaction(db);
+            execute();
+            success = true;
+        } finally {
+            finalizeTransaction();
+        }
+    }
+
+    protected abstract void execute();
+
+    private void initializeTransaction(SQLDB db) {
+        try {
+            this.db = db;
+            this.connection = db.getConnection();
+            this.savepoint = connection.setSavepoint();
+        } catch (SQLException e) {
+            throw new DBOpException(getClass().getSimpleName() + " initialization failed: " + e.getMessage(), e);
+        }
+    }
+
+    private void finalizeTransaction() {
+        try {
+            handleSavepoint();
+        } catch (SQLException e) {
+            throw new DBOpException(getClass().getSimpleName() + " finalization failed: " + e.getMessage(), e);
+        }
+        if (db != null) db.returnToPool(connection);
+        db = null;
+    }
+
+    private void handleSavepoint() throws SQLException {
+        if (connection == null) {
+            return;
+        }
+        // Commit or rollback the transaction
+        if (success) {
+            connection.commit();
+        } else {
+            connection.rollback(savepoint);
+        }
+    }
+
+    protected <T> T query(Query<T> query) {
+        return db.query(query);
+    }
+
+    protected boolean execute(ExecStatement statement) {
+        try {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
+                return statement.execute(preparedStatement);
+            }
+        } catch (SQLException e) {
+            throw DBOpException.forCause(statement.getSql(), e);
+        }
+    }
+
+    protected boolean execute(String sql) {
+        return execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) {
+                // Statement is ready for execution.
+            }
+        });
+    }
+
+    protected void executeSwallowingExceptions(String... statements) {
+        Verify.nullCheck(statements);
+        for (String statement : statements) {
+            try {
+                execute(statement);
+            } catch (DBOpException ignore) {
+                /* Exceptions swallowed */
+            }
+        }
+    }
+
+    protected void executeBatch(ExecStatement statement) {
+        try {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
+                statement.executeBatch(preparedStatement);
+            }
+        } catch (SQLException e) {
+            throw DBOpException.forCause(statement.getSql(), e);
+        }
+    }
 }

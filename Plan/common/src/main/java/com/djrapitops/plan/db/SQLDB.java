@@ -22,6 +22,7 @@ import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.patches.*;
 import com.djrapitops.plan.db.sql.tables.*;
 import com.djrapitops.plan.db.tasks.CreateIndexTask;
@@ -314,6 +315,7 @@ public abstract class SQLDB extends AbstractDatabase {
 
     public abstract Connection getConnection() throws SQLException;
 
+    @Deprecated
     public abstract void commit(Connection connection);
 
     public abstract void returnToPool(Connection connection);
@@ -402,6 +404,11 @@ public abstract class SQLDB extends AbstractDatabase {
     @Override
     public <T> T query(Query<T> query) {
         return query.executeQuery(this);
+    }
+
+    @Override
+    public void executeTransaction(Transaction transaction) {
+        transaction.executeTransaction(this);
     }
 
     public UsersTable getUsersTable() {
