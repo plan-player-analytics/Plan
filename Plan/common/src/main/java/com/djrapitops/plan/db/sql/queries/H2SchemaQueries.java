@@ -16,10 +16,10 @@
  */
 package com.djrapitops.plan.db.sql.queries;
 
-import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.access.CountQueryStatement;
+import com.djrapitops.plan.db.access.Query;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -33,17 +33,24 @@ public class H2SchemaQueries {
         /* Static method class */
     }
 
-    public static QueryStatement<Boolean> doesTableExist(String tableName) {
+    public static Query<Boolean> doesTableExist(String tableName) {
         String sql = "SELECT COUNT(1) as c FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME=?";
-        return new QueryStatement<Boolean>(sql) {
+        return new CountQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tableName);
             }
+        };
+    }
 
+    public static Query<Boolean> doesColumnExist(String tableName, String columnName) {
+        String sql = "SELECT COUNT(1) as c FROM INFORMATION_SCHEMA.COLUMNS" +
+                " WHERE TABLE_NAME=? AND COLUMN_NAME=?";
+        return new CountQueryStatement(sql) {
             @Override
-            public Boolean processResults(ResultSet set) throws SQLException {
-                return set.next() && set.getInt("c") > 0;
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, tableName);
+                statement.setString(2, columnName);
             }
         };
     }

@@ -19,19 +19,13 @@ package com.djrapitops.plan.db.patches;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.QueryAllStatement;
-import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
 import com.djrapitops.plan.db.sql.queries.H2SchemaQueries;
 import com.djrapitops.plan.db.sql.queries.MySQLSchemaQueries;
 import com.djrapitops.plan.db.sql.queries.SQLiteSchemaQueries;
-import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plugin.utilities.Verify;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
@@ -79,51 +73,22 @@ public abstract class Patch extends Transaction {
             case SQLITE:
                 return query(SQLiteSchemaQueries.doesTableExist(tableName));
             case MYSQL:
-                return query(MySQLSchemaQueries.doesTableExist(db.getConfig().get(DatabaseSettings.MYSQL_DATABASE), tableName));
+                return query(MySQLSchemaQueries.doesTableExist(tableName));
             default:
                 throw new IllegalStateException("Unsupported Database Type: " + dbType.getName());
         }
     }
 
     protected boolean hasColumn(String tableName, String columnName) {
-        if (dbType.supportsMySQLQueries()) {
-            String query;
-
-            if (dbType == DBType.H2) {
-                query = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS" +
-                        " WHERE TABLE_NAME=? AND COLUMN_NAME=?";
-            } else {
-                query = "SELECT * FROM information_schema.COLUMNS" +
-                        " WHERE TABLE_NAME=? AND COLUMN_NAME=? AND TABLE_SCHEMA=?";
-            }
-
-            return query(new QueryStatement<Boolean>(query) {
-                @Override
-                public void prepare(PreparedStatement statement) throws SQLException {
-                    statement.setString(1, tableName);
-                    statement.setString(2, columnName);
-                    if (dbType != DBType.H2) {
-                        statement.setString(3, db.getConfig().get(DatabaseSettings.MYSQL_DATABASE));
-                    }
-                }
-
-                @Override
-                public Boolean processResults(ResultSet set) throws SQLException {
-                    return set.next();
-                }
-            });
-        } else {
-            return query(new QueryAllStatement<Boolean>("PRAGMA table_info(" + tableName + ")") {
-                @Override
-                public Boolean processResults(ResultSet set) throws SQLException {
-                    while (set.next()) {
-                        if (columnName.equals(set.getString("name"))) {
-                            return true;
-                        }
-                    }
-                    return false;
-                }
-            });
+        switch (dbType) {
+            case H2:
+                return query(H2SchemaQueries.doesColumnExist(tableName, columnName));
+            case MYSQL:
+                return query(MySQLSchemaQueries.doesColumnExist(tableName, columnName));
+            case SQLITE:
+                return query(SQLiteSchemaQueries.doesColumnExist(tableName, columnName));
+            default:
+                throw new IllegalStateException("Unsupported Database Type: " + dbType.getName());
         }
     }
 
@@ -157,8 +122,7 @@ public abstract class Patch extends Transaction {
             return;
         }
 
-        String schema = db.getConfig().get(DatabaseSettings.MYSQL_DATABASE);
-        List<MySQLSchemaQueries.ForeignKeyConstraint> constraints = query(MySQLSchemaQueries.foreignKeyConstraintsOf(schema, referencedTable));
+        List<MySQLSchemaQueries.ForeignKeyConstraint> constraints = query(MySQLSchemaQueries.foreignKeyConstraintsOf(referencedTable));
 
         for (MySQLSchemaQueries.ForeignKeyConstraint constraint : constraints) {
             // Uses information from https://stackoverflow.com/a/34574758
@@ -172,8 +136,7 @@ public abstract class Patch extends Transaction {
             return;
         }
 
-        String schema = db.getConfig().get(DatabaseSettings.MYSQL_DATABASE);
-        List<MySQLSchemaQueries.ForeignKeyConstraint> constraints = query(MySQLSchemaQueries.foreignKeyConstraintsOf(schema, table));
+        List<MySQLSchemaQueries.ForeignKeyConstraint> constraints = query(MySQLSchemaQueries.foreignKeyConstraintsOf(table));
 
         Verify.isTrue(constraints.isEmpty(), () -> new DBOpException("Table '" + table + "' has constraints '" + constraints + "'"));
     }

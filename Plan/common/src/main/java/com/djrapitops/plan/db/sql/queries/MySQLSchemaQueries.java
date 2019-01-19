@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.db.sql.queries;
 
+import com.djrapitops.plan.db.access.CountQueryStatement;
+import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
 
 import java.sql.PreparedStatement;
@@ -35,31 +37,24 @@ public class MySQLSchemaQueries {
         /* Static method class */
     }
 
-    public static QueryStatement<Boolean> doesTableExist(String tableSchema, String tableName) {
-        String sql = "SELECT COUNT(1) as c FROM information_schema.TABLES WHERE table_name=? AND TABLE_SCHEMA=?";
-        return new QueryStatement<Boolean>(sql) {
+    public static Query<Boolean> doesTableExist(String tableName) {
+        String sql = "SELECT COUNT(1) as c FROM information_schema.TABLES WHERE table_name=? AND TABLE_SCHEMA=DATABASE()";
+        return new CountQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tableName);
-                statement.setString(2, tableSchema);
-            }
-
-            @Override
-            public Boolean processResults(ResultSet set) throws SQLException {
-                return set.next() && set.getInt("c") > 0;
             }
         };
     }
 
-    public static QueryStatement<List<ForeignKeyConstraint>> foreignKeyConstraintsOf(String tableSchema, String referencedTable) {
+    public static Query<List<ForeignKeyConstraint>> foreignKeyConstraintsOf(String referencedTable) {
         String keySQL = "SELECT TABLE_NAME,COLUMN_NAME,CONSTRAINT_NAME,REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE" +
-                " WHERE REFERENCED_TABLE_SCHEMA = ?" +
+                " WHERE REFERENCED_TABLE_SCHEMA = DATABASE()" +
                 " AND REFERENCED_TABLE_NAME = ?";
         return new QueryStatement<List<ForeignKeyConstraint>>(keySQL) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, tableSchema);
-                statement.setString(2, referencedTable);
+                statement.setString(1, referencedTable);
             }
 
             @Override
@@ -85,19 +80,26 @@ public class MySQLSchemaQueries {
         };
     }
 
-    public static QueryStatement<Boolean> doesIndexExist(String indexName, String tableName) {
-        String sql = "SELECT COUNT(1) as IndexIsThere FROM INFORMATION_SCHEMA.STATISTICS " +
+    public static Query<Boolean> doesIndexExist(String indexName, String tableName) {
+        String sql = "SELECT COUNT(1) as c FROM INFORMATION_SCHEMA.STATISTICS " +
                 "WHERE table_schema=DATABASE() AND table_name=? AND index_name=?";
-        return new QueryStatement<Boolean>(sql) {
+        return new CountQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tableName);
                 statement.setString(2, indexName);
             }
+        };
+    }
 
+    public static Query<Boolean> doesColumnExist(String tableName, String columnName) {
+        String sql = "SELECT COUNT(1) as c FROM information_schema.COLUMNS" +
+                " WHERE TABLE_NAME=? AND COLUMN_NAME=? AND TABLE_SCHEMA=DATABASE()";
+        return new CountQueryStatement(sql) {
             @Override
-            public Boolean processResults(ResultSet set) throws SQLException {
-                return set.next() && set.getInt("IndexIsThere") > 0;
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, tableName);
+                statement.setString(2, columnName);
             }
         };
     }

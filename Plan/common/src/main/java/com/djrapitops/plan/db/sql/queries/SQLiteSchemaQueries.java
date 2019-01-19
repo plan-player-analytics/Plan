@@ -16,7 +16,9 @@
  */
 package com.djrapitops.plan.db.sql.queries;
 
-import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.access.CountQueryStatement;
+import com.djrapitops.plan.db.access.Query;
+import com.djrapitops.plan.db.access.QueryAllStatement;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,19 +35,27 @@ public class SQLiteSchemaQueries {
         /* Static method class */
     }
 
-    public static QueryStatement<Boolean> doesTableExist(String tableName) {
+    public static Query<Boolean> doesTableExist(String tableName) {
         String sql = "SELECT COUNT(1) as c FROM sqlite_master WHERE tbl_name=?";
-        return new QueryStatement<Boolean>(sql) {
+        return new CountQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tableName);
             }
-
-            @Override
-            public Boolean processResults(ResultSet set) throws SQLException {
-                return set.next() && set.getInt("c") > 0;
-            }
         };
     }
 
+    public static Query<Boolean> doesColumnExist(String tableName, String columnName) {
+        return new QueryAllStatement<Boolean>("PRAGMA table_info(" + tableName + ")") {
+            @Override
+            public Boolean processResults(ResultSet set) throws SQLException {
+                while (set.next()) {
+                    if (columnName.equals(set.getString("name"))) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
+    }
 }
