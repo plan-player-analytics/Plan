@@ -103,7 +103,6 @@ public class ConfigSettingKeyTest {
         settings.remove(PluginSettings.SERVER_NAME);
         settings.remove(PluginSettings.BUNGEE_COPY_CONFIG);
         settings.remove(DatabaseSettings.TYPE);
-        settings.remove(DisplaySettings.PLAYERS_PER_SERVER_PAGE);
         settings.remove(DisplaySettings.GRAPH_TPS_THRESHOLD_MED);
         settings.remove(DisplaySettings.GRAPH_TPS_THRESHOLD_HIGH);
         settings.remove(DisplaySettings.GRAPH_DISK_THRESHOLD_MED);
