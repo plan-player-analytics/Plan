@@ -135,4 +135,9 @@ public abstract class Transaction {
             throw DBOpException.forCause(statement.getSql(), e);
         }
     }
+
+    @Deprecated
+    protected void setDb(SQLDB db) {
+        this.db = db;
+    }
 }

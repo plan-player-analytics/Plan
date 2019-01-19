@@ -82,7 +82,7 @@ public class WorldsServerIDPatch extends Patch {
         }
 
         updateWorldTimesTableWorldIDs();
-        db.executeUnsafe("DELETE FROM " + WorldTable.TABLE_NAME + " WHERE server_id=0");
+        executeSwallowingExceptions("DELETE FROM " + WorldTable.TABLE_NAME + " WHERE server_id=0");
     }
 
     private Set<String> getWorldNamesOld(UUID serverUUID) {
@@ -136,7 +136,7 @@ public class WorldsServerIDPatch extends Patch {
                 WorldTimesTable.Col.WORLD_ID + "=?" +
                 " WHERE " + WorldTimesTable.Col.WORLD_ID + "=?" +
                 " AND " + "server_id=?";
-        db.executeBatch(new ExecStatement(sql) {
+        executeBatch(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (Map.Entry<WorldObj, List<WorldObj>> entry : oldToNewMap.entrySet()) {

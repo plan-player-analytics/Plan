@@ -47,7 +47,7 @@ public class UserInfoOptimizationPatch extends Patch {
             tempOldTable();
             db.getUserInfoTable().createTable();
 
-            db.execute("INSERT INTO " + tableName + " (" +
+            execute("INSERT INTO " + tableName + " (" +
                     Col.UUID + ", " +
                     Col.SERVER_UUID + ", " +
                     Col.REGISTERED + ", " +

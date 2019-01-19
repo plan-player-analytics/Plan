@@ -29,6 +29,7 @@ import com.djrapitops.plugin.task.AbsRunnable;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class PatchTask extends AbsRunnable {
 
     private final Patch[] patches;

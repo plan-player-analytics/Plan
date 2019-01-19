@@ -52,7 +52,7 @@ public class NicknameLastSeenPatch extends Patch {
         }
 
         // Create table if has failed already
-        db.executeUnsafe("CREATE TABLE IF NOT EXISTS plan_actions " +
+        executeSwallowingExceptions("CREATE TABLE IF NOT EXISTS plan_actions " +
                 "(action_id integer, date bigint, server_id integer, user_id integer, additional_info varchar(1))");
 
         Map<Integer, UUID> serverUUIDsByID = getServerUUIDsByID();
@@ -64,7 +64,7 @@ public class NicknameLastSeenPatch extends Patch {
         Map<Integer, Set<Nickname>> nicknames = getNicknamesByUserID(serverUUIDsByID);
         updateLastUsed(serverIDsByUUID, nicknames);
 
-        db.executeUnsafe("DROP TABLE plan_actions");
+        executeSwallowingExceptions("DROP TABLE plan_actions");
     }
 
     private Map<Integer, UUID> getServerUUIDsByID() {
@@ -117,7 +117,7 @@ public class NicknameLastSeenPatch extends Patch {
                 " AND user_id=?" +
                 " AND server_id=?";
 
-        db.executeBatch(new ExecStatement(updateSQL) {
+        executeBatch(new ExecStatement(updateSQL) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (Map.Entry<Integer, Set<Nickname>> entry : nicknames.entrySet()) {

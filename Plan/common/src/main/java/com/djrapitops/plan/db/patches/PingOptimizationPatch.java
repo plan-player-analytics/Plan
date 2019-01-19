@@ -47,7 +47,7 @@ public class PingOptimizationPatch extends Patch {
             tempOldTable();
             db.getPingTable().createTable();
 
-            db.execute("INSERT INTO " + tableName + " (" +
+            execute("INSERT INTO " + tableName + " (" +
                     Col.UUID + ", " +
                     Col.SERVER_UUID + ", " +
                     Col.ID + ", " +

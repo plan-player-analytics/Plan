@@ -49,7 +49,7 @@ public class WorldsOptimizationPatch extends Patch {
             tempOldTable();
             db.getWorldTable().createTable();
 
-            db.execute("INSERT INTO " + tableName + " (" +
+            execute("INSERT INTO " + tableName + " (" +
                     Col.ID + ", " +
                     Col.SERVER_UUID + ", " +
                     Col.NAME +

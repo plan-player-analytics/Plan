@@ -66,6 +66,6 @@ public class BadAFKThresholdValuePatch extends Patch {
                 SessionsTable.Col.AFK_TIME +
                 " - (" + SessionsTable.Col.SESSION_END + "-" + SessionsTable.Col.SESSION_START +
                 ")) < 5 AND " + SessionsTable.Col.AFK_TIME + "!=0";
-        db.execute(sql);
+        execute(sql);
     }
 }

@@ -97,31 +97,22 @@ public class Version10Patch extends Patch {
                 "(id, uuid, registered, name)" +
                 " SELECT id, uuid, registered, name" +
                 " FROM " + tempTableName;
-        db.execute(statement);
+        execute(statement);
         statement = "INSERT INTO plan_user_info " +
                 "(user_id, registered, opped, banned, server_id)" +
                 " SELECT id, registered, opped, banned, '" + serverID + "'" +
                 " FROM " + tempTableName;
-        db.execute(statement);
+        execute(statement);
         statement = "INSERT INTO plan_nicknames " +
                 "(user_id, nickname, server_id)" +
                 " SELECT user_id, nickname, '" + serverID + "'" +
                 " FROM " + tempNickTableName;
-        db.execute(statement);
-        try {
-            if (dbType.supportsMySQLQueries()) {
-                db.execute("SET foreign_key_checks = 0");
-            }
-            statement = "INSERT INTO plan_kills " +
-                    "(killer_id, victim_id, weapon, date, session_id)" +
-                    " SELECT killer_id, victim_id, weapon, date, '0'" +
-                    " FROM " + tempKillsTableName;
-            db.execute(statement);
-        } finally {
-            if (dbType.supportsMySQLQueries()) {
-                db.execute("SET foreign_key_checks = 1");
-            }
-        }
+        execute(statement);
+        statement = "INSERT INTO plan_kills " +
+                "(killer_id, victim_id, weapon, date, session_id)" +
+                " SELECT killer_id, victim_id, weapon, date, '0'" +
+                " FROM " + tempKillsTableName;
+        execute(statement);
     }
 
     private void copyCommandUsage() throws DBInitException {
@@ -136,7 +127,7 @@ public class Version10Patch extends Patch {
                 "(command, times_used, server_id)" +
                 " SELECT command, times_used, '" + serverID + "'" +
                 " FROM " + tempTableName;
-        db.execute(statement);
+        execute(statement);
 
         dropTable(tempTableName);
     }
@@ -153,7 +144,7 @@ public class Version10Patch extends Patch {
                 "(date, tps, players_online, cpu_usage, ram_usage, entities, chunks_loaded, server_id)" +
                 " SELECT date, tps, players_online, cpu_usage, ram_usage, entities, chunks_loaded, '" + serverID + "'" +
                 " FROM " + tempTableName;
-        db.execute(statement);
+        execute(statement);
 
         dropTable(tempTableName);
     }

@@ -80,7 +80,7 @@ public class IPAnonPatch extends Patch {
                 GeoInfoTable.Col.IP_HASH + "=? " +
                 "WHERE " + GeoInfoTable.Col.IP + "=?";
 
-        db.executeBatch(new ExecStatement(sql) {
+        executeBatch(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (List<GeoInfo> geoInfos : allGeoInfo.values()) {
@@ -122,7 +122,7 @@ public class IPAnonPatch extends Patch {
             boolean hasUserIdColumn = hasColumn(tempTableName, "user_id");
             String identifiers = hasUserIdColumn ? "user_id" : "id, uuid";
 
-            db.execute("INSERT INTO plan_ips (" +
+            execute("INSERT INTO plan_ips (" +
                     identifiers + ", ip, ip_hash, geolocation, last_used" +
                     ") SELECT " +
                     identifiers + ", ip, ip_hash, geolocation, MAX(last_used) FROM plan_ips_temp GROUP BY ip_hash, " +

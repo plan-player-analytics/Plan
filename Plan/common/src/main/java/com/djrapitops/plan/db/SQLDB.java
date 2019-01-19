@@ -523,6 +523,14 @@ public abstract class SQLDB extends AbstractDatabase {
         return config;
     }
 
+    public PluginLogger getLogger() {
+        return logger;
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
     public NetworkContainer.Factory getNetworkContainerFactory() {
         return networkContainerFactory;
     }

@@ -21,6 +21,7 @@ import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
 import com.djrapitops.plan.db.sql.queries.MySQLSchemaQueries;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
@@ -32,12 +33,13 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class Patch {
+public abstract class Patch extends Transaction {
 
     protected final SQLDB db;
     protected final DBType dbType;
 
     public Patch(SQLDB db) {
+        setDb(db);
         this.db = db;
         this.dbType = db.getType();
     }
@@ -46,22 +48,26 @@ public abstract class Patch {
 
     protected abstract void applyPatch();
 
-    public void apply() {
+    @Override
+    protected void execute() {
+//        if (!hasBeenApplied()) { TODO Uncomment after moving patches to the execution service
         if (dbType == DBType.MYSQL) disableForeignKeyChecks();
         applyPatch();
         if (dbType == DBType.MYSQL) enableForeignKeyChecks();
+//        }
+    }
+
+    @Deprecated
+    public void apply() {
+        db.executeTransaction(this);
     }
 
     private void enableForeignKeyChecks() {
-        db.execute("SET FOREIGN_KEY_CHECKS=1");
+        execute("SET FOREIGN_KEY_CHECKS=1");
     }
 
     private void disableForeignKeyChecks() {
-        db.execute("SET FOREIGN_KEY_CHECKS=0");
-    }
-
-    public <T> T query(QueryStatement<T> query) {
-        return db.query(query);
+        execute("SET FOREIGN_KEY_CHECKS=0");
     }
 
     protected boolean hasTable(String tableName) {
@@ -138,15 +144,15 @@ public abstract class Patch {
     }
 
     protected void addColumn(String tableName, String columnInfo) {
-        db.execute("ALTER TABLE " + tableName + " ADD " + (dbType.supportsMySQLQueries() ? "" : "COLUMN ") + columnInfo);
+        execute("ALTER TABLE " + tableName + " ADD " + (dbType.supportsMySQLQueries() ? "" : "COLUMN ") + columnInfo);
     }
 
     protected void dropTable(String name) {
-        db.execute(TableSqlParser.dropTable(name));
+        execute(TableSqlParser.dropTable(name));
     }
 
     protected void renameTable(String from, String to) {
-        db.execute(getRenameTableSQL(from, to));
+        execute(getRenameTableSQL(from, to));
     }
 
     private String getRenameTableSQL(String from, String to) {
@@ -172,7 +178,7 @@ public abstract class Patch {
 
         for (MySQLSchemaQueries.ForeignKeyConstraint constraint : constraints) {
             // Uses information from https://stackoverflow.com/a/34574758
-            db.execute("ALTER TABLE " + constraint.getTable() +
+            execute("ALTER TABLE " + constraint.getTable() +
                     " DROP FOREIGN KEY " + constraint.getConstraintName());
         }
     }

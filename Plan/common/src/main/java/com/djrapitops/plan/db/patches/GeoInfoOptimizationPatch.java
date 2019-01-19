@@ -46,7 +46,7 @@ public class GeoInfoOptimizationPatch extends Patch {
             tempOldTable();
             db.getGeoInfoTable().createTable();
 
-            db.execute("INSERT INTO " + tableName + " (" +
+            execute("INSERT INTO " + tableName + " (" +
                     Col.UUID + ", " +
                     Col.IP + ", " +
                     Col.IP_HASH + ", " +

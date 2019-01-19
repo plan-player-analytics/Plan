@@ -47,7 +47,7 @@ public class NicknamesOptimizationPatch extends Patch {
             tempOldTable();
             db.getNicknamesTable().createTable();
 
-            db.execute("INSERT INTO " + tableName + " (" +
+            execute("INSERT INTO " + tableName + " (" +
                     Col.UUID + ", " +
                     Col.SERVER_UUID + ", " +
                     Col.NICKNAME + ", " +

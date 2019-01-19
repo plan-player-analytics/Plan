@@ -49,7 +49,7 @@ public class KillsOptimizationPatch extends Patch {
             tempOldTable();
             db.getKillsTable().createTable();
 
-            db.execute("INSERT INTO " + tableName + " (" +
+            execute("INSERT INTO " + tableName + " (" +
                     Col.VICTIM_UUID + ", " +
                     Col.KILLER_UUID + ", " +
                     Col.SERVER_UUID + ", " +

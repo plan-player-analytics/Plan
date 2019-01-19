@@ -69,7 +69,7 @@ public class KillsServerIDPatch extends Patch {
 
         String sql = "UPDATE " + KillsTable.TABLE_NAME + " SET server_id=? WHERE " + KillsTable.Col.SESSION_ID + "=?";
 
-        db.executeBatch(new ExecStatement(sql) {
+        executeBatch(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (Map.Entry<Integer, Integer> entry : sessionIDServerIDRelation.entrySet()) {

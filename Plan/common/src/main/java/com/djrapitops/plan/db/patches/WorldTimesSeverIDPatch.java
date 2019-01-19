@@ -66,7 +66,7 @@ public class WorldTimesSeverIDPatch extends Patch {
                 "server_id=?" +
                 " WHERE " + WorldTimesTable.Col.SESSION_ID + "=?";
 
-        db.executeBatch(new ExecStatement(sql) {
+        executeBatch(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (Map.Entry<Integer, Integer> entry : sessionIDServerIDRelation.entrySet()) {
