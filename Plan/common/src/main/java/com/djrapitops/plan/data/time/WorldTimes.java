@@ -55,6 +55,7 @@ public class WorldTimes {
     }
 
     private void addWorld(String worldName, String gameMode, long changeTime) {
+        if (worldName == null || gameMode == null) return;
         times.put(worldName, new GMTimes(gameMode, changeTime));
     }
 

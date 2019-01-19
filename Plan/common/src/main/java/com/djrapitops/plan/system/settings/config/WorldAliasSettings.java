@@ -85,6 +85,8 @@ public class WorldAliasSettings {
      * @param world World name
      */
     public void addWorld(String world) {
+        Verify.isFalse(Verify.isEmpty(world), () -> new IllegalArgumentException("Attempted to save a world alias '" + world + "'"));
+
         ConfigNode aliasSect = getAliasSection();
 
         String previousValue = aliasSect.getString(world);
@@ -165,7 +167,7 @@ public class WorldAliasSettings {
         }
         WorldTimes worldTimes = session.getUnsafe(SessionKeys.WORLD_TIMES);
         if (!session.supports(SessionKeys.END)) {
-            return "Current: " + aliases.get(worldTimes.getCurrentWorld());
+            return "Current: " + aliases.getOrDefault(worldTimes.getCurrentWorld(), "Unknown");
         }
 
         Map<String, Long> playtimePerAlias = getPlaytimePerAlias(worldTimes);

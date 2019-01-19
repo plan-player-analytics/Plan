@@ -139,6 +139,11 @@ Formatting:
     NoSeconds: 'MMM d YYYY, HH:mm'
     JustClock: 'HH:mm:ss'
 # -----------------------------------------------------
+# World aliases can be used to rename worlds and to combine multiple worlds into a group.
+# -----------------------------------------------------
+World_aliases:
+  world: world
+# -----------------------------------------------------
 # These settings will make Plan write .js, .css, .json and .html files to some location on disk.
 # Relative path will render to /plugins/Plan/path
 # Make sure user running the server has write permissions to the path.
