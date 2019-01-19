@@ -36,11 +36,10 @@ public class Protocol {
      */
     public static String getMCVersion(int protocolVersion) {
         switch (protocolVersion) {
+            case 404:
+                return "1.13.2";
             case 401:
                 return "1.13.1";
-            case 390:
-            case 391:
-            case 392:
             case 393:
                 return "1.13";
             case 340:
@@ -68,7 +67,7 @@ public class Protocol {
             case 4:
                 return "1.7.5";
             default:
-                return "Unknown (" + protocolVersion + ")";
+                return "Newer than 1.13.2 (" + protocolVersion + ")";
         }
     }
 }
