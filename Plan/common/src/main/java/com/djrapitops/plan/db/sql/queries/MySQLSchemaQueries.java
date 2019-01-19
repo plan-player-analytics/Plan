@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class that contains different SELECT statements.
+ * Static method class for MySQL Schema related queries.
  *
  * @author Rsl1122
  */
@@ -33,6 +33,22 @@ public class MySQLSchemaQueries {
 
     private MySQLSchemaQueries() {
         /* Static method class */
+    }
+
+    public static QueryStatement<Boolean> doesTableExist(String tableSchema, String tableName) {
+        String sql = "SELECT COUNT(1) as c FROM information_schema.TABLES WHERE table_name=? AND TABLE_SCHEMA=?";
+        return new QueryStatement<Boolean>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, tableName);
+                statement.setString(2, tableSchema);
+            }
+
+            @Override
+            public Boolean processResults(ResultSet set) throws SQLException {
+                return set.next() && set.getInt("c") > 0;
+            }
+        };
     }
 
     public static QueryStatement<List<ForeignKeyConstraint>> foreignKeyConstraintsOf(String tableSchema, String referencedTable) {
@@ -96,18 +112,18 @@ public class MySQLSchemaQueries {
         private final String table;
         private final String referencedTable;
         private final String column;
-        private final String refrencedColumn;
+        private final String referencedColumn;
         private final String constraintName;
 
         public ForeignKeyConstraint(
                 String table, String referencedTable,
-                String column, String refrencedColumn,
+                String column, String referencedColumn,
                 String constraintName
         ) {
             this.table = table;
             this.referencedTable = referencedTable;
             this.column = column;
-            this.refrencedColumn = refrencedColumn;
+            this.referencedColumn = referencedColumn;
             this.constraintName = constraintName;
         }
 
@@ -123,8 +139,8 @@ public class MySQLSchemaQueries {
             return column;
         }
 
-        public String getRefrencedColumn() {
-            return refrencedColumn;
+        public String getReferencedColumn() {
+            return referencedColumn;
         }
 
         public String getConstraintName() {
@@ -136,7 +152,7 @@ public class MySQLSchemaQueries {
             return "FK '" + constraintName + "' " +
                     table + "." + column +
                     " references " +
-                    referencedTable + "." + refrencedColumn;
+                    referencedTable + "." + referencedColumn;
         }
     }
 }

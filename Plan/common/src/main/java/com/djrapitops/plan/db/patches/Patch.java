@@ -23,7 +23,9 @@ import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
+import com.djrapitops.plan.db.sql.queries.H2SchemaQueries;
 import com.djrapitops.plan.db.sql.queries.MySQLSchemaQueries;
+import com.djrapitops.plan.db.sql.queries.SQLiteSchemaQueries;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -71,34 +73,16 @@ public abstract class Patch extends Transaction {
     }
 
     protected boolean hasTable(String tableName) {
-        boolean secondParameter;
-
-        String sql;
-        if (dbType == DBType.H2) {
-            sql = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME=?";
-            secondParameter = false;
-        } else if (dbType.supportsMySQLQueries()) {
-            sql = "SELECT * FROM information_schema.TABLES WHERE table_name=? AND TABLE_SCHEMA=? LIMIT 1";
-            secondParameter = true;
-        } else {
-            sql = "SELECT tbl_name FROM sqlite_master WHERE tbl_name=?";
-            secondParameter = false;
+        switch (dbType) {
+            case H2:
+                return query(H2SchemaQueries.doesTableExist(tableName));
+            case SQLITE:
+                return query(SQLiteSchemaQueries.doesTableExist(tableName));
+            case MYSQL:
+                return query(MySQLSchemaQueries.doesTableExist(db.getConfig().get(DatabaseSettings.MYSQL_DATABASE), tableName));
+            default:
+                throw new IllegalStateException("Unsupported Database Type: " + dbType.getName());
         }
-
-        return query(new QueryStatement<Boolean>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, tableName);
-                if (secondParameter) {
-                    statement.setString(2, db.getConfig().get(DatabaseSettings.MYSQL_DATABASE));
-                }
-            }
-
-            @Override
-            public Boolean processResults(ResultSet set) throws SQLException {
-                return set.next();
-            }
-        });
     }
 
     protected boolean hasColumn(String tableName, String columnName) {
