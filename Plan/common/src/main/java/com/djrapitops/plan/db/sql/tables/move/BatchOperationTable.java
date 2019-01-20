@@ -129,7 +129,7 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        toDB.db.getSecurityTable().addUsers(db.getSecurityTable().getUsers());
+        toDB.db.getSecurityTable().addUsers(db.query(LargeFetchQueries.fetchAllPlanWebUsers()));
     }
 
     public void copyServers(BatchOperationTable toDB) {

@@ -20,7 +20,6 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.parsing.*;
 import com.djrapitops.plugin.utilities.Verify;
@@ -28,7 +27,6 @@ import com.djrapitops.plugin.utilities.Verify;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,8 +41,10 @@ import java.util.List;
  */
 public class SecurityTable extends Table {
 
+    public static final String TABLE_NAME = "plan_security";
+
     public SecurityTable(SQLDB db) {
-        super("plan_security", db);
+        super(TABLE_NAME, db);
         insertStatement = Insert.values(tableName,
                 Col.USERNAME,
                 Col.SALT_PASSWORD_HASH,
@@ -112,25 +112,6 @@ public class SecurityTable extends Table {
 
     public boolean userExists(String user) {
         return getWebUser(user) != null;
-    }
-
-    public List<WebUser> getUsers() {
-        String sql = Select.all(tableName).toString();
-
-        return query(new QueryAllStatement<List<WebUser>>(sql, 5000) {
-            @Override
-            public List<WebUser> processResults(ResultSet set) throws SQLException {
-                List<WebUser> list = new ArrayList<>();
-                while (set.next()) {
-                    String user = set.getString(Col.USERNAME.get());
-                    String saltedPassHash = set.getString(Col.SALT_PASSWORD_HASH.get());
-                    int permissionLevel = set.getInt(Col.PERMISSION_LEVEL.get());
-                    WebUser info = new WebUser(user, saltedPassHash, permissionLevel);
-                    list.add(info);
-                }
-                return list;
-            }
-        });
     }
 
     public enum Col implements Column {

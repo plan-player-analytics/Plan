@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.db.sql.queries.batch;
 
+import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.data.container.PlayerKill;
@@ -256,4 +257,27 @@ public class LargeFetchQueries {
         };
     }
 
+    /**
+     * Query database for all Plan WebUsers.
+     *
+     * @return Set of Plan WebUsers.
+     */
+    public static Query<List<WebUser>> fetchAllPlanWebUsers() {
+        String sql = "SELECT * FROM " + SecurityTable.TABLE_NAME + " ORDER BY " + SecurityTable.Col.PERMISSION_LEVEL + " ASC";
+
+        return new QueryAllStatement<List<WebUser>>(sql, 5000) {
+            @Override
+            public List<WebUser> processResults(ResultSet set) throws SQLException {
+                List<WebUser> list = new ArrayList<>();
+                while (set.next()) {
+                    String user = set.getString(SecurityTable.Col.USERNAME.get());
+                    String saltedPassHash = set.getString(SecurityTable.Col.SALT_PASSWORD_HASH.get());
+                    int permissionLevel = set.getInt(SecurityTable.Col.PERMISSION_LEVEL.get());
+                    WebUser info = new WebUser(user, saltedPassHash, permissionLevel);
+                    list.add(info);
+                }
+                return list;
+            }
+        };
+    }
 }

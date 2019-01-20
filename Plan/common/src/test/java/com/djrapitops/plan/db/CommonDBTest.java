@@ -312,13 +312,13 @@ public abstract class CommonDBTest {
         assertFalse(securityTable.userExists("NotExist"));
         assertNull(securityTable.getWebUser("NotExist"));
 
-        assertEquals(1, securityTable.getUsers().size());
+        assertEquals(1, db.query(LargeFetchQueries.fetchAllPlanWebUsers()).size());
 
         securityTable.removeUser("Test");
         assertFalse(securityTable.userExists("Test"));
         assertNull(securityTable.getWebUser("Test"));
 
-        assertEquals(0, securityTable.getUsers().size());
+        assertEquals(0, db.query(LargeFetchQueries.fetchAllPlanWebUsers()).size());
     }
 
     @Test
@@ -574,7 +574,7 @@ public abstract class CommonDBTest {
         assertTrue(tpsTable.getTPSData().isEmpty());
         assertTrue(db.getServerTable().getBukkitServers().isEmpty());
         assertTrue(db.query(LargeFetchQueries.fetchAllPingData()).isEmpty());
-        assertTrue(securityTable.getUsers().isEmpty());
+        assertTrue(db.query(LargeFetchQueries.fetchAllPlanWebUsers()).isEmpty());
     }
 
     private void saveAllData(SQLDB database) throws NoSuchAlgorithmException {
@@ -737,7 +737,7 @@ public abstract class CommonDBTest {
         assertFalse(backup.getWorldTable().getAllWorlds().isEmpty());
         assertFalse(tpsTable.getTPSData().isEmpty());
         assertFalse(backup.getServerTable().getBukkitServers().isEmpty());
-        assertFalse(securityTable.getUsers().isEmpty());
+        assertFalse(db.query(LargeFetchQueries.fetchAllPlanWebUsers()).isEmpty());
     }
 
     @Test

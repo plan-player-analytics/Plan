@@ -469,7 +469,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public List<WebUser> getWebUsers() {
-        return securityTable.getUsers();
+        return new ArrayList<>(db.query(LargeFetchQueries.fetchAllPlanWebUsers()));
     }
 
     @Override
