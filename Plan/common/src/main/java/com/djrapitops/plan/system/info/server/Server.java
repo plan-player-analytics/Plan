@@ -72,8 +72,7 @@ public class Server implements Comparable<Server> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Server that = (Server) o;
-        return id == that.id &&
-                Objects.equals(uuid, that.uuid) &&
+        return Objects.equals(uuid, that.uuid) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(webAddress, that.webAddress);
     }

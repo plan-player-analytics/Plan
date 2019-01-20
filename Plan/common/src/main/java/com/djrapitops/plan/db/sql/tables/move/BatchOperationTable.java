@@ -149,7 +149,7 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        toDB.db.getWorldTable().saveWorlds(db.getWorldTable().getAllWorlds());
+        toDB.db.getWorldTable().saveWorlds(db.query(LargeFetchQueries.fetchAllWorldNames()));
     }
 
     public void copyUsers(BatchOperationTable toDB) {

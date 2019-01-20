@@ -19,7 +19,6 @@ package com.djrapitops.plan.db.sql.tables;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.patches.WorldsOptimizationPatch;
@@ -72,27 +71,6 @@ public class WorldTable extends Table {
         );
     }
 
-    /**
-     * Used to get the available world names.
-     *
-     * @return List of all world names in the database.
-     */
-    public List<String> getAllWorlds() {
-        String sql = "SELECT * FROM " + tableName;
-
-        return query(new QueryAllStatement<List<String>>(sql) {
-            @Override
-            public List<String> processResults(ResultSet set) throws SQLException {
-                List<String> worldNames = new ArrayList<>();
-                while (set.next()) {
-                    String worldName = set.getString(Col.NAME.get());
-                    worldNames.add(worldName);
-                }
-                return worldNames;
-            }
-        });
-    }
-
     public List<String> getWorlds() {
         return getWorlds(getServerUUID());
     }
@@ -116,6 +94,27 @@ public class WorldTable extends Table {
                     worldNames.add(worldName);
                 }
                 return worldNames;
+            }
+        });
+    }
+
+    public void saveWorlds(Map<UUID, Collection<String>> worldMap) {
+        String sql = "INSERT INTO " + tableName + " ("
+                + Col.NAME + ", "
+                + Col.SERVER_UUID
+                + ") VALUES (?, ?)";
+
+        executeBatch(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (Map.Entry<UUID, Collection<String>> entry : worldMap.entrySet()) {
+                    UUID serverUUID = entry.getKey();
+                    for (String world : entry.getValue()) {
+                        statement.setString(1, world);
+                        statement.setString(2, serverUUID.toString());
+                        statement.addBatch();
+                    }
+                }
             }
         });
     }

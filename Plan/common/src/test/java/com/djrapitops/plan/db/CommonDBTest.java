@@ -28,6 +28,7 @@ import com.djrapitops.plan.data.store.keys.*;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.patches.Patch;
 import com.djrapitops.plan.db.sql.queries.batch.LargeFetchQueries;
 import com.djrapitops.plan.db.sql.tables.*;
@@ -71,7 +72,6 @@ public abstract class CommonDBTest {
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
     @ClassRule
     public static ComponentMocker component = new PluginComponentMocker(temporaryFolder);
-
 
     public static UUID serverUUID;
 
@@ -329,7 +329,7 @@ public abstract class CommonDBTest {
 
         commitTest();
 
-        List<String> saved = worldTable.getAllWorlds();
+        List<String> saved = worldTable.getWorlds(serverUUID);
         assertEquals(new HashSet<>(worlds), new HashSet<>(saved));
     }
 
@@ -550,31 +550,25 @@ public abstract class CommonDBTest {
 
     @Test
     public void testRemovalEverything() throws NoSuchAlgorithmException {
-        UserInfoTable userInfoTable = db.getUserInfoTable();
-        UsersTable usersTable = db.getUsersTable();
-        SessionsTable sessionsTable = db.getSessionsTable();
-        NicknamesTable nicknamesTable = db.getNicknamesTable();
-        GeoInfoTable geoInfoTable = db.getGeoInfoTable();
-        TPSTable tpsTable = db.getTpsTable();
-        SecurityTable securityTable = db.getSecurityTable();
-
         saveAllData(db);
 
         db.remove().everything();
 
-        assertFalse(usersTable.isRegistered(playerUUID));
-        assertFalse(usersTable.isRegistered(TestConstants.PLAYER_TWO_UUID));
-        assertFalse(userInfoTable.isRegistered(playerUUID));
-
-        assertTrue(nicknamesTable.getNicknames(playerUUID).isEmpty());
-        assertTrue(geoInfoTable.getGeoInfo(playerUUID).isEmpty());
-        assertTrue(sessionsTable.getSessions(playerUUID).isEmpty());
-        assertTrue(db.getCommandUseTable().getCommandUse().isEmpty());
-        assertTrue(db.getWorldTable().getAllWorlds().isEmpty());
-        assertTrue(tpsTable.getTPSData().isEmpty());
-        assertTrue(db.query(LargeFetchQueries.fetchPlanServerInformation()).isEmpty());
-        assertTrue(db.query(LargeFetchQueries.fetchAllPingData()).isEmpty());
+        assertQueryIsEmpty(db, LargeFetchQueries.fetchAllCommonUserInformation());
+        assertQueryIsEmpty(db, LargeFetchQueries.fetchPerServerUserInformation());
+        assertQueryIsEmpty(db, LargeFetchQueries.fetchAllNicknameData());
+        assertQueryIsEmpty(db, LargeFetchQueries.fetchAllGeoInfoData());
+        assertQueryIsEmpty(db, LargeFetchQueries.fetchAllSessionsWithoutKillOrWorldData());
+        assertQueryIsEmpty(db, LargeFetchQueries.fetchAllCommandUsageData());
+        assertQueryIsEmpty(db, LargeFetchQueries.fetchAllWorldNames());
+        assertQueryIsEmpty(db, LargeFetchQueries.fetchAllTPSData());
+        assertQueryIsEmpty(db, LargeFetchQueries.fetchPlanServerInformation());
+        assertQueryIsEmpty(db, LargeFetchQueries.fetchAllPingData());
         assertTrue(db.query(LargeFetchQueries.fetchAllPlanWebUsers()).isEmpty());
+    }
+
+    private <T extends Map> void assertQueryIsEmpty(Database database, Query<T> query) {
+        assertTrue(database.query(query).isEmpty());
     }
 
     private void saveAllData(SQLDB database) throws NoSuchAlgorithmException {
@@ -718,26 +712,20 @@ public abstract class CommonDBTest {
 
         db.backup().backup(backup);
 
-        UserInfoTable userInfoTable = backup.getUserInfoTable();
-        UsersTable usersTable = backup.getUsersTable();
-        SessionsTable sessionsTable = backup.getSessionsTable();
-        NicknamesTable nicknamesTable = backup.getNicknamesTable();
-        GeoInfoTable ipsTable = backup.getGeoInfoTable();
-        TPSTable tpsTable = backup.getTpsTable();
-        SecurityTable securityTable = backup.getSecurityTable();
+        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllCommonUserInformation());
+        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchPerServerUserInformation());
+        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllNicknameData());
+        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllGeoInfoData());
+        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllSessionsWithKillAndWorldData());
+        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllCommandUsageData());
+        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllWorldNames());
+        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllTPSData());
+        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchPlanServerInformation());
+        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllPlanWebUsers());
+    }
 
-        assertTrue(usersTable.isRegistered(playerUUID));
-        assertTrue(usersTable.isRegistered(TestConstants.PLAYER_TWO_UUID));
-        assertTrue(userInfoTable.isRegistered(playerUUID));
-
-        assertFalse(nicknamesTable.getNicknames(playerUUID).isEmpty());
-        assertFalse(ipsTable.getGeoInfo(playerUUID).isEmpty());
-        assertFalse(sessionsTable.getSessions(playerUUID).isEmpty());
-        assertFalse(backup.getCommandUseTable().getCommandUse().isEmpty());
-        assertFalse(backup.getWorldTable().getAllWorlds().isEmpty());
-        assertFalse(tpsTable.getTPSData().isEmpty());
-        assertFalse(backup.query(LargeFetchQueries.fetchPlanServerInformation()).isEmpty());
-        assertFalse(backup.query(LargeFetchQueries.fetchAllPlanWebUsers()).isEmpty());
+    private <T> void assertQueryResultIsEqual(Database one, Database two, Query<T> query) {
+        assertEquals(one.query(query), two.query(query));
     }
 
     @Test

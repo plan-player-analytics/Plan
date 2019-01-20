@@ -464,6 +464,13 @@ public class LargeFetchQueries {
         };
     }
 
+    /**
+     * Query database for common user information.
+     * <p>
+     * This is the base for any user information.
+     *
+     * @return Map: Player UUID - UserInfo
+     */
     public static Query<Map<UUID, UserInfo>> fetchAllCommonUserInformation() {
         String sql = Select.all(UsersTable.TABLE_NAME).toString();
 
@@ -479,6 +486,29 @@ public class LargeFetchQueries {
                     users.put(uuid, new UserInfo(uuid, name, registered, false, false));
                 }
                 return users;
+            }
+        };
+    }
+
+    /**
+     * Query database for world names.
+     *
+     * @return Map: Server UUID - List of world names
+     */
+    public static Query<Map<UUID, Collection<String>>> fetchAllWorldNames() {
+        String sql = "SELECT * FROM " + WorldTable.TABLE_NAME;
+
+        return new QueryAllStatement<Map<UUID, Collection<String>>>(sql, 1000) {
+            @Override
+            public Map<UUID, Collection<String>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, Collection<String>> worldMap = new HashMap<>();
+                while (set.next()) {
+                    UUID serverUUID = UUID.fromString(set.getString(WorldTable.Col.SERVER_UUID.get()));
+                    Collection<String> worlds = worldMap.getOrDefault(serverUUID, new HashSet<>());
+                    worlds.add(set.getString(WorldTable.Col.NAME.get()));
+                    worldMap.put(serverUUID, worlds);
+                }
+                return worldMap;
             }
         };
     }
