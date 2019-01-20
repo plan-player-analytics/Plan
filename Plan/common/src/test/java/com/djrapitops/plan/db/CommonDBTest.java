@@ -29,6 +29,7 @@ import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.patches.Patch;
+import com.djrapitops.plan.db.sql.queries.batch.LargeFetchQueries;
 import com.djrapitops.plan.db.sql.tables.*;
 import com.djrapitops.plan.db.tasks.CreateIndexTask;
 import com.djrapitops.plan.system.PlanSystem;
@@ -572,7 +573,7 @@ public abstract class CommonDBTest {
         assertTrue(db.getWorldTable().getAllWorlds().isEmpty());
         assertTrue(tpsTable.getTPSData().isEmpty());
         assertTrue(db.getServerTable().getBukkitServers().isEmpty());
-        assertTrue(db.getPingTable().getAllPings().isEmpty());
+        assertTrue(db.query(LargeFetchQueries.fetchAllPingData()).isEmpty());
         assertTrue(securityTable.getUsers().isEmpty());
     }
 

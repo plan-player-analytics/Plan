@@ -20,7 +20,6 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.PingOptimizationPatch;
 import com.djrapitops.plan.db.sql.parsing.Column;
@@ -31,7 +30,10 @@ import com.djrapitops.plugin.api.TimeAmount;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Table that represents plan_ping in the database.
@@ -126,41 +128,6 @@ public class PingTable extends UserUUIDTable {
                 }
 
                 return pings;
-            }
-        });
-    }
-
-    public Map<UUID, List<Ping>> getAllPings() {
-        String sql = "SELECT " +
-                Col.DATE + ", " +
-                Col.MAX_PING + ", " +
-                Col.MIN_PING + ", " +
-                Col.AVG_PING + ", " +
-                Col.UUID + ", " +
-                Col.SERVER_UUID +
-                " FROM " + tableName;
-        return query(new QueryAllStatement<Map<UUID, List<Ping>>>(sql, 100000) {
-            @Override
-            public Map<UUID, List<Ping>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, List<Ping>> userPings = new HashMap<>();
-
-                while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
-                    UUID serverUUID = UUID.fromString(set.getString(Col.SERVER_UUID.get()));
-                    long date = set.getLong(Col.DATE.get());
-                    double avgPing = set.getDouble(Col.AVG_PING.get());
-                    int minPing = set.getInt(Col.MIN_PING.get());
-                    int maxPing = set.getInt(Col.MAX_PING.get());
-
-                    List<Ping> pings = userPings.getOrDefault(uuid, new ArrayList<>());
-                    pings.add(new Ping(date, serverUUID,
-                            minPing,
-                            maxPing,
-                            avgPing));
-                    userPings.put(uuid, pings);
-                }
-
-                return userPings;
             }
         });
     }

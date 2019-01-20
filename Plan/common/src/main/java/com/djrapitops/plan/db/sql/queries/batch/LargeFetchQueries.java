@@ -17,6 +17,7 @@
 package com.djrapitops.plan.db.sql.queries.batch;
 
 import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.access.Query;
@@ -211,6 +212,46 @@ public class LargeFetchQueries {
                     ));
                 }
                 return map;
+            }
+        };
+    }
+
+    /**
+     * Query database for all Ping data.
+     *
+     * @return Map: Player UUID - List of ping data.
+     */
+    public static Query<Map<UUID, List<Ping>>> fetchAllPingData() {
+        String sql = "SELECT " +
+                PingTable.Col.DATE + ", " +
+                PingTable.Col.MAX_PING + ", " +
+                PingTable.Col.MIN_PING + ", " +
+                PingTable.Col.AVG_PING + ", " +
+                PingTable.Col.UUID + ", " +
+                PingTable.Col.SERVER_UUID +
+                " FROM " + PingTable.TABLE_NAME;
+        return new QueryAllStatement<Map<UUID, List<Ping>>>(sql, 100000) {
+            @Override
+            public Map<UUID, List<Ping>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, List<Ping>> userPings = new HashMap<>();
+
+                while (set.next()) {
+                    UUID uuid = UUID.fromString(set.getString(PingTable.Col.UUID.get()));
+                    UUID serverUUID = UUID.fromString(set.getString(PingTable.Col.SERVER_UUID.get()));
+                    long date = set.getLong(PingTable.Col.DATE.get());
+                    double avgPing = set.getDouble(PingTable.Col.AVG_PING.get());
+                    int minPing = set.getInt(PingTable.Col.MIN_PING.get());
+                    int maxPing = set.getInt(PingTable.Col.MAX_PING.get());
+
+                    List<Ping> pings = userPings.getOrDefault(uuid, new ArrayList<>());
+                    pings.add(new Ping(date, serverUUID,
+                            minPing,
+                            maxPing,
+                            avgPing));
+                    userPings.put(uuid, pings);
+                }
+
+                return userPings;
             }
         };
     }

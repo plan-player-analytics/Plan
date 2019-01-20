@@ -101,7 +101,7 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        toDB.db.getPingTable().insertAllPings(db.getPingTable().getAllPings());
+        toDB.db.getPingTable().insertAllPings(db.query(LargeFetchQueries.fetchAllPingData()));
     }
 
     public void copyCommandUse(BatchOperationTable toDB) {
