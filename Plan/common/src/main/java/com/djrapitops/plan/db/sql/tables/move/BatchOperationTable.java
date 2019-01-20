@@ -122,7 +122,7 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        toDB.db.getNicknamesTable().insertNicknames(db.getNicknamesTable().getAllNicknames());
+        toDB.db.getNicknamesTable().insertNicknames(db.query(LargeFetchQueries.fetchAllNicknameData()));
     }
 
     public void copyWebUsers(BatchOperationTable toDB) {

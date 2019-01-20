@@ -18,6 +18,7 @@ package com.djrapitops.plan.db.sql.queries.batch;
 
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.PlayerKill;
+import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.sql.tables.*;
@@ -113,7 +114,7 @@ public class LargeFetchQueries {
      *
      * @return Map: Session ID - List of PlayerKills
      */
-    public static Query<Map<Integer, List<PlayerKill>>> fetchAllPlayerKillsBySessionID() {
+    public static Query<Map<Integer, List<PlayerKill>>> fetchAllPlayerKillDataBySessionID() {
         String usersUUIDColumn = UsersTable.TABLE_NAME + "." + UsersTable.Col.UUID;
         String usersNameColumn = UsersTable.TABLE_NAME + "." + UsersTable.Col.USER_NAME + " as victim_name";
         String sql = "SELECT " +
@@ -143,6 +144,44 @@ public class LargeFetchQueries {
                     allPlayerKills.put(sessionID, playerKills);
                 }
                 return allPlayerKills;
+            }
+        };
+    }
+
+    /**
+     * Query database for all nickname data.
+     *
+     * @return Multimap: Server UUID - (Player UUID - List of nicknames)
+     */
+    public static Query<Map<UUID, Map<UUID, List<Nickname>>>> fetchAllNicknameData() {
+        String sql = "SELECT " +
+                NicknamesTable.Col.NICKNAME + ", " +
+                NicknamesTable.Col.LAST_USED + ", " +
+                NicknamesTable.Col.UUID + ", " +
+                NicknamesTable.Col.SERVER_UUID +
+                " FROM " + NicknamesTable.TABLE_NAME;
+
+        return new QueryAllStatement<Map<UUID, Map<UUID, List<Nickname>>>>(sql, 5000) {
+            @Override
+            public Map<UUID, Map<UUID, List<Nickname>>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, Map<UUID, List<Nickname>>> map = new HashMap<>();
+                while (set.next()) {
+                    UUID serverUUID = UUID.fromString(set.getString(NicknamesTable.Col.SERVER_UUID.get()));
+                    UUID uuid = UUID.fromString(set.getString(NicknamesTable.Col.UUID.get()));
+
+                    Map<UUID, List<Nickname>> serverMap = map.getOrDefault(serverUUID, new HashMap<>());
+                    List<Nickname> nicknames = serverMap.getOrDefault(uuid, new ArrayList<>());
+
+                    nicknames.add(new Nickname(
+                            set.getString(NicknamesTable.Col.NICKNAME.get()),
+                            set.getLong(NicknamesTable.Col.LAST_USED.get()),
+                            serverUUID
+                    ));
+
+                    serverMap.put(uuid, nicknames);
+                    map.put(serverUUID, serverMap);
+                }
+                return map;
             }
         };
     }

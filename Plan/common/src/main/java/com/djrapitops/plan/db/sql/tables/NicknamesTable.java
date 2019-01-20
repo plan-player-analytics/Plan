@@ -158,9 +158,7 @@ public class NicknamesTable extends UserUUIDTable {
     }
 
     /**
-     * Get nicknames of all users but doesn't map them by Server
-     *
-     * See {@link NicknamesTable#getAllNicknames}
+     * Get nicknames of all users but doesn't map them by Server.
      *
      * @return a {@code Map<UUID, List<Nickname>} with all nicknames of all users
      *

@@ -211,7 +211,7 @@ public class KillsTable extends UserUUIDTable {
     }
 
     public void addKillsToSessions(Map<UUID, Map<UUID, List<Session>>> map) {
-        Map<Integer, List<PlayerKill>> playerKillsBySessionID = db.query(LargeFetchQueries.fetchAllPlayerKillsBySessionID());
+        Map<Integer, List<PlayerKill>> playerKillsBySessionID = db.query(LargeFetchQueries.fetchAllPlayerKillDataBySessionID());
         for (UUID serverUUID : map.keySet()) {
             for (List<Session> sessions : map.get(serverUUID).values()) {
                 for (Session session : sessions) {
