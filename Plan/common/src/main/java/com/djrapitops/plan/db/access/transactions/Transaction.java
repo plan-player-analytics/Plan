@@ -17,6 +17,7 @@
 package com.djrapitops.plan.db.access.transactions;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.Query;
@@ -64,6 +65,8 @@ public abstract class Transaction {
         try {
             this.db = db;
             this.connection = db.getConnection();
+            // Temporary fix for MySQL Patch task test failing, TODO remove after Auto commit is off for MySQL
+            if (connection.getAutoCommit()) connection.setAutoCommit(false);
             this.savepoint = connection.setSavepoint();
         } catch (SQLException e) {
             throw new DBOpException(getClass().getSimpleName() + " initialization failed: " + e.getMessage(), e);
@@ -73,6 +76,8 @@ public abstract class Transaction {
     private void finalizeTransaction() {
         try {
             handleSavepoint();
+            // Temporary fix for MySQL Patch task test failing, TODO remove after Auto commit is off for MySQL
+            if (db.getType() == DBType.MYSQL) connection.setAutoCommit(true);
         } catch (SQLException e) {
             throw new DBOpException(getClass().getSimpleName() + " finalization failed: " + e.getMessage(), e);
         }
