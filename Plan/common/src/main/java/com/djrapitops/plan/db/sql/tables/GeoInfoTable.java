@@ -20,13 +20,13 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.*;
 import com.djrapitops.plan.db.sql.parsing.Column;
 import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
+import com.djrapitops.plan.db.sql.queries.batch.LargeFetchQueries;
 import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -166,41 +166,10 @@ public class GeoInfoTable extends UserUUIDTable {
         });
     }
 
-    public Map<UUID, List<GeoInfo>> getAllGeoInfo() {
-        String sql = "SELECT " +
-                Col.IP + ", " +
-                Col.GEOLOCATION + ", " +
-                Col.LAST_USED + ", " +
-                Col.IP_HASH + ", " +
-                Col.UUID +
-                " FROM " + tableName;
-
-        return query(new QueryAllStatement<Map<UUID, List<GeoInfo>>>(sql, 50000) {
-            @Override
-            public Map<UUID, List<GeoInfo>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, List<GeoInfo>> geoLocations = new HashMap<>();
-                while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
-
-                    List<GeoInfo> userGeoInfo = geoLocations.getOrDefault(uuid, new ArrayList<>());
-
-                    String ip = set.getString(Col.IP.get());
-                    String geolocation = set.getString(Col.GEOLOCATION.get());
-                    String ipHash = set.getString(Col.IP_HASH.get());
-                    long lastUsed = set.getLong(Col.LAST_USED.get());
-                    userGeoInfo.add(new GeoInfo(ip, geolocation, lastUsed, ipHash));
-
-                    geoLocations.put(uuid, userGeoInfo);
-                }
-                return geoLocations;
-            }
-        });
-    }
-
     public List<String> getNetworkGeolocations() {
         List<String> geolocations = new ArrayList<>();
 
-        Map<UUID, List<GeoInfo>> geoInfo = getAllGeoInfo();
+        Map<UUID, List<GeoInfo>> geoInfo = db.query(LargeFetchQueries.fetchAllGeoInfoData());
         for (List<GeoInfo> userGeoInfos : geoInfo.values()) {
             if (userGeoInfos.isEmpty()) {
                 continue;

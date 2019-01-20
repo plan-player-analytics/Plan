@@ -16,16 +16,16 @@
  */
 package com.djrapitops.plan.db.sql.queries.batch;
 
+import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.sql.tables.CommandUseTable;
+import com.djrapitops.plan.db.sql.tables.GeoInfoTable;
 import com.djrapitops.plan.db.sql.tables.ServerTable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Static method class for queries that use large amount of memory.
@@ -69,6 +69,37 @@ public class LargeFetchQueries {
                     map.put(serverUUID, serverMap);
                 }
                 return map;
+            }
+        };
+    }
+
+    public static Query<Map<UUID, List<GeoInfo>>> fetchAllGeoInfoData() {
+        String sql = "SELECT " +
+                GeoInfoTable.Col.IP + ", " +
+                GeoInfoTable.Col.GEOLOCATION + ", " +
+                GeoInfoTable.Col.LAST_USED + ", " +
+                GeoInfoTable.Col.IP_HASH + ", " +
+                GeoInfoTable.Col.UUID +
+                " FROM " + GeoInfoTable.TABLE_NAME;
+
+        return new QueryAllStatement<Map<UUID, List<GeoInfo>>>(sql, 50000) {
+            @Override
+            public Map<UUID, List<GeoInfo>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, List<GeoInfo>> geoLocations = new HashMap<>();
+                while (set.next()) {
+                    UUID uuid = UUID.fromString(set.getString(GeoInfoTable.Col.UUID.get()));
+
+                    List<GeoInfo> userGeoInfo = geoLocations.getOrDefault(uuid, new ArrayList<>());
+
+                    String ip = set.getString(GeoInfoTable.Col.IP.get());
+                    String geolocation = set.getString(GeoInfoTable.Col.GEOLOCATION.get());
+                    String ipHash = set.getString(GeoInfoTable.Col.IP_HASH.get());
+                    long lastUsed = set.getLong(GeoInfoTable.Col.LAST_USED.get());
+                    userGeoInfo.add(new GeoInfo(ip, geolocation, lastUsed, ipHash));
+
+                    geoLocations.put(uuid, userGeoInfo);
+                }
+                return geoLocations;
             }
         };
     }

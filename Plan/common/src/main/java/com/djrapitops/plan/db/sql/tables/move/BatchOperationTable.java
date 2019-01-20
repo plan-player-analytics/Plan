@@ -115,7 +115,7 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        toDB.db.getGeoInfoTable().insertAllGeoInfo(db.getGeoInfoTable().getAllGeoInfo());
+        toDB.db.getGeoInfoTable().insertAllGeoInfo(db.query(LargeFetchQueries.fetchAllGeoInfoData()));
     }
 
     public void copyNicknames(BatchOperationTable toDB) {

@@ -27,6 +27,7 @@ import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.SQLDB;
+import com.djrapitops.plan.db.sql.queries.batch.LargeFetchQueries;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.info.server.Server;
@@ -123,7 +124,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
         List<UserInfo> serverUserInfo = userInfoTable.getServerUserInfo(serverUUID);
         Map<UUID, Integer> timesKicked = usersTable.getAllTimesKicked();
-        Map<UUID, List<GeoInfo>> geoInfo = geoInfoTable.getAllGeoInfo();
+        Map<UUID, List<GeoInfo>> geoInfo = db.query(LargeFetchQueries.fetchAllGeoInfoData());
         Map<UUID, List<Ping>> allPings = pingTable.getAllPings();
         Map<UUID, List<Nickname>> allNicknames = nicknamesTable.getAllNicknamesUnmapped();
 
@@ -188,7 +189,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
         Map<UUID, UserInfo> users = usersTable.getUsers();
         Map<UUID, Integer> timesKicked = usersTable.getAllTimesKicked();
-        Map<UUID, List<GeoInfo>> geoInfo = geoInfoTable.getAllGeoInfo();
+        Map<UUID, List<GeoInfo>> geoInfo = db.query(LargeFetchQueries.fetchAllGeoInfoData());
         Map<UUID, List<Ping>> allPings = pingTable.getAllPings();
         Map<UUID, List<Nickname>> allNicknames = nicknamesTable.getAllNicknamesUnmapped();
 
@@ -428,7 +429,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Map<UUID, List<GeoInfo>> getAllGeoInfo() {
-        return geoInfoTable.getAllGeoInfo();
+        return db.query(LargeFetchQueries.fetchAllGeoInfoData());
     }
 
     @Override
