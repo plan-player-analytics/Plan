@@ -199,7 +199,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         Map<UUID, List<Nickname>> allNicknames = db.query(LargeFetchQueries.fetchAllNicknameDataByPlayerUUIDs());
 
         Map<UUID, Map<UUID, List<Session>>> sessions = db.query(LargeFetchQueries.fetchAllSessionsWithoutKillOrWorldData());
-        Map<UUID, List<UserInfo>> allUserInfo = userInfoTable.getAllUserInfo();
+        Map<UUID, List<UserInfo>> allUserInfo = db.query(LargeFetchQueries.fetchPerServerUserInformation());
         Map<UUID, PerServerContainer> perServerInfo = getPerServerData(sessions, allUserInfo, allPings);
 
         for (UserInfo userInfo : users.values()) {

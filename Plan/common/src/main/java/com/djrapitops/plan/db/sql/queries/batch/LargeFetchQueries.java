@@ -423,4 +423,43 @@ public class LargeFetchQueries {
             }
         };
     }
+
+    /**
+     * Query database for user information.
+     * <p>
+     * The user information does not contain player names.
+     *
+     * @return Map: Server UUID - List of user information
+     */
+    public static Query<Map<UUID, List<UserInfo>>> fetchPerServerUserInformation() {
+        String sql = "SELECT " +
+                UserInfoTable.Col.REGISTERED + ", " +
+                UserInfoTable.Col.BANNED + ", " +
+                UserInfoTable.Col.OP + ", " +
+                UserInfoTable.Col.UUID + ", " +
+                UserInfoTable.Col.SERVER_UUID +
+                " FROM " + UserInfoTable.TABLE_NAME;
+
+        return new QueryAllStatement<Map<UUID, List<UserInfo>>>(sql, 50000) {
+            @Override
+            public Map<UUID, List<UserInfo>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, List<UserInfo>> serverMap = new HashMap<>();
+                while (set.next()) {
+                    UUID serverUUID = UUID.fromString(set.getString(UserInfoTable.Col.SERVER_UUID.get()));
+                    UUID uuid = UUID.fromString(set.getString(UserInfoTable.Col.UUID.get()));
+
+                    List<UserInfo> userInfos = serverMap.getOrDefault(serverUUID, new ArrayList<>());
+
+                    long registered = set.getLong(UserInfoTable.Col.REGISTERED.get());
+                    boolean banned = set.getBoolean(UserInfoTable.Col.BANNED.get());
+                    boolean op = set.getBoolean(UserInfoTable.Col.OP.get());
+
+                    userInfos.add(new UserInfo(uuid, "", registered, op, banned));
+
+                    serverMap.put(serverUUID, userInfos);
+                }
+                return serverMap;
+            }
+        };
+    }
 }

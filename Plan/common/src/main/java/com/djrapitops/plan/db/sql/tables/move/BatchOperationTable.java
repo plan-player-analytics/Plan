@@ -146,7 +146,7 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        toDB.db.getUserInfoTable().insertUserInfo(db.getUserInfoTable().getAllUserInfo());
+        toDB.db.getUserInfoTable().insertUserInfo(db.query(LargeFetchQueries.fetchPerServerUserInformation()));
     }
 
     public void copyWorlds(BatchOperationTable toDB) {

@@ -232,38 +232,6 @@ public class UserInfoTable extends UserUUIDTable {
         return getServerUserInfo(getServerUUID());
     }
 
-    public Map<UUID, List<UserInfo>> getAllUserInfo() {
-        String sql = "SELECT " +
-                tableName + "." + Col.REGISTERED + ", " +
-                Col.BANNED + ", " +
-                Col.OP + ", " +
-                Col.UUID + ", " +
-                Col.SERVER_UUID +
-                " FROM " + tableName;
-
-        return query(new QueryAllStatement<Map<UUID, List<UserInfo>>>(sql, 50000) {
-            @Override
-            public Map<UUID, List<UserInfo>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, List<UserInfo>> serverMap = new HashMap<>();
-                while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(Col.SERVER_UUID.get()));
-                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
-
-                    List<UserInfo> userInfos = serverMap.getOrDefault(serverUUID, new ArrayList<>());
-
-                    long registered = set.getLong(Col.REGISTERED.get());
-                    boolean banned = set.getBoolean(Col.BANNED.get());
-                    boolean op = set.getBoolean(Col.OP.get());
-
-                    userInfos.add(new UserInfo(uuid, "", registered, op, banned));
-
-                    serverMap.put(serverUUID, userInfos);
-                }
-                return serverMap;
-            }
-        });
-    }
-
     public void insertUserInfo(Map<UUID, List<UserInfo>> allUserInfos) {
         if (Verify.isEmpty(allUserInfos)) {
             return;
