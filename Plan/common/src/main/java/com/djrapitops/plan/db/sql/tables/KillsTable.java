@@ -23,7 +23,6 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.KillsOptimizationPatch;
 import com.djrapitops.plan.db.patches.KillsServerIDPatch;
@@ -37,7 +36,9 @@ import com.djrapitops.plugin.utilities.Verify;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Table that is in charge of storing kill data for each session.
@@ -205,38 +206,6 @@ public class KillsTable extends UserUUIDTable {
                     statement.setString(6, weapon);
                     statement.addBatch();
                 }
-            }
-        });
-    }
-
-    public Map<UUID, List<PlayerKill>> getPlayerKills() {
-        String usersVictimUUIDColumn = usersTable + "." + UsersTable.Col.UUID;
-        String usersVictimNameColumn = usersTable + "." + UsersTable.Col.USER_NAME + " as victim_name";
-        String sql = "SELECT " +
-                Col.DATE + ", " +
-                Col.WEAPON + ", " +
-                Col.VICTIM_UUID + ", " +
-                usersVictimNameColumn + ", " +
-                Col.KILLER_UUID +
-                " FROM " + tableName +
-                " INNER JOIN " + usersTable + " on " + usersVictimUUIDColumn + "=" + Col.VICTIM_UUID;
-
-        return query(new QueryAllStatement<Map<UUID, List<PlayerKill>>>(sql, 50000) {
-            @Override
-            public Map<UUID, List<PlayerKill>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, List<PlayerKill>> allKills = new HashMap<>();
-                while (set.next()) {
-                    UUID killer = UUID.fromString(set.getString(Col.KILLER_UUID.get()));
-                    UUID victim = UUID.fromString(set.getString(Col.VICTIM_UUID.get()));
-                    String victimName = set.getString("victim_name");
-                    long date = set.getLong(Col.DATE.get());
-                    String weapon = set.getString(Col.WEAPON.get());
-
-                    List<PlayerKill> kills = allKills.getOrDefault(killer, new ArrayList<>());
-                    kills.add(new PlayerKill(victim, weapon, date, victimName));
-                    allKills.put(killer, kills);
-                }
-                return allKills;
             }
         });
     }

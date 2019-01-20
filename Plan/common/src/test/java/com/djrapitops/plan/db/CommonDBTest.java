@@ -682,9 +682,15 @@ public abstract class CommonDBTest {
 
         commitTest();
 
-        Map<UUID, List<PlayerKill>> playerKills = db.getKillsTable().getPlayerKills();
-        List<PlayerKill> kills = playerKills.get(playerUUID);
-        assertFalse(playerKills.isEmpty());
+        Map<UUID, List<Session>> sessions = db.getSessionsTable().getSessions(playerUUID);
+        List<Session> savedSessions = sessions.get(playerUUID);
+        assertNotNull(savedSessions);
+        assertFalse(savedSessions.isEmpty());
+
+        Session savedSession = savedSessions.get(0);
+        assertNotNull(savedSession);
+
+        List<PlayerKill> kills = savedSession.getPlayerKills();
         assertNotNull(kills);
         assertFalse(kills.isEmpty());
         assertEquals(expected, kills);
