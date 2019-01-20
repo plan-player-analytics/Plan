@@ -19,7 +19,6 @@ package com.djrapitops.plan.db.sql.tables;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.parsing.Column;
 import com.djrapitops.plan.db.sql.parsing.Select;
@@ -45,8 +44,10 @@ import java.util.UUID;
  */
 public class CommandUseTable extends Table {
 
+    public static final String TABLE_NAME = "plan_commandusages";
+
     public CommandUseTable(SQLDB db) {
-        super("plan_commandusages", db);
+        super(TABLE_NAME, db);
         serverTable = db.getServerTable();
         insertStatement = "INSERT INTO " + tableName + " ("
                 + Col.COMMAND + ", "
@@ -179,36 +180,6 @@ public class CommandUseTable extends Table {
                     return Optional.of(set.getInt(Col.COMMAND_ID.get()));
                 }
                 return Optional.empty();
-            }
-        });
-    }
-
-    public Map<UUID, Map<String, Integer>> getAllCommandUsages() {
-        String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
-        String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
-        String sql = "SELECT " +
-                Col.COMMAND + ", " +
-                Col.TIMES_USED + ", " +
-                serverUUIDColumn +
-                " FROM " + tableName +
-                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + Col.SERVER_ID;
-
-        return query(new QueryAllStatement<Map<UUID, Map<String, Integer>>>(sql, 10000) {
-            @Override
-            public Map<UUID, Map<String, Integer>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Map<String, Integer>> map = new HashMap<>();
-                while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
-
-                    Map<String, Integer> serverMap = map.getOrDefault(serverUUID, new HashMap<>());
-
-                    String command = set.getString(Col.COMMAND.get());
-                    int timesUsed = set.getInt(Col.TIMES_USED.get());
-
-                    serverMap.put(command, timesUsed);
-                    map.put(serverUUID, serverMap);
-                }
-                return map;
             }
         });
     }

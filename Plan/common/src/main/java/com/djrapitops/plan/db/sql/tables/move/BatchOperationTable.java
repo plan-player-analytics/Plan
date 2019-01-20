@@ -18,6 +18,7 @@ package com.djrapitops.plan.db.sql.tables.move;
 
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.db.SQLDB;
+import com.djrapitops.plan.db.sql.queries.batch.LargeFetchQueries;
 import com.djrapitops.plan.db.sql.tables.ServerTable;
 import com.djrapitops.plan.db.sql.tables.Table;
 import com.djrapitops.plan.db.sql.tables.UsersTable;
@@ -107,7 +108,7 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        toDB.db.getCommandUseTable().insertCommandUsage(db.getCommandUseTable().getAllCommandUsages());
+        toDB.db.getCommandUseTable().insertCommandUsage(db.query(LargeFetchQueries.fetchAllCommandUsageData()));
     }
 
     public void copyIPsAndGeolocs(BatchOperationTable toDB) {
