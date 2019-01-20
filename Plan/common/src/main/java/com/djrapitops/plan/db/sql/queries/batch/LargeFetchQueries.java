@@ -23,6 +23,7 @@ import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.tables.*;
 import com.djrapitops.plan.system.info.server.Server;
 
@@ -459,6 +460,25 @@ public class LargeFetchQueries {
                     serverMap.put(serverUUID, userInfos);
                 }
                 return serverMap;
+            }
+        };
+    }
+
+    public static Query<Map<UUID, UserInfo>> fetchAllCommonUserInformation() {
+        String sql = Select.all(UsersTable.TABLE_NAME).toString();
+
+        return new QueryAllStatement<Map<UUID, UserInfo>>(sql, 20000) {
+            @Override
+            public Map<UUID, UserInfo> processResults(ResultSet set) throws SQLException {
+                Map<UUID, UserInfo> users = new HashMap<>();
+                while (set.next()) {
+                    UUID uuid = UUID.fromString(set.getString(UsersTable.Col.UUID.get()));
+                    String name = set.getString(UsersTable.Col.USER_NAME.get());
+                    long registered = set.getLong(UsersTable.Col.REGISTERED.get());
+
+                    users.put(uuid, new UserInfo(uuid, name, registered, false, false));
+                }
+                return users;
             }
         };
     }

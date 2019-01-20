@@ -16,14 +16,10 @@
  */
 package com.djrapitops.plan.db.sql.tables.move;
 
-import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.queries.batch.LargeFetchQueries;
 import com.djrapitops.plan.db.sql.tables.Table;
 import com.djrapitops.plan.db.sql.tables.UsersTable;
-
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * A Fake table used to store a lot of big table operations.
@@ -162,8 +158,8 @@ public class BatchOperationTable extends Table {
         }
         UsersTable fromTable = db.getUsersTable();
         UsersTable toTable = toDB.db.getUsersTable();
-        Map<UUID, UserInfo> users = fromTable.getUsers();
-        toTable.insertUsers(users);
+
+        toTable.insertUsers(db.query(LargeFetchQueries.fetchAllCommonUserInformation()));
         toTable.updateKicked(fromTable.getAllTimesKicked());
     }
 

@@ -275,25 +275,6 @@ public class UsersTable extends UserUUIDTable {
         });
     }
 
-    public Map<UUID, UserInfo> getUsers() {
-        String sql = Select.all(tableName).toString();
-
-        return query(new QueryAllStatement<Map<UUID, UserInfo>>(sql, 20000) {
-            @Override
-            public Map<UUID, UserInfo> processResults(ResultSet set) throws SQLException {
-                Map<UUID, UserInfo> users = new HashMap<>();
-                while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
-                    String name = set.getString(Col.USER_NAME.get());
-                    long registered = set.getLong(Col.REGISTERED.get());
-
-                    users.put(uuid, new UserInfo(uuid, name, registered, false, false));
-                }
-                return users;
-            }
-        });
-    }
-
     /**
      * Inserts UUIDs, Register dates and Names to the table.
      * <p>
