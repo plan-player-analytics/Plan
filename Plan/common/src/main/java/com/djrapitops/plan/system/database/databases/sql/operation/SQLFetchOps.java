@@ -198,7 +198,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         Map<UUID, List<Ping>> allPings = db.query(LargeFetchQueries.fetchAllPingData());
         Map<UUID, List<Nickname>> allNicknames = db.query(LargeFetchQueries.fetchAllNicknameDataByPlayerUUIDs());
 
-        Map<UUID, Map<UUID, List<Session>>> sessions = sessionsTable.getAllSessions(false);
+        Map<UUID, Map<UUID, List<Session>>> sessions = db.query(LargeFetchQueries.fetchAllSessionsWithoutKillOrWorldData());
         Map<UUID, List<UserInfo>> allUserInfo = userInfoTable.getAllUserInfo();
         Map<UUID, PerServerContainer> perServerInfo = getPerServerData(sessions, allUserInfo, allPings);
 
@@ -419,7 +419,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Map<UUID, Map<UUID, List<Session>>> getSessionsWithNoExtras() {
-        return sessionsTable.getAllSessions(false);
+        return db.query(LargeFetchQueries.fetchAllSessionsWithoutKillOrWorldData());
     }
 
     @Override

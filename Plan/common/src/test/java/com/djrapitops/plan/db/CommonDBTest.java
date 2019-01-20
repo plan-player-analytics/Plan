@@ -799,7 +799,7 @@ public abstract class CommonDBTest {
 
         sessionsTable.insertSessions(map, true);
 
-        Map<UUID, Map<UUID, List<Session>>> allSessions = sessionsTable.getAllSessions(true);
+        Map<UUID, Map<UUID, List<Session>>> allSessions = db.query(LargeFetchQueries.fetchAllSessionsWithKillAndWorldData());
 
         assertEquals(worldTimes, allSessions.get(serverUUID).get(playerUUID).get(0).getUnsafe(SessionKeys.WORLD_TIMES));
     }

@@ -20,6 +20,7 @@ import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.data.container.PlayerKill;
+import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryAllStatement;
@@ -312,6 +313,67 @@ public class LargeFetchQueries {
                 }
                 return servers;
             }
+        };
+    }
+
+    /**
+     * Query the database for Session data without kill, death or world data.
+     *
+     * @return Multimap: Server UUID - (Player UUID - List of sessions)
+     */
+    public static Query<Map<UUID, Map<UUID, List<Session>>>> fetchAllSessionsWithoutKillOrWorldData() {
+        String sql = "SELECT " +
+                SessionsTable.Col.ID + ", " +
+                SessionsTable.Col.UUID + ", " +
+                SessionsTable.Col.SERVER_UUID + ", " +
+                SessionsTable.Col.SESSION_START + ", " +
+                SessionsTable.Col.SESSION_END + ", " +
+                SessionsTable.Col.DEATHS + ", " +
+                SessionsTable.Col.MOB_KILLS + ", " +
+                SessionsTable.Col.AFK_TIME +
+                " FROM " + SessionsTable.TABLE_NAME;
+
+        return new QueryAllStatement<Map<UUID, Map<UUID, List<Session>>>>(sql, 20000) {
+            @Override
+            public Map<UUID, Map<UUID, List<Session>>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
+                while (set.next()) {
+                    UUID serverUUID = UUID.fromString(set.getString(SessionsTable.Col.SERVER_UUID.get()));
+                    UUID uuid = UUID.fromString(set.getString(SessionsTable.Col.UUID.get()));
+
+                    Map<UUID, List<Session>> sessionsByUser = map.getOrDefault(serverUUID, new HashMap<>());
+                    List<Session> sessions = sessionsByUser.getOrDefault(uuid, new ArrayList<>());
+
+                    long start = set.getLong(SessionsTable.Col.SESSION_START.get());
+                    long end = set.getLong(SessionsTable.Col.SESSION_END.get());
+
+                    int deaths = set.getInt(SessionsTable.Col.DEATHS.get());
+                    int mobKills = set.getInt(SessionsTable.Col.MOB_KILLS.get());
+                    int id = set.getInt(SessionsTable.Col.ID.get());
+
+                    long timeAFK = set.getLong(SessionsTable.Col.AFK_TIME.get());
+
+                    sessions.add(new Session(id, uuid, serverUUID, start, end, mobKills, deaths, timeAFK));
+
+                    sessionsByUser.put(uuid, sessions);
+                    map.put(serverUUID, sessionsByUser);
+                }
+                return map;
+            }
+        };
+    }
+
+    /**
+     * Query the database for Session data with kill, death or world data.
+     *
+     * @return Multimap: Server UUID - (Player UUID - List of sessions)
+     */
+    public static Query<Map<UUID, Map<UUID, List<Session>>>> fetchAllSessionsWithKillAndWorldData() {
+        return db -> {
+            Map<UUID, Map<UUID, List<Session>>> sessions = db.query(fetchAllSessionsWithoutKillOrWorldData());
+            db.getKillsTable().addKillsToSessions(sessions);
+            db.getWorldTimesTable().addWorldTimesToSessions(sessions);
+            return sessions;
         };
     }
 }

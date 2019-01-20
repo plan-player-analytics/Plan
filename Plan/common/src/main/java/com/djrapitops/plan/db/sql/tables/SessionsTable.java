@@ -30,6 +30,7 @@ import com.djrapitops.plan.db.sql.parsing.Column;
 import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
+import com.djrapitops.plan.db.sql.queries.batch.LargeFetchQueries;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -439,53 +440,6 @@ public class SessionsTable extends UserUUIDTable {
         });
     }
 
-    public Map<UUID, Map<UUID, List<Session>>> getAllSessions(boolean getKillsAndWorldTimes) {
-        String sql = "SELECT " +
-                Col.ID + ", " +
-                Col.UUID + ", " +
-                Col.SERVER_UUID + ", " +
-                Col.SESSION_START + ", " +
-                Col.SESSION_END + ", " +
-                Col.DEATHS + ", " +
-                Col.MOB_KILLS + ", " +
-                Col.AFK_TIME +
-                " FROM " + tableName;
-
-        return query(new QueryAllStatement<Map<UUID, Map<UUID, List<Session>>>>(sql, 20000) {
-            @Override
-            public Map<UUID, Map<UUID, List<Session>>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
-                while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(Col.SERVER_UUID.get()));
-                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
-
-                    Map<UUID, List<Session>> sessionsByUser = map.getOrDefault(serverUUID, new HashMap<>());
-                    List<Session> sessions = sessionsByUser.getOrDefault(uuid, new ArrayList<>());
-
-                    long start = set.getLong(Col.SESSION_START.get());
-                    long end = set.getLong(Col.SESSION_END.get());
-
-                    int deaths = set.getInt(Col.DEATHS.get());
-                    int mobKills = set.getInt(Col.MOB_KILLS.get());
-                    int id = set.getInt(Col.ID.get());
-
-                    long timeAFK = set.getLong(Col.AFK_TIME.get());
-
-                    Session session = new Session(id, uuid, serverUUID, start, end, mobKills, deaths, timeAFK);
-                    sessions.add(session);
-
-                    sessionsByUser.put(uuid, sessions);
-                    map.put(serverUUID, sessionsByUser);
-                }
-                if (getKillsAndWorldTimes) {
-                    db.getKillsTable().addKillsToSessions(map);
-                    db.getWorldTimesTable().addWorldTimesToSessions(map);
-                }
-                return map;
-            }
-        });
-    }
-
     public void insertSessions(Map<UUID, Map<UUID, List<Session>>> allSessions, boolean saveKillsAndWorldTimes) {
         if (Verify.isEmpty(allSessions)) {
             return;
@@ -514,7 +468,7 @@ public class SessionsTable extends UserUUIDTable {
             }
         });
         if (saveKillsAndWorldTimes) {
-            Map<UUID, Map<UUID, List<Session>>> savedSessions = getAllSessions(false);
+            Map<UUID, Map<UUID, List<Session>>> savedSessions = db.query(LargeFetchQueries.fetchAllSessionsWithoutKillOrWorldData());
             matchSessionIDs(allSessions, savedSessions);
             db.getKillsTable().savePlayerKills(allSessions);
             db.getWorldTimesTable().saveWorldTimes(allSessions);

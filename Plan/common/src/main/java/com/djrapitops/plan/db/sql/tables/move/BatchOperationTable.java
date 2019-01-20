@@ -171,6 +171,6 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        toDB.db.getSessionsTable().insertSessions(db.getSessionsTable().getAllSessions(true), true);
+        toDB.db.getSessionsTable().insertSessions(db.query(LargeFetchQueries.fetchAllSessionsWithKillAndWorldData()), true);
     }
 }
