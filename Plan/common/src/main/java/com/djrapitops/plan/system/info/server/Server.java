@@ -98,4 +98,12 @@ public class Server implements Comparable<Server> {
     public int compareTo(Server other) {
         return Integer.compare(this.id, other.id);
     }
+
+    public boolean isProxy() {
+        return "BungeeCord".equals(name);
+    }
+
+    public boolean isNotProxy() {
+        return !isProxy();
+    }
 }

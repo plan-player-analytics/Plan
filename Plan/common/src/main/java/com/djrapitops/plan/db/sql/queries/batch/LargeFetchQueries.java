@@ -23,8 +23,11 @@ import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryAllStatement;
+import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.tables.*;
+import com.djrapitops.plan.system.info.server.Server;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -277,6 +280,37 @@ public class LargeFetchQueries {
                     list.add(info);
                 }
                 return list;
+            }
+        };
+    }
+
+    /**
+     * Query database for all Plan server information.
+     *
+     * @return Map: Server UUID - Plan Server Information
+     */
+    public static Query<Map<UUID, Server>> fetchPlanServerInformation() {
+        String sql = "SELECT * FROM " + ServerTable.TABLE_NAME + " WHERE " + ServerTable.Col.INSTALLED + "=?";
+
+        return new QueryStatement<Map<UUID, Server>>(sql, 100) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setBoolean(1, true);
+            }
+
+            @Override
+            public Map<UUID, Server> processResults(ResultSet set) throws SQLException {
+                Map<UUID, Server> servers = new HashMap<>();
+                while (set.next()) {
+                    UUID serverUUID = UUID.fromString(set.getString(ServerTable.Col.SERVER_UUID.get()));
+                    servers.put(serverUUID, new Server(
+                            set.getInt(ServerTable.Col.SERVER_ID.get()),
+                            serverUUID,
+                            set.getString(ServerTable.Col.NAME.get()),
+                            set.getString(ServerTable.Col.WEBSERVER_ADDRESS.get()),
+                            set.getInt(ServerTable.Col.MAX_PLAYERS.get())));
+                }
+                return servers;
             }
         };
     }

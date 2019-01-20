@@ -17,6 +17,7 @@
 package com.djrapitops.plan.db;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.db.sql.queries.batch.LargeFetchQueries;
 import com.djrapitops.plan.db.sql.tables.ServerTable;
 import com.djrapitops.plan.system.info.server.Server;
 import org.junit.BeforeClass;
@@ -78,9 +79,10 @@ public class SQLiteTest extends CommonDBTest {
     @Test
     public void testServerTableBungee() throws DBInitException {
         testServerTableBungeeSave();
-        ServerTable serverTable = db.getServerTable();
 
-        Map<UUID, Server> bukkitServers = serverTable.getBukkitServers();
-        assertEquals(1, bukkitServers.size());
+        Map<UUID, Server> serverInformation = db.query(LargeFetchQueries.fetchPlanServerInformation());
+
+        assertEquals(1, serverInformation.values().stream().filter(Server::isNotProxy).count());
+        assertEquals(1, serverInformation.values().stream().filter(Server::isProxy).count());
     }
 }

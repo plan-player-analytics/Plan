@@ -201,7 +201,7 @@ public class DebugPage implements Page {
             content.append("</pre>");
 
             content.append("<pre>### Servers:<br><br>");
-            List<Server> servers = connectionSystem.getBukkitServers();
+            List<Server> servers = connectionSystem.getDataServers();
             content.append("Server Name | Address <br>")
                     .append("-- | --<br>");
             for (Server server : servers) {

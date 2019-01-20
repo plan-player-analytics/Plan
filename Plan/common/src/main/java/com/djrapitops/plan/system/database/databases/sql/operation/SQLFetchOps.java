@@ -35,6 +35,7 @@ import com.djrapitops.plan.system.settings.config.Config;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class SQLFetchOps extends SQLOps implements FetchOperations {
 
@@ -45,7 +46,10 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
     @Override
     public NetworkContainer getNetworkContainer() {
         NetworkContainer networkContainer = db.getNetworkContainerFactory().forBungeeContainer(getBungeeServerContainer());
-        networkContainer.putCachingSupplier(NetworkKeys.BUKKIT_SERVERS, () -> getBukkitServers().values());
+        networkContainer.putCachingSupplier(NetworkKeys.BUKKIT_SERVERS, () ->
+                db.query(LargeFetchQueries.fetchPlanServerInformation()).values()
+                        .stream().filter(Server::isNotProxy).collect(Collectors.toSet())
+        );
         return networkContainer;
     }
 
@@ -464,7 +468,9 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Map<UUID, Server> getBukkitServers() {
-        return serverTable.getBukkitServers();
+        return db.query(LargeFetchQueries.fetchPlanServerInformation()).entrySet().stream()
+                .filter(entry -> entry.getValue().isNotProxy())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     @Override
@@ -474,12 +480,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public List<Server> getServers() {
-        Map<UUID, Server> bukkitServers = getBukkitServers();
-        Optional<Server> bungeeInformation = getBungeeInformation();
-
-        List<Server> servers = new ArrayList<>(bukkitServers.values());
-        bungeeInformation.ifPresent(servers::add);
-
+        List<Server> servers = new ArrayList<>(db.query(LargeFetchQueries.fetchPlanServerInformation()).values());
         Collections.sort(servers);
         return servers;
     }

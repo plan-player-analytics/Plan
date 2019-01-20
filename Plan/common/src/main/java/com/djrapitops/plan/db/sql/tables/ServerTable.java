@@ -237,36 +237,6 @@ public class ServerTable extends Table {
         });
     }
 
-    public Map<UUID, Server> getBukkitServers() {
-        String sql = Select.from(tableName, "*")
-                .where(Col.NAME + "!=?")
-                .and(Col.INSTALLED + "=?")
-                .toString();
-
-        return query(new QueryStatement<Map<UUID, Server>>(sql, 100) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, "BungeeCord");
-                statement.setBoolean(2, true);
-            }
-
-            @Override
-            public Map<UUID, Server> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Server> servers = new HashMap<>();
-                while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(Col.SERVER_UUID.get()));
-                    servers.put(serverUUID, new Server(
-                            set.getInt(Col.SERVER_ID.get()),
-                            serverUUID,
-                            set.getString(Col.NAME.get()),
-                            set.getString(Col.WEBSERVER_ADDRESS.get()),
-                            set.getInt(Col.MAX_PLAYERS.get())));
-                }
-                return servers;
-            }
-        });
-    }
-
     public List<UUID> getServerUUIDs() {
         String sql = Select.from(tableName, Col.SERVER_UUID)
                 .toString();
@@ -283,7 +253,7 @@ public class ServerTable extends Table {
         });
     }
 
-    public void insertAllServers(List<Server> allServer) {
+    public void insertAllServers(Collection<Server> allServer) {
         if (Verify.isEmpty(allServer)) {
             return;
         }

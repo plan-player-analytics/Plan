@@ -18,6 +18,7 @@ package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.db.sql.queries.single.OptionalFetchQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
@@ -40,7 +41,6 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -132,16 +132,9 @@ public class AnalyzeCommand extends CommandNode {
 
     private Optional<Server> getServer(String[] args) {
         if (args.length >= 1 && connectionSystem.isServerAvailable()) {
-            Map<UUID, Server> bukkitServers = dbSystem.getDatabase().fetch().getBukkitServers();
             String serverIdentifier = getGivenIdentifier(args);
-            for (Map.Entry<UUID, Server> entry : bukkitServers.entrySet()) {
-                Server server = entry.getValue();
-
-                if (Integer.toString(server.getId()).equals(serverIdentifier)
-                        || server.getName().equalsIgnoreCase(serverIdentifier)) {
-                    return Optional.of(server);
-                }
-            }
+            return dbSystem.getDatabase().query(OptionalFetchQueries.matchingServerIdentifier(serverIdentifier))
+                    .filter(server -> !server.isProxy());
         }
         return Optional.empty();
     }

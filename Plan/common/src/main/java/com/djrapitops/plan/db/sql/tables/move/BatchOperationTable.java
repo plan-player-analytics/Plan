@@ -19,13 +19,9 @@ package com.djrapitops.plan.db.sql.tables.move;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.queries.batch.LargeFetchQueries;
-import com.djrapitops.plan.db.sql.tables.ServerTable;
 import com.djrapitops.plan.db.sql.tables.Table;
 import com.djrapitops.plan.db.sql.tables.UsersTable;
-import com.djrapitops.plan.system.info.server.Server;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -136,10 +132,7 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        ServerTable serverTable = db.getServerTable();
-        List<Server> servers = new ArrayList<>(serverTable.getBukkitServers().values());
-        serverTable.getBungeeInfo().ifPresent(servers::add);
-        toDB.db.getServerTable().insertAllServers(servers);
+        toDB.db.getServerTable().insertAllServers(db.query(LargeFetchQueries.fetchPlanServerInformation()).values());
     }
 
     public void copyTPS(BatchOperationTable toDB) {

@@ -49,7 +49,7 @@ public class BStatsBungee {
 
         addStringSettingPie("server_type", serverType);
         addStringSettingPie("database_type", databaseType);
-        addStringSettingPie("network_servers", connectionSystem.getBukkitServers().size());
+        addStringSettingPie("network_servers", connectionSystem.getDataServers().size());
     }
 
     protected void addStringSettingPie(String id, Serializable setting) {

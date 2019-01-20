@@ -572,7 +572,7 @@ public abstract class CommonDBTest {
         assertTrue(db.getCommandUseTable().getCommandUse().isEmpty());
         assertTrue(db.getWorldTable().getAllWorlds().isEmpty());
         assertTrue(tpsTable.getTPSData().isEmpty());
-        assertTrue(db.getServerTable().getBukkitServers().isEmpty());
+        assertTrue(db.query(LargeFetchQueries.fetchPlanServerInformation()).isEmpty());
         assertTrue(db.query(LargeFetchQueries.fetchAllPingData()).isEmpty());
         assertTrue(db.query(LargeFetchQueries.fetchAllPlanWebUsers()).isEmpty());
     }
@@ -684,7 +684,7 @@ public abstract class CommonDBTest {
         commitTest();
 
         Map<UUID, List<Session>> sessions = db.getSessionsTable().getSessions(playerUUID);
-        List<Session> savedSessions = sessions.get(playerUUID);
+        List<Session> savedSessions = sessions.get(serverUUID);
         assertNotNull(savedSessions);
         assertFalse(savedSessions.isEmpty());
 
@@ -736,8 +736,8 @@ public abstract class CommonDBTest {
         assertFalse(backup.getCommandUseTable().getCommandUse().isEmpty());
         assertFalse(backup.getWorldTable().getAllWorlds().isEmpty());
         assertFalse(tpsTable.getTPSData().isEmpty());
-        assertFalse(backup.getServerTable().getBukkitServers().isEmpty());
-        assertFalse(db.query(LargeFetchQueries.fetchAllPlanWebUsers()).isEmpty());
+        assertFalse(backup.query(LargeFetchQueries.fetchPlanServerInformation()).isEmpty());
+        assertFalse(backup.query(LargeFetchQueries.fetchAllPlanWebUsers()).isEmpty());
     }
 
     @Test
