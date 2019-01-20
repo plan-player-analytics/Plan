@@ -139,7 +139,7 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        toDB.db.getTpsTable().insertAllTPS(db.getTpsTable().getAllTPS());
+        toDB.db.getTpsTable().insertAllTPS(db.query(LargeFetchQueries.fetchAllTPSData()));
     }
 
     public void copyUserInfo(BatchOperationTable toDB) {

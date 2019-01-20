@@ -222,50 +222,6 @@ public class TPSTable extends Table {
         return getPeakPlayerCount(getServerUUID(), afterDate);
     }
 
-    public Map<UUID, List<TPS>> getAllTPS() {
-        String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
-        String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
-        String sql = "SELECT " +
-                Col.DATE + ", " +
-                Col.TPS + ", " +
-                Col.PLAYERS_ONLINE + ", " +
-                Col.CPU_USAGE + ", " +
-                Col.RAM_USAGE + ", " +
-                Col.ENTITIES + ", " +
-                Col.CHUNKS + ", " +
-                Col.FREE_DISK + ", " +
-                serverUUIDColumn +
-                " FROM " + tableName +
-                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + Col.SERVER_ID;
-
-        return query(new QueryAllStatement<Map<UUID, List<TPS>>>(sql, 50000) {
-            @Override
-            public Map<UUID, List<TPS>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, List<TPS>> serverMap = new HashMap<>();
-                while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
-
-                    List<TPS> tpsList = serverMap.getOrDefault(serverUUID, new ArrayList<>());
-
-                    TPS tps = TPSBuilder.get()
-                            .date(set.getLong(Col.DATE.get()))
-                            .tps(set.getDouble(Col.TPS.get()))
-                            .playersOnline(set.getInt(Col.PLAYERS_ONLINE.get()))
-                            .usedCPU(set.getDouble(Col.CPU_USAGE.get()))
-                            .usedMemory(set.getLong(Col.RAM_USAGE.get()))
-                            .entities(set.getInt(Col.ENTITIES.get()))
-                            .chunksLoaded(set.getInt(Col.CHUNKS.get()))
-                            .freeDiskSpace(set.getLong(Col.FREE_DISK.get()))
-                            .toTPS();
-
-                    tpsList.add(tps);
-                    serverMap.put(serverUUID, tpsList);
-                }
-                return serverMap;
-            }
-        });
-    }
-
     public List<TPS> getNetworkOnlineData() {
         Optional<Server> proxyInfo = db.query(OptionalFetchQueries.proxyServerInformation());
         if (!proxyInfo.isPresent()) {

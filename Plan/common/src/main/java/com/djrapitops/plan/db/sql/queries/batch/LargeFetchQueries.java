@@ -17,10 +17,8 @@
 package com.djrapitops.plan.db.sql.queries.batch;
 
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.data.container.GeoInfo;
-import com.djrapitops.plan.data.container.Ping;
-import com.djrapitops.plan.data.container.PlayerKill;
-import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.container.*;
+import com.djrapitops.plan.data.container.builders.TPSBuilder;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryAllStatement;
@@ -374,6 +372,55 @@ public class LargeFetchQueries {
             db.getKillsTable().addKillsToSessions(sessions);
             db.getWorldTimesTable().addWorldTimesToSessions(sessions);
             return sessions;
+        };
+    }
+
+    /**
+     * Query database for TPS data.
+     *
+     * @return Map: Server UUID - List of TPS data
+     */
+    public static Query<Map<UUID, List<TPS>>> fetchAllTPSData() {
+        String serverIDColumn = ServerTable.TABLE_NAME + "." + ServerTable.Col.SERVER_ID;
+        String serverUUIDColumn = ServerTable.TABLE_NAME + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
+        String sql = "SELECT " +
+                TPSTable.Col.DATE + ", " +
+                TPSTable.Col.TPS + ", " +
+                TPSTable.Col.PLAYERS_ONLINE + ", " +
+                TPSTable.Col.CPU_USAGE + ", " +
+                TPSTable.Col.RAM_USAGE + ", " +
+                TPSTable.Col.ENTITIES + ", " +
+                TPSTable.Col.CHUNKS + ", " +
+                TPSTable.Col.FREE_DISK + ", " +
+                serverUUIDColumn +
+                " FROM " + TPSTable.TABLE_NAME +
+                " INNER JOIN " + ServerTable.TABLE_NAME + " on " + serverIDColumn + "=" + TPSTable.Col.SERVER_ID;
+
+        return new QueryAllStatement<Map<UUID, List<TPS>>>(sql, 50000) {
+            @Override
+            public Map<UUID, List<TPS>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, List<TPS>> serverMap = new HashMap<>();
+                while (set.next()) {
+                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+
+                    List<TPS> tpsList = serverMap.getOrDefault(serverUUID, new ArrayList<>());
+
+                    TPS tps = TPSBuilder.get()
+                            .date(set.getLong(TPSTable.Col.DATE.get()))
+                            .tps(set.getDouble(TPSTable.Col.TPS.get()))
+                            .playersOnline(set.getInt(TPSTable.Col.PLAYERS_ONLINE.get()))
+                            .usedCPU(set.getDouble(TPSTable.Col.CPU_USAGE.get()))
+                            .usedMemory(set.getLong(TPSTable.Col.RAM_USAGE.get()))
+                            .entities(set.getInt(TPSTable.Col.ENTITIES.get()))
+                            .chunksLoaded(set.getInt(TPSTable.Col.CHUNKS.get()))
+                            .freeDiskSpace(set.getLong(TPSTable.Col.FREE_DISK.get()))
+                            .toTPS();
+
+                    tpsList.add(tps);
+                    serverMap.put(serverUUID, tpsList);
+                }
+                return serverMap;
+            }
         };
     }
 }
