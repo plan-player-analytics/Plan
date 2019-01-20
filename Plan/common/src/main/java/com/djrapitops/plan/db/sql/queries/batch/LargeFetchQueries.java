@@ -17,11 +17,10 @@
 package com.djrapitops.plan.db.sql.queries.batch;
 
 import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryAllStatement;
-import com.djrapitops.plan.db.sql.tables.CommandUseTable;
-import com.djrapitops.plan.db.sql.tables.GeoInfoTable;
-import com.djrapitops.plan.db.sql.tables.ServerTable;
+import com.djrapitops.plan.db.sql.tables.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -73,6 +72,11 @@ public class LargeFetchQueries {
         };
     }
 
+    /**
+     * Query database for all GeoInfo data.
+     *
+     * @return Map: Server UUID - List of GeoInfo
+     */
     public static Query<Map<UUID, List<GeoInfo>>> fetchAllGeoInfoData() {
         String sql = "SELECT " +
                 GeoInfoTable.Col.IP + ", " +
@@ -100,6 +104,45 @@ public class LargeFetchQueries {
                     geoLocations.put(uuid, userGeoInfo);
                 }
                 return geoLocations;
+            }
+        };
+    }
+
+    /**
+     * Query database for all Kill data.
+     *
+     * @return Map: Session ID - List of PlayerKills
+     */
+    public static Query<Map<Integer, List<PlayerKill>>> fetchAllPlayerKillsBySessionID() {
+        String usersUUIDColumn = UsersTable.TABLE_NAME + "." + UsersTable.Col.UUID;
+        String usersNameColumn = UsersTable.TABLE_NAME + "." + UsersTable.Col.USER_NAME + " as victim_name";
+        String sql = "SELECT " +
+                KillsTable.Col.SESSION_ID + ", " +
+                KillsTable.Col.DATE + ", " +
+                KillsTable.Col.WEAPON + ", " +
+                KillsTable.Col.VICTIM_UUID + ", " +
+                usersNameColumn +
+                " FROM " + KillsTable.TABLE_NAME +
+                " INNER JOIN " + UsersTable.TABLE_NAME + " on " + usersUUIDColumn + "=" + KillsTable.Col.VICTIM_UUID;
+
+        return new QueryAllStatement<Map<Integer, List<PlayerKill>>>(sql, 50000) {
+            @Override
+            public Map<Integer, List<PlayerKill>> processResults(ResultSet set) throws SQLException {
+                Map<Integer, List<PlayerKill>> allPlayerKills = new HashMap<>();
+                while (set.next()) {
+                    int sessionID = set.getInt(KillsTable.Col.SESSION_ID.get());
+
+                    List<PlayerKill> playerKills = allPlayerKills.getOrDefault(sessionID, new ArrayList<>());
+
+                    UUID victim = UUID.fromString(set.getString(KillsTable.Col.VICTIM_UUID.get()));
+                    String victimName = set.getString("victim_name");
+                    long date = set.getLong(KillsTable.Col.DATE.get());
+                    String weapon = set.getString(KillsTable.Col.WEAPON.get());
+                    playerKills.add(new PlayerKill(victim, weapon, date, victimName));
+
+                    allPlayerKills.put(sessionID, playerKills);
+                }
+                return allPlayerKills;
             }
         };
     }

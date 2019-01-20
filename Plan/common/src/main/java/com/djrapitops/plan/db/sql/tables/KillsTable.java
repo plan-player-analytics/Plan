@@ -31,6 +31,7 @@ import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.sql.parsing.Column;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
+import com.djrapitops.plan.db.sql.queries.batch.LargeFetchQueries;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -240,42 +241,8 @@ public class KillsTable extends UserUUIDTable {
         });
     }
 
-    public Map<Integer, List<PlayerKill>> getAllPlayerKillsBySessionID() {
-        String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID;
-        String usersNameColumn = usersTable + "." + UsersTable.Col.USER_NAME + " as victim_name";
-        String sql = "SELECT " +
-                Col.SESSION_ID + ", " +
-                Col.DATE + ", " +
-                Col.WEAPON + ", " +
-                Col.VICTIM_UUID + ", " +
-                usersNameColumn +
-                " FROM " + tableName +
-                " INNER JOIN " + usersTable + " on " + usersUUIDColumn + "=" + Col.VICTIM_UUID;
-
-        return query(new QueryAllStatement<Map<Integer, List<PlayerKill>>>(sql, 50000) {
-            @Override
-            public Map<Integer, List<PlayerKill>> processResults(ResultSet set) throws SQLException {
-                Map<Integer, List<PlayerKill>> allPlayerKills = new HashMap<>();
-                while (set.next()) {
-                    int sessionID = set.getInt(Col.SESSION_ID.get());
-
-                    List<PlayerKill> playerKills = allPlayerKills.getOrDefault(sessionID, new ArrayList<>());
-
-                    UUID victim = UUID.fromString(set.getString(Col.VICTIM_UUID.get()));
-                    String victimName = set.getString("victim_name");
-                    long date = set.getLong(Col.DATE.get());
-                    String weapon = set.getString(Col.WEAPON.get());
-                    playerKills.add(new PlayerKill(victim, weapon, date, victimName));
-
-                    allPlayerKills.put(sessionID, playerKills);
-                }
-                return allPlayerKills;
-            }
-        });
-    }
-
     public void addKillsToSessions(Map<UUID, Map<UUID, List<Session>>> map) {
-        Map<Integer, List<PlayerKill>> playerKillsBySessionID = getAllPlayerKillsBySessionID();
+        Map<Integer, List<PlayerKill>> playerKillsBySessionID = db.query(LargeFetchQueries.fetchAllPlayerKillsBySessionID());
         for (UUID serverUUID : map.keySet()) {
             for (List<Session> sessions : map.get(serverUUID).values()) {
                 for (Session session : sessions) {
