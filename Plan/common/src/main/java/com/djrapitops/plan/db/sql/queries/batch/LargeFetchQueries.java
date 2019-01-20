@@ -186,4 +186,33 @@ public class LargeFetchQueries {
         };
     }
 
+    /**
+     * Query database for all nickname data.
+     *
+     * @return Map: Player UUID - List of nicknames.
+     */
+    public static Query<Map<UUID, List<Nickname>>> fetchAllNicknameDataByPlayerUUIDs() {
+        String sql = "SELECT " +
+                NicknamesTable.Col.NICKNAME + ", " +
+                NicknamesTable.Col.LAST_USED + ", " +
+                NicknamesTable.Col.UUID + ", " +
+                NicknamesTable.Col.SERVER_UUID +
+                " FROM " + NicknamesTable.TABLE_NAME;
+        return new QueryAllStatement<Map<UUID, List<Nickname>>>(sql, 5000) {
+            @Override
+            public Map<UUID, List<Nickname>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, List<Nickname>> map = new HashMap<>();
+                while (set.next()) {
+                    UUID uuid = UUID.fromString(set.getString(NicknamesTable.Col.UUID.get()));
+                    UUID serverUUID = UUID.fromString(set.getString(NicknamesTable.Col.SERVER_UUID.get()));
+                    List<Nickname> nicknames = map.computeIfAbsent(uuid, x -> new ArrayList<>());
+                    nicknames.add(new Nickname(
+                            set.getString(NicknamesTable.Col.NICKNAME.get()), set.getLong(NicknamesTable.Col.LAST_USED.get()), serverUUID
+                    ));
+                }
+                return map;
+            }
+        };
+    }
+
 }

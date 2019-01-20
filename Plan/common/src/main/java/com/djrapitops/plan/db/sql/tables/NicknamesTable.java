@@ -157,36 +157,6 @@ public class NicknamesTable extends UserUUIDTable {
         });
     }
 
-    /**
-     * Get nicknames of all users but doesn't map them by Server.
-     *
-     * @return a {@code Map<UUID, List<Nickname>} with all nicknames of all users
-     *
-     */
-    public Map<UUID, List<Nickname>> getAllNicknamesUnmapped() {
-        String sql = "SELECT " +
-                Col.NICKNAME + ", " +
-                Col.LAST_USED + ", " +
-                Col.UUID + ", " +
-                Col.SERVER_UUID +
-                " FROM " + tableName;
-        return query(new QueryAllStatement<Map<UUID, List<Nickname>>>(sql, 5000) {
-            @Override
-            public Map<UUID, List<Nickname>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, List<Nickname>> map = new HashMap<>();
-                while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
-                    UUID serverUUID = UUID.fromString(set.getString(Col.SERVER_UUID.get()));
-                    List<Nickname> nicknames = map.computeIfAbsent(uuid, x -> new ArrayList<>());
-                    nicknames.add(new Nickname(
-                            set.getString(Col.NICKNAME.get()), set.getLong(Col.LAST_USED.get()), serverUUID
-                    ));
-                }
-                return map;
-            }
-        });
-    }
-
     public void saveUserName(UUID uuid, Nickname name) {
         List<Nickname> saved = getNicknameInformation(uuid);
         if (saved.contains(name)) {

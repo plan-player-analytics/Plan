@@ -124,9 +124,9 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
         List<UserInfo> serverUserInfo = userInfoTable.getServerUserInfo(serverUUID);
         Map<UUID, Integer> timesKicked = usersTable.getAllTimesKicked();
-        Map<UUID, List<GeoInfo>> geoInfo = db.query(LargeFetchQueries.fetchAllGeoInfoData());
+        Map<UUID, List<GeoInfo>> geoInfo = db.query(LargeFetchQueries.fetchAllGeoInfoData()); // TODO Optimize
         Map<UUID, List<Ping>> allPings = pingTable.getAllPings();
-        Map<UUID, List<Nickname>> allNicknames = nicknamesTable.getAllNicknamesUnmapped();
+        Map<UUID, List<Nickname>> allNicknames = db.query(LargeFetchQueries.fetchAllNicknameDataByPlayerUUIDs()); // TODO Optimize
 
         Map<UUID, List<Session>> sessions = sessionsTable.getSessionInfoOfServer(serverUUID);
         Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
@@ -191,7 +191,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         Map<UUID, Integer> timesKicked = usersTable.getAllTimesKicked();
         Map<UUID, List<GeoInfo>> geoInfo = db.query(LargeFetchQueries.fetchAllGeoInfoData());
         Map<UUID, List<Ping>> allPings = pingTable.getAllPings();
-        Map<UUID, List<Nickname>> allNicknames = nicknamesTable.getAllNicknamesUnmapped();
+        Map<UUID, List<Nickname>> allNicknames = db.query(LargeFetchQueries.fetchAllNicknameDataByPlayerUUIDs());
 
         Map<UUID, Map<UUID, List<Session>>> sessions = sessionsTable.getAllSessions(false);
         Map<UUID, List<UserInfo>> allUserInfo = userInfoTable.getAllUserInfo();
