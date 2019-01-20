@@ -14,29 +14,27 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.db.sql.queries;
+package com.djrapitops.plan.db.sql.queries.schema;
 
 import com.djrapitops.plan.db.access.CountQueryStatement;
 import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.access.QueryAllStatement;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Static method class for SQLite Schema related queries.
+ * Static method class for H2 Schema related queries.
  *
  * @author Rsl1122
  */
-public class SQLiteSchemaQueries {
+public class H2SchemaQueries {
 
-    private SQLiteSchemaQueries() {
+    private H2SchemaQueries() {
         /* Static method class */
     }
 
     public static Query<Boolean> doesTableExist(String tableName) {
-        String sql = "SELECT COUNT(1) as c FROM sqlite_master WHERE tbl_name=?";
+        String sql = "SELECT COUNT(1) as c FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME=?";
         return new CountQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -46,15 +44,13 @@ public class SQLiteSchemaQueries {
     }
 
     public static Query<Boolean> doesColumnExist(String tableName, String columnName) {
-        return new QueryAllStatement<Boolean>("PRAGMA table_info(" + tableName + ")") {
+        String sql = "SELECT COUNT(1) as c FROM INFORMATION_SCHEMA.COLUMNS" +
+                " WHERE TABLE_NAME=? AND COLUMN_NAME=?";
+        return new CountQueryStatement(sql) {
             @Override
-            public Boolean processResults(ResultSet set) throws SQLException {
-                while (set.next()) {
-                    if (columnName.equals(set.getString("name"))) {
-                        return true;
-                    }
-                }
-                return false;
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, tableName);
+                statement.setString(2, columnName);
             }
         };
     }

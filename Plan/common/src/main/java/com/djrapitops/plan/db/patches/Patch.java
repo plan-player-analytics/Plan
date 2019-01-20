@@ -21,9 +21,9 @@ import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
-import com.djrapitops.plan.db.sql.queries.H2SchemaQueries;
-import com.djrapitops.plan.db.sql.queries.MySQLSchemaQueries;
-import com.djrapitops.plan.db.sql.queries.SQLiteSchemaQueries;
+import com.djrapitops.plan.db.sql.queries.schema.H2SchemaQueries;
+import com.djrapitops.plan.db.sql.queries.schema.MySQLSchemaQueries;
+import com.djrapitops.plan.db.sql.queries.schema.SQLiteSchemaQueries;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.List;

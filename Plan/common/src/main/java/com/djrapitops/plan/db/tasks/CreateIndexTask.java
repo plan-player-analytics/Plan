@@ -19,7 +19,7 @@ package com.djrapitops.plan.db.tasks;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.parsing.Column;
-import com.djrapitops.plan.db.sql.queries.MySQLSchemaQueries;
+import com.djrapitops.plan.db.sql.queries.schema.MySQLSchemaQueries;
 import com.djrapitops.plan.db.sql.tables.*;
 import com.djrapitops.plugin.task.AbsRunnable;
 import org.apache.commons.text.TextStringBuilder;
