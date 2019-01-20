@@ -205,38 +205,6 @@ public class ServerTable extends Table {
         });
     }
 
-    /**
-     * Used to get BungeeCord WebServer info if present.
-     *
-     * @return information about Bungee server.
-     */
-    public Optional<Server> getBungeeInfo() {
-        String sql = Select.from(tableName, "*")
-                .where(Col.NAME + "=?")
-                .toString();
-
-        return query(new QueryStatement<Optional<Server>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, "BungeeCord");
-            }
-
-            @Override
-            public Optional<Server> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return Optional.of(new Server(
-                            set.getInt(Col.SERVER_ID.get()),
-                            UUID.fromString(set.getString(Col.SERVER_UUID.get())),
-                            set.getString(Col.NAME.get()),
-                            set.getString(Col.WEBSERVER_ADDRESS.get()),
-                            set.getInt(Col.MAX_PLAYERS.get())));
-                } else {
-                    return Optional.empty();
-                }
-            }
-        });
-    }
-
     public List<UUID> getServerUUIDs() {
         String sql = Select.from(tableName, Col.SERVER_UUID)
                 .toString();

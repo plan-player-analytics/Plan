@@ -28,6 +28,7 @@ import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.queries.batch.LargeFetchQueries;
+import com.djrapitops.plan.db.sql.queries.single.OptionalFetchQueries;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.info.server.Server;
@@ -54,12 +55,12 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
     }
 
     private ServerContainer getBungeeServerContainer() {
-        Optional<Server> bungeeInfo = serverTable.getBungeeInfo();
-        if (!bungeeInfo.isPresent()) {
+        Optional<Server> proxyInformation = db.query(OptionalFetchQueries.proxyServerInformation());
+        if (!proxyInformation.isPresent()) {
             return new ServerContainer();
         }
 
-        ServerContainer container = getServerContainer(bungeeInfo.get().getUuid());
+        ServerContainer container = getServerContainer(proxyInformation.get().getUuid());
         container.putCachingSupplier(ServerKeys.PLAYERS, this::getAllPlayerContainers);
         container.putCachingSupplier(ServerKeys.TPS, tpsTable::getNetworkOnlineData);
         container.putSupplier(ServerKeys.WORLD_TIMES, null); // Additional Session information not supported
@@ -458,7 +459,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Optional<Server> getBungeeInformation() {
-        return serverTable.getBungeeInfo();
+        return db.query(OptionalFetchQueries.proxyServerInformation());
     }
 
     @Override

@@ -27,6 +27,7 @@ import com.djrapitops.plan.db.sql.parsing.Column;
 import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
+import com.djrapitops.plan.db.sql.queries.single.OptionalFetchQueries;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
@@ -266,11 +267,11 @@ public class TPSTable extends Table {
     }
 
     public List<TPS> getNetworkOnlineData() {
-        Optional<Server> bungeeInfo = serverTable.getBungeeInfo();
-        if (!bungeeInfo.isPresent()) {
+        Optional<Server> proxyInfo = db.query(OptionalFetchQueries.proxyServerInformation());
+        if (!proxyInfo.isPresent()) {
             return new ArrayList<>();
         }
-        UUID bungeeUUID = bungeeInfo.get().getUuid();
+        UUID bungeeUUID = proxyInfo.get().getUuid();
 
         String sql = "SELECT " +
                 Col.DATE + ", " +

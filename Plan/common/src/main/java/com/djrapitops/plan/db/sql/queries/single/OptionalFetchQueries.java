@@ -20,6 +20,7 @@ import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.tables.ServerTable;
 import com.djrapitops.plan.system.info.server.Server;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -48,7 +49,7 @@ public class OptionalFetchQueries {
         return new QueryStatement<Optional<Server>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, identifier);
+                statement.setInt(1, NumberUtils.isParsable(identifier) ? Integer.parseInt(identifier) : -1);
                 statement.setString(2, identifier);
                 statement.setString(3, identifier);
                 statement.setBoolean(4, true);
@@ -68,6 +69,10 @@ public class OptionalFetchQueries {
                 return Optional.empty();
             }
         };
+    }
+
+    public static Query<Optional<Server>> proxyServerInformation() {
+        return db -> db.query(matchingServerIdentifier("BungeeCord"));
     }
 
 }

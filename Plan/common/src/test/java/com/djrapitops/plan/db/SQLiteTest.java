@@ -18,6 +18,7 @@ package com.djrapitops.plan.db;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.db.sql.queries.batch.LargeFetchQueries;
+import com.djrapitops.plan.db.sql.queries.single.OptionalFetchQueries;
 import com.djrapitops.plan.db.sql.tables.ServerTable;
 import com.djrapitops.plan.system.info.server.Server;
 import org.junit.BeforeClass;
@@ -56,7 +57,7 @@ public class SQLiteTest extends CommonDBTest {
     public void testServerTableBungeeSave() throws DBInitException {
         ServerTable serverTable = db.getServerTable();
 
-        Optional<Server> bungeeInfo = serverTable.getBungeeInfo();
+        Optional<Server> bungeeInfo = db.query(OptionalFetchQueries.proxyServerInformation());
         assertFalse(bungeeInfo.isPresent());
 
         UUID bungeeUUID = UUID.randomUUID();
@@ -67,7 +68,7 @@ public class SQLiteTest extends CommonDBTest {
 
         bungeeCord.setId(2);
 
-        bungeeInfo = serverTable.getBungeeInfo();
+        bungeeInfo = db.query(OptionalFetchQueries.proxyServerInformation());
         assertTrue(bungeeInfo.isPresent());
         assertEquals(bungeeCord, bungeeInfo.get());
 
