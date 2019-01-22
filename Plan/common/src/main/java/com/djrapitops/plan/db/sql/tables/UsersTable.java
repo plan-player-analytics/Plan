@@ -21,6 +21,7 @@ import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryAllStatement;
@@ -46,6 +47,12 @@ public class UsersTable extends UserUUIDTable {
 
     public static final String TABLE_NAME = "plan_users";
 
+    public static final String ID = "id";
+    public static final String USER_UUID = "uuid";
+    public static final String REGISTERED = "registered";
+    public static final String USER_NAME = "name";
+    public static final String TIMES_KICKED = "times_kicked";
+
     public UsersTable(SQLDB db) {
         super(TABLE_NAME, db);
         statementSelectID = "(" + Select.from(tableName, tableName + "." + Col.ID).where(Col.UUID + "=?").toString() + " LIMIT 1)";
@@ -57,6 +64,16 @@ public class UsersTable extends UserUUIDTable {
 
     public final String statementSelectID;
     private String insertStatement;
+
+    public static String createTableSQL(DBType dbType) {
+        return CreateTableParser.create(TABLE_NAME, dbType)
+                .column(ID, Sql.INT).primaryKey()
+                .column(USER_UUID, Sql.varchar(36)).notNull().unique()
+                .column(REGISTERED, Sql.LONG).notNull()
+                .column(USER_NAME, Sql.varchar(16)).notNull()
+                .column(TIMES_KICKED, Sql.INT).notNull().defaultValue("0")
+                .toString();
+    }
 
     @Override
     public void createTable() throws DBInitException {
@@ -426,11 +443,17 @@ public class UsersTable extends UserUUIDTable {
         });
     }
 
+    @Deprecated
     public enum Col implements Column {
+        @Deprecated
         ID("id"),
+        @Deprecated
         UUID("uuid"),
+        @Deprecated
         REGISTERED("registered"),
+        @Deprecated
         USER_NAME("name"),
+        @Deprecated
         TIMES_KICKED("times_kicked");
 
         private final String column;
