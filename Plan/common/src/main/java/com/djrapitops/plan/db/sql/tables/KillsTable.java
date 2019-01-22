@@ -21,6 +21,7 @@ import com.djrapitops.plan.data.container.PlayerDeath;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
+import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
@@ -28,8 +29,8 @@ import com.djrapitops.plan.db.patches.KillsOptimizationPatch;
 import com.djrapitops.plan.db.patches.KillsServerIDPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.sql.parsing.Column;
+import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -56,6 +57,14 @@ public class KillsTable extends UserUUIDTable {
 
     public static final String TABLE_NAME = "plan_kills";
 
+    public static final String ID = "id";
+    public static final String KILLER_UUID = "killer_uuid";
+    public static final String VICTIM_UUID = "victim_uuid";
+    public static final String SERVER_UUID = "server_uuid";
+    public static final String SESSION_ID = "session_id";
+    public static final String WEAPON = "weapon";
+    public static final String DATE = "date";
+
     private final UsersTable usersTable;
 
     public KillsTable(SQLDB db) {
@@ -75,20 +84,22 @@ public class KillsTable extends UserUUIDTable {
     private final SessionsTable sessionsTable;
     private String insertStatement;
 
+    public static String createTableSQL(DBType dbType) {
+        return CreateTableParser.create(TABLE_NAME, dbType)
+                .column(ID, Sql.INT).primaryKey()
+                .column(KILLER_UUID, Sql.varchar(36)).notNull()
+                .column(VICTIM_UUID, Sql.varchar(36)).notNull()
+                .column(SERVER_UUID, Sql.varchar(36)).notNull()
+                .column(WEAPON, Sql.varchar(30)).notNull()
+                .column(DATE, Sql.LONG).notNull()
+                .column(SESSION_ID, Sql.INT).notNull()
+                .foreignKey(SESSION_ID, SessionsTable.TABLE_NAME, SessionsTable.ID)
+                .toString();
+    }
+
     @Override
     public void createTable() throws DBInitException {
-        createTable(TableSqlParser.createTable(tableName)
-                .primaryKeyIDColumn(supportsMySQLQueries, Col.ID)
-                .column(Col.KILLER_UUID, Sql.varchar(36)).notNull()
-                .column(Col.VICTIM_UUID, Sql.varchar(36)).notNull()
-                .column(Col.SERVER_UUID, Sql.varchar(36)).notNull()
-                .column(Col.WEAPON, Sql.varchar(30)).notNull()
-                .column(Col.DATE, Sql.LONG).notNull()
-                .column(Col.SESSION_ID, Sql.INT).notNull()
-                .primaryKey(supportsMySQLQueries, Col.ID)
-                .foreignKey(Col.SESSION_ID, sessionsTable.getTableName(), SessionsTable.Col.ID)
-                .toString()
-        );
+        createTable(createTableSQL(db.getType()));
     }
 
     @Override
@@ -261,13 +272,21 @@ public class KillsTable extends UserUUIDTable {
         });
     }
 
+    @Deprecated
     public enum Col implements Column {
+        @Deprecated
         ID("id"),
+        @Deprecated
         KILLER_UUID("killer_uuid"),
+        @Deprecated
         VICTIM_UUID("victim_uuid"),
+        @Deprecated
         SERVER_UUID("server_uuid"),
+        @Deprecated
         SESSION_ID("session_id"),
+        @Deprecated
         WEAPON("weapon"),
+        @Deprecated
         DATE("date");
 
         private final String column;
