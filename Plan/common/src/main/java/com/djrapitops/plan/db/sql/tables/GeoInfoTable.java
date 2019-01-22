@@ -18,14 +18,12 @@ package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.*;
-import com.djrapitops.plan.db.sql.parsing.Column;
-import com.djrapitops.plan.db.sql.parsing.Select;
-import com.djrapitops.plan.db.sql.parsing.Sql;
-import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
+import com.djrapitops.plan.db.sql.parsing.*;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
 import com.djrapitops.plugin.utilities.Verify;
@@ -53,6 +51,13 @@ public class GeoInfoTable extends UserUUIDTable {
 
     public static final String TABLE_NAME = "plan_ips";
 
+    public static final String ID = "id";
+    public static final String USER_UUID = UserUUIDTable.Col.UUID.get();
+    public static final String IP = "ip";
+    public static final String IP_HASH = "ip_hash";
+    public static final String GEOLOCATION = "geolocation";
+    public static final String LAST_USED = "last_used";
+
     public GeoInfoTable(SQLDB db) {
         super(TABLE_NAME, db);
         insertStatement = "INSERT INTO " + tableName + " ("
@@ -65,6 +70,17 @@ public class GeoInfoTable extends UserUUIDTable {
     }
 
     private String insertStatement;
+
+    public static String createTableSQL(DBType dbType) {
+        return CreateTableParser.create(TABLE_NAME, dbType)
+                .column(ID, Sql.INT).primaryKey()
+                .column(USER_UUID, Sql.varchar(36)).notNull()
+                .column(IP, Sql.varchar(39)).notNull()
+                .column(GEOLOCATION, Sql.varchar(50)).notNull()
+                .column(IP_HASH, Sql.varchar(200))
+                .column(LAST_USED, Sql.LONG).notNull().defaultValue("0")
+                .toString();
+    }
 
     @Override
     public void createTable() throws DBInitException {
@@ -211,12 +227,19 @@ public class GeoInfoTable extends UserUUIDTable {
         });
     }
 
+    @Deprecated
     public enum Col implements Column {
+        @Deprecated
         ID("id"),
+        @Deprecated
         UUID(UserUUIDTable.Col.UUID.get()),
+        @Deprecated
         IP("ip"),
+        @Deprecated
         IP_HASH("ip_hash"),
+        @Deprecated
         GEOLOCATION("geolocation"),
+        @Deprecated
         LAST_USED("last_used");
 
         private final String column;
