@@ -19,6 +19,7 @@ package com.djrapitops.plan.db.sql.tables;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
+import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryAllStatement;
@@ -27,9 +28,9 @@ import com.djrapitops.plan.db.patches.SessionAFKTimePatch;
 import com.djrapitops.plan.db.patches.SessionsOptimizationPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.sql.parsing.Column;
+import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -42,7 +43,7 @@ import java.util.stream.Collectors;
 
 /**
  * Table that represents plan_sessions.
- *
+ * <p>
  * Patches related to this table:
  * {@link Version10Patch}
  * {@link SessionAFKTimePatch}
@@ -53,6 +54,15 @@ import java.util.stream.Collectors;
 public class SessionsTable extends UserUUIDTable {
 
     public static final String TABLE_NAME = "plan_sessions";
+
+    public static final String ID = "id";
+    public static final String USER_UUID = UserUUIDTable.Col.UUID.get();
+    public static final String SERVER_UUID = "server_uuid";
+    public static final String SESSION_START = "session_start";
+    public static final String SESSION_END = "session_end";
+    public static final String MOB_KILLS = "mob_kills";
+    public static final String DEATHS = "deaths";
+    public static final String AFK_TIME = "afk_time";
 
     private String insertStatement;
 
@@ -69,20 +79,22 @@ public class SessionsTable extends UserUUIDTable {
                 + ") VALUES (?, ?, ?, ?, ?, ?, ?)";
     }
 
+    public static String createTableSQL(DBType dbType) {
+        return CreateTableParser.create(TABLE_NAME, dbType)
+                .column(ID, Sql.INT).primaryKey()
+                .column(USER_UUID, Sql.varchar(36)).notNull()
+                .column(SERVER_UUID, Sql.varchar(36)).notNull()
+                .column(SESSION_START, Sql.LONG).notNull()
+                .column(SESSION_END, Sql.LONG).notNull()
+                .column(MOB_KILLS, Sql.INT).notNull()
+                .column(DEATHS, Sql.INT).notNull()
+                .column(AFK_TIME, Sql.LONG).notNull()
+                .toString();
+    }
+
     @Override
     public void createTable() throws DBInitException {
-        createTable(TableSqlParser.createTable(this.tableName)
-                .primaryKeyIDColumn(supportsMySQLQueries, Col.ID)
-                .column(Col.UUID, Sql.varchar(36)).notNull()
-                .column(Col.SERVER_UUID, Sql.varchar(36)).notNull()
-                .column(Col.SESSION_START, Sql.LONG).notNull()
-                .column(Col.SESSION_END, Sql.LONG).notNull()
-                .column(Col.MOB_KILLS, Sql.INT).notNull()
-                .column(Col.DEATHS, Sql.INT).notNull()
-                .column(Col.AFK_TIME, Sql.LONG).notNull()
-                .primaryKey(supportsMySQLQueries, Col.ID)
-                .toString()
-        );
+        createTable(createTableSQL(db.getType()));
     }
 
     /**
@@ -554,14 +566,23 @@ public class SessionsTable extends UserUUIDTable {
         });
     }
 
+    @Deprecated
     public enum Col implements Column {
+        @Deprecated
         UUID(UserUUIDTable.Col.UUID.get()),
+        @Deprecated
         ID("id"),
+        @Deprecated
         SERVER_UUID("server_uuid"),
+        @Deprecated
         SESSION_START("session_start"),
+        @Deprecated
         SESSION_END("session_end"),
+        @Deprecated
         MOB_KILLS("mob_kills"),
+        @Deprecated
         DEATHS("deaths"),
+        @Deprecated
         AFK_TIME("afk_time");
 
         private final String column;
