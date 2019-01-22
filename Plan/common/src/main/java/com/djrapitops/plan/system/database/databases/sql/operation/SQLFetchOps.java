@@ -27,8 +27,8 @@ import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.sql.queries.batch.LargeFetchQueries;
-import com.djrapitops.plan.db.sql.queries.single.OptionalFetchQueries;
+import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
+import com.djrapitops.plan.db.sql.queries.OptionalFetchQueries;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.info.server.Server;
@@ -136,8 +136,8 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         Map<UUID, List<Session>> sessions = sessionsTable.getSessionInfoOfServer(serverUUID);
         Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
         map.put(serverUUID, sessions);
-        killsTable.addKillsToSessions(map);
-        worldTimesTable.addWorldTimesToSessions(map);
+        killsTable.addKillsToSessions(map); // TODO Optimize
+        worldTimesTable.addWorldTimesToSessions(map); // TODO Optimize
 
         Map<UUID, List<UserInfo>> serverUserInfos = Collections.singletonMap(serverUUID, serverUserInfo);
         Map<UUID, Map<UUID, List<Session>>> serverSessions = Collections.singletonMap(serverUUID, sessions);

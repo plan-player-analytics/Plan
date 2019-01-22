@@ -30,7 +30,7 @@ import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.sql.parsing.Column;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
-import com.djrapitops.plan.db.sql.queries.batch.LargeFetchQueries;
+import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;

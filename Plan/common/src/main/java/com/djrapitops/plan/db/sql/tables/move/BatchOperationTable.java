@@ -17,7 +17,7 @@
 package com.djrapitops.plan.db.sql.tables.move;
 
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.sql.queries.batch.LargeFetchQueries;
+import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.sql.tables.Table;
 import com.djrapitops.plan.db.sql.tables.UsersTable;
 
