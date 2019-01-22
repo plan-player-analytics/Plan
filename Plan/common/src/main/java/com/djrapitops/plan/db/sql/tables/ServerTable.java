@@ -17,6 +17,7 @@
 package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryAllStatement;
@@ -44,6 +45,13 @@ public class ServerTable extends Table {
 
     public static final String TABLE_NAME = "plan_servers";
 
+    public static final String SERVER_ID = "id";
+    public static final String SERVER_UUID = "uuid";
+    public static final String NAME = "name";
+    public static final String WEB_ADDRESS = "web_address";
+    public static final String INSTALLED = "is_installed";
+    public static final String MAX_PLAYERS = "max_players";
+
     public ServerTable(SQLDB db) {
         super(TABLE_NAME, db);
         statementSelectServerID = "(" + Select.from(tableName, tableName + "." + Col.SERVER_ID).where(tableName + "." + Col.SERVER_UUID + "=?").toString() + " LIMIT 1)";
@@ -59,6 +67,17 @@ public class ServerTable extends Table {
     public final String statementSelectServerID;
     public final String statementSelectServerNameID;
     private String insertStatement;
+
+    public static String createTableSQL(DBType dbType) {
+        return CreateTableParser.create(TABLE_NAME, dbType)
+                .column(SERVER_ID, Sql.INT).primaryKey()
+                .column(SERVER_UUID, Sql.varchar(36)).notNull().unique()
+                .column(NAME, Sql.varchar(100))
+                .column(WEB_ADDRESS, Sql.varchar(100))
+                .column(INSTALLED, Sql.BOOL).notNull().defaultValue(true)
+                .column(MAX_PLAYERS, Sql.INT).notNull().defaultValue("-1")
+                .toString();
+    }
 
     @Override
     public void createTable() throws DBInitException {
@@ -310,12 +329,19 @@ public class ServerTable extends Table {
         });
     }
 
+    @Deprecated
     public enum Col implements Column {
+        @Deprecated
         SERVER_ID("id"),
+        @Deprecated
         SERVER_UUID("uuid"),
+        @Deprecated
         NAME("name"),
+        @Deprecated
         WEBSERVER_ADDRESS("web_address"),
+        @Deprecated
         INSTALLED("is_installed"),
+        @Deprecated
         MAX_PLAYERS("max_players");
 
         private final String column;
