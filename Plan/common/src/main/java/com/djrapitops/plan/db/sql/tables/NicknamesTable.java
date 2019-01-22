@@ -18,6 +18,7 @@ package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.store.objects.Nickname;
+import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryAllStatement;
@@ -26,6 +27,7 @@ import com.djrapitops.plan.db.patches.NicknameLastSeenPatch;
 import com.djrapitops.plan.db.patches.NicknamesOptimizationPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.sql.parsing.Column;
+import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
 import com.djrapitops.plugin.utilities.Verify;
@@ -50,6 +52,13 @@ import java.util.*;
 public class NicknamesTable extends UserUUIDTable {
 
     public static final String TABLE_NAME = "plan_nicknames";
+
+    public static final String ID = "id";
+    public static final String USER_UUID = UserUUIDTable.Col.UUID.get();
+    public static final String SERVER_UUID = "server_uuid";
+    public static final String NICKNAME = "nickname";
+    public static final String LAST_USED = "last_used";
+
     private String insertStatement;
     private final String updateStatement;
 
@@ -65,6 +74,16 @@ public class NicknamesTable extends UserUUIDTable {
                 " WHERE " + Col.NICKNAME + "=?" +
                 " AND " + Col.UUID + "=?" +
                 " AND " + Col.SERVER_UUID + "=?";
+    }
+
+    public static String createTableSQL(DBType dbType) {
+        return CreateTableParser.create(TABLE_NAME, dbType)
+                .column(ID, Sql.INT).primaryKey()
+                .column(USER_UUID, Sql.varchar(36)).notNull()
+                .column(NICKNAME, Sql.varchar(75)).notNull()
+                .column(SERVER_UUID, Sql.varchar(36)).notNull()
+                .column(LAST_USED, Sql.LONG).notNull()
+                .toString();
     }
 
     @Override
@@ -246,11 +265,17 @@ public class NicknamesTable extends UserUUIDTable {
         });
     }
 
+    @Deprecated
     public enum Col implements Column {
+        @Deprecated
         ID("id"),
+        @Deprecated
         UUID(UserUUIDTable.Col.UUID.get()),
+        @Deprecated
         SERVER_UUID("server_uuid"),
+        @Deprecated
         NICKNAME("nickname"),
+        @Deprecated
         LAST_USED("last_used");
 
         private final String column;
