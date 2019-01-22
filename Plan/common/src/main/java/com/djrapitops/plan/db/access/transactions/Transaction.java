@@ -50,6 +50,10 @@ public abstract class Transaction {
         Verify.nullCheck(db, () -> new IllegalArgumentException("Given database was null"));
         Verify.isFalse(success, () -> new IllegalStateException("Transaction has already been executed"));
 
+        if (!shouldBeExecuted()) {
+            return;
+        }
+
         try {
             initializeTransaction(db);
             execute();
@@ -59,6 +63,21 @@ public abstract class Transaction {
         }
     }
 
+    /**
+     * Override this method for conditional execution.
+     * <p>
+     * Please note that the transaction has not been initialized and class variables are not available for
+     * queries. The condition should depend on other variables (Like the data that is to be stored) given to the transaction.
+     *
+     * @return false if the transaction should not execute.
+     */
+    protected boolean shouldBeExecuted() {
+        return true;
+    }
+
+    /**
+     * Implement this method for transaction execution.
+     */
     protected abstract void execute();
 
     private void initializeTransaction(SQLDB db) {
