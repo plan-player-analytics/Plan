@@ -18,6 +18,7 @@ package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.UserInfo;
+import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryAllStatement;
@@ -48,6 +49,13 @@ public class UserInfoTable extends UserUUIDTable {
 
     public static final String TABLE_NAME = "plan_user_info";
 
+    public static final String ID = "id";
+    public static final String USER_UUID = UserUUIDTable.Col.UUID.get();
+    public static final String SERVER_UUID = "server_uuid";
+    public static final String REGISTERED = "registered";
+    public static final String OP = "opped";
+    public static final String BANNED = "banned";
+
     private final String insertStatement;
 
     private final UsersTable usersTable;
@@ -62,6 +70,17 @@ public class UserInfoTable extends UserUUIDTable {
                 Col.BANNED + ", " +
                 Col.OP +
                 ") VALUES (?, ?, ?, ?, ?)";
+    }
+
+    public static String createTableSQL(DBType dbType) {
+        return CreateTableParser.create(TABLE_NAME, dbType)
+                .column(ID, Sql.INT).primaryKey()
+                .column(USER_UUID, Sql.varchar(36)).notNull()
+                .column(SERVER_UUID, Sql.varchar(36)).notNull()
+                .column(REGISTERED, Sql.LONG).notNull()
+                .column(OP, Sql.BOOL).notNull().defaultValue(false)
+                .column(BANNED, Sql.BOOL).notNull().defaultValue(false)
+                .toString();
     }
 
     @Override
@@ -328,12 +347,19 @@ public class UserInfoTable extends UserUUIDTable {
         });
     }
 
+    @Deprecated
     public enum Col implements Column {
+        @Deprecated
         ID("id"),
+        @Deprecated
         UUID(UserUUIDTable.Col.UUID.get()),
+        @Deprecated
         SERVER_UUID("server_uuid"),
+        @Deprecated
         REGISTERED("registered"),
+        @Deprecated
         OP("opped"),
+        @Deprecated
         BANNED("banned");
 
         private final String column;
