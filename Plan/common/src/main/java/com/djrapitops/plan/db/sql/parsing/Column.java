@@ -21,6 +21,7 @@ package com.djrapitops.plan.db.sql.parsing;
  *
  * @author Rsl1122
  */
+@Deprecated
 public interface Column {
 
     default String get() {
