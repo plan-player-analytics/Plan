@@ -18,6 +18,7 @@ package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
@@ -43,6 +44,10 @@ public class SecurityTable extends Table {
 
     public static final String TABLE_NAME = "plan_security";
 
+    public static final String USERNAME = "username";
+    public static final String SALT_PASSWORD_HASH = "salted_pass_hash";
+    public static final String PERMISSION_LEVEL = "permission_level";
+
     public SecurityTable(SQLDB db) {
         super(TABLE_NAME, db);
         insertStatement = Insert.values(tableName,
@@ -53,14 +58,17 @@ public class SecurityTable extends Table {
 
     private String insertStatement;
 
+    public static String createTableSQL(DBType dbType) {
+        return CreateTableParser.create(TABLE_NAME, dbType)
+                .column(USERNAME, Sql.varchar(100)).notNull().unique()
+                .column(SALT_PASSWORD_HASH, Sql.varchar(100)).notNull().unique()
+                .column(PERMISSION_LEVEL, Sql.INT).notNull()
+                .toString();
+    }
+
     @Override
     public void createTable() throws DBInitException {
-        createTable(TableSqlParser.createTable(tableName)
-                .column(Col.USERNAME, Sql.varchar(100)).notNull().unique()
-                .column(Col.SALT_PASSWORD_HASH, Sql.varchar(100)).notNull().unique()
-                .column(Col.PERMISSION_LEVEL, Sql.INT).notNull()
-                .toString()
-        );
+        createTable(createTableSQL(db.getType()));
     }
 
     public void removeUser(String user) {
@@ -114,10 +122,11 @@ public class SecurityTable extends Table {
         return getWebUser(user) != null;
     }
 
+    @Deprecated
     public enum Col implements Column {
-        USERNAME("username"),
-        SALT_PASSWORD_HASH("salted_pass_hash"),
-        PERMISSION_LEVEL("permission_level");
+        @Deprecated USERNAME("username"),
+        @Deprecated SALT_PASSWORD_HASH("salted_pass_hash"),
+        @Deprecated PERMISSION_LEVEL("permission_level");
 
         private final String column;
 
