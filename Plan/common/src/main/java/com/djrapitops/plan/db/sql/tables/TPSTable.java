@@ -19,14 +19,15 @@ package com.djrapitops.plan.db.sql.tables;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
+import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.parsing.Column;
+import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
 import com.djrapitops.plan.db.sql.queries.OptionalFetchQueries;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plugin.api.TimeAmount;
@@ -51,6 +52,16 @@ public class TPSTable extends Table {
 
     public static final String TABLE_NAME = "plan_tps";
 
+    public static final String SERVER_ID = "server_id";
+    public static final String DATE = "date";
+    public static final String TPS = "tps";
+    public static final String PLAYERS_ONLINE = "players_online";
+    public static final String CPU_USAGE = "cpu_usage";
+    public static final String RAM_USAGE = "ram_usage";
+    public static final String ENTITIES = "entities";
+    public static final String CHUNKS = "chunks_loaded";
+    public static final String FREE_DISK = "free_disk_space";
+
     public TPSTable(SQLDB db) {
         super(TABLE_NAME, db);
         serverTable = db.getServerTable();
@@ -72,21 +83,24 @@ public class TPSTable extends Table {
     private final ServerTable serverTable;
     private String insertStatement;
 
+    public static String createTableSQL(DBType dbType) {
+        return CreateTableParser.create(TABLE_NAME, dbType)
+                .column(SERVER_ID, Sql.INT).notNull()
+                .column(DATE, Sql.LONG).notNull()
+                .column(TPS, Sql.DOUBLE).notNull()
+                .column(PLAYERS_ONLINE, Sql.INT).notNull()
+                .column(CPU_USAGE, Sql.DOUBLE).notNull()
+                .column(RAM_USAGE, Sql.LONG).notNull()
+                .column(ENTITIES, Sql.INT).notNull()
+                .column(CHUNKS, Sql.INT).notNull()
+                .column(FREE_DISK, Sql.LONG).notNull()
+                .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.SERVER_ID)
+                .toString();
+    }
+
     @Override
     public void createTable() throws DBInitException {
-        createTable(TableSqlParser.createTable(tableName)
-                .column(Col.SERVER_ID, Sql.INT).notNull()
-                .column(Col.DATE, Sql.LONG).notNull()
-                .column(Col.TPS, Sql.DOUBLE).notNull()
-                .column(Col.PLAYERS_ONLINE, Sql.INT).notNull()
-                .column(Col.CPU_USAGE, Sql.DOUBLE).notNull()
-                .column(Col.RAM_USAGE, Sql.LONG).notNull()
-                .column(Col.ENTITIES, Sql.INT).notNull()
-                .column(Col.CHUNKS, Sql.INT).notNull()
-                .column(Col.FREE_DISK, Sql.LONG).notNull()
-                .foreignKey(Col.SERVER_ID, serverTable.getTableName(), ServerTable.Col.SERVER_ID)
-                .toString()
-        );
+        createTable(createTableSQL(db.getType()));
     }
 
     public List<TPS> getTPSData(UUID serverUUID) {
@@ -326,16 +340,17 @@ public class TPSTable extends Table {
         });
     }
 
+    @Deprecated
     public enum Col implements Column {
-        SERVER_ID("server_id"),
-        DATE("date"),
-        TPS("tps"),
-        PLAYERS_ONLINE("players_online"),
-        CPU_USAGE("cpu_usage"),
-        RAM_USAGE("ram_usage"),
-        ENTITIES("entities"),
-        CHUNKS("chunks_loaded"),
-        FREE_DISK("free_disk_space");
+        @Deprecated SERVER_ID("server_id"),
+        @Deprecated DATE("date"),
+        @Deprecated TPS("tps"),
+        @Deprecated PLAYERS_ONLINE("players_online"),
+        @Deprecated CPU_USAGE("cpu_usage"),
+        @Deprecated RAM_USAGE("ram_usage"),
+        @Deprecated ENTITIES("entities"),
+        @Deprecated CHUNKS("chunks_loaded"),
+        @Deprecated FREE_DISK("free_disk_space");
 
         private final String column;
 
