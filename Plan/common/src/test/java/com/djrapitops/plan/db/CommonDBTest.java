@@ -29,6 +29,7 @@ import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.access.Query;
+import com.djrapitops.plan.db.access.transactions.RemoveEverythingTransaction;
 import com.djrapitops.plan.db.access.transactions.RemovePlayerTransaction;
 import com.djrapitops.plan.db.patches.Patch;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
@@ -123,7 +124,7 @@ public abstract class CommonDBTest {
             }
         }.apply();
         db.createTables();
-        db.remove().everything();
+        db.executeTransaction(new RemoveEverythingTransaction());
         ServerTable serverTable = db.getServerTable();
         serverTable.saveCurrentServerInfo(new Server(-1, serverUUID, "ServerName", "", 20));
         assertEquals(serverUUID, db.getServerUUIDSupplier().get());
@@ -553,7 +554,7 @@ public abstract class CommonDBTest {
     public void testRemovalEverything() throws NoSuchAlgorithmException {
         saveAllData(db);
 
-        db.remove().everything();
+        db.executeTransaction(new RemoveEverythingTransaction());
 
         assertQueryIsEmpty(db, LargeFetchQueries.fetchAllCommonUserInformation());
         assertQueryIsEmpty(db, LargeFetchQueries.fetchPerServerUserInformation());

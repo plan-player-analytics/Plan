@@ -17,20 +17,12 @@
 package com.djrapitops.plan.system.database.databases.sql.operation;
 
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.sql.tables.Table;
 import com.djrapitops.plan.system.database.databases.operation.RemoveOperations;
 
 public class SQLRemoveOps extends SQLOps implements RemoveOperations {
 
     public SQLRemoveOps(SQLDB db) {
         super(db);
-    }
-
-    @Override
-    public void everything() {
-        for (Table table : db.getAllTablesInRemoveOrder()) {
-            table.removeAllData();
-        }
     }
 
     @Override

@@ -18,7 +18,5 @@ package com.djrapitops.plan.system.database.databases.operation;
 
 public interface RemoveOperations {
 
-    void everything();
-
     void webUser(String name);
 }

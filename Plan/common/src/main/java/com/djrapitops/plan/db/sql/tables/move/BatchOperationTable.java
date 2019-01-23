@@ -17,6 +17,7 @@
 package com.djrapitops.plan.db.sql.tables.move;
 
 import com.djrapitops.plan.db.SQLDB;
+import com.djrapitops.plan.db.access.transactions.RemoveEverythingTransaction;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.sql.tables.Table;
 import com.djrapitops.plan.db.sql.tables.UsersTable;
@@ -67,7 +68,7 @@ public class BatchOperationTable extends Table {
 
     @Override
     public void removeAllData() {
-        db.remove().everything();
+        db.executeTransaction(new RemoveEverythingTransaction());
     }
 
     public void copyEverything(BatchOperationTable toDB) {

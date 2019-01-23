@@ -19,6 +19,7 @@ package com.djrapitops.plan.db;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
+import com.djrapitops.plan.db.access.transactions.RemoveEverythingTransaction;
 import com.djrapitops.plan.db.tasks.PatchTask;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plugin.logging.L;
@@ -117,6 +118,6 @@ public class DBPatchSQLiteRegressionTest extends DBPatchRegressionTest {
         OptionalAssert.equals(1, server.getValue(ServerKeys.PLAYER_KILL_COUNT));
 
         // Make sure no foreign key checks fail on removal
-        underTest.remove().everything();
+        underTest.executeTransaction(new RemoveEverythingTransaction());
     }
 }
