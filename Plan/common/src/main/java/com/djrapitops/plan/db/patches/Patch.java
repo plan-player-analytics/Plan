@@ -19,7 +19,7 @@ package com.djrapitops.plan.db.patches;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.transactions.Transaction;
+import com.djrapitops.plan.db.access.transactions.OperationCriticalTransaction;
 import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
 import com.djrapitops.plan.db.sql.queries.schema.H2SchemaQueries;
 import com.djrapitops.plan.db.sql.queries.schema.MySQLSchemaQueries;
@@ -29,7 +29,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class Patch extends Transaction {
+public abstract class Patch extends OperationCriticalTransaction {
 
     protected final SQLDB db;
     protected final DBType dbType;
