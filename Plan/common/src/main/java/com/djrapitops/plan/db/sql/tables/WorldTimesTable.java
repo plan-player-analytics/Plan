@@ -21,6 +21,7 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryAllStatement;
@@ -30,6 +31,7 @@ import com.djrapitops.plan.db.patches.WorldTimesOptimizationPatch;
 import com.djrapitops.plan.db.patches.WorldTimesSeverIDPatch;
 import com.djrapitops.plan.db.patches.WorldsServerIDPatch;
 import com.djrapitops.plan.db.sql.parsing.Column;
+import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
 import com.djrapitops.plugin.utilities.Verify;
@@ -58,6 +60,17 @@ import java.util.stream.Collectors;
 public class WorldTimesTable extends UserUUIDTable {
 
     public static final String TABLE_NAME = "plan_world_times";
+
+    public static final String ID = "id";
+    public static final String USER_UUID = UserUUIDTable.Col.UUID.get();
+    public static final String SERVER_UUID = "server_uuid";
+    public static final String SESSION_ID = "session_id";
+    public static final String WORLD_ID = "world_id";
+    public static final String SURVIVAL = "survival_time";
+    public static final String CREATIVE = "creative_time";
+    public static final String ADVENTURE = "adventure_time";
+    public static final String SPECTATOR = "spectator_time";
+
     private final WorldTable worldTable;
     private final SessionsTable sessionsTable;
     private String insertStatement;
@@ -78,6 +91,22 @@ public class WorldTimesTable extends UserUUIDTable {
                 ") VALUES (?, " +
                 worldTable.statementSelectID + ", " +
                 "?, ?, ?, ?, ?, ?)";
+    }
+
+    public static String createTableSQL(DBType dbType) {
+        return CreateTableParser.create(TABLE_NAME, dbType)
+                .column(ID, Sql.INT).primaryKey()
+                .column(USER_UUID, Sql.varchar(36)).notNull()
+                .column(WORLD_ID, Sql.INT).notNull()
+                .column(SERVER_UUID, Sql.varchar(36)).notNull()
+                .column(SESSION_ID, Sql.INT).notNull()
+                .column(SURVIVAL, Sql.LONG).notNull().defaultValue("0")
+                .column(CREATIVE, Sql.LONG).notNull().defaultValue("0")
+                .column(ADVENTURE, Sql.LONG).notNull().defaultValue("0")
+                .column(SPECTATOR, Sql.LONG).notNull().defaultValue("0")
+                .foreignKey(WORLD_ID, WorldTable.TABLE_NAME, WorldTable.ID)
+                .foreignKey(SESSION_ID, SessionsTable.TABLE_NAME, SessionsTable.ID)
+                .toString();
     }
 
     @Override
@@ -388,16 +417,17 @@ public class WorldTimesTable extends UserUUIDTable {
         return Objects.hash(super.hashCode(), worldTable, sessionsTable, insertStatement);
     }
 
+    @Deprecated
     public enum Col implements Column {
-        ID("id"),
-        UUID(UserUUIDTable.Col.UUID.get()),
-        SERVER_UUID("server_uuid"),
-        SESSION_ID("session_id"),
-        WORLD_ID("world_id"),
-        SURVIVAL("survival_time"),
-        CREATIVE("creative_time"),
-        ADVENTURE("adventure_time"),
-        SPECTATOR("spectator_time");
+        @Deprecated ID("id"),
+        @Deprecated UUID(UserUUIDTable.Col.UUID.get()),
+        @Deprecated SERVER_UUID("server_uuid"),
+        @Deprecated SESSION_ID("session_id"),
+        @Deprecated WORLD_ID("world_id"),
+        @Deprecated SURVIVAL("survival_time"),
+        @Deprecated CREATIVE("creative_time"),
+        @Deprecated ADVENTURE("adventure_time"),
+        @Deprecated SPECTATOR("spectator_time");
 
         private final String column;
 
