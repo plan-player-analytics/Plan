@@ -17,6 +17,7 @@
 package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
@@ -24,8 +25,8 @@ import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.patches.WorldsOptimizationPatch;
 import com.djrapitops.plan.db.patches.WorldsServerIDPatch;
 import com.djrapitops.plan.db.sql.parsing.Column;
+import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -48,6 +49,11 @@ import java.util.*;
 public class WorldTable extends Table {
 
     public static final String TABLE_NAME = "plan_worlds";
+
+    public static final String ID = "id";
+    public static final String SERVER_UUID = "server_uuid";
+    public static final String NAME = "world_name";
+
     public final String statementSelectID;
     private final ServerTable serverTable;
 
@@ -60,15 +66,17 @@ public class WorldTable extends Table {
                 " LIMIT 1)";
     }
 
+    public static String createTableSQL(DBType dbType) {
+        return CreateTableParser.create(TABLE_NAME, dbType)
+                .column(ID, Sql.INT).primaryKey()
+                .column(NAME, Sql.varchar(100)).notNull()
+                .column(SERVER_UUID, Sql.varchar(36)).notNull()
+                .toString();
+    }
+
     @Override
     public void createTable() throws DBInitException {
-        createTable(TableSqlParser.createTable(tableName)
-                .primaryKeyIDColumn(supportsMySQLQueries, Col.ID)
-                .column(Col.NAME, Sql.varchar(100)).notNull()
-                .column(Col.SERVER_UUID, Sql.varchar(36)).notNull()
-                .primaryKey(supportsMySQLQueries, Col.ID)
-                .toString()
-        );
+        createTable(createTableSQL(db.getType()));
     }
 
     public List<String> getWorlds() {
@@ -177,10 +185,11 @@ public class WorldTable extends Table {
         });
     }
 
+    @Deprecated
     public enum Col implements Column {
-        ID("id"),
-        SERVER_UUID("server_uuid"),
-        NAME("world_name");
+        @Deprecated ID("id"),
+        @Deprecated SERVER_UUID("server_uuid"),
+        @Deprecated NAME("world_name");
 
         private final String column;
 
