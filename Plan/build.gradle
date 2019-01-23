@@ -15,7 +15,7 @@ allprojects {
     version "4.6.2-SNAPSHOT"
 
     test {
-        useJUnitPlatform()
+//        useJUnitPlatform()
         testLogging {
             events "passed", "failed"
             exceptionFormat "full"
