@@ -68,10 +68,10 @@ public class CreateTableParser {
         if (dbType.supportsMySQLQueries()) {
             notNull();
             columnBuilder.append(" AUTO_INCREMENT");
+            primaryKey(currentColumn);
         } else {
             columnBuilder.append(" PRIMARY KEY");
         }
-        primaryKey(currentColumn);
         return this;
     }
 
