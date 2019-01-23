@@ -17,13 +17,14 @@
 package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.parsing.Column;
+import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -46,6 +47,11 @@ public class CommandUseTable extends Table {
 
     public static final String TABLE_NAME = "plan_commandusages";
 
+    public static final String COMMAND_ID = "id";
+    public static final String SERVER_ID = "server_id";
+    public static final String COMMAND = "command";
+    public static final String TIMES_USED = "times_used";
+
     public CommandUseTable(SQLDB db) {
         super(TABLE_NAME, db);
         serverTable = db.getServerTable();
@@ -59,18 +65,19 @@ public class CommandUseTable extends Table {
     private final ServerTable serverTable;
     private String insertStatement;
 
+    public static String createTableSQL(DBType dbType) {
+        return CreateTableParser.create(TABLE_NAME, dbType)
+                .column(COMMAND_ID, Sql.INT).primaryKey()
+                .column(COMMAND, Sql.varchar(20)).notNull()
+                .column(TIMES_USED, Sql.INT).notNull()
+                .column(SERVER_ID, Sql.INT).notNull()
+                .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.SERVER_ID)
+                .toString();
+    }
+
     @Override
     public void createTable() throws DBInitException {
-        ServerTable serverTable = db.getServerTable();
-        createTable(TableSqlParser.createTable(tableName)
-                .primaryKeyIDColumn(supportsMySQLQueries, Col.COMMAND_ID)
-                .column(Col.COMMAND, Sql.varchar(20)).notNull()
-                .column(Col.TIMES_USED, Sql.INT).notNull()
-                .column(Col.SERVER_ID, Sql.INT).notNull()
-                .primaryKey(supportsMySQLQueries, Col.COMMAND_ID)
-                .foreignKey(Col.SERVER_ID, serverTable.toString(), ServerTable.Col.SERVER_ID)
-                .toString()
-        );
+        createTable(createTableSQL(db.getType()));
     }
 
     /**
@@ -184,10 +191,15 @@ public class CommandUseTable extends Table {
         });
     }
 
+    @Deprecated
     public enum Col implements Column {
+        @Deprecated
         COMMAND_ID("id"),
+        @Deprecated
         SERVER_ID("server_id"),
+        @Deprecated
         COMMAND("command"),
+        @Deprecated
         TIMES_USED("times_used");
 
         private final String column;
