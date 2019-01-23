@@ -29,6 +29,7 @@ import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.access.Query;
+import com.djrapitops.plan.db.access.transactions.RemovePlayerTransaction;
 import com.djrapitops.plan.db.patches.Patch;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.sql.tables.*;
@@ -539,7 +540,7 @@ public abstract class CommonDBTest {
 
         assertTrue(usersTable.isRegistered(playerUUID));
 
-        db.remove().player(playerUUID);
+        db.executeTransaction(new RemovePlayerTransaction(playerUUID));
 
         assertFalse(usersTable.isRegistered(playerUUID));
         assertFalse(userInfoTable.isRegistered(playerUUID));

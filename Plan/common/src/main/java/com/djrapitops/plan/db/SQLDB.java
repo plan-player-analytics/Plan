@@ -23,6 +23,7 @@ import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.access.transactions.CreateTablesTransaction;
+import com.djrapitops.plan.db.access.transactions.RemovePlayerTransaction;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.patches.*;
 import com.djrapitops.plan.db.sql.tables.*;
@@ -304,7 +305,7 @@ public abstract class SQLDB extends AbstractDatabase {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
         for (UUID uuid : inactivePlayers) {
-            removeOps.player(uuid);
+            executeTransaction(new RemovePlayerTransaction(uuid));
         }
         int removed = inactivePlayers.size();
         if (removed > 0) {

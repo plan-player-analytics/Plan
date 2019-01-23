@@ -19,6 +19,7 @@ package com.djrapitops.plan.db.sql.queries;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.tables.ServerTable;
+import com.djrapitops.plan.db.sql.tables.UsersTable;
 import com.djrapitops.plan.system.info.server.Server;
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -73,6 +74,26 @@ public class OptionalFetchQueries {
 
     public static Query<Optional<Server>> proxyServerInformation() {
         return db -> db.query(matchingServerIdentifier("BungeeCord"));
+    }
+
+    public static Query<Optional<String>> playerUserName(UUID playerUUID) {
+        String sql = "SELECT " + UsersTable.USER_NAME +
+                " FROM " + UsersTable.TABLE_NAME +
+                " WHERE " + UsersTable.USER_UUID + "=?";
+        return new QueryStatement<Optional<String>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+            }
+
+            @Override
+            public Optional<String> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(set.getString(UsersTable.USER_NAME));
+                }
+                return Optional.empty();
+            }
+        };
     }
 
 }
