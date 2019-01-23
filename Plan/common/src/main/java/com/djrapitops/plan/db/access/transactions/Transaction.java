@@ -160,6 +160,10 @@ public abstract class Transaction {
         }
     }
 
+    protected DBType getDBType() {
+        return db.getType();
+    }
+
     @Deprecated
     protected void setDb(SQLDB db) {
         this.db = db;

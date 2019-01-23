@@ -22,6 +22,7 @@ import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.access.transactions.CreateTablesTransaction;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.patches.*;
 import com.djrapitops.plan.db.sql.tables.*;
@@ -250,9 +251,7 @@ public abstract class SQLDB extends AbstractDatabase {
      * Updates table columns to latest schema.
      */
     void createTables() throws DBInitException {
-        for (Table table : getAllTables()) {
-            table.createTable();
-        }
+        executeTransaction(new CreateTablesTransaction());
     }
 
     /**
