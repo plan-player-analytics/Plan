@@ -74,6 +74,7 @@ public class PingTable extends UserUUIDTable {
         return CreateTableParser.create(TABLE_NAME, dbType)
                 .column(ID, Sql.INT).primaryKey()
                 .column(USER_UUID, Sql.varchar(36)).notNull()
+                .column(SERVER_UUID, Sql.varchar(36)).notNull()
                 .column(DATE, Sql.LONG).notNull()
                 .column(MAX_PING, Sql.INT).notNull()
                 .column(MIN_PING, Sql.INT).notNull()
