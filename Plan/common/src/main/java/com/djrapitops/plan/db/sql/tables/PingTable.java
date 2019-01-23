@@ -18,13 +18,14 @@ package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.Ping;
+import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.PingOptimizationPatch;
 import com.djrapitops.plan.db.sql.parsing.Column;
+import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.sql.PreparedStatement;
@@ -46,6 +47,15 @@ import java.util.UUID;
 public class PingTable extends UserUUIDTable {
 
     public static final String TABLE_NAME = "plan_ping";
+
+    public static final String ID = "id";
+    public static final String USER_UUID = UserUUIDTable.Col.UUID.get();
+    public static final String SERVER_UUID = "server_uuid";
+    public static final String DATE = "date";
+    public static final String MAX_PING = "max_ping";
+    public static final String AVG_PING = "avg_ping";
+    public static final String MIN_PING = "min_ping";
+
     private final String insertStatement;
 
     public PingTable(SQLDB db) {
@@ -60,18 +70,20 @@ public class PingTable extends UserUUIDTable {
                 ") VALUES (?, ?, ?, ?, ?, ?)";
     }
 
+    public static String createTableSQL(DBType dbType) {
+        return CreateTableParser.create(TABLE_NAME, dbType)
+                .column(ID, Sql.INT).primaryKey()
+                .column(USER_UUID, Sql.varchar(36)).notNull()
+                .column(DATE, Sql.LONG).notNull()
+                .column(MAX_PING, Sql.INT).notNull()
+                .column(MIN_PING, Sql.INT).notNull()
+                .column(AVG_PING, Sql.DOUBLE).notNull()
+                .toString();
+    }
+
     @Override
     public void createTable() throws DBInitException {
-        createTable(TableSqlParser.createTable(TABLE_NAME)
-                .primaryKeyIDColumn(supportsMySQLQueries, Col.ID)
-                .column(Col.UUID, Sql.varchar(36)).notNull()
-                .column(Col.SERVER_UUID, Sql.varchar(36)).notNull()
-                .column(Col.DATE, Sql.LONG).notNull()
-                .column(Col.MAX_PING, Sql.INT).notNull()
-                .column(Col.MIN_PING, Sql.INT).notNull()
-                .column(Col.AVG_PING, Sql.DOUBLE).notNull()
-                .primaryKey(supportsMySQLQueries, Col.ID)
-                .toString());
+        createTable(createTableSQL(db.getType()));
     }
 
     public void clean() {
@@ -159,13 +171,21 @@ public class PingTable extends UserUUIDTable {
         });
     }
 
+    @Deprecated
     public enum Col implements Column {
+        @Deprecated
         ID("id"),
+        @Deprecated
         UUID(UserUUIDTable.Col.UUID.get()),
+        @Deprecated
         SERVER_UUID("server_uuid"),
+        @Deprecated
         DATE("date"),
+        @Deprecated
         MAX_PING("max_ping"),
+        @Deprecated
         AVG_PING("avg_ping"),
+        @Deprecated
         MIN_PING("min_ping");
 
         private final String name;
