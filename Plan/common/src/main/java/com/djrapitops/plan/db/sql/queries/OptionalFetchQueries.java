@@ -42,10 +42,10 @@ public class OptionalFetchQueries {
 
     public static Query<Optional<Server>> matchingServerIdentifier(String identifier) {
         String sql = "SELECT * FROM " + ServerTable.TABLE_NAME +
-                " WHERE (" + ServerTable.Col.SERVER_ID + "=?" +
-                " OR LOWER(" + ServerTable.Col.NAME + ") LIKE LOWER(?)" +
-                " OR LOWER(" + ServerTable.Col.SERVER_UUID + ") LIKE LOWER(?))" +
-                " AND " + ServerTable.Col.INSTALLED + "=?" +
+                " WHERE (" + ServerTable.SERVER_ID + "=?" +
+                " OR LOWER(" + ServerTable.NAME + ") LIKE LOWER(?)" +
+                " OR LOWER(" + ServerTable.SERVER_UUID + ") LIKE LOWER(?))" +
+                " AND " + ServerTable.INSTALLED + "=?" +
                 " LIMIT 1";
         return new QueryStatement<Optional<Server>>(sql) {
             @Override
@@ -60,11 +60,11 @@ public class OptionalFetchQueries {
             public Optional<Server> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
                     return Optional.of(new Server(
-                            set.getInt(ServerTable.Col.SERVER_ID.get()),
-                            UUID.fromString(set.getString(ServerTable.Col.SERVER_UUID.get())),
-                            set.getString(ServerTable.Col.NAME.get()),
-                            set.getString(ServerTable.Col.WEBSERVER_ADDRESS.get()),
-                            set.getInt(ServerTable.Col.MAX_PLAYERS.get())
+                            set.getInt(ServerTable.SERVER_ID),
+                            UUID.fromString(set.getString(ServerTable.SERVER_UUID)),
+                            set.getString(ServerTable.NAME),
+                            set.getString(ServerTable.WEB_ADDRESS),
+                            set.getInt(ServerTable.MAX_PLAYERS)
                     ));
                 }
                 return Optional.empty();

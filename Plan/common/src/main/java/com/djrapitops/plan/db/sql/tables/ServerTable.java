@@ -35,8 +35,6 @@ import java.util.*;
  * Table for managing multiple server's data in the database.
  * <p>
  * Table Name: plan_servers
- * <p>
- * For contained columns {@link Col}
  *
  * @author Rsl1122
  * @see Server
@@ -54,14 +52,14 @@ public class ServerTable extends Table {
 
     public ServerTable(SQLDB db) {
         super(TABLE_NAME, db);
-        statementSelectServerID = "(" + Select.from(tableName, tableName + "." + Col.SERVER_ID).where(tableName + "." + Col.SERVER_UUID + "=?").toString() + " LIMIT 1)";
-        statementSelectServerNameID = "(" + Select.from(tableName, tableName + "." + Col.NAME).where(tableName + "." + Col.SERVER_ID + "=?").toString() + " LIMIT 1)";
+        statementSelectServerID = "(" + Select.from(tableName, tableName + "." + SERVER_ID).where(tableName + "." + SERVER_UUID + "=?").toString() + " LIMIT 1)";
+        statementSelectServerNameID = "(" + Select.from(tableName, tableName + "." + NAME).where(tableName + "." + SERVER_ID + "=?").toString() + " LIMIT 1)";
         insertStatement = Insert.values(tableName,
-                Col.SERVER_UUID,
-                Col.NAME,
-                Col.WEBSERVER_ADDRESS,
-                Col.INSTALLED,
-                Col.MAX_PLAYERS);
+                SERVER_UUID,
+                NAME,
+                WEB_ADDRESS,
+                INSTALLED,
+                MAX_PLAYERS);
     }
 
     public final String statementSelectServerID;
@@ -81,26 +79,17 @@ public class ServerTable extends Table {
 
     @Override
     public void createTable() throws DBInitException {
-        createTable(TableSqlParser.createTable(tableName)
-                .primaryKeyIDColumn(supportsMySQLQueries, Col.SERVER_ID)
-                .column(Col.SERVER_UUID, Sql.varchar(36)).notNull().unique()
-                .column(Col.NAME, Sql.varchar(100))
-                .column(Col.WEBSERVER_ADDRESS, Sql.varchar(100))
-                .column(Col.INSTALLED, Sql.BOOL).notNull().defaultValue(true)
-                .column(Col.MAX_PLAYERS, Sql.INT).notNull().defaultValue("-1")
-                .primaryKey(supportsMySQLQueries, Col.SERVER_ID)
-                .toString()
-        );
+        createTable(createTableSQL(db.getType()));
     }
 
     private void updateServerInfo(Server info) {
         String sql = Update.values(tableName,
-                Col.SERVER_UUID,
-                Col.NAME,
-                Col.WEBSERVER_ADDRESS,
-                Col.INSTALLED,
-                Col.MAX_PLAYERS)
-                .where(Col.SERVER_ID + "=?")
+                SERVER_UUID,
+                NAME,
+                WEB_ADDRESS,
+                INSTALLED,
+                MAX_PLAYERS)
+                .where(SERVER_ID + "=?")
                 .toString();
 
         execute(new ExecStatement(sql) {
@@ -132,8 +121,8 @@ public class ServerTable extends Table {
      */
     public Optional<Integer> getServerID(UUID serverUUID) {
         String sql = Select.from(tableName,
-                Col.SERVER_ID)
-                .where(Col.SERVER_UUID + "=?")
+                SERVER_ID)
+                .where(SERVER_UUID + "=?")
                 .toString();
 
         return query(new QueryStatement<Optional<Integer>>(sql) {
@@ -145,7 +134,7 @@ public class ServerTable extends Table {
             @Override
             public Optional<Integer> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return Optional.of(set.getInt(Col.SERVER_ID.get()));
+                    return Optional.of(set.getInt(SERVER_ID));
                 } else {
                     return Optional.empty();
                 }
@@ -185,8 +174,8 @@ public class ServerTable extends Table {
      */
     public Optional<String> getServerName(UUID serverUUID) {
         String sql = Select.from(tableName,
-                Col.NAME)
-                .where(Col.SERVER_UUID + "=?")
+                NAME)
+                .where(SERVER_UUID + "=?")
                 .toString();
 
         return query(new QueryStatement<Optional<String>>(sql) {
@@ -198,7 +187,7 @@ public class ServerTable extends Table {
             @Override
             public Optional<String> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return Optional.of(set.getString(Col.NAME.get()));
+                    return Optional.of(set.getString(NAME));
                 } else {
                     return Optional.empty();
                 }
@@ -208,7 +197,7 @@ public class ServerTable extends Table {
 
     public Map<UUID, String> getServerNames() {
         String sql = Select.from(tableName,
-                Col.SERVER_UUID, Col.NAME)
+                SERVER_UUID, NAME)
                 .toString();
 
         return query(new QueryAllStatement<Map<UUID, String>>(sql) {
@@ -216,8 +205,8 @@ public class ServerTable extends Table {
             public Map<UUID, String> processResults(ResultSet set) throws SQLException {
                 Map<UUID, String> names = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(Col.SERVER_UUID.get()));
-                    names.put(serverUUID, set.getString(Col.NAME.get()));
+                    UUID serverUUID = UUID.fromString(set.getString(SERVER_UUID));
+                    names.put(serverUUID, set.getString(NAME));
                 }
                 return names;
             }
@@ -225,7 +214,7 @@ public class ServerTable extends Table {
     }
 
     public List<UUID> getServerUUIDs() {
-        String sql = Select.from(tableName, Col.SERVER_UUID)
+        String sql = Select.from(tableName, SERVER_UUID)
                 .toString();
 
         return query(new QueryAllStatement<List<UUID>>(sql) {
@@ -233,7 +222,7 @@ public class ServerTable extends Table {
             public List<UUID> processResults(ResultSet set) throws SQLException {
                 List<UUID> uuids = new ArrayList<>();
                 while (set.next()) {
-                    uuids.add(UUID.fromString(set.getString(Col.SERVER_UUID.get())));
+                    uuids.add(UUID.fromString(set.getString(SERVER_UUID)));
                 }
                 return uuids;
             }
@@ -270,8 +259,8 @@ public class ServerTable extends Table {
 
     public Optional<UUID> getServerUUID(String serverName) {
         String sql = Select.from(tableName,
-                Col.SERVER_UUID)
-                .where(Col.NAME + "=?")
+                SERVER_UUID)
+                .where(NAME + "=?")
                 .toString();
 
         return query(new QueryStatement<Optional<UUID>>(sql) {
@@ -283,7 +272,7 @@ public class ServerTable extends Table {
             @Override
             public Optional<UUID> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return Optional.of(UUID.fromString(set.getString(Col.SERVER_UUID.get())));
+                    return Optional.of(UUID.fromString(set.getString(SERVER_UUID)));
                 } else {
                     return Optional.empty();
                 }
@@ -293,7 +282,7 @@ public class ServerTable extends Table {
 
     public Optional<Server> getServerInfo(UUID serverUUID) {
         String sql = Select.from(tableName, "*")
-                .where(Col.SERVER_UUID + "=?")
+                .where(SERVER_UUID + "=?")
                 .toString();
 
         return query(new QueryStatement<Optional<Server>>(sql) {
@@ -306,11 +295,11 @@ public class ServerTable extends Table {
             public Optional<Server> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
                     return Optional.of(new Server(
-                            set.getInt(Col.SERVER_ID.get()),
-                            UUID.fromString(set.getString(Col.SERVER_UUID.get())),
-                            set.getString(Col.NAME.get()),
-                            set.getString(Col.WEBSERVER_ADDRESS.get()),
-                            set.getInt(Col.MAX_PLAYERS.get())));
+                            set.getInt(SERVER_ID),
+                            UUID.fromString(set.getString(SERVER_UUID)),
+                            set.getString(NAME),
+                            set.getString(WEB_ADDRESS),
+                            set.getInt(MAX_PLAYERS)));
                 }
                 return Optional.empty();
             }
@@ -318,7 +307,7 @@ public class ServerTable extends Table {
     }
 
     public void setAsUninstalled(UUID serverUUID) {
-        String sql = "UPDATE " + tableName + " SET " + Col.INSTALLED + "=? WHERE " + Col.SERVER_UUID + "=?";
+        String sql = "UPDATE " + tableName + " SET " + INSTALLED + "=? WHERE " + SERVER_UUID + "=?";
 
         execute(new ExecStatement(sql) {
             @Override
@@ -327,37 +316,5 @@ public class ServerTable extends Table {
                 statement.setString(2, serverUUID.toString());
             }
         });
-    }
-
-    @Deprecated
-    public enum Col implements Column {
-        @Deprecated
-        SERVER_ID("id"),
-        @Deprecated
-        SERVER_UUID("uuid"),
-        @Deprecated
-        NAME("name"),
-        @Deprecated
-        WEBSERVER_ADDRESS("web_address"),
-        @Deprecated
-        INSTALLED("is_installed"),
-        @Deprecated
-        MAX_PLAYERS("max_players");
-
-        private final String column;
-
-        Col(String column) {
-            this.column = column;
-        }
-
-        @Override
-        public String get() {
-            return toString();
-        }
-
-        @Override
-        public String toString() {
-            return column;
-        }
     }
 }

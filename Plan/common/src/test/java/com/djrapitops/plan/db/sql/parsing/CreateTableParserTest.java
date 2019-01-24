@@ -36,13 +36,13 @@ class CreateTableParserTest {
     void createsSameTablesAsOldParser() {
         String expected = "CREATE TABLE IF NOT EXISTS plan_servers (id integer NOT NULL AUTO_INCREMENT, uuid varchar(36) NOT NULL UNIQUE, name varchar(100), web_address varchar(100), is_installed boolean NOT NULL DEFAULT 1, max_players integer NOT NULL DEFAULT -1, PRIMARY KEY (id))";
         String result = CreateTableParser.create(ServerTable.TABLE_NAME, DBType.MYSQL)
-                .column(ServerTable.Col.SERVER_ID.get(), Sql.INT)
+                .column(ServerTable.SERVER_ID, Sql.INT)
                 .primaryKey()
-                .column(ServerTable.Col.SERVER_UUID.get(), Sql.varchar(36)).notNull().unique()
-                .column(ServerTable.Col.NAME.get(), Sql.varchar(100))
-                .column(ServerTable.Col.WEBSERVER_ADDRESS.get(), Sql.varchar(100))
-                .column(ServerTable.Col.INSTALLED.get(), Sql.BOOL).notNull().defaultValue(true)
-                .column(ServerTable.Col.MAX_PLAYERS.get(), Sql.INT).notNull().defaultValue("-1")
+                .column(ServerTable.SERVER_UUID, Sql.varchar(36)).notNull().unique()
+                .column(ServerTable.NAME, Sql.varchar(100))
+                .column(ServerTable.WEB_ADDRESS, Sql.varchar(100))
+                .column(ServerTable.INSTALLED, Sql.BOOL).notNull().defaultValue(true)
+                .column(ServerTable.MAX_PLAYERS, Sql.INT).notNull().defaultValue("-1")
                 .toString();
         assertEquals(expected, result);
     }
