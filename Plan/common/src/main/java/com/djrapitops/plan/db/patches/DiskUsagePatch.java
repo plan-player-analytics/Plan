@@ -27,13 +27,13 @@ public class DiskUsagePatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(TPSTable.TABLE_NAME, TPSTable.Col.FREE_DISK.get());
+        return hasColumn(TPSTable.TABLE_NAME, TPSTable.FREE_DISK);
     }
 
     @Override
     protected void applyPatch() {
         addColumn(TPSTable.TABLE_NAME,
-                TPSTable.Col.FREE_DISK + " bigint NOT NULL DEFAULT -1"
+                TPSTable.FREE_DISK + " bigint NOT NULL DEFAULT -1"
         );
     }
 }
