@@ -49,14 +49,14 @@ public class LargeFetchQueries {
      * @return Multi map: Server UUID - (Command name - Usage count)
      */
     public static Query<Map<UUID, Map<String, Integer>>> fetchAllCommandUsageData() {
-        String serverIDColumn = ServerTable.TABLE_NAME + "." + ServerTable.Col.SERVER_ID;
-        String serverUUIDColumn = ServerTable.TABLE_NAME + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
+        String serverIDColumn = ServerTable.TABLE_NAME + "." + ServerTable.SERVER_ID;
+        String serverUUIDColumn = ServerTable.TABLE_NAME + "." + ServerTable.SERVER_UUID + " as s_uuid";
         String sql = "SELECT " +
-                CommandUseTable.Col.COMMAND + ", " +
-                CommandUseTable.Col.TIMES_USED + ", " +
+                CommandUseTable.COMMAND + ", " +
+                CommandUseTable.TIMES_USED + ", " +
                 serverUUIDColumn +
                 " FROM " + CommandUseTable.TABLE_NAME +
-                " INNER JOIN " + ServerTable.TABLE_NAME + " on " + serverIDColumn + "=" + CommandUseTable.Col.SERVER_ID;
+                " INNER JOIN " + ServerTable.TABLE_NAME + " on " + serverIDColumn + "=" + CommandUseTable.SERVER_ID;
 
         return new QueryAllStatement<Map<UUID, Map<String, Integer>>>(sql, 10000) {
             @Override
@@ -67,8 +67,8 @@ public class LargeFetchQueries {
 
                     Map<String, Integer> serverMap = map.getOrDefault(serverUUID, new HashMap<>());
 
-                    String command = set.getString(CommandUseTable.Col.COMMAND.get());
-                    int timesUsed = set.getInt(CommandUseTable.Col.TIMES_USED.get());
+                    String command = set.getString(CommandUseTable.COMMAND);
+                    int timesUsed = set.getInt(CommandUseTable.TIMES_USED);
 
                     serverMap.put(command, timesUsed);
                     map.put(serverUUID, serverMap);
@@ -85,11 +85,11 @@ public class LargeFetchQueries {
      */
     public static Query<Map<UUID, List<GeoInfo>>> fetchAllGeoInfoData() {
         String sql = "SELECT " +
-                GeoInfoTable.Col.IP + ", " +
-                GeoInfoTable.Col.GEOLOCATION + ", " +
-                GeoInfoTable.Col.LAST_USED + ", " +
-                GeoInfoTable.Col.IP_HASH + ", " +
-                GeoInfoTable.Col.UUID +
+                GeoInfoTable.IP + ", " +
+                GeoInfoTable.GEOLOCATION + ", " +
+                GeoInfoTable.LAST_USED + ", " +
+                GeoInfoTable.IP_HASH + ", " +
+                GeoInfoTable.USER_UUID +
                 " FROM " + GeoInfoTable.TABLE_NAME;
 
         return new QueryAllStatement<Map<UUID, List<GeoInfo>>>(sql, 50000) {
@@ -97,14 +97,14 @@ public class LargeFetchQueries {
             public Map<UUID, List<GeoInfo>> processResults(ResultSet set) throws SQLException {
                 Map<UUID, List<GeoInfo>> geoLocations = new HashMap<>();
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(GeoInfoTable.Col.UUID.get()));
+                    UUID uuid = UUID.fromString(set.getString(GeoInfoTable.USER_UUID));
 
                     List<GeoInfo> userGeoInfo = geoLocations.getOrDefault(uuid, new ArrayList<>());
 
-                    String ip = set.getString(GeoInfoTable.Col.IP.get());
-                    String geolocation = set.getString(GeoInfoTable.Col.GEOLOCATION.get());
-                    String ipHash = set.getString(GeoInfoTable.Col.IP_HASH.get());
-                    long lastUsed = set.getLong(GeoInfoTable.Col.LAST_USED.get());
+                    String ip = set.getString(GeoInfoTable.IP);
+                    String geolocation = set.getString(GeoInfoTable.GEOLOCATION);
+                    String ipHash = set.getString(GeoInfoTable.IP_HASH);
+                    long lastUsed = set.getLong(GeoInfoTable.LAST_USED);
                     userGeoInfo.add(new GeoInfo(ip, geolocation, lastUsed, ipHash));
 
                     geoLocations.put(uuid, userGeoInfo);
@@ -120,30 +120,30 @@ public class LargeFetchQueries {
      * @return Map: Session ID - List of PlayerKills
      */
     public static Query<Map<Integer, List<PlayerKill>>> fetchAllPlayerKillDataBySessionID() {
-        String usersUUIDColumn = UsersTable.TABLE_NAME + "." + UsersTable.Col.UUID;
-        String usersNameColumn = UsersTable.TABLE_NAME + "." + UsersTable.Col.USER_NAME + " as victim_name";
+        String usersUUIDColumn = UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID;
+        String usersNameColumn = UsersTable.TABLE_NAME + "." + UsersTable.USER_NAME + " as victim_name";
         String sql = "SELECT " +
-                KillsTable.Col.SESSION_ID + ", " +
-                KillsTable.Col.DATE + ", " +
-                KillsTable.Col.WEAPON + ", " +
-                KillsTable.Col.VICTIM_UUID + ", " +
+                KillsTable.SESSION_ID + ", " +
+                KillsTable.DATE + ", " +
+                KillsTable.WEAPON + ", " +
+                KillsTable.VICTIM_UUID + ", " +
                 usersNameColumn +
                 " FROM " + KillsTable.TABLE_NAME +
-                " INNER JOIN " + UsersTable.TABLE_NAME + " on " + usersUUIDColumn + "=" + KillsTable.Col.VICTIM_UUID;
+                " INNER JOIN " + UsersTable.TABLE_NAME + " on " + usersUUIDColumn + "=" + KillsTable.VICTIM_UUID;
 
         return new QueryAllStatement<Map<Integer, List<PlayerKill>>>(sql, 50000) {
             @Override
             public Map<Integer, List<PlayerKill>> processResults(ResultSet set) throws SQLException {
                 Map<Integer, List<PlayerKill>> allPlayerKills = new HashMap<>();
                 while (set.next()) {
-                    int sessionID = set.getInt(KillsTable.Col.SESSION_ID.get());
+                    int sessionID = set.getInt(KillsTable.SESSION_ID);
 
                     List<PlayerKill> playerKills = allPlayerKills.getOrDefault(sessionID, new ArrayList<>());
 
-                    UUID victim = UUID.fromString(set.getString(KillsTable.Col.VICTIM_UUID.get()));
+                    UUID victim = UUID.fromString(set.getString(KillsTable.VICTIM_UUID));
                     String victimName = set.getString("victim_name");
-                    long date = set.getLong(KillsTable.Col.DATE.get());
-                    String weapon = set.getString(KillsTable.Col.WEAPON.get());
+                    long date = set.getLong(KillsTable.DATE);
+                    String weapon = set.getString(KillsTable.WEAPON);
                     playerKills.add(new PlayerKill(victim, weapon, date, victimName));
 
                     allPlayerKills.put(sessionID, playerKills);
@@ -160,10 +160,10 @@ public class LargeFetchQueries {
      */
     public static Query<Map<UUID, Map<UUID, List<Nickname>>>> fetchAllNicknameData() {
         String sql = "SELECT " +
-                NicknamesTable.Col.NICKNAME + ", " +
-                NicknamesTable.Col.LAST_USED + ", " +
-                NicknamesTable.Col.UUID + ", " +
-                NicknamesTable.Col.SERVER_UUID +
+                NicknamesTable.NICKNAME + ", " +
+                NicknamesTable.LAST_USED + ", " +
+                NicknamesTable.USER_UUID + ", " +
+                NicknamesTable.SERVER_UUID +
                 " FROM " + NicknamesTable.TABLE_NAME;
 
         return new QueryAllStatement<Map<UUID, Map<UUID, List<Nickname>>>>(sql, 5000) {
@@ -171,15 +171,15 @@ public class LargeFetchQueries {
             public Map<UUID, Map<UUID, List<Nickname>>> processResults(ResultSet set) throws SQLException {
                 Map<UUID, Map<UUID, List<Nickname>>> map = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(NicknamesTable.Col.SERVER_UUID.get()));
-                    UUID uuid = UUID.fromString(set.getString(NicknamesTable.Col.UUID.get()));
+                    UUID serverUUID = UUID.fromString(set.getString(NicknamesTable.SERVER_UUID));
+                    UUID uuid = UUID.fromString(set.getString(NicknamesTable.USER_UUID));
 
                     Map<UUID, List<Nickname>> serverMap = map.getOrDefault(serverUUID, new HashMap<>());
                     List<Nickname> nicknames = serverMap.getOrDefault(uuid, new ArrayList<>());
 
                     nicknames.add(new Nickname(
-                            set.getString(NicknamesTable.Col.NICKNAME.get()),
-                            set.getLong(NicknamesTable.Col.LAST_USED.get()),
+                            set.getString(NicknamesTable.NICKNAME),
+                            set.getLong(NicknamesTable.LAST_USED),
                             serverUUID
                     ));
 
@@ -198,21 +198,21 @@ public class LargeFetchQueries {
      */
     public static Query<Map<UUID, List<Nickname>>> fetchAllNicknameDataByPlayerUUIDs() {
         String sql = "SELECT " +
-                NicknamesTable.Col.NICKNAME + ", " +
-                NicknamesTable.Col.LAST_USED + ", " +
-                NicknamesTable.Col.UUID + ", " +
-                NicknamesTable.Col.SERVER_UUID +
+                NicknamesTable.NICKNAME + ", " +
+                NicknamesTable.LAST_USED + ", " +
+                NicknamesTable.USER_UUID + ", " +
+                NicknamesTable.SERVER_UUID +
                 " FROM " + NicknamesTable.TABLE_NAME;
         return new QueryAllStatement<Map<UUID, List<Nickname>>>(sql, 5000) {
             @Override
             public Map<UUID, List<Nickname>> processResults(ResultSet set) throws SQLException {
                 Map<UUID, List<Nickname>> map = new HashMap<>();
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(NicknamesTable.Col.UUID.get()));
-                    UUID serverUUID = UUID.fromString(set.getString(NicknamesTable.Col.SERVER_UUID.get()));
+                    UUID uuid = UUID.fromString(set.getString(NicknamesTable.USER_UUID));
+                    UUID serverUUID = UUID.fromString(set.getString(NicknamesTable.SERVER_UUID));
                     List<Nickname> nicknames = map.computeIfAbsent(uuid, x -> new ArrayList<>());
                     nicknames.add(new Nickname(
-                            set.getString(NicknamesTable.Col.NICKNAME.get()), set.getLong(NicknamesTable.Col.LAST_USED.get()), serverUUID
+                            set.getString(NicknamesTable.NICKNAME), set.getLong(NicknamesTable.LAST_USED), serverUUID
                     ));
                 }
                 return map;
@@ -227,12 +227,12 @@ public class LargeFetchQueries {
      */
     public static Query<Map<UUID, List<Ping>>> fetchAllPingData() {
         String sql = "SELECT " +
-                PingTable.Col.DATE + ", " +
-                PingTable.Col.MAX_PING + ", " +
-                PingTable.Col.MIN_PING + ", " +
-                PingTable.Col.AVG_PING + ", " +
-                PingTable.Col.UUID + ", " +
-                PingTable.Col.SERVER_UUID +
+                PingTable.DATE + ", " +
+                PingTable.MAX_PING + ", " +
+                PingTable.MIN_PING + ", " +
+                PingTable.AVG_PING + ", " +
+                PingTable.USER_UUID + ", " +
+                PingTable.SERVER_UUID +
                 " FROM " + PingTable.TABLE_NAME;
         return new QueryAllStatement<Map<UUID, List<Ping>>>(sql, 100000) {
             @Override
@@ -240,12 +240,12 @@ public class LargeFetchQueries {
                 Map<UUID, List<Ping>> userPings = new HashMap<>();
 
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(PingTable.Col.UUID.get()));
-                    UUID serverUUID = UUID.fromString(set.getString(PingTable.Col.SERVER_UUID.get()));
-                    long date = set.getLong(PingTable.Col.DATE.get());
-                    double avgPing = set.getDouble(PingTable.Col.AVG_PING.get());
-                    int minPing = set.getInt(PingTable.Col.MIN_PING.get());
-                    int maxPing = set.getInt(PingTable.Col.MAX_PING.get());
+                    UUID uuid = UUID.fromString(set.getString(PingTable.USER_UUID));
+                    UUID serverUUID = UUID.fromString(set.getString(PingTable.SERVER_UUID));
+                    long date = set.getLong(PingTable.DATE);
+                    double avgPing = set.getDouble(PingTable.AVG_PING);
+                    int minPing = set.getInt(PingTable.MIN_PING);
+                    int maxPing = set.getInt(PingTable.MAX_PING);
 
                     List<Ping> pings = userPings.getOrDefault(uuid, new ArrayList<>());
                     pings.add(new Ping(date, serverUUID,
@@ -266,16 +266,16 @@ public class LargeFetchQueries {
      * @return Set of Plan WebUsers.
      */
     public static Query<List<WebUser>> fetchAllPlanWebUsers() {
-        String sql = "SELECT * FROM " + SecurityTable.TABLE_NAME + " ORDER BY " + SecurityTable.Col.PERMISSION_LEVEL + " ASC";
+        String sql = "SELECT * FROM " + SecurityTable.TABLE_NAME + " ORDER BY " + SecurityTable.PERMISSION_LEVEL + " ASC";
 
         return new QueryAllStatement<List<WebUser>>(sql, 5000) {
             @Override
             public List<WebUser> processResults(ResultSet set) throws SQLException {
                 List<WebUser> list = new ArrayList<>();
                 while (set.next()) {
-                    String user = set.getString(SecurityTable.Col.USERNAME.get());
-                    String saltedPassHash = set.getString(SecurityTable.Col.SALT_PASSWORD_HASH.get());
-                    int permissionLevel = set.getInt(SecurityTable.Col.PERMISSION_LEVEL.get());
+                    String user = set.getString(SecurityTable.USERNAME);
+                    String saltedPassHash = set.getString(SecurityTable.SALT_PASSWORD_HASH);
+                    int permissionLevel = set.getInt(SecurityTable.PERMISSION_LEVEL);
                     WebUser info = new WebUser(user, saltedPassHash, permissionLevel);
                     list.add(info);
                 }
@@ -290,7 +290,7 @@ public class LargeFetchQueries {
      * @return Map: Server UUID - Plan Server Information
      */
     public static Query<Map<UUID, Server>> fetchPlanServerInformation() {
-        String sql = "SELECT * FROM " + ServerTable.TABLE_NAME + " WHERE " + ServerTable.Col.INSTALLED + "=?";
+        String sql = "SELECT * FROM " + ServerTable.TABLE_NAME + " WHERE " + ServerTable.INSTALLED + "=?";
 
         return new QueryStatement<Map<UUID, Server>>(sql, 100) {
             @Override
@@ -302,13 +302,13 @@ public class LargeFetchQueries {
             public Map<UUID, Server> processResults(ResultSet set) throws SQLException {
                 Map<UUID, Server> servers = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(ServerTable.Col.SERVER_UUID.get()));
+                    UUID serverUUID = UUID.fromString(set.getString(ServerTable.SERVER_UUID));
                     servers.put(serverUUID, new Server(
-                            set.getInt(ServerTable.Col.SERVER_ID.get()),
+                            set.getInt(ServerTable.SERVER_ID),
                             serverUUID,
-                            set.getString(ServerTable.Col.NAME.get()),
-                            set.getString(ServerTable.Col.WEBSERVER_ADDRESS.get()),
-                            set.getInt(ServerTable.Col.MAX_PLAYERS.get())));
+                            set.getString(ServerTable.NAME),
+                            set.getString(ServerTable.WEB_ADDRESS),
+                            set.getInt(ServerTable.MAX_PLAYERS)));
                 }
                 return servers;
             }
@@ -322,14 +322,14 @@ public class LargeFetchQueries {
      */
     public static Query<Map<UUID, Map<UUID, List<Session>>>> fetchAllSessionsWithoutKillOrWorldData() {
         String sql = "SELECT " +
-                SessionsTable.Col.ID + ", " +
-                SessionsTable.Col.UUID + ", " +
-                SessionsTable.Col.SERVER_UUID + ", " +
-                SessionsTable.Col.SESSION_START + ", " +
-                SessionsTable.Col.SESSION_END + ", " +
-                SessionsTable.Col.DEATHS + ", " +
-                SessionsTable.Col.MOB_KILLS + ", " +
-                SessionsTable.Col.AFK_TIME +
+                SessionsTable.ID + ", " +
+                SessionsTable.USER_UUID + ", " +
+                SessionsTable.SERVER_UUID + ", " +
+                SessionsTable.SESSION_START + ", " +
+                SessionsTable.SESSION_END + ", " +
+                SessionsTable.DEATHS + ", " +
+                SessionsTable.MOB_KILLS + ", " +
+                SessionsTable.AFK_TIME +
                 " FROM " + SessionsTable.TABLE_NAME;
 
         return new QueryAllStatement<Map<UUID, Map<UUID, List<Session>>>>(sql, 20000) {
@@ -337,20 +337,20 @@ public class LargeFetchQueries {
             public Map<UUID, Map<UUID, List<Session>>> processResults(ResultSet set) throws SQLException {
                 Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(SessionsTable.Col.SERVER_UUID.get()));
-                    UUID uuid = UUID.fromString(set.getString(SessionsTable.Col.UUID.get()));
+                    UUID serverUUID = UUID.fromString(set.getString(SessionsTable.SERVER_UUID));
+                    UUID uuid = UUID.fromString(set.getString(SessionsTable.USER_UUID));
 
                     Map<UUID, List<Session>> sessionsByUser = map.getOrDefault(serverUUID, new HashMap<>());
                     List<Session> sessions = sessionsByUser.getOrDefault(uuid, new ArrayList<>());
 
-                    long start = set.getLong(SessionsTable.Col.SESSION_START.get());
-                    long end = set.getLong(SessionsTable.Col.SESSION_END.get());
+                    long start = set.getLong(SessionsTable.SESSION_START);
+                    long end = set.getLong(SessionsTable.SESSION_END);
 
-                    int deaths = set.getInt(SessionsTable.Col.DEATHS.get());
-                    int mobKills = set.getInt(SessionsTable.Col.MOB_KILLS.get());
-                    int id = set.getInt(SessionsTable.Col.ID.get());
+                    int deaths = set.getInt(SessionsTable.DEATHS);
+                    int mobKills = set.getInt(SessionsTable.MOB_KILLS);
+                    int id = set.getInt(SessionsTable.ID);
 
-                    long timeAFK = set.getLong(SessionsTable.Col.AFK_TIME.get());
+                    long timeAFK = set.getLong(SessionsTable.AFK_TIME);
 
                     sessions.add(new Session(id, uuid, serverUUID, start, end, mobKills, deaths, timeAFK));
 
@@ -382,20 +382,20 @@ public class LargeFetchQueries {
      * @return Map: Server UUID - List of TPS data
      */
     public static Query<Map<UUID, List<TPS>>> fetchAllTPSData() {
-        String serverIDColumn = ServerTable.TABLE_NAME + "." + ServerTable.Col.SERVER_ID;
-        String serverUUIDColumn = ServerTable.TABLE_NAME + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
+        String serverIDColumn = ServerTable.TABLE_NAME + "." + ServerTable.SERVER_ID;
+        String serverUUIDColumn = ServerTable.TABLE_NAME + "." + ServerTable.SERVER_UUID + " as s_uuid";
         String sql = "SELECT " +
-                TPSTable.Col.DATE + ", " +
-                TPSTable.Col.TPS + ", " +
-                TPSTable.Col.PLAYERS_ONLINE + ", " +
-                TPSTable.Col.CPU_USAGE + ", " +
-                TPSTable.Col.RAM_USAGE + ", " +
-                TPSTable.Col.ENTITIES + ", " +
-                TPSTable.Col.CHUNKS + ", " +
-                TPSTable.Col.FREE_DISK + ", " +
+                TPSTable.DATE + ", " +
+                TPSTable.TPS + ", " +
+                TPSTable.PLAYERS_ONLINE + ", " +
+                TPSTable.CPU_USAGE + ", " +
+                TPSTable.RAM_USAGE + ", " +
+                TPSTable.ENTITIES + ", " +
+                TPSTable.CHUNKS + ", " +
+                TPSTable.FREE_DISK + ", " +
                 serverUUIDColumn +
                 " FROM " + TPSTable.TABLE_NAME +
-                " INNER JOIN " + ServerTable.TABLE_NAME + " on " + serverIDColumn + "=" + TPSTable.Col.SERVER_ID;
+                " INNER JOIN " + ServerTable.TABLE_NAME + " on " + serverIDColumn + "=" + TPSTable.SERVER_ID;
 
         return new QueryAllStatement<Map<UUID, List<TPS>>>(sql, 50000) {
             @Override
@@ -407,14 +407,14 @@ public class LargeFetchQueries {
                     List<TPS> tpsList = serverMap.getOrDefault(serverUUID, new ArrayList<>());
 
                     TPS tps = TPSBuilder.get()
-                            .date(set.getLong(TPSTable.Col.DATE.get()))
-                            .tps(set.getDouble(TPSTable.Col.TPS.get()))
-                            .playersOnline(set.getInt(TPSTable.Col.PLAYERS_ONLINE.get()))
-                            .usedCPU(set.getDouble(TPSTable.Col.CPU_USAGE.get()))
-                            .usedMemory(set.getLong(TPSTable.Col.RAM_USAGE.get()))
-                            .entities(set.getInt(TPSTable.Col.ENTITIES.get()))
-                            .chunksLoaded(set.getInt(TPSTable.Col.CHUNKS.get()))
-                            .freeDiskSpace(set.getLong(TPSTable.Col.FREE_DISK.get()))
+                            .date(set.getLong(TPSTable.DATE))
+                            .tps(set.getDouble(TPSTable.TPS))
+                            .playersOnline(set.getInt(TPSTable.PLAYERS_ONLINE))
+                            .usedCPU(set.getDouble(TPSTable.CPU_USAGE))
+                            .usedMemory(set.getLong(TPSTable.RAM_USAGE))
+                            .entities(set.getInt(TPSTable.ENTITIES))
+                            .chunksLoaded(set.getInt(TPSTable.CHUNKS))
+                            .freeDiskSpace(set.getLong(TPSTable.FREE_DISK))
                             .toTPS();
 
                     tpsList.add(tps);
@@ -434,11 +434,11 @@ public class LargeFetchQueries {
      */
     public static Query<Map<UUID, List<UserInfo>>> fetchPerServerUserInformation() {
         String sql = "SELECT " +
-                UserInfoTable.Col.REGISTERED + ", " +
-                UserInfoTable.Col.BANNED + ", " +
-                UserInfoTable.Col.OP + ", " +
-                UserInfoTable.Col.UUID + ", " +
-                UserInfoTable.Col.SERVER_UUID +
+                UserInfoTable.REGISTERED + ", " +
+                UserInfoTable.BANNED + ", " +
+                UserInfoTable.OP + ", " +
+                UserInfoTable.USER_UUID + ", " +
+                UserInfoTable.SERVER_UUID +
                 " FROM " + UserInfoTable.TABLE_NAME;
 
         return new QueryAllStatement<Map<UUID, List<UserInfo>>>(sql, 50000) {
@@ -446,14 +446,14 @@ public class LargeFetchQueries {
             public Map<UUID, List<UserInfo>> processResults(ResultSet set) throws SQLException {
                 Map<UUID, List<UserInfo>> serverMap = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(UserInfoTable.Col.SERVER_UUID.get()));
-                    UUID uuid = UUID.fromString(set.getString(UserInfoTable.Col.UUID.get()));
+                    UUID serverUUID = UUID.fromString(set.getString(UserInfoTable.SERVER_UUID));
+                    UUID uuid = UUID.fromString(set.getString(UserInfoTable.USER_UUID));
 
                     List<UserInfo> userInfos = serverMap.getOrDefault(serverUUID, new ArrayList<>());
 
-                    long registered = set.getLong(UserInfoTable.Col.REGISTERED.get());
-                    boolean banned = set.getBoolean(UserInfoTable.Col.BANNED.get());
-                    boolean op = set.getBoolean(UserInfoTable.Col.OP.get());
+                    long registered = set.getLong(UserInfoTable.REGISTERED);
+                    boolean banned = set.getBoolean(UserInfoTable.BANNED);
+                    boolean op = set.getBoolean(UserInfoTable.OP);
 
                     userInfos.add(new UserInfo(uuid, "", registered, op, banned));
 
@@ -479,9 +479,9 @@ public class LargeFetchQueries {
             public Map<UUID, UserInfo> processResults(ResultSet set) throws SQLException {
                 Map<UUID, UserInfo> users = new HashMap<>();
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(UsersTable.Col.UUID.get()));
-                    String name = set.getString(UsersTable.Col.USER_NAME.get());
-                    long registered = set.getLong(UsersTable.Col.REGISTERED.get());
+                    UUID uuid = UUID.fromString(set.getString(UsersTable.USER_UUID));
+                    String name = set.getString(UsersTable.USER_NAME);
+                    long registered = set.getLong(UsersTable.REGISTERED);
 
                     users.put(uuid, new UserInfo(uuid, name, registered, false, false));
                 }
@@ -503,9 +503,9 @@ public class LargeFetchQueries {
             public Map<UUID, Collection<String>> processResults(ResultSet set) throws SQLException {
                 Map<UUID, Collection<String>> worldMap = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(WorldTable.Col.SERVER_UUID.get()));
+                    UUID serverUUID = UUID.fromString(set.getString(WorldTable.SERVER_UUID));
                     Collection<String> worlds = worldMap.getOrDefault(serverUUID, new HashSet<>());
-                    worlds.add(set.getString(WorldTable.Col.NAME.get()));
+                    worlds.add(set.getString(WorldTable.NAME));
                     worldMap.put(serverUUID, worlds);
                 }
                 return worldMap;

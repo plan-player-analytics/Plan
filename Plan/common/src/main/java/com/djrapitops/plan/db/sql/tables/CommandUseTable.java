@@ -21,7 +21,6 @@ import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.db.sql.parsing.Column;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
@@ -38,8 +37,6 @@ import java.util.UUID;
  * Table that is in charge of storing command data.
  * <p>
  * Table Name: plan_commandusages
- * <p>
- * For contained columns {@link Col}
  *
  * @author Rsl1122
  */
@@ -56,9 +53,9 @@ public class CommandUseTable extends Table {
         super(TABLE_NAME, db);
         serverTable = db.getServerTable();
         insertStatement = "INSERT INTO " + tableName + " ("
-                + Col.COMMAND + ", "
-                + Col.TIMES_USED + ", "
-                + Col.SERVER_ID
+                + COMMAND + ", "
+                + TIMES_USED + ", "
+                + SERVER_ID
                 + ") VALUES (?, ?, " + serverTable.statementSelectServerID + ")";
     }
 
@@ -88,8 +85,8 @@ public class CommandUseTable extends Table {
      */
     public Map<String, Integer> getCommandUse(UUID serverUUID) {
         String sql = Select.from(tableName,
-                Col.COMMAND, Col.TIMES_USED)
-                .where(Col.SERVER_ID + "=" + serverTable.statementSelectServerID)
+                COMMAND, TIMES_USED)
+                .where(SERVER_ID + "=" + serverTable.statementSelectServerID)
                 .toString();
 
         return query(new QueryStatement<Map<String, Integer>>(sql, 5000) {
@@ -102,8 +99,8 @@ public class CommandUseTable extends Table {
             public Map<String, Integer> processResults(ResultSet set) throws SQLException {
                 Map<String, Integer> commandUse = new HashMap<>();
                 while (set.next()) {
-                    String cmd = set.getString(Col.COMMAND.get()).toLowerCase();
-                    int amountUsed = set.getInt(Col.TIMES_USED.get());
+                    String cmd = set.getString(COMMAND).toLowerCase();
+                    int amountUsed = set.getInt(TIMES_USED);
                     commandUse.put(cmd, amountUsed);
                 }
                 return commandUse;
@@ -126,9 +123,9 @@ public class CommandUseTable extends Table {
         }
 
         String sql = "UPDATE " + tableName + " SET "
-                + Col.TIMES_USED + "=" + Col.TIMES_USED + "+ 1" +
-                " WHERE " + Col.SERVER_ID + "=" + serverTable.statementSelectServerID +
-                " AND " + Col.COMMAND + "=?";
+                + TIMES_USED + "=" + TIMES_USED + "+ 1" +
+                " WHERE " + SERVER_ID + "=" + serverTable.statementSelectServerID +
+                " AND " + COMMAND + "=?";
 
         boolean updated = execute(new ExecStatement(sql) {
             @Override
@@ -143,7 +140,7 @@ public class CommandUseTable extends Table {
     }
 
     public Optional<String> getCommandByID(int id) {
-        String sql = Select.from(tableName, Col.COMMAND).where(Col.COMMAND_ID + "=?").toString();
+        String sql = Select.from(tableName, COMMAND).where(COMMAND_ID + "=?").toString();
 
         return query(new QueryStatement<Optional<String>>(sql) {
             @Override
@@ -154,7 +151,7 @@ public class CommandUseTable extends Table {
             @Override
             public Optional<String> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return Optional.of(set.getString(Col.COMMAND.get()));
+                    return Optional.of(set.getString(COMMAND));
                 }
                 return Optional.empty();
             }
@@ -173,7 +170,7 @@ public class CommandUseTable extends Table {
     }
 
     public Optional<Integer> getCommandID(String command) {
-        String sql = Select.from(tableName, Col.COMMAND_ID).where(Col.COMMAND + "=?").toString();
+        String sql = Select.from(tableName, COMMAND_ID).where(COMMAND + "=?").toString();
 
         return query(new QueryStatement<Optional<Integer>>(sql) {
             @Override
@@ -184,39 +181,11 @@ public class CommandUseTable extends Table {
             @Override
             public Optional<Integer> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return Optional.of(set.getInt(Col.COMMAND_ID.get()));
+                    return Optional.of(set.getInt(COMMAND_ID));
                 }
                 return Optional.empty();
             }
         });
-    }
-
-    @Deprecated
-    public enum Col implements Column {
-        @Deprecated
-        COMMAND_ID("id"),
-        @Deprecated
-        SERVER_ID("server_id"),
-        @Deprecated
-        COMMAND("command"),
-        @Deprecated
-        TIMES_USED("times_used");
-
-        private final String column;
-
-        Col(String column) {
-            this.column = column;
-        }
-
-        @Override
-        public String get() {
-            return toString();
-        }
-
-        @Override
-        public String toString() {
-            return column;
-        }
     }
 
     public void insertCommandUsage(Map<UUID, Map<String, Integer>> allCommandUsages) {
