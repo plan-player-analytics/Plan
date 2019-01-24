@@ -19,7 +19,6 @@ package com.djrapitops.plan.db.patches;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.tables.UserInfoTable;
-import com.djrapitops.plan.db.sql.tables.UserInfoTable.Col;
 
 public class UserInfoOptimizationPatch extends Patch {
 
@@ -34,8 +33,8 @@ public class UserInfoOptimizationPatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(tableName, Col.UUID.get())
-                && hasColumn(tableName, Col.SERVER_UUID.get())
+        return hasColumn(tableName, UserInfoTable.USER_UUID)
+                && hasColumn(tableName, UserInfoTable.SERVER_UUID)
                 && !hasColumn(tableName, "user_id")
                 && !hasColumn(tableName, "server_id")
                 && !hasTable(tempTableName); // If this table exists the patch has failed to finish.
@@ -48,17 +47,17 @@ public class UserInfoOptimizationPatch extends Patch {
             db.getUserInfoTable().createTable();
 
             execute("INSERT INTO " + tableName + " (" +
-                    Col.UUID + ", " +
-                    Col.SERVER_UUID + ", " +
-                    Col.REGISTERED + ", " +
-                    Col.BANNED + ", " +
-                    Col.OP +
+                    UserInfoTable.USER_UUID + ", " +
+                    UserInfoTable.SERVER_UUID + ", " +
+                    UserInfoTable.REGISTERED + ", " +
+                    UserInfoTable.BANNED + ", " +
+                    UserInfoTable.OP +
                     ") SELECT " +
                     "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
                     "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
-                    Col.REGISTERED + ", " +
-                    Col.BANNED + ", " +
-                    Col.OP +
+                    UserInfoTable.REGISTERED + ", " +
+                    UserInfoTable.BANNED + ", " +
+                    UserInfoTable.OP +
                     " FROM " + tempTableName
             );
 

@@ -25,7 +25,10 @@ import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.UserInfoOptimizationPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
-import com.djrapitops.plan.db.sql.parsing.*;
+import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
+import com.djrapitops.plan.db.sql.parsing.Select;
+import com.djrapitops.plan.db.sql.parsing.Sql;
+import com.djrapitops.plan.db.sql.parsing.Update;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -64,11 +67,11 @@ public class UserInfoTable extends UserUUIDTable {
         super(TABLE_NAME, db);
         usersTable = db.getUsersTable();
         insertStatement = "INSERT INTO " + tableName + " (" +
-                Col.UUID + ", " +
-                Col.REGISTERED + ", " +
-                Col.SERVER_UUID + ", " +
-                Col.BANNED + ", " +
-                Col.OP +
+                USER_UUID + ", " +
+                REGISTERED + ", " +
+                SERVER_UUID + ", " +
+                BANNED + ", " +
+                OP +
                 ") VALUES (?, ?, ?, ?, ?)";
     }
 
@@ -85,15 +88,7 @@ public class UserInfoTable extends UserUUIDTable {
 
     @Override
     public void createTable() throws DBInitException {
-        createTable(TableSqlParser.createTable(tableName)
-                .primaryKeyIDColumn(supportsMySQLQueries, Col.ID)
-                .column(Col.UUID, Sql.varchar(36)).notNull()
-                .column(Col.SERVER_UUID, Sql.varchar(36)).notNull()
-                .column(Col.REGISTERED, Sql.LONG).notNull()
-                .column(Col.OP, Sql.BOOL).notNull().defaultValue(false)
-                .column(Col.BANNED, Sql.BOOL).notNull().defaultValue(false)
-                .primaryKey(supportsMySQLQueries, Col.ID)
-                .toString());
+        createTable(createTableSQL(db.getType()));
     }
 
     public void registerUserInfo(UUID uuid, long registered) {
@@ -110,9 +105,9 @@ public class UserInfoTable extends UserUUIDTable {
     }
 
     public boolean isRegistered(UUID uuid, UUID serverUUID) {
-        String sql = Select.from(tableName, "COUNT(" + Col.UUID + ") as c")
-                .where(Col.UUID + "=?")
-                .and(Col.SERVER_UUID + "=?")
+        String sql = Select.from(tableName, "COUNT(" + USER_UUID + ") as c")
+                .where(USER_UUID + "=?")
+                .and(SERVER_UUID + "=?")
                 .toString();
 
         return query(new QueryStatement<Boolean>(sql) {
@@ -134,8 +129,8 @@ public class UserInfoTable extends UserUUIDTable {
     }
 
     public void updateOpStatus(UUID uuid, boolean op) {
-        String sql = Update.values(tableName, Col.OP)
-                .where(Col.UUID + "=?")
+        String sql = Update.values(tableName, OP)
+                .where(USER_UUID + "=?")
                 .toString();
 
         execute(new ExecStatement(sql) {
@@ -148,8 +143,8 @@ public class UserInfoTable extends UserUUIDTable {
     }
 
     public void updateBanStatus(UUID uuid, boolean banned) {
-        String sql = Update.values(tableName, Col.BANNED)
-                .where(Col.UUID + "=?")
+        String sql = Update.values(tableName, BANNED)
+                .where(USER_UUID + "=?")
                 .toString();
 
         execute(new ExecStatement(sql) {
@@ -162,18 +157,18 @@ public class UserInfoTable extends UserUUIDTable {
     }
 
     public Map<UUID, UserInfo> getAllUserInfo(UUID uuid) {
-        String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID;
-        String usersNameColumn = usersTable + "." + UsersTable.Col.USER_NAME + " as name";
+        String usersUUIDColumn = usersTable + "." + UsersTable.USER_UUID;
+        String usersNameColumn = usersTable + "." + UsersTable.USER_NAME + " as name";
 
         String sql = "SELECT " +
-                tableName + "." + Col.REGISTERED + ", " +
-                Col.BANNED + ", " +
-                Col.OP + ", " +
+                tableName + "." + REGISTERED + ", " +
+                BANNED + ", " +
+                OP + ", " +
                 usersNameColumn + ", " +
-                Col.SERVER_UUID +
+                SERVER_UUID +
                 " FROM " + tableName +
-                " INNER JOIN " + usersTable + " on " + usersUUIDColumn + "=" + tableName + "." + Col.UUID +
-                " WHERE " + tableName + "." + Col.UUID + "=?";
+                " INNER JOIN " + usersTable + " on " + usersUUIDColumn + "=" + tableName + "." + USER_UUID +
+                " WHERE " + tableName + "." + USER_UUID + "=?";
 
         return query(new QueryStatement<Map<UUID, UserInfo>>(sql) {
             @Override
@@ -185,12 +180,12 @@ public class UserInfoTable extends UserUUIDTable {
             public Map<UUID, UserInfo> processResults(ResultSet set) throws SQLException {
                 Map<UUID, UserInfo> map = new HashMap<>();
                 while (set.next()) {
-                    long registered = set.getLong(Col.REGISTERED.get());
-                    boolean op = set.getBoolean(Col.OP.get());
-                    boolean banned = set.getBoolean(Col.BANNED.get());
+                    long registered = set.getLong(REGISTERED);
+                    boolean op = set.getBoolean(OP);
+                    boolean banned = set.getBoolean(BANNED);
                     String name = set.getString("name");
 
-                    UUID serverUUID = UUID.fromString(set.getString(Col.SERVER_UUID.get()));
+                    UUID serverUUID = UUID.fromString(set.getString(SERVER_UUID));
                     map.put(serverUUID, new UserInfo(uuid, name, registered, op, banned));
                 }
                 return map;
@@ -203,18 +198,18 @@ public class UserInfoTable extends UserUUIDTable {
     }
 
     public List<UserInfo> getServerUserInfo(UUID serverUUID) {
-        String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID;
-        String usersNameColumn = usersTable + "." + UsersTable.Col.USER_NAME + " as name";
+        String usersUUIDColumn = usersTable + "." + UsersTable.USER_UUID;
+        String usersNameColumn = usersTable + "." + UsersTable.USER_NAME + " as name";
 
         String sql = "SELECT " +
-                tableName + "." + Col.REGISTERED + ", " +
-                Col.BANNED + ", " +
-                Col.OP + ", " +
+                tableName + "." + REGISTERED + ", " +
+                BANNED + ", " +
+                OP + ", " +
                 usersNameColumn + ", " +
-                tableName + "." + Col.UUID +
+                tableName + "." + USER_UUID +
                 " FROM " + tableName +
-                " INNER JOIN " + usersTable + " on " + usersUUIDColumn + "=" + tableName + "." + Col.UUID +
-                " WHERE " + Col.SERVER_UUID + "=?";
+                " INNER JOIN " + usersTable + " on " + usersUUIDColumn + "=" + tableName + "." + USER_UUID +
+                " WHERE " + SERVER_UUID + "=?";
 
         return query(new QueryStatement<List<UserInfo>>(sql, 20000) {
             @Override
@@ -226,11 +221,11 @@ public class UserInfoTable extends UserUUIDTable {
             public List<UserInfo> processResults(ResultSet set) throws SQLException {
                 List<UserInfo> userInfo = new ArrayList<>();
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
+                    UUID uuid = UUID.fromString(set.getString(USER_UUID));
                     String name = set.getString("name");
-                    long registered = set.getLong(Col.REGISTERED.get());
-                    boolean op = set.getBoolean(Col.OP.get());
-                    boolean banned = set.getBoolean(Col.BANNED.get());
+                    long registered = set.getLong(REGISTERED);
+                    boolean op = set.getBoolean(OP);
+                    boolean banned = set.getBoolean(BANNED);
 
                     UserInfo info = new UserInfo(uuid, name, registered, op, banned);
                     if (!userInfo.contains(info)) {
@@ -278,9 +273,9 @@ public class UserInfoTable extends UserUUIDTable {
 
     public int getServerUserCount(UUID serverUUID) {
         String sql = "SELECT " +
-                " COUNT(" + Col.REGISTERED + ") as c" +
+                " COUNT(" + REGISTERED + ") as c" +
                 " FROM " + tableName +
-                " WHERE " + Col.SERVER_UUID + "=?";
+                " WHERE " + SERVER_UUID + "=?";
 
         return query(new QueryAllStatement<Integer>(sql, 20000) {
             @Override
@@ -307,16 +302,16 @@ public class UserInfoTable extends UserUUIDTable {
             return new HashMap<>();
         }
 
-        String sql = "SELECT " + Col.SERVER_UUID + ", " +
-                "COUNT(" + Col.REGISTERED + ") AS count" +
+        String sql = "SELECT " + SERVER_UUID + ", " +
+                "COUNT(" + REGISTERED + ") AS count" +
                 " FROM " + tableName +
-                " GROUP BY " + Col.SERVER_UUID;
+                " GROUP BY " + SERVER_UUID;
         return query(new QueryAllStatement<Map<UUID, Integer>>(sql, 10000) {
             @Override
             public Map<UUID, Integer> processResults(ResultSet set) throws SQLException {
                 Map<UUID, Integer> map = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(Col.SERVER_UUID.get()));
+                    UUID serverUUID = UUID.fromString(set.getString(SERVER_UUID));
                     int count = set.getInt("count");
                     map.put(serverUUID, count);
                 }
@@ -327,7 +322,7 @@ public class UserInfoTable extends UserUUIDTable {
     }
 
     public Set<UUID> getSavedUUIDs(UUID serverUUID) {
-        String sql = "SELECT " + Col.UUID + " FROM " + tableName + " WHERE " + Col.SERVER_UUID + "=?";
+        String sql = "SELECT " + USER_UUID + " FROM " + tableName + " WHERE " + SERVER_UUID + "=?";
 
         return query(new QueryStatement<Set<UUID>>(sql, 50000) {
             @Override
@@ -339,43 +334,11 @@ public class UserInfoTable extends UserUUIDTable {
             public Set<UUID> processResults(ResultSet set) throws SQLException {
                 Set<UUID> uuids = new HashSet<>();
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
+                    UUID uuid = UUID.fromString(set.getString(USER_UUID));
                     uuids.add(uuid);
                 }
                 return uuids;
             }
         });
-    }
-
-    @Deprecated
-    public enum Col implements Column {
-        @Deprecated
-        ID("id"),
-        @Deprecated
-        UUID(UserUUIDTable.Col.UUID.get()),
-        @Deprecated
-        SERVER_UUID("server_uuid"),
-        @Deprecated
-        REGISTERED("registered"),
-        @Deprecated
-        OP("opped"),
-        @Deprecated
-        BANNED("banned");
-
-        private final String column;
-
-        Col(String column) {
-            this.column = column;
-        }
-
-        @Override
-        public String get() {
-            return toString();
-        }
-
-        @Override
-        public String toString() {
-            return column;
-        }
     }
 }
