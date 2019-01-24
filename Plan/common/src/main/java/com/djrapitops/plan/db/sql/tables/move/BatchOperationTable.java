@@ -55,16 +55,11 @@ public class BatchOperationTable extends Table {
         }
     }
 
-    @Override
-    public void removeAllData() {
-        db.executeTransaction(new RemoveEverythingTransaction());
-    }
-
     public void copyEverything(BatchOperationTable toDB) {
         if (toDB.equals(this)) {
             return;
         }
-        toDB.removeAllData();
+        toDB.db.executeTransaction(new RemoveEverythingTransaction());
 
         copyServers(toDB);
         copyUsers(toDB);

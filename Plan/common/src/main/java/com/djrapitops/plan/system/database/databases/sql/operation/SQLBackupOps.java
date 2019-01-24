@@ -33,7 +33,6 @@ public class SQLBackupOps extends SQLOps implements BackupOperations {
             BatchOperationTable toDB = new BatchOperationTable((SQLDB) toDatabase);
             BatchOperationTable fromDB = new BatchOperationTable(db);
 
-            toDB.removeAllData();
             fromDB.copyEverything(toDB);
         } else {
             throw new IllegalArgumentException("Database was not a SQL database - backup not implemented.");

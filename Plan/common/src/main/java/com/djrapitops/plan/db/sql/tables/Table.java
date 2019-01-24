@@ -101,13 +101,6 @@ public abstract class Table {
         return tableName;
     }
 
-    /**
-     * Removes all data from the table.
-     */
-    public void removeAllData() {
-        db.execute("DELETE FROM " + tableName);
-    }
-
     @Override
     public String toString() {
         return tableName;
