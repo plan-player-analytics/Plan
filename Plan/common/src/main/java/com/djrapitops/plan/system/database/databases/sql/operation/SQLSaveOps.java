@@ -43,7 +43,12 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
 
     @Override
     public void insertTPS(Map<UUID, List<TPS>> ofServers) {
-        tpsTable.insertAllTPS(ofServers);
+        db.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute(LargeStoreQueries.storeAllTPSData(ofServers));
+            }
+        });
     }
 
     @Override

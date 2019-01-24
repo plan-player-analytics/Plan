@@ -90,7 +90,7 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
     }
 
     private void copyTPS() {
-        db.getTpsTable().insertAllTPS(sourceDB.query(LargeFetchQueries.fetchAllTPSData()));
+        copy(LargeStoreQueries::storeAllTPSData, LargeFetchQueries.fetchAllTPSData());
     }
 
     private void copyUserInfo() {

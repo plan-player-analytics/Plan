@@ -29,7 +29,6 @@ import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.sql.queries.OptionalFetchQueries;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.utilities.Verify;
 import org.apache.commons.text.TextStringBuilder;
 
 import java.sql.PreparedStatement;
@@ -58,26 +57,26 @@ public class TPSTable extends Table {
     public static final String CHUNKS = "chunks_loaded";
     public static final String FREE_DISK = "free_disk_space";
 
+    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
+            + SERVER_ID + ", "
+            + DATE + ", "
+            + TPS + ", "
+            + PLAYERS_ONLINE + ", "
+            + CPU_USAGE + ", "
+            + RAM_USAGE + ", "
+            + ENTITIES + ", "
+            + CHUNKS + ", "
+            + FREE_DISK
+            + ") VALUES ("
+            + ServerTable.STATEMENT_SELECT_SERVER_ID + ", "
+            + "?, ?, ?, ?, ?, ?, ?, ?)";
+
     public TPSTable(SQLDB db) {
         super(TABLE_NAME, db);
         serverTable = db.getServerTable();
-        insertStatement = "INSERT INTO " + tableName + " ("
-                + SERVER_ID + ", "
-                + DATE + ", "
-                + TPS + ", "
-                + PLAYERS_ONLINE + ", "
-                + CPU_USAGE + ", "
-                + RAM_USAGE + ", "
-                + ENTITIES + ", "
-                + CHUNKS + ", "
-                + FREE_DISK
-                + ") VALUES ("
-                + serverTable.statementSelectServerID + ", "
-                + "?, ?, ?, ?, ?, ?, ?, ?)";
     }
 
     private final ServerTable serverTable;
-    private String insertStatement;
 
     public static String createTableSQL(DBType dbType) {
         return CreateTableParser.create(TABLE_NAME, dbType)
@@ -159,7 +158,7 @@ public class TPSTable extends Table {
     }
 
     public void insertTPS(TPS tps) {
-        execute(new ExecStatement(insertStatement) {
+        execute(new ExecStatement(INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, getServerUUID().toString());
@@ -259,36 +258,6 @@ public class TPSTable extends Table {
                     tpsList.add(tps);
                 }
                 return tpsList;
-            }
-        });
-    }
-
-    public void insertAllTPS(Map<UUID, List<TPS>> allTPS) {
-        if (Verify.isEmpty(allTPS)) {
-            return;
-        }
-
-        executeBatch(new ExecStatement(insertStatement) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                // Every Server
-                for (Map.Entry<UUID, List<TPS>> entry : allTPS.entrySet()) {
-                    UUID serverUUID = entry.getKey();
-                    // Every TPS Data point
-                    List<TPS> tpsList = entry.getValue();
-                    for (TPS tps : tpsList) {
-                        statement.setString(1, serverUUID.toString());
-                        statement.setLong(2, tps.getDate());
-                        statement.setDouble(3, tps.getTicksPerSecond());
-                        statement.setInt(4, tps.getPlayers());
-                        statement.setDouble(5, tps.getCPUUsage());
-                        statement.setLong(6, tps.getUsedMemory());
-                        statement.setDouble(7, tps.getEntityCount());
-                        statement.setDouble(8, tps.getChunksLoaded());
-                        statement.setLong(9, tps.getFreeDiskSpace());
-                        statement.addBatch();
-                    }
-                }
             }
         });
     }

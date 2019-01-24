@@ -18,6 +18,7 @@ package com.djrapitops.plan.db.sql.queries;
 
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.Executable;
@@ -183,6 +184,36 @@ public class LargeStoreQueries {
                     statement.setBoolean(4, true);
                     statement.setInt(5, info.getMaxPlayers());
                     statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable storeAllTPSData(Map<UUID, List<TPS>> ofServers) {
+        if (Verify.isEmpty(ofServers)) {
+            return Executable.empty();
+        }
+
+        return new ExecBatchStatement(TPSTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                // Every Server
+                for (Map.Entry<UUID, List<TPS>> entry : ofServers.entrySet()) {
+                    UUID serverUUID = entry.getKey();
+                    // Every TPS Data point
+                    List<TPS> tpsList = entry.getValue();
+                    for (TPS tps : tpsList) {
+                        statement.setString(1, serverUUID.toString());
+                        statement.setLong(2, tps.getDate());
+                        statement.setDouble(3, tps.getTicksPerSecond());
+                        statement.setInt(4, tps.getPlayers());
+                        statement.setDouble(5, tps.getCPUUsage());
+                        statement.setLong(6, tps.getUsedMemory());
+                        statement.setDouble(7, tps.getEntityCount());
+                        statement.setDouble(8, tps.getChunksLoaded());
+                        statement.setLong(9, tps.getFreeDiskSpace());
+                        statement.addBatch();
+                    }
                 }
             }
         };
