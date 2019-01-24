@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class SessionsTable extends UserUUIDTable {
+public class SessionsTable extends Table {
 
     public static final String TABLE_NAME = "plan_sessions";
 

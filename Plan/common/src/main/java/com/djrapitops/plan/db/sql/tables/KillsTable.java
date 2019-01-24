@@ -52,7 +52,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class KillsTable extends UserUUIDTable {
+public class KillsTable extends Table {
 
     public static final String TABLE_NAME = "plan_kills";
 

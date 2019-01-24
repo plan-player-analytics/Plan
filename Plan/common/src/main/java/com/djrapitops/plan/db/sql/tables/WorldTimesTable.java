@@ -56,7 +56,7 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class WorldTimesTable extends UserUUIDTable {
+public class WorldTimesTable extends Table {
 
     public static final String TABLE_NAME = "plan_world_times";
 

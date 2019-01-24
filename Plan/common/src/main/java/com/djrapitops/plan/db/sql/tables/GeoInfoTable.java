@@ -50,7 +50,7 @@ import java.util.*;
  *
  * @author Rsl1122
  */
-public class GeoInfoTable extends UserUUIDTable {
+public class GeoInfoTable extends Table {
 
     public static final String TABLE_NAME = "plan_ips";
 

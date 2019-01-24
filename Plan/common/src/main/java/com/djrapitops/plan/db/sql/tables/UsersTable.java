@@ -41,7 +41,7 @@ import java.util.*;
  *
  * @author Rsl1122
  */
-public class UsersTable extends UserUUIDTable {
+public class UsersTable extends Table {
 
     public static final String TABLE_NAME = "plan_users";
 
