@@ -35,7 +35,7 @@ import java.sql.Savepoint;
  */
 public abstract class Transaction {
 
-    private SQLDB db;
+    SQLDB db;
 
     private Connection connection;
     private Savepoint savepoint;

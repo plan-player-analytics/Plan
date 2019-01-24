@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.database.databases.sql.operation;
 
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.sql.tables.move.BatchOperationTable;
+import com.djrapitops.plan.db.access.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.system.database.databases.operation.BackupOperations;
 
 public class SQLBackupOps extends SQLOps implements BackupOperations {
@@ -29,18 +29,11 @@ public class SQLBackupOps extends SQLOps implements BackupOperations {
 
     @Override
     public void backup(Database toDatabase) {
-        if (toDatabase instanceof SQLDB) {
-            BatchOperationTable toDB = new BatchOperationTable((SQLDB) toDatabase);
-            BatchOperationTable fromDB = new BatchOperationTable(db);
-
-            fromDB.copyEverything(toDB);
-        } else {
-            throw new IllegalArgumentException("Database was not a SQL database - backup not implemented.");
-        }
+        toDatabase.executeTransaction(new BackupCopyTransaction(db));
     }
 
     @Override
     public void restore(Database fromDatabase) {
-        fromDatabase.backup().backup(db);
+        db.executeTransaction(new BackupCopyTransaction(fromDatabase));
     }
 }
