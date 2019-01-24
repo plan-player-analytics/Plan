@@ -22,7 +22,10 @@ import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.db.sql.parsing.*;
+import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
+import com.djrapitops.plan.db.sql.parsing.Insert;
+import com.djrapitops.plan.db.sql.parsing.Select;
+import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -34,8 +37,6 @@ import java.util.List;
  * Table that is in charge of storing WebUser data.
  * <p>
  * Table Name: plan_security
- * <p>
- * For contained columns {@link Col}
  *
  * @author Rsl1122
  * @see WebUser
@@ -51,9 +52,9 @@ public class SecurityTable extends Table {
     public SecurityTable(SQLDB db) {
         super(TABLE_NAME, db);
         insertStatement = Insert.values(tableName,
-                Col.USERNAME,
-                Col.SALT_PASSWORD_HASH,
-                Col.PERMISSION_LEVEL);
+                USERNAME,
+                SALT_PASSWORD_HASH,
+                PERMISSION_LEVEL);
     }
 
     private String insertStatement;
@@ -72,7 +73,7 @@ public class SecurityTable extends Table {
     }
 
     public void removeUser(String user) {
-        String sql = "DELETE FROM " + tableName + " WHERE (" + Col.USERNAME + "=?)";
+        String sql = "DELETE FROM " + tableName + " WHERE (" + USERNAME + "=?)";
 
         execute(new ExecStatement(sql) {
             @Override
@@ -83,7 +84,7 @@ public class SecurityTable extends Table {
     }
 
     public WebUser getWebUser(String user) {
-        String sql = Select.all(tableName).where(Col.USERNAME + "=?").toString();
+        String sql = Select.all(tableName).where(USERNAME + "=?").toString();
 
         return query(new QueryStatement<WebUser>(sql) {
             @Override
@@ -94,8 +95,8 @@ public class SecurityTable extends Table {
             @Override
             public WebUser processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    String saltedPassHash = set.getString(Col.SALT_PASSWORD_HASH.get());
-                    int permissionLevel = set.getInt(Col.PERMISSION_LEVEL.get());
+                    String saltedPassHash = set.getString(SALT_PASSWORD_HASH);
+                    int permissionLevel = set.getInt(PERMISSION_LEVEL);
                     return new WebUser(user, saltedPassHash, permissionLevel);
                 }
                 return null;
@@ -120,29 +121,6 @@ public class SecurityTable extends Table {
 
     public boolean userExists(String user) {
         return getWebUser(user) != null;
-    }
-
-    @Deprecated
-    public enum Col implements Column {
-        @Deprecated USERNAME("username"),
-        @Deprecated SALT_PASSWORD_HASH("salted_pass_hash"),
-        @Deprecated PERMISSION_LEVEL("permission_level");
-
-        private final String column;
-
-        Col(String column) {
-            this.column = column;
-        }
-
-        @Override
-        public String get() {
-            return toString();
-        }
-
-        @Override
-        public String toString() {
-            return column;
-        }
     }
 
     public void addUsers(List<WebUser> users) {
