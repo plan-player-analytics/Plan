@@ -20,6 +20,7 @@ import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
+import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -120,14 +121,8 @@ public abstract class Transaction {
         return db.query(query);
     }
 
-    protected boolean execute(ExecStatement statement) {
-        try {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
-                return statement.execute(preparedStatement);
-            }
-        } catch (SQLException e) {
-            throw DBOpException.forCause(statement.getSql(), e);
-        }
+    protected boolean execute(Executable executable) {
+        return executable.execute(connection);
     }
 
     protected boolean execute(String sql) {
@@ -147,16 +142,6 @@ public abstract class Transaction {
             } catch (DBOpException ignore) {
                 /* Exceptions swallowed */
             }
-        }
-    }
-
-    protected void executeBatch(ExecStatement statement) {
-        try {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
-                statement.executeBatch(preparedStatement);
-            }
-        } catch (SQLException e) {
-            throw DBOpException.forCause(statement.getSql(), e);
         }
     }
 

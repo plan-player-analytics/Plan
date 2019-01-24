@@ -16,6 +16,9 @@
  */
 package com.djrapitops.plan.db.access;
 
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -24,12 +27,23 @@ import java.sql.SQLException;
  *
  * @author Rsl1122
  */
-public abstract class ExecStatement {
+public abstract class ExecStatement implements Executable {
 
     private final String sql;
 
     public ExecStatement(String sql) {
         this.sql = sql;
+    }
+
+    @Override
+    public boolean execute(Connection connection) {
+        try {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                return execute(preparedStatement);
+            }
+        } catch (SQLException e) {
+            throw DBOpException.forCause(sql, e);
+        }
     }
 
     public boolean execute(PreparedStatement statement) throws SQLException {
@@ -41,7 +55,7 @@ public abstract class ExecStatement {
         }
     }
 
-    private boolean callExecute(PreparedStatement statement) throws SQLException {
+    protected boolean callExecute(PreparedStatement statement) throws SQLException {
         if (sql.startsWith("UPDATE") || sql.startsWith("INSERT") || sql.startsWith("DELETE") || sql.startsWith("REPLACE")) {
             return statement.executeUpdate() > 0;
         } else {
@@ -50,6 +64,7 @@ public abstract class ExecStatement {
         }
     }
 
+    @Deprecated
     public void executeBatch(PreparedStatement statement) throws SQLException {
         try {
             prepare(statement);

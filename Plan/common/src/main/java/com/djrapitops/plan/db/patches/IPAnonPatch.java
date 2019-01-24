@@ -18,7 +18,7 @@ package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.ExecStatement;
+import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.sql.tables.GeoInfoTable;
@@ -79,7 +79,7 @@ public class IPAnonPatch extends Patch {
                 GeoInfoTable.IP_HASH + "=? " +
                 "WHERE " + GeoInfoTable.IP + "=?";
 
-        executeBatch(new ExecStatement(sql) {
+        execute(new ExecBatchStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (List<GeoInfo> geoInfos : allGeoInfo.values()) {

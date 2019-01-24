@@ -17,7 +17,7 @@
 package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.ExecStatement;
+import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.tables.SessionsTable;
@@ -136,7 +136,7 @@ public class WorldsServerIDPatch extends Patch {
                 WorldTimesTable.WORLD_ID + "=?" +
                 " WHERE " + WorldTimesTable.WORLD_ID + "=?" +
                 " AND " + "server_id=?";
-        executeBatch(new ExecStatement(sql) {
+        execute(new ExecBatchStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (Map.Entry<WorldObj, List<WorldObj>> entry : oldToNewMap.entrySet()) {

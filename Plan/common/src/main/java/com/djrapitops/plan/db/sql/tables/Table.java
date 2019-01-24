@@ -129,14 +129,17 @@ public abstract class Table {
         return Objects.hashCode(tableName, db, supportsMySQLQueries);
     }
 
+    @Deprecated
     protected boolean execute(ExecStatement statement) {
         return db.execute(statement);
     }
 
+    @Deprecated
     protected void executeBatch(ExecStatement statement) {
         db.executeBatch(statement);
     }
 
+    @Deprecated
     protected <T> T query(QueryStatement<T> statement) {
         return db.query(statement);
     }

@@ -18,7 +18,7 @@ package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.ExecStatement;
+import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.tables.NicknamesTable;
@@ -117,7 +117,7 @@ public class NicknameLastSeenPatch extends Patch {
                 " AND user_id=?" +
                 " AND server_id=?";
 
-        executeBatch(new ExecStatement(updateSQL) {
+        execute(new ExecBatchStatement(updateSQL) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (Map.Entry<Integer, Set<Nickname>> entry : nicknames.entrySet()) {
