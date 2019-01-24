@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
@@ -49,14 +47,6 @@ public abstract class Table {
         this.tableName = name;
         this.db = db;
         this.supportsMySQLQueries = db != null && db.getType().supportsMySQLQueries();
-    }
-
-    protected void createTable(String sql) throws DBInitException {
-        try {
-            db.execute(sql);
-        } catch (DBOpException e) {
-            throw new DBInitException("Failed to create table: " + tableName, e);
-        }
     }
 
     protected UUID getServerUUID() {
