@@ -19,7 +19,6 @@ package com.djrapitops.plan.db.patches;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.tables.PingTable;
-import com.djrapitops.plan.db.sql.tables.PingTable.Col;
 
 public class PingOptimizationPatch extends Patch {
 
@@ -34,8 +33,8 @@ public class PingOptimizationPatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(tableName, Col.UUID.get())
-                && hasColumn(tableName, Col.SERVER_UUID.get())
+        return hasColumn(tableName, PingTable.USER_UUID)
+                && hasColumn(tableName, PingTable.SERVER_UUID)
                 && !hasColumn(tableName, "user_id")
                 && !hasColumn(tableName, "server_id")
                 && !hasTable(tempTableName); // If this table exists the patch has failed to finish.
@@ -48,21 +47,21 @@ public class PingOptimizationPatch extends Patch {
             db.getPingTable().createTable();
 
             execute("INSERT INTO " + tableName + " (" +
-                    Col.UUID + ", " +
-                    Col.SERVER_UUID + ", " +
-                    Col.ID + ", " +
-                    Col.MIN_PING + ", " +
-                    Col.MAX_PING + ", " +
-                    Col.AVG_PING + ", " +
-                    Col.DATE +
+                    PingTable.USER_UUID + ", " +
+                    PingTable.SERVER_UUID + ", " +
+                    PingTable.ID + ", " +
+                    PingTable.MIN_PING + ", " +
+                    PingTable.MAX_PING + ", " +
+                    PingTable.AVG_PING + ", " +
+                    PingTable.DATE +
                     ") SELECT " +
                     "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
                     "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
-                    Col.ID + ", " +
-                    Col.MIN_PING + ", " +
-                    Col.MAX_PING + ", " +
-                    Col.AVG_PING + ", " +
-                    Col.DATE +
+                    PingTable.ID + ", " +
+                    PingTable.MIN_PING + ", " +
+                    PingTable.MAX_PING + ", " +
+                    PingTable.AVG_PING + ", " +
+                    PingTable.DATE +
                     " FROM " + tempTableName
             );
 

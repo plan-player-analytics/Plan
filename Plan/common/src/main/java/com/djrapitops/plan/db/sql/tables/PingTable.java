@@ -23,7 +23,6 @@ import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.PingOptimizationPatch;
-import com.djrapitops.plan.db.sql.parsing.Column;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plugin.api.TimeAmount;
@@ -61,12 +60,12 @@ public class PingTable extends UserUUIDTable {
     public PingTable(SQLDB db) {
         super(TABLE_NAME, db);
         insertStatement = "INSERT INTO " + tableName + " (" +
-                Col.UUID + ", " +
-                Col.SERVER_UUID + ", " +
-                Col.DATE + ", " +
-                Col.MIN_PING + ", " +
-                Col.MAX_PING + ", " +
-                Col.AVG_PING +
+                USER_UUID + ", " +
+                SERVER_UUID + ", " +
+                DATE + ", " +
+                MIN_PING + ", " +
+                MAX_PING + ", " +
+                AVG_PING +
                 ") VALUES (?, ?, ?, ?, ?, ?)";
     }
 
@@ -89,8 +88,8 @@ public class PingTable extends UserUUIDTable {
 
     public void clean() {
         String sql = "DELETE FROM " + tableName +
-                " WHERE (" + Col.DATE + "<?)" +
-                " OR (" + Col.MIN_PING + "<0)";
+                " WHERE (" + DATE + "<?)" +
+                " OR (" + MIN_PING + "<0)";
 
         execute(new ExecStatement(sql) {
             @Override
@@ -117,7 +116,7 @@ public class PingTable extends UserUUIDTable {
 
     public List<Ping> getPing(UUID uuid) {
         String sql = "SELECT * FROM " + tableName +
-                " WHERE " + Col.UUID + "=?";
+                " WHERE " + USER_UUID + "=?";
 
         return query(new QueryStatement<List<Ping>>(sql, 10000) {
             @Override
@@ -131,11 +130,11 @@ public class PingTable extends UserUUIDTable {
 
                 while (set.next()) {
                     pings.add(new Ping(
-                                    set.getLong(Col.DATE.get()),
-                            UUID.fromString(set.getString(Col.SERVER_UUID.get())),
-                                    set.getInt(Col.MIN_PING.get()),
-                                    set.getInt(Col.MAX_PING.get()),
-                                    set.getDouble(Col.AVG_PING.get())
+                            set.getLong(DATE),
+                            UUID.fromString(set.getString(SERVER_UUID)),
+                            set.getInt(MIN_PING),
+                            set.getInt(MAX_PING),
+                            set.getDouble(AVG_PING)
                             )
                     );
                 }
@@ -171,39 +170,4 @@ public class PingTable extends UserUUIDTable {
             }
         });
     }
-
-    @Deprecated
-    public enum Col implements Column {
-        @Deprecated
-        ID("id"),
-        @Deprecated
-        UUID(UserUUIDTable.Col.UUID.get()),
-        @Deprecated
-        SERVER_UUID("server_uuid"),
-        @Deprecated
-        DATE("date"),
-        @Deprecated
-        MAX_PING("max_ping"),
-        @Deprecated
-        AVG_PING("avg_ping"),
-        @Deprecated
-        MIN_PING("min_ping");
-
-        private final String name;
-
-        Col(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String get() {
-            return name;
-        }
-
-        @Override
-        public String toString() {
-            return get();
-        }
-    }
-
 }
