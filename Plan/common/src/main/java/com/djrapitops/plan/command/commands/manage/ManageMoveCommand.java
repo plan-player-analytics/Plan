@@ -18,6 +18,7 @@ package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -111,7 +112,7 @@ public class ManageMoveCommand extends CommandNode {
             try {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
-                fromDatabase.backup().backup(toDatabase);
+                toDatabase.executeTransaction(new BackupCopyTransaction(fromDatabase));
 
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
 

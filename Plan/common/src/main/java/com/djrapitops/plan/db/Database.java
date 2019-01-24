@@ -54,9 +54,6 @@ public interface Database {
     void executeTransaction(Transaction transaction);
 
     @Deprecated
-    BackupOperations backup();
-
-    @Deprecated
     CheckOperations check();
 
     @Deprecated

@@ -21,6 +21,7 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.SQLiteDB;
+import com.djrapitops.plan.db.access.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -136,7 +137,7 @@ public class ManageBackupCommand extends CommandNode {
                 return;
             }
             backupDB.init();
-            copyFromDB.backup().backup(backupDB);
+            backupDB.executeTransaction(new BackupCopyTransaction(copyFromDB));
         } catch (DBException e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
         } finally {

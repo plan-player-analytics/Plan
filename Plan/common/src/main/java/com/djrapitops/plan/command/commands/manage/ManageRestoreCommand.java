@@ -19,6 +19,7 @@ package com.djrapitops.plan.command.commands.manage;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.SQLiteDB;
+import com.djrapitops.plan.db.access.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.locale.Locale;
@@ -123,7 +124,7 @@ public class ManageRestoreCommand extends CommandNode {
 
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
-                database.backup().restore(backupDB);
+                database.executeTransaction(new BackupCopyTransaction(backupDB));
 
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (Exception e) {

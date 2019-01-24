@@ -89,7 +89,6 @@ public abstract class SQLDB extends AbstractDatabase {
     private final PingTable pingTable;
     private final SettingsTable settingsTable;
 
-    private final SQLBackupOps backupOps;
     private final SQLCheckOps checkOps;
     private final SQLFetchOps fetchOps;
     private final SQLRemoveOps removeOps;
@@ -134,7 +133,6 @@ public abstract class SQLDB extends AbstractDatabase {
         pingTable = new PingTable(this);
         settingsTable = new SettingsTable(this);
 
-        backupOps = new SQLBackupOps(this);
         checkOps = new SQLCheckOps(this);
         fetchOps = new SQLFetchOps(this);
         removeOps = new SQLRemoveOps(this);
@@ -465,11 +463,6 @@ public abstract class SQLDB extends AbstractDatabase {
 
     public SettingsTable getSettingsTable() {
         return settingsTable;
-    }
-
-    @Override
-    public BackupOperations backup() {
-        return backupOps;
     }
 
     @Override

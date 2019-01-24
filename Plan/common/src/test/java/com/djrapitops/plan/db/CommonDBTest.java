@@ -29,6 +29,7 @@ import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.access.Query;
+import com.djrapitops.plan.db.access.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.db.access.transactions.RemoveEverythingTransaction;
 import com.djrapitops.plan.db.access.transactions.RemovePlayerTransaction;
 import com.djrapitops.plan.db.patches.Patch;
@@ -712,7 +713,7 @@ public abstract class CommonDBTest {
 
         saveAllData(db);
 
-        db.backup().backup(backup);
+        backup.executeTransaction(new BackupCopyTransaction(db));
 
         assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllCommonUserInformation());
         assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchPerServerUserInformation());
