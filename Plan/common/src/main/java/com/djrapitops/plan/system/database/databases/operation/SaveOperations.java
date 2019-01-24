@@ -33,57 +33,82 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Deprecated
 public interface SaveOperations {
 
     // Bulk save
 
+    @Deprecated
     void insertTPS(Map<UUID, List<TPS>> ofServers);
 
+    @Deprecated
     void insertCommandUsage(Map<UUID, Map<String, Integer>> ofServers);
 
+    @Deprecated
     void insertUsers(Map<UUID, UserInfo> ofServers);
 
+    @Deprecated
     void insertSessions(Map<UUID, Map<UUID, List<Session>>> ofServers, boolean containsExtraData);
 
+    @Deprecated
     void kickAmount(Map<UUID, Integer> ofUsers);
 
+    @Deprecated
     void insertUserInfo(Map<UUID, List<UserInfo>> ofServers);
 
+    @Deprecated
     void insertNicknames(Map<UUID, Map<UUID, List<Nickname>>> ofServers);
 
+    @Deprecated
     void insertAllGeoInfo(Map<UUID, List<GeoInfo>> ofUsers);
 
     // Single data point
 
+    @Deprecated
     void banStatus(UUID uuid, boolean banned);
 
+    @Deprecated
     void opStatus(UUID uuid, boolean op);
 
+    @Deprecated
     void registerNewUser(UUID uuid, long registered, String name);
 
+    @Deprecated
     void geoInfo(UUID uuid, GeoInfo geoInfo);
 
+    @Deprecated
     void playerWasKicked(UUID uuid);
 
+    @Deprecated
     void playerName(UUID uuid, String playerName);
 
+    @Deprecated
     void playerDisplayName(UUID uuid, Nickname nickname);
 
+    @Deprecated
     void registerNewUserOnThisServer(UUID uuid, long registered);
 
+    @Deprecated
     void commandUsed(String commandName);
 
+    @Deprecated
     void insertTPSforThisServer(TPS tps);
 
+    @Deprecated
     void session(UUID uuid, Session session);
 
+    @Deprecated
     void serverInfoForThisServer(Server server);
 
+    @Deprecated
     void webUser(WebUser webUser);
 
+    @Deprecated
     void ping(UUID uuid, Ping ping);
 
+    @Deprecated
     void setAsUninstalled(UUID serverUUID);
 
+    @Deprecated
     void saveConfig(UUID serverUUID, Config config, long lastModified);
 }
