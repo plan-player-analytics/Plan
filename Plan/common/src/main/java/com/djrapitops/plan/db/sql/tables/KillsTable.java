@@ -101,21 +101,6 @@ public class KillsTable extends UserUUIDTable {
         createTable(createTableSQL(db.getType()));
     }
 
-    @Override
-    public void removeUser(UUID uuid) {
-        String sql = "DELETE FROM " + tableName +
-                " WHERE " + KILLER_UUID + "=?" +
-                " OR " + VICTIM_UUID + "=?";
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-                statement.setString(2, uuid.toString());
-            }
-        });
-    }
-
     public void addKillsToSessions(UUID uuid, Map<Integer, Session> sessions) {
         String usersUUIDColumn = usersTable + "." + UsersTable.USER_UUID;
         String usersNameColumn = usersTable + "." + UsersTable.USER_NAME + " as victim_name";

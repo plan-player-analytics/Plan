@@ -17,12 +17,7 @@
 package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.sql.parsing.Column;
-
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.UUID;
 
 /**
  * Represents a Table that uses UUIDs to get their data.
@@ -33,17 +28,6 @@ public abstract class UserUUIDTable extends Table {
 
     public UserUUIDTable(String name, SQLDB db) {
         super(name, db);
-    }
-
-    public void removeUser(UUID uuid) {
-        String sql = "DELETE FROM " + tableName + " WHERE (" + Col.UUID + "=?)";
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-            }
-        });
     }
 
     public enum Col implements Column {
