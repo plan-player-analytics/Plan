@@ -21,7 +21,6 @@ import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.db.sql.parsing.Column;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.system.settings.config.Config;
@@ -92,9 +91,9 @@ public class SettingsTable extends Table {
 
     private void insertConfig(UUID serverUUID, String configSettings, long lastModified) {
         String sql = "INSERT INTO " + tableName + " (" +
-                Col.SERVER_UUID + ", " +
-                Col.UPDATED + ", " +
-                Col.CONFIG_CONTENT + ") VALUES (?,?,?)";
+                SERVER_UUID + ", " +
+                UPDATED + ", " +
+                CONFIG_CONTENT + ") VALUES (?,?,?)";
 
         execute(new ExecStatement(sql) {
             @Override
@@ -108,10 +107,10 @@ public class SettingsTable extends Table {
 
     private void updateConfig(UUID serverUUID, String configSettings, long lastModified) {
         String sql = "UPDATE " + tableName + " SET " +
-                Col.CONFIG_CONTENT + "=?," +
-                Col.UPDATED + "=? WHERE " +
-                Col.SERVER_UUID + "=? AND " +
-                Col.CONFIG_CONTENT + "!=?";
+                CONFIG_CONTENT + "=?," +
+                UPDATED + "=? WHERE " +
+                SERVER_UUID + "=? AND " +
+                CONFIG_CONTENT + "!=?";
 
         execute(new ExecStatement(sql) {
             @Override
@@ -125,7 +124,7 @@ public class SettingsTable extends Table {
     }
 
     private boolean isConfigStored(UUID serverUUID) {
-        String sql = "SELECT " + Col.SERVER_UUID + " FROM " + tableName + " WHERE " + Col.SERVER_UUID + "=? LIMIT 1";
+        String sql = "SELECT " + SERVER_UUID + " FROM " + tableName + " WHERE " + SERVER_UUID + "=? LIMIT 1";
         return query(new QueryStatement<Boolean>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -134,7 +133,7 @@ public class SettingsTable extends Table {
 
             @Override
             public Boolean processResults(ResultSet set) throws SQLException {
-                return set.next() && set.getString(Col.SERVER_UUID.get()).equals(serverUUID.toString());
+                return set.next() && set.getString(SERVER_UUID).equals(serverUUID.toString());
             }
         });
     }
@@ -147,9 +146,9 @@ public class SettingsTable extends Table {
      * @return Optional Config if a new config is found, empty if not.
      */
     public Optional<Config> fetchNewerConfig(long updatedAfter, UUID serverUUID) {
-        String sql = "SELECT " + Col.CONFIG_CONTENT + " FROM " + tableName +
-                " WHERE " + Col.UPDATED + ">? AND " +
-                Col.SERVER_UUID + "=? LIMIT 1";
+        String sql = "SELECT " + CONFIG_CONTENT + " FROM " + tableName +
+                " WHERE " + UPDATED + ">? AND " +
+                SERVER_UUID + "=? LIMIT 1";
 
         return Optional.ofNullable(query(new QueryStatement<Config>(sql, 10) {
             @Override
@@ -161,7 +160,7 @@ public class SettingsTable extends Table {
             @Override
             public Config processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    try (ConfigReader reader = new ConfigReader(new Scanner(set.getString(Col.CONFIG_CONTENT.get())))) {
+                    try (ConfigReader reader = new ConfigReader(new Scanner(set.getString(CONFIG_CONTENT)))) {
                         return reader.read();
                     }
                 } else {
@@ -169,29 +168,5 @@ public class SettingsTable extends Table {
                 }
             }
         }));
-    }
-
-    @Deprecated
-    public enum Col implements Column {
-        @Deprecated ID("id"),
-        @Deprecated SERVER_UUID("server_uuid"),
-        @Deprecated UPDATED("updated"),
-        @Deprecated CONFIG_CONTENT("content");
-
-        private final String name;
-
-        Col(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String get() {
-            return name;
-        }
-
-        @Override
-        public String toString() {
-            return get();
-        }
     }
 }
