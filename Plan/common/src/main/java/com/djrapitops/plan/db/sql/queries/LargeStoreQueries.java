@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.db.sql.queries;
 
+import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.access.ExecBatchStatement;
@@ -23,6 +24,7 @@ import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.sql.tables.CommandUseTable;
 import com.djrapitops.plan.db.sql.tables.GeoInfoTable;
 import com.djrapitops.plan.db.sql.tables.NicknamesTable;
+import com.djrapitops.plan.db.sql.tables.SecurityTable;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -132,6 +134,28 @@ public class LargeStoreQueries {
                             statement.addBatch();
                         }
                     }
+                }
+            }
+        };
+    }
+
+    public static Executable storeAllPlanWebUsers(List<WebUser> users) {
+        if (Verify.isEmpty(users)) {
+            return Executable.empty();
+        }
+
+        return new ExecBatchStatement(SecurityTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (WebUser user : users) {
+                    String userName = user.getName();
+                    String pass = user.getSaltedPassHash();
+                    int permLvl = user.getPermLevel();
+
+                    statement.setString(1, userName);
+                    statement.setString(2, pass);
+                    statement.setInt(3, permLvl);
+                    statement.addBatch();
                 }
             }
         };

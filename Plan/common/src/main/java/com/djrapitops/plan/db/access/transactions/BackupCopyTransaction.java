@@ -82,7 +82,7 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
     }
 
     private void copyWebUsers() {
-        db.getSecurityTable().addUsers(sourceDB.query(LargeFetchQueries.fetchAllPlanWebUsers()));
+        copy(LargeStoreQueries::storeAllPlanWebUsers, LargeFetchQueries.fetchAllPlanWebUsers());
     }
 
     private void copyServers() {
