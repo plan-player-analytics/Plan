@@ -19,7 +19,6 @@ package com.djrapitops.plan.db.patches;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.tables.WorldTable;
-import com.djrapitops.plan.db.sql.tables.WorldTable.Col;
 
 public class WorldsOptimizationPatch extends Patch {
 
@@ -34,8 +33,8 @@ public class WorldsOptimizationPatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(tableName, Col.ID.get())
-                && hasColumn(tableName, Col.SERVER_UUID.get())
+        return hasColumn(tableName, WorldTable.ID)
+                && hasColumn(tableName, WorldTable.SERVER_UUID)
                 && !hasColumn(tableName, "server_id")
                 && !hasTable(tempTableName); // If this table exists the patch has failed to finish.
     }
@@ -50,13 +49,13 @@ public class WorldsOptimizationPatch extends Patch {
             db.getWorldTable().createTable();
 
             execute("INSERT INTO " + tableName + " (" +
-                    Col.ID + ", " +
-                    Col.SERVER_UUID + ", " +
-                    Col.NAME +
+                    WorldTable.ID + ", " +
+                    WorldTable.SERVER_UUID + ", " +
+                    WorldTable.NAME +
                     ") SELECT " +
-                    Col.ID + ", " +
+                    WorldTable.ID + ", " +
                     "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
-                    Col.NAME +
+                    WorldTable.NAME +
                     " FROM " + tempTableName
             );
 

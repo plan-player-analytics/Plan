@@ -114,8 +114,8 @@ public class WorldTimesTable extends Table {
     }
 
     public void addWorldTimesToSessions(UUID uuid, Map<Integer, Session> sessions) {
-        String worldIDColumn = worldTable + "." + WorldTable.Col.ID;
-        String worldNameColumn = worldTable + "." + WorldTable.Col.NAME + " as world_name";
+        String worldIDColumn = worldTable + "." + WorldTable.ID;
+        String worldNameColumn = worldTable + "." + WorldTable.NAME + " as world_name";
         String sql = "SELECT " +
                 Col.SESSION_ID + ", " +
                 Col.SURVIVAL + ", " +
@@ -195,8 +195,8 @@ public class WorldTimesTable extends Table {
     }
 
     public WorldTimes getWorldTimesOfServer(UUID serverUUID) {
-        String worldIDColumn = worldTable + "." + WorldTable.Col.ID;
-        String worldNameColumn = worldTable + "." + WorldTable.Col.NAME + " as world";
+        String worldIDColumn = worldTable + "." + WorldTable.ID;
+        String worldNameColumn = worldTable + "." + WorldTable.NAME + " as world";
         String sql = "SELECT " +
                 "SUM(" + Col.SURVIVAL + ") as survival, " +
                 "SUM(" + Col.CREATIVE + ") as creative, " +
@@ -237,8 +237,8 @@ public class WorldTimesTable extends Table {
     }
 
     public WorldTimes getWorldTimesOfUser(UUID uuid) {
-        String worldIDColumn = worldTable + "." + WorldTable.Col.ID;
-        String worldNameColumn = worldTable + "." + WorldTable.Col.NAME + " as world";
+        String worldIDColumn = worldTable + "." + WorldTable.ID;
+        String worldNameColumn = worldTable + "." + WorldTable.NAME + " as world";
         String sql = "SELECT " +
                 "SUM(" + Col.SURVIVAL + ") as survival, " +
                 "SUM(" + Col.CREATIVE + ") as creative, " +
@@ -279,8 +279,8 @@ public class WorldTimesTable extends Table {
     }
 
     public Map<Integer, WorldTimes> getAllWorldTimesBySessionID() {
-        String worldIDColumn = worldTable + "." + WorldTable.Col.ID;
-        String worldNameColumn = worldTable + "." + WorldTable.Col.NAME + " as world";
+        String worldIDColumn = worldTable + "." + WorldTable.ID;
+        String worldNameColumn = worldTable + "." + WorldTable.NAME + " as world";
         String sql = "SELECT " +
                 Col.SESSION_ID + ", " +
                 Col.SURVIVAL + ", " +

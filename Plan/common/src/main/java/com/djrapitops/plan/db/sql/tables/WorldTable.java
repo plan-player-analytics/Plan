@@ -24,7 +24,6 @@ import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.patches.WorldsOptimizationPatch;
 import com.djrapitops.plan.db.patches.WorldsServerIDPatch;
-import com.djrapitops.plan.db.sql.parsing.Column;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plugin.utilities.Verify;
@@ -44,7 +43,7 @@ import java.util.*;
  * {@link WorldsServerIDPatch}
  * {@link WorldsOptimizationPatch}
  *
- * @author Rsl1122 / Database version 7
+ * @author Rsl1122
  */
 public class WorldTable extends Table {
 
@@ -60,9 +59,9 @@ public class WorldTable extends Table {
     public WorldTable(SQLDB db) {
         super(TABLE_NAME, db);
         serverTable = db.getServerTable();
-        statementSelectID = "(SELECT " + Col.ID + " FROM " + tableName +
-                " WHERE (" + Col.NAME + "=?)" +
-                " AND (" + Col.SERVER_UUID + "=?)" +
+        statementSelectID = "(SELECT " + ID + " FROM " + tableName +
+                " WHERE (" + NAME + "=?)" +
+                " AND (" + SERVER_UUID + "=?)" +
                 " LIMIT 1)";
     }
 
@@ -85,7 +84,7 @@ public class WorldTable extends Table {
 
     public List<String> getWorlds(UUID serverUUID) {
         String sql = "SELECT * FROM " + tableName +
-                " WHERE " + Col.SERVER_UUID + "=?";
+                " WHERE " + SERVER_UUID + "=?";
 
         return query(new QueryStatement<List<String>>(sql) {
 
@@ -98,7 +97,7 @@ public class WorldTable extends Table {
             public List<String> processResults(ResultSet set) throws SQLException {
                 List<String> worldNames = new ArrayList<>();
                 while (set.next()) {
-                    String worldName = set.getString(Col.NAME.get());
+                    String worldName = set.getString(NAME);
                     worldNames.add(worldName);
                 }
                 return worldNames;
@@ -108,8 +107,8 @@ public class WorldTable extends Table {
 
     public void saveWorlds(Map<UUID, Collection<String>> worldMap) {
         String sql = "INSERT INTO " + tableName + " ("
-                + Col.NAME + ", "
-                + Col.SERVER_UUID
+                + NAME + ", "
+                + SERVER_UUID
                 + ") VALUES (?, ?)";
 
         executeBatch(new ExecStatement(sql) {
@@ -149,8 +148,8 @@ public class WorldTable extends Table {
         }
 
         String sql = "INSERT INTO " + tableName + " ("
-                + Col.NAME + ", "
-                + Col.SERVER_UUID
+                + NAME + ", "
+                + SERVER_UUID
                 + ") VALUES (?, ?)";
 
         executeBatch(new ExecStatement(sql) {
@@ -166,8 +165,8 @@ public class WorldTable extends Table {
     }
 
     public Set<String> getWorldNames(UUID serverUUID) {
-        String sql = "SELECT DISTINCT " + Col.NAME + " FROM " + tableName +
-                " WHERE " + Col.SERVER_UUID + "=?";
+        String sql = "SELECT DISTINCT " + NAME + " FROM " + tableName +
+                " WHERE " + SERVER_UUID + "=?";
         return query(new QueryStatement<Set<String>>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -178,34 +177,11 @@ public class WorldTable extends Table {
             public Set<String> processResults(ResultSet set) throws SQLException {
                 Set<String> worldNames = new HashSet<>();
                 while (set.next()) {
-                    worldNames.add(set.getString(Col.NAME.get()));
+                    worldNames.add(set.getString(NAME));
                 }
                 return worldNames;
             }
         });
-    }
-
-    @Deprecated
-    public enum Col implements Column {
-        @Deprecated ID("id"),
-        @Deprecated SERVER_UUID("server_uuid"),
-        @Deprecated NAME("world_name");
-
-        private final String column;
-
-        Col(String column) {
-            this.column = column;
-        }
-
-        @Override
-        public String get() {
-            return toString();
-        }
-
-        @Override
-        public String toString() {
-            return column;
-        }
     }
 
     @Override
