@@ -64,7 +64,7 @@ public class WorldTimesSeverIDPatch extends Patch {
 
         String sql = "UPDATE " + WorldTimesTable.TABLE_NAME + " SET " +
                 "server_id=?" +
-                " WHERE " + WorldTimesTable.Col.SESSION_ID + "=?";
+                " WHERE " + WorldTimesTable.SESSION_ID + "=?";
 
         executeBatch(new ExecStatement(sql) {
             @Override

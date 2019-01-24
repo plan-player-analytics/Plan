@@ -30,7 +30,6 @@ import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.patches.WorldTimesOptimizationPatch;
 import com.djrapitops.plan.db.patches.WorldTimesSeverIDPatch;
 import com.djrapitops.plan.db.patches.WorldsServerIDPatch;
-import com.djrapitops.plan.db.sql.parsing.Column;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plugin.utilities.Verify;
@@ -45,8 +44,6 @@ import java.util.stream.Collectors;
  * Table that is in charge of storing playtime data for each world in each GameMode.
  * <p>
  * Table Name: plan_world_times
- * <p>
- * For contained columns {@link Col}
  * <p>
  * Patches related to this table:
  * {@link Version10Patch}
@@ -79,14 +76,14 @@ public class WorldTimesTable extends Table {
         worldTable = db.getWorldTable();
         sessionsTable = db.getSessionsTable();
         insertStatement = "INSERT INTO " + tableName + " (" +
-                Col.UUID + ", " +
-                Col.WORLD_ID + ", " +
-                Col.SERVER_UUID + ", " +
-                Col.SESSION_ID + ", " +
-                Col.SURVIVAL + ", " +
-                Col.CREATIVE + ", " +
-                Col.ADVENTURE + ", " +
-                Col.SPECTATOR +
+                USER_UUID + ", " +
+                WORLD_ID + ", " +
+                SERVER_UUID + ", " +
+                SESSION_ID + ", " +
+                SURVIVAL + ", " +
+                CREATIVE + ", " +
+                ADVENTURE + ", " +
+                SPECTATOR +
                 ") VALUES (?, " +
                 worldTable.statementSelectID + ", " +
                 "?, ?, ?, ?, ?, ?)";
@@ -117,15 +114,15 @@ public class WorldTimesTable extends Table {
         String worldIDColumn = worldTable + "." + WorldTable.ID;
         String worldNameColumn = worldTable + "." + WorldTable.NAME + " as world_name";
         String sql = "SELECT " +
-                Col.SESSION_ID + ", " +
-                Col.SURVIVAL + ", " +
-                Col.CREATIVE + ", " +
-                Col.ADVENTURE + ", " +
-                Col.SPECTATOR + ", " +
+                SESSION_ID + ", " +
+                SURVIVAL + ", " +
+                CREATIVE + ", " +
+                ADVENTURE + ", " +
+                SPECTATOR + ", " +
                 worldNameColumn +
                 " FROM " + tableName +
-                " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + Col.WORLD_ID +
-                " WHERE " + Col.UUID + "=?";
+                " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + WORLD_ID +
+                " WHERE " + USER_UUID + "=?";
 
         query(new QueryStatement<Object>(sql, 2000) {
             @Override
@@ -138,7 +135,7 @@ public class WorldTimesTable extends Table {
                 String[] gms = GMTimes.getGMKeyArray();
 
                 while (set.next()) {
-                    int sessionID = set.getInt(Col.SESSION_ID.get());
+                    int sessionID = set.getInt(SESSION_ID);
                     Session session = sessions.get(sessionID);
 
                     if (session == null) {
@@ -148,10 +145,10 @@ public class WorldTimesTable extends Table {
                     String worldName = set.getString("world_name");
 
                     Map<String, Long> gmMap = new HashMap<>();
-                    gmMap.put(gms[0], set.getLong(Col.SURVIVAL.get()));
-                    gmMap.put(gms[1], set.getLong(Col.CREATIVE.get()));
-                    gmMap.put(gms[2], set.getLong(Col.ADVENTURE.get()));
-                    gmMap.put(gms[3], set.getLong(Col.SPECTATOR.get()));
+                    gmMap.put(gms[0], set.getLong(SURVIVAL));
+                    gmMap.put(gms[1], set.getLong(CREATIVE));
+                    gmMap.put(gms[2], set.getLong(ADVENTURE));
+                    gmMap.put(gms[3], set.getLong(SPECTATOR));
                     GMTimes gmTimes = new GMTimes(gmMap);
 
                     session.getUnsafe(SessionKeys.WORLD_TIMES).setGMTimesForWorld(worldName, gmTimes);
@@ -196,17 +193,17 @@ public class WorldTimesTable extends Table {
 
     public WorldTimes getWorldTimesOfServer(UUID serverUUID) {
         String worldIDColumn = worldTable + "." + WorldTable.ID;
-        String worldNameColumn = worldTable + "." + WorldTable.NAME + " as world";
+        String worldNameColumn = worldTable + "." + WorldTable.NAME + " as world_name";
         String sql = "SELECT " +
-                "SUM(" + Col.SURVIVAL + ") as survival, " +
-                "SUM(" + Col.CREATIVE + ") as creative, " +
-                "SUM(" + Col.ADVENTURE + ") as adventure, " +
-                "SUM(" + Col.SPECTATOR + ") as spectator, " +
+                "SUM(" + SURVIVAL + ") as survival, " +
+                "SUM(" + CREATIVE + ") as creative, " +
+                "SUM(" + ADVENTURE + ") as adventure, " +
+                "SUM(" + SPECTATOR + ") as spectator, " +
                 worldNameColumn +
                 " FROM " + tableName +
-                " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + Col.WORLD_ID +
-                " WHERE " + tableName + "." + Col.SERVER_UUID + "=?" +
-                " GROUP BY world";
+                " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + WORLD_ID +
+                " WHERE " + tableName + "." + SERVER_UUID + "=?" +
+                " GROUP BY " + WORLD_ID;
 
         return query(new QueryStatement<WorldTimes>(sql, 1000) {
             @Override
@@ -220,7 +217,7 @@ public class WorldTimesTable extends Table {
 
                 WorldTimes worldTimes = new WorldTimes(new HashMap<>());
                 while (set.next()) {
-                    String worldName = set.getString("world");
+                    String worldName = set.getString("world_name");
 
                     Map<String, Long> gmMap = new HashMap<>();
                     gmMap.put(gms[0], set.getLong("survival"));
@@ -238,17 +235,17 @@ public class WorldTimesTable extends Table {
 
     public WorldTimes getWorldTimesOfUser(UUID uuid) {
         String worldIDColumn = worldTable + "." + WorldTable.ID;
-        String worldNameColumn = worldTable + "." + WorldTable.NAME + " as world";
+        String worldNameColumn = worldTable + "." + WorldTable.NAME + " as world_name";
         String sql = "SELECT " +
-                "SUM(" + Col.SURVIVAL + ") as survival, " +
-                "SUM(" + Col.CREATIVE + ") as creative, " +
-                "SUM(" + Col.ADVENTURE + ") as adventure, " +
-                "SUM(" + Col.SPECTATOR + ") as spectator, " +
+                "SUM(" + SURVIVAL + ") as survival, " +
+                "SUM(" + CREATIVE + ") as creative, " +
+                "SUM(" + ADVENTURE + ") as adventure, " +
+                "SUM(" + SPECTATOR + ") as spectator, " +
                 worldNameColumn +
                 " FROM " + tableName +
-                " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + Col.WORLD_ID +
-                " WHERE " + Col.UUID + "=?" +
-                " GROUP BY world";
+                " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + WORLD_ID +
+                " WHERE " + USER_UUID + "=?" +
+                " GROUP BY " + WORLD_ID;
 
         return query(new QueryStatement<WorldTimes>(sql) {
             @Override
@@ -262,7 +259,7 @@ public class WorldTimesTable extends Table {
 
                 WorldTimes worldTimes = new WorldTimes(new HashMap<>());
                 while (set.next()) {
-                    String worldName = set.getString("world");
+                    String worldName = set.getString("world_name");
 
                     Map<String, Long> gmMap = new HashMap<>();
                     gmMap.put(gms[0], set.getLong("survival"));
@@ -280,16 +277,16 @@ public class WorldTimesTable extends Table {
 
     public Map<Integer, WorldTimes> getAllWorldTimesBySessionID() {
         String worldIDColumn = worldTable + "." + WorldTable.ID;
-        String worldNameColumn = worldTable + "." + WorldTable.NAME + " as world";
+        String worldNameColumn = worldTable + "." + WorldTable.NAME + " as world_name";
         String sql = "SELECT " +
-                Col.SESSION_ID + ", " +
-                Col.SURVIVAL + ", " +
-                Col.CREATIVE + ", " +
-                Col.ADVENTURE + ", " +
-                Col.SPECTATOR + ", " +
+                SESSION_ID + ", " +
+                SURVIVAL + ", " +
+                CREATIVE + ", " +
+                ADVENTURE + ", " +
+                SPECTATOR + ", " +
                 worldNameColumn +
                 " FROM " + tableName +
-                " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + Col.WORLD_ID;
+                " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + WORLD_ID;
 
         return query(new QueryAllStatement<Map<Integer, WorldTimes>>(sql, 50000) {
             @Override
@@ -298,15 +295,15 @@ public class WorldTimesTable extends Table {
 
                 Map<Integer, WorldTimes> worldTimes = new HashMap<>();
                 while (set.next()) {
-                    int sessionID = set.getInt(Col.SESSION_ID.get());
+                    int sessionID = set.getInt(SESSION_ID);
 
-                    String worldName = set.getString("world");
+                    String worldName = set.getString("world_name");
 
                     Map<String, Long> gmMap = new HashMap<>();
-                    gmMap.put(gms[0], set.getLong(Col.SURVIVAL.get()));
-                    gmMap.put(gms[1], set.getLong(Col.CREATIVE.get()));
-                    gmMap.put(gms[2], set.getLong(Col.ADVENTURE.get()));
-                    gmMap.put(gms[3], set.getLong(Col.SPECTATOR.get()));
+                    gmMap.put(gms[0], set.getLong(SURVIVAL));
+                    gmMap.put(gms[1], set.getLong(CREATIVE));
+                    gmMap.put(gms[2], set.getLong(ADVENTURE));
+                    gmMap.put(gms[3], set.getLong(SPECTATOR));
                     GMTimes gmTimes = new GMTimes(gmMap);
 
                     WorldTimes worldTOfSession = worldTimes.getOrDefault(sessionID, new WorldTimes(new HashMap<>()));
@@ -402,32 +399,4 @@ public class WorldTimesTable extends Table {
         return Objects.hash(super.hashCode(), worldTable, sessionsTable, insertStatement);
     }
 
-    @Deprecated
-    public enum Col implements Column {
-        @Deprecated ID("id"),
-        @Deprecated UUID("uuid"),
-        @Deprecated SERVER_UUID("server_uuid"),
-        @Deprecated SESSION_ID("session_id"),
-        @Deprecated WORLD_ID("world_id"),
-        @Deprecated SURVIVAL("survival_time"),
-        @Deprecated CREATIVE("creative_time"),
-        @Deprecated ADVENTURE("adventure_time"),
-        @Deprecated SPECTATOR("spectator_time");
-
-        private final String column;
-
-        Col(String column) {
-            this.column = column;
-        }
-
-        @Override
-        public String get() {
-            return toString();
-        }
-
-        @Override
-        public String toString() {
-            return column;
-        }
-    }
 }

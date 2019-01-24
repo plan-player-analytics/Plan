@@ -19,7 +19,6 @@ package com.djrapitops.plan.db.patches;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.tables.WorldTimesTable;
-import com.djrapitops.plan.db.sql.tables.WorldTimesTable.Col;
 
 public class WorldTimesOptimizationPatch extends Patch {
 
@@ -34,9 +33,9 @@ public class WorldTimesOptimizationPatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(tableName, Col.ID.get())
-                && hasColumn(tableName, Col.UUID.get())
-                && hasColumn(tableName, Col.SERVER_UUID.get())
+        return hasColumn(tableName, WorldTimesTable.ID)
+                && hasColumn(tableName, WorldTimesTable.USER_UUID)
+                && hasColumn(tableName, WorldTimesTable.SERVER_UUID)
                 && !hasColumn(tableName, "user_id")
                 && !hasColumn(tableName, "server_id")
                 && !hasTable(tempTableName); // If this table exists the patch has failed to finish.
@@ -49,23 +48,23 @@ public class WorldTimesOptimizationPatch extends Patch {
             db.getWorldTimesTable().createTable();
 
             execute("INSERT INTO " + tableName + " (" +
-                    Col.UUID + ", " +
-                    Col.SERVER_UUID + ", " +
-                    Col.ADVENTURE + ", " +
-                    Col.CREATIVE + ", " +
-                    Col.SURVIVAL + ", " +
-                    Col.SPECTATOR + ", " +
-                    Col.SESSION_ID + ", " +
-                    Col.WORLD_ID +
+                    WorldTimesTable.USER_UUID + ", " +
+                    WorldTimesTable.SERVER_UUID + ", " +
+                    WorldTimesTable.ADVENTURE + ", " +
+                    WorldTimesTable.CREATIVE + ", " +
+                    WorldTimesTable.SURVIVAL + ", " +
+                    WorldTimesTable.SPECTATOR + ", " +
+                    WorldTimesTable.SESSION_ID + ", " +
+                    WorldTimesTable.WORLD_ID +
                     ") SELECT " +
                     "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
                     "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
-                    Col.ADVENTURE + ", " +
-                    Col.CREATIVE + ", " +
-                    Col.SURVIVAL + ", " +
-                    Col.SPECTATOR + ", " +
-                    Col.SESSION_ID + ", " +
-                    Col.WORLD_ID +
+                    WorldTimesTable.ADVENTURE + ", " +
+                    WorldTimesTable.CREATIVE + ", " +
+                    WorldTimesTable.SURVIVAL + ", " +
+                    WorldTimesTable.SPECTATOR + ", " +
+                    WorldTimesTable.SESSION_ID + ", " +
+                    WorldTimesTable.WORLD_ID +
                     " FROM " + tempTableName
             );
 
