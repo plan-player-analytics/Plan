@@ -53,7 +53,7 @@ public class IPAnonPatch extends Patch {
 
     private Boolean containsUnAnonymizedIPs() {
         String sql = "SELECT * FROM " + tableName +
-                " WHERE " + GeoInfoTable.Col.IP + " NOT LIKE ? LIMIT 1";
+                " WHERE " + GeoInfoTable.IP + " NOT LIKE ? LIMIT 1";
 
         return query(new QueryStatement<Boolean>(sql) {
             @Override
@@ -77,9 +77,9 @@ public class IPAnonPatch extends Patch {
 
     private void anonymizeIPs(Map<UUID, List<GeoInfo>> allGeoInfo) {
         String sql = "UPDATE " + GeoInfoTable.TABLE_NAME + " SET " +
-                GeoInfoTable.Col.IP + "=?, " +
-                GeoInfoTable.Col.IP_HASH + "=? " +
-                "WHERE " + GeoInfoTable.Col.IP + "=?";
+                GeoInfoTable.IP + "=?, " +
+                GeoInfoTable.IP_HASH + "=? " +
+                "WHERE " + GeoInfoTable.IP + "=?";
 
         executeBatch(new ExecStatement(sql) {
             @Override

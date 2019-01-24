@@ -19,7 +19,6 @@ package com.djrapitops.plan.db.patches;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.tables.GeoInfoTable;
-import com.djrapitops.plan.db.sql.tables.GeoInfoTable.Col;
 
 public class GeoInfoOptimizationPatch extends Patch {
 
@@ -34,8 +33,8 @@ public class GeoInfoOptimizationPatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(tableName, Col.ID.get())
-                && hasColumn(tableName, Col.UUID.get())
+        return hasColumn(tableName, GeoInfoTable.ID)
+                && hasColumn(tableName, GeoInfoTable.USER_UUID)
                 && !hasColumn(tableName, "user_id")
                 && !hasTable(tempTableName); // If this table exists the patch has failed to finish.
     }
@@ -47,17 +46,17 @@ public class GeoInfoOptimizationPatch extends Patch {
             db.getGeoInfoTable().createTable();
 
             execute("INSERT INTO " + tableName + " (" +
-                    Col.UUID + ", " +
-                    Col.IP + ", " +
-                    Col.IP_HASH + ", " +
-                    Col.LAST_USED + ", " +
-                    Col.GEOLOCATION +
+                    GeoInfoTable.USER_UUID + ", " +
+                    GeoInfoTable.IP + ", " +
+                    GeoInfoTable.IP_HASH + ", " +
+                    GeoInfoTable.LAST_USED + ", " +
+                    GeoInfoTable.GEOLOCATION +
                     ") SELECT " +
                     "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
-                    Col.IP + ", " +
-                    Col.IP_HASH + ", " +
-                    Col.LAST_USED + ", " +
-                    Col.GEOLOCATION +
+                    GeoInfoTable.IP + ", " +
+                    GeoInfoTable.IP_HASH + ", " +
+                    GeoInfoTable.LAST_USED + ", " +
+                    GeoInfoTable.GEOLOCATION +
                     " FROM " + tempTableName
             );
 

@@ -27,13 +27,13 @@ public class GeoInfoLastUsedPatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(GeoInfoTable.TABLE_NAME, GeoInfoTable.Col.LAST_USED.get());
+        return hasColumn(GeoInfoTable.TABLE_NAME, GeoInfoTable.LAST_USED);
     }
 
     @Override
     protected void applyPatch() {
         addColumn(GeoInfoTable.TABLE_NAME,
-                GeoInfoTable.Col.LAST_USED + " bigint NOT NULL DEFAULT 0"
+                GeoInfoTable.LAST_USED + " bigint NOT NULL DEFAULT 0"
         );
     }
 }

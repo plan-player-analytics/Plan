@@ -23,7 +23,10 @@ import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.*;
-import com.djrapitops.plan.db.sql.parsing.*;
+import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
+import com.djrapitops.plan.db.sql.parsing.Select;
+import com.djrapitops.plan.db.sql.parsing.Sql;
+import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
 import com.djrapitops.plugin.utilities.Verify;
@@ -61,11 +64,11 @@ public class GeoInfoTable extends UserUUIDTable {
     public GeoInfoTable(SQLDB db) {
         super(TABLE_NAME, db);
         insertStatement = "INSERT INTO " + tableName + " ("
-                + Col.UUID + ", "
-                + Col.IP + ", "
-                + Col.IP_HASH + ", "
-                + Col.GEOLOCATION + ", "
-                + Col.LAST_USED
+                + USER_UUID + ", "
+                + IP + ", "
+                + IP_HASH + ", "
+                + GEOLOCATION + ", "
+                + LAST_USED
                 + ") VALUES (?, ?, ?, ?, ?)";
     }
 
@@ -85,20 +88,20 @@ public class GeoInfoTable extends UserUUIDTable {
     @Override
     public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
-                .primaryKeyIDColumn(supportsMySQLQueries, Col.ID)
-                .column(Col.UUID, Sql.varchar(36)).notNull()
-                .column(Col.IP, Sql.varchar(39)).notNull()
-                .column(Col.GEOLOCATION, Sql.varchar(50)).notNull()
-                .column(Col.IP_HASH, Sql.varchar(200))
-                .column(Col.LAST_USED, Sql.LONG).notNull().defaultValue("0")
-                .primaryKey(supportsMySQLQueries, Col.ID)
+                .primaryKeyIDColumn(supportsMySQLQueries, ID)
+                .column(USER_UUID, Sql.varchar(36)).notNull()
+                .column(IP, Sql.varchar(39)).notNull()
+                .column(GEOLOCATION, Sql.varchar(50)).notNull()
+                .column(IP_HASH, Sql.varchar(200))
+                .column(LAST_USED, Sql.LONG).notNull().defaultValue("0")
+                .primaryKey(supportsMySQLQueries, ID)
                 .toString()
         );
     }
 
     public List<GeoInfo> getGeoInfo(UUID uuid) {
         String sql = "SELECT DISTINCT * FROM " + tableName +
-                " WHERE " + Col.UUID + "=?";
+                " WHERE " + USER_UUID + "=?";
 
         return query(new QueryStatement<List<GeoInfo>>(sql, 100) {
             @Override
@@ -110,10 +113,10 @@ public class GeoInfoTable extends UserUUIDTable {
             public List<GeoInfo> processResults(ResultSet set) throws SQLException {
                 List<GeoInfo> geoInfo = new ArrayList<>();
                 while (set.next()) {
-                    String ip = set.getString(Col.IP.get());
-                    String geolocation = set.getString(Col.GEOLOCATION.get());
-                    String ipHash = set.getString(Col.IP_HASH.get());
-                    long lastUsed = set.getLong(Col.LAST_USED.get());
+                    String ip = set.getString(IP);
+                    String geolocation = set.getString(GEOLOCATION);
+                    String ipHash = set.getString(IP_HASH);
+                    long lastUsed = set.getLong(LAST_USED);
                     geoInfo.add(new GeoInfo(ip, geolocation, lastUsed, ipHash));
                 }
                 return geoInfo;
@@ -123,10 +126,10 @@ public class GeoInfoTable extends UserUUIDTable {
 
     private void updateGeoInfo(UUID uuid, GeoInfo info) {
         String sql = "UPDATE " + tableName + " SET "
-                + Col.LAST_USED + "=?" +
-                " WHERE " + Col.UUID + "=?" +
-                " AND " + Col.IP_HASH + "=?" +
-                " AND " + Col.GEOLOCATION + "=?";
+                + LAST_USED + "=?" +
+                " WHERE " + USER_UUID + "=?" +
+                " AND " + IP_HASH + "=?" +
+                " AND " + GEOLOCATION + "=?";
 
         execute(new ExecStatement(sql) {
             @Override
@@ -162,8 +165,8 @@ public class GeoInfoTable extends UserUUIDTable {
     }
 
     public Optional<String> getGeolocation(String ip) {
-        String sql = Select.from(tableName, Col.GEOLOCATION)
-                .where(Col.IP + "=?")
+        String sql = Select.from(tableName, GEOLOCATION)
+                .where(IP + "=?")
                 .toString();
 
         return query(new QueryStatement<Optional<String>>(sql) {
@@ -175,7 +178,7 @@ public class GeoInfoTable extends UserUUIDTable {
             @Override
             public Optional<String> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return Optional.of(set.getString(Col.GEOLOCATION.get()));
+                    return Optional.of(set.getString(GEOLOCATION));
                 }
                 return Optional.empty();
             }
@@ -225,37 +228,5 @@ public class GeoInfoTable extends UserUUIDTable {
                 }
             }
         });
-    }
-
-    @Deprecated
-    public enum Col implements Column {
-        @Deprecated
-        ID("id"),
-        @Deprecated
-        UUID(UserUUIDTable.Col.UUID.get()),
-        @Deprecated
-        IP("ip"),
-        @Deprecated
-        IP_HASH("ip_hash"),
-        @Deprecated
-        GEOLOCATION("geolocation"),
-        @Deprecated
-        LAST_USED("last_used");
-
-        private final String column;
-
-        Col(String column) {
-            this.column = column;
-        }
-
-        @Override
-        public String get() {
-            return toString();
-        }
-
-        @Override
-        public String toString() {
-            return column;
-        }
     }
 }

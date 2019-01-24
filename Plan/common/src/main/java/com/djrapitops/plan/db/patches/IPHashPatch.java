@@ -27,11 +27,11 @@ public class IPHashPatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(GeoInfoTable.TABLE_NAME, GeoInfoTable.Col.IP_HASH.get());
+        return hasColumn(GeoInfoTable.TABLE_NAME, GeoInfoTable.IP_HASH);
     }
 
     @Override
     protected void applyPatch() {
-        addColumn(GeoInfoTable.TABLE_NAME, GeoInfoTable.Col.IP_HASH.get() + " varchar(200) DEFAULT ''");
+        addColumn(GeoInfoTable.TABLE_NAME, GeoInfoTable.IP_HASH + " varchar(200) DEFAULT ''");
     }
 }
