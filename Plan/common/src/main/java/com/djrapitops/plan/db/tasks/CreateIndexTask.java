@@ -18,7 +18,6 @@ package com.djrapitops.plan.db.tasks;
 
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.sql.parsing.Column;
 import com.djrapitops.plan.db.sql.queries.schema.MySQLSchemaQueries;
 import com.djrapitops.plan.db.sql.tables.*;
 import com.djrapitops.plugin.task.AbsRunnable;
@@ -35,44 +34,44 @@ public class CreateIndexTask extends AbsRunnable {
     @Override
     public void run() {
         createIndex(UsersTable.TABLE_NAME, "plan_users_uuid_index",
-                UsersTable.Col.UUID
+                UsersTable.USER_UUID
         );
         createIndex(UserInfoTable.TABLE_NAME, "plan_user_info_uuid_index",
-                UserInfoTable.Col.UUID,
-                UserInfoTable.Col.SERVER_UUID
+                UserInfoTable.USER_UUID,
+                UserInfoTable.SERVER_UUID
         );
         createIndex(SessionsTable.TABLE_NAME, "plan_sessions_uuid_index",
-                SessionsTable.Col.UUID,
-                SessionsTable.Col.SERVER_UUID
+                SessionsTable.USER_UUID,
+                SessionsTable.SERVER_UUID
         );
         createIndex(SessionsTable.TABLE_NAME, "plan_sessions_date_index",
-                SessionsTable.Col.SESSION_START
+                SessionsTable.SESSION_START
         );
         createIndex(WorldTimesTable.TABLE_NAME, "plan_world_times_uuid_index",
-                WorldTimesTable.Col.UUID,
-                WorldTimesTable.Col.SERVER_UUID
+                WorldTimesTable.USER_UUID,
+                WorldTimesTable.SERVER_UUID
         );
         createIndex(KillsTable.TABLE_NAME, "plan_kills_uuid_index",
-                KillsTable.Col.KILLER_UUID,
-                KillsTable.Col.VICTIM_UUID,
-                KillsTable.Col.SERVER_UUID
+                KillsTable.KILLER_UUID,
+                KillsTable.VICTIM_UUID,
+                KillsTable.SERVER_UUID
         );
         createIndex(KillsTable.TABLE_NAME, "plan_kills_date_index",
-                KillsTable.Col.DATE
+                KillsTable.DATE
         );
         createIndex(PingTable.TABLE_NAME, "plan_ping_uuid_index",
-                PingTable.Col.UUID,
-                PingTable.Col.SERVER_UUID
+                PingTable.USER_UUID,
+                PingTable.SERVER_UUID
         );
         createIndex(PingTable.TABLE_NAME, "plan_ping_date_index",
-                PingTable.Col.DATE
+                PingTable.DATE
         );
         createIndex(TPSTable.TABLE_NAME, "plan_tps_date_index",
-                TPSTable.Col.DATE
+                TPSTable.DATE
         );
     }
 
-    private void createIndex(String tableName, String indexName, Column... indexedColumns) {
+    private void createIndex(String tableName, String indexName, String... indexedColumns) {
         if (indexedColumns.length == 0) {
             throw new IllegalArgumentException("Can not create index without columns");
         }

@@ -38,7 +38,7 @@ public class KillsServerIDPatch extends Patch {
         String columnName = "server_id";
 
         // KillsOptimizationPatch makes this patch incompatible with newer patch versions.
-        return hasColumn(tableName, KillsTable.Col.SERVER_UUID.get())
+        return hasColumn(tableName, KillsTable.SERVER_UUID)
                 || (hasColumn(tableName, columnName) && allValuesHaveServerID(tableName, columnName));
     }
 
@@ -59,7 +59,7 @@ public class KillsServerIDPatch extends Patch {
 
     @Override
     protected void applyPatch() {
-        if (hasColumn(KillsTable.TABLE_NAME, KillsTable.Col.SERVER_UUID.get())) {
+        if (hasColumn(KillsTable.TABLE_NAME, KillsTable.SERVER_UUID)) {
             return;
         }
 
@@ -67,7 +67,7 @@ public class KillsServerIDPatch extends Patch {
 
         Map<Integer, Integer> sessionIDServerIDRelation = db.getSessionsTable().getIDServerIDRelation();
 
-        String sql = "UPDATE " + KillsTable.TABLE_NAME + " SET server_id=? WHERE " + KillsTable.Col.SESSION_ID + "=?";
+        String sql = "UPDATE " + KillsTable.TABLE_NAME + " SET server_id=? WHERE " + KillsTable.SESSION_ID + "=?";
 
         executeBatch(new ExecStatement(sql) {
             @Override
