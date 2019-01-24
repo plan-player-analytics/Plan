@@ -81,7 +81,7 @@ public class LargeFetchQueries {
     /**
      * Query database for all GeoInfo data.
      *
-     * @return Map: Server UUID - List of GeoInfo
+     * @return Map: Player UUID - List of GeoInfo
      */
     public static Query<Map<UUID, List<GeoInfo>>> fetchAllGeoInfoData() {
         String sql = "SELECT " +

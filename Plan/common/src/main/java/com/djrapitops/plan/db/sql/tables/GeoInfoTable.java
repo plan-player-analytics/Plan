@@ -27,7 +27,6 @@ import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
-import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -59,18 +58,17 @@ public class GeoInfoTable extends Table {
     public static final String GEOLOCATION = "geolocation";
     public static final String LAST_USED = "last_used";
 
+    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
+            + USER_UUID + ", "
+            + IP + ", "
+            + IP_HASH + ", "
+            + GEOLOCATION + ", "
+            + LAST_USED
+            + ") VALUES (?, ?, ?, ?, ?)";
+
     public GeoInfoTable(SQLDB db) {
         super(TABLE_NAME, db);
-        insertStatement = "INSERT INTO " + tableName + " ("
-                + USER_UUID + ", "
-                + IP + ", "
-                + IP_HASH + ", "
-                + GEOLOCATION + ", "
-                + LAST_USED
-                + ") VALUES (?, ?, ?, ?, ?)";
     }
-
-    private String insertStatement;
 
     public static String createTableSQL(DBType dbType) {
         return CreateTableParser.create(TABLE_NAME, dbType)
@@ -136,7 +134,7 @@ public class GeoInfoTable extends Table {
     }
 
     private void insertGeoInfo(UUID uuid, GeoInfo info) {
-        execute(new ExecStatement(insertStatement) {
+        execute(new ExecStatement(INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
@@ -182,35 +180,5 @@ public class GeoInfoTable extends Table {
         }
 
         return geolocations;
-    }
-
-    public void insertAllGeoInfo(Map<UUID, List<GeoInfo>> allIPsAndGeolocations) {
-        if (Verify.isEmpty(allIPsAndGeolocations)) {
-            return;
-        }
-
-        executeBatch(new ExecStatement(insertStatement) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                // Every User
-                for (UUID uuid : allIPsAndGeolocations.keySet()) {
-                    // Every GeoInfo
-                    for (GeoInfo info : allIPsAndGeolocations.get(uuid)) {
-                        String ip = info.getIp();
-                        String ipHash = info.getIpHash();
-                        String geoLocation = info.getGeolocation();
-                        long lastUsed = info.getDate();
-
-                        statement.setString(1, uuid.toString());
-                        statement.setString(2, ip);
-                        statement.setString(3, ipHash);
-                        statement.setString(4, geoLocation);
-                        statement.setLong(5, lastUsed);
-
-                        statement.addBatch();
-                    }
-                }
-            }
-        });
     }
 }

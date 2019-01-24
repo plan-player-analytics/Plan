@@ -65,7 +65,7 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
     }
 
     private void copyIPsAndGeolocs() {
-        db.getGeoInfoTable().insertAllGeoInfo(sourceDB.query(LargeFetchQueries.fetchAllGeoInfoData()));
+        execute(LargeStoreQueries.storeAllGeoInfoData(sourceDB.query(LargeFetchQueries.fetchAllGeoInfoData())));
     }
 
     private void copyNicknames() {

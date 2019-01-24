@@ -16,12 +16,16 @@
  */
 package com.djrapitops.plan.db.sql.queries;
 
+import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.sql.tables.CommandUseTable;
+import com.djrapitops.plan.db.sql.tables.GeoInfoTable;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -36,8 +40,14 @@ public class LargeStoreQueries {
         /* Static method class */
     }
 
-    public static Executable storeAllCommandUsageData(Map<UUID, Map<String, Integer>> allCommandUsages) {
-        if (allCommandUsages.isEmpty()) {
+    /**
+     * Execute a big batch of command use insert statements.
+     *
+     * @param ofServers Multi map: Server UUID - (Command name - Usage count)
+     * @return Executable, use inside a {@link com.djrapitops.plan.db.access.transactions.Transaction}
+     */
+    public static Executable storeAllCommandUsageData(Map<UUID, Map<String, Integer>> ofServers) {
+        if (ofServers.isEmpty()) {
             return Executable.empty();
         }
 
@@ -45,15 +55,51 @@ public class LargeStoreQueries {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 // Every Server
-                for (UUID serverUUID : allCommandUsages.keySet()) {
+                for (UUID serverUUID : ofServers.keySet()) {
                     // Every Command
-                    for (Map.Entry<String, Integer> entry : allCommandUsages.get(serverUUID).entrySet()) {
+                    for (Map.Entry<String, Integer> entry : ofServers.get(serverUUID).entrySet()) {
                         String command = entry.getKey();
                         int timesUsed = entry.getValue();
 
                         statement.setString(1, command);
                         statement.setInt(2, timesUsed);
                         statement.setString(3, serverUUID.toString());
+                        statement.addBatch();
+                    }
+                }
+            }
+        };
+    }
+
+    /**
+     * Execute a big batch of GeoInfo insert statements.
+     *
+     * @param ofUsers Map: Player UUID - List of GeoInfo
+     * @return Executable, use inside a {@link com.djrapitops.plan.db.access.transactions.Transaction}
+     */
+    public static Executable storeAllGeoInfoData(Map<UUID, List<GeoInfo>> ofUsers) {
+        if (Verify.isEmpty(ofUsers)) {
+            return Executable.empty();
+        }
+
+        return new ExecBatchStatement(GeoInfoTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                // Every User
+                for (UUID uuid : ofUsers.keySet()) {
+                    // Every GeoInfo
+                    for (GeoInfo info : ofUsers.get(uuid)) {
+                        String ip = info.getIp();
+                        String ipHash = info.getIpHash();
+                        String geoLocation = info.getGeolocation();
+                        long lastUsed = info.getDate();
+
+                        statement.setString(1, uuid.toString());
+                        statement.setString(2, ip);
+                        statement.setString(3, ipHash);
+                        statement.setString(4, geoLocation);
+                        statement.setLong(5, lastUsed);
+
                         statement.addBatch();
                     }
                 }

@@ -83,7 +83,12 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
 
     @Override
     public void insertAllGeoInfo(Map<UUID, List<GeoInfo>> ofUsers) {
-        geoInfoTable.insertAllGeoInfo(ofUsers);
+        db.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute(LargeStoreQueries.storeAllGeoInfoData(ofUsers));
+            }
+        });
     }
 
     @Override
