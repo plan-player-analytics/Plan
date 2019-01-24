@@ -45,7 +45,7 @@ public class WorldTimesOptimizationPatch extends Patch {
     protected void applyPatch() {
         try {
             tempOldTable();
-            db.getWorldTimesTable().createTable();
+            execute(WorldTimesTable.createTableSQL(dbType));
 
             execute("INSERT INTO " + tableName + " (" +
                     WorldTimesTable.USER_UUID + ", " +

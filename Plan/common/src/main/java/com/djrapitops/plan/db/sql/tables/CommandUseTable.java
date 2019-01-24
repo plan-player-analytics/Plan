@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
@@ -70,11 +69,6 @@ public class CommandUseTable extends Table {
                 .column(SERVER_ID, Sql.INT).notNull()
                 .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.SERVER_ID)
                 .toString();
-    }
-
-    @Override
-    public void createTable() throws DBInitException {
-        createTable(createTableSQL(db.getType()));
     }
 
     /**

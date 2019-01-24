@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.db.DBType;
@@ -89,11 +88,6 @@ public class SessionsTable extends Table {
                 .column(DEATHS, Sql.INT).notNull()
                 .column(AFK_TIME, Sql.LONG).notNull()
                 .toString();
-    }
-
-    @Override
-    public void createTable() throws DBInitException {
-        createTable(createTableSQL(db.getType()));
     }
 
     /**

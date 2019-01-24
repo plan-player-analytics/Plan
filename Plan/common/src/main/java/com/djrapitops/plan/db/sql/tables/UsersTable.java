@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.containers.DataContainer;
@@ -71,11 +70,6 @@ public class UsersTable extends Table {
                 .column(USER_NAME, Sql.varchar(16)).notNull()
                 .column(TIMES_KICKED, Sql.INT).notNull().defaultValue("0")
                 .toString();
-    }
-
-    @Override
-    public void createTable() throws DBInitException {
-        createTable(createTableSQL(db.getType()));
     }
 
     /**

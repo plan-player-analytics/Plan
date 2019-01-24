@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
@@ -71,11 +70,6 @@ public class WorldTable extends Table {
                 .column(NAME, Sql.varchar(100)).notNull()
                 .column(SERVER_UUID, Sql.varchar(36)).notNull()
                 .toString();
-    }
-
-    @Override
-    public void createTable() throws DBInitException {
-        createTable(createTableSQL(db.getType()));
     }
 
     public List<String> getWorlds() {

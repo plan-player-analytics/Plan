@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
@@ -26,7 +25,6 @@ import com.djrapitops.plan.db.patches.*;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
 import com.djrapitops.plugin.utilities.Verify;
@@ -83,20 +81,6 @@ public class GeoInfoTable extends Table {
                 .column(IP_HASH, Sql.varchar(200))
                 .column(LAST_USED, Sql.LONG).notNull().defaultValue("0")
                 .toString();
-    }
-
-    @Override
-    public void createTable() throws DBInitException {
-        createTable(TableSqlParser.createTable(tableName)
-                .primaryKeyIDColumn(supportsMySQLQueries, ID)
-                .column(USER_UUID, Sql.varchar(36)).notNull()
-                .column(IP, Sql.varchar(39)).notNull()
-                .column(GEOLOCATION, Sql.varchar(50)).notNull()
-                .column(IP_HASH, Sql.varchar(200))
-                .column(LAST_USED, Sql.LONG).notNull().defaultValue("0")
-                .primaryKey(supportsMySQLQueries, ID)
-                .toString()
-        );
     }
 
     public List<GeoInfo> getGeoInfo(UUID uuid) {

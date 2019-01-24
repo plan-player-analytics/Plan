@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.PlayerDeath;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
@@ -94,11 +93,6 @@ public class KillsTable extends Table {
                 .column(SESSION_ID, Sql.INT).notNull()
                 .foreignKey(SESSION_ID, SessionsTable.TABLE_NAME, SessionsTable.ID)
                 .toString();
-    }
-
-    @Override
-    public void createTable() throws DBInitException {
-        createTable(createTableSQL(db.getType()));
     }
 
     public void addKillsToSessions(UUID uuid, Map<Integer, Session> sessions) {

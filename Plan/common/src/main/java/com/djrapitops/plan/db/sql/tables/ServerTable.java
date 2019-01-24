@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
@@ -75,11 +74,6 @@ public class ServerTable extends Table {
                 .column(INSTALLED, Sql.BOOL).notNull().defaultValue(true)
                 .column(MAX_PLAYERS, Sql.INT).notNull().defaultValue("-1")
                 .toString();
-    }
-
-    @Override
-    public void createTable() throws DBInitException {
-        createTable(createTableSQL(db.getType()));
     }
 
     private void updateServerInfo(Server info) {

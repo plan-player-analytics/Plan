@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
@@ -82,11 +81,6 @@ public class NicknamesTable extends Table {
                 .column(SERVER_UUID, Sql.varchar(36)).notNull()
                 .column(LAST_USED, Sql.LONG).notNull()
                 .toString();
-    }
-
-    @Override
-    public void createTable() throws DBInitException {
-        createTable(createTableSQL(db.getType()));
     }
 
     /**

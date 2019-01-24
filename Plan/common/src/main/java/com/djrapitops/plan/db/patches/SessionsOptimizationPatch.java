@@ -48,7 +48,7 @@ public class SessionsOptimizationPatch extends Patch {
 
             tempOldTable();
 
-            db.getSessionsTable().createTable();
+            execute(SessionsTable.createTableSQL(dbType));
 
             execute("INSERT INTO " + tableName + " (" +
                     SessionsTable.USER_UUID + ", " +

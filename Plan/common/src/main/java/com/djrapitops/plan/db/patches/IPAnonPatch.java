@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.db.patches;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
@@ -114,25 +112,21 @@ public class IPAnonPatch extends Patch {
     }
 
     private void groupHashedIPs() {
-        try {
-            if (!hasTable(tempTableName)) {
-                tempOldTable();
-            }
-            db.getGeoInfoTable().createTable();
-
-            boolean hasUserIdColumn = hasColumn(tempTableName, "user_id");
-            String identifiers = hasUserIdColumn ? "user_id" : "id, uuid";
-
-            execute("INSERT INTO plan_ips (" +
-                    identifiers + ", ip, ip_hash, geolocation, last_used" +
-                    ") SELECT " +
-                    identifiers + ", ip, ip_hash, geolocation, MAX(last_used) FROM plan_ips_temp GROUP BY ip_hash, " +
-                    (hasUserIdColumn ? "user_id" : "uuid") +
-                    ", ip, geolocation");
-            dropTable(tempTableName);
-        } catch (DBInitException e) {
-            throw new DBOpException(e.getMessage(), e);
+        if (!hasTable(tempTableName)) {
+            tempOldTable();
         }
+        execute(GeoInfoTable.createTableSQL(dbType));
+
+        boolean hasUserIdColumn = hasColumn(tempTableName, "user_id");
+        String identifiers = hasUserIdColumn ? "user_id" : "id, uuid";
+
+        execute("INSERT INTO plan_ips (" +
+                identifiers + ", ip, ip_hash, geolocation, last_used" +
+                ") SELECT " +
+                identifiers + ", ip, ip_hash, geolocation, MAX(last_used) FROM plan_ips_temp GROUP BY ip_hash, " +
+                (hasUserIdColumn ? "user_id" : "uuid") +
+                ", ip, geolocation");
+        dropTable(tempTableName);
     }
 
     private void tempOldTable() {

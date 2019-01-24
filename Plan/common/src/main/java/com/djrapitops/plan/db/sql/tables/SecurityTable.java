@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
@@ -65,11 +64,6 @@ public class SecurityTable extends Table {
                 .column(SALT_PASSWORD_HASH, Sql.varchar(100)).notNull().unique()
                 .column(PERMISSION_LEVEL, Sql.INT).notNull()
                 .toString();
-    }
-
-    @Override
-    public void createTable() throws DBInitException {
-        createTable(createTableSQL(db.getType()));
     }
 
     public void removeUser(String user) {

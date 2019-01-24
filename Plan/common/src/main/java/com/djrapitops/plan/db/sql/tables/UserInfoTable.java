@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
@@ -84,11 +83,6 @@ public class UserInfoTable extends Table {
                 .column(OP, Sql.BOOL).notNull().defaultValue(false)
                 .column(BANNED, Sql.BOOL).notNull().defaultValue(false)
                 .toString();
-    }
-
-    @Override
-    public void createTable() throws DBInitException {
-        createTable(createTableSQL(db.getType()));
     }
 
     public void registerUserInfo(UUID uuid, long registered) {

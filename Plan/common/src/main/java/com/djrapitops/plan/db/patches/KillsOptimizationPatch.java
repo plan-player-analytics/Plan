@@ -46,7 +46,7 @@ public class KillsOptimizationPatch extends Patch {
     protected void applyPatch() {
         try {
             tempOldTable();
-            db.getKillsTable().createTable();
+            execute(KillsTable.createTableSQL(dbType));
 
             execute("INSERT INTO " + tableName + " (" +
                     KillsTable.VICTIM_UUID + ", " +

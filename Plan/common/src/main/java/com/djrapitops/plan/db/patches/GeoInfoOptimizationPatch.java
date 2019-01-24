@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db.patches;
 
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.tables.GeoInfoTable;
 
@@ -41,29 +40,25 @@ public class GeoInfoOptimizationPatch extends Patch {
 
     @Override
     protected void applyPatch() {
-        try {
-            tempOldTable();
-            db.getGeoInfoTable().createTable();
+        tempOldTable();
+        execute(GeoInfoTable.createTableSQL(dbType));
 
-            execute("INSERT INTO " + tableName + " (" +
-                    GeoInfoTable.USER_UUID + ", " +
-                    GeoInfoTable.IP + ", " +
-                    GeoInfoTable.IP_HASH + ", " +
-                    GeoInfoTable.LAST_USED + ", " +
-                    GeoInfoTable.GEOLOCATION +
-                    ") SELECT " +
-                    "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
-                    GeoInfoTable.IP + ", " +
-                    GeoInfoTable.IP_HASH + ", " +
-                    GeoInfoTable.LAST_USED + ", " +
-                    GeoInfoTable.GEOLOCATION +
-                    " FROM " + tempTableName
-            );
+        execute("INSERT INTO " + tableName + " (" +
+                GeoInfoTable.USER_UUID + ", " +
+                GeoInfoTable.IP + ", " +
+                GeoInfoTable.IP_HASH + ", " +
+                GeoInfoTable.LAST_USED + ", " +
+                GeoInfoTable.GEOLOCATION +
+                ") SELECT " +
+                "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
+                GeoInfoTable.IP + ", " +
+                GeoInfoTable.IP_HASH + ", " +
+                GeoInfoTable.LAST_USED + ", " +
+                GeoInfoTable.GEOLOCATION +
+                " FROM " + tempTableName
+        );
 
-            dropTable(tempTableName);
-        } catch (Exception e) {
-            throw new DBOpException(GeoInfoOptimizationPatch.class.getSimpleName() + " failed.", e);
-        }
+        dropTable(tempTableName);
     }
 
     private void tempOldTable() {

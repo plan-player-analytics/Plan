@@ -59,11 +59,11 @@ public class Version10Patch extends Patch {
         copyUsers();
 
         dropTable("plan_ips");
-        db.getGeoInfoTable().createTable();
+        execute(GeoInfoTable.createTableSQL(dbType));
         dropTable("plan_world_times");
         dropTable("plan_worlds");
-        db.getWorldTable().createTable();
-        db.getWorldTimesTable().createTable();
+        execute(WorldTable.createTableSQL(dbType));
+        execute(WorldTimesTable.createTableSQL(dbType));
 
         dropTable("plan_gamemodetimes");
         dropTable("temp_nicks");
@@ -73,7 +73,6 @@ public class Version10Patch extends Patch {
 
     private void copyUsers() throws DBInitException {
         String tempTableName = "temp_users";
-        UsersTable usersTable = db.getUsersTable();
         renameTable("plan_users", tempTableName);
 
         String tempNickTableName = "temp_nicks";
@@ -81,17 +80,15 @@ public class Version10Patch extends Patch {
         renameTable(nicknamesTable.toString(), tempNickTableName);
 
         String tempKillsTableName = "temp_kills";
-        KillsTable killsTable = db.getKillsTable();
-        renameTable(killsTable.toString(), tempKillsTableName);
+        renameTable(KillsTable.TABLE_NAME, tempKillsTableName);
 
-        usersTable.createTable();
-        nicknamesTable.createTable();
+        execute(UsersTable.createTableSQL(dbType));
+        execute(NicknamesTable.createTableSQL(dbType));
         dropTable("plan_sessions");
-        db.getSessionsTable().createTable();
-        killsTable.createTable();
+        execute(SessionsTable.createTableSQL(dbType));
+        execute(KillsTable.createTableSQL(dbType));
 
-        UserInfoTable userInfoTable = db.getUserInfoTable();
-        userInfoTable.createTable();
+        execute(UserInfoTable.createTableSQL(dbType));
 
         String statement = "INSERT INTO plan_users " +
                 "(id, uuid, registered, name)" +
@@ -117,11 +114,10 @@ public class Version10Patch extends Patch {
 
     private void copyCommandUsage() throws DBInitException {
         String tempTableName = "temp_cmdusg";
-        CommandUseTable commandUseTable = db.getCommandUseTable();
 
         renameTable("plan_commandusages", tempTableName);
 
-        commandUseTable.createTable();
+        execute(CommandUseTable.createTableSQL(dbType));
 
         String statement = "INSERT INTO plan_commandusages " +
                 "(command, times_used, server_id)" +
@@ -138,7 +134,7 @@ public class Version10Patch extends Patch {
 
         renameTable(tpsTable.toString(), tempTableName);
 
-        tpsTable.createTable();
+        execute(TPSTable.createTableSQL(dbType));
 
         String statement = "INSERT INTO plan_tps " +
                 "(date, tps, players_online, cpu_usage, ram_usage, entities, chunks_loaded, server_id)" +

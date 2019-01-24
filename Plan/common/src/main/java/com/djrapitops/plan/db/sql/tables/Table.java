@@ -51,8 +51,6 @@ public abstract class Table {
         this.supportsMySQLQueries = db != null && db.getType().supportsMySQLQueries();
     }
 
-    public abstract void createTable() throws DBInitException;
-
     protected void createTable(String sql) throws DBInitException {
         try {
             db.execute(sql);

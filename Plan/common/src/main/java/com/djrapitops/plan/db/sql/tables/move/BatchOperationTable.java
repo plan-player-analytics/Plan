@@ -57,11 +57,6 @@ public class BatchOperationTable extends Table {
         }
     }
 
-    @Override
-    public void createTable() {
-        throw new IllegalStateException("Method not supposed to be used on this table.");
-    }
-
     public void clearTable(Table table) {
         table.removeAllData();
     }

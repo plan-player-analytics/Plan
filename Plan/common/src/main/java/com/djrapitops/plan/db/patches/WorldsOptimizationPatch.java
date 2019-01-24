@@ -46,7 +46,7 @@ public class WorldsOptimizationPatch extends Patch {
             ensureNoForeignKeyConstraints(tableName);
 
             tempOldTable();
-            db.getWorldTable().createTable();
+            execute(WorldTable.createTableSQL(dbType));
 
             execute("INSERT INTO " + tableName + " (" +
                     WorldTable.ID + ", " +

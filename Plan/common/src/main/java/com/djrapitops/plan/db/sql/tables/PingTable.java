@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
@@ -79,11 +78,6 @@ public class PingTable extends Table {
                 .column(MIN_PING, Sql.INT).notNull()
                 .column(AVG_PING, Sql.DOUBLE).notNull()
                 .toString();
-    }
-
-    @Override
-    public void createTable() throws DBInitException {
-        createTable(createTableSQL(db.getType()));
     }
 
     public void clean() {

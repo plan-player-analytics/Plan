@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.time.GMTimes;
@@ -103,11 +102,6 @@ public class WorldTimesTable extends Table {
                 .foreignKey(WORLD_ID, WorldTable.TABLE_NAME, WorldTable.ID)
                 .foreignKey(SESSION_ID, SessionsTable.TABLE_NAME, SessionsTable.ID)
                 .toString();
-    }
-
-    @Override
-    public void createTable() throws DBInitException {
-        createTable(createTableSQL(db.getType()));
     }
 
     public void addWorldTimesToSessions(UUID uuid, Map<Integer, Session> sessions) {
