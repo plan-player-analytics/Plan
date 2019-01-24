@@ -263,7 +263,7 @@ public class LargeFetchQueries {
     /**
      * Query database for all Plan WebUsers.
      *
-     * @return Set of Plan WebUsers.
+     * @return List of Plan WebUsers.
      */
     public static Query<List<WebUser>> fetchAllPlanWebUsers() {
         String sql = "SELECT * FROM " + SecurityTable.TABLE_NAME + " ORDER BY " + SecurityTable.PERMISSION_LEVEL + " ASC";

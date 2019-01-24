@@ -111,6 +111,12 @@ public class LargeStoreQueries {
         };
     }
 
+    /**
+     * Execute a big batch of nickname insert statements.
+     *
+     * @param ofServersAndUsers Multimap: Server UUID - (Player UUID - List of nicknames)
+     * @return Executable, use inside a {@link com.djrapitops.plan.db.access.transactions.Transaction}
+     */
     public static Executable storeAllNicknameData(Map<UUID, Map<UUID, List<Nickname>>> ofServersAndUsers) {
         if (Verify.isEmpty(ofServersAndUsers)) {
             return Executable.empty();
@@ -139,6 +145,12 @@ public class LargeStoreQueries {
         };
     }
 
+    /**
+     * Execute a big batch of web user insert statements.
+     *
+     * @param users Collection of Plan WebUsers.
+     * @return Executable, use inside a {@link com.djrapitops.plan.db.access.transactions.Transaction}
+     */
     public static Executable storeAllPlanWebUsers(Collection<WebUser> users) {
         if (Verify.isEmpty(users)) {
             return Executable.empty();
@@ -161,6 +173,12 @@ public class LargeStoreQueries {
         };
     }
 
+    /**
+     * Execute a big batch of server infromation insert statements.
+     *
+     * @param servers Collection of Plan Servers.
+     * @return Executable, use inside a {@link com.djrapitops.plan.db.access.transactions.Transaction}
+     */
     public static Executable storeAllPlanServerInformation(Collection<Server> servers) {
         if (Verify.isEmpty(servers)) {
             return Executable.empty();
@@ -189,6 +207,12 @@ public class LargeStoreQueries {
         };
     }
 
+    /**
+     * Execute a big batch of TPS insert statements.
+     *
+     * @param ofServers Map: Server UUID - List of TPS data
+     * @return Executable, use inside a {@link com.djrapitops.plan.db.access.transactions.Transaction}
+     */
     public static Executable storeAllTPSData(Map<UUID, List<TPS>> ofServers) {
         if (Verify.isEmpty(ofServers)) {
             return Executable.empty();
