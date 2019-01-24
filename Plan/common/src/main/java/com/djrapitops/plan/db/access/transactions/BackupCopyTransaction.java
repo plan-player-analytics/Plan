@@ -86,7 +86,7 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
     }
 
     private void copyServers() {
-        db.getServerTable().insertAllServers(sourceDB.query(LargeFetchQueries.fetchPlanServerInformation()).values());
+        copy(LargeStoreQueries::storeAllPlanServerInformation, LargeFetchQueries.fetchPlanServerInformationCollection());
     }
 
     private void copyTPS() {

@@ -21,14 +21,13 @@ import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.Executable;
-import com.djrapitops.plan.db.sql.tables.CommandUseTable;
-import com.djrapitops.plan.db.sql.tables.GeoInfoTable;
-import com.djrapitops.plan.db.sql.tables.NicknamesTable;
-import com.djrapitops.plan.db.sql.tables.SecurityTable;
+import com.djrapitops.plan.db.sql.tables.*;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -139,7 +138,7 @@ public class LargeStoreQueries {
         };
     }
 
-    public static Executable storeAllPlanWebUsers(List<WebUser> users) {
+    public static Executable storeAllPlanWebUsers(Collection<WebUser> users) {
         if (Verify.isEmpty(users)) {
             return Executable.empty();
         }
@@ -155,6 +154,34 @@ public class LargeStoreQueries {
                     statement.setString(1, userName);
                     statement.setString(2, pass);
                     statement.setInt(3, permLvl);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable storeAllPlanServerInformation(Collection<Server> servers) {
+        if (Verify.isEmpty(servers)) {
+            return Executable.empty();
+        }
+
+        return new ExecBatchStatement(ServerTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (Server info : servers) {
+                    UUID uuid = info.getUuid();
+                    String name = info.getName();
+                    String webAddress = info.getWebAddress();
+
+                    if (uuid == null) {
+                        continue;
+                    }
+
+                    statement.setString(1, uuid.toString());
+                    statement.setString(2, name);
+                    statement.setString(3, webAddress);
+                    statement.setBoolean(4, true);
+                    statement.setInt(5, info.getMaxPlayers());
                     statement.addBatch();
                 }
             }

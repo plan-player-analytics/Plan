@@ -315,6 +315,10 @@ public class LargeFetchQueries {
         };
     }
 
+    public static Query<Collection<Server>> fetchPlanServerInformationCollection() {
+        return db -> db.query(fetchPlanServerInformation()).values();
+    }
+
     /**
      * Query the database for Session data without kill, death or world data.
      *

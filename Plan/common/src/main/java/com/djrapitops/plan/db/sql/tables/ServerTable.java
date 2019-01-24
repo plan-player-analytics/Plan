@@ -49,6 +49,10 @@ public class ServerTable extends Table {
     public static final String INSTALLED = "is_installed";
     public static final String MAX_PLAYERS = "max_players";
 
+    public static final String INSERT_STATEMENT = Insert.values(TABLE_NAME,
+            SERVER_UUID, NAME,
+            WEB_ADDRESS, INSTALLED, MAX_PLAYERS);
+
     public static final String STATEMENT_SELECT_SERVER_ID =
             "(SELECT " + TABLE_NAME + "." + SERVER_ID + " FROM " + TABLE_NAME +
                     " WHERE " + TABLE_NAME + "." + SERVER_UUID + "=?" +
@@ -58,17 +62,10 @@ public class ServerTable extends Table {
         super(TABLE_NAME, db);
         statementSelectServerID = "(" + Select.from(tableName, tableName + "." + SERVER_ID).where(tableName + "." + SERVER_UUID + "=?").toString() + " LIMIT 1)";
         statementSelectServerNameID = "(" + Select.from(tableName, tableName + "." + NAME).where(tableName + "." + SERVER_ID + "=?").toString() + " LIMIT 1)";
-        insertStatement = Insert.values(tableName,
-                SERVER_UUID,
-                NAME,
-                WEB_ADDRESS,
-                INSTALLED,
-                MAX_PLAYERS);
     }
 
     public final String statementSelectServerID;
     public final String statementSelectServerNameID;
-    private String insertStatement;
 
     public static String createTableSQL(DBType dbType) {
         return CreateTableParser.create(TABLE_NAME, dbType)
@@ -153,7 +150,7 @@ public class ServerTable extends Table {
         String webAddress = info.getWebAddress();
         Verify.nullCheck(uuid, name, webAddress);
 
-        execute(new ExecStatement(insertStatement) {
+        execute(new ExecStatement(INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
@@ -224,34 +221,6 @@ public class ServerTable extends Table {
                     uuids.add(UUID.fromString(set.getString(SERVER_UUID)));
                 }
                 return uuids;
-            }
-        });
-    }
-
-    public void insertAllServers(Collection<Server> allServer) {
-        if (Verify.isEmpty(allServer)) {
-            return;
-        }
-
-        executeBatch(new ExecStatement(insertStatement) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                for (Server info : allServer) {
-                    UUID uuid = info.getUuid();
-                    String name = info.getName();
-                    String webAddress = info.getWebAddress();
-
-                    if (uuid == null) {
-                        continue;
-                    }
-
-                    statement.setString(1, uuid.toString());
-                    statement.setString(2, name);
-                    statement.setString(3, webAddress);
-                    statement.setBoolean(4, true);
-                    statement.setInt(5, info.getMaxPlayers());
-                    statement.addBatch();
-                }
             }
         });
     }
