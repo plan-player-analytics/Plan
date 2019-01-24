@@ -43,7 +43,7 @@ public class RemovePlayerTransaction extends Transaction {
     }
 
     @Override
-    protected void execute() {
+    protected void performOperations() {
         query(OptionalFetchQueries.playerUserName(playerUUID)).ifPresent(this::deleteWebUser);
 
         deleteFromTable(GeoInfoTable.TABLE_NAME);

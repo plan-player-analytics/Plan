@@ -26,7 +26,7 @@ import com.djrapitops.plan.db.sql.tables.*;
 public class RemoveEverythingTransaction extends Transaction {
 
     @Override
-    protected void execute() {
+    protected void performOperations() {
         // Delete statements are run in a specific order as some tables have foreign keys,
         // or had at some point in the past.
         clearTable(SettingsTable.TABLE_NAME);

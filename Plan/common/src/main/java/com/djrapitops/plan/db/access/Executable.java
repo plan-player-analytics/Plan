@@ -27,4 +27,8 @@ public interface Executable {
 
     boolean execute(Connection connection);
 
+    static Executable empty() {
+        return i -> true;
+    }
+
 }

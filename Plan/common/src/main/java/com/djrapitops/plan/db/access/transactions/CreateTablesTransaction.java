@@ -27,7 +27,7 @@ import com.djrapitops.plan.db.sql.tables.*;
 public class CreateTablesTransaction extends OperationCriticalTransaction {
 
     @Override
-    protected void execute() {
+    protected void performOperations() {
         // DBType is required for SQL parsing, as MySQL and SQLite primary key format differs.
         DBType dbType = getDBType();
 

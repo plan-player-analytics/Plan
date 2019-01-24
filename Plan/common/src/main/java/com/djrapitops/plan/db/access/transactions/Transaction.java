@@ -57,7 +57,7 @@ public abstract class Transaction {
 
         try {
             initializeTransaction(db);
-            execute();
+            performOperations();
             success = true;
         } finally {
             finalizeTransaction();
@@ -79,7 +79,7 @@ public abstract class Transaction {
     /**
      * Implement this method for transaction execution.
      */
-    protected abstract void execute();
+    protected abstract void performOperations();
 
     private void initializeTransaction(SQLDB db) {
         try {

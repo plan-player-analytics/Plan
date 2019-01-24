@@ -45,7 +45,7 @@ public abstract class Patch extends OperationCriticalTransaction {
     protected abstract void applyPatch();
 
     @Override
-    protected void execute() {
+    protected void performOperations() {
 //        if (!hasBeenApplied()) { TODO Uncomment after moving patches to the execution service
         if (dbType == DBType.MYSQL) disableForeignKeyChecks();
         applyPatch();

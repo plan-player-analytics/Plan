@@ -18,6 +18,7 @@ package com.djrapitops.plan.db.access.transactions;
 
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
+import com.djrapitops.plan.db.sql.queries.LargeStoreQueries;
 import com.djrapitops.plan.db.sql.tables.UsersTable;
 
 /**
@@ -39,15 +40,15 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
     }
 
     @Override
-    protected void execute() {
-        super.execute();
+    protected void performOperations() {
+        super.performOperations();
 
         copyServers();
         copyUsers();
         copyWorlds();
         copyTPS();
         copyWebUsers();
-        copyCommandUse();
+        copyCommandUsageData();
         copyIPsAndGeolocs();
         copyNicknames();
         copySessions();
@@ -59,8 +60,8 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
         db.getPingTable().insertAllPings(sourceDB.query(LargeFetchQueries.fetchAllPingData()));
     }
 
-    private void copyCommandUse() {
-        db.getCommandUseTable().insertCommandUsage(sourceDB.query(LargeFetchQueries.fetchAllCommandUsageData()));
+    private void copyCommandUsageData() {
+        execute(LargeStoreQueries.storeAllCommandUsageData(sourceDB.query(LargeFetchQueries.fetchAllCommandUsageData())));
     }
 
     private void copyIPsAndGeolocs() {
