@@ -27,7 +27,6 @@ import com.djrapitops.plan.db.patches.NicknamesOptimizationPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -56,21 +55,20 @@ public class NicknamesTable extends Table {
     public static final String NICKNAME = "nickname";
     public static final String LAST_USED = "last_used";
 
-    private String insertStatement;
-    private final String updateStatement;
+    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
+            USER_UUID + ", " +
+            SERVER_UUID + ", " +
+            NICKNAME + ", " +
+            LAST_USED +
+            ") VALUES (?, ?, ?, ?)";
+
+    public static final String UPDATE_STATEMENT = "UPDATE " + TABLE_NAME + " SET " + LAST_USED + "=?" +
+            " WHERE " + NICKNAME + "=?" +
+            " AND " + USER_UUID + "=?" +
+            " AND " + SERVER_UUID + "=?";
 
     public NicknamesTable(SQLDB db) {
         super(TABLE_NAME, db);
-        insertStatement = "INSERT INTO " + tableName + " (" +
-                USER_UUID + ", " +
-                SERVER_UUID + ", " +
-                NICKNAME + ", " +
-                LAST_USED +
-                ") VALUES (?, ?, ?, ?)";
-        updateStatement = "UPDATE " + tableName + " SET " + LAST_USED + "=?" +
-                " WHERE " + NICKNAME + "=?" +
-                " AND " + USER_UUID + "=?" +
-                " AND " + SERVER_UUID + "=?";
     }
 
     public static String createTableSQL(DBType dbType) {
@@ -170,7 +168,7 @@ public class NicknamesTable extends Table {
     }
 
     private void updateNickname(UUID uuid, Nickname name) {
-        execute(new ExecStatement(updateStatement) {
+        execute(new ExecStatement(UPDATE_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, name.getDate());
@@ -182,7 +180,7 @@ public class NicknamesTable extends Table {
     }
 
     private void insertNickname(UUID uuid, Nickname name) {
-        execute(new ExecStatement(insertStatement) {
+        execute(new ExecStatement(INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
@@ -217,34 +215,6 @@ public class NicknamesTable extends Table {
                     nicknames.add(new Nickname(nickname, set.getLong(LAST_USED), serverUUID));
                 }
                 return nicknames;
-            }
-        });
-    }
-
-    public void insertNicknames(Map<UUID, Map<UUID, List<Nickname>>> allNicknames) {
-        if (Verify.isEmpty(allNicknames)) {
-            return;
-        }
-
-        executeBatch(new ExecStatement(insertStatement) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                // Every Server
-                for (UUID serverUUID : allNicknames.keySet()) {
-                    // Every User
-                    for (Map.Entry<UUID, List<Nickname>> entry : allNicknames.get(serverUUID).entrySet()) {
-                        UUID uuid = entry.getKey();
-                        // Every Nickname
-                        List<Nickname> nicknames = entry.getValue();
-                        for (Nickname nickname : nicknames) {
-                            statement.setString(1, uuid.toString());
-                            statement.setString(2, serverUUID.toString());
-                            statement.setString(3, nickname.getName());
-                            statement.setLong(4, nickname.getDate());
-                            statement.addBatch();
-                        }
-                    }
-                }
             }
         });
     }

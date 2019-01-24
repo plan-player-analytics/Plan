@@ -78,7 +78,12 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
 
     @Override
     public void insertNicknames(Map<UUID, Map<UUID, List<Nickname>>> ofServers) {
-        nicknamesTable.insertNicknames(ofServers);
+        db.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute(LargeStoreQueries.storeAllNicknameData(ofServers));
+            }
+        });
     }
 
     @Override

@@ -17,10 +17,12 @@
 package com.djrapitops.plan.db.sql.queries;
 
 import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.sql.tables.CommandUseTable;
 import com.djrapitops.plan.db.sql.tables.GeoInfoTable;
+import com.djrapitops.plan.db.sql.tables.NicknamesTable;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -101,6 +103,34 @@ public class LargeStoreQueries {
                         statement.setLong(5, lastUsed);
 
                         statement.addBatch();
+                    }
+                }
+            }
+        };
+    }
+
+    public static Executable storeAllNicknameData(Map<UUID, Map<UUID, List<Nickname>>> ofServersAndUsers) {
+        if (Verify.isEmpty(ofServersAndUsers)) {
+            return Executable.empty();
+        }
+
+        return new ExecBatchStatement(NicknamesTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                // Every Server
+                for (UUID serverUUID : ofServersAndUsers.keySet()) {
+                    // Every User
+                    for (Map.Entry<UUID, List<Nickname>> entry : ofServersAndUsers.get(serverUUID).entrySet()) {
+                        UUID uuid = entry.getKey();
+                        // Every Nickname
+                        List<Nickname> nicknames = entry.getValue();
+                        for (Nickname nickname : nicknames) {
+                            statement.setString(1, uuid.toString());
+                            statement.setString(2, serverUUID.toString());
+                            statement.setString(3, nickname.getName());
+                            statement.setLong(4, nickname.getDate());
+                            statement.addBatch();
+                        }
                     }
                 }
             }

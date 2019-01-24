@@ -17,9 +17,13 @@
 package com.djrapitops.plan.db.access.transactions;
 
 import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.Executable;
+import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.sql.queries.LargeStoreQueries;
 import com.djrapitops.plan.db.sql.tables.UsersTable;
+
+import java.util.function.Function;
 
 /**
  * Transaction that performs a clear + copy operation to duplicate a source database in the current one.
@@ -56,20 +60,25 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
         copyPings();
     }
 
+    private <T> void copy(Function<T, Executable> executableCreator, Query<T> dataQuery) {
+        // Creates a new Executable from the queried data of the source database
+        execute(executableCreator.apply(sourceDB.query(dataQuery)));
+    }
+
     private void copyPings() {
         db.getPingTable().insertAllPings(sourceDB.query(LargeFetchQueries.fetchAllPingData()));
     }
 
     private void copyCommandUsageData() {
-        execute(LargeStoreQueries.storeAllCommandUsageData(sourceDB.query(LargeFetchQueries.fetchAllCommandUsageData())));
+        copy(LargeStoreQueries::storeAllCommandUsageData, LargeFetchQueries.fetchAllCommandUsageData());
     }
 
     private void copyIPsAndGeolocs() {
-        execute(LargeStoreQueries.storeAllGeoInfoData(sourceDB.query(LargeFetchQueries.fetchAllGeoInfoData())));
+        copy(LargeStoreQueries::storeAllGeoInfoData, LargeFetchQueries.fetchAllGeoInfoData());
     }
 
     private void copyNicknames() {
-        db.getNicknamesTable().insertNicknames(sourceDB.query(LargeFetchQueries.fetchAllNicknameData()));
+        copy(LargeStoreQueries::storeAllNicknameData, LargeFetchQueries.fetchAllNicknameData());
     }
 
     private void copyWebUsers() {
