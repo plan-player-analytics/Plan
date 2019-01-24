@@ -52,7 +52,7 @@ public class NicknamesTable extends UserUUIDTable {
     public static final String TABLE_NAME = "plan_nicknames";
 
     public static final String ID = "id";
-    public static final String USER_UUID = UserUUIDTable.Col.UUID.get();
+    public static final String USER_UUID = "uuid";
     public static final String SERVER_UUID = "server_uuid";
     public static final String NICKNAME = "nickname";
     public static final String LAST_USED = "last_used";

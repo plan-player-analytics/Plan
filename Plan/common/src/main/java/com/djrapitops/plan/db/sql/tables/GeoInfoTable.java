@@ -55,7 +55,7 @@ public class GeoInfoTable extends UserUUIDTable {
     public static final String TABLE_NAME = "plan_ips";
 
     public static final String ID = "id";
-    public static final String USER_UUID = UserUUIDTable.Col.UUID.get();
+    public static final String USER_UUID = "uuid";
     public static final String IP = "ip";
     public static final String IP_HASH = "ip_hash";
     public static final String GEOLOCATION = "geolocation";

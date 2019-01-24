@@ -61,7 +61,7 @@ public class WorldTimesTable extends UserUUIDTable {
     public static final String TABLE_NAME = "plan_world_times";
 
     public static final String ID = "id";
-    public static final String USER_UUID = UserUUIDTable.Col.UUID.get();
+    public static final String USER_UUID = "uuid";
     public static final String SERVER_UUID = "server_uuid";
     public static final String SESSION_ID = "session_id";
     public static final String WORLD_ID = "world_id";
@@ -405,7 +405,7 @@ public class WorldTimesTable extends UserUUIDTable {
     @Deprecated
     public enum Col implements Column {
         @Deprecated ID("id"),
-        @Deprecated UUID(UserUUIDTable.Col.UUID.get()),
+        @Deprecated UUID("uuid"),
         @Deprecated SERVER_UUID("server_uuid"),
         @Deprecated SESSION_ID("session_id"),
         @Deprecated WORLD_ID("world_id"),

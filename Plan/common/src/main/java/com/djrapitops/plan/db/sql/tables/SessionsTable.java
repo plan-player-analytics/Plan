@@ -55,7 +55,7 @@ public class SessionsTable extends UserUUIDTable {
     public static final String TABLE_NAME = "plan_sessions";
 
     public static final String ID = "id";
-    public static final String USER_UUID = UserUUIDTable.Col.UUID.get();
+    public static final String USER_UUID = "uuid";
     public static final String SERVER_UUID = "server_uuid";
     public static final String SESSION_START = "session_start";
     public static final String SESSION_END = "session_end";

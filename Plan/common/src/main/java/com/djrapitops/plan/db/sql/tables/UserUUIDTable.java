@@ -17,7 +17,6 @@
 package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.sql.parsing.Column;
 
 /**
  * Represents a Table that uses UUIDs to get their data.
@@ -30,23 +29,4 @@ public abstract class UserUUIDTable extends Table {
         super(name, db);
     }
 
-    public enum Col implements Column {
-        UUID("uuid");
-
-        private final String column;
-
-        Col(String column) {
-            this.column = column;
-        }
-
-        @Override
-        public String get() {
-            return toString();
-        }
-
-        @Override
-        public String toString() {
-            return column;
-        }
-    }
 }

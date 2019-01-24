@@ -53,7 +53,7 @@ public class UserInfoTable extends UserUUIDTable {
     public static final String TABLE_NAME = "plan_user_info";
 
     public static final String ID = "id";
-    public static final String USER_UUID = UserUUIDTable.Col.UUID.get();
+    public static final String USER_UUID = "uuid";
     public static final String SERVER_UUID = "server_uuid";
     public static final String REGISTERED = "registered";
     public static final String OP = "opped";
