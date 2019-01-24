@@ -48,7 +48,7 @@ public class RemovePlayerTransaction extends Transaction {
 
         deleteFromTable(GeoInfoTable.TABLE_NAME);
         deleteFromTable(NicknamesTable.TABLE_NAME);
-        deleteFromTable(KillsTable.TABLE_NAME);
+        deleteFromKillsTable();
         deleteFromTable(WorldTimesTable.TABLE_NAME);
         deleteFromTable(SessionsTable.TABLE_NAME);
         deleteFromTable(PingTable.TABLE_NAME);
@@ -66,10 +66,23 @@ public class RemovePlayerTransaction extends Transaction {
     }
 
     private void deleteFromTable(String tableName) {
-        execute(new ExecStatement("DELETE FROM " + tableName + " WHERE (uuid=?)") {
+        execute(new ExecStatement("DELETE FROM " + tableName + " WHERE uuid=?") {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
+            }
+        });
+    }
+
+    private void deleteFromKillsTable() {
+        String sql = "DELETE FROM " + KillsTable.TABLE_NAME +
+                " WHERE " + KillsTable.KILLER_UUID + "=?" +
+                " OR " + KillsTable.VICTIM_UUID + "=?";
+        execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+                statement.setString(2, playerUUID.toString());
             }
         });
     }
