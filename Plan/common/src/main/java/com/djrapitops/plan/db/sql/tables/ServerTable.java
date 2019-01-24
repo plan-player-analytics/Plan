@@ -49,6 +49,11 @@ public class ServerTable extends Table {
     public static final String INSTALLED = "is_installed";
     public static final String MAX_PLAYERS = "max_players";
 
+    public static final String STATEMENT_SELECT_SERVER_ID =
+            "(SELECT " + TABLE_NAME + "." + SERVER_ID + " FROM " + TABLE_NAME +
+                    " WHERE " + TABLE_NAME + "." + SERVER_UUID + "=?" +
+                    " LIMIT 1)";
+
     public ServerTable(SQLDB db) {
         super(TABLE_NAME, db);
         statementSelectServerID = "(" + Select.from(tableName, tableName + "." + SERVER_ID).where(tableName + "." + SERVER_UUID + "=?").toString() + " LIMIT 1)";

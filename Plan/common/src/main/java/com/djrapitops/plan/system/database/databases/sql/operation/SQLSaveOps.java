@@ -20,6 +20,8 @@ import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.SQLDB;
+import com.djrapitops.plan.db.access.transactions.Transaction;
+import com.djrapitops.plan.db.sql.queries.LargeStoreQueries;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.settings.config.Config;
@@ -46,7 +48,12 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
 
     @Override
     public void insertCommandUsage(Map<UUID, Map<String, Integer>> ofServers) {
-        commandUseTable.insertCommandUsage(ofServers);
+        db.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute(LargeStoreQueries.storeAllCommandUsageData(ofServers));
+            }
+        });
     }
 
     @Override

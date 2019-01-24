@@ -48,18 +48,19 @@ public class CommandUseTable extends Table {
     public static final String COMMAND = "command";
     public static final String TIMES_USED = "times_used";
 
+    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
+            + COMMAND + ", "
+            + TIMES_USED + ", "
+            + SERVER_ID
+            + ") VALUES (?, ?, " + ServerTable.STATEMENT_SELECT_SERVER_ID + ")";
+
     public CommandUseTable(SQLDB db) {
         super(TABLE_NAME, db);
         serverTable = db.getServerTable();
-        insertStatement = "INSERT INTO " + tableName + " ("
-                + COMMAND + ", "
-                + TIMES_USED + ", "
-                + SERVER_ID
-                + ") VALUES (?, ?, " + serverTable.statementSelectServerID + ")";
+
     }
 
     private final ServerTable serverTable;
-    private String insertStatement;
 
     public static String createTableSQL(DBType dbType) {
         return CreateTableParser.create(TABLE_NAME, dbType)
@@ -153,7 +154,7 @@ public class CommandUseTable extends Table {
     }
 
     private void insertCommand(String command) {
-        execute(new ExecStatement(insertStatement) {
+        execute(new ExecStatement(INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, command);
@@ -178,31 +179,6 @@ public class CommandUseTable extends Table {
                     return Optional.of(set.getInt(COMMAND_ID));
                 }
                 return Optional.empty();
-            }
-        });
-    }
-
-    public void insertCommandUsage(Map<UUID, Map<String, Integer>> allCommandUsages) {
-        if (allCommandUsages.isEmpty()) {
-            return;
-        }
-
-        executeBatch(new ExecStatement(insertStatement) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                // Every Server
-                for (UUID serverUUID : allCommandUsages.keySet()) {
-                    // Every Command
-                    for (Map.Entry<String, Integer> entry : allCommandUsages.get(serverUUID).entrySet()) {
-                        String command = entry.getKey();
-                        int timesUsed = entry.getValue();
-
-                        statement.setString(1, command);
-                        statement.setInt(2, timesUsed);
-                        statement.setString(3, serverUUID.toString());
-                        statement.addBatch();
-                    }
-                }
             }
         });
     }
