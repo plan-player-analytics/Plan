@@ -33,8 +33,6 @@ import com.djrapitops.plan.db.sql.tables.UsersTable;
  * <p>
  * The copy methods assume that the table has been cleared, or that no duplicate data will be entered for a user.
  * <p>
- * clearTable methods can be used to clear the table beforehand.
- * <p>
  * Server and User tables should be copied first.
  *
  * @author Rsl1122
@@ -55,10 +53,6 @@ public class BatchOperationTable extends Table {
         if (!db.isOpen()) {
             throw new IllegalStateException("Given Database had not been initialized.");
         }
-    }
-
-    public void clearTable(Table table) {
-        table.removeAllData();
     }
 
     @Override
