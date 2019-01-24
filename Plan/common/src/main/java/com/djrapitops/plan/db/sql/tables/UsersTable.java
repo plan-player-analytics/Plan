@@ -38,8 +38,6 @@ import java.util.*;
  * Table that is in charge of storing common player data for all servers.
  * <p>
  * Table Name: plan_users
- * <p>
- * For contained columns {@link Col}
  *
  * @author Rsl1122
  */
@@ -55,11 +53,11 @@ public class UsersTable extends UserUUIDTable {
 
     public UsersTable(SQLDB db) {
         super(TABLE_NAME, db);
-        statementSelectID = "(" + Select.from(tableName, tableName + "." + Col.ID).where(Col.UUID + "=?").toString() + " LIMIT 1)";
+        statementSelectID = "(" + Select.from(tableName, tableName + "." + ID).where(USER_UUID + "=?").toString() + " LIMIT 1)";
         insertStatement = Insert.values(tableName,
-                Col.UUID,
-                Col.REGISTERED,
-                Col.USER_NAME);
+                USER_UUID,
+                REGISTERED,
+                USER_NAME);
     }
 
     public final String statementSelectID;
@@ -77,29 +75,21 @@ public class UsersTable extends UserUUIDTable {
 
     @Override
     public void createTable() throws DBInitException {
-        createTable(TableSqlParser.createTable(tableName)
-                .primaryKeyIDColumn(supportsMySQLQueries, Col.ID)
-                .column(Col.UUID, Sql.varchar(36)).notNull().unique()
-                .column(Col.REGISTERED, Sql.LONG).notNull()
-                .column(Col.USER_NAME, Sql.varchar(16)).notNull()
-                .column(Col.TIMES_KICKED, Sql.INT).notNull().defaultValue("0")
-                .primaryKey(supportsMySQLQueries, Col.ID)
-                .toString()
-        );
+        createTable(createTableSQL(db.getType()));
     }
 
     /**
      * @return a {@link Set} of the saved UUIDs.
      */
     public Set<UUID> getSavedUUIDs() {
-        String sql = Select.from(tableName, Col.UUID).toString();
+        String sql = Select.from(tableName, USER_UUID).toString();
 
         return query(new QueryAllStatement<Set<UUID>>(sql, 50000) {
             @Override
             public Set<UUID> processResults(ResultSet set) throws SQLException {
                 Set<UUID> uuids = new HashSet<>();
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
+                    UUID uuid = UUID.fromString(set.getString(USER_UUID));
                     uuids.add(uuid);
                 }
                 return uuids;
@@ -114,8 +104,8 @@ public class UsersTable extends UserUUIDTable {
      * @return UUID of the player
      */
     public UUID getUuidOf(String playerName) {
-        String sql = Select.from(tableName, Col.UUID)
-                .where("UPPER(" + Col.USER_NAME + ")=UPPER(?)")
+        String sql = Select.from(tableName, USER_UUID)
+                .where("UPPER(" + USER_NAME + ")=UPPER(?)")
                 .toString();
 
         return query(new QueryStatement<UUID>(sql) {
@@ -127,7 +117,7 @@ public class UsersTable extends UserUUIDTable {
             @Override
             public UUID processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    String uuidS = set.getString(Col.UUID.get());
+                    String uuidS = set.getString(USER_UUID);
                     return UUID.fromString(uuidS);
                 }
                 return null;
@@ -136,14 +126,14 @@ public class UsersTable extends UserUUIDTable {
     }
 
     public List<Long> getRegisterDates() {
-        String sql = Select.from(tableName, Col.REGISTERED).toString();
+        String sql = Select.from(tableName, REGISTERED).toString();
 
         return query(new QueryAllStatement<List<Long>>(sql, 50000) {
             @Override
             public List<Long> processResults(ResultSet set) throws SQLException {
                 List<Long> registerDates = new ArrayList<>();
                 while (set.next()) {
-                    registerDates.add(set.getLong(Col.REGISTERED.get()));
+                    registerDates.add(set.getLong(REGISTERED));
                 }
                 return registerDates;
             }
@@ -151,8 +141,8 @@ public class UsersTable extends UserUUIDTable {
     }
 
     public boolean isRegistered(UUID uuid) {
-        String sql = Select.from(tableName, "COUNT(" + Col.ID + ") as c")
-                .where(Col.UUID + "=?")
+        String sql = Select.from(tableName, "COUNT(" + ID + ") as c")
+                .where(USER_UUID + "=?")
                 .toString();
 
         return query(new QueryStatement<Boolean>(sql) {
@@ -190,8 +180,8 @@ public class UsersTable extends UserUUIDTable {
     }
 
     public void updateName(UUID uuid, String name) {
-        String sql = Update.values(tableName, Col.USER_NAME.get())
-                .where(Col.UUID + "=?")
+        String sql = Update.values(tableName, USER_NAME)
+                .where(USER_UUID + "=?")
                 .toString();
 
         execute(new ExecStatement(sql) {
@@ -204,8 +194,8 @@ public class UsersTable extends UserUUIDTable {
     }
 
     public int getTimesKicked(UUID uuid) {
-        String sql = Select.from(tableName, Col.TIMES_KICKED)
-                .where(Col.UUID + "=?")
+        String sql = Select.from(tableName, TIMES_KICKED)
+                .where(USER_UUID + "=?")
                 .toString();
 
         return query(new QueryStatement<Integer>(sql) {
@@ -217,7 +207,7 @@ public class UsersTable extends UserUUIDTable {
             @Override
             public Integer processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return set.getInt(Col.TIMES_KICKED.get());
+                    return set.getInt(TIMES_KICKED);
                 }
                 return 0;
             }
@@ -226,8 +216,8 @@ public class UsersTable extends UserUUIDTable {
 
     public void kicked(UUID uuid) {
         String sql = "UPDATE " + tableName + " SET "
-                + Col.TIMES_KICKED + "=" + Col.TIMES_KICKED + "+ 1" +
-                " WHERE " + Col.UUID + "=?";
+                + TIMES_KICKED + "=" + TIMES_KICKED + "+ 1" +
+                " WHERE " + USER_UUID + "=?";
 
         execute(new ExecStatement(sql) {
             @Override
@@ -238,7 +228,7 @@ public class UsersTable extends UserUUIDTable {
     }
 
     public String getPlayerName(UUID uuid) {
-        String sql = Select.from(tableName, Col.USER_NAME).where(Col.UUID + "=?").toString();
+        String sql = Select.from(tableName, USER_NAME).where(USER_UUID + "=?").toString();
 
         return query(new QueryStatement<String>(sql) {
             @Override
@@ -249,7 +239,7 @@ public class UsersTable extends UserUUIDTable {
             @Override
             public String processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return set.getString(Col.USER_NAME.get());
+                    return set.getString(USER_NAME);
                 }
                 return null;
             }
@@ -265,9 +255,9 @@ public class UsersTable extends UserUUIDTable {
     public List<String> getMatchingNames(String name) {
         String searchString = "%" + name + "%";
         NicknamesTable nicknamesTable = db.getNicknamesTable();
-        String sql = "SELECT DISTINCT " + Col.USER_NAME + " FROM " + tableName +
-                " WHERE LOWER(" + Col.USER_NAME + ") LIKE LOWER(?)" +
-                " UNION SELECT DISTINCT " + Col.USER_NAME + " FROM " + tableName +
+        String sql = "SELECT DISTINCT " + USER_NAME + " FROM " + tableName +
+                " WHERE LOWER(" + USER_NAME + ") LIKE LOWER(?)" +
+                " UNION SELECT DISTINCT " + USER_NAME + " FROM " + tableName +
                 " INNER JOIN " + nicknamesTable + " on " + tableName + "." + USER_UUID + "=" + nicknamesTable + "." + NicknamesTable.USER_UUID +
                 " WHERE LOWER(" + NicknamesTable.NICKNAME + ") LIKE LOWER(?)";
 
@@ -328,7 +318,7 @@ public class UsersTable extends UserUUIDTable {
             return;
         }
 
-        String sql = "UPDATE " + tableName + " SET " + Col.TIMES_KICKED + "=? WHERE " + Col.UUID + "=?";
+        String sql = "UPDATE " + tableName + " SET " + TIMES_KICKED + "=? WHERE " + USER_UUID + "=?";
 
         executeBatch(new ExecStatement(sql) {
             @Override
@@ -345,15 +335,15 @@ public class UsersTable extends UserUUIDTable {
     }
 
     public Map<UUID, Integer> getAllTimesKicked() {
-        String sql = Select.from(tableName, Col.UUID, Col.TIMES_KICKED).toString();
+        String sql = Select.from(tableName, USER_UUID, TIMES_KICKED).toString();
 
         return query(new QueryAllStatement<Map<UUID, Integer>>(sql, 20000) {
             @Override
             public Map<UUID, Integer> processResults(ResultSet set) throws SQLException {
                 Map<UUID, Integer> timesKicked = new HashMap<>();
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
-                    int kickCount = set.getInt(Col.TIMES_KICKED.get());
+                    UUID uuid = UUID.fromString(set.getString(USER_UUID));
+                    int kickCount = set.getInt(TIMES_KICKED);
 
                     timesKicked.put(uuid, kickCount);
                 }
@@ -363,15 +353,15 @@ public class UsersTable extends UserUUIDTable {
     }
 
     public Map<UUID, String> getPlayerNames() {
-        String sql = Select.from(tableName, Col.UUID, Col.USER_NAME).toString();
+        String sql = Select.from(tableName, USER_UUID, USER_NAME).toString();
 
         return query(new QueryAllStatement<Map<UUID, String>>(sql, 20000) {
             @Override
             public Map<UUID, String> processResults(ResultSet set) throws SQLException {
                 Map<UUID, String> names = new HashMap<>();
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
-                    String name = set.getString(Col.USER_NAME.get());
+                    UUID uuid = UUID.fromString(set.getString(USER_UUID));
+                    String name = set.getString(USER_NAME);
 
                     names.put(uuid, name);
                 }
@@ -387,15 +377,15 @@ public class UsersTable extends UserUUIDTable {
      * and the value is an {@code Map.Entry<UUID, String>>} of the player's {@code UUID} and name
      */
     public Map<Integer, Map.Entry<UUID, String>> getUUIDsAndNamesByID() {
-        String sql = Select.from(tableName, Col.ID, Col.UUID, Col.USER_NAME).toString();
+        String sql = Select.from(tableName, ID, USER_UUID, USER_NAME).toString();
         return query(new QueryAllStatement<Map<Integer, Map.Entry<UUID, String>>>(sql, 20000) {
             @Override
             public Map<Integer, Map.Entry<UUID, String>> processResults(ResultSet set) throws SQLException {
                 Map<Integer, Map.Entry<UUID, String>> uuidsAndNamesByID = new TreeMap<>();
                 while (set.next()) {
-                    int id = set.getInt(Col.ID.get());
-                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
-                    String name = set.getString(Col.USER_NAME.get());
+                    int id = set.getInt(ID);
+                    UUID uuid = UUID.fromString(set.getString(USER_UUID));
+                    String name = set.getString(USER_NAME);
                     uuidsAndNamesByID.put(id, new AbstractMap.SimpleEntry<>(uuid, name));
                 }
                 return uuidsAndNamesByID;
@@ -416,7 +406,7 @@ public class UsersTable extends UserUUIDTable {
     }
 
     private DataContainer getUserInformationDataContainer(UUID uuid) {
-        String sql = "SELECT * FROM " + tableName + " WHERE " + Col.UUID + "=?";
+        String sql = "SELECT * FROM " + tableName + " WHERE " + USER_UUID + "=?";
 
         return query(new QueryStatement<DataContainer>(sql) {
             @Override
@@ -429,9 +419,9 @@ public class UsersTable extends UserUUIDTable {
                 DataContainer container = new DataContainer();
 
                 if (set.next()) {
-                    long registered = set.getLong(Col.REGISTERED.get());
-                    String name = set.getString(Col.USER_NAME.get());
-                    int timesKicked = set.getInt(Col.TIMES_KICKED.get());
+                    long registered = set.getLong(REGISTERED);
+                    String name = set.getString(USER_NAME);
+                    int timesKicked = set.getInt(TIMES_KICKED);
 
                     container.putRawData(PlayerKeys.REGISTERED, registered);
                     container.putRawData(PlayerKeys.NAME, name);
@@ -441,35 +431,5 @@ public class UsersTable extends UserUUIDTable {
                 return container;
             }
         });
-    }
-
-    @Deprecated
-    public enum Col implements Column {
-        @Deprecated
-        ID("id"),
-        @Deprecated
-        UUID("uuid"),
-        @Deprecated
-        REGISTERED("registered"),
-        @Deprecated
-        USER_NAME("name"),
-        @Deprecated
-        TIMES_KICKED("times_kicked");
-
-        private final String column;
-
-        Col(String column) {
-            this.column = column;
-        }
-
-        @Override
-        public String get() {
-            return toString();
-        }
-
-        @Override
-        public String toString() {
-            return column;
-        }
     }
 }
