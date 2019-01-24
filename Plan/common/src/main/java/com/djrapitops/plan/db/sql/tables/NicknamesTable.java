@@ -26,10 +26,8 @@ import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.NicknameLastSeenPatch;
 import com.djrapitops.plan.db.patches.NicknamesOptimizationPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
-import com.djrapitops.plan.db.sql.parsing.Column;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -65,15 +63,15 @@ public class NicknamesTable extends UserUUIDTable {
     public NicknamesTable(SQLDB db) {
         super(TABLE_NAME, db);
         insertStatement = "INSERT INTO " + tableName + " (" +
-                Col.UUID + ", " +
-                Col.SERVER_UUID + ", " +
-                Col.NICKNAME + ", " +
-                Col.LAST_USED +
+                USER_UUID + ", " +
+                SERVER_UUID + ", " +
+                NICKNAME + ", " +
+                LAST_USED +
                 ") VALUES (?, ?, ?, ?)";
-        updateStatement = "UPDATE " + tableName + " SET " + Col.LAST_USED + "=?" +
-                " WHERE " + Col.NICKNAME + "=?" +
-                " AND " + Col.UUID + "=?" +
-                " AND " + Col.SERVER_UUID + "=?";
+        updateStatement = "UPDATE " + tableName + " SET " + LAST_USED + "=?" +
+                " WHERE " + NICKNAME + "=?" +
+                " AND " + USER_UUID + "=?" +
+                " AND " + SERVER_UUID + "=?";
     }
 
     public static String createTableSQL(DBType dbType) {
@@ -88,15 +86,7 @@ public class NicknamesTable extends UserUUIDTable {
 
     @Override
     public void createTable() throws DBInitException {
-        createTable(TableSqlParser.createTable(tableName)
-                .primaryKeyIDColumn(supportsMySQLQueries, Col.ID)
-                .column(Col.UUID, Sql.varchar(36)).notNull()
-                .column(Col.NICKNAME, Sql.varchar(75)).notNull()
-                .column(Col.SERVER_UUID, Sql.varchar(36)).notNull()
-                .column(Col.LAST_USED, Sql.LONG).notNull()
-                .primaryKey(supportsMySQLQueries, Col.ID)
-                .toString()
-        );
+        createTable(createTableSQL(db.getType()));
     }
 
     /**
@@ -107,9 +97,9 @@ public class NicknamesTable extends UserUUIDTable {
      * @return The nicknames of the User
      */
     public List<String> getNicknames(UUID uuid, UUID serverUUID) {
-        String sql = "SELECT " + Col.NICKNAME + " FROM " + tableName +
-                " WHERE (" + Col.UUID + "=?)" +
-                " AND " + Col.SERVER_UUID + "=?";
+        String sql = "SELECT " + NICKNAME + " FROM " + tableName +
+                " WHERE (" + USER_UUID + "=?)" +
+                " AND " + SERVER_UUID + "=?";
 
         return query(new QueryStatement<List<String>>(sql, 1000) {
             @Override
@@ -122,7 +112,7 @@ public class NicknamesTable extends UserUUIDTable {
             public List<String> processResults(ResultSet set) throws SQLException {
                 List<String> nicknames = new ArrayList<>();
                 while (set.next()) {
-                    String nickname = set.getString(Col.NICKNAME.get());
+                    String nickname = set.getString(NICKNAME);
                     if (nickname.isEmpty()) {
                         continue;
                     }
@@ -147,10 +137,10 @@ public class NicknamesTable extends UserUUIDTable {
 
     public Map<UUID, Map<UUID, List<Nickname>>> getAllNicknames() {
         String sql = "SELECT " +
-                Col.NICKNAME + ", " +
-                Col.LAST_USED + ", " +
-                Col.UUID + ", " +
-                Col.SERVER_UUID +
+                NICKNAME + ", " +
+                LAST_USED + ", " +
+                USER_UUID + ", " +
+                SERVER_UUID +
                 " FROM " + tableName;
 
         return query(new QueryAllStatement<Map<UUID, Map<UUID, List<Nickname>>>>(sql, 5000) {
@@ -158,14 +148,14 @@ public class NicknamesTable extends UserUUIDTable {
             public Map<UUID, Map<UUID, List<Nickname>>> processResults(ResultSet set) throws SQLException {
                 Map<UUID, Map<UUID, List<Nickname>>> map = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(Col.SERVER_UUID.get()));
-                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
+                    UUID serverUUID = UUID.fromString(set.getString(SERVER_UUID));
+                    UUID uuid = UUID.fromString(set.getString(USER_UUID));
 
                     Map<UUID, List<Nickname>> serverMap = map.getOrDefault(serverUUID, new HashMap<>());
                     List<Nickname> nicknames = serverMap.getOrDefault(uuid, new ArrayList<>());
 
                     nicknames.add(new Nickname(
-                            set.getString(Col.NICKNAME.get()), set.getLong(Col.LAST_USED.get()), serverUUID
+                            set.getString(NICKNAME), set.getLong(LAST_USED), serverUUID
                     ));
 
                     serverMap.put(uuid, nicknames);
@@ -211,11 +201,11 @@ public class NicknamesTable extends UserUUIDTable {
 
     public List<Nickname> getNicknameInformation(UUID uuid) {
         String sql = "SELECT " +
-                Col.NICKNAME + ", " +
-                Col.LAST_USED + ", " +
-                Col.SERVER_UUID +
+                NICKNAME + ", " +
+                LAST_USED + ", " +
+                SERVER_UUID +
                 " FROM " + tableName +
-                " WHERE (" + Col.UUID + "=?)";
+                " WHERE (" + USER_UUID + "=?)";
 
         return query(new QueryStatement<List<Nickname>>(sql, 5000) {
 
@@ -228,9 +218,9 @@ public class NicknamesTable extends UserUUIDTable {
             public List<Nickname> processResults(ResultSet set) throws SQLException {
                 List<Nickname> nicknames = new ArrayList<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(Col.SERVER_UUID.get()));
-                    String nickname = set.getString(Col.NICKNAME.get());
-                    nicknames.add(new Nickname(nickname, set.getLong(Col.LAST_USED.get()), serverUUID));
+                    UUID serverUUID = UUID.fromString(set.getString(SERVER_UUID));
+                    String nickname = set.getString(NICKNAME);
+                    nicknames.add(new Nickname(nickname, set.getLong(LAST_USED), serverUUID));
                 }
                 return nicknames;
             }
@@ -263,35 +253,5 @@ public class NicknamesTable extends UserUUIDTable {
                 }
             }
         });
-    }
-
-    @Deprecated
-    public enum Col implements Column {
-        @Deprecated
-        ID("id"),
-        @Deprecated
-        UUID(UserUUIDTable.Col.UUID.get()),
-        @Deprecated
-        SERVER_UUID("server_uuid"),
-        @Deprecated
-        NICKNAME("nickname"),
-        @Deprecated
-        LAST_USED("last_used");
-
-        private final String column;
-
-        Col(String column) {
-            this.column = column;
-        }
-
-        @Override
-        public String get() {
-            return toString();
-        }
-
-        @Override
-        public String toString() {
-            return column;
-        }
     }
 }

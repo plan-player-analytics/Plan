@@ -37,16 +37,16 @@ public class NicknameLastSeenPatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(NicknamesTable.TABLE_NAME, NicknamesTable.Col.LAST_USED.get());
+        return hasColumn(NicknamesTable.TABLE_NAME, NicknamesTable.LAST_USED);
     }
 
     @Override
     protected void applyPatch() {
         addColumn(NicknamesTable.TABLE_NAME,
-                NicknamesTable.Col.LAST_USED + " bigint NOT NULL DEFAULT '0'"
+                NicknamesTable.LAST_USED + " bigint NOT NULL DEFAULT '0'"
         );
 
-        if (hasColumn(NicknamesTable.TABLE_NAME, NicknamesTable.Col.UUID.get())) {
+        if (hasColumn(NicknamesTable.TABLE_NAME, NicknamesTable.USER_UUID)) {
             // NicknamesOptimizationPatch makes this patch incompatible with newer patch versions.
             return;
         }
@@ -69,7 +69,7 @@ public class NicknameLastSeenPatch extends Patch {
 
     private Map<Integer, UUID> getServerUUIDsByID() {
         String sql = Select.from(ServerTable.TABLE_NAME,
-                ServerTable.Col.SERVER_ID, ServerTable.Col.SERVER_UUID)
+                ServerTable.SERVER_ID, ServerTable.SERVER_UUID)
                 .toString();
 
         return query(new QueryAllStatement<Map<Integer, UUID>>(sql) {
@@ -77,8 +77,8 @@ public class NicknameLastSeenPatch extends Patch {
             public Map<Integer, UUID> processResults(ResultSet set) throws SQLException {
                 Map<Integer, UUID> uuids = new HashMap<>();
                 while (set.next()) {
-                    int id = set.getInt(ServerTable.Col.SERVER_ID.get());
-                    uuids.put(id, UUID.fromString(set.getString(ServerTable.Col.SERVER_UUID.get())));
+                    int id = set.getInt(ServerTable.SERVER_ID);
+                    uuids.put(id, UUID.fromString(set.getString(ServerTable.SERVER_UUID)));
                 }
                 return uuids;
             }
@@ -112,8 +112,8 @@ public class NicknameLastSeenPatch extends Patch {
     }
 
     private void updateLastUsed(Map<UUID, Integer> serverIDsByUUID, Map<Integer, Set<Nickname>> nicknames) {
-        String updateSQL = "UPDATE " + NicknamesTable.TABLE_NAME + " SET " + NicknamesTable.Col.LAST_USED + "=?" +
-                " WHERE " + NicknamesTable.Col.NICKNAME + "=?" +
+        String updateSQL = "UPDATE " + NicknamesTable.TABLE_NAME + " SET " + NicknamesTable.LAST_USED + "=?" +
+                " WHERE " + NicknamesTable.NICKNAME + "=?" +
                 " AND user_id=?" +
                 " AND server_id=?";
 

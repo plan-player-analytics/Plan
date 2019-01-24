@@ -268,8 +268,8 @@ public class UsersTable extends UserUUIDTable {
         String sql = "SELECT DISTINCT " + Col.USER_NAME + " FROM " + tableName +
                 " WHERE LOWER(" + Col.USER_NAME + ") LIKE LOWER(?)" +
                 " UNION SELECT DISTINCT " + Col.USER_NAME + " FROM " + tableName +
-                " INNER JOIN " + nicknamesTable + " on " + tableName + "." + Col.UUID + "=" + nicknamesTable + "." + NicknamesTable.Col.UUID +
-                " WHERE LOWER(" + NicknamesTable.Col.NICKNAME + ") LIKE LOWER(?)";
+                " INNER JOIN " + nicknamesTable + " on " + tableName + "." + USER_UUID + "=" + nicknamesTable + "." + NicknamesTable.USER_UUID +
+                " WHERE LOWER(" + NicknamesTable.NICKNAME + ") LIKE LOWER(?)";
 
         return query(new QueryStatement<List<String>>(sql, 5000) {
             @Override

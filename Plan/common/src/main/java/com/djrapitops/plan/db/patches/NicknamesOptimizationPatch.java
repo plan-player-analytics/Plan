@@ -19,7 +19,6 @@ package com.djrapitops.plan.db.patches;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.tables.NicknamesTable;
-import com.djrapitops.plan.db.sql.tables.NicknamesTable.Col;
 
 public class NicknamesOptimizationPatch extends Patch {
 
@@ -34,8 +33,8 @@ public class NicknamesOptimizationPatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(tableName, Col.UUID.get())
-                && hasColumn(tableName, Col.SERVER_UUID.get())
+        return hasColumn(tableName, NicknamesTable.USER_UUID)
+                && hasColumn(tableName, NicknamesTable.SERVER_UUID)
                 && !hasColumn(tableName, "user_id")
                 && !hasColumn(tableName, "server_id")
                 && !hasTable(tempTableName); // If this table exists the patch has failed to finish.
@@ -48,15 +47,15 @@ public class NicknamesOptimizationPatch extends Patch {
             db.getNicknamesTable().createTable();
 
             execute("INSERT INTO " + tableName + " (" +
-                    Col.UUID + ", " +
-                    Col.SERVER_UUID + ", " +
-                    Col.NICKNAME + ", " +
-                    Col.LAST_USED +
+                    NicknamesTable.USER_UUID + ", " +
+                    NicknamesTable.SERVER_UUID + ", " +
+                    NicknamesTable.NICKNAME + ", " +
+                    NicknamesTable.LAST_USED +
                     ") SELECT " +
                     "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
                     "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
-                    Col.NICKNAME + ", " +
-                    Col.LAST_USED +
+                    NicknamesTable.NICKNAME + ", " +
+                    NicknamesTable.LAST_USED +
                     " FROM " + tempTableName
             );
 
