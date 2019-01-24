@@ -27,13 +27,13 @@ public class SessionAFKTimePatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(SessionsTable.TABLE_NAME, SessionsTable.Col.AFK_TIME.get());
+        return hasColumn(SessionsTable.TABLE_NAME, SessionsTable.AFK_TIME);
     }
 
     @Override
     protected void applyPatch() {
         addColumn(SessionsTable.TABLE_NAME,
-                SessionsTable.Col.AFK_TIME + " bigint NOT NULL DEFAULT 0"
+                SessionsTable.AFK_TIME + " bigint NOT NULL DEFAULT 0"
         );
     }
 }

@@ -19,7 +19,6 @@ package com.djrapitops.plan.db.patches;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.tables.SessionsTable;
-import com.djrapitops.plan.db.sql.tables.SessionsTable.Col;
 
 public class SessionsOptimizationPatch extends Patch {
 
@@ -34,8 +33,8 @@ public class SessionsOptimizationPatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(tableName, Col.UUID.get())
-                && hasColumn(tableName, Col.SERVER_UUID.get())
+        return hasColumn(tableName, SessionsTable.USER_UUID)
+                && hasColumn(tableName, SessionsTable.SERVER_UUID)
                 && !hasColumn(tableName, "user_id")
                 && !hasColumn(tableName, "server_id")
                 && !hasTable(tempTableName); // If this table exists the patch has failed to finish.
@@ -52,23 +51,23 @@ public class SessionsOptimizationPatch extends Patch {
             db.getSessionsTable().createTable();
 
             execute("INSERT INTO " + tableName + " (" +
-                    Col.UUID + ", " +
-                    Col.SERVER_UUID + ", " +
-                    Col.ID + ", " +
-                    Col.SESSION_START + ", " +
-                    Col.SESSION_END + ", " +
-                    Col.MOB_KILLS + ", " +
-                    Col.DEATHS + ", " +
-                    Col.AFK_TIME +
+                    SessionsTable.USER_UUID + ", " +
+                    SessionsTable.SERVER_UUID + ", " +
+                    SessionsTable.ID + ", " +
+                    SessionsTable.SESSION_START + ", " +
+                    SessionsTable.SESSION_END + ", " +
+                    SessionsTable.MOB_KILLS + ", " +
+                    SessionsTable.DEATHS + ", " +
+                    SessionsTable.AFK_TIME +
                     ") SELECT " +
                     "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
                     "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
-                    Col.ID + ", " +
-                    Col.SESSION_START + ", " +
-                    Col.SESSION_END + ", " +
-                    Col.MOB_KILLS + ", " +
-                    Col.DEATHS + ", " +
-                    Col.AFK_TIME +
+                    SessionsTable.ID + ", " +
+                    SessionsTable.SESSION_START + ", " +
+                    SessionsTable.SESSION_END + ", " +
+                    SessionsTable.MOB_KILLS + ", " +
+                    SessionsTable.DEATHS + ", " +
+                    SessionsTable.AFK_TIME +
                     " FROM " + tempTableName
             );
 

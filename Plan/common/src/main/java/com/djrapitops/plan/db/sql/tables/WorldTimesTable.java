@@ -33,7 +33,6 @@ import com.djrapitops.plan.db.patches.WorldsServerIDPatch;
 import com.djrapitops.plan.db.sql.parsing.Column;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -111,21 +110,7 @@ public class WorldTimesTable extends UserUUIDTable {
 
     @Override
     public void createTable() throws DBInitException {
-        createTable(TableSqlParser.createTable(tableName)
-                .primaryKeyIDColumn(supportsMySQLQueries, Col.ID)
-                .column(Col.UUID, Sql.varchar(36)).notNull()
-                .column(Col.WORLD_ID, Sql.INT).notNull()
-                .column(Col.SERVER_UUID, Sql.varchar(36)).notNull()
-                .column(Col.SESSION_ID, Sql.INT).notNull()
-                .column(Col.SURVIVAL, Sql.LONG).notNull().defaultValue("0")
-                .column(Col.CREATIVE, Sql.LONG).notNull().defaultValue("0")
-                .column(Col.ADVENTURE, Sql.LONG).notNull().defaultValue("0")
-                .column(Col.SPECTATOR, Sql.LONG).notNull().defaultValue("0")
-                .primaryKey(supportsMySQLQueries, Col.ID)
-                .foreignKey(Col.WORLD_ID, worldTable.getTableName(), WorldTable.Col.ID)
-                .foreignKey(Col.SESSION_ID, sessionsTable.getTableName(), SessionsTable.Col.ID)
-                .toString()
-        );
+        createTable(createTableSQL(db.getType()));
     }
 
     public void addWorldTimesToSessions(UUID uuid, Map<Integer, Session> sessions) {

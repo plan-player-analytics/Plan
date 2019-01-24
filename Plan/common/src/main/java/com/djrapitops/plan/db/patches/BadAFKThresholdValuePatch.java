@@ -17,10 +17,10 @@
 package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.QueryAllStatement;
+import com.djrapitops.plan.db.access.CountQueryStatement;
 import com.djrapitops.plan.db.sql.tables.SessionsTable;
 
-import java.sql.ResultSet;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
@@ -48,13 +48,13 @@ public class BadAFKThresholdValuePatch extends Patch {
         // where |afk - session_length| < 5
         String sql = "SELECT COUNT(1) as found FROM " + SessionsTable.TABLE_NAME +
                 " WHERE ABS(" +
-                SessionsTable.Col.AFK_TIME +
-                " - (" + SessionsTable.Col.SESSION_END + "-" + SessionsTable.Col.SESSION_START +
-                ")) < 5 AND " + SessionsTable.Col.AFK_TIME + "!=0";
-        return query(new QueryAllStatement<Boolean>(sql) {
+                SessionsTable.AFK_TIME +
+                " - (" + SessionsTable.SESSION_END + "-" + SessionsTable.SESSION_START +
+                ")) < 5 AND " + SessionsTable.AFK_TIME + "!=0";
+        return query(new CountQueryStatement(sql, "found") {
             @Override
-            public Boolean processResults(ResultSet set) throws SQLException {
-                return set.next() && set.getInt("found") > 0;
+            public void prepare(PreparedStatement statement) throws SQLException {
+                /* Nothing to prepare */
             }
         });
     }
@@ -62,10 +62,10 @@ public class BadAFKThresholdValuePatch extends Patch {
     @Override
     protected void applyPatch() {
         // where |afk - session_length| < 5
-        String sql = "UPDATE " + SessionsTable.TABLE_NAME + " SET " + SessionsTable.Col.AFK_TIME + "=0 WHERE ABS(" +
-                SessionsTable.Col.AFK_TIME +
-                " - (" + SessionsTable.Col.SESSION_END + "-" + SessionsTable.Col.SESSION_START +
-                ")) < 5 AND " + SessionsTable.Col.AFK_TIME + "!=0";
+        String sql = "UPDATE " + SessionsTable.TABLE_NAME + " SET " + SessionsTable.AFK_TIME + "=0 WHERE ABS(" +
+                SessionsTable.AFK_TIME +
+                " - (" + SessionsTable.SESSION_END + "-" + SessionsTable.SESSION_START +
+                ")) < 5 AND " + SessionsTable.AFK_TIME + "!=0";
         execute(sql);
     }
 }

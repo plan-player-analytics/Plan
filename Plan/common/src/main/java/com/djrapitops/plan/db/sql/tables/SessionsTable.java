@@ -27,7 +27,6 @@ import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.SessionAFKTimePatch;
 import com.djrapitops.plan.db.patches.SessionsOptimizationPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
-import com.djrapitops.plan.db.sql.parsing.Column;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
@@ -69,13 +68,13 @@ public class SessionsTable extends UserUUIDTable {
     public SessionsTable(SQLDB db) {
         super(TABLE_NAME, db);
         insertStatement = "INSERT INTO " + tableName + " ("
-                + Col.UUID + ", "
-                + Col.SESSION_START + ", "
-                + Col.SESSION_END + ", "
-                + Col.DEATHS + ", "
-                + Col.MOB_KILLS + ", "
-                + Col.AFK_TIME + ", "
-                + Col.SERVER_UUID
+                + USER_UUID + ", "
+                + SESSION_START + ", "
+                + SESSION_END + ", "
+                + DEATHS + ", "
+                + MOB_KILLS + ", "
+                + AFK_TIME + ", "
+                + SERVER_UUID
                 + ") VALUES (?, ?, ?, ?, ?, ?, ?)";
     }
 
@@ -105,10 +104,10 @@ public class SessionsTable extends UserUUIDTable {
      * @return ID of the inserted session or -1 if session has not been inserted.
      */
     private int getSessionID(UUID uuid, Session session) {
-        String sql = "SELECT " + Col.ID + " FROM " + tableName +
-                " WHERE " + Col.UUID + "=?" +
-                " AND " + Col.SESSION_START + "=?" +
-                " AND " + Col.SESSION_END + "=?";
+        String sql = "SELECT " + ID + " FROM " + tableName +
+                " WHERE " + USER_UUID + "=?" +
+                " AND " + SESSION_START + "=?" +
+                " AND " + SESSION_END + "=?";
 
         return query(new QueryStatement<Integer>(sql) {
             @Override
@@ -121,7 +120,7 @@ public class SessionsTable extends UserUUIDTable {
             @Override
             public Integer processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return set.getInt(Col.ID.get());
+                    return set.getInt(ID);
                 }
                 return -1;
             }
@@ -181,7 +180,7 @@ public class SessionsTable extends UserUUIDTable {
      */
     private Map<UUID, List<Session>> getSessionInformation(UUID uuid) {
         String sql = Select.from(tableName, "*")
-                .where(Col.UUID + "=?")
+                .where(USER_UUID + "=?")
                 .toString();
 
         return query(new QueryStatement<Map<UUID, List<Session>>>(sql, 10000) {
@@ -194,15 +193,15 @@ public class SessionsTable extends UserUUIDTable {
             public Map<UUID, List<Session>> processResults(ResultSet set) throws SQLException {
                 Map<UUID, List<Session>> sessionsByServer = new HashMap<>();
                 while (set.next()) {
-                    int id = set.getInt(Col.ID.get());
-                    long start = set.getLong(Col.SESSION_START.get());
-                    long end = set.getLong(Col.SESSION_END.get());
-                    UUID serverUUID = UUID.fromString(set.getString(Col.SERVER_UUID.get()));
+                    int id = set.getInt(ID);
+                    long start = set.getLong(SESSION_START);
+                    long end = set.getLong(SESSION_END);
+                    UUID serverUUID = UUID.fromString(set.getString(SERVER_UUID));
 
-                    long timeAFK = set.getLong(Col.AFK_TIME.get());
+                    long timeAFK = set.getLong(AFK_TIME);
 
-                    int deaths = set.getInt(Col.DEATHS.get());
-                    int mobKills = set.getInt(Col.MOB_KILLS.get());
+                    int deaths = set.getInt(DEATHS);
+                    int mobKills = set.getInt(MOB_KILLS);
                     List<Session> sessions = sessionsByServer.getOrDefault(serverUUID, new ArrayList<>());
                     sessions.add(new Session(id, uuid, serverUUID, start, end, mobKills, deaths, timeAFK));
                     sessionsByServer.put(serverUUID, sessions);
@@ -222,11 +221,11 @@ public class SessionsTable extends UserUUIDTable {
      */
     public long getPlaytime(UUID uuid, UUID serverUUID, long afterDate) {
         String sql = "SELECT" +
-                " (SUM(" + Col.SESSION_END + ") - SUM(" + Col.SESSION_START + ")) as playtime" +
+                " (SUM(" + SESSION_END + ") - SUM(" + SESSION_START + ")) as playtime" +
                 " FROM " + tableName +
-                " WHERE " + Col.SESSION_START + ">?" +
-                " AND " + Col.UUID + "=?" +
-                " AND " + Col.SERVER_UUID + "=?";
+                " WHERE " + SESSION_START + ">?" +
+                " AND " + USER_UUID + "=?" +
+                " AND " + SERVER_UUID + "=?";
 
         return query(new QueryStatement<Long>(sql) {
             @Override
@@ -299,10 +298,10 @@ public class SessionsTable extends UserUUIDTable {
      */
     public long getPlaytimeOfServer(UUID serverUUID, long afterDate) {
         String sql = "SELECT" +
-                " (SUM(" + Col.SESSION_END + ") - SUM(" + Col.SESSION_START + ")) as playtime" +
+                " (SUM(" + SESSION_END + ") - SUM(" + SESSION_START + ")) as playtime" +
                 " FROM " + tableName +
-                " WHERE " + Col.SESSION_START + ">?" +
-                " AND " + Col.SERVER_UUID + "=?";
+                " WHERE " + SESSION_START + ">?" +
+                " AND " + SERVER_UUID + "=?";
 
         return query(new QueryStatement<Long>(sql) {
             @Override
@@ -343,9 +342,9 @@ public class SessionsTable extends UserUUIDTable {
         String sql = "SELECT" +
                 " COUNT(*) as logintimes" +
                 " FROM " + tableName +
-                " WHERE (" + Col.SESSION_START + " >= ?)" +
-                " AND " + Col.UUID + "=?" +
-                " AND " + Col.SERVER_UUID + "=?";
+                " WHERE (" + SESSION_START + " >= ?)" +
+                " AND " + USER_UUID + "=?" +
+                " AND " + SERVER_UUID + "=?";
 
         return query(new QueryStatement<Integer>(sql) {
             @Override
@@ -388,15 +387,15 @@ public class SessionsTable extends UserUUIDTable {
 
     public Map<UUID, List<Session>> getSessionInfoOfServer(UUID serverUUID) {
         String sql = "SELECT " +
-                tableName + "." + Col.ID + ", " +
-                Col.UUID + ", " +
-                Col.SESSION_START + ", " +
-                Col.SESSION_END + ", " +
-                Col.DEATHS + ", " +
-                Col.MOB_KILLS + ", " +
-                Col.AFK_TIME +
+                tableName + "." + ID + ", " +
+                USER_UUID + ", " +
+                SESSION_START + ", " +
+                SESSION_END + ", " +
+                DEATHS + ", " +
+                MOB_KILLS + ", " +
+                AFK_TIME +
                 " FROM " + tableName +
-                " WHERE " + Col.SERVER_UUID + "=?";
+                " WHERE " + SERVER_UUID + "=?";
 
         return query(new QueryStatement<Map<UUID, List<Session>>>(sql, 5000) {
             @Override
@@ -408,15 +407,15 @@ public class SessionsTable extends UserUUIDTable {
             public Map<UUID, List<Session>> processResults(ResultSet set) throws SQLException {
                 Map<UUID, List<Session>> sessionsByUser = new HashMap<>();
                 while (set.next()) {
-                    int id = set.getInt(Col.ID.get());
-                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
-                    long start = set.getLong(Col.SESSION_START.get());
-                    long end = set.getLong(Col.SESSION_END.get());
+                    int id = set.getInt(ID);
+                    UUID uuid = UUID.fromString(set.getString(USER_UUID));
+                    long start = set.getLong(SESSION_START);
+                    long end = set.getLong(SESSION_END);
 
-                    int deaths = set.getInt(Col.DEATHS.get());
-                    int mobKills = set.getInt(Col.MOB_KILLS.get());
+                    int deaths = set.getInt(DEATHS);
+                    int mobKills = set.getInt(MOB_KILLS);
 
-                    long timeAFK = set.getLong(Col.AFK_TIME.get());
+                    long timeAFK = set.getLong(AFK_TIME);
 
                     List<Session> sessions = sessionsByUser.getOrDefault(uuid, new ArrayList<>());
                     sessions.add(new Session(id, uuid, serverUUID, start, end, mobKills, deaths, timeAFK));
@@ -433,10 +432,10 @@ public class SessionsTable extends UserUUIDTable {
 
     public Map<UUID, Long> getLastSeenForAllPlayers() {
         String sql = "SELECT" +
-                " MAX(" + Col.SESSION_END + ") as last_seen, " +
-                Col.UUID +
+                " MAX(" + SESSION_END + ") as last_seen, " +
+                USER_UUID +
                 " FROM " + tableName +
-                " GROUP BY " + Col.UUID;
+                " GROUP BY " + USER_UUID;
 
         return query(new QueryAllStatement<Map<UUID, Long>>(sql, 20000) {
             @Override
@@ -550,8 +549,8 @@ public class SessionsTable extends UserUUIDTable {
 
     public Map<Integer, Integer> getIDServerIDRelation() {
         String sql = "SELECT " +
-                Col.ID + ", " +
-                "(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=" + Col.SERVER_UUID + ") as server_id" +
+                ID + ", " +
+                "(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=" + SERVER_UUID + ") as server_id" +
                 " FROM " + tableName;
 
         return query(new QueryAllStatement<Map<Integer, Integer>>(sql, 10000) {
@@ -559,46 +558,10 @@ public class SessionsTable extends UserUUIDTable {
             public Map<Integer, Integer> processResults(ResultSet set) throws SQLException {
                 Map<Integer, Integer> idServerIdMap = new HashMap<>();
                 while (set.next()) {
-                    idServerIdMap.put(set.getInt(Col.ID.get()), set.getInt("server_id"));
+                    idServerIdMap.put(set.getInt(ID), set.getInt("server_id"));
                 }
                 return idServerIdMap;
             }
         });
-    }
-
-    @Deprecated
-    public enum Col implements Column {
-        @Deprecated
-        UUID(UserUUIDTable.Col.UUID.get()),
-        @Deprecated
-        ID("id"),
-        @Deprecated
-        SERVER_UUID("server_uuid"),
-        @Deprecated
-        SESSION_START("session_start"),
-        @Deprecated
-        SESSION_END("session_end"),
-        @Deprecated
-        MOB_KILLS("mob_kills"),
-        @Deprecated
-        DEATHS("deaths"),
-        @Deprecated
-        AFK_TIME("afk_time");
-
-        private final String column;
-
-        Col(String column) {
-            this.column = column;
-        }
-
-        @Override
-        public String get() {
-            return toString();
-        }
-
-        @Override
-        public String toString() {
-            return column;
-        }
     }
 }
