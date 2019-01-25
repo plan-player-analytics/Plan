@@ -254,36 +254,6 @@ public abstract class SQLDB extends AbstractDatabase {
         executeTransaction(new CreateTablesTransaction());
     }
 
-    /**
-     * Get all tables in a create order.
-     *
-     * @return Table array.
-     */
-    @Deprecated
-    public Table[] getAllTables() {
-        return new Table[]{
-                serverTable, usersTable, userInfoTable, geoInfoTable,
-                nicknamesTable, sessionsTable, killsTable, pingTable,
-                commandUseTable, tpsTable, worldTable,
-                worldTimesTable, securityTable, settingsTable
-        };
-    }
-
-    /**
-     * Get all tables for removal of data.
-     *
-     * @return Tables in the order the data should be removed in.
-     */
-    @Deprecated
-    public Table[] getAllTablesInRemoveOrder() {
-        return new Table[]{
-                settingsTable, geoInfoTable, nicknamesTable, killsTable,
-                worldTimesTable, sessionsTable, worldTable, pingTable,
-                userInfoTable, usersTable, commandUseTable,
-                tpsTable, securityTable, serverTable
-        };
-    }
-
     public abstract void setupDataSource() throws DBInitException;
 
     @Override
