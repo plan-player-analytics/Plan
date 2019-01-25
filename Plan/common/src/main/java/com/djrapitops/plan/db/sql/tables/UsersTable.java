@@ -277,27 +277,6 @@ public class UsersTable extends Table {
         });
     }
 
-    public void updateKicked(Map<UUID, Integer> timesKicked) {
-        if (Verify.isEmpty(timesKicked)) {
-            return;
-        }
-
-        String sql = "UPDATE " + tableName + " SET " + TIMES_KICKED + "=? WHERE " + USER_UUID + "=?";
-
-        executeBatch(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                for (Map.Entry<UUID, Integer> entry : timesKicked.entrySet()) {
-                    UUID uuid = entry.getKey();
-                    int kickCount = entry.getValue();
-                    statement.setInt(1, kickCount);
-                    statement.setString(2, uuid.toString());
-                    statement.addBatch();
-                }
-            }
-        });
-    }
-
     public Map<UUID, Integer> getAllTimesKicked() {
         String sql = Select.from(tableName, USER_UUID, TIMES_KICKED).toString();
 

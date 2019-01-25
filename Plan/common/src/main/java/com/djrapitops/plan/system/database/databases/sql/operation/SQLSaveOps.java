@@ -83,7 +83,6 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
 
     @Override
     public void kickAmount(Map<UUID, Integer> ofUsers) {
-        usersTable.updateKicked(ofUsers);
     }
 
     @Override
