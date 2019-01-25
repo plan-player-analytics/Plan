@@ -22,7 +22,6 @@ import com.djrapitops.plan.data.store.keys.NetworkKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.sql.queries.ContainerFetchQueries;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.sql.queries.OptionalFetchQueries;
 import com.djrapitops.plan.system.info.server.Server;
@@ -56,7 +55,7 @@ public class NetworkContainerQuery implements Query<NetworkContainer> {
 
             UUID serverUUID = proxyInformation.get().getUuid();
             ServerContainer container = db.query(ContainerFetchQueries.fetchServerContainer(serverUUID));
-            container.putCachingSupplier(ServerKeys.PLAYERS, db.fetch()::getAllPlayerContainers);
+            container.putCachingSupplier(ServerKeys.PLAYERS, () -> db.query(ContainerFetchQueries.fetchAllPlayerContainers()));
             container.putCachingSupplier(ServerKeys.TPS, db.getTpsTable()::getNetworkOnlineData);
             container.putSupplier(ServerKeys.WORLD_TIMES, null); // Additional Session information not supported
             container.putSupplier(ServerKeys.PLAYER_KILLS, null);

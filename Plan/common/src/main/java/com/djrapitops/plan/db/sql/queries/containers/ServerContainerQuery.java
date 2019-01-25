@@ -62,7 +62,7 @@ public class ServerContainerQuery implements Query<ServerContainer> {
 
         container.putRawData(ServerKeys.SERVER_UUID, serverUUID);
         container.putRawData(ServerKeys.NAME, serverInfo.get().getName());
-        container.putCachingSupplier(ServerKeys.PLAYERS, () -> db.fetch().getPlayerContainers(serverUUID));
+        container.putCachingSupplier(ServerKeys.PLAYERS, () -> db.query(new ServerPlayerContainersQuery(serverUUID)));
         container.putSupplier(ServerKeys.PLAYER_COUNT, () -> container.getUnsafe(ServerKeys.PLAYERS).size());
 
         container.putCachingSupplier(ServerKeys.TPS, () -> db.getTpsTable().getTPSData(serverUUID));

@@ -14,16 +14,14 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.db.sql.queries;
+package com.djrapitops.plan.db.sql.queries.containers;
 
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.sql.queries.containers.NetworkContainerQuery;
-import com.djrapitops.plan.db.sql.queries.containers.PlayerContainerQuery;
-import com.djrapitops.plan.db.sql.queries.containers.ServerContainerQuery;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -69,6 +67,21 @@ public class ContainerFetchQueries {
      */
     public static Query<PlayerContainer> fetchPlayerContainer(UUID playerUUID) {
         return new PlayerContainerQuery(playerUUID);
+    }
+
+    /**
+     * Used to get PlayerContainers of all players on the network, some limitations apply to DataContainer keys.
+     * <p>
+     * Limitations:
+     * - PlayerContainers do not support: PlayerKeys WORLD_TIMES, PLAYER_KILLS, PLAYER_KILL_COUNT
+     * - PlayerContainers PlayerKeys.PER_SERVER does not support: PerServerKeys WORLD_TIMES, PLAYER_KILLS, PLAYER_KILL_COUNT
+     * <p>
+     * Blocking methods are not called until DataContainer getter methods are called.
+     *
+     * @return a list of PlayerContainers in Plan database.
+     */
+    public static Query<List<PlayerContainer>> fetchAllPlayerContainers() {
+        return new AllPlayerContainersQuery();
     }
 
 }
