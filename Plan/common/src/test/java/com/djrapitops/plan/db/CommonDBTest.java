@@ -32,8 +32,10 @@ import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.db.access.transactions.RemoveEverythingTransaction;
 import com.djrapitops.plan.db.access.transactions.RemovePlayerTransaction;
+import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.patches.Patch;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
+import com.djrapitops.plan.db.sql.queries.LargeStoreQueries;
 import com.djrapitops.plan.db.sql.tables.*;
 import com.djrapitops.plan.db.tasks.CreateIndexTask;
 import com.djrapitops.plan.system.PlanSystem;
@@ -753,19 +755,18 @@ public abstract class CommonDBTest {
         saveUserOne();
         WorldTimes worldTimes = createWorldTimes();
 
-        SessionsTable sessionsTable = db.getSessionsTable();
         WorldTimesTable worldTimesTable = db.getWorldTimesTable();
 
         Session session = createSession();
         session.setWorldTimes(worldTimes);
-        Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
-        Map<UUID, List<Session>> sessionMap = new HashMap<>();
         List<Session> sessions = new ArrayList<>();
         sessions.add(session);
-        sessionMap.put(playerUUID, sessions);
-        map.put(serverUUID, sessionMap);
-
-        sessionsTable.insertSessions(map, true);
+        db.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute(LargeStoreQueries.storeAllSessionsWithKillAndWorldData(sessions));
+            }
+        });
 
         Map<Integer, WorldTimes> worldTimesBySessionID = worldTimesTable.getAllWorldTimesBySessionID();
         System.out.println(worldTimesBySessionID);
@@ -780,19 +781,18 @@ public abstract class CommonDBTest {
         WorldTimes worldTimes = createWorldTimes();
         Session session = createSession();
         session.setWorldTimes(worldTimes);
-
-        Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
-        Map<UUID, List<Session>> sessionMap = new HashMap<>();
         List<Session> sessions = new ArrayList<>();
         sessions.add(session);
-        sessionMap.put(playerUUID, sessions);
-        map.put(serverUUID, sessionMap);
+        db.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute(LargeStoreQueries.storeAllSessionsWithKillAndWorldData(sessions));
+            }
+        });
 
-        sessionsTable.insertSessions(map, true);
+        List<Session> allSessions = db.query(LargeFetchQueries.fetchAllSessionsFlatWithKillAndWorldData());
 
-        Map<UUID, Map<UUID, List<Session>>> allSessions = db.query(LargeFetchQueries.fetchAllSessionsWithKillAndWorldData());
-
-        assertEquals(worldTimes, allSessions.get(serverUUID).get(playerUUID).get(0).getUnsafe(SessionKeys.WORLD_TIMES));
+        assertEquals(worldTimes, allSessions.get(0).getUnsafe(SessionKeys.WORLD_TIMES));
     }
 
     @Test

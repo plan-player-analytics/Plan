@@ -78,7 +78,18 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
 
     @Override
     public void insertSessions(Map<UUID, Map<UUID, List<Session>>> ofServers, boolean containsExtraData) {
-        sessionsTable.insertSessions(ofServers, containsExtraData);
+        List<Session> sessions = ofServers.values().stream()
+                .map(Map::values)
+                .flatMap(Collection::stream)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+        db.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute(containsExtraData ? LargeStoreQueries.storeAllSessionsWithKillAndWorldData(sessions)
+                        : LargeStoreQueries.storeAllSessionsWithoutKillOrWorldData(sessions));
+            }
+        });
     }
 
     @Override

@@ -212,41 +212,4 @@ public class KillsTable extends Table {
             }
         }
     }
-
-    public void savePlayerKills(Map<UUID, Map<UUID, List<Session>>> allSessions) {
-        if (Verify.isEmpty(allSessions)) {
-            return;
-        }
-
-        executeBatch(new ExecStatement(insertStatement) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                // Every server
-                for (UUID serverUUID : allSessions.keySet()) {
-                    // Every player
-                    for (Map.Entry<UUID, List<Session>> entry : allSessions.get(serverUUID).entrySet()) {
-                        UUID killer = entry.getKey();
-                        List<Session> sessions = entry.getValue();
-                        // Every session
-                        for (Session session : sessions) {
-                            int sessionID = session.getUnsafe(SessionKeys.DB_ID);
-                            // Every kill
-                            for (PlayerKill kill : session.getPlayerKills()) {
-                                UUID victim = kill.getVictim();
-                                long date = kill.getDate();
-                                String weapon = kill.getWeapon();
-                                statement.setString(1, killer.toString());
-                                statement.setString(2, victim.toString());
-                                statement.setString(3, serverUUID.toString());
-                                statement.setInt(4, sessionID);
-                                statement.setLong(5, date);
-                                statement.setString(6, weapon);
-                                statement.addBatch();
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
 }

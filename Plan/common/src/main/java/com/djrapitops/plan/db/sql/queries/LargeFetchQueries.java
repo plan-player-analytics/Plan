@@ -31,6 +31,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Static method class for queries that use large amount of memory.
@@ -378,6 +379,20 @@ public class LargeFetchQueries {
             db.getWorldTimesTable().addWorldTimesToSessions(sessions);
             return sessions;
         };
+    }
+
+    /**
+     * Query the database for Session data with kill, death or world data.
+     *
+     * @return List of sessions
+     */
+    public static Query<List<Session>> fetchAllSessionsFlatWithKillAndWorldData() {
+        return db -> db.query(fetchAllSessionsWithKillAndWorldData())
+                .values().stream()
+                .map(Map::values)
+                .flatMap(Collection::stream)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
 
     /**

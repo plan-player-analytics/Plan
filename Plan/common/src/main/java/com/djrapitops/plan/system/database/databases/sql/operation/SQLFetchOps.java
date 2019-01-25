@@ -127,8 +127,8 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
     private List<PlayerContainer> getPlayerContainers(UUID serverUUID) {
         List<PlayerContainer> containers = new ArrayList<>();
 
-        List<UserInfo> serverUserInfo = userInfoTable.getServerUserInfo(serverUUID);
-        Map<UUID, Integer> timesKicked = usersTable.getAllTimesKicked();
+        List<UserInfo> serverUserInfo = userInfoTable.getServerUserInfo(serverUUID); // TODO Optimize and sort out
+        Map<UUID, Integer> timesKicked = usersTable.getAllTimesKicked();  // TODO Optimize and sort out
         Map<UUID, List<GeoInfo>> geoInfo = db.query(LargeFetchQueries.fetchAllGeoInfoData()); // TODO Optimize
         Map<UUID, List<Ping>> allPings = db.query(LargeFetchQueries.fetchAllPingData()); // TODO Optimize
         Map<UUID, List<Nickname>> allNicknames = db.query(LargeFetchQueries.fetchAllNicknameDataByPlayerUUIDs()); // TODO Optimize

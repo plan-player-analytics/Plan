@@ -17,11 +17,10 @@
 package com.djrapitops.plan.db.sql.queries;
 
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.data.container.BaseUser;
-import com.djrapitops.plan.data.container.GeoInfo;
-import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.data.container.UserInfo;
+import com.djrapitops.plan.data.container.*;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.objects.Nickname;
+import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.sql.tables.*;
@@ -302,6 +301,12 @@ public class LargeStoreQueries {
         };
     }
 
+    /**
+     * Execute a big batch of user information insert statements.
+     *
+     * @param ofUsers Collection of BaseUsers
+     * @return Executable, use inside a {@link com.djrapitops.plan.db.access.transactions.Transaction}
+     */
     public static Executable storeAllCommonUserInformation(Collection<BaseUser> ofUsers) {
         if (Verify.isEmpty(ofUsers)) {
             return Executable.empty();
@@ -316,6 +321,131 @@ public class LargeStoreQueries {
                     statement.setLong(3, user.getRegistered());
                     statement.setInt(4, user.getTimesKicked());
                     statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable storeAllSessionsWithoutKillOrWorldData(List<Session> sessions) {
+        if (Verify.isEmpty(sessions)) {
+            return Executable.empty();
+        }
+
+        return new ExecBatchStatement(SessionsTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (Session session : sessions) {
+                    statement.setString(1, session.getUnsafe(SessionKeys.UUID).toString());
+                    statement.setLong(2, session.getUnsafe(SessionKeys.START));
+                    statement.setLong(3, session.getUnsafe(SessionKeys.END));
+                    statement.setInt(4, session.getUnsafe(SessionKeys.DEATH_COUNT));
+                    statement.setInt(5, session.getUnsafe(SessionKeys.MOB_KILL_COUNT));
+                    statement.setLong(6, session.getUnsafe(SessionKeys.AFK_TIME));
+                    statement.setString(7, session.getUnsafe(SessionKeys.SERVER_UUID).toString());
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable storeAllSessionsWithKillAndWorldData(List<Session> sessions) {
+        return connection -> {
+            storeAllSessionsWithoutKillOrWorldData(sessions).execute(connection);
+            storeSessionKillData(sessions).execute(connection);
+            storeSessionWorldTimeData(sessions).execute(connection);
+            return false;
+        };
+    }
+
+    private static Executable storeSessionKillData(List<Session> sessions) {
+        if (Verify.isEmpty(sessions)) {
+            return Executable.empty();
+        }
+
+        String sql = "INSERT INTO " + KillsTable.TABLE_NAME + " ("
+                + KillsTable.SESSION_ID + ", "
+                + KillsTable.KILLER_UUID + ", "
+                + KillsTable.VICTIM_UUID + ", "
+                + KillsTable.SERVER_UUID + ", "
+                + KillsTable.DATE + ", "
+                + KillsTable.WEAPON
+                + ") VALUES (" + SessionsTable.SELECT_SESSION_ID_STATEMENT + ", ?, ?, ?, ?, ?)";
+
+        return new ExecBatchStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (Session session : sessions) {
+                    UUID uuid = session.getUnsafe(SessionKeys.UUID);
+                    UUID serverUUID = session.getUnsafe(SessionKeys.SERVER_UUID);
+                    for (PlayerKill kill : session.getPlayerKills()) {
+                        // Session ID select statement
+                        statement.setString(1, uuid.toString());
+                        statement.setString(2, serverUUID.toString());
+                        statement.setLong(3, session.getUnsafe(SessionKeys.START));
+                        statement.setLong(4, session.getUnsafe(SessionKeys.END));
+
+                        statement.setString(5, uuid.toString());
+                        statement.setString(6, kill.getVictim().toString());
+                        statement.setString(7, serverUUID.toString());
+                        statement.setLong(8, kill.getDate());
+                        statement.setString(9, kill.getWeapon());
+                        statement.addBatch();
+                    }
+                }
+            }
+        };
+    }
+
+    private static Executable storeSessionWorldTimeData(List<Session> sessions) {
+        if (Verify.isEmpty(sessions)) {
+            return Executable.empty();
+        }
+
+        String sql = "INSERT INTO " + WorldTimesTable.TABLE_NAME + " (" +
+                WorldTimesTable.SESSION_ID + ", " +
+                WorldTimesTable.WORLD_ID + ", " +
+                WorldTimesTable.USER_UUID + ", " +
+                WorldTimesTable.SERVER_UUID + ", " +
+                WorldTimesTable.SURVIVAL + ", " +
+                WorldTimesTable.CREATIVE + ", " +
+                WorldTimesTable.ADVENTURE + ", " +
+                WorldTimesTable.SPECTATOR +
+                ") VALUES ( " +
+                SessionsTable.SELECT_SESSION_ID_STATEMENT + ", " +
+                WorldTable.SELECT_WORLD_ID_STATEMENT + ", " +
+                "?, ?, ?, ?, ?, ?)";
+
+        return new ExecBatchStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                String[] gms = GMTimes.getGMKeyArray();
+
+                for (Session session : sessions) {
+                    UUID uuid = session.getUnsafe(SessionKeys.UUID);
+                    UUID serverUUID = session.getUnsafe(SessionKeys.SERVER_UUID);
+                    Map<String, GMTimes> worldTimes = session.getUnsafe(SessionKeys.WORLD_TIMES).getWorldTimes();
+                    for (Map.Entry<String, GMTimes> worldTimesEntry : worldTimes.entrySet()) {
+                        String worldName = worldTimesEntry.getKey();
+                        GMTimes gmTimes = worldTimesEntry.getValue();
+
+                        // Session ID select statement
+                        statement.setString(1, uuid.toString());
+                        statement.setString(2, serverUUID.toString());
+                        statement.setLong(3, session.getUnsafe(SessionKeys.START));
+                        statement.setLong(4, session.getUnsafe(SessionKeys.END));
+
+                        // World ID select statement
+                        statement.setString(5, worldName);
+                        statement.setString(6, serverUUID.toString());
+
+                        statement.setString(7, uuid.toString());
+                        statement.setString(8, serverUUID.toString());
+                        statement.setLong(9, gmTimes.getTime(gms[0]));
+                        statement.setLong(10, gmTimes.getTime(gms[1]));
+                        statement.setLong(11, gmTimes.getTime(gms[2]));
+                        statement.setLong(12, gmTimes.getTime(gms[3]));
+                        statement.addBatch();
+                    }
                 }
             }
         };

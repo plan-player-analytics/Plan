@@ -37,7 +37,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Table that is in charge of storing playtime data for each world in each GameMode.
@@ -84,7 +83,7 @@ public class WorldTimesTable extends Table {
                 ADVENTURE + ", " +
                 SPECTATOR +
                 ") VALUES (?, " +
-                worldTable.statementSelectID + ", " +
+                WorldTable.SELECT_WORLD_ID_STATEMENT + ", " +
                 "?, ?, ?, ?, ?, ?)";
     }
 
@@ -322,59 +321,6 @@ public class WorldTimesTable extends Table {
                 }
             }
         }
-    }
-
-    public void saveWorldTimes(Map<UUID, Map<UUID, List<Session>>> allSessions) {
-        if (Verify.isEmpty(allSessions)) {
-            return;
-        }
-        List<String> worldNames = allSessions.values().stream()
-                .map(Map::values)
-                .flatMap(Collection::stream)
-                .flatMap(Collection::stream)
-                .map(s -> s.getUnsafe(SessionKeys.WORLD_TIMES))
-                .map(WorldTimes::getWorldTimes)
-                .map(Map::keySet)
-                .flatMap(Collection::stream)
-                .distinct()
-                .collect(Collectors.toList());
-        db.getWorldTable().saveWorlds(worldNames);
-
-        executeBatch(new ExecStatement(insertStatement) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                String[] gms = GMTimes.getGMKeyArray();
-                // Every Server
-                for (Map.Entry<UUID, Map<UUID, List<Session>>> serverSessions : allSessions.entrySet()) {
-                    UUID serverUUID = serverSessions.getKey();
-                    // Every User
-                    for (Map.Entry<UUID, List<Session>> entry : serverSessions.getValue().entrySet()) {
-                        UUID uuid = entry.getKey();
-                        List<Session> sessions = entry.getValue();
-                        // Every Session
-                        for (Session session : sessions) {
-                            int sessionID = session.getUnsafe(SessionKeys.DB_ID);
-                            // Every WorldTimes
-                            for (Map.Entry<String, GMTimes> worldTimesEntry : session.getUnsafe(SessionKeys.WORLD_TIMES)
-                                    .getWorldTimes().entrySet()) {
-                                String worldName = worldTimesEntry.getKey();
-                                GMTimes gmTimes = worldTimesEntry.getValue();
-                                statement.setString(1, uuid.toString());
-                                statement.setString(2, worldName);
-                                statement.setString(3, serverUUID.toString());
-                                statement.setString(4, serverUUID.toString());
-                                statement.setInt(5, sessionID);
-                                statement.setLong(6, gmTimes.getTime(gms[0]));
-                                statement.setLong(7, gmTimes.getTime(gms[1]));
-                                statement.setLong(8, gmTimes.getTime(gms[2]));
-                                statement.setLong(9, gmTimes.getTime(gms[3]));
-                                statement.addBatch();
-                            }
-                        }
-                    }
-                }
-            }
-        });
     }
 
     @Override

@@ -29,8 +29,6 @@ import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
-import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -62,19 +60,24 @@ public class SessionsTable extends Table {
     public static final String DEATHS = "deaths";
     public static final String AFK_TIME = "afk_time";
 
-    private String insertStatement;
+    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
+            + USER_UUID + ", "
+            + SESSION_START + ", "
+            + SESSION_END + ", "
+            + DEATHS + ", "
+            + MOB_KILLS + ", "
+            + AFK_TIME + ", "
+            + SERVER_UUID
+            + ") VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+    public static final String SELECT_SESSION_ID_STATEMENT = "(SELECT " + TABLE_NAME + "." + ID + " FROM " + TABLE_NAME +
+            " WHERE " + TABLE_NAME + "." + USER_UUID + "=?" +
+            " AND " + TABLE_NAME + "." + SERVER_UUID + "=?" +
+            " AND " + SESSION_START + "=?" +
+            " AND " + SESSION_END + "=? LIMIT 1)";
 
     public SessionsTable(SQLDB db) {
         super(TABLE_NAME, db);
-        insertStatement = "INSERT INTO " + tableName + " ("
-                + USER_UUID + ", "
-                + SESSION_START + ", "
-                + SESSION_END + ", "
-                + DEATHS + ", "
-                + MOB_KILLS + ", "
-                + AFK_TIME + ", "
-                + SERVER_UUID
-                + ") VALUES (?, ?, ?, ?, ?, ?, ?)";
     }
 
     public static String createTableSQL(DBType dbType) {
@@ -149,7 +152,7 @@ public class SessionsTable extends Table {
      * @param session Session of the player that has ended ({@code endSession} has been called)
      */
     private void saveSessionInformation(UUID uuid, Session session) {
-        execute(new ExecStatement(insertStatement) {
+        execute(new ExecStatement(INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
@@ -443,102 +446,6 @@ public class SessionsTable extends Table {
                 return lastSeenMap;
             }
         });
-    }
-
-    public void insertSessions(Map<UUID, Map<UUID, List<Session>>> allSessions, boolean saveKillsAndWorldTimes) {
-        if (Verify.isEmpty(allSessions)) {
-            return;
-        }
-
-        executeBatch(new ExecStatement(insertStatement) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                for (UUID serverUUID : allSessions.keySet()) {
-                    for (Map.Entry<UUID, List<Session>> entry : allSessions.get(serverUUID).entrySet()) {
-                        UUID uuid = entry.getKey();
-                        List<Session> sessions = entry.getValue();
-
-                        for (Session session : sessions) {
-                            statement.setString(1, uuid.toString());
-                            statement.setLong(2, session.getUnsafe(SessionKeys.START));
-                            statement.setLong(3, session.getUnsafe(SessionKeys.END));
-                            statement.setInt(4, session.getUnsafe(SessionKeys.DEATH_COUNT));
-                            statement.setInt(5, session.getUnsafe(SessionKeys.MOB_KILL_COUNT));
-                            statement.setLong(6, session.getUnsafe(SessionKeys.AFK_TIME));
-                            statement.setString(7, serverUUID.toString());
-                            statement.addBatch();
-                        }
-                    }
-                }
-            }
-        });
-        if (saveKillsAndWorldTimes) {
-            Map<UUID, Map<UUID, List<Session>>> savedSessions = db.query(LargeFetchQueries.fetchAllSessionsWithoutKillOrWorldData());
-            matchSessionIDs(allSessions, savedSessions);
-            db.getKillsTable().savePlayerKills(allSessions);
-            db.getWorldTimesTable().saveWorldTimes(allSessions);
-        }
-    }
-
-    /**
-     * Sessions should be saved before calling this method.
-     *
-     * @param allSessions      Sessions to match IDs to (contain extra data)
-     * @param allSavedSessions Sessions in the Database.
-     */
-    private void matchSessionIDs(Map<UUID, Map<UUID, List<Session>>> allSessions, Map<UUID, Map<UUID, List<Session>>> allSavedSessions) {
-        for (UUID serverUUID : allSessions.keySet()) {
-            Map<UUID, List<Session>> serverSessions = allSessions.get(serverUUID);
-            Map<UUID, List<Session>> savedServerSessions = allSavedSessions.get(serverUUID);
-
-            for (Map.Entry<UUID, List<Session>> entry : serverSessions.entrySet()) {
-                UUID uuid = entry.getKey();
-                List<Session> sessions = entry.getValue();
-
-                List<Session> savedSessions = savedServerSessions.get(uuid);
-                if (savedSessions == null) {
-                    throw new IllegalStateException("Some of the sessions being matched were not saved.");
-                }
-
-                matchSessions(sessions, savedSessions);
-            }
-        }
-    }
-
-    /**
-     * Used by matchSessionIDs method.
-     * <p>
-     * Matches IDs of Sessions with by sessionStart.
-     * Assumes that both lists are from the same user and server.
-     *
-     * @param sessions      Sessions of Player in a Server.
-     * @param savedSessions Sessions of Player in a Server in the db.
-     */
-    private void matchSessions(List<Session> sessions, List<Session> savedSessions) {
-        Map<Long, List<Session>> sessionsByStart = turnToMapByStart(sessions);
-        Map<Long, List<Session>> savedSessionsByStart = turnToMapByStart(savedSessions);
-
-        for (Map.Entry<Long, List<Session>> sessionEntry : sessionsByStart.entrySet()) {
-            long start = sessionEntry.getKey();
-            if (!savedSessionsByStart.containsKey(start)) {
-                throw new IllegalStateException("Some of the sessions being matched were not saved.");
-            }
-            Session savedSession = savedSessionsByStart.get(start).get(0);
-            sessionEntry.getValue().forEach(
-                    session -> session.setSessionID(savedSession.getUnsafe(SessionKeys.DB_ID))
-            );
-        }
-    }
-
-    private Map<Long, List<Session>> turnToMapByStart(List<Session> sessions) {
-        Map<Long, List<Session>> sessionsByStart = new TreeMap<>();
-        for (Session session : sessions) {
-            long start = session.getUnsafe(SessionKeys.START);
-            List<Session> sorted = sessionsByStart.getOrDefault(start, new ArrayList<>());
-            sorted.add(session);
-            sessionsByStart.put(start, sorted);
-        }
-        return sessionsByStart;
     }
 
     public Map<Integer, Integer> getIDServerIDRelation() {

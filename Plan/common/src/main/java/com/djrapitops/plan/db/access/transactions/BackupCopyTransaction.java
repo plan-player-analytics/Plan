@@ -105,6 +105,6 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
     }
 
     private void copySessions() {
-        db.getSessionsTable().insertSessions(sourceDB.query(LargeFetchQueries.fetchAllSessionsWithKillAndWorldData()), true);
+        copy(LargeStoreQueries::storeAllSessionsWithKillAndWorldData, LargeFetchQueries.fetchAllSessionsFlatWithKillAndWorldData());
     }
 }

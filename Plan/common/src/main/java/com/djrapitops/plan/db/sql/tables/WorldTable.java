@@ -56,16 +56,16 @@ public class WorldTable extends Table {
             + SERVER_UUID
             + ") VALUES (?, ?)";
 
-    public final String statementSelectID;
+    public static final String SELECT_WORLD_ID_STATEMENT = "(SELECT " + TABLE_NAME + "." + ID + " FROM " + TABLE_NAME +
+            " WHERE (" + NAME + "=?)" +
+            " AND (" + TABLE_NAME + "." + SERVER_UUID + "=?)" +
+            " LIMIT 1)";
+
     private final ServerTable serverTable;
 
     public WorldTable(SQLDB db) {
         super(TABLE_NAME, db);
         serverTable = db.getServerTable();
-        statementSelectID = "(SELECT " + ID + " FROM " + tableName +
-                " WHERE (" + NAME + "=?)" +
-                " AND (" + SERVER_UUID + "=?)" +
-                " LIMIT 1)";
     }
 
     public static String createTableSQL(DBType dbType) {
@@ -162,13 +162,13 @@ public class WorldTable extends Table {
         if (!(o instanceof WorldTable)) return false;
         if (!super.equals(o)) return false;
         WorldTable that = (WorldTable) o;
-        return Objects.equals(statementSelectID, that.statementSelectID) &&
+        return Objects.equals(SELECT_WORLD_ID_STATEMENT, SELECT_WORLD_ID_STATEMENT) &&
                 Objects.equals(serverTable, that.serverTable);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), statementSelectID, serverTable);
+        return Objects.hash(super.hashCode(), SELECT_WORLD_ID_STATEMENT, serverTable);
     }
 }
 
