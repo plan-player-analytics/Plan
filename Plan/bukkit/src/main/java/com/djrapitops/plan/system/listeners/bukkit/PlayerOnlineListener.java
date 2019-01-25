@@ -126,7 +126,6 @@ public class PlayerOnlineListener implements Listener {
 
     private void actOnJoinEvent(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        // TODO Move update notification to the website.
 
         UUID uuid = player.getUniqueId();
         long time = System.currentTimeMillis();
