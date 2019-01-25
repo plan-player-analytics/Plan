@@ -170,7 +170,7 @@ public class GeoInfoTable extends Table {
     public List<String> getNetworkGeolocations() {
         List<String> geolocations = new ArrayList<>();
 
-        Map<UUID, List<GeoInfo>> geoInfo = db.query(LargeFetchQueries.fetchAllGeoInfoData());
+        Map<UUID, List<GeoInfo>> geoInfo = db.query(LargeFetchQueries.fetchAllGeoInformation());
         for (List<GeoInfo> userGeoInfos : geoInfo.values()) {
             if (userGeoInfos.isEmpty()) {
                 continue;

@@ -82,7 +82,7 @@ public class LargeStoreQueries {
      * @param ofUsers Map: Player UUID - List of GeoInfo
      * @return Executable, use inside a {@link com.djrapitops.plan.db.access.transactions.Transaction}
      */
-    public static Executable storeAllGeoInfoData(Map<UUID, List<GeoInfo>> ofUsers) {
+    public static Executable storeAllGeoInformation(Map<UUID, List<GeoInfo>> ofUsers) {
         if (Verify.isEmpty(ofUsers)) {
             return Executable.empty();
         }
@@ -444,6 +444,37 @@ public class LargeStoreQueries {
                         statement.setLong(10, gmTimes.getTime(gms[1]));
                         statement.setLong(11, gmTimes.getTime(gms[2]));
                         statement.setLong(12, gmTimes.getTime(gms[3]));
+                        statement.addBatch();
+                    }
+                }
+            }
+        };
+    }
+
+    public static Executable storeAllPingData(Map<UUID, List<Ping>> ofUsers) {
+        if (Verify.isEmpty(ofUsers)) {
+            return Executable.empty();
+        }
+
+        return new ExecBatchStatement(PingTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (Map.Entry<UUID, List<Ping>> entry : ofUsers.entrySet()) {
+                    UUID uuid = entry.getKey();
+                    List<Ping> pings = entry.getValue();
+                    for (Ping ping : pings) {
+                        UUID serverUUID = ping.getServerUUID();
+                        long date = ping.getDate();
+                        int minPing = ping.getMin();
+                        int maxPing = ping.getMax();
+                        double avgPing = ping.getAverage();
+
+                        statement.setString(1, uuid.toString());
+                        statement.setString(2, serverUUID.toString());
+                        statement.setLong(3, date);
+                        statement.setInt(4, minPing);
+                        statement.setInt(5, maxPing);
+                        statement.setDouble(6, avgPing);
                         statement.addBatch();
                     }
                 }

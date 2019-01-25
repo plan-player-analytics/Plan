@@ -44,19 +44,20 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
 
     @Override
     protected void performOperations() {
+        // Clear the database.
         super.performOperations();
 
-        copyServers();
-        copyUsers();
-        copyWorlds();
-        copyTPS();
-        copyWebUsers();
+        copyPlanServerInformation();
+        copyCommonUserInformation();
+        copyWorldNames();
+        copyTPSData();
+        copyPlanWebUsers();
         copyCommandUsageData();
-        copyIPsAndGeolocs();
-        copyNicknames();
-        copySessions();
-        copyUserInfo();
-        copyPings();
+        copyGeoInformation();
+        copyNicknameData();
+        copySessionsWithKillAndWorldData();
+        copyPerServerUserInformation();
+        copyPingData();
     }
 
     private <T> void copy(Function<T, Executable> executableCreator, Query<T> dataQuery) {
@@ -64,47 +65,47 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
         execute(executableCreator.apply(sourceDB.query(dataQuery)));
     }
 
-    private void copyPings() {
-        db.getPingTable().insertAllPings(sourceDB.query(LargeFetchQueries.fetchAllPingData()));
+    private void copyPingData() {
+        copy(LargeStoreQueries::storeAllPingData, LargeFetchQueries.fetchAllPingData());
     }
 
     private void copyCommandUsageData() {
         copy(LargeStoreQueries::storeAllCommandUsageData, LargeFetchQueries.fetchAllCommandUsageData());
     }
 
-    private void copyIPsAndGeolocs() {
-        copy(LargeStoreQueries::storeAllGeoInfoData, LargeFetchQueries.fetchAllGeoInfoData());
+    private void copyGeoInformation() {
+        copy(LargeStoreQueries::storeAllGeoInformation, LargeFetchQueries.fetchAllGeoInformation());
     }
 
-    private void copyNicknames() {
+    private void copyNicknameData() {
         copy(LargeStoreQueries::storeAllNicknameData, LargeFetchQueries.fetchAllNicknameData());
     }
 
-    private void copyWebUsers() {
+    private void copyPlanWebUsers() {
         copy(LargeStoreQueries::storeAllPlanWebUsers, LargeFetchQueries.fetchAllPlanWebUsers());
     }
 
-    private void copyServers() {
+    private void copyPlanServerInformation() {
         copy(LargeStoreQueries::storeAllPlanServerInformation, LargeFetchQueries.fetchPlanServerInformationCollection());
     }
 
-    private void copyTPS() {
+    private void copyTPSData() {
         copy(LargeStoreQueries::storeAllTPSData, LargeFetchQueries.fetchAllTPSData());
     }
 
-    private void copyUserInfo() {
+    private void copyPerServerUserInformation() {
         copy(LargeStoreQueries::storePerServerUserInformation, LargeFetchQueries.fetchPerServerUserInformation());
     }
 
-    private void copyWorlds() {
+    private void copyWorldNames() {
         copy(LargeStoreQueries::storeAllWorldNames, LargeFetchQueries.fetchAllWorldNames());
     }
 
-    private void copyUsers() {
+    private void copyCommonUserInformation() {
         copy(LargeStoreQueries::storeAllCommonUserInformation, LargeFetchQueries.fetchAllCommonUserInformation());
     }
 
-    private void copySessions() {
+    private void copySessionsWithKillAndWorldData() {
         copy(LargeStoreQueries::storeAllSessionsWithKillAndWorldData, LargeFetchQueries.fetchAllSessionsFlatWithKillAndWorldData());
     }
 }

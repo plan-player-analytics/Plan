@@ -31,7 +31,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -54,18 +53,17 @@ public class PingTable extends Table {
     public static final String AVG_PING = "avg_ping";
     public static final String MIN_PING = "min_ping";
 
-    private final String insertStatement;
+    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
+            USER_UUID + ", " +
+            SERVER_UUID + ", " +
+            DATE + ", " +
+            MIN_PING + ", " +
+            MAX_PING + ", " +
+            AVG_PING +
+            ") VALUES (?, ?, ?, ?, ?, ?)";
 
     public PingTable(SQLDB db) {
         super(TABLE_NAME, db);
-        insertStatement = "INSERT INTO " + tableName + " (" +
-                USER_UUID + ", " +
-                SERVER_UUID + ", " +
-                DATE + ", " +
-                MIN_PING + ", " +
-                MAX_PING + ", " +
-                AVG_PING +
-                ") VALUES (?, ?, ?, ?, ?, ?)";
     }
 
     public static String createTableSQL(DBType dbType) {
@@ -95,7 +93,7 @@ public class PingTable extends Table {
     }
 
     public void insertPing(UUID uuid, Ping ping) {
-        execute(new ExecStatement(insertStatement) {
+        execute(new ExecStatement(INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
@@ -134,33 +132,6 @@ public class PingTable extends Table {
                 }
 
                 return pings;
-            }
-        });
-    }
-
-    public void insertAllPings(Map<UUID, List<Ping>> userPings) {
-        executeBatch(new ExecStatement(insertStatement) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                for (Map.Entry<UUID, List<Ping>> entry : userPings.entrySet()) {
-                    UUID uuid = entry.getKey();
-                    List<Ping> pings = entry.getValue();
-                    for (Ping ping : pings) {
-                        UUID serverUUID = ping.getServerUUID();
-                        long date = ping.getDate();
-                        int minPing = ping.getMin();
-                        int maxPing = ping.getMax();
-                        double avgPing = ping.getAverage();
-
-                        statement.setString(1, uuid.toString());
-                        statement.setString(2, serverUUID.toString());
-                        statement.setLong(3, date);
-                        statement.setInt(4, minPing);
-                        statement.setInt(5, maxPing);
-                        statement.setDouble(6, avgPing);
-                        statement.addBatch();
-                    }
-                }
             }
         });
     }

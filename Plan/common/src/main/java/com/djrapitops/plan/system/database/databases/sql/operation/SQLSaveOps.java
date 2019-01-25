@@ -121,7 +121,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         db.executeTransaction(new Transaction() {
             @Override
             protected void performOperations() {
-                execute(LargeStoreQueries.storeAllGeoInfoData(ofUsers));
+                execute(LargeStoreQueries.storeAllGeoInformation(ofUsers));
             }
         });
     }
