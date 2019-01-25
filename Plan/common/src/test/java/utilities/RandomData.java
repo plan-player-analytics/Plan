@@ -90,7 +90,6 @@ public class RandomData {
         List<UserInfo> test = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             UserInfo info = new UserInfo(UUID.randomUUID(), randomString(10), r.nextLong(), r.nextBoolean(), r.nextBoolean());
-            info.setLastSeen(r.nextLong());
             test.add(info);
         }
         return test;

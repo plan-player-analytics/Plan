@@ -29,7 +29,6 @@ public class UserInfo {
     private final UUID uuid;
     private String name;
     private long registered;
-    private long lastSeen;
     private boolean banned;
     private boolean opped;
 
@@ -39,7 +38,6 @@ public class UserInfo {
         this.registered = registered;
         this.opped = opped;
         this.banned = banned;
-        lastSeen = 0L;
     }
 
     public UUID getUuid() {
@@ -52,14 +50,6 @@ public class UserInfo {
 
     public long getRegistered() {
         return registered;
-    }
-
-    public long getLastSeen() {
-        return lastSeen;
-    }
-
-    public void setLastSeen(long lastSeen) {
-        this.lastSeen = lastSeen;
     }
 
     public boolean isBanned() {
@@ -76,7 +66,6 @@ public class UserInfo {
         if (o == null || getClass() != o.getClass()) return false;
         UserInfo userInfo = (UserInfo) o;
         return registered == userInfo.registered &&
-                lastSeen == userInfo.lastSeen &&
                 banned == userInfo.banned &&
                 opped == userInfo.opped &&
                 Objects.equals(uuid, userInfo.uuid) &&
@@ -85,7 +74,7 @@ public class UserInfo {
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, name, registered, lastSeen, banned, opped);
+        return Objects.hash(uuid, name, registered, banned, opped);
     }
 
     @Override
@@ -94,7 +83,6 @@ public class UserInfo {
                 "uuid=" + uuid +
                 ", name='" + name + '\'' +
                 ", registered=" + registered +
-                ", lastSeen=" + lastSeen +
                 ", banned=" + banned +
                 ", opped=" + opped +
                 '}';

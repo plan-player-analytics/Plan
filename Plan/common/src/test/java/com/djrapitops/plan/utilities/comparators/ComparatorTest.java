@@ -79,19 +79,6 @@ public class ComparatorTest {
     }
 
     @Test
-    public void userDataLastPlayedComparator() {
-        List<UserInfo> userInfo = RandomData.randomUserData();
-
-        List<Long> expected = userInfo.stream().map(UserInfo::getLastSeen)
-                .sorted(Long::compare).collect(Collectors.toList());
-        Collections.reverse(expected);
-
-        userInfo.sort(new UserInfoLastPlayedComparator());
-        List<Long> result = userInfo.stream().map(UserInfo::getLastSeen).collect(Collectors.toList());
-        assertEquals(expected, result);
-    }
-
-    @Test
     public void userDataNameComparator() {
         List<UserInfo> userInfo = RandomData.randomUserData();
 
