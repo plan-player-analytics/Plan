@@ -19,6 +19,7 @@ package com.djrapitops.plan.db.sql.queries;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.Executable;
@@ -236,6 +237,37 @@ public class LargeStoreQueries {
                         statement.setDouble(7, tps.getEntityCount());
                         statement.setDouble(8, tps.getChunksLoaded());
                         statement.setLong(9, tps.getFreeDiskSpace());
+                        statement.addBatch();
+                    }
+                }
+            }
+        };
+    }
+
+    /**
+     * Execute a big batch of Per server UserInfo insert statements.
+     *
+     * @param ofServers Map: Server UUID - List of user information
+     * @return Executable, use inside a {@link com.djrapitops.plan.db.access.transactions.Transaction}
+     */
+    public static Executable storePerServerUserInformation(Map<UUID, List<UserInfo>> ofServers) {
+        if (Verify.isEmpty(ofServers)) {
+            return Executable.empty();
+        }
+
+        return new ExecBatchStatement(UserInfoTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                // Every Server
+                for (Map.Entry<UUID, List<UserInfo>> entry : ofServers.entrySet()) {
+                    UUID serverUUID = entry.getKey();
+                    // Every User
+                    for (UserInfo user : entry.getValue()) {
+                        statement.setString(1, user.getUuid().toString());
+                        statement.setLong(2, user.getRegistered());
+                        statement.setString(3, serverUUID.toString());
+                        statement.setBoolean(4, user.isBanned());
+                        statement.setBoolean(5, user.isOperator());
                         statement.addBatch();
                     }
                 }

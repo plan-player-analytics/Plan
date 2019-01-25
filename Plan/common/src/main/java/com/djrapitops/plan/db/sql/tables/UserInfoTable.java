@@ -29,7 +29,6 @@ import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.sql.parsing.Update;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -58,20 +57,19 @@ public class UserInfoTable extends Table {
     public static final String OP = "opped";
     public static final String BANNED = "banned";
 
-    private final String insertStatement;
+    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
+            USER_UUID + ", " +
+            REGISTERED + ", " +
+            SERVER_UUID + ", " +
+            BANNED + ", " +
+            OP +
+            ") VALUES (?, ?, ?, ?, ?)";
 
     private final UsersTable usersTable;
 
     public UserInfoTable(SQLDB db) {
         super(TABLE_NAME, db);
         usersTable = db.getUsersTable();
-        insertStatement = "INSERT INTO " + tableName + " (" +
-                USER_UUID + ", " +
-                REGISTERED + ", " +
-                SERVER_UUID + ", " +
-                BANNED + ", " +
-                OP +
-                ") VALUES (?, ?, ?, ?, ?)";
     }
 
     public static String createTableSQL(DBType dbType) {
@@ -86,7 +84,7 @@ public class UserInfoTable extends Table {
     }
 
     public void registerUserInfo(UUID uuid, long registered) {
-        execute(new ExecStatement(insertStatement) {
+        execute(new ExecStatement(INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
@@ -238,31 +236,6 @@ public class UserInfoTable extends Table {
      */
     public List<UserInfo> getServerUserInfo() {
         return getServerUserInfo(getServerUUID());
-    }
-
-    public void insertUserInfo(Map<UUID, List<UserInfo>> allUserInfos) {
-        if (Verify.isEmpty(allUserInfos)) {
-            return;
-        }
-
-        executeBatch(new ExecStatement(insertStatement) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                // Every Server
-                for (Map.Entry<UUID, List<UserInfo>> entry : allUserInfos.entrySet()) {
-                    UUID serverUUID = entry.getKey();
-                    // Every User
-                    for (UserInfo user : entry.getValue()) {
-                        statement.setString(1, user.getUuid().toString());
-                        statement.setLong(2, user.getRegistered());
-                        statement.setString(3, serverUUID.toString());
-                        statement.setBoolean(4, user.isBanned());
-                        statement.setBoolean(5, user.isOperator());
-                        statement.addBatch();
-                    }
-                }
-            }
-        });
     }
 
     public int getServerUserCount(UUID serverUUID) {

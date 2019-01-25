@@ -78,7 +78,12 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
 
     @Override
     public void insertUserInfo(Map<UUID, List<UserInfo>> ofServers) {
-        userInfoTable.insertUserInfo(ofServers);
+        db.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute(LargeStoreQueries.storePerServerUserInformation(ofServers));
+            }
+        });
     }
 
     @Override

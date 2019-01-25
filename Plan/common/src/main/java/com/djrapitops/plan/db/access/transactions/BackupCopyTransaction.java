@@ -94,7 +94,7 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
     }
 
     private void copyUserInfo() {
-        db.getUserInfoTable().insertUserInfo(sourceDB.query(LargeFetchQueries.fetchPerServerUserInformation()));
+        copy(LargeStoreQueries::storePerServerUserInformation, LargeFetchQueries.fetchPerServerUserInformation());
     }
 
     private void copyWorlds() {
