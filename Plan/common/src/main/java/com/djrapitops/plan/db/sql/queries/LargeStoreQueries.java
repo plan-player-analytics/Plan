@@ -274,4 +274,24 @@ public class LargeStoreQueries {
             }
         };
     }
+
+    public static Executable storeAllWorldNames(Map<UUID, Collection<String>> ofServers) {
+        if (Verify.isEmpty(ofServers)) {
+            return Executable.empty();
+        }
+
+        return new ExecBatchStatement(WorldTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (Map.Entry<UUID, Collection<String>> entry : ofServers.entrySet()) {
+                    UUID serverUUID = entry.getKey();
+                    for (String world : entry.getValue()) {
+                        statement.setString(1, world);
+                        statement.setString(2, serverUUID.toString());
+                        statement.addBatch();
+                    }
+                }
+            }
+        };
+    }
 }

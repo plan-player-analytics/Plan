@@ -98,7 +98,7 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
     }
 
     private void copyWorlds() {
-        db.getWorldTable().saveWorlds(sourceDB.query(LargeFetchQueries.fetchAllWorldNames()));
+        copy(LargeStoreQueries::storeAllWorldNames, LargeFetchQueries.fetchAllWorldNames());
     }
 
     private void copyUsers() {

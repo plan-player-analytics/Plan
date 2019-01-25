@@ -51,6 +51,10 @@ public class WorldTable extends Table {
     public static final String ID = "id";
     public static final String SERVER_UUID = "server_uuid";
     public static final String NAME = "world_name";
+    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
+            + NAME + ", "
+            + SERVER_UUID
+            + ") VALUES (?, ?)";
 
     public final String statementSelectID;
     private final ServerTable serverTable;
@@ -99,27 +103,6 @@ public class WorldTable extends Table {
         });
     }
 
-    public void saveWorlds(Map<UUID, Collection<String>> worldMap) {
-        String sql = "INSERT INTO " + tableName + " ("
-                + NAME + ", "
-                + SERVER_UUID
-                + ") VALUES (?, ?)";
-
-        executeBatch(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                for (Map.Entry<UUID, Collection<String>> entry : worldMap.entrySet()) {
-                    UUID serverUUID = entry.getKey();
-                    for (String world : entry.getValue()) {
-                        statement.setString(1, world);
-                        statement.setString(2, serverUUID.toString());
-                        statement.addBatch();
-                    }
-                }
-            }
-        });
-    }
-
     public void saveWorlds(Collection<String> worlds) {
         saveWorlds(worlds, getServerUUID());
     }
@@ -141,12 +124,7 @@ public class WorldTable extends Table {
             return;
         }
 
-        String sql = "INSERT INTO " + tableName + " ("
-                + NAME + ", "
-                + SERVER_UUID
-                + ") VALUES (?, ?)";
-
-        executeBatch(new ExecStatement(sql) {
+        executeBatch(new ExecStatement(INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (String world : worldsToSave) {
