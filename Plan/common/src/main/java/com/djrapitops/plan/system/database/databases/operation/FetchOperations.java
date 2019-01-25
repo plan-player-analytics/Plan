@@ -29,6 +29,7 @@ import com.djrapitops.plan.system.settings.config.Config;
 
 import java.util.*;
 
+@Deprecated
 public interface FetchOperations {
 
     /**
@@ -45,6 +46,7 @@ public interface FetchOperations {
      *
      * @return a new NetworkContainer.
      */
+    @Deprecated
     NetworkContainer getNetworkContainer();
 
     /**
@@ -58,6 +60,7 @@ public interface FetchOperations {
      * @param serverUUID UUID of the Server.
      * @return a new ServerContainer.
      */
+    @Deprecated
     ServerContainer getServerContainer(UUID serverUUID);
 
     /**
@@ -71,6 +74,7 @@ public interface FetchOperations {
      *
      * @return a list of PlayerContainers in Plan database.
      */
+    @Deprecated
     List<PlayerContainer> getAllPlayerContainers();
 
     /**
@@ -81,61 +85,86 @@ public interface FetchOperations {
      * @param uuid UUID of the player.
      * @return a new PlayerContainer.
      */
+    @Deprecated
     PlayerContainer getPlayerContainer(UUID uuid);
 
     // UUIDs
 
+    @Deprecated
     Set<UUID> getSavedUUIDs();
 
+    @Deprecated
     Set<UUID> getSavedUUIDs(UUID server);
 
+    @Deprecated
     Map<UUID, String> getServerNames();
 
+    @Deprecated
     Optional<UUID> getServerUUID(String serverName);
 
+    @Deprecated
     UUID getUuidOf(String playerName);
 
     // WebUsers
-
+    @Deprecated
     WebUser getWebUser(String username);
 
     // Servers
-
+    @Deprecated
     Optional<String> getServerName(UUID serverUUID);
 
+    @Deprecated
     Optional<Server> getBungeeInformation();
 
+    @Deprecated
     Optional<Integer> getServerID(UUID serverUUID);
 
     // Raw Data
-
+    @Deprecated
     List<TPS> getTPSData(UUID serverUUID);
 
+    @Deprecated
     Map<UUID, Map<UUID, List<Session>>> getSessionsWithNoExtras();
 
+    /**
+     * @deprecated It was not possible to keep this compatible so now empty map is returned.
+     */
+    @Deprecated
     Map<UUID, UserInfo> getUsers();
 
+    @Deprecated
     Map<UUID, Long> getLastSeenForAllPlayers();
 
+    @Deprecated
     Map<UUID, List<GeoInfo>> getAllGeoInfo();
 
+    @Deprecated
     Map<UUID, String> getPlayerNames();
 
+    @Deprecated
     String getPlayerName(UUID playerUUID);
 
+    @Deprecated
     List<String> getNicknames(UUID uuid);
 
+    @Deprecated
     Map<UUID, Server> getBukkitServers();
 
+    @Deprecated
     List<WebUser> getWebUsers();
 
+    @Deprecated
     List<Server> getServers();
 
+    @Deprecated
     List<UUID> getServerUUIDs();
 
+    @Deprecated
     Map<Integer, List<TPS>> getPlayersOnlineForServers(Collection<Server> servers);
 
+    @Deprecated
     Map<UUID, Integer> getPlayersRegisteredForServers(Collection<Server> servers);
 
+    @Deprecated
     Optional<Config> getNewConfig(long updatedAfter, UUID serverUUID);
 }
