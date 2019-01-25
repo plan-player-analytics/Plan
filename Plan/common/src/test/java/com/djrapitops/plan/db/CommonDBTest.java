@@ -562,7 +562,7 @@ public abstract class CommonDBTest {
         assertTrue(db.query(LargeFetchQueries.fetchAllCommonUserInformation()).isEmpty());
         assertQueryIsEmpty(db, LargeFetchQueries.fetchPerServerUserInformation());
         assertQueryIsEmpty(db, LargeFetchQueries.fetchAllNicknameData());
-        assertQueryIsEmpty(db, LargeFetchQueries.fetchAllGeoInfoData());
+        assertQueryIsEmpty(db, LargeFetchQueries.fetchAllGeoInformation());
         assertQueryIsEmpty(db, LargeFetchQueries.fetchAllSessionsWithoutKillOrWorldData());
         assertQueryIsEmpty(db, LargeFetchQueries.fetchAllCommandUsageData());
         assertQueryIsEmpty(db, LargeFetchQueries.fetchAllWorldNames());
@@ -720,7 +720,7 @@ public abstract class CommonDBTest {
         assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllCommonUserInformation());
         assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchPerServerUserInformation());
         assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllNicknameData());
-        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllGeoInfoData());
+        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllGeoInformation());
         assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllSessionsWithKillAndWorldData());
         assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllCommandUsageData());
         assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllWorldNames());
@@ -752,6 +752,7 @@ public abstract class CommonDBTest {
 
     @Test
     public void testSaveAllWorldTimes() {
+        saveTwoWorlds();
         saveUserOne();
         WorldTimes worldTimes = createWorldTimes();
 
@@ -775,9 +776,9 @@ public abstract class CommonDBTest {
 
     @Test
     public void testSaveSessionsWorldTimes() {
-        SessionsTable sessionsTable = db.getSessionsTable();
-
+        saveTwoWorlds();
         saveUserOne();
+
         WorldTimes worldTimes = createWorldTimes();
         Session session = createSession();
         session.setWorldTimes(worldTimes);
