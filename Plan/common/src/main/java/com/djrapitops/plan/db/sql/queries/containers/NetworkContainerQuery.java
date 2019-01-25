@@ -55,7 +55,7 @@ public class NetworkContainerQuery implements Query<NetworkContainer> {
             }
 
             UUID serverUUID = proxyInformation.get().getUuid();
-            ServerContainer container = db.query(ContainerFetchQueries.getServerContainer(serverUUID));
+            ServerContainer container = db.query(ContainerFetchQueries.fetchServerContainer(serverUUID));
             container.putCachingSupplier(ServerKeys.PLAYERS, db.fetch()::getAllPlayerContainers);
             container.putCachingSupplier(ServerKeys.TPS, db.getTpsTable()::getNetworkOnlineData);
             container.putSupplier(ServerKeys.WORLD_TIMES, null); // Additional Session information not supported

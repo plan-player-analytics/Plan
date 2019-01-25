@@ -50,7 +50,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public ServerContainer getServerContainer(UUID serverUUID) {
-        return db.query(ContainerFetchQueries.getServerContainer(serverUUID));
+        return db.query(ContainerFetchQueries.fetchServerContainer(serverUUID));
     }
 
     @Override
@@ -235,80 +235,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public PlayerContainer getPlayerContainer(UUID uuid) {
-        PlayerContainer container = new PlayerContainer();
-        container.putRawData(PlayerKeys.UUID, uuid);
-
-        container.putAll(usersTable.getUserInformation(uuid));
-        container.putCachingSupplier(PlayerKeys.GEO_INFO, () -> geoInfoTable.getGeoInfo(uuid));
-        container.putCachingSupplier(PlayerKeys.PING, () -> pingTable.getPing(uuid));
-        container.putCachingSupplier(PlayerKeys.NICKNAMES, () -> nicknamesTable.getNicknameInformation(uuid));
-        container.putCachingSupplier(PlayerKeys.PER_SERVER, () -> getPerServerData(uuid));
-
-        container.putSupplier(PlayerKeys.BANNED, () -> new PerServerMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).isBanned());
-        container.putSupplier(PlayerKeys.OPERATOR, () -> new PerServerMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).isOperator());
-
-        container.putCachingSupplier(PlayerKeys.SESSIONS, () -> {
-                    List<Session> sessions = new PerServerMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).flatMapSessions();
-                    container.getValue(PlayerKeys.ACTIVE_SESSION).ifPresent(sessions::add);
-                    return sessions;
-                }
-        );
-        container.putCachingSupplier(PlayerKeys.WORLD_TIMES, () ->
-        {
-            WorldTimes worldTimes = new PerServerMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).flatMapWorldTimes();
-            container.getValue(PlayerKeys.ACTIVE_SESSION).ifPresent(session -> worldTimes.add(
-                    session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>())))
-            );
-            return worldTimes;
-        });
-
-        container.putSupplier(PlayerKeys.LAST_SEEN, () -> SessionsMutator.forContainer(container).toLastSeen());
-
-        container.putSupplier(PlayerKeys.PLAYER_KILLS, () -> SessionsMutator.forContainer(container).toPlayerKillList());
-        container.putSupplier(PlayerKeys.PLAYER_DEATHS, () -> SessionsMutator.forContainer(container).toPlayerDeathList());
-        container.putSupplier(PlayerKeys.PLAYER_KILL_COUNT, () -> container.getUnsafe(PlayerKeys.PLAYER_KILLS).size());
-        container.putSupplier(PlayerKeys.MOB_KILL_COUNT, () -> SessionsMutator.forContainer(container).toMobKillCount());
-        container.putSupplier(PlayerKeys.DEATH_COUNT, () -> SessionsMutator.forContainer(container).toDeathCount());
-
-        return container;
-    }
-
-    private PerServerContainer getPerServerData(UUID uuid) {
-        PerServerContainer perServerContainer = new PerServerContainer();
-
-        Map<UUID, UserInfo> allUserInfo = userInfoTable.getAllUserInfo(uuid);
-        for (Map.Entry<UUID, UserInfo> entry : allUserInfo.entrySet()) {
-            UUID serverUUID = entry.getKey();
-            UserInfo info = entry.getValue();
-
-            DataContainer container = perServerContainer.getOrDefault(serverUUID, new DataContainer());
-            container.putRawData(PlayerKeys.REGISTERED, info.getRegistered());
-            container.putRawData(PlayerKeys.BANNED, info.isBanned());
-            container.putRawData(PlayerKeys.OPERATOR, info.isOperator());
-            perServerContainer.put(serverUUID, container);
-        }
-
-        Map<UUID, List<Session>> sessions = sessionsTable.getSessions(uuid);
-        for (Map.Entry<UUID, List<Session>> entry : sessions.entrySet()) {
-            UUID serverUUID = entry.getKey();
-            List<Session> serverSessions = entry.getValue();
-
-            DataContainer container = perServerContainer.getOrDefault(serverUUID, new DataContainer());
-            container.putRawData(PerServerKeys.SESSIONS, serverSessions);
-
-            container.putSupplier(PerServerKeys.LAST_SEEN, () -> SessionsMutator.forContainer(container).toLastSeen());
-
-            container.putSupplier(PerServerKeys.WORLD_TIMES, () -> SessionsMutator.forContainer(container).toTotalWorldTimes());
-            container.putSupplier(PerServerKeys.PLAYER_KILLS, () -> SessionsMutator.forContainer(container).toPlayerKillList());
-            container.putSupplier(PerServerKeys.PLAYER_DEATHS, () -> SessionsMutator.forContainer(container).toPlayerDeathList());
-            container.putSupplier(PerServerKeys.PLAYER_KILL_COUNT, () -> container.getUnsafe(PerServerKeys.PLAYER_KILLS).size());
-            container.putSupplier(PerServerKeys.MOB_KILL_COUNT, () -> SessionsMutator.forContainer(container).toMobKillCount());
-            container.putSupplier(PerServerKeys.DEATH_COUNT, () -> SessionsMutator.forContainer(container).toDeathCount());
-
-            perServerContainer.put(serverUUID, container);
-        }
-
-        return perServerContainer;
+        return db.query(ContainerFetchQueries.fetchPlayerContainer(uuid));
     }
 
     @Override

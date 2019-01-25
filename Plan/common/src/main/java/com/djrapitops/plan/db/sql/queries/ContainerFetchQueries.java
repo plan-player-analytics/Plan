@@ -17,9 +17,11 @@
 package com.djrapitops.plan.db.sql.queries;
 
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
+import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.sql.queries.containers.NetworkContainerQuery;
+import com.djrapitops.plan.db.sql.queries.containers.PlayerContainerQuery;
 import com.djrapitops.plan.db.sql.queries.containers.ServerContainerQuery;
 
 import java.util.UUID;
@@ -39,7 +41,7 @@ public class ContainerFetchQueries {
      * Used to get a NetworkContainer, some limitations apply to values returned by DataContainer keys.
      *
      * @return a new NetworkContainer.
-     * @see com.djrapitops.plan.db.sql.queries.containers.NetworkContainerQuery
+     * @see NetworkContainerQuery
      */
     public static Query<NetworkContainer> fetchNetworkContainer() {
         return new NetworkContainerQuery();
@@ -47,14 +49,26 @@ public class ContainerFetchQueries {
 
     /**
      * Used to get a ServerContainer, some limitations apply to values returned by DataContainer keys.
-     * <p>
      *
      * @param serverUUID UUID of the Server.
      * @return a new ServerContainer.
-     * @see com.djrapitops.plan.db.sql.queries.containers.ServerContainerQuery
+     * @see ServerContainerQuery
      */
-    public static Query<ServerContainer> getServerContainer(UUID serverUUID) {
+    public static Query<ServerContainer> fetchServerContainer(UUID serverUUID) {
         return new ServerContainerQuery(serverUUID);
+    }
+
+    /**
+     * Used to get a PlayerContainer of a specific player.
+     * <p>
+     * Blocking methods are not called until DataContainer getter methods are called.
+     *
+     * @param playerUUID UUID of the player.
+     * @return a new PlayerContainer.
+     * @see PlayerContainerQuery
+     */
+    public static Query<PlayerContainer> fetchPlayerContainer(UUID playerUUID) {
+        return new PlayerContainerQuery(playerUUID);
     }
 
 }
