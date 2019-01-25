@@ -36,6 +36,7 @@ import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.patches.Patch;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.sql.queries.LargeStoreQueries;
+import com.djrapitops.plan.db.sql.queries.OptionalFetchQueries;
 import com.djrapitops.plan.db.sql.tables.*;
 import com.djrapitops.plan.db.tasks.CreateIndexTask;
 import com.djrapitops.plan.system.PlanSystem;
@@ -304,26 +305,27 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testSecurityTable() throws DBInitException {
-        SecurityTable securityTable = db.getSecurityTable();
+    public void webUserIsRegistered() throws DBInitException {
         WebUser expected = new WebUser("Test", "RandomGarbageBlah", 0);
-        securityTable.addNewUser(expected);
+        db.getSecurityTable().addNewUser(expected);
         commitTest();
 
-        assertTrue(securityTable.userExists("Test"));
-        WebUser test = securityTable.getWebUser("Test");
-        assertEquals(expected, test);
+        Optional<WebUser> found = db.query(OptionalFetchQueries.webUser("Test"));
+        assertTrue(found.isPresent());
+        assertEquals(expected, found.get());
+    }
 
-        assertFalse(securityTable.userExists("NotExist"));
-        assertNull(securityTable.getWebUser("NotExist"));
-
+    @Test
+    public void multipleWebUsersAreFetchedAppropriately() throws DBInitException {
+        webUserIsRegistered();
         assertEquals(1, db.query(LargeFetchQueries.fetchAllPlanWebUsers()).size());
+    }
 
-        securityTable.removeUser("Test");
-        assertFalse(securityTable.userExists("Test"));
-        assertNull(securityTable.getWebUser("Test"));
-
-        assertEquals(0, db.query(LargeFetchQueries.fetchAllPlanWebUsers()).size());
+    @Test
+    public void webUserIsRemoved() throws DBInitException {
+        webUserIsRegistered();
+        db.getSecurityTable().removeUser("Test");
+        assertFalse(db.query(OptionalFetchQueries.webUser("Test")).isPresent());
     }
 
     @Test

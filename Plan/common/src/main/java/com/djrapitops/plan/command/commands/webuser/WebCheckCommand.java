@@ -18,6 +18,7 @@ package com.djrapitops.plan.command.commands.webuser;
 
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.sql.queries.OptionalFetchQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -35,6 +36,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * Subcommand for checking WebUser permission level.
@@ -77,11 +79,12 @@ public class WebCheckCommand extends CommandNode {
         processing.submitNonCritical(() -> {
             try {
                 Database db = dbSystem.getDatabase();
-                if (!db.check().doesWebUserExists(user)) {
+                Optional<WebUser> found = db.query(OptionalFetchQueries.webUser(user));
+                if (!found.isPresent()) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_WEB_USER_NOT_EXISTS));
                     return;
                 }
-                WebUser info = db.fetch().getWebUser(user);
+                WebUser info = found.get();
                 sender.sendMessage(locale.getString(CommandLang.WEB_USER_LIST, info.getName(), info.getPermLevel()));
             } catch (Exception e) {
                 errorHandler.log(L.ERROR, this.getClass(), e);

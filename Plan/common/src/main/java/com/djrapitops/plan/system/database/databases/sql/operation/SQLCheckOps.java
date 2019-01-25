@@ -43,11 +43,6 @@ public class SQLCheckOps extends SQLOps implements CheckOperations {
     }
 
     @Override
-    public boolean doesWebUserExists(String username) {
-        return securityTable.userExists(username);
-    }
-
-    @Override
     public boolean isServerInDatabase(UUID serverUUID) {
         return serverTable.getServerID(serverUUID).isPresent();
     }

@@ -17,6 +17,7 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.db.sql.queries.OptionalFetchQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.locale.Locale;
@@ -118,7 +119,7 @@ public class InspectCommand extends CommandNode {
 
     private void checkWebUserAndNotify(Sender sender) {
         if (CommandUtils.isPlayer(sender) && webServer.isAuthRequired()) {
-            boolean senderHasWebUser = dbSystem.getDatabase().check().doesWebUserExists(sender.getName());
+            boolean senderHasWebUser = dbSystem.getDatabase().query(OptionalFetchQueries.webUser(sender.getName())).isPresent();
 
             if (!senderHasWebUser) {
                 sender.sendMessage("§e" + locale.getString(CommandLang.NO_WEB_USER_NOTIFY));

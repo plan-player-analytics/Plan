@@ -338,7 +338,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public WebUser getWebUser(String username) {
-        return securityTable.getWebUser(username);
+        return db.query(OptionalFetchQueries.webUser(username)).orElse(null);
     }
 
     @Override

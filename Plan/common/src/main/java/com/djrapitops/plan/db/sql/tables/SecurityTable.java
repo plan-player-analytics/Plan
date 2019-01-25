@@ -20,14 +20,11 @@ import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Insert;
-import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -71,27 +68,6 @@ public class SecurityTable extends Table {
         });
     }
 
-    public WebUser getWebUser(String user) {
-        String sql = Select.all(tableName).where(USERNAME + "=?").toString();
-
-        return query(new QueryStatement<WebUser>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, user);
-            }
-
-            @Override
-            public WebUser processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    String saltedPassHash = set.getString(SALT_PASSWORD_HASH);
-                    int permissionLevel = set.getInt(PERMISSION_LEVEL);
-                    return new WebUser(user, saltedPassHash, permissionLevel);
-                }
-                return null;
-            }
-        });
-    }
-
     public void addNewUser(WebUser info) {
         addNewUser(info.getName(), info.getSaltedPassHash(), info.getPermLevel());
     }
@@ -105,9 +81,5 @@ public class SecurityTable extends Table {
                 statement.setInt(3, permLevel);
             }
         });
-    }
-
-    public boolean userExists(String user) {
-        return getWebUser(user) != null;
     }
 }

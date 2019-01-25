@@ -21,6 +21,7 @@ import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.sql.queries.OptionalFetchQueries;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 
@@ -55,11 +56,8 @@ public class BasicAuthentication implements Authentication {
         String passwordRaw = userInfo[1];
 
         try {
-            if (!database.check().doesWebUserExists(user)) {
-                throw new WebUserAuthException(FailReason.USER_DOES_NOT_EXIST, user);
-            }
-
-            WebUser webUser = database.fetch().getWebUser(user);
+            WebUser webUser = database.query(OptionalFetchQueries.webUser(user))
+                    .orElseThrow(() -> new WebUserAuthException(FailReason.USER_DOES_NOT_EXIST, user));
 
             boolean correctPass = PassEncryptUtil.verifyPassword(passwordRaw, webUser.getSaltedPassHash());
             if (!correctPass) {

@@ -18,6 +18,7 @@ package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.sql.queries.OptionalFetchQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -147,7 +148,7 @@ public class RegisterCommand extends CommandNode {
             String userName = webUser.getName();
             try {
                 Database database = dbSystem.getDatabase();
-                boolean userExists = database.check().doesWebUserExists(userName);
+                boolean userExists = database.query(OptionalFetchQueries.webUser(userName)).isPresent();
                 if (userExists) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_WEB_USER_EXISTS));
                     return;

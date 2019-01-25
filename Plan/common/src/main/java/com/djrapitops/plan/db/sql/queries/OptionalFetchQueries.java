@@ -16,8 +16,10 @@
  */
 package com.djrapitops.plan.db.sql.queries;
 
+import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.sql.tables.SecurityTable;
 import com.djrapitops.plan.db.sql.tables.ServerTable;
 import com.djrapitops.plan.db.sql.tables.UsersTable;
 import com.djrapitops.plan.system.info.server.Server;
@@ -90,6 +92,27 @@ public class OptionalFetchQueries {
             public Optional<String> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
                     return Optional.of(set.getString(UsersTable.USER_NAME));
+                }
+                return Optional.empty();
+            }
+        };
+    }
+
+    public static Query<Optional<WebUser>> webUser(String called) {
+        String sql = "SELECT * FROM " + SecurityTable.TABLE_NAME +
+                " WHERE " + SecurityTable.USERNAME + "=? LIMIT 1";
+        return new QueryStatement<Optional<WebUser>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, called);
+            }
+
+            @Override
+            public Optional<WebUser> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    String saltedPassHash = set.getString(SecurityTable.SALT_PASSWORD_HASH);
+                    int permissionLevel = set.getInt(SecurityTable.PERMISSION_LEVEL);
+                    return Optional.of(new WebUser(called, saltedPassHash, permissionLevel));
                 }
                 return Optional.empty();
             }

@@ -27,9 +27,6 @@ public interface CheckOperations {
     boolean isPlayerRegistered(UUID player, UUID server);
 
     @Deprecated
-    boolean doesWebUserExists(String username);
-
-    @Deprecated
     boolean isPlayerRegisteredOnThisServer(UUID player);
 
     @Deprecated
