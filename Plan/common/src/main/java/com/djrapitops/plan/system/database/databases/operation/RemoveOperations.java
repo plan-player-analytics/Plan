@@ -16,7 +16,8 @@
  */
 package com.djrapitops.plan.system.database.databases.operation;
 
+@Deprecated
 public interface RemoveOperations {
-
+    @Deprecated
     void webUser(String name);
 }

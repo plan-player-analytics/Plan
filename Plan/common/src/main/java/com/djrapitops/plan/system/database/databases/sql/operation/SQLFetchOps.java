@@ -19,23 +19,22 @@ package com.djrapitops.plan.system.database.databases.sql.operation;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.store.containers.*;
-import com.djrapitops.plan.data.store.keys.*;
+import com.djrapitops.plan.data.store.keys.PerServerKeys;
+import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.mutators.PerServerMutator;
-import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.SQLDB;
+import com.djrapitops.plan.db.sql.queries.ContainerFetchQueries;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.sql.queries.OptionalFetchQueries;
-import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.settings.config.Config;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class SQLFetchOps extends SQLOps implements FetchOperations {
@@ -46,85 +45,16 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public NetworkContainer getNetworkContainer() {
-        NetworkContainer networkContainer = db.getNetworkContainerFactory().forBungeeContainer(getBungeeServerContainer());
-        networkContainer.putCachingSupplier(NetworkKeys.BUKKIT_SERVERS, () ->
-                db.query(LargeFetchQueries.fetchPlanServerInformation()).values()
-                        .stream().filter(Server::isNotProxy).collect(Collectors.toSet())
-        );
-        return networkContainer;
-    }
-
-    private ServerContainer getBungeeServerContainer() {
-        Optional<Server> proxyInformation = db.query(OptionalFetchQueries.proxyServerInformation());
-        if (!proxyInformation.isPresent()) {
-            return new ServerContainer();
-        }
-
-        ServerContainer container = getServerContainer(proxyInformation.get().getUuid());
-        container.putCachingSupplier(ServerKeys.PLAYERS, this::getAllPlayerContainers);
-        container.putCachingSupplier(ServerKeys.TPS, tpsTable::getNetworkOnlineData);
-        container.putSupplier(ServerKeys.WORLD_TIMES, null); // Additional Session information not supported
-        container.putSupplier(ServerKeys.PLAYER_KILLS, null);
-        container.putSupplier(ServerKeys.PLAYER_KILL_COUNT, null);
-
-        return container;
+        return db.query(ContainerFetchQueries.fetchNetworkContainer());
     }
 
     @Override
     public ServerContainer getServerContainer(UUID serverUUID) {
-        ServerContainer container = new ServerContainer();
-
-        Optional<Server> serverInfo = serverTable.getServerInfo(serverUUID);
-        if (!serverInfo.isPresent()) {
-            return container;
-        }
-
-        container.putRawData(ServerKeys.SERVER_UUID, serverUUID);
-        container.putRawData(ServerKeys.NAME, serverInfo.get().getName());
-        container.putCachingSupplier(ServerKeys.PLAYERS, () -> getPlayerContainers(serverUUID));
-        container.putSupplier(ServerKeys.PLAYER_COUNT, () -> container.getUnsafe(ServerKeys.PLAYERS).size());
-
-        container.putCachingSupplier(ServerKeys.TPS, () -> tpsTable.getTPSData(serverUUID));
-        container.putCachingSupplier(ServerKeys.PING, () -> PlayersMutator.forContainer(container).pings());
-        container.putCachingSupplier(ServerKeys.ALL_TIME_PEAK_PLAYERS, () -> {
-            Optional<TPS> allTimePeak = tpsTable.getAllTimePeak(serverUUID);
-            if (allTimePeak.isPresent()) {
-                TPS peak = allTimePeak.get();
-                return new DateObj<>(peak.getDate(), peak.getPlayers());
-            }
-            return null;
-        });
-        container.putCachingSupplier(ServerKeys.RECENT_PEAK_PLAYERS, () -> {
-            long twoDaysAgo = System.currentTimeMillis() - (TimeUnit.DAYS.toMillis(2L));
-            Optional<TPS> lastPeak = tpsTable.getPeakPlayerCount(serverUUID, twoDaysAgo);
-            if (lastPeak.isPresent()) {
-                TPS peak = lastPeak.get();
-                return new DateObj<>(peak.getDate(), peak.getPlayers());
-            }
-            return null;
-        });
-
-        container.putCachingSupplier(ServerKeys.COMMAND_USAGE, () -> commandUseTable.getCommandUse(serverUUID));
-        container.putCachingSupplier(ServerKeys.WORLD_TIMES, () -> worldTimesTable.getWorldTimesOfServer(serverUUID));
-
-        // Calculating getters
-        container.putCachingSupplier(ServerKeys.OPERATORS, () -> PlayersMutator.forContainer(container).operators());
-        container.putCachingSupplier(ServerKeys.SESSIONS, () -> {
-            List<Session> sessions = PlayersMutator.forContainer(container).getSessions();
-            if (serverUUID.equals(serverInfo.get().getUuid())) {
-                sessions.addAll(SessionCache.getActiveSessions().values());
-            }
-            return sessions;
-        });
-        container.putCachingSupplier(ServerKeys.PLAYER_KILLS, () -> SessionsMutator.forContainer(container).toPlayerKillList());
-        container.putCachingSupplier(ServerKeys.PLAYER_KILL_COUNT, () -> container.getUnsafe(ServerKeys.PLAYER_KILLS).size());
-        container.putCachingSupplier(ServerKeys.MOB_KILL_COUNT, () -> SessionsMutator.forContainer(container).toMobKillCount());
-        container.putCachingSupplier(ServerKeys.DEATH_COUNT, () -> SessionsMutator.forContainer(container).toDeathCount());
-
-        return container;
+        return db.query(ContainerFetchQueries.getServerContainer(serverUUID));
     }
 
-    private List<PlayerContainer> getPlayerContainers(UUID serverUUID) {
+    @Override
+    public List<PlayerContainer> getPlayerContainers(UUID serverUUID) {
         List<PlayerContainer> containers = new ArrayList<>();
 
         List<UserInfo> serverUserInfo = userInfoTable.getServerUserInfo(serverUUID); // TODO Optimize and sort out

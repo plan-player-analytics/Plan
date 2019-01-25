@@ -249,6 +249,7 @@ public abstract class SQLDB extends AbstractDatabase {
      * <p>
      * Updates table columns to latest schema.
      */
+    @Deprecated
     void createTables() throws DBInitException {
         executeTransaction(new CreateTablesTransaction());
     }
@@ -258,6 +259,7 @@ public abstract class SQLDB extends AbstractDatabase {
      *
      * @return Table array.
      */
+    @Deprecated
     public Table[] getAllTables() {
         return new Table[]{
                 serverTable, usersTable, userInfoTable, geoInfoTable,
@@ -272,6 +274,7 @@ public abstract class SQLDB extends AbstractDatabase {
      *
      * @return Tables in the order the data should be removed in.
      */
+    @Deprecated
     public Table[] getAllTablesInRemoveOrder() {
         return new Table[]{
                 settingsTable, geoInfoTable, nicknamesTable, killsTable,
@@ -409,88 +412,108 @@ public abstract class SQLDB extends AbstractDatabase {
         transaction.executeTransaction(this);
     }
 
+    @Deprecated
     public UsersTable getUsersTable() {
         return usersTable;
     }
 
+    @Deprecated
     public SessionsTable getSessionsTable() {
         return sessionsTable;
     }
 
+    @Deprecated
     public KillsTable getKillsTable() {
         return killsTable;
     }
 
+    @Deprecated
     public GeoInfoTable getGeoInfoTable() {
         return geoInfoTable;
     }
 
+    @Deprecated
     public NicknamesTable getNicknamesTable() {
         return nicknamesTable;
     }
 
+    @Deprecated
     public CommandUseTable getCommandUseTable() {
         return commandUseTable;
     }
 
+    @Deprecated
     public TPSTable getTpsTable() {
         return tpsTable;
     }
 
+    @Deprecated
     public SecurityTable getSecurityTable() {
         return securityTable;
     }
 
+    @Deprecated
     public WorldTable getWorldTable() {
         return worldTable;
     }
 
+    @Deprecated
     public WorldTimesTable getWorldTimesTable() {
         return worldTimesTable;
     }
 
+    @Deprecated
     public ServerTable getServerTable() {
         return serverTable;
     }
 
+    @Deprecated
     public UserInfoTable getUserInfoTable() {
         return userInfoTable;
     }
 
+    @Deprecated
     public PingTable getPingTable() {
         return pingTable;
     }
 
+    @Deprecated
     public SettingsTable getSettingsTable() {
         return settingsTable;
     }
 
     @Override
+    @Deprecated
     public CheckOperations check() {
         return checkOps;
     }
 
     @Override
+    @Deprecated
     public FetchOperations fetch() {
         return fetchOps;
     }
 
     @Override
+    @Deprecated
     public RemoveOperations remove() {
         return removeOps;
     }
 
     @Override
+    @Deprecated
     public SearchOperations search() {
         return searchOps;
     }
 
     @Override
+    @Deprecated
     public CountOperations count() {
         return countOps;
     }
 
     @Override
+    @Deprecated
     public SaveOperations save() {
         return saveOps;
     }

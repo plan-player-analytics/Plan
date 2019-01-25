@@ -18,8 +18,9 @@ package com.djrapitops.plan.system.database.databases.operation;
 
 import java.util.List;
 
+@Deprecated
 public interface SearchOperations {
-
+    @Deprecated
     List<String> matchingPlayers(String search);
 
 }

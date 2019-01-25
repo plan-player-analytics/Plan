@@ -18,15 +18,20 @@ package com.djrapitops.plan.system.database.databases.operation;
 
 import java.util.UUID;
 
+@Deprecated
 public interface CheckOperations {
-
+    @Deprecated
     boolean isPlayerRegistered(UUID player);
 
+    @Deprecated
     boolean isPlayerRegistered(UUID player, UUID server);
 
+    @Deprecated
     boolean doesWebUserExists(String username);
 
+    @Deprecated
     boolean isPlayerRegisteredOnThisServer(UUID player);
 
+    @Deprecated
     boolean isServerInDatabase(UUID serverUUID);
 }

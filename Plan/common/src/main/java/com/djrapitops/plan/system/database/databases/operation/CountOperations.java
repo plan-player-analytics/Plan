@@ -18,8 +18,9 @@ package com.djrapitops.plan.system.database.databases.operation;
 
 import java.util.UUID;
 
+@Deprecated
 public interface CountOperations {
-
+    @Deprecated
     int getServerPlayerCount(UUID server);
 
 }

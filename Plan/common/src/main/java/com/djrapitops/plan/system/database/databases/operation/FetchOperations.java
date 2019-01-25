@@ -63,6 +63,8 @@ public interface FetchOperations {
     @Deprecated
     ServerContainer getServerContainer(UUID serverUUID);
 
+    List<PlayerContainer> getPlayerContainers(UUID serverUUID);
+
     /**
      * Used to get PlayerContainers of all players on the network, some limitations apply to DataContainer keys.
      * <p>
