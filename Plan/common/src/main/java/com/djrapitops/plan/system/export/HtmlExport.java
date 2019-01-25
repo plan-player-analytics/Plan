@@ -19,7 +19,7 @@ package com.djrapitops.plan.system.export;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.data.container.UserInfo;
+import com.djrapitops.plan.data.container.BaseUser;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
@@ -138,9 +138,9 @@ public class HtmlExport extends SpecificExport {
 
     public void exportAvailablePlayers() {
         try {
-            Map<UUID, UserInfo> users = dbSystem.getDatabase().query(LargeFetchQueries.fetchAllCommonUserInformation());
-            for (Map.Entry<UUID, UserInfo> entry : users.entrySet()) {
-                exportAvailablePlayerPage(entry.getKey(), entry.getValue().getName());
+            Collection<BaseUser> users = dbSystem.getDatabase().query(LargeFetchQueries.fetchAllCommonUserInformation());
+            for (BaseUser user : users) {
+                exportAvailablePlayerPage(user.getUuid(), user.getName());
             }
         } catch (IOException | DBOpException e) {
             errorHandler.log(L.WARN, this.getClass(), e);

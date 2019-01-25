@@ -16,36 +16,39 @@
  */
 package com.djrapitops.plan.data.container;
 
+import com.djrapitops.plugin.utilities.Verify;
+
 import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Used for storing information of players after it has been fetched.
+ * Represents user information stored in plan_users.
+ * <p>
+ * Only one per player exists unlike {@link UserInfo} which is available per server.
  *
  * @author Rsl1122
  */
-public class UserInfo {
+public class BaseUser {
 
     private final UUID uuid;
-    @Deprecated
-    private String name;
-    private long registered;
-    private boolean banned;
-    private boolean opped;
+    private final String name;
+    private final long registered;
+    private final int timesKicked;
 
-    public UserInfo(UUID uuid, String name, long registered, boolean opped, boolean banned) {
+    public BaseUser(UUID uuid, String name, long registered, int timesKicked) {
+        Verify.nullCheck(uuid, () -> new IllegalArgumentException("'uuid' can not be null"));
+        Verify.nullCheck(name, () -> new IllegalArgumentException("'name' can not be null"));
+
         this.uuid = uuid;
         this.name = name;
         this.registered = registered;
-        this.opped = opped;
-        this.banned = banned;
+        this.timesKicked = timesKicked;
     }
 
     public UUID getUuid() {
         return uuid;
     }
 
-    @Deprecated
     public String getName() {
         return name;
     }
@@ -54,39 +57,23 @@ public class UserInfo {
         return registered;
     }
 
-    public boolean isBanned() {
-        return banned;
-    }
-
-    public boolean isOperator() {
-        return opped;
+    public int getTimesKicked() {
+        return timesKicked;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserInfo userInfo = (UserInfo) o;
-        return registered == userInfo.registered &&
-                banned == userInfo.banned &&
-                opped == userInfo.opped &&
-                Objects.equals(uuid, userInfo.uuid) &&
-                Objects.equals(name, userInfo.name);
+        if (!(o instanceof BaseUser)) return false;
+        BaseUser baseUser = (BaseUser) o;
+        return registered == baseUser.registered &&
+                timesKicked == baseUser.timesKicked &&
+                uuid.equals(baseUser.uuid) &&
+                name.equals(baseUser.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, name, registered, banned, opped);
-    }
-
-    @Override
-    public String toString() {
-        return "UserInfo{" +
-                "uuid=" + uuid +
-                ", name='" + name + '\'' +
-                ", registered=" + registered +
-                ", banned=" + banned +
-                ", opped=" + opped +
-                '}';
+        return Objects.hash(uuid, name, registered, timesKicked);
     }
 }

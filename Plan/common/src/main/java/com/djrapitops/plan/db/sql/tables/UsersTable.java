@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
@@ -49,6 +48,8 @@ public class UsersTable extends Table {
     public static final String REGISTERED = "registered";
     public static final String USER_NAME = "name";
     public static final String TIMES_KICKED = "times_kicked";
+
+    public static final String INSERT_STATEMENT = Insert.values(TABLE_NAME, USER_UUID, USER_NAME, REGISTERED, TIMES_KICKED);
 
     public UsersTable(SQLDB db) {
         super(TABLE_NAME, db);
@@ -272,37 +273,6 @@ public class UsersTable extends Table {
                     }
                 }
                 return matchingNames;
-            }
-        });
-    }
-
-    /**
-     * Inserts UUIDs, Register dates and Names to the table.
-     * <p>
-     * This method is for batch operations, and should not be used to add information of users.
-     * Use UserInfoTable instead.
-     *
-     * @param users Users to insert
-     */
-    public void insertUsers(Map<UUID, UserInfo> users) {
-        if (Verify.isEmpty(users)) {
-            return;
-        }
-
-        executeBatch(new ExecStatement(insertStatement) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                for (Map.Entry<UUID, UserInfo> entry : users.entrySet()) {
-                    UUID uuid = entry.getKey();
-                    UserInfo info = entry.getValue();
-                    long registered = info.getRegistered();
-                    String name = info.getName();
-
-                    statement.setString(1, uuid.toString());
-                    statement.setLong(2, registered);
-                    statement.setString(3, name);
-                    statement.addBatch();
-                }
             }
         });
     }

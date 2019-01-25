@@ -17,12 +17,10 @@
 package com.djrapitops.plan.db.access.transactions;
 
 import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.sql.queries.LargeStoreQueries;
-import com.djrapitops.plan.db.sql.tables.UsersTable;
 
 import java.util.function.Function;
 
@@ -103,11 +101,7 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
     }
 
     private void copyUsers() {
-        UsersTable fromTable = ((SQLDB) sourceDB).getUsersTable();
-        UsersTable toTable = db.getUsersTable();
-
-        toTable.insertUsers(sourceDB.query(LargeFetchQueries.fetchAllCommonUserInformation()));
-        toTable.updateKicked(fromTable.getAllTimesKicked());
+        copy(LargeStoreQueries::storeAllCommonUserInformation, LargeFetchQueries.fetchAllCommonUserInformation());
     }
 
     private void copySessions() {

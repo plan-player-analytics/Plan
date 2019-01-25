@@ -557,7 +557,7 @@ public abstract class CommonDBTest {
 
         db.executeTransaction(new RemoveEverythingTransaction());
 
-        assertQueryIsEmpty(db, LargeFetchQueries.fetchAllCommonUserInformation());
+        assertTrue(db.query(LargeFetchQueries.fetchAllCommonUserInformation()).isEmpty());
         assertQueryIsEmpty(db, LargeFetchQueries.fetchPerServerUserInformation());
         assertQueryIsEmpty(db, LargeFetchQueries.fetchAllNicknameData());
         assertQueryIsEmpty(db, LargeFetchQueries.fetchAllGeoInfoData());

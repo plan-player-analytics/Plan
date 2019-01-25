@@ -473,21 +473,22 @@ public class LargeFetchQueries {
      * <p>
      * This is the base for any user information.
      *
-     * @return Map: Player UUID - UserInfo
+     * @return Map: Player UUID - BaseUser
      */
-    public static Query<Map<UUID, UserInfo>> fetchAllCommonUserInformation() {
+    public static Query<Collection<BaseUser>> fetchAllCommonUserInformation() {
         String sql = Select.all(UsersTable.TABLE_NAME).toString();
 
-        return new QueryAllStatement<Map<UUID, UserInfo>>(sql, 20000) {
+        return new QueryAllStatement<Collection<BaseUser>>(sql, 20000) {
             @Override
-            public Map<UUID, UserInfo> processResults(ResultSet set) throws SQLException {
-                Map<UUID, UserInfo> users = new HashMap<>();
+            public Collection<BaseUser> processResults(ResultSet set) throws SQLException {
+                Collection<BaseUser> users = new HashSet<>();
                 while (set.next()) {
                     UUID uuid = UUID.fromString(set.getString(UsersTable.USER_UUID));
                     String name = set.getString(UsersTable.USER_NAME);
                     long registered = set.getLong(UsersTable.REGISTERED);
+                    int kicked = set.getInt(UsersTable.TIMES_KICKED);
 
-                    users.put(uuid, new UserInfo(uuid, name, registered, false, false));
+                    users.add(new BaseUser(uuid, name, registered, kicked));
                 }
                 return users;
             }

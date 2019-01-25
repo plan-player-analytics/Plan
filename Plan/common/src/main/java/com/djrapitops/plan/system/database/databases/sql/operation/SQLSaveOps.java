@@ -26,9 +26,11 @@ import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.settings.config.Config;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * SaveOperations implementation for SQL databases.
@@ -62,8 +64,16 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
     }
 
     @Override
-    public void insertUsers(Map<UUID, UserInfo> ofServers) {
-        usersTable.insertUsers(ofServers);
+    public void insertUsers(Map<UUID, UserInfo> ofUsers) {
+        db.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                Collection<BaseUser> users = ofUsers.values().stream()
+                        .map(user -> new BaseUser(user.getUuid(), user.getName(), user.getRegistered(), 0))
+                        .collect(Collectors.toSet());
+                execute(LargeStoreQueries.storeAllCommonUserInformation(users));
+            }
+        });
     }
 
     @Override

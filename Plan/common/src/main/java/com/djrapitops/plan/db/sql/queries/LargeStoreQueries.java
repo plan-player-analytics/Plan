@@ -17,6 +17,7 @@
 package com.djrapitops.plan.db.sql.queries;
 
 import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.data.container.BaseUser;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.UserInfo;
@@ -275,6 +276,12 @@ public class LargeStoreQueries {
         };
     }
 
+    /**
+     * Execute a big batch of world name insert statements.
+     *
+     * @param ofServers Map: Server UUID - Collection of world names
+     * @return Executable, use inside a {@link com.djrapitops.plan.db.access.transactions.Transaction}
+     */
     public static Executable storeAllWorldNames(Map<UUID, Collection<String>> ofServers) {
         if (Verify.isEmpty(ofServers)) {
             return Executable.empty();
@@ -290,6 +297,25 @@ public class LargeStoreQueries {
                         statement.setString(2, serverUUID.toString());
                         statement.addBatch();
                     }
+                }
+            }
+        };
+    }
+
+    public static Executable storeAllCommonUserInformation(Collection<BaseUser> ofUsers) {
+        if (Verify.isEmpty(ofUsers)) {
+            return Executable.empty();
+        }
+
+        return new ExecBatchStatement(UsersTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (BaseUser user : ofUsers) {
+                    statement.setString(1, user.getUuid().toString());
+                    statement.setString(2, user.getName());
+                    statement.setLong(3, user.getRegistered());
+                    statement.setInt(4, user.getTimesKicked());
+                    statement.addBatch();
                 }
             }
         };

@@ -192,8 +192,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
     public List<PlayerContainer> getAllPlayerContainers() {
         List<PlayerContainer> containers = new ArrayList<>();
 
-        Map<UUID, UserInfo> users = db.query(LargeFetchQueries.fetchAllCommonUserInformation());
-        Map<UUID, Integer> timesKicked = usersTable.getAllTimesKicked();
+        Collection<BaseUser> users = db.query(LargeFetchQueries.fetchAllCommonUserInformation());
         Map<UUID, List<GeoInfo>> geoInfo = db.query(LargeFetchQueries.fetchAllGeoInfoData());
         Map<UUID, List<Ping>> allPings = db.query(LargeFetchQueries.fetchAllPingData());
         Map<UUID, List<Nickname>> allNicknames = db.query(LargeFetchQueries.fetchAllNicknameDataByPlayerUUIDs());
@@ -202,14 +201,14 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         Map<UUID, List<UserInfo>> allUserInfo = db.query(LargeFetchQueries.fetchPerServerUserInformation());
         Map<UUID, PerServerContainer> perServerInfo = getPerServerData(sessions, allUserInfo, allPings);
 
-        for (UserInfo userInfo : users.values()) {
+        for (BaseUser baseUser : users) {
             PlayerContainer container = new PlayerContainer();
-            UUID uuid = userInfo.getUuid();
+            UUID uuid = baseUser.getUuid();
             container.putRawData(PlayerKeys.UUID, uuid);
 
-            container.putRawData(PlayerKeys.REGISTERED, userInfo.getRegistered());
-            container.putRawData(PlayerKeys.NAME, userInfo.getName());
-            container.putRawData(PlayerKeys.KICK_COUNT, timesKicked.get(uuid));
+            container.putRawData(PlayerKeys.REGISTERED, baseUser.getRegistered());
+            container.putRawData(PlayerKeys.NAME, baseUser.getName());
+            container.putRawData(PlayerKeys.KICK_COUNT, baseUser.getTimesKicked());
             container.putRawData(PlayerKeys.GEO_INFO, geoInfo.get(uuid));
             container.putRawData(PlayerKeys.PING, allPings.get(uuid));
             container.putRawData(PlayerKeys.NICKNAMES, allNicknames.get(uuid));
@@ -424,7 +423,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Map<UUID, UserInfo> getUsers() {
-        return db.query(LargeFetchQueries.fetchAllCommonUserInformation());
+        return new HashMap<>();
     }
 
     @Override
