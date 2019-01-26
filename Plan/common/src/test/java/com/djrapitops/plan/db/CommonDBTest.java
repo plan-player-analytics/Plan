@@ -780,6 +780,12 @@ public abstract class CommonDBTest {
     }
 
     @Test
+    public void testGetServerWorldTimesNoSessions() {
+        WorldTimes worldTimesOfServer = db.getWorldTimesTable().getWorldTimesOfServer(serverUUID);
+        assertEquals(new WorldTimes(new HashMap<>()), worldTimesOfServer);
+    }
+
+    @Test
     public void testRegister() {
         assertFalse(db.check().isPlayerRegistered(playerUUID));
         assertFalse(db.check().isPlayerRegisteredOnThisServer(playerUUID));
