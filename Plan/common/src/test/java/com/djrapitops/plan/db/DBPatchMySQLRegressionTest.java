@@ -20,7 +20,9 @@ import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
+import com.djrapitops.plan.db.access.transactions.CreateTablesTransaction;
 import com.djrapitops.plan.db.access.transactions.RemoveEverythingTransaction;
+import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.tasks.PatchTask;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.locale.Locale;
@@ -98,30 +100,40 @@ public class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
         dropAllTables();
 
         // Initialize database with the old table schema
-        underTest.execute(serverTable);
-        underTest.execute(usersTable);
-        underTest.execute(userInfoTable);
-        underTest.execute(geoInfoTable);
-        underTest.execute(nicknameTable);
-        underTest.execute(sessionsTable);
-        underTest.execute(killsTable);
-        underTest.execute(pingTable);
-        underTest.execute(commandUseTable);
-        underTest.execute(tpsTable);
-        underTest.execute(worldsTable);
-        underTest.execute(worldTimesTable);
-        underTest.execute(securityTable);
-        underTest.execute(transferTable);
+        underTest.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute(serverTable);
+                execute(usersTable);
+                execute(userInfoTable);
+                execute(geoInfoTable);
+                execute(nicknameTable);
+                execute(sessionsTable);
+                execute(killsTable);
+                execute(pingTable);
+                execute(commandUseTable);
+                execute(tpsTable);
+                execute(worldsTable);
+                execute(worldTimesTable);
+                execute(securityTable);
+                execute(transferTable);
+            }
+        });
 
-        underTest.createTables();
+        underTest.executeTransaction(new CreateTablesTransaction());
 
         insertData(underTest);
     }
 
     private void dropAllTables() {
-        underTest.execute("DROP DATABASE Plan");
-        underTest.execute("CREATE DATABASE Plan");
-        underTest.execute("USE Plan");
+        underTest.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute("DROP DATABASE Plan");
+                execute("CREATE DATABASE Plan");
+                execute("USE Plan");
+            }
+        });
     }
 
     @After

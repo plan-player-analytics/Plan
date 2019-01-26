@@ -213,7 +213,7 @@ public abstract class SQLDB extends AbstractDatabase {
      */
     private void setupDatabase() throws DBInitException {
         try {
-            createTables();
+            executeTransaction(new CreateTablesTransaction());
             registerIndexCreationTask();
             registerPatchTask();
         } catch (DBOpException | IllegalArgumentException e) {
@@ -242,16 +242,6 @@ public abstract class SQLDB extends AbstractDatabase {
         } catch (Exception ignore) {
             // Task failed to register because plugin is being disabled
         }
-    }
-
-    /**
-     * Creates the tables that contain data.
-     * <p>
-     * Updates table columns to latest schema.
-     */
-    @Deprecated
-    void createTables() throws DBInitException {
-        executeTransaction(new CreateTablesTransaction());
     }
 
     public abstract void setupDataSource() throws DBInitException;

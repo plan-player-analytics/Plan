@@ -123,7 +123,7 @@ public abstract class CommonDBTest {
                 dropTable("plan_users");
             }
         }.apply();
-        db.createTables();
+        db.executeTransaction(new CreateTablesTransaction());
         db.executeTransaction(new RemoveEverythingTransaction());
         ServerTable serverTable = db.getServerTable();
         serverTable.saveCurrentServerInfo(new Server(-1, serverUUID, "ServerName", "", 20));
