@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.db.sql.queries.schema;
 
-import com.djrapitops.plan.db.access.CountQueryStatement;
+import com.djrapitops.plan.db.access.HasMoreThanZeroQueryStatement;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 
@@ -37,7 +37,7 @@ public class SQLiteSchemaQueries {
 
     public static Query<Boolean> doesTableExist(String tableName) {
         String sql = "SELECT COUNT(1) as c FROM sqlite_master WHERE tbl_name=?";
-        return new CountQueryStatement(sql) {
+        return new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tableName);

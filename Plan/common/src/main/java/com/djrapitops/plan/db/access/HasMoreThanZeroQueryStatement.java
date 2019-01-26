@@ -24,15 +24,15 @@ import java.sql.SQLException;
  *
  * @author Rsl1122
  */
-public abstract class CountQueryStatement extends QueryStatement<Boolean> {
+public abstract class HasMoreThanZeroQueryStatement extends QueryStatement<Boolean> {
 
     private String countColumnName = "c";
 
-    public CountQueryStatement(String sql) {
+    public HasMoreThanZeroQueryStatement(String sql) {
         super(sql);
     }
 
-    public CountQueryStatement(String sql, String countColumnName) {
+    public HasMoreThanZeroQueryStatement(String sql, String countColumnName) {
         super(sql);
         this.countColumnName = countColumnName;
     }

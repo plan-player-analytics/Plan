@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.db.sql.queries.schema;
 
-import com.djrapitops.plan.db.access.CountQueryStatement;
+import com.djrapitops.plan.db.access.HasMoreThanZeroQueryStatement;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
 
@@ -39,7 +39,7 @@ public class MySQLSchemaQueries {
 
     public static Query<Boolean> doesTableExist(String tableName) {
         String sql = "SELECT COUNT(1) as c FROM information_schema.TABLES WHERE table_name=? AND TABLE_SCHEMA=DATABASE()";
-        return new CountQueryStatement(sql) {
+        return new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tableName);
@@ -83,7 +83,7 @@ public class MySQLSchemaQueries {
     public static Query<Boolean> doesIndexExist(String indexName, String tableName) {
         String sql = "SELECT COUNT(1) as c FROM INFORMATION_SCHEMA.STATISTICS " +
                 "WHERE table_schema=DATABASE() AND table_name=? AND index_name=?";
-        return new CountQueryStatement(sql) {
+        return new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tableName);
@@ -95,7 +95,7 @@ public class MySQLSchemaQueries {
     public static Query<Boolean> doesColumnExist(String tableName, String columnName) {
         String sql = "SELECT COUNT(1) as c FROM information_schema.COLUMNS" +
                 " WHERE TABLE_NAME=? AND COLUMN_NAME=? AND TABLE_SCHEMA=DATABASE()";
-        return new CountQueryStatement(sql) {
+        return new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tableName);

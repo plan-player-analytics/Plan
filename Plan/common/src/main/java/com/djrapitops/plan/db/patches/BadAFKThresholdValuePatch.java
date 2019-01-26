@@ -17,7 +17,7 @@
 package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.CountQueryStatement;
+import com.djrapitops.plan.db.access.HasMoreThanZeroQueryStatement;
 import com.djrapitops.plan.db.sql.tables.SessionsTable;
 
 import java.sql.PreparedStatement;
@@ -51,7 +51,7 @@ public class BadAFKThresholdValuePatch extends Patch {
                 SessionsTable.AFK_TIME +
                 " - (" + SessionsTable.SESSION_END + "-" + SessionsTable.SESSION_START +
                 ")) < 5 AND " + SessionsTable.AFK_TIME + "!=0";
-        return query(new CountQueryStatement(sql, "found") {
+        return query(new HasMoreThanZeroQueryStatement(sql, "found") {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 /* Nothing to prepare */
