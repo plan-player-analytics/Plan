@@ -20,7 +20,6 @@ import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.UserInfoOptimizationPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
@@ -28,7 +27,6 @@ import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.sql.parsing.Update;
-import com.djrapitops.plan.system.info.server.Server;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -238,54 +236,8 @@ public class UserInfoTable extends Table {
         return getServerUserInfo(getServerUUID());
     }
 
-    public int getServerUserCount(UUID serverUUID) {
-        String sql = "SELECT " +
-                " COUNT(" + REGISTERED + ") as c" +
-                " FROM " + tableName +
-                " WHERE " + SERVER_UUID + "=?";
-
-        return query(new QueryAllStatement<Integer>(sql, 20000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public Integer processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return set.getInt("c");
-                }
-                return 0;
-            }
-        });
-    }
-
     public boolean isRegisteredOnThisServer(UUID player) {
         return isRegistered(player, getServerUUID());
-    }
-
-    public Map<UUID, Integer> getPlayersRegisteredForServers(Collection<Server> servers) {
-        if (servers.isEmpty()) {
-            return new HashMap<>();
-        }
-
-        String sql = "SELECT " + SERVER_UUID + ", " +
-                "COUNT(" + REGISTERED + ") AS count" +
-                " FROM " + tableName +
-                " GROUP BY " + SERVER_UUID;
-        return query(new QueryAllStatement<Map<UUID, Integer>>(sql, 10000) {
-            @Override
-            public Map<UUID, Integer> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Integer> map = new HashMap<>();
-                while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(SERVER_UUID));
-                    int count = set.getInt("count");
-                    map.put(serverUUID, count);
-                }
-                return map;
-            }
-        });
-
     }
 
     public Set<UUID> getSavedUUIDs(UUID serverUUID) {

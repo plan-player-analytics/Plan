@@ -93,7 +93,6 @@ public abstract class SQLDB extends AbstractDatabase {
     private final SQLFetchOps fetchOps;
     private final SQLRemoveOps removeOps;
     private final SQLSearchOps searchOps;
-    private final SQLCountOps countOps;
     private final SQLSaveOps saveOps;
 
     private PluginTask dbCleanTask;
@@ -136,7 +135,6 @@ public abstract class SQLDB extends AbstractDatabase {
         checkOps = new SQLCheckOps(this);
         fetchOps = new SQLFetchOps(this);
         removeOps = new SQLRemoveOps(this);
-        countOps = new SQLCountOps(this);
         searchOps = new SQLSearchOps(this);
         saveOps = new SQLSaveOps(this);
     }
@@ -474,12 +472,6 @@ public abstract class SQLDB extends AbstractDatabase {
     @Deprecated
     public SearchOperations search() {
         return searchOps;
-    }
-
-    @Override
-    @Deprecated
-    public CountOperations count() {
-        return countOps;
     }
 
     @Override

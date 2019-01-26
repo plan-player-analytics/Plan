@@ -66,9 +66,6 @@ public interface Database {
     SearchOperations search();
 
     @Deprecated
-    CountOperations count();
-
-    @Deprecated
     SaveOperations save();
 
     /**

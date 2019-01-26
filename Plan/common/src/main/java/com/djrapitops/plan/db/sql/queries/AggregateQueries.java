@@ -18,10 +18,16 @@ package com.djrapitops.plan.db.sql.queries;
 
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryAllStatement;
+import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.sql.tables.UserInfoTable;
 import com.djrapitops.plan.db.sql.tables.UsersTable;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Static method class for queries that count how many entries of particular kinds there are.
@@ -37,7 +43,7 @@ public class AggregateQueries {
     /**
      * Count how many users are in the Plan database.
      *
-     * @return Count of base users, all users in a network.
+     * @return Count of base users, all users in a network after Plan installation.
      */
     public static Query<Integer> baseUserCount() {
         String sql = "SELECT COUNT(1) as c FROM " + UsersTable.TABLE_NAME;
@@ -45,6 +51,54 @@ public class AggregateQueries {
             @Override
             public Integer processResults(ResultSet set) throws SQLException {
                 return set.next() ? set.getInt("c") : 0;
+            }
+        };
+    }
+
+    /**
+     * Count how many users are on a server in the network.
+     *
+     * @param serverUUID ServerUUID of the Plan server.
+     * @return Count of users registered to that server after Plan installation.
+     */
+    public static Query<Integer> serverUserCount(UUID serverUUID) {
+        String sql = "SELECT COUNT(1) as c FROM " + UserInfoTable.TABLE_NAME +
+                " WHERE " + UserInfoTable.SERVER_UUID + "=?";
+        return new QueryStatement<Integer>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+            }
+
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getInt("c") : 0;
+            }
+        };
+    }
+
+    /**
+     * Count how many users are on each server in the network.
+     * <p>
+     * Please note that counts can overlap as one user can join multiple servers.
+     * Use {@link AggregateQueries#baseUserCount()} if you want to count total number of users.
+     *
+     * @return Map: Server UUID - Count of users registered to that server
+     */
+    public static Query<Map<UUID, Integer>> serverUserCounts() {
+        String sql = "SELECT COUNT(1) as c, " + UserInfoTable.SERVER_UUID + " FROM " + UserInfoTable.TABLE_NAME +
+                " WHERE " + UserInfoTable.SERVER_UUID + "=?" +
+                " GROUP BY " + UserInfoTable.SERVER_UUID;
+        return new QueryAllStatement<Map<UUID, Integer>>(sql, 100) {
+            @Override
+            public Map<UUID, Integer> processResults(ResultSet set) throws SQLException {
+                Map<UUID, Integer> ofServer = new HashMap<>();
+                while (set.next()) {
+                    UUID serverUUID = UUID.fromString(set.getString(UserInfoTable.SERVER_UUID));
+                    int count = set.getInt("c");
+                    ofServer.put(serverUUID, count);
+                }
+                return ofServer;
             }
         };
     }

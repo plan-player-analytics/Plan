@@ -23,6 +23,7 @@ import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.mutators.health.NetworkHealthInformation;
+import com.djrapitops.plan.db.sql.queries.AggregateQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
@@ -100,19 +101,16 @@ public class NetworkContainer extends DataContainer {
         putSupplier(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA, () -> dbSystem.getDatabase().fetch().getPlayersOnlineForServers(
                 getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>()))
         );
-        putSupplier(NetworkKeys.SERVER_REGISTER_DATA, () -> dbSystem.getDatabase().fetch().getPlayersRegisteredForServers(
-                getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>()))
-        );
         putSupplier(NetworkKeys.SERVERS_TAB, () -> {
             StringBuilder serverBoxes = new StringBuilder();
             Map<Integer, List<TPS>> playersOnlineData = getValue(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA).orElse(new HashMap<>());
-            Map<UUID, Integer> registerData = getValue(NetworkKeys.SERVER_REGISTER_DATA).orElse(new HashMap<>());
+            Map<UUID, Integer> userCounts = dbSystem.getDatabase().query(AggregateQueries.serverUserCounts());
             Collection<Server> servers = getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>());
             servers.stream()
                     .sorted((one, two) -> String.CASE_INSENSITIVE_ORDER.compare(one.getName(), two.getName()))
                     .forEach(server -> {
                         TPSMutator tpsMutator = new TPSMutator(playersOnlineData.getOrDefault(server.getId(), new ArrayList<>()));
-                        int registered = registerData.getOrDefault(server.getUuid(), 0);
+                        int registered = userCounts.getOrDefault(server.getUuid(), 0);
                         NetworkServerBox serverBox = new NetworkServerBox(server, registered, tpsMutator, graphs);
                         serverBoxes.append(serverBox.toHtml());
                     });
