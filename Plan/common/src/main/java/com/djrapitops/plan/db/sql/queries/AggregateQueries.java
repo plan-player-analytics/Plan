@@ -113,7 +113,7 @@ public class AggregateQueries {
      */
     public static Query<Map<String, Integer>> commandUsageCounts(UUID serverUUID) {
         String sql = "SELECT " + CommandUseTable.COMMAND + ", " + CommandUseTable.TIMES_USED + " FROM " + CommandUseTable.TABLE_NAME +
-                "WHERE " + CommandUseTable.SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID;
+                " WHERE " + CommandUseTable.SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID;
 
         return new QueryStatement<Map<String, Integer>>(sql, 5000) {
             @Override
