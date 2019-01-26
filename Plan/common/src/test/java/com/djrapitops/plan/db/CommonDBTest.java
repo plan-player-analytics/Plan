@@ -31,6 +31,7 @@ import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.transactions.*;
 import com.djrapitops.plan.db.patches.Patch;
+import com.djrapitops.plan.db.sql.queries.AggregateQueries;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.sql.queries.LargeStoreQueries;
 import com.djrapitops.plan.db.sql.queries.OptionalFetchQueries;
@@ -172,7 +173,7 @@ public abstract class CommonDBTest {
 
         commitTest();
 
-        Map<String, Integer> commandUse = db.getCommandUseTable().getCommandUse(serverUUID);
+        Map<String, Integer> commandUse = db.query(AggregateQueries.commandUsageCounts(serverUUID));
         assertEquals(expected, commandUse);
 
         for (int i = 0; i < 3; i++) {
@@ -186,7 +187,7 @@ public abstract class CommonDBTest {
         expected.put("test", 3);
         expected.put("tp", 6);
 
-        commandUse = db.getCommandUseTable().getCommandUse(serverUUID);
+        commandUse = db.query(AggregateQueries.commandUsageCounts(serverUUID));
 
         assertEquals(expected, commandUse);
     }

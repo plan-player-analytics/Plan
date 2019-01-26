@@ -19,6 +19,8 @@ package com.djrapitops.plan.db.sql.queries;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.sql.tables.CommandUseTable;
+import com.djrapitops.plan.db.sql.tables.ServerTable;
 import com.djrapitops.plan.db.sql.tables.UserInfoTable;
 import com.djrapitops.plan.db.sql.tables.UsersTable;
 
@@ -99,6 +101,35 @@ public class AggregateQueries {
                     ofServer.put(serverUUID, count);
                 }
                 return ofServer;
+            }
+        };
+    }
+
+    /**
+     * Count how many times commands have been used on a server.
+     *
+     * @param serverUUID Server UUID of the Plan server.
+     * @return Map: Lowercase used command - Count of use times.
+     */
+    public static Query<Map<String, Integer>> commandUsageCounts(UUID serverUUID) {
+        String sql = "SELECT " + CommandUseTable.COMMAND + ", " + CommandUseTable.TIMES_USED + " FROM " + CommandUseTable.TABLE_NAME +
+                "WHERE " + CommandUseTable.SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID;
+
+        return new QueryStatement<Map<String, Integer>>(sql, 5000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+            }
+
+            @Override
+            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
+                Map<String, Integer> commandUse = new HashMap<>();
+                while (set.next()) {
+                    String cmd = set.getString(CommandUseTable.COMMAND).toLowerCase();
+                    int amountUsed = set.getInt(CommandUseTable.TIMES_USED);
+                    commandUse.put(cmd, amountUsed);
+                }
+                return commandUse;
             }
         };
     }

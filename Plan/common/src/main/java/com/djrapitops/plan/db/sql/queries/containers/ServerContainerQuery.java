@@ -23,6 +23,7 @@ import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Query;
+import com.djrapitops.plan.db.sql.queries.AggregateQueries;
 import com.djrapitops.plan.db.sql.queries.OptionalFetchQueries;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.info.server.Server;
@@ -74,7 +75,7 @@ public class ServerContainerQuery implements Query<ServerContainer> {
             return db.query(OptionalFetchQueries.fetchPeakPlayerCount(serverUUID, twoDaysAgo)).orElse(null);
         });
 
-        container.putCachingSupplier(ServerKeys.COMMAND_USAGE, () -> db.getCommandUseTable().getCommandUse(serverUUID));
+        container.putCachingSupplier(ServerKeys.COMMAND_USAGE, () -> db.query(AggregateQueries.commandUsageCounts(serverUUID)));
         container.putCachingSupplier(ServerKeys.WORLD_TIMES, () -> db.getWorldTimesTable().getWorldTimesOfServer(serverUUID));
 
         // Calculating getters

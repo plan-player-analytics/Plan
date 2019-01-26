@@ -27,10 +27,7 @@ import com.djrapitops.plan.db.sql.parsing.Sql;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Table that is in charge of storing command data.
@@ -70,37 +67,6 @@ public class CommandUseTable extends Table {
                 .column(SERVER_ID, Sql.INT).notNull()
                 .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.SERVER_ID)
                 .toString();
-    }
-
-    /**
-     * Used to get all commands used in a server.
-     *
-     * @param serverUUID UUID of the server.
-     * @return command - times used Map
-     */
-    public Map<String, Integer> getCommandUse(UUID serverUUID) {
-        String sql = Select.from(tableName,
-                COMMAND, TIMES_USED)
-                .where(SERVER_ID + "=" + serverTable.statementSelectServerID)
-                .toString();
-
-        return query(new QueryStatement<Map<String, Integer>>(sql, 5000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
-                Map<String, Integer> commandUse = new HashMap<>();
-                while (set.next()) {
-                    String cmd = set.getString(COMMAND).toLowerCase();
-                    int amountUsed = set.getInt(TIMES_USED);
-                    commandUse.put(cmd, amountUsed);
-                }
-                return commandUse;
-            }
-        });
     }
 
     public void commandUsed(String command) {
