@@ -79,7 +79,7 @@ public class WebDeleteCommand extends CommandNode {
         processing.submitNonCritical(() -> {
             try {
                 Database db = dbSystem.getDatabase();
-                Optional<WebUser> found = db.query(OptionalFetchQueries.webUser(user));
+                Optional<WebUser> found = db.query(OptionalFetchQueries.fetchWebUser(user));
                 if (!found.isPresent()) {
                     sender.sendMessage("§c[Plan] User Doesn't exist.");
                     return;

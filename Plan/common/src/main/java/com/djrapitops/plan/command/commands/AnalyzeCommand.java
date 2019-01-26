@@ -125,7 +125,7 @@ public class AnalyzeCommand extends CommandNode {
     private void sendWebUserNotificationIfNecessary(Sender sender) {
         if (webServer.isAuthRequired() &&
                 CommandUtils.isPlayer(sender) &&
-                !dbSystem.getDatabase().query(OptionalFetchQueries.webUser(sender.getName())).isPresent()) {
+                !dbSystem.getDatabase().query(OptionalFetchQueries.fetchWebUser(sender.getName())).isPresent()) {
             sender.sendMessage("§e" + locale.getString(CommandLang.NO_WEB_USER_NOTIFY));
         }
     }
@@ -133,7 +133,7 @@ public class AnalyzeCommand extends CommandNode {
     private Optional<Server> getServer(String[] args) {
         if (args.length >= 1 && connectionSystem.isServerAvailable()) {
             String serverIdentifier = getGivenIdentifier(args);
-            return dbSystem.getDatabase().query(OptionalFetchQueries.matchingServerIdentifier(serverIdentifier))
+            return dbSystem.getDatabase().query(OptionalFetchQueries.fetchMatchingServerIdentifier(serverIdentifier))
                     .filter(server -> !server.isProxy());
         }
         return Optional.empty();

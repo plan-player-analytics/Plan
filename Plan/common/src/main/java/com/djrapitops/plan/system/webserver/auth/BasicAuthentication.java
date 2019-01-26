@@ -56,7 +56,7 @@ public class BasicAuthentication implements Authentication {
         String passwordRaw = userInfo[1];
 
         try {
-            WebUser webUser = database.query(OptionalFetchQueries.webUser(user))
+            WebUser webUser = database.query(OptionalFetchQueries.fetchWebUser(user))
                     .orElseThrow(() -> new WebUserAuthException(FailReason.USER_DOES_NOT_EXIST, user));
 
             boolean correctPass = PassEncryptUtil.verifyPassword(passwordRaw, webUser.getSaltedPassHash());

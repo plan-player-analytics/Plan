@@ -57,7 +57,7 @@ public class SQLiteTest extends CommonDBTest {
     public void testServerTableBungeeSave() throws DBInitException {
         ServerTable serverTable = db.getServerTable();
 
-        Optional<Server> bungeeInfo = db.query(OptionalFetchQueries.proxyServerInformation());
+        Optional<Server> bungeeInfo = db.query(OptionalFetchQueries.fetchProxyServerInformation());
         assertFalse(bungeeInfo.isPresent());
 
         UUID bungeeUUID = UUID.randomUUID();
@@ -68,7 +68,7 @@ public class SQLiteTest extends CommonDBTest {
 
         bungeeCord.setId(2);
 
-        bungeeInfo = db.query(OptionalFetchQueries.proxyServerInformation());
+        bungeeInfo = db.query(OptionalFetchQueries.fetchProxyServerInformation());
         assertTrue(bungeeInfo.isPresent());
         assertEquals(bungeeCord, bungeeInfo.get());
 

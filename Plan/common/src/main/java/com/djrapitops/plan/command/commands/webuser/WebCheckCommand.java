@@ -79,7 +79,7 @@ public class WebCheckCommand extends CommandNode {
         processing.submitNonCritical(() -> {
             try {
                 Database db = dbSystem.getDatabase();
-                Optional<WebUser> found = db.query(OptionalFetchQueries.webUser(user));
+                Optional<WebUser> found = db.query(OptionalFetchQueries.fetchWebUser(user));
                 if (!found.isPresent()) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_WEB_USER_NOT_EXISTS));
                     return;

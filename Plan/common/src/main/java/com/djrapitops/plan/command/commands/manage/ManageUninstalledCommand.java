@@ -103,7 +103,7 @@ public class ManageUninstalledCommand extends CommandNode {
     private Optional<Server> getServer(String[] args) {
         if (args.length >= 1) {
             String serverIdentifier = getGivenIdentifier(args);
-            return dbSystem.getDatabase().query(OptionalFetchQueries.matchingServerIdentifier(serverIdentifier))
+            return dbSystem.getDatabase().query(OptionalFetchQueries.fetchMatchingServerIdentifier(serverIdentifier))
                     .filter(Server::isNotProxy);
         }
         return Optional.empty();

@@ -48,7 +48,7 @@ public class NetworkContainerQuery implements Query<NetworkContainer> {
 
     private static Query<ServerContainer> getBungeeServerContainer() {
         return db -> {
-            Optional<Server> proxyInformation = db.query(OptionalFetchQueries.proxyServerInformation());
+            Optional<Server> proxyInformation = db.query(OptionalFetchQueries.fetchProxyServerInformation());
             if (!proxyInformation.isPresent()) {
                 return new ServerContainer();
             }

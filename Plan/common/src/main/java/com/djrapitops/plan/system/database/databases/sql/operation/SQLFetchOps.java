@@ -89,7 +89,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public WebUser getWebUser(String username) {
-        return db.query(OptionalFetchQueries.webUser(username)).orElse(null);
+        return db.query(OptionalFetchQueries.fetchWebUser(username)).orElse(null);
     }
 
     @Override
@@ -139,7 +139,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Optional<Server> getBungeeInformation() {
-        return db.query(OptionalFetchQueries.proxyServerInformation());
+        return db.query(OptionalFetchQueries.fetchProxyServerInformation());
     }
 
     @Override

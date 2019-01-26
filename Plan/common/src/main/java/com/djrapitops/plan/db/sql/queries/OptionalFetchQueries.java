@@ -42,7 +42,7 @@ public class OptionalFetchQueries {
         /* Static method class */
     }
 
-    public static Query<Optional<Server>> matchingServerIdentifier(String identifier) {
+    public static Query<Optional<Server>> fetchMatchingServerIdentifier(String identifier) {
         String sql = "SELECT * FROM " + ServerTable.TABLE_NAME +
                 " WHERE (" + ServerTable.SERVER_ID + "=?" +
                 " OR LOWER(" + ServerTable.NAME + ") LIKE LOWER(?)" +
@@ -74,8 +74,8 @@ public class OptionalFetchQueries {
         };
     }
 
-    public static Query<Optional<Server>> proxyServerInformation() {
-        return db -> db.query(matchingServerIdentifier("BungeeCord"));
+    public static Query<Optional<Server>> fetchProxyServerInformation() {
+        return db -> db.query(fetchMatchingServerIdentifier("BungeeCord"));
     }
 
     public static Query<Optional<String>> playerUserName(UUID playerUUID) {
@@ -98,7 +98,7 @@ public class OptionalFetchQueries {
         };
     }
 
-    public static Query<Optional<WebUser>> webUser(String called) {
+    public static Query<Optional<WebUser>> fetchWebUser(String called) {
         String sql = "SELECT * FROM " + SecurityTable.TABLE_NAME +
                 " WHERE " + SecurityTable.USERNAME + "=? LIMIT 1";
         return new QueryStatement<Optional<WebUser>>(sql) {
@@ -118,5 +118,4 @@ public class OptionalFetchQueries {
             }
         };
     }
-
 }

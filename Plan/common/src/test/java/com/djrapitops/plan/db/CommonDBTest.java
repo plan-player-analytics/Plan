@@ -310,7 +310,7 @@ public abstract class CommonDBTest {
         db.getSecurityTable().addNewUser(expected);
         commitTest();
 
-        Optional<WebUser> found = db.query(OptionalFetchQueries.webUser("Test"));
+        Optional<WebUser> found = db.query(OptionalFetchQueries.fetchWebUser("Test"));
         assertTrue(found.isPresent());
         assertEquals(expected, found.get());
     }
@@ -325,7 +325,7 @@ public abstract class CommonDBTest {
     public void webUserIsRemoved() throws DBInitException {
         webUserIsRegistered();
         db.getSecurityTable().removeUser("Test");
-        assertFalse(db.query(OptionalFetchQueries.webUser("Test")).isPresent());
+        assertFalse(db.query(OptionalFetchQueries.fetchWebUser("Test")).isPresent());
     }
 
     @Test

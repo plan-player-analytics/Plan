@@ -148,7 +148,7 @@ public class RegisterCommand extends CommandNode {
             String userName = webUser.getName();
             try {
                 Database database = dbSystem.getDatabase();
-                boolean userExists = database.query(OptionalFetchQueries.webUser(userName)).isPresent();
+                boolean userExists = database.query(OptionalFetchQueries.fetchWebUser(userName)).isPresent();
                 if (userExists) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_WEB_USER_EXISTS));
                     return;
