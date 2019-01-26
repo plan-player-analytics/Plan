@@ -23,11 +23,11 @@ import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.access.transactions.CleanTransaction;
+import com.djrapitops.plan.db.access.transactions.CreateIndexTransaction;
 import com.djrapitops.plan.db.access.transactions.CreateTablesTransaction;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.patches.*;
 import com.djrapitops.plan.db.sql.tables.*;
-import com.djrapitops.plan.db.tasks.CreateIndexTask;
 import com.djrapitops.plan.db.tasks.PatchTask;
 import com.djrapitops.plan.system.database.databases.operation.*;
 import com.djrapitops.plan.system.database.databases.sql.operation.*;
@@ -233,8 +233,12 @@ public abstract class SQLDB extends AbstractDatabase {
 
     private void registerIndexCreationTask() {
         try {
-            runnableFactory.create("Database Index Creation", new CreateIndexTask(this))
-                    .runTaskLaterAsynchronously(TimeAmount.toTicks(1, TimeUnit.MINUTES));
+            runnableFactory.create("Database Index Creation", new AbsRunnable() {
+                @Override
+                public void run() {
+                    executeTransaction(new CreateIndexTransaction(getType()));
+                }
+            }).runTaskLaterAsynchronously(TimeAmount.toTicks(1, TimeUnit.MINUTES));
         } catch (Exception ignore) {
             // Task failed to register because plugin is being disabled
         }

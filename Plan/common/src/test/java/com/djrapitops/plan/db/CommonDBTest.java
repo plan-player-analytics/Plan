@@ -29,16 +29,12 @@ import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.access.transactions.BackupCopyTransaction;
-import com.djrapitops.plan.db.access.transactions.RemoveEverythingTransaction;
-import com.djrapitops.plan.db.access.transactions.RemovePlayerTransaction;
-import com.djrapitops.plan.db.access.transactions.Transaction;
+import com.djrapitops.plan.db.access.transactions.*;
 import com.djrapitops.plan.db.patches.Patch;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.sql.queries.LargeStoreQueries;
 import com.djrapitops.plan.db.sql.queries.OptionalFetchQueries;
 import com.djrapitops.plan.db.sql.tables.*;
-import com.djrapitops.plan.db.tasks.CreateIndexTask;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
@@ -1063,7 +1059,7 @@ public abstract class CommonDBTest {
 
     @Test
     public void indexCreationWorksWithoutErrors() {
-        new CreateIndexTask(db).run();
+        db.executeTransaction(new CreateIndexTransaction(db.getType()));
     }
 
 }

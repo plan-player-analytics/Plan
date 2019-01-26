@@ -14,25 +14,28 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.db.tasks;
+package com.djrapitops.plan.db.access.transactions;
 
 import com.djrapitops.plan.db.DBType;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.queries.schema.MySQLSchemaQueries;
 import com.djrapitops.plan.db.sql.tables.*;
-import com.djrapitops.plugin.task.AbsRunnable;
 import org.apache.commons.text.TextStringBuilder;
 
-public class CreateIndexTask extends AbsRunnable {
+/**
+ * Transaction that creates the database index if it has not yet been created.
+ *
+ * @author Rsl1122
+ */
+public class CreateIndexTransaction extends Transaction {
 
-    private final SQLDB db;
+    private final DBType dbType;
 
-    public CreateIndexTask(SQLDB db) {
-        this.db = db;
+    public CreateIndexTransaction(DBType dbType) {
+        this.dbType = dbType;
     }
 
     @Override
-    public void run() {
+    protected void performOperations() {
         createIndex(UsersTable.TABLE_NAME, "plan_users_uuid_index",
                 UsersTable.USER_UUID
         );
@@ -76,9 +79,9 @@ public class CreateIndexTask extends AbsRunnable {
             throw new IllegalArgumentException("Can not create index without columns");
         }
 
-        boolean isMySQL = db.getType() == DBType.MYSQL;
+        boolean isMySQL = dbType == DBType.MYSQL;
         if (isMySQL) {
-            boolean indexExists = db.query(MySQLSchemaQueries.doesIndexExist(indexName, tableName));
+            boolean indexExists = query(MySQLSchemaQueries.doesIndexExist(indexName, tableName));
             if (indexExists) return;
         }
 
@@ -92,6 +95,6 @@ public class CreateIndexTask extends AbsRunnable {
         sql.appendWithSeparators(indexedColumns, ",");
         sql.append(")");
 
-        db.execute(sql.toString());
+        execute(sql.toString());
     }
 }
