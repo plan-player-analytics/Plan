@@ -172,7 +172,7 @@ public abstract class CommonDBTest {
 
         commitTest();
 
-        Map<String, Integer> commandUse = db.getCommandUseTable().getCommandUse();
+        Map<String, Integer> commandUse = db.getCommandUseTable().getCommandUse(serverUUID);
         assertEquals(expected, commandUse);
 
         for (int i = 0; i < 3; i++) {
@@ -186,7 +186,7 @@ public abstract class CommonDBTest {
         expected.put("test", 3);
         expected.put("tp", 6);
 
-        commandUse = db.getCommandUseTable().getCommandUse();
+        commandUse = db.getCommandUseTable().getCommandUse(serverUUID);
 
         assertEquals(expected, commandUse);
     }

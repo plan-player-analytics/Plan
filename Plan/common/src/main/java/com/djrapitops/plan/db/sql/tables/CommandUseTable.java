@@ -103,15 +103,6 @@ public class CommandUseTable extends Table {
         });
     }
 
-    /**
-     * Used to get all commands used in this server.
-     *
-     * @return command - times used Map
-     */
-    public Map<String, Integer> getCommandUse() {
-        return getCommandUse(getServerUUID());
-    }
-
     public void commandUsed(String command) {
         if (command.length() > 20) {
             return;
