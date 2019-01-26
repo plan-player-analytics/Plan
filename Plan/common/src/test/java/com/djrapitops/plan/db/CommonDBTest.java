@@ -193,38 +193,6 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testCommandUseTableIDSystem() {
-        CommandUseTable commandUseTable = db.getCommandUseTable();
-        commandUseTable.commandUsed("plan");
-
-        for (int i = 0; i < 4; i++) {
-            commandUseTable.commandUsed("tp");
-        }
-
-        for (int i = 0; i < 7; i++) {
-            commandUseTable.commandUsed("pla");
-        }
-
-        for (int i = 0; i < 21; i++) {
-            commandUseTable.commandUsed("help");
-        }
-
-        for (int i = 0; i < 3; i++) {
-            commandUseTable.commandUsed("roiergbnougbierubieugbeigubeigubgierbgeugeg");
-        }
-
-        Optional<Integer> id = commandUseTable.getCommandID("plan");
-
-        assertTrue(id.isPresent());
-
-        Optional<String> commandByID = commandUseTable.getCommandByID(id.get());
-
-        assertTrue(commandByID.isPresent());
-        assertEquals("plan", commandByID.get());
-        assertFalse(commandUseTable.getCommandID("roiergbnougbierubieugbeigubeigubgierbgeugeg").isPresent());
-    }
-
-    @Test
     public void testTPSSaving() throws Exception {
         TPSTable tpsTable = db.getTpsTable();
         Random r = new Random();

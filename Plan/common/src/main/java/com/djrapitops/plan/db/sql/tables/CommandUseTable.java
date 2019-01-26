@@ -19,15 +19,11 @@ package com.djrapitops.plan.db.sql.tables;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
-import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Optional;
 
 /**
  * Table that is in charge of storing command data.
@@ -53,11 +49,7 @@ public class CommandUseTable extends Table {
 
     public CommandUseTable(SQLDB db) {
         super(TABLE_NAME, db);
-        serverTable = db.getServerTable();
-
     }
-
-    private final ServerTable serverTable;
 
     public static String createTableSQL(DBType dbType) {
         return CreateTableParser.create(TABLE_NAME, dbType)
@@ -74,9 +66,9 @@ public class CommandUseTable extends Table {
             return;
         }
 
-        String sql = "UPDATE " + tableName + " SET "
+        String sql = "UPDATE " + TABLE_NAME + " SET "
                 + TIMES_USED + "=" + TIMES_USED + "+ 1" +
-                " WHERE " + SERVER_ID + "=" + serverTable.statementSelectServerID +
+                " WHERE " + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
                 " AND " + COMMAND + "=?";
 
         boolean updated = execute(new ExecStatement(sql) {
@@ -91,25 +83,6 @@ public class CommandUseTable extends Table {
         }
     }
 
-    public Optional<String> getCommandByID(int id) {
-        String sql = Select.from(tableName, COMMAND).where(COMMAND_ID + "=?").toString();
-
-        return query(new QueryStatement<Optional<String>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setInt(1, id);
-            }
-
-            @Override
-            public Optional<String> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return Optional.of(set.getString(COMMAND));
-                }
-                return Optional.empty();
-            }
-        });
-    }
-
     private void insertCommand(String command) {
         execute(new ExecStatement(INSERT_STATEMENT) {
             @Override
@@ -117,25 +90,6 @@ public class CommandUseTable extends Table {
                 statement.setString(1, command);
                 statement.setInt(2, 1);
                 statement.setString(3, getServerUUID().toString());
-            }
-        });
-    }
-
-    public Optional<Integer> getCommandID(String command) {
-        String sql = Select.from(tableName, COMMAND_ID).where(COMMAND + "=?").toString();
-
-        return query(new QueryStatement<Optional<Integer>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, command);
-            }
-
-            @Override
-            public Optional<Integer> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return Optional.of(set.getInt(COMMAND_ID));
-                }
-                return Optional.empty();
             }
         });
     }
