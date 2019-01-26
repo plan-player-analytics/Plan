@@ -16,8 +16,9 @@
  */
 package com.djrapitops.plan.system.listeners.sponge;
 
-import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.Processors;
+import com.djrapitops.plan.db.access.transactions.events.CommandStoreTransaction;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DataGatheringSettings;
@@ -42,20 +43,20 @@ import java.util.Optional;
 public class SpongeCommandListener {
 
     private final PlanConfig config;
-    private final Processors processors;
-    private final Processing processing;
-    private ErrorHandler errorHandler;
+    private final ServerInfo serverInfo;
+    private final DBSystem dbSystem;
+    private final ErrorHandler errorHandler;
 
     @Inject
     public SpongeCommandListener(
             PlanConfig config,
-            Processors processors,
-            Processing processing,
+            ServerInfo serverInfo,
+            DBSystem dbSystem,
             ErrorHandler errorHandler
     ) {
         this.config = config;
-        this.processors = processors;
-        this.processing = processing;
+        this.serverInfo = serverInfo;
+        this.dbSystem = dbSystem;
         this.errorHandler = errorHandler;
     }
 
@@ -88,7 +89,7 @@ public class SpongeCommandListener {
                 commandName = existingCommand.get().getPrimaryAlias();
             }
         }
-        processing.submit(processors.commandProcessor(commandName));
+        dbSystem.getDatabase().executeTransaction(new CommandStoreTransaction(serverInfo.getServerUUID(), commandName));
     }
 
 }

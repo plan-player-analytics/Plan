@@ -167,11 +167,6 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
     }
 
     @Override
-    public void commandUsed(String commandName) {
-        commandUseTable.commandUsed(commandName);
-    }
-
-    @Override
     public void insertTPSforThisServer(TPS tps) {
         tpsTable.insertTPS(tps);
     }

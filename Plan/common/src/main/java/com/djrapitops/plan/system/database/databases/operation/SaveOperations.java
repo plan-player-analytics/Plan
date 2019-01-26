@@ -89,9 +89,6 @@ public interface SaveOperations {
     void registerNewUserOnThisServer(UUID uuid, long registered);
 
     @Deprecated
-    void commandUsed(String commandName);
-
-    @Deprecated
     void insertTPSforThisServer(TPS tps);
 
     @Deprecated

@@ -30,6 +30,7 @@ import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.transactions.*;
+import com.djrapitops.plan.db.access.transactions.events.CommandStoreTransaction;
 import com.djrapitops.plan.db.patches.Patch;
 import com.djrapitops.plan.db.sql.queries.AggregateQueries;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
@@ -146,7 +147,6 @@ public abstract class CommonDBTest {
 
     @Test
     public void testSaveCommandUse() throws DBInitException {
-        CommandUseTable commandUseTable = db.getCommandUseTable();
         Map<String, Integer> expected = new HashMap<>();
 
         expected.put("plan", 1);
@@ -154,43 +154,45 @@ public abstract class CommonDBTest {
         expected.put("pla", 7);
         expected.put("help", 21);
 
-        commandUseTable.commandUsed("plan");
-
-        for (int i = 0; i < 4; i++) {
-            commandUseTable.commandUsed("tp");
-        }
-
-        for (int i = 0; i < 7; i++) {
-            commandUseTable.commandUsed("pla");
-        }
-
-        for (int i = 0; i < 21; i++) {
-            commandUseTable.commandUsed("help");
-        }
-
-        for (int i = 0; i < 3; i++) {
-            commandUseTable.commandUsed("roiergbnougbierubieugbeigubeigubgierbgeugeg");
-        }
+        useCommand("plan");
+        useCommand("tp", 4);
+        useCommand("pla", 7);
+        useCommand("help", 21);
+        useCommand("roiergbnougbierubieugbeigubeigubgierbgeugeg", 3);
 
         commitTest();
 
         Map<String, Integer> commandUse = db.query(AggregateQueries.commandUsageCounts(serverUUID));
         assertEquals(expected, commandUse);
+    }
 
-        for (int i = 0; i < 3; i++) {
-            commandUseTable.commandUsed("test");
-        }
+    @Test
+    public void commandUsageSavingDoesNotCreateNewEntriesForOldCommands() throws DBInitException {
+        Map<String, Integer> expected = new HashMap<>();
 
-        for (int i = 0; i < 2; i++) {
-            commandUseTable.commandUsed("tp");
-        }
-
+        expected.put("plan", 1);
         expected.put("test", 3);
         expected.put("tp", 6);
+        expected.put("pla", 7);
+        expected.put("help", 21);
 
-        commandUse = db.query(AggregateQueries.commandUsageCounts(serverUUID));
+        testSaveCommandUse();
 
+        useCommand("test", 3);
+        useCommand("tp", 2);
+
+        Map<String, Integer> commandUse = db.query(AggregateQueries.commandUsageCounts(serverUUID));
         assertEquals(expected, commandUse);
+    }
+
+    private void useCommand(String commandName) {
+        db.executeTransaction(new CommandStoreTransaction(serverUUID, commandName));
+    }
+
+    private void useCommand(String commandName, int times) {
+        for (int i = 0; i < times; i++) {
+            useCommand(commandName);
+        }
     }
 
     @Test
@@ -572,13 +574,12 @@ public abstract class CommonDBTest {
 
         assertTrue(usersTable.isRegistered(playerUUID));
 
-        CommandUseTable commandUseTable = database.getCommandUseTable();
-        commandUseTable.commandUsed("plan");
-        commandUseTable.commandUsed("plan");
-        commandUseTable.commandUsed("tp");
-        commandUseTable.commandUsed("help");
-        commandUseTable.commandUsed("help");
-        commandUseTable.commandUsed("help");
+        useCommand("plan");
+        useCommand("plan");
+        useCommand("tp");
+        useCommand("help");
+        useCommand("help");
+        useCommand("help");
 
         List<TPS> expected = new ArrayList<>();
         Random r = new Random();

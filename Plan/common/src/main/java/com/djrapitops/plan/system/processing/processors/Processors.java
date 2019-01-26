@@ -55,10 +55,6 @@ public class Processors {
         return new TPSInsertProcessor(tpsList, dbSystem.get().getDatabase());
     }
 
-    public CommandProcessor commandProcessor(String command) {
-        return new CommandProcessor(command, dbSystem.get().getDatabase());
-    }
-
     public PlayerProcessors player() {
         return playerProcessors;
     }

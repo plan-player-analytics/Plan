@@ -19,6 +19,7 @@ package com.djrapitops.plan.system.database.databases.sql.operation;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.tables.*;
 
+@Deprecated
 public class SQLOps {
 
     protected final SQLDB db;
@@ -29,7 +30,6 @@ public class SQLOps {
     protected final NicknamesTable nicknamesTable;
     protected final SessionsTable sessionsTable;
     protected final GeoInfoTable geoInfoTable;
-    protected final CommandUseTable commandUseTable;
     protected final TPSTable tpsTable;
     protected final SecurityTable securityTable;
     protected final WorldTable worldTable;
@@ -47,7 +47,6 @@ public class SQLOps {
         nicknamesTable = db.getNicknamesTable();
         sessionsTable = db.getSessionsTable();
         geoInfoTable = db.getGeoInfoTable();
-        commandUseTable = db.getCommandUseTable();
         tpsTable = db.getTpsTable();
         securityTable = db.getSecurityTable();
         worldTable = db.getWorldTable();

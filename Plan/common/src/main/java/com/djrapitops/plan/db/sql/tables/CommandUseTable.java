@@ -17,26 +17,22 @@
 package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.db.DBType;
-import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 /**
- * Table that is in charge of storing command data.
- * <p>
- * Table Name: plan_commandusages
+ * Table information about 'plan_commandusages'.
+ *
+ * Patches affecting this table:
+ * {@link com.djrapitops.plan.db.patches.Version10Patch}
  *
  * @author Rsl1122
  */
-public class CommandUseTable extends Table {
+public class CommandUseTable {
 
     public static final String TABLE_NAME = "plan_commandusages";
 
-    public static final String COMMAND_ID = "id";
+    public static final String ID = "id";
     public static final String SERVER_ID = "server_id";
     public static final String COMMAND = "command";
     public static final String TIMES_USED = "times_used";
@@ -47,50 +43,17 @@ public class CommandUseTable extends Table {
             + SERVER_ID
             + ") VALUES (?, ?, " + ServerTable.STATEMENT_SELECT_SERVER_ID + ")";
 
-    public CommandUseTable(SQLDB db) {
-        super(TABLE_NAME, db);
+    private CommandUseTable() {
+        /* Static information class */
     }
 
     public static String createTableSQL(DBType dbType) {
         return CreateTableParser.create(TABLE_NAME, dbType)
-                .column(COMMAND_ID, Sql.INT).primaryKey()
+                .column(ID, Sql.INT).primaryKey()
                 .column(COMMAND, Sql.varchar(20)).notNull()
                 .column(TIMES_USED, Sql.INT).notNull()
                 .column(SERVER_ID, Sql.INT).notNull()
                 .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.SERVER_ID)
                 .toString();
-    }
-
-    public void commandUsed(String command) {
-        if (command.length() > 20) {
-            return;
-        }
-
-        String sql = "UPDATE " + TABLE_NAME + " SET "
-                + TIMES_USED + "=" + TIMES_USED + "+ 1" +
-                " WHERE " + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
-                " AND " + COMMAND + "=?";
-
-        boolean updated = execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, getServerUUID().toString());
-                statement.setString(2, command);
-            }
-        });
-        if (!updated) {
-            insertCommand(command);
-        }
-    }
-
-    private void insertCommand(String command) {
-        execute(new ExecStatement(INSERT_STATEMENT) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, command);
-                statement.setInt(2, 1);
-                statement.setString(3, getServerUUID().toString());
-            }
-        });
     }
 }
