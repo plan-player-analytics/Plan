@@ -22,6 +22,7 @@ import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.db.access.transactions.CreateTablesTransaction;
 import com.djrapitops.plan.db.access.transactions.RemoveEverythingTransaction;
 import com.djrapitops.plan.db.access.transactions.Transaction;
+import com.djrapitops.plan.db.sql.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.db.tasks.PatchTask;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plugin.logging.L;
@@ -121,7 +122,7 @@ public class DBPatchSQLiteRegressionTest extends DBPatchRegressionTest {
         assertPatchesHaveBeenApplied(underTest);
 
         // Make sure that a fetch works.
-        ServerContainer server = underTest.fetch().getServerContainer(TestConstants.SERVER_UUID);
+        ServerContainer server = underTest.query(ContainerFetchQueries.fetchServerContainer(TestConstants.SERVER_UUID));
         OptionalAssert.equals(1, server.getValue(ServerKeys.PLAYER_KILL_COUNT));
 
         // Make sure no foreign key checks fail on removal

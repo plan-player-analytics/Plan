@@ -18,6 +18,7 @@ package com.djrapitops.plan.api;
 
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
@@ -64,5 +65,10 @@ public class ProxyAPI extends CommonAPI {
     @Override
     public FetchOperations fetchFromPlanDB() {
         return dbSystem.getDatabase().fetch();
+    }
+
+    @Override
+    protected <T> T queryDB(Query<T> query) {
+        return dbSystem.getDatabase().query(query);
     }
 }

@@ -16,7 +16,11 @@
  */
 package com.djrapitops.plan.api;
 
+import com.djrapitops.plan.api.data.PlayerContainer;
+import com.djrapitops.plan.api.data.ServerContainer;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.db.access.Query;
+import com.djrapitops.plan.db.sql.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -66,4 +70,15 @@ public abstract class CommonAPI implements PlanAPI {
         }
     }
 
+    protected abstract <T> T queryDB(Query<T> query);
+
+    @Override
+    public PlayerContainer fetchPlayerContainer(UUID uuid) {
+        return new PlayerContainer(queryDB(ContainerFetchQueries.fetchPlayerContainer(uuid)));
+    }
+
+    @Override
+    public ServerContainer fetchServerContainer(UUID serverUUID) {
+        return new ServerContainer(queryDB(ContainerFetchQueries.fetchServerContainer(serverUUID)));
+    }
 }

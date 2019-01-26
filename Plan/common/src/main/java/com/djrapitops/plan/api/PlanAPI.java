@@ -79,9 +79,7 @@ public interface PlanAPI {
      * @param uuid UUID of the player.
      * @return a {@link PlayerContainer}.
      */
-    default PlayerContainer fetchPlayerContainer(UUID uuid) {
-        return new PlayerContainer(fetchFromPlanDB().getPlayerContainer(uuid));
-    }
+    PlayerContainer fetchPlayerContainer(UUID uuid);
 
     /**
      * Fetch a ServerContainer from the database.
@@ -91,9 +89,7 @@ public interface PlanAPI {
      * @param serverUUID UUID of the server.
      * @return a {@link ServerContainer}.
      */
-    default ServerContainer fetchServerContainer(UUID serverUUID) {
-        return new ServerContainer(fetchFromPlanDB().getServerContainer(serverUUID));
-    }
+    ServerContainer fetchServerContainer(UUID serverUUID);
 
     /**
      * Fetch server UUIDs.

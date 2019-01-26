@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.webserver.response;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
+import com.djrapitops.plan.db.sql.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.locale.Locale;
@@ -104,11 +105,11 @@ public class ResponseFactory {
     }
 
     public RawDataResponse rawPlayerPageResponse(UUID uuid) {
-        return new RawPlayerDataResponse(dbSystem.getDatabase().fetch().getPlayerContainer(uuid));
+        return new RawPlayerDataResponse(dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(uuid)));
     }
 
     public RawDataResponse rawServerPageResponse(UUID serverUUID) {
-        return new RawServerDataResponse(dbSystem.getDatabase().fetch().getServerContainer(serverUUID));
+        return new RawServerDataResponse(dbSystem.getDatabase().query(ContainerFetchQueries.fetchServerContainer(serverUUID)));
     }
 
     public Response javaScriptResponse(String fileName) {

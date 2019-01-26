@@ -35,6 +35,7 @@ import com.djrapitops.plan.db.sql.queries.AggregateQueries;
 import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.sql.queries.LargeStoreQueries;
 import com.djrapitops.plan.db.sql.queries.OptionalFetchQueries;
+import com.djrapitops.plan.db.sql.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.db.sql.tables.*;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -826,7 +827,7 @@ public abstract class CommonDBTest {
 
         long start = System.nanoTime();
 
-        PlayerContainer container = db.fetch().getPlayerContainer(playerUUID);
+        PlayerContainer container = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
 
         assertTrue(container.supports(PlayerKeys.UUID));
         assertTrue(container.supports(PlayerKeys.REGISTERED));
@@ -879,7 +880,7 @@ public abstract class CommonDBTest {
     public void playerContainerSupportsAllPlayerKeys() throws NoSuchAlgorithmException, IllegalAccessException {
         saveAllData(db);
 
-        PlayerContainer playerContainer = db.fetch().getPlayerContainer(playerUUID);
+        PlayerContainer playerContainer = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
         // Active sessions are added after fetching
         playerContainer.putRawData(PlayerKeys.ACTIVE_SESSION, RandomData.randomSession());
 
@@ -898,7 +899,7 @@ public abstract class CommonDBTest {
     public void serverContainerSupportsAllServerKeys() throws NoSuchAlgorithmException, IllegalAccessException {
         saveAllData(db);
 
-        ServerContainer serverContainer = db.fetch().getServerContainer(serverUUID);
+        ServerContainer serverContainer = db.query(ContainerFetchQueries.fetchServerContainer(serverUUID));
 
         List<String> unsupported = new ArrayList<>();
         List<Key> keys = FieldFetcher.getPublicStaticFields(ServerKeys.class, Key.class);
@@ -916,7 +917,7 @@ public abstract class CommonDBTest {
         serverContainerSupportsAllServerKeys();
         AnalysisContainer.Factory factory = constructAnalysisContainerFactory();
         AnalysisContainer analysisContainer = factory.forServerContainer(
-                db.fetch().getServerContainer(serverUUID)
+                db.query(ContainerFetchQueries.fetchServerContainer(serverUUID))
         );
         Collection<String> unsupported = new ArrayList<>();
         List<Key> keys = FieldFetcher.getPublicStaticFields(AnalysisKeys.class, Key.class);
@@ -948,7 +949,7 @@ public abstract class CommonDBTest {
     @Test
     public void networkContainerSupportsAllNetworkKeys() throws IllegalAccessException, NoSuchAlgorithmException {
         serverContainerSupportsAllServerKeys();
-        NetworkContainer networkContainer = db.fetch().getNetworkContainer();
+        NetworkContainer networkContainer = db.query(ContainerFetchQueries.fetchNetworkContainer());
 
         List<String> unsupported = new ArrayList<>();
         List<Key> keys = FieldFetcher.getPublicStaticFields(NetworkKeys.class, Key.class);
