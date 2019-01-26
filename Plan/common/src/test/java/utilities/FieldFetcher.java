@@ -33,7 +33,10 @@ public class FieldFetcher {
             if (!Modifier.isPublic(field.getModifiers())) {
                 continue;
             }
-            T key = (T) field.get(null);
+            if (field.getAnnotationsByType(Deprecated.class).length > 0) {
+                continue;
+            }
+            T key = ofType.cast(field.get(null));
             list.add(key);
         }
         return list;
