@@ -244,7 +244,7 @@ public abstract class CommonDBTest {
 
         commitTest();
 
-        assertEquals(expected, tpsTable.getTPSData());
+        assertEquals(expected, tpsTable.getTPSData(serverUUID));
     }
 
     private void saveUserOne() {

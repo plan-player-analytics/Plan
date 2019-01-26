@@ -127,10 +127,6 @@ public class TPSTable extends Table {
         });
     }
 
-    public List<TPS> getTPSData() {
-        return getTPSData(getServerUUID());
-    }
-
     /**
      * Clean the TPS Table of old data.
      */
