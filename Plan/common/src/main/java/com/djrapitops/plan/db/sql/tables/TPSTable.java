@@ -131,7 +131,7 @@ public class TPSTable extends Table {
      * Clean the TPS Table of old data.
      */
     public void clean() {
-        Optional<TPS> allTimePeak = getAllTimePeak();
+        Optional<TPS> allTimePeak = getAllTimePeak(getServerUUID());
         int p = -1;
         if (allTimePeak.isPresent()) {
             p = allTimePeak.get().getPlayers();
@@ -214,16 +214,8 @@ public class TPSTable extends Table {
         return getPeakPlayerCount(serverUUID, 0);
     }
 
-    public Optional<TPS> getAllTimePeak() {
-        return getPeakPlayerCount(0);
-    }
-
-    public Optional<TPS> getPeakPlayerCount(long afterDate) {
-        return getPeakPlayerCount(getServerUUID(), afterDate);
-    }
-
     public List<TPS> getNetworkOnlineData() {
-        Optional<Server> proxyInfo = db.query(OptionalFetchQueries.proxyServerInformation());
+        Optional<Server> proxyInfo = db.query(OptionalFetchQueries.fetchProxyServerInformation());
         if (!proxyInfo.isPresent()) {
             return new ArrayList<>();
         }
