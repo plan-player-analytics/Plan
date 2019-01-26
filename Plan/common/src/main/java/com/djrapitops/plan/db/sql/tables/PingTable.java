@@ -24,7 +24,6 @@ import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.PingOptimizationPatch;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-import com.djrapitops.plugin.api.TimeAmount;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -76,20 +75,6 @@ public class PingTable extends Table {
                 .column(MIN_PING, Sql.INT).notNull()
                 .column(AVG_PING, Sql.DOUBLE).notNull()
                 .toString();
-    }
-
-    public void clean() {
-        String sql = "DELETE FROM " + tableName +
-                " WHERE (" + DATE + "<?)" +
-                " OR (" + MIN_PING + "<0)";
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                long twoWeeks = TimeAmount.WEEK.toMillis(2L);
-                statement.setLong(1, System.currentTimeMillis() - twoWeeks);
-            }
-        });
     }
 
     public void insertPing(UUID uuid, Ping ping) {

@@ -22,8 +22,8 @@ import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.access.transactions.CleanTransaction;
 import com.djrapitops.plan.db.access.transactions.CreateTablesTransaction;
-import com.djrapitops.plan.db.access.transactions.RemovePlayerTransaction;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.patches.*;
 import com.djrapitops.plan.db.sql.tables.*;
@@ -32,7 +32,6 @@ import com.djrapitops.plan.db.tasks.PatchTask;
 import com.djrapitops.plan.system.database.databases.operation.*;
 import com.djrapitops.plan.system.database.databases.sql.operation.*;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
@@ -49,13 +48,10 @@ import com.djrapitops.plugin.utilities.Verify;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * Class containing main logic for different data related save and load functionality.
@@ -167,7 +163,9 @@ public abstract class SQLDB extends AbstractDatabase {
             public void run() {
                 try {
                     if (isOpen()) {
-                        clean();
+                        executeTransaction(new CleanTransaction(serverUUIDSupplier.get(),
+                                config.get(TimeSettings.KEEP_INACTIVE_PLAYERS), logger, locale)
+                        );
                     }
                 } catch (DBOpException e) {
                     errorHandler.log(L.ERROR, this.getClass(), e);
@@ -259,26 +257,6 @@ public abstract class SQLDB extends AbstractDatabase {
         setOpen(false);
         if (dbCleanTask != null) {
             dbCleanTask.cancel();
-        }
-    }
-
-    private void clean() {
-        tpsTable.clean();
-        pingTable.clean();
-
-        long now = System.currentTimeMillis();
-        long keepActiveAfter = now - config.get(TimeSettings.KEEP_INACTIVE_PLAYERS);
-
-        List<UUID> inactivePlayers = sessionsTable.getLastSeenForAllPlayers().entrySet().stream()
-                .filter(entry -> entry.getValue() < keepActiveAfter)
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
-        for (UUID uuid : inactivePlayers) {
-            executeTransaction(new RemovePlayerTransaction(uuid));
-        }
-        int removed = inactivePlayers.size();
-        if (removed > 0) {
-            logger.info(locale.getString(PluginLang.DB_NOTIFY_CLEAN, removed));
         }
     }
 

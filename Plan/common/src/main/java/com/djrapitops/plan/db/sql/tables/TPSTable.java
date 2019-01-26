@@ -18,7 +18,6 @@ package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
-import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
@@ -124,32 +123,6 @@ public class TPSTable extends Table {
                     data.add(tps);
                 }
                 return data;
-            }
-        });
-    }
-
-    /**
-     * Clean the TPS Table of old data.
-     */
-    public void clean() {
-        Optional<DateObj<Integer>> allTimePeak = db.query(OptionalFetchQueries.fetchAllTimePeakPlayerCount(getServerUUID()));
-        int p = -1;
-        if (allTimePeak.isPresent()) {
-            p = allTimePeak.get().getValue();
-        }
-        final int pValue = p;
-
-        String sql = "DELETE FROM " + tableName +
-                " WHERE (" + DATE + "<?)" +
-                " AND (" + PLAYERS_ONLINE + " != ?)";
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                // More than 3 Months ago.
-                long threeMonths = TimeAmount.MONTH.toMillis(3L);
-                statement.setLong(1, System.currentTimeMillis() - threeMonths);
-                statement.setInt(2, pValue);
             }
         });
     }
