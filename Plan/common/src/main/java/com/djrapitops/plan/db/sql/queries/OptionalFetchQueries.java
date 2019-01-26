@@ -17,10 +17,12 @@
 package com.djrapitops.plan.db.sql.queries;
 
 import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.tables.SecurityTable;
 import com.djrapitops.plan.db.sql.tables.ServerTable;
+import com.djrapitops.plan.db.sql.tables.TPSTable;
 import com.djrapitops.plan.db.sql.tables.UsersTable;
 import com.djrapitops.plan.system.info.server.Server;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -117,5 +119,34 @@ public class OptionalFetchQueries {
                 return Optional.empty();
             }
         };
+    }
+
+    public static Query<Optional<DateObj<Integer>>> fetchPeakPlayerCount(UUID serverUUID, long afterDate) {
+        String sql = "SELECT " + TPSTable.DATE + ", MAX(" + TPSTable.PLAYERS_ONLINE + ") as max FROM " + TPSTable.TABLE_NAME +
+                " WHERE " + TPSTable.SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                " AND " + TPSTable.DATE + ">= ?";
+
+        return new QueryStatement<Optional<DateObj<Integer>>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, afterDate);
+            }
+
+            @Override
+            public Optional<DateObj<Integer>> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(new DateObj<>(
+                            set.getLong(TPSTable.DATE),
+                            set.getInt(TPSTable.PLAYERS_ONLINE)
+                    ));
+                }
+                return Optional.empty();
+            }
+        };
+    }
+
+    public static Query<Optional<DateObj<Integer>>> fetchAllTimePeakPlayerCount(UUID serverUUID) {
+        return db -> db.query(fetchPeakPlayerCount(serverUUID, 0));
     }
 }

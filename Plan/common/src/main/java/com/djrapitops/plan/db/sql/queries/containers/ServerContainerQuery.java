@@ -17,14 +17,13 @@
 package com.djrapitops.plan.db.sql.queries.containers;
 
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Query;
+import com.djrapitops.plan.db.sql.queries.OptionalFetchQueries;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.info.server.Server;
 
@@ -67,22 +66,12 @@ public class ServerContainerQuery implements Query<ServerContainer> {
 
         container.putCachingSupplier(ServerKeys.TPS, () -> db.getTpsTable().getTPSData(serverUUID));
         container.putCachingSupplier(ServerKeys.PING, () -> PlayersMutator.forContainer(container).pings());
-        container.putCachingSupplier(ServerKeys.ALL_TIME_PEAK_PLAYERS, () -> {
-            Optional<TPS> allTimePeak = db.getTpsTable().getAllTimePeak(serverUUID);
-            if (allTimePeak.isPresent()) {
-                TPS peak = allTimePeak.get();
-                return new DateObj<>(peak.getDate(), peak.getPlayers());
-            }
-            return null;
-        });
+        container.putCachingSupplier(ServerKeys.ALL_TIME_PEAK_PLAYERS, () ->
+                db.query(OptionalFetchQueries.fetchAllTimePeakPlayerCount(serverUUID)).orElse(null)
+        );
         container.putCachingSupplier(ServerKeys.RECENT_PEAK_PLAYERS, () -> {
             long twoDaysAgo = System.currentTimeMillis() - (TimeUnit.DAYS.toMillis(2L));
-            Optional<TPS> lastPeak = db.getTpsTable().getPeakPlayerCount(serverUUID, twoDaysAgo);
-            if (lastPeak.isPresent()) {
-                TPS peak = lastPeak.get();
-                return new DateObj<>(peak.getDate(), peak.getPlayers());
-            }
-            return null;
+            return db.query(OptionalFetchQueries.fetchPeakPlayerCount(serverUUID, twoDaysAgo)).orElse(null);
         });
 
         container.putCachingSupplier(ServerKeys.COMMAND_USAGE, () -> db.getCommandUseTable().getCommandUse(serverUUID));

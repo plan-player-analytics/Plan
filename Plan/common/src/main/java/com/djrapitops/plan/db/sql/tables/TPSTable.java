@@ -18,6 +18,7 @@ package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
+import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
@@ -131,10 +132,10 @@ public class TPSTable extends Table {
      * Clean the TPS Table of old data.
      */
     public void clean() {
-        Optional<TPS> allTimePeak = getAllTimePeak(getServerUUID());
+        Optional<DateObj<Integer>> allTimePeak = db.query(OptionalFetchQueries.fetchAllTimePeakPlayerCount(getServerUUID()));
         int p = -1;
         if (allTimePeak.isPresent()) {
-            p = allTimePeak.get().getPlayers();
+            p = allTimePeak.get().getValue();
         }
         final int pValue = p;
 
@@ -168,50 +169,6 @@ public class TPSTable extends Table {
                 statement.setLong(9, tps.getFreeDiskSpace());
             }
         });
-    }
-
-    public Optional<TPS> getPeakPlayerCount(UUID serverUUID, long afterDate) {
-        String subStatement = "SELECT MAX(" + PLAYERS_ONLINE + ") FROM " + tableName +
-                " WHERE " + SERVER_ID + "=" + serverTable.statementSelectServerID +
-                " AND " + DATE + ">= ?";
-        String sql = Select.all(tableName)
-                .where(SERVER_ID + "=" + serverTable.statementSelectServerID)
-                .and(PLAYERS_ONLINE + "= (" + subStatement + ")")
-                .and(DATE + ">= ?")
-                .toString();
-
-        return query(new QueryStatement<Optional<TPS>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-                statement.setString(2, serverUUID.toString());
-                statement.setLong(3, afterDate);
-                statement.setLong(4, afterDate);
-            }
-
-            @Override
-            public Optional<TPS> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    TPS tps = TPSBuilder.get()
-                            .date(set.getLong(DATE))
-                            .tps(set.getDouble(TPS))
-                            .playersOnline(set.getInt(PLAYERS_ONLINE))
-                            .usedCPU(set.getDouble(CPU_USAGE))
-                            .usedMemory(set.getLong(RAM_USAGE))
-                            .entities(set.getInt(ENTITIES))
-                            .chunksLoaded(set.getInt(CHUNKS))
-                            .freeDiskSpace(set.getLong(FREE_DISK))
-                            .toTPS();
-
-                    return Optional.of(tps);
-                }
-                return Optional.empty();
-            }
-        });
-    }
-
-    public Optional<TPS> getAllTimePeak(UUID serverUUID) {
-        return getPeakPlayerCount(serverUUID, 0);
     }
 
     public List<TPS> getNetworkOnlineData() {
