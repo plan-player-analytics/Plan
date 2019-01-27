@@ -142,7 +142,7 @@ public class DataStoreQueries {
     // TODO Remove usage after WorldChange event stores world names in its own transaction
     private static Executable storeWorldName(UUID serverUUID, String worldName) {
         return connection -> {
-            if (doesWorldNameExist(connection, serverUUID, worldName)) {
+            if (!doesWorldNameExist(connection, serverUUID, worldName)) {
                 return insertWorldName(serverUUID, worldName).execute(connection);
             }
             return false;
