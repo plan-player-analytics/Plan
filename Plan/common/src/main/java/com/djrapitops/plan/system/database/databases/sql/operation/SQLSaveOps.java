@@ -21,6 +21,7 @@ import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.transactions.Transaction;
+import com.djrapitops.plan.db.sql.queries.DataStoreQueries;
 import com.djrapitops.plan.db.sql.queries.LargeStoreQueries;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 import com.djrapitops.plan.system.info.server.Server;
@@ -173,7 +174,12 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
 
     @Override
     public void session(UUID uuid, Session session) {
-        sessionsTable.saveSession(uuid, session);
+        db.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute(DataStoreQueries.storeSession(session));
+            }
+        });
     }
 
     @Override

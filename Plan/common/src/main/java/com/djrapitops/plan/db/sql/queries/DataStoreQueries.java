@@ -16,10 +16,13 @@
  */
 package com.djrapitops.plan.db.sql.queries;
 
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
+import com.djrapitops.plan.data.time.GMTimes;
+import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.Executable;
-import com.djrapitops.plan.db.sql.tables.CommandUseTable;
-import com.djrapitops.plan.db.sql.tables.ServerTable;
+import com.djrapitops.plan.db.sql.tables.*;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -36,6 +39,13 @@ public class DataStoreQueries {
         /* static method class */
     }
 
+    /**
+     * Store the used command in the database.
+     *
+     * @param serverUUID  UUID of the Plan server.
+     * @param commandName Name of the command that was used.
+     * @return Executable, use inside a {@link com.djrapitops.plan.db.access.transactions.Transaction}
+     */
     public static Executable storeUsedCommandInformation(UUID serverUUID, String commandName) {
         return connection -> {
             if (!updateCommandUsage(serverUUID, commandName).execute(connection)) {
@@ -71,4 +81,52 @@ public class DataStoreQueries {
         };
     }
 
+    /**
+     * Store a finished session in the database.
+     *
+     * @param session Session, of which {@link Session#endSession(long)} has been called.
+     * @return Executable, use inside a {@link com.djrapitops.plan.db.access.transactions.Transaction}
+     * @throws IllegalArgumentException If {@link Session#endSession(long)} has not yet been called.
+     */
+    public static Executable storeSession(Session session) {
+        session.getValue(SessionKeys.END).orElseThrow(() -> new IllegalArgumentException("Attempted to save a session that has not ended."));
+        return connection -> {
+            storeSessionInformation(session).execute(connection);
+            storeSessionKills(session).execute(connection);
+            return storeSessionWorldTimes(session).execute(connection);
+        };
+    }
+
+    private static Executable storeSessionInformation(Session session) {
+        return new ExecStatement(SessionsTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, session.getUnsafe(SessionKeys.UUID).toString());
+                statement.setLong(2, session.getUnsafe(SessionKeys.START));
+                statement.setLong(3, session.getUnsafe(SessionKeys.END));
+                statement.setInt(4, session.getUnsafe(SessionKeys.DEATH_COUNT));
+                statement.setInt(5, session.getUnsafe(SessionKeys.MOB_KILL_COUNT));
+                statement.setLong(6, session.getUnsafe(SessionKeys.AFK_TIME));
+                statement.setString(7, session.getUnsafe(SessionKeys.SERVER_UUID).toString());
+            }
+        };
+    }
+
+    private static Executable storeSessionKills(Session session) {
+        return new ExecBatchStatement(KillsTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                KillsTable.addSessionKillsToBatch(statement, session);
+            }
+        };
+    }
+
+    private static Executable storeSessionWorldTimes(Session session) {
+        return new ExecBatchStatement(WorldTimesTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                WorldTimesTable.addSessionWorldTimesToBatch(statement, session, GMTimes.getGMKeyArray());
+            }
+        };
+    }
 }

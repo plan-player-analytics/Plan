@@ -103,6 +103,7 @@ public class ShutdownHook extends Thread {
             if (!database.isOpen()) {
                 database.init();
             }
+            // TODO Create a server shutdown transaction.
             try {
                 database.save().session(uuid, session);
             } catch (DBOpException e) {

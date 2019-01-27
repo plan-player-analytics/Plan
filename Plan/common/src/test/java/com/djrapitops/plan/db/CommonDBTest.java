@@ -28,14 +28,12 @@ import com.djrapitops.plan.data.store.keys.*;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.transactions.*;
 import com.djrapitops.plan.db.access.transactions.events.CommandStoreTransaction;
 import com.djrapitops.plan.db.patches.Patch;
-import com.djrapitops.plan.db.sql.queries.AggregateQueries;
-import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
-import com.djrapitops.plan.db.sql.queries.LargeStoreQueries;
-import com.djrapitops.plan.db.sql.queries.OptionalFetchQueries;
+import com.djrapitops.plan.db.sql.queries.*;
 import com.djrapitops.plan.db.sql.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.db.sql.tables.*;
 import com.djrapitops.plan.system.PlanSystem;
@@ -131,6 +129,15 @@ public abstract class CommonDBTest {
         ServerTable serverTable = db.getServerTable();
         serverTable.saveCurrentServerInfo(new Server(-1, serverUUID, "ServerName", "", 20));
         assertEquals(serverUUID, db.getServerUUIDSupplier().get());
+    }
+
+    private void execute(Executable executable) {
+        db.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute(executable);
+            }
+        });
     }
 
     public void commitTest() throws DBInitException {
@@ -351,7 +358,7 @@ public abstract class CommonDBTest {
         assertEquals(expectedLength, session.getUnsafe(SessionKeys.WORLD_TIMES).getTotal());
 
         SessionsTable sessionsTable = db.getSessionsTable();
-        sessionsTable.saveSession(playerUUID, session);
+        execute(DataStoreQueries.storeSession(session));
 
         commitTest();
 
@@ -377,7 +384,7 @@ public abstract class CommonDBTest {
         session.setPlayerKills(createKills());
 
         SessionsTable sessionsTable = db.getSessionsTable();
-        sessionsTable.saveSession(playerUUID, session);
+        execute(DataStoreQueries.storeSession(session));
 
         commitTest();
 
@@ -508,7 +515,7 @@ public abstract class CommonDBTest {
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
 
-        sessionsTable.saveSession(playerUUID, session);
+        execute(DataStoreQueries.storeSession(session));
         nicknamesTable.saveUserName(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID));
         geoInfoTable.saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L, "3"));
 
@@ -567,7 +574,7 @@ public abstract class CommonDBTest {
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
 
-        sessionsTable.saveSession(playerUUID, session);
+        execute(DataStoreQueries.storeSession(session));
         nicknamesTable.saveUserName(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID));
         geoInfoTable.saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L,
                 new SHA256Hash("1.2.3.4").create()));
@@ -623,7 +630,7 @@ public abstract class CommonDBTest {
         session.setPlayerKills(createKills());
 
         SessionsTable sessionsTable = db.getSessionsTable();
-        sessionsTable.saveSession(playerUUID, session);
+        execute(DataStoreQueries.storeSession(session));
 
         commitTest();
 
@@ -647,7 +654,7 @@ public abstract class CommonDBTest {
         Session session = createSession();
         List<PlayerKill> expected = createKills();
         session.setPlayerKills(expected);
-        db.getSessionsTable().saveSession(playerUUID, session);
+        execute(DataStoreQueries.storeSession(session));
 
         commitTest();
 
@@ -710,7 +717,7 @@ public abstract class CommonDBTest {
 
         Session session = new Session(1, playerUUID, serverUUID, 12345L, 23456L, 0, 0, 0);
         session.setWorldTimes(worldTimes);
-        db.getSessionsTable().saveSession(playerUUID, session);
+        execute(DataStoreQueries.storeSession(session));
 
         Map<Integer, Session> sessions = new HashMap<>();
         sessions.put(1, session);

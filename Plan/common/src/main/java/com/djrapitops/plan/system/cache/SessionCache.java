@@ -78,18 +78,17 @@ public class SessionCache {
      * @param time Time the session ended.
      * @throws com.djrapitops.plan.api.exceptions.database.DBOpException If saving failed.
      */
-    public void endSession(UUID uuid, long time) {
+    public Optional<Session> endSession(UUID uuid, long time) {
         Session session = activeSessions.get(uuid);
-        if (session == null) {
-            return;
-        }
-        if (session.getUnsafe(SessionKeys.START) > time) {
-            return;
+        if (session == null || session.getUnsafe(SessionKeys.START) > time) {
+            return Optional.empty();
         }
         try {
             session.endSession(time);
             // Might throw a DBOpException
+            // TODO Refactor to use Event transactions when available.
             dbSystem.getDatabase().save().session(uuid, session);
+            return Optional.of(session);
         } finally {
             removeSessionFromCache(uuid);
         }

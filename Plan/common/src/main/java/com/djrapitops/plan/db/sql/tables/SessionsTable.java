@@ -20,7 +20,6 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.SessionAFKTimePatch;
@@ -91,79 +90,6 @@ public class SessionsTable extends Table {
                 .column(DEATHS, Sql.INT).notNull()
                 .column(AFK_TIME, Sql.LONG).notNull()
                 .toString();
-    }
-
-    /**
-     * Used to get the sessionID of a newly inserted row.
-     *
-     * @param uuid    UUID of the player
-     * @param session session inserted.
-     * @return ID of the inserted session or -1 if session has not been inserted.
-     */
-    private int getSessionID(UUID uuid, Session session) {
-        String sql = "SELECT " + ID + " FROM " + tableName +
-                " WHERE " + USER_UUID + "=?" +
-                " AND " + SESSION_START + "=?" +
-                " AND " + SESSION_END + "=?";
-
-        return query(new QueryStatement<Integer>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-                statement.setLong(2, session.getUnsafe(SessionKeys.START));
-                statement.setLong(3, session.getValue(SessionKeys.END).orElse(System.currentTimeMillis()));
-            }
-
-            @Override
-            public Integer processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return set.getInt(ID);
-                }
-                return -1;
-            }
-        });
-    }
-
-    /**
-     * Used to save a session, with all it's information into the database.
-     * <p>
-     * Also saves WorldTimes and Kills.
-     *
-     * @param uuid    UUID of the player.
-     * @param session Session of the player that has ended ({@code endSession} has been called)
-     */
-    public void saveSession(UUID uuid, Session session) {
-        saveSessionInformation(uuid, session);
-        int sessionID = getSessionID(uuid, session);
-        if (sessionID == -1) {
-            throw new IllegalStateException("Session was not Saved!");
-        }
-
-        db.getWorldTimesTable().saveWorldTimes(uuid, sessionID, session.getUnsafe(SessionKeys.WORLD_TIMES));
-        db.getKillsTable().savePlayerKills(uuid, sessionID, session.getPlayerKills());
-    }
-
-    /**
-     * Saves Session's Information to the Session Table.
-     * <p>
-     * Does not save Kills or WorldTimes.
-     *
-     * @param uuid    UUID of the player.
-     * @param session Session of the player that has ended ({@code endSession} has been called)
-     */
-    private void saveSessionInformation(UUID uuid, Session session) {
-        execute(new ExecStatement(INSERT_STATEMENT) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-                statement.setLong(2, session.getUnsafe(SessionKeys.START));
-                statement.setLong(3, session.getUnsafe(SessionKeys.END));
-                statement.setInt(4, session.getUnsafe(SessionKeys.DEATH_COUNT));
-                statement.setInt(5, session.getUnsafe(SessionKeys.MOB_KILL_COUNT));
-                statement.setLong(6, session.getUnsafe(SessionKeys.AFK_TIME));
-                statement.setString(7, getServerUUID().toString());
-            }
-        });
     }
 
     /**

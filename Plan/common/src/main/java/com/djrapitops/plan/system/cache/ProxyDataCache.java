@@ -16,11 +16,13 @@
  */
 package com.djrapitops.plan.system.cache;
 
+import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -39,8 +41,9 @@ public class ProxyDataCache extends DataCache {
     }
 
     @Override
-    public void endSession(UUID uuid, long time) {
+    public Optional<Session> endSession(UUID uuid, long time) {
         removeSessionFromCache(uuid);
         /* Proxy should not save sessions so session is not removed.. */
+        return Optional.empty();
     }
 }
