@@ -76,7 +76,7 @@ public class ServerContainerQuery implements Query<ServerContainer> {
         });
 
         container.putCachingSupplier(ServerKeys.COMMAND_USAGE, () -> db.query(AggregateQueries.commandUsageCounts(serverUUID)));
-        container.putCachingSupplier(ServerKeys.WORLD_TIMES, () -> db.getWorldTimesTable().getWorldTimesOfServer(serverUUID));
+        container.putCachingSupplier(ServerKeys.WORLD_TIMES, () -> db.query(AggregateQueries.totalWorldTimes(serverUUID)));
 
         // Calculating getters
         container.putCachingSupplier(ServerKeys.OPERATORS, () -> PlayersMutator.forContainer(container).operators());

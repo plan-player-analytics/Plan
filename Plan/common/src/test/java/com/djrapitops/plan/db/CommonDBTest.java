@@ -775,13 +775,13 @@ public abstract class CommonDBTest {
     @Test
     public void testGetServerWorldTimes() {
         testSaveSessionsWorldTimes();
-        WorldTimes worldTimesOfServer = db.getWorldTimesTable().getWorldTimesOfServer(serverUUID);
+        WorldTimes worldTimesOfServer = db.query(AggregateQueries.totalWorldTimes(serverUUID));
         assertEquals(createWorldTimes(), worldTimesOfServer);
     }
 
     @Test
     public void testGetServerWorldTimesNoSessions() {
-        WorldTimes worldTimesOfServer = db.getWorldTimesTable().getWorldTimesOfServer(serverUUID);
+        WorldTimes worldTimesOfServer = db.query(AggregateQueries.totalWorldTimes(serverUUID));
         assertEquals(new WorldTimes(new HashMap<>()), worldTimesOfServer);
     }
 

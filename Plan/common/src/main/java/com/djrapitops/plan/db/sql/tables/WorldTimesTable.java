@@ -184,48 +184,6 @@ public class WorldTimesTable extends Table {
         });
     }
 
-    public WorldTimes getWorldTimesOfServer(UUID serverUUID) {
-        String worldIDColumn = worldTable + "." + WorldTable.ID;
-        String worldNameColumn = worldTable + "." + WorldTable.NAME + " as world_name";
-        String sql = "SELECT " +
-                "SUM(" + SURVIVAL + ") as survival, " +
-                "SUM(" + CREATIVE + ") as creative, " +
-                "SUM(" + ADVENTURE + ") as adventure, " +
-                "SUM(" + SPECTATOR + ") as spectator, " +
-                worldNameColumn +
-                " FROM " + tableName +
-                " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + WORLD_ID +
-                " WHERE " + tableName + "." + SERVER_UUID + "=?" +
-                " GROUP BY " + WORLD_ID;
-
-        return query(new QueryStatement<WorldTimes>(sql, 1000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public WorldTimes processResults(ResultSet set) throws SQLException {
-                String[] gms = GMTimes.getGMKeyArray();
-
-                WorldTimes worldTimes = new WorldTimes(new HashMap<>());
-                while (set.next()) {
-                    String worldName = set.getString("world_name");
-
-                    Map<String, Long> gmMap = new HashMap<>();
-                    gmMap.put(gms[0], set.getLong("survival"));
-                    gmMap.put(gms[1], set.getLong("creative"));
-                    gmMap.put(gms[2], set.getLong("adventure"));
-                    gmMap.put(gms[3], set.getLong("spectator"));
-                    GMTimes gmTimes = new GMTimes(gmMap);
-
-                    worldTimes.setGMTimesForWorld(worldName, gmTimes);
-                }
-                return worldTimes;
-            }
-        });
-    }
-
     public WorldTimes getWorldTimesOfUser(UUID uuid) {
         String worldIDColumn = worldTable + "." + WorldTable.ID;
         String worldNameColumn = worldTable + "." + WorldTable.NAME + " as world_name";
