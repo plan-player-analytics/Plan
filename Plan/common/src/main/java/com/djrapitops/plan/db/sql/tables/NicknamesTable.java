@@ -20,7 +20,6 @@ import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.NicknameLastSeenPatch;
 import com.djrapitops.plan.db.patches.NicknamesOptimizationPatch;
@@ -31,7 +30,9 @@ import com.djrapitops.plan.db.sql.parsing.Sql;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Table that is in charge of storing nickname data.
@@ -125,37 +126,6 @@ public class NicknamesTable extends Table {
      */
     public List<String> getNicknames(UUID uuid) {
         return getNicknames(uuid, getServerUUID());
-    }
-
-    public Map<UUID, Map<UUID, List<Nickname>>> getAllNicknames() {
-        String sql = "SELECT " +
-                NICKNAME + ", " +
-                LAST_USED + ", " +
-                USER_UUID + ", " +
-                SERVER_UUID +
-                " FROM " + tableName;
-
-        return query(new QueryAllStatement<Map<UUID, Map<UUID, List<Nickname>>>>(sql, 5000) {
-            @Override
-            public Map<UUID, Map<UUID, List<Nickname>>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Map<UUID, List<Nickname>>> map = new HashMap<>();
-                while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(SERVER_UUID));
-                    UUID uuid = UUID.fromString(set.getString(USER_UUID));
-
-                    Map<UUID, List<Nickname>> serverMap = map.getOrDefault(serverUUID, new HashMap<>());
-                    List<Nickname> nicknames = serverMap.getOrDefault(uuid, new ArrayList<>());
-
-                    nicknames.add(new Nickname(
-                            set.getString(NICKNAME), set.getLong(LAST_USED), serverUUID
-                    ));
-
-                    serverMap.put(uuid, nicknames);
-                    map.put(serverUUID, serverMap);
-                }
-                return map;
-            }
-        });
     }
 
     public void saveUserName(UUID uuid, Nickname name) {
