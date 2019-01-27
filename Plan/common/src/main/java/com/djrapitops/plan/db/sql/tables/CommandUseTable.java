@@ -43,6 +43,11 @@ public class CommandUseTable {
             + SERVER_ID
             + ") VALUES (?, ?, " + ServerTable.STATEMENT_SELECT_SERVER_ID + ")";
 
+    public static final String UPDATE_STATEMENT = "UPDATE " + CommandUseTable.TABLE_NAME + " SET "
+            + CommandUseTable.TIMES_USED + "=" + CommandUseTable.TIMES_USED + "+ 1" +
+            " WHERE " + CommandUseTable.SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
+            " AND " + CommandUseTable.COMMAND + "=?";
+
     private CommandUseTable() {
         /* Static information class */
     }

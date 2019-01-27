@@ -51,6 +51,7 @@ public class WorldTable extends Table {
     public static final String ID = "id";
     public static final String SERVER_UUID = "server_uuid";
     public static final String NAME = "world_name";
+
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
             + NAME + ", "
             + SERVER_UUID
@@ -61,11 +62,8 @@ public class WorldTable extends Table {
             " AND (" + TABLE_NAME + "." + SERVER_UUID + "=?)" +
             " LIMIT 1)";
 
-    private final ServerTable serverTable;
-
     public WorldTable(SQLDB db) {
         super(TABLE_NAME, db);
-        serverTable = db.getServerTable();
     }
 
     public static String createTableSQL(DBType dbType) {
@@ -160,15 +158,12 @@ public class WorldTable extends Table {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof WorldTable)) return false;
-        if (!super.equals(o)) return false;
-        WorldTable that = (WorldTable) o;
-        return Objects.equals(SELECT_WORLD_ID_STATEMENT, SELECT_WORLD_ID_STATEMENT) &&
-                Objects.equals(serverTable, that.serverTable);
+        return super.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), SELECT_WORLD_ID_STATEMENT, serverTable);
+        return Objects.hash(super.hashCode());
     }
 }
 
