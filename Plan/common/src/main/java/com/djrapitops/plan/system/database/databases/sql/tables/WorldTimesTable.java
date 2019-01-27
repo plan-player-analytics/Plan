@@ -178,7 +178,7 @@ public class WorldTimesTable extends UserUUIDTable {
 
     public WorldTimes getWorldTimesOfServer(UUID serverUUID) {
         String worldIDColumn = worldTable + "." + WorldTable.Col.ID;
-        String worldNameColumn = worldTable + "." + WorldTable.Col.NAME + " as world_name";
+        String worldNameColumn = worldTable + "." + WorldTable.Col.NAME + " as world";
         String sql = "SELECT " +
                 "SUM(" + Col.SURVIVAL + ") as survival, " +
                 "SUM(" + Col.CREATIVE + ") as creative, " +
@@ -188,7 +188,7 @@ public class WorldTimesTable extends UserUUIDTable {
                 " FROM " + tableName +
                 " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + Col.WORLD_ID +
                 " WHERE " + tableName + "." + Col.SERVER_UUID + "=?" +
-                " GROUP BY " + Col.WORLD_ID;
+                " GROUP BY world";
 
         return query(new QueryStatement<WorldTimes>(sql, 1000) {
             @Override
@@ -202,7 +202,7 @@ public class WorldTimesTable extends UserUUIDTable {
 
                 WorldTimes worldTimes = new WorldTimes(new HashMap<>());
                 while (set.next()) {
-                    String worldName = set.getString("world_name");
+                    String worldName = set.getString("world");
 
                     Map<String, Long> gmMap = new HashMap<>();
                     gmMap.put(gms[0], set.getLong("survival"));
@@ -220,7 +220,7 @@ public class WorldTimesTable extends UserUUIDTable {
 
     public WorldTimes getWorldTimesOfUser(UUID uuid) {
         String worldIDColumn = worldTable + "." + WorldTable.Col.ID;
-        String worldNameColumn = worldTable + "." + WorldTable.Col.NAME + " as world_name";
+        String worldNameColumn = worldTable + "." + WorldTable.Col.NAME + " as world";
         String sql = "SELECT " +
                 "SUM(" + Col.SURVIVAL + ") as survival, " +
                 "SUM(" + Col.CREATIVE + ") as creative, " +
@@ -230,7 +230,7 @@ public class WorldTimesTable extends UserUUIDTable {
                 " FROM " + tableName +
                 " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + Col.WORLD_ID +
                 " WHERE " + Col.UUID + "=?" +
-                " GROUP BY " + Col.WORLD_ID;
+                " GROUP BY world";
 
         return query(new QueryStatement<WorldTimes>(sql) {
             @Override
@@ -244,7 +244,7 @@ public class WorldTimesTable extends UserUUIDTable {
 
                 WorldTimes worldTimes = new WorldTimes(new HashMap<>());
                 while (set.next()) {
-                    String worldName = set.getString("world_name");
+                    String worldName = set.getString("world");
 
                     Map<String, Long> gmMap = new HashMap<>();
                     gmMap.put(gms[0], set.getLong("survival"));
@@ -262,7 +262,7 @@ public class WorldTimesTable extends UserUUIDTable {
 
     public Map<Integer, WorldTimes> getAllWorldTimesBySessionID() {
         String worldIDColumn = worldTable + "." + WorldTable.Col.ID;
-        String worldNameColumn = worldTable + "." + WorldTable.Col.NAME + " as world_name";
+        String worldNameColumn = worldTable + "." + WorldTable.Col.NAME + " as world";
         String sql = "SELECT " +
                 Col.SESSION_ID + ", " +
                 Col.SURVIVAL + ", " +
@@ -282,7 +282,7 @@ public class WorldTimesTable extends UserUUIDTable {
                 while (set.next()) {
                     int sessionID = set.getInt(Col.SESSION_ID.get());
 
-                    String worldName = set.getString("world_name");
+                    String worldName = set.getString("world");
 
                     Map<String, Long> gmMap = new HashMap<>();
                     gmMap.put(gms[0], set.getLong(Col.SURVIVAL.get()));
