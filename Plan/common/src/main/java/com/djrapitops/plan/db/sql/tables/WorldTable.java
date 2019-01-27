@@ -74,10 +74,6 @@ public class WorldTable extends Table {
                 .toString();
     }
 
-    public List<String> getWorlds() {
-        return getWorlds(getServerUUID());
-    }
-
     public List<String> getWorlds(UUID serverUUID) {
         String sql = "SELECT * FROM " + tableName +
                 " WHERE " + SERVER_UUID + "=?";
