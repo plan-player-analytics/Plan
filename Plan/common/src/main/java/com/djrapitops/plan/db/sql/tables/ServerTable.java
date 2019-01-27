@@ -61,11 +61,9 @@ public class ServerTable extends Table {
     public ServerTable(SQLDB db) {
         super(TABLE_NAME, db);
         statementSelectServerID = "(" + Select.from(tableName, tableName + "." + SERVER_ID).where(tableName + "." + SERVER_UUID + "=?").toString() + " LIMIT 1)";
-        statementSelectServerNameID = "(" + Select.from(tableName, tableName + "." + NAME).where(tableName + "." + SERVER_ID + "=?").toString() + " LIMIT 1)";
     }
 
     public final String statementSelectServerID;
-    public final String statementSelectServerNameID;
 
     public static String createTableSQL(DBType dbType) {
         return CreateTableParser.create(TABLE_NAME, dbType)
