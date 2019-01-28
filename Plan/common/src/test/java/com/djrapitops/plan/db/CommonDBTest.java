@@ -34,6 +34,7 @@ import com.djrapitops.plan.db.access.queries.*;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.db.access.transactions.*;
 import com.djrapitops.plan.db.access.transactions.events.CommandStoreTransaction;
+import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.db.patches.Patch;
 import com.djrapitops.plan.db.sql.tables.*;
 import com.djrapitops.plan.system.PlanSystem;
@@ -319,7 +320,10 @@ public abstract class CommonDBTest {
         gm.put(gms[1], 2000L);
         gm.put(gms[2], 3000L);
         gm.put(gms[3], 4000L);
-        times.put(worlds.get(0), new GMTimes(gm));
+
+        String worldName = worlds.get(0);
+        times.put(worldName, new GMTimes(gm));
+        db.executeTransaction(new WorldNameStoreTransaction(serverUUID, worldName));
 
         return new WorldTimes(times);
     }
@@ -667,6 +671,7 @@ public abstract class CommonDBTest {
                 "world",
                 GMTimes.getGMKeyArray()[0]
         );
+        db.executeTransaction(new WorldNameStoreTransaction(serverUUID, "world"));
         session.endSession(System.currentTimeMillis() + 1L);
         return session;
     }

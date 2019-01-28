@@ -17,7 +17,10 @@
 package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.WorldAliasSettings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -39,14 +42,20 @@ import java.util.UUID;
 public class GameModeChangeListener implements Listener {
 
     private final WorldAliasSettings worldAliasSettings;
+    private final ServerInfo serverInfo;
+    private final DBSystem dbSystem;
     private final ErrorHandler errorHandler;
 
     @Inject
     public GameModeChangeListener(
             WorldAliasSettings worldAliasSettings,
+            ServerInfo serverInfo,
+            DBSystem dbSystem,
             ErrorHandler errorHandler
     ) {
         this.worldAliasSettings = worldAliasSettings;
+        this.serverInfo = serverInfo;
+        this.dbSystem = dbSystem;
         this.errorHandler = errorHandler;
     }
 
@@ -69,6 +78,7 @@ public class GameModeChangeListener implements Listener {
         String gameMode = event.getNewGameMode().name();
         String worldName = player.getWorld().getName();
 
+        dbSystem.getDatabase().executeTransaction(new WorldNameStoreTransaction(serverInfo.getServerUUID(), worldName));
         worldAliasSettings.addWorld(worldName);
 
         Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);

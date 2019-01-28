@@ -17,7 +17,9 @@
 package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
@@ -51,6 +53,7 @@ public class PlayerOnlineListener implements Listener {
     private final Processors processors;
     private final Processing processing;
     private final ServerInfo serverInfo;
+    private final DBSystem dbSystem;
     private final SessionCache sessionCache;
     private final ErrorHandler errorHandler;
     private final Status status;
@@ -62,6 +65,7 @@ public class PlayerOnlineListener implements Listener {
             Processors processors,
             Processing processing,
             ServerInfo serverInfo,
+            DBSystem dbSystem,
             SessionCache sessionCache,
             Status status,
             RunnableFactory runnableFactory,
@@ -71,6 +75,7 @@ public class PlayerOnlineListener implements Listener {
         this.processors = processors;
         this.processing = processing;
         this.serverInfo = serverInfo;
+        this.dbSystem = dbSystem;
         this.sessionCache = sessionCache;
         this.status = status;
         this.runnableFactory = runnableFactory;
@@ -134,6 +139,8 @@ public class PlayerOnlineListener implements Listener {
 
         String world = player.getWorld().getName();
         String gm = player.getGameMode().name();
+
+        dbSystem.getDatabase().executeTransaction(new WorldNameStoreTransaction(serverInfo.getServerUUID(), world));
 
         InetAddress address = player.getAddress().getAddress();
 

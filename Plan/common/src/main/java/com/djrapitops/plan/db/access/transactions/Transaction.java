@@ -51,6 +51,8 @@ public abstract class Transaction {
         Verify.nullCheck(db, () -> new IllegalArgumentException("Given database was null"));
         Verify.isFalse(success, () -> new IllegalStateException("Transaction has already been executed"));
 
+        this.db = db;
+
         if (!shouldBeExecuted()) {
             return;
         }
@@ -83,7 +85,6 @@ public abstract class Transaction {
 
     private void initializeTransaction(SQLDB db) {
         try {
-            this.db = db;
             this.connection = db.getConnection();
             // Temporary fix for MySQL Patch task test failing, TODO remove after Auto commit is off for MySQL
             if (connection.getAutoCommit()) connection.setAutoCommit(false);

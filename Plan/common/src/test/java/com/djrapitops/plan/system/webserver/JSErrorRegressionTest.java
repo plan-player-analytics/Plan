@@ -20,6 +20,7 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.DataStoreQueries;
 import com.djrapitops.plan.db.access.transactions.Transaction;
+import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -83,12 +84,14 @@ public class JSErrorRegressionTest {
         database.save().registerNewUser(uuid, 1000L, "TestPlayer");
         Session session = new Session(uuid, TestConstants.SERVER_UUID, 1000L, "world", "SURVIVAL");
         session.endSession(11000L);
+        database.executeTransaction(new WorldNameStoreTransaction(TestConstants.SERVER_UUID, "world"));
         database.executeTransaction(new Transaction() {
             @Override
             protected void performOperations() {
                 execute(DataStoreQueries.storeSession(session));
             }
         });
+        
         // TODO Refactor to use Event transactions when available.
     }
 

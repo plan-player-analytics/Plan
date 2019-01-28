@@ -17,7 +17,9 @@
 package com.djrapitops.plan.system.listeners.sponge;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
@@ -55,6 +57,7 @@ public class SpongePlayerListener {
     private final Processors processors;
     private final Processing processing;
     private final ServerInfo serverInfo;
+    private final DBSystem dbSystem;
     private SessionCache sessionCache;
     private final Status status;
     private RunnableFactory runnableFactory;
@@ -66,6 +69,7 @@ public class SpongePlayerListener {
             Processors processors,
             Processing processing,
             ServerInfo serverInfo,
+            DBSystem dbSystem,
             SessionCache sessionCache,
             Status status,
             RunnableFactory runnableFactory,
@@ -75,6 +79,7 @@ public class SpongePlayerListener {
         this.processors = processors;
         this.processing = processing;
         this.serverInfo = serverInfo;
+        this.dbSystem = dbSystem;
         this.sessionCache = sessionCache;
         this.status = status;
         this.runnableFactory = runnableFactory;
@@ -139,6 +144,8 @@ public class SpongePlayerListener {
         String world = player.getWorld().getName();
         Optional<GameMode> gameMode = player.getGameModeData().get(Keys.GAME_MODE);
         String gm = gameMode.map(mode -> mode.getName().toUpperCase()).orElse("ADVENTURE");
+
+        dbSystem.getDatabase().executeTransaction(new WorldNameStoreTransaction(serverInfo.getServerUUID(), world));
 
         InetAddress address = player.getConnection().getAddress().getAddress();
 
