@@ -17,7 +17,7 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.db.sql.queries.OptionalFetchQueries;
+import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.locale.Locale;

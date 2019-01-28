@@ -18,8 +18,8 @@ package com.djrapitops.plan.system.webserver;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.DataStoreQueries;
 import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.db.sql.queries.DataStoreQueries;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;

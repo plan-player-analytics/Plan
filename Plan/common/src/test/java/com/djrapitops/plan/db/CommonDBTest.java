@@ -30,11 +30,11 @@ import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.Query;
+import com.djrapitops.plan.db.access.queries.*;
+import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.db.access.transactions.*;
 import com.djrapitops.plan.db.access.transactions.events.CommandStoreTransaction;
 import com.djrapitops.plan.db.patches.Patch;
-import com.djrapitops.plan.db.sql.queries.*;
-import com.djrapitops.plan.db.sql.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.db.sql.tables.*;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -223,20 +223,12 @@ public abstract class CommonDBTest {
     }
 
     private void saveUserOne() {
-        saveUserOne(db);
-    }
-
-    private void saveUserOne(SQLDB database) {
-        database.getUsersTable().registerUser(playerUUID, 123456789L, "Test");
-        database.getUsersTable().kicked(playerUUID);
+        db.getUsersTable().registerUser(playerUUID, 123456789L, "Test");
+        db.getUsersTable().kicked(playerUUID);
     }
 
     private void saveUserTwo() {
-        saveUserTwo(db);
-    }
-
-    private void saveUserTwo(SQLDB database) {
-        database.getUsersTable().registerUser(player2UUID, 123456789L, "Test");
+        db.getUsersTable().registerUser(player2UUID, 123456789L, "Test");
     }
 
     @Test
@@ -316,11 +308,7 @@ public abstract class CommonDBTest {
     }
 
     private void saveTwoWorlds() {
-        saveTwoWorlds(db);
-    }
-
-    private void saveTwoWorlds(SQLDB database) {
-        database.getWorldTable().saveWorlds(worlds);
+        db.getWorldTable().saveWorlds(worlds);
     }
 
     private WorldTimes createWorldTimes() {
@@ -532,7 +520,7 @@ public abstract class CommonDBTest {
 
     @Test
     public void testRemovalEverything() throws NoSuchAlgorithmException {
-        saveAllData(db);
+        saveAllData();
 
         db.executeTransaction(new RemoveEverythingTransaction());
 
@@ -553,21 +541,20 @@ public abstract class CommonDBTest {
         assertTrue(database.query(query).isEmpty());
     }
 
-    private void saveAllData(SQLDB database) throws NoSuchAlgorithmException {
-        UserInfoTable userInfoTable = database.getUserInfoTable();
-        UsersTable usersTable = database.getUsersTable();
-        SessionsTable sessionsTable = database.getSessionsTable();
-        NicknamesTable nicknamesTable = database.getNicknamesTable();
-        GeoInfoTable geoInfoTable = database.getGeoInfoTable();
-        TPSTable tpsTable = database.getTpsTable();
-        SecurityTable securityTable = database.getSecurityTable();
-        PingTable pingTable = database.getPingTable();
+    private void saveAllData() throws NoSuchAlgorithmException {
+        UserInfoTable userInfoTable = db.getUserInfoTable();
+        UsersTable usersTable = db.getUsersTable();
+        NicknamesTable nicknamesTable = db.getNicknamesTable();
+        GeoInfoTable geoInfoTable = db.getGeoInfoTable();
+        TPSTable tpsTable = db.getTpsTable();
+        SecurityTable securityTable = db.getSecurityTable();
+        PingTable pingTable = db.getPingTable();
 
-        saveUserOne(database);
-        saveUserTwo(database);
+        saveUserOne();
+        saveUserTwo();
 
         userInfoTable.registerUserInfo(playerUUID, 223456789L);
-        saveTwoWorlds(database);
+        saveTwoWorlds();
 
         Session session = new Session(playerUUID, serverUUID, 12345L, "", "");
         session.endSession(22345L);
@@ -689,7 +676,7 @@ public abstract class CommonDBTest {
         H2DB backup = dbSystem.getH2Factory().usingFile(temporaryFolder.newFile("backup.db"));
         backup.init();
 
-        saveAllData(db);
+        saveAllData();
 
         backup.executeTransaction(new BackupCopyTransaction(db));
 
@@ -804,7 +791,7 @@ public abstract class CommonDBTest {
 
     @Test
     public void testWorldTableGetWorldNamesNoException() throws NoSuchAlgorithmException {
-        saveAllData(db);
+        saveAllData();
         Set<String> worldNames = db.getWorldTable().getWorldNames(serverUUID);
         assertEquals(new HashSet<>(worlds), worldNames);
     }
@@ -837,7 +824,7 @@ public abstract class CommonDBTest {
 
     @Test
     public void testNewContainerForPlayer() throws NoSuchAlgorithmException {
-        saveAllData(db);
+        saveAllData();
 
         long start = System.nanoTime();
 
@@ -892,7 +879,7 @@ public abstract class CommonDBTest {
 
     @Test
     public void playerContainerSupportsAllPlayerKeys() throws NoSuchAlgorithmException, IllegalAccessException {
-        saveAllData(db);
+        saveAllData();
 
         PlayerContainer playerContainer = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
         // Active sessions are added after fetching
@@ -911,7 +898,7 @@ public abstract class CommonDBTest {
 
     @Test
     public void serverContainerSupportsAllServerKeys() throws NoSuchAlgorithmException, IllegalAccessException {
-        saveAllData(db);
+        saveAllData();
 
         ServerContainer serverContainer = db.query(ContainerFetchQueries.fetchServerContainer(serverUUID));
 

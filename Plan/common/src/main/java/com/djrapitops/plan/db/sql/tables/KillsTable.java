@@ -23,12 +23,12 @@ import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.patches.KillsOptimizationPatch;
 import com.djrapitops.plan.db.patches.KillsServerIDPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

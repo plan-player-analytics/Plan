@@ -18,7 +18,7 @@ package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.sql.queries.OptionalFetchQueries;
+import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;

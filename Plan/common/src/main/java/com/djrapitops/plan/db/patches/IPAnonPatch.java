@@ -20,7 +20,7 @@ import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
+import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.sql.tables.GeoInfoTable;
 
 import java.net.InetAddress;

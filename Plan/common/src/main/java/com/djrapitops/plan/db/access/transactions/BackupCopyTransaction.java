@@ -19,8 +19,8 @@ package com.djrapitops.plan.db.access.transactions;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
-import com.djrapitops.plan.db.sql.queries.LargeStoreQueries;
+import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
+import com.djrapitops.plan.db.access.queries.LargeStoreQueries;
 
 import java.util.function.Function;
 

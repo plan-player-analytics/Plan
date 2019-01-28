@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.db.sql.queries.containers;
+package com.djrapitops.plan.db.access.queries.containers;
 
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;

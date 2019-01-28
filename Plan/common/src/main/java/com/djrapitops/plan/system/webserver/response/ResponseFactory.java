@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.webserver.response;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
-import com.djrapitops.plan.db.sql.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.locale.Locale;

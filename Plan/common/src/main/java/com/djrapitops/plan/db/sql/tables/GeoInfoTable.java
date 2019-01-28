@@ -21,11 +21,11 @@ import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.patches.*;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
 import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
 
 import java.sql.PreparedStatement;

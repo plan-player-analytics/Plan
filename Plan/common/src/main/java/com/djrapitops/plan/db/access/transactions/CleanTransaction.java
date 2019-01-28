@@ -19,7 +19,7 @@ package com.djrapitops.plan.db.access.transactions;
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.Executable;
-import com.djrapitops.plan.db.sql.queries.OptionalFetchQueries;
+import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
 import com.djrapitops.plan.db.sql.tables.PingTable;
 import com.djrapitops.plan.db.sql.tables.TPSTable;
 import com.djrapitops.plan.system.locale.Locale;

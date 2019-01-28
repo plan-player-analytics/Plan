@@ -23,7 +23,7 @@ import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.mutators.health.NetworkHealthInformation;
-import com.djrapitops.plan.db.sql.queries.AggregateQueries;
+import com.djrapitops.plan.db.access.queries.AggregateQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;

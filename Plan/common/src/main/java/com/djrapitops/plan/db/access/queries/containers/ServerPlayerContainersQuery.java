@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.db.sql.queries.containers;
+package com.djrapitops.plan.db.access.queries.containers;
 
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Ping;
@@ -30,7 +30,7 @@ import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.sql.queries.LargeFetchQueries;
+import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
 
 import java.util.*;
 

@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.db.sql.queries.containers;
+package com.djrapitops.plan.db.access.queries.containers;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
@@ -23,8 +23,8 @@ import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.sql.queries.AggregateQueries;
-import com.djrapitops.plan.db.sql.queries.OptionalFetchQueries;
+import com.djrapitops.plan.db.access.queries.AggregateQueries;
+import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.info.server.Server;
 

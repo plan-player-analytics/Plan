@@ -20,7 +20,7 @@ import com.djrapitops.plan.api.data.PlayerContainer;
 import com.djrapitops.plan.api.data.ServerContainer;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.sql.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;

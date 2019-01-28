@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.db.access.transactions.events;
 
+import com.djrapitops.plan.db.access.queries.DataStoreQueries;
 import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.db.sql.queries.DataStoreQueries;
 
 import java.util.UUID;
 

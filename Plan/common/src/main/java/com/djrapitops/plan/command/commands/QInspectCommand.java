@@ -24,7 +24,7 @@ import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 import com.djrapitops.plan.data.store.mutators.GeoInfoMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.objects.DateHolder;
-import com.djrapitops.plan.db.sql.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
