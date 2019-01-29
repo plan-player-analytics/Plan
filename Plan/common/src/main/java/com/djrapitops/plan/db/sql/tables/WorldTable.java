@@ -97,10 +97,6 @@ public class WorldTable extends Table {
         });
     }
 
-    public void saveWorlds(Collection<String> worlds) {
-        saveWorlds(worlds, getServerUUID());
-    }
-
     /**
      * Used to save a list of world names.
      * <p>

@@ -83,7 +83,7 @@ public abstract class CommonDBTest {
     public static SQLDB db;
     public static PlanSystem system;
 
-    public final List<String> worlds = Arrays.asList("TestWorld", "TestWorld2");
+    public final String[] worlds = new String[]{"TestWorld", "TestWorld2"};
     public final UUID playerUUID = TestConstants.PLAYER_ONE_UUID;
     public final UUID player2UUID = TestConstants.PLAYER_TWO_UUID;
 
@@ -297,19 +297,28 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testWorldTable() throws DBInitException {
-        WorldTable worldTable = db.getWorldTable();
-        List<String> worlds = Arrays.asList("Test", "Test2", "Test3");
-        worldTable.saveWorlds(worlds);
+    public void worldNamesAreStored() throws DBInitException {
+        String[] expected = {"Test", "Test2", "Test3"};
+        saveWorlds(expected);
 
         commitTest();
 
-        List<String> saved = worldTable.getWorlds(serverUUID);
-        assertEquals(new HashSet<>(worlds), new HashSet<>(saved));
+        Collection<String> result = db.query(LargeFetchQueries.fetchAllWorldNames()).getOrDefault(serverUUID, new HashSet<>());
+        assertEquals(Arrays.asList(expected), result);
+    }
+
+    private void saveWorld(String worldName) {
+        db.executeTransaction(new WorldNameStoreTransaction(serverUUID, worldName));
+    }
+
+    private void saveWorlds(String... worldNames) {
+        for (String worldName : worldNames) {
+            saveWorld(worldName);
+        }
     }
 
     private void saveTwoWorlds() {
-        db.getWorldTable().saveWorlds(worlds);
+        saveWorlds(worlds);
     }
 
     private WorldTimes createWorldTimes() {
@@ -321,7 +330,7 @@ public abstract class CommonDBTest {
         gm.put(gms[2], 3000L);
         gm.put(gms[3], 4000L);
 
-        String worldName = worlds.get(0);
+        String worldName = worlds[0];
         times.put(worldName, new GMTimes(gm));
         db.executeTransaction(new WorldNameStoreTransaction(serverUUID, worldName));
 
@@ -792,13 +801,6 @@ public abstract class CommonDBTest {
         db.save().registerNewUserOnThisServer(playerUUID, 500L);
         assertTrue(db.check().isPlayerRegistered(playerUUID));
         assertTrue(db.check().isPlayerRegisteredOnThisServer(playerUUID));
-    }
-
-    @Test
-    public void testWorldTableGetWorldNamesNoException() throws NoSuchAlgorithmException {
-        saveAllData();
-        Set<String> worldNames = db.getWorldTable().getWorldNames(serverUUID);
-        assertEquals(new HashSet<>(worlds), worldNames);
     }
 
     @Test
