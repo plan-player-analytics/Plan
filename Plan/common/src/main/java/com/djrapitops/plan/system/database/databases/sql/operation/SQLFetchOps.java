@@ -25,9 +25,9 @@ import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.queries.AggregateQueries;
 import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
+import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.info.server.Server;
@@ -178,7 +178,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Map<UUID, Integer> getPlayersRegisteredForServers(Collection<Server> servers) {
-        return db.query(AggregateQueries.serverUserCounts());
+        return db.query(ServerAggregateQueries.serverUserCounts());
     }
 
     @Override

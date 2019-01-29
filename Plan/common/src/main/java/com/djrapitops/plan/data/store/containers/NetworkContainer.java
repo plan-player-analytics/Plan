@@ -23,7 +23,7 @@ import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.mutators.health.NetworkHealthInformation;
-import com.djrapitops.plan.db.access.queries.AggregateQueries;
+import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
@@ -104,7 +104,7 @@ public class NetworkContainer extends DataContainer {
         putSupplier(NetworkKeys.SERVERS_TAB, () -> {
             StringBuilder serverBoxes = new StringBuilder();
             Map<Integer, List<TPS>> playersOnlineData = getValue(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA).orElse(new HashMap<>());
-            Map<UUID, Integer> userCounts = dbSystem.getDatabase().query(AggregateQueries.serverUserCounts());
+            Map<UUID, Integer> userCounts = dbSystem.getDatabase().query(ServerAggregateQueries.serverUserCounts());
             Collection<Server> servers = getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>());
             servers.stream()
                     .sorted((one, two) -> String.CASE_INSENSITIVE_ORDER.compare(one.getName(), two.getName()))

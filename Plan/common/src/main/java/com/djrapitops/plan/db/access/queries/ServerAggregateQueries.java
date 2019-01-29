@@ -31,13 +31,13 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Static method class for queries that count how many entries of particular kinds there are.
+ * Static method class for queries that count how many entries of particular kinds there are for a server.
  *
  * @author Rsl1122
  */
-public class AggregateQueries {
+public class ServerAggregateQueries {
 
-    private AggregateQueries() {
+    private ServerAggregateQueries() {
         /* Static method class */
     }
 
@@ -82,7 +82,7 @@ public class AggregateQueries {
      * Count how many users are on each server in the network.
      * <p>
      * Please note that counts can overlap as one user can join multiple servers.
-     * Use {@link AggregateQueries#baseUserCount()} if you want to count total number of users.
+     * Use {@link ServerAggregateQueries#baseUserCount()} if you want to count total number of users.
      *
      * @return Map: Server UUID - Count of users registered to that server
      */

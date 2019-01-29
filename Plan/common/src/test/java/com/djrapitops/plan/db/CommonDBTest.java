@@ -170,7 +170,7 @@ public abstract class CommonDBTest {
 
         commitTest();
 
-        Map<String, Integer> commandUse = db.query(AggregateQueries.commandUsageCounts(serverUUID));
+        Map<String, Integer> commandUse = db.query(ServerAggregateQueries.commandUsageCounts(serverUUID));
         assertEquals(expected, commandUse);
     }
 
@@ -189,7 +189,7 @@ public abstract class CommonDBTest {
         useCommand("test", 3);
         useCommand("tp", 2);
 
-        Map<String, Integer> commandUse = db.query(AggregateQueries.commandUsageCounts(serverUUID));
+        Map<String, Integer> commandUse = db.query(ServerAggregateQueries.commandUsageCounts(serverUUID));
         assertEquals(expected, commandUse);
     }
 
@@ -783,13 +783,13 @@ public abstract class CommonDBTest {
     @Test
     public void testGetServerWorldTimes() {
         testSaveSessionsWorldTimes();
-        WorldTimes worldTimesOfServer = db.query(AggregateQueries.totalWorldTimes(serverUUID));
+        WorldTimes worldTimesOfServer = db.query(ServerAggregateQueries.totalWorldTimes(serverUUID));
         assertEquals(createWorldTimes(), worldTimesOfServer);
     }
 
     @Test
     public void testGetServerWorldTimesNoSessions() {
-        WorldTimes worldTimesOfServer = db.query(AggregateQueries.totalWorldTimes(serverUUID));
+        WorldTimes worldTimesOfServer = db.query(ServerAggregateQueries.totalWorldTimes(serverUUID));
         assertEquals(new WorldTimes(new HashMap<>()), worldTimesOfServer);
     }
 

@@ -21,7 +21,7 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.SQLiteDB;
-import com.djrapitops.plan.db.access.queries.AggregateQueries;
+import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
 import com.djrapitops.plan.db.access.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
@@ -126,7 +126,7 @@ public class ManageBackupCommand extends CommandNode {
      * @param copyFromDB Database you want to backup.
      */
     private void createNewBackup(String dbName, Database copyFromDB) {
-        Integer userCount = copyFromDB.query(AggregateQueries.baseUserCount());
+        Integer userCount = copyFromDB.query(ServerAggregateQueries.baseUserCount());
         if (userCount <= 0) {
             return;
         }
