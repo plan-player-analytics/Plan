@@ -16,15 +16,14 @@
  */
 package utilities;
 
-import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.time.GMTimes;
-import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.system.info.server.Server;
 
 import java.io.File;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class TestDatabaseCreator {
@@ -44,7 +43,6 @@ public class TestDatabaseCreator {
     private static final String[] gms = GMTimes.getGMKeyArray();
     private final SQLDB db = null; // TODO
     private final Random r;
-    private Map<UUID, List<String>> worlds;
 
     public TestDatabaseCreator() {
         File testDB = new File("src/test/resources/testDB.db".replace("/", File.separator));
@@ -60,70 +58,6 @@ public class TestDatabaseCreator {
             return;
         }
 
-        fillDatabase();
+        // fillDatabase();
     }
-
-    private void fillDatabase() {
-        addServers();
-        addWorlds();
-        addUsers();
-    }
-
-    private void addWorlds() {
-        worlds = new HashMap<>();
-
-        for (UUID serverUuid : SERVER_UUIDS) {
-            for (int i = 0; i < r.nextInt(10); i++) {
-                List<String> worldNames = worlds.getOrDefault(serverUuid, new ArrayList<>());
-                worldNames.add(RandomData.randomString(50));
-                worlds.put(serverUuid, worldNames);
-            }
-        }
-
-        for (Map.Entry<UUID, List<String>> entry : worlds.entrySet()) {
-            db.getWorldTable().saveWorlds(entry.getValue(), entry.getKey());
-        }
-    }
-
-    private void addUsers() {
-        for (int i = 0; i < 100000; i++) {
-            UUID uuid = UUID.randomUUID();
-            long registered = Math.abs(r.nextLong());
-            String name = uuid.toString().split("-", 2)[0];
-            db.save().registerNewUser(uuid, registered, name);
-        }
-    }
-
-    private void addSession(UUID uuid, long date) {
-        UUID serverUUID = SERVER_UUIDS.get(r.nextInt(SERVER_UUIDS.size()));
-        List<String> worldNames = worlds.get(serverUUID);
-        String world = worldNames.get(r.nextInt(worldNames.size()));
-        String gm = gms[r.nextInt(gms.length)];
-
-        long end = date + (long) r.nextInt((int) TimeUnit.DAYS.toMillis(1L));
-
-        Session session = new Session(-1, uuid, serverUUID,
-                date, end,
-                r.nextInt(100), // mobs
-                r.nextInt(50), // deaths
-                r.nextInt((int) (end - date)) // afk
-        );
-
-        WorldTimes worldTimes = new WorldTimes(new HashMap<>());
-
-    }
-
-    private void addServers() {
-        for (UUID serverUuid : SERVER_UUIDS) {
-            Server server = new Server(
-                    -1,
-                    serverUuid,
-                    serverUuid.toString().split("-", 2)[0],
-                    "address",
-                    100
-            );
-            db.getServerTable().saveCurrentServerInfo(server);
-        }
-    }
-
 }

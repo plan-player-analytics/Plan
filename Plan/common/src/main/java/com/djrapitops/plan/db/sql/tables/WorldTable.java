@@ -18,19 +18,13 @@ package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.patches.WorldsOptimizationPatch;
 import com.djrapitops.plan.db.patches.WorldsServerIDPatch;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-import com.djrapitops.plugin.utilities.Verify;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
+import java.util.Objects;
 
 /**
  * Table class representing database table plan_worlds.
@@ -72,58 +66,6 @@ public class WorldTable extends Table {
                 .column(NAME, Sql.varchar(100)).notNull()
                 .column(SERVER_UUID, Sql.varchar(36)).notNull()
                 .toString();
-    }
-
-    public List<String> getWorlds(UUID serverUUID) {
-        String sql = "SELECT * FROM " + tableName +
-                " WHERE " + SERVER_UUID + "=?";
-
-        return query(new QueryStatement<List<String>>(sql) {
-
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public List<String> processResults(ResultSet set) throws SQLException {
-                List<String> worldNames = new ArrayList<>();
-                while (set.next()) {
-                    String worldName = set.getString(NAME);
-                    worldNames.add(worldName);
-                }
-                return worldNames;
-            }
-        });
-    }
-
-    /**
-     * Used to save a list of world names.
-     * <p>
-     * Already saved names will not be saved.
-     *
-     * @param worlds List of world names.
-     */
-    public void saveWorlds(Collection<String> worlds, UUID serverUUID) {
-        Verify.nullCheck(worlds);
-        Set<String> worldsToSave = new HashSet<>(worlds);
-
-        List<String> saved = getWorlds(serverUUID);
-        worldsToSave.removeAll(saved);
-        if (Verify.isEmpty(worlds)) {
-            return;
-        }
-
-        executeBatch(new ExecStatement(INSERT_STATEMENT) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                for (String world : worldsToSave) {
-                    statement.setString(1, world);
-                    statement.setString(2, serverUUID.toString());
-                    statement.addBatch();
-                }
-            }
-        });
     }
 
     @Override

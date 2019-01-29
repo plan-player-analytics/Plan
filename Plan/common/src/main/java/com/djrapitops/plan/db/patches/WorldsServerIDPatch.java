@@ -20,6 +20,7 @@ import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.access.queries.LargeStoreQueries;
 import com.djrapitops.plan.db.sql.tables.SessionsTable;
 import com.djrapitops.plan.db.sql.tables.WorldTable;
 import com.djrapitops.plan.db.sql.tables.WorldTimesTable;
@@ -69,17 +70,12 @@ public class WorldsServerIDPatch extends Patch {
 
         List<UUID> serverUUIDs = db.getServerTable().getServerUUIDs();
 
-        Map<UUID, Set<String>> worldsPerServer = new HashMap<>();
+        Map<UUID, Collection<String>> worldsPerServer = new HashMap<>();
         for (UUID serverUUID : serverUUIDs) {
             worldsPerServer.put(serverUUID, getWorldNamesOld(serverUUID));
         }
 
-        for (Map.Entry<UUID, Set<String>> entry : worldsPerServer.entrySet()) {
-            UUID serverUUID = entry.getKey();
-            Set<String> worlds = entry.getValue();
-
-            worldTable.saveWorlds(worlds, serverUUID);
-        }
+        execute(LargeStoreQueries.storeAllWorldNames(worldsPerServer));
 
         updateWorldTimesTableWorldIDs();
         executeSwallowingExceptions("DELETE FROM " + WorldTable.TABLE_NAME + " WHERE server_id=0");
