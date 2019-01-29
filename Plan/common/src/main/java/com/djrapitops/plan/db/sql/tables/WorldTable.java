@@ -17,19 +17,14 @@
 package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.db.DBType;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.patches.WorldsOptimizationPatch;
 import com.djrapitops.plan.db.patches.WorldsServerIDPatch;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
-import java.util.Objects;
-
 /**
- * Table class representing database table plan_worlds.
- * <p>
- * Used for storing id references to world names.
+ * Table information about 'plan_worlds'.
  * <p>
  * Patches related to this table:
  * {@link Version10Patch}
@@ -38,7 +33,7 @@ import java.util.Objects;
  *
  * @author Rsl1122
  */
-public class WorldTable extends Table {
+public class WorldTable {
 
     public static final String TABLE_NAME = "plan_worlds";
 
@@ -56,8 +51,8 @@ public class WorldTable extends Table {
             " AND (" + TABLE_NAME + "." + SERVER_UUID + "=?)" +
             " LIMIT 1)";
 
-    public WorldTable(SQLDB db) {
-        super(TABLE_NAME, db);
+    private WorldTable() {
+        /* Static information class */
     }
 
     public static String createTableSQL(DBType dbType) {
@@ -66,18 +61,6 @@ public class WorldTable extends Table {
                 .column(NAME, Sql.varchar(100)).notNull()
                 .column(SERVER_UUID, Sql.varchar(36)).notNull()
                 .toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof WorldTable)) return false;
-        return super.equals(o);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode());
     }
 }
 

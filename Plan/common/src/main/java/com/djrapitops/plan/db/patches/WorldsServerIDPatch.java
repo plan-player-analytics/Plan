@@ -66,8 +66,6 @@ public class WorldsServerIDPatch extends Patch {
 
     @Override
     protected void applyPatch() {
-        WorldTable worldTable = db.getWorldTable();
-
         List<UUID> serverUUIDs = db.getServerTable().getServerUUIDs();
 
         Map<UUID, Collection<String>> worldsPerServer = new HashMap<>();

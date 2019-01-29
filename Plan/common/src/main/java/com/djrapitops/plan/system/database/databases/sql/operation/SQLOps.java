@@ -32,7 +32,6 @@ public class SQLOps {
     protected final GeoInfoTable geoInfoTable;
     protected final TPSTable tpsTable;
     protected final SecurityTable securityTable;
-    protected final WorldTable worldTable;
     protected final WorldTimesTable worldTimesTable;
     protected final ServerTable serverTable;
     protected final PingTable pingTable;
@@ -49,7 +48,6 @@ public class SQLOps {
         geoInfoTable = db.getGeoInfoTable();
         tpsTable = db.getTpsTable();
         securityTable = db.getSecurityTable();
-        worldTable = db.getWorldTable();
         worldTimesTable = db.getWorldTimesTable();
         serverTable = db.getServerTable();
         pingTable = db.getPingTable();

@@ -78,7 +78,6 @@ public abstract class SQLDB extends AbstractDatabase {
     private final GeoInfoTable geoInfoTable;
     private final TPSTable tpsTable;
     private final SecurityTable securityTable;
-    private final WorldTable worldTable;
     private final WorldTimesTable worldTimesTable;
     private final ServerTable serverTable;
     private final PingTable pingTable;
@@ -121,7 +120,6 @@ public abstract class SQLDB extends AbstractDatabase {
         nicknamesTable = new NicknamesTable(this);
         sessionsTable = new SessionsTable(this);
         killsTable = new KillsTable(this);
-        worldTable = new WorldTable(this);
         worldTimesTable = new WorldTimesTable(this);
         pingTable = new PingTable(this);
         settingsTable = new SettingsTable(this);
@@ -383,11 +381,6 @@ public abstract class SQLDB extends AbstractDatabase {
     @Deprecated
     public SecurityTable getSecurityTable() {
         return securityTable;
-    }
-
-    @Deprecated
-    public WorldTable getWorldTable() {
-        return worldTable;
     }
 
     @Deprecated
