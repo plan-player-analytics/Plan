@@ -126,26 +126,6 @@ public class WorldTable extends Table {
         });
     }
 
-    public Set<String> getWorldNames(UUID serverUUID) {
-        String sql = "SELECT DISTINCT " + NAME + " FROM " + tableName +
-                " WHERE " + SERVER_UUID + "=?";
-        return query(new QueryStatement<Set<String>>(sql, 100) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public Set<String> processResults(ResultSet set) throws SQLException {
-                Set<String> worldNames = new HashSet<>();
-                while (set.next()) {
-                    worldNames.add(set.getString(NAME));
-                }
-                return worldNames;
-            }
-        });
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
