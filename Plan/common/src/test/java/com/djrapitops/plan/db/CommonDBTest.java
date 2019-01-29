@@ -304,7 +304,7 @@ public abstract class CommonDBTest {
         commitTest();
 
         Collection<String> result = db.query(LargeFetchQueries.fetchAllWorldNames()).getOrDefault(serverUUID, new HashSet<>());
-        assertEquals(Arrays.asList(expected), result);
+        assertEquals(new HashSet<>(Arrays.asList(expected)), result);
     }
 
     private void saveWorld(String worldName) {
