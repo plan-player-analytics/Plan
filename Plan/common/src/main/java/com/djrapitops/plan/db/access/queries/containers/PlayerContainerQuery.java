@@ -29,6 +29,7 @@ import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Query;
+import com.djrapitops.plan.db.access.queries.PlayerAggregateQueries;
 
 import java.util.HashMap;
 import java.util.List;
@@ -72,7 +73,7 @@ public class PlayerContainerQuery implements Query<PlayerContainer> {
         );
         container.putCachingSupplier(PlayerKeys.WORLD_TIMES, () ->
         {
-            WorldTimes worldTimes = new PerServerMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).flatMapWorldTimes();
+            WorldTimes worldTimes = db.query(PlayerAggregateQueries.totalWorldTimes(uuid));
             container.getValue(PlayerKeys.ACTIVE_SESSION).ifPresent(session -> worldTimes.add(
                     session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>())))
             );

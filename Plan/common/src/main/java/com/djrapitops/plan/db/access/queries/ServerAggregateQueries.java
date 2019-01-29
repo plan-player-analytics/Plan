@@ -133,6 +133,12 @@ public class ServerAggregateQueries {
         };
     }
 
+    /**
+     * Sum total playtime per world on a server.
+     *
+     * @param serverUUID Server UUID of the Plan server.
+     * @return WorldTimes with world name - playtime ms information.
+     */
     public static Query<WorldTimes> totalWorldTimes(UUID serverUUID) {
         String worldIDColumn = WorldTable.TABLE_NAME + "." + WorldTable.ID;
         String worldNameColumn = WorldTable.TABLE_NAME + "." + WorldTable.NAME + " as world";

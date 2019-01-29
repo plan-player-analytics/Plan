@@ -776,7 +776,7 @@ public abstract class CommonDBTest {
     @Test
     public void testGetUserWorldTimes() {
         testSaveSessionsWorldTimes();
-        WorldTimes worldTimesOfUser = db.getWorldTimesTable().getWorldTimesOfUser(playerUUID);
+        WorldTimes worldTimesOfUser = db.query(PlayerAggregateQueries.totalWorldTimes(playerUUID));
         assertEquals(createWorldTimes(), worldTimesOfUser);
     }
 
