@@ -83,9 +83,7 @@ public class CleanTransaction extends Transaction {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
         for (UUID uuid : inactivePlayers) {
-            // TODO Figure out a better way to schedule transactions from within transactions
-            // or figure out a way to execute the transaction within this transaction.
-            db.executeTransaction(new RemovePlayerTransaction(uuid));
+            executeOther(new RemovePlayerTransaction(uuid));
         }
         return inactivePlayers.size();
     }

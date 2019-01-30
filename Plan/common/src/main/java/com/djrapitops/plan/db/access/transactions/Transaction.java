@@ -146,6 +146,12 @@ public abstract class Transaction {
         }
     }
 
+    protected void executeOther(Transaction transaction) {
+        transaction.connection = this.connection;
+        transaction.performOperations();
+        transaction.connection = null;
+    }
+
     protected DBType getDBType() {
         return db.getType();
     }
