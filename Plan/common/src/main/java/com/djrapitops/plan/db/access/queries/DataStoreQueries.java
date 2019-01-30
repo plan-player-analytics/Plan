@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.db.access.queries;
 
+import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.time.GMTimes;
@@ -134,6 +135,40 @@ public class DataStoreQueries {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 WorldTimesTable.addSessionWorldTimesToBatch(statement, session, GMTimes.getGMKeyArray());
+            }
+        };
+    }
+
+    public static Executable storeGeoInfo(UUID playerUUID, GeoInfo geoInfo) {
+        return connection -> {
+            if (!updateGeoInfo(playerUUID, geoInfo).execute(connection)) {
+                return insertGeoInfo(playerUUID, geoInfo).execute(connection);
+            }
+            return false;
+        };
+    }
+
+    private static Executable updateGeoInfo(UUID playerUUID, GeoInfo geoInfo) {
+        return new ExecStatement(GeoInfoTable.UPDATE_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, geoInfo.getDate());
+                statement.setString(2, playerUUID.toString());
+                statement.setString(3, geoInfo.getIpHash());
+                statement.setString(4, geoInfo.getGeolocation());
+            }
+        };
+    }
+
+    private static Executable insertGeoInfo(UUID playerUUID, GeoInfo geoInfo) {
+        return new ExecStatement(GeoInfoTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+                statement.setString(2, geoInfo.getIp());
+                statement.setString(3, geoInfo.getIpHash());
+                statement.setString(4, geoInfo.getGeolocation());
+                statement.setLong(5, geoInfo.getDate());
             }
         };
     }

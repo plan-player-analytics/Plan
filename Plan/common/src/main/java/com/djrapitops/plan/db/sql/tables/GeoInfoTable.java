@@ -19,19 +19,20 @@ package com.djrapitops.plan.db.sql.tables;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.patches.*;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
-import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Table that is in charge of storing common IP and Geolocation data for users.
@@ -65,6 +66,11 @@ public class GeoInfoTable extends Table {
             + GEOLOCATION + ", "
             + LAST_USED
             + ") VALUES (?, ?, ?, ?, ?)";
+    public static final String UPDATE_STATEMENT = "UPDATE " + TABLE_NAME + " SET "
+            + LAST_USED + "=?" +
+            " WHERE " + USER_UUID + "=?" +
+            " AND " + IP_HASH + "=?" +
+            " AND " + GEOLOCATION + "=?";
 
     public GeoInfoTable(SQLDB db) {
         super(TABLE_NAME, db);
@@ -102,67 +108,6 @@ public class GeoInfoTable extends Table {
                     geoInfo.add(new GeoInfo(ip, geolocation, lastUsed, ipHash));
                 }
                 return geoInfo;
-            }
-        });
-    }
-
-    private void updateGeoInfo(UUID uuid, GeoInfo info) {
-        String sql = "UPDATE " + tableName + " SET "
-                + LAST_USED + "=?" +
-                " WHERE " + USER_UUID + "=?" +
-                " AND " + IP_HASH + "=?" +
-                " AND " + GEOLOCATION + "=?";
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, info.getDate());
-                statement.setString(2, uuid.toString());
-                statement.setString(3, info.getIpHash());
-                statement.setString(4, info.getGeolocation());
-            }
-        });
-    }
-
-    public void saveGeoInfo(UUID uuid, GeoInfo info) {
-        List<GeoInfo> geoInfo = getGeoInfo(uuid);
-        if (geoInfo.contains(info)) {
-            updateGeoInfo(uuid, info);
-        } else {
-            insertGeoInfo(uuid, info);
-        }
-    }
-
-    private void insertGeoInfo(UUID uuid, GeoInfo info) {
-        execute(new ExecStatement(INSERT_STATEMENT) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-                statement.setString(2, info.getIp());
-                statement.setString(3, info.getIpHash());
-                statement.setString(4, info.getGeolocation());
-                statement.setLong(5, info.getDate());
-            }
-        });
-    }
-
-    public Optional<String> getGeolocation(String ip) {
-        String sql = Select.from(tableName, GEOLOCATION)
-                .where(IP + "=?")
-                .toString();
-
-        return query(new QueryStatement<Optional<String>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, ip);
-            }
-
-            @Override
-            public Optional<String> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return Optional.of(set.getString(GEOLOCATION));
-                }
-                return Optional.empty();
             }
         });
     }

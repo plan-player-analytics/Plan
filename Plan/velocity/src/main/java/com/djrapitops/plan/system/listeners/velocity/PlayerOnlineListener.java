@@ -17,7 +17,10 @@
 package com.djrapitops.plan.system.listeners.velocity;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.db.access.transactions.events.GeoInfoStoreTransaction;
+import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
@@ -51,6 +54,8 @@ public class PlayerOnlineListener {
     private final PlanConfig config;
     private final Processors processors;
     private final Processing processing;
+    private final DBSystem dbSystem;
+    private final GeolocationCache geolocationCache;
     private final SessionCache sessionCache;
     private final ServerInfo serverInfo;
     private final ErrorHandler errorHandler;
@@ -60,6 +65,8 @@ public class PlayerOnlineListener {
             PlanConfig config,
             Processing processing,
             Processors processors,
+            DBSystem dbSystem,
+            GeolocationCache geolocationCache,
             SessionCache sessionCache,
             ServerInfo serverInfo,
             ErrorHandler errorHandler
@@ -67,6 +74,8 @@ public class PlayerOnlineListener {
         this.config = config;
         this.processing = processing;
         this.processors = processors;
+        this.dbSystem = dbSystem;
+        this.geolocationCache = geolocationCache;
         this.sessionCache = sessionCache;
         this.serverInfo = serverInfo;
         this.errorHandler = errorHandler;
@@ -84,10 +93,13 @@ public class PlayerOnlineListener {
             sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, null, null));
 
             boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
+            if (gatheringGeolocations) {
+                dbSystem.getDatabase().executeTransaction(
+                        new GeoInfoStoreTransaction(uuid, address, time, geolocationCache::getCountry)
+                );
+            }
 
-            processing.submit(processors.player().proxyRegisterProcessor(uuid, name, time,
-                    gatheringGeolocations ? processors.player().ipUpdateProcessor(uuid, address, time) : null
-            ));
+            processing.submit(processors.player().proxyRegisterProcessor(uuid, name, time));
             processing.submit(processors.info().playerPageUpdateProcessor(uuid));
             ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
         } catch (Exception e) {

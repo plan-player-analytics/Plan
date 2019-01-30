@@ -17,7 +17,9 @@
 package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.db.access.transactions.events.GeoInfoStoreTransaction;
 import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
+import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -54,6 +56,7 @@ public class PlayerOnlineListener implements Listener {
     private final Processing processing;
     private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
+    private final GeolocationCache geolocationCache;
     private final SessionCache sessionCache;
     private final ErrorHandler errorHandler;
     private final Status status;
@@ -66,6 +69,7 @@ public class PlayerOnlineListener implements Listener {
             Processing processing,
             ServerInfo serverInfo,
             DBSystem dbSystem,
+            GeolocationCache geolocationCache,
             SessionCache sessionCache,
             Status status,
             RunnableFactory runnableFactory,
@@ -76,6 +80,7 @@ public class PlayerOnlineListener implements Listener {
         this.processing = processing;
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
+        this.geolocationCache = geolocationCache;
         this.sessionCache = sessionCache;
         this.status = status;
         this.runnableFactory = runnableFactory;
@@ -148,11 +153,15 @@ public class PlayerOnlineListener implements Listener {
         String displayName = player.getDisplayName();
 
         boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
+        if (gatheringGeolocations) {
+            dbSystem.getDatabase().executeTransaction(
+                    new GeoInfoStoreTransaction(uuid, address, time, geolocationCache::getCountry)
+            );
+        }
 
         processing.submitCritical(() -> sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, world, gm)));
         runnableFactory.create("Player Register: " + uuid,
                 processors.player().registerProcessor(uuid, player::getFirstPlayed, playerName,
-                        gatheringGeolocations ? processors.player().ipUpdateProcessor(uuid, address, time) : null,
                         processors.player().nameProcessor(uuid, playerName, displayName),
                         processors.info().playerPageUpdateProcessor(uuid)
                 )

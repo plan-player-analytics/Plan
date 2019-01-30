@@ -143,11 +143,6 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
     }
 
     @Override
-    public void geoInfo(UUID uuid, GeoInfo geoInfo) {
-        geoInfoTable.saveGeoInfo(uuid, geoInfo);
-    }
-
-    @Override
     public void playerWasKicked(UUID uuid) {
         usersTable.kicked(uuid);
     }

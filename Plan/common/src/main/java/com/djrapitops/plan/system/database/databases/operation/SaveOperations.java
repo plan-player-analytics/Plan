@@ -74,9 +74,6 @@ public interface SaveOperations {
     void registerNewUser(UUID uuid, long registered, String name);
 
     @Deprecated
-    void geoInfo(UUID uuid, GeoInfo geoInfo);
-
-    @Deprecated
     void playerWasKicked(UUID uuid);
 
     @Deprecated

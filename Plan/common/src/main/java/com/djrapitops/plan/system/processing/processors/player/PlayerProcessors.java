@@ -27,7 +27,6 @@ import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.net.InetAddress;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.BooleanSupplier;
@@ -72,10 +71,6 @@ public class PlayerProcessors {
 
     public EndSessionProcessor endSessionProcessor(UUID uuid, long time) {
         return new EndSessionProcessor(uuid, time, dataCache.get());
-    }
-
-    public IPUpdateProcessor ipUpdateProcessor(UUID uuid, InetAddress ip, long time) {
-        return new IPUpdateProcessor(uuid, ip, time, dbSystem.get().getDatabase(), geolocationCache.get());
     }
 
     public KickProcessor kickProcessor(UUID uuid) {

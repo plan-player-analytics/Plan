@@ -34,6 +34,7 @@ import com.djrapitops.plan.db.access.queries.*;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.db.access.transactions.*;
 import com.djrapitops.plan.db.access.transactions.events.CommandStoreTransaction;
+import com.djrapitops.plan.db.access.transactions.events.GeoInfoStoreTransaction;
 import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.db.patches.Patch;
 import com.djrapitops.plan.db.sql.tables.*;
@@ -233,28 +234,20 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testIPTable() throws DBInitException {
+    public void geoInformationIsStored() throws DBInitException {
         saveUserOne();
-        GeoInfoTable geoInfoTable = db.getGeoInfoTable();
 
         String expectedIP = "1.2.3.4";
         String expectedGeoLoc = "TestLocation";
         long time = System.currentTimeMillis();
 
         GeoInfo expected = new GeoInfo(expectedIP, expectedGeoLoc, time, "3");
-        geoInfoTable.saveGeoInfo(playerUUID, expected);
-        geoInfoTable.saveGeoInfo(playerUUID, expected);
+        saveGeoInfo(playerUUID, expected);
         commitTest();
 
-        List<GeoInfo> getInfo = geoInfoTable.getGeoInfo(playerUUID);
-        assertEquals(1, getInfo.size());
-        GeoInfo actual = getInfo.get(0);
-        assertEquals(expected, actual);
-        assertEquals(time, actual.getDate());
-
-        Optional<String> result = geoInfoTable.getGeolocation(expectedIP);
-        assertTrue(result.isPresent());
-        assertEquals(expectedGeoLoc, result.get());
+        List<GeoInfo> geolocations = db.query(LargeFetchQueries.fetchAllGeoInformation()).getOrDefault(playerUUID, new ArrayList<>());
+        assertEquals(1, geolocations.size());
+        assertEquals(expected, geolocations.get(0));
     }
 
     @Test
@@ -518,7 +511,7 @@ public abstract class CommonDBTest {
 
         execute(DataStoreQueries.storeSession(session));
         nicknamesTable.saveUserName(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID));
-        geoInfoTable.saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L, "3"));
+        saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L, "3"));
 
         assertTrue(usersTable.isRegistered(playerUUID));
 
@@ -576,7 +569,7 @@ public abstract class CommonDBTest {
 
         execute(DataStoreQueries.storeSession(session));
         nicknamesTable.saveUserName(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID));
-        geoInfoTable.saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L,
+        saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L,
                 new SHA256Hash("1.2.3.4").create()));
 
         assertTrue(usersTable.isRegistered(playerUUID));
@@ -611,6 +604,10 @@ public abstract class CommonDBTest {
         ));
 
         securityTable.addNewUser(new WebUser("Test", "RandomGarbageBlah", 0));
+    }
+
+    private void saveGeoInfo(UUID uuid, GeoInfo geoInfo) {
+        db.executeTransaction(new GeoInfoStoreTransaction(uuid, geoInfo));
     }
 
     @Test
@@ -815,11 +812,11 @@ public abstract class CommonDBTest {
         usersTable.registerUser(secondUuid, 0, "");
         usersTable.registerUser(thirdUuid, 0, "");
 
-        geoInfoTable.saveGeoInfo(firstUuid, new GeoInfo("-", "Test1", 0, "3"));
+        saveGeoInfo(firstUuid, new GeoInfo("-", "Test1", 0, "3"));
         GeoInfo secondInfo = new GeoInfo("-", "Test2", 5, "3");
-        geoInfoTable.saveGeoInfo(firstUuid, secondInfo);
-        geoInfoTable.saveGeoInfo(secondUuid, new GeoInfo("-", "Test3", 0, "3"));
-        geoInfoTable.saveGeoInfo(thirdUuid, new GeoInfo("-", "Test4", 0, "3"));
+        saveGeoInfo(firstUuid, secondInfo);
+        saveGeoInfo(secondUuid, new GeoInfo("-", "Test3", 0, "3"));
+        saveGeoInfo(thirdUuid, new GeoInfo("-", "Test4", 0, "3"));
 
         List<String> geolocations = geoInfoTable.getNetworkGeolocations();
 
