@@ -24,15 +24,11 @@ import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.db.access.transactions.CreateTablesTransaction;
 import com.djrapitops.plan.db.access.transactions.RemoveEverythingTransaction;
 import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.db.tasks.PatchTask;
+import com.djrapitops.plan.db.patches.Patch;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.console.TestPluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import rules.PluginComponentMocker;
@@ -144,15 +140,9 @@ public class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
 
     @Test
     public void mysqlPatchTaskWorksWithoutErrors() {
-        PatchTask patchTask = new PatchTask(underTest.patches(), new Locale(), new TestPluginLogger(), new ErrorHandler() {
-            @Override
-            public void log(L l, Class aClass, Throwable throwable) {
-                throw new AssertionError(throwable);
-            }
-        });
-
-        // Patching might fail due to exception.
-        patchTask.run();
+        for (Patch patch : underTest.patches()) {
+            underTest.executeTransaction(patch);
+        }
 
         assertPatchesHaveBeenApplied(underTest);
 

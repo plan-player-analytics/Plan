@@ -23,11 +23,7 @@ import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.db.access.transactions.CreateTablesTransaction;
 import com.djrapitops.plan.db.access.transactions.RemoveEverythingTransaction;
 import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.db.tasks.PatchTask;
-import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.console.TestPluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
+import com.djrapitops.plan.db.patches.Patch;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -109,15 +105,9 @@ public class DBPatchSQLiteRegressionTest extends DBPatchRegressionTest {
 
     @Test
     public void sqlitePatchTaskWorksWithoutErrors() {
-        PatchTask patchTask = new PatchTask(underTest.patches(), new Locale(), new TestPluginLogger(), new ErrorHandler() {
-            @Override
-            public void log(L l, Class aClass, Throwable throwable) {
-                throw new AssertionError(throwable);
-            }
-        });
-
-        // Patching might fail due to exception.
-        patchTask.run();
+        for (Patch patch : underTest.patches()) {
+            underTest.executeTransaction(patch);
+        }
 
         assertPatchesHaveBeenApplied(underTest);
 
