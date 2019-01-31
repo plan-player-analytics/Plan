@@ -30,6 +30,7 @@ import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.queries.PlayerAggregateQueries;
+import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
 
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +58,7 @@ public class PlayerContainerQuery implements Query<PlayerContainer> {
         container.putRawData(PlayerKeys.UUID, uuid);
 
         container.putAll(db.getUsersTable().getUserInformation(uuid));
-        container.putCachingSupplier(PlayerKeys.GEO_INFO, () -> db.getGeoInfoTable().getGeoInfo(uuid));
+        container.putCachingSupplier(PlayerKeys.GEO_INFO, () -> db.query(PlayerFetchQueries.playerGeoInfo(uuid)));
         container.putCachingSupplier(PlayerKeys.PING, () -> db.getPingTable().getPing(uuid));
         container.putCachingSupplier(PlayerKeys.NICKNAMES, () -> db.getNicknamesTable().getNicknameInformation(uuid));
         container.putCachingSupplier(PlayerKeys.PER_SERVER, () -> getPerServerData(db));

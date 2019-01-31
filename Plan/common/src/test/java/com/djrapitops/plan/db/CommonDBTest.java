@@ -520,7 +520,7 @@ public abstract class CommonDBTest {
         assertFalse(usersTable.isRegistered(playerUUID));
         assertFalse(userInfoTable.isRegistered(playerUUID));
         assertTrue(nicknamesTable.getNicknames(playerUUID).isEmpty());
-        assertTrue(geoInfoTable.getGeoInfo(playerUUID).isEmpty());
+        assertTrue(db.query(PlayerFetchQueries.playerGeoInfo(playerUUID)).isEmpty());
         assertTrue(sessionsTable.getSessions(playerUUID).isEmpty());
     }
 
