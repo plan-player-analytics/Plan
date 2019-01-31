@@ -606,7 +606,7 @@ public abstract class CommonDBTest {
         securityTable.addNewUser(new WebUser("Test", "RandomGarbageBlah", 0));
     }
 
-    private void saveGeoInfo(UUID uuid, GeoInfo geoInfo) {
+    void saveGeoInfo(UUID uuid, GeoInfo geoInfo) {
         db.executeTransaction(new GeoInfoStoreTransaction(uuid, geoInfo));
     }
 
@@ -798,32 +798,6 @@ public abstract class CommonDBTest {
         db.save().registerNewUserOnThisServer(playerUUID, 500L);
         assertTrue(db.check().isPlayerRegistered(playerUUID));
         assertTrue(db.check().isPlayerRegisteredOnThisServer(playerUUID));
-    }
-
-    @Test
-    public void testGetNetworkGeolocations() {
-        GeoInfoTable geoInfoTable = db.getGeoInfoTable();
-        UUID firstUuid = UUID.randomUUID();
-        UUID secondUuid = UUID.randomUUID();
-        UUID thirdUuid = UUID.randomUUID();
-
-        UsersTable usersTable = db.getUsersTable();
-        usersTable.registerUser(firstUuid, 0, "");
-        usersTable.registerUser(secondUuid, 0, "");
-        usersTable.registerUser(thirdUuid, 0, "");
-
-        saveGeoInfo(firstUuid, new GeoInfo("-", "Test1", 0, "3"));
-        GeoInfo secondInfo = new GeoInfo("-", "Test2", 5, "3");
-        saveGeoInfo(firstUuid, secondInfo);
-        saveGeoInfo(secondUuid, new GeoInfo("-", "Test3", 0, "3"));
-        saveGeoInfo(thirdUuid, new GeoInfo("-", "Test4", 0, "3"));
-
-        List<String> geolocations = geoInfoTable.getNetworkGeolocations();
-
-        assertNotNull(geolocations);
-        assertFalse(geolocations.isEmpty());
-        assertEquals(3, geolocations.size());
-        assertTrue(geolocations.contains(secondInfo.getGeolocation()));
     }
 
     @Test

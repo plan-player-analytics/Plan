@@ -180,4 +180,27 @@ public class ServerAggregateQueries {
             }
         };
     }
+
+    public static Query<Map<String, Integer>> networkGeolocationCounts() {
+        String subQuery = "SELECT " +
+                GeoInfoTable.GEOLOCATION + ", " +
+                GeoInfoTable.LAST_USED + ", " +
+                "MAX(" + GeoInfoTable.LAST_USED + ") as m" +
+                " FROM " + GeoInfoTable.TABLE_NAME +
+                " GROUP BY " + GeoInfoTable.USER_UUID;
+        String sql = "SELECT " + GeoInfoTable.GEOLOCATION + ", COUNT(1) as c FROM (" + subQuery + ") AS q1" +
+                " WHERE " + GeoInfoTable.LAST_USED + " = m" +
+                " GROUP BY " + GeoInfoTable.GEOLOCATION;
+
+        return new QueryAllStatement<Map<String, Integer>>(sql) {
+            @Override
+            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
+                Map<String, Integer> geolocationCounts = new HashMap<>();
+                while (set.next()) {
+                    geolocationCounts.put(set.getString(GeoInfoTable.GEOLOCATION), set.getInt("c"));
+                }
+                return geolocationCounts;
+            }
+        };
+    }
 }

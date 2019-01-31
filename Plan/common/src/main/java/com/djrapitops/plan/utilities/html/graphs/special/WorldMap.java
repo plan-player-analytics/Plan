@@ -23,6 +23,7 @@ import org.apache.commons.text.TextStringBuilder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * World Map that uses iso-a3 specification of Country codes.
@@ -31,13 +32,17 @@ import java.util.Map;
  */
 public class WorldMap implements HighChart {
 
-    private final List<String> geoLocations;
+    private final Map<String, Integer> geoCodeCounts;
 
     WorldMap(PlayersMutator mutator) {
-        this.geoLocations = mutator.getGeolocations();
+        this.geoCodeCounts = toGeoCodeCounts(mutator.getGeolocations());
     }
 
-    private static Map<String, String> getGeoCodes(Map<String, Integer> geoCodeCounts) {
+    WorldMap(Map<String, Integer> geolocationCounts) {
+        this.geoCodeCounts = toGeoCodeCounts(geolocationCounts);
+    }
+
+    private static Map<String, String> getGeoCodes() {
         Map<String, String> geoCodes = new HashMap<>();
         // Countries & Codes have been copied from a iso-a3 specification file.
         // Each index corresponds to each code.
@@ -48,23 +53,30 @@ public class WorldMap implements HighChart {
             String countryCode = codes[i];
 
             geoCodes.put(country.toLowerCase(), countryCode);
-            geoCodeCounts.put(countryCode, 0);
         }
         return geoCodes;
     }
 
-    @Override
-    public String toHighChartsSeries() {
+    private Map<String, Integer> toGeoCodeCounts(Map<String, Integer> geolocationCounts) {
+        Map<String, String> geoCodes = getGeoCodes();
+        return geolocationCounts.entrySet().stream()
+                .collect(Collectors.toMap(entry -> geoCodes.get(entry.getKey().toLowerCase()), Map.Entry::getValue));
+    }
+
+    private Map<String, Integer> toGeoCodeCounts(List<String> geoLocations) {
         Map<String, Integer> geoCodeCounts = new HashMap<>();
-        Map<String, String> geoCodes = getGeoCodes(geoCodeCounts);
+        Map<String, String> geoCodes = getGeoCodes();
 
         for (String geoLocation : geoLocations) {
             String countryCode = geoCodes.get(geoLocation.toLowerCase());
-            if (countryCode != null) {
-                geoCodeCounts.computeIfPresent(countryCode, (computedCountry, amount) -> amount + 1);
-            }
+            geoCodeCounts.put(countryCode, geoCodeCounts.getOrDefault(countryCode, 0) + 1);
         }
 
+        return geoCodeCounts;
+    }
+
+    @Override
+    public String toHighChartsSeries() {
         TextStringBuilder dataBuilder = new TextStringBuilder("[");
 
         dataBuilder.appendWithSeparators(

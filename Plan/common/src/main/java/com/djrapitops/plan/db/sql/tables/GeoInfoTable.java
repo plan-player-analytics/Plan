@@ -16,19 +16,11 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.patches.*;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * Table that is in charge of storing common IP and Geolocation data for users.
@@ -84,18 +76,4 @@ public class GeoInfoTable extends Table {
                 .toString();
     }
 
-    public List<String> getNetworkGeolocations() {
-        List<String> geolocations = new ArrayList<>();
-
-        Map<UUID, List<GeoInfo>> geoInfo = db.query(LargeFetchQueries.fetchAllGeoInformation());
-        for (List<GeoInfo> userGeoInfos : geoInfo.values()) {
-            if (userGeoInfos.isEmpty()) {
-                continue;
-            }
-            userGeoInfos.sort(new GeoInfoComparator());
-            geolocations.add(userGeoInfos.get(0).getGeolocation());
-        }
-
-        return geolocations;
-    }
 }

@@ -23,6 +23,7 @@ import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.mutators.health.NetworkHealthInformation;
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
@@ -63,10 +64,10 @@ public class NetworkContainer extends DataContainer {
     private final PlanConfig config;
     private final Locale locale;
     private final Theme theme;
-    private final DBSystem dbSystem;
     private final ServerProperties serverProperties;
     private final Formatters formatters;
     private final Graphs graphs;
+    private final Database database;
 
     public NetworkContainer(
             ServerContainer bungeeContainer,
@@ -84,7 +85,7 @@ public class NetworkContainer extends DataContainer {
         this.config = config;
         this.locale = locale;
         this.theme = theme;
-        this.dbSystem = dbSystem;
+        this.database = dbSystem.getDatabase();
         this.serverProperties = serverProperties;
         this.formatters = formatters;
         this.graphs = graphs;
@@ -98,13 +99,13 @@ public class NetworkContainer extends DataContainer {
     }
 
     private void addServerBoxes() {
-        putSupplier(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA, () -> dbSystem.getDatabase().fetch().getPlayersOnlineForServers(
+        putSupplier(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA, () -> database.fetch().getPlayersOnlineForServers(
                 getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>()))
         );
         putSupplier(NetworkKeys.SERVERS_TAB, () -> {
             StringBuilder serverBoxes = new StringBuilder();
             Map<Integer, List<TPS>> playersOnlineData = getValue(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA).orElse(new HashMap<>());
-            Map<UUID, Integer> userCounts = dbSystem.getDatabase().query(ServerAggregateQueries.serverUserCounts());
+            Map<UUID, Integer> userCounts = database.query(ServerAggregateQueries.serverUserCounts());
             Collection<Server> servers = getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>());
             servers.stream()
                     .sorted((one, two) -> String.CASE_INSENSITIVE_ORDER.compare(one.getName(), two.getName()))
@@ -168,7 +169,7 @@ public class NetworkContainer extends DataContainer {
     private void addPlayerInformation() {
         putSupplier(NetworkKeys.PLAYERS_TOTAL, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR).count());
         putSupplier(NetworkKeys.WORLD_MAP_SERIES, () ->
-                graphs.special().worldMap(PlayersMutator.forContainer(bungeeContainer)).toHighChartsSeries()
+                graphs.special().worldMap(database.query(ServerAggregateQueries.networkGeolocationCounts())).toHighChartsSeries()
         );
         Key<BarGraph> geolocationBarChart = new Key<>(BarGraph.class, "GEOLOCATION_BAR_GRAPH");
         putSupplier(geolocationBarChart, () -> graphs.bar().geolocationBarGraph(getUnsafe(NetworkKeys.PLAYERS_MUTATOR)));

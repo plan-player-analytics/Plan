@@ -16,11 +16,20 @@
  */
 package com.djrapitops.plan.db;
 
+import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
+import com.djrapitops.plan.db.sql.tables.UsersTable;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import org.junit.BeforeClass;
+import org.junit.Test;
 import utilities.CIProperties;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assume.assumeTrue;
 
 /**
@@ -53,5 +62,32 @@ public class MySQLTest extends CommonDBTest {
         db.execute("DROP DATABASE Plan");
         db.execute("CREATE DATABASE Plan");
         db.execute("USE Plan");
+    }
+
+    @Test
+    public void networkGeolocationsAreCountedAppropriately() {
+        UUID firstUuid = UUID.randomUUID();
+        UUID secondUuid = UUID.randomUUID();
+        UUID thirdUuid = UUID.randomUUID();
+
+        UsersTable usersTable = db.getUsersTable();
+        usersTable.registerUser(firstUuid, 0, "");
+        usersTable.registerUser(secondUuid, 0, "");
+        usersTable.registerUser(thirdUuid, 0, "");
+
+        saveGeoInfo(firstUuid, new GeoInfo("-", "Norway", 0, "3"));
+        saveGeoInfo(firstUuid, new GeoInfo("-", "Finland", 5, "3"));
+        saveGeoInfo(secondUuid, new GeoInfo("-", "Sweden", 0, "3"));
+        saveGeoInfo(thirdUuid, new GeoInfo("-", "Denmark", 0, "3"));
+
+        Map<String, Integer> got = db.query(ServerAggregateQueries.networkGeolocationCounts());
+
+        Map<String, Integer> expected = new HashMap<>();
+        // first user has a more recent connection from Finland so their country should be counted as Finland.
+        expected.put("Finland", 1);
+        expected.put("Sweden", 1);
+        expected.put("Denmark", 1);
+
+        assertEquals(expected, got);
     }
 }
