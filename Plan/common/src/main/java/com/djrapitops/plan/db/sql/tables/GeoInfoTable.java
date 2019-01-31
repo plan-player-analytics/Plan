@@ -17,7 +17,6 @@
 package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.db.DBType;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.patches.*;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
@@ -36,7 +35,7 @@ import com.djrapitops.plan.db.sql.parsing.Sql;
  *
  * @author Rsl1122
  */
-public class GeoInfoTable extends Table {
+public class GeoInfoTable {
 
     public static final String TABLE_NAME = "plan_ips";
 
@@ -61,8 +60,8 @@ public class GeoInfoTable extends Table {
             " AND " + IP_HASH + "=?" +
             " AND " + GEOLOCATION + "=?";
 
-    public GeoInfoTable(SQLDB db) {
-        super(TABLE_NAME, db);
+    private GeoInfoTable() {
+        /* Static information class */
     }
 
     public static String createTableSQL(DBType dbType) {

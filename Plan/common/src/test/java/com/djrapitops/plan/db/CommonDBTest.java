@@ -498,7 +498,6 @@ public abstract class CommonDBTest {
         UsersTable usersTable = db.getUsersTable();
         SessionsTable sessionsTable = db.getSessionsTable();
         NicknamesTable nicknamesTable = db.getNicknamesTable();
-        GeoInfoTable geoInfoTable = db.getGeoInfoTable();
 
         usersTable.registerUser(playerUUID, 223456789L, "Test_name");
         userInfoTable.registerUserInfo(playerUUID, 223456789L);
@@ -551,7 +550,6 @@ public abstract class CommonDBTest {
         UserInfoTable userInfoTable = db.getUserInfoTable();
         UsersTable usersTable = db.getUsersTable();
         NicknamesTable nicknamesTable = db.getNicknamesTable();
-        GeoInfoTable geoInfoTable = db.getGeoInfoTable();
         TPSTable tpsTable = db.getTpsTable();
         SecurityTable securityTable = db.getSecurityTable();
         PingTable pingTable = db.getPingTable();
