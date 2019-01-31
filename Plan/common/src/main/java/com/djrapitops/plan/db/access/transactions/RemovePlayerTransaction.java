@@ -17,7 +17,7 @@
 package com.djrapitops.plan.db.access.transactions;
 
 import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
+import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
 import com.djrapitops.plan.db.sql.tables.*;
 
 import java.sql.PreparedStatement;
@@ -44,7 +44,7 @@ public class RemovePlayerTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
-        query(OptionalFetchQueries.playerUserName(playerUUID)).ifPresent(this::deleteWebUser);
+        query(PlayerFetchQueries.playerUserName(playerUUID)).ifPresent(this::deleteWebUser);
 
         deleteFromTable(GeoInfoTable.TABLE_NAME);
         deleteFromTable(NicknamesTable.TABLE_NAME);
