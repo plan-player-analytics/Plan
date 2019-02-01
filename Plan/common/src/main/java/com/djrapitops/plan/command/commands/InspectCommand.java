@@ -18,6 +18,7 @@ package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
+import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.locale.Locale;
@@ -97,19 +98,19 @@ public class InspectCommand extends CommandNode {
     private void runInspectTask(String playerName, Sender sender) {
         processing.submitNonCritical(() -> {
             try {
-                UUID uuid = uuidUtility.getUUIDOf(playerName);
-                if (uuid == null) {
+                UUID playerUUID = uuidUtility.getUUIDOf(playerName);
+                if (playerUUID == null) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_VALID));
                     return;
                 }
 
-                if (!dbSystem.getDatabase().check().isPlayerRegistered(uuid)) {
+                if (!dbSystem.getDatabase().query(PlayerFetchQueries.isPlayerRegistered(playerUUID))) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_KNOWN));
                     return;
                 }
 
                 checkWebUserAndNotify(sender);
-                processing.submit(processorFactory.inspectCacheRequestProcessor(uuid, sender, playerName, this::sendInspectMsg));
+                processing.submit(processorFactory.inspectCacheRequestProcessor(playerUUID, sender, playerName, this::sendInspectMsg));
             } catch (DBOpException e) {
                 sender.sendMessage("§eDatabase exception occurred: " + e.getMessage());
                 errorHandler.log(L.ERROR, this.getClass(), e);

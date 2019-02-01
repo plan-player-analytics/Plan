@@ -18,6 +18,7 @@ package com.djrapitops.plan.db.access.queries;
 
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.UserInfo;
+import com.djrapitops.plan.db.access.HasMoreThanZeroQueryStatement;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.tables.GeoInfoTable;
@@ -126,6 +127,23 @@ public class PlayerFetchQueries {
                     userInformation.add(new UserInfo(playerUUID, serverUUID, registered, op, banned));
                 }
                 return userInformation;
+            }
+        };
+    }
+
+    /**
+     * Check if the player's BaseUser is registered.
+     *
+     * @param playerUUID UUID of the player.
+     * @return True if the player's BaseUser is found from plan_users
+     */
+    public static Query<Boolean> isPlayerRegistered(UUID playerUUID) {
+        String sql = "SELECT COUNT(1) as c FROM " + UsersTable.TABLE_NAME +
+                " WHERE " + UsersTable.USER_UUID + "=?";
+        return new HasMoreThanZeroQueryStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
             }
         };
     }

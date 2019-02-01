@@ -410,9 +410,9 @@ public abstract class CommonDBTest {
     @Test
     public void userRegisterChecksReturnCorrectValues() {
         UsersTable usersTable = db.getUsersTable();
-        assertFalse(usersTable.isRegistered(playerUUID));
+        assertFalse(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
         saveUserOne();
-        assertTrue(usersTable.isRegistered(playerUUID));
+        assertTrue(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
 
         UserInfoTable userInfoTable = db.getUserInfoTable();
         assertFalse(userInfoTable.isRegistered(playerUUID));
@@ -500,11 +500,11 @@ public abstract class CommonDBTest {
         nicknamesTable.saveUserName(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID));
         saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L, "3"));
 
-        assertTrue(usersTable.isRegistered(playerUUID));
+        assertTrue(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
 
         db.executeTransaction(new RemovePlayerTransaction(playerUUID));
 
-        assertFalse(usersTable.isRegistered(playerUUID));
+        assertFalse(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
         assertFalse(userInfoTable.isRegistered(playerUUID));
         assertTrue(nicknamesTable.getNicknames(playerUUID).isEmpty());
         assertTrue(db.query(PlayerFetchQueries.playerGeoInfo(playerUUID)).isEmpty());
@@ -558,7 +558,7 @@ public abstract class CommonDBTest {
         saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L,
                 new SHA256Hash("1.2.3.4").create()));
 
-        assertTrue(usersTable.isRegistered(playerUUID));
+        assertTrue(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
 
         useCommand("plan");
         useCommand("plan");
@@ -778,11 +778,11 @@ public abstract class CommonDBTest {
 
     @Test
     public void testRegister() {
-        assertFalse(db.check().isPlayerRegistered(playerUUID));
+        assertFalse(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
         assertFalse(db.check().isPlayerRegisteredOnThisServer(playerUUID));
         db.save().registerNewUser(playerUUID, 1000L, "name");
         db.save().registerNewUserOnThisServer(playerUUID, 500L);
-        assertTrue(db.check().isPlayerRegistered(playerUUID));
+        assertTrue(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
         assertTrue(db.check().isPlayerRegisteredOnThisServer(playerUUID));
     }
 

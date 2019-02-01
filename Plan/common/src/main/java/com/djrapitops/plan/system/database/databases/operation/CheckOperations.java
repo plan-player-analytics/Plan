@@ -20,11 +20,6 @@ import java.util.UUID;
 
 @Deprecated
 public interface CheckOperations {
-    @Deprecated
-    boolean isPlayerRegistered(UUID player);
-
-    @Deprecated
-    boolean isPlayerRegistered(UUID player, UUID server);
 
     @Deprecated
     boolean isPlayerRegisteredOnThisServer(UUID player);

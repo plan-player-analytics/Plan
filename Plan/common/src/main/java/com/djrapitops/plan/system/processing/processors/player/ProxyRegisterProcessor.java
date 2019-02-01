@@ -17,6 +17,7 @@
 package com.djrapitops.plan.system.processing.processors.player;
 
 import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
 import com.djrapitops.plan.system.processing.CriticalRunnable;
 import com.djrapitops.plan.system.processing.Processing;
 
@@ -54,7 +55,7 @@ public class ProxyRegisterProcessor implements CriticalRunnable {
     @Override
     public void run() {
         try {
-            if (database.check().isPlayerRegistered(uuid)) {
+            if (database.query(PlayerFetchQueries.isPlayerRegistered(uuid))) {
                 return;
             }
             database.save().registerNewUser(uuid, registered, name);

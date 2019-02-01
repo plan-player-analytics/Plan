@@ -135,24 +135,6 @@ public class UsersTable extends Table {
         });
     }
 
-    public boolean isRegistered(UUID uuid) {
-        String sql = Select.from(tableName, "COUNT(" + ID + ") as c")
-                .where(USER_UUID + "=?")
-                .toString();
-
-        return query(new QueryStatement<Boolean>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-            }
-
-            @Override
-            public Boolean processResults(ResultSet set) throws SQLException {
-                return set.next() && set.getInt("c") >= 1;
-            }
-        });
-    }
-
     /**
      * Register a new user (UUID) to the database.
      *

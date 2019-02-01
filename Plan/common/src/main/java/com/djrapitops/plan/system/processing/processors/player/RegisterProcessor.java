@@ -17,6 +17,7 @@
 package com.djrapitops.plan.system.processing.processors.player;
 
 import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
 import com.djrapitops.plan.system.database.databases.operation.CheckOperations;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 import com.djrapitops.plan.system.processing.Processing;
@@ -61,7 +62,7 @@ public class RegisterProcessor extends AbsRunnable {
         CheckOperations check = database.check();
         SaveOperations save = database.save();
         try {
-            if (!check.isPlayerRegistered(uuid)) {
+            if (!database.query(PlayerFetchQueries.isPlayerRegistered(uuid))) {
                 save.registerNewUser(uuid, registered.getAsLong(), name);
             }
             if (!check.isPlayerRegisteredOnThisServer(uuid)) {
