@@ -17,6 +17,7 @@
 package com.djrapitops.plan.db.access.queries;
 
 import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.time.GMTimes;
@@ -236,6 +237,28 @@ public class DataStoreQueries {
                 statement.setString(3, serverUUID.toString());
                 statement.setBoolean(4, false); // Banned
                 statement.setBoolean(5, false); // Operator
+            }
+        };
+    }
+
+    /**
+     * Store Ping data of a player on a server.
+     *
+     * @param playerUUID UUID of the player.
+     * @param serverUUID UUID of the Plan server.
+     * @param ping       Ping data entry
+     * @return Executable, use inside a {@link com.djrapitops.plan.db.access.transactions.Transaction}
+     */
+    public static Executable storePing(UUID playerUUID, UUID serverUUID, Ping ping) {
+        return new ExecStatement(PingTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+                statement.setString(2, serverUUID.toString());
+                statement.setLong(3, ping.getDate());
+                statement.setInt(4, ping.getMin());
+                statement.setInt(5, ping.getMax());
+                statement.setDouble(6, ping.getAverage());
             }
         };
     }

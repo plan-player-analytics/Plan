@@ -16,17 +16,11 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.patches.PingOptimizationPatch;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.UUID;
 
 /**
  * Table that represents plan_ping in the database.
@@ -71,19 +65,5 @@ public class PingTable extends Table {
                 .column(MIN_PING, Sql.INT).notNull()
                 .column(AVG_PING, Sql.DOUBLE).notNull()
                 .toString();
-    }
-
-    public void insertPing(UUID uuid, Ping ping) {
-        execute(new ExecStatement(INSERT_STATEMENT) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-                statement.setString(2, getServerUUID().toString());
-                statement.setLong(3, ping.getDate());
-                statement.setInt(4, ping.getMin());
-                statement.setInt(5, ping.getMax());
-                statement.setDouble(6, ping.getAverage());
-            }
-        });
     }
 }

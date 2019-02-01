@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.system.processing.processors.player;
 
-import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.cache.GeolocationCache;
@@ -27,7 +26,6 @@ import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
 import java.util.UUID;
 import java.util.function.BooleanSupplier;
 
@@ -76,9 +74,4 @@ public class PlayerProcessors {
         Nickname nickname = new Nickname(displayName, System.currentTimeMillis(), serverInfo.get().getServerUUID());
         return new NameProcessor(uuid, nickname, dbSystem.get().getDatabase(), dataCache.get());
     }
-
-    public PingInsertProcessor pingInsertProcessor(UUID uuid, List<DateObj<Integer>> pingList) {
-        return new PingInsertProcessor(uuid, serverInfo.get().getServerUUID(), pingList, dbSystem.get().getDatabase());
-    }
-
 }

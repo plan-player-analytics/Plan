@@ -24,8 +24,9 @@
 package com.djrapitops.plan.system.tasks.bukkit;
 
 import com.djrapitops.plan.data.store.objects.DateObj;
-import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.Processors;
+import com.djrapitops.plan.db.access.transactions.events.PingStoreTransaction;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.utilities.java.Reflection;
@@ -107,20 +108,20 @@ public class PingCountTimerBukkit extends AbsRunnable implements Listener {
     private final Map<UUID, List<DateObj<Integer>>> playerHistory;
 
     private final PlanConfig config;
-    private final Processors processors;
-    private final Processing processing;
+    private final DBSystem dbSystem;
+    private final ServerInfo serverInfo;
     private final RunnableFactory runnableFactory;
 
     @Inject
     public PingCountTimerBukkit(
             PlanConfig config,
-            Processors processors,
-            Processing processing,
+            DBSystem dbSystem,
+            ServerInfo serverInfo,
             RunnableFactory runnableFactory
     ) {
         this.config = config;
-        this.processors = processors;
-        this.processing = processing;
+        this.dbSystem = dbSystem;
+        this.serverInfo = serverInfo;
         this.runnableFactory = runnableFactory;
         playerHistory = new HashMap<>();
     }
@@ -153,7 +154,9 @@ public class PingCountTimerBukkit extends AbsRunnable implements Listener {
                 }
                 history.add(new DateObj<>(time, ping));
                 if (history.size() >= 30) {
-                    processing.submit(processors.player().pingInsertProcessor(uuid, new ArrayList<>(history)));
+                    dbSystem.getDatabase().executeTransaction(
+                            new PingStoreTransaction(uuid, serverInfo.getServerUUID(), new ArrayList<>(history))
+                    );
                     history.clear();
                 }
             } else {

@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.processing.processors.player;
+package com.djrapitops.plan.db.access.transactions.events;
 
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.utilities.analysis.Median;
@@ -32,11 +32,11 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Test for {@link PingInsertProcessor}.
+ * Test for {@link PingStoreTransaction#getMeanValue()}.
  *
  * @author Rsl1122
  */
-public class PingInsertProcessorTest {
+public class PingMedianTest {
 
     private List<DateObj<Integer>> testPing;
 
@@ -54,8 +54,8 @@ public class PingInsertProcessorTest {
         List<Integer> collect = testPing.stream().map(DateObj::getValue).sorted().collect(Collectors.toList());
 
         int expected = (int) Median.forList(collect).calculate();
-        int result = new PingInsertProcessor(TestConstants.PLAYER_ONE_UUID, TestConstants.SERVER_UUID, new ArrayList<>(), null)
-                .getMeanValue(testPing);
+        int result = new PingStoreTransaction(TestConstants.PLAYER_ONE_UUID, TestConstants.SERVER_UUID, new ArrayList<>())
+                .getMeanValue();
 
         assertEquals(expected, result);
     }
@@ -63,8 +63,9 @@ public class PingInsertProcessorTest {
     @Test
     public void medianCalculationForSingleEntry() {
         int expected = 50;
-        int result = new PingInsertProcessor(TestConstants.PLAYER_ONE_UUID, TestConstants.SERVER_UUID, new ArrayList<>(), null)
-                .getMeanValue(Collections.singletonList(new DateObj<>(0, expected)));
+        int result = new PingStoreTransaction(TestConstants.PLAYER_ONE_UUID, TestConstants.SERVER_UUID,
+                Collections.singletonList(new DateObj<>(0, expected)))
+                .getMeanValue();
 
         assertEquals(expected, result);
     }
@@ -72,8 +73,8 @@ public class PingInsertProcessorTest {
     @Test
     public void medianCalculationForNoEntries() {
         int expected = -1;
-        int result = new PingInsertProcessor(TestConstants.PLAYER_ONE_UUID, TestConstants.SERVER_UUID, new ArrayList<>(), null)
-                .getMeanValue(Collections.emptyList());
+        int result = new PingStoreTransaction(TestConstants.PLAYER_ONE_UUID, TestConstants.SERVER_UUID, new ArrayList<>())
+                .getMeanValue();
 
         assertEquals(expected, result);
     }

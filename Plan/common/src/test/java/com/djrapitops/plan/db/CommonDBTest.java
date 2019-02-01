@@ -25,6 +25,7 @@ import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.data.store.keys.*;
+import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
@@ -562,10 +563,10 @@ public abstract class CommonDBTest {
             tpsTable.insertTPS(tps);
         }
 
-        pingTable.insertPing(playerUUID, new Ping(
-                System.currentTimeMillis(), serverUUID,
-                r.nextInt(), r.nextInt(), r.nextDouble()
-        ));
+        db.executeTransaction(new PingStoreTransaction(
+                playerUUID, serverUUID,
+                Collections.singletonList(new DateObj<>(System.currentTimeMillis(), r.nextInt())))
+        );
 
         securityTable.addNewUser(new WebUser(TestConstants.PLAYER_ONE_NAME, "RandomGarbageBlah", 0));
     }
