@@ -182,14 +182,19 @@ public class ServerAggregateQueries {
     }
 
     public static Query<Map<String, Integer>> networkGeolocationCounts() {
-        String subQuery = "SELECT " +
-                GeoInfoTable.USER_UUID + ", " +
+        String subQuery1 = "SELECT " +
+                GeoInfoTable.ID + ", " +
                 GeoInfoTable.GEOLOCATION + ", " +
                 GeoInfoTable.LAST_USED + ", " +
+                " FROM " + GeoInfoTable.TABLE_NAME;
+        String subQuery2 = "SELECT " +
+                GeoInfoTable.ID + ", " +
                 "MAX(" + GeoInfoTable.LAST_USED + ") as m" +
                 " FROM " + GeoInfoTable.TABLE_NAME +
                 " GROUP BY " + GeoInfoTable.USER_UUID;
-        String sql = "SELECT " + GeoInfoTable.GEOLOCATION + ", COUNT(1) as c FROM (" + subQuery + ") AS q1" +
+        String sql = "SELECT " + GeoInfoTable.GEOLOCATION + ", COUNT(1) as c FROM (" +
+                "(" + subQuery1 + ") AS q1" +
+                " INNER JOIN (" + subQuery2 + ") AS q2 ON q1.id = q2.id)"  +
                 " WHERE " + GeoInfoTable.LAST_USED + " = m" +
                 " GROUP BY " + GeoInfoTable.GEOLOCATION;
 
