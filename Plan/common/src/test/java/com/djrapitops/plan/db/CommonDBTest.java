@@ -398,63 +398,52 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testUserInfoTableRegisterRegistered() throws DBInitException {
-        saveUserOne();
+    public void userInfoTableStoresCorrectUserInformation() {
+        userRegisterChecksReturnCorrectValues();
+
+        List<UserInfo> userInfo = db.query(PlayerFetchQueries.playerServerSpecificUserInformation(playerUUID));
+        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 223456789L, false, false));
+
+        assertEquals(expected, userInfo);
+    }
+
+    @Test
+    public void userRegisterChecksReturnCorrectValues() {
         UsersTable usersTable = db.getUsersTable();
+        assertFalse(usersTable.isRegistered(playerUUID));
+        saveUserOne();
         assertTrue(usersTable.isRegistered(playerUUID));
 
         UserInfoTable userInfoTable = db.getUserInfoTable();
         assertFalse(userInfoTable.isRegistered(playerUUID));
-
         userInfoTable.registerUserInfo(playerUUID, 223456789L);
-        commitTest();
-
-        assertTrue(usersTable.isRegistered(playerUUID));
         assertTrue(userInfoTable.isRegistered(playerUUID));
 
-        UserInfo userInfo = userInfoTable.getAllUserInfo(playerUUID).get(serverUUID);
-        assertEquals(playerUUID, userInfo.getPlayerUuid());
-        assertEquals(123456789L, (long) usersTable.getRegisterDates().get(0));
-        assertEquals(223456789L, userInfo.getRegistered());
-        assertFalse(userInfo.isBanned());
-        assertFalse(userInfo.isOperator());
-
-        assertEquals(userInfo, userInfoTable.getServerUserInfo().get(0));
+        assertEquals(123456789L, (long) db.getUsersTable().getRegisterDates().get(0));
     }
 
     @Test
-    public void testUserInfoTableUpdateBannedOpped() throws DBInitException {
-        UsersTable usersTable = db.getUsersTable();
-        usersTable.registerUser(playerUUID, 223456789L, "Test_name");
-        UserInfoTable userInfoTable = db.getUserInfoTable();
-        userInfoTable.registerUserInfo(playerUUID, 223456789L);
-        assertTrue(userInfoTable.isRegistered(playerUUID));
+    public void userInfoTableUpdatesBanStatus() {
+        userRegisterChecksReturnCorrectValues();
 
-        userInfoTable.updateOpStatus(playerUUID, true);
-        userInfoTable.updateBanStatus(playerUUID, true);
-        commitTest();
+        db.getUserInfoTable().updateBanStatus(playerUUID, true);
 
-        UserInfo userInfo = userInfoTable.getAllUserInfo(playerUUID).get(serverUUID);
-        assertTrue(userInfo.isBanned());
-        assertTrue(userInfo.isOperator());
+        List<UserInfo> userInfo = db.query(PlayerFetchQueries.playerServerSpecificUserInformation(playerUUID));
+        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 223456789L, true, false));
 
-        userInfoTable.updateOpStatus(playerUUID, false);
-        userInfoTable.updateBanStatus(playerUUID, true);
-        commitTest();
+        assertEquals(expected, userInfo);
+    }
 
-        userInfo = userInfoTable.getAllUserInfo(playerUUID).get(serverUUID);
+    @Test
+    public void userInfoTableUpdatesOperatorStatus() {
+        userRegisterChecksReturnCorrectValues();
 
-        assertTrue(userInfo.isBanned());
-        assertFalse(userInfo.isOperator());
+        db.getUserInfoTable().updateOpStatus(playerUUID, true);
 
-        userInfoTable.updateOpStatus(playerUUID, true);
-        userInfoTable.updateBanStatus(playerUUID, false);
-        commitTest();
+        List<UserInfo> userInfo = db.query(PlayerFetchQueries.playerServerSpecificUserInformation(playerUUID));
+        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 223456789L, false, true));
 
-        userInfo = userInfoTable.getAllUserInfo(playerUUID).get(serverUUID);
-
-        assertFalse(userInfo.isBanned());
-        assertTrue(userInfo.isOperator());
+        assertEquals(expected, userInfo);
     }
 
     @Test

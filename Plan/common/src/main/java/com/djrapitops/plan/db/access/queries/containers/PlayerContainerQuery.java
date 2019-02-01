@@ -17,11 +17,7 @@
 package com.djrapitops.plan.db.access.queries.containers;
 
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.container.UserInfo;
-import com.djrapitops.plan.data.store.containers.DataContainer;
-import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
-import com.djrapitops.plan.data.store.keys.PerServerKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.mutators.PerServerMutator;
@@ -34,7 +30,6 @@ import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -61,7 +56,7 @@ public class PlayerContainerQuery implements Query<PlayerContainer> {
         container.putCachingSupplier(PlayerKeys.GEO_INFO, () -> db.query(PlayerFetchQueries.playerGeoInfo(uuid)));
         container.putCachingSupplier(PlayerKeys.PING, () -> db.getPingTable().getPing(uuid));
         container.putCachingSupplier(PlayerKeys.NICKNAMES, () -> db.getNicknamesTable().getNicknameInformation(uuid));
-        container.putCachingSupplier(PlayerKeys.PER_SERVER, () -> getPerServerData(db));
+        container.putCachingSupplier(PlayerKeys.PER_SERVER, () -> db.query(new PerServerContainerQuery(uuid)));
 
         container.putSupplier(PlayerKeys.BANNED, () -> new PerServerMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).isBanned());
         container.putSupplier(PlayerKeys.OPERATOR, () -> new PerServerMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).isOperator());
@@ -90,43 +85,5 @@ public class PlayerContainerQuery implements Query<PlayerContainer> {
         container.putSupplier(PlayerKeys.DEATH_COUNT, () -> SessionsMutator.forContainer(container).toDeathCount());
 
         return container;
-    }
-
-    private PerServerContainer getPerServerData(SQLDB db) {
-        PerServerContainer perServerContainer = new PerServerContainer();
-
-        Map<UUID, UserInfo> allUserInfo = db.getUserInfoTable().getAllUserInfo(uuid);
-        for (Map.Entry<UUID, UserInfo> entry : allUserInfo.entrySet()) {
-            UUID serverUUID = entry.getKey();
-            UserInfo info = entry.getValue();
-
-            DataContainer container = perServerContainer.getOrDefault(serverUUID, new DataContainer());
-            container.putRawData(PlayerKeys.REGISTERED, info.getRegistered());
-            container.putRawData(PlayerKeys.BANNED, info.isBanned());
-            container.putRawData(PlayerKeys.OPERATOR, info.isOperator());
-            perServerContainer.put(serverUUID, container);
-        }
-
-        Map<UUID, List<Session>> sessions = db.getSessionsTable().getSessions(uuid);
-        for (Map.Entry<UUID, List<Session>> entry : sessions.entrySet()) {
-            UUID serverUUID = entry.getKey();
-            List<Session> serverSessions = entry.getValue();
-
-            DataContainer container = perServerContainer.getOrDefault(serverUUID, new DataContainer());
-            container.putRawData(PerServerKeys.SESSIONS, serverSessions);
-
-            container.putSupplier(PerServerKeys.LAST_SEEN, () -> SessionsMutator.forContainer(container).toLastSeen());
-
-            container.putSupplier(PerServerKeys.WORLD_TIMES, () -> SessionsMutator.forContainer(container).toTotalWorldTimes());
-            container.putSupplier(PerServerKeys.PLAYER_KILLS, () -> SessionsMutator.forContainer(container).toPlayerKillList());
-            container.putSupplier(PerServerKeys.PLAYER_DEATHS, () -> SessionsMutator.forContainer(container).toPlayerDeathList());
-            container.putSupplier(PerServerKeys.PLAYER_KILL_COUNT, () -> container.getUnsafe(PerServerKeys.PLAYER_KILLS).size());
-            container.putSupplier(PerServerKeys.MOB_KILL_COUNT, () -> SessionsMutator.forContainer(container).toMobKillCount());
-            container.putSupplier(PerServerKeys.DEATH_COUNT, () -> SessionsMutator.forContainer(container).toDeathCount());
-
-            perServerContainer.put(serverUUID, container);
-        }
-
-        return perServerContainer;
     }
 }

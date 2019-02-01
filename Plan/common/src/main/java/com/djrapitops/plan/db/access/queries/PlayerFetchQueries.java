@@ -17,9 +17,11 @@
 package com.djrapitops.plan.db.access.queries;
 
 import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.tables.GeoInfoTable;
+import com.djrapitops.plan.db.sql.tables.UserInfoTable;
 import com.djrapitops.plan.db.sql.tables.UsersTable;
 
 import java.sql.PreparedStatement;
@@ -94,6 +96,36 @@ public class PlayerFetchQueries {
                     geoInfo.add(new GeoInfo(ip, geolocation, lastUsed, ipHash));
                 }
                 return geoInfo;
+            }
+        };
+    }
+
+    public static Query<List<UserInfo>> playerServerSpecificUserInformation(UUID playerUUID) {
+        String sql = "SELECT " +
+                UserInfoTable.TABLE_NAME + "." + UserInfoTable.REGISTERED + ", " +
+                UserInfoTable.BANNED + ", " +
+                UserInfoTable.OP + ", " +
+                UserInfoTable.SERVER_UUID +
+                " FROM " + UserInfoTable.TABLE_NAME +
+                " WHERE " + UserInfoTable.TABLE_NAME + "." + UserInfoTable.USER_UUID + "=?";
+
+        return new QueryStatement<List<UserInfo>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+            }
+
+            @Override
+            public List<UserInfo> processResults(ResultSet set) throws SQLException {
+                List<UserInfo> userInformation = new ArrayList<>();
+                while (set.next()) {
+                    long registered = set.getLong(UserInfoTable.REGISTERED);
+                    boolean op = set.getBoolean(UserInfoTable.OP);
+                    boolean banned = set.getBoolean(UserInfoTable.BANNED);
+                    UUID serverUUID = UUID.fromString(set.getString(UserInfoTable.SERVER_UUID));
+                    userInformation.add(new UserInfo(playerUUID, serverUUID, registered, op, banned));
+                }
+                return userInformation;
             }
         };
     }
