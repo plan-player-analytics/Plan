@@ -17,11 +17,13 @@
 package com.djrapitops.plan.db.access.queries;
 
 import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.db.access.HasMoreThanZeroQueryStatement;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.tables.GeoInfoTable;
+import com.djrapitops.plan.db.sql.tables.PingTable;
 import com.djrapitops.plan.db.sql.tables.UserInfoTable;
 import com.djrapitops.plan.db.sql.tables.UsersTable;
 
@@ -164,6 +166,36 @@ public class PlayerFetchQueries {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
                 statement.setString(2, serverUUID.toString());
+            }
+        };
+    }
+
+    public static Query<List<Ping>> playerPingData(UUID playerUUID) {
+        String sql = "SELECT * FROM " + PingTable.TABLE_NAME +
+                " WHERE " + PingTable.USER_UUID + "=?";
+
+        return new QueryStatement<List<Ping>>(sql, 10000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+            }
+
+            @Override
+            public List<Ping> processResults(ResultSet set) throws SQLException {
+                List<Ping> pings = new ArrayList<>();
+
+                while (set.next()) {
+                    pings.add(new Ping(
+                                    set.getLong(PingTable.DATE),
+                                    UUID.fromString(set.getString(PingTable.SERVER_UUID)),
+                                    set.getInt(PingTable.MIN_PING),
+                                    set.getInt(PingTable.MAX_PING),
+                                    set.getDouble(PingTable.AVG_PING)
+                            )
+                    );
+                }
+
+                return pings;
             }
         };
     }

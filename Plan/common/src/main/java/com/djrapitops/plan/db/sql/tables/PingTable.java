@@ -20,16 +20,12 @@ import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.PingOptimizationPatch;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -87,36 +83,6 @@ public class PingTable extends Table {
                 statement.setInt(4, ping.getMin());
                 statement.setInt(5, ping.getMax());
                 statement.setDouble(6, ping.getAverage());
-            }
-        });
-    }
-
-    public List<Ping> getPing(UUID uuid) {
-        String sql = "SELECT * FROM " + tableName +
-                " WHERE " + USER_UUID + "=?";
-
-        return query(new QueryStatement<List<Ping>>(sql, 10000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-            }
-
-            @Override
-            public List<Ping> processResults(ResultSet set) throws SQLException {
-                List<Ping> pings = new ArrayList<>();
-
-                while (set.next()) {
-                    pings.add(new Ping(
-                            set.getLong(DATE),
-                            UUID.fromString(set.getString(SERVER_UUID)),
-                            set.getInt(MIN_PING),
-                            set.getInt(MAX_PING),
-                            set.getDouble(AVG_PING)
-                            )
-                    );
-                }
-
-                return pings;
             }
         });
     }

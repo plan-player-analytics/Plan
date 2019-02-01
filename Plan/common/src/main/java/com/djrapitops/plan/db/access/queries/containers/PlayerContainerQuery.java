@@ -54,7 +54,7 @@ public class PlayerContainerQuery implements Query<PlayerContainer> {
 
         container.putAll(db.getUsersTable().getUserInformation(uuid));
         container.putCachingSupplier(PlayerKeys.GEO_INFO, () -> db.query(PlayerFetchQueries.playerGeoInfo(uuid)));
-        container.putCachingSupplier(PlayerKeys.PING, () -> db.getPingTable().getPing(uuid));
+        container.putCachingSupplier(PlayerKeys.PING, () -> db.query(PlayerFetchQueries.playerPingData(uuid)));
         container.putCachingSupplier(PlayerKeys.NICKNAMES, () -> db.getNicknamesTable().getNicknameInformation(uuid));
         container.putCachingSupplier(PlayerKeys.PER_SERVER, () -> db.query(new PerServerContainerQuery(uuid)));
 
