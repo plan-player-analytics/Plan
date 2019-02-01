@@ -135,7 +135,7 @@ public class PlayerFetchQueries {
      * Check if the player's BaseUser is registered.
      *
      * @param playerUUID UUID of the player.
-     * @return True if the player's BaseUser is found from plan_users
+     * @return True if the player's BaseUser is found
      */
     public static Query<Boolean> isPlayerRegistered(UUID playerUUID) {
         String sql = "SELECT COUNT(1) as c FROM " + UsersTable.TABLE_NAME +
@@ -144,6 +144,26 @@ public class PlayerFetchQueries {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
+            }
+        };
+    }
+
+    /**
+     * Check if the player's UserInfo is registered.
+     *
+     * @param playerUUID UUID of the player.
+     * @param serverUUID UUID of the Plan server.
+     * @return True if the player's UserInfo is found
+     */
+    public static Query<Boolean> isPlayerRegisteredOnServer(UUID playerUUID, UUID serverUUID) {
+        String sql = "SELECT COUNT(1) as c FROM " + UserInfoTable.TABLE_NAME +
+                " WHERE " + UserInfoTable.USER_UUID + "=?" +
+                " AND " + UserInfoTable.SERVER_UUID + "=?";
+        return new HasMoreThanZeroQueryStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+                statement.setString(2, serverUUID.toString());
             }
         };
     }

@@ -30,7 +30,6 @@ import javax.inject.Singleton;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.BooleanSupplier;
-import java.util.function.LongSupplier;
 
 /**
  * Factory for creating Runnables related to Player data to run with {@link com.djrapitops.plan.system.processing.Processing}.
@@ -80,10 +79,6 @@ public class PlayerProcessors {
 
     public PingInsertProcessor pingInsertProcessor(UUID uuid, List<DateObj<Integer>> pingList) {
         return new PingInsertProcessor(uuid, serverInfo.get().getServerUUID(), pingList, dbSystem.get().getDatabase());
-    }
-
-    public RegisterProcessor registerProcessor(UUID uuid, LongSupplier registered, String name, Runnable... afterProcess) {
-        return new RegisterProcessor(uuid, registered, name, processing.get(), dbSystem.get().getDatabase(), afterProcess);
     }
 
 }

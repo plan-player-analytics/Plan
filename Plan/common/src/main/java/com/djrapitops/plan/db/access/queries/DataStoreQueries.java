@@ -218,4 +218,25 @@ public class DataStoreQueries {
             }
         };
     }
+
+    /**
+     * Store UserInfo about a player on a server in the database.
+     *
+     * @param playerUUID UUID of the player.
+     * @param registered Time the player registered on the server.
+     * @param serverUUID UUID of the Plan server.
+     * @return Executable, use inside a {@link com.djrapitops.plan.db.access.transactions.Transaction}
+     */
+    public static Executable registerUserInfo(UUID playerUUID, long registered, UUID serverUUID) {
+        return new ExecStatement(UserInfoTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+                statement.setLong(2, registered);
+                statement.setString(3, serverUUID.toString());
+                statement.setBoolean(4, false); // Banned
+                statement.setBoolean(5, false); // Operator
+            }
+        };
+    }
 }

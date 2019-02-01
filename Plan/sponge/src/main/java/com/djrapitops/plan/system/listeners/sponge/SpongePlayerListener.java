@@ -17,7 +17,9 @@
 package com.djrapitops.plan.system.listeners.sponge;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.transactions.events.GeoInfoStoreTransaction;
+import com.djrapitops.plan.db.access.transactions.events.PlayerServerRegisterTransaction;
 import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.cache.SessionCache;
@@ -142,6 +144,7 @@ public class SpongePlayerListener {
         Player player = event.getTargetEntity();
 
         UUID uuid = player.getUniqueId();
+        UUID serverUUID = serverInfo.getServerUUID();
         long time = System.currentTimeMillis();
 
         SpongeAFKListener.AFK_TRACKER.performedAction(uuid, time);
@@ -150,7 +153,8 @@ public class SpongePlayerListener {
         Optional<GameMode> gameMode = player.getGameModeData().get(Keys.GAME_MODE);
         String gm = gameMode.map(mode -> mode.getName().toUpperCase()).orElse("ADVENTURE");
 
-        dbSystem.getDatabase().executeTransaction(new WorldNameStoreTransaction(serverInfo.getServerUUID(), world));
+        Database database = dbSystem.getDatabase();
+        database.executeTransaction(new WorldNameStoreTransaction(serverUUID, world));
 
         InetAddress address = player.getConnection().getAddress().getAddress();
 
@@ -159,18 +163,15 @@ public class SpongePlayerListener {
 
         boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
         if (gatheringGeolocations) {
-            dbSystem.getDatabase().executeTransaction(
+            database.executeTransaction(
                     new GeoInfoStoreTransaction(uuid, address, time, geolocationCache::getCountry)
             );
         }
 
-        processing.submitCritical(() -> sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, world, gm)));
-        runnableFactory.create("Player Register: " + uuid,
-                processors.player().registerProcessor(uuid, () -> time, playerName,
-                        processors.player().nameProcessor(uuid, displayName),
-                        processors.info().playerPageUpdateProcessor(uuid)
-                )
-        ).runTaskAsynchronously();
+        database.executeTransaction(new PlayerServerRegisterTransaction(uuid, () -> time, playerName, serverUUID));
+        processing.submitCritical(() -> sessionCache.cacheSession(uuid, new Session(uuid, serverUUID, time, world, gm)));
+        processing.submitNonCritical(processors.player().nameProcessor(uuid, displayName));
+        processing.submitNonCritical(processors.info().playerPageUpdateProcessor(uuid));
     }
 
     @Listener(order = Order.POST)

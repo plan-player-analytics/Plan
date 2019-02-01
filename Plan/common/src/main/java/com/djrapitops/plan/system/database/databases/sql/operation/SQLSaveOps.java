@@ -153,11 +153,6 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
     }
 
     @Override
-    public void registerNewUserOnThisServer(UUID uuid, long registered) {
-        userInfoTable.registerUserInfo(uuid, registered);
-    }
-
-    @Override
     public void insertTPSforThisServer(TPS tps) {
         tpsTable.insertTPS(tps);
     }

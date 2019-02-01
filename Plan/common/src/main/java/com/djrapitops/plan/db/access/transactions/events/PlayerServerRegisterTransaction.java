@@ -18,38 +18,29 @@ package com.djrapitops.plan.db.access.transactions.events;
 
 import com.djrapitops.plan.db.access.queries.DataStoreQueries;
 import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
-import com.djrapitops.plan.db.access.transactions.Transaction;
 
 import java.util.UUID;
 import java.util.function.LongSupplier;
 
 /**
- * Transaction for registering player's BaseUser to the database.
+ * Transaction for registering player's BaseUser and UserInfo to the database.
  *
  * @author Rsl1122
  */
-public class PlayerRegisterTransaction extends Transaction {
+public class PlayerServerRegisterTransaction extends PlayerRegisterTransaction {
 
-    protected final UUID playerUUID;
-    protected final LongSupplier registered;
-    private final String playerName;
+    private final UUID serverUUID;
 
-    public PlayerRegisterTransaction(UUID playerUUID, LongSupplier registered, String playerName) {
-        this.playerUUID = playerUUID;
-        this.registered = registered;
-        this.playerName = playerName;
-    }
-
-    @Override
-    protected boolean shouldBeExecuted() {
-        return playerUUID != null && playerName != null;
+    public PlayerServerRegisterTransaction(UUID playerUUID, LongSupplier registered, String playerName, UUID serverUUID) {
+        super(playerUUID, registered, playerName);
+        this.serverUUID = serverUUID;
     }
 
     @Override
     protected void performOperations() {
-        if (!query(PlayerFetchQueries.isPlayerRegistered(playerUUID))) {
-            execute(DataStoreQueries.registerBaseUser(playerUUID, registered.getAsLong(), playerName));
+        super.performOperations();
+        if (!query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID))) {
+            execute(DataStoreQueries.registerUserInfo(playerUUID, registered.getAsLong(), serverUUID));
         }
-        execute(DataStoreQueries.updatePlayerName(playerUUID, playerName));
     }
 }

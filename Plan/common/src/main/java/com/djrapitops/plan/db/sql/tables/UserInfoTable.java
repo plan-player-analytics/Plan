@@ -24,7 +24,6 @@ import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.UserInfoOptimizationPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
-import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.sql.parsing.Update;
 
@@ -76,43 +75,6 @@ public class UserInfoTable extends Table {
                 .column(OP, Sql.BOOL).notNull().defaultValue(false)
                 .column(BANNED, Sql.BOOL).notNull().defaultValue(false)
                 .toString();
-    }
-
-    public void registerUserInfo(UUID uuid, long registered) {
-        execute(new ExecStatement(INSERT_STATEMENT) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-                statement.setLong(2, registered);
-                statement.setString(3, getServerUUID().toString());
-                statement.setBoolean(4, false);
-                statement.setBoolean(5, false);
-            }
-        });
-    }
-
-    public boolean isRegistered(UUID uuid, UUID serverUUID) {
-        String sql = Select.from(TABLE_NAME, "COUNT(" + USER_UUID + ") as c")
-                .where(USER_UUID + "=?")
-                .and(SERVER_UUID + "=?")
-                .toString();
-
-        return query(new QueryStatement<Boolean>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-                statement.setString(2, serverUUID.toString());
-            }
-
-            @Override
-            public Boolean processResults(ResultSet set) throws SQLException {
-                return set.next() && set.getInt("c") >= 1;
-            }
-        });
-    }
-
-    public boolean isRegistered(UUID uuid) {
-        return isRegistered(uuid, getServerUUID());
     }
 
     public void updateOpStatus(UUID uuid, boolean op) {
@@ -175,19 +137,6 @@ public class UserInfoTable extends Table {
                 return userInfo;
             }
         });
-    }
-
-    /**
-     * Used for getting info of all users on THIS server.
-     *
-     * @return List of UserInfo objects.
-     */
-    public List<UserInfo> getServerUserInfo() {
-        return getServerUserInfo(getServerUUID());
-    }
-
-    public boolean isRegisteredOnThisServer(UUID player) {
-        return isRegistered(player, getServerUUID());
     }
 
     public Set<UUID> getSavedUUIDs(UUID serverUUID) {

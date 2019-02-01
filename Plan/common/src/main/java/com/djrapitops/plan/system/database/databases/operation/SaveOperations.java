@@ -80,9 +80,6 @@ public interface SaveOperations {
     void playerDisplayName(UUID uuid, Nickname nickname);
 
     @Deprecated
-    void registerNewUserOnThisServer(UUID uuid, long registered);
-
-    @Deprecated
     void insertTPSforThisServer(TPS tps);
 
     @Deprecated

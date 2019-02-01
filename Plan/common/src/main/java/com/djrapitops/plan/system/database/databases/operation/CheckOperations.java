@@ -22,8 +22,5 @@ import java.util.UUID;
 public interface CheckOperations {
 
     @Deprecated
-    boolean isPlayerRegisteredOnThisServer(UUID player);
-
-    @Deprecated
     boolean isServerInDatabase(UUID serverUUID);
 }

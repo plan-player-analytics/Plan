@@ -33,10 +33,7 @@ import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.queries.*;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.db.access.transactions.*;
-import com.djrapitops.plan.db.access.transactions.events.CommandStoreTransaction;
-import com.djrapitops.plan.db.access.transactions.events.GeoInfoStoreTransaction;
-import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
-import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
+import com.djrapitops.plan.db.access.transactions.events.*;
 import com.djrapitops.plan.db.patches.Patch;
 import com.djrapitops.plan.db.sql.tables.*;
 import com.djrapitops.plan.system.PlanSystem;
@@ -226,7 +223,7 @@ public abstract class CommonDBTest {
     }
 
     private void saveUserOne() {
-        db.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 123456789L, "Test"));
+        playerIsRegisteredToBothTables();
         db.getUsersTable().kicked(playerUUID);
     }
 
@@ -400,7 +397,7 @@ public abstract class CommonDBTest {
 
     @Test
     public void userInfoTableStoresCorrectUserInformation() {
-        userRegisterChecksReturnCorrectValues();
+        saveUserOne();
 
         List<UserInfo> userInfo = db.query(PlayerFetchQueries.playerServerSpecificUserInformation(playerUUID));
         List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 223456789L, false, false));
@@ -409,23 +406,8 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void userRegisterChecksReturnCorrectValues() {
-        UsersTable usersTable = db.getUsersTable();
-        assertFalse(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
-        saveUserOne();
-        assertTrue(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
-
-        UserInfoTable userInfoTable = db.getUserInfoTable();
-        assertFalse(userInfoTable.isRegistered(playerUUID));
-        userInfoTable.registerUserInfo(playerUUID, 223456789L);
-        assertTrue(userInfoTable.isRegistered(playerUUID));
-
-        assertEquals(123456789L, (long) db.getUsersTable().getRegisterDates().get(0));
-    }
-
-    @Test
     public void userInfoTableUpdatesBanStatus() {
-        userRegisterChecksReturnCorrectValues();
+        saveUserOne();
 
         db.getUserInfoTable().updateBanStatus(playerUUID, true);
 
@@ -437,7 +419,7 @@ public abstract class CommonDBTest {
 
     @Test
     public void userInfoTableUpdatesOperatorStatus() {
-        userRegisterChecksReturnCorrectValues();
+        saveUserOne();
 
         db.getUserInfoTable().updateOpStatus(playerUUID, true);
 
@@ -484,12 +466,10 @@ public abstract class CommonDBTest {
         saveUserTwo();
 
         UserInfoTable userInfoTable = db.getUserInfoTable();
-        UsersTable usersTable = db.getUsersTable();
         SessionsTable sessionsTable = db.getSessionsTable();
         NicknamesTable nicknamesTable = db.getNicknamesTable();
 
-        db.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 223456789L, "Test_name"));
-        userInfoTable.registerUserInfo(playerUUID, 223456789L);
+        db.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> 223456789L, "Test_name", serverUUID));
         saveTwoWorlds();
 
         Session session = new Session(playerUUID, serverUUID, 12345L, "", "");
@@ -506,7 +486,7 @@ public abstract class CommonDBTest {
         db.executeTransaction(new RemovePlayerTransaction(playerUUID));
 
         assertFalse(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
-        assertFalse(userInfoTable.isRegistered(playerUUID));
+        assertFalse(db.query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)));
         assertTrue(nicknamesTable.getNicknames(playerUUID).isEmpty());
         assertTrue(db.query(PlayerFetchQueries.playerGeoInfo(playerUUID)).isEmpty());
         assertTrue(sessionsTable.getSessions(playerUUID).isEmpty());
@@ -546,7 +526,6 @@ public abstract class CommonDBTest {
         saveUserOne();
         saveUserTwo();
 
-        userInfoTable.registerUserInfo(playerUUID, 223456789L);
         saveTwoWorlds();
 
         Session session = new Session(playerUUID, serverUUID, 12345L, "", "");
@@ -778,13 +757,20 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testRegister() {
+    public void playerIsRegisteredToUsersTable() {
         assertFalse(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
-        assertFalse(db.check().isPlayerRegisteredOnThisServer(playerUUID));
         db.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 1000L, "name"));
-        db.save().registerNewUserOnThisServer(playerUUID, 500L);
         assertTrue(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
-        assertTrue(db.check().isPlayerRegisteredOnThisServer(playerUUID));
+        assertFalse(db.query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)));
+    }
+
+    @Test
+    public void playerIsRegisteredToBothTables() {
+        assertFalse(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
+        assertFalse(db.query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)));
+        db.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> 1000L, "name", serverUUID));
+        assertTrue(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
+        assertTrue(db.query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)));
     }
 
     @Test
