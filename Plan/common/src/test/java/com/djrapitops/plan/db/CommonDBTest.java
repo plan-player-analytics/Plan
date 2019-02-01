@@ -429,7 +429,7 @@ public abstract class CommonDBTest {
         db.getUserInfoTable().updateBanStatus(playerUUID, true);
 
         List<UserInfo> userInfo = db.query(PlayerFetchQueries.playerServerSpecificUserInformation(playerUUID));
-        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 223456789L, true, false));
+        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 223456789L, false, true));
 
         assertEquals(expected, userInfo);
     }
@@ -441,7 +441,7 @@ public abstract class CommonDBTest {
         db.getUserInfoTable().updateOpStatus(playerUUID, true);
 
         List<UserInfo> userInfo = db.query(PlayerFetchQueries.playerServerSpecificUserInformation(playerUUID));
-        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 223456789L, false, true));
+        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 223456789L, true, false));
 
         assertEquals(expected, userInfo);
     }
