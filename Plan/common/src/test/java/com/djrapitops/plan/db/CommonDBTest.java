@@ -412,7 +412,7 @@ public abstract class CommonDBTest {
         assertTrue(usersTable.isRegistered(playerUUID));
         assertTrue(userInfoTable.isRegistered(playerUUID));
 
-        UserInfo userInfo = userInfoTable.getUserInfo(playerUUID);
+        UserInfo userInfo = userInfoTable.getAllUserInfo(playerUUID).get(serverUUID);
         assertEquals(playerUUID, userInfo.getUuid());
         assertEquals(123456789L, (long) usersTable.getRegisterDates().get(0));
         assertEquals(223456789L, userInfo.getRegistered());
@@ -435,7 +435,7 @@ public abstract class CommonDBTest {
         userInfoTable.updateBanStatus(playerUUID, true);
         commitTest();
 
-        UserInfo userInfo = userInfoTable.getUserInfo(playerUUID);
+        UserInfo userInfo = userInfoTable.getAllUserInfo(playerUUID).get(serverUUID);
         assertTrue(userInfo.isBanned());
         assertTrue(userInfo.isOperator());
 
@@ -443,7 +443,7 @@ public abstract class CommonDBTest {
         userInfoTable.updateBanStatus(playerUUID, true);
         commitTest();
 
-        userInfo = userInfoTable.getUserInfo(playerUUID);
+        userInfo = userInfoTable.getAllUserInfo(playerUUID).get(serverUUID);
 
         assertTrue(userInfo.isBanned());
         assertFalse(userInfo.isOperator());
@@ -452,7 +452,7 @@ public abstract class CommonDBTest {
         userInfoTable.updateBanStatus(playerUUID, false);
         commitTest();
 
-        userInfo = userInfoTable.getUserInfo(playerUUID);
+        userInfo = userInfoTable.getAllUserInfo(playerUUID).get(serverUUID);
 
         assertFalse(userInfo.isBanned());
         assertTrue(userInfo.isOperator());

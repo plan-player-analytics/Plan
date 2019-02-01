@@ -63,11 +63,8 @@ public class UserInfoTable extends Table {
             OP +
             ") VALUES (?, ?, ?, ?, ?)";
 
-    private final UsersTable usersTable;
-
     public UserInfoTable(SQLDB db) {
         super(TABLE_NAME, db);
-        usersTable = db.getUsersTable();
     }
 
     public static String createTableSQL(DBType dbType) {
@@ -95,7 +92,7 @@ public class UserInfoTable extends Table {
     }
 
     public boolean isRegistered(UUID uuid, UUID serverUUID) {
-        String sql = Select.from(tableName, "COUNT(" + USER_UUID + ") as c")
+        String sql = Select.from(TABLE_NAME, "COUNT(" + USER_UUID + ") as c")
                 .where(USER_UUID + "=?")
                 .and(SERVER_UUID + "=?")
                 .toString();
@@ -119,7 +116,7 @@ public class UserInfoTable extends Table {
     }
 
     public void updateOpStatus(UUID uuid, boolean op) {
-        String sql = Update.values(tableName, OP)
+        String sql = Update.values(TABLE_NAME, OP)
                 .where(USER_UUID + "=?")
                 .toString();
 
@@ -133,7 +130,7 @@ public class UserInfoTable extends Table {
     }
 
     public void updateBanStatus(UUID uuid, boolean banned) {
-        String sql = Update.values(tableName, BANNED)
+        String sql = Update.values(TABLE_NAME, BANNED)
                 .where(USER_UUID + "=?")
                 .toString();
 
@@ -147,18 +144,18 @@ public class UserInfoTable extends Table {
     }
 
     public Map<UUID, UserInfo> getAllUserInfo(UUID uuid) {
-        String usersUUIDColumn = usersTable + "." + UsersTable.USER_UUID;
-        String usersNameColumn = usersTable + "." + UsersTable.USER_NAME + " as name";
+        String usersUUIDColumn = UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID;
+        String usersNameColumn = UsersTable.TABLE_NAME + "." + UsersTable.USER_NAME + " as name";
 
         String sql = "SELECT " +
-                tableName + "." + REGISTERED + ", " +
+                TABLE_NAME + "." + REGISTERED + ", " +
                 BANNED + ", " +
                 OP + ", " +
                 usersNameColumn + ", " +
                 SERVER_UUID +
-                " FROM " + tableName +
-                " INNER JOIN " + usersTable + " on " + usersUUIDColumn + "=" + tableName + "." + USER_UUID +
-                " WHERE " + tableName + "." + USER_UUID + "=?";
+                " FROM " + TABLE_NAME +
+                " INNER JOIN " + UsersTable.TABLE_NAME + " on " + usersUUIDColumn + "=" + TABLE_NAME + "." + USER_UUID +
+                " WHERE " + TABLE_NAME + "." + USER_UUID + "=?";
 
         return query(new QueryStatement<Map<UUID, UserInfo>>(sql) {
             @Override
@@ -183,22 +180,18 @@ public class UserInfoTable extends Table {
         });
     }
 
-    public UserInfo getUserInfo(UUID uuid) {
-        return getAllUserInfo(uuid).get(getServerUUID());
-    }
-
     public List<UserInfo> getServerUserInfo(UUID serverUUID) {
-        String usersUUIDColumn = usersTable + "." + UsersTable.USER_UUID;
-        String usersNameColumn = usersTable + "." + UsersTable.USER_NAME + " as name";
+        String usersUUIDColumn = UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID;
+        String usersNameColumn = UsersTable.TABLE_NAME + "." + UsersTable.USER_NAME + " as name";
 
         String sql = "SELECT " +
-                tableName + "." + REGISTERED + ", " +
+                TABLE_NAME + "." + REGISTERED + ", " +
                 BANNED + ", " +
                 OP + ", " +
                 usersNameColumn + ", " +
-                tableName + "." + USER_UUID +
-                " FROM " + tableName +
-                " INNER JOIN " + usersTable + " on " + usersUUIDColumn + "=" + tableName + "." + USER_UUID +
+                TABLE_NAME + "." + USER_UUID +
+                " FROM " + TABLE_NAME +
+                " INNER JOIN " + UsersTable.TABLE_NAME + " on " + usersUUIDColumn + "=" + TABLE_NAME + "." + USER_UUID +
                 " WHERE " + SERVER_UUID + "=?";
 
         return query(new QueryStatement<List<UserInfo>>(sql, 20000) {
@@ -241,7 +234,7 @@ public class UserInfoTable extends Table {
     }
 
     public Set<UUID> getSavedUUIDs(UUID serverUUID) {
-        String sql = "SELECT " + USER_UUID + " FROM " + tableName + " WHERE " + SERVER_UUID + "=?";
+        String sql = "SELECT " + USER_UUID + " FROM " + TABLE_NAME + " WHERE " + SERVER_UUID + "=?";
 
         return query(new QueryStatement<Set<UUID>>(sql, 50000) {
             @Override
