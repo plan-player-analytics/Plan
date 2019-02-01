@@ -143,11 +143,6 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
     }
 
     @Override
-    public void playerName(UUID uuid, String playerName) {
-        usersTable.updateName(uuid, playerName);
-    }
-
-    @Override
     public void playerDisplayName(UUID uuid, Nickname nickname) {
         nicknamesTable.saveUserName(uuid, nickname);
     }

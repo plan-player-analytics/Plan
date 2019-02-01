@@ -265,11 +265,11 @@ public abstract class CommonDBTest {
 
     @Test
     public void webUserIsRegistered() throws DBInitException {
-        WebUser expected = new WebUser("Test", "RandomGarbageBlah", 0);
+        WebUser expected = new WebUser(TestConstants.PLAYER_ONE_NAME, "RandomGarbageBlah", 0);
         db.getSecurityTable().addNewUser(expected);
         commitTest();
 
-        Optional<WebUser> found = db.query(OptionalFetchQueries.fetchWebUser("Test"));
+        Optional<WebUser> found = db.query(OptionalFetchQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME));
         assertTrue(found.isPresent());
         assertEquals(expected, found.get());
     }
@@ -283,8 +283,8 @@ public abstract class CommonDBTest {
     @Test
     public void webUserIsRemoved() throws DBInitException {
         webUserIsRegistered();
-        db.getSecurityTable().removeUser("Test");
-        assertFalse(db.query(OptionalFetchQueries.fetchWebUser("Test")).isPresent());
+        db.getSecurityTable().removeUser(TestConstants.PLAYER_ONE_NAME);
+        assertFalse(db.query(OptionalFetchQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME)).isPresent());
     }
 
     @Test
@@ -400,7 +400,7 @@ public abstract class CommonDBTest {
         saveUserOne();
 
         List<UserInfo> userInfo = db.query(PlayerFetchQueries.playerServerSpecificUserInformation(playerUUID));
-        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 223456789L, false, false));
+        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 1000L, false, false));
 
         assertEquals(expected, userInfo);
     }
@@ -412,7 +412,7 @@ public abstract class CommonDBTest {
         db.getUserInfoTable().updateBanStatus(playerUUID, true);
 
         List<UserInfo> userInfo = db.query(PlayerFetchQueries.playerServerSpecificUserInformation(playerUUID));
-        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 223456789L, false, true));
+        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 1000L, false, true));
 
         assertEquals(expected, userInfo);
     }
@@ -424,7 +424,7 @@ public abstract class CommonDBTest {
         db.getUserInfoTable().updateOpStatus(playerUUID, true);
 
         List<UserInfo> userInfo = db.query(PlayerFetchQueries.playerServerSpecificUserInformation(playerUUID));
-        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 223456789L, true, false));
+        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 1000L, true, false));
 
         assertEquals(expected, userInfo);
     }
@@ -435,12 +435,12 @@ public abstract class CommonDBTest {
 
         UsersTable usersTable = db.getUsersTable();
 
-        assertEquals(playerUUID, usersTable.getUuidOf("Test"));
-        usersTable.updateName(playerUUID, "NewName");
+        assertEquals(playerUUID, usersTable.getUuidOf(TestConstants.PLAYER_ONE_NAME));
+        db.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 0, "NewName"));
 
         commitTest();
 
-        assertNull(usersTable.getUuidOf("Test"));
+        assertNull(usersTable.getUuidOf(TestConstants.PLAYER_ONE_NAME));
 
         assertEquals("NewName", usersTable.getPlayerName(playerUUID));
         assertEquals(playerUUID, usersTable.getUuidOf("NewName"));
@@ -516,8 +516,6 @@ public abstract class CommonDBTest {
     }
 
     private void saveAllData() throws NoSuchAlgorithmException {
-        UserInfoTable userInfoTable = db.getUserInfoTable();
-        UsersTable usersTable = db.getUsersTable();
         NicknamesTable nicknamesTable = db.getNicknamesTable();
         TPSTable tpsTable = db.getTpsTable();
         SecurityTable securityTable = db.getSecurityTable();
@@ -569,7 +567,7 @@ public abstract class CommonDBTest {
                 r.nextInt(), r.nextInt(), r.nextDouble()
         ));
 
-        securityTable.addNewUser(new WebUser("Test", "RandomGarbageBlah", 0));
+        securityTable.addNewUser(new WebUser(TestConstants.PLAYER_ONE_NAME, "RandomGarbageBlah", 0));
     }
 
     void saveGeoInfo(UUID uuid, GeoInfo geoInfo) {
@@ -759,7 +757,7 @@ public abstract class CommonDBTest {
     @Test
     public void playerIsRegisteredToUsersTable() {
         assertFalse(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
-        db.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 1000L, "name"));
+        db.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 1000L, TestConstants.PLAYER_ONE_NAME));
         assertTrue(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
         assertFalse(db.query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)));
     }
@@ -768,7 +766,7 @@ public abstract class CommonDBTest {
     public void playerIsRegisteredToBothTables() {
         assertFalse(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
         assertFalse(db.query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)));
-        db.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> 1000L, "name", serverUUID));
+        db.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> 1000L, TestConstants.PLAYER_ONE_NAME, serverUUID));
         assertTrue(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
         assertTrue(db.query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)));
     }
@@ -811,8 +809,8 @@ public abstract class CommonDBTest {
         assertFalse("Took too long: " + ((end - start) / 1000000.0) + "ms", end - start > TimeUnit.SECONDS.toNanos(1L));
 
         OptionalAssert.equals(playerUUID, container.getValue(PlayerKeys.UUID));
-        OptionalAssert.equals(123456789L, container.getValue(PlayerKeys.REGISTERED));
-        OptionalAssert.equals("Test", container.getValue(PlayerKeys.NAME));
+        OptionalAssert.equals(1000L, container.getValue(PlayerKeys.REGISTERED));
+        OptionalAssert.equals(TestConstants.PLAYER_ONE_NAME, container.getValue(PlayerKeys.NAME));
         OptionalAssert.equals(1, container.getValue(PlayerKeys.KICK_COUNT));
 
         List<GeoInfo> expectedGeoInfo =

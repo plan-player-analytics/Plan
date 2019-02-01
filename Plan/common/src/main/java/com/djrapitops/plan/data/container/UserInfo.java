@@ -20,7 +20,10 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Used for storing information of players after it has been fetched.
+ * Represents user information stored in plan_user_info.
+ * <p>
+ * Unlike {@link BaseUser} one instance is stored per server for a single player.
+ * Proxy servers are an exception, and UserInfo is not stored for them.
  *
  * @author Rsl1122
  */

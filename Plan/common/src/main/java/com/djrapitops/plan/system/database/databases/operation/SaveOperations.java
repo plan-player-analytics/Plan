@@ -74,9 +74,6 @@ public interface SaveOperations {
     void playerWasKicked(UUID uuid);
 
     @Deprecated
-    void playerName(UUID uuid, String playerName);
-
-    @Deprecated
     void playerDisplayName(UUID uuid, Nickname nickname);
 
     @Deprecated
