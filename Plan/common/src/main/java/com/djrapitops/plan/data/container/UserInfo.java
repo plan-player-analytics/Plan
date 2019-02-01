@@ -26,28 +26,31 @@ import java.util.UUID;
  */
 public class UserInfo {
 
-    private final UUID uuid;
-    @Deprecated
-    private String name;
+    private final UUID playerUUID;
+    private final UUID serverUUID;
     private long registered;
     private boolean banned;
     private boolean opped;
 
-    public UserInfo(UUID uuid, String name, long registered, boolean opped, boolean banned) {
-        this.uuid = uuid;
-        this.name = name;
+    public UserInfo(UUID playerUUID, UUID serverUUID, long registered, boolean opped, boolean banned) {
+        this.playerUUID = playerUUID;
+        this.serverUUID = serverUUID;
         this.registered = registered;
         this.opped = opped;
         this.banned = banned;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public UUID getPlayerUuid() {
+        return playerUUID;
+    }
+
+    public UUID getServerUUID() {
+        return serverUUID;
     }
 
     @Deprecated
     public String getName() {
-        return name;
+        return null;
     }
 
     public long getRegistered() {
@@ -65,25 +68,25 @@ public class UserInfo {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof UserInfo)) return false;
         UserInfo userInfo = (UserInfo) o;
         return registered == userInfo.registered &&
                 banned == userInfo.banned &&
                 opped == userInfo.opped &&
-                Objects.equals(uuid, userInfo.uuid) &&
-                Objects.equals(name, userInfo.name);
+                playerUUID.equals(userInfo.playerUUID) &&
+                serverUUID.equals(userInfo.serverUUID);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, name, registered, banned, opped);
+        return Objects.hash(playerUUID, serverUUID, registered, banned, opped);
     }
 
     @Override
     public String toString() {
         return "UserInfo{" +
-                "uuid=" + uuid +
-                ", name='" + name + '\'' +
+                "playerUUID=" + playerUUID +
+                ", serverUUID=" + serverUUID +
                 ", registered=" + registered +
                 ", banned=" + banned +
                 ", opped=" + opped +

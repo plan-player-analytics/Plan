@@ -77,7 +77,7 @@ public class ServerPlayerContainersQuery implements Query<List<PlayerContainer>>
 
         for (UserInfo userInfo : serverUserInfo) {
             PlayerContainer container = new PlayerContainer();
-            UUID uuid = userInfo.getUuid();
+            UUID uuid = userInfo.getPlayerUuid();
             container.putRawData(PlayerKeys.UUID, uuid);
 
             container.putRawData(PlayerKeys.REGISTERED, userInfo.getRegistered());

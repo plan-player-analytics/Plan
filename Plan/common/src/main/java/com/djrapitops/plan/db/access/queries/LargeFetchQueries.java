@@ -474,7 +474,7 @@ public class LargeFetchQueries {
                     boolean banned = set.getBoolean(UserInfoTable.BANNED);
                     boolean op = set.getBoolean(UserInfoTable.OP);
 
-                    userInfos.add(new UserInfo(uuid, "", registered, op, banned));
+                    userInfos.add(new UserInfo(uuid, serverUUID, registered, op, banned));
 
                     serverMap.put(serverUUID, userInfos);
                 }

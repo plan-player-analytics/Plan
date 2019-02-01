@@ -144,17 +144,12 @@ public class UserInfoTable extends Table {
     }
 
     public Map<UUID, UserInfo> getAllUserInfo(UUID uuid) {
-        String usersUUIDColumn = UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID;
-        String usersNameColumn = UsersTable.TABLE_NAME + "." + UsersTable.USER_NAME + " as name";
-
         String sql = "SELECT " +
                 TABLE_NAME + "." + REGISTERED + ", " +
                 BANNED + ", " +
                 OP + ", " +
-                usersNameColumn + ", " +
                 SERVER_UUID +
                 " FROM " + TABLE_NAME +
-                " INNER JOIN " + UsersTable.TABLE_NAME + " on " + usersUUIDColumn + "=" + TABLE_NAME + "." + USER_UUID +
                 " WHERE " + TABLE_NAME + "." + USER_UUID + "=?";
 
         return query(new QueryStatement<Map<UUID, UserInfo>>(sql) {
@@ -170,10 +165,8 @@ public class UserInfoTable extends Table {
                     long registered = set.getLong(REGISTERED);
                     boolean op = set.getBoolean(OP);
                     boolean banned = set.getBoolean(BANNED);
-                    String name = set.getString("name");
-
                     UUID serverUUID = UUID.fromString(set.getString(SERVER_UUID));
-                    map.put(serverUUID, new UserInfo(uuid, name, registered, op, banned));
+                    map.put(serverUUID, new UserInfo(uuid, serverUUID, registered, op, banned));
                 }
                 return map;
             }
@@ -181,17 +174,12 @@ public class UserInfoTable extends Table {
     }
 
     public List<UserInfo> getServerUserInfo(UUID serverUUID) {
-        String usersUUIDColumn = UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID;
-        String usersNameColumn = UsersTable.TABLE_NAME + "." + UsersTable.USER_NAME + " as name";
-
         String sql = "SELECT " +
                 TABLE_NAME + "." + REGISTERED + ", " +
                 BANNED + ", " +
                 OP + ", " +
-                usersNameColumn + ", " +
                 TABLE_NAME + "." + USER_UUID +
                 " FROM " + TABLE_NAME +
-                " INNER JOIN " + UsersTable.TABLE_NAME + " on " + usersUUIDColumn + "=" + TABLE_NAME + "." + USER_UUID +
                 " WHERE " + SERVER_UUID + "=?";
 
         return query(new QueryStatement<List<UserInfo>>(sql, 20000) {
@@ -205,12 +193,11 @@ public class UserInfoTable extends Table {
                 List<UserInfo> userInfo = new ArrayList<>();
                 while (set.next()) {
                     UUID uuid = UUID.fromString(set.getString(USER_UUID));
-                    String name = set.getString("name");
                     long registered = set.getLong(REGISTERED);
                     boolean op = set.getBoolean(OP);
                     boolean banned = set.getBoolean(BANNED);
 
-                    UserInfo info = new UserInfo(uuid, name, registered, op, banned);
+                    UserInfo info = new UserInfo(uuid, serverUUID, registered, op, banned);
                     if (!userInfo.contains(info)) {
                         userInfo.add(info);
                     }

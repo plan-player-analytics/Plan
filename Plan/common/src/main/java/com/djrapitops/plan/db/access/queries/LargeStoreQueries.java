@@ -263,7 +263,7 @@ public class LargeStoreQueries {
                     UUID serverUUID = entry.getKey();
                     // Every User
                     for (UserInfo user : entry.getValue()) {
-                        statement.setString(1, user.getUuid().toString());
+                        statement.setString(1, user.getPlayerUuid().toString());
                         statement.setLong(2, user.getRegistered());
                         statement.setString(3, serverUUID.toString());
                         statement.setBoolean(4, user.isBanned());

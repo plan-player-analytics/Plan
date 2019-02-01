@@ -413,10 +413,9 @@ public abstract class CommonDBTest {
         assertTrue(userInfoTable.isRegistered(playerUUID));
 
         UserInfo userInfo = userInfoTable.getAllUserInfo(playerUUID).get(serverUUID);
-        assertEquals(playerUUID, userInfo.getUuid());
+        assertEquals(playerUUID, userInfo.getPlayerUuid());
         assertEquals(123456789L, (long) usersTable.getRegisterDates().get(0));
         assertEquals(223456789L, userInfo.getRegistered());
-        assertEquals("Test", userInfo.getName());
         assertFalse(userInfo.isBanned());
         assertFalse(userInfo.isOperator());
 

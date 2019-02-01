@@ -56,7 +56,7 @@ public class AllPlayerContainersQuery implements Query<List<PlayerContainer>> {
             List<UserInfo> serverUserInfo = entry.getValue();
 
             for (UserInfo userInfo : serverUserInfo) {
-                UUID uuid = userInfo.getUuid();
+                UUID uuid = userInfo.getPlayerUuid();
                 if (uuid == null) {
                     continue;
                 }

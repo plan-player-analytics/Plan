@@ -19,6 +19,7 @@ package com.djrapitops.plan.system.importing.importers;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.data.container.BaseUser;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.UserInfo;
@@ -186,14 +187,22 @@ public abstract class BukkitImporter implements Importer {
         helper.submit(service);
     }
 
-    private UserInfo toUserInfo(UserImportData userImportData) {
+    // TODO Refactor parts to use the base user
+    private BaseUser toBaseUser(UserImportData userImportData) {
         UUID uuid = userImportData.getUuid();
         String name = userImportData.getName();
+        long registered = userImportData.getRegistered();
+        int timesKicked = userImportData.getTimesKicked();
+        return new BaseUser(uuid, name, registered, timesKicked);
+    }
+
+    private UserInfo toUserInfo(UserImportData userImportData) {
+        UUID uuid = userImportData.getUuid();
         long registered = userImportData.getRegistered();
         boolean op = userImportData.isOp();
         boolean banned = userImportData.isBanned();
 
-        return new UserInfo(uuid, name, registered, op, banned);
+        return new UserInfo(uuid, serverUUID.get(), registered, op, banned);
     }
 
     private Session toSession(UserImportData userImportData) {
