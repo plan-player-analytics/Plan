@@ -520,7 +520,6 @@ public abstract class CommonDBTest {
         NicknamesTable nicknamesTable = db.getNicknamesTable();
         TPSTable tpsTable = db.getTpsTable();
         SecurityTable securityTable = db.getSecurityTable();
-        PingTable pingTable = db.getPingTable();
 
         saveUserOne();
         saveUserTwo();

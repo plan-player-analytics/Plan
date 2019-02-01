@@ -17,7 +17,6 @@
 package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.db.DBType;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.patches.PingOptimizationPatch;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
@@ -30,7 +29,7 @@ import com.djrapitops.plan.db.sql.parsing.Sql;
  *
  * @author Rsl1122
  */
-public class PingTable extends Table {
+public class PingTable {
 
     public static final String TABLE_NAME = "plan_ping";
 
@@ -51,8 +50,8 @@ public class PingTable extends Table {
             AVG_PING +
             ") VALUES (?, ?, ?, ?, ?, ?)";
 
-    public PingTable(SQLDB db) {
-        super(TABLE_NAME, db);
+    private PingTable() {
+        /* Static information class */
     }
 
     public static String createTableSQL(DBType dbType) {
