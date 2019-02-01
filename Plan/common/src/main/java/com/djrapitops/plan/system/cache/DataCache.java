@@ -77,14 +77,9 @@ public class DataCache extends SessionCache implements SubSystem {
      * Used to update PlayerName and DisplayName caches.
      *
      * @param uuid        UUID of the player.
-     * @param playerName  Name of the player.
      * @param displayName DisplayName of the player.
      */
-    public void updateNames(UUID uuid, String playerName, String displayName) {
-        if (playerName != null) {
-            playerNames.put(uuid, playerName);
-            uuids.put(playerName, uuid);
-        }
+    public void updateDisplayName(UUID uuid, String displayName) {
         if (displayName != null) {
             displayNames.put(uuid, displayName);
         }
@@ -92,7 +87,7 @@ public class DataCache extends SessionCache implements SubSystem {
 
     /**
      * Used to get the player name in the cache.
-     *
+     * <p>
      * It is recommended to use
      * {@link com.djrapitops.plan.data.store.keys.AnalysisKeys#PLAYER_NAMES} and
      * {@link com.djrapitops.plan.data.store.keys.PlayerKeys#NAME} when possible

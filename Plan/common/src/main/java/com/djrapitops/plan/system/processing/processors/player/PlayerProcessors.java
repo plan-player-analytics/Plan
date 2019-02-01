@@ -65,10 +65,6 @@ public class PlayerProcessors {
         return new BanAndOpProcessor(uuid, banned, op, dbSystem.get().getDatabase());
     }
 
-    public ProxyRegisterProcessor proxyRegisterProcessor(UUID uuid, String name, long registered, Runnable... afterProcess) {
-        return new ProxyRegisterProcessor(uuid, name, registered, processing.get(), dbSystem.get().getDatabase(), afterProcess);
-    }
-
     public EndSessionProcessor endSessionProcessor(UUID uuid, long time) {
         return new EndSessionProcessor(uuid, time, dataCache.get());
     }
@@ -77,9 +73,9 @@ public class PlayerProcessors {
         return new KickProcessor(uuid, dbSystem.get().getDatabase());
     }
 
-    public NameProcessor nameProcessor(UUID uuid, String playerName, String displayName) {
+    public NameProcessor nameProcessor(UUID uuid, String displayName) {
         Nickname nickname = new Nickname(displayName, System.currentTimeMillis(), serverInfo.get().getServerUUID());
-        return new NameProcessor(uuid, playerName, nickname, dbSystem.get().getDatabase(), dataCache.get());
+        return new NameProcessor(uuid, nickname, dbSystem.get().getDatabase(), dataCache.get());
     }
 
     public PingInsertProcessor pingInsertProcessor(UUID uuid, List<DateObj<Integer>> pingList) {

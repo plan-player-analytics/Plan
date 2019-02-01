@@ -66,9 +66,8 @@ public class SpongeChatListener {
 
     private void actOnChatEvent(@First Player player) {
         UUID uuid = player.getUniqueId();
-        String name = player.getName();
         String displayName = player.getDisplayNameData().displayName().get().toPlain();
-        processing.submit(processorFactory.nameProcessor(uuid, name, displayName));
+        processing.submit(processorFactory.nameProcessor(uuid, displayName));
     }
 
 }

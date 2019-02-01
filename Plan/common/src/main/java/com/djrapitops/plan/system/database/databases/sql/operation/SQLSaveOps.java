@@ -138,11 +138,6 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
     }
 
     @Override
-    public void registerNewUser(UUID uuid, long registered, String name) {
-        usersTable.registerUser(uuid, registered, name);
-    }
-
-    @Override
     public void playerWasKicked(UUID uuid) {
         usersTable.kicked(uuid);
     }

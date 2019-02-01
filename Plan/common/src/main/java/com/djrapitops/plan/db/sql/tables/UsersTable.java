@@ -25,7 +25,6 @@ import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.parsing.*;
-import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -131,27 +130,6 @@ public class UsersTable extends Table {
                     registerDates.add(set.getLong(REGISTERED));
                 }
                 return registerDates;
-            }
-        });
-    }
-
-    /**
-     * Register a new user (UUID) to the database.
-     *
-     * @param uuid       UUID of the player.
-     * @param registered Register date.
-     * @param name       Name of the player.
-     * @throws IllegalArgumentException If uuid or name are null.
-     */
-    public void registerUser(UUID uuid, long registered, String name) {
-        Verify.nullCheck(uuid, name);
-
-        execute(new ExecStatement(insertStatement) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-                statement.setLong(2, registered);
-                statement.setString(3, name);
             }
         });
     }

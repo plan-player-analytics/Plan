@@ -67,8 +67,7 @@ public class ChatListener implements Listener {
     private void actOnChatEvent(AsyncPlayerChatEvent event) {
         Player p = event.getPlayer();
         UUID uuid = p.getUniqueId();
-        String name = p.getName();
         String displayName = p.getDisplayName();
-        processing.submit(processorFactory.nameProcessor(uuid, name, displayName));
+        processing.submit(processorFactory.nameProcessor(uuid, displayName));
     }
 }

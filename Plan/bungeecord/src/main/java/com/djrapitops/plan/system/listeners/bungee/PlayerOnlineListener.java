@@ -17,7 +17,9 @@
 package com.djrapitops.plan.system.listeners.bungee;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.transactions.events.GeoInfoStoreTransaction;
+import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -89,14 +91,16 @@ public class PlayerOnlineListener implements Listener {
 
             sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, null, null));
 
+            Database database = dbSystem.getDatabase();
+
             boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
             if (gatheringGeolocations) {
-                dbSystem.getDatabase().executeTransaction(
+                database.executeTransaction(
                         new GeoInfoStoreTransaction(uuid, address, time, geolocationCache::getCountry)
                 );
             }
 
-            processing.submit(processors.player().proxyRegisterProcessor(uuid, name, time));
+            database.executeTransaction(new PlayerRegisterTransaction(uuid, () -> time, name));
             processing.submit(processors.info().playerPageUpdateProcessor(uuid));
             ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
         } catch (Exception e) {

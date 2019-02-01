@@ -20,6 +20,7 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.DataStoreQueries;
 import com.djrapitops.plan.db.access.transactions.Transaction;
+import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -81,7 +82,7 @@ public class JSErrorRegressionTest {
         DBSystem dbSystem = bukkitSystem.getDatabaseSystem();
         Database database = dbSystem.getDatabase();
         UUID uuid = TestConstants.PLAYER_ONE_UUID;
-        database.save().registerNewUser(uuid, 1000L, "TestPlayer");
+        database.executeTransaction(new PlayerRegisterTransaction(uuid, () -> 1000L, "name"));
         Session session = new Session(uuid, TestConstants.SERVER_UUID, 1000L, "world", "SURVIVAL");
         session.endSession(11000L);
         database.executeTransaction(new WorldNameStoreTransaction(TestConstants.SERVER_UUID, "world"));

@@ -139,6 +139,13 @@ public class DataStoreQueries {
         };
     }
 
+    /**
+     * Store player's Geo Information in the database.
+     *
+     * @param playerUUID UUID of the player.
+     * @param geoInfo    GeoInfo of the player.
+     * @return Executable, use inside a {@link com.djrapitops.plan.db.access.transactions.Transaction}
+     */
     public static Executable storeGeoInfo(UUID playerUUID, GeoInfo geoInfo) {
         return connection -> {
             if (!updateGeoInfo(playerUUID, geoInfo).execute(connection)) {
@@ -169,6 +176,45 @@ public class DataStoreQueries {
                 statement.setString(3, geoInfo.getIpHash());
                 statement.setString(4, geoInfo.getGeolocation());
                 statement.setLong(5, geoInfo.getDate());
+            }
+        };
+    }
+
+    /**
+     * Store a BaseUser for the player in the database.
+     *
+     * @param playerUUID UUID of the player.
+     * @param registered Time the player registered on the server for the first time.
+     * @param playerName Name of the player.
+     * @return Executable, use inside a {@link com.djrapitops.plan.db.access.transactions.Transaction}
+     */
+    public static Executable registerBaseUser(UUID playerUUID, long registered, String playerName) {
+        return new ExecStatement(UsersTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+                statement.setString(2, playerName);
+                statement.setLong(3, registered);
+                statement.setInt(4, 0); // times kicked
+            }
+        };
+    }
+
+    /**
+     * Update player's name in the database in case they have changed it.
+     *
+     * @param playerUUID UUID of the player.
+     * @param playerName Name of the player.
+     * @return Executable, use inside a {@link com.djrapitops.plan.db.access.transactions.Transaction}
+     */
+    public static Executable updatePlayerName(UUID playerUUID, String playerName) {
+        String sql = "UPDATE " + UsersTable.TABLE_NAME + " SET " + UsersTable.USER_NAME + "=?" +
+                " WHERE " + UsersTable.USER_UUID + "=?";
+        return new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerName);
+                statement.setString(2, playerUUID.toString());
             }
         };
     }

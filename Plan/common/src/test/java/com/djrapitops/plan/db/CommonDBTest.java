@@ -35,6 +35,7 @@ import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.db.access.transactions.*;
 import com.djrapitops.plan.db.access.transactions.events.CommandStoreTransaction;
 import com.djrapitops.plan.db.access.transactions.events.GeoInfoStoreTransaction;
+import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.db.patches.Patch;
 import com.djrapitops.plan.db.sql.tables.*;
@@ -225,12 +226,12 @@ public abstract class CommonDBTest {
     }
 
     private void saveUserOne() {
-        db.getUsersTable().registerUser(playerUUID, 123456789L, "Test");
+        db.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 123456789L, "Test"));
         db.getUsersTable().kicked(playerUUID);
     }
 
     private void saveUserTwo() {
-        db.getUsersTable().registerUser(player2UUID, 123456789L, "Test");
+        db.executeTransaction(new PlayerRegisterTransaction(player2UUID, () -> 123456789L, "Test"));
     }
 
     @Test
@@ -487,7 +488,7 @@ public abstract class CommonDBTest {
         SessionsTable sessionsTable = db.getSessionsTable();
         NicknamesTable nicknamesTable = db.getNicknamesTable();
 
-        usersTable.registerUser(playerUUID, 223456789L, "Test_name");
+        db.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 223456789L, "Test_name"));
         userInfoTable.registerUserInfo(playerUUID, 223456789L);
         saveTwoWorlds();
 
@@ -780,7 +781,7 @@ public abstract class CommonDBTest {
     public void testRegister() {
         assertFalse(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
         assertFalse(db.check().isPlayerRegisteredOnThisServer(playerUUID));
-        db.save().registerNewUser(playerUUID, 1000L, "name");
+        db.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 1000L, "name"));
         db.save().registerNewUserOnThisServer(playerUUID, 500L);
         assertTrue(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
         assertTrue(db.check().isPlayerRegisteredOnThisServer(playerUUID));
@@ -932,10 +933,9 @@ public abstract class CommonDBTest {
         String exp1 = "TestName";
         String exp2 = "TestName2";
 
-        UsersTable usersTable = db.getUsersTable();
         UUID uuid1 = UUID.randomUUID();
-        usersTable.registerUser(uuid1, 0L, exp1);
-        usersTable.registerUser(UUID.randomUUID(), 0L, exp2);
+        db.executeTransaction(new PlayerRegisterTransaction(uuid1, () -> 0L, exp1));
+        db.executeTransaction(new PlayerRegisterTransaction(UUID.randomUUID(), () -> 0L, exp2));
 
         String search = "testname";
 
@@ -951,8 +951,9 @@ public abstract class CommonDBTest {
     public void testGetMatchingNickNames() {
         UUID uuid = UUID.randomUUID();
         String userName = RandomData.randomString(10);
-        db.getUsersTable().registerUser(uuid, 0L, userName);
-        db.getUsersTable().registerUser(playerUUID, 1L, "Not random");
+
+        db.executeTransaction(new PlayerRegisterTransaction(uuid, () -> 0L, userName));
+        db.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 1L, "Not random"));
 
         String nickname = "2" + RandomData.randomString(10);
         db.getNicknamesTable().saveUserName(uuid, new Nickname(nickname, System.currentTimeMillis(), serverUUID));

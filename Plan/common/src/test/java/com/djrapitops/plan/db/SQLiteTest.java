@@ -21,8 +21,8 @@ import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
 import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
+import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.db.sql.tables.ServerTable;
-import com.djrapitops.plan.db.sql.tables.UsersTable;
 import com.djrapitops.plan.system.info.server.Server;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -97,10 +97,9 @@ public class SQLiteTest extends CommonDBTest {
         UUID secondUuid = UUID.randomUUID();
         UUID thirdUuid = UUID.randomUUID();
 
-        UsersTable usersTable = db.getUsersTable();
-        usersTable.registerUser(firstUuid, 0, "");
-        usersTable.registerUser(secondUuid, 0, "");
-        usersTable.registerUser(thirdUuid, 0, "");
+        db.executeTransaction(new PlayerRegisterTransaction(firstUuid, () -> 0L, ""));
+        db.executeTransaction(new PlayerRegisterTransaction(secondUuid, () -> 0L, ""));
+        db.executeTransaction(new PlayerRegisterTransaction(thirdUuid, () -> 0L, ""));
 
         saveGeoInfo(firstUuid, new GeoInfo("-", "Norway", 0, "3"));
         saveGeoInfo(firstUuid, new GeoInfo("-", "Finland", 5, "3"));

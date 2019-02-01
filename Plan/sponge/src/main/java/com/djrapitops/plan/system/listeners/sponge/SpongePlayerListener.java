@@ -167,7 +167,7 @@ public class SpongePlayerListener {
         processing.submitCritical(() -> sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, world, gm)));
         runnableFactory.create("Player Register: " + uuid,
                 processors.player().registerProcessor(uuid, () -> time, playerName,
-                        processors.player().nameProcessor(uuid, playerName, displayName),
+                        processors.player().nameProcessor(uuid, displayName),
                         processors.info().playerPageUpdateProcessor(uuid)
                 )
         ).runTaskAsynchronously();

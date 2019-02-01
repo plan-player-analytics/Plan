@@ -71,9 +71,6 @@ public interface SaveOperations {
     void opStatus(UUID uuid, boolean op);
 
     @Deprecated
-    void registerNewUser(UUID uuid, long registered, String name);
-
-    @Deprecated
     void playerWasKicked(UUID uuid);
 
     @Deprecated
