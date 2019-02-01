@@ -20,7 +20,6 @@ import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.system.locale.Message;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -74,19 +73,6 @@ public class ComparatorTest {
 
         tpsList.sort(new TPSComparator());
         List<Long> result = tpsList.stream().map(TPS::getDate).collect(Collectors.toList());
-
-        assertEquals(expected, result);
-    }
-
-    @Test
-    public void userDataNameComparator() {
-        List<UserInfo> userInfo = RandomData.randomUserData();
-
-        List<String> expected = userInfo.stream().map(UserInfo::getName)
-                .sorted().collect(Collectors.toList());
-
-        userInfo.sort(new UserInfoNameComparator());
-        List<String> result = userInfo.stream().map(UserInfo::getName).collect(Collectors.toList());
 
         assertEquals(expected, result);
     }
