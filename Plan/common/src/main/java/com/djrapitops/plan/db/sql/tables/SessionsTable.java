@@ -191,17 +191,6 @@ public class SessionsTable extends Table {
     }
 
     /**
-     * Get Playtime of a Player after Epoch ms on THIS server.
-     *
-     * @param uuid      UUID of the player.
-     * @param afterDate Epoch ms (Playtime after this date is calculated)
-     * @return Milliseconds played on THIS server. 0 if player or server not found.
-     */
-    public long getPlaytime(UUID uuid, long afterDate) {
-        return getPlaytime(uuid, getServerUUID(), afterDate);
-    }
-
-    /**
      * Get Total Playtime of a Player on a server.
      *
      * @param uuid       UUID of the player.
