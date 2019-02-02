@@ -14,19 +14,6 @@ allprojects {
     group "com.djrapitops"
     version "4.6.2-SNAPSHOT"
 
-    configurations {
-        annotationProcessor
-        testAnnotationProcessor
-    }
-
-    compileJava {
-        options.annotationProcessorPath = configurations.annotationProcessor
-    }
-
-    compileTestJava {
-        options.annotationProcessorPath = configurations.testAnnotationProcessor
-    }
-
     test {
 //        useJUnitPlatform()
         testLogging {
