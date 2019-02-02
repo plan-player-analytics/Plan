@@ -286,10 +286,6 @@ public class SessionsTable extends Table {
         });
     }
 
-    public Map<UUID, List<Session>> getSessionInfoOfServer() {
-        return getSessionInfoOfServer(getServerUUID());
-    }
-
     public Map<UUID, Long> getLastSeenForAllPlayers() {
         String sql = "SELECT" +
                 " MAX(" + SESSION_END + ") as last_seen, " +

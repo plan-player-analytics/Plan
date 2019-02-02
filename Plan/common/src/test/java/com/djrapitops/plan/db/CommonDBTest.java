@@ -595,7 +595,7 @@ public abstract class CommonDBTest {
 
         commitTest();
 
-        Map<UUID, List<Session>> sessions = sessionsTable.getSessionInfoOfServer();
+        Map<UUID, List<Session>> sessions = sessionsTable.getSessionInfoOfServer(serverUUID);
 
         session.setPlayerKills(new ArrayList<>());
         session.setWorldTimes(new WorldTimes(new HashMap<>()));
