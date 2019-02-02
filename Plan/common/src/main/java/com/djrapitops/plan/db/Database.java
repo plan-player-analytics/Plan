@@ -20,7 +20,10 @@ import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.system.database.databases.operation.*;
+import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
+import com.djrapitops.plan.system.database.databases.operation.RemoveOperations;
+import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
+import com.djrapitops.plan.system.database.databases.operation.SearchOperations;
 
 /**
  * Interface for interacting with a Plan SQL database.
@@ -52,9 +55,6 @@ public interface Database {
      * @param transaction Transaction to execute.
      */
     void executeTransaction(Transaction transaction);
-
-    @Deprecated
-    CheckOperations check();
 
     @Deprecated
     FetchOperations fetch();

@@ -43,19 +43,23 @@ public class OptionalFetchQueries {
         /* Static method class */
     }
 
+    public static Query<Optional<Server>> fetchMatchingServerIdentifier(UUID serverUUID) {
+        return fetchMatchingServerIdentifier(serverUUID.toString());
+    }
+
     public static Query<Optional<Server>> fetchMatchingServerIdentifier(String identifier) {
         String sql = "SELECT * FROM " + ServerTable.TABLE_NAME +
-                " WHERE (" + ServerTable.SERVER_ID + "=?" +
+                " WHERE (LOWER(" + ServerTable.SERVER_UUID + ") LIKE LOWER(?)" +
                 " OR LOWER(" + ServerTable.NAME + ") LIKE LOWER(?)" +
-                " OR LOWER(" + ServerTable.SERVER_UUID + ") LIKE LOWER(?))" +
+                " OR " + ServerTable.SERVER_ID + "=?)" +
                 " AND " + ServerTable.INSTALLED + "=?" +
                 " LIMIT 1";
         return new QueryStatement<Optional<Server>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setInt(1, NumberUtils.isParsable(identifier) ? Integer.parseInt(identifier) : -1);
+                statement.setString(1, identifier);
                 statement.setString(2, identifier);
-                statement.setString(3, identifier);
+                statement.setInt(3, NumberUtils.isParsable(identifier) ? Integer.parseInt(identifier) : -1);
                 statement.setBoolean(4, true);
             }
 
