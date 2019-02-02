@@ -54,7 +54,7 @@ public class PingMedianTest {
         List<Integer> collect = testPing.stream().map(DateObj::getValue).sorted().collect(Collectors.toList());
 
         int expected = (int) Median.forList(collect).calculate();
-        int result = new PingStoreTransaction(TestConstants.PLAYER_ONE_UUID, TestConstants.SERVER_UUID, new ArrayList<>())
+        int result = new PingStoreTransaction(TestConstants.PLAYER_ONE_UUID, TestConstants.SERVER_UUID, testPing)
                 .getMeanValue();
 
         assertEquals(expected, result);
