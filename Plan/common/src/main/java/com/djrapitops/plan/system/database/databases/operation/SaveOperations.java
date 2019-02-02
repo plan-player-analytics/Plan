@@ -79,9 +79,6 @@ public interface SaveOperations {
     void playerDisplayName(UUID uuid, Nickname nickname);
 
     @Deprecated
-    void insertTPSforThisServer(TPS tps);
-
-    @Deprecated
     void session(UUID uuid, Session session);
 
     @Deprecated

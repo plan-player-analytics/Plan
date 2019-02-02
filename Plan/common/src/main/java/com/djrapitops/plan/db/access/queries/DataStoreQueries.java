@@ -19,6 +19,7 @@ package com.djrapitops.plan.db.access.queries;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.db.access.ExecBatchStatement;
@@ -259,6 +260,30 @@ public class DataStoreQueries {
                 statement.setInt(4, ping.getMin());
                 statement.setInt(5, ping.getMax());
                 statement.setDouble(6, ping.getAverage());
+            }
+        };
+    }
+
+    /**
+     * Store TPS data of a server.
+     *
+     * @param serverUUID UUID of the Plan server.
+     * @param tps        TPS data entry
+     * @return Executable, use inside a {@link com.djrapitops.plan.db.access.transactions.Transaction}
+     */
+    public static Executable storeTPS(UUID serverUUID, TPS tps) {
+        return new ExecStatement(TPSTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, tps.getDate());
+                statement.setDouble(3, tps.getTicksPerSecond());
+                statement.setInt(4, tps.getPlayers());
+                statement.setDouble(5, tps.getCPUUsage());
+                statement.setLong(6, tps.getUsedMemory());
+                statement.setDouble(7, tps.getEntityCount());
+                statement.setDouble(8, tps.getChunksLoaded());
+                statement.setLong(9, tps.getFreeDiskSpace());
             }
         };
     }

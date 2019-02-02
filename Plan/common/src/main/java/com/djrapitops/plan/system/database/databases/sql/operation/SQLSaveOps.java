@@ -147,11 +147,6 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
     }
 
     @Override
-    public void insertTPSforThisServer(TPS tps) {
-        tpsTable.insertTPS(tps);
-    }
-
-    @Override
     public void session(UUID uuid, Session session) {
         db.executeTransaction(new Transaction() {
             @Override

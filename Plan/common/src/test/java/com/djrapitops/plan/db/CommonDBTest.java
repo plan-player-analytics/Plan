@@ -215,7 +215,7 @@ public abstract class CommonDBTest {
         }
 
         for (TPS tps : expected) {
-            tpsTable.insertTPS(tps);
+            execute(DataStoreQueries.storeTPS(serverUUID, tps));
         }
 
         commitTest();
@@ -558,7 +558,7 @@ public abstract class CommonDBTest {
         expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded, freeDiskSpace));
         expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded, freeDiskSpace));
         for (TPS tps : expected) {
-            tpsTable.insertTPS(tps);
+            execute(DataStoreQueries.storeTPS(serverUUID, tps));
         }
 
         db.executeTransaction(new PingStoreTransaction(

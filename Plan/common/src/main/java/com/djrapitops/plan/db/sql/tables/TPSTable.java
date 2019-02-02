@@ -20,7 +20,6 @@ import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
@@ -73,10 +72,7 @@ public class TPSTable extends Table {
 
     public TPSTable(SQLDB db) {
         super(TABLE_NAME, db);
-        serverTable = db.getServerTable();
     }
-
-    private final ServerTable serverTable;
 
     public static String createTableSQL(DBType dbType) {
         return CreateTableParser.create(TABLE_NAME, dbType)
@@ -95,7 +91,7 @@ public class TPSTable extends Table {
 
     public List<TPS> getTPSData(UUID serverUUID) {
         String sql = Select.all(tableName)
-                .where(SERVER_ID + "=" + serverTable.statementSelectServerID)
+                .where(SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID)
                 .toString();
 
         return query(new QueryStatement<List<TPS>>(sql, 50000) {
@@ -127,23 +123,6 @@ public class TPSTable extends Table {
         });
     }
 
-    public void insertTPS(TPS tps) {
-        execute(new ExecStatement(INSERT_STATEMENT) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, getServerUUID().toString());
-                statement.setLong(2, tps.getDate());
-                statement.setDouble(3, tps.getTicksPerSecond());
-                statement.setInt(4, tps.getPlayers());
-                statement.setDouble(5, tps.getCPUUsage());
-                statement.setLong(6, tps.getUsedMemory());
-                statement.setDouble(7, tps.getEntityCount());
-                statement.setDouble(8, tps.getChunksLoaded());
-                statement.setLong(9, tps.getFreeDiskSpace());
-            }
-        });
-    }
-
     public List<TPS> getNetworkOnlineData() {
         Optional<Server> proxyInfo = db.query(OptionalFetchQueries.fetchProxyServerInformation());
         if (!proxyInfo.isPresent()) {
@@ -154,8 +133,8 @@ public class TPSTable extends Table {
         String sql = "SELECT " +
                 DATE + ", " +
                 PLAYERS_ONLINE +
-                " FROM " + tableName +
-                " WHERE " + SERVER_ID + "=" + serverTable.statementSelectServerID;
+                " FROM " + TABLE_NAME +
+                " WHERE " + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID;
 
         return query(new QueryStatement<List<TPS>>(sql, 50000) {
             @Override
@@ -188,7 +167,7 @@ public class TPSTable extends Table {
         sql.append(SERVER_ID).append(", ")
                 .append(DATE).append(", ")
                 .append(PLAYERS_ONLINE)
-                .append(" FROM ").append(tableName)
+                .append(" FROM ").append(TABLE_NAME)
                 .append(" WHERE ")
                 .append(DATE).append(">").append(System.currentTimeMillis() - TimeAmount.WEEK.toMillis(2L))
                 .append(" AND (");

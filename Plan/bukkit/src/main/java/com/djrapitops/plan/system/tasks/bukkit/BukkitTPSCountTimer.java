@@ -19,9 +19,9 @@ package com.djrapitops.plan.system.tasks.bukkit;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
-import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.tasks.TPSCountTimer;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -41,13 +41,13 @@ public class BukkitTPSCountTimer extends TPSCountTimer {
     @Inject
     public BukkitTPSCountTimer(
             Plan plugin,
-            Processors processors,
-            Processing processing,
+            DBSystem dbSystem,
+            ServerInfo serverInfo,
             ServerProperties serverProperties,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        super(processors, processing, logger, errorHandler);
+        super(dbSystem, serverInfo, logger, errorHandler);
         this.plugin = plugin;
         this.serverProperties = serverProperties;
         lastCheckNano = -1;
