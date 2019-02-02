@@ -45,7 +45,6 @@ public class DataCache extends SessionCache implements SubSystem {
 
     private final ErrorHandler errorHandler;
 
-    private final Map<UUID, String> playerNames;
     private final Map<String, UUID> uuids;
     private final Map<UUID, String> displayNames;
 
@@ -56,7 +55,6 @@ public class DataCache extends SessionCache implements SubSystem {
     ) {
         super(dbSystem);
         this.errorHandler = errorHandler;
-        playerNames = new HashMap<>();
         displayNames = new HashMap<>();
         uuids = new HashMap<>();
     }
@@ -68,7 +66,6 @@ public class DataCache extends SessionCache implements SubSystem {
 
     @Override
     public void disable() {
-        playerNames.clear();
         uuids.clear();
         displayNames.clear();
     }
@@ -83,31 +80,6 @@ public class DataCache extends SessionCache implements SubSystem {
         if (displayName != null) {
             displayNames.put(uuid, displayName);
         }
-    }
-
-    /**
-     * Used to get the player name in the cache.
-     * <p>
-     * It is recommended to use
-     * {@link com.djrapitops.plan.data.store.keys.AnalysisKeys#PLAYER_NAMES} and
-     * {@link com.djrapitops.plan.data.store.keys.PlayerKeys#NAME} when possible
-     * because this method will call database if a name is not found.
-     *
-     * @param uuid UUID of the player.
-     * @return name or null if not cached.
-     */
-    public String getName(UUID uuid) {
-        String name = playerNames.get(uuid);
-        if (name == null) {
-            try {
-                name = dbSystem.getDatabase().fetch().getPlayerName(uuid);
-                playerNames.put(uuid, name);
-            } catch (DBOpException e) {
-                errorHandler.log(L.ERROR, this.getClass(), e);
-                name = "Error occurred";
-            }
-        }
-        return name;
     }
 
     /**
