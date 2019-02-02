@@ -19,13 +19,9 @@ package com.djrapitops.plan.db.sql.tables;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Insert;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 /**
  * Table that is in charge of storing WebUser data.
@@ -55,20 +51,5 @@ public class SecurityTable extends Table {
                 .column(SALT_PASSWORD_HASH, Sql.varchar(100)).notNull().unique()
                 .column(PERMISSION_LEVEL, Sql.INT).notNull()
                 .toString();
-    }
-
-    public void addNewUser(WebUser info) {
-        addNewUser(info.getName(), info.getSaltedPassHash(), info.getPermLevel());
-    }
-
-    public void addNewUser(String user, String saltPassHash, int permLevel) {
-        execute(new ExecStatement(INSERT_STATEMENT) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, user);
-                statement.setString(2, saltPassHash);
-                statement.setInt(3, permLevel);
-            }
-        });
     }
 }

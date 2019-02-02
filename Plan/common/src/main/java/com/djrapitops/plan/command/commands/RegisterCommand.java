@@ -19,6 +19,7 @@ package com.djrapitops.plan.command.commands;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
+import com.djrapitops.plan.db.access.transactions.RegisterWebUserTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -153,7 +154,7 @@ public class RegisterCommand extends CommandNode {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_WEB_USER_EXISTS));
                     return;
                 }
-                database.save().webUser(webUser);
+                database.executeTransaction(new RegisterWebUserTransaction(webUser));
                 sender.sendMessage(locale.getString(CommandLang.WEB_USER_REGISTER_SUCCESS, userName));
                 logger.info(locale.getString(CommandLang.WEB_USER_REGISTER_NOTIFY, userName, webUser.getPermLevel()));
             } catch (Exception e) {

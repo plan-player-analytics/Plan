@@ -267,7 +267,7 @@ public abstract class CommonDBTest {
     @Test
     public void webUserIsRegistered() throws DBInitException {
         WebUser expected = new WebUser(TestConstants.PLAYER_ONE_NAME, "RandomGarbageBlah", 0);
-        db.getSecurityTable().addNewUser(expected);
+        db.executeTransaction(new RegisterWebUserTransaction(expected));
         commitTest();
 
         Optional<WebUser> found = db.query(OptionalFetchQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME));
@@ -567,7 +567,8 @@ public abstract class CommonDBTest {
                 Collections.singletonList(new DateObj<>(System.currentTimeMillis(), r.nextInt())))
         );
 
-        securityTable.addNewUser(new WebUser(TestConstants.PLAYER_ONE_NAME, "RandomGarbageBlah", 0));
+        WebUser webUser = new WebUser(TestConstants.PLAYER_ONE_NAME, "RandomGarbageBlah", 0);
+        db.executeTransaction(new RegisterWebUserTransaction(webUser));
     }
 
     void saveGeoInfo(UUID uuid, GeoInfo geoInfo) {

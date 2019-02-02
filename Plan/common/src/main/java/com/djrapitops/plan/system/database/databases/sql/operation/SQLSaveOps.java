@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.system.database.databases.sql.operation;
 
-import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.SQLDB;
@@ -165,11 +164,6 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
     @Override
     public void serverInfoForThisServer(Server server) {
         serverTable.saveCurrentServerInfo(server);
-    }
-
-    @Override
-    public void webUser(WebUser webUser) {
-        securityTable.addNewUser(webUser);
     }
 
     @Override

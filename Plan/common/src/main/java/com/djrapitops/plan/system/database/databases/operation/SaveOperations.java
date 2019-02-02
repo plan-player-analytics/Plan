@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.system.database.databases.operation;
 
-import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.TPS;
@@ -87,9 +86,6 @@ public interface SaveOperations {
 
     @Deprecated
     void serverInfoForThisServer(Server server);
-
-    @Deprecated
-    void webUser(WebUser webUser);
 
     @Deprecated
     void setAsUninstalled(UUID serverUUID);
