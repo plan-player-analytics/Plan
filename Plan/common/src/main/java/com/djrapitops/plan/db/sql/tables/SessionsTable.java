@@ -256,16 +256,6 @@ public class SessionsTable extends Table {
     }
 
     /**
-     * Used to get total Session count of a Player on THIS server.
-     *
-     * @param uuid UUID of the player.
-     * @return How many sessions player has. 0 if player or server not found.
-     */
-    public int getSessionCount(UUID uuid) {
-        return getSessionCount(uuid, 0L);
-    }
-
-    /**
      * Used to get total Session count of a Player on THIS server after a given epoch ms.
      *
      * @param uuid      UUID of the player.

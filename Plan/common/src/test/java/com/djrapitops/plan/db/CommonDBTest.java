@@ -362,8 +362,8 @@ public abstract class CommonDBTest {
         assertEquals(expectedLength, playtimeOfServer);
         assertEquals(0L, sessionsTable.getPlaytimeOfServer(serverUUID, 30000L));
 
-        assertEquals(1, sessionsTable.getSessionCount(playerUUID));
-        assertEquals(0, sessionsTable.getSessionCount(playerUUID, 30000L));
+        assertEquals(1, sessionsTable.getSessionCount(playerUUID, serverUUID, 0L));
+        assertEquals(0, sessionsTable.getSessionCount(playerUUID, serverUUID, 30000L));
     }
 
     @Test
