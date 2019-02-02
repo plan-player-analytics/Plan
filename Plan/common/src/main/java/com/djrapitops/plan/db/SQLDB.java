@@ -30,11 +30,9 @@ import com.djrapitops.plan.db.patches.*;
 import com.djrapitops.plan.db.sql.tables.*;
 import com.djrapitops.plan.db.tasks.PatchTask;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
-import com.djrapitops.plan.system.database.databases.operation.RemoveOperations;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 import com.djrapitops.plan.system.database.databases.operation.SearchOperations;
 import com.djrapitops.plan.system.database.databases.sql.operation.SQLFetchOps;
-import com.djrapitops.plan.system.database.databases.sql.operation.SQLRemoveOps;
 import com.djrapitops.plan.system.database.databases.sql.operation.SQLSaveOps;
 import com.djrapitops.plan.system.database.databases.sql.operation.SQLSearchOps;
 import com.djrapitops.plan.system.locale.Locale;
@@ -88,7 +86,6 @@ public abstract class SQLDB extends AbstractDatabase {
     private final SettingsTable settingsTable;
 
     private final SQLFetchOps fetchOps;
-    private final SQLRemoveOps removeOps;
     private final SQLSearchOps searchOps;
     private final SQLSaveOps saveOps;
 
@@ -126,7 +123,6 @@ public abstract class SQLDB extends AbstractDatabase {
         settingsTable = new SettingsTable(this);
 
         fetchOps = new SQLFetchOps(this);
-        removeOps = new SQLRemoveOps(this);
         searchOps = new SQLSearchOps(this);
         saveOps = new SQLSaveOps(this);
     }
@@ -402,12 +398,6 @@ public abstract class SQLDB extends AbstractDatabase {
     @Deprecated
     public FetchOperations fetch() {
         return fetchOps;
-    }
-
-    @Override
-    @Deprecated
-    public RemoveOperations remove() {
-        return removeOps;
     }
 
     @Override

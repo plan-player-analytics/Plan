@@ -21,7 +21,6 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
-import com.djrapitops.plan.system.database.databases.operation.RemoveOperations;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 import com.djrapitops.plan.system.database.databases.operation.SearchOperations;
 
@@ -58,9 +57,6 @@ public interface Database {
 
     @Deprecated
     FetchOperations fetch();
-
-    @Deprecated
-    RemoveOperations remove();
 
     @Deprecated
     SearchOperations search();
