@@ -75,9 +75,6 @@ public class AnalysisContainer extends DataContainer {
     private final Accordions accordions;
     private final AnalysisPluginsTabContentCreator pluginsTabContentCreator;
 
-    private static final Key<Map<UUID, String>> serverNames = new Key<>(new Type<Map<UUID, String>>() {
-    }, "SERVER_NAMES");
-
     public AnalysisContainer(
             ServerContainer serverContainer,
             String version,
@@ -148,9 +145,7 @@ public class AnalysisContainer extends DataContainer {
     }
 
     private void addServerProperties() {
-        putCachingSupplier(AnalysisKeys.SERVER_NAME, () ->
-                getUnsafe(serverNames).getOrDefault(serverContainer.getUnsafe(ServerKeys.SERVER_UUID), "Plan")
-        );
+        putCachingSupplier(AnalysisKeys.SERVER_NAME, () -> serverContainer.getValue(ServerKeys.NAME).orElse("Plan"));
 
         putRawData(AnalysisKeys.PLAYERS_MAX, serverProperties.getMaxPlayers());
         putRawData(AnalysisKeys.PLAYERS_ONLINE, serverProperties.getOnlinePlayers());
@@ -308,10 +303,12 @@ public class AnalysisContainer extends DataContainer {
 
     private void addSessionSuppliers() {
         Key<SessionAccordion> sessionAccordion = new Key<>(SessionAccordion.class, "SESSION_ACCORDION");
-        putCachingSupplier(serverNames, () -> dbSystem.getDatabase().fetch().getServerNames());
         putCachingSupplier(sessionAccordion, () -> accordions.serverSessionAccordion(
                 getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).all(),
-                getSupplier(serverNames),
+                () -> Collections.singletonMap(
+                        serverContainer.getUnsafe(ServerKeys.SERVER_UUID),
+                        serverContainer.getValue(ServerKeys.NAME).orElse("This server")
+                ),
                 () -> getUnsafe(AnalysisKeys.PLAYER_NAMES)
         ));
         putSupplier(AnalysisKeys.SESSION_ACCORDION_HTML, () -> getUnsafe(sessionAccordion).toHtml());
