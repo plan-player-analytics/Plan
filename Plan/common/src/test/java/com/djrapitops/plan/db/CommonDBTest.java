@@ -284,7 +284,7 @@ public abstract class CommonDBTest {
     @Test
     public void webUserIsRemoved() throws DBInitException {
         webUserIsRegistered();
-        db.getSecurityTable().removeUser(TestConstants.PLAYER_ONE_NAME);
+        db.executeTransaction(new RemoveWebUserTransaction(TestConstants.PLAYER_ONE_NAME));
         assertFalse(db.query(OptionalFetchQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME)).isPresent());
     }
 

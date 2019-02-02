@@ -57,17 +57,6 @@ public class SecurityTable extends Table {
                 .toString();
     }
 
-    public void removeUser(String user) {
-        String sql = "DELETE FROM " + tableName + " WHERE (" + USERNAME + "=?)";
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, user);
-            }
-        });
-    }
-
     public void addNewUser(WebUser info) {
         addNewUser(info.getName(), info.getSaltedPassHash(), info.getPermLevel());
     }

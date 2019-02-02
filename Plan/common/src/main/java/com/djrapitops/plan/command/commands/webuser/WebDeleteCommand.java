@@ -19,6 +19,7 @@ package com.djrapitops.plan.command.commands.webuser;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
+import com.djrapitops.plan.db.access.transactions.RemoveWebUserTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -84,7 +85,7 @@ public class WebDeleteCommand extends CommandNode {
                     sender.sendMessage("§c[Plan] User Doesn't exist.");
                     return;
                 }
-                db.remove().webUser(user);
+                db.executeTransaction(new RemoveWebUserTransaction(user));
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (Exception e) {
                 errorHandler.log(L.ERROR, this.getClass(), e);

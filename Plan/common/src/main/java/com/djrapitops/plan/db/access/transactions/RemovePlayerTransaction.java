@@ -57,12 +57,7 @@ public class RemovePlayerTransaction extends Transaction {
     }
 
     private void deleteWebUser(String username) {
-        execute(new ExecStatement("DELETE FROM " + SecurityTable.TABLE_NAME + " WHERE " + SecurityTable.USERNAME + "=?") {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, username);
-            }
-        });
+        executeOther(new RemoveWebUserTransaction(username));
     }
 
     private void deleteFromTable(String tableName) {
