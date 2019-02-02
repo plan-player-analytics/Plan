@@ -16,22 +16,17 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.db.DBType;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Insert;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
 /**
- * Table that is in charge of storing WebUser data.
- * <p>
- * Table Name: plan_security
+ * Table information about 'plan_security'
  *
  * @author Rsl1122
- * @see WebUser
  */
-public class SecurityTable extends Table {
+public class SecurityTable {
 
     public static final String TABLE_NAME = "plan_security";
 
@@ -41,8 +36,8 @@ public class SecurityTable extends Table {
 
     public static final String INSERT_STATEMENT = Insert.values(TABLE_NAME, USERNAME, SALT_PASSWORD_HASH, PERMISSION_LEVEL);
 
-    public SecurityTable(SQLDB db) {
-        super(TABLE_NAME, db);
+    private SecurityTable() {
+        /* Static information class */
     }
 
     public static String createTableSQL(DBType dbType) {

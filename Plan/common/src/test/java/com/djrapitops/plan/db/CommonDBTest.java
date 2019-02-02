@@ -519,7 +519,6 @@ public abstract class CommonDBTest {
     private void saveAllData() throws NoSuchAlgorithmException {
         NicknamesTable nicknamesTable = db.getNicknamesTable();
         TPSTable tpsTable = db.getTpsTable();
-        SecurityTable securityTable = db.getSecurityTable();
 
         saveUserOne();
         saveUserTwo();

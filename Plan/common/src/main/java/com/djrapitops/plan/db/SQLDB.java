@@ -80,7 +80,6 @@ public abstract class SQLDB extends AbstractDatabase {
     private final NicknamesTable nicknamesTable;
     private final SessionsTable sessionsTable;
     private final TPSTable tpsTable;
-    private final SecurityTable securityTable;
     private final WorldTimesTable worldTimesTable;
     private final ServerTable serverTable;
     private final SettingsTable settingsTable;
@@ -110,7 +109,6 @@ public abstract class SQLDB extends AbstractDatabase {
         this.errorHandler = errorHandler;
 
         serverTable = new ServerTable(this);
-        securityTable = new SecurityTable(this);
 
         tpsTable = new TPSTable(this);
 
@@ -367,11 +365,6 @@ public abstract class SQLDB extends AbstractDatabase {
     @Deprecated
     public TPSTable getTpsTable() {
         return tpsTable;
-    }
-
-    @Deprecated
-    public SecurityTable getSecurityTable() {
-        return securityTable;
     }
 
     @Deprecated
