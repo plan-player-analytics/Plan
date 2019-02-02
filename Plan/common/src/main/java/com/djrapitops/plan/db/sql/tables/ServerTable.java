@@ -181,29 +181,6 @@ public class ServerTable extends Table {
         });
     }
 
-    public Optional<UUID> getServerUUID(String serverName) {
-        String sql = Select.from(tableName,
-                SERVER_UUID)
-                .where(NAME + "=?")
-                .toString();
-
-        return query(new QueryStatement<Optional<UUID>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverName);
-            }
-
-            @Override
-            public Optional<UUID> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return Optional.of(UUID.fromString(set.getString(SERVER_UUID)));
-                } else {
-                    return Optional.empty();
-                }
-            }
-        });
-    }
-
     public Optional<Server> getServerInfo(UUID serverUUID) {
         String sql = Select.from(tableName, "*")
                 .where(SERVER_UUID + "=?")

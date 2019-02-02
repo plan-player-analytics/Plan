@@ -80,7 +80,8 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Optional<UUID> getServerUUID(String serverName) {
-        return serverTable.getServerUUID(serverName);
+        return db.query(OptionalFetchQueries.fetchMatchingServerIdentifier(serverName))
+                .map(Server::getUuid);
     }
 
     @Override
