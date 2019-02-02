@@ -17,7 +17,6 @@
 package com.djrapitops.plan.utilities.uuid;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plugin.api.utility.UUIDFetcher;
 import com.djrapitops.plugin.logging.L;
@@ -33,13 +32,11 @@ import java.util.UUID;
 @Singleton
 public class UUIDUtility {
 
-    private final DataCache dataCache;
     private final DBSystem dbSystem;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public UUIDUtility(DataCache dataCache, DBSystem dbSystem, ErrorHandler errorHandler) {
-        this.dataCache = dataCache;
+    public UUIDUtility(DBSystem dbSystem, ErrorHandler errorHandler) {
         this.dbSystem = dbSystem;
         this.errorHandler = errorHandler;
     }
@@ -52,11 +49,6 @@ public class UUIDUtility {
      */
     public UUID getUUIDOf(String playerName) {
         UUID uuid = getUUIDFromString(playerName);
-        if (uuid != null) {
-            return uuid;
-        }
-
-        uuid = dataCache.getUUIDof(playerName);
         if (uuid != null) {
             return uuid;
         }

@@ -45,7 +45,6 @@ public class DataCache extends SessionCache implements SubSystem {
 
     private final ErrorHandler errorHandler;
 
-    private final Map<String, UUID> uuids;
     private final Map<UUID, String> displayNames;
 
     @Inject
@@ -56,7 +55,6 @@ public class DataCache extends SessionCache implements SubSystem {
         super(dbSystem);
         this.errorHandler = errorHandler;
         displayNames = new HashMap<>();
-        uuids = new HashMap<>();
     }
 
     @Override
@@ -66,7 +64,6 @@ public class DataCache extends SessionCache implements SubSystem {
 
     @Override
     public void disable() {
-        uuids.clear();
         displayNames.clear();
     }
 
@@ -104,9 +101,5 @@ public class DataCache extends SessionCache implements SubSystem {
             }
         }
         return cached;
-    }
-
-    public UUID getUUIDof(String playerName) {
-        return uuids.get(playerName);
     }
 }
