@@ -160,35 +160,6 @@ public class ServerTable extends Table {
         });
     }
 
-    /**
-     * Returns server Name for a matching UUID
-     *
-     * @param serverUUID UUID of the server.
-     * @return Name or empty optional.
-     */
-    public Optional<String> getServerName(UUID serverUUID) {
-        String sql = Select.from(tableName,
-                NAME)
-                .where(SERVER_UUID + "=?")
-                .toString();
-
-        return query(new QueryStatement<Optional<String>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public Optional<String> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return Optional.of(set.getString(NAME));
-                } else {
-                    return Optional.empty();
-                }
-            }
-        });
-    }
-
     public Map<UUID, String> getServerNames() {
         String sql = Select.from(tableName,
                 SERVER_UUID, NAME)
