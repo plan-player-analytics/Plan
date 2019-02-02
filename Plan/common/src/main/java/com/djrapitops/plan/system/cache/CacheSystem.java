@@ -30,18 +30,18 @@ import javax.inject.Singleton;
 @Singleton
 public class CacheSystem implements SubSystem {
 
-    private final DataCache dataCache;
+    private final NicknameCache nicknameCache;
     private final GeolocationCache geolocationCache;
 
     @Inject
-    public CacheSystem(DataCache dataCache, GeolocationCache geolocationCache) {
-        this.dataCache = dataCache;
+    public CacheSystem(NicknameCache nicknameCache, GeolocationCache geolocationCache) {
+        this.nicknameCache = nicknameCache;
         this.geolocationCache = geolocationCache;
     }
 
     @Override
     public void enable() throws EnableException {
-        dataCache.enable();
+        nicknameCache.enable();
         geolocationCache.enable();
     }
 
@@ -50,8 +50,8 @@ public class CacheSystem implements SubSystem {
         geolocationCache.clearCache();
     }
 
-    public DataCache getDataCache() {
-        return dataCache;
+    public NicknameCache getNicknameCache() {
+        return nicknameCache;
     }
 
     public GeolocationCache getGeolocationCache() {

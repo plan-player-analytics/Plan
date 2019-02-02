@@ -19,13 +19,11 @@ package com.djrapitops.plan.db.access.queries;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.data.container.UserInfo;
+import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.access.HasMoreThanZeroQueryStatement;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.db.sql.tables.GeoInfoTable;
-import com.djrapitops.plan.db.sql.tables.PingTable;
-import com.djrapitops.plan.db.sql.tables.UserInfoTable;
-import com.djrapitops.plan.db.sql.tables.UsersTable;
+import com.djrapitops.plan.db.sql.tables.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -196,6 +194,39 @@ public class PlayerFetchQueries {
                 }
 
                 return pings;
+            }
+        };
+    }
+
+    public static Query<Optional<Nickname>> playersLastSeenNickname(UUID playerUUID, UUID serverUUID) {
+        String subQuery = "SELECT MAX(" + NicknamesTable.LAST_USED + ") FROM " + NicknamesTable.TABLE_NAME +
+                " WHERE " + NicknamesTable.USER_UUID + "=?" +
+                " AND " + NicknamesTable.SERVER_UUID + "=?" +
+                " GROUP BY " + NicknamesTable.USER_UUID;
+        String sql = "SELECT " + NicknamesTable.LAST_USED + ", " +
+                NicknamesTable.NICKNAME + " FROM " + NicknamesTable.TABLE_NAME +
+                " WHERE " + NicknamesTable.USER_UUID + "=?" +
+                " AND " + NicknamesTable.SERVER_UUID + "=?" +
+                " AND " + NicknamesTable.LAST_USED + "=(" + subQuery + ")";
+        return new QueryStatement<Optional<Nickname>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+                statement.setString(2, serverUUID.toString());
+                statement.setString(3, playerUUID.toString());
+                statement.setString(4, serverUUID.toString());
+            }
+
+            @Override
+            public Optional<Nickname> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(new Nickname(
+                            set.getString(NicknamesTable.NICKNAME),
+                            set.getLong(NicknamesTable.LAST_USED),
+                            serverUUID
+                    ));
+                }
+                return Optional.empty();
             }
         };
     }

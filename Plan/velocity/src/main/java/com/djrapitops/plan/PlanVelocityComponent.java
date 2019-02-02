@@ -17,7 +17,10 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.command.PlanProxyCommand;
-import com.djrapitops.plan.modules.*;
+import com.djrapitops.plan.modules.APFModule;
+import com.djrapitops.plan.modules.FilesModule;
+import com.djrapitops.plan.modules.ProxySuperClassBindingModule;
+import com.djrapitops.plan.modules.SystemObjectProvidingModule;
 import com.djrapitops.plan.modules.velocity.VelocityCommandModule;
 import com.djrapitops.plan.modules.velocity.VelocityPlanModule;
 import com.djrapitops.plan.modules.velocity.VelocityServerPropertiesModule;
@@ -38,7 +41,6 @@ import javax.inject.Singleton;
 @Component(modules = {
         VelocityPlanModule.class,
         VelocityCommandModule.class,
-        SuperClassBindingModule.class,
         SystemObjectProvidingModule.class,
         APFModule.class,
         FilesModule.class,

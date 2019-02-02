@@ -20,6 +20,8 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.system.database.DBSystem;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -30,26 +32,28 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Singleton
 public class SessionCache {
 
-    private static final Map<UUID, Session> activeSessions = new HashMap<>();
+    private static final Map<UUID, Session> ACTIVE_SESSIONS = new HashMap<>();
 
     protected final DBSystem dbSystem;
 
+    @Inject
     public SessionCache(DBSystem dbSystem) {
         this.dbSystem = dbSystem;
     }
 
     public static Map<UUID, Session> getActiveSessions() {
-        return activeSessions;
+        return ACTIVE_SESSIONS;
     }
 
     public static void clear() {
-        activeSessions.clear();
+        ACTIVE_SESSIONS.clear();
     }
 
     public static void refreshActiveSessionsState() {
-        for (Session session : activeSessions.values()) {
+        for (Session session : ACTIVE_SESSIONS.values()) {
             session.getUnsafe(SessionKeys.WORLD_TIMES).updateState(System.currentTimeMillis());
         }
     }
@@ -61,14 +65,14 @@ public class SessionCache {
      * @return Optional with the session inside it if found.
      */
     public static Optional<Session> getCachedSession(UUID uuid) {
-        return Optional.ofNullable(activeSessions.get(uuid));
+        return Optional.ofNullable(ACTIVE_SESSIONS.get(uuid));
     }
 
     public void cacheSession(UUID uuid, Session session) {
         if (getCachedSession(uuid).isPresent()) {
             endSession(uuid, System.currentTimeMillis());
         }
-        activeSessions.put(uuid, session);
+        ACTIVE_SESSIONS.put(uuid, session);
     }
 
     /**
@@ -79,7 +83,7 @@ public class SessionCache {
      * @throws com.djrapitops.plan.api.exceptions.database.DBOpException If saving failed.
      */
     public Optional<Session> endSession(UUID uuid, long time) {
-        Session session = activeSessions.get(uuid);
+        Session session = ACTIVE_SESSIONS.get(uuid);
         if (session == null || session.getUnsafe(SessionKeys.START) > time) {
             return Optional.empty();
         }
@@ -95,6 +99,6 @@ public class SessionCache {
     }
 
     protected void removeSessionFromCache(UUID uuid) {
-        activeSessions.remove(uuid);
+        ACTIVE_SESSIONS.remove(uuid);
     }
 }

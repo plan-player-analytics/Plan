@@ -17,7 +17,8 @@
 package com.djrapitops.plan.system.processing.processors.player;
 
 import com.djrapitops.plan.data.store.objects.Nickname;
-import com.djrapitops.plan.system.cache.DataCache;
+import com.djrapitops.plan.system.cache.NicknameCache;
+import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import dagger.Lazy;
@@ -37,17 +38,20 @@ public class PlayerProcessors {
 
     private final Lazy<ServerInfo> serverInfo;
     private final Lazy<DBSystem> dbSystem;
-    private final Lazy<DataCache> dataCache;
+    private final Lazy<SessionCache> sessionCache;
+    private final Lazy<NicknameCache> nicknameCache;
 
     @Inject
     public PlayerProcessors(
             Lazy<ServerInfo> serverInfo,
             Lazy<DBSystem> dbSystem,
-            Lazy<DataCache> dataCache
+            Lazy<SessionCache> sessionCache,
+            Lazy<NicknameCache> nicknameCache
     ) {
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
-        this.dataCache = dataCache;
+        this.sessionCache = sessionCache;
+        this.nicknameCache = nicknameCache;
     }
 
     public BanAndOpProcessor banAndOpProcessor(UUID uuid, BooleanSupplier banned, boolean op) {
@@ -55,7 +59,7 @@ public class PlayerProcessors {
     }
 
     public EndSessionProcessor endSessionProcessor(UUID uuid, long time) {
-        return new EndSessionProcessor(uuid, time, dataCache.get());
+        return new EndSessionProcessor(uuid, time, sessionCache.get());
     }
 
     public KickProcessor kickProcessor(UUID uuid) {
@@ -64,6 +68,6 @@ public class PlayerProcessors {
 
     public NameProcessor nameProcessor(UUID uuid, String displayName) {
         Nickname nickname = new Nickname(displayName, System.currentTimeMillis(), serverInfo.get().getServerUUID());
-        return new NameProcessor(uuid, nickname, dbSystem.get().getDatabase(), dataCache.get());
+        return new NameProcessor(uuid, nickname, dbSystem.get().getDatabase(), nicknameCache.get());
     }
 }

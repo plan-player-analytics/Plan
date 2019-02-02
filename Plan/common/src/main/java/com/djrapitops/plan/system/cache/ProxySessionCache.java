@@ -18,7 +18,6 @@ package com.djrapitops.plan.system.cache;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -26,18 +25,18 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Proxy server specific DataCache.
+ * Proxy server specific SessionCache.
  * <p>
  * Used for overriding {@link SessionCache#endSession(UUID, long)}.
  *
  * @author Rsl1122
  */
 @Singleton
-public class ProxyDataCache extends DataCache {
+public class ProxySessionCache extends SessionCache {
 
     @Inject
-    public ProxyDataCache(DBSystem dbSystem, ErrorHandler errorHandler) {
-        super(dbSystem, errorHandler);
+    public ProxySessionCache(DBSystem dbSystem) {
+        super(dbSystem);
     }
 
     @Override

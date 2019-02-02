@@ -22,6 +22,7 @@ import com.djrapitops.plan.db.access.transactions.events.GeoInfoStoreTransaction
 import com.djrapitops.plan.db.access.transactions.events.PlayerServerRegisterTransaction;
 import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.system.cache.GeolocationCache;
+import com.djrapitops.plan.system.cache.NicknameCache;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -32,7 +33,6 @@ import com.djrapitops.plan.system.settings.paths.DataGatheringSettings;
 import com.djrapitops.plan.system.status.Status;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.plugin.task.RunnableFactory;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
@@ -63,9 +63,9 @@ public class SpongePlayerListener {
     private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
     private final GeolocationCache geolocationCache;
+    private final NicknameCache nicknameCache;
     private final SessionCache sessionCache;
     private final Status status;
-    private final RunnableFactory runnableFactory;
     private final ErrorHandler errorHandler;
 
     @Inject
@@ -76,9 +76,9 @@ public class SpongePlayerListener {
             ServerInfo serverInfo,
             DBSystem dbSystem,
             GeolocationCache geolocationCache,
+            NicknameCache nicknameCache,
             SessionCache sessionCache,
             Status status,
-            RunnableFactory runnableFactory,
             ErrorHandler errorHandler
     ) {
         this.config = config;
@@ -87,9 +87,9 @@ public class SpongePlayerListener {
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
         this.geolocationCache = geolocationCache;
+        this.nicknameCache = nicknameCache;
         this.sessionCache = sessionCache;
         this.status = status;
-        this.runnableFactory = runnableFactory;
         this.errorHandler = errorHandler;
     }
 
@@ -189,6 +189,8 @@ public class SpongePlayerListener {
         UUID uuid = player.getUniqueId();
 
         SpongeAFKListener.AFK_TRACKER.loggedOut(uuid, time);
+
+        nicknameCache.removeDisplayName(uuid);
 
         boolean banned = isBanned(player.getProfile());
         processing.submit(processors.player().banAndOpProcessor(uuid, () -> banned, false));
