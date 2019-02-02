@@ -212,16 +212,6 @@ public class SessionsTable extends Table {
     }
 
     /**
-     * Used to get the Total Playtime of a Server.
-     *
-     * @param serverUUID UUID of the server.
-     * @return Milliseconds played on the server. 0 if server not found.
-     */
-    public long getPlaytimeOfServer(UUID serverUUID) {
-        return getPlaytimeOfServer(serverUUID, 0L);
-    }
-
-    /**
      * Used to get total Session count of a Player on a server after a given epoch ms.
      *
      * @param uuid       UUID of the player.
