@@ -255,17 +255,6 @@ public class SessionsTable extends Table {
         });
     }
 
-    /**
-     * Used to get total Session count of a Player on THIS server after a given epoch ms.
-     *
-     * @param uuid      UUID of the player.
-     * @param afterDate Epoch ms (Session count after this date is calculated)
-     * @return How many sessions player has. 0 if player or server not found.
-     */
-    public int getSessionCount(UUID uuid, long afterDate) {
-        return getSessionCount(uuid, getServerUUID(), afterDate);
-    }
-
     public Map<UUID, List<Session>> getSessionInfoOfServer(UUID serverUUID) {
         String sql = "SELECT " +
                 tableName + "." + ID + ", " +
