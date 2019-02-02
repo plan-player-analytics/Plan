@@ -181,32 +181,6 @@ public class ServerTable extends Table {
         });
     }
 
-    public Optional<Server> getServerInfo(UUID serverUUID) {
-        String sql = Select.from(tableName, "*")
-                .where(SERVER_UUID + "=?")
-                .toString();
-
-        return query(new QueryStatement<Optional<Server>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public Optional<Server> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return Optional.of(new Server(
-                            set.getInt(SERVER_ID),
-                            UUID.fromString(set.getString(SERVER_UUID)),
-                            set.getString(NAME),
-                            set.getString(WEB_ADDRESS),
-                            set.getInt(MAX_PLAYERS)));
-                }
-                return Optional.empty();
-            }
-        });
-    }
-
     public void setAsUninstalled(UUID serverUUID) {
         String sql = "UPDATE " + tableName + " SET " + INSTALLED + "=? WHERE " + SERVER_UUID + "=?";
 
