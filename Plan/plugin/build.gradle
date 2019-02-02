@@ -20,3 +20,15 @@ shadowJar {
     baseName = "Plan"
     classifier = null
 }
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'com.djrapitops'
+            artifactId = 'Plan-plugin'
+            version = project.version
+
+            artifact shadowJar
+        }
+    }
+}

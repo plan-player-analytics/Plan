@@ -14,6 +14,19 @@ allprojects {
     group "com.djrapitops"
     version "4.6.2-SNAPSHOT"
 
+    configurations {
+        annotationProcessor
+        testAnnotationProcessor
+    }
+
+    compileJava {
+        options.annotationProcessorPath = configurations.annotationProcessor
+    }
+
+    compileTestJava {
+        options.annotationProcessorPath = configurations.testAnnotationProcessor
+    }
+
     test {
 //        useJUnitPlatform()
         testLogging {
@@ -31,7 +44,7 @@ allprojects {
 subprojects {
     // Build plugins
     apply plugin: "java"
-    apply plugin: "maven"
+    apply plugin: "maven-publish"
     apply plugin: "net.ltgt.apt"      // Annotation processing plugin
     apply plugin: "net.ltgt.apt-idea" // Annotation processing IntelliJ IDEA configuration plugin
     apply plugin: "com.github.johnrengelman.shadow"
