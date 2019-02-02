@@ -82,52 +82,6 @@ public class NicknamesTable extends Table {
                 .toString();
     }
 
-    /**
-     * Get nicknames of the user on a server.
-     *
-     * @param uuid       UUID of the Player
-     * @param serverUUID UUID of the server
-     * @return The nicknames of the User
-     */
-    public List<String> getNicknames(UUID uuid, UUID serverUUID) {
-        String sql = "SELECT " + NICKNAME + " FROM " + tableName +
-                " WHERE (" + USER_UUID + "=?)" +
-                " AND " + SERVER_UUID + "=?";
-
-        return query(new QueryStatement<List<String>>(sql, 1000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-                statement.setString(2, serverUUID.toString());
-            }
-
-            @Override
-            public List<String> processResults(ResultSet set) throws SQLException {
-                List<String> nicknames = new ArrayList<>();
-                while (set.next()) {
-                    String nickname = set.getString(NICKNAME);
-                    if (nickname.isEmpty()) {
-                        continue;
-                    }
-                    if (!nicknames.contains(nickname)) {
-                        nicknames.add(nickname);
-                    }
-                }
-                return nicknames;
-            }
-        });
-    }
-
-    /**
-     * Get nicknames of the user on THIS server.
-     *
-     * @param uuid UUID of the Player
-     * @return The nicknames of the User
-     */
-    public List<String> getNicknames(UUID uuid) {
-        return getNicknames(uuid, getServerUUID());
-    }
-
     public void saveUserName(UUID uuid, Nickname name) {
         List<Nickname> saved = getNicknameInformation(uuid);
         if (saved.contains(name)) {
@@ -166,7 +120,7 @@ public class NicknamesTable extends Table {
                 NICKNAME + ", " +
                 LAST_USED + ", " +
                 SERVER_UUID +
-                " FROM " + tableName +
+                " FROM " + TABLE_NAME +
                 " WHERE (" + USER_UUID + "=?)";
 
         return query(new QueryStatement<List<Nickname>>(sql, 5000) {

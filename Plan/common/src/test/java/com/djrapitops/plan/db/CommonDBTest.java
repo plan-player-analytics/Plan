@@ -488,7 +488,7 @@ public abstract class CommonDBTest {
 
         assertFalse(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
         assertFalse(db.query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)));
-        assertTrue(nicknamesTable.getNicknames(playerUUID).isEmpty());
+        assertTrue(nicknamesTable.getNicknameInformation(playerUUID).isEmpty());
         assertTrue(db.query(PlayerFetchQueries.playerGeoInfo(playerUUID)).isEmpty());
         assertTrue(sessionsTable.getSessions(playerUUID).isEmpty());
     }
