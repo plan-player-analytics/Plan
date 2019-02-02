@@ -355,7 +355,7 @@ public abstract class CommonDBTest {
 
         commitTest();
 
-        assertEquals(expectedLength, sessionsTable.getPlaytime(playerUUID));
+        assertEquals(expectedLength, sessionsTable.getPlaytime(playerUUID, serverUUID, 0L));
         assertEquals(0L, sessionsTable.getPlaytime(playerUUID, serverUUID, 30000L));
 
         long playtimeOfServer = sessionsTable.getPlaytimeOfServer(serverUUID);
