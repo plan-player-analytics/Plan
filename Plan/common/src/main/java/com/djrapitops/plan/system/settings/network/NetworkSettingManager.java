@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.settings.network;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
@@ -39,8 +40,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -166,7 +167,7 @@ public class NetworkSettingManager implements SubSystem {
 
     private void updateConfigFromDBIfUpdated() {
         Database database = dbSystem.getDatabase();
-        List<UUID> serverUUIDs = database.fetch().getServerUUIDs();
+        Set<UUID> serverUUIDs = database.query(LargeFetchQueries.fetchPlanServerInformation()).keySet();
         // Remove the proxy server from the list
         serverUUIDs.remove(serverInfo.getServerUUID());
 

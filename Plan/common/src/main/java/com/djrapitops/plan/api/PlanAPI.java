@@ -96,7 +96,5 @@ public interface PlanAPI {
      *
      * @return All Plan server UUIDs.
      */
-    default Collection<UUID> fetchServerUUIDs() {
-        return fetchFromPlanDB().getServerUUIDs();
-    }
+    Collection<UUID> fetchServerUUIDs();
 }

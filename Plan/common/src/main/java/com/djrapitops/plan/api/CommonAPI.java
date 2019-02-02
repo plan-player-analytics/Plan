@@ -20,11 +20,13 @@ import com.djrapitops.plan.api.data.PlayerContainer;
 import com.djrapitops.plan.api.data.ServerContainer;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.access.Query;
+import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -80,5 +82,10 @@ public abstract class CommonAPI implements PlanAPI {
     @Override
     public ServerContainer fetchServerContainer(UUID serverUUID) {
         return new ServerContainer(queryDB(ContainerFetchQueries.fetchServerContainer(serverUUID)));
+    }
+
+    @Override
+    public Collection<UUID> fetchServerUUIDs() {
+        return queryDB(LargeFetchQueries.fetchPlanServerInformation()).keySet();
     }
 }

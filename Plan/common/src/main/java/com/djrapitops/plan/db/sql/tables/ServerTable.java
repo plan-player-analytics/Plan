@@ -28,7 +28,10 @@ import com.djrapitops.plugin.utilities.Verify;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Table for managing multiple server's data in the database.
@@ -174,22 +177,6 @@ public class ServerTable extends Table {
                     names.put(serverUUID, set.getString(NAME));
                 }
                 return names;
-            }
-        });
-    }
-
-    public List<UUID> getServerUUIDs() {
-        String sql = Select.from(tableName, SERVER_UUID)
-                .toString();
-
-        return query(new QueryAllStatement<List<UUID>>(sql) {
-            @Override
-            public List<UUID> processResults(ResultSet set) throws SQLException {
-                List<UUID> uuids = new ArrayList<>();
-                while (set.next()) {
-                    uuids.add(UUID.fromString(set.getString(SERVER_UUID)));
-                }
-                return uuids;
             }
         });
     }

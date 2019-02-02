@@ -169,7 +169,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public List<UUID> getServerUUIDs() {
-        return serverTable.getServerUUIDs();
+        return new ArrayList<>(db.query(LargeFetchQueries.fetchPlanServerInformation()).keySet());
     }
 
     @Override
