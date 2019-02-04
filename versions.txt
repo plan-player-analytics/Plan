@@ -1,3 +1,4 @@
+REL|4.6.2|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.6.2-REL/Plan-4.6.2.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.6.2-REL
 REL|4.6.1|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.6.1-REL/Plan-4.6.1.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.6.1-REL
 REL|4.6.0|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.6.0-REL/Plan-4.6.0.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.6.0-REL
 DEV|4.5.2-b4|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.6.0-DEV4/Plan-4.5.2-b4.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.6.0-DEV4
