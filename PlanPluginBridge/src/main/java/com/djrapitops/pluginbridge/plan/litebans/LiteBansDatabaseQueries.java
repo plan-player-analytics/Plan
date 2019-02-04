@@ -45,13 +45,13 @@ public class LiteBansDatabaseQueries extends Table {
 
     private final String selectSQL;
 
-    public LiteBansDatabaseQueries(String tablePrefix) {
+    public LiteBansDatabaseQueries() {
         super("litebans", null);
         database = Database.get();
-        banTable = tablePrefix + "bans";
-        mutesTable = tablePrefix + "mutes";
-        warningsTable = tablePrefix + "warnings";
-        kicksTable = tablePrefix + "kicks";
+        banTable = "{bans}";
+        mutesTable = "{mutes}";
+        warningsTable = "{warnings}";
+        kicksTable = "{kicks}";
         selectSQL = "SELECT uuid, reason, banned_by_name, until, active, time FROM ";
     }
 

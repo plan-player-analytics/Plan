@@ -25,8 +25,6 @@ import litebans.api.Database;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import static github.scarsz.discordsrv.util.PluginUtil.getPlugin;
-
 /**
  * A Class responsible for hooking to LiteBans and registering data
  * sources.
@@ -54,8 +52,7 @@ public class LiteBansBukkitHook extends Hook {
 
     public void hook(HookHandler handler) throws NoClassDefFoundError {
         if (enabled) {
-            String tablePrefix = getPlugin("LiteBans").getConfig().getString("sql.table_prefix");
-            LiteBansDatabaseQueries db = new LiteBansDatabaseQueries(tablePrefix);
+            LiteBansDatabaseQueries db = new LiteBansDatabaseQueries();
             handler.addPluginDataSource(new LiteBansData(db, timestampFormatter));
         }
     }
