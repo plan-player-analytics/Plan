@@ -1542,6 +1542,7 @@
                 if (slideIndex < 0) {
                     slideIndex = max
                 }
+                window.scrollTo(0, 0);
                 window.sessionStorage.setItem("AnalysisSlideIndex", slideIndex);
                 var value = slideIndex * percent;
                 x.style.transition = "0.5s";
