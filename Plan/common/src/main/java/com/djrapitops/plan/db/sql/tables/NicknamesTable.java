@@ -19,7 +19,6 @@ package com.djrapitops.plan.db.sql.tables;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.NicknameLastSeenPatch;
 import com.djrapitops.plan.db.patches.NicknamesOptimizationPatch;
@@ -80,39 +79,6 @@ public class NicknamesTable extends Table {
                 .column(SERVER_UUID, Sql.varchar(36)).notNull()
                 .column(LAST_USED, Sql.LONG).notNull()
                 .toString();
-    }
-
-    public void saveUserName(UUID uuid, Nickname name) {
-        List<Nickname> saved = getNicknameInformation(uuid);
-        if (saved.contains(name)) {
-            updateNickname(uuid, name);
-        } else {
-            insertNickname(uuid, name);
-        }
-    }
-
-    private void updateNickname(UUID uuid, Nickname name) {
-        execute(new ExecStatement(UPDATE_STATEMENT) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, name.getDate());
-                statement.setString(2, name.getName());
-                statement.setString(3, uuid.toString());
-                statement.setString(4, getServerUUID().toString());
-            }
-        });
-    }
-
-    private void insertNickname(UUID uuid, Nickname name) {
-        execute(new ExecStatement(INSERT_STATEMENT) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-                statement.setString(2, getServerUUID().toString());
-                statement.setString(3, name.getName());
-                statement.setLong(4, name.getDate());
-            }
-        });
     }
 
     public List<Nickname> getNicknameInformation(UUID uuid) {

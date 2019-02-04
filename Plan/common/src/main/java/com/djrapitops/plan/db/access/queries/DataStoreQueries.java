@@ -21,6 +21,7 @@ import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
+import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.ExecStatement;
@@ -284,6 +285,46 @@ public class DataStoreQueries {
                 statement.setDouble(7, tps.getEntityCount());
                 statement.setDouble(8, tps.getChunksLoaded());
                 statement.setLong(9, tps.getFreeDiskSpace());
+            }
+        };
+    }
+
+    /**
+     * Store nickname information of a player on a server.
+     *
+     * @param playerUUID UUID of the player.
+     * @param nickname   Nickname information.
+     * @return Executable, use inside a {@link com.djrapitops.plan.db.access.transactions.Transaction}
+     */
+    public static Executable storePlayerNickname(UUID playerUUID, Nickname nickname) {
+        return connection -> {
+            if (!updatePlayerNickname(playerUUID, nickname).execute(connection)) {
+                insertPlayerNickname(playerUUID, nickname).execute(connection);
+            }
+            return false;
+        };
+    }
+
+    private static Executable updatePlayerNickname(UUID playerUUID, Nickname nickname) {
+        return new ExecStatement(NicknamesTable.UPDATE_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, nickname.getDate());
+                statement.setString(2, nickname.getName());
+                statement.setString(3, playerUUID.toString());
+                statement.setString(4, nickname.getServerUUID().toString());
+            }
+        };
+    }
+
+    private static Executable insertPlayerNickname(UUID playerUUID, Nickname nickname) {
+        return new ExecStatement(NicknamesTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+                statement.setString(2, nickname.getServerUUID().toString());
+                statement.setString(3, nickname.getName());
+                statement.setLong(4, nickname.getDate());
             }
         };
     }

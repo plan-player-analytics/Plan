@@ -76,9 +76,6 @@ public interface SaveOperations {
     void playerWasKicked(UUID uuid);
 
     @Deprecated
-    void playerDisplayName(UUID uuid, Nickname nickname);
-
-    @Deprecated
     void session(UUID uuid, Session session);
 
     @Deprecated

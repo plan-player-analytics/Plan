@@ -255,8 +255,8 @@ public abstract class CommonDBTest {
         NicknamesTable nickTable = db.getNicknamesTable();
 
         Nickname expected = new Nickname("TestNickname", System.currentTimeMillis(), serverUUID);
-        nickTable.saveUserName(playerUUID, expected);
-        nickTable.saveUserName(playerUUID, expected);
+        db.executeTransaction(new NicknameStoreTransaction(playerUUID, expected));
+        db.executeTransaction(new NicknameStoreTransaction(playerUUID, expected));
         commitTest();
 
         List<Nickname> nicknames = nickTable.getNicknameInformation(playerUUID);
@@ -479,7 +479,7 @@ public abstract class CommonDBTest {
         session.setPlayerKills(createKills());
 
         execute(DataStoreQueries.storeSession(session));
-        nicknamesTable.saveUserName(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID));
+        db.executeTransaction(new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID)));
         saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L, "3"));
 
         assertTrue(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
@@ -517,9 +517,6 @@ public abstract class CommonDBTest {
     }
 
     private void saveAllData() throws NoSuchAlgorithmException {
-        NicknamesTable nicknamesTable = db.getNicknamesTable();
-        TPSTable tpsTable = db.getTpsTable();
-
         saveUserOne();
         saveUserTwo();
 
@@ -531,7 +528,9 @@ public abstract class CommonDBTest {
         session.setPlayerKills(createKills());
 
         execute(DataStoreQueries.storeSession(session));
-        nicknamesTable.saveUserName(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID));
+        db.executeTransaction(
+                new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID))
+        );
         saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L,
                 new SHA256Hash("1.2.3.4").create()));
 
@@ -940,8 +939,8 @@ public abstract class CommonDBTest {
         db.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 1L, "Not random"));
 
         String nickname = "2" + RandomData.randomString(10);
-        db.getNicknamesTable().saveUserName(uuid, new Nickname(nickname, System.currentTimeMillis(), serverUUID));
-        db.getNicknamesTable().saveUserName(playerUUID, new Nickname("No nick", System.currentTimeMillis(), serverUUID));
+        db.executeTransaction(new NicknameStoreTransaction(uuid, new Nickname(nickname, System.currentTimeMillis(), serverUUID)));
+        db.executeTransaction(new NicknameStoreTransaction(playerUUID, new Nickname("No nick", System.currentTimeMillis(), serverUUID)));
 
         String search = "2";
 

@@ -17,8 +17,10 @@
 package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.transactions.events.GeoInfoStoreTransaction;
+import com.djrapitops.plan.db.access.transactions.events.NicknameStoreTransaction;
 import com.djrapitops.plan.db.access.transactions.events.PlayerServerRegisterTransaction;
 import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.system.cache.GeolocationCache;
@@ -165,8 +167,15 @@ public class PlayerOnlineListener implements Listener {
 
         database.executeTransaction(new PlayerServerRegisterTransaction(uuid, player::getFirstPlayed, playerName, serverUUID));
         processing.submitCritical(() -> sessionCache.cacheSession(uuid, new Session(uuid, serverUUID, time, world, gm)));
-        processing.submitNonCritical(processors.player().nameProcessor(uuid, displayName));
+
+        if (!displayName.equals(nicknameCache.getDisplayName(uuid))) {
+            database.executeTransaction(
+                    new NicknameStoreTransaction(uuid, new Nickname(displayName, time, serverUUID))
+            );
+        }
+
         processing.submitNonCritical(processors.info().playerPageUpdateProcessor(uuid));
+
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

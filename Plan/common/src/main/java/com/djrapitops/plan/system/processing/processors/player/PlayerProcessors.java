@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.system.processing.processors.player;
 
-import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.cache.NicknameCache;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -64,10 +63,5 @@ public class PlayerProcessors {
 
     public KickProcessor kickProcessor(UUID uuid) {
         return new KickProcessor(uuid, dbSystem.get().getDatabase());
-    }
-
-    public NameProcessor nameProcessor(UUID uuid, String displayName) {
-        Nickname nickname = new Nickname(displayName, System.currentTimeMillis(), serverInfo.get().getServerUUID());
-        return new NameProcessor(uuid, nickname, dbSystem.get().getDatabase(), nicknameCache.get());
     }
 }
