@@ -126,7 +126,7 @@ public class NetworkContainer extends DataContainer {
                         "<h2><i class=\"col-light-green fa fa-servers\"></i> No Servers</h2>" +
                         "</div><div class=\"body\">" +
                         "<p>No Bukkit/Sponge servers connected to Plan.</p>" +
-                        "</div></div></div></div>");
+                        "</div></div></div></div></div></div>");
             }
             return serverBoxes.toString();
         });
