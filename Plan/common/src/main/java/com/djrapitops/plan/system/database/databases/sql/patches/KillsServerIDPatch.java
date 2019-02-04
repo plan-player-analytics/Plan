@@ -39,7 +39,7 @@ public class KillsServerIDPatch extends Patch {
 
         // KillsOptimizationPatch makes this patch incompatible with newer patch versions.
         return hasColumn(tableName, KillsTable.Col.SERVER_UUID.get())
-                || hasColumn(tableName, columnName) && allValuesHaveServerID(tableName, columnName);
+                || (hasColumn(tableName, columnName) && allValuesHaveServerID(tableName, columnName));
     }
 
     private Boolean allValuesHaveServerID(String tableName, String columnName) {
@@ -59,6 +59,10 @@ public class KillsServerIDPatch extends Patch {
 
     @Override
     protected void applyPatch() {
+        if (hasColumn(KillsTable.TABLE_NAME, KillsTable.Col.SERVER_UUID.get())) {
+            return;
+        }
+
         addColumn(KillsTable.TABLE_NAME, "server_id integer NOT NULL DEFAULT 0");
 
         Map<Integer, Integer> sessionIDServerIDRelation = db.getSessionsTable().getIDServerIDRelation();
