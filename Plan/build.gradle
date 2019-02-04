@@ -12,7 +12,7 @@ allprojects {
     wrapper.gradleVersion = "5.0"
 
     group "com.djrapitops"
-    version "4.6.1-SNAPSHOT"
+    version "4.6.2-SNAPSHOT"
 
     test {
         testLogging {
@@ -46,7 +46,7 @@ subprojects {
     ext.daggerCompilerVersion = "2.21"
 
     ext.abstractPluginFrameworkVersion = "3.4.1"
-    ext.planPluginBridgeVersion = "4.6.1"
+    ext.planPluginBridgeVersion = "4.6.2"
 
     ext.bukkitVersion = "1.12.2-R0.1-SNAPSHOT"
     ext.spigotVersion = "1.12.2-R0.1-SNAPSHOT"
