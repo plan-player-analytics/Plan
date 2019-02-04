@@ -114,7 +114,7 @@ subprojects {
 
         // Testing dependencies required by Plan
         testCompile "org.xerial:sqlite-jdbc:3.25.2"     // SQLite
-        testCompile "mysql:mysql-connector-java:8.0.14" // MySQL
+        testCompile "mysql:mysql-connector-java:8.0.15" // MySQL
     }
 
 
