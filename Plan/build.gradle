@@ -107,7 +107,7 @@ subprojects {
         testCompile "org.junit.vintage:junit-vintage-engine:5.3.2"   // JUnit 4 compatibility for JUnit 5
         testCompile "org.junit.jupiter:junit-jupiter-params:5.3.2"   // JUnit 5, parameterized tests
         testCompile "org.junit-pioneer:junit-pioneer:0.3.0"          // TempDirectory TODO REMOVE W/ JUNIT 5.4
-        testCompile "org.mockito:mockito-core:2.23.4"                // Mockito Core
+        testCompile "org.mockito:mockito-core:2.24.0"                // Mockito Core
         testCompile "org.mockito:mockito-junit-jupiter:2.23.4"       // Mockito JUnit 5 Extension
         testCompile "org.seleniumhq.selenium:selenium-java:3.141.59" // Selenium (Browser tests)
         testCompile "com.jayway.awaitility:awaitility:1.7.0"         // Awaitility (Concurrent wait conditions)
