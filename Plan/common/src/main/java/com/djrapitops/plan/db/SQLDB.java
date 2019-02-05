@@ -77,7 +77,6 @@ public abstract class SQLDB extends AbstractDatabase {
     private final UsersTable usersTable;
     private final UserInfoTable userInfoTable;
     private final KillsTable killsTable;
-    private final NicknamesTable nicknamesTable;
     private final SessionsTable sessionsTable;
     private final TPSTable tpsTable;
     private final WorldTimesTable worldTimesTable;
@@ -114,7 +113,6 @@ public abstract class SQLDB extends AbstractDatabase {
 
         usersTable = new UsersTable(this);
         userInfoTable = new UserInfoTable(this);
-        nicknamesTable = new NicknamesTable(this);
         sessionsTable = new SessionsTable(this);
         killsTable = new KillsTable(this);
         worldTimesTable = new WorldTimesTable(this);
@@ -355,11 +353,6 @@ public abstract class SQLDB extends AbstractDatabase {
     @Deprecated
     public KillsTable getKillsTable() {
         return killsTable;
-    }
-
-    @Deprecated
-    public NicknamesTable getNicknamesTable() {
-        return nicknamesTable;
     }
 
     @Deprecated

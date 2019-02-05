@@ -209,11 +209,10 @@ public class UsersTable extends Table {
      */
     public List<String> getMatchingNames(String name) {
         String searchString = "%" + name + "%";
-        NicknamesTable nicknamesTable = db.getNicknamesTable();
         String sql = "SELECT DISTINCT " + USER_NAME + " FROM " + tableName +
                 " WHERE LOWER(" + USER_NAME + ") LIKE LOWER(?)" +
                 " UNION SELECT DISTINCT " + USER_NAME + " FROM " + tableName +
-                " INNER JOIN " + nicknamesTable + " on " + tableName + "." + USER_UUID + "=" + nicknamesTable + "." + NicknamesTable.USER_UUID +
+                " INNER JOIN " + NicknamesTable.TABLE_NAME + " on " + tableName + "." + USER_UUID + "=" + NicknamesTable.TABLE_NAME + "." + NicknamesTable.USER_UUID +
                 " WHERE LOWER(" + NicknamesTable.NICKNAME + ") LIKE LOWER(?)";
 
         return query(new QueryStatement<List<String>>(sql, 5000) {

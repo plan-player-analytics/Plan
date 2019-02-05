@@ -17,7 +17,6 @@
 package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.db.DBType;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.patches.NicknameLastSeenPatch;
 import com.djrapitops.plan.db.patches.NicknamesOptimizationPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
@@ -25,9 +24,7 @@ import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
 /**
- * Table that is in charge of storing nickname data.
- * <p>
- * Table Name: plan_nicknames
+ * Table information about 'plan_nicknames'.
  * <p>
  * Patches related to this table:
  * {@link Version10Patch}
@@ -36,7 +33,7 @@ import com.djrapitops.plan.db.sql.parsing.Sql;
  *
  * @author Rsl1122
  */
-public class NicknamesTable extends Table {
+public class NicknamesTable {
 
     public static final String TABLE_NAME = "plan_nicknames";
 
@@ -58,8 +55,8 @@ public class NicknamesTable extends Table {
             " AND " + USER_UUID + "=?" +
             " AND " + SERVER_UUID + "=?";
 
-    public NicknamesTable(SQLDB db) {
-        super(TABLE_NAME, db);
+    private NicknamesTable() {
+        /* Static information class */
     }
 
     public static String createTableSQL(DBType dbType) {

@@ -76,8 +76,7 @@ public class Version10Patch extends Patch {
         renameTable("plan_users", tempTableName);
 
         String tempNickTableName = "temp_nicks";
-        NicknamesTable nicknamesTable = db.getNicknamesTable();
-        renameTable(nicknamesTable.toString(), tempNickTableName);
+        renameTable(NicknamesTable.TABLE_NAME, tempNickTableName);
 
         String tempKillsTableName = "temp_kills";
         renameTable(KillsTable.TABLE_NAME, tempKillsTableName);
