@@ -28,6 +28,7 @@ import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
+import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
 import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
@@ -135,8 +136,9 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
     }
 
     @Override
-    public List<String> getNicknames(UUID uuid) {
-        return nicknamesTable.getNicknameInformation(uuid).stream().map(Nickname::getName).collect(Collectors.toList());
+    public List<String> getNicknames(UUID playerUUID) {
+        return db.query(PlayerFetchQueries.playersNicknameInformation(playerUUID)).stream()
+                .map(Nickname::getName).collect(Collectors.toList());
     }
 
     @Override

@@ -16,22 +16,13 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.NicknameLastSeenPatch;
 import com.djrapitops.plan.db.patches.NicknamesOptimizationPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Table that is in charge of storing nickname data.
@@ -79,33 +70,5 @@ public class NicknamesTable extends Table {
                 .column(SERVER_UUID, Sql.varchar(36)).notNull()
                 .column(LAST_USED, Sql.LONG).notNull()
                 .toString();
-    }
-
-    public List<Nickname> getNicknameInformation(UUID uuid) {
-        String sql = "SELECT " +
-                NICKNAME + ", " +
-                LAST_USED + ", " +
-                SERVER_UUID +
-                " FROM " + TABLE_NAME +
-                " WHERE (" + USER_UUID + "=?)";
-
-        return query(new QueryStatement<List<Nickname>>(sql, 5000) {
-
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-            }
-
-            @Override
-            public List<Nickname> processResults(ResultSet set) throws SQLException {
-                List<Nickname> nicknames = new ArrayList<>();
-                while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(SERVER_UUID));
-                    String nickname = set.getString(NICKNAME);
-                    nicknames.add(new Nickname(nickname, set.getLong(LAST_USED), serverUUID));
-                }
-                return nicknames;
-            }
-        });
     }
 }

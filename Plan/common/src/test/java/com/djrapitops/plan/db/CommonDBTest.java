@@ -252,14 +252,13 @@ public abstract class CommonDBTest {
     @Test
     public void testNicknamesTable() throws DBInitException {
         saveUserOne();
-        NicknamesTable nickTable = db.getNicknamesTable();
 
         Nickname expected = new Nickname("TestNickname", System.currentTimeMillis(), serverUUID);
         db.executeTransaction(new NicknameStoreTransaction(playerUUID, expected));
         db.executeTransaction(new NicknameStoreTransaction(playerUUID, expected));
         commitTest();
 
-        List<Nickname> nicknames = nickTable.getNicknameInformation(playerUUID);
+        List<Nickname> nicknames = db.query(PlayerFetchQueries.playersNicknameInformation(playerUUID));
         assertEquals(1, nicknames.size());
         assertEquals(expected, nicknames.get(0));
     }
@@ -466,9 +465,7 @@ public abstract class CommonDBTest {
     public void testRemovalSingleUser() {
         saveUserTwo();
 
-        UserInfoTable userInfoTable = db.getUserInfoTable();
         SessionsTable sessionsTable = db.getSessionsTable();
-        NicknamesTable nicknamesTable = db.getNicknamesTable();
 
         db.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> 223456789L, "Test_name", serverUUID));
         saveTwoWorlds();
@@ -488,7 +485,7 @@ public abstract class CommonDBTest {
 
         assertFalse(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
         assertFalse(db.query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)));
-        assertTrue(nicknamesTable.getNicknameInformation(playerUUID).isEmpty());
+        assertTrue(db.query(PlayerFetchQueries.playersNicknameInformation(playerUUID)).isEmpty());
         assertTrue(db.query(PlayerFetchQueries.playerGeoInfo(playerUUID)).isEmpty());
         assertTrue(sessionsTable.getSessions(playerUUID).isEmpty());
     }

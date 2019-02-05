@@ -230,4 +230,32 @@ public class PlayerFetchQueries {
             }
         };
     }
+
+    public static Query<List<Nickname>> playersNicknameInformation(UUID playerUUID) {
+        String sql = "SELECT " +
+                NicknamesTable.NICKNAME + ", " +
+                NicknamesTable.LAST_USED + ", " +
+                NicknamesTable.SERVER_UUID +
+                " FROM " + NicknamesTable.TABLE_NAME +
+                " WHERE (" + NicknamesTable.USER_UUID + "=?)";
+
+        return new QueryStatement<List<Nickname>>(sql, 5000) {
+
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+            }
+
+            @Override
+            public List<Nickname> processResults(ResultSet set) throws SQLException {
+                List<Nickname> nicknames = new ArrayList<>();
+                while (set.next()) {
+                    UUID serverUUID = UUID.fromString(set.getString(NicknamesTable.SERVER_UUID));
+                    String nickname = set.getString(NicknamesTable.NICKNAME);
+                    nicknames.add(new Nickname(nickname, set.getLong(NicknamesTable.LAST_USED), serverUUID));
+                }
+                return nicknames;
+            }
+        };
+    }
 }
