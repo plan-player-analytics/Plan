@@ -16,48 +16,35 @@
  */
 package com.djrapitops.plan.data.store.containers;
 
-import com.djrapitops.plan.data.store.CachingSupplier;
 import com.djrapitops.plan.data.store.Key;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
- * DataContainer implementation that stores everything in {@link Supplier} objects.
+ * DataContainer that stores everything as raw object value.
  *
  * @author Rsl1122
  */
-public class SupplierDataContainer implements DataContainer {
+public class RawDataContainer implements DataContainer {
 
-    private final Map<Key, Supplier> map;
-    private long timeToLive;
-
-    /**
-     * Create a SupplierDataContainer with a default TTL of 30 seconds.
-     */
-    public SupplierDataContainer() {
-        this(TimeUnit.SECONDS.toMillis(30L));
-    }
+    private final Map<Key, Object> map;
 
     /**
-     * Create a SupplierDataContainer with a custom TTL.
-     * <p>
-     * The old value is not removed from memory until the supplier is called again.
-     *
-     * @param timeToLive TTL that determines how long a CachingSupplier value is deemed valid.
+     * Create a RawDataContainer.
      */
-    public SupplierDataContainer(long timeToLive) {
-        this.timeToLive = timeToLive;
+    public RawDataContainer() {
         map = new HashMap<>();
     }
 
     @Override
     public <T> void putRawData(Key<T> key, T obj) {
-        putSupplier(key, () -> obj);
+        if (obj == null) {
+            return;
+        }
+        map.put(key, obj);
     }
 
     @Override
@@ -65,19 +52,12 @@ public class SupplierDataContainer implements DataContainer {
         if (supplier == null) {
             return;
         }
-        map.put(key, supplier);
+        putRawData(key, supplier.get());
     }
 
     @Override
     public <T> void putCachingSupplier(Key<T> key, Supplier<T> supplier) {
-        if (supplier == null) {
-            return;
-        }
-        map.put(key, new CachingSupplier<>(supplier, timeToLive));
-    }
-
-    private <T> Supplier<T> getSupplier(Key<T> key) {
-        return (Supplier<T>) map.get(key);
+        putSupplier(key, supplier);
     }
 
     @Override
@@ -87,12 +67,8 @@ public class SupplierDataContainer implements DataContainer {
 
     @Override
     public <T> Optional<T> getValue(Key<T> key) {
-        Supplier<T> supplier = getSupplier(key);
-        if (supplier == null) {
-            return Optional.empty();
-        }
         try {
-            return Optional.ofNullable(supplier.get());
+            return Optional.ofNullable(getUnsafe(key));
         } catch (ClassCastException e) {
             return Optional.empty();
         }
@@ -100,26 +76,24 @@ public class SupplierDataContainer implements DataContainer {
 
     @Override
     public <T> T getUnsafe(Key<T> key) {
-        Supplier supplier = map.get(key);
-        if (supplier == null) {
+        Object value = map.get(key);
+        if (value == null) {
             throw new IllegalArgumentException("Unsupported Key: " + key.getKeyName());
         }
-        return (T) supplier.get();
-    }
-
-    private void putAll(Map<Key, Supplier> toPut) {
-        map.putAll(toPut);
+        return (T) value;
     }
 
     @Override
     public void putAll(DataContainer dataContainer) {
-        if (dataContainer instanceof SupplierDataContainer) {
-            putAll(((SupplierDataContainer) dataContainer).map);
+        if (dataContainer instanceof RawDataContainer) {
+            putAll(((RawDataContainer) dataContainer).map);
         } else {
-            for (Map.Entry<Key, Object> entry : dataContainer.getMap().entrySet()) {
-                putRawData(entry.getKey(), entry.getValue());
-            }
+            putAll(dataContainer.getMap());
         }
+    }
+
+    void putAll(Map<Key, Object> map) {
+        this.map.putAll(map);
     }
 
     @Override
@@ -129,6 +103,6 @@ public class SupplierDataContainer implements DataContainer {
 
     @Override
     public Map<Key, Object> getMap() {
-        return map.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().get()));
+        return map;
     }
 }
