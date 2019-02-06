@@ -22,5 +22,5 @@ package com.djrapitops.plan.data.store.containers;
  * @author Rsl1122
  * @see com.djrapitops.plan.data.store.keys.ServerKeys For Key objects.
  */
-public class ServerContainer extends SupplierDataContainer {
+public class ServerContainer extends DynamicDataContainer {
 }
