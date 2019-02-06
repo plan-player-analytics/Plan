@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Abstract representation of an object that holds the Values for different Keys.
@@ -142,7 +143,7 @@ public class DataContainer {
         map.clear();
     }
 
-    public Map<Key, Supplier> getMap() {
-        return map;
+    public Map<Key, Object> getMap() {
+        return map.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().get()));
     }
 }
