@@ -73,7 +73,7 @@ public class DataContainer {
         map.put(key, new CachingSupplier<>(supplier, timeToLive));
     }
 
-    public <T> Supplier<T> getSupplier(Key<T> key) {
+    private <T> Supplier<T> getSupplier(Key<T> key) {
         return (Supplier<T>) map.get(key);
     }
 
