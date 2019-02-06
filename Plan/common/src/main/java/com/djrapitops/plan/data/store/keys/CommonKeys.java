@@ -54,7 +54,9 @@ public class CommonKeys {
     public static final Key<List<PlayerDeath>> PLAYER_DEATHS = new Key<>(new Type<List<PlayerDeath>>() {}, "player_deaths");
     public static final Key<List<PlayerKill>> PLAYER_KILLS = new Key<>(new Type<List<PlayerKill>>() {}, "player_kills");
     public static final Key<Integer> PLAYER_KILL_COUNT = new Key<>(Integer.class, "player_kill_count");
+    public static final Key<Integer> PLAYER_DEATH_COUNT = new Key<>(Integer.class, "player_death_count");
     public static final Key<Integer> MOB_KILL_COUNT = new Key<>(Integer.class, "mob_kill_count");
+    public static final Key<Integer> MOB_DEATH_COUNT = new Key<>(Integer.class, "mob_death_count");
     public static final Key<Integer> DEATH_COUNT = new Key<>(Integer.class, "death_count");
 
     public static final Key<Boolean> BANNED = new Key<>(Boolean.class, "banned");

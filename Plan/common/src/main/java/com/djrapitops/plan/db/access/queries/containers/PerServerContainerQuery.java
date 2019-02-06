@@ -18,6 +18,7 @@ package com.djrapitops.plan.db.access.queries.containers;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.UserInfo;
+import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.keys.PerServerKeys;
@@ -25,6 +26,7 @@ import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Query;
+import com.djrapitops.plan.db.access.queries.PerServerAggregateQueries;
 import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
 
 import java.util.List;
@@ -48,15 +50,19 @@ public class PerServerContainerQuery implements Query<PerServerContainer> {
     public PerServerContainer executeQuery(SQLDB db) {
         PerServerContainer perServerContainer = new PerServerContainer();
 
-        List<UserInfo> userInformation = db.query(PlayerFetchQueries.playerServerSpecificUserInformation(playerUUID));
-        for (UserInfo userInfo : userInformation) {
-            UUID serverUUID = userInfo.getServerUUID();
+        userInformation(db, perServerContainer);
+        lastSeen(db, perServerContainer);
+        playerKillCount(db, perServerContainer);
+        playerDeathCount(db, perServerContainer);
+        mobKillCount(db, perServerContainer);
+        totalDeathCount(db, perServerContainer);
+        worldTimes(db, perServerContainer);
 
-            DataContainer container = perServerContainer.getOrDefault(serverUUID, new DataContainer());
-            container.putRawData(PlayerKeys.REGISTERED, userInfo.getRegistered());
-            container.putRawData(PlayerKeys.BANNED, userInfo.isBanned());
-            container.putRawData(PlayerKeys.OPERATOR, userInfo.isOperator());
-            perServerContainer.put(serverUUID, container);
+        // After-values that can be calculated without database.
+        for (DataContainer serverContainer : perServerContainer.values()) {
+            serverContainer.putSupplier(PerServerKeys.MOB_DEATH_COUNT, () ->
+                    serverContainer.getUnsafe(PerServerKeys.DEATH_COUNT) - serverContainer.getUnsafe(PerServerKeys.PLAYER_DEATH_COUNT)
+            );
         }
 
         Map<UUID, List<Session>> sessions = db.getSessionsTable().getSessions(playerUUID);
@@ -64,21 +70,61 @@ public class PerServerContainerQuery implements Query<PerServerContainer> {
             UUID serverUUID = entry.getKey();
             List<Session> serverSessions = entry.getValue();
 
-            DataContainer container = perServerContainer.getOrDefault(serverUUID, new DataContainer());
-            container.putRawData(PerServerKeys.SESSIONS, serverSessions);
+            DataContainer serverContainer = perServerContainer.getOrDefault(serverUUID, new DataContainer());
+            serverContainer.putRawData(PerServerKeys.SESSIONS, serverSessions);
 
-            container.putSupplier(PerServerKeys.LAST_SEEN, () -> SessionsMutator.forContainer(container).toLastSeen());
+            serverContainer.putSupplier(PerServerKeys.PLAYER_KILLS, () -> SessionsMutator.forContainer(serverContainer).toPlayerKillList());
+            serverContainer.putSupplier(PerServerKeys.PLAYER_DEATHS, () -> SessionsMutator.forContainer(serverContainer).toPlayerDeathList());
 
-            container.putSupplier(PerServerKeys.WORLD_TIMES, () -> SessionsMutator.forContainer(container).toTotalWorldTimes());
-            container.putSupplier(PerServerKeys.PLAYER_KILLS, () -> SessionsMutator.forContainer(container).toPlayerKillList());
-            container.putSupplier(PerServerKeys.PLAYER_DEATHS, () -> SessionsMutator.forContainer(container).toPlayerDeathList());
-            container.putSupplier(PerServerKeys.PLAYER_KILL_COUNT, () -> container.getUnsafe(PerServerKeys.PLAYER_KILLS).size());
-            container.putSupplier(PerServerKeys.MOB_KILL_COUNT, () -> SessionsMutator.forContainer(container).toMobKillCount());
-            container.putSupplier(PerServerKeys.DEATH_COUNT, () -> SessionsMutator.forContainer(container).toDeathCount());
-
-            perServerContainer.put(serverUUID, container);
+            perServerContainer.put(serverUUID, serverContainer);
         }
 
         return perServerContainer;
+    }
+
+    private void totalDeathCount(SQLDB db, PerServerContainer container) {
+        matchingEntrySet(PerServerKeys.DEATH_COUNT, PerServerAggregateQueries.totalDeathCountOnServers(playerUUID), db, container);
+    }
+
+    private void worldTimes(SQLDB db, PerServerContainer container) {
+        matchingEntrySet(PerServerKeys.WORLD_TIMES, PerServerAggregateQueries.worldTimesOnServers(playerUUID), db, container);
+    }
+
+    private void playerDeathCount(SQLDB db, PerServerContainer container) {
+        matchingEntrySet(PerServerKeys.PLAYER_DEATH_COUNT, PerServerAggregateQueries.playerDeathCountOnServers(playerUUID), db, container);
+    }
+
+    private void mobKillCount(SQLDB db, PerServerContainer container) {
+        matchingEntrySet(PerServerKeys.MOB_KILL_COUNT, PerServerAggregateQueries.mobKillCountOnServers(playerUUID), db, container);
+    }
+
+    private void playerKillCount(SQLDB db, PerServerContainer container) {
+        matchingEntrySet(PerServerKeys.PLAYER_KILL_COUNT, PerServerAggregateQueries.playerKillCountOnServers(playerUUID), db, container);
+    }
+
+    private void lastSeen(SQLDB db, PerServerContainer container) {
+        matchingEntrySet(PerServerKeys.LAST_SEEN, PerServerAggregateQueries.lastSeenOnServers(playerUUID), db, container);
+    }
+
+    private void userInformation(SQLDB db, PerServerContainer perServerContainer) {
+        List<UserInfo> userInformation = db.query(PlayerFetchQueries.playerServerSpecificUserInformation(playerUUID));
+        for (UserInfo userInfo : userInformation) {
+            UUID serverUUID = userInfo.getServerUUID();
+            placeToPerServerContainer(serverUUID, PlayerKeys.REGISTERED, userInfo.getRegistered(), perServerContainer);
+            placeToPerServerContainer(serverUUID, PlayerKeys.BANNED, userInfo.isBanned(), perServerContainer);
+            placeToPerServerContainer(serverUUID, PlayerKeys.OPERATOR, userInfo.isOperator(), perServerContainer);
+        }
+    }
+
+    private <T> void matchingEntrySet(Key<T> key, Query<Map<UUID, T>> map, SQLDB db, PerServerContainer container) {
+        for (Map.Entry<UUID, T> lastSeen : db.query(map).entrySet()) {
+            placeToPerServerContainer(lastSeen.getKey(), key, lastSeen.getValue(), container);
+        }
+    }
+
+    private <T> void placeToPerServerContainer(UUID serverUUID, Key<T> key, T value, PerServerContainer perServerContainer) {
+        DataContainer container = perServerContainer.getOrDefault(serverUUID, new DataContainer());
+        container.putRawData(key, value);
+        perServerContainer.put(serverUUID, container);
     }
 }

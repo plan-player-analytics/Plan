@@ -90,6 +90,9 @@ public class AllPlayerContainersQuery implements Query<List<PlayerContainer>> {
                 container.putSupplier(PerServerKeys.PLAYER_KILL_COUNT, () -> container.getUnsafe(PerServerKeys.PLAYER_KILLS).size());
                 container.putSupplier(PerServerKeys.MOB_KILL_COUNT, () -> SessionsMutator.forContainer(container).toMobKillCount());
                 container.putSupplier(PerServerKeys.DEATH_COUNT, () -> SessionsMutator.forContainer(container).toDeathCount());
+                container.putSupplier(PerServerKeys.MOB_DEATH_COUNT, () ->
+                        container.getUnsafe(PerServerKeys.DEATH_COUNT) - container.getUnsafe(PerServerKeys.PLAYER_DEATH_COUNT)
+                );
                 perServerContainer.put(serverUUID, container);
                 perServerContainers.put(uuid, perServerContainer);
             }
