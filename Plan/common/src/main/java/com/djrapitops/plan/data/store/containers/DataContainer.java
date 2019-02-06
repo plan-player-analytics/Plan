@@ -131,7 +131,7 @@ public class DataContainer {
         return formatter.apply(value);
     }
 
-    public void putAll(Map<Key, Supplier> toPut) {
+    private void putAll(Map<Key, Supplier> toPut) {
         map.putAll(toPut);
     }
 
