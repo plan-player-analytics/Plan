@@ -56,7 +56,7 @@ import java.util.concurrent.TimeUnit;
  * @see com.djrapitops.plan.data.store.keys.NetworkKeys for Key objects
  * @see com.djrapitops.plan.data.store.PlaceholderKey for placeholder information
  */
-public class NetworkContainer extends DataContainer {
+public class NetworkContainer extends SupplierDataContainer {
 
     private final ServerContainer bungeeContainer;
 

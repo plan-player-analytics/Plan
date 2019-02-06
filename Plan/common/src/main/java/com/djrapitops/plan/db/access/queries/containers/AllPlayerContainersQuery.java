@@ -20,6 +20,7 @@ import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.data.store.containers.SupplierDataContainer;
 import com.djrapitops.plan.data.store.keys.PerServerKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.PerServerMutator;
@@ -61,7 +62,7 @@ public class AllPlayerContainersQuery implements Query<List<PlayerContainer>> {
                     continue;
                 }
                 PerServerContainer perServerContainer = perServerContainers.getOrDefault(uuid, new PerServerContainer());
-                DataContainer container = perServerContainer.getOrDefault(serverUUID, new DataContainer());
+                DataContainer container = perServerContainer.getOrDefault(serverUUID, new SupplierDataContainer());
                 container.putRawData(PlayerKeys.REGISTERED, userInfo.getRegistered());
                 container.putRawData(PlayerKeys.BANNED, userInfo.isBanned());
                 container.putRawData(PlayerKeys.OPERATOR, userInfo.isOperator());
@@ -77,7 +78,7 @@ public class AllPlayerContainersQuery implements Query<List<PlayerContainer>> {
             for (Map.Entry<UUID, List<Session>> sessionEntry : serverUserSessions.entrySet()) {
                 UUID uuid = sessionEntry.getKey();
                 PerServerContainer perServerContainer = perServerContainers.getOrDefault(uuid, new PerServerContainer());
-                DataContainer container = perServerContainer.getOrDefault(serverUUID, new DataContainer());
+                DataContainer container = perServerContainer.getOrDefault(serverUUID, new SupplierDataContainer());
 
                 List<Session> serverSessions = sessionEntry.getValue();
                 container.putRawData(PerServerKeys.SESSIONS, serverSessions);
@@ -103,7 +104,7 @@ public class AllPlayerContainersQuery implements Query<List<PlayerContainer>> {
             for (Ping ping : entry.getValue()) {
                 UUID serverUUID = ping.getServerUUID();
                 PerServerContainer perServerContainer = perServerContainers.getOrDefault(uuid, new PerServerContainer());
-                DataContainer container = perServerContainer.getOrDefault(serverUUID, new DataContainer());
+                DataContainer container = perServerContainer.getOrDefault(serverUUID, new SupplierDataContainer());
 
                 if (!container.supports(PerServerKeys.PING)) {
                     container.putRawData(PerServerKeys.PING, new ArrayList<>());

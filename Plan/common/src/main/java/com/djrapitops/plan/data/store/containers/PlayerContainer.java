@@ -30,7 +30,7 @@ import java.util.Map;
  * @author Rsl1122
  * @see com.djrapitops.plan.data.store.keys.PlayerKeys For Key objects.
  */
-public class PlayerContainer extends DataContainer {
+public class PlayerContainer extends SupplierDataContainer {
 
     private Map<Long, ActivityIndex> activityIndexCache;
 

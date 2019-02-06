@@ -59,7 +59,7 @@ import java.util.stream.Collectors;
  * @see com.djrapitops.plan.data.store.keys.AnalysisKeys for Key objects
  * @see com.djrapitops.plan.data.store.PlaceholderKey for placeholder information
  */
-public class AnalysisContainer extends DataContainer {
+public class AnalysisContainer extends SupplierDataContainer {
 
     private final ServerContainer serverContainer;
 

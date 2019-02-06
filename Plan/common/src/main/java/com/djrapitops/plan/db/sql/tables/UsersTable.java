@@ -18,6 +18,7 @@ package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.containers.DataContainer;
+import com.djrapitops.plan.data.store.containers.SupplierDataContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
@@ -297,7 +298,7 @@ public class UsersTable extends Table {
 
     public DataContainer getUserInformation(UUID uuid) {
         Key<DataContainer> user_data = new Key<>(DataContainer.class, "plan_users_data");
-        DataContainer returnValue = new DataContainer();
+        DataContainer returnValue = new SupplierDataContainer();
 
         returnValue.putSupplier(user_data, () -> getUserInformationDataContainer(uuid));
         returnValue.putRawData(PlayerKeys.UUID, uuid);
@@ -318,7 +319,7 @@ public class UsersTable extends Table {
 
             @Override
             public DataContainer processResults(ResultSet set) throws SQLException {
-                DataContainer container = new DataContainer();
+                DataContainer container = new SupplierDataContainer();
 
                 if (set.next()) {
                     long registered = set.getLong(REGISTERED);

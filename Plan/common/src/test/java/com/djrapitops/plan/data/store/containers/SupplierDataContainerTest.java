@@ -22,18 +22,18 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Test for {@link DataContainer} programming errors.
+ * Test for {@link SupplierDataContainer} programming errors.
  *
  * @author Rsl1122
  */
-public class DataContainerTest {
+public class SupplierDataContainerTest {
 
     private static final Key<String> TEST_KEY = new Key<>(String.class, "TEST_KEY");
     private static final Key<String> TEST_KEY_COPY = new Key<>(String.class, "TEST_KEY");
 
     @Test
     public void safeUnsafeKeySupplierSameObject() {
-        DataContainer container = new DataContainer();
+        DataContainer container = new SupplierDataContainer();
         container.putSupplier(TEST_KEY, () -> "Success");
 
         assertEquals("Success", container.getUnsafe(TEST_KEY));
@@ -41,7 +41,7 @@ public class DataContainerTest {
 
     @Test
     public void safeUnsafeKeySupplierDifferentObject() {
-        DataContainer container = new DataContainer();
+        DataContainer container = new SupplierDataContainer();
         container.putSupplier(TEST_KEY, () -> "Success");
 
         assertEquals("Success", container.getUnsafe(TEST_KEY_COPY));
@@ -49,7 +49,7 @@ public class DataContainerTest {
 
     @Test
     public void safeUnsafeKeyRawSameObject() {
-        DataContainer container = new DataContainer();
+        DataContainer container = new SupplierDataContainer();
         container.putRawData(TEST_KEY, "Success");
 
         assertEquals("Success", container.getUnsafe(TEST_KEY));
@@ -57,7 +57,7 @@ public class DataContainerTest {
 
     @Test
     public void safeUnsafeKeyRawDifferentObject() {
-        DataContainer container = new DataContainer();
+        DataContainer container = new SupplierDataContainer();
         container.putRawData(TEST_KEY, "Success");
 
         assertEquals("Success", container.getUnsafe(TEST_KEY_COPY));
@@ -65,7 +65,7 @@ public class DataContainerTest {
 
     @Test
     public void safeUnsafeKeyRawNull() {
-        DataContainer container = new DataContainer();
+        DataContainer container = new SupplierDataContainer();
         container.putRawData(TEST_KEY, null);
 
         assertTrue(container.supports(TEST_KEY));
@@ -74,7 +74,7 @@ public class DataContainerTest {
 
     @Test
     public void safeUnsafeKeyNullSupplier() {
-        DataContainer container = new DataContainer();
+        DataContainer container = new SupplierDataContainer();
         container.putSupplier(TEST_KEY, null);
 
         assertFalse(container.supports(TEST_KEY));
@@ -82,7 +82,7 @@ public class DataContainerTest {
 
     @Test
     public void safeUnsafeKeySupplierNull() {
-        DataContainer container = new DataContainer();
+        DataContainer container = new SupplierDataContainer();
         container.putSupplier(TEST_KEY, () -> null);
 
         assertTrue(container.supports(TEST_KEY));
@@ -91,7 +91,7 @@ public class DataContainerTest {
 
     @Test
     public void cachingSupplier() {
-        DataContainer container = new DataContainer();
+        DataContainer container = new SupplierDataContainer();
         String firstObj = "First";
         String secondObj = "Second";
 

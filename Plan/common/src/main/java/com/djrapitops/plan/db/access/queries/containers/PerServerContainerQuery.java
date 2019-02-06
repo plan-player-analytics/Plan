@@ -21,6 +21,7 @@ import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.containers.PerServerContainer;
+import com.djrapitops.plan.data.store.containers.SupplierDataContainer;
 import com.djrapitops.plan.data.store.keys.PerServerKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
@@ -70,7 +71,7 @@ public class PerServerContainerQuery implements Query<PerServerContainer> {
             UUID serverUUID = entry.getKey();
             List<Session> serverSessions = entry.getValue();
 
-            DataContainer serverContainer = perServerContainer.getOrDefault(serverUUID, new DataContainer());
+            DataContainer serverContainer = perServerContainer.getOrDefault(serverUUID, new SupplierDataContainer());
             serverContainer.putRawData(PerServerKeys.SESSIONS, serverSessions);
 
             serverContainer.putSupplier(PerServerKeys.PLAYER_KILLS, () -> SessionsMutator.forContainer(serverContainer).toPlayerKillList());
@@ -123,7 +124,7 @@ public class PerServerContainerQuery implements Query<PerServerContainer> {
     }
 
     private <T> void placeToPerServerContainer(UUID serverUUID, Key<T> key, T value, PerServerContainer perServerContainer) {
-        DataContainer container = perServerContainer.getOrDefault(serverUUID, new DataContainer());
+        DataContainer container = perServerContainer.getOrDefault(serverUUID, new SupplierDataContainer());
         container.putRawData(key, value);
         perServerContainer.put(serverUUID, container);
     }

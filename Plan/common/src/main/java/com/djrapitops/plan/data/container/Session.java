@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.data.container;
 
-import com.djrapitops.plan.data.store.containers.DataContainer;
+import com.djrapitops.plan.data.store.containers.SupplierDataContainer;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.WorldTimes;
@@ -29,7 +29,7 @@ import java.util.*;
  * @author Rsl1122
  * @see SessionKeys for Key objects.
  */
-public class Session extends DataContainer implements DateHolder {
+public class Session extends SupplierDataContainer implements DateHolder {
 
     private long sessionStart;
     private WorldTimes worldTimes;
