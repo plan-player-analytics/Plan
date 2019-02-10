@@ -76,7 +76,7 @@ public class NicknameQueries {
         };
     }
 
-    public static Query<Optional<Nickname>> fetchPlayersLastSeenNickname(UUID playerUUID, UUID serverUUID) {
+    public static Query<Optional<Nickname>> fetchLastSeenNicknameOfPlayer(UUID playerUUID, UUID serverUUID) {
         String subQuery = "SELECT MAX(" + NicknamesTable.LAST_USED + ") FROM " + NicknamesTable.TABLE_NAME +
                 " WHERE " + NicknamesTable.USER_UUID + "=?" +
                 " AND " + NicknamesTable.SERVER_UUID + "=?" +
@@ -109,7 +109,7 @@ public class NicknameQueries {
         };
     }
 
-    public static Query<List<Nickname>> fetchPlayersNicknameData(UUID playerUUID) {
+    public static Query<List<Nickname>> fetchNicknameDataOfPlayer(UUID playerUUID) {
         String sql = "SELECT " +
                 NicknamesTable.NICKNAME + ", " +
                 NicknamesTable.LAST_USED + ", " +
@@ -162,6 +162,43 @@ public class NicknameQueries {
                     ));
                 }
                 return map;
+            }
+        };
+    }
+
+    /**
+     * Query database for nickname information of a server.
+     *
+     * @param serverUUID UUID the the Plan server.
+     * @return Map: Player UUID - List of Nicknames on the server.
+     */
+    public static Query<Map<UUID, List<Nickname>>> fetchNicknameDataOfServer(UUID serverUUID) {
+        String sql = "SELECT " +
+                NicknamesTable.NICKNAME + ", " +
+                NicknamesTable.LAST_USED + ", " +
+                NicknamesTable.USER_UUID + ", " +
+                NicknamesTable.SERVER_UUID +
+                " FROM " + NicknamesTable.TABLE_NAME;
+
+        return new QueryAllStatement<Map<UUID, List<Nickname>>>(sql, 5000) {
+            @Override
+            public Map<UUID, List<Nickname>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, List<Nickname>> serverMap = new HashMap<>();
+                while (set.next()) {
+                    UUID serverUUID = UUID.fromString(set.getString(NicknamesTable.SERVER_UUID));
+                    UUID uuid = UUID.fromString(set.getString(NicknamesTable.USER_UUID));
+
+                    List<Nickname> nicknames = serverMap.getOrDefault(uuid, new ArrayList<>());
+
+                    nicknames.add(new Nickname(
+                            set.getString(NicknamesTable.NICKNAME),
+                            set.getLong(NicknamesTable.LAST_USED),
+                            serverUUID
+                    ));
+
+                    serverMap.put(uuid, nicknames);
+                }
+                return serverMap;
             }
         };
     }

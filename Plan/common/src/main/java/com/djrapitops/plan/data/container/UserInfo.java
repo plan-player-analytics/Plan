@@ -51,11 +51,6 @@ public class UserInfo {
         return serverUUID;
     }
 
-    @Deprecated
-    public String getName() {
-        return null;
-    }
-
     public long getRegistered() {
         return registered;
     }

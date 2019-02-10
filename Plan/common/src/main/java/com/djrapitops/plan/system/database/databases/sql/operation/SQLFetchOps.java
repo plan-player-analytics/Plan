@@ -135,7 +135,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public List<String> getNicknames(UUID playerUUID) {
-        return db.query(NicknameQueries.fetchPlayersNicknameData(playerUUID)).stream()
+        return db.query(NicknameQueries.fetchNicknameDataOfPlayer(playerUUID)).stream()
                 .map(Nickname::getName).collect(Collectors.toList());
     }
 

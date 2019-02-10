@@ -69,7 +69,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
             @Override
             protected void performOperations() {
                 Collection<BaseUser> users = ofUsers.values().stream()
-                        .map(user -> new BaseUser(user.getPlayerUuid(), user.getName(), user.getRegistered(), 0))
+                        .map(user -> new BaseUser(user.getPlayerUuid(), user.getPlayerUuid().toString(), user.getRegistered(), 0))
                         .collect(Collectors.toSet());
                 execute(LargeStoreQueries.storeAllCommonUserInformation(users));
             }

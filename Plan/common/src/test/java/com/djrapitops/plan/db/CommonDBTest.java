@@ -259,7 +259,7 @@ public abstract class CommonDBTest {
         db.executeTransaction(new NicknameStoreTransaction(playerUUID, expected));
         commitTest();
 
-        List<Nickname> nicknames = db.query(NicknameQueries.fetchPlayersNicknameData(playerUUID));
+        List<Nickname> nicknames = db.query(NicknameQueries.fetchNicknameDataOfPlayer(playerUUID));
         assertEquals(1, nicknames.size());
         assertEquals(expected, nicknames.get(0));
     }
@@ -486,7 +486,7 @@ public abstract class CommonDBTest {
 
         assertFalse(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
         assertFalse(db.query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)));
-        assertTrue(db.query(NicknameQueries.fetchPlayersNicknameData(playerUUID)).isEmpty());
+        assertTrue(db.query(NicknameQueries.fetchNicknameDataOfPlayer(playerUUID)).isEmpty());
         assertTrue(db.query(GeoInfoQueries.fetchPlayerGeoInformation(playerUUID)).isEmpty());
         assertTrue(sessionsTable.getSessions(playerUUID).isEmpty());
     }

@@ -104,7 +104,7 @@ public class NicknameCache implements SubSystem {
     private String updateFromDatabase(UUID uuid, String cached) {
         try {
             Optional<Nickname> latest = dbSystem.getDatabase().query(
-                    NicknameQueries.fetchPlayersLastSeenNickname(uuid, serverInfo.getServerUUID())
+                    NicknameQueries.fetchLastSeenNicknameOfPlayer(uuid, serverInfo.getServerUUID())
             );
             if (latest.isPresent()) {
                 cached = latest.get().getName();

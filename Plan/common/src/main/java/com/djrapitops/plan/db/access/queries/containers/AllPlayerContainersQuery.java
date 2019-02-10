@@ -45,6 +45,14 @@ import java.util.*;
  */
 public class AllPlayerContainersQuery implements Query<List<PlayerContainer>> {
 
+    /**
+     * Create PerServerContainers for each player.
+     *
+     * @param sessions    Map: Server UUID - Map: Player UUID - List of Sessions
+     * @param allUserInfo Map: Server UUID - List of Users
+     * @param allPings    Map: Player UUID - List of Ping data
+     * @return Map: Player UUID - PerServerContainer
+     */
     static Map<UUID, PerServerContainer> getPerServerData(
             Map<UUID, Map<UUID, List<Session>>> sessions,
             Map<UUID, List<UserInfo>> allUserInfo,
