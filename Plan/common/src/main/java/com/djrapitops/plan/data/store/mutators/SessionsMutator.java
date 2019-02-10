@@ -44,10 +44,6 @@ public class SessionsMutator {
         return new SessionsMutator(container.getValue(CommonKeys.SESSIONS).orElse(new ArrayList<>()));
     }
 
-    public static SessionsMutator copyOf(SessionsMutator mutator) {
-        return new SessionsMutator(new ArrayList<>(mutator.sessions));
-    }
-
     public SessionsMutator(List<Session> sessions) {
         this.sessions = sessions;
     }

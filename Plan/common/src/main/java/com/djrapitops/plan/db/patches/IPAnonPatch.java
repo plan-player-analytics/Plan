@@ -20,7 +20,7 @@ import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.GeoInfoQueries;
 import com.djrapitops.plan.db.sql.tables.GeoInfoTable;
 
 import java.net.InetAddress;
@@ -68,7 +68,7 @@ public class IPAnonPatch extends Patch {
 
     @Override
     protected void applyPatch() {
-        Map<UUID, List<GeoInfo>> allGeoInfo = db.query(LargeFetchQueries.fetchAllGeoInformation());
+        Map<UUID, List<GeoInfo>> allGeoInfo = db.query(GeoInfoQueries.fetchAllGeoInformation());
         anonymizeIPs(allGeoInfo);
         groupHashedIPs();
     }

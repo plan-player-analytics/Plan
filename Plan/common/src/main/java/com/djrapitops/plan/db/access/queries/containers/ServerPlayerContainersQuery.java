@@ -30,7 +30,9 @@ import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.GeoInfoQueries;
+import com.djrapitops.plan.db.access.queries.objects.NicknameQueries;
+import com.djrapitops.plan.db.access.queries.objects.PingQueries;
 
 import java.util.*;
 
@@ -56,12 +58,12 @@ public class ServerPlayerContainersQuery implements Query<List<PlayerContainer>>
     @Override
     public List<PlayerContainer> executeQuery(SQLDB db) {
         List<PlayerContainer> containers = new ArrayList<>();
-
+        
         List<UserInfo> serverUserInfo = db.getUserInfoTable().getServerUserInfo(serverUUID); // TODO Optimize and sort out
         Map<UUID, Integer> timesKicked = db.getUsersTable().getAllTimesKicked();  // TODO Optimize and sort out
-        Map<UUID, List<GeoInfo>> geoInfo = db.query(LargeFetchQueries.fetchAllGeoInformation()); // TODO Optimize
-        Map<UUID, List<Ping>> allPings = db.query(LargeFetchQueries.fetchAllPingData()); // TODO Optimize
-        Map<UUID, List<Nickname>> allNicknames = db.query(LargeFetchQueries.fetchAllNicknameDataByPlayerUUIDs()); // TODO Optimize
+        Map<UUID, List<GeoInfo>> geoInfo = db.query(GeoInfoQueries.fetchAllGeoInformation()); // TODO Optimize
+        Map<UUID, List<Ping>> allPings = db.query(PingQueries.fetchAllPingData()); // TODO Optimize
+        Map<UUID, List<Nickname>> allNicknames = db.query(NicknameQueries.fetchAllNicknameDataByPlayerUUIDs()); // TODO Optimize
 
         Map<UUID, List<Session>> sessions = db.getSessionsTable().getSessionInfoOfServer(serverUUID);
         Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();

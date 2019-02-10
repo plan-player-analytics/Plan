@@ -25,8 +25,10 @@ import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.access.queries.PlayerAggregateQueries;
-import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.GeoInfoQueries;
+import com.djrapitops.plan.db.access.queries.objects.NicknameQueries;
+import com.djrapitops.plan.db.access.queries.objects.PingQueries;
+import com.djrapitops.plan.db.access.queries.objects.WorldTimesQueries;
 
 import java.util.HashMap;
 import java.util.List;
@@ -53,9 +55,9 @@ public class PlayerContainerQuery implements Query<PlayerContainer> {
         container.putRawData(PlayerKeys.UUID, uuid);
 
         container.putAll(db.getUsersTable().getUserInformation(uuid));
-        container.putCachingSupplier(PlayerKeys.GEO_INFO, () -> db.query(PlayerFetchQueries.playerGeoInfo(uuid)));
-        container.putCachingSupplier(PlayerKeys.PING, () -> db.query(PlayerFetchQueries.playerPingData(uuid)));
-        container.putCachingSupplier(PlayerKeys.NICKNAMES, () -> db.query(PlayerFetchQueries.playersNicknameInformation(uuid)));
+        container.putCachingSupplier(PlayerKeys.GEO_INFO, () -> db.query(GeoInfoQueries.fetchPlayerGeoInformation(uuid)));
+        container.putCachingSupplier(PlayerKeys.PING, () -> db.query(PingQueries.fetchPlayerPingData(uuid)));
+        container.putCachingSupplier(PlayerKeys.NICKNAMES, () -> db.query(NicknameQueries.fetchPlayersNicknameData(uuid)));
         container.putCachingSupplier(PlayerKeys.PER_SERVER, () -> db.query(new PerServerContainerQuery(uuid)));
 
         container.putSupplier(PlayerKeys.BANNED, () -> new PerServerMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).isBanned());
@@ -69,7 +71,7 @@ public class PlayerContainerQuery implements Query<PlayerContainer> {
         );
         container.putCachingSupplier(PlayerKeys.WORLD_TIMES, () ->
         {
-            WorldTimes worldTimes = db.query(PlayerAggregateQueries.totalWorldTimes(uuid));
+            WorldTimes worldTimes = db.query(WorldTimesQueries.fetchPlayerTotalWorldTimes(uuid));
             container.getValue(PlayerKeys.ACTIVE_SESSION).ifPresent(session -> worldTimes.add(
                     session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>())))
             );

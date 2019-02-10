@@ -23,7 +23,7 @@ import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
 import com.djrapitops.plan.db.patches.KillsOptimizationPatch;
 import com.djrapitops.plan.db.patches.KillsServerIDPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
@@ -185,7 +185,7 @@ public class KillsTable extends Table {
     }
 
     public void addKillsToSessions(Map<UUID, Map<UUID, List<Session>>> map) {
-        Map<Integer, List<PlayerKill>> playerKillsBySessionID = db.query(LargeFetchQueries.fetchAllPlayerKillDataBySessionID());
+        Map<Integer, List<PlayerKill>> playerKillsBySessionID = db.query(SessionQueries.fetchAllPlayerKillDataBySessionID());
         for (UUID serverUUID : map.keySet()) {
             for (List<Session> sessions : map.get(serverUUID).values()) {
                 for (Session session : sessions) {

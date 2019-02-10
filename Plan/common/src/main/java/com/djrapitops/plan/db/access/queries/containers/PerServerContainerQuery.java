@@ -28,7 +28,8 @@ import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.queries.PerServerAggregateQueries;
-import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.UserInfoQueries;
+import com.djrapitops.plan.db.access.queries.objects.WorldTimesQueries;
 
 import java.util.List;
 import java.util.Map;
@@ -88,7 +89,7 @@ public class PerServerContainerQuery implements Query<PerServerContainer> {
     }
 
     private void worldTimes(SQLDB db, PerServerContainer container) {
-        matchingEntrySet(PerServerKeys.WORLD_TIMES, PerServerAggregateQueries.worldTimesOnServers(playerUUID), db, container);
+        matchingEntrySet(PerServerKeys.WORLD_TIMES, WorldTimesQueries.fetchPlayerWorldTimesOnServers(playerUUID), db, container);
     }
 
     private void playerDeathCount(SQLDB db, PerServerContainer container) {
@@ -108,7 +109,7 @@ public class PerServerContainerQuery implements Query<PerServerContainer> {
     }
 
     private void userInformation(SQLDB db, PerServerContainer perServerContainer) {
-        List<UserInfo> userInformation = db.query(PlayerFetchQueries.playerServerSpecificUserInformation(playerUUID));
+        List<UserInfo> userInformation = db.query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
         for (UserInfo userInfo : userInformation) {
             UUID serverUUID = userInfo.getServerUUID();
             placeToPerServerContainer(serverUUID, PlayerKeys.REGISTERED, userInfo.getRegistered(), perServerContainer);

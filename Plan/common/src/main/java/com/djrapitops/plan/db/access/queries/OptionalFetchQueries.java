@@ -16,15 +16,11 @@
  */
 package com.djrapitops.plan.db.access.queries;
 
-import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.db.sql.tables.SecurityTable;
 import com.djrapitops.plan.db.sql.tables.ServerTable;
 import com.djrapitops.plan.db.sql.tables.TPSTable;
-import com.djrapitops.plan.system.info.server.Server;
-import org.apache.commons.lang3.math.NumberUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -41,67 +37,6 @@ public class OptionalFetchQueries {
 
     private OptionalFetchQueries() {
         /* Static method class */
-    }
-
-    public static Query<Optional<Server>> fetchMatchingServerIdentifier(UUID serverUUID) {
-        return fetchMatchingServerIdentifier(serverUUID.toString());
-    }
-
-    public static Query<Optional<Server>> fetchMatchingServerIdentifier(String identifier) {
-        String sql = "SELECT * FROM " + ServerTable.TABLE_NAME +
-                " WHERE (LOWER(" + ServerTable.SERVER_UUID + ") LIKE LOWER(?)" +
-                " OR LOWER(" + ServerTable.NAME + ") LIKE LOWER(?)" +
-                " OR " + ServerTable.SERVER_ID + "=?)" +
-                " AND " + ServerTable.INSTALLED + "=?" +
-                " LIMIT 1";
-        return new QueryStatement<Optional<Server>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, identifier);
-                statement.setString(2, identifier);
-                statement.setInt(3, NumberUtils.isParsable(identifier) ? Integer.parseInt(identifier) : -1);
-                statement.setBoolean(4, true);
-            }
-
-            @Override
-            public Optional<Server> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return Optional.of(new Server(
-                            set.getInt(ServerTable.SERVER_ID),
-                            UUID.fromString(set.getString(ServerTable.SERVER_UUID)),
-                            set.getString(ServerTable.NAME),
-                            set.getString(ServerTable.WEB_ADDRESS),
-                            set.getInt(ServerTable.MAX_PLAYERS)
-                    ));
-                }
-                return Optional.empty();
-            }
-        };
-    }
-
-    public static Query<Optional<Server>> fetchProxyServerInformation() {
-        return db -> db.query(fetchMatchingServerIdentifier("BungeeCord"));
-    }
-
-    public static Query<Optional<WebUser>> fetchWebUser(String called) {
-        String sql = "SELECT * FROM " + SecurityTable.TABLE_NAME +
-                " WHERE " + SecurityTable.USERNAME + "=? LIMIT 1";
-        return new QueryStatement<Optional<WebUser>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, called);
-            }
-
-            @Override
-            public Optional<WebUser> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    String saltedPassHash = set.getString(SecurityTable.SALT_PASSWORD_HASH);
-                    int permissionLevel = set.getInt(SecurityTable.PERMISSION_LEVEL);
-                    return Optional.of(new WebUser(called, saltedPassHash, permissionLevel));
-                }
-                return Optional.empty();
-            }
-        };
     }
 
     public static Query<Optional<DateObj<Integer>>> fetchPeakPlayerCount(UUID serverUUID, long afterDate) {

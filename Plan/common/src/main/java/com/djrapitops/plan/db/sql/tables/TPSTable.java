@@ -22,7 +22,7 @@ import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
@@ -124,7 +124,7 @@ public class TPSTable extends Table {
     }
 
     public List<TPS> getNetworkOnlineData() {
-        Optional<Server> proxyInfo = db.query(OptionalFetchQueries.fetchProxyServerInformation());
+        Optional<Server> proxyInfo = db.query(ServerQueries.fetchProxyServerInformation());
         if (!proxyInfo.isPresent()) {
             return new ArrayList<>();
         }

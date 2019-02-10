@@ -17,7 +17,7 @@
 package com.djrapitops.plan.command.commands.webuser;
 
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.WebUserQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -69,7 +69,7 @@ public class WebListUsersCommand extends CommandNode {
     public void onCommand(Sender sender, String commandLabel, String[] args) {
         processing.submitNonCritical(() -> {
             try {
-                List<WebUser> users = dbSystem.getDatabase().query(LargeFetchQueries.fetchAllPlanWebUsers());
+                List<WebUser> users = dbSystem.getDatabase().query(WebUserQueries.fetchAllPlanWebUsers());
                 sender.sendMessage(locale.getString(CommandLang.HEADER_WEB_USERS, users.size()));
                 for (WebUser user : users) {
                     sender.sendMessage(locale.getString(CommandLang.WEB_USER_LIST, user.getName(), user.getPermLevel()));

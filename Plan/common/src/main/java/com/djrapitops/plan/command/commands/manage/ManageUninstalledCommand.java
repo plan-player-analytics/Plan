@@ -17,7 +17,7 @@
 package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -103,7 +103,7 @@ public class ManageUninstalledCommand extends CommandNode {
     private Optional<Server> getServer(String[] args) {
         if (args.length >= 1) {
             String serverIdentifier = getGivenIdentifier(args);
-            return dbSystem.getDatabase().query(OptionalFetchQueries.fetchMatchingServerIdentifier(serverIdentifier))
+            return dbSystem.getDatabase().query(ServerQueries.fetchMatchingServerIdentifier(serverIdentifier))
                     .filter(Server::isNotProxy);
         }
         return Optional.empty();

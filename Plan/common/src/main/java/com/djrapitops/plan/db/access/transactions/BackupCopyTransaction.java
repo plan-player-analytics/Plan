@@ -21,6 +21,7 @@ import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.access.queries.LargeStoreQueries;
+import com.djrapitops.plan.db.access.queries.objects.*;
 
 import java.util.function.Function;
 
@@ -66,7 +67,7 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
     }
 
     private void copyPingData() {
-        copy(LargeStoreQueries::storeAllPingData, LargeFetchQueries.fetchAllPingData());
+        copy(LargeStoreQueries::storeAllPingData, PingQueries.fetchAllPingData());
     }
 
     private void copyCommandUsageData() {
@@ -74,19 +75,19 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
     }
 
     private void copyGeoInformation() {
-        copy(LargeStoreQueries::storeAllGeoInformation, LargeFetchQueries.fetchAllGeoInformation());
+        copy(LargeStoreQueries::storeAllGeoInformation, GeoInfoQueries.fetchAllGeoInformation());
     }
 
     private void copyNicknameData() {
-        copy(LargeStoreQueries::storeAllNicknameData, LargeFetchQueries.fetchAllNicknameData());
+        copy(LargeStoreQueries::storeAllNicknameData, NicknameQueries.fetchAllNicknameData());
     }
 
     private void copyPlanWebUsers() {
-        copy(LargeStoreQueries::storeAllPlanWebUsers, LargeFetchQueries.fetchAllPlanWebUsers());
+        copy(LargeStoreQueries::storeAllPlanWebUsers, WebUserQueries.fetchAllPlanWebUsers());
     }
 
     private void copyPlanServerInformation() {
-        copy(LargeStoreQueries::storeAllPlanServerInformation, LargeFetchQueries.fetchPlanServerInformationCollection());
+        copy(LargeStoreQueries::storeAllPlanServerInformation, ServerQueries.fetchPlanServerInformationCollection());
     }
 
     private void copyTPSData() {
@@ -94,7 +95,7 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
     }
 
     private void copyPerServerUserInformation() {
-        copy(LargeStoreQueries::storePerServerUserInformation, LargeFetchQueries.fetchPerServerUserInformation());
+        copy(LargeStoreQueries::storePerServerUserInformation, UserInfoQueries.fetchAllUserInformation());
     }
 
     private void copyWorldNames() {
@@ -102,10 +103,10 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
     }
 
     private void copyCommonUserInformation() {
-        copy(LargeStoreQueries::storeAllCommonUserInformation, LargeFetchQueries.fetchAllCommonUserInformation());
+        copy(LargeStoreQueries::storeAllCommonUserInformation, BaseUserQueries.fetchAllCommonUserInformation());
     }
 
     private void copySessionsWithKillAndWorldData() {
-        copy(LargeStoreQueries::storeAllSessionsWithKillAndWorldData, LargeFetchQueries.fetchAllSessionsFlatWithKillAndWorldData());
+        copy(LargeStoreQueries::storeAllSessionsWithKillAndWorldData, SessionQueries.fetchAllSessionsFlatWithKillAndWorldData());
     }
 }

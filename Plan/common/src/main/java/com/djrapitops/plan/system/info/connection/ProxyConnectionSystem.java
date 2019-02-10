@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.*;
@@ -73,7 +73,7 @@ public class ProxyConnectionSystem extends ConnectionSystem {
     private void refreshServerMap() {
         if (latestServerMapRefresh < System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(15L)) {
             try {
-                dataServers = dbSystem.getDatabase().query(LargeFetchQueries.fetchPlanServerInformation()).entrySet().stream()
+                dataServers = dbSystem.getDatabase().query(ServerQueries.fetchPlanServerInformation()).entrySet().stream()
                         .filter(entry -> entry.getValue().isNotProxy())
                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
                 latestServerMapRefresh = System.currentTimeMillis();

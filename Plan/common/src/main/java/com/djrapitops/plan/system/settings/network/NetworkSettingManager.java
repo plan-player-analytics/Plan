@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.settings.network;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
@@ -167,7 +167,7 @@ public class NetworkSettingManager implements SubSystem {
 
     private void updateConfigFromDBIfUpdated() {
         Database database = dbSystem.getDatabase();
-        Set<UUID> serverUUIDs = database.query(LargeFetchQueries.fetchPlanServerInformation()).keySet();
+        Set<UUID> serverUUIDs = database.query(ServerQueries.fetchPlanServerInformation()).keySet();
         // Remove the proxy server from the list
         serverUUIDs.remove(serverInfo.getServerUUID());
 

@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.db.access.queries;
 
-import com.djrapitops.plan.data.time.GMTimes;
-import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
@@ -129,54 +127,6 @@ public class ServerAggregateQueries {
                     commandUse.put(cmd, amountUsed);
                 }
                 return commandUse;
-            }
-        };
-    }
-
-    /**
-     * Sum total playtime per world on a server.
-     *
-     * @param serverUUID Server UUID of the Plan server.
-     * @return WorldTimes with world name - playtime ms information.
-     */
-    public static Query<WorldTimes> totalWorldTimes(UUID serverUUID) {
-        String worldIDColumn = WorldTable.TABLE_NAME + "." + WorldTable.ID;
-        String worldNameColumn = WorldTable.TABLE_NAME + "." + WorldTable.NAME + " as world";
-        String sql = "SELECT " +
-                "SUM(" + WorldTimesTable.SURVIVAL + ") as survival, " +
-                "SUM(" + WorldTimesTable.CREATIVE + ") as creative, " +
-                "SUM(" + WorldTimesTable.ADVENTURE + ") as adventure, " +
-                "SUM(" + WorldTimesTable.SPECTATOR + ") as spectator, " +
-                worldNameColumn +
-                " FROM " + WorldTimesTable.TABLE_NAME +
-                " INNER JOIN " + WorldTable.TABLE_NAME + " on " + worldIDColumn + "=" + WorldTimesTable.WORLD_ID +
-                " WHERE " + WorldTimesTable.TABLE_NAME + "." + WorldTimesTable.SERVER_UUID + "=?" +
-                " GROUP BY world";
-
-        return new QueryStatement<WorldTimes>(sql, 1000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public WorldTimes processResults(ResultSet set) throws SQLException {
-                String[] gms = GMTimes.getGMKeyArray();
-
-                WorldTimes worldTimes = new WorldTimes(new HashMap<>());
-                while (set.next()) {
-                    String worldName = set.getString("world");
-
-                    Map<String, Long> gmMap = new HashMap<>();
-                    gmMap.put(gms[0], set.getLong("survival"));
-                    gmMap.put(gms[1], set.getLong("creative"));
-                    gmMap.put(gms[2], set.getLong("adventure"));
-                    gmMap.put(gms[3], set.getLong("spectator"));
-                    GMTimes gmTimes = new GMTimes(gmMap);
-
-                    worldTimes.setGMTimesForWorld(worldName, gmTimes);
-                }
-                return worldTimes;
             }
         };
     }

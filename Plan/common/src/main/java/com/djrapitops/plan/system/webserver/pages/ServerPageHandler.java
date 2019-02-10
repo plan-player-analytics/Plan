@@ -20,7 +20,7 @@ import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.Server;
@@ -112,7 +112,7 @@ public class ServerPageHandler implements PageHandler {
             try {
                 String serverName = target.get(0);
                 Optional<UUID> serverUUIDOptional = dbSystem.getDatabase()
-                        .query(OptionalFetchQueries.fetchMatchingServerIdentifier(serverName))
+                        .query(ServerQueries.fetchMatchingServerIdentifier(serverName))
                         .map(Server::getUuid);
                 if (serverUUIDOptional.isPresent()) {
                     serverUUID = serverUUIDOptional.get();

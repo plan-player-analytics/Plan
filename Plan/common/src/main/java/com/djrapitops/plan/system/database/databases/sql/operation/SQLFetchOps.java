@@ -26,11 +26,9 @@ import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
-import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
-import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
 import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.*;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.settings.config.Config;
@@ -81,7 +79,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Optional<UUID> getServerUUID(String serverName) {
-        return db.query(OptionalFetchQueries.fetchMatchingServerIdentifier(serverName))
+        return db.query(ServerQueries.fetchMatchingServerIdentifier(serverName))
                 .map(Server::getUuid);
     }
 
@@ -92,7 +90,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public WebUser getWebUser(String username) {
-        return db.query(OptionalFetchQueries.fetchWebUser(username)).orElse(null);
+        return db.query(WebUserQueries.fetchWebUser(username)).orElse(null);
     }
 
     @Override
@@ -102,7 +100,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Map<UUID, Map<UUID, List<Session>>> getSessionsWithNoExtras() {
-        return db.query(LargeFetchQueries.fetchAllSessionsWithoutKillOrWorldData());
+        return db.query(SessionQueries.fetchAllSessionsWithoutKillOrWorldData());
     }
 
     @Override
@@ -117,7 +115,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Map<UUID, List<GeoInfo>> getAllGeoInfo() {
-        return db.query(LargeFetchQueries.fetchAllGeoInformation());
+        return db.query(GeoInfoQueries.fetchAllGeoInformation());
     }
 
     @Override
@@ -132,18 +130,18 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Optional<String> getServerName(UUID serverUUID) {
-        return db.query(OptionalFetchQueries.fetchMatchingServerIdentifier(serverUUID)).map(Server::getName);
+        return db.query(ServerQueries.fetchMatchingServerIdentifier(serverUUID)).map(Server::getName);
     }
 
     @Override
     public List<String> getNicknames(UUID playerUUID) {
-        return db.query(PlayerFetchQueries.playersNicknameInformation(playerUUID)).stream()
+        return db.query(NicknameQueries.fetchPlayersNicknameData(playerUUID)).stream()
                 .map(Nickname::getName).collect(Collectors.toList());
     }
 
     @Override
     public Optional<Server> getBungeeInformation() {
-        return db.query(OptionalFetchQueries.fetchProxyServerInformation());
+        return db.query(ServerQueries.fetchProxyServerInformation());
     }
 
     @Override
@@ -153,26 +151,26 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Map<UUID, Server> getBukkitServers() {
-        return db.query(LargeFetchQueries.fetchPlanServerInformation()).entrySet().stream()
+        return db.query(ServerQueries.fetchPlanServerInformation()).entrySet().stream()
                 .filter(entry -> entry.getValue().isNotProxy())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     @Override
     public List<WebUser> getWebUsers() {
-        return new ArrayList<>(db.query(LargeFetchQueries.fetchAllPlanWebUsers()));
+        return new ArrayList<>(db.query(WebUserQueries.fetchAllPlanWebUsers()));
     }
 
     @Override
     public List<Server> getServers() {
-        List<Server> servers = new ArrayList<>(db.query(LargeFetchQueries.fetchPlanServerInformation()).values());
+        List<Server> servers = new ArrayList<>(db.query(ServerQueries.fetchPlanServerInformation()).values());
         Collections.sort(servers);
         return servers;
     }
 
     @Override
     public List<UUID> getServerUUIDs() {
-        return new ArrayList<>(db.query(LargeFetchQueries.fetchPlanServerInformation()).keySet());
+        return new ArrayList<>(db.query(ServerQueries.fetchPlanServerInformation()).keySet());
     }
 
     @Override

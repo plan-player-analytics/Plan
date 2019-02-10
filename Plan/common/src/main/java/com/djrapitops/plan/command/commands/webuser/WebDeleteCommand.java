@@ -18,7 +18,7 @@ package com.djrapitops.plan.command.commands.webuser;
 
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.WebUserQueries;
 import com.djrapitops.plan.db.access.transactions.RemoveWebUserTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
@@ -80,7 +80,7 @@ public class WebDeleteCommand extends CommandNode {
         processing.submitNonCritical(() -> {
             try {
                 Database db = dbSystem.getDatabase();
-                Optional<WebUser> found = db.query(OptionalFetchQueries.fetchWebUser(user));
+                Optional<WebUser> found = db.query(WebUserQueries.fetchWebUser(user));
                 if (!found.isPresent()) {
                     sender.sendMessage("§c[Plan] User Doesn't exist.");
                     return;

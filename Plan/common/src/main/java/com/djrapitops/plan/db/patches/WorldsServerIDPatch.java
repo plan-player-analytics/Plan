@@ -20,8 +20,8 @@ import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.access.queries.LargeStoreQueries;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.db.sql.tables.SessionsTable;
 import com.djrapitops.plan.db.sql.tables.WorldTable;
 import com.djrapitops.plan.db.sql.tables.WorldTimesTable;
@@ -67,7 +67,7 @@ public class WorldsServerIDPatch extends Patch {
 
     @Override
     protected void applyPatch() {
-        Collection<UUID> serverUUIDs = db.query(LargeFetchQueries.fetchPlanServerInformation()).keySet();
+        Collection<UUID> serverUUIDs = db.query(ServerQueries.fetchPlanServerInformation()).keySet();
 
         Map<UUID, Collection<String>> worldsPerServer = new HashMap<>();
         for (UUID serverUUID : serverUUIDs) {

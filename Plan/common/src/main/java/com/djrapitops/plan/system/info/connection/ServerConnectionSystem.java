@@ -19,7 +19,7 @@ package com.djrapitops.plan.system.info.connection;
 import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.*;
@@ -91,7 +91,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
         processing.submitNonCritical(() -> {
             if (latestServerMapRefresh < System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(15L)) {
                 Database database = dbSystem.getDatabase();
-                Map<UUID, Server> servers = database.query(LargeFetchQueries.fetchPlanServerInformation());
+                Map<UUID, Server> servers = database.query(ServerQueries.fetchPlanServerInformation());
                 Optional<Server> proxy = servers.values().stream()
                         .filter(Server::isProxy)
                         .findFirst();

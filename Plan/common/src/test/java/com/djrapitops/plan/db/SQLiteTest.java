@@ -18,9 +18,8 @@ package com.djrapitops.plan.db;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.GeoInfo;
-import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
-import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
 import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.db.sql.tables.ServerTable;
 import com.djrapitops.plan.system.info.server.Server;
@@ -61,7 +60,7 @@ public class SQLiteTest extends CommonDBTest {
     public void testServerTableBungeeSave() throws DBInitException {
         ServerTable serverTable = db.getServerTable();
 
-        Optional<Server> bungeeInfo = db.query(OptionalFetchQueries.fetchProxyServerInformation());
+        Optional<Server> bungeeInfo = db.query(ServerQueries.fetchProxyServerInformation());
         assertFalse(bungeeInfo.isPresent());
 
         UUID bungeeUUID = UUID.randomUUID();
@@ -72,7 +71,7 @@ public class SQLiteTest extends CommonDBTest {
 
         bungeeCord.setId(2);
 
-        bungeeInfo = db.query(OptionalFetchQueries.fetchProxyServerInformation());
+        bungeeInfo = db.query(ServerQueries.fetchProxyServerInformation());
         assertTrue(bungeeInfo.isPresent());
         assertEquals(bungeeCord, bungeeInfo.get());
 
@@ -85,7 +84,7 @@ public class SQLiteTest extends CommonDBTest {
     public void testServerTableBungee() throws DBInitException {
         testServerTableBungeeSave();
 
-        Map<UUID, Server> serverInformation = db.query(LargeFetchQueries.fetchPlanServerInformation());
+        Map<UUID, Server> serverInformation = db.query(ServerQueries.fetchPlanServerInformation());
 
         assertEquals(1, serverInformation.values().stream().filter(Server::isNotProxy).count());
         assertEquals(1, serverInformation.values().stream().filter(Server::isProxy).count());

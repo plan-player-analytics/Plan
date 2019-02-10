@@ -18,7 +18,7 @@ package com.djrapitops.plan.command.commands.webuser;
 
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.WebUserQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -79,7 +79,7 @@ public class WebCheckCommand extends CommandNode {
         processing.submitNonCritical(() -> {
             try {
                 Database db = dbSystem.getDatabase();
-                Optional<WebUser> found = db.query(OptionalFetchQueries.fetchWebUser(user));
+                Optional<WebUser> found = db.query(WebUserQueries.fetchWebUser(user));
                 if (!found.isPresent()) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_WEB_USER_NOT_EXISTS));
                     return;

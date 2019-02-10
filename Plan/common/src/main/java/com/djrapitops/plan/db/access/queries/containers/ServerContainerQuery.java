@@ -25,6 +25,8 @@ import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
 import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.db.access.queries.objects.WorldTimesQueries;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.info.server.Server;
 
@@ -55,7 +57,7 @@ public class ServerContainerQuery implements Query<ServerContainer> {
     public ServerContainer executeQuery(SQLDB db) {
         ServerContainer container = new ServerContainer();
 
-        Optional<Server> serverInfo = db.query(OptionalFetchQueries.fetchMatchingServerIdentifier(serverUUID));
+        Optional<Server> serverInfo = db.query(ServerQueries.fetchMatchingServerIdentifier(serverUUID));
         if (!serverInfo.isPresent()) {
             return container;
         }
@@ -76,7 +78,7 @@ public class ServerContainerQuery implements Query<ServerContainer> {
         });
 
         container.putCachingSupplier(ServerKeys.COMMAND_USAGE, () -> db.query(ServerAggregateQueries.commandUsageCounts(serverUUID)));
-        container.putCachingSupplier(ServerKeys.WORLD_TIMES, () -> db.query(ServerAggregateQueries.totalWorldTimes(serverUUID)));
+        container.putCachingSupplier(ServerKeys.WORLD_TIMES, () -> db.query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID)));
 
         // Calculating getters
         container.putCachingSupplier(ServerKeys.OPERATORS, () -> PlayersMutator.forContainer(container).operators());

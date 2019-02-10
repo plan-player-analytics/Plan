@@ -33,6 +33,7 @@ import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.queries.*;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.*;
 import com.djrapitops.plan.db.access.transactions.*;
 import com.djrapitops.plan.db.access.transactions.events.*;
 import com.djrapitops.plan.db.patches.Patch;
@@ -244,7 +245,7 @@ public abstract class CommonDBTest {
         saveGeoInfo(playerUUID, expected);
         commitTest();
 
-        List<GeoInfo> geolocations = db.query(LargeFetchQueries.fetchAllGeoInformation()).getOrDefault(playerUUID, new ArrayList<>());
+        List<GeoInfo> geolocations = db.query(GeoInfoQueries.fetchAllGeoInformation()).getOrDefault(playerUUID, new ArrayList<>());
         assertEquals(1, geolocations.size());
         assertEquals(expected, geolocations.get(0));
     }
@@ -258,7 +259,7 @@ public abstract class CommonDBTest {
         db.executeTransaction(new NicknameStoreTransaction(playerUUID, expected));
         commitTest();
 
-        List<Nickname> nicknames = db.query(PlayerFetchQueries.playersNicknameInformation(playerUUID));
+        List<Nickname> nicknames = db.query(NicknameQueries.fetchPlayersNicknameData(playerUUID));
         assertEquals(1, nicknames.size());
         assertEquals(expected, nicknames.get(0));
     }
@@ -269,7 +270,7 @@ public abstract class CommonDBTest {
         db.executeTransaction(new RegisterWebUserTransaction(expected));
         commitTest();
 
-        Optional<WebUser> found = db.query(OptionalFetchQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME));
+        Optional<WebUser> found = db.query(WebUserQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME));
         assertTrue(found.isPresent());
         assertEquals(expected, found.get());
     }
@@ -277,14 +278,14 @@ public abstract class CommonDBTest {
     @Test
     public void multipleWebUsersAreFetchedAppropriately() throws DBInitException {
         webUserIsRegistered();
-        assertEquals(1, db.query(LargeFetchQueries.fetchAllPlanWebUsers()).size());
+        assertEquals(1, db.query(WebUserQueries.fetchAllPlanWebUsers()).size());
     }
 
     @Test
     public void webUserIsRemoved() throws DBInitException {
         webUserIsRegistered();
         db.executeTransaction(new RemoveWebUserTransaction(TestConstants.PLAYER_ONE_NAME));
-        assertFalse(db.query(OptionalFetchQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME)).isPresent());
+        assertFalse(db.query(WebUserQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME)).isPresent());
     }
 
     @Test
@@ -399,7 +400,7 @@ public abstract class CommonDBTest {
     public void userInfoTableStoresCorrectUserInformation() {
         saveUserOne();
 
-        List<UserInfo> userInfo = db.query(PlayerFetchQueries.playerServerSpecificUserInformation(playerUUID));
+        List<UserInfo> userInfo = db.query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
         List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 1000L, false, false));
 
         assertEquals(expected, userInfo);
@@ -411,7 +412,7 @@ public abstract class CommonDBTest {
 
         db.getUserInfoTable().updateBanStatus(playerUUID, true);
 
-        List<UserInfo> userInfo = db.query(PlayerFetchQueries.playerServerSpecificUserInformation(playerUUID));
+        List<UserInfo> userInfo = db.query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
         List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 1000L, false, true));
 
         assertEquals(expected, userInfo);
@@ -423,7 +424,7 @@ public abstract class CommonDBTest {
 
         db.getUserInfoTable().updateOpStatus(playerUUID, true);
 
-        List<UserInfo> userInfo = db.query(PlayerFetchQueries.playerServerSpecificUserInformation(playerUUID));
+        List<UserInfo> userInfo = db.query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
         List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 1000L, true, false));
 
         assertEquals(expected, userInfo);
@@ -485,8 +486,8 @@ public abstract class CommonDBTest {
 
         assertFalse(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
         assertFalse(db.query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)));
-        assertTrue(db.query(PlayerFetchQueries.playersNicknameInformation(playerUUID)).isEmpty());
-        assertTrue(db.query(PlayerFetchQueries.playerGeoInfo(playerUUID)).isEmpty());
+        assertTrue(db.query(NicknameQueries.fetchPlayersNicknameData(playerUUID)).isEmpty());
+        assertTrue(db.query(GeoInfoQueries.fetchPlayerGeoInformation(playerUUID)).isEmpty());
         assertTrue(sessionsTable.getSessions(playerUUID).isEmpty());
     }
 
@@ -496,17 +497,17 @@ public abstract class CommonDBTest {
 
         db.executeTransaction(new RemoveEverythingTransaction());
 
-        assertTrue(db.query(LargeFetchQueries.fetchAllCommonUserInformation()).isEmpty());
-        assertQueryIsEmpty(db, LargeFetchQueries.fetchPerServerUserInformation());
-        assertQueryIsEmpty(db, LargeFetchQueries.fetchAllNicknameData());
-        assertQueryIsEmpty(db, LargeFetchQueries.fetchAllGeoInformation());
-        assertQueryIsEmpty(db, LargeFetchQueries.fetchAllSessionsWithoutKillOrWorldData());
+        assertTrue(db.query(BaseUserQueries.fetchAllCommonUserInformation()).isEmpty());
+        assertQueryIsEmpty(db, UserInfoQueries.fetchAllUserInformation());
+        assertQueryIsEmpty(db, NicknameQueries.fetchAllNicknameData());
+        assertQueryIsEmpty(db, GeoInfoQueries.fetchAllGeoInformation());
+        assertQueryIsEmpty(db, SessionQueries.fetchAllSessionsWithoutKillOrWorldData());
         assertQueryIsEmpty(db, LargeFetchQueries.fetchAllCommandUsageData());
         assertQueryIsEmpty(db, LargeFetchQueries.fetchAllWorldNames());
         assertQueryIsEmpty(db, LargeFetchQueries.fetchAllTPSData());
-        assertQueryIsEmpty(db, LargeFetchQueries.fetchPlanServerInformation());
-        assertQueryIsEmpty(db, LargeFetchQueries.fetchAllPingData());
-        assertTrue(db.query(LargeFetchQueries.fetchAllPlanWebUsers()).isEmpty());
+        assertQueryIsEmpty(db, ServerQueries.fetchPlanServerInformation());
+        assertQueryIsEmpty(db, PingQueries.fetchAllPingData());
+        assertTrue(db.query(WebUserQueries.fetchAllPlanWebUsers()).isEmpty());
     }
 
     private <T extends Map> void assertQueryIsEmpty(Database database, Query<T> query) {
@@ -651,16 +652,16 @@ public abstract class CommonDBTest {
 
         backup.executeTransaction(new BackupCopyTransaction(db));
 
-        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllCommonUserInformation());
-        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchPerServerUserInformation());
-        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllNicknameData());
-        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllGeoInformation());
-        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllSessionsWithKillAndWorldData());
+        assertQueryResultIsEqual(db, backup, BaseUserQueries.fetchAllCommonUserInformation());
+        assertQueryResultIsEqual(db, backup, UserInfoQueries.fetchAllUserInformation());
+        assertQueryResultIsEqual(db, backup, NicknameQueries.fetchAllNicknameData());
+        assertQueryResultIsEqual(db, backup, GeoInfoQueries.fetchAllGeoInformation());
+        assertQueryResultIsEqual(db, backup, SessionQueries.fetchAllSessionsWithKillAndWorldData());
         assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllCommandUsageData());
         assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllWorldNames());
         assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllTPSData());
-        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchPlanServerInformation());
-        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllPlanWebUsers());
+        assertQueryResultIsEqual(db, backup, ServerQueries.fetchPlanServerInformation());
+        assertQueryResultIsEqual(db, backup, WebUserQueries.fetchAllPlanWebUsers());
     }
 
     private <T> void assertQueryResultIsEqual(Database one, Database two, Query<T> query) {
@@ -725,7 +726,7 @@ public abstract class CommonDBTest {
             }
         });
 
-        List<Session> allSessions = db.query(LargeFetchQueries.fetchAllSessionsFlatWithKillAndWorldData());
+        List<Session> allSessions = db.query(SessionQueries.fetchAllSessionsFlatWithKillAndWorldData());
 
         assertEquals(worldTimes, allSessions.get(0).getUnsafe(SessionKeys.WORLD_TIMES));
     }
@@ -733,20 +734,20 @@ public abstract class CommonDBTest {
     @Test
     public void testGetUserWorldTimes() {
         testSaveSessionsWorldTimes();
-        WorldTimes worldTimesOfUser = db.query(PlayerAggregateQueries.totalWorldTimes(playerUUID));
+        WorldTimes worldTimesOfUser = db.query(WorldTimesQueries.fetchPlayerTotalWorldTimes(playerUUID));
         assertEquals(createWorldTimes(), worldTimesOfUser);
     }
 
     @Test
     public void testGetServerWorldTimes() {
         testSaveSessionsWorldTimes();
-        WorldTimes worldTimesOfServer = db.query(ServerAggregateQueries.totalWorldTimes(serverUUID));
+        WorldTimes worldTimesOfServer = db.query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID));
         assertEquals(createWorldTimes(), worldTimesOfServer);
     }
 
     @Test
     public void testGetServerWorldTimesNoSessions() {
-        WorldTimes worldTimesOfServer = db.query(ServerAggregateQueries.totalWorldTimes(serverUUID));
+        WorldTimes worldTimesOfServer = db.query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID));
         assertEquals(new WorldTimes(new HashMap<>()), worldTimesOfServer);
     }
 

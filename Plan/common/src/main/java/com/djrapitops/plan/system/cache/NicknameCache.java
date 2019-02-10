@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.cache;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.store.objects.Nickname;
-import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.NicknameQueries;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -104,7 +104,7 @@ public class NicknameCache implements SubSystem {
     private String updateFromDatabase(UUID uuid, String cached) {
         try {
             Optional<Nickname> latest = dbSystem.getDatabase().query(
-                    PlayerFetchQueries.playersLastSeenNickname(uuid, serverInfo.getServerUUID())
+                    NicknameQueries.fetchPlayersLastSeenNickname(uuid, serverInfo.getServerUUID())
             );
             if (latest.isPresent()) {
                 cached = latest.get().getName();

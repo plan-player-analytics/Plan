@@ -18,7 +18,8 @@ package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.db.access.queries.objects.WebUserQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
@@ -125,7 +126,7 @@ public class AnalyzeCommand extends CommandNode {
     private void sendWebUserNotificationIfNecessary(Sender sender) {
         if (webServer.isAuthRequired() &&
                 CommandUtils.isPlayer(sender) &&
-                !dbSystem.getDatabase().query(OptionalFetchQueries.fetchWebUser(sender.getName())).isPresent()) {
+                !dbSystem.getDatabase().query(WebUserQueries.fetchWebUser(sender.getName())).isPresent()) {
             sender.sendMessage("§e" + locale.getString(CommandLang.NO_WEB_USER_NOTIFY));
         }
     }
@@ -133,7 +134,7 @@ public class AnalyzeCommand extends CommandNode {
     private Optional<Server> getServer(String[] args) {
         if (args.length >= 1 && connectionSystem.isServerAvailable()) {
             String serverIdentifier = getGivenIdentifier(args);
-            return dbSystem.getDatabase().query(OptionalFetchQueries.fetchMatchingServerIdentifier(serverIdentifier))
+            return dbSystem.getDatabase().query(ServerQueries.fetchMatchingServerIdentifier(serverIdentifier))
                     .filter(server -> !server.isProxy());
         }
         return Optional.empty();

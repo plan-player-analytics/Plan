@@ -28,7 +28,7 @@ import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.*;
 
 import java.util.*;
 
@@ -123,13 +123,13 @@ public class AllPlayerContainersQuery implements Query<List<PlayerContainer>> {
     public List<PlayerContainer> executeQuery(SQLDB db) {
         List<PlayerContainer> containers = new ArrayList<>();
 
-        Collection<BaseUser> users = db.query(LargeFetchQueries.fetchAllCommonUserInformation());
-        Map<UUID, List<GeoInfo>> geoInfo = db.query(LargeFetchQueries.fetchAllGeoInformation());
-        Map<UUID, List<Ping>> allPings = db.query(LargeFetchQueries.fetchAllPingData());
-        Map<UUID, List<Nickname>> allNicknames = db.query(LargeFetchQueries.fetchAllNicknameDataByPlayerUUIDs());
+        Collection<BaseUser> users = db.query(BaseUserQueries.fetchAllCommonUserInformation());
+        Map<UUID, List<GeoInfo>> geoInfo = db.query(GeoInfoQueries.fetchAllGeoInformation());
+        Map<UUID, List<Ping>> allPings = db.query(PingQueries.fetchAllPingData());
+        Map<UUID, List<Nickname>> allNicknames = db.query(NicknameQueries.fetchAllNicknameDataByPlayerUUIDs());
 
-        Map<UUID, Map<UUID, List<Session>>> sessions = db.query(LargeFetchQueries.fetchAllSessionsWithoutKillOrWorldData());
-        Map<UUID, List<UserInfo>> allUserInfo = db.query(LargeFetchQueries.fetchPerServerUserInformation());
+        Map<UUID, Map<UUID, List<Session>>> sessions = db.query(SessionQueries.fetchAllSessionsWithoutKillOrWorldData());
+        Map<UUID, List<UserInfo>> allUserInfo = db.query(UserInfoQueries.fetchAllUserInformation());
         Map<UUID, PerServerContainer> perServerInfo = getPerServerData(sessions, allUserInfo, allPings);
 
         for (BaseUser baseUser : users) {

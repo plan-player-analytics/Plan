@@ -16,14 +16,10 @@
  */
 package com.djrapitops.plan.db.access.queries;
 
-import com.djrapitops.plan.data.time.GMTimes;
-import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.tables.KillsTable;
 import com.djrapitops.plan.db.sql.tables.SessionsTable;
-import com.djrapitops.plan.db.sql.tables.WorldTable;
-import com.djrapitops.plan.db.sql.tables.WorldTimesTable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -189,54 +185,4 @@ public class PerServerAggregateQueries {
         };
     }
 
-    /**
-     * Find total world times of the player on servers.
-     *
-     * @param playerUUID UUID of the player.
-     * @return Map: Server UUID - WorldTimes total for the server
-     */
-    public static Query<Map<UUID, WorldTimes>> worldTimesOnServers(UUID playerUUID) {
-        String worldIDColumn = WorldTable.TABLE_NAME + "." + WorldTable.ID;
-        String worldNameColumn = WorldTable.TABLE_NAME + "." + WorldTable.NAME + " as world";
-        String sql = "SELECT " +
-                "SUM(" + WorldTimesTable.SURVIVAL + ") as survival, " +
-                "SUM(" + WorldTimesTable.CREATIVE + ") as creative, " +
-                "SUM(" + WorldTimesTable.ADVENTURE + ") as adventure, " +
-                "SUM(" + WorldTimesTable.SPECTATOR + ") as spectator, " +
-                worldNameColumn +
-                " FROM " + WorldTimesTable.TABLE_NAME +
-                " INNER JOIN " + WorldTable.TABLE_NAME + " on " + worldIDColumn + "=" + WorldTimesTable.WORLD_ID +
-                " WHERE " + WorldTimesTable.TABLE_NAME + "." + WorldTimesTable.USER_UUID + "=?" +
-                " GROUP BY world, " + WorldTimesTable.SERVER_UUID;
-
-        return new QueryStatement<Map<UUID, WorldTimes>>(sql, 1000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, playerUUID.toString());
-            }
-
-            @Override
-            public Map<UUID, WorldTimes> processResults(ResultSet set) throws SQLException {
-                String[] gms = GMTimes.getGMKeyArray();
-
-                Map<UUID, WorldTimes> worldTimesMap = new HashMap<>();
-                while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(WorldTimesTable.SERVER_UUID));
-                    WorldTimes worldTimes = worldTimesMap.getOrDefault(serverUUID, new WorldTimes(new HashMap<>()));
-                    String worldName = set.getString("world");
-
-                    Map<String, Long> gmMap = new HashMap<>();
-                    gmMap.put(gms[0], set.getLong("survival"));
-                    gmMap.put(gms[1], set.getLong("creative"));
-                    gmMap.put(gms[2], set.getLong("adventure"));
-                    gmMap.put(gms[3], set.getLong("spectator"));
-                    GMTimes gmTimes = new GMTimes(gmMap);
-
-                    worldTimes.setGMTimesForWorld(worldName, gmTimes);
-                    worldTimesMap.put(serverUUID, worldTimes);
-                }
-                return worldTimesMap;
-            }
-        };
-    }
 }
