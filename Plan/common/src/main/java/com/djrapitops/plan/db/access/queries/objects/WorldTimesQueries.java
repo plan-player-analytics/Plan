@@ -151,11 +151,12 @@ public class WorldTimesQueries {
                 "SUM(" + WorldTimesTable.CREATIVE + ") as creative, " +
                 "SUM(" + WorldTimesTable.ADVENTURE + ") as adventure, " +
                 "SUM(" + WorldTimesTable.SPECTATOR + ") as spectator, " +
+                WorldTimesTable.TABLE_NAME + "." + WorldTimesTable.SERVER_UUID + ", " +
                 worldNameColumn +
                 " FROM " + WorldTimesTable.TABLE_NAME +
                 " INNER JOIN " + WorldTable.TABLE_NAME + " on " + worldIDColumn + "=" + WorldTimesTable.WORLD_ID +
                 " WHERE " + WorldTimesTable.TABLE_NAME + "." + WorldTimesTable.USER_UUID + "=?" +
-                " GROUP BY world, " + WorldTimesTable.SERVER_UUID;
+                " GROUP BY world, " + WorldTimesTable.TABLE_NAME + "." + WorldTimesTable.SERVER_UUID;
 
         return new QueryStatement<Map<UUID, WorldTimes>>(sql, 1000) {
             @Override

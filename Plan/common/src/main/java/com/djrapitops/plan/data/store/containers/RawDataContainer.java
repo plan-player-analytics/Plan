@@ -68,7 +68,7 @@ public class RawDataContainer implements DataContainer {
     @Override
     public <T> Optional<T> getValue(Key<T> key) {
         try {
-            return Optional.ofNullable(getUnsafe(key));
+            return Optional.ofNullable(key.typeCast(map.get(key)));
         } catch (ClassCastException e) {
             return Optional.empty();
         }
@@ -80,7 +80,7 @@ public class RawDataContainer implements DataContainer {
         if (value == null) {
             throw new IllegalArgumentException("Unsupported Key: " + key.getKeyName());
         }
-        return (T) value;
+        return key.typeCast(value);
     }
 
     @Override

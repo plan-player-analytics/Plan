@@ -104,7 +104,7 @@ public class SupplierDataContainer implements DataContainer {
         if (supplier == null) {
             throw new IllegalArgumentException("Unsupported Key: " + key.getKeyName());
         }
-        return (T) supplier.get();
+        return key.typeCast(supplier.get());
     }
 
     private void putAll(Map<Key, Supplier> toPut) {

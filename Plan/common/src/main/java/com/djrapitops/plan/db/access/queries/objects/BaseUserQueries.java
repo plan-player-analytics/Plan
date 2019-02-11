@@ -71,7 +71,7 @@ public class BaseUserQueries {
         String sql = "SELECT " +
                 UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID + ", " +
                 UsersTable.USER_NAME + ", " +
-                UsersTable.REGISTERED + ", " +
+                UsersTable.TABLE_NAME + "." + UsersTable.REGISTERED + ", " +
                 UsersTable.TIMES_KICKED +
                 " FROM " + UsersTable.TABLE_NAME +
                 " INNER JOIN " + UserInfoTable.TABLE_NAME + " on " +
