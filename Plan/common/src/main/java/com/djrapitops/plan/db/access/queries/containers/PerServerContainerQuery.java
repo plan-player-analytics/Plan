@@ -23,7 +23,6 @@ import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.containers.SupplierDataContainer;
 import com.djrapitops.plan.data.store.keys.PerServerKeys;
-import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Query;
@@ -108,25 +107,14 @@ public class PerServerContainerQuery implements Query<PerServerContainer> {
         matchingEntrySet(PerServerKeys.LAST_SEEN, PerServerAggregateQueries.lastSeenOnServers(playerUUID), db, container);
     }
 
-    private void userInformation(SQLDB db, PerServerContainer perServerContainer) {
+    private void userInformation(SQLDB db, PerServerContainer container) {
         List<UserInfo> userInformation = db.query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
-        for (UserInfo userInfo : userInformation) {
-            UUID serverUUID = userInfo.getServerUUID();
-            placeToPerServerContainer(serverUUID, PlayerKeys.REGISTERED, userInfo.getRegistered(), perServerContainer);
-            placeToPerServerContainer(serverUUID, PlayerKeys.BANNED, userInfo.isBanned(), perServerContainer);
-            placeToPerServerContainer(serverUUID, PlayerKeys.OPERATOR, userInfo.isOperator(), perServerContainer);
-        }
+        container.putUserInfo(userInformation);
     }
 
     private <T> void matchingEntrySet(Key<T> key, Query<Map<UUID, T>> map, SQLDB db, PerServerContainer container) {
-        for (Map.Entry<UUID, T> lastSeen : db.query(map).entrySet()) {
-            placeToPerServerContainer(lastSeen.getKey(), key, lastSeen.getValue(), container);
+        for (Map.Entry<UUID, T> entry : db.query(map).entrySet()) {
+            container.putToContainerOfServer(entry.getKey(), key, entry.getValue());
         }
-    }
-
-    private <T> void placeToPerServerContainer(UUID serverUUID, Key<T> key, T value, PerServerContainer perServerContainer) {
-        DataContainer container = perServerContainer.getOrDefault(serverUUID, new SupplierDataContainer());
-        container.putRawData(key, value);
-        perServerContainer.put(serverUUID, container);
     }
 }

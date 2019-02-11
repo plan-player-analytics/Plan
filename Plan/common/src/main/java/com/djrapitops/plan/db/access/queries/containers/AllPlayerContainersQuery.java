@@ -53,7 +53,7 @@ public class AllPlayerContainersQuery implements Query<List<PlayerContainer>> {
      * @param allPings    Map: Player UUID - List of Ping data
      * @return Map: Player UUID - PerServerContainer
      */
-    static Map<UUID, PerServerContainer> getPerServerData(
+    private Map<UUID, PerServerContainer> getPerServerData(
             Map<UUID, Map<UUID, List<Session>>> sessions,
             Map<UUID, List<UserInfo>> allUserInfo,
             Map<UUID, List<Ping>> allPings
@@ -84,8 +84,8 @@ public class AllPlayerContainersQuery implements Query<List<PlayerContainer>> {
             Map<UUID, List<Session>> serverUserSessions = entry.getValue();
 
             for (Map.Entry<UUID, List<Session>> sessionEntry : serverUserSessions.entrySet()) {
-                UUID uuid = sessionEntry.getKey();
-                PerServerContainer perServerContainer = perServerContainers.getOrDefault(uuid, new PerServerContainer());
+                UUID playerUUID = sessionEntry.getKey();
+                PerServerContainer perServerContainer = perServerContainers.getOrDefault(playerUUID, new PerServerContainer());
                 DataContainer container = perServerContainer.getOrDefault(serverUUID, new SupplierDataContainer());
 
                 List<Session> serverSessions = sessionEntry.getValue();
@@ -103,7 +103,7 @@ public class AllPlayerContainersQuery implements Query<List<PlayerContainer>> {
                         container.getUnsafe(PerServerKeys.DEATH_COUNT) - container.getUnsafe(PerServerKeys.PLAYER_DEATH_COUNT)
                 );
                 perServerContainer.put(serverUUID, container);
-                perServerContainers.put(uuid, perServerContainer);
+                perServerContainers.put(playerUUID, perServerContainer);
             }
         }
 

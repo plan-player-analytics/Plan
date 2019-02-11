@@ -67,7 +67,7 @@ public class BaseUserQueries {
         };
     }
 
-    public static Query<Collection<BaseUser>> serverBaseUsers(UUID serverUUID) {
+    public static Query<Collection<BaseUser>> fetchServerBaseUsers(UUID serverUUID) {
         String sql = "SELECT " +
                 UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID + ", " +
                 UsersTable.USER_NAME + ", " +
