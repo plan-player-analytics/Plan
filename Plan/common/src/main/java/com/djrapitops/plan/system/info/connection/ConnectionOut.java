@@ -94,6 +94,7 @@ public class ConnectionOut {
         CloseableHttpClient client = null;
         HttpPost post = null;
         CloseableHttpResponse response = null;
+        long start = System.currentTimeMillis();
         try {
             client = getHttpClient(address);
             String url = address + "/info/" + infoRequest.getClass().getSimpleName().toLowerCase();
@@ -109,7 +110,8 @@ public class ConnectionOut {
             handleResult(url, parameters, responseCode);
         } catch (SocketTimeoutException e) {
             connectionLog.logConnectionTo(toServer, infoRequest, 0);
-            throw new ConnectionFailException("Connection to " + address + " timed out after 10 seconds.", e);
+            long seconds = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - start);
+            throw new ConnectionFailException("Connection to " + address + " timed out (" + seconds + "s): " + e.getMessage(), e);
         } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException | IOException e) {
             connectionLog.logConnectionTo(toServer, infoRequest, -1);
             throw new ConnectionFailException("Connection failed to address: " + address + " - Make sure the server is online.", e);
