@@ -18,12 +18,17 @@ package com.djrapitops.plan.db.access.queries.objects;
 
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
+import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+import com.djrapitops.plan.data.time.GMTimes;
+import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryAllStatement;
-import com.djrapitops.plan.db.sql.tables.KillsTable;
-import com.djrapitops.plan.db.sql.tables.SessionsTable;
-import com.djrapitops.plan.db.sql.tables.UsersTable;
+import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.sql.tables.*;
+import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -39,6 +44,30 @@ public class SessionQueries {
     private SessionQueries() {
         /* Static method class */
     }
+
+    private static final String SELECT_SESSIONS_STATEMENT = "SELECT " +
+            SessionsTable.TABLE_NAME + "." + SessionsTable.ID + ", " +
+            SessionsTable.TABLE_NAME + "." + SessionsTable.USER_UUID + ", " +
+            SessionsTable.TABLE_NAME + "." + SessionsTable.SERVER_UUID + ", " +
+            SessionsTable.SESSION_START + ", " +
+            SessionsTable.SESSION_END + ", " +
+            SessionsTable.MOB_KILLS + ", " +
+            SessionsTable.DEATHS + ", " +
+            SessionsTable.AFK_TIME + ", " +
+            WorldTimesTable.SURVIVAL + ", " +
+            WorldTimesTable.CREATIVE + ", " +
+            WorldTimesTable.ADVENTURE + ", " +
+            WorldTimesTable.SPECTATOR + ", " +
+            WorldTable.NAME + ", " +
+            KillsTable.VICTIM_UUID + ", " +
+            UsersTable.USER_NAME + " as victim_name, " +
+            KillsTable.DATE + ", " +
+            KillsTable.WEAPON +
+            " FROM " + SessionsTable.TABLE_NAME +
+            " LEFT JOIN " + KillsTable.TABLE_NAME + " ON " + SessionsTable.TABLE_NAME + "." + SessionsTable.ID + "=" + KillsTable.TABLE_NAME + "." + KillsTable.SESSION_ID +
+            " LEFT JOIN " + UsersTable.TABLE_NAME + " on " + UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID + "=" + KillsTable.VICTIM_UUID +
+            " INNER JOIN " + WorldTimesTable.TABLE_NAME + " ON " + SessionsTable.TABLE_NAME + "." + SessionsTable.ID + "=" + WorldTimesTable.TABLE_NAME + "." + WorldTimesTable.SESSION_ID +
+            " INNER JOIN " + WorldTable.TABLE_NAME + " ON " + WorldTimesTable.TABLE_NAME + "." + WorldTimesTable.WORLD_ID + "=" + WorldTable.TABLE_NAME + "." + WorldTable.ID;
 
     /**
      * Query database for all Kill data.
@@ -146,10 +175,121 @@ public class SessionQueries {
      * @return List of sessions
      */
     public static Query<List<Session>> fetchAllSessionsFlatWithKillAndWorldData() {
-        return db -> db.query(fetchAllSessionsWithKillAndWorldData())
-                .values().stream()
+        String sql = SELECT_SESSIONS_STATEMENT + " ORDER BY " + SessionsTable.SESSION_START + " DESC";
+        return new QueryAllStatement<List<Session>>(sql, 50000) {
+            @Override
+            public List<Session> processResults(ResultSet set) throws SQLException {
+                return extractDataFromSessionSelectStatement(set);
+            }
+        };
+    }
+
+    /**
+     * Query the database for Session data of a server with kill and world data.
+     *
+     * @param serverUUID UUID of the Plan server.
+     * @return Map: Player UUID - List of sessions on the server.
+     */
+    public static Query<Map<UUID, List<Session>>> fetchSessionsOfServer(UUID serverUUID) {
+        String sql = SELECT_SESSIONS_STATEMENT + " WHERE " + SessionsTable.TABLE_NAME + "." + SessionsTable.SERVER_UUID + "=?" +
+                " ORDER BY " + SessionsTable.SESSION_START + " DESC";
+        return new QueryStatement<Map<UUID, List<Session>>>(sql, 50000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+            }
+
+            @Override
+            public Map<UUID, List<Session>> processResults(ResultSet set) throws SQLException {
+                List<Session> sessions = extractDataFromSessionSelectStatement(set);
+                return SessionsMutator.sortByPlayers(sessions);
+            }
+        };
+    }
+
+    /**
+     * Query the database for Session data of a player with kill and world data.
+     *
+     * @param playerUUID UUID of the Player.
+     * @return Map: Server UUID - List of sessions on the server.
+     */
+    public static Query<Map<UUID, List<Session>>> fetchSessionsOfPlayer(UUID playerUUID) {
+        String sql = SELECT_SESSIONS_STATEMENT + " WHERE " + SessionsTable.TABLE_NAME + "." + SessionsTable.USER_UUID + "=?" +
+                " ORDER BY " + SessionsTable.SESSION_START + " DESC";
+        return new QueryStatement<Map<UUID, List<Session>>>(sql, 50000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+            }
+
+            @Override
+            public Map<UUID, List<Session>> processResults(ResultSet set) throws SQLException {
+                List<Session> sessions = extractDataFromSessionSelectStatement(set);
+                return SessionsMutator.sortByServers(sessions);
+            }
+        };
+    }
+
+    private static List<Session> extractDataFromSessionSelectStatement(ResultSet set) throws SQLException {
+        // Server UUID - Player UUID - Session Start - Session
+        Map<UUID, Map<UUID, Map<Long, Session>>> tempSessionMap = new HashMap<>();
+
+        // Utilities
+        String[] gms = GMTimes.getGMKeyArray();
+        DateHolderRecentComparator dateColderRecentComparator = new DateHolderRecentComparator();
+
+        while (set.next()) {
+            UUID serverUUID = UUID.fromString(set.getString(SessionsTable.SERVER_UUID));
+            Map<UUID, Map<Long, Session>> serverSessions = tempSessionMap.getOrDefault(serverUUID, new HashMap<>());
+
+            UUID playerUUID = UUID.fromString(set.getString(SessionsTable.USER_UUID));
+            Map<Long, Session> playerSessions = serverSessions.getOrDefault(playerUUID, new HashMap<>());
+
+            long sessionStart = set.getLong(SessionsTable.SESSION_START);
+            // id, uuid, serverUUID, sessionStart, sessionEnd, mobKills, deaths, afkTime
+            Session session = playerSessions.getOrDefault(sessionStart, new Session(
+                    set.getInt(SessionsTable.ID),
+                    playerUUID,
+                    serverUUID,
+                    sessionStart,
+                    set.getLong(SessionsTable.SESSION_END),
+                    set.getInt(SessionsTable.MOB_KILLS),
+                    set.getInt(SessionsTable.DEATHS),
+                    set.getLong(SessionsTable.AFK_TIME)
+            ));
+
+            WorldTimes worldTimes = session.getUnsafe(SessionKeys.WORLD_TIMES);
+            String worldName = set.getString(WorldTable.NAME);
+
+            if (!worldTimes.contains(worldName)) {
+                Map<String, Long> gmMap = new HashMap<>();
+                gmMap.put(gms[0], set.getLong(WorldTimesTable.SURVIVAL));
+                gmMap.put(gms[1], set.getLong(WorldTimesTable.CREATIVE));
+                gmMap.put(gms[2], set.getLong(WorldTimesTable.ADVENTURE));
+                gmMap.put(gms[3], set.getLong(WorldTimesTable.SPECTATOR));
+                GMTimes gmTimes = new GMTimes(gmMap);
+                worldTimes.setGMTimesForWorld(worldName, gmTimes);
+            }
+
+            String victimName = set.getString("victim_name");
+            if (victimName != null) {
+                UUID victim = UUID.fromString(set.getString(KillsTable.VICTIM_UUID));
+                long date = set.getLong(KillsTable.DATE);
+                String weapon = set.getString(KillsTable.WEAPON);
+                List<PlayerKill> playerKills = session.getPlayerKills();
+                playerKills.add(new PlayerKill(victim, weapon, date, victimName));
+                playerKills.sort(dateColderRecentComparator);
+            }
+
+            playerSessions.put(sessionStart, session);
+            serverSessions.put(playerUUID, playerSessions);
+            tempSessionMap.put(serverUUID, serverSessions);
+        }
+
+        return tempSessionMap.values().stream()
                 .map(Map::values)
                 .flatMap(Collection::stream)
+                .map(Map::values)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }

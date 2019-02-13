@@ -16,13 +16,11 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.data.container.PlayerDeath;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
 import com.djrapitops.plan.db.patches.KillsOptimizationPatch;
 import com.djrapitops.plan.db.patches.KillsServerIDPatch;
@@ -31,7 +29,6 @@ import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -106,82 +103,6 @@ public class KillsTable extends Table {
             statement.setString(9, kill.getWeapon());
             statement.addBatch();
         }
-    }
-
-    public void addKillsToSessions(UUID uuid, Map<Integer, Session> sessions) {
-        String usersUUIDColumn = UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID;
-        String usersNameColumn = UsersTable.TABLE_NAME + "." + UsersTable.USER_NAME + " as victim_name";
-        String sql = "SELECT " +
-                SESSION_ID + ", " +
-                DATE + ", " +
-                WEAPON + ", " +
-                VICTIM_UUID + ", " +
-                usersNameColumn +
-                " FROM " + TABLE_NAME +
-                " INNER JOIN " + UsersTable.TABLE_NAME + " on " + usersUUIDColumn + "=" + VICTIM_UUID +
-                " WHERE " + KILLER_UUID + "=?";
-
-        query(new QueryStatement<Object>(sql, 50000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-            }
-
-            @Override
-            public Object processResults(ResultSet set) throws SQLException {
-                while (set.next()) {
-                    int sessionID = set.getInt(SESSION_ID);
-                    Session session = sessions.get(sessionID);
-                    if (session == null) {
-                        continue;
-                    }
-                    UUID victim = UUID.fromString(set.getString(VICTIM_UUID));
-                    String victimName = set.getString("victim_name");
-                    long date = set.getLong(DATE);
-                    String weapon = set.getString(WEAPON);
-                    session.getPlayerKills().add(new PlayerKill(victim, weapon, date, victimName));
-                }
-                return null;
-            }
-        });
-    }
-
-    public void addDeathsToSessions(UUID uuid, Map<Integer, Session> sessions) {
-        String usersUUIDColumn = UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID;
-        String usersNameColumn = UsersTable.TABLE_NAME + "." + UsersTable.USER_NAME + " as killer_name";
-        String sql = "SELECT " +
-                SESSION_ID + ", " +
-                DATE + ", " +
-                WEAPON + ", " +
-                KILLER_UUID + ", " +
-                usersNameColumn +
-                " FROM " + TABLE_NAME +
-                " INNER JOIN " + UsersTable.TABLE_NAME + " on " + usersUUIDColumn + "=" + KILLER_UUID +
-                " WHERE " + VICTIM_UUID + "=?";
-
-        query(new QueryStatement<Object>(sql, 50000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-            }
-
-            @Override
-            public Object processResults(ResultSet set) throws SQLException {
-                while (set.next()) {
-                    int sessionID = set.getInt(SESSION_ID);
-                    Session session = sessions.get(sessionID);
-                    if (session == null) {
-                        continue;
-                    }
-                    UUID killer = UUID.fromString(set.getString(KILLER_UUID));
-                    String name = set.getString("killer_name");
-                    long date = set.getLong(DATE);
-                    String weapon = set.getString(WEAPON);
-                    session.getUnsafe(SessionKeys.PLAYER_DEATHS).add(new PlayerDeath(killer, name, weapon, date));
-                }
-                return null;
-            }
-        });
     }
 
     public void addKillsToSessions(Map<UUID, Map<UUID, List<Session>>> map) {

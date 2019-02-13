@@ -45,6 +45,7 @@ import com.djrapitops.plan.system.settings.config.Config;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.utilities.SHA256Hash;
+import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.Timeout;
@@ -333,6 +334,7 @@ public abstract class CommonDBTest {
         List<PlayerKill> kills = new ArrayList<>();
         kills.add(new PlayerKill(TestConstants.PLAYER_TWO_UUID, "Iron Sword", 4321L));
         kills.add(new PlayerKill(TestConstants.PLAYER_TWO_UUID, "Gold Sword", 5321L));
+        kills.sort(new DateHolderRecentComparator());
         return kills;
     }
 
@@ -381,7 +383,7 @@ public abstract class CommonDBTest {
 
         commitTest();
 
-        Map<UUID, List<Session>> sessions = sessionsTable.getSessions(playerUUID);
+        Map<UUID, List<Session>> sessions = db.query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
         List<Session> savedSessions = sessions.get(serverUUID);
 
         assertNotNull(savedSessions);
@@ -488,7 +490,7 @@ public abstract class CommonDBTest {
         assertFalse(db.query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)));
         assertTrue(db.query(NicknameQueries.fetchNicknameDataOfPlayer(playerUUID)).isEmpty());
         assertTrue(db.query(GeoInfoQueries.fetchPlayerGeoInformation(playerUUID)).isEmpty());
-        assertTrue(sessionsTable.getSessions(playerUUID).isEmpty());
+        assertQueryIsEmpty(db, SessionQueries.fetchSessionsOfPlayer(playerUUID));
     }
 
     @Test
@@ -587,15 +589,11 @@ public abstract class CommonDBTest {
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
 
-        SessionsTable sessionsTable = db.getSessionsTable();
         execute(DataStoreQueries.storeSession(session));
 
         commitTest();
 
-        Map<UUID, List<Session>> sessions = sessionsTable.getSessionInfoOfServer(serverUUID);
-
-        session.setPlayerKills(new ArrayList<>());
-        session.setWorldTimes(new WorldTimes(new HashMap<>()));
+        Map<UUID, List<Session>> sessions = db.query(SessionQueries.fetchSessionsOfServer(serverUUID));
 
         List<Session> sSessions = sessions.get(playerUUID);
         assertFalse(sessions.isEmpty());
@@ -616,7 +614,7 @@ public abstract class CommonDBTest {
 
         commitTest();
 
-        Map<UUID, List<Session>> sessions = db.getSessionsTable().getSessions(playerUUID);
+        Map<UUID, List<Session>> sessions = db.query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
         List<Session> savedSessions = sessions.get(serverUUID);
         assertNotNull(savedSessions);
         assertFalse(savedSessions.isEmpty());
@@ -669,20 +667,21 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testSaveWorldTimes() {
+    public void sessionWorldTimesAreFetchedCorrectly() {
         saveUserOne();
         WorldTimes worldTimes = createWorldTimes();
-        WorldTimesTable worldTimesTable = db.getWorldTimesTable();
-
         Session session = new Session(1, playerUUID, serverUUID, 12345L, 23456L, 0, 0, 0);
         session.setWorldTimes(worldTimes);
         execute(DataStoreQueries.storeSession(session));
 
-        Map<Integer, Session> sessions = new HashMap<>();
-        sessions.put(1, session);
-        worldTimesTable.addWorldTimesToSessions(playerUUID, sessions);
+        // Fetch the session
+        Map<UUID, List<Session>> sessions = db.query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
+        List<Session> serverSessions = sessions.get(serverUUID);
+        assertNotNull(serverSessions);
+        assertFalse(serverSessions.isEmpty());
 
-        assertEquals(worldTimes, session.getUnsafe(SessionKeys.WORLD_TIMES));
+        Session savedSession = serverSessions.get(0);
+        assertEquals(worldTimes, savedSession.getUnsafe(SessionKeys.WORLD_TIMES));
     }
 
     @Test

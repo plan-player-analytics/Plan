@@ -23,7 +23,6 @@ import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.QueryAllStatement;
-import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.patches.WorldTimesOptimizationPatch;
 import com.djrapitops.plan.db.patches.WorldTimesSeverIDPatch;
@@ -123,54 +122,6 @@ public class WorldTimesTable extends Table {
             statement.setLong(12, gmTimes.getTime(gms[3]));
             statement.addBatch();
         }
-    }
-
-    public void addWorldTimesToSessions(UUID uuid, Map<Integer, Session> sessions) {
-        String worldIDColumn = WorldTable.TABLE_NAME + "." + WorldTable.ID;
-        String worldNameColumn = WorldTable.TABLE_NAME + "." + WorldTable.NAME + " as world_name";
-        String sql = "SELECT " +
-                SESSION_ID + ", " +
-                SURVIVAL + ", " +
-                CREATIVE + ", " +
-                ADVENTURE + ", " +
-                SPECTATOR + ", " +
-                worldNameColumn +
-                " FROM " + TABLE_NAME +
-                " INNER JOIN " + WorldTable.TABLE_NAME + " on " + worldIDColumn + "=" + WORLD_ID +
-                " WHERE " + USER_UUID + "=?";
-
-        query(new QueryStatement<Object>(sql, 2000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-            }
-
-            @Override
-            public Object processResults(ResultSet set) throws SQLException {
-                String[] gms = GMTimes.getGMKeyArray();
-
-                while (set.next()) {
-                    int sessionID = set.getInt(SESSION_ID);
-                    Session session = sessions.get(sessionID);
-
-                    if (session == null) {
-                        continue;
-                    }
-
-                    String worldName = set.getString("world_name");
-
-                    Map<String, Long> gmMap = new HashMap<>();
-                    gmMap.put(gms[0], set.getLong(SURVIVAL));
-                    gmMap.put(gms[1], set.getLong(CREATIVE));
-                    gmMap.put(gms[2], set.getLong(ADVENTURE));
-                    gmMap.put(gms[3], set.getLong(SPECTATOR));
-                    GMTimes gmTimes = new GMTimes(gmMap);
-
-                    session.getUnsafe(SessionKeys.WORLD_TIMES).setGMTimesForWorld(worldName, gmTimes);
-                }
-                return null;
-            }
-        });
     }
 
     public Map<Integer, WorldTimes> getAllWorldTimesBySessionID() {

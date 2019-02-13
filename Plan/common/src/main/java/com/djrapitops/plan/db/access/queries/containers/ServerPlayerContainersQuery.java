@@ -50,36 +50,6 @@ public class ServerPlayerContainersQuery implements Query<List<PlayerContainer>>
         this.serverUUID = serverUUID;
     }
 
-    /**
-     * Create PerServerContainers for each player.
-     *
-     * @param userInformation Map: Player UUID - UserInfo of this server
-     * @param sessions        Map: Player UUID - List of Sessions of this server
-     * @param ping            Map: Player UUID - List of Ping data of this server
-     * @return Map: Player UUID - PerServerContainer
-     */
-    private static Map<UUID, PerServerContainer> getPerServerData(
-            Map<UUID, UserInfo> userInformation,
-            Map<UUID, List<Session>> sessions,
-            Map<UUID, List<Ping>> ping
-    ) {
-        Map<UUID, PerServerContainer> perServerContainers = new HashMap<>();
-
-        for (Map.Entry<UUID, UserInfo> entry : userInformation.entrySet()) {
-            UUID playerUUID = entry.getKey();
-            PerServerContainer perServerContainer = perServerContainers.getOrDefault(playerUUID, new PerServerContainer());
-
-            perServerContainer.putUserInfo(entry.getValue());         // Information found withing UserInfo
-            perServerContainer.putSessions(sessions.get(playerUUID)); // Session list
-            perServerContainer.putPing(ping.get(playerUUID));         // Ping list
-            perServerContainer.putCalculatingSuppliers();             // Derivative values
-
-            perServerContainers.put(playerUUID, perServerContainer);
-        }
-
-        return perServerContainers;
-    }
-
     @Override
     public List<PlayerContainer> executeQuery(SQLDB db) {
         List<PlayerContainer> containers = new ArrayList<>();
@@ -89,14 +59,7 @@ public class ServerPlayerContainersQuery implements Query<List<PlayerContainer>>
         Map<UUID, List<GeoInfo>> geoInformation = db.query(GeoInfoQueries.fetchServerGeoInformation(serverUUID));
         Map<UUID, List<Nickname>> nicknames = db.query(NicknameQueries.fetchNicknameDataOfServer(serverUUID));
         Map<UUID, List<Ping>> pingData = db.query(PingQueries.fetchPingDataOfServer(serverUUID));
-
-        // v ------------- Needs work
-        Map<UUID, List<Session>> sessions = db.getSessionsTable().getSessionInfoOfServer(serverUUID);
-        Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
-        map.put(serverUUID, sessions);
-        db.getKillsTable().addKillsToSessions(map); // TODO Optimize
-        db.getWorldTimesTable().addWorldTimesToSessions(map); // TODO Optimize
-        // ^ ------------- Needs work
+        Map<UUID, List<Session>> sessions = db.query(SessionQueries.fetchSessionsOfServer(serverUUID));
 
         Map<UUID, UserInfo> userInformation = db.query(UserInfoQueries.fetchUserInformationOfServer(serverUUID));
 
@@ -128,7 +91,6 @@ public class ServerPlayerContainersQuery implements Query<List<PlayerContainer>>
             // PerServerContainer
             container.putRawData(PlayerKeys.PER_SERVER, perServerInfo.get(uuid));
 
-            // v ------------- Needs work
             container.putCachingSupplier(PlayerKeys.SESSIONS, () -> {
                         List<Session> playerSessions = sessions.getOrDefault(uuid, new ArrayList<>());
                         container.getValue(PlayerKeys.ACTIVE_SESSION).ifPresent(playerSessions::add);
@@ -154,10 +116,39 @@ public class ServerPlayerContainersQuery implements Query<List<PlayerContainer>>
             container.putSupplier(PlayerKeys.PLAYER_KILL_COUNT, () -> container.getUnsafe(PlayerKeys.PLAYER_KILLS).size());
             container.putSupplier(PlayerKeys.MOB_KILL_COUNT, () -> SessionsMutator.forContainer(container).toMobKillCount());
             container.putSupplier(PlayerKeys.DEATH_COUNT, () -> SessionsMutator.forContainer(container).toDeathCount());
-            // ^ ------------- Needs work
 
             containers.add(container);
         }
         return containers;
+    }
+
+    /**
+     * Create PerServerContainers for each player.
+     *
+     * @param userInformation Map: Player UUID - UserInfo of this server
+     * @param sessions        Map: Player UUID - List of Sessions of this server
+     * @param ping            Map: Player UUID - List of Ping data of this server
+     * @return Map: Player UUID - PerServerContainer
+     */
+    private Map<UUID, PerServerContainer> getPerServerData(
+            Map<UUID, UserInfo> userInformation,
+            Map<UUID, List<Session>> sessions,
+            Map<UUID, List<Ping>> ping
+    ) {
+        Map<UUID, PerServerContainer> perServerContainers = new HashMap<>();
+
+        for (Map.Entry<UUID, UserInfo> entry : userInformation.entrySet()) {
+            UUID playerUUID = entry.getKey();
+            PerServerContainer perServerContainer = perServerContainers.getOrDefault(playerUUID, new PerServerContainer());
+
+            perServerContainer.putUserInfo(entry.getValue());         // Information found withing UserInfo
+            perServerContainer.putSessions(sessions.get(playerUUID)); // Session list
+            perServerContainer.putPing(ping.get(playerUUID));         // Ping list
+            perServerContainer.putCalculatingSuppliers();             // Derivative values
+
+            perServerContainers.put(playerUUID, perServerContainer);
+        }
+
+        return perServerContainers;
     }
 }

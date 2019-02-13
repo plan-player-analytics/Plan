@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.QueryAllStatement;
@@ -26,15 +24,14 @@ import com.djrapitops.plan.db.patches.SessionAFKTimePatch;
 import com.djrapitops.plan.db.patches.SessionsOptimizationPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
-import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Table that represents plan_sessions.
@@ -93,48 +90,6 @@ public class SessionsTable extends Table {
     }
 
     /**
-     * Returns a Map containing Lists of sessions, key as ServerName.
-     * <p>
-     * Does not include Kills or WorldTimes.
-     * Use {@code getSessions} to get full Sessions.
-     *
-     * @param uuid UUID of the player
-     * @return Map with Sessions that don't contain Kills or WorldTimes.
-     */
-    private Map<UUID, List<Session>> getSessionInformation(UUID uuid) {
-        String sql = Select.from(tableName, "*")
-                .where(USER_UUID + "=?")
-                .toString();
-
-        return query(new QueryStatement<Map<UUID, List<Session>>>(sql, 10000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-            }
-
-            @Override
-            public Map<UUID, List<Session>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, List<Session>> sessionsByServer = new HashMap<>();
-                while (set.next()) {
-                    int id = set.getInt(ID);
-                    long start = set.getLong(SESSION_START);
-                    long end = set.getLong(SESSION_END);
-                    UUID serverUUID = UUID.fromString(set.getString(SERVER_UUID));
-
-                    long timeAFK = set.getLong(AFK_TIME);
-
-                    int deaths = set.getInt(DEATHS);
-                    int mobKills = set.getInt(MOB_KILLS);
-                    List<Session> sessions = sessionsByServer.getOrDefault(serverUUID, new ArrayList<>());
-                    sessions.add(new Session(id, uuid, serverUUID, start, end, mobKills, deaths, timeAFK));
-                    sessionsByServer.put(serverUUID, sessions);
-                }
-                return sessionsByServer;
-            }
-        });
-    }
-
-    /**
      * Used to get Playtime after Epoch ms on a server.
      *
      * @param uuid       UUID of the player.
@@ -166,18 +121,6 @@ public class SessionsTable extends Table {
                 return 0L;
             }
         });
-    }
-
-    public Map<UUID, List<Session>> getSessions(UUID uuid) {
-        Map<UUID, List<Session>> sessions = getSessionInformation(uuid);
-        Map<Integer, Session> allSessions = sessions.values().stream()
-                .flatMap(Collection::stream)
-                .collect(Collectors.toMap(s -> s.getUnsafe(SessionKeys.DB_ID), Function.identity()));
-
-        db.getKillsTable().addKillsToSessions(uuid, allSessions);
-        db.getKillsTable().addDeathsToSessions(uuid, allSessions);
-        db.getWorldTimesTable().addWorldTimesToSessions(uuid, allSessions);
-        return sessions;
     }
 
     /**
@@ -241,47 +184,6 @@ public class SessionsTable extends Table {
                     return set.getInt("logintimes");
                 }
                 return 0;
-            }
-        });
-    }
-
-    public Map<UUID, List<Session>> getSessionInfoOfServer(UUID serverUUID) {
-        String sql = "SELECT " +
-                tableName + "." + ID + ", " +
-                USER_UUID + ", " +
-                SESSION_START + ", " +
-                SESSION_END + ", " +
-                DEATHS + ", " +
-                MOB_KILLS + ", " +
-                AFK_TIME +
-                " FROM " + tableName +
-                " WHERE " + SERVER_UUID + "=?";
-
-        return query(new QueryStatement<Map<UUID, List<Session>>>(sql, 5000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public Map<UUID, List<Session>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, List<Session>> sessionsByUser = new HashMap<>();
-                while (set.next()) {
-                    int id = set.getInt(ID);
-                    UUID uuid = UUID.fromString(set.getString(USER_UUID));
-                    long start = set.getLong(SESSION_START);
-                    long end = set.getLong(SESSION_END);
-
-                    int deaths = set.getInt(DEATHS);
-                    int mobKills = set.getInt(MOB_KILLS);
-
-                    long timeAFK = set.getLong(AFK_TIME);
-
-                    List<Session> sessions = sessionsByUser.getOrDefault(uuid, new ArrayList<>());
-                    sessions.add(new Session(id, uuid, serverUUID, start, end, mobKills, deaths, timeAFK));
-                    sessionsByUser.put(uuid, sessions);
-                }
-                return sessionsByUser;
             }
         });
     }

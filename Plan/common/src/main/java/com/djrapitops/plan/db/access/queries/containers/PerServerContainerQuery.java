@@ -27,6 +27,7 @@ import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.queries.PerServerAggregateQueries;
+import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
 import com.djrapitops.plan.db.access.queries.objects.UserInfoQueries;
 import com.djrapitops.plan.db.access.queries.objects.WorldTimesQueries;
 
@@ -66,7 +67,7 @@ public class PerServerContainerQuery implements Query<PerServerContainer> {
             );
         }
 
-        Map<UUID, List<Session>> sessions = db.getSessionsTable().getSessions(playerUUID);
+        Map<UUID, List<Session>> sessions = db.query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
         for (Map.Entry<UUID, List<Session>> entry : sessions.entrySet()) {
             UUID serverUUID = entry.getKey();
             List<Session> serverSessions = entry.getValue();
