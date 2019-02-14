@@ -81,19 +81,16 @@ public class WorldsServerIDPatch extends Patch {
     }
 
     private Set<String> getWorldNamesOld(UUID serverUUID) {
-        WorldTimesTable worldTimesTable = db.getWorldTimesTable();
-        SessionsTable sessionsTable = db.getSessionsTable();
-
-        String worldIDColumn = worldTimesTable + "." + WorldTimesTable.WORLD_ID;
-        String worldSessionIDColumn = worldTimesTable + "." + WorldTimesTable.SESSION_ID;
-        String sessionIDColumn = sessionsTable + "." + SessionsTable.ID;
-        String sessionServerUUIDColumn = sessionsTable + "." + SessionsTable.SERVER_UUID;
+        String worldIDColumn = WorldTimesTable.TABLE_NAME + "." + WorldTimesTable.WORLD_ID;
+        String worldSessionIDColumn = WorldTimesTable.TABLE_NAME + "." + WorldTimesTable.SESSION_ID;
+        String sessionIDColumn = SessionsTable.TABLE_NAME + "." + SessionsTable.ID;
+        String sessionServerUUIDColumn = SessionsTable.TABLE_NAME + "." + SessionsTable.SERVER_UUID;
 
         String sql = "SELECT DISTINCT " +
                 WorldTable.NAME + " FROM " +
                 WorldTable.TABLE_NAME +
-                " INNER JOIN " + worldTimesTable + " on " + worldIDColumn + "=" + WorldTable.TABLE_NAME + "." + WorldTable.ID +
-                " INNER JOIN " + sessionsTable + " on " + worldSessionIDColumn + "=" + sessionIDColumn +
+                " INNER JOIN " + WorldTimesTable.TABLE_NAME + " on " + worldIDColumn + "=" + WorldTable.TABLE_NAME + "." + WorldTable.ID +
+                " INNER JOIN " + SessionsTable.TABLE_NAME + " on " + worldSessionIDColumn + "=" + sessionIDColumn +
                 " WHERE " + sessionServerUUIDColumn + "=?";
 
         return query(new QueryStatement<Set<String>>(sql, 1000) {
@@ -126,8 +123,7 @@ public class WorldsServerIDPatch extends Patch {
                                         .collect(Collectors.toList()
                                         )));
 
-        WorldTimesTable worldTimesTable = db.getWorldTimesTable();
-        String sql = "UPDATE " + worldTimesTable + " SET " +
+        String sql = "UPDATE " + WorldTimesTable.TABLE_NAME + " SET " +
                 WorldTimesTable.WORLD_ID + "=?" +
                 " WHERE " + WorldTimesTable.WORLD_ID + "=?" +
                 " AND " + "server_id=?";

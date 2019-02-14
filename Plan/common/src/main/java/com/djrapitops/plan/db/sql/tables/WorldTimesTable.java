@@ -20,7 +20,6 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.db.DBType;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.patches.WorldTimesOptimizationPatch;
 import com.djrapitops.plan.db.patches.WorldTimesSeverIDPatch;
@@ -31,13 +30,10 @@ import com.djrapitops.plan.db.sql.parsing.Sql;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Table that is in charge of storing playtime data for each world in each GameMode.
- * <p>
- * Table Name: plan_world_times
+ * Information about database table 'plan_world_times'.
  * <p>
  * Patches related to this table:
  * {@link Version10Patch}
@@ -47,7 +43,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class WorldTimesTable extends Table {
+public class WorldTimesTable {
 
     public static final String TABLE_NAME = "plan_world_times";
 
@@ -75,8 +71,8 @@ public class WorldTimesTable extends Table {
             WorldTable.SELECT_WORLD_ID_STATEMENT + ", " +
             "?, ?, ?, ?, ?, ?)";
 
-    public WorldTimesTable(SQLDB db) {
-        super(TABLE_NAME, db);
+    private WorldTimesTable() {
+        /* Static information class */
     }
 
     public static String createTableSQL(DBType dbType) {
@@ -121,17 +117,5 @@ public class WorldTimesTable extends Table {
             statement.setLong(12, gmTimes.getTime(gms[3]));
             statement.addBatch();
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof WorldTimesTable)) return false;
-        return super.equals(o);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode());
     }
 }

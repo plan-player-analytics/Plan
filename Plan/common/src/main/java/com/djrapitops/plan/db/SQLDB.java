@@ -79,7 +79,6 @@ public abstract class SQLDB extends AbstractDatabase {
     private final KillsTable killsTable;
     private final SessionsTable sessionsTable;
     private final TPSTable tpsTable;
-    private final WorldTimesTable worldTimesTable;
     private final ServerTable serverTable;
     private final SettingsTable settingsTable;
 
@@ -115,7 +114,6 @@ public abstract class SQLDB extends AbstractDatabase {
         userInfoTable = new UserInfoTable(this);
         sessionsTable = new SessionsTable(this);
         killsTable = new KillsTable(this);
-        worldTimesTable = new WorldTimesTable(this);
         settingsTable = new SettingsTable(this);
 
         fetchOps = new SQLFetchOps(this);
@@ -358,11 +356,6 @@ public abstract class SQLDB extends AbstractDatabase {
     @Deprecated
     public TPSTable getTpsTable() {
         return tpsTable;
-    }
-
-    @Deprecated
-    public WorldTimesTable getWorldTimesTable() {
-        return worldTimesTable;
     }
 
     @Deprecated
