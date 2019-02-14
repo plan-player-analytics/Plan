@@ -33,6 +33,7 @@ public abstract class Patch extends OperationCriticalTransaction {
 
     protected final SQLDB db;
     protected final DBType dbType;
+    private static final String ALTER_TABLE = "ALTER TABLE ";
 
     public Patch(SQLDB db) {
         setDb(db);
@@ -96,7 +97,7 @@ public abstract class Patch extends OperationCriticalTransaction {
     }
 
     protected void addColumn(String tableName, String columnInfo) {
-        execute("ALTER TABLE " + tableName + " ADD " + (dbType.supportsMySQLQueries() ? "" : "COLUMN ") + columnInfo);
+        execute(ALTER_TABLE + tableName + " ADD " + (dbType.supportsMySQLQueries() ? "" : "COLUMN ") + columnInfo);
     }
 
     protected void dropTable(String name) {
@@ -110,11 +111,10 @@ public abstract class Patch extends OperationCriticalTransaction {
     private String getRenameTableSQL(String from, String to) {
         switch (dbType) {
             case SQLITE:
-                return "ALTER TABLE " + from + " RENAME TO " + to;
+            case H2:
+                return ALTER_TABLE + from + " RENAME TO " + to;
             case MYSQL:
                 return "RENAME TABLE " + from + " TO " + to;
-            case H2:
-                return "ALTER TABLE " + from + " RENAME TO " + to;
             default:
                 throw new IllegalArgumentException("DBType: " + dbType.getName() + " does not have rename table sql");
         }
@@ -129,7 +129,7 @@ public abstract class Patch extends OperationCriticalTransaction {
 
         for (MySQLSchemaQueries.ForeignKeyConstraint constraint : constraints) {
             // Uses information from https://stackoverflow.com/a/34574758
-            execute("ALTER TABLE " + constraint.getTable() +
+            execute(ALTER_TABLE + constraint.getTable() +
                     " DROP FOREIGN KEY " + constraint.getConstraintName());
         }
     }

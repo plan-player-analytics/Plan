@@ -27,6 +27,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Queries for {@link com.djrapitops.plan.data.container.UserInfo} objects.
  *
@@ -46,13 +48,13 @@ public class UserInfoQueries {
      * @return Map: Server UUID - List of user information
      */
     public static Query<Map<UUID, List<UserInfo>>> fetchAllUserInformation() {
-        String sql = "SELECT " +
+        String sql = SELECT +
                 UserInfoTable.REGISTERED + ", " +
                 UserInfoTable.BANNED + ", " +
                 UserInfoTable.OP + ", " +
                 UserInfoTable.USER_UUID + ", " +
                 UserInfoTable.SERVER_UUID +
-                " FROM " + UserInfoTable.TABLE_NAME;
+                FROM + UserInfoTable.TABLE_NAME;
 
         return new QueryAllStatement<Map<UUID, List<UserInfo>>>(sql, 50000) {
             @Override
@@ -83,13 +85,13 @@ public class UserInfoQueries {
      * @return List of UserInfo objects, one for each server where the player has played.
      */
     public static Query<List<UserInfo>> fetchUserInformationOfUser(UUID playerUUID) {
-        String sql = "SELECT " +
+        String sql = SELECT +
                 UserInfoTable.TABLE_NAME + "." + UserInfoTable.REGISTERED + ", " +
                 UserInfoTable.BANNED + ", " +
                 UserInfoTable.OP + ", " +
                 UserInfoTable.SERVER_UUID +
-                " FROM " + UserInfoTable.TABLE_NAME +
-                " WHERE " + UserInfoTable.TABLE_NAME + "." + UserInfoTable.USER_UUID + "=?";
+                FROM + UserInfoTable.TABLE_NAME +
+                WHERE + UserInfoTable.TABLE_NAME + "." + UserInfoTable.USER_UUID + "=?";
 
         return new QueryStatement<List<UserInfo>>(sql) {
             @Override
@@ -113,14 +115,14 @@ public class UserInfoQueries {
     }
 
     public static Query<Map<UUID, UserInfo>> fetchUserInformationOfServer(UUID serverUUID) {
-        String sql = "SELECT " +
+        String sql = SELECT +
                 UserInfoTable.REGISTERED + ", " +
                 UserInfoTable.BANNED + ", " +
                 UserInfoTable.OP + ", " +
                 UserInfoTable.USER_UUID + ", " +
                 UserInfoTable.SERVER_UUID +
-                " FROM " + UserInfoTable.TABLE_NAME +
-                " WHERE " + UserInfoTable.SERVER_UUID + "=?";
+                FROM + UserInfoTable.TABLE_NAME +
+                WHERE + UserInfoTable.SERVER_UUID + "=?";
         return new QueryStatement<Map<UUID, UserInfo>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

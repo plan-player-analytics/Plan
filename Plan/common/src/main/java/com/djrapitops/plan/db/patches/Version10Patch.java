@@ -23,6 +23,8 @@ import com.djrapitops.plan.db.sql.tables.*;
 
 import java.util.Optional;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.FROM;
+
 public class Version10Patch extends Patch {
 
     private Integer serverID;
@@ -55,13 +57,13 @@ public class Version10Patch extends Patch {
 
         copyTPS();
 
-        dropTable("plan_user_info");
+        dropTable(UserInfoTable.TABLE_NAME);
         copyUsers();
 
-        dropTable("plan_ips");
+        dropTable(GeoInfoTable.TABLE_NAME);
         execute(GeoInfoTable.createTableSQL(dbType));
-        dropTable("plan_world_times");
-        dropTable("plan_worlds");
+        dropTable(WorldTimesTable.TABLE_NAME);
+        dropTable(WorldTable.TABLE_NAME);
         execute(WorldTable.createTableSQL(dbType));
         execute(WorldTimesTable.createTableSQL(dbType));
 
@@ -73,7 +75,7 @@ public class Version10Patch extends Patch {
 
     private void copyUsers() throws DBInitException {
         String tempTableName = "temp_users";
-        renameTable("plan_users", tempTableName);
+        renameTable(UsersTable.TABLE_NAME, tempTableName);
 
         String tempNickTableName = "temp_nicks";
         renameTable(NicknamesTable.TABLE_NAME, tempNickTableName);
@@ -83,7 +85,7 @@ public class Version10Patch extends Patch {
 
         execute(UsersTable.createTableSQL(dbType));
         execute(NicknamesTable.createTableSQL(dbType));
-        dropTable("plan_sessions");
+        dropTable(SessionsTable.TABLE_NAME);
         execute(SessionsTable.createTableSQL(dbType));
         execute(KillsTable.createTableSQL(dbType));
 
@@ -92,22 +94,22 @@ public class Version10Patch extends Patch {
         String statement = "INSERT INTO plan_users " +
                 "(id, uuid, registered, name)" +
                 " SELECT id, uuid, registered, name" +
-                " FROM " + tempTableName;
+                FROM + tempTableName;
         execute(statement);
         statement = "INSERT INTO plan_user_info " +
                 "(user_id, registered, opped, banned, server_id)" +
                 " SELECT id, registered, opped, banned, '" + serverID + "'" +
-                " FROM " + tempTableName;
+                FROM + tempTableName;
         execute(statement);
         statement = "INSERT INTO plan_nicknames " +
                 "(user_id, nickname, server_id)" +
                 " SELECT user_id, nickname, '" + serverID + "'" +
-                " FROM " + tempNickTableName;
+                FROM + tempNickTableName;
         execute(statement);
         statement = "INSERT INTO plan_kills " +
                 "(killer_id, victim_id, weapon, date, session_id)" +
                 " SELECT killer_id, victim_id, weapon, date, '0'" +
-                " FROM " + tempKillsTableName;
+                FROM + tempKillsTableName;
         execute(statement);
     }
 
@@ -121,7 +123,7 @@ public class Version10Patch extends Patch {
         String statement = "INSERT INTO plan_commandusages " +
                 "(command, times_used, server_id)" +
                 " SELECT command, times_used, '" + serverID + "'" +
-                " FROM " + tempTableName;
+                FROM + tempTableName;
         execute(statement);
 
         dropTable(tempTableName);
@@ -138,7 +140,7 @@ public class Version10Patch extends Patch {
         String statement = "INSERT INTO plan_tps " +
                 "(date, tps, players_online, cpu_usage, ram_usage, entities, chunks_loaded, server_id)" +
                 " SELECT date, tps, players_online, cpu_usage, ram_usage, entities, chunks_loaded, '" + serverID + "'" +
-                " FROM " + tempTableName;
+                FROM + tempTableName;
         execute(statement);
 
         dropTable(tempTableName);

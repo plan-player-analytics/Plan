@@ -93,6 +93,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
 
     @Override
     public void kickAmount(Map<UUID, Integer> ofUsers) {
+        // Moved to BaseUser storage methods
     }
 
     @Override

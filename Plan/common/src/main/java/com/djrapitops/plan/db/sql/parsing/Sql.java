@@ -22,6 +22,12 @@ public class Sql {
     public static final String LONG = "bigint";
     public static final String BOOL = "boolean";
 
+    public static final String SELECT = "SELECT ";
+    public static final String FROM = " FROM ";
+    public static final String WHERE = " WHERE ";
+    public static final String GROUP_BY = " GROUP BY ";
+    public static final String AND = " AND ";
+
     private Sql() {
         throw new IllegalStateException("Variable Class");
     }

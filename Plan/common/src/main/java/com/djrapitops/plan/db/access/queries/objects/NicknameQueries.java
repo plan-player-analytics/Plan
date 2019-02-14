@@ -27,6 +27,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Queries for {@link com.djrapitops.plan.data.store.objects.Nickname} objects.
  *
@@ -44,12 +46,12 @@ public class NicknameQueries {
      * @return Multimap: Server UUID - (Player UUID - List of nicknames)
      */
     public static Query<Map<UUID, Map<UUID, List<Nickname>>>> fetchAllNicknameData() {
-        String sql = "SELECT " +
+        String sql = SELECT +
                 NicknamesTable.NICKNAME + ", " +
                 NicknamesTable.LAST_USED + ", " +
                 NicknamesTable.USER_UUID + ", " +
                 NicknamesTable.SERVER_UUID +
-                " FROM " + NicknamesTable.TABLE_NAME;
+                FROM + NicknamesTable.TABLE_NAME;
 
         return new QueryAllStatement<Map<UUID, Map<UUID, List<Nickname>>>>(sql, 5000) {
             @Override
@@ -78,14 +80,15 @@ public class NicknameQueries {
 
     public static Query<Optional<Nickname>> fetchLastSeenNicknameOfPlayer(UUID playerUUID, UUID serverUUID) {
         String subQuery = "SELECT MAX(" + NicknamesTable.LAST_USED + ") FROM " + NicknamesTable.TABLE_NAME +
-                " WHERE " + NicknamesTable.USER_UUID + "=?" +
-                " AND " + NicknamesTable.SERVER_UUID + "=?" +
-                " GROUP BY " + NicknamesTable.USER_UUID;
-        String sql = "SELECT " + NicknamesTable.LAST_USED + ", " +
-                NicknamesTable.NICKNAME + " FROM " + NicknamesTable.TABLE_NAME +
-                " WHERE " + NicknamesTable.USER_UUID + "=?" +
-                " AND " + NicknamesTable.SERVER_UUID + "=?" +
-                " AND " + NicknamesTable.LAST_USED + "=(" + subQuery + ")";
+                WHERE + NicknamesTable.USER_UUID + "=?" +
+                AND + NicknamesTable.SERVER_UUID + "=?" +
+                GROUP_BY + NicknamesTable.USER_UUID;
+        String sql = SELECT +
+                NicknamesTable.LAST_USED + ", " + NicknamesTable.NICKNAME +
+                FROM + NicknamesTable.TABLE_NAME +
+                WHERE + NicknamesTable.USER_UUID + "=?" +
+                AND + NicknamesTable.SERVER_UUID + "=?" +
+                AND + NicknamesTable.LAST_USED + "=(" + subQuery + ")";
         return new QueryStatement<Optional<Nickname>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -110,12 +113,12 @@ public class NicknameQueries {
     }
 
     public static Query<List<Nickname>> fetchNicknameDataOfPlayer(UUID playerUUID) {
-        String sql = "SELECT " +
+        String sql = SELECT +
                 NicknamesTable.NICKNAME + ", " +
                 NicknamesTable.LAST_USED + ", " +
                 NicknamesTable.SERVER_UUID +
-                " FROM " + NicknamesTable.TABLE_NAME +
-                " WHERE (" + NicknamesTable.USER_UUID + "=?)";
+                FROM + NicknamesTable.TABLE_NAME +
+                WHERE + NicknamesTable.USER_UUID + "=?";
 
         return new QueryStatement<List<Nickname>>(sql, 5000) {
 
@@ -143,12 +146,12 @@ public class NicknameQueries {
      * @return Map: Player UUID - List of nicknames.
      */
     public static Query<Map<UUID, List<Nickname>>> fetchAllNicknameDataByPlayerUUIDs() {
-        String sql = "SELECT " +
+        String sql = SELECT +
                 NicknamesTable.NICKNAME + ", " +
                 NicknamesTable.LAST_USED + ", " +
                 NicknamesTable.USER_UUID + ", " +
                 NicknamesTable.SERVER_UUID +
-                " FROM " + NicknamesTable.TABLE_NAME;
+                FROM + NicknamesTable.TABLE_NAME;
         return new QueryAllStatement<Map<UUID, List<Nickname>>>(sql, 5000) {
             @Override
             public Map<UUID, List<Nickname>> processResults(ResultSet set) throws SQLException {
@@ -173,12 +176,12 @@ public class NicknameQueries {
      * @return Map: Player UUID - List of Nicknames on the server.
      */
     public static Query<Map<UUID, List<Nickname>>> fetchNicknameDataOfServer(UUID serverUUID) {
-        String sql = "SELECT " +
+        String sql = SELECT +
                 NicknamesTable.NICKNAME + ", " +
                 NicknamesTable.LAST_USED + ", " +
                 NicknamesTable.USER_UUID + ", " +
                 NicknamesTable.SERVER_UUID +
-                " FROM " + NicknamesTable.TABLE_NAME;
+                FROM + NicknamesTable.TABLE_NAME;
 
         return new QueryAllStatement<Map<UUID, List<Nickname>>>(sql, 5000) {
             @Override

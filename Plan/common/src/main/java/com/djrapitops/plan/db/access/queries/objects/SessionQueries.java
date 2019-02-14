@@ -20,6 +20,7 @@ import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.access.Query;
@@ -33,6 +34,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.djrapitops.plan.db.sql.parsing.Sql.WHERE;
 
 /**
  * Queries for {@link com.djrapitops.plan.data.container.Session} objects.
@@ -68,6 +71,8 @@ public class SessionQueries {
             " LEFT JOIN " + UsersTable.TABLE_NAME + " on " + UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID + "=" + KillsTable.VICTIM_UUID +
             " INNER JOIN " + WorldTimesTable.TABLE_NAME + " ON " + SessionsTable.TABLE_NAME + "." + SessionsTable.ID + "=" + WorldTimesTable.TABLE_NAME + "." + WorldTimesTable.SESSION_ID +
             " INNER JOIN " + WorldTable.TABLE_NAME + " ON " + WorldTimesTable.TABLE_NAME + "." + WorldTimesTable.WORLD_ID + "=" + WorldTable.TABLE_NAME + "." + WorldTable.ID;
+
+    private static final String ORDER_BY_SESSION_START_DESC = " ORDER BY " + SessionsTable.SESSION_START + " DESC";
 
     /**
      * Query the database for Session data without kill, death or world data.
@@ -122,7 +127,8 @@ public class SessionQueries {
      * @return List of sessions
      */
     public static Query<List<Session>> fetchAllSessions() {
-        String sql = SELECT_SESSIONS_STATEMENT + " ORDER BY " + SessionsTable.SESSION_START + " DESC";
+        String sql = SELECT_SESSIONS_STATEMENT +
+                ORDER_BY_SESSION_START_DESC;
         return new QueryAllStatement<List<Session>>(sql, 50000) {
             @Override
             public List<Session> processResults(ResultSet set) throws SQLException {
@@ -138,8 +144,9 @@ public class SessionQueries {
      * @return Map: Player UUID - List of sessions on the server.
      */
     public static Query<Map<UUID, List<Session>>> fetchSessionsOfServer(UUID serverUUID) {
-        String sql = SELECT_SESSIONS_STATEMENT + " WHERE " + SessionsTable.TABLE_NAME + "." + SessionsTable.SERVER_UUID + "=?" +
-                " ORDER BY " + SessionsTable.SESSION_START + " DESC";
+        String sql = SELECT_SESSIONS_STATEMENT +
+                WHERE + SessionsTable.TABLE_NAME + "." + SessionsTable.SERVER_UUID + "=?" +
+                ORDER_BY_SESSION_START_DESC;
         return new QueryStatement<Map<UUID, List<Session>>>(sql, 50000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -161,8 +168,9 @@ public class SessionQueries {
      * @return Map: Server UUID - List of sessions on the server.
      */
     public static Query<Map<UUID, List<Session>>> fetchSessionsOfPlayer(UUID playerUUID) {
-        String sql = SELECT_SESSIONS_STATEMENT + " WHERE " + SessionsTable.TABLE_NAME + "." + SessionsTable.USER_UUID + "=?" +
-                " ORDER BY " + SessionsTable.SESSION_START + " DESC";
+        String sql = SELECT_SESSIONS_STATEMENT +
+                WHERE + SessionsTable.TABLE_NAME + "." + SessionsTable.USER_UUID + "=?" +
+                ORDER_BY_SESSION_START_DESC;
         return new QueryStatement<Map<UUID, List<Session>>>(sql, 50000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -179,18 +187,19 @@ public class SessionQueries {
 
     private static List<Session> extractDataFromSessionSelectStatement(ResultSet set) throws SQLException {
         // Server UUID - Player UUID - Session Start - Session
-        Map<UUID, Map<UUID, Map<Long, Session>>> tempSessionMap = new HashMap<>();
+        Map<UUID, Map<UUID, SortedMap<Long, Session>>> tempSessionMap = new HashMap<>();
 
         // Utilities
         String[] gms = GMTimes.getGMKeyArray();
-        DateHolderRecentComparator dateColderRecentComparator = new DateHolderRecentComparator();
+        Comparator<DateHolder> dateColderRecentComparator = new DateHolderRecentComparator();
+        Comparator<Long> longRecentComparator = (one, two) -> Long.compare(two, one); // Descending order, most recent first.
 
         while (set.next()) {
             UUID serverUUID = UUID.fromString(set.getString(SessionsTable.SERVER_UUID));
-            Map<UUID, Map<Long, Session>> serverSessions = tempSessionMap.getOrDefault(serverUUID, new HashMap<>());
+            Map<UUID, SortedMap<Long, Session>> serverSessions = tempSessionMap.getOrDefault(serverUUID, new HashMap<>());
 
             UUID playerUUID = UUID.fromString(set.getString(SessionsTable.USER_UUID));
-            Map<Long, Session> playerSessions = serverSessions.getOrDefault(playerUUID, new HashMap<>());
+            SortedMap<Long, Session> playerSessions = serverSessions.getOrDefault(playerUUID, new TreeMap<>(longRecentComparator));
 
             long sessionStart = set.getLong(SessionsTable.SESSION_START);
             // id, uuid, serverUUID, sessionStart, sessionEnd, mobKills, deaths, afkTime
@@ -236,7 +245,7 @@ public class SessionQueries {
         return tempSessionMap.values().stream()
                 .map(Map::values)
                 .flatMap(Collection::stream)
-                .map(Map::values)
+                .map(SortedMap::values)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }

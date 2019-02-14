@@ -167,6 +167,7 @@ public abstract class BukkitImporter implements Importer {
 
         SaveOperations save = dbSystem.getDatabase().save();
 
+        // TODO Replace with a transaction
         save.insertUsers(users);
         submitTo(service, () -> save.insertSessions(ImmutableMap.of(serverUUID.get(), sessions), true));
         submitTo(service, () -> save.kickAmount(timesKicked));

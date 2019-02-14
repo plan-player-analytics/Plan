@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Static method class for queries that count together counts for a player on a per server basis.
  * <p>
@@ -51,9 +53,9 @@ public class PerServerAggregateQueries {
     public static Query<Map<UUID, Long>> lastSeenOnServers(UUID playerUUID) {
         String sql = "SELECT MAX(" + SessionsTable.SESSION_END + ") as last_seen, " +
                 SessionsTable.SERVER_UUID +
-                " FROM " + SessionsTable.TABLE_NAME +
-                " WHERE " + SessionsTable.USER_UUID + "=?" +
-                " GROUP BY " + SessionsTable.SERVER_UUID;
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.USER_UUID + "=?" +
+                GROUP_BY + SessionsTable.SERVER_UUID;
         return new QueryStatement<Map<UUID, Long>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -80,9 +82,9 @@ public class PerServerAggregateQueries {
      * @return Map: Server UUID - Player kill count
      */
     public static Query<Map<UUID, Integer>> playerKillCountOnServers(UUID playerUUID) {
-        String sql = "SELECT COUNT(1) as kill_count, " + KillsTable.SERVER_UUID + " FROM " + KillsTable.TABLE_NAME +
-                " WHERE " + KillsTable.KILLER_UUID + "=?" +
-                " GROUP BY " + KillsTable.SERVER_UUID;
+        String sql = "SELECT COUNT(1) as kill_count, " + KillsTable.SERVER_UUID + FROM + KillsTable.TABLE_NAME +
+                WHERE + KillsTable.KILLER_UUID + "=?" +
+                GROUP_BY + KillsTable.SERVER_UUID;
         return new QueryStatement<Map<UUID, Integer>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -110,9 +112,9 @@ public class PerServerAggregateQueries {
      */
     public static Query<Map<UUID, Integer>> mobKillCountOnServers(UUID playerUUID) {
         String sql = "SELECT SUM(" + SessionsTable.MOB_KILLS + ") as kill_count, " +
-                SessionsTable.SERVER_UUID + " FROM " + SessionsTable.TABLE_NAME +
-                " WHERE " + SessionsTable.USER_UUID + "=?" +
-                " GROUP BY " + SessionsTable.SERVER_UUID;
+                SessionsTable.SERVER_UUID + FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.USER_UUID + "=?" +
+                GROUP_BY + SessionsTable.SERVER_UUID;
         return new QueryStatement<Map<UUID, Integer>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -139,9 +141,9 @@ public class PerServerAggregateQueries {
      * @return Map: Server UUID - Mob kill count
      */
     public static Query<Map<UUID, Integer>> playerDeathCountOnServers(UUID playerUUID) {
-        String sql = "SELECT COUNT(1) as death_count, " + KillsTable.SERVER_UUID + " FROM " + KillsTable.TABLE_NAME +
-                " WHERE " + KillsTable.VICTIM_UUID + "=?" +
-                " GROUP BY " + KillsTable.SERVER_UUID;
+        String sql = "SELECT COUNT(1) as death_count, " + KillsTable.SERVER_UUID + FROM + KillsTable.TABLE_NAME +
+                WHERE + KillsTable.VICTIM_UUID + "=?" +
+                GROUP_BY + KillsTable.SERVER_UUID;
         return new QueryStatement<Map<UUID, Integer>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -163,9 +165,9 @@ public class PerServerAggregateQueries {
 
     public static Query<Map<UUID, Integer>> totalDeathCountOnServers(UUID playerUUID) {
         String sql = "SELECT SUM(" + SessionsTable.DEATHS + ") as death_count, " +
-                SessionsTable.SERVER_UUID + " FROM " + SessionsTable.TABLE_NAME +
-                " WHERE " + SessionsTable.USER_UUID + "=?" +
-                " GROUP BY " + SessionsTable.SERVER_UUID;
+                SessionsTable.SERVER_UUID + FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.USER_UUID + "=?" +
+                GROUP_BY + SessionsTable.SERVER_UUID;
         return new QueryStatement<Map<UUID, Integer>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

@@ -28,6 +28,8 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Static method class for queries that return information related to a single player.
  *
@@ -47,8 +49,8 @@ public class PlayerFetchQueries {
      */
     public static Query<Optional<String>> playerUserName(UUID playerUUID) {
         String sql = "SELECT " + UsersTable.USER_NAME +
-                " FROM " + UsersTable.TABLE_NAME +
-                " WHERE " + UsersTable.USER_UUID + "=?";
+                FROM + UsersTable.TABLE_NAME +
+                WHERE + UsersTable.USER_UUID + "=?";
         return new QueryStatement<Optional<String>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -73,7 +75,7 @@ public class PlayerFetchQueries {
      */
     public static Query<Boolean> isPlayerRegistered(UUID playerUUID) {
         String sql = "SELECT COUNT(1) as c FROM " + UsersTable.TABLE_NAME +
-                " WHERE " + UsersTable.USER_UUID + "=?";
+                WHERE + UsersTable.USER_UUID + "=?";
         return new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -91,8 +93,8 @@ public class PlayerFetchQueries {
      */
     public static Query<Boolean> isPlayerRegisteredOnServer(UUID playerUUID, UUID serverUUID) {
         String sql = "SELECT COUNT(1) as c FROM " + UserInfoTable.TABLE_NAME +
-                " WHERE " + UserInfoTable.USER_UUID + "=?" +
-                " AND " + UserInfoTable.SERVER_UUID + "=?";
+                WHERE + UserInfoTable.USER_UUID + "=?" +
+                AND + UserInfoTable.SERVER_UUID + "=?";
         return new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

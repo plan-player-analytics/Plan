@@ -30,7 +30,7 @@ public class DataCache {
 
     @Inject
     public DataCache() {
-
+        // Dagger requires an Inject constructor.
     }
 
 }

@@ -117,14 +117,15 @@ public class IPAnonPatch extends Patch {
         }
         execute(GeoInfoTable.createTableSQL(dbType));
 
-        boolean hasUserIdColumn = hasColumn(tempTableName, "user_id");
-        String identifiers = hasUserIdColumn ? "user_id" : "id, uuid";
+        String userIdColumn = "user_id";
+        boolean hasUserIdColumn = hasColumn(tempTableName, userIdColumn);
+        String identifiers = hasUserIdColumn ? userIdColumn : "id, uuid";
 
         execute("INSERT INTO plan_ips (" +
                 identifiers + ", ip, ip_hash, geolocation, last_used" +
                 ") SELECT " +
                 identifiers + ", ip, ip_hash, geolocation, MAX(last_used) FROM plan_ips_temp GROUP BY ip_hash, " +
-                (hasUserIdColumn ? "user_id" : "uuid") +
+                (hasUserIdColumn ? userIdColumn : "uuid") +
                 ", ip, geolocation");
         dropTable(tempTableName);
     }

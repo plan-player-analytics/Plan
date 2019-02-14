@@ -63,6 +63,15 @@ public class GeoInfoStoreTransaction extends Transaction {
         return !hasFailed;
     }
 
+    public static void setAsFailed() {
+        hasFailed = true;
+    }
+
+    private GeoInfo createGeoInfo() throws NoSuchAlgorithmException {
+        String country = geolocationFunction.apply(ip.getHostAddress());
+        return new GeoInfo(ip, country, time);
+    }
+
     @Override
     protected void performOperations() {
         try {
@@ -71,12 +80,7 @@ public class GeoInfoStoreTransaction extends Transaction {
             execute(DataStoreQueries.storeGeoInfo(playerUUID, geoInfo));
         } catch (NoSuchAlgorithmException noSHA256Available) {
             // SHA256 not available.
-            hasFailed = true;
+            setAsFailed();
         }
-    }
-
-    private GeoInfo createGeoInfo() throws NoSuchAlgorithmException {
-        String country = geolocationFunction.apply(ip.getHostAddress());
-        return new GeoInfo(ip, country, time);
     }
 }

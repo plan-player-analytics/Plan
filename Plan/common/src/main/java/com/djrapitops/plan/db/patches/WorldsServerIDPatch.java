@@ -33,6 +33,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 public class WorldsServerIDPatch extends Patch {
 
     public WorldsServerIDPatch(SQLDB db) {
@@ -51,7 +53,7 @@ public class WorldsServerIDPatch extends Patch {
     }
 
     private Boolean allValuesHaveServerID(String tableName, String columnName) {
-        String sql = "SELECT * FROM " + tableName + " WHERE " + columnName + "=? LIMIT 1";
+        String sql = "SELECT *" + FROM + tableName + WHERE + columnName + "=? LIMIT 1";
         return query(new QueryStatement<Boolean>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -87,11 +89,11 @@ public class WorldsServerIDPatch extends Patch {
         String sessionServerUUIDColumn = SessionsTable.TABLE_NAME + "." + SessionsTable.SERVER_UUID;
 
         String sql = "SELECT DISTINCT " +
-                WorldTable.NAME + " FROM " +
+                WorldTable.NAME + FROM +
                 WorldTable.TABLE_NAME +
                 " INNER JOIN " + WorldTimesTable.TABLE_NAME + " on " + worldIDColumn + "=" + WorldTable.TABLE_NAME + "." + WorldTable.ID +
                 " INNER JOIN " + SessionsTable.TABLE_NAME + " on " + worldSessionIDColumn + "=" + sessionIDColumn +
-                " WHERE " + sessionServerUUIDColumn + "=?";
+                WHERE + sessionServerUUIDColumn + "=?";
 
         return query(new QueryStatement<Set<String>>(sql, 1000) {
             @Override
@@ -125,8 +127,8 @@ public class WorldsServerIDPatch extends Patch {
 
         String sql = "UPDATE " + WorldTimesTable.TABLE_NAME + " SET " +
                 WorldTimesTable.WORLD_ID + "=?" +
-                " WHERE " + WorldTimesTable.WORLD_ID + "=?" +
-                " AND " + "server_id=?";
+                WHERE + WorldTimesTable.WORLD_ID + "=?" +
+                AND + "server_id=?";
         execute(new ExecBatchStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

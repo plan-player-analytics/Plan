@@ -33,6 +33,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Table that represents plan_sessions.
  * <p>
@@ -66,11 +68,11 @@ public class SessionsTable extends Table {
             + SERVER_UUID
             + ") VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-    public static final String SELECT_SESSION_ID_STATEMENT = "(SELECT " + TABLE_NAME + "." + ID + " FROM " + TABLE_NAME +
-            " WHERE " + TABLE_NAME + "." + USER_UUID + "=?" +
-            " AND " + TABLE_NAME + "." + SERVER_UUID + "=?" +
-            " AND " + SESSION_START + "=?" +
-            " AND " + SESSION_END + "=? LIMIT 1)";
+    public static final String SELECT_SESSION_ID_STATEMENT = "(SELECT " + TABLE_NAME + "." + ID + FROM + TABLE_NAME +
+            WHERE + TABLE_NAME + "." + USER_UUID + "=?" +
+            AND + TABLE_NAME + "." + SERVER_UUID + "=?" +
+            AND + SESSION_START + "=?" +
+            AND + SESSION_END + "=? LIMIT 1)";
 
     public SessionsTable(SQLDB db) {
         super(TABLE_NAME, db);
@@ -98,12 +100,12 @@ public class SessionsTable extends Table {
      * @return Milliseconds played after given epoch ms on the server. 0 if player or server not found.
      */
     public long getPlaytime(UUID uuid, UUID serverUUID, long afterDate) {
-        String sql = "SELECT" +
-                " (SUM(" + SESSION_END + ") - SUM(" + SESSION_START + ")) as playtime" +
-                " FROM " + tableName +
-                " WHERE " + SESSION_START + ">?" +
-                " AND " + USER_UUID + "=?" +
-                " AND " + SERVER_UUID + "=?";
+        String sql = SELECT +
+                "(SUM(" + SESSION_END + ") - SUM(" + SESSION_START + ")) as playtime" +
+                FROM + tableName +
+                WHERE + SESSION_START + ">?" +
+                AND + USER_UUID + "=?" +
+                AND + SERVER_UUID + "=?";
 
         return query(new QueryStatement<Long>(sql) {
             @Override
@@ -131,11 +133,11 @@ public class SessionsTable extends Table {
      * @return Milliseconds played  after given epoch ms on the server. 0 if server not found.
      */
     public long getPlaytimeOfServer(UUID serverUUID, long afterDate) {
-        String sql = "SELECT" +
-                " (SUM(" + SESSION_END + ") - SUM(" + SESSION_START + ")) as playtime" +
-                " FROM " + tableName +
-                " WHERE " + SESSION_START + ">?" +
-                " AND " + SERVER_UUID + "=?";
+        String sql = SELECT +
+                "(SUM(" + SESSION_END + ") - SUM(" + SESSION_START + ")) as playtime" +
+                FROM + tableName +
+                WHERE + SESSION_START + ">?" +
+                AND + SERVER_UUID + "=?";
 
         return query(new QueryStatement<Long>(sql) {
             @Override
@@ -163,12 +165,12 @@ public class SessionsTable extends Table {
      * @return How many sessions player has. 0 if player or server not found.
      */
     public int getSessionCount(UUID uuid, UUID serverUUID, long afterDate) {
-        String sql = "SELECT" +
-                " COUNT(*) as logintimes" +
-                " FROM " + tableName +
-                " WHERE (" + SESSION_START + " >= ?)" +
-                " AND " + USER_UUID + "=?" +
-                " AND " + SERVER_UUID + "=?";
+        String sql = SELECT +
+                "COUNT(*) as login_times" +
+                FROM + tableName +
+                WHERE + SESSION_START + " >= ?" +
+                AND + USER_UUID + "=?" +
+                AND + SERVER_UUID + "=?";
 
         return query(new QueryStatement<Integer>(sql) {
             @Override
@@ -181,7 +183,7 @@ public class SessionsTable extends Table {
             @Override
             public Integer processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return set.getInt("logintimes");
+                    return set.getInt("login_times");
                 }
                 return 0;
             }
@@ -189,10 +191,10 @@ public class SessionsTable extends Table {
     }
 
     public Map<Integer, Integer> getIDServerIDRelation() {
-        String sql = "SELECT " +
+        String sql = SELECT +
                 ID + ", " +
                 "(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=" + SERVER_UUID + ") as server_id" +
-                " FROM " + tableName;
+                FROM + tableName;
 
         return query(new QueryAllStatement<Map<Integer, Integer>>(sql, 10000) {
             @Override
