@@ -181,9 +181,15 @@ public class NicknameQueries {
                 NicknamesTable.LAST_USED + ", " +
                 NicknamesTable.USER_UUID + ", " +
                 NicknamesTable.SERVER_UUID +
-                FROM + NicknamesTable.TABLE_NAME;
+                FROM + NicknamesTable.TABLE_NAME +
+                WHERE + NicknamesTable.SERVER_UUID + "=?";
 
-        return new QueryAllStatement<Map<UUID, List<Nickname>>>(sql, 5000) {
+        return new QueryStatement<Map<UUID, List<Nickname>>>(sql, 5000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+            }
+
             @Override
             public Map<UUID, List<Nickname>> processResults(ResultSet set) throws SQLException {
                 Map<UUID, List<Nickname>> serverMap = new HashMap<>();

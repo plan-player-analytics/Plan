@@ -64,15 +64,15 @@ public class WorldMap implements HighChart {
     }
 
     private Map<String, Integer> toGeoCodeCounts(List<String> geoLocations) {
-        Map<String, Integer> geoCodeCounts = new HashMap<>();
+        Map<String, Integer> codeCounts = new HashMap<>();
         Map<String, String> geoCodes = getGeoCodes();
 
         for (String geoLocation : geoLocations) {
             String countryCode = geoCodes.get(geoLocation.toLowerCase());
-            geoCodeCounts.put(countryCode, geoCodeCounts.getOrDefault(countryCode, 0) + 1);
+            codeCounts.put(countryCode, codeCounts.getOrDefault(countryCode, 0) + 1);
         }
 
-        return geoCodeCounts;
+        return codeCounts;
     }
 
     @Override

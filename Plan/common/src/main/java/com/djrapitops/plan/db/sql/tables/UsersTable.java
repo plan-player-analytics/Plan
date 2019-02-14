@@ -53,15 +53,7 @@ public class UsersTable extends Table {
 
     public UsersTable(SQLDB db) {
         super(TABLE_NAME, db);
-        statementSelectID = "(" + Select.from(tableName, tableName + "." + ID).where(USER_UUID + "=?").toString() + " LIMIT 1)";
-        insertStatement = Insert.values(tableName,
-                USER_UUID,
-                REGISTERED,
-                USER_NAME);
     }
-
-    public final String statementSelectID;
-    private String insertStatement;
 
     public static String createTableSQL(DBType dbType) {
         return CreateTableParser.create(TABLE_NAME, dbType)

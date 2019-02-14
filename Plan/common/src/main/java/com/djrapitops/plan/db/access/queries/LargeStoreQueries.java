@@ -60,9 +60,10 @@ public class LargeStoreQueries {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 // Every Server
-                for (UUID serverUUID : ofServers.keySet()) {
+                for (Map.Entry<UUID, Map<String, Integer>> serverEntry : ofServers.entrySet()) {
+                    UUID serverUUID = serverEntry.getKey();
                     // Every Command
-                    for (Map.Entry<String, Integer> entry : ofServers.get(serverUUID).entrySet()) {
+                    for (Map.Entry<String, Integer> entry : serverEntry.getValue().entrySet()) {
                         String command = entry.getKey();
                         int timesUsed = entry.getValue();
 
@@ -91,15 +92,16 @@ public class LargeStoreQueries {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 // Every User
-                for (UUID uuid : ofUsers.keySet()) {
+                for (Map.Entry<UUID, List<GeoInfo>> playerEntry : ofUsers.entrySet()) {
+                    UUID playerUUID = playerEntry.getKey();
                     // Every GeoInfo
-                    for (GeoInfo info : ofUsers.get(uuid)) {
+                    for (GeoInfo info : playerEntry.getValue()) {
                         String ip = info.getIp();
                         String ipHash = info.getIpHash();
                         String geoLocation = info.getGeolocation();
                         long lastUsed = info.getDate();
 
-                        statement.setString(1, uuid.toString());
+                        statement.setString(1, playerUUID.toString());
                         statement.setString(2, ip);
                         statement.setString(3, ipHash);
                         statement.setString(4, geoLocation);
@@ -127,9 +129,10 @@ public class LargeStoreQueries {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 // Every Server
-                for (UUID serverUUID : ofServersAndUsers.keySet()) {
+                for (Map.Entry<UUID, Map<UUID, List<Nickname>>> serverEntry : ofServersAndUsers.entrySet()) {
+                    UUID serverUUID = serverEntry.getKey();
                     // Every User
-                    for (Map.Entry<UUID, List<Nickname>> entry : ofServersAndUsers.get(serverUUID).entrySet()) {
+                    for (Map.Entry<UUID, List<Nickname>> entry : serverEntry.getValue().entrySet()) {
                         UUID uuid = entry.getKey();
                         // Every Nickname
                         List<Nickname> nicknames = entry.getValue();

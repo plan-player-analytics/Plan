@@ -40,11 +40,12 @@ import static com.djrapitops.plan.db.sql.parsing.Sql.*;
 public class WorldTimesQueries {
 
     private static String worldColumn = "world";
-    private static final String SELECT_WORLD_TIMES_STATEMENT_START = "SELECT " +
+    private static final String SELECT_WORLD_TIMES_STATEMENT_START = SELECT +
             "SUM(" + WorldTimesTable.SURVIVAL + ") as survival, " +
             "SUM(" + WorldTimesTable.CREATIVE + ") as creative, " +
             "SUM(" + WorldTimesTable.ADVENTURE + ") as adventure, " +
             "SUM(" + WorldTimesTable.SPECTATOR + ") as spectator, " +
+            WorldTimesTable.SERVER_UUID + ", " +
             WorldTable.TABLE_NAME + "." + WorldTable.NAME + " as " + worldColumn +
             FROM + WorldTimesTable.TABLE_NAME +
             " INNER JOIN " + WorldTable.TABLE_NAME + " on " + WorldTable.TABLE_NAME + "." + WorldTable.ID + "=" + WorldTimesTable.WORLD_ID;
