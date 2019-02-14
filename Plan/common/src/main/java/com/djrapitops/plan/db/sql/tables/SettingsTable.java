@@ -17,16 +17,15 @@
 package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.db.DBType;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
 /**
- * Table that represents plan_settings.
+ * Table information about 'plan_settings'.
  *
  * @author Rsl1122
  */
-public class SettingsTable extends Table {
+public class SettingsTable {
 
     public static final String TABLE_NAME = "plan_settings";
 
@@ -45,8 +44,8 @@ public class SettingsTable extends Table {
             SERVER_UUID + "=? AND " +
             CONFIG_CONTENT + "!=?";
 
-    public SettingsTable(SQLDB db) {
-        super(TABLE_NAME, db);
+    private SettingsTable() {
+        /* Static information class */
     }
 
     public static String createTableSQL(DBType dbType) {

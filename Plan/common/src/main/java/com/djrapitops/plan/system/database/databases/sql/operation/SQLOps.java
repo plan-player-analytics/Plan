@@ -29,7 +29,6 @@ public class SQLOps {
     protected final SessionsTable sessionsTable;
     protected final TPSTable tpsTable;
     protected final ServerTable serverTable;
-    protected final SettingsTable settingsTable;
 
     public SQLOps(SQLDB db) {
         this.db = db;
@@ -39,6 +38,5 @@ public class SQLOps {
         sessionsTable = db.getSessionsTable();
         tpsTable = db.getTpsTable();
         serverTable = db.getServerTable();
-        settingsTable = db.getSettingsTable();
     }
 }

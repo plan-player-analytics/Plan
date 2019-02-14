@@ -79,7 +79,6 @@ public abstract class SQLDB extends AbstractDatabase {
     private final SessionsTable sessionsTable;
     private final TPSTable tpsTable;
     private final ServerTable serverTable;
-    private final SettingsTable settingsTable;
 
     private final SQLFetchOps fetchOps;
     private final SQLSearchOps searchOps;
@@ -112,7 +111,6 @@ public abstract class SQLDB extends AbstractDatabase {
         usersTable = new UsersTable(this);
         userInfoTable = new UserInfoTable(this);
         sessionsTable = new SessionsTable(this);
-        settingsTable = new SettingsTable(this);
 
         fetchOps = new SQLFetchOps(this);
         searchOps = new SQLSearchOps(this);
@@ -359,11 +357,6 @@ public abstract class SQLDB extends AbstractDatabase {
     @Deprecated
     public UserInfoTable getUserInfoTable() {
         return userInfoTable;
-    }
-
-    @Deprecated
-    public SettingsTable getSettingsTable() {
-        return settingsTable;
     }
 
     @Override
