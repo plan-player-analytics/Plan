@@ -22,7 +22,7 @@ import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.queries.schema.H2SchemaQueries;
 import com.djrapitops.plan.db.access.queries.schema.MySQLSchemaQueries;
 import com.djrapitops.plan.db.access.queries.schema.SQLiteSchemaQueries;
-import com.djrapitops.plan.db.access.transactions.OperationCriticalTransaction;
+import com.djrapitops.plan.db.access.transactions.init.OperationCriticalTransaction;
 import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
 import com.djrapitops.plugin.utilities.Verify;
 

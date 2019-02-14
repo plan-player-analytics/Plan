@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.db.access.transactions;
+package com.djrapitops.plan.db.access.transactions.init;
 
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.db.access.ExecStatement;
@@ -22,6 +22,7 @@ import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
+import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.access.transactions.commands.RemovePlayerTransaction;
 import com.djrapitops.plan.db.sql.tables.PingTable;
 import com.djrapitops.plan.db.sql.tables.SessionsTable;

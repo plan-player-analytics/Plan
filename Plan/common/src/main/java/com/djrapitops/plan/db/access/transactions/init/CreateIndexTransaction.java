@@ -14,10 +14,11 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.db.access.transactions;
+package com.djrapitops.plan.db.access.transactions.init;
 
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.access.queries.schema.MySQLSchemaQueries;
+import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.sql.tables.*;
 import org.apache.commons.text.TextStringBuilder;
 
