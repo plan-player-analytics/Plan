@@ -956,7 +956,7 @@ public abstract class CommonDBTest {
 
         db.executeTransaction(new StoreConfigTransaction(serverUUID, config, System.currentTimeMillis()));
 
-        Optional<Config> foundConfig = db.getSettingsTable().fetchNewerConfig(0, serverUUID);
+        Optional<Config> foundConfig = db.query(new NewerConfigQuery(serverUUID, 0));
         assertTrue(foundConfig.isPresent());
         assertEquals(config, foundConfig.get());
     }
@@ -970,7 +970,7 @@ public abstract class CommonDBTest {
 
         db.executeTransaction(new StoreConfigTransaction(serverUUID, config, System.currentTimeMillis()));
 
-        assertFalse(db.getSettingsTable().fetchNewerConfig(savedMs, serverUUID).isPresent());
+        assertFalse(db.query(new NewerConfigQuery(serverUUID, savedMs)).isPresent());
     }
 
     @Test

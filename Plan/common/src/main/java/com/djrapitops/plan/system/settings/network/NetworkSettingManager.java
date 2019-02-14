@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.settings.network;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.objects.NewerConfigQuery;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.db.access.transactions.StoreConfigTransaction;
 import com.djrapitops.plan.system.SubSystem;
@@ -181,7 +182,7 @@ public class NetworkSettingManager implements SubSystem {
         File configFile = getServerConfigFile(serverUUID);
         long lastModified = configFile.exists() ? configFile.lastModified() : -1;
 
-        Optional<Config> foundConfig = database.fetch().getNewConfig(lastModified, serverUUID);
+        Optional<Config> foundConfig = database.query(new NewerConfigQuery(serverUUID, lastModified));
         if (foundConfig.isPresent()) {
             try {
                 Config writing = foundConfig.get();

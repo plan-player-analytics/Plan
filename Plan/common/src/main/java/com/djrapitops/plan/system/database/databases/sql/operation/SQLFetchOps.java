@@ -185,6 +185,6 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Optional<Config> getNewConfig(long updatedAfter, UUID serverUUID) {
-        return settingsTable.fetchNewerConfig(updatedAfter, serverUUID);
+        return db.query(new NewerConfigQuery(serverUUID, updatedAfter));
     }
 }
