@@ -316,7 +316,7 @@ Yesterday                                       || 'Gestern'
 Today                                           || 'Heute'
 Health - Active Playtime Comparison Decrease    ||  Aktive Spieler haben möglicherweise nichts mehr zu tun (Vergleich der letzten zwei Wochen: ${0} zu den vorletzten zwei Wochen: ${1}.
 Health - Active Playtime Comparison Increase    ||  Aktive Spieler haben möglicherweise mehr zu tun (Vergleich der letzten zwei Wochen: ${0} ; zu den vorletzten zwei Wochen: ${1}.
-Health - Downtime                               || Gesamte Serverdowntime (Keine Daten) war ${0}
+Health - Downtime                               ||  Gesamte Serverdowntime (Keine Daten) war ${0}
 Health - New Player Join Players, No            ||  Neue Spieler haben möglicherweise keine anderen Spielern, mit denen sie spielen können. (${0} im Durchschnitt)
 Health - New Player Join Players, Yes           ||  Neue Spieler haben andere Spieler, mit denen Spielen können. (${0} im Durchschnitt)
 Health - New Player Stickiness                  ||  ${0} von den neuen Spieler sind geblieben (${1}/${2})
