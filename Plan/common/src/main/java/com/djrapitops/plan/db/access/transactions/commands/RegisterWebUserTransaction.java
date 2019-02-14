@@ -14,35 +14,37 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.db.access.transactions;
+package com.djrapitops.plan.db.access.transactions.commands;
 
+import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.db.access.ExecStatement;
+import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.sql.tables.SecurityTable;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Transaction to remove a Plan {@link com.djrapitops.plan.data.WebUser} from the database.
+ * Transaction to save a new Plan {@link WebUser} to the database.
  *
  * @author Rsl1122
  */
-public class RemoveWebUserTransaction extends Transaction {
+public class RegisterWebUserTransaction extends Transaction {
 
-    private final String username;
+    private WebUser webUser;
 
-    public RemoveWebUserTransaction(String username) {
-        this.username = username;
+    public RegisterWebUserTransaction(WebUser webUser) {
+        this.webUser = webUser;
     }
 
     @Override
     protected void performOperations() {
-        String sql = "DELETE FROM " + SecurityTable.TABLE_NAME + " WHERE " + SecurityTable.USERNAME + "=?";
-
-        execute(new ExecStatement(sql) {
+        execute(new ExecStatement(SecurityTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, username);
+                statement.setString(1, webUser.getName());
+                statement.setString(2, webUser.getSaltedPassHash());
+                statement.setInt(3, webUser.getPermLevel());
             }
         });
     }

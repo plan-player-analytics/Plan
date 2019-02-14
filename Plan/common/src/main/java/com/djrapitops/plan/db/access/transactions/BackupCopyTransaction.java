@@ -22,6 +22,7 @@ import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.queries.LargeFetchQueries;
 import com.djrapitops.plan.db.access.queries.LargeStoreQueries;
 import com.djrapitops.plan.db.access.queries.objects.*;
+import com.djrapitops.plan.db.access.transactions.commands.RemoveEverythingTransaction;
 
 import java.util.function.Function;
 

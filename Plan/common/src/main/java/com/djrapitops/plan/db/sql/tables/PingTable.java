@@ -22,7 +22,7 @@ import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
 /**
- * Table that represents plan_ping in the database.
+ * Table information about 'plan_ping'.
  * <p>
  * Patches related to this table:
  * {@link PingOptimizationPatch}

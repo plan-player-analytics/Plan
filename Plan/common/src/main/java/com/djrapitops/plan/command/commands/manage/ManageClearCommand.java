@@ -20,7 +20,7 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.transactions.RemoveEverythingTransaction;
+import com.djrapitops.plan.db.access.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;

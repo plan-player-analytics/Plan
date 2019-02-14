@@ -19,7 +19,7 @@ package com.djrapitops.plan.command.commands.manage;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
-import com.djrapitops.plan.db.access.transactions.RemovePlayerTransaction;
+import com.djrapitops.plan.db.access.transactions.commands.RemovePlayerTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;

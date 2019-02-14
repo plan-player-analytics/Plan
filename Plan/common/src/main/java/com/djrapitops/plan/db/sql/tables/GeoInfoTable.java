@@ -22,9 +22,7 @@ import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
 /**
- * Table that is in charge of storing common IP and Geolocation data for users.
- * <p>
- * Table Name: plan_ips
+ * Table information about 'plan_ips'.
  * <p>
  * Patches related to this table:
  * {@link Version10Patch}

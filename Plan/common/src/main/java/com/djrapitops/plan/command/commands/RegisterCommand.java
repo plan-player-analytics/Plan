@@ -19,7 +19,7 @@ package com.djrapitops.plan.command.commands;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.objects.WebUserQueries;
-import com.djrapitops.plan.db.access.transactions.RegisterWebUserTransaction;
+import com.djrapitops.plan.db.access.transactions.commands.RegisterWebUserTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
