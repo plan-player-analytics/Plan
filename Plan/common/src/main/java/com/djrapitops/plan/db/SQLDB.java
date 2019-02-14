@@ -76,7 +76,6 @@ public abstract class SQLDB extends AbstractDatabase {
 
     private final UsersTable usersTable;
     private final UserInfoTable userInfoTable;
-    private final KillsTable killsTable;
     private final SessionsTable sessionsTable;
     private final TPSTable tpsTable;
     private final ServerTable serverTable;
@@ -113,7 +112,6 @@ public abstract class SQLDB extends AbstractDatabase {
         usersTable = new UsersTable(this);
         userInfoTable = new UserInfoTable(this);
         sessionsTable = new SessionsTable(this);
-        killsTable = new KillsTable(this);
         settingsTable = new SettingsTable(this);
 
         fetchOps = new SQLFetchOps(this);
@@ -346,11 +344,6 @@ public abstract class SQLDB extends AbstractDatabase {
     @Deprecated
     public SessionsTable getSessionsTable() {
         return sessionsTable;
-    }
-
-    @Deprecated
-    public KillsTable getKillsTable() {
-        return killsTable;
     }
 
     @Deprecated

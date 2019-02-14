@@ -20,7 +20,6 @@ import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.db.DBType;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.patches.KillsOptimizationPatch;
 import com.djrapitops.plan.db.patches.KillsServerIDPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
@@ -32,9 +31,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 /**
- * Table that is in charge of storing kill data for each session.
- * <p>
- * Table Name: plan_kills
+ * Table information about 'plan_kills'.
  * <p>
  * Patches related to this table:
  * {@link Version10Patch}
@@ -43,7 +40,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class KillsTable extends Table {
+public class KillsTable {
 
     public static final String TABLE_NAME = "plan_kills";
 
@@ -64,8 +61,8 @@ public class KillsTable extends Table {
             + WEAPON
             + ") VALUES (" + SessionsTable.SELECT_SESSION_ID_STATEMENT + ", ?, ?, ?, ?, ?)";
 
-    public KillsTable(SQLDB db) {
-        super(TABLE_NAME, db);
+    private KillsTable() {
+        /* Static information class */
     }
 
     public static String createTableSQL(DBType dbType) {
