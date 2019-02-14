@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.db.patches;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.tables.*;
 
@@ -40,19 +38,15 @@ public class Version10Patch extends Patch {
 
     @Override
     protected void applyPatch() {
-        try {
-            Optional<Integer> fetchedServerID = db.getServerTable().getServerID(getServerUUID());
-            if (!fetchedServerID.isPresent()) {
-                throw new IllegalStateException("Server UUID was not registered, try rebooting the plugin.");
-            }
-            serverID = fetchedServerID.get();
-            alterTablesToV10();
-        } catch (DBInitException e) {
-            throw new DBOpException(e.getMessage(), e);
+        Optional<Integer> fetchedServerID = db.getServerTable().getServerID(getServerUUID());
+        if (!fetchedServerID.isPresent()) {
+            throw new IllegalStateException("Server UUID was not registered, try rebooting the plugin.");
         }
+        serverID = fetchedServerID.get();
+        alterTablesToV10();
     }
 
-    public void alterTablesToV10() throws DBInitException {
+    public void alterTablesToV10() {
         copyCommandUsage();
 
         copyTPS();
@@ -73,7 +67,7 @@ public class Version10Patch extends Patch {
         dropTable("temp_users");
     }
 
-    private void copyUsers() throws DBInitException {
+    private void copyUsers() {
         String tempTableName = "temp_users";
         renameTable(UsersTable.TABLE_NAME, tempTableName);
 
@@ -113,7 +107,7 @@ public class Version10Patch extends Patch {
         execute(statement);
     }
 
-    private void copyCommandUsage() throws DBInitException {
+    private void copyCommandUsage() {
         String tempTableName = "temp_cmdusg";
 
         renameTable("plan_commandusages", tempTableName);
@@ -129,7 +123,7 @@ public class Version10Patch extends Patch {
         dropTable(tempTableName);
     }
 
-    private void copyTPS() throws DBInitException {
+    private void copyTPS() {
         String tempTableName = "temp_tps";
         TPSTable tpsTable = db.getTpsTable();
 

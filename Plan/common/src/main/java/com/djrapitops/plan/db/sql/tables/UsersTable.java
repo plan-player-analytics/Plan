@@ -289,14 +289,14 @@ public class UsersTable extends Table {
     }
 
     public DataContainer getUserInformation(UUID uuid) {
-        Key<DataContainer> user_data = new Key<>(DataContainer.class, "plan_users_data");
+        Key<DataContainer> key = new Key<>(DataContainer.class, "plan_users_data");
         DataContainer returnValue = new SupplierDataContainer();
 
-        returnValue.putSupplier(user_data, () -> getUserInformationDataContainer(uuid));
+        returnValue.putSupplier(key, () -> getUserInformationDataContainer(uuid));
         returnValue.putRawData(PlayerKeys.UUID, uuid);
-        returnValue.putSupplier(PlayerKeys.REGISTERED, () -> returnValue.getUnsafe(user_data).getValue(PlayerKeys.REGISTERED).orElse(null));
-        returnValue.putSupplier(PlayerKeys.NAME, () -> returnValue.getUnsafe(user_data).getValue(PlayerKeys.NAME).orElse(null));
-        returnValue.putSupplier(PlayerKeys.KICK_COUNT, () -> returnValue.getUnsafe(user_data).getValue(PlayerKeys.KICK_COUNT).orElse(null));
+        returnValue.putSupplier(PlayerKeys.REGISTERED, () -> returnValue.getUnsafe(key).getValue(PlayerKeys.REGISTERED).orElse(null));
+        returnValue.putSupplier(PlayerKeys.NAME, () -> returnValue.getUnsafe(key).getValue(PlayerKeys.NAME).orElse(null));
+        returnValue.putSupplier(PlayerKeys.KICK_COUNT, () -> returnValue.getUnsafe(key).getValue(PlayerKeys.KICK_COUNT).orElse(null));
         return returnValue;
     }
 

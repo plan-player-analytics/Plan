@@ -45,7 +45,7 @@ public class WorldTimesQueries {
             "SUM(" + WorldTimesTable.CREATIVE + ") as creative, " +
             "SUM(" + WorldTimesTable.ADVENTURE + ") as adventure, " +
             "SUM(" + WorldTimesTable.SPECTATOR + ") as spectator, " +
-            WorldTimesTable.SERVER_UUID + ", " +
+            WorldTimesTable.TABLE_NAME + "." + WorldTimesTable.SERVER_UUID + ", " +
             WorldTable.TABLE_NAME + "." + WorldTable.NAME + " as " + worldColumn +
             FROM + WorldTimesTable.TABLE_NAME +
             " INNER JOIN " + WorldTable.TABLE_NAME + " on " + WorldTable.TABLE_NAME + "." + WorldTable.ID + "=" + WorldTimesTable.WORLD_ID;

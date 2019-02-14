@@ -23,7 +23,7 @@ import com.djrapitops.plan.db.access.transactions.Transaction;
 import java.net.InetAddress;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 /**
  * Transaction to update Geo information of a player in the database.
@@ -37,7 +37,7 @@ public class GeoInfoStoreTransaction extends Transaction {
     private final UUID playerUUID;
     private InetAddress ip;
     private long time;
-    private Function<String, String> geolocationFunction;
+    private UnaryOperator<String> geolocationFunction;
 
     private GeoInfo geoInfo;
 
@@ -45,7 +45,7 @@ public class GeoInfoStoreTransaction extends Transaction {
             UUID playerUUID,
             InetAddress ip,
             long time,
-            Function<String, String> geolocationFunction
+            UnaryOperator<String> geolocationFunction
     ) {
         this.playerUUID = playerUUID;
         this.ip = ip;
