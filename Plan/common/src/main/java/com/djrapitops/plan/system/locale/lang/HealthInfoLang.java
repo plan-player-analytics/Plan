@@ -34,7 +34,7 @@ public enum HealthInfoLang implements Lang {
     NEW_PLAYER_STICKINESS("New Player Stickiness", " ${0} of new players have stuck around (${1}/${2})"),
     TPS_ABOVE_LOW_THERSHOLD("TPS Above Low Threshold", " Average TPS was above Low Threshold ${0} of the time"),
     TPS_LOW_DIPS("TPS Low Dips", " Average TPS dropped below Low Threshold (${0}) ${1} times"),
-    DOWNTIME("Downtime", "Total Server downtime (No Data) was ${0}"),
+    DOWNTIME("Downtime", " Total Server downtime (No Data) was ${0}"),
     NO_SERVERS_INACCURACY("No Servers Inaccuracy", " No Bukkit/Sponge servers to gather session data - These measures are inaccurate."),
     SINGLE_SERVER_INACCURACY("Single Servers Inaccuracy", " Single Bukkit/Sponge server to gather session data."),
     PLAYER_VISIT_PER_SERVER("Player Visit Server", " players visit on servers per day/server on average."),

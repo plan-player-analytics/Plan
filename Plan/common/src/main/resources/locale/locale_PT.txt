@@ -316,7 +316,7 @@ Yesterday                                       || 'Yesterday'
 Today                                           || 'Today'
 Health - Active Playtime Comparison Decrease    ||  Active players might be running out of things to do (Played ${0} vs ${1}, last two weeks vs weeks 2-4)
 Health - Active Playtime Comparison Increase    ||  Active players seem to have things to do (Played ${0} vs ${1}, last two weeks vs weeks 2-4)
-Health - Downtime                               || Total Server downtime (No Data) was ${0}
+Health - Downtime                               ||  Total Server downtime (No Data) was ${0}
 Health - New Player Join Players, No            ||  New Players may not have players to play with when they join (${0} on average)
 Health - New Player Join Players, Yes           ||  New Players have players to play with when they join (${0} on average)
 Health - New Player Stickiness                  ||  ${0} of new players have stuck around (${1}/${2})
