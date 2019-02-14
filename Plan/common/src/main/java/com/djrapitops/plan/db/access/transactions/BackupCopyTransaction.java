@@ -107,6 +107,6 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
     }
 
     private void copySessionsWithKillAndWorldData() {
-        copy(LargeStoreQueries::storeAllSessionsWithKillAndWorldData, SessionQueries.fetchAllSessionsFlatWithKillAndWorldData());
+        copy(LargeStoreQueries::storeAllSessionsWithKillAndWorldData, SessionQueries.fetchAllSessions());
     }
 }

@@ -19,10 +19,8 @@ package com.djrapitops.plan.db.sql.tables;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.time.GMTimes;
-import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.patches.WorldTimesOptimizationPatch;
 import com.djrapitops.plan.db.patches.WorldTimesSeverIDPatch;
@@ -31,9 +29,10 @@ import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Table that is in charge of storing playtime data for each world in each GameMode.
@@ -121,61 +120,6 @@ public class WorldTimesTable extends Table {
             statement.setLong(11, gmTimes.getTime(gms[2]));
             statement.setLong(12, gmTimes.getTime(gms[3]));
             statement.addBatch();
-        }
-    }
-
-    public Map<Integer, WorldTimes> getAllWorldTimesBySessionID() {
-        String worldIDColumn = WorldTable.TABLE_NAME + "." + WorldTable.ID;
-        String worldNameColumn = WorldTable.TABLE_NAME + "." + WorldTable.NAME + " as world_name";
-        String sql = "SELECT " +
-                SESSION_ID + ", " +
-                SURVIVAL + ", " +
-                CREATIVE + ", " +
-                ADVENTURE + ", " +
-                SPECTATOR + ", " +
-                worldNameColumn +
-                " FROM " + TABLE_NAME +
-                " INNER JOIN " + WorldTable.TABLE_NAME + " on " + worldIDColumn + "=" + WORLD_ID;
-
-        return query(new QueryAllStatement<Map<Integer, WorldTimes>>(sql, 50000) {
-            @Override
-            public Map<Integer, WorldTimes> processResults(ResultSet set) throws SQLException {
-                String[] gms = GMTimes.getGMKeyArray();
-
-                Map<Integer, WorldTimes> worldTimes = new HashMap<>();
-                while (set.next()) {
-                    int sessionID = set.getInt(SESSION_ID);
-
-                    String worldName = set.getString("world_name");
-
-                    Map<String, Long> gmMap = new HashMap<>();
-                    gmMap.put(gms[0], set.getLong(SURVIVAL));
-                    gmMap.put(gms[1], set.getLong(CREATIVE));
-                    gmMap.put(gms[2], set.getLong(ADVENTURE));
-                    gmMap.put(gms[3], set.getLong(SPECTATOR));
-                    GMTimes gmTimes = new GMTimes(gmMap);
-
-                    WorldTimes worldTOfSession = worldTimes.getOrDefault(sessionID, new WorldTimes(new HashMap<>()));
-                    worldTOfSession.setGMTimesForWorld(worldName, gmTimes);
-                    worldTimes.put(sessionID, worldTOfSession);
-                }
-                return worldTimes;
-            }
-        });
-    }
-
-    public void addWorldTimesToSessions(Map<UUID, Map<UUID, List<Session>>> map) {
-        Map<Integer, WorldTimes> worldTimesBySessionID = getAllWorldTimesBySessionID();
-
-        for (Map.Entry<UUID, Map<UUID, List<Session>>> entry : map.entrySet()) {
-            for (List<Session> sessions : entry.getValue().values()) {
-                for (Session session : sessions) {
-                    WorldTimes worldTimes = worldTimesBySessionID.get(session.getUnsafe(SessionKeys.DB_ID));
-                    if (worldTimes != null) {
-                        session.setWorldTimes(worldTimes);
-                    }
-                }
-            }
         }
     }
 

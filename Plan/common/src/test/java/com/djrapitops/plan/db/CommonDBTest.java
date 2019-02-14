@@ -503,7 +503,7 @@ public abstract class CommonDBTest {
         assertQueryIsEmpty(db, UserInfoQueries.fetchAllUserInformation());
         assertQueryIsEmpty(db, NicknameQueries.fetchAllNicknameData());
         assertQueryIsEmpty(db, GeoInfoQueries.fetchAllGeoInformation());
-        assertQueryIsEmpty(db, SessionQueries.fetchAllSessionsWithoutKillOrWorldData());
+        assertTrue(db.query(SessionQueries.fetchAllSessions()).isEmpty());
         assertQueryIsEmpty(db, LargeFetchQueries.fetchAllCommandUsageData());
         assertQueryIsEmpty(db, LargeFetchQueries.fetchAllWorldNames());
         assertQueryIsEmpty(db, LargeFetchQueries.fetchAllTPSData());
@@ -654,7 +654,7 @@ public abstract class CommonDBTest {
         assertQueryResultIsEqual(db, backup, UserInfoQueries.fetchAllUserInformation());
         assertQueryResultIsEqual(db, backup, NicknameQueries.fetchAllNicknameData());
         assertQueryResultIsEqual(db, backup, GeoInfoQueries.fetchAllGeoInformation());
-        assertQueryResultIsEqual(db, backup, SessionQueries.fetchAllSessionsWithKillAndWorldData());
+        assertQueryResultIsEqual(db, backup, SessionQueries.fetchAllSessions());
         assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllCommandUsageData());
         assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllWorldNames());
         assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllTPSData());
@@ -685,12 +685,11 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testSaveAllWorldTimes() {
+    public void worldTimesAreSavedWithAllSessionSave() {
         saveTwoWorlds();
         saveUserOne();
-        WorldTimes worldTimes = createWorldTimes();
 
-        WorldTimesTable worldTimesTable = db.getWorldTimesTable();
+        WorldTimes worldTimes = createWorldTimes();
 
         Session session = createSession();
         session.setWorldTimes(worldTimes);
@@ -703,9 +702,9 @@ public abstract class CommonDBTest {
             }
         });
 
-        Map<Integer, WorldTimes> worldTimesBySessionID = worldTimesTable.getAllWorldTimesBySessionID();
-        System.out.println(worldTimesBySessionID);
-        assertEquals(worldTimes, worldTimesBySessionID.get(1));
+        Map<UUID, WorldTimes> saved = db.query(WorldTimesQueries.fetchPlayerWorldTimesOnServers(playerUUID));
+        WorldTimes savedWorldTimes = saved.get(serverUUID);
+        assertEquals(worldTimes, savedWorldTimes);
     }
 
     @Test
@@ -725,7 +724,7 @@ public abstract class CommonDBTest {
             }
         });
 
-        List<Session> allSessions = db.query(SessionQueries.fetchAllSessionsFlatWithKillAndWorldData());
+        List<Session> allSessions = db.query(SessionQueries.fetchAllSessions());
 
         assertEquals(worldTimes, allSessions.get(0).getUnsafe(SessionKeys.WORLD_TIMES));
     }

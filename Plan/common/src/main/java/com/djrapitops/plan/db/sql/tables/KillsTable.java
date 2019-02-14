@@ -21,7 +21,6 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
 import com.djrapitops.plan.db.patches.KillsOptimizationPatch;
 import com.djrapitops.plan.db.patches.KillsServerIDPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
@@ -30,8 +29,6 @@ import com.djrapitops.plan.db.sql.parsing.Sql;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -102,20 +99,6 @@ public class KillsTable extends Table {
             statement.setLong(8, kill.getDate());
             statement.setString(9, kill.getWeapon());
             statement.addBatch();
-        }
-    }
-
-    public void addKillsToSessions(Map<UUID, Map<UUID, List<Session>>> map) {
-        Map<Integer, List<PlayerKill>> playerKillsBySessionID = db.query(SessionQueries.fetchAllPlayerKillDataBySessionID());
-        for (UUID serverUUID : map.keySet()) {
-            for (List<Session> sessions : map.get(serverUUID).values()) {
-                for (Session session : sessions) {
-                    List<PlayerKill> playerKills = playerKillsBySessionID.get(session.getUnsafe(SessionKeys.DB_ID));
-                    if (playerKills != null) {
-                        session.setPlayerKills(playerKills);
-                    }
-                }
-            }
         }
     }
 }

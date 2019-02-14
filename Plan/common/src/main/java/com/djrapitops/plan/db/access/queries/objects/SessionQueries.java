@@ -70,45 +70,6 @@ public class SessionQueries {
             " INNER JOIN " + WorldTable.TABLE_NAME + " ON " + WorldTimesTable.TABLE_NAME + "." + WorldTimesTable.WORLD_ID + "=" + WorldTable.TABLE_NAME + "." + WorldTable.ID;
 
     /**
-     * Query database for all Kill data.
-     *
-     * @return Map: Session ID - List of PlayerKills
-     */
-    public static Query<Map<Integer, List<PlayerKill>>> fetchAllPlayerKillDataBySessionID() {
-        String usersUUIDColumn = UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID;
-        String usersNameColumn = UsersTable.TABLE_NAME + "." + UsersTable.USER_NAME + " as victim_name";
-        String sql = "SELECT " +
-                KillsTable.SESSION_ID + ", " +
-                KillsTable.DATE + ", " +
-                KillsTable.WEAPON + ", " +
-                KillsTable.VICTIM_UUID + ", " +
-                usersNameColumn +
-                " FROM " + KillsTable.TABLE_NAME +
-                " INNER JOIN " + UsersTable.TABLE_NAME + " on " + usersUUIDColumn + "=" + KillsTable.VICTIM_UUID;
-
-        return new QueryAllStatement<Map<Integer, List<PlayerKill>>>(sql, 50000) {
-            @Override
-            public Map<Integer, List<PlayerKill>> processResults(ResultSet set) throws SQLException {
-                Map<Integer, List<PlayerKill>> allPlayerKills = new HashMap<>();
-                while (set.next()) {
-                    int sessionID = set.getInt(KillsTable.SESSION_ID);
-
-                    List<PlayerKill> playerKills = allPlayerKills.getOrDefault(sessionID, new ArrayList<>());
-
-                    UUID victim = UUID.fromString(set.getString(KillsTable.VICTIM_UUID));
-                    String victimName = set.getString("victim_name");
-                    long date = set.getLong(KillsTable.DATE);
-                    String weapon = set.getString(KillsTable.WEAPON);
-                    playerKills.add(new PlayerKill(victim, weapon, date, victimName));
-
-                    allPlayerKills.put(sessionID, playerKills);
-                }
-                return allPlayerKills;
-            }
-        };
-    }
-
-    /**
      * Query the database for Session data without kill, death or world data.
      *
      * @return Multimap: Server UUID - (Player UUID - List of sessions)
@@ -158,23 +119,9 @@ public class SessionQueries {
     /**
      * Query the database for Session data with kill, death or world data.
      *
-     * @return Multimap: Server UUID - (Player UUID - List of sessions)
-     */
-    public static Query<Map<UUID, Map<UUID, List<Session>>>> fetchAllSessionsWithKillAndWorldData() {
-        return db -> {
-            Map<UUID, Map<UUID, List<Session>>> sessions = db.query(fetchAllSessionsWithoutKillOrWorldData());
-            db.getKillsTable().addKillsToSessions(sessions);
-            db.getWorldTimesTable().addWorldTimesToSessions(sessions);
-            return sessions;
-        };
-    }
-
-    /**
-     * Query the database for Session data with kill, death or world data.
-     *
      * @return List of sessions
      */
-    public static Query<List<Session>> fetchAllSessionsFlatWithKillAndWorldData() {
+    public static Query<List<Session>> fetchAllSessions() {
         String sql = SELECT_SESSIONS_STATEMENT + " ORDER BY " + SessionsTable.SESSION_START + " DESC";
         return new QueryAllStatement<List<Session>>(sql, 50000) {
             @Override
