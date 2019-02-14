@@ -22,7 +22,6 @@ import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.settings.config.Config;
 
 import java.util.List;
 import java.util.Map;
@@ -84,6 +83,4 @@ public interface SaveOperations {
     @Deprecated
     void setAsUninstalled(UUID serverUUID);
 
-    @Deprecated
-    void saveConfig(UUID serverUUID, Config config, long lastModified);
 }

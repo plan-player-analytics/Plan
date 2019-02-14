@@ -37,7 +37,10 @@ import com.djrapitops.plan.db.access.queries.objects.*;
 import com.djrapitops.plan.db.access.transactions.*;
 import com.djrapitops.plan.db.access.transactions.events.*;
 import com.djrapitops.plan.db.patches.Patch;
-import com.djrapitops.plan.db.sql.tables.*;
+import com.djrapitops.plan.db.sql.tables.ServerTable;
+import com.djrapitops.plan.db.sql.tables.SessionsTable;
+import com.djrapitops.plan.db.sql.tables.TPSTable;
+import com.djrapitops.plan.db.sql.tables.UsersTable;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
@@ -951,10 +954,9 @@ public abstract class CommonDBTest {
     public void configIsStoredInTheDatabase() {
         PlanConfig config = system.getConfigSystem().getConfig();
 
-        SettingsTable settingsTable = db.getSettingsTable();
-        settingsTable.storeConfig(serverUUID, config, System.currentTimeMillis());
+        db.executeTransaction(new StoreConfigTransaction(serverUUID, config, System.currentTimeMillis()));
 
-        Optional<Config> foundConfig = settingsTable.fetchNewerConfig(0, serverUUID);
+        Optional<Config> foundConfig = db.getSettingsTable().fetchNewerConfig(0, serverUUID);
         assertTrue(foundConfig.isPresent());
         assertEquals(config, foundConfig.get());
     }
@@ -966,10 +968,9 @@ public abstract class CommonDBTest {
 
         PlanConfig config = system.getConfigSystem().getConfig();
 
-        SettingsTable settingsTable = db.getSettingsTable();
-        settingsTable.storeConfig(serverUUID, config, System.currentTimeMillis());
+        db.executeTransaction(new StoreConfigTransaction(serverUUID, config, System.currentTimeMillis()));
 
-        assertFalse(settingsTable.fetchNewerConfig(savedMs, serverUUID).isPresent());
+        assertFalse(db.getSettingsTable().fetchNewerConfig(savedMs, serverUUID).isPresent());
     }
 
     @Test

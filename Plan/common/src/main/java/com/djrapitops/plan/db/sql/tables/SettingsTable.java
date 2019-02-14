@@ -18,19 +18,15 @@ package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.system.settings.config.Config;
 import com.djrapitops.plan.system.settings.config.ConfigReader;
-import com.djrapitops.plan.system.settings.config.ConfigWriter;
-import org.apache.commons.text.TextStringBuilder;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.UUID;
@@ -49,6 +45,16 @@ public class SettingsTable extends Table {
     public static final String UPDATED = "updated";
     public static final String CONFIG_CONTENT = "content";
 
+    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
+            SERVER_UUID + ", " +
+            UPDATED + ", " +
+            CONFIG_CONTENT + ") VALUES (?,?,?)";
+    public static final String UPDATE_STATEMENT = "UPDATE " + TABLE_NAME + " SET " +
+            CONFIG_CONTENT + "=?," +
+            UPDATED + "=? WHERE " +
+            SERVER_UUID + "=? AND " +
+            CONFIG_CONTENT + "!=?";
+
     public SettingsTable(SQLDB db) {
         super(TABLE_NAME, db);
     }
@@ -60,76 +66,6 @@ public class SettingsTable extends Table {
                 .column(UPDATED, Sql.LONG).notNull()
                 .column(CONFIG_CONTENT, "TEXT").notNull()
                 .toString();
-    }
-
-    /**
-     * Place a config in the database for this server.
-     * <p>
-     * Only one config is stored per server uuid.
-     *
-     * @param serverUUID   UUID of the server.
-     * @param config       Config of the server.
-     * @param lastModified Epoch ms the config file was last modified.
-     */
-    public void storeConfig(UUID serverUUID, Config config, long lastModified) {
-        TextStringBuilder configTextBuilder = new TextStringBuilder();
-        List<String> lines = new ConfigWriter().parseLines(config);
-        configTextBuilder.appendWithSeparators(lines, "\n");
-        String configSettings = configTextBuilder.toString();
-        if (isConfigStored(serverUUID)) {
-            updateConfig(serverUUID, configSettings, lastModified);
-        } else {
-            insertConfig(serverUUID, configSettings, lastModified);
-        }
-    }
-
-    private void insertConfig(UUID serverUUID, String configSettings, long lastModified) {
-        String sql = "INSERT INTO " + tableName + " (" +
-                SERVER_UUID + ", " +
-                UPDATED + ", " +
-                CONFIG_CONTENT + ") VALUES (?,?,?)";
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-                statement.setLong(2, lastModified);
-                statement.setString(3, configSettings);
-            }
-        });
-    }
-
-    private void updateConfig(UUID serverUUID, String configSettings, long lastModified) {
-        String sql = "UPDATE " + tableName + " SET " +
-                CONFIG_CONTENT + "=?," +
-                UPDATED + "=? WHERE " +
-                SERVER_UUID + "=? AND " +
-                CONFIG_CONTENT + "!=?";
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, configSettings);
-                statement.setLong(2, lastModified);
-                statement.setString(3, serverUUID.toString());
-                statement.setString(4, configSettings);
-            }
-        });
-    }
-
-    private boolean isConfigStored(UUID serverUUID) {
-        String sql = "SELECT " + SERVER_UUID + " FROM " + tableName + " WHERE " + SERVER_UUID + "=? LIMIT 1";
-        return query(new QueryStatement<Boolean>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public Boolean processResults(ResultSet set) throws SQLException {
-                return set.next() && set.getString(SERVER_UUID).equals(serverUUID.toString());
-            }
-        });
     }
 
     /**

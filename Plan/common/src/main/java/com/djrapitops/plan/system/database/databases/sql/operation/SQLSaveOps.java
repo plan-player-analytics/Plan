@@ -24,7 +24,6 @@ import com.djrapitops.plan.db.access.queries.LargeStoreQueries;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.settings.config.Config;
 
 import java.util.Collection;
 import java.util.List;
@@ -161,8 +160,4 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         serverTable.setAsUninstalled(serverUUID);
     }
 
-    @Override
-    public void saveConfig(UUID serverUUID, Config config, long lastModified) {
-        settingsTable.storeConfig(serverUUID, config, lastModified);
-    }
 }
