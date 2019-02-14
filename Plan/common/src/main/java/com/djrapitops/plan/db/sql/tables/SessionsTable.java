@@ -188,27 +188,6 @@ public class SessionsTable extends Table {
         });
     }
 
-    public Map<UUID, Long> getLastSeenForAllPlayers() {
-        String sql = "SELECT" +
-                " MAX(" + SESSION_END + ") as last_seen, " +
-                USER_UUID +
-                " FROM " + tableName +
-                " GROUP BY " + USER_UUID;
-
-        return query(new QueryAllStatement<Map<UUID, Long>>(sql, 20000) {
-            @Override
-            public Map<UUID, Long> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Long> lastSeenMap = new HashMap<>();
-                while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString("uuid"));
-                    long lastSeen = set.getLong("last_seen");
-                    lastSeenMap.put(uuid, lastSeen);
-                }
-                return lastSeenMap;
-            }
-        });
-    }
-
     public Map<Integer, Integer> getIDServerIDRelation() {
         String sql = "SELECT " +
                 ID + ", " +

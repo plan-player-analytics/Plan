@@ -48,11 +48,13 @@ import com.djrapitops.plan.db.sql.tables.UsersTable;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.Config;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.utilities.SHA256Hash;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
+import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.Timeout;
@@ -350,7 +352,7 @@ public abstract class CommonDBTest {
         saveTwoWorlds();
         saveUserOne();
         saveUserTwo();
-        Session session = new Session(playerUUID, serverUUID, 12345L, "", "");
+        Session session = new Session(playerUUID, serverUUID, 12345L, worlds[0], "SURVIVAL");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
@@ -380,12 +382,11 @@ public abstract class CommonDBTest {
         saveUserOne();
         saveUserTwo();
 
-        Session session = new Session(playerUUID, serverUUID, 12345L, "", "");
+        Session session = new Session(playerUUID, serverUUID, 12345L, worlds[0], "SURVIVAL");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
 
-        SessionsTable sessionsTable = db.getSessionsTable();
         execute(DataStoreQueries.storeSession(session));
 
         commitTest();
@@ -398,11 +399,6 @@ public abstract class CommonDBTest {
         assertNull(sessions.get(UUID.randomUUID()));
 
         assertEquals(session, savedSessions.get(0));
-
-        Map<UUID, Long> lastSeen = sessionsTable.getLastSeenForAllPlayers();
-        assertTrue(lastSeen.containsKey(playerUUID));
-        assertFalse(lastSeen.containsKey(TestConstants.PLAYER_TWO_UUID));
-        assertEquals(22345L, (long) lastSeen.get(playerUUID));
     }
 
     @Test
@@ -475,12 +471,10 @@ public abstract class CommonDBTest {
     public void testRemovalSingleUser() {
         saveUserTwo();
 
-        SessionsTable sessionsTable = db.getSessionsTable();
-
         db.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> 223456789L, "Test_name", serverUUID));
         saveTwoWorlds();
 
-        Session session = new Session(playerUUID, serverUUID, 12345L, "", "");
+        Session session = new Session(playerUUID, serverUUID, 12345L, worlds[0], "SURVIVAL");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
@@ -529,7 +523,7 @@ public abstract class CommonDBTest {
 
         saveTwoWorlds();
 
-        Session session = new Session(playerUUID, serverUUID, 12345L, "", "");
+        Session session = new Session(playerUUID, serverUUID, 12345L, worlds[0], "SURVIVAL");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
@@ -581,21 +575,14 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testSessionTableNPEWhenNoPlayers() {
-        Map<UUID, Long> lastSeen = db.getSessionsTable().getLastSeenForAllPlayers();
-        assertTrue(lastSeen.isEmpty());
-    }
-
-    @Test
     public void testSessionTableGetInfoOfServer() throws DBInitException {
         saveUserOne();
         saveUserTwo();
 
-        Session session = new Session(playerUUID, serverUUID, 12345L, "", "");
+        Session session = new Session(playerUUID, serverUUID, 12345L, worlds[0], "SURVIVAL");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
-
         execute(DataStoreQueries.storeSession(session));
 
         commitTest();
@@ -607,6 +594,22 @@ public abstract class CommonDBTest {
         assertNotNull(sSessions);
         assertFalse(sSessions.isEmpty());
         assertEquals(session, sSessions.get(0));
+    }
+
+    @Test
+    public void cleanTransactionDoesNotCleanActivePlayers() {
+        saveUserOne();
+        saveTwoWorlds();
+
+        long sessionStart = System.currentTimeMillis();
+        Session session = new Session(playerUUID, serverUUID, sessionStart, worlds[0], "SURVIVAL");
+        session.endSession(sessionStart + 22345L);
+        execute(DataStoreQueries.storeSession(session));
+
+        db.executeTransaction(new CleanTransaction(serverUUID, TimeUnit.DAYS.toMillis(1L), new TestPluginLogger(), new Locale()));
+
+        Collection<BaseUser> found = db.query(BaseUserQueries.fetchServerBaseUsers(serverUUID));
+        assertFalse("All users were deleted!! D:", found.isEmpty());
     }
 
     @Test

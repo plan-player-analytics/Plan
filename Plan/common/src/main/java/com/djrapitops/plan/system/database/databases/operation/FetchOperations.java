@@ -132,6 +132,9 @@ public interface FetchOperations {
     @Deprecated
     Map<UUID, UserInfo> getUsers();
 
+    /**
+     * @deprecated Now empty map is returned.
+     */
     @Deprecated
     Map<UUID, Long> getLastSeenForAllPlayers();
 

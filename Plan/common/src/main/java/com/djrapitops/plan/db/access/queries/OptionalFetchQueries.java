@@ -42,7 +42,8 @@ public class OptionalFetchQueries {
     public static Query<Optional<DateObj<Integer>>> fetchPeakPlayerCount(UUID serverUUID, long afterDate) {
         String sql = "SELECT " + TPSTable.DATE + ", MAX(" + TPSTable.PLAYERS_ONLINE + ") as max FROM " + TPSTable.TABLE_NAME +
                 " WHERE " + TPSTable.SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
-                " AND " + TPSTable.DATE + ">= ?";
+                " AND " + TPSTable.DATE + ">= ?" +
+                " GROUP BY " + TPSTable.SERVER_ID;
 
         return new QueryStatement<Optional<DateObj<Integer>>>(sql) {
             @Override

@@ -110,7 +110,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Map<UUID, Long> getLastSeenForAllPlayers() {
-        return sessionsTable.getLastSeenForAllPlayers();
+        return new HashMap<>();
     }
 
     @Override

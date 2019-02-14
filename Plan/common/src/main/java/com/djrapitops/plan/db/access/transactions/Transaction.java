@@ -36,7 +36,7 @@ import java.sql.Savepoint;
  */
 public abstract class Transaction {
 
-    SQLDB db;
+    protected SQLDB db; // TODO Make private, this is a quick hack to access some tables while they are in use.
 
     private Connection connection;
     private Savepoint savepoint;

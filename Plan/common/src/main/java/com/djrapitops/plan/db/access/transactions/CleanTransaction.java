@@ -19,9 +19,12 @@ package com.djrapitops.plan.db.access.transactions;
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.Executable;
+import com.djrapitops.plan.db.access.Query;
+import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
 import com.djrapitops.plan.db.access.transactions.commands.RemovePlayerTransaction;
 import com.djrapitops.plan.db.sql.tables.PingTable;
+import com.djrapitops.plan.db.sql.tables.SessionsTable;
 import com.djrapitops.plan.db.sql.tables.TPSTable;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
@@ -29,12 +32,12 @@ import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Transaction for cleaning up old data from the database.
@@ -64,7 +67,7 @@ public class CleanTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
-        Optional<Integer> allTimePeak = db.query(OptionalFetchQueries.fetchAllTimePeakPlayerCount(serverUUID)).map(DateObj::getValue);
+        Optional<Integer> allTimePeak = query(OptionalFetchQueries.fetchAllTimePeakPlayerCount(serverUUID)).map(DateObj::getValue);
 
         execute(cleanTPSTable(allTimePeak.orElse(-1)));
         execute(cleanPingTable());
@@ -79,10 +82,7 @@ public class CleanTransaction extends Transaction {
         long now = System.currentTimeMillis();
         long keepActiveAfter = now - keepInactiveForMs;
 
-        List<UUID> inactivePlayers = db.getSessionsTable().getLastSeenForAllPlayers().entrySet().stream()
-                .filter(entry -> entry.getValue() < keepActiveAfter)
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
+        List<UUID> inactivePlayers = query(fetchInactivePlayerUUIDs(keepActiveAfter));
         for (UUID uuid : inactivePlayers) {
             executeOther(new RemovePlayerTransaction(uuid));
         }
@@ -115,6 +115,30 @@ public class CleanTransaction extends Transaction {
             public void prepare(PreparedStatement statement) throws SQLException {
                 long twoWeeks = TimeAmount.WEEK.toMillis(2L);
                 statement.setLong(1, System.currentTimeMillis() - twoWeeks);
+            }
+        };
+    }
+
+    private Query<List<UUID>> fetchInactivePlayerUUIDs(long keepActiveAfter) {
+        String sql = "SELECT uuid, last_seen FROM (SELECT" +
+                " MAX(" + SessionsTable.SESSION_END + ") as last_seen, " + SessionsTable.USER_UUID +
+                " FROM " + SessionsTable.TABLE_NAME +
+                " GROUP BY " + SessionsTable.USER_UUID + ") as q1" +
+                " WHERE last_seen < ?";
+        return new QueryStatement<List<UUID>>(sql, 20000) {
+
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, keepActiveAfter);
+            }
+
+            @Override
+            public List<UUID> processResults(ResultSet set) throws SQLException {
+                List<UUID> inactiveUUIDs = new ArrayList<>();
+                while (set.next()) {
+                    inactiveUUIDs.add(UUID.fromString(set.getString("uuid")));
+                }
+                return inactiveUUIDs;
             }
         };
     }
