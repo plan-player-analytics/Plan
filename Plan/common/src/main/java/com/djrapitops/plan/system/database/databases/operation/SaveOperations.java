@@ -21,7 +21,6 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.store.objects.Nickname;
-import com.djrapitops.plan.system.info.server.Server;
 
 import java.util.List;
 import java.util.Map;
@@ -76,9 +75,6 @@ public interface SaveOperations {
 
     @Deprecated
     void session(UUID uuid, Session session);
-
-    @Deprecated
-    void serverInfoForThisServer(Server server);
 
     @Deprecated
     void setAsUninstalled(UUID serverUUID);

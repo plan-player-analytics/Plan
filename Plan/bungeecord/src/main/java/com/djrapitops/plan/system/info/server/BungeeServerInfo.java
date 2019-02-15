@@ -19,6 +19,8 @@ package com.djrapitops.plan.system.info.server;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.db.access.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.webserver.WebServer;
@@ -78,7 +80,7 @@ public class BungeeServerInfo extends ServerInfo {
         String accessAddress = webServer.get().getAccessAddress();
         if (!accessAddress.equals(server.getWebAddress())) {
             server.setWebAddress(accessAddress);
-            db.save().serverInfoForThisServer(server);
+            db.executeTransaction(new StoreServerInformationTransaction(server));
         }
     }
 
@@ -96,9 +98,9 @@ public class BungeeServerInfo extends ServerInfo {
         String accessAddress = webServer.get().getAccessAddress();
 
         Server bungeeCord = new Server(-1, serverUUID, "BungeeCord", accessAddress, serverProperties.getMaxPlayers());
-        db.save().serverInfoForThisServer(bungeeCord);
+        db.executeTransaction(new StoreServerInformationTransaction(bungeeCord));
 
-        Optional<Server> bungeeInfo = db.fetch().getBungeeInformation();
+        Optional<Server> bungeeInfo = db.query(ServerQueries.fetchProxyServerInformation());
         if (bungeeInfo.isPresent()) {
             return bungeeInfo.get();
         }

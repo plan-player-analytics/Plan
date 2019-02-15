@@ -20,6 +20,7 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.db.access.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.db.sql.tables.ServerTable;
 import com.djrapitops.plan.system.info.server.Server;
@@ -65,7 +66,7 @@ public class SQLiteTest extends CommonDBTest {
 
         UUID bungeeUUID = UUID.randomUUID();
         Server bungeeCord = new Server(-1, bungeeUUID, "BungeeCord", "Random:1234", 20);
-        serverTable.saveCurrentServerInfo(bungeeCord);
+        db.executeTransaction(new StoreServerInformationTransaction(bungeeCord));
 
         commitTest();
 

@@ -19,6 +19,7 @@ package com.djrapitops.plan.system.info.server;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -86,8 +87,8 @@ public class ServerServerInfo extends ServerInfo {
     }
 
     private Server updateDbInfo(UUID serverUUID) throws IOException {
-        Database database = dbSystem.getDatabase();
-        Optional<Integer> serverID = database.fetch().getServerID(serverUUID);
+        Database db = dbSystem.getDatabase();
+        Optional<Integer> serverID = db.fetch().getServerID(serverUUID);
         if (!serverID.isPresent()) {
             return registerServer(serverUUID);
         }
@@ -99,7 +100,7 @@ public class ServerServerInfo extends ServerInfo {
         int maxPlayers = serverProperties.getMaxPlayers();
 
         Server server = new Server(serverID.get(), serverUUID, name, webAddress, maxPlayers);
-        database.save().serverInfoForThisServer(server);
+        db.executeTransaction(new StoreServerInformationTransaction(server));
         return server;
     }
 
@@ -114,10 +115,10 @@ public class ServerServerInfo extends ServerInfo {
 
         Server server = new Server(-1, serverUUID, name, webAddress, maxPlayers);
 
-        Database database = dbSystem.getDatabase();
-        database.save().serverInfoForThisServer(server);
+        Database db = dbSystem.getDatabase();
+        db.executeTransaction(new StoreServerInformationTransaction(server));
 
-        Optional<Integer> serverID = database.fetch().getServerID(serverUUID);
+        Optional<Integer> serverID = db.fetch().getServerID(serverUUID);
         int id = serverID.orElseThrow(() -> new IllegalStateException("Failed to Register Server (ID not found)"));
         server.setId(id);
 

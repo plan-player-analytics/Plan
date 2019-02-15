@@ -23,7 +23,6 @@ import com.djrapitops.plan.db.access.queries.DataStoreQueries;
 import com.djrapitops.plan.db.access.queries.LargeStoreQueries;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
-import com.djrapitops.plan.system.info.server.Server;
 
 import java.util.Collection;
 import java.util.List;
@@ -149,11 +148,6 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
                 execute(DataStoreQueries.storeSession(session));
             }
         });
-    }
-
-    @Override
-    public void serverInfoForThisServer(Server server) {
-        serverTable.saveCurrentServerInfo(server);
     }
 
     @Override

@@ -23,7 +23,6 @@ import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.parsing.*;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -56,6 +55,15 @@ public class ServerTable extends Table {
             SERVER_UUID, NAME,
             WEB_ADDRESS, INSTALLED, MAX_PLAYERS);
 
+    public static final String UPDATE_STATEMENT = Update.values(TABLE_NAME,
+            SERVER_UUID,
+            NAME,
+            WEB_ADDRESS,
+            INSTALLED,
+            MAX_PLAYERS)
+            .where(SERVER_UUID + "=?")
+            .toString();
+
     public static final String STATEMENT_SELECT_SERVER_ID =
             "(SELECT " + TABLE_NAME + "." + SERVER_ID + " FROM " + TABLE_NAME +
                     " WHERE " + TABLE_NAME + "." + SERVER_UUID + "=?" +
@@ -77,37 +85,6 @@ public class ServerTable extends Table {
                 .column(INSTALLED, Sql.BOOL).notNull().defaultValue(true)
                 .column(MAX_PLAYERS, Sql.INT).notNull().defaultValue("-1")
                 .toString();
-    }
-
-    private void updateServerInfo(Server info) {
-        String sql = Update.values(tableName,
-                SERVER_UUID,
-                NAME,
-                WEB_ADDRESS,
-                INSTALLED,
-                MAX_PLAYERS)
-                .where(SERVER_ID + "=?")
-                .toString();
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, info.getUuid().toString());
-                statement.setString(2, info.getName());
-                statement.setString(3, info.getWebAddress());
-                statement.setBoolean(4, true);
-                statement.setInt(5, info.getMaxPlayers());
-                statement.setInt(6, info.getId());
-            }
-        });
-    }
-
-    public void saveCurrentServerInfo(Server info) {
-        if (getServerID(info.getUuid()).isPresent()) {
-            updateServerInfo(info);
-        } else {
-            saveNewServerInfo(info);
-        }
     }
 
     /**
@@ -135,30 +112,6 @@ public class ServerTable extends Table {
                 } else {
                     return Optional.empty();
                 }
-            }
-        });
-    }
-
-    /**
-     * Inserts new row for a server into the table.
-     *
-     * @param info Info to instert (All variables should be present.
-     * @throws IllegalStateException if one of the Server variables is null
-     */
-    private void saveNewServerInfo(Server info) {
-        UUID uuid = info.getUuid();
-        String name = info.getName();
-        String webAddress = info.getWebAddress();
-        Verify.nullCheck(uuid, name, webAddress);
-
-        execute(new ExecStatement(INSERT_STATEMENT) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-                statement.setString(2, name);
-                statement.setString(3, webAddress);
-                statement.setBoolean(4, true);
-                statement.setInt(5, info.getMaxPlayers());
             }
         });
     }

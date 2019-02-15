@@ -36,6 +36,7 @@ import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.db.access.queries.objects.*;
 import com.djrapitops.plan.db.access.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.db.access.transactions.StoreConfigTransaction;
+import com.djrapitops.plan.db.access.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.access.transactions.commands.RegisterWebUserTransaction;
 import com.djrapitops.plan.db.access.transactions.commands.RemoveEverythingTransaction;
@@ -46,7 +47,6 @@ import com.djrapitops.plan.db.access.transactions.init.CleanTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.db.patches.Patch;
-import com.djrapitops.plan.db.sql.tables.ServerTable;
 import com.djrapitops.plan.db.sql.tables.SessionsTable;
 import com.djrapitops.plan.db.sql.tables.TPSTable;
 import com.djrapitops.plan.db.sql.tables.UsersTable;
@@ -143,8 +143,8 @@ public abstract class CommonDBTest {
         }.apply();
         db.executeTransaction(new CreateTablesTransaction());
         db.executeTransaction(new RemoveEverythingTransaction());
-        ServerTable serverTable = db.getServerTable();
-        serverTable.saveCurrentServerInfo(new Server(-1, serverUUID, "ServerName", "", 20));
+
+        db.executeTransaction(new StoreServerInformationTransaction(new Server(-1, serverUUID, "ServerName", "", 20)));
         assertEquals(serverUUID, db.getServerUUIDSupplier().get());
     }
 
