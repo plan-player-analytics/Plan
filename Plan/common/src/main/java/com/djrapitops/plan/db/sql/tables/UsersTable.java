@@ -25,7 +25,10 @@ import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.db.sql.parsing.*;
+import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
+import com.djrapitops.plan.db.sql.parsing.Insert;
+import com.djrapitops.plan.db.sql.parsing.Select;
+import com.djrapitops.plan.db.sql.parsing.Sql;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -66,25 +69,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     * @return a {@link Set} of the saved UUIDs.
-     */
-    public Set<UUID> getSavedUUIDs() {
-        String sql = Select.from(tableName, USER_UUID).toString();
-
-        return query(new QueryAllStatement<Set<UUID>>(sql, 50000) {
-            @Override
-            public Set<UUID> processResults(ResultSet set) throws SQLException {
-                Set<UUID> uuids = new HashSet<>();
-                while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(USER_UUID));
-                    uuids.add(uuid);
-                }
-                return uuids;
-            }
-        });
-    }
-
-    /**
      * Get UUID of a player.
      *
      * @param playerName Name of a player
@@ -108,35 +92,6 @@ public class UsersTable extends Table {
                     return UUID.fromString(uuidS);
                 }
                 return null;
-            }
-        });
-    }
-
-    public List<Long> getRegisterDates() {
-        String sql = Select.from(tableName, REGISTERED).toString();
-
-        return query(new QueryAllStatement<List<Long>>(sql, 50000) {
-            @Override
-            public List<Long> processResults(ResultSet set) throws SQLException {
-                List<Long> registerDates = new ArrayList<>();
-                while (set.next()) {
-                    registerDates.add(set.getLong(REGISTERED));
-                }
-                return registerDates;
-            }
-        });
-    }
-
-    public void updateName(UUID uuid, String name) {
-        String sql = Update.values(tableName, USER_NAME)
-                .where(USER_UUID + "=?")
-                .toString();
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, name);
-                statement.setString(2, uuid.toString());
             }
         });
     }
@@ -229,24 +184,6 @@ public class UsersTable extends Table {
         });
     }
 
-    public Map<UUID, Integer> getAllTimesKicked() {
-        String sql = Select.from(tableName, USER_UUID, TIMES_KICKED).toString();
-
-        return query(new QueryAllStatement<Map<UUID, Integer>>(sql, 20000) {
-            @Override
-            public Map<UUID, Integer> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Integer> timesKicked = new HashMap<>();
-                while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(USER_UUID));
-                    int kickCount = set.getInt(TIMES_KICKED);
-
-                    timesKicked.put(uuid, kickCount);
-                }
-                return timesKicked;
-            }
-        });
-    }
-
     public Map<UUID, String> getPlayerNames() {
         String sql = Select.from(tableName, USER_UUID, USER_NAME).toString();
 
@@ -261,29 +198,6 @@ public class UsersTable extends Table {
                     names.put(uuid, name);
                 }
                 return names;
-            }
-        });
-    }
-
-    /**
-     * Gets the {@code UUID} and the name of the player mapped to the user ID
-     *
-     * @return a {@code Map<Integer, Map.Entry<UUID, String>>} where the key is the user ID
-     * and the value is an {@code Map.Entry<UUID, String>>} of the player's {@code UUID} and name
-     */
-    public Map<Integer, Map.Entry<UUID, String>> getUUIDsAndNamesByID() {
-        String sql = Select.from(tableName, ID, USER_UUID, USER_NAME).toString();
-        return query(new QueryAllStatement<Map<Integer, Map.Entry<UUID, String>>>(sql, 20000) {
-            @Override
-            public Map<Integer, Map.Entry<UUID, String>> processResults(ResultSet set) throws SQLException {
-                Map<Integer, Map.Entry<UUID, String>> uuidsAndNamesByID = new TreeMap<>();
-                while (set.next()) {
-                    int id = set.getInt(ID);
-                    UUID uuid = UUID.fromString(set.getString(USER_UUID));
-                    String name = set.getString(USER_NAME);
-                    uuidsAndNamesByID.put(id, new AbstractMap.SimpleEntry<>(uuid, name));
-                }
-                return uuidsAndNamesByID;
             }
         });
     }

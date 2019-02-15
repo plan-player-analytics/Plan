@@ -55,14 +55,30 @@ public class BaseUserQueries {
             public Collection<BaseUser> processResults(ResultSet set) throws SQLException {
                 Collection<BaseUser> users = new HashSet<>();
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(UsersTable.USER_UUID));
+                    UUID playerUUID = UUID.fromString(set.getString(UsersTable.USER_UUID));
                     String name = set.getString(UsersTable.USER_NAME);
                     long registered = set.getLong(UsersTable.REGISTERED);
                     int kicked = set.getInt(UsersTable.TIMES_KICKED);
 
-                    users.add(new BaseUser(uuid, name, registered, kicked));
+                    users.add(new BaseUser(playerUUID, name, registered, kicked));
                 }
                 return users;
+            }
+        };
+    }
+
+    public static Query<Set<UUID>> fetchCommonUserUUIDs() {
+        String sql = Select.from(UsersTable.TABLE_NAME, UsersTable.USER_UUID).toString();
+
+        return new QueryAllStatement<Set<UUID>>(sql, 20000) {
+            @Override
+            public Set<UUID> processResults(ResultSet set) throws SQLException {
+                Set<UUID> playerUUIDs = new HashSet<>();
+                while (set.next()) {
+                    UUID playerUUID = UUID.fromString(set.getString(UsersTable.USER_UUID));
+                    playerUUIDs.add(playerUUID);
+                }
+                return playerUUIDs;
             }
         };
     }
@@ -87,14 +103,39 @@ public class BaseUserQueries {
             public List<BaseUser> processResults(ResultSet set) throws SQLException {
                 List<BaseUser> users = new ArrayList<>();
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(UsersTable.USER_UUID));
+                    UUID playerUUID = UUID.fromString(set.getString(UsersTable.USER_UUID));
                     String name = set.getString(UsersTable.USER_NAME);
                     long registered = set.getLong(UsersTable.REGISTERED);
                     int kicked = set.getInt(UsersTable.TIMES_KICKED);
 
-                    users.add(new BaseUser(uuid, name, registered, kicked));
+                    users.add(new BaseUser(playerUUID, name, registered, kicked));
                 }
                 return users;
+            }
+        };
+    }
+
+    public static Query<Set<UUID>> fetchServerUserUUIDs(UUID serverUUID) {
+        String sql = "SELECT " +
+                UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID + ", " +
+                " FROM " + UsersTable.TABLE_NAME +
+                " INNER JOIN " + UserInfoTable.TABLE_NAME + " on " +
+                UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID + "=" + UserInfoTable.TABLE_NAME + "." + UserInfoTable.USER_UUID +
+                " WHERE " + UserInfoTable.SERVER_UUID + "=?";
+        return new QueryStatement<Set<UUID>>(sql, 1000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+            }
+
+            @Override
+            public Set<UUID> processResults(ResultSet set) throws SQLException {
+                Set<UUID> playerUUIDs = new HashSet<>();
+                while (set.next()) {
+                    UUID playerUUID = UUID.fromString(set.getString(UsersTable.USER_UUID));
+                    playerUUIDs.add(playerUUID);
+                }
+                return playerUUIDs;
             }
         };
     }

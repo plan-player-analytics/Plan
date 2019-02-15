@@ -16,11 +16,9 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.UserInfoOptimizationPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
@@ -28,9 +26,8 @@ import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.sql.parsing.Update;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.UUID;
 
 /**
  * Table that is in charge of storing server specific player data.
@@ -101,61 +98,6 @@ public class UserInfoTable extends Table {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setBoolean(1, banned);
                 statement.setString(2, uuid.toString());
-            }
-        });
-    }
-
-    public List<UserInfo> getServerUserInfo(UUID serverUUID) {
-        String sql = "SELECT " +
-                TABLE_NAME + "." + REGISTERED + ", " +
-                BANNED + ", " +
-                OP + ", " +
-                TABLE_NAME + "." + USER_UUID +
-                " FROM " + TABLE_NAME +
-                " WHERE " + SERVER_UUID + "=?";
-
-        return query(new QueryStatement<List<UserInfo>>(sql, 20000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public List<UserInfo> processResults(ResultSet set) throws SQLException {
-                List<UserInfo> userInfo = new ArrayList<>();
-                while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(USER_UUID));
-                    long registered = set.getLong(REGISTERED);
-                    boolean op = set.getBoolean(OP);
-                    boolean banned = set.getBoolean(BANNED);
-
-                    UserInfo info = new UserInfo(uuid, serverUUID, registered, op, banned);
-                    if (!userInfo.contains(info)) {
-                        userInfo.add(info);
-                    }
-                }
-                return userInfo;
-            }
-        });
-    }
-
-    public Set<UUID> getSavedUUIDs(UUID serverUUID) {
-        String sql = "SELECT " + USER_UUID + " FROM " + TABLE_NAME + " WHERE " + SERVER_UUID + "=?";
-
-        return query(new QueryStatement<Set<UUID>>(sql, 50000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public Set<UUID> processResults(ResultSet set) throws SQLException {
-                Set<UUID> uuids = new HashSet<>();
-                while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(USER_UUID));
-                    uuids.add(uuid);
-                }
-                return uuids;
             }
         });
     }

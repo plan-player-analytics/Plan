@@ -64,12 +64,12 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Set<UUID> getSavedUUIDs() {
-        return usersTable.getSavedUUIDs();
+        return db.query(BaseUserQueries.fetchCommonUserUUIDs());
     }
 
     @Override
-    public Set<UUID> getSavedUUIDs(UUID server) {
-        return userInfoTable.getSavedUUIDs(server);
+    public Set<UUID> getSavedUUIDs(UUID serverUUID) {
+        return db.query(BaseUserQueries.fetchServerUserUUIDs(serverUUID));
     }
 
     @Override
