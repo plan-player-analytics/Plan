@@ -22,7 +22,6 @@ import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.db.access.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
-import com.djrapitops.plan.db.sql.tables.ServerTable;
 import com.djrapitops.plan.system.info.server.Server;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -60,8 +59,6 @@ public class SQLiteTest extends CommonDBTest {
 
     @Test
     public void testServerTableBungeeSave() throws DBInitException {
-        ServerTable serverTable = db.getServerTable();
-
         Optional<Server> bungeeInfo = db.query(ServerQueries.fetchProxyServerInformation());
         assertFalse(bungeeInfo.isPresent());
 

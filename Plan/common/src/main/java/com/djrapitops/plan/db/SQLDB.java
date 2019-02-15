@@ -27,7 +27,10 @@ import com.djrapitops.plan.db.access.transactions.init.CleanTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.db.patches.*;
-import com.djrapitops.plan.db.sql.tables.*;
+import com.djrapitops.plan.db.sql.tables.SessionsTable;
+import com.djrapitops.plan.db.sql.tables.TPSTable;
+import com.djrapitops.plan.db.sql.tables.UserInfoTable;
+import com.djrapitops.plan.db.sql.tables.UsersTable;
 import com.djrapitops.plan.db.tasks.PatchTask;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
@@ -78,7 +81,6 @@ public abstract class SQLDB extends AbstractDatabase {
     private final UserInfoTable userInfoTable;
     private final SessionsTable sessionsTable;
     private final TPSTable tpsTable;
-    private final ServerTable serverTable;
 
     private final SQLFetchOps fetchOps;
     private final SQLSearchOps searchOps;
@@ -103,8 +105,6 @@ public abstract class SQLDB extends AbstractDatabase {
         this.logger = logger;
         this.timings = timings;
         this.errorHandler = errorHandler;
-
-        serverTable = new ServerTable(this);
 
         tpsTable = new TPSTable(this);
 
@@ -347,11 +347,6 @@ public abstract class SQLDB extends AbstractDatabase {
     @Deprecated
     public TPSTable getTpsTable() {
         return tpsTable;
-    }
-
-    @Deprecated
-    public ServerTable getServerTable() {
-        return serverTable;
     }
 
     @Deprecated

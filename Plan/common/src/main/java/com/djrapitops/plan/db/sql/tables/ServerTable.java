@@ -17,19 +17,21 @@
 package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.db.DBType;
-import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.sql.parsing.*;
+import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
+import com.djrapitops.plan.db.sql.parsing.Insert;
+import com.djrapitops.plan.db.sql.parsing.Sql;
+import com.djrapitops.plan.db.sql.parsing.Update;
 import com.djrapitops.plan.system.info.server.Server;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
- * Table for managing multiple server's data in the database.
- * <p>
- * Table Name: plan_servers
+ * Table information about 'plan_servers'.
  *
  * @author Rsl1122
  * @see Server
  */
-public class ServerTable extends Table {
+public class ServerTable {
 
     public static final String TABLE_NAME = "plan_servers";
 
@@ -54,16 +56,14 @@ public class ServerTable extends Table {
             .toString();
 
     public static final String STATEMENT_SELECT_SERVER_ID =
-            "(SELECT " + TABLE_NAME + "." + SERVER_ID + " FROM " + TABLE_NAME +
-                    " WHERE " + TABLE_NAME + "." + SERVER_UUID + "=?" +
+            "(" + SELECT + TABLE_NAME + "." + SERVER_ID +
+                    FROM + TABLE_NAME +
+                    WHERE + TABLE_NAME + "." + SERVER_UUID + "=?" +
                     " LIMIT 1)";
 
-    public ServerTable(SQLDB db) {
-        super(TABLE_NAME, db);
-        statementSelectServerID = "(" + Select.from(tableName, tableName + "." + SERVER_ID).where(tableName + "." + SERVER_UUID + "=?").toString() + " LIMIT 1)";
+    private ServerTable() {
+        /* Static information class */
     }
-
-    public final String statementSelectServerID;
 
     public static String createTableSQL(DBType dbType) {
         return CreateTableParser.create(TABLE_NAME, dbType)
