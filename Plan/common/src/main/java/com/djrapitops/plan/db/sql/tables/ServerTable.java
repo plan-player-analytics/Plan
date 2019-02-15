@@ -20,7 +20,6 @@ import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryAllStatement;
-import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.parsing.*;
 import com.djrapitops.plan.system.info.server.Server;
 
@@ -29,7 +28,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -85,35 +83,6 @@ public class ServerTable extends Table {
                 .column(INSTALLED, Sql.BOOL).notNull().defaultValue(true)
                 .column(MAX_PLAYERS, Sql.INT).notNull().defaultValue("-1")
                 .toString();
-    }
-
-    /**
-     * Returns server ID for a matching UUID
-     *
-     * @param serverUUID UUID of the server.
-     * @return ID or or empty optional.
-     */
-    public Optional<Integer> getServerID(UUID serverUUID) {
-        String sql = Select.from(tableName,
-                SERVER_ID)
-                .where(SERVER_UUID + "=?")
-                .toString();
-
-        return query(new QueryStatement<Optional<Integer>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public Optional<Integer> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return Optional.of(set.getInt(SERVER_ID));
-                } else {
-                    return Optional.empty();
-                }
-            }
-        });
     }
 
     public Map<UUID, String> getServerNames() {
