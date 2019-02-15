@@ -19,7 +19,6 @@ package com.djrapitops.plan.db.sql.tables;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Insert;
@@ -29,7 +28,9 @@ import com.djrapitops.plan.db.sql.parsing.Sql;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Table that is in charge of storing common player data for all servers.
@@ -176,24 +177,6 @@ public class UsersTable extends Table {
                     }
                 }
                 return matchingNames;
-            }
-        });
-    }
-
-    public Map<UUID, String> getPlayerNames() {
-        String sql = Select.from(tableName, USER_UUID, USER_NAME).toString();
-
-        return query(new QueryAllStatement<Map<UUID, String>>(sql, 20000) {
-            @Override
-            public Map<UUID, String> processResults(ResultSet set) throws SQLException {
-                Map<UUID, String> names = new HashMap<>();
-                while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(USER_UUID));
-                    String name = set.getString(USER_NAME);
-
-                    names.put(uuid, name);
-                }
-                return names;
             }
         });
     }

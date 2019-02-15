@@ -163,4 +163,22 @@ public class BaseUserQueries {
             }
         };
     }
+
+    public static Query<Map<UUID, String>> fetchPlayerNames() {
+        String sql = Select.from(UsersTable.TABLE_NAME, UsersTable.USER_UUID, UsersTable.USER_NAME).toString();
+
+        return new QueryAllStatement<Map<UUID, String>>(sql, 20000) {
+            @Override
+            public Map<UUID, String> processResults(ResultSet set) throws SQLException {
+                Map<UUID, String> names = new HashMap<>();
+                while (set.next()) {
+                    UUID uuid = UUID.fromString(set.getString((UsersTable.USER_UUID)));
+                    String name = set.getString((UsersTable.USER_NAME));
+
+                    names.put(uuid, name);
+                }
+                return names;
+            }
+        };
+    }
 }

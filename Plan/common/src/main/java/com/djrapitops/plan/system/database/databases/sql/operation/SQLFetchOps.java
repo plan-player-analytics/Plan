@@ -120,7 +120,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Map<UUID, String> getPlayerNames() {
-        return usersTable.getPlayerNames();
+        return db.query(BaseUserQueries.fetchPlayerNames());
     }
 
     @Override
