@@ -29,9 +29,9 @@ import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
+import com.djrapitops.plan.system.importing.data.BukkitUserImportRefiner;
 import com.djrapitops.plan.system.importing.data.ServerImportData;
 import com.djrapitops.plan.system.importing.data.UserImportData;
-import com.djrapitops.plan.system.importing.data.UserImportRefiner;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.SHA256Hash;
 import com.djrapitops.plugin.utilities.Verify;
@@ -131,7 +131,7 @@ public abstract class BukkitImporter implements Importer {
             return;
         }
 
-        UserImportRefiner userImportRefiner = new UserImportRefiner(plugin, userImportData);
+        BukkitUserImportRefiner userImportRefiner = new BukkitUserImportRefiner(plugin, userImportData);
         userImportData = userImportRefiner.refineData();
 
         FetchOperations fetch = dbSystem.getDatabase().fetch();

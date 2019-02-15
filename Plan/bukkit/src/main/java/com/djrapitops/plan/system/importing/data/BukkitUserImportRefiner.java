@@ -21,19 +21,20 @@ import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plugin.api.utility.UUIDFetcher;
 import com.djrapitops.plugin.benchmarking.Timings;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * A class for refining the {@link UserImportData}s
- * so no {@code null} is left in any field.
- * It also removes invalid data.
+ * UserImportRefiner attempts to find any crucial information that is missing.
+ *
+ * - Finds UUIDs if only name is present.
+ * - Finds Names if only UUID is present.
+ * - Removes any importers that do not have any identifiers.
  *
  * @author Fuzzlemann
  */
-public class UserImportRefiner {
+public class BukkitUserImportRefiner {
 
     private final Plan plugin;
     private final Timings timings;
@@ -41,15 +42,13 @@ public class UserImportRefiner {
 
     private final List<UserImportData> importers = new ArrayList<>();
 
-    private final Map<String, Boolean> worlds = new HashMap<>();
-
-    private final Map<UserImportData, String> uuidsMissing = new HashMap<>();
-    private final Map<UserImportData, String> namesMissing = new HashMap<>();
+    private final Map<UserImportData, String> missingUUIDs = new HashMap<>();
+    private final Map<UserImportData, String> missingNames = new HashMap<>();
 
     private final Map<UserImportData, String> foundUUIDs = new HashMap<>();
     private final Map<UserImportData, String> foundNames = new HashMap<>();
 
-    public UserImportRefiner(Plan plugin, List<UserImportData> importers) {
+    public BukkitUserImportRefiner(Plan plugin, List<UserImportData> importers) {
         this.plugin = plugin;
         this.timings = plugin.getTimings();
         this.importers.addAll(importers);
@@ -62,42 +61,9 @@ public class UserImportRefiner {
 
         timings.start(benchmarkName);
         processMissingIdentifiers();
-        processOldWorlds();
         timings.end(DebugChannels.IMPORTING, benchmarkName);
 
         return importers;
-    }
-
-    private void processOldWorlds() {
-        String benchmarkName = "Processing old worlds";
-
-        timings.start(benchmarkName);
-
-        importers.parallelStream()
-                .flatMap(importer -> importer.getWorldTimes().keySet().stream())
-                .forEach(this::checkOldWorld);
-
-        if (!worlds.containsValue(true)) {
-            return;
-        }
-
-        worlds.values().removeIf(old -> false);
-
-        importers.parallelStream()
-                .forEach(importer -> importer.getWorldTimes().keySet().removeAll(worlds.keySet()));
-
-        timings.end(DebugChannels.IMPORTING, benchmarkName);
-    }
-
-    private void checkOldWorld(String worldName) {
-        if (worlds.containsKey(worldName)) {
-            return;
-        }
-
-        World world = plugin.getServer().getWorld(worldName);
-        boolean old = world == null;
-
-        worlds.put(worldName, old);
     }
 
     private void processMissingIdentifiers() {
@@ -117,9 +83,9 @@ public class UserImportRefiner {
             if (nameNull && uuidNull) {
                 invalidData.add(importer);
             } else if (nameNull) {
-                namesMissing.put(importer, uuid.toString());
+                missingNames.put(importer, uuid.toString());
             } else if (uuidNull) {
-                uuidsMissing.put(importer, name);
+                missingUUIDs.put(importer, name);
             }
         });
 
@@ -152,13 +118,13 @@ public class UserImportRefiner {
                     userImportData.setUuid(uuid);
                 });
 
-        importers.removeAll(uuidsMissing.keySet());
+        importers.removeAll(missingUUIDs.keySet());
 
         timings.end(DebugChannels.IMPORTING, benchmarkName);
     }
 
     private void addMissingUUIDsOverFetcher() {
-        UUIDFetcher uuidFetcher = new UUIDFetcher(new ArrayList<>(uuidsMissing.values()));
+        UUIDFetcher uuidFetcher = new UUIDFetcher(new ArrayList<>(missingUUIDs.values()));
 
         Map<String, String> result;
 
@@ -175,7 +141,7 @@ public class UserImportRefiner {
     private void addMissingUUIDsOverOfflinePlayer() {
         Map<String, String> result = new HashMap<>();
 
-        for (String name : uuidsMissing.values()) {
+        for (String name : missingUUIDs.values()) {
             String uuid = getUuidByOfflinePlayer(name);
 
             if (uuid == null) {
@@ -191,7 +157,7 @@ public class UserImportRefiner {
     private void addFoundUUIDs(Map<String, String> foundUUIDs) {
         List<UserImportData> found = new ArrayList<>();
 
-        uuidsMissing.entrySet().parallelStream().forEach((entry) -> {
+        missingUUIDs.entrySet().parallelStream().forEach((entry) -> {
             UserImportData importer = entry.getKey();
             String name = entry.getValue();
 
@@ -201,7 +167,7 @@ public class UserImportRefiner {
             found.add(importer);
         });
 
-        uuidsMissing.keySet().removeAll(found);
+        missingUUIDs.keySet().removeAll(found);
     }
 
     @SuppressWarnings("deprecation")
@@ -220,19 +186,19 @@ public class UserImportRefiner {
 
         timings.start(benchmarkNames);
 
-        addMissingNames();
+        findMissingNames();
 
         foundNames.entrySet().parallelStream().forEach(entry -> entry.getKey().setName(entry.getValue()));
 
-        importers.removeAll(namesMissing.keySet());
+        importers.removeAll(missingNames.keySet());
 
         timings.end(DebugChannels.IMPORTING, benchmarkNames);
     }
 
-    private void addMissingNames() {
+    private void findMissingNames() {
         Map<String, String> result = new HashMap<>();
 
-        namesMissing.values().parallelStream().forEach(uuid -> {
+        missingNames.values().parallelStream().forEach(uuid -> {
             String name = getNameByOfflinePlayer(uuid);
 
             result.put(uuid, name);
@@ -244,7 +210,7 @@ public class UserImportRefiner {
     private void addFoundNames(Map<String, String> foundNames) {
         List<UserImportData> found = new ArrayList<>();
 
-        namesMissing.entrySet().parallelStream().forEach(entry -> {
+        missingNames.entrySet().parallelStream().forEach(entry -> {
             UserImportData importer = entry.getKey();
             String uuid = entry.getValue();
 
@@ -254,7 +220,7 @@ public class UserImportRefiner {
             found.add(importer);
         });
 
-        namesMissing.keySet().removeAll(found);
+        missingNames.keySet().removeAll(found);
     }
 
     private String getNameByOfflinePlayer(String uuid) {
