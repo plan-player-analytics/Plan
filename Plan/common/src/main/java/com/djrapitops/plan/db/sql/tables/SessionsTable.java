@@ -19,19 +19,16 @@ package com.djrapitops.plan.db.sql.tables;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.QueryAllStatement;
-import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.patches.SessionAFKTimePatch;
 import com.djrapitops.plan.db.patches.SessionsOptimizationPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import static com.djrapitops.plan.db.sql.parsing.Sql.*;
 
@@ -89,105 +86,6 @@ public class SessionsTable extends Table {
                 .column(DEATHS, Sql.INT).notNull()
                 .column(AFK_TIME, Sql.LONG).notNull()
                 .toString();
-    }
-
-    /**
-     * Used to get Playtime after Epoch ms on a server.
-     *
-     * @param uuid       UUID of the player.
-     * @param serverUUID UUID of the server. @see ServerTable
-     * @param afterDate  Epoch ms (Playtime after this date is calculated)
-     * @return Milliseconds played after given epoch ms on the server. 0 if player or server not found.
-     */
-    public long getPlaytime(UUID uuid, UUID serverUUID, long afterDate) {
-        String sql = SELECT +
-                "(SUM(" + SESSION_END + ") - SUM(" + SESSION_START + ")) as playtime" +
-                FROM + tableName +
-                WHERE + SESSION_START + ">?" +
-                AND + USER_UUID + "=?" +
-                AND + SERVER_UUID + "=?";
-
-        return query(new QueryStatement<Long>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, afterDate);
-                statement.setString(2, uuid.toString());
-                statement.setString(3, serverUUID.toString());
-            }
-
-            @Override
-            public Long processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return set.getLong("playtime");
-                }
-                return 0L;
-            }
-        });
-    }
-
-    /**
-     * Used to get Playtime after a date of a Server.
-     *
-     * @param serverUUID UUID of the server.
-     * @param afterDate  Epoch ms (Playtime after this date is calculated)
-     * @return Milliseconds played  after given epoch ms on the server. 0 if server not found.
-     */
-    public long getPlaytimeOfServer(UUID serverUUID, long afterDate) {
-        String sql = SELECT +
-                "(SUM(" + SESSION_END + ") - SUM(" + SESSION_START + ")) as playtime" +
-                FROM + tableName +
-                WHERE + SESSION_START + ">?" +
-                AND + SERVER_UUID + "=?";
-
-        return query(new QueryStatement<Long>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, afterDate);
-                statement.setString(2, serverUUID.toString());
-            }
-
-            @Override
-            public Long processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return set.getLong("playtime");
-                }
-                return 0L;
-            }
-        });
-    }
-
-    /**
-     * Used to get total Session count of a Player on a server after a given epoch ms.
-     *
-     * @param uuid       UUID of the player.
-     * @param serverUUID UUID of the server.
-     * @param afterDate  Epoch ms (Session count after this date is calculated)
-     * @return How many sessions player has. 0 if player or server not found.
-     */
-    public int getSessionCount(UUID uuid, UUID serverUUID, long afterDate) {
-        String sql = SELECT +
-                "COUNT(*) as login_times" +
-                FROM + tableName +
-                WHERE + SESSION_START + " >= ?" +
-                AND + USER_UUID + "=?" +
-                AND + SERVER_UUID + "=?";
-
-        return query(new QueryStatement<Integer>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, afterDate);
-                statement.setString(2, uuid.toString());
-                statement.setString(3, serverUUID.toString());
-            }
-
-            @Override
-            public Integer processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return set.getInt("login_times");
-                }
-                return 0;
-            }
-        });
     }
 
     public Map<Integer, Integer> getIDServerIDRelation() {

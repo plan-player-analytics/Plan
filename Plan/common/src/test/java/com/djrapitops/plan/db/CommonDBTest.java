@@ -25,6 +25,7 @@ import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.data.store.keys.*;
+import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
@@ -368,15 +369,17 @@ public abstract class CommonDBTest {
 
         commitTest();
 
-        assertEquals(expectedLength, sessionsTable.getPlaytime(playerUUID, serverUUID, 0L));
-        assertEquals(0L, sessionsTable.getPlaytime(playerUUID, serverUUID, 30000L));
+        Map<UUID, List<Session>> sessions = db.query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
+        assertTrue(sessions.containsKey(serverUUID));
 
-        long playtimeOfServer = sessionsTable.getPlaytimeOfServer(serverUUID, 0L);
-        assertEquals(expectedLength, playtimeOfServer);
-        assertEquals(0L, sessionsTable.getPlaytimeOfServer(serverUUID, 30000L));
+        SessionsMutator sessionsMutator = new SessionsMutator(sessions.get(serverUUID));
+        SessionsMutator afterTimeSessionsMutator = sessionsMutator.filterSessionsBetween(30000, System.currentTimeMillis());
 
-        assertEquals(1, sessionsTable.getSessionCount(playerUUID, serverUUID, 0L));
-        assertEquals(0, sessionsTable.getSessionCount(playerUUID, serverUUID, 30000L));
+        assertEquals(expectedLength, sessionsMutator.toPlaytime());
+        assertEquals(0L, afterTimeSessionsMutator.toPlaytime());
+
+        assertEquals(1, sessionsMutator.count());
+        assertEquals(0, afterTimeSessionsMutator.count());
     }
 
     @Test
