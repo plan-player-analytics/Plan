@@ -27,7 +27,6 @@ import com.djrapitops.plan.db.access.transactions.init.CleanTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.db.patches.*;
-import com.djrapitops.plan.db.sql.tables.SessionsTable;
 import com.djrapitops.plan.db.sql.tables.TPSTable;
 import com.djrapitops.plan.db.sql.tables.UserInfoTable;
 import com.djrapitops.plan.db.sql.tables.UsersTable;
@@ -79,7 +78,6 @@ public abstract class SQLDB extends AbstractDatabase {
 
     private final UsersTable usersTable;
     private final UserInfoTable userInfoTable;
-    private final SessionsTable sessionsTable;
     private final TPSTable tpsTable;
 
     private final SQLFetchOps fetchOps;
@@ -110,7 +108,6 @@ public abstract class SQLDB extends AbstractDatabase {
 
         usersTable = new UsersTable(this);
         userInfoTable = new UserInfoTable(this);
-        sessionsTable = new SessionsTable(this);
 
         fetchOps = new SQLFetchOps(this);
         searchOps = new SQLSearchOps(this);
@@ -337,11 +334,6 @@ public abstract class SQLDB extends AbstractDatabase {
     @Deprecated
     public UsersTable getUsersTable() {
         return usersTable;
-    }
-
-    @Deprecated
-    public SessionsTable getSessionsTable() {
-        return sessionsTable;
     }
 
     @Deprecated

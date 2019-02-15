@@ -17,7 +17,6 @@
 package com.djrapitops.plan.system.database.databases.sql.operation;
 
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.sql.tables.SessionsTable;
 import com.djrapitops.plan.db.sql.tables.TPSTable;
 import com.djrapitops.plan.db.sql.tables.UserInfoTable;
 import com.djrapitops.plan.db.sql.tables.UsersTable;
@@ -29,7 +28,6 @@ public class SQLOps {
 
     protected final UsersTable usersTable;
     protected final UserInfoTable userInfoTable;
-    protected final SessionsTable sessionsTable;
     protected final TPSTable tpsTable;
 
     public SQLOps(SQLDB db) {
@@ -37,7 +35,6 @@ public class SQLOps {
 
         usersTable = db.getUsersTable();
         userInfoTable = db.getUserInfoTable();
-        sessionsTable = db.getSessionsTable();
         tpsTable = db.getTpsTable();
     }
 }

@@ -45,7 +45,6 @@ import com.djrapitops.plan.db.access.transactions.init.CleanTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.db.patches.Patch;
-import com.djrapitops.plan.db.sql.tables.SessionsTable;
 import com.djrapitops.plan.db.sql.tables.TPSTable;
 import com.djrapitops.plan.db.sql.tables.UsersTable;
 import com.djrapitops.plan.system.PlanSystem;
@@ -364,7 +363,6 @@ public abstract class CommonDBTest {
         assertEquals(expectedLength, session.getLength());
         assertEquals(expectedLength, session.getUnsafe(SessionKeys.WORLD_TIMES).getTotal());
 
-        SessionsTable sessionsTable = db.getSessionsTable();
         execute(DataStoreQueries.storeSession(session));
 
         commitTest();

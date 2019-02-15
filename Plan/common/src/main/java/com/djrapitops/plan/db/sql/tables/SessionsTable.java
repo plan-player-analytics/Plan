@@ -17,7 +17,6 @@
 package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.db.DBType;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.patches.SessionAFKTimePatch;
 import com.djrapitops.plan.db.patches.SessionsOptimizationPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
@@ -27,7 +26,7 @@ import com.djrapitops.plan.db.sql.parsing.Sql;
 import static com.djrapitops.plan.db.sql.parsing.Sql.*;
 
 /**
- * Table that represents plan_sessions.
+ * Table information about 'plan_sessions'.
  * <p>
  * Patches related to this table:
  * {@link Version10Patch}
@@ -36,7 +35,7 @@ import static com.djrapitops.plan.db.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class SessionsTable extends Table {
+public class SessionsTable {
 
     public static final String TABLE_NAME = "plan_sessions";
 
@@ -65,8 +64,8 @@ public class SessionsTable extends Table {
             AND + SESSION_START + "=?" +
             AND + SESSION_END + "=? LIMIT 1)";
 
-    public SessionsTable(SQLDB db) {
-        super(TABLE_NAME, db);
+    private SessionsTable() {
+        /* Static information class */
     }
 
     public static String createTableSQL(DBType dbType) {
