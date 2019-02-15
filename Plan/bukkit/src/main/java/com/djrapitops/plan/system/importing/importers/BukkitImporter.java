@@ -89,17 +89,12 @@ public abstract class BukkitImporter implements Importer {
     public final void processImport() {
         ExecutorService service = Executors.newCachedThreadPool();
 
-        submitTo(service, this::processServerData);
-        submitTo(service, this::processUserData);
-
-        service.shutdown();
         try {
-            service.awaitTermination(20, TimeUnit.MINUTES);
-        } catch (InterruptedException e) {
-            service.shutdownNow();
-            Thread.currentThread().interrupt();
+            submitTo(service, this::processServerData);
+            submitTo(service, this::processUserData);
+        } finally {
+            shutdownService(service);
         }
-
     }
 
     private void processServerData() {
@@ -111,16 +106,12 @@ public abstract class BukkitImporter implements Importer {
 
         ExecutorService service = Executors.newCachedThreadPool();
 
-        SaveOperations save = dbSystem.getDatabase().save();
-        submitTo(service, () -> save.insertTPS(ImmutableMap.of(serverUUID.get(), serverImportData.getTpsData())));
-        submitTo(service, () -> save.insertCommandUsage(ImmutableMap.of(serverUUID.get(), serverImportData.getCommandUsages())));
-
-        service.shutdown();
         try {
-            service.awaitTermination(20, TimeUnit.MINUTES);
-        } catch (InterruptedException e) {
-            service.shutdownNow();
-            Thread.currentThread().interrupt();
+            SaveOperations save = dbSystem.getDatabase().save();
+            submitTo(service, () -> save.insertTPS(ImmutableMap.of(serverUUID.get(), serverImportData.getTpsData())));
+            submitTo(service, () -> save.insertCommandUsage(ImmutableMap.of(serverUUID.get(), serverImportData.getCommandUsages())));
+        } finally {
+            shutdownService(service);
         }
     }
 
@@ -165,19 +156,27 @@ public abstract class BukkitImporter implements Importer {
 
         ExecutorService service = Executors.newCachedThreadPool();
 
-        SaveOperations save = dbSystem.getDatabase().save();
+        try {
+            SaveOperations save = dbSystem.getDatabase().save();
 
-        // TODO Replace with a transaction
-        save.insertUsers(users);
-        submitTo(service, () -> save.insertSessions(ImmutableMap.of(serverUUID.get(), sessions), true));
-        submitTo(service, () -> save.kickAmount(timesKicked));
-        submitTo(service, () -> save.insertUserInfo(ImmutableMap.of(serverUUID.get(), userInfo)));
-        submitTo(service, () -> save.insertNicknames(ImmutableMap.of(serverUUID.get(), nickNames)));
-        submitTo(service, () -> save.insertAllGeoInfo(geoInfo));
+            // TODO Replace with a transaction
+            save.insertUsers(users);
+            submitTo(service, () -> save.insertSessions(ImmutableMap.of(serverUUID.get(), sessions), true));
+            submitTo(service, () -> save.kickAmount(timesKicked));
+            submitTo(service, () -> save.insertUserInfo(ImmutableMap.of(serverUUID.get(), userInfo)));
+            submitTo(service, () -> save.insertNicknames(ImmutableMap.of(serverUUID.get(), nickNames)));
+            submitTo(service, () -> save.insertAllGeoInfo(geoInfo));
+        } finally {
+            shutdownService(service);
+        }
+    }
 
+    private void shutdownService(ExecutorService service) {
         service.shutdown();
         try {
-            service.awaitTermination(20, TimeUnit.MINUTES);
+            if (!service.awaitTermination(20, TimeUnit.MINUTES)) {
+                service.shutdownNow();
+            }
         } catch (InterruptedException e) {
             service.shutdownNow();
             Thread.currentThread().interrupt();
