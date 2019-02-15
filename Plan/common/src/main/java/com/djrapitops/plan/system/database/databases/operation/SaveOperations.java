@@ -76,7 +76,4 @@ public interface SaveOperations {
     @Deprecated
     void session(UUID uuid, Session session);
 
-    @Deprecated
-    void setAsUninstalled(UUID serverUUID);
-
 }

@@ -38,10 +38,7 @@ import com.djrapitops.plan.db.access.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.db.access.transactions.StoreConfigTransaction;
 import com.djrapitops.plan.db.access.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.db.access.transactions.commands.RegisterWebUserTransaction;
-import com.djrapitops.plan.db.access.transactions.commands.RemoveEverythingTransaction;
-import com.djrapitops.plan.db.access.transactions.commands.RemovePlayerTransaction;
-import com.djrapitops.plan.db.access.transactions.commands.RemoveWebUserTransaction;
+import com.djrapitops.plan.db.access.transactions.commands.*;
 import com.djrapitops.plan.db.access.transactions.events.*;
 import com.djrapitops.plan.db.access.transactions.init.CleanTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateIndexTransaction;
@@ -853,6 +850,22 @@ public abstract class CommonDBTest {
         }
 
         assertTrue("Some keys are not supported by PlayerContainer: PlayerKeys." + unsupported.toString(), unsupported.isEmpty());
+    }
+
+    @Test
+    public void uninstallingServerStopsItFromBeingReturnedInServerQuery() {
+        db.executeTransaction(new SetServerAsUninstalledTransaction(serverUUID));
+
+        Optional<Server> found = db.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID));
+        assertFalse(found.isPresent());
+    }
+
+    @Test
+    public void uninstallingServerStopsItFromBeingReturnedInServersQuery() {
+        db.executeTransaction(new SetServerAsUninstalledTransaction(serverUUID));
+
+        Collection<Server> found = db.query(ServerQueries.fetchPlanServerInformationCollection());
+        assertTrue(found.isEmpty());
     }
 
     @Test

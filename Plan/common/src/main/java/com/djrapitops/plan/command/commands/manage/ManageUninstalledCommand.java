@@ -18,6 +18,7 @@ package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.db.access.transactions.commands.SetServerAsUninstalledTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -91,7 +92,7 @@ public class ManageUninstalledCommand extends CommandNode {
                     return;
                 }
 
-                dbSystem.getDatabase().save().setAsUninstalled(serverUUID);
+                dbSystem.getDatabase().executeTransaction(new SetServerAsUninstalledTransaction(serverUUID));
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (DBOpException e) {
                 sender.sendMessage("§cError occurred: " + e.toString());

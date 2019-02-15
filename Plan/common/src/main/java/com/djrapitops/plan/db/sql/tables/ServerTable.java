@@ -18,12 +18,10 @@ package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.sql.parsing.*;
 import com.djrapitops.plan.system.info.server.Server;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -99,18 +97,6 @@ public class ServerTable extends Table {
                     names.put(serverUUID, set.getString(NAME));
                 }
                 return names;
-            }
-        });
-    }
-
-    public void setAsUninstalled(UUID serverUUID) {
-        String sql = "UPDATE " + tableName + " SET " + INSTALLED + "=? WHERE " + SERVER_UUID + "=?";
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setBoolean(1, false);
-                statement.setString(2, serverUUID.toString());
             }
         });
     }
