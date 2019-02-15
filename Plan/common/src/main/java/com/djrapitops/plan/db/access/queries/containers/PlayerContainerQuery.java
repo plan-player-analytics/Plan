@@ -16,7 +16,9 @@
  */
 package com.djrapitops.plan.db.access.queries.containers;
 
+import com.djrapitops.plan.data.container.BaseUser;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
@@ -25,10 +27,7 @@ import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.access.queries.objects.GeoInfoQueries;
-import com.djrapitops.plan.db.access.queries.objects.NicknameQueries;
-import com.djrapitops.plan.db.access.queries.objects.PingQueries;
-import com.djrapitops.plan.db.access.queries.objects.WorldTimesQueries;
+import com.djrapitops.plan.db.access.queries.objects.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +53,12 @@ public class PlayerContainerQuery implements Query<PlayerContainer> {
         PlayerContainer container = new PlayerContainer();
         container.putRawData(PlayerKeys.UUID, uuid);
 
-        container.putAll(db.getUsersTable().getUserInformation(uuid));
+        Key<BaseUser> baseUserKey = new Key<>(BaseUser.class, "BASE_USER");
+        container.putSupplier(baseUserKey, () -> db.query(BaseUserQueries.fetchCommonUserInformationOfPlayer(uuid)).orElse(null));
+        container.putSupplier(PlayerKeys.REGISTERED, () -> container.getValue(baseUserKey).map(BaseUser::getRegistered).orElse(null));
+        container.putSupplier(PlayerKeys.NAME, () -> container.getValue(baseUserKey).map(BaseUser::getName).orElse(null));
+        container.putSupplier(PlayerKeys.KICK_COUNT, () -> container.getValue(baseUserKey).map(BaseUser::getTimesKicked).orElse(null));
+
         container.putCachingSupplier(PlayerKeys.GEO_INFO, () -> db.query(GeoInfoQueries.fetchPlayerGeoInformation(uuid)));
         container.putCachingSupplier(PlayerKeys.PING, () -> db.query(PingQueries.fetchPingDataOfPlayer(uuid)));
         container.putCachingSupplier(PlayerKeys.NICKNAMES, () -> db.query(NicknameQueries.fetchNicknameDataOfPlayer(uuid)));

@@ -16,10 +16,6 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.data.store.Key;
-import com.djrapitops.plan.data.store.containers.DataContainer;
-import com.djrapitops.plan.data.store.containers.SupplierDataContainer;
-import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
@@ -198,46 +194,6 @@ public class UsersTable extends Table {
                     names.put(uuid, name);
                 }
                 return names;
-            }
-        });
-    }
-
-    public DataContainer getUserInformation(UUID uuid) {
-        Key<DataContainer> key = new Key<>(DataContainer.class, "plan_users_data");
-        DataContainer returnValue = new SupplierDataContainer();
-
-        returnValue.putSupplier(key, () -> getUserInformationDataContainer(uuid));
-        returnValue.putRawData(PlayerKeys.UUID, uuid);
-        returnValue.putSupplier(PlayerKeys.REGISTERED, () -> returnValue.getUnsafe(key).getValue(PlayerKeys.REGISTERED).orElse(null));
-        returnValue.putSupplier(PlayerKeys.NAME, () -> returnValue.getUnsafe(key).getValue(PlayerKeys.NAME).orElse(null));
-        returnValue.putSupplier(PlayerKeys.KICK_COUNT, () -> returnValue.getUnsafe(key).getValue(PlayerKeys.KICK_COUNT).orElse(null));
-        return returnValue;
-    }
-
-    private DataContainer getUserInformationDataContainer(UUID uuid) {
-        String sql = "SELECT * FROM " + tableName + " WHERE " + USER_UUID + "=?";
-
-        return query(new QueryStatement<DataContainer>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-            }
-
-            @Override
-            public DataContainer processResults(ResultSet set) throws SQLException {
-                DataContainer container = new SupplierDataContainer();
-
-                if (set.next()) {
-                    long registered = set.getLong(REGISTERED);
-                    String name = set.getString(USER_NAME);
-                    int timesKicked = set.getInt(TIMES_KICKED);
-
-                    container.putRawData(PlayerKeys.REGISTERED, registered);
-                    container.putRawData(PlayerKeys.NAME, name);
-                    container.putRawData(PlayerKeys.KICK_COUNT, timesKicked);
-                }
-
-                return container;
             }
         });
     }

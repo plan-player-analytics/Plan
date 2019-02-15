@@ -83,6 +83,30 @@ public class BaseUserQueries {
         };
     }
 
+    public static Query<Optional<BaseUser>> fetchCommonUserInformationOfPlayer(UUID playerUUID) {
+        String sql = Select.all(UsersTable.TABLE_NAME).where(UsersTable.USER_UUID + "=?").toString();
+
+        return new QueryStatement<Optional<BaseUser>>(sql, 20000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+            }
+
+            @Override
+            public Optional<BaseUser> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    UUID playerUUID = UUID.fromString(set.getString(UsersTable.USER_UUID));
+                    String name = set.getString(UsersTable.USER_NAME);
+                    long registered = set.getLong(UsersTable.REGISTERED);
+                    int kicked = set.getInt(UsersTable.TIMES_KICKED);
+
+                    return Optional.of(new BaseUser(playerUUID, name, registered, kicked));
+                }
+                return Optional.empty();
+            }
+        };
+    }
+
     public static Query<Collection<BaseUser>> fetchServerBaseUsers(UUID serverUUID) {
         String sql = "SELECT " +
                 UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID + ", " +
