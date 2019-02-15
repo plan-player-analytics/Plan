@@ -73,11 +73,11 @@ public class ServerQueries {
         return db -> db.query(fetchPlanServerInformation()).values();
     }
 
-    public static Query<Optional<Server>> fetchMatchingServerIdentifier(UUID serverUUID) {
-        return fetchMatchingServerIdentifier(serverUUID.toString());
+    public static Query<Optional<Server>> fetchServerMatchingIdentifier(UUID serverUUID) {
+        return fetchServerMatchingIdentifier(serverUUID.toString());
     }
 
-    public static Query<Optional<Server>> fetchMatchingServerIdentifier(String identifier) {
+    public static Query<Optional<Server>> fetchServerMatchingIdentifier(String identifier) {
         String sql = "SELECT * FROM " + ServerTable.TABLE_NAME +
                 " WHERE (LOWER(" + ServerTable.SERVER_UUID + ") LIKE LOWER(?)" +
                 " OR LOWER(" + ServerTable.NAME + ") LIKE LOWER(?)" +
@@ -110,6 +110,6 @@ public class ServerQueries {
     }
 
     public static Query<Optional<Server>> fetchProxyServerInformation() {
-        return db -> db.query(fetchMatchingServerIdentifier("BungeeCord"));
+        return db -> db.query(fetchServerMatchingIdentifier("BungeeCord"));
     }
 }

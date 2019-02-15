@@ -79,7 +79,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Optional<UUID> getServerUUID(String serverName) {
-        return db.query(ServerQueries.fetchMatchingServerIdentifier(serverName))
+        return db.query(ServerQueries.fetchServerMatchingIdentifier(serverName))
                 .map(Server::getUuid);
     }
 
@@ -130,7 +130,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Optional<String> getServerName(UUID serverUUID) {
-        return db.query(ServerQueries.fetchMatchingServerIdentifier(serverUUID)).map(Server::getName);
+        return db.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID)).map(Server::getName);
     }
 
     @Override
@@ -146,7 +146,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Optional<Integer> getServerID(UUID serverUUID) {
-        return serverTable.getServerID(serverUUID);
+        return db.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID)).map(Server::getId);
     }
 
     @Override

@@ -112,7 +112,7 @@ public class ServerPageHandler implements PageHandler {
             try {
                 String serverName = target.get(0);
                 Optional<UUID> serverUUIDOptional = dbSystem.getDatabase()
-                        .query(ServerQueries.fetchMatchingServerIdentifier(serverName))
+                        .query(ServerQueries.fetchServerMatchingIdentifier(serverName))
                         .map(Server::getUuid);
                 if (serverUUIDOptional.isPresent()) {
                     serverUUID = serverUUIDOptional.get();

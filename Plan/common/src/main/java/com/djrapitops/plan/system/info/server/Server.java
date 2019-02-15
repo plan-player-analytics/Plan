@@ -55,6 +55,10 @@ public class Server implements Comparable<Server> {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getWebAddress() {
         return webAddress;
     }
@@ -104,5 +108,9 @@ public class Server implements Comparable<Server> {
 
     public boolean isNotProxy() {
         return !isProxy();
+    }
+
+    public void setMaxPlayers(int maxPlayers) {
+        this.maxPlayers = maxPlayers;
     }
 }

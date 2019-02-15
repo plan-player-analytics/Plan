@@ -134,7 +134,7 @@ public class AnalyzeCommand extends CommandNode {
     private Optional<Server> getServer(String[] args) {
         if (args.length >= 1 && connectionSystem.isServerAvailable()) {
             String serverIdentifier = getGivenIdentifier(args);
-            return dbSystem.getDatabase().query(ServerQueries.fetchMatchingServerIdentifier(serverIdentifier))
+            return dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverIdentifier))
                     .filter(server -> !server.isProxy());
         }
         return Optional.empty();

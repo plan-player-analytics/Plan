@@ -63,9 +63,9 @@ public class BungeeServerInfo extends ServerInfo {
 
         try {
             Database database = dbSystem.getDatabase();
-            Optional<Server> bungeeInfo = database.fetch().getBungeeInformation();
-            if (bungeeInfo.isPresent()) {
-                server = bungeeInfo.get();
+            Optional<Server> proxyInfo = database.query(ServerQueries.fetchProxyServerInformation());
+            if (proxyInfo.isPresent()) {
+                server = proxyInfo.get();
                 updateServerInfo(database);
             } else {
                 server = registerBungeeInfo(database);
@@ -97,22 +97,13 @@ public class BungeeServerInfo extends ServerInfo {
         UUID serverUUID = generateNewUUID();
         String accessAddress = webServer.get().getAccessAddress();
 
-        Server bungeeCord = new Server(-1, serverUUID, "BungeeCord", accessAddress, serverProperties.getMaxPlayers());
-        db.executeTransaction(new StoreServerInformationTransaction(bungeeCord));
+        Server proxy = new Server(-1, serverUUID, "BungeeCord", accessAddress, serverProperties.getMaxPlayers());
+        db.executeTransaction(new StoreServerInformationTransaction(proxy));
 
-        Optional<Server> bungeeInfo = db.query(ServerQueries.fetchProxyServerInformation());
-        if (bungeeInfo.isPresent()) {
-            return bungeeInfo.get();
+        Optional<Server> proxyInfo = db.query(ServerQueries.fetchProxyServerInformation());
+        if (proxyInfo.isPresent()) {
+            return proxyInfo.get();
         }
         throw new EnableException("BungeeCord registration failed (DB)");
-    }
-
-    private UUID generateNewUUID() {
-        String seed = serverProperties.getName() +
-                serverProperties.getIp() +
-                serverProperties.getPort() +
-                serverProperties.getVersion() +
-                serverProperties.getImplVersion();
-        return UUID.nameUUIDFromBytes(seed.getBytes());
     }
 }

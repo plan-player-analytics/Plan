@@ -28,6 +28,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+import utilities.OptionalAssert;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -76,9 +77,8 @@ public class SQLiteTest extends CommonDBTest {
         assertTrue(bungeeInfo.isPresent());
         assertEquals(bungeeCord, bungeeInfo.get());
 
-        Optional<Integer> serverID = serverTable.getServerID(bungeeUUID);
-        assertTrue(serverID.isPresent());
-        assertEquals(2, (int) serverID.get());
+        Optional<Server> found = db.query(ServerQueries.fetchServerMatchingIdentifier(bungeeUUID));
+        OptionalAssert.equals(2, found.map(Server::getId));
     }
 
     @Test

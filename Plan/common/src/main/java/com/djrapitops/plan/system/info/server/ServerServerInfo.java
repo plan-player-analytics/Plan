@@ -19,6 +19,7 @@ package com.djrapitops.plan.system.info.server;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.db.access.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
@@ -88,18 +89,24 @@ public class ServerServerInfo extends ServerInfo {
 
     private Server updateDbInfo(UUID serverUUID) throws IOException {
         Database db = dbSystem.getDatabase();
-        Optional<Integer> serverID = db.fetch().getServerID(serverUUID);
-        if (!serverID.isPresent()) {
+
+        Optional<Server> foundServer = db.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID));
+        if (!foundServer.isPresent()) {
             return registerServer(serverUUID);
         }
-        String name = config.get(PluginSettings.SERVER_NAME).replaceAll("[^a-zA-Z0-9_\\s]", "_");
-        String webAddress = webServer.get().getAccessAddress();
-        if ("plan".equalsIgnoreCase(name)) {
-            name = "Server " + serverID.get();
-        }
-        int maxPlayers = serverProperties.getMaxPlayers();
+        Server server = foundServer.get();
 
-        Server server = new Server(serverID.get(), serverUUID, name, webAddress, maxPlayers);
+        // Update information
+        String name = config.get(PluginSettings.SERVER_NAME).replaceAll("[^a-zA-Z0-9_\\s]", "_");
+        server.setName("plan".equalsIgnoreCase(name) ? "Server " + server.getId() : name);
+
+        String webAddress = webServer.get().getAccessAddress();
+        server.setWebAddress(webAddress);
+
+        int maxPlayers = serverProperties.getMaxPlayers();
+        server.setMaxPlayers(maxPlayers);
+
+        // Save
         db.executeTransaction(new StoreServerInformationTransaction(server));
         return server;
     }
@@ -109,30 +116,23 @@ public class ServerServerInfo extends ServerInfo {
     }
 
     private Server registerServer(UUID serverUUID) throws IOException {
+        Database db = dbSystem.getDatabase();
+
+        // Create the server object
         String webAddress = webServer.get().getAccessAddress();
         String name = config.get(PluginSettings.SERVER_NAME).replaceAll("[^a-zA-Z0-9_\\s]", "_");
         int maxPlayers = serverProperties.getMaxPlayers();
-
         Server server = new Server(-1, serverUUID, name, webAddress, maxPlayers);
 
-        Database db = dbSystem.getDatabase();
+        // Save
         db.executeTransaction(new StoreServerInformationTransaction(server));
 
-        Optional<Integer> serverID = db.fetch().getServerID(serverUUID);
-        int id = serverID.orElseThrow(() -> new IllegalStateException("Failed to Register Server (ID not found)"));
-        server.setId(id);
+        // Load from database
+        server = db.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
+                .orElseThrow(() -> new IllegalStateException("Failed to Register Server (ID not found)"));
 
+        // Store the UUID in ServerInfoFile
         serverInfoFile.saveServerUUID(serverUUID);
         return server;
-    }
-
-    private UUID generateNewUUID() {
-        String seed = serverProperties.getServerId() +
-                serverProperties.getName() +
-                serverProperties.getIp() +
-                serverProperties.getPort() +
-                serverProperties.getVersion() +
-                serverProperties.getImplVersion();
-        return UUID.nameUUIDFromBytes(seed.getBytes());
     }
 }

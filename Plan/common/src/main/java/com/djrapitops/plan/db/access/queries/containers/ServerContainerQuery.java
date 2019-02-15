@@ -57,7 +57,7 @@ public class ServerContainerQuery implements Query<ServerContainer> {
     public ServerContainer executeQuery(SQLDB db) {
         ServerContainer container = new ServerContainer();
 
-        Optional<Server> serverInfo = db.query(ServerQueries.fetchMatchingServerIdentifier(serverUUID));
+        Optional<Server> serverInfo = db.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID));
         if (!serverInfo.isPresent()) {
             return container;
         }

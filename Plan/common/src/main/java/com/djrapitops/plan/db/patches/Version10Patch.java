@@ -17,7 +17,9 @@
 package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.db.SQLDB;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.db.sql.tables.*;
+import com.djrapitops.plan.system.info.server.Server;
 
 import java.util.Optional;
 
@@ -38,11 +40,10 @@ public class Version10Patch extends Patch {
 
     @Override
     protected void applyPatch() {
-        Optional<Integer> fetchedServerID = db.getServerTable().getServerID(getServerUUID());
-        if (!fetchedServerID.isPresent()) {
-            throw new IllegalStateException("Server UUID was not registered, try rebooting the plugin.");
-        }
-        serverID = fetchedServerID.get();
+        Optional<Server> server = db.query(ServerQueries.fetchServerMatchingIdentifier(getServerUUID()));
+        serverID = server.map(Server::getId)
+                .orElseThrow(() -> new IllegalStateException("Server UUID was not registered, try rebooting the plugin."));
+
         alterTablesToV10();
     }
 
