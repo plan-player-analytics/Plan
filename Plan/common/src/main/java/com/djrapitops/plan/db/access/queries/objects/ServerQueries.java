@@ -17,7 +17,9 @@
 package com.djrapitops.plan.db.access.queries.objects;
 
 import com.djrapitops.plan.db.access.Query;
+import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.tables.ServerTable;
 import com.djrapitops.plan.system.info.server.Server;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -111,5 +113,23 @@ public class ServerQueries {
 
     public static Query<Optional<Server>> fetchProxyServerInformation() {
         return db -> db.query(fetchServerMatchingIdentifier("BungeeCord"));
+    }
+
+    public static Query<Map<UUID, String>> fetchServerNames() {
+        String sql = Select.from(ServerTable.TABLE_NAME,
+                ServerTable.SERVER_UUID, ServerTable.NAME)
+                .toString();
+
+        return new QueryAllStatement<Map<UUID, String>>(sql) {
+            @Override
+            public Map<UUID, String> processResults(ResultSet set) throws SQLException {
+                Map<UUID, String> names = new HashMap<>();
+                while (set.next()) {
+                    UUID serverUUID = UUID.fromString(set.getString(ServerTable.SERVER_UUID));
+                    names.put(serverUUID, set.getString(ServerTable.NAME));
+                }
+                return names;
+            }
+        };
     }
 }

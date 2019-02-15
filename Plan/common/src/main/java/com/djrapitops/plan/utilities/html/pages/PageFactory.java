@@ -22,6 +22,7 @@ import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
@@ -132,7 +133,7 @@ public class PageFactory {
     public InspectPage inspectPage(UUID uuid) {
         Database db = dbSystem.get().getDatabase();
         PlayerContainer player = db.query(ContainerFetchQueries.fetchPlayerContainer(uuid));
-        Map<UUID, String> serverNames = db.fetch().getServerNames();
+        Map<UUID, String> serverNames = db.query(ServerQueries.fetchServerNames());
         return new InspectPage(
                 player, serverNames,
                 versionCheckSystem.get(),

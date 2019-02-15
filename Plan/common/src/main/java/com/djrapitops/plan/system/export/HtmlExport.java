@@ -21,6 +21,7 @@ import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.BaseUser;
 import com.djrapitops.plan.db.access.queries.objects.BaseUserQueries;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
@@ -149,7 +150,7 @@ public class HtmlExport extends SpecificExport {
 
     public void exportAvailableServerPages() {
         try {
-            Map<UUID, String> serverNames = dbSystem.getDatabase().fetch().getServerNames();
+            Map<UUID, String> serverNames = dbSystem.getDatabase().query(ServerQueries.fetchServerNames());
 
             for (Map.Entry<UUID, String> entry : serverNames.entrySet()) {
                 exportAvailableServerPage(entry.getKey(), entry.getValue());

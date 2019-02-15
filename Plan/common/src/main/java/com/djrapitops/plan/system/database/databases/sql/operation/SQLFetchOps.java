@@ -74,7 +74,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Map<UUID, String> getServerNames() {
-        return serverTable.getServerNames();
+        return db.query(ServerQueries.fetchServerNames());
     }
 
     @Override

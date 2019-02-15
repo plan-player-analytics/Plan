@@ -18,15 +18,8 @@ package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.sql.parsing.*;
 import com.djrapitops.plan.system.info.server.Server;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * Table for managing multiple server's data in the database.
@@ -81,23 +74,5 @@ public class ServerTable extends Table {
                 .column(INSTALLED, Sql.BOOL).notNull().defaultValue(true)
                 .column(MAX_PLAYERS, Sql.INT).notNull().defaultValue("-1")
                 .toString();
-    }
-
-    public Map<UUID, String> getServerNames() {
-        String sql = Select.from(tableName,
-                SERVER_UUID, NAME)
-                .toString();
-
-        return query(new QueryAllStatement<Map<UUID, String>>(sql) {
-            @Override
-            public Map<UUID, String> processResults(ResultSet set) throws SQLException {
-                Map<UUID, String> names = new HashMap<>();
-                while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(SERVER_UUID));
-                    names.put(serverUUID, set.getString(NAME));
-                }
-                return names;
-            }
-        });
     }
 }
