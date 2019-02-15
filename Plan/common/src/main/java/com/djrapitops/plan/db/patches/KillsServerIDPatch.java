@@ -19,6 +19,7 @@ package com.djrapitops.plan.db.patches;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.access.queries.schema.SessionIDServerIDRelationQuery;
 import com.djrapitops.plan.db.sql.tables.KillsTable;
 
 import java.sql.PreparedStatement;
@@ -65,7 +66,7 @@ public class KillsServerIDPatch extends Patch {
 
         addColumn(KillsTable.TABLE_NAME, "server_id integer NOT NULL DEFAULT 0");
 
-        Map<Integer, Integer> sessionIDServerIDRelation = db.getSessionsTable().getIDServerIDRelation();
+        Map<Integer, Integer> sessionIDServerIDRelation = query(new SessionIDServerIDRelationQuery());
 
         String sql = "UPDATE " + KillsTable.TABLE_NAME + " SET server_id=? WHERE " + KillsTable.SESSION_ID + "=?";
 

@@ -19,6 +19,7 @@ package com.djrapitops.plan.db.patches;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.access.queries.schema.SessionIDServerIDRelationQuery;
 import com.djrapitops.plan.db.sql.tables.WorldTimesTable;
 
 import java.sql.PreparedStatement;
@@ -60,7 +61,7 @@ public class WorldTimesSeverIDPatch extends Patch {
 
     @Override
     protected void applyPatch() {
-        Map<Integer, Integer> sessionIDServerIDRelation = db.getSessionsTable().getIDServerIDRelation();
+        Map<Integer, Integer> sessionIDServerIDRelation = query(new SessionIDServerIDRelationQuery());
 
         String sql = "UPDATE " + WorldTimesTable.TABLE_NAME + " SET " +
                 "server_id=?" +

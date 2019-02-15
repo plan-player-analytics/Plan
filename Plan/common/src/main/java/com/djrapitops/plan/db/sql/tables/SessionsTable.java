@@ -18,17 +18,11 @@ package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.patches.SessionAFKTimePatch;
 import com.djrapitops.plan.db.patches.SessionsOptimizationPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.djrapitops.plan.db.sql.parsing.Sql.*;
 
@@ -86,23 +80,5 @@ public class SessionsTable extends Table {
                 .column(DEATHS, Sql.INT).notNull()
                 .column(AFK_TIME, Sql.LONG).notNull()
                 .toString();
-    }
-
-    public Map<Integer, Integer> getIDServerIDRelation() {
-        String sql = SELECT +
-                ID + ", " +
-                "(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=" + SERVER_UUID + ") as server_id" +
-                FROM + tableName;
-
-        return query(new QueryAllStatement<Map<Integer, Integer>>(sql, 10000) {
-            @Override
-            public Map<Integer, Integer> processResults(ResultSet set) throws SQLException {
-                Map<Integer, Integer> idServerIdMap = new HashMap<>();
-                while (set.next()) {
-                    idServerIdMap.put(set.getInt(ID), set.getInt("server_id"));
-                }
-                return idServerIdMap;
-            }
-        });
     }
 }
