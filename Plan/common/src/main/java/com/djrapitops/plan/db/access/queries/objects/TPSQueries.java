@@ -18,6 +18,7 @@ package com.djrapitops.plan.db.access.queries.objects;
 
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
+import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
@@ -116,5 +117,35 @@ public class TPSQueries {
                 return map;
             }
         };
+    }
+
+    public static Query<Optional<DateObj<Integer>>> fetchPeakPlayerCount(UUID serverUUID, long afterDate) {
+        String sql = "SELECT " + DATE + ", MAX(" + PLAYERS_ONLINE + ") as max FROM " + TABLE_NAME +
+                " WHERE " + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                " AND " + DATE + ">= ?" +
+                " GROUP BY " + SERVER_ID;
+
+        return new QueryStatement<Optional<DateObj<Integer>>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, afterDate);
+            }
+
+            @Override
+            public Optional<DateObj<Integer>> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(new DateObj<>(
+                            set.getLong(DATE),
+                            set.getInt(PLAYERS_ONLINE)
+                    ));
+                }
+                return Optional.empty();
+            }
+        };
+    }
+
+    public static Query<Optional<DateObj<Integer>>> fetchAllTimePeakPlayerCount(UUID serverUUID) {
+        return db -> db.query(fetchPeakPlayerCount(serverUUID, 0));
     }
 }

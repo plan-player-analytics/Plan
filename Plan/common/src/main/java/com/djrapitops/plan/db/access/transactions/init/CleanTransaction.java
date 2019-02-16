@@ -21,7 +21,7 @@ import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.access.transactions.commands.RemovePlayerTransaction;
 import com.djrapitops.plan.db.sql.tables.PingTable;
@@ -68,7 +68,7 @@ public class CleanTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
-        Optional<Integer> allTimePeak = query(OptionalFetchQueries.fetchAllTimePeakPlayerCount(serverUUID)).map(DateObj::getValue);
+        Optional<Integer> allTimePeak = query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID)).map(DateObj::getValue);
 
         execute(cleanTPSTable(allTimePeak.orElse(-1)));
         execute(cleanPingTable());

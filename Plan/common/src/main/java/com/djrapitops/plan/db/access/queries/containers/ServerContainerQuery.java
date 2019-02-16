@@ -23,7 +23,6 @@ import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
 import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
@@ -71,11 +70,11 @@ public class ServerContainerQuery implements Query<ServerContainer> {
         container.putCachingSupplier(ServerKeys.TPS, () -> db.query(TPSQueries.fetchTPSDataOfServer(serverUUID)));
         container.putCachingSupplier(ServerKeys.PING, () -> PlayersMutator.forContainer(container).pings());
         container.putCachingSupplier(ServerKeys.ALL_TIME_PEAK_PLAYERS, () ->
-                db.query(OptionalFetchQueries.fetchAllTimePeakPlayerCount(serverUUID)).orElse(null)
+                db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID)).orElse(null)
         );
         container.putCachingSupplier(ServerKeys.RECENT_PEAK_PLAYERS, () -> {
             long twoDaysAgo = System.currentTimeMillis() - (TimeUnit.DAYS.toMillis(2L));
-            return db.query(OptionalFetchQueries.fetchPeakPlayerCount(serverUUID, twoDaysAgo)).orElse(null);
+            return db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, twoDaysAgo)).orElse(null);
         });
 
         container.putCachingSupplier(ServerKeys.COMMAND_USAGE, () -> db.query(ServerAggregateQueries.commandUsageCounts(serverUUID)));
