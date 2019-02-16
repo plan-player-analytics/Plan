@@ -92,10 +92,11 @@ public class PlayerOnlineListener implements Listener {
     public void onPlayerLogin(PlayerLoginEvent event) {
         try {
             PlayerLoginEvent.Result result = event.getResult();
-            UUID uuid = event.getPlayer().getUniqueId();
-            boolean op = event.getPlayer().isOp();
+            UUID playerUUID = event.getPlayer().getUniqueId();
+            boolean operator = event.getPlayer().isOp();
             boolean banned = result == PlayerLoginEvent.Result.KICK_BANNED;
-            processing.submit(processors.player().banAndOpProcessor(uuid, () -> banned, op));
+            dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, () -> banned));
+            dbSystem.getDatabase().executeTransaction(new OperatorStatusTransaction(playerUUID, operator));
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
         }
@@ -194,7 +195,7 @@ public class PlayerOnlineListener implements Listener {
 
         nicknameCache.removeDisplayName(playerUUID);
 
-        processing.submit(processors.player().banAndOpProcessor(playerUUID, player::isBanned, player.isOp()));
+        dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, player::isBanned));
 
         sessionCache.endSession(playerUUID, time)
                 .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new SessionEndTransaction(endedSession)));

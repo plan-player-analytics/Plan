@@ -17,7 +17,6 @@
 package com.djrapitops.plan.system.processing.processors;
 
 import com.djrapitops.plan.system.processing.processors.info.InfoProcessors;
-import com.djrapitops.plan.system.processing.processors.player.PlayerProcessors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -30,20 +29,13 @@ import javax.inject.Singleton;
 @Singleton
 public class Processors {
 
-    private final PlayerProcessors playerProcessors;
     private final InfoProcessors infoProcessors;
 
     @Inject
     public Processors(
-            PlayerProcessors playerProcessors,
             InfoProcessors infoProcessors
     ) {
-        this.playerProcessors = playerProcessors;
         this.infoProcessors = infoProcessors;
-    }
-
-    public PlayerProcessors player() {
-        return playerProcessors;
     }
 
     public InfoProcessors info() {

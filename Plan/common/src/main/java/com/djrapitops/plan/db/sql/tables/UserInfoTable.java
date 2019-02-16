@@ -18,16 +18,10 @@ package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.patches.UserInfoOptimizationPatch;
 import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-import com.djrapitops.plan.db.sql.parsing.Update;
-
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.UUID;
 
 /**
  * Table that is in charge of storing server specific player data.
@@ -72,33 +66,5 @@ public class UserInfoTable extends Table {
                 .column(OP, Sql.BOOL).notNull().defaultValue(false)
                 .column(BANNED, Sql.BOOL).notNull().defaultValue(false)
                 .toString();
-    }
-
-    public void updateOpStatus(UUID uuid, boolean op) {
-        String sql = Update.values(TABLE_NAME, OP)
-                .where(USER_UUID + "=?")
-                .toString();
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setBoolean(1, op);
-                statement.setString(2, uuid.toString());
-            }
-        });
-    }
-
-    public void updateBanStatus(UUID uuid, boolean banned) {
-        String sql = Update.values(TABLE_NAME, BANNED)
-                .where(USER_UUID + "=?")
-                .toString();
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setBoolean(1, banned);
-                statement.setString(2, uuid.toString());
-            }
-        });
     }
 }

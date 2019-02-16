@@ -21,7 +21,6 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
-import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 
 /**
  * Interface for interacting with a Plan SQL database.
@@ -56,9 +55,6 @@ public interface Database {
 
     @Deprecated
     FetchOperations fetch();
-
-    @Deprecated
-    SaveOperations save();
 
     /**
      * Used to get the {@code DBType} of the Database

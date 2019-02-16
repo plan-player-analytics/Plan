@@ -105,7 +105,7 @@ public class SpongePlayerListener {
         GameProfile profile = event.getProfile();
         UUID playerUUID = profile.getUniqueId();
         boolean banned = isBanned(profile);
-        processing.submit(processors.player().banAndOpProcessor(playerUUID, () -> banned, false));
+        dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, () -> banned));
     }
 
     @Listener(order = Order.POST)
@@ -199,7 +199,7 @@ public class SpongePlayerListener {
         nicknameCache.removeDisplayName(playerUUID);
 
         boolean banned = isBanned(player.getProfile());
-        processing.submit(processors.player().banAndOpProcessor(playerUUID, () -> banned, false));
+        dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, () -> banned));
 
         sessionCache.endSession(playerUUID, time)
                 .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new SessionEndTransaction(endedSession)));

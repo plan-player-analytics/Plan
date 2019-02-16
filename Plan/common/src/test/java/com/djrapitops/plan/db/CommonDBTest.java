@@ -417,7 +417,7 @@ public abstract class CommonDBTest {
     public void userInfoTableUpdatesBanStatus() {
         saveUserOne();
 
-        db.getUserInfoTable().updateBanStatus(playerUUID, true);
+        db.executeTransaction(new BanStatusTransaction(playerUUID, () -> true));
 
         List<UserInfo> userInfo = db.query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
         List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 1000L, false, true));
@@ -429,7 +429,7 @@ public abstract class CommonDBTest {
     public void userInfoTableUpdatesOperatorStatus() {
         saveUserOne();
 
-        db.getUserInfoTable().updateOpStatus(playerUUID, true);
+        db.executeTransaction(new OperatorStatusTransaction(playerUUID, true));
 
         List<UserInfo> userInfo = db.query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
         List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 1000L, true, false));
