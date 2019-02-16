@@ -439,20 +439,18 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testUsersTableUpdateName() throws DBInitException {
+    public void playerNameIsUpdatedWhenPlayerLogsIn() throws DBInitException {
         saveUserOne();
 
-        UsersTable usersTable = db.getUsersTable();
+        OptionalAssert.equals(playerUUID, db.query(BaseUserQueries.fetchPlayerUUID(TestConstants.PLAYER_ONE_NAME)));
 
-        assertEquals(playerUUID, usersTable.getUuidOf(TestConstants.PLAYER_ONE_NAME));
+        // Updates the name
         db.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 0, "NewName"));
-
         commitTest();
 
-        assertNull(usersTable.getUuidOf(TestConstants.PLAYER_ONE_NAME));
+        assertFalse(db.query(BaseUserQueries.fetchPlayerUUID(TestConstants.PLAYER_ONE_NAME)).isPresent());
 
-        assertEquals("NewName", usersTable.getPlayerName(playerUUID));
-        assertEquals(playerUUID, usersTable.getUuidOf("NewName"));
+        OptionalAssert.equals(playerUUID, db.query(BaseUserQueries.fetchPlayerUUID("NewName")));
     }
 
     @Test

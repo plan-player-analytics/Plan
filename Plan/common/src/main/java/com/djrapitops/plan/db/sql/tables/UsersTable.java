@@ -65,34 +65,6 @@ public class UsersTable extends Table {
                 .toString();
     }
 
-    /**
-     * Get UUID of a player.
-     *
-     * @param playerName Name of a player
-     * @return UUID of the player
-     */
-    public UUID getUuidOf(String playerName) {
-        String sql = Select.from(tableName, USER_UUID)
-                .where("UPPER(" + USER_NAME + ")=UPPER(?)")
-                .toString();
-
-        return query(new QueryStatement<UUID>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, playerName);
-            }
-
-            @Override
-            public UUID processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    String uuidS = set.getString(USER_UUID);
-                    return UUID.fromString(uuidS);
-                }
-                return null;
-            }
-        });
-    }
-
     public int getTimesKicked(UUID uuid) {
         String sql = Select.from(tableName, TIMES_KICKED)
                 .where(USER_UUID + "=?")

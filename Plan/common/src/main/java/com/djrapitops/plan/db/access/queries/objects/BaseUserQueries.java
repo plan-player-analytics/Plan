@@ -181,4 +181,32 @@ public class BaseUserQueries {
             }
         };
     }
+
+    /**
+     * Query database for a Player UUID matching a specific player's name.
+     *
+     * @param playerName Name of the player, case does not matter.
+     * @return Optional: UUID if found, empty if not.
+     */
+    public static Query<Optional<UUID>> fetchPlayerUUID(String playerName) {
+        String sql = Select.from(UsersTable.TABLE_NAME, UsersTable.USER_UUID)
+                .where("UPPER(" + UsersTable.USER_NAME + ")=UPPER(?)")
+                .toString();
+
+        return new QueryStatement<Optional<UUID>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerName);
+            }
+
+            @Override
+            public Optional<UUID> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    String uuidS = set.getString(UsersTable.USER_UUID);
+                    return Optional.of(UUID.fromString(uuidS));
+                }
+                return Optional.empty();
+            }
+        };
+    }
 }

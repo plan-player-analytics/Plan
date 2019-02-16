@@ -17,6 +17,7 @@
 package com.djrapitops.plan.utilities.uuid;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.db.access.queries.objects.BaseUserQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plugin.api.utility.UUIDFetcher;
 import com.djrapitops.plugin.logging.L;
@@ -24,9 +25,17 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
+ * Utility for fetching a user's UUID.
+ * <p>
+ * Attempts are made in order:
+ * - Parse UUID out of the given String
+ * - Find an UUID from the database matching the player name
+ * - Find an UUID from Mojang API that matches the player name
+ *
  * @author Rsl1122
  */
 @Singleton
@@ -49,16 +58,10 @@ public class UUIDUtility {
      */
     public UUID getUUIDOf(String playerName) {
         UUID uuid = getUUIDFromString(playerName);
-        if (uuid != null) {
-            return uuid;
-        }
+        if (uuid != null) return uuid;
 
-        uuid = getUUIDFromDB(playerName);
-        if (uuid != null) {
-            return uuid;
-        }
-
-        return getUUIDViaUUIDFetcher(playerName);
+        return getUUIDFromDB(playerName)
+                .orElse(getUUIDViaUUIDFetcher(playerName));
     }
 
     private UUID getUUIDFromString(String playerName) {
@@ -77,12 +80,12 @@ public class UUIDUtility {
         }
     }
 
-    private UUID getUUIDFromDB(String playerName) {
+    private Optional<UUID> getUUIDFromDB(String playerName) {
         try {
-            return dbSystem.getDatabase().fetch().getUuidOf(playerName);
+            return dbSystem.getDatabase().query(BaseUserQueries.fetchPlayerUUID(playerName));
         } catch (DBOpException e) {
             errorHandler.log(L.ERROR, UUIDUtility.class, e);
-            return null;
+            return Optional.empty();
         }
     }
 }
