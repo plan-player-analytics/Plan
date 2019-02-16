@@ -45,7 +45,6 @@ import com.djrapitops.plan.db.access.transactions.init.CleanTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.db.patches.Patch;
-import com.djrapitops.plan.db.sql.tables.TPSTable;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
@@ -217,7 +216,6 @@ public abstract class CommonDBTest {
 
     @Test
     public void testTPSSaving() throws Exception {
-        TPSTable tpsTable = db.getTpsTable();
         Random r = new Random();
 
         List<TPS> expected = new ArrayList<>();
@@ -232,7 +230,7 @@ public abstract class CommonDBTest {
 
         commitTest();
 
-        assertEquals(expected, tpsTable.getTPSData(serverUUID));
+        assertEquals(expected, db.query(TPSQueries.fetchTPSDataOfServer(serverUUID)));
     }
 
     private void saveUserOne() {

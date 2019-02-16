@@ -24,7 +24,6 @@ import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
-import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plugin.api.TimeAmount;
@@ -87,40 +86,6 @@ public class TPSTable extends Table {
                 .column(FREE_DISK, Sql.LONG).notNull()
                 .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.SERVER_ID)
                 .toString();
-    }
-
-    public List<TPS> getTPSData(UUID serverUUID) {
-        String sql = Select.all(tableName)
-                .where(SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID)
-                .toString();
-
-        return query(new QueryStatement<List<TPS>>(sql, 50000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public List<TPS> processResults(ResultSet set) throws SQLException {
-                List<TPS> data = new ArrayList<>();
-                while (set.next()) {
-
-                    TPS tps = TPSBuilder.get()
-                            .date(set.getLong(DATE))
-                            .tps(set.getDouble(TPS))
-                            .playersOnline(set.getInt(PLAYERS_ONLINE))
-                            .usedCPU(set.getDouble(CPU_USAGE))
-                            .usedMemory(set.getLong(RAM_USAGE))
-                            .entities(set.getInt(ENTITIES))
-                            .chunksLoaded(set.getInt(CHUNKS))
-                            .freeDiskSpace(set.getLong(FREE_DISK))
-                            .toTPS();
-
-                    data.add(tps);
-                }
-                return data;
-            }
-        });
     }
 
     public List<TPS> getNetworkOnlineData() {

@@ -95,7 +95,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public List<TPS> getTPSData(UUID serverUUID) {
-        return tpsTable.getTPSData(serverUUID);
+        return db.query(TPSQueries.fetchTPSDataOfServer(serverUUID));
     }
 
     @Override

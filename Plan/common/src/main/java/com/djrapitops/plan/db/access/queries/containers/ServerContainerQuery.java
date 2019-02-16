@@ -26,6 +26,7 @@ import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.queries.OptionalFetchQueries;
 import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
 import com.djrapitops.plan.db.access.queries.objects.WorldTimesQueries;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.info.server.Server;
@@ -67,7 +68,7 @@ public class ServerContainerQuery implements Query<ServerContainer> {
         container.putCachingSupplier(ServerKeys.PLAYERS, () -> db.query(new ServerPlayerContainersQuery(serverUUID)));
         container.putSupplier(ServerKeys.PLAYER_COUNT, () -> container.getUnsafe(ServerKeys.PLAYERS).size());
 
-        container.putCachingSupplier(ServerKeys.TPS, () -> db.getTpsTable().getTPSData(serverUUID));
+        container.putCachingSupplier(ServerKeys.TPS, () -> db.query(TPSQueries.fetchTPSDataOfServer(serverUUID)));
         container.putCachingSupplier(ServerKeys.PING, () -> PlayersMutator.forContainer(container).pings());
         container.putCachingSupplier(ServerKeys.ALL_TIME_PEAK_PLAYERS, () ->
                 db.query(OptionalFetchQueries.fetchAllTimePeakPlayerCount(serverUUID)).orElse(null)
