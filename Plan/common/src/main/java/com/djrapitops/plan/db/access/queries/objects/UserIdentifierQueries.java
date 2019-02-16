@@ -173,19 +173,19 @@ public class UserIdentifierQueries {
     public static Query<List<String>> fetchMatchingPlayerNames(String searchFor) {
         String sql = SELECT + DISTINCT + UsersTable.USER_NAME +
                 FROM + UsersTable.TABLE_NAME +
-                WHERE + "LOWER(" + UsersTable.USER_NAME + ") LIKE LOWER(%?%)" +
+                WHERE + "LOWER(" + UsersTable.USER_NAME + ") LIKE LOWER(?)" +
                 " UNION " +
                 SELECT + DISTINCT + UsersTable.USER_NAME +
                 FROM + UsersTable.TABLE_NAME +
                 INNER_JOIN + NicknamesTable.TABLE_NAME + " on " +
                 UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID + "=" + NicknamesTable.TABLE_NAME + "." + NicknamesTable.USER_UUID +
-                WHERE + "LOWER(" + NicknamesTable.NICKNAME + ") LIKE LOWER(%?%)";
+                WHERE + "LOWER(" + NicknamesTable.NICKNAME + ") LIKE LOWER(?)";
 
         return new QueryStatement<List<String>>(sql, 5000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, searchFor);
-                statement.setString(2, searchFor);
+                statement.setString(1, '%' + searchFor + '%');
+                statement.setString(2, '%' + searchFor + '%');
             }
 
             @Override
