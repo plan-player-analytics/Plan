@@ -71,9 +71,6 @@ public interface SaveOperations {
     void opStatus(UUID uuid, boolean op);
 
     @Deprecated
-    void playerWasKicked(UUID uuid);
-
-    @Deprecated
     void session(UUID uuid, Session session);
 
 }

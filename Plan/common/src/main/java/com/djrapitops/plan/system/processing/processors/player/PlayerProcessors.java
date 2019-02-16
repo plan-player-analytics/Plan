@@ -52,8 +52,4 @@ public class PlayerProcessors {
     public EndSessionProcessor endSessionProcessor(UUID uuid, long time) {
         return new EndSessionProcessor(uuid, time, sessionCache.get());
     }
-
-    public KickProcessor kickProcessor(UUID uuid) {
-        return new KickProcessor(uuid, dbSystem.get().getDatabase());
-    }
 }

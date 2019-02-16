@@ -136,11 +136,6 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
     }
 
     @Override
-    public void playerWasKicked(UUID uuid) {
-        usersTable.kicked(uuid);
-    }
-
-    @Override
     public void session(UUID uuid, Session session) {
         db.executeTransaction(new Transaction() {
             @Override

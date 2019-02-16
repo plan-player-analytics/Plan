@@ -18,14 +18,9 @@ package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Insert;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.UUID;
 
 /**
  * Table that is in charge of storing common player data for all servers.
@@ -58,18 +53,5 @@ public class UsersTable extends Table {
                 .column(USER_NAME, Sql.varchar(16)).notNull()
                 .column(TIMES_KICKED, Sql.INT).notNull().defaultValue("0")
                 .toString();
-    }
-
-    public void kicked(UUID uuid) {
-        String sql = "UPDATE " + tableName + " SET "
-                + TIMES_KICKED + "=" + TIMES_KICKED + "+ 1" +
-                " WHERE " + USER_UUID + "=?";
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-            }
-        });
     }
 }

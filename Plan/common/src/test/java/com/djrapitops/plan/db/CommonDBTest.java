@@ -46,7 +46,6 @@ import com.djrapitops.plan.db.access.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.db.patches.Patch;
 import com.djrapitops.plan.db.sql.tables.TPSTable;
-import com.djrapitops.plan.db.sql.tables.UsersTable;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
@@ -238,7 +237,7 @@ public abstract class CommonDBTest {
 
     private void saveUserOne() {
         playerIsRegisteredToBothTables();
-        db.getUsersTable().kicked(playerUUID);
+        db.executeTransaction(new KickStoreTransaction(playerUUID));
     }
 
     private void saveUserTwo() {
@@ -456,13 +455,12 @@ public abstract class CommonDBTest {
     @Test
     public void testUsersTableKickSaving() throws DBInitException {
         saveUserOne();
-        UsersTable usersTable = db.getUsersTable();
         OptionalAssert.equals(1, db.query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID)).map(BaseUser::getTimesKicked));
 
         int random = new Random().nextInt(20);
 
         for (int i = 0; i < random + 1; i++) {
-            usersTable.kicked(playerUUID);
+            db.executeTransaction(new KickStoreTransaction(playerUUID));
         }
         commitTest();
         OptionalAssert.equals(random + 2, db.query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID)).map(BaseUser::getTimesKicked));

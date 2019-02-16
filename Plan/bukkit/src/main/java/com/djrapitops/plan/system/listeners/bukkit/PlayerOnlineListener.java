@@ -19,10 +19,7 @@ package com.djrapitops.plan.system.listeners.bukkit;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.transactions.events.GeoInfoStoreTransaction;
-import com.djrapitops.plan.db.access.transactions.events.NicknameStoreTransaction;
-import com.djrapitops.plan.db.access.transactions.events.PlayerServerRegisterTransaction;
-import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
+import com.djrapitops.plan.db.access.transactions.events.*;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.cache.NicknameCache;
 import com.djrapitops.plan.system.cache.SessionCache;
@@ -123,7 +120,7 @@ public class PlayerOnlineListener implements Listener {
                 return;
             }
 
-            processing.submit(processors.player().kickProcessor(uuid));
+            dbSystem.getDatabase().executeTransaction(new KickStoreTransaction(uuid));
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
         }
