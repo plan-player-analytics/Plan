@@ -25,6 +25,7 @@ import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.mutators.health.NetworkHealthInformation;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
+import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
@@ -99,9 +100,9 @@ public class NetworkContainer extends DynamicDataContainer {
     }
 
     private void addServerBoxes() {
-        putSupplier(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA, () -> database.fetch().getPlayersOnlineForServers(
+        putSupplier(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA, () -> database.query(TPSQueries.fetchPlayerOnlineDataOfServers(
                 getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>()))
-        );
+        ));
         putSupplier(NetworkKeys.SERVERS_TAB, () -> {
             StringBuilder serverBoxes = new StringBuilder();
             Map<Integer, List<TPS>> playersOnlineData = getValue(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA).orElse(new HashMap<>());

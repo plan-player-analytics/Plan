@@ -16,20 +16,10 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
-import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.data.container.builders.TPSBuilder;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
-import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plugin.api.TimeAmount;
-import org.apache.commons.text.TextStringBuilder;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
 
 /**
  * Table that is in charge of storing TPS, Players Online and Performance data.
@@ -83,43 +73,5 @@ public class TPSTable extends Table {
                 .column(FREE_DISK, Sql.LONG).notNull()
                 .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.SERVER_ID)
                 .toString();
-    }
-
-    public Map<Integer, List<TPS>> getPlayersOnlineForServers(Collection<Server> servers) {
-        if (servers.isEmpty()) {
-            return new HashMap<>();
-        }
-        TextStringBuilder sql = new TextStringBuilder("SELECT ");
-        sql.append(SERVER_ID).append(", ")
-                .append(DATE).append(", ")
-                .append(PLAYERS_ONLINE)
-                .append(" FROM ").append(TABLE_NAME)
-                .append(" WHERE ")
-                .append(DATE).append(">").append(System.currentTimeMillis() - TimeAmount.WEEK.toMillis(2L))
-                .append(" AND (");
-        sql.appendWithSeparators(servers.stream().map(server -> SERVER_ID + "=" + server.getId()).iterator(), " OR ");
-        sql.append(")");
-
-        return query(new QueryAllStatement<Map<Integer, List<TPS>>>(sql.toString(), 10000) {
-            @Override
-            public Map<Integer, List<TPS>> processResults(ResultSet set) throws SQLException {
-                Map<Integer, List<TPS>> map = new HashMap<>();
-                while (set.next()) {
-                    int serverID = set.getInt(SERVER_ID);
-                    int playersOnline = set.getInt(PLAYERS_ONLINE);
-                    long date = set.getLong(DATE);
-
-                    List<TPS> tpsList = map.getOrDefault(serverID, new ArrayList<>());
-
-                    TPS tps = TPSBuilder.get().date(date)
-                            .playersOnline(playersOnline)
-                            .toTPS();
-                    tpsList.add(tps);
-
-                    map.put(serverID, tpsList);
-                }
-                return map;
-            }
-        });
     }
 }

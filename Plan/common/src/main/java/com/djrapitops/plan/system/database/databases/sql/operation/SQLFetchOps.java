@@ -175,7 +175,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Map<Integer, List<TPS>> getPlayersOnlineForServers(Collection<Server> servers) {
-        return tpsTable.getPlayersOnlineForServers(servers);
+        return db.query(TPSQueries.fetchPlayerOnlineDataOfServers(servers));
     }
 
     @Override
