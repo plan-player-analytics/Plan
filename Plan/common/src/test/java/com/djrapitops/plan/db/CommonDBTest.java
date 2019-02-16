@@ -442,15 +442,15 @@ public abstract class CommonDBTest {
     public void playerNameIsUpdatedWhenPlayerLogsIn() throws DBInitException {
         saveUserOne();
 
-        OptionalAssert.equals(playerUUID, db.query(BaseUserQueries.fetchPlayerUUID(TestConstants.PLAYER_ONE_NAME)));
+        OptionalAssert.equals(playerUUID, db.query(UserIdentifierQueries.fetchPlayerUUIDOf(TestConstants.PLAYER_ONE_NAME)));
 
         // Updates the name
         db.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 0, "NewName"));
         commitTest();
 
-        assertFalse(db.query(BaseUserQueries.fetchPlayerUUID(TestConstants.PLAYER_ONE_NAME)).isPresent());
+        assertFalse(db.query(UserIdentifierQueries.fetchPlayerUUIDOf(TestConstants.PLAYER_ONE_NAME)).isPresent());
 
-        OptionalAssert.equals(playerUUID, db.query(BaseUserQueries.fetchPlayerUUID("NewName")));
+        OptionalAssert.equals(playerUUID, db.query(UserIdentifierQueries.fetchPlayerUUIDOf("NewName")));
     }
 
     @Test
@@ -501,7 +501,7 @@ public abstract class CommonDBTest {
 
         db.executeTransaction(new RemoveEverythingTransaction());
 
-        assertTrue(db.query(BaseUserQueries.fetchAllCommonUserInformation()).isEmpty());
+        assertTrue(db.query(BaseUserQueries.fetchAllBaseUsers()).isEmpty());
         assertQueryIsEmpty(db, UserInfoQueries.fetchAllUserInformation());
         assertQueryIsEmpty(db, NicknameQueries.fetchAllNicknameData());
         assertQueryIsEmpty(db, GeoInfoQueries.fetchAllGeoInformation());
@@ -661,7 +661,7 @@ public abstract class CommonDBTest {
 
         backup.executeTransaction(new BackupCopyTransaction(db));
 
-        assertQueryResultIsEqual(db, backup, BaseUserQueries.fetchAllCommonUserInformation());
+        assertQueryResultIsEqual(db, backup, BaseUserQueries.fetchAllBaseUsers());
         assertQueryResultIsEqual(db, backup, UserInfoQueries.fetchAllUserInformation());
         assertQueryResultIsEqual(db, backup, NicknameQueries.fetchAllNicknameData());
         assertQueryResultIsEqual(db, backup, GeoInfoQueries.fetchAllGeoInformation());

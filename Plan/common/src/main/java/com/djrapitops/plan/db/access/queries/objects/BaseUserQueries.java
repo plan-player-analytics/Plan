@@ -43,11 +43,11 @@ public class BaseUserQueries {
     /**
      * Query database for common user information.
      * <p>
-     * This is the base for any user information.
+     * Only one {@link BaseUser} per player exists unlike {@link com.djrapitops.plan.data.container.UserInfo} which is available per server.
      *
      * @return Map: Player UUID - BaseUser
      */
-    public static Query<Collection<BaseUser>> fetchAllCommonUserInformation() {
+    public static Query<Collection<BaseUser>> fetchAllBaseUsers() {
         String sql = Select.all(UsersTable.TABLE_NAME).toString();
 
         return new QueryAllStatement<Collection<BaseUser>>(sql, 20000) {
@@ -67,22 +67,14 @@ public class BaseUserQueries {
         };
     }
 
-    public static Query<Set<UUID>> fetchCommonUserUUIDs() {
-        String sql = Select.from(UsersTable.TABLE_NAME, UsersTable.USER_UUID).toString();
-
-        return new QueryAllStatement<Set<UUID>>(sql, 20000) {
-            @Override
-            public Set<UUID> processResults(ResultSet set) throws SQLException {
-                Set<UUID> playerUUIDs = new HashSet<>();
-                while (set.next()) {
-                    UUID playerUUID = UUID.fromString(set.getString(UsersTable.USER_UUID));
-                    playerUUIDs.add(playerUUID);
-                }
-                return playerUUIDs;
-            }
-        };
-    }
-
+    /**
+     * Query database for common user information of a player.
+     * <p>
+     * Only one {@link BaseUser} per player exists unlike {@link com.djrapitops.plan.data.container.UserInfo} which is available per server.
+     *
+     * @param playerUUID UUID of the Player.
+     * @return Optional: BaseUser if found, empty if not.
+     */
     public static Query<Optional<BaseUser>> fetchBaseUserOfPlayer(UUID playerUUID) {
         String sql = Select.all(UsersTable.TABLE_NAME).where(UsersTable.USER_UUID + "=?").toString();
 
@@ -107,6 +99,16 @@ public class BaseUserQueries {
         };
     }
 
+    /**
+     * Query database for common user information for players that have played on a specific server.
+     * <p>
+     * Only one {@link BaseUser} per player exists unlike {@link com.djrapitops.plan.data.container.UserInfo} which is available per server.
+     * <p>
+     * This will fetch BaseUsers for which UserInfo object also exists on the server.
+     *
+     * @param serverUUID UUID of the Plan server.
+     * @return Collection: BaseUsers
+     */
     public static Query<Collection<BaseUser>> fetchServerBaseUsers(UUID serverUUID) {
         String sql = "SELECT " +
                 UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID + ", " +
@@ -139,74 +141,4 @@ public class BaseUserQueries {
         };
     }
 
-    public static Query<Set<UUID>> fetchServerUserUUIDs(UUID serverUUID) {
-        String sql = "SELECT " +
-                UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID + ", " +
-                " FROM " + UsersTable.TABLE_NAME +
-                " INNER JOIN " + UserInfoTable.TABLE_NAME + " on " +
-                UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID + "=" + UserInfoTable.TABLE_NAME + "." + UserInfoTable.USER_UUID +
-                " WHERE " + UserInfoTable.SERVER_UUID + "=?";
-        return new QueryStatement<Set<UUID>>(sql, 1000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public Set<UUID> processResults(ResultSet set) throws SQLException {
-                Set<UUID> playerUUIDs = new HashSet<>();
-                while (set.next()) {
-                    UUID playerUUID = UUID.fromString(set.getString(UsersTable.USER_UUID));
-                    playerUUIDs.add(playerUUID);
-                }
-                return playerUUIDs;
-            }
-        };
-    }
-
-    public static Query<Map<UUID, String>> fetchPlayerNames() {
-        String sql = Select.from(UsersTable.TABLE_NAME, UsersTable.USER_UUID, UsersTable.USER_NAME).toString();
-
-        return new QueryAllStatement<Map<UUID, String>>(sql, 20000) {
-            @Override
-            public Map<UUID, String> processResults(ResultSet set) throws SQLException {
-                Map<UUID, String> names = new HashMap<>();
-                while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString((UsersTable.USER_UUID)));
-                    String name = set.getString((UsersTable.USER_NAME));
-
-                    names.put(uuid, name);
-                }
-                return names;
-            }
-        };
-    }
-
-    /**
-     * Query database for a Player UUID matching a specific player's name.
-     *
-     * @param playerName Name of the player, case does not matter.
-     * @return Optional: UUID if found, empty if not.
-     */
-    public static Query<Optional<UUID>> fetchPlayerUUID(String playerName) {
-        String sql = Select.from(UsersTable.TABLE_NAME, UsersTable.USER_UUID)
-                .where("UPPER(" + UsersTable.USER_NAME + ")=UPPER(?)")
-                .toString();
-
-        return new QueryStatement<Optional<UUID>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, playerName);
-            }
-
-            @Override
-            public Optional<UUID> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    String uuidS = set.getString(UsersTable.USER_UUID);
-                    return Optional.of(UUID.fromString(uuidS));
-                }
-                return Optional.empty();
-            }
-        };
-    }
 }

@@ -25,7 +25,7 @@ import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.LargeStoreQueries;
-import com.djrapitops.plan.db.access.queries.objects.BaseUserQueries;
+import com.djrapitops.plan.db.access.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -126,8 +126,8 @@ public abstract class BukkitImporter implements Importer {
 
         Database db = dbSystem.getDatabase();
 
-        Set<UUID> existingUUIDs = db.query(BaseUserQueries.fetchCommonUserUUIDs());
-        Set<UUID> existingUserInfoTableUUIDs = db.query(BaseUserQueries.fetchServerUserUUIDs(serverUUID.get()));
+        Set<UUID> existingUUIDs = db.query(UserIdentifierQueries.fetchAllPlayerUUIDs());
+        Set<UUID> existingUserInfoTableUUIDs = db.query(UserIdentifierQueries.fetchPlayerUUIDsOfServer(serverUUID.get()));
 
         Map<UUID, BaseUser> users = new HashMap<>();
         List<UserInfo> userInfo = new ArrayList<>();

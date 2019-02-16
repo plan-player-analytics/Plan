@@ -139,7 +139,7 @@ public class HtmlExport extends SpecificExport {
 
     public void exportAvailablePlayers() {
         try {
-            Collection<BaseUser> users = dbSystem.getDatabase().query(BaseUserQueries.fetchAllCommonUserInformation());
+            Collection<BaseUser> users = dbSystem.getDatabase().query(BaseUserQueries.fetchAllBaseUsers());
             for (BaseUser user : users) {
                 exportAvailablePlayerPage(user.getUuid(), user.getName());
             }

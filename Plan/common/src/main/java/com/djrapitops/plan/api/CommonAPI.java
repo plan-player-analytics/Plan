@@ -21,8 +21,8 @@ import com.djrapitops.plan.api.data.ServerContainer;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
-import com.djrapitops.plan.db.access.queries.objects.BaseUserQueries;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.db.access.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -66,7 +66,7 @@ public abstract class CommonAPI implements PlanAPI {
     @Override
     public Map<UUID, String> getKnownPlayerNames() {
         try {
-            return queryDB(BaseUserQueries.fetchPlayerNames());
+            return queryDB(UserIdentifierQueries.fetchAllPlayerNames());
         } catch (DBOpException e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
             return new HashMap<>();

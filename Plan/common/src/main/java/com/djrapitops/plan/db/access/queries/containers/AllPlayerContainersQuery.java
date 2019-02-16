@@ -131,7 +131,7 @@ public class AllPlayerContainersQuery implements Query<List<PlayerContainer>> {
     public List<PlayerContainer> executeQuery(SQLDB db) {
         List<PlayerContainer> containers = new ArrayList<>();
 
-        Collection<BaseUser> users = db.query(BaseUserQueries.fetchAllCommonUserInformation());
+        Collection<BaseUser> users = db.query(BaseUserQueries.fetchAllBaseUsers());
         Map<UUID, List<GeoInfo>> geoInfo = db.query(GeoInfoQueries.fetchAllGeoInformation());
         Map<UUID, List<Ping>> allPings = db.query(PingQueries.fetchAllPingData());
         Map<UUID, List<Nickname>> allNicknames = db.query(NicknameQueries.fetchAllNicknameDataByPlayerUUIDs());

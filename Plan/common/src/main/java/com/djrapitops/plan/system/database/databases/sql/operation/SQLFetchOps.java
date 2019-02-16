@@ -64,12 +64,12 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Set<UUID> getSavedUUIDs() {
-        return db.query(BaseUserQueries.fetchCommonUserUUIDs());
+        return db.query(UserIdentifierQueries.fetchAllPlayerUUIDs());
     }
 
     @Override
     public Set<UUID> getSavedUUIDs(UUID serverUUID) {
-        return db.query(BaseUserQueries.fetchServerUserUUIDs(serverUUID));
+        return db.query(UserIdentifierQueries.fetchPlayerUUIDsOfServer(serverUUID));
     }
 
     @Override
@@ -85,7 +85,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public UUID getUuidOf(String playerName) {
-        return db.query(BaseUserQueries.fetchPlayerUUID(playerName)).orElse(null);
+        return db.query(UserIdentifierQueries.fetchPlayerUUIDOf(playerName)).orElse(null);
     }
 
     @Override
@@ -120,7 +120,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public Map<UUID, String> getPlayerNames() {
-        return db.query(BaseUserQueries.fetchPlayerNames());
+        return db.query(UserIdentifierQueries.fetchAllPlayerNames());
     }
 
     @Override

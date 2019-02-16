@@ -17,7 +17,7 @@
 package com.djrapitops.plan.utilities.uuid;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.db.access.queries.objects.BaseUserQueries;
+import com.djrapitops.plan.db.access.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plugin.api.utility.UUIDFetcher;
 import com.djrapitops.plugin.logging.L;
@@ -82,7 +82,7 @@ public class UUIDUtility {
 
     private Optional<UUID> getUUIDFromDB(String playerName) {
         try {
-            return dbSystem.getDatabase().query(BaseUserQueries.fetchPlayerUUID(playerName));
+            return dbSystem.getDatabase().query(UserIdentifierQueries.fetchPlayerUUIDOf(playerName));
         } catch (DBOpException e) {
             errorHandler.log(L.ERROR, UUIDUtility.class, e);
             return Optional.empty();
