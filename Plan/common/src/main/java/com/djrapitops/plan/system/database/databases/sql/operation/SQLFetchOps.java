@@ -36,6 +36,10 @@ import com.djrapitops.plan.system.settings.config.Config;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * @deprecated Bad API, replaced with {@link com.djrapitops.plan.db.access.Query} objects.
+ */
+@Deprecated
 public class SQLFetchOps implements FetchOperations {
 
     private final Database db;
