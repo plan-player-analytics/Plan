@@ -25,7 +25,7 @@ import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.data.store.objects.Nickname;
-import com.djrapitops.plan.db.SQLDB;
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.db.access.queries.objects.*;
@@ -38,9 +38,9 @@ import java.util.stream.Collectors;
 
 public class SQLFetchOps implements FetchOperations {
 
-    private final SQLDB db;
+    private final Database db;
 
-    public SQLFetchOps(SQLDB db) {
+    public SQLFetchOps(Database db) {
         this.db = db;
     }
 

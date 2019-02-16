@@ -21,6 +21,7 @@ import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
+import com.djrapitops.plan.system.database.databases.sql.operation.SQLFetchOps;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
@@ -57,7 +58,7 @@ public class ServerAPI extends CommonAPI {
 
     @Override
     public FetchOperations fetchFromPlanDB() {
-        return dbSystem.getDatabase().fetch();
+        return new SQLFetchOps(dbSystem.getDatabase());
     }
 
     @Override

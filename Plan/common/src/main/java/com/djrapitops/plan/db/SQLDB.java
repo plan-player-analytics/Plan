@@ -28,8 +28,6 @@ import com.djrapitops.plan.db.access.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.db.patches.*;
 import com.djrapitops.plan.db.tasks.PatchTask;
-import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
-import com.djrapitops.plan.system.database.databases.sql.operation.SQLFetchOps;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.PluginSettings;
@@ -69,8 +67,6 @@ public abstract class SQLDB extends AbstractDatabase {
     protected final Timings timings;
     protected final ErrorHandler errorHandler;
 
-    private final SQLFetchOps fetchOps;
-
     private PluginTask dbCleanTask;
 
     public SQLDB(
@@ -90,8 +86,6 @@ public abstract class SQLDB extends AbstractDatabase {
         this.logger = logger;
         this.timings = timings;
         this.errorHandler = errorHandler;
-
-        fetchOps = new SQLFetchOps(this);
     }
 
     /**
@@ -309,12 +303,6 @@ public abstract class SQLDB extends AbstractDatabase {
     @Override
     public void executeTransaction(Transaction transaction) {
         transaction.executeTransaction(this);
-    }
-
-    @Override
-    @Deprecated
-    public FetchOperations fetch() {
-        return fetchOps;
     }
 
     @Override

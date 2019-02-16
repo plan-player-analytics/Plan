@@ -17,6 +17,7 @@
 package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.api.exceptions.connection.*;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.request.InfoRequestFactory;
@@ -38,7 +39,7 @@ import com.djrapitops.plugin.command.Sender;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -126,15 +127,14 @@ public class ManageConDebugCommand extends CommandNode {
     }
 
     private void testServers(Sender sender) {
-        List<Server> servers = dbSystem.getDatabase().fetch().getServers();
+        Map<UUID, Server> servers = dbSystem.getDatabase().query(ServerQueries.fetchPlanServerInformation());
 
         if (servers.isEmpty()) {
             sender.sendMessage(locale.getString(ManageLang.CON_NO_SERVERS));
         }
 
-        String accessAddress = webServer.getAccessAddress();
         UUID thisServer = serverInfo.getServerUUID();
-        for (Server server : servers) {
+        for (Server server : servers.values()) {
             if (thisServer.equals(server.getUuid())) {
                 continue;
             }

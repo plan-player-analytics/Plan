@@ -26,6 +26,7 @@ import com.djrapitops.plan.db.access.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.ExportSettings;
@@ -95,14 +96,15 @@ public class HtmlExport extends SpecificExport {
         if (Check.isBukkitAvailable() && connectionSystem.isServerAvailable()) {
             return;
         }
-        Optional<String> serverName = dbSystem.getDatabase().fetch().getServerName(serverUUID);
-        serverName.ifPresent(name -> {
-            try {
-                exportAvailableServerPage(serverUUID, name);
-            } catch (IOException e) {
-                errorHandler.log(L.WARN, this.getClass(), e);
-            }
-        });
+        dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
+                .map(Server::getName)
+                .ifPresent(serverName -> {
+                    try {
+                        exportAvailableServerPage(serverUUID, serverName);
+                    } catch (IOException e) {
+                        errorHandler.log(L.WARN, this.getClass(), e);
+                    }
+                });
     }
 
     public void exportPlayer(UUID playerUUID) {
