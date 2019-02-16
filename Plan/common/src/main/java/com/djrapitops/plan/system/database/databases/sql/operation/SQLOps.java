@@ -17,18 +17,13 @@
 package com.djrapitops.plan.system.database.databases.sql.operation;
 
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.sql.tables.TPSTable;
 
 @Deprecated
 public class SQLOps {
 
     protected final SQLDB db;
 
-    protected final TPSTable tpsTable;
-
     public SQLOps(SQLDB db) {
         this.db = db;
-
-        tpsTable = db.getTpsTable();
     }
 }

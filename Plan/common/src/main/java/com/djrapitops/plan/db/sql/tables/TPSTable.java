@@ -17,18 +17,15 @@
 package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.db.DBType;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
 /**
- * Table that is in charge of storing TPS, Players Online and Performance data.
- * <p>
- * Table Name: plan_tps
+ * Table information about 'plan_tps'.
  *
  * @author Rsl1122
  */
-public class TPSTable extends Table {
+public class TPSTable {
 
     public static final String TABLE_NAME = "plan_tps";
 
@@ -56,8 +53,8 @@ public class TPSTable extends Table {
             + ServerTable.STATEMENT_SELECT_SERVER_ID + ", "
             + "?, ?, ?, ?, ?, ?, ?, ?)";
 
-    public TPSTable(SQLDB db) {
-        super(TABLE_NAME, db);
+    private TPSTable() {
+        /* Static information class */
     }
 
     public static String createTableSQL(DBType dbType) {

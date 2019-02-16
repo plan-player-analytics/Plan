@@ -126,9 +126,8 @@ public class Version10Patch extends Patch {
 
     private void copyTPS() {
         String tempTableName = "temp_tps";
-        TPSTable tpsTable = db.getTpsTable();
 
-        renameTable(tpsTable.toString(), tempTableName);
+        renameTable(TPSTable.TABLE_NAME, tempTableName);
 
         execute(TPSTable.createTableSQL(dbType));
 
