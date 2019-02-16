@@ -17,19 +17,21 @@
 package com.djrapitops.plan.db.sql.tables;
 
 import com.djrapitops.plan.db.DBType;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Insert;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
 /**
- * Table that is in charge of storing common player data for all servers.
- * <p>
- * Table Name: plan_users
+ * Table information about 'plan_users'.
+ *
+ * This table is used to store Player information that applies to all servers.
+ *
+ * Patches that apply to this table:
+ * {@link com.djrapitops.plan.db.patches.Version10Patch}
  *
  * @author Rsl1122
  */
-public class UsersTable extends Table {
+public class UsersTable {
 
     public static final String TABLE_NAME = "plan_users";
 
@@ -41,8 +43,8 @@ public class UsersTable extends Table {
 
     public static final String INSERT_STATEMENT = Insert.values(TABLE_NAME, USER_UUID, USER_NAME, REGISTERED, TIMES_KICKED);
 
-    public UsersTable(SQLDB db) {
-        super(TABLE_NAME, db);
+    private UsersTable() {
+        /* Static information class */
     }
 
     public static String createTableSQL(DBType dbType) {
