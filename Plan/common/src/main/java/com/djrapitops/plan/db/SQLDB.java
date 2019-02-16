@@ -28,7 +28,6 @@ import com.djrapitops.plan.db.access.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.db.patches.*;
 import com.djrapitops.plan.db.sql.tables.TPSTable;
-import com.djrapitops.plan.db.sql.tables.UserInfoTable;
 import com.djrapitops.plan.db.tasks.PatchTask;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.database.databases.sql.operation.SQLFetchOps;
@@ -71,7 +70,6 @@ public abstract class SQLDB extends AbstractDatabase {
     protected final Timings timings;
     protected final ErrorHandler errorHandler;
 
-    private final UserInfoTable userInfoTable;
     private final TPSTable tpsTable;
 
     private final SQLFetchOps fetchOps;
@@ -97,8 +95,6 @@ public abstract class SQLDB extends AbstractDatabase {
         this.errorHandler = errorHandler;
 
         tpsTable = new TPSTable(this);
-
-        userInfoTable = new UserInfoTable(this);
 
         fetchOps = new SQLFetchOps(this);
     }
@@ -323,11 +319,6 @@ public abstract class SQLDB extends AbstractDatabase {
     @Deprecated
     public TPSTable getTpsTable() {
         return tpsTable;
-    }
-
-    @Deprecated
-    public UserInfoTable getUserInfoTable() {
-        return userInfoTable;
     }
 
     @Override
