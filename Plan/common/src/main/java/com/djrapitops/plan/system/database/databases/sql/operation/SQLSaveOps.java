@@ -16,10 +16,7 @@
  */
 package com.djrapitops.plan.system.database.databases.sql.operation;
 
-import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.queries.DataStoreQueries;
-import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 
 import java.util.UUID;
@@ -45,13 +42,4 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         userInfoTable.updateOpStatus(uuid, op);
     }
 
-    @Override
-    public void session(UUID uuid, Session session) {
-        db.executeTransaction(new Transaction() {
-            @Override
-            protected void performOperations() {
-                execute(DataStoreQueries.storeSession(session));
-            }
-        });
-    }
 }

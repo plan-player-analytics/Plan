@@ -36,12 +36,12 @@ public class ProxySessionCache extends SessionCache {
 
     @Inject
     public ProxySessionCache(DBSystem dbSystem) {
-        super(dbSystem);
+        super();
     }
 
     @Override
-    public Optional<Session> endSession(UUID uuid, long time) {
-        removeSessionFromCache(uuid);
+    public Optional<Session> endSession(UUID playerUUID, long time) {
+        removeSessionFromCache(playerUUID);
         /* Proxy should not save sessions so session is not removed.. */
         return Optional.empty();
     }

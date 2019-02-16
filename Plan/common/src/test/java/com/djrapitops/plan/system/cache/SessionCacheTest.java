@@ -38,7 +38,7 @@ public class SessionCacheTest {
     public void setUp() {
         session = new Session(uuid, serverUUID, 12345L, "World1", "SURVIVAL");
 
-        SessionCache sessionCache = new SessionCache(null);
+        SessionCache sessionCache = new SessionCache();
         sessionCache.cacheSession(uuid, session);
     }
 

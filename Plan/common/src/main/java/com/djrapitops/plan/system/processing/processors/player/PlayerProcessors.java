@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.system.processing.processors.player;
 
-import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.DBSystem;
 import dagger.Lazy;
 
@@ -34,22 +33,15 @@ import java.util.function.BooleanSupplier;
 public class PlayerProcessors {
 
     private final Lazy<DBSystem> dbSystem;
-    private final Lazy<SessionCache> sessionCache;
 
     @Inject
     public PlayerProcessors(
-            Lazy<DBSystem> dbSystem,
-            Lazy<SessionCache> sessionCache
+            Lazy<DBSystem> dbSystem
     ) {
         this.dbSystem = dbSystem;
-        this.sessionCache = sessionCache;
     }
 
     public BanAndOpProcessor banAndOpProcessor(UUID uuid, BooleanSupplier banned, boolean op) {
         return new BanAndOpProcessor(uuid, banned, op, dbSystem.get().getDatabase());
-    }
-
-    public EndSessionProcessor endSessionProcessor(UUID uuid, long time) {
-        return new EndSessionProcessor(uuid, time, sessionCache.get());
     }
 }

@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.system.database.databases.operation;
 
-import com.djrapitops.plan.data.container.Session;
-
 import java.util.UUID;
 
 /**
@@ -39,8 +37,5 @@ public interface SaveOperations {
 
     @Deprecated
     void opStatus(UUID uuid, boolean op);
-
-    @Deprecated
-    void session(UUID uuid, Session session);
 
 }

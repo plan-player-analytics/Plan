@@ -163,7 +163,8 @@ public class PlayerOnlineListener implements Listener {
         }
 
         database.executeTransaction(new PlayerServerRegisterTransaction(uuid, player::getFirstPlayed, playerName, serverUUID));
-        processing.submitCritical(() -> sessionCache.cacheSession(uuid, new Session(uuid, serverUUID, time, world, gm)));
+        sessionCache.cacheSession(uuid, new Session(uuid, serverUUID, time, world, gm))
+                .ifPresent(previousSession -> database.executeTransaction(new SessionEndTransaction(previousSession)));
 
         if (!displayName.equals(nicknameCache.getDisplayName(uuid))) {
             database.executeTransaction(
@@ -187,14 +188,17 @@ public class PlayerOnlineListener implements Listener {
     private void actOnQuitEvent(PlayerQuitEvent event) {
         long time = System.currentTimeMillis();
         Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
+        UUID playerUUID = player.getUniqueId();
 
-        AFKListener.AFK_TRACKER.loggedOut(uuid, time);
+        AFKListener.AFK_TRACKER.loggedOut(playerUUID, time);
 
-        nicknameCache.removeDisplayName(uuid);
+        nicknameCache.removeDisplayName(playerUUID);
 
-        processing.submit(processors.player().banAndOpProcessor(uuid, player::isBanned, player.isOp()));
-        processing.submit(processors.player().endSessionProcessor(uuid, time));
-        processing.submit(processors.info().playerPageUpdateProcessor(uuid));
+        processing.submit(processors.player().banAndOpProcessor(playerUUID, player::isBanned, player.isOp()));
+
+        sessionCache.endSession(playerUUID, time)
+                .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new SessionEndTransaction(endedSession)));
+
+        processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
     }
 }

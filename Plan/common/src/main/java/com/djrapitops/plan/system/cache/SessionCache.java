@@ -18,7 +18,6 @@ package com.djrapitops.plan.system.cache;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.system.database.DBSystem;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -37,11 +36,8 @@ public class SessionCache {
 
     private static final Map<UUID, Session> ACTIVE_SESSIONS = new HashMap<>();
 
-    protected final DBSystem dbSystem;
-
     @Inject
-    public SessionCache(DBSystem dbSystem) {
-        this.dbSystem = dbSystem;
+    public SessionCache() {
     }
 
     public static Map<UUID, Session> getActiveSessions() {
@@ -61,44 +57,46 @@ public class SessionCache {
     /**
      * Used to get the Session of the player in the sessionCache.
      *
-     * @param uuid UUID of the player.
+     * @param playerUUID UUID of the player.
      * @return Optional with the session inside it if found.
      */
-    public static Optional<Session> getCachedSession(UUID uuid) {
-        return Optional.ofNullable(ACTIVE_SESSIONS.get(uuid));
+    public static Optional<Session> getCachedSession(UUID playerUUID) {
+        return Optional.ofNullable(ACTIVE_SESSIONS.get(playerUUID));
     }
 
-    public void cacheSession(UUID uuid, Session session) {
-        if (getCachedSession(uuid).isPresent()) {
-            endSession(uuid, System.currentTimeMillis());
+    /**
+     * Cache a new session.
+     *
+     * @param playerUUID UUID of the player
+     * @param session    Session to cache.
+     * @return Optional: previous session. Recipients of this object should decide if it needs to be saved.
+     */
+    public Optional<Session> cacheSession(UUID playerUUID, Session session) {
+        if (getCachedSession(playerUUID).isPresent()) {
+            return endSession(playerUUID, session.getUnsafe(SessionKeys.START));
         }
-        ACTIVE_SESSIONS.put(uuid, session);
+        ACTIVE_SESSIONS.put(playerUUID, session);
+        return Optional.empty();
     }
 
     /**
      * End a session and save it to database.
      *
-     * @param uuid UUID of the player.
-     * @param time Time the session ended.
-     * @throws com.djrapitops.plan.api.exceptions.database.DBOpException If saving failed.
+     * @param playerUUID UUID of the player.
+     * @param time       Time the session ended.
+     * @return Optional: ended session. Recipients of this object should decide if it needs to be saved.
      */
-    public Optional<Session> endSession(UUID uuid, long time) {
-        Session session = ACTIVE_SESSIONS.get(uuid);
+    public Optional<Session> endSession(UUID playerUUID, long time) {
+        Session session = ACTIVE_SESSIONS.get(playerUUID);
         if (session == null || session.getUnsafe(SessionKeys.START) > time) {
             return Optional.empty();
         }
-        try {
-            session.endSession(time);
-            // Might throw a DBOpException
-            // TODO Refactor to use Event transactions when available.
-            dbSystem.getDatabase().save().session(uuid, session);
-            return Optional.of(session);
-        } finally {
-            removeSessionFromCache(uuid);
-        }
+        removeSessionFromCache(playerUUID);
+        session.endSession(time);
+        return Optional.of(session);
     }
 
-    protected void removeSessionFromCache(UUID uuid) {
-        ACTIVE_SESSIONS.remove(uuid);
+    protected void removeSessionFromCache(UUID playerUUID) {
+        ACTIVE_SESSIONS.remove(playerUUID);
     }
 }

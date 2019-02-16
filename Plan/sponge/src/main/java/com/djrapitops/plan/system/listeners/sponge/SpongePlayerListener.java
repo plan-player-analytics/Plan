@@ -103,19 +103,19 @@ public class SpongePlayerListener {
 
     private void actOnLoginEvent(ClientConnectionEvent.Login event) {
         GameProfile profile = event.getProfile();
-        UUID uuid = profile.getUniqueId();
+        UUID playerUUID = profile.getUniqueId();
         boolean banned = isBanned(profile);
-        processing.submit(processors.player().banAndOpProcessor(uuid, () -> banned, false));
+        processing.submit(processors.player().banAndOpProcessor(playerUUID, () -> banned, false));
     }
 
     @Listener(order = Order.POST)
     public void onKick(KickPlayerEvent event) {
         try {
-            UUID uuid = event.getTargetEntity().getUniqueId();
-            if (!status.areKicksCounted() || SpongeAFKListener.AFK_TRACKER.isAfk(uuid)) {
+            UUID playerUUID = event.getTargetEntity().getUniqueId();
+            if (!status.areKicksCounted() || SpongeAFKListener.AFK_TRACKER.isAfk(playerUUID)) {
                 return;
             }
-            dbSystem.getDatabase().executeTransaction(new KickStoreTransaction(uuid));
+            dbSystem.getDatabase().executeTransaction(new KickStoreTransaction(playerUUID));
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
         }
@@ -142,11 +142,11 @@ public class SpongePlayerListener {
     private void actOnJoinEvent(ClientConnectionEvent.Join event) {
         Player player = event.getTargetEntity();
 
-        UUID uuid = player.getUniqueId();
+        UUID playerUUID = player.getUniqueId();
         UUID serverUUID = serverInfo.getServerUUID();
         long time = System.currentTimeMillis();
 
-        SpongeAFKListener.AFK_TRACKER.performedAction(uuid, time);
+        SpongeAFKListener.AFK_TRACKER.performedAction(playerUUID, time);
 
         String world = player.getWorld().getName();
         Optional<GameMode> gameMode = player.getGameModeData().get(Keys.GAME_MODE);
@@ -163,20 +163,21 @@ public class SpongePlayerListener {
         boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
         if (gatheringGeolocations) {
             database.executeTransaction(
-                    new GeoInfoStoreTransaction(uuid, address, time, geolocationCache::getCountry)
+                    new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
             );
         }
 
-        database.executeTransaction(new PlayerServerRegisterTransaction(uuid, () -> time, playerName, serverUUID));
-        processing.submitCritical(() -> sessionCache.cacheSession(uuid, new Session(uuid, serverUUID, time, world, gm)));
+        database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> time, playerName, serverUUID));
+        sessionCache.cacheSession(playerUUID, new Session(playerUUID, serverUUID, time, world, gm))
+                .ifPresent(previousSession -> database.executeTransaction(new SessionEndTransaction(previousSession)));
 
-        if (!displayName.equals(nicknameCache.getDisplayName(uuid))) {
+        if (!displayName.equals(nicknameCache.getDisplayName(playerUUID))) {
             database.executeTransaction(
-                    new NicknameStoreTransaction(uuid, new Nickname(displayName, time, serverUUID))
+                    new NicknameStoreTransaction(playerUUID, new Nickname(displayName, time, serverUUID))
             );
         }
 
-        processing.submitNonCritical(processors.info().playerPageUpdateProcessor(uuid));
+        processing.submitNonCritical(processors.info().playerPageUpdateProcessor(playerUUID));
     }
 
     @Listener(order = Order.POST)
@@ -191,15 +192,18 @@ public class SpongePlayerListener {
     private void actOnQuitEvent(ClientConnectionEvent.Disconnect event) {
         long time = System.currentTimeMillis();
         Player player = event.getTargetEntity();
-        UUID uuid = player.getUniqueId();
+        UUID playerUUID = player.getUniqueId();
 
-        SpongeAFKListener.AFK_TRACKER.loggedOut(uuid, time);
+        SpongeAFKListener.AFK_TRACKER.loggedOut(playerUUID, time);
 
-        nicknameCache.removeDisplayName(uuid);
+        nicknameCache.removeDisplayName(playerUUID);
 
         boolean banned = isBanned(player.getProfile());
-        processing.submit(processors.player().banAndOpProcessor(uuid, () -> banned, false));
-        processing.submit(processors.player().endSessionProcessor(uuid, time));
-        processing.submit(processors.info().playerPageUpdateProcessor(uuid));
+        processing.submit(processors.player().banAndOpProcessor(playerUUID, () -> banned, false));
+
+        sessionCache.endSession(playerUUID, time)
+                .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new SessionEndTransaction(endedSession)));
+
+        processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
     }
 }

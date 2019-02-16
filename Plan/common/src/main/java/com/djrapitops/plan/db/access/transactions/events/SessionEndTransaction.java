@@ -14,33 +14,27 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.processing.processors.player;
+package com.djrapitops.plan.db.access.transactions.events;
 
-import com.djrapitops.plan.system.cache.SessionCache;
-import com.djrapitops.plan.system.processing.CriticalRunnable;
-
-import java.util.UUID;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.db.access.queries.DataStoreQueries;
+import com.djrapitops.plan.db.access.transactions.Transaction;
 
 /**
- * Ends a session and saves it to the database.
+ * Transaction for storing a session after a session has ended.
  *
  * @author Rsl1122
  */
-public class EndSessionProcessor implements CriticalRunnable {
+public class SessionEndTransaction extends Transaction {
 
-    private final UUID uuid;
-    private final long time;
+    private final Session session;
 
-    private final SessionCache sessionCache;
-
-    EndSessionProcessor(UUID uuid, long time, SessionCache sessionCache) {
-        this.uuid = uuid;
-        this.time = time;
-        this.sessionCache = sessionCache;
+    public SessionEndTransaction(Session session) {
+        this.session = session;
     }
 
     @Override
-    public void run() {
-        sessionCache.endSession(uuid, time);
+    protected void performOperations() {
+        execute(DataStoreQueries.storeSession(session));
     }
 }

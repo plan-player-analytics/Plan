@@ -84,24 +84,23 @@ public class PlayerOnlineListener implements Listener {
     public void onPostLogin(PostLoginEvent event) {
         try {
             ProxiedPlayer player = event.getPlayer();
-            UUID uuid = player.getUniqueId();
+            UUID playerUUID = player.getUniqueId();
             String name = player.getName();
             InetAddress address = player.getAddress().getAddress();
             long time = System.currentTimeMillis();
 
-            sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, null, null));
-
+            sessionCache.cacheSession(playerUUID, new Session(playerUUID, serverInfo.getServerUUID(), time, null, null));
             Database database = dbSystem.getDatabase();
 
             boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
             if (gatheringGeolocations) {
                 database.executeTransaction(
-                        new GeoInfoStoreTransaction(uuid, address, time, geolocationCache::getCountry)
+                        new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
                 );
             }
 
-            database.executeTransaction(new PlayerRegisterTransaction(uuid, () -> time, name));
-            processing.submit(processors.info().playerPageUpdateProcessor(uuid));
+            database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> time, name));
+            processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
             ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
@@ -112,10 +111,10 @@ public class PlayerOnlineListener implements Listener {
     public void onLogout(PlayerDisconnectEvent event) {
         try {
             ProxiedPlayer player = event.getPlayer();
-            UUID uuid = player.getUniqueId();
+            UUID playerUUID = player.getUniqueId();
 
-            sessionCache.endSession(uuid, System.currentTimeMillis());
-            processing.submit(processors.info().playerPageUpdateProcessor(uuid));
+            sessionCache.endSession(playerUUID, System.currentTimeMillis());
+            processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
             ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
@@ -126,12 +125,12 @@ public class PlayerOnlineListener implements Listener {
     public void onServerSwitch(ServerSwitchEvent event) {
         try {
             ProxiedPlayer player = event.getPlayer();
-            UUID uuid = player.getUniqueId();
+            UUID playerUUID = player.getUniqueId();
 
             long time = System.currentTimeMillis();
             // Replaces the current session in the cache.
-            sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, null, null));
-            processing.submit(processors.info().playerPageUpdateProcessor(uuid));
+            sessionCache.cacheSession(playerUUID, new Session(playerUUID, serverInfo.getServerUUID(), time, null, null));
+            processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
         }
