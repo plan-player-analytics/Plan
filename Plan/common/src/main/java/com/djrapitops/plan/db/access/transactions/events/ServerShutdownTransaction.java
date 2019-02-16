@@ -14,33 +14,29 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.database.databases.operation;
+package com.djrapitops.plan.db.access.transactions.events;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.db.access.queries.LargeStoreQueries;
+import com.djrapitops.plan.db.access.transactions.Transaction;
 
-import java.util.UUID;
+import java.util.Collection;
 
 /**
- * Operation methods for saving data.
- * <p>
- * Note: Method names subject to change
+ * Transaction to store sessions on server shutdown.
  *
  * @author Rsl1122
  */
-@Deprecated
-public interface SaveOperations {
+public class ServerShutdownTransaction extends Transaction {
 
-    // Bulk save
+    private final Collection<Session> unsavedSessions;
 
-    // Single data point
+    public ServerShutdownTransaction(Collection<Session> unsavedSessions) {
+        this.unsavedSessions = unsavedSessions;
+    }
 
-    @Deprecated
-    void banStatus(UUID uuid, boolean banned);
-
-    @Deprecated
-    void opStatus(UUID uuid, boolean op);
-
-    @Deprecated
-    void session(UUID uuid, Session session);
-
+    @Override
+    protected void performOperations() {
+        execute(LargeStoreQueries.storeAllSessionsWithKillAndWorldData(unsavedSessions));
+    }
 }

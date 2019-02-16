@@ -329,7 +329,7 @@ public class LargeStoreQueries {
         };
     }
 
-    public static Executable storeAllSessionsWithoutKillOrWorldData(List<Session> sessions) {
+    public static Executable storeAllSessionsWithoutKillOrWorldData(Collection<Session> sessions) {
         if (Verify.isEmpty(sessions)) {
             return Executable.empty();
         }
@@ -351,7 +351,7 @@ public class LargeStoreQueries {
         };
     }
 
-    public static Executable storeAllSessionsWithKillAndWorldData(List<Session> sessions) {
+    public static Executable storeAllSessionsWithKillAndWorldData(Collection<Session> sessions) {
         return connection -> {
             storeAllSessionsWithoutKillOrWorldData(sessions).execute(connection);
             storeSessionKillData(sessions).execute(connection);
@@ -359,7 +359,7 @@ public class LargeStoreQueries {
         };
     }
 
-    private static Executable storeSessionKillData(List<Session> sessions) {
+    private static Executable storeSessionKillData(Collection<Session> sessions) {
         if (Verify.isEmpty(sessions)) {
             return Executable.empty();
         }
@@ -374,7 +374,7 @@ public class LargeStoreQueries {
         };
     }
 
-    private static Executable storeSessionWorldTimeData(List<Session> sessions) {
+    private static Executable storeSessionWorldTimeData(Collection<Session> sessions) {
         if (Verify.isEmpty(sessions)) {
             return Executable.empty();
         }
