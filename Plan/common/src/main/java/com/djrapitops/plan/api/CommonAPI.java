@@ -89,4 +89,9 @@ public abstract class CommonAPI implements PlanAPI {
     public Collection<UUID> fetchServerUUIDs() {
         return queryDB(ServerQueries.fetchPlanServerInformation()).keySet();
     }
+
+    @Override
+    public String getPlayerName(UUID playerUUID) {
+        return queryDB(UserIdentifierQueries.fetchPlayerNameOf(playerUUID)).orElse(null);
+    }
 }

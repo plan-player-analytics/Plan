@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.system.export;
 
+import com.djrapitops.plan.db.access.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -67,20 +68,21 @@ public class JSONExport extends SpecificExport {
         return config.get(ExportSettings.JSON_EXPORT_PATH);
     }
 
-    public void exportPlayerJSON(UUID uuid) {
-        String json = responseFactory.rawPlayerPageResponse(uuid).getContent();
-        String playerName = dbSystem.getDatabase().fetch().getPlayerName(uuid);
-        if (playerName != null) {
-            try {
-                File htmlLocation = getPlayerFolder();
-                htmlLocation.mkdirs();
-                File exportFile = new File(htmlLocation, playerName.replace(" ", "%20").replace(".", "%2E") + ".json");
+    public void exportPlayerJSON(UUID playerUUID) {
+        String json = responseFactory.rawPlayerPageResponse(playerUUID).getContent();
 
-                export(exportFile, Collections.singletonList(json));
-            } catch (IOException e) {
-                errorHandler.log(L.WARN, this.getClass(), e);
-            }
-        }
+        dbSystem.getDatabase().query(UserIdentifierQueries.fetchPlayerNameOf(playerUUID))
+                .ifPresent(playerName -> {
+                    try {
+                        File htmlLocation = getPlayerFolder();
+                        htmlLocation.mkdirs();
+                        File exportFile = new File(htmlLocation, playerName.replace(" ", "%20").replace(".", "%2E") + ".json");
+
+                        export(exportFile, Collections.singletonList(json));
+                    } catch (IOException e) {
+                        errorHandler.log(L.WARN, this.getClass(), e);
+                    }
+                });
     }
 
     public void exportServerJSON(UUID serverUUID) {

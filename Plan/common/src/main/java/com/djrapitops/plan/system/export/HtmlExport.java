@@ -22,6 +22,7 @@ import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.BaseUser;
 import com.djrapitops.plan.db.access.queries.objects.BaseUserQueries;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.db.access.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
@@ -104,18 +105,19 @@ public class HtmlExport extends SpecificExport {
         });
     }
 
-    public void exportPlayer(UUID uuid) {
+    public void exportPlayer(UUID playerUUID) {
         if (Check.isBukkitAvailable() && connectionSystem.isServerAvailable()) {
             return;
         }
-        String playerName = dbSystem.getDatabase().fetch().getPlayerName(uuid);
-        if (playerName != null) {
-            try {
-                exportAvailablePlayerPage(uuid, playerName);
-            } catch (IOException e) {
-                errorHandler.log(L.WARN, this.getClass(), e);
-            }
-        }
+
+        dbSystem.getDatabase().query(UserIdentifierQueries.fetchPlayerNameOf(playerUUID))
+                .ifPresent(playerName -> {
+                    try {
+                        exportAvailablePlayerPage(playerUUID, playerName);
+                    } catch (IOException e) {
+                        errorHandler.log(L.WARN, this.getClass(), e);
+                    }
+                });
     }
 
     public void exportPlayersPage() {

@@ -141,4 +141,29 @@ public class UserIdentifierQueries {
             }
         };
     }
+
+    /**
+     * Query database for a Player name matching a specific player's UUID.
+     *
+     * @param playerUUID UUID of the Player
+     * @return Optional: name if found, empty if not - Case is stored unless using a H2 database.
+     */
+    public static Query<Optional<String>> fetchPlayerNameOf(UUID playerUUID) {
+        String sql = Select.from(UsersTable.TABLE_NAME, UsersTable.USER_NAME).where(UsersTable.USER_UUID + "=?").toString();
+
+        return new QueryStatement<Optional<String>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+            }
+
+            @Override
+            public Optional<String> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(set.getString(UsersTable.USER_NAME));
+                }
+                return Optional.empty();
+            }
+        };
+    }
 }

@@ -125,7 +125,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public String getPlayerName(UUID playerUUID) {
-        return usersTable.getPlayerName(playerUUID);
+        return db.query(UserIdentifierQueries.fetchPlayerNameOf(playerUUID)).orElse(null);
     }
 
     @Override

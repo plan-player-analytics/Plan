@@ -22,7 +22,6 @@ import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Insert;
-import com.djrapitops.plan.db.sql.parsing.Select;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
 import java.sql.PreparedStatement;
@@ -74,25 +73,6 @@ public class UsersTable extends Table {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
-            }
-        });
-    }
-
-    public String getPlayerName(UUID uuid) {
-        String sql = Select.from(tableName, USER_NAME).where(USER_UUID + "=?").toString();
-
-        return query(new QueryStatement<String>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-            }
-
-            @Override
-            public String processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return set.getString(USER_NAME);
-                }
-                return null;
             }
         });
     }

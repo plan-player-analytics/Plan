@@ -26,7 +26,6 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.UUID;
 
 /**
  * PlanAPI extension for Bukkit
@@ -54,11 +53,6 @@ public class ServerAPI extends CommonAPI {
     @Override
     public void addPluginDataSource(PluginData pluginData) {
         hookHandler.addPluginDataSource(pluginData);
-    }
-
-    @Override
-    public String getPlayerName(UUID uuid) {
-        return dbSystem.getDatabase().fetch().getPlayerName(uuid);
     }
 
     @Override
