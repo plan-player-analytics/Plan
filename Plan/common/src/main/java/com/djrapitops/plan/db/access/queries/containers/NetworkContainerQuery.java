@@ -23,6 +23,7 @@ import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
 import com.djrapitops.plan.system.info.server.Server;
 
 import java.util.Optional;
@@ -45,17 +46,17 @@ import java.util.stream.Collectors;
  */
 public class NetworkContainerQuery implements Query<NetworkContainer> {
 
-    private static Query<ServerContainer> getBungeeServerContainer() {
+    private static Query<ServerContainer> getProxyServerContainer() {
         return db -> {
             Optional<Server> proxyInformation = db.query(ServerQueries.fetchProxyServerInformation());
             if (!proxyInformation.isPresent()) {
                 return new ServerContainer();
             }
 
-            UUID serverUUID = proxyInformation.get().getUuid();
-            ServerContainer container = db.query(ContainerFetchQueries.fetchServerContainer(serverUUID));
+            UUID proxyUUID = proxyInformation.get().getUuid();
+            ServerContainer container = db.query(ContainerFetchQueries.fetchServerContainer(proxyUUID));
             container.putCachingSupplier(ServerKeys.PLAYERS, () -> db.query(ContainerFetchQueries.fetchAllPlayerContainers()));
-            container.putCachingSupplier(ServerKeys.TPS, db.getTpsTable()::getNetworkOnlineData);
+            container.putCachingSupplier(ServerKeys.TPS, () -> db.query(TPSQueries.fetchTPSDataOfServer(proxyUUID)));
             container.putSupplier(ServerKeys.WORLD_TIMES, null); // Additional Session information not supported
             container.putSupplier(ServerKeys.PLAYER_KILLS, null);
             container.putSupplier(ServerKeys.PLAYER_KILL_COUNT, null);
@@ -66,7 +67,7 @@ public class NetworkContainerQuery implements Query<NetworkContainer> {
 
     @Override
     public NetworkContainer executeQuery(SQLDB db) {
-        ServerContainer bungeeContainer = db.query(getBungeeServerContainer());
+        ServerContainer bungeeContainer = db.query(getProxyServerContainer());
         NetworkContainer networkContainer = db.getNetworkContainerFactory().forBungeeContainer(bungeeContainer);
         networkContainer.putCachingSupplier(NetworkKeys.BUKKIT_SERVERS, () ->
                 db.query(ServerQueries.fetchPlanServerInformation()).values()

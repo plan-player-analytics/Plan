@@ -21,15 +21,12 @@ import com.djrapitops.plan.data.container.builders.TPSBuilder;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.QueryAllStatement;
-import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plugin.api.TimeAmount;
 import org.apache.commons.text.TextStringBuilder;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -86,42 +83,6 @@ public class TPSTable extends Table {
                 .column(FREE_DISK, Sql.LONG).notNull()
                 .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.SERVER_ID)
                 .toString();
-    }
-
-    public List<TPS> getNetworkOnlineData() {
-        Optional<Server> proxyInfo = db.query(ServerQueries.fetchProxyServerInformation());
-        if (!proxyInfo.isPresent()) {
-            return new ArrayList<>();
-        }
-        UUID bungeeUUID = proxyInfo.get().getUuid();
-
-        String sql = "SELECT " +
-                DATE + ", " +
-                PLAYERS_ONLINE +
-                " FROM " + TABLE_NAME +
-                " WHERE " + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID;
-
-        return query(new QueryStatement<List<TPS>>(sql, 50000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, bungeeUUID.toString());
-            }
-
-            @Override
-            public List<TPS> processResults(ResultSet set) throws SQLException {
-                List<TPS> tpsList = new ArrayList<>();
-                while (set.next()) {
-
-                    TPS tps = TPSBuilder.get()
-                            .date(set.getLong(DATE))
-                            .playersOnline(set.getInt(PLAYERS_ONLINE))
-                            .toTPS();
-
-                    tpsList.add(tps);
-                }
-                return tpsList;
-            }
-        });
     }
 
     public Map<Integer, List<TPS>> getPlayersOnlineForServers(Collection<Server> servers) {
