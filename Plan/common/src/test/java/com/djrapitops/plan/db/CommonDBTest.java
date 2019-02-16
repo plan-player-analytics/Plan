@@ -943,9 +943,9 @@ public abstract class CommonDBTest {
         db.executeTransaction(new PlayerRegisterTransaction(uuid1, () -> 0L, exp1));
         db.executeTransaction(new PlayerRegisterTransaction(UUID.randomUUID(), () -> 0L, exp2));
 
-        String search = "testname";
+        String searchFor = "testname";
 
-        List<String> result = db.search().matchingPlayers(search);
+        List<String> result = db.query(UserIdentifierQueries.fetchMatchingPlayerNames(searchFor));
 
         assertNotNull(result);
         assertEquals(2, result.size());
@@ -965,9 +965,9 @@ public abstract class CommonDBTest {
         db.executeTransaction(new NicknameStoreTransaction(uuid, new Nickname(nickname, System.currentTimeMillis(), serverUUID)));
         db.executeTransaction(new NicknameStoreTransaction(playerUUID, new Nickname("No nick", System.currentTimeMillis(), serverUUID)));
 
-        String search = "2";
+        String searchFor = "2";
 
-        List<String> result = db.search().matchingPlayers(search);
+        List<String> result = db.query(UserIdentifierQueries.fetchMatchingPlayerNames(searchFor));
 
         assertNotNull(result);
         assertEquals(1, result.size());

@@ -19,16 +19,12 @@ package com.djrapitops.plan.db.sql.tables;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Insert;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -73,41 +69,6 @@ public class UsersTable extends Table {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
-            }
-        });
-    }
-
-    /**
-     * Gets the names of the players which names or nicknames match {@code name}.
-     *
-     * @param name the name / nickname.
-     * @return a list of distinct names.
-     */
-    public List<String> getMatchingNames(String name) {
-        String searchString = "%" + name + "%";
-        String sql = "SELECT DISTINCT " + USER_NAME + " FROM " + tableName +
-                " WHERE LOWER(" + USER_NAME + ") LIKE LOWER(?)" +
-                " UNION SELECT DISTINCT " + USER_NAME + " FROM " + tableName +
-                " INNER JOIN " + NicknamesTable.TABLE_NAME + " on " + tableName + "." + USER_UUID + "=" + NicknamesTable.TABLE_NAME + "." + NicknamesTable.USER_UUID +
-                " WHERE LOWER(" + NicknamesTable.NICKNAME + ") LIKE LOWER(?)";
-
-        return query(new QueryStatement<List<String>>(sql, 5000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, searchString);
-                statement.setString(2, searchString);
-            }
-
-            @Override
-            public List<String> processResults(ResultSet set) throws SQLException {
-                List<String> matchingNames = new ArrayList<>();
-                while (set.next()) {
-                    String match = set.getString("name");
-                    if (!matchingNames.contains(match)) {
-                        matchingNames.add(match);
-                    }
-                }
-                return matchingNames;
             }
         });
     }

@@ -33,10 +33,8 @@ import com.djrapitops.plan.db.sql.tables.UsersTable;
 import com.djrapitops.plan.db.tasks.PatchTask;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
-import com.djrapitops.plan.system.database.databases.operation.SearchOperations;
 import com.djrapitops.plan.system.database.databases.sql.operation.SQLFetchOps;
 import com.djrapitops.plan.system.database.databases.sql.operation.SQLSaveOps;
-import com.djrapitops.plan.system.database.databases.sql.operation.SQLSearchOps;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.PluginSettings;
@@ -81,7 +79,6 @@ public abstract class SQLDB extends AbstractDatabase {
     private final TPSTable tpsTable;
 
     private final SQLFetchOps fetchOps;
-    private final SQLSearchOps searchOps;
     private final SQLSaveOps saveOps;
 
     private PluginTask dbCleanTask;
@@ -110,7 +107,6 @@ public abstract class SQLDB extends AbstractDatabase {
         userInfoTable = new UserInfoTable(this);
 
         fetchOps = new SQLFetchOps(this);
-        searchOps = new SQLSearchOps(this);
         saveOps = new SQLSaveOps(this);
     }
 
@@ -350,12 +346,6 @@ public abstract class SQLDB extends AbstractDatabase {
     @Deprecated
     public FetchOperations fetch() {
         return fetchOps;
-    }
-
-    @Override
-    @Deprecated
-    public SearchOperations search() {
-        return searchOps;
     }
 
     @Override

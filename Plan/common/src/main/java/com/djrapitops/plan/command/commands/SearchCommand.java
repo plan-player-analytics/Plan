@@ -17,6 +17,7 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.db.access.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -82,12 +83,12 @@ public class SearchCommand extends CommandNode {
     private void runSearchTask(String[] args, Sender sender) {
         processing.submitNonCritical(() -> {
             try {
-                String searchTerm = args[0];
-                List<String> names = dbSystem.getDatabase().search().matchingPlayers(searchTerm);
+                String searchFor = args[0];
+                List<String> names = dbSystem.getDatabase().query(UserIdentifierQueries.fetchMatchingPlayerNames(searchFor));
                 Collections.sort(names);
                 boolean empty = Verify.isEmpty(names);
 
-                sender.sendMessage(locale.getString(CommandLang.HEADER_SEARCH, empty ? 0 : names.size(), searchTerm));
+                sender.sendMessage(locale.getString(CommandLang.HEADER_SEARCH, empty ? 0 : names.size(), searchFor));
                 // Results
                 if (!empty) {
                     String message = names.toString();

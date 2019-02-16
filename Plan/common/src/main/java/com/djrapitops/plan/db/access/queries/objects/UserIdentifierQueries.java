@@ -20,6 +20,7 @@ import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.parsing.Select;
+import com.djrapitops.plan.db.sql.tables.NicknamesTable;
 import com.djrapitops.plan.db.sql.tables.UserInfoTable;
 import com.djrapitops.plan.db.sql.tables.UsersTable;
 
@@ -27,6 +28,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
 
 /**
  * Queries for fetching different user identifiers in the database.
@@ -67,12 +70,12 @@ public class UserIdentifierQueries {
      * @return Set of UUIDs.
      */
     public static Query<Set<UUID>> fetchPlayerUUIDsOfServer(UUID serverUUID) {
-        String sql = "SELECT " +
+        String sql = SELECT +
                 UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID + ", " +
-                " FROM " + UsersTable.TABLE_NAME +
-                " INNER JOIN " + UserInfoTable.TABLE_NAME + " on " +
+                FROM + UsersTable.TABLE_NAME +
+                INNER_JOIN + UserInfoTable.TABLE_NAME + " on " +
                 UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID + "=" + UserInfoTable.TABLE_NAME + "." + UserInfoTable.USER_UUID +
-                " WHERE " + UserInfoTable.SERVER_UUID + "=?";
+                WHERE + UserInfoTable.SERVER_UUID + "=?";
         return new QueryStatement<Set<UUID>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -163,6 +166,38 @@ public class UserIdentifierQueries {
                     return Optional.of(set.getString(UsersTable.USER_NAME));
                 }
                 return Optional.empty();
+            }
+        };
+    }
+
+    public static Query<List<String>> fetchMatchingPlayerNames(String searchFor) {
+        String sql = SELECT + DISTINCT + UsersTable.USER_NAME +
+                FROM + UsersTable.TABLE_NAME +
+                WHERE + "LOWER(" + UsersTable.USER_NAME + ") LIKE LOWER(%?%)" +
+                " UNION " +
+                SELECT + DISTINCT + UsersTable.USER_NAME +
+                FROM + UsersTable.TABLE_NAME +
+                INNER_JOIN + NicknamesTable.TABLE_NAME + " on " +
+                UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID + "=" + NicknamesTable.TABLE_NAME + "." + NicknamesTable.USER_UUID +
+                WHERE + "LOWER(" + NicknamesTable.NICKNAME + ") LIKE LOWER(%?%)";
+
+        return new QueryStatement<List<String>>(sql, 5000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, searchFor);
+                statement.setString(2, searchFor);
+            }
+
+            @Override
+            public List<String> processResults(ResultSet set) throws SQLException {
+                List<String> matchingNames = new ArrayList<>();
+                while (set.next()) {
+                    String match = set.getString(UsersTable.USER_NAME);
+                    if (!matchingNames.contains(match)) {
+                        matchingNames.add(match);
+                    }
+                }
+                return matchingNames;
             }
         };
     }

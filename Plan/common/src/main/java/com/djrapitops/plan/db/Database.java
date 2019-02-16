@@ -22,7 +22,6 @@ import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
-import com.djrapitops.plan.system.database.databases.operation.SearchOperations;
 
 /**
  * Interface for interacting with a Plan SQL database.
@@ -57,9 +56,6 @@ public interface Database {
 
     @Deprecated
     FetchOperations fetch();
-
-    @Deprecated
-    SearchOperations search();
 
     @Deprecated
     SaveOperations save();
