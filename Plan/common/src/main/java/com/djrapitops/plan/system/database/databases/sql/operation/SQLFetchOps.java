@@ -36,10 +36,12 @@ import com.djrapitops.plan.system.settings.config.Config;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SQLFetchOps extends SQLOps implements FetchOperations {
+public class SQLFetchOps implements FetchOperations {
+
+    private final SQLDB db;
 
     public SQLFetchOps(SQLDB db) {
-        super(db);
+        this.db = db;
     }
 
     @Override
