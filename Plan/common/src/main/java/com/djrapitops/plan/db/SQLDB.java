@@ -27,7 +27,6 @@ import com.djrapitops.plan.db.access.transactions.init.CleanTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.db.patches.*;
-import com.djrapitops.plan.db.tasks.PatchTask;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.PluginSettings;
@@ -167,20 +166,12 @@ public abstract class SQLDB extends AbstractDatabase {
     private void setupDatabase() throws DBInitException {
         try {
             executeTransaction(new CreateTablesTransaction());
+            for (Patch patch : patches()) {
+                executeTransaction(patch);
+            }
             registerIndexCreationTask();
-            registerPatchTask();
         } catch (DBOpException | IllegalArgumentException e) {
             throw new DBInitException("Failed to set-up Database", e);
-        }
-    }
-
-    private void registerPatchTask() {
-        Patch[] patches = patches();
-        try {
-            runnableFactory.create("Database Patch", new PatchTask(patches, locale, logger, errorHandler))
-                    .runTaskLaterAsynchronously(TimeAmount.toTicks(5L, TimeUnit.SECONDS));
-        } catch (Exception ignore) {
-            // Task failed to register because plugin is being disabled
         }
     }
 
