@@ -17,7 +17,6 @@
 package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.tables.SessionsTable;
 
 public class SessionsOptimizationPatch extends Patch {
@@ -25,8 +24,7 @@ public class SessionsOptimizationPatch extends Patch {
     private String tempTableName;
     private String tableName;
 
-    public SessionsOptimizationPatch(SQLDB db) {
-        super(db);
+    public SessionsOptimizationPatch() {
         tableName = SessionsTable.TABLE_NAME;
         tempTableName = "temp_sessions";
     }

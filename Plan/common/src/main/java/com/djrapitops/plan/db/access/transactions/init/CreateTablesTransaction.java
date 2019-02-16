@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db.access.transactions.init;
 
-import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.sql.tables.*;
 
 /**
@@ -29,7 +28,6 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
     @Override
     protected void performOperations() {
         // DBType is required for SQL parsing, as MySQL and SQLite primary key format differs.
-        DBType dbType = getDBType();
 
         // Create statements are run in a specific order as some tables have foreign keys,
         // or had at some point in the past.

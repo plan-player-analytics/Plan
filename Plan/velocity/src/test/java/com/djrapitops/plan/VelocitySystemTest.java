@@ -16,11 +16,13 @@
  */
 package com.djrapitops.plan;
 
+import com.djrapitops.plan.db.SQLiteDB;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.ProxySettings;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
+import com.google.common.util.concurrent.MoreExecutors;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -56,7 +58,9 @@ public class VelocitySystemTest {
             config.set(ProxySettings.IP, "8.8.8.8");
 
             DBSystem dbSystem = velocitySystem.getDatabaseSystem();
-            dbSystem.setActiveDatabase(dbSystem.getSqLiteFactory().usingDefaultFile());
+            SQLiteDB db = dbSystem.getSqLiteFactory().usingDefaultFile();
+            db.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
+            dbSystem.setActiveDatabase(db);
 
             velocitySystem.enable();
             assertTrue(velocitySystem.isEnabled());

@@ -31,6 +31,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Manages Server information on the Bungee instance.
@@ -70,8 +71,10 @@ public class BungeeServerInfo extends ServerInfo {
             } else {
                 server = registerBungeeInfo(database);
             }
-        } catch (DBOpException e) {
+        } catch (DBOpException | ExecutionException e) {
             throw new EnableException("Failed to read Server information from Database.");
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
         return server;
     }
@@ -93,12 +96,13 @@ public class BungeeServerInfo extends ServerInfo {
         }
     }
 
-    private Server registerBungeeInfo(Database db) throws EnableException {
+    private Server registerBungeeInfo(Database db) throws EnableException, ExecutionException, InterruptedException {
         UUID serverUUID = generateNewUUID();
         String accessAddress = webServer.get().getAccessAddress();
 
         Server proxy = new Server(-1, serverUUID, "BungeeCord", accessAddress, serverProperties.getMaxPlayers());
-        db.executeTransaction(new StoreServerInformationTransaction(proxy));
+        db.executeTransaction(new StoreServerInformationTransaction(proxy))
+                .get();
 
         Optional<Server> proxyInfo = db.query(ServerQueries.fetchProxyServerInformation());
         if (proxyInfo.isPresent()) {

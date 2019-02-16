@@ -25,8 +25,7 @@ import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plugin.benchmarking.Timings;
-import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.PluginTask;
@@ -61,10 +60,9 @@ public class H2DB extends SQLDB {
             NetworkContainer.Factory networkContainerFactory,
             RunnableFactory runnableFactory,
             PluginLogger logger,
-            Timings timings,
             ErrorHandler errorHandler
     ) {
-        super(() -> serverInfo.get().getServerUUID(), locale, config, networkContainerFactory, runnableFactory, logger, timings, errorHandler);
+        super(() -> serverInfo.get().getServerUUID(), locale, config, networkContainerFactory, runnableFactory, logger, errorHandler);
         dbName = databaseFile.getName();
         this.databaseFile = databaseFile;
     }
@@ -77,7 +75,7 @@ public class H2DB extends SQLDB {
             throw new DBInitException(e);
         }
 
-        execute("SET REFERENTIAL_INTEGRITY FALSE");
+        // TODO Figure out if execute("SET REFERENTIAL_INTEGRITY FALSE"); is required
         startConnectionPingTask();
     }
 
@@ -145,19 +143,9 @@ public class H2DB extends SQLDB {
         stopConnectionPingTask();
 
         if (connection != null) {
-            logger.debug("H2DB " + dbName + ": Closed Connection");
+            logger.debug("H2 Connection close prompted by: " + ThrowableUtils.findCallerAfterClass(Thread.currentThread().getStackTrace(), H2DB.class));
+            logger.debug("H2 " + dbName + ": Closed Connection");
             MiscUtils.close(connection);
-        }
-    }
-
-    @Override
-    public void commit(Connection connection) {
-        try {
-            connection.commit();
-        } catch (SQLException e) {
-            if (!e.getMessage().contains("cannot commit")) {
-                errorHandler.log(L.ERROR, this.getClass(), e);
-            }
         }
     }
 
@@ -189,7 +177,6 @@ public class H2DB extends SQLDB {
         private final NetworkContainer.Factory networkContainerFactory;
         private final RunnableFactory runnableFactory;
         private final PluginLogger logger;
-        private final Timings timings;
         private final ErrorHandler errorHandler;
         private PlanFiles files;
 
@@ -202,7 +189,6 @@ public class H2DB extends SQLDB {
                 NetworkContainer.Factory networkContainerFactory,
                 RunnableFactory runnableFactory,
                 PluginLogger logger,
-                Timings timings,
                 ErrorHandler errorHandler
         ) {
             this.locale = locale;
@@ -212,7 +198,6 @@ public class H2DB extends SQLDB {
             this.networkContainerFactory = networkContainerFactory;
             this.runnableFactory = runnableFactory;
             this.logger = logger;
-            this.timings = timings;
             this.errorHandler = errorHandler;
         }
 
@@ -228,7 +213,7 @@ public class H2DB extends SQLDB {
             return new H2DB(databaseFile,
                     locale, config, serverInfo,
                     networkContainerFactory,
-                    runnableFactory, logger, timings, errorHandler
+                    runnableFactory, logger, errorHandler
             );
         }
 

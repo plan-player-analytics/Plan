@@ -17,7 +17,6 @@
 package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.tables.NicknamesTable;
 
 public class NicknamesOptimizationPatch extends Patch {
@@ -25,8 +24,7 @@ public class NicknamesOptimizationPatch extends Patch {
     private String tempTableName;
     private String tableName;
 
-    public NicknamesOptimizationPatch(SQLDB db) {
-        super(db);
+    public NicknamesOptimizationPatch() {
         tableName = NicknamesTable.TABLE_NAME;
         tempTableName = "temp_nicknames";
     }

@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db.patches;
 
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
@@ -36,10 +35,6 @@ import java.util.stream.Collectors;
 import static com.djrapitops.plan.db.sql.parsing.Sql.*;
 
 public class WorldsServerIDPatch extends Patch {
-
-    public WorldsServerIDPatch(SQLDB db) {
-        super(db);
-    }
 
     @Override
     public boolean hasBeenApplied() {
@@ -69,7 +64,7 @@ public class WorldsServerIDPatch extends Patch {
 
     @Override
     protected void applyPatch() {
-        Collection<UUID> serverUUIDs = db.query(ServerQueries.fetchPlanServerInformation()).keySet();
+        Collection<UUID> serverUUIDs = query(ServerQueries.fetchPlanServerInformation()).keySet();
 
         Map<UUID, Collection<String>> worldsPerServer = new HashMap<>();
         for (UUID serverUUID : serverUUIDs) {

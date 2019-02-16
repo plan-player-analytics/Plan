@@ -17,7 +17,6 @@
 package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.tables.KillsTable;
 
 public class KillsOptimizationPatch extends Patch {
@@ -25,8 +24,7 @@ public class KillsOptimizationPatch extends Patch {
     private String tempTableName;
     private String tableName;
 
-    public KillsOptimizationPatch(SQLDB db) {
-        super(db);
+    public KillsOptimizationPatch() {
         tableName = KillsTable.TABLE_NAME;
         tempTableName = "temp_kills";
     }

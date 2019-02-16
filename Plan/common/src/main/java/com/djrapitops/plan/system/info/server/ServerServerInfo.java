@@ -80,14 +80,19 @@ public class ServerServerInfo extends ServerInfo {
         try {
             return serverUUID.isPresent() ? updateDbInfo(serverUUID.get()) : registerServer();
         } catch (DBOpException e) {
-            String causeMsg = e.getCause().getMessage();
+            String causeMsg = e.getMessage();
             throw new EnableException("Failed to read Server information from Database: " + causeMsg, e);
         } catch (IOException e) {
             throw new EnableException("Failed to read ServerInfoFile.yml", e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return null; // This line is not reached due to the thread interrupt.
+        } catch (Exception e) {
+            throw new EnableException("Failed to perform a database transaction to store the server information", e);
         }
     }
 
-    private Server updateDbInfo(UUID serverUUID) throws IOException {
+    private Server updateDbInfo(UUID serverUUID) throws Exception {
         Database db = dbSystem.getDatabase();
 
         Optional<Server> foundServer = db.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID));
@@ -111,11 +116,11 @@ public class ServerServerInfo extends ServerInfo {
         return server;
     }
 
-    private Server registerServer() throws IOException {
+    private Server registerServer() throws Exception {
         return registerServer(generateNewUUID());
     }
 
-    private Server registerServer(UUID serverUUID) throws IOException {
+    private Server registerServer(UUID serverUUID) throws Exception {
         Database db = dbSystem.getDatabase();
 
         // Create the server object
@@ -125,7 +130,8 @@ public class ServerServerInfo extends ServerInfo {
         Server server = new Server(-1, serverUUID, name, webAddress, maxPlayers);
 
         // Save
-        db.executeTransaction(new StoreServerInformationTransaction(server));
+        db.executeTransaction(new StoreServerInformationTransaction(server))
+                .get(); // Wait until transaction has completed
 
         // Load from database
         server = db.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))

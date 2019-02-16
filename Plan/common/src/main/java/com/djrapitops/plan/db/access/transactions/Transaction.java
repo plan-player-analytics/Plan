@@ -28,6 +28,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Savepoint;
+import java.util.UUID;
 
 /**
  * Represents a database transaction.
@@ -37,11 +38,12 @@ import java.sql.Savepoint;
 public abstract class Transaction {
 
     protected SQLDB db; // TODO Make private, this is a quick hack to access some tables while they are in use.
+    protected DBType dbType;
 
     private Connection connection;
     private Savepoint savepoint;
 
-    private boolean success;
+    protected boolean success;
 
     protected Transaction() {
         success = false;
@@ -52,8 +54,10 @@ public abstract class Transaction {
         Verify.isFalse(success, () -> new IllegalStateException("Transaction has already been executed"));
 
         this.db = db;
+        this.dbType = db.getType();
 
         if (!shouldBeExecuted()) {
+            success = true;
             return;
         }
 
@@ -103,7 +107,6 @@ public abstract class Transaction {
             throw new DBOpException(getClass().getSimpleName() + " finalization failed: " + e.getMessage(), e);
         }
         if (db != null) db.returnToPool(connection);
-        db = null;
     }
 
     private void handleSavepoint() throws SQLException {
@@ -119,7 +122,7 @@ public abstract class Transaction {
     }
 
     protected <T> T query(Query<T> query) {
-        return db.query(query);
+        return query.executeQuery(db);
     }
 
     protected boolean execute(Executable executable) {
@@ -152,12 +155,12 @@ public abstract class Transaction {
         transaction.connection = null;
     }
 
-    protected DBType getDBType() {
-        return db.getType();
-    }
-
     @Deprecated
     protected void setDb(SQLDB db) {
         this.db = db;
+    }
+
+    protected UUID getServerUUID() {
+        return db.getServerUUIDSupplier().get();
     }
 }

@@ -16,14 +16,9 @@
  */
 package com.djrapitops.plan.db.patches;
 
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.tables.GeoInfoTable;
 
 public class IPHashPatch extends Patch {
-
-    public IPHashPatch(SQLDB db) {
-        super(db);
-    }
 
     @Override
     public boolean hasBeenApplied() {

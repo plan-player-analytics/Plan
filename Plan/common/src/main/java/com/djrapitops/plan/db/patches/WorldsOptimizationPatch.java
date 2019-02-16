@@ -17,7 +17,6 @@
 package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.tables.WorldTable;
 
 public class WorldsOptimizationPatch extends Patch {
@@ -25,8 +24,7 @@ public class WorldsOptimizationPatch extends Patch {
     private String tempTableName;
     private String tableName;
 
-    public WorldsOptimizationPatch(SQLDB db) {
-        super(db);
+    public WorldsOptimizationPatch() {
         tableName = WorldTable.TABLE_NAME;
         tempTableName = "temp_worlds";
     }

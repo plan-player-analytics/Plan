@@ -16,12 +16,10 @@
  */
 package com.djrapitops.plan.db.patches;
 
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.HasMoreThanZeroQueryStatement;
 import com.djrapitops.plan.db.sql.tables.SessionsTable;
 
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 /**
  * Patch that resets AFK time of sessions with afk time of length of the session to 0.
@@ -34,10 +32,6 @@ import java.sql.SQLException;
  * @author Rsl1122
  */
 public class BadAFKThresholdValuePatch extends Patch {
-
-    public BadAFKThresholdValuePatch(SQLDB db) {
-        super(db);
-    }
 
     @Override
     public boolean hasBeenApplied() {
@@ -53,7 +47,7 @@ public class BadAFKThresholdValuePatch extends Patch {
                 ")) < 5 AND " + SessionsTable.AFK_TIME + "!=0";
         return query(new HasMoreThanZeroQueryStatement(sql, "found") {
             @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
+            public void prepare(PreparedStatement statement) {
                 /* Nothing to prepare */
             }
         });

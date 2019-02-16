@@ -21,7 +21,7 @@ package com.djrapitops.plan.api.exceptions.database;
  *
  * @author Rsl1122
  */
-public class DBInitException extends FatalDBException {
+public class DBInitException extends DBException {
 
     public DBInitException(String message, Throwable cause) {
         super(message, cause);

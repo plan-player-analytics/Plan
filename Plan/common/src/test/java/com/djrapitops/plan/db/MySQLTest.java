@@ -18,6 +18,7 @@ package com.djrapitops.plan.db;
 
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
+import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
@@ -59,9 +60,14 @@ public class MySQLTest extends CommonDBTest {
     }
 
     private static void clearDatabase() {
-        db.execute("DROP DATABASE Plan");
-        db.execute("CREATE DATABASE Plan");
-        db.execute("USE Plan");
+        db.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute("DROP DATABASE Plan");
+                execute("CREATE DATABASE Plan");
+                execute("USE Plan");
+            }
+        });
     }
 
     @Test

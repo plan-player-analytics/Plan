@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db.patches;
 
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.access.queries.schema.SessionIDServerIDRelationQuery;
@@ -28,10 +27,6 @@ import java.sql.SQLException;
 import java.util.Map;
 
 public class WorldTimesSeverIDPatch extends Patch {
-
-    public WorldTimesSeverIDPatch(SQLDB db) {
-        super(db);
-    }
 
     @Override
     public boolean hasBeenApplied() {

@@ -84,7 +84,7 @@ public class ManageHotSwapCommand extends CommandNode {
             Database database = dbSystem.getActiveDatabaseByName(dbName);
             database.init();
 
-            if (!database.isOpen()) {
+            if (database.getState() == Database.State.CLOSED) {
                 return;
             }
         } catch (Exception e) {

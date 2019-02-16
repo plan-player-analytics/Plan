@@ -25,7 +25,7 @@ import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plugin.benchmarking.Timings;
+import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -59,10 +59,9 @@ public class SQLiteDB extends SQLDB {
             NetworkContainer.Factory networkContainerFactory,
             RunnableFactory runnableFactory,
             PluginLogger logger,
-            Timings timings,
             ErrorHandler errorHandler
     ) {
-        super(() -> serverInfo.get().getServerUUID(), locale, config, networkContainerFactory, runnableFactory, logger, timings, errorHandler);
+        super(() -> serverInfo.get().getServerUUID(), locale, config, networkContainerFactory, runnableFactory, logger, errorHandler);
         dbName = databaseFile.getName();
         this.databaseFile = databaseFile;
     }
@@ -144,19 +143,9 @@ public class SQLiteDB extends SQLDB {
         stopConnectionPingTask();
 
         if (connection != null) {
+            logger.debug("SQLite Connection close prompted by: " + ThrowableUtils.findCallerAfterClass(Thread.currentThread().getStackTrace(), SQLiteDB.class));
             logger.debug("SQLite " + dbName + ": Closed Connection");
             MiscUtils.close(connection);
-        }
-    }
-
-    @Override
-    public void commit(Connection connection) {
-        try {
-            connection.commit();
-        } catch (SQLException e) {
-            if (!e.getMessage().contains("cannot commit")) {
-                errorHandler.log(L.ERROR, this.getClass(), e);
-            }
         }
     }
 
@@ -188,7 +177,6 @@ public class SQLiteDB extends SQLDB {
         private final NetworkContainer.Factory networkContainerFactory;
         private final RunnableFactory runnableFactory;
         private final PluginLogger logger;
-        private final Timings timings;
         private final ErrorHandler errorHandler;
         private PlanFiles files;
 
@@ -201,7 +189,6 @@ public class SQLiteDB extends SQLDB {
                 NetworkContainer.Factory networkContainerFactory,
                 RunnableFactory runnableFactory,
                 PluginLogger logger,
-                Timings timings,
                 ErrorHandler errorHandler
         ) {
             this.locale = locale;
@@ -211,7 +198,6 @@ public class SQLiteDB extends SQLDB {
             this.networkContainerFactory = networkContainerFactory;
             this.runnableFactory = runnableFactory;
             this.logger = logger;
-            this.timings = timings;
             this.errorHandler = errorHandler;
         }
 
@@ -227,7 +213,7 @@ public class SQLiteDB extends SQLDB {
             return new SQLiteDB(databaseFile,
                     locale, config, serverInfo,
                     networkContainerFactory,
-                    runnableFactory, logger, timings, errorHandler
+                    runnableFactory, logger, errorHandler
             );
         }
 

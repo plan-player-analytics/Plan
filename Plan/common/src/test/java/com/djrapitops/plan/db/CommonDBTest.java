@@ -55,6 +55,7 @@ import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.utilities.SHA256Hash;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
+import com.google.common.util.concurrent.MoreExecutors;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.Timeout;
@@ -108,7 +109,7 @@ public abstract class CommonDBTest {
 
         dbSystem = system.getDatabaseSystem();
         db = (SQLDB) dbSystem.getActiveDatabaseByName(dbName);
-
+        db.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
         db.init();
 
         serverUUID = system.getServerInfo().getServerUUID();
@@ -120,8 +121,8 @@ public abstract class CommonDBTest {
     }
 
     @Before
-    public void setUp() throws DBInitException {
-        new Patch(db) {
+    public void setUp() {
+        db.executeTransaction(new Patch() {
             @Override
             public boolean hasBeenApplied() {
                 return false;
@@ -135,7 +136,7 @@ public abstract class CommonDBTest {
                 dropTable("plan_worlds");
                 dropTable("plan_users");
             }
-        }.apply();
+        });
         db.executeTransaction(new CreateTablesTransaction());
         db.executeTransaction(new RemoveEverythingTransaction());
 
@@ -155,13 +156,6 @@ public abstract class CommonDBTest {
     public void commitTest() throws DBInitException {
         db.close();
         db.init();
-    }
-
-    @Test
-    public void testNoExceptionWhenCommitEmpty() throws Exception {
-        db.commit(db.getConnection());
-        db.commit(db.getConnection());
-        db.commit(db.getConnection());
     }
 
     @Test
@@ -243,19 +237,20 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void geoInformationIsStored() throws DBInitException {
+    public void geoInformationIsStored() throws DBInitException, NoSuchAlgorithmException {
         saveUserOne();
 
         String expectedIP = "1.2.3.4";
         String expectedGeoLoc = "TestLocation";
         long time = System.currentTimeMillis();
 
-        GeoInfo expected = new GeoInfo(expectedIP, expectedGeoLoc, time, "3");
-        saveGeoInfo(playerUUID, expected);
+        saveGeoInfo(playerUUID, new GeoInfo(expectedIP, expectedGeoLoc, time, "3"));
         commitTest();
 
         List<GeoInfo> geolocations = db.query(GeoInfoQueries.fetchAllGeoInformation()).getOrDefault(playerUUID, new ArrayList<>());
         assertEquals(1, geolocations.size());
+
+        GeoInfo expected = new GeoInfo("1.2.xx.xx", expectedGeoLoc, time, new SHA256Hash(expectedIP).create());
         assertEquals(expected, geolocations.get(0));
     }
 
@@ -651,6 +646,7 @@ public abstract class CommonDBTest {
     @Test
     public void testBackupAndRestore() throws Exception {
         H2DB backup = dbSystem.getH2Factory().usingFile(temporaryFolder.newFile("backup.db"));
+        backup.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
         backup.init();
 
         saveAllData();

@@ -24,6 +24,7 @@ import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.access.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.db.patches.Patch;
+import com.google.common.util.concurrent.MoreExecutors;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -32,8 +33,6 @@ import org.junit.rules.TemporaryFolder;
 import rules.PluginComponentMocker;
 import utilities.OptionalAssert;
 import utilities.TestConstants;
-
-import java.sql.SQLException;
 
 /**
  * Test for the patching of Plan 4.5.2 SQLite DB into the newest schema.
@@ -65,14 +64,14 @@ public class DBPatchSQLiteRegressionTest extends DBPatchRegressionTest {
     private SQLiteDB underTest;
 
     @Before
-    public void setUpDBWithOldSchema() throws DBInitException, SQLException {
+    public void setUpDBWithOldSchema() throws DBInitException {
         underTest = component.getPlanSystem().getDatabaseSystem().getSqLiteFactory()
                 .usingFileCalled("test");
-
-        underTest.setOpen(true);
-        underTest.setupDataSource();
+        underTest.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
+        underTest.init();
 
         // Initialize database with the old table schema
+        dropAllTables(underTest);
         underTest.executeTransaction(new Transaction() {
             @Override
             protected void performOperations() {
@@ -105,11 +104,12 @@ public class DBPatchSQLiteRegressionTest extends DBPatchRegressionTest {
 
     @Test
     public void sqlitePatchTaskWorksWithoutErrors() {
-        for (Patch patch : underTest.patches()) {
+        Patch[] patches = underTest.patches();
+        for (Patch patch : patches) {
             underTest.executeTransaction(patch);
         }
 
-        assertPatchesHaveBeenApplied(underTest);
+        assertPatchesHaveBeenApplied(patches);
 
         // Make sure that a fetch works.
         ServerContainer server = underTest.query(ContainerFetchQueries.fetchServerContainer(TestConstants.SERVER_UUID));

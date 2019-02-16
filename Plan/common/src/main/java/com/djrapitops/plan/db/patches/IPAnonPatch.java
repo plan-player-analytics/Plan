@@ -17,7 +17,6 @@
 package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.data.container.GeoInfo;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.access.queries.objects.GeoInfoQueries;
@@ -38,8 +37,7 @@ public class IPAnonPatch extends Patch {
     private String tableName;
     private String tempTableName;
 
-    public IPAnonPatch(SQLDB db) {
-        super(db);
+    public IPAnonPatch() {
         tableName = GeoInfoTable.TABLE_NAME;
         tempTableName = "plan_ips_temp";
     }
@@ -68,7 +66,7 @@ public class IPAnonPatch extends Patch {
 
     @Override
     protected void applyPatch() {
-        Map<UUID, List<GeoInfo>> allGeoInfo = db.query(GeoInfoQueries.fetchAllGeoInformation());
+        Map<UUID, List<GeoInfo>> allGeoInfo = query(GeoInfoQueries.fetchAllGeoInformation());
         anonymizeIPs(allGeoInfo);
         groupHashedIPs();
     }

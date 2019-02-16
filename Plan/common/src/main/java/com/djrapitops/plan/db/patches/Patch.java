@@ -18,28 +18,17 @@ package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.DBType;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.queries.schema.H2SchemaQueries;
 import com.djrapitops.plan.db.access.queries.schema.MySQLSchemaQueries;
 import com.djrapitops.plan.db.access.queries.schema.SQLiteSchemaQueries;
 import com.djrapitops.plan.db.access.transactions.init.OperationCriticalTransaction;
-import com.djrapitops.plan.db.sql.parsing.TableSqlParser;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.List;
-import java.util.UUID;
 
 public abstract class Patch extends OperationCriticalTransaction {
 
-    protected final SQLDB db;
-    protected final DBType dbType;
     private static final String ALTER_TABLE = "ALTER TABLE ";
-
-    public Patch(SQLDB db) {
-        setDb(db);
-        this.db = db;
-        this.dbType = db.getType();
-    }
 
     public abstract boolean hasBeenApplied();
 
@@ -55,11 +44,6 @@ public abstract class Patch extends OperationCriticalTransaction {
         if (dbType == DBType.MYSQL) disableForeignKeyChecks();
         applyPatch();
         if (dbType == DBType.MYSQL) enableForeignKeyChecks();
-    }
-
-    @Deprecated
-    public void apply() {
-        db.executeTransaction(this);
     }
 
     private void enableForeignKeyChecks() {
@@ -101,7 +85,7 @@ public abstract class Patch extends OperationCriticalTransaction {
     }
 
     protected void dropTable(String name) {
-        execute(TableSqlParser.dropTable(name));
+        execute("DROP TABLE " + name);
     }
 
     protected void renameTable(String from, String to) {
@@ -142,9 +126,5 @@ public abstract class Patch extends OperationCriticalTransaction {
         List<MySQLSchemaQueries.ForeignKeyConstraint> constraints = query(MySQLSchemaQueries.foreignKeyConstraintsOf(table));
 
         Verify.isTrue(constraints.isEmpty(), () -> new DBOpException("Table '" + table + "' has constraints '" + constraints + "'"));
-    }
-
-    protected UUID getServerUUID() {
-        return db.getServerUUIDSupplier().get();
     }
 }

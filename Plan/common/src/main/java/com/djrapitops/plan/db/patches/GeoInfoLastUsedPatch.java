@@ -16,14 +16,9 @@
  */
 package com.djrapitops.plan.db.patches;
 
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.tables.GeoInfoTable;
 
 public class GeoInfoLastUsedPatch extends Patch {
-
-    public GeoInfoLastUsedPatch(SQLDB db) {
-        super(db);
-    }
 
     @Override
     public boolean hasBeenApplied() {

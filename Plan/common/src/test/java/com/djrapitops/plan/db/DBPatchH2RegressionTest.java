@@ -26,6 +26,7 @@ import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.db.patches.Patch;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
+import com.google.common.util.concurrent.MoreExecutors;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -34,8 +35,6 @@ import org.junit.rules.TemporaryFolder;
 import rules.PluginComponentMocker;
 import utilities.OptionalAssert;
 import utilities.TestConstants;
-
-import java.sql.SQLException;
 
 /**
  * Test for the patching of Plan 4.5.2 H2 DB into the newest schema.
@@ -67,7 +66,7 @@ public class DBPatchH2RegressionTest extends DBPatchRegressionTest {
     private H2DB underTest;
 
     @Before
-    public void setUpDBWithOldSchema() throws DBInitException, SQLException {
+    public void setUpDBWithOldSchema() throws DBInitException {
         PlanConfig config = component.getPlanSystem().getConfigSystem().getConfig();
 
         config.set(DatabaseSettings.MYSQL_USER, "user");
@@ -75,11 +74,11 @@ public class DBPatchH2RegressionTest extends DBPatchRegressionTest {
 
         underTest = component.getPlanSystem().getDatabaseSystem().getH2Factory()
                 .usingFileCalled("test");
-
-        underTest.setOpen(true);
-        underTest.setupDataSource();
+        underTest.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
+        underTest.init();
 
         // Initialize database with the old table schema
+        dropAllTables(underTest);
         underTest.executeTransaction(new Transaction() {
             @Override
             protected void performOperations() {
@@ -112,11 +111,12 @@ public class DBPatchH2RegressionTest extends DBPatchRegressionTest {
 
     @Test
     public void h2PatchTaskWorksWithoutErrors() {
-        for (Patch patch : underTest.patches()) {
+        Patch[] patches = underTest.patches();
+        for (Patch patch : patches) {
             underTest.executeTransaction(patch);
         }
 
-        assertPatchesHaveBeenApplied(underTest);
+        assertPatchesHaveBeenApplied(patches);
 
         // Make sure that a fetch works.
         ServerContainer server = underTest.query(ContainerFetchQueries.fetchServerContainer(TestConstants.SERVER_UUID));

@@ -16,14 +16,9 @@
  */
 package com.djrapitops.plan.db.patches;
 
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.tables.SessionsTable;
 
 public class SessionAFKTimePatch extends Patch {
-
-    public SessionAFKTimePatch(SQLDB db) {
-        super(db);
-    }
 
     @Override
     public boolean hasBeenApplied() {

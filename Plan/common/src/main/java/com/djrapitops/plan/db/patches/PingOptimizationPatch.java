@@ -17,7 +17,6 @@
 package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.tables.PingTable;
 
 public class PingOptimizationPatch extends Patch {
@@ -25,8 +24,7 @@ public class PingOptimizationPatch extends Patch {
     private String tempTableName;
     private String tableName;
 
-    public PingOptimizationPatch(SQLDB db) {
-        super(db);
+    public PingOptimizationPatch() {
         tableName = PingTable.TABLE_NAME;
         tempTableName = "temp_ping";
     }

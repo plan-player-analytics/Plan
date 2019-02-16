@@ -25,11 +25,21 @@ package com.djrapitops.plan.db;
  */
 public abstract class AbstractDatabase implements Database {
 
-    protected volatile boolean open = false;
+    protected DBAccessLock accessLock;
+    private State state;
 
-    @Override
-    public boolean isOpen() {
-        return open;
+    public AbstractDatabase() {
+        state = State.CLOSED;
+        accessLock = new DBAccessLock(this);
     }
 
+    @Override
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+        accessLock.operabilityChanged();
+    }
 }

@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.db.access.transactions.init;
 
+import com.djrapitops.plan.api.exceptions.database.FatalDBException;
+import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 
 /**
@@ -27,4 +29,11 @@ import com.djrapitops.plan.db.access.transactions.Transaction;
  */
 public abstract class OperationCriticalTransaction extends Transaction {
 
+    @Override
+    public void executeTransaction(SQLDB db) {
+        super.executeTransaction(db);
+        if (!success) {
+            throw new FatalDBException(getClass().getSimpleName() + " failed to execute and database can not be opened.");
+        }
+    }
 }

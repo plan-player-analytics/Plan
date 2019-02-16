@@ -63,7 +63,7 @@ public class MySQLDB extends SQLDB {
             Timings timings,
             ErrorHandler errorHandler
     ) {
-        super(() -> serverInfo.get().getServerUUID(), locale, config, networkContainerFactory, runnableFactory, pluginLogger, timings, errorHandler);
+        super(() -> serverInfo.get().getServerUUID(), locale, config, networkContainerFactory, runnableFactory, pluginLogger, errorHandler);
     }
 
     private static synchronized void increment() {
@@ -152,11 +152,6 @@ public class MySQLDB extends SQLDB {
         } catch (SQLException e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
         }
-    }
-
-    @Override
-    public void commit(Connection connection) {
-        returnToPool(connection);
     }
 
     @Override

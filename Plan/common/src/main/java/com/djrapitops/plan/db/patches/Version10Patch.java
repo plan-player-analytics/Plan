@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db.patches;
 
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.db.sql.tables.*;
 import com.djrapitops.plan.system.info.server.Server;
@@ -29,10 +28,6 @@ public class Version10Patch extends Patch {
 
     private Integer serverID;
 
-    public Version10Patch(SQLDB db) {
-        super(db);
-    }
-
     @Override
     public boolean hasBeenApplied() {
         return !hasTable("plan_gamemodetimes");
@@ -40,7 +35,7 @@ public class Version10Patch extends Patch {
 
     @Override
     protected void applyPatch() {
-        Optional<Server> server = db.query(ServerQueries.fetchServerMatchingIdentifier(getServerUUID()));
+        Optional<Server> server = query(ServerQueries.fetchServerMatchingIdentifier(getServerUUID()));
         serverID = server.map(Server::getId)
                 .orElseThrow(() -> new IllegalStateException("Server UUID was not registered, try rebooting the plugin."));
 

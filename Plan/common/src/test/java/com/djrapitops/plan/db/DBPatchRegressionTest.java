@@ -16,7 +16,9 @@
  */
 package com.djrapitops.plan.db;
 
+import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.patches.Patch;
+import com.djrapitops.plan.db.sql.tables.*;
 import utilities.TestConstants;
 
 import java.util.ArrayList;
@@ -37,23 +39,49 @@ public abstract class DBPatchRegressionTest {
     String insertWorld = "INSERT INTO plan_worlds (server_id, world_name) VALUES (1, 'World')";
     String insertWorldTimes = "INSERT INTO plan_world_times (user_id, server_id, world_id, session_id, survival_time) VALUES (1,1,1,1,1234)";
 
-
-    protected void insertData(SQLDB underTest) {
-        underTest.execute(insertServer);
-        underTest.execute(insertUser);
-        underTest.execute(insertUser2);
-        underTest.execute(insertUserInfo);
-        underTest.execute(insertIP);
-        underTest.execute(insertNickname);
-        underTest.execute(insertSession);
-        underTest.execute(insertKill);
-        underTest.execute(insertWorld);
-        underTest.execute(insertWorldTimes);
+    protected void dropAllTables(SQLDB underTest) {
+        underTest.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute("DROP TABLE " + CommandUseTable.TABLE_NAME);
+                execute("DROP TABLE " + GeoInfoTable.TABLE_NAME);
+                execute("DROP TABLE " + KillsTable.TABLE_NAME);
+                execute("DROP TABLE " + NicknamesTable.TABLE_NAME);
+                execute("DROP TABLE " + PingTable.TABLE_NAME);
+                execute("DROP TABLE " + SecurityTable.TABLE_NAME);
+                execute("DROP TABLE " + ServerTable.TABLE_NAME);
+                execute("DROP TABLE " + SessionsTable.TABLE_NAME);
+                execute("DROP TABLE " + SettingsTable.TABLE_NAME);
+                execute("DROP TABLE " + TPSTable.TABLE_NAME);
+                execute("DROP TABLE " + UserInfoTable.TABLE_NAME);
+                execute("DROP TABLE " + UsersTable.TABLE_NAME);
+                execute("DROP TABLE " + WorldTable.TABLE_NAME);
+                execute("DROP TABLE " + WorldTimesTable.TABLE_NAME);
+            }
+        });
     }
 
-    protected void assertPatchesHaveBeenApplied(SQLDB underTest) {
+    protected void insertData(SQLDB underTest) {
+        underTest.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute(insertServer);
+                execute(insertUser);
+                execute(insertUser2);
+                execute(insertUserInfo);
+                execute(insertIP);
+                execute(insertNickname);
+                execute(insertSession);
+                execute(insertKill);
+                execute(insertWorld);
+                execute(insertWorldTimes);
+            }
+        });
+    }
+
+    protected void assertPatchesHaveBeenApplied(Patch[] patches) {
         List<String> failed = new ArrayList<>();
-        for (Patch patch : underTest.patches()) {
+        for (Patch patch : patches) {
             if (!patch.hasBeenApplied()) {
                 failed.add(patch.getClass().getSimpleName());
             }

@@ -29,6 +29,7 @@ import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
+import com.google.common.util.concurrent.MoreExecutors;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import rules.PluginComponentMocker;
@@ -90,11 +91,10 @@ public class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
         system.enable();
 
         underTest = (MySQLDB) system.getDatabaseSystem().getActiveDatabaseByName(DBType.MYSQL.getName());
+        underTest.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
+        underTest.init();
 
-        underTest.setOpen(true);
-        underTest.setupDataSource();
-
-        dropAllTables();
+        dropAllTables(underTest);
 
         // Initialize database with the old table schema
         underTest.executeTransaction(new Transaction() {
@@ -122,17 +122,6 @@ public class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
         insertData(underTest);
     }
 
-    private void dropAllTables() {
-        underTest.executeTransaction(new Transaction() {
-            @Override
-            protected void performOperations() {
-                execute("DROP DATABASE Plan");
-                execute("CREATE DATABASE Plan");
-                execute("USE Plan");
-            }
-        });
-    }
-
     @After
     public void closeDatabase() {
         underTest.close();
@@ -140,11 +129,12 @@ public class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
 
     @Test
     public void mysqlPatchTaskWorksWithoutErrors() {
-        for (Patch patch : underTest.patches()) {
+        Patch[] patches = underTest.patches();
+        for (Patch patch : patches) {
             underTest.executeTransaction(patch);
         }
 
-        assertPatchesHaveBeenApplied(underTest);
+        assertPatchesHaveBeenApplied(patches);
 
         // Make sure that a fetch works.
         ServerContainer server = underTest.query(ContainerFetchQueries.fetchServerContainer(TestConstants.SERVER_UUID));

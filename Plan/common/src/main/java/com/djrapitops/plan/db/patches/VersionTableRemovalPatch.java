@@ -16,13 +16,7 @@
  */
 package com.djrapitops.plan.db.patches;
 
-import com.djrapitops.plan.db.SQLDB;
-
 public class VersionTableRemovalPatch extends Patch {
-
-    public VersionTableRemovalPatch(SQLDB db) {
-        super(db);
-    }
 
     @Override
     public boolean hasBeenApplied() {

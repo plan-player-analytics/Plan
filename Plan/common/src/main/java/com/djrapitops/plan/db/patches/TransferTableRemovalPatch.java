@@ -16,13 +16,7 @@
  */
 package com.djrapitops.plan.db.patches;
 
-import com.djrapitops.plan.db.SQLDB;
-
 public class TransferTableRemovalPatch extends Patch {
-
-    public TransferTableRemovalPatch(SQLDB db) {
-        super(db);
-    }
 
     @Override
     public boolean hasBeenApplied() {

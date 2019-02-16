@@ -17,7 +17,6 @@
 package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.data.store.objects.Nickname;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.sql.parsing.Select;
@@ -30,10 +29,6 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class NicknameLastSeenPatch extends Patch {
-
-    public NicknameLastSeenPatch(SQLDB db) {
-        super(db);
-    }
 
     @Override
     public boolean hasBeenApplied() {

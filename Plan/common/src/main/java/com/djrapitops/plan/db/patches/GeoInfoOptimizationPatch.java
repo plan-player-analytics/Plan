@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db.patches;
 
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.tables.GeoInfoTable;
 
 public class GeoInfoOptimizationPatch extends Patch {
@@ -24,8 +23,7 @@ public class GeoInfoOptimizationPatch extends Patch {
     private String tempTableName;
     private String tableName;
 
-    public GeoInfoOptimizationPatch(SQLDB db) {
-        super(db);
+    public GeoInfoOptimizationPatch() {
         tableName = GeoInfoTable.TABLE_NAME;
         tempTableName = "temp_ips";
     }

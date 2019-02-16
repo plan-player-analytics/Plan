@@ -21,6 +21,8 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 
+import java.util.concurrent.Future;
+
 /**
  * Interface for interacting with a Plan SQL database.
  *
@@ -31,8 +33,6 @@ public interface Database {
     void init() throws DBInitException;
 
     void close() throws DBException;
-
-    boolean isOpen();
 
     /**
      * Execute an SQL Query statement to get a result.
@@ -49,8 +49,9 @@ public interface Database {
      * Execute an SQL Transaction.
      *
      * @param transaction Transaction to execute.
+     * @return Future that is finished when the transaction has been executed.
      */
-    void executeTransaction(Transaction transaction);
+    Future<?> executeTransaction(Transaction transaction);
 
     /**
      * Used to get the {@code DBType} of the Database
@@ -58,9 +59,16 @@ public interface Database {
      * @return the {@code DBType}
      * @see DBType
      */
-    @Deprecated
     DBType getType();
 
     @Deprecated
     void scheduleClean(long delay);
+
+    State getState();
+
+    enum State {
+        CLOSED,
+        INITIALIZING,
+        OPEN
+    }
 }

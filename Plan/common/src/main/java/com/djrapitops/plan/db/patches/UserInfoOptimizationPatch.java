@@ -17,7 +17,6 @@
 package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.sql.tables.UserInfoTable;
 
 public class UserInfoOptimizationPatch extends Patch {
@@ -25,8 +24,7 @@ public class UserInfoOptimizationPatch extends Patch {
     private String tempTableName;
     private String tableName;
 
-    public UserInfoOptimizationPatch(SQLDB db) {
-        super(db);
+    public UserInfoOptimizationPatch() {
         tableName = UserInfoTable.TABLE_NAME;
         tempTableName = "temp_user_info";
     }
