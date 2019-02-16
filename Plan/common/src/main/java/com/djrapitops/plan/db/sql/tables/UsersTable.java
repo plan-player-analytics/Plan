@@ -65,27 +65,6 @@ public class UsersTable extends Table {
                 .toString();
     }
 
-    public int getTimesKicked(UUID uuid) {
-        String sql = Select.from(tableName, TIMES_KICKED)
-                .where(USER_UUID + "=?")
-                .toString();
-
-        return query(new QueryStatement<Integer>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-            }
-
-            @Override
-            public Integer processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return set.getInt(TIMES_KICKED);
-                }
-                return 0;
-            }
-        });
-    }
-
     public void kicked(UUID uuid) {
         String sql = "UPDATE " + tableName + " SET "
                 + TIMES_KICKED + "=" + TIMES_KICKED + "+ 1" +

@@ -457,7 +457,7 @@ public abstract class CommonDBTest {
     public void testUsersTableKickSaving() throws DBInitException {
         saveUserOne();
         UsersTable usersTable = db.getUsersTable();
-        assertEquals(1, usersTable.getTimesKicked(playerUUID));
+        OptionalAssert.equals(1, db.query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID)).map(BaseUser::getTimesKicked));
 
         int random = new Random().nextInt(20);
 
@@ -465,7 +465,7 @@ public abstract class CommonDBTest {
             usersTable.kicked(playerUUID);
         }
         commitTest();
-        assertEquals(random + 2, usersTable.getTimesKicked(playerUUID));
+        OptionalAssert.equals(random + 2, db.query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID)).map(BaseUser::getTimesKicked));
     }
 
     @Test

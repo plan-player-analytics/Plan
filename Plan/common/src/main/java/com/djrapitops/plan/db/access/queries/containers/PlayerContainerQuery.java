@@ -54,7 +54,7 @@ public class PlayerContainerQuery implements Query<PlayerContainer> {
         container.putRawData(PlayerKeys.UUID, uuid);
 
         Key<BaseUser> baseUserKey = new Key<>(BaseUser.class, "BASE_USER");
-        container.putSupplier(baseUserKey, () -> db.query(BaseUserQueries.fetchCommonUserInformationOfPlayer(uuid)).orElse(null));
+        container.putSupplier(baseUserKey, () -> db.query(BaseUserQueries.fetchBaseUserOfPlayer(uuid)).orElse(null));
         container.putSupplier(PlayerKeys.REGISTERED, () -> container.getValue(baseUserKey).map(BaseUser::getRegistered).orElse(null));
         container.putSupplier(PlayerKeys.NAME, () -> container.getValue(baseUserKey).map(BaseUser::getName).orElse(null));
         container.putSupplier(PlayerKeys.KICK_COUNT, () -> container.getValue(baseUserKey).map(BaseUser::getTimesKicked).orElse(null));

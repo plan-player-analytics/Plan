@@ -83,7 +83,7 @@ public class BaseUserQueries {
         };
     }
 
-    public static Query<Optional<BaseUser>> fetchCommonUserInformationOfPlayer(UUID playerUUID) {
+    public static Query<Optional<BaseUser>> fetchBaseUserOfPlayer(UUID playerUUID) {
         String sql = Select.all(UsersTable.TABLE_NAME).where(UsersTable.USER_UUID + "=?").toString();
 
         return new QueryStatement<Optional<BaseUser>>(sql, 20000) {
