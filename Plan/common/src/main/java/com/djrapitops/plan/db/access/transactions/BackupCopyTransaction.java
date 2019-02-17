@@ -34,14 +34,16 @@ import java.util.function.Function;
 public class BackupCopyTransaction extends RemoveEverythingTransaction {
 
     private final Database sourceDB;
+    private final Database destinationDB;
 
-    public BackupCopyTransaction(Database sourceDB) {
+    public BackupCopyTransaction(Database sourceDB, Database destinationDB) {
         this.sourceDB = sourceDB;
+        this.destinationDB = destinationDB;
     }
 
     @Override
     protected boolean shouldBeExecuted() {
-        return !sourceDB.equals(db) && sourceDB.getState() != Database.State.CLOSED;
+        return !sourceDB.equals(destinationDB) && sourceDB.getState() != Database.State.CLOSED;
     }
 
     @Override

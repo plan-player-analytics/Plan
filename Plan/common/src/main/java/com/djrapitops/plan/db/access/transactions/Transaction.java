@@ -37,7 +37,7 @@ import java.util.UUID;
  */
 public abstract class Transaction {
 
-    protected SQLDB db; // TODO Make private, this is a quick hack to access some tables while they are in use.
+    private SQLDB db;
     protected DBType dbType;
 
     private Connection connection;
@@ -76,7 +76,9 @@ public abstract class Transaction {
     private void manageFailure(Exception statementFail) {
         String failMsg = getClass().getSimpleName() + " failed: " + statementFail.getMessage();
         try {
-            connection.rollback(savepoint);
+            if (Verify.notNull(connection, savepoint)) {
+                connection.rollback(savepoint);
+            }
         } catch (SQLException rollbackFail) {
             throw new DBOpException(failMsg + ", additionally Transaction rollback failed: " + rollbackFail.getMessage(), statementFail);
         }
@@ -141,11 +143,6 @@ public abstract class Transaction {
         transaction.connection = this.connection;
         transaction.performOperations();
         transaction.connection = null;
-    }
-
-    @Deprecated
-    protected void setDb(SQLDB db) {
-        this.db = db;
     }
 
     protected UUID getServerUUID() {

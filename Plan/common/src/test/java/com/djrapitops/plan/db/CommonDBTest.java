@@ -651,7 +651,7 @@ public abstract class CommonDBTest {
 
         saveAllData();
 
-        backup.executeTransaction(new BackupCopyTransaction(db));
+        backup.executeTransaction(new BackupCopyTransaction(db, backup));
 
         assertQueryResultIsEqual(db, backup, BaseUserQueries.fetchAllBaseUsers());
         assertQueryResultIsEqual(db, backup, UserInfoQueries.fetchAllUserInformation());

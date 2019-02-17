@@ -112,7 +112,7 @@ public class ManageMoveCommand extends CommandNode {
             try {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
-                toDatabase.executeTransaction(new BackupCopyTransaction(fromDatabase));
+                toDatabase.executeTransaction(new BackupCopyTransaction(fromDatabase, toDatabase));
 
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
 

@@ -136,7 +136,7 @@ public class ManageBackupCommand extends CommandNode {
             String fileName = dbName + "-backup-" + timeStamp;
             backupDB = sqliteFactory.usingFileCalled(fileName);
             backupDB.init();
-            backupDB.executeTransaction(new BackupCopyTransaction(copyFromDB));
+            backupDB.executeTransaction(new BackupCopyTransaction(copyFromDB, backupDB));
         } catch (DBException e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
         } finally {

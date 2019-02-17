@@ -18,9 +18,8 @@ package com.djrapitops.plan.system.webserver;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.queries.DataStoreQueries;
-import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
+import com.djrapitops.plan.db.access.transactions.events.SessionEndTransaction;
 import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -86,14 +85,7 @@ public class JSErrorRegressionTest {
         Session session = new Session(uuid, TestConstants.SERVER_UUID, 1000L, "world", "SURVIVAL");
         session.endSession(11000L);
         database.executeTransaction(new WorldNameStoreTransaction(TestConstants.SERVER_UUID, "world"));
-        database.executeTransaction(new Transaction() {
-            @Override
-            protected void performOperations() {
-                execute(DataStoreQueries.storeSession(session));
-            }
-        });
-        
-        // TODO Refactor to use Event transactions when available.
+        database.executeTransaction(new SessionEndTransaction(session));
     }
 
     @After
