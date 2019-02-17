@@ -64,10 +64,23 @@ public abstract class Transaction {
         try {
             initializeTransaction(db);
             performOperations();
+            if (connection != null) connection.commit();
             success = true;
+        } catch (Exception statementFail) {
+            manageFailure(statementFail); // Throws a DBOpException.
         } finally {
-            finalizeTransaction();
+            db.returnToPool(connection);
         }
+    }
+
+    private void manageFailure(Exception statementFail) {
+        String failMsg = getClass().getSimpleName() + " failed: " + statementFail.getMessage();
+        try {
+            connection.rollback(savepoint);
+        } catch (SQLException rollbackFail) {
+            throw new DBOpException(failMsg + ", additionally Transaction rollback failed: " + rollbackFail.getMessage(), statementFail);
+        }
+        throw new DBOpException(failMsg + ", Transaction was rolled back.", statementFail);
     }
 
     /**
@@ -90,34 +103,9 @@ public abstract class Transaction {
     private void initializeTransaction(SQLDB db) {
         try {
             this.connection = db.getConnection();
-            // Temporary fix for MySQL Patch task test failing, TODO remove after Auto commit is off for MySQL
-            if (connection.getAutoCommit()) connection.setAutoCommit(false);
             this.savepoint = connection.setSavepoint();
         } catch (SQLException e) {
             throw new DBOpException(getClass().getSimpleName() + " initialization failed: " + e.getMessage(), e);
-        }
-    }
-
-    private void finalizeTransaction() {
-        try {
-            handleSavepoint();
-            // Temporary fix for MySQL Patch task test failing, TODO remove after Auto commit is off for MySQL
-            if (db.getType() == DBType.MYSQL) connection.setAutoCommit(true);
-        } catch (SQLException e) {
-            throw new DBOpException(getClass().getSimpleName() + " finalization failed: " + e.getMessage(), e);
-        }
-        if (db != null) db.returnToPool(connection);
-    }
-
-    private void handleSavepoint() throws SQLException {
-        if (connection == null) {
-            return;
-        }
-        // Commit or rollback the transaction
-        if (success) {
-            connection.commit();
-        } else {
-            connection.rollback(savepoint);
         }
     }
 

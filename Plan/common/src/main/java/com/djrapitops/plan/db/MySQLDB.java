@@ -108,9 +108,7 @@ public class MySQLDB extends SQLDB {
             hikariConfig.setLeakDetectionThreshold(TimeUnit.MINUTES.toMillis(10L));
 
             this.dataSource = new HikariDataSource(hikariConfig);
-
-            getConnection();
-        } catch (HikariPool.PoolInitializationException | SQLException e) {
+        } catch (HikariPool.PoolInitializationException e) {
             throw new DBInitException("Failed to set-up HikariCP Datasource: " + e.getMessage(), e);
         }
     }
@@ -126,11 +124,12 @@ public class MySQLDB extends SQLDB {
             try {
                 setupDataSource();
                 // get new connection after restarting pool
-                return dataSource.getConnection();
+                connection = dataSource.getConnection();
             } catch (DBInitException e) {
                 throw new DBOpException("Failed to restart DataSource after a connection was invalid: " + e.getMessage(), e);
             }
         }
+        if (connection.getAutoCommit()) connection.setAutoCommit(false);
         return connection;
     }
 

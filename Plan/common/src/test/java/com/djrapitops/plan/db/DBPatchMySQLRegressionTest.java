@@ -94,7 +94,7 @@ public class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
         underTest.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
         underTest.init();
 
-        dropAllTables(underTest);
+        dropAllTables();
 
         // Initialize database with the old table schema
         underTest.executeTransaction(new Transaction() {
@@ -120,6 +120,17 @@ public class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
         underTest.executeTransaction(new CreateTablesTransaction());
 
         insertData(underTest);
+    }
+
+    private void dropAllTables() {
+        underTest.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute("DROP DATABASE Plan");
+                execute("CREATE DATABASE Plan");
+                execute("USE Plan");
+            }
+        });
     }
 
     @After
