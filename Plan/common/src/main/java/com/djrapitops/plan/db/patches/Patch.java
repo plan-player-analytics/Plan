@@ -85,7 +85,7 @@ public abstract class Patch extends OperationCriticalTransaction {
     }
 
     protected void dropTable(String name) {
-        execute("DROP TABLE " + name);
+        execute("DROP TABLE IF EXISTS " + name);
     }
 
     protected void renameTable(String from, String to) {
