@@ -67,7 +67,7 @@ public class SQLiteDB extends SQLDB {
     }
 
     @Override
-    public void setupDataSource() throws DBInitException {
+    public void setupDataSource() {
         try {
             connection = getNewConnection(databaseFile);
         } catch (SQLException e) {

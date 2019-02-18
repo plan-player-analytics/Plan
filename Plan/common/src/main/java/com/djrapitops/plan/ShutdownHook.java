@@ -78,16 +78,16 @@ public class ShutdownHook extends Thread {
             Map<UUID, Session> activeSessions = SessionCache.getActiveSessions();
             prepareSessionsForStorage(activeSessions, System.currentTimeMillis());
             saveActiveSessions(activeSessions);
-        } catch (IllegalStateException ignored) {
-            /* Database is not initialized */
         } catch (DBInitException e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
+        } catch (IllegalStateException ignored) {
+            /* Database is not initialized */
         } finally {
             closeDatabase(dbSystem.getDatabase());
         }
     }
 
-    private void saveActiveSessions(Map<UUID, Session> activeSessions) throws DBInitException {
+    private void saveActiveSessions(Map<UUID, Session> activeSessions) {
         Database database = dbSystem.getDatabase();
         if (database.getState() == Database.State.CLOSED) {
             // Ensure that database is not closed when performing the transaction.

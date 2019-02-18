@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.store.Key;
@@ -154,13 +153,13 @@ public abstract class CommonDBTest {
         });
     }
 
-    public void commitTest() throws DBInitException {
+    public void commitTest() {
         db.close();
         db.init();
     }
 
     @Test
-    public void testSaveCommandUse() throws DBInitException {
+    public void testSaveCommandUse() {
         Map<String, Integer> expected = new HashMap<>();
 
         expected.put("plan", 1);
@@ -181,7 +180,7 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void commandUsageSavingDoesNotCreateNewEntriesForOldCommands() throws DBInitException {
+    public void commandUsageSavingDoesNotCreateNewEntriesForOldCommands() {
         Map<String, Integer> expected = new HashMap<>();
 
         expected.put("plan", 1);
@@ -238,7 +237,7 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void geoInformationIsStored() throws DBInitException, NoSuchAlgorithmException {
+    public void geoInformationIsStored() throws NoSuchAlgorithmException {
         saveUserOne();
 
         String expectedIP = "1.2.3.4";
@@ -256,7 +255,7 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testNicknamesTable() throws DBInitException {
+    public void testNicknamesTable() {
         saveUserOne();
 
         Nickname expected = new Nickname("TestNickname", System.currentTimeMillis(), serverUUID);
@@ -270,7 +269,7 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void webUserIsRegistered() throws DBInitException {
+    public void webUserIsRegistered() {
         WebUser expected = new WebUser(TestConstants.PLAYER_ONE_NAME, "RandomGarbageBlah", 0);
         db.executeTransaction(new RegisterWebUserTransaction(expected));
         commitTest();
@@ -281,20 +280,20 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void multipleWebUsersAreFetchedAppropriately() throws DBInitException {
+    public void multipleWebUsersAreFetchedAppropriately() {
         webUserIsRegistered();
         assertEquals(1, db.query(WebUserQueries.fetchAllPlanWebUsers()).size());
     }
 
     @Test
-    public void webUserIsRemoved() throws DBInitException {
+    public void webUserIsRemoved() {
         webUserIsRegistered();
         db.executeTransaction(new RemoveWebUserTransaction(TestConstants.PLAYER_ONE_NAME));
         assertFalse(db.query(WebUserQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME)).isPresent());
     }
 
     @Test
-    public void worldNamesAreStored() throws DBInitException {
+    public void worldNamesAreStored() {
         String[] expected = {"Test", "Test2", "Test3"};
         saveWorlds(expected);
 
@@ -343,7 +342,7 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testSessionPlaytimeSaving() throws DBInitException {
+    public void testSessionPlaytimeSaving() {
         saveTwoWorlds();
         saveUserOne();
         saveUserTwo();
@@ -374,7 +373,7 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testSessionSaving() throws DBInitException {
+    public void testSessionSaving() {
         saveUserOne();
         saveUserTwo();
 
@@ -432,7 +431,7 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void playerNameIsUpdatedWhenPlayerLogsIn() throws DBInitException {
+    public void playerNameIsUpdatedWhenPlayerLogsIn() {
         saveUserOne();
 
         OptionalAssert.equals(playerUUID, db.query(UserIdentifierQueries.fetchPlayerUUIDOf(TestConstants.PLAYER_ONE_NAME)));
@@ -447,7 +446,7 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testUsersTableKickSaving() throws DBInitException {
+    public void testUsersTableKickSaving() {
         saveUserOne();
         OptionalAssert.equals(1, db.query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID)).map(BaseUser::getTimesKicked));
 
@@ -568,7 +567,7 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testSessionTableGetInfoOfServer() throws DBInitException {
+    public void testSessionTableGetInfoOfServer() {
         saveUserOne();
         saveUserTwo();
 
@@ -606,7 +605,7 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testKillTableGetKillsOfServer() throws DBInitException {
+    public void testKillTableGetKillsOfServer() {
         saveUserOne();
         saveUserTwo();
 

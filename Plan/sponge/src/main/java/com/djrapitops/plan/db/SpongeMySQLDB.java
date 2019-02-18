@@ -57,7 +57,7 @@ public class SpongeMySQLDB extends MySQLDB {
     }
 
     @Override
-    public void setupDataSource() throws DBInitException {
+    public void setupDataSource() {
         Optional<SqlService> sqlServiceProvider = Sponge.getServiceManager().provide(SqlService.class);
         if (!sqlServiceProvider.isPresent()) {
             return;

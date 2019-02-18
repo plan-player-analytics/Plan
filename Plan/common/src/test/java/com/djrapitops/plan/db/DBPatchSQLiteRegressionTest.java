@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
@@ -64,7 +63,7 @@ public class DBPatchSQLiteRegressionTest extends DBPatchRegressionTest {
     private SQLiteDB underTest;
 
     @Before
-    public void setUpDBWithOldSchema() throws DBInitException {
+    public void setUpDBWithOldSchema() {
         underTest = component.getPlanSystem().getDatabaseSystem().getSqLiteFactory()
                 .usingFileCalled("test");
         underTest.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);

@@ -29,7 +29,14 @@ import java.util.concurrent.Future;
  */
 public interface Database {
 
-    void init() throws DBInitException;
+    /**
+     * Initializes the Database.
+     * <p>
+     * Queries can be performed after this request has completed all required transactions for the database operations.
+     *
+     * @throws DBInitException if Database fails to initiate.
+     */
+    void init();
 
     void close();
 

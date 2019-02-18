@@ -17,7 +17,6 @@
 package com.djrapitops.plan.db;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
@@ -78,7 +77,7 @@ public class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
     }
 
     @Before
-    public void setUpDBWithOldSchema() throws DBInitException, EnableException {
+    public void setUpDBWithOldSchema() throws EnableException {
         PlanSystem system = component.getPlanSystem();
         PlanConfig config = system.getConfigSystem().getConfig();
         config.set(DatabaseSettings.MYSQL_DATABASE, "Plan");

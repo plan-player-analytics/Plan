@@ -79,7 +79,7 @@ public class MySQLDB extends SQLDB {
      * Setups the {@link HikariDataSource}
      */
     @Override
-    public void setupDataSource() throws DBInitException {
+    public void setupDataSource() {
         try {
             HikariConfig hikariConfig = new HikariConfig();
 

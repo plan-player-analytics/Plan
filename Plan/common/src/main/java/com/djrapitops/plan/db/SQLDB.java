@@ -89,18 +89,8 @@ public abstract class SQLDB extends AbstractDatabase {
         this.transactionExecutorServiceProvider = () -> Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat("Plan " + getClass().getSimpleName() + "-transaction-thread-%d").build());
     }
 
-    /**
-     * Initializes the Database.
-     * <p>
-     * All tables exist in the database after call to this.
-     * Updates Schema to latest version.
-     * Converts Unsaved Bukkit player files to database data.
-     * Cleans the database.
-     *
-     * @throws DBInitException if Database fails to initiate.
-     */
     @Override
-    public void init() throws DBInitException {
+    public void init() {
         List<Runnable> unfinishedTransactions = closeTransactionExecutor(transactionExecutor);
         this.transactionExecutor = transactionExecutorServiceProvider.get();
 
@@ -215,7 +205,12 @@ public abstract class SQLDB extends AbstractDatabase {
         }
     }
 
-    public abstract void setupDataSource() throws DBInitException;
+    /**
+     * Set up the source for connections.
+     *
+     * @throws DBInitException If the DataSource fails to be initialized.
+     */
+    public abstract void setupDataSource();
 
     @Override
     public void close() {

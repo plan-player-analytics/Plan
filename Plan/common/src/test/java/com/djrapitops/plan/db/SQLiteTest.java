@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
@@ -58,7 +57,7 @@ public class SQLiteTest extends CommonDBTest {
     }
 
     @Test
-    public void testServerTableBungeeSave() throws DBInitException {
+    public void testServerTableBungeeSave() {
         Optional<Server> bungeeInfo = db.query(ServerQueries.fetchProxyServerInformation());
         assertFalse(bungeeInfo.isPresent());
 
@@ -79,7 +78,7 @@ public class SQLiteTest extends CommonDBTest {
     }
 
     @Test
-    public void testServerTableBungee() throws DBInitException {
+    public void testServerTableBungee() {
         testServerTableBungeeSave();
 
         Map<UUID, Server> serverInformation = db.query(ServerQueries.fetchPlanServerInformation());

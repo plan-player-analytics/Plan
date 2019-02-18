@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
@@ -66,7 +65,7 @@ public class DBPatchH2RegressionTest extends DBPatchRegressionTest {
     private H2DB underTest;
 
     @Before
-    public void setUpDBWithOldSchema() throws DBInitException {
+    public void setUpDBWithOldSchema() {
         PlanConfig config = component.getPlanSystem().getConfigSystem().getConfig();
 
         config.set(DatabaseSettings.MYSQL_USER, "user");
