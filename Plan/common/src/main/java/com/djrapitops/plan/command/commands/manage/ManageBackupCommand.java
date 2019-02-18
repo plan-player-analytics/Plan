@@ -43,6 +43,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
 /**
  * This command is used to backup a database to a .db file.
@@ -136,9 +137,12 @@ public class ManageBackupCommand extends CommandNode {
             String fileName = dbName + "-backup-" + timeStamp;
             backupDB = sqliteFactory.usingFileCalled(fileName);
             backupDB.init();
-            backupDB.executeTransaction(new BackupCopyTransaction(copyFromDB, backupDB));
-        } catch (DBException e) {
+            backupDB.executeTransaction(new BackupCopyTransaction(copyFromDB, backupDB)).get();
+        } catch (DBException | ExecutionException e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
+        } catch (InterruptedException e) {
+            backupDB.close();
+            Thread.currentThread().interrupt();
         } finally {
             if (backupDB != null) {
                 backupDB.close();

@@ -112,7 +112,7 @@ public class ManageMoveCommand extends CommandNode {
             try {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
-                toDatabase.executeTransaction(new BackupCopyTransaction(fromDatabase, toDatabase));
+                toDatabase.executeTransaction(new BackupCopyTransaction(fromDatabase, toDatabase)).get();
 
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
 
@@ -120,6 +120,8 @@ public class ManageMoveCommand extends CommandNode {
                 if (movingToCurrentDB) {
                     sender.sendMessage(locale.getString(ManageLang.HOTSWAP_REMINDER, toDatabase.getType().getConfigName()));
                 }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             } catch (Exception e) {
                 errorHandler.log(L.ERROR, this.getClass(), e);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));

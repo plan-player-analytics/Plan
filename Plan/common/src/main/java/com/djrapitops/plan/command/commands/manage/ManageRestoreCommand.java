@@ -124,9 +124,11 @@ public class ManageRestoreCommand extends CommandNode {
 
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
-                database.executeTransaction(new BackupCopyTransaction(backupDB, database));
+                database.executeTransaction(new BackupCopyTransaction(backupDB, database)).get();
 
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             } catch (Exception e) {
                 errorHandler.log(L.ERROR, this.getClass(), e);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
