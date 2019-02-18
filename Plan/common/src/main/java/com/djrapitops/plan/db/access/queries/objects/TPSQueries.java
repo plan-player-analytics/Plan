@@ -120,16 +120,23 @@ public class TPSQueries {
     }
 
     public static Query<Optional<DateObj<Integer>>> fetchPeakPlayerCount(UUID serverUUID, long afterDate) {
-        String sql = "SELECT " + DATE + ", MAX(" + PLAYERS_ONLINE + ") as max FROM " + TABLE_NAME +
-                " WHERE " + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
-                " AND " + DATE + ">= ?" +
-                " GROUP BY " + SERVER_ID;
+        String subQuery = "(" + SELECT + "MAX(" + PLAYERS_ONLINE + ")" + FROM + TABLE_NAME + WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                AND + DATE + ">= ?)";
+        String sql = SELECT +
+                DATE + ", " + PLAYERS_ONLINE +
+                FROM + TABLE_NAME +
+                WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                AND + DATE + ">= ?" +
+                AND + PLAYERS_ONLINE + "=" + subQuery +
+                ORDER_BY + DATE + " DESC LIMIT 1";
 
         return new QueryStatement<Optional<DateObj<Integer>>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
                 statement.setLong(2, afterDate);
+                statement.setString(3, serverUUID.toString());
+                statement.setLong(4, afterDate);
             }
 
             @Override
@@ -146,6 +153,6 @@ public class TPSQueries {
     }
 
     public static Query<Optional<DateObj<Integer>>> fetchAllTimePeakPlayerCount(UUID serverUUID) {
-        return db -> db.query(fetchPeakPlayerCount(serverUUID, 0));
+        return fetchPeakPlayerCount(serverUUID, 0);
     }
 }

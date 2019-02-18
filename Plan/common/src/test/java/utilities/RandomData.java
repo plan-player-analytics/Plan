@@ -55,7 +55,7 @@ public class RandomData {
         List<TPS> test = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             int randInt = r.nextInt();
-            long randLong = r.nextLong();
+            long randLong = Math.abs(r.nextLong());
             test.add(new TPS(randLong, randLong, randInt, randLong, randLong, randInt, randInt, randLong));
         }
         return test;

@@ -72,6 +72,7 @@ import java.lang.management.OperatingSystemMXBean;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -992,6 +993,20 @@ public abstract class CommonDBTest {
     @Test
     public void indexCreationWorksWithoutErrors() {
         db.executeTransaction(new CreateIndexTransaction(db.getType()));
+    }
+
+    @Test
+    public void playerMaxPeakIsCorrect() {
+        List<TPS> tpsData = RandomData.randomTPS();
+
+        for (TPS tps : tpsData) {
+            db.executeTransaction(new TPSStoreTransaction(serverUUID, Collections.singletonList(tps)));
+        }
+
+        tpsData.sort(Comparator.comparingInt(TPS::getPlayers));
+        int expected = tpsData.get(tpsData.size() - 1).getPlayers();
+        int actual = db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID)).map(DateObj::getValue).orElse(-1);
+        assertEquals("Wrong return value. " + tpsData.stream().map(TPS::getPlayers).collect(Collectors.toList()).toString(), expected, actual);
     }
 
 }
