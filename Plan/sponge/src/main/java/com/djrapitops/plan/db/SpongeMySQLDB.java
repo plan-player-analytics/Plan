@@ -80,7 +80,7 @@ public class SpongeMySQLDB extends MySQLDB {
                     "jdbc:mysql://" + username + ":" + password + "@" + url
             );
         } catch (SQLException e) {
-            throw new DBInitException(e);
+            throw new DBInitException(e.getMessage(), e);
         }
     }
 

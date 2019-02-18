@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.Session;
@@ -116,10 +115,6 @@ public class ShutdownHook extends Thread {
     }
 
     private void closeDatabase(Database database) {
-        try {
-            database.close();
-        } catch (DBException e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
-        }
+        database.close();
     }
 }

@@ -17,7 +17,6 @@
 package com.djrapitops.plan.system.database;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.H2DB;
@@ -26,7 +25,6 @@ import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plugin.benchmarking.Timings;
-import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
@@ -86,12 +84,8 @@ public abstract class DBSystem implements SubSystem {
 
     @Override
     public void disable() {
-        try {
-            if (db != null) {
-                db.close();
-            }
-        } catch (DBException e) {
-            errorHandler.log(L.WARN, this.getClass(), e);
+        if (db != null) {
+            db.close();
         }
     }
 
@@ -112,7 +106,7 @@ public abstract class DBSystem implements SubSystem {
         }
     }
 
-    public void setActiveDatabase(Database db) throws DBException {
+    public void setActiveDatabase(Database db) {
         this.db.close();
         this.db = db;
     }

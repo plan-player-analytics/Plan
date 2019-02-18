@@ -72,7 +72,7 @@ public class H2DB extends SQLDB {
         try {
             connection = getNewConnection(databaseFile);
         } catch (SQLException e) {
-            throw new DBInitException(e);
+            throw new DBInitException(e.getMessage(), e);
         }
 
         // TODO Figure out if execute("SET REFERENTIAL_INTEGRITY FALSE"); is required

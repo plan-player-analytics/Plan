@@ -21,14 +21,10 @@ package com.djrapitops.plan.api.exceptions.database;
  *
  * @author Rsl1122
  */
-public class DBInitException extends DBException {
+public class DBInitException extends DBOpException {
 
     public DBInitException(String message, Throwable cause) {
         super(message, cause);
-    }
-
-    public DBInitException(Throwable cause) {
-        super(cause);
     }
 
     public DBInitException(String message) {

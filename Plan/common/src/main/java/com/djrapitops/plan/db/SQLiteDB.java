@@ -71,7 +71,7 @@ public class SQLiteDB extends SQLDB {
         try {
             connection = getNewConnection(databaseFile);
         } catch (SQLException e) {
-            throw new DBInitException(e);
+            throw new DBInitException(e.getMessage(), e);
         }
         startConnectionPingTask();
     }

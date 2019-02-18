@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.SQLiteDB;
@@ -138,7 +138,7 @@ public class ManageBackupCommand extends CommandNode {
             backupDB = sqliteFactory.usingFileCalled(fileName);
             backupDB.init();
             backupDB.executeTransaction(new BackupCopyTransaction(copyFromDB, backupDB)).get();
-        } catch (DBException | ExecutionException e) {
+        } catch (DBOpException | ExecutionException e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
         } catch (InterruptedException e) {
             backupDB.close();

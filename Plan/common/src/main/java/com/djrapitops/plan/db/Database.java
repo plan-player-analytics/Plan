@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.transactions.Transaction;
@@ -32,7 +31,7 @@ public interface Database {
 
     void init() throws DBInitException;
 
-    void close() throws DBException;
+    void close();
 
     /**
      * Execute an SQL Query statement to get a result.
