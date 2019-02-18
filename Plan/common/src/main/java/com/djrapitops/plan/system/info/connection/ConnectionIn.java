@@ -61,7 +61,7 @@ public class ConnectionIn {
         UUID serverUUID = getServerUUID();
 
         try {
-            if (!database.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID)).isPresent()) {
+            if (database.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID)).isPresent()) {
                 return;
             }
         } catch (DBOpException e) {
