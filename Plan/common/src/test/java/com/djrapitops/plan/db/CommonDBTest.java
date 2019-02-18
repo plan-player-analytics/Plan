@@ -1009,4 +1009,12 @@ public abstract class CommonDBTest {
         assertEquals("Wrong return value. " + tpsData.stream().map(TPS::getPlayers).collect(Collectors.toList()).toString(), expected, actual);
     }
 
+    @Test
+    public void playerCountForServersIsCorrect() {
+        Map<UUID, Integer> expected = Collections.singletonMap(serverUUID, 1);
+        saveUserOne();
+
+        Map<UUID, Integer> result = db.query(ServerAggregateQueries.serverUserCounts());
+        assertEquals(expected, result);
+    }
 }

@@ -88,7 +88,6 @@ public class ServerAggregateQueries {
      */
     public static Query<Map<UUID, Integer>> serverUserCounts() {
         String sql = "SELECT COUNT(1) as c, " + UserInfoTable.SERVER_UUID + FROM + UserInfoTable.TABLE_NAME +
-                WHERE + UserInfoTable.SERVER_UUID + "=?" +
                 GROUP_BY + UserInfoTable.SERVER_UUID;
         return new QueryAllStatement<Map<UUID, Integer>>(sql, 100) {
             @Override
