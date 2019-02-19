@@ -23,7 +23,7 @@ import com.djrapitops.plugin.api.Check;
  * Abstract class for easy hooking of plugins.
  *
  * @author Rsl1122
- * @since 2.6.0
+
  */
 public abstract class Hook {
 

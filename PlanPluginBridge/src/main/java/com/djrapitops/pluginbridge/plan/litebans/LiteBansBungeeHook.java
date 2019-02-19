@@ -30,7 +30,7 @@ import javax.inject.Singleton;
  * sources.
  *
  * @author Rsl1122
- * @since 3.5.0
+
  */
 @Singleton
 public class LiteBansBungeeHook extends Hook {

@@ -22,6 +22,7 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.pluginbridge.plan.viaversion.Protocol;
@@ -40,18 +41,18 @@ import java.util.stream.Collectors;
  */
 class ProtocolSupportData extends PluginData {
 
-    private final ProtocolTable table;
+    private final Database database;
 
-    ProtocolSupportData(ProtocolTable table) {
+    ProtocolSupportData(Database database) {
         super(ContainerSize.THIRD, "ProtocolSupport");
         setPluginIcon(Icon.called("gamepad").of(Color.CYAN).build());
-        this.table = table;
+        this.database = database;
     }
 
     @Override
     public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
         try {
-            int protocolVersion = table.getProtocolVersion(uuid);
+            int protocolVersion = database.query(ProtocolTable.getProtocolVersion(uuid));
 
             inspectContainer.addValue(getWithIcon("Last Join Version", Icon.called("signal").of(Color.CYAN)),
                     protocolVersion != -1 ? Protocol.getMCVersion(protocolVersion) : "Not Yet Known");
@@ -67,7 +68,7 @@ class ProtocolSupportData extends PluginData {
         Map<UUID, Integer> versions;
 
         try {
-            versions = table.getProtocolVersions();
+            versions = database.query(ProtocolTable.getProtocolVersions());
         } catch (DBOpException ex) {
             analysisContainer.addValue("Error", ex.toString());
             return analysisContainer;

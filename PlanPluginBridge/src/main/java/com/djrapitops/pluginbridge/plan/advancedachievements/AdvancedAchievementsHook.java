@@ -32,7 +32,7 @@ import java.util.Optional;
  * data sources.
  *
  * @author Rsl1122
- * @since 3.1.0
+
  */
 @Singleton
 public class AdvancedAchievementsHook extends Hook {

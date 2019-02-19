@@ -21,6 +21,7 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Family;
@@ -40,19 +41,19 @@ import java.util.stream.Collectors;
  */
 class AdvancedAntiCheatData extends PluginData {
 
-    private final HackerTable table;
+    private final Database database;
     private final Formatter<Long> timestampFormatter;
 
-    AdvancedAntiCheatData(HackerTable table, Formatter<Long> timestampFormatter) {
+    AdvancedAntiCheatData(Database database, Formatter<Long> timestampFormatter) {
         super(ContainerSize.THIRD, "AdvancedAntiCheat");
         this.timestampFormatter = timestampFormatter;
         super.setPluginIcon(Icon.called("heart").of(Color.RED).build());
-        this.table = table;
+        this.database = database;
     }
 
     @Override
     public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
-        List<HackObject> hackObjects = table.getHackObjects(uuid);
+        List<HackObject> hackObjects = database.query(HackerTable.getHackObjects(uuid));
 
         inspectContainer.addValue(
                 getWithIcon("Times Kicked for Possible Hacking", Icon.called("exclamation-triangle").of(Color.RED)),
@@ -78,7 +79,7 @@ class AdvancedAntiCheatData extends PluginData {
 
     @Override
     public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
-        Map<UUID, List<HackObject>> hackObjects = table.getHackObjects();
+        Map<UUID, List<HackObject>> hackObjects = database.query(HackerTable.getHackObjects());
 
         Map<UUID, Integer> violations = hackObjects.entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().size()));

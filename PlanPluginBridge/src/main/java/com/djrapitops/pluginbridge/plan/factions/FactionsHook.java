@@ -28,7 +28,7 @@ import javax.inject.Singleton;
  * A Class responsible for hooking to Factions and registering 4 data sources.
  *
  * @author Rsl1122
- * @since 3.1.0
+
  */
 @Singleton
 public class FactionsHook extends Hook {

@@ -21,7 +21,6 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.data.store.keys.AnalysisKeys;
-import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
@@ -41,16 +40,13 @@ class VaultEcoData extends PluginData {
 
     private final Economy econ;
 
-    private final DataCache dataCache;
     private final Formatter<Double> decimalFormatter;
 
     VaultEcoData(
             Economy econ,
-            DataCache dataCache,
             Formatter<Double> decimalFormatter
     ) {
         super(ContainerSize.THIRD, "Economy (" + econ.getName() + ")");
-        this.dataCache = dataCache;
         this.decimalFormatter = decimalFormatter;
         setPluginIcon(Icon.called("money-bill-wave").of(Color.GREEN).build());
         this.econ = econ;
@@ -58,10 +54,7 @@ class VaultEcoData extends PluginData {
 
     @Override
     public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
-        String name = dataCache.getName(uuid);
-        if (name == null) {
-            return inspectContainer;
-        }
+        String name = uuid.toString();
         OfflinePlayer p = new FakeOfflinePlayer(uuid, name);
         inspectContainer.addValue(getWithIcon("Balance", Icon.called("money-bill-wave").of(Color.GREEN)), econ.format(econ.getBalance(p)));
 
