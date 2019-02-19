@@ -16,17 +16,10 @@
  */
 package com.djrapitops.plan.db.sql.parsing;
 
-import java.util.Arrays;
-
 public class Select extends WhereParser {
 
     public Select(String start) {
         super(start);
-    }
-
-    public static Select from(String table, Column... columns) {
-        String[] cols = Arrays.stream(columns).map(Column::get).toArray(String[]::new);
-        return from(table, cols);
     }
 
     public static Select from(String table, String... columns) {

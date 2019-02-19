@@ -16,18 +16,11 @@
  */
 package com.djrapitops.plan.db.sql.parsing;
 
-import java.util.Arrays;
-
 public class Insert extends SqlParser {
 
     public Insert(String table) {
         super("INSERT INTO " + table);
         addSpace();
-    }
-
-    public static String values(String table, Column... columns) {
-        String[] cols = Arrays.stream(columns).map(Column::get).toArray(String[]::new);
-        return values(table, cols);
     }
 
     public static String values(String table, String... columns) {
