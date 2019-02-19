@@ -67,9 +67,6 @@ public interface Database {
      */
     DBType getType();
 
-    @Deprecated
-    void scheduleClean(long delay);
-
     State getState();
 
     enum State {

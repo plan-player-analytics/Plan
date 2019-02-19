@@ -22,21 +22,18 @@ import com.djrapitops.plan.api.exceptions.database.FatalDBException;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.db.access.transactions.init.CleanTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.db.access.transactions.init.OperationCriticalTransaction;
 import com.djrapitops.plan.db.patches.*;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.PluginTask;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
@@ -64,8 +61,6 @@ public abstract class SQLDB extends AbstractDatabase {
     protected final RunnableFactory runnableFactory;
     protected final PluginLogger logger;
     protected final ErrorHandler errorHandler;
-
-    private PluginTask dbCleanTask;
 
     private Supplier<ExecutorService> transactionExecutorServiceProvider;
     private ExecutorService transactionExecutor;
@@ -125,28 +120,6 @@ public abstract class SQLDB extends AbstractDatabase {
         return Collections.emptyList();
     }
 
-    @Override
-    public void scheduleClean(long secondsDelay) {
-        dbCleanTask = runnableFactory.create("DB Clean Task", new AbsRunnable() {
-            @Override
-            public void run() {
-                try {
-                    if (getState() != State.CLOSED) {
-                        executeTransaction(new CleanTransaction(serverUUIDSupplier.get(),
-                                config.get(TimeSettings.KEEP_INACTIVE_PLAYERS), logger, locale)
-                        );
-                    }
-                } catch (DBOpException e) {
-                    errorHandler.log(L.ERROR, this.getClass(), e);
-                    cancel();
-                }
-            }
-        }).runTaskTimerAsynchronously(
-                TimeAmount.toTicks(secondsDelay, TimeUnit.SECONDS),
-                TimeAmount.toTicks(config.get(TimeSettings.CLEAN_DATABASE_PERIOD), TimeUnit.MILLISECONDS)
-        );
-    }
-
     Patch[] patches() {
         return new Patch[]{
                 new Version10Patch(),
@@ -197,7 +170,7 @@ public abstract class SQLDB extends AbstractDatabase {
             runnableFactory.create("Database Index Creation", new AbsRunnable() {
                 @Override
                 public void run() {
-                    executeTransaction(new CreateIndexTransaction(getType()));
+                    executeTransaction(new CreateIndexTransaction());
                 }
             }).runTaskLaterAsynchronously(TimeAmount.toTicks(1, TimeUnit.MINUTES));
         } catch (Exception ignore) {
@@ -216,9 +189,6 @@ public abstract class SQLDB extends AbstractDatabase {
     public void close() {
         setState(State.CLOSED);
         closeTransactionExecutor(transactionExecutor);
-        if (dbCleanTask != null) {
-            dbCleanTask.cancel();
-        }
     }
 
     public abstract Connection getConnection() throws SQLException;

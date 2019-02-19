@@ -24,7 +24,6 @@ import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.*;
 import com.djrapitops.plan.data.store.mutators.health.HealthInformation;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -67,7 +66,6 @@ public class AnalysisContainer extends DynamicDataContainer {
     private final Locale locale;
     private final PlanConfig config;
     private final Theme theme;
-    private final DBSystem dbSystem;
     private final ServerProperties serverProperties;
     private final Formatters formatters;
     private final Graphs graphs;
@@ -81,7 +79,6 @@ public class AnalysisContainer extends DynamicDataContainer {
             Locale locale,
             PlanConfig config,
             Theme theme,
-            DBSystem dbSystem,
             ServerProperties serverProperties,
             Formatters formatters,
             Graphs graphs,
@@ -94,7 +91,6 @@ public class AnalysisContainer extends DynamicDataContainer {
         this.locale = locale;
         this.config = config;
         this.theme = theme;
-        this.dbSystem = dbSystem;
         this.serverProperties = serverProperties;
         this.formatters = formatters;
         this.graphs = graphs;
@@ -508,7 +504,6 @@ public class AnalysisContainer extends DynamicDataContainer {
         private final PlanConfig config;
         private final Locale locale;
         private final Theme theme;
-        private final DBSystem dbSystem;
         private final ServerProperties serverProperties;
         private final Formatters formatters;
         private final Graphs graphs;
@@ -522,7 +517,6 @@ public class AnalysisContainer extends DynamicDataContainer {
                 PlanConfig config,
                 Locale locale,
                 Theme theme,
-                DBSystem dbSystem,
                 ServerProperties serverProperties,
                 Formatters formatters,
                 Graphs graphs,
@@ -534,7 +528,6 @@ public class AnalysisContainer extends DynamicDataContainer {
             this.config = config;
             this.locale = locale;
             this.theme = theme;
-            this.dbSystem = dbSystem;
             this.serverProperties = serverProperties;
             this.formatters = formatters;
             this.graphs = graphs;
@@ -550,7 +543,6 @@ public class AnalysisContainer extends DynamicDataContainer {
                     locale,
                     config,
                     theme,
-                    dbSystem,
                     serverProperties,
                     formatters,
                     graphs,

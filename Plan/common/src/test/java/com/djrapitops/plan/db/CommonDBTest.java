@@ -900,7 +900,6 @@ public abstract class CommonDBTest {
                 system.getConfigSystem().getConfig(),
                 system.getLocaleSystem().getLocale(),
                 system.getConfigSystem().getTheme(),
-                dbSystem,
                 system.getServerInfo().getServerProperties(),
                 system.getHtmlUtilities().getFormatters(),
                 system.getHtmlUtilities().getGraphs(),
@@ -991,7 +990,7 @@ public abstract class CommonDBTest {
 
     @Test
     public void indexCreationWorksWithoutErrors() {
-        db.executeTransaction(new CreateIndexTransaction(db.getType()));
+        db.executeTransaction(new CreateIndexTransaction());
     }
 
     @Test

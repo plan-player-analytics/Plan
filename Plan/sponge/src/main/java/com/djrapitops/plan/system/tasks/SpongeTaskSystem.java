@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.ShutdownHook;
+import com.djrapitops.plan.db.tasks.DBCleanTask;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.tasks.server.BootAnalysisTask;
@@ -39,6 +40,7 @@ public class SpongeTaskSystem extends ServerTaskSystem {
     private final ShutdownHook shutdownHook;
     private final PingCountTimerSponge pingCountTimer;
     private final ConfigStoreTask configStoreTask;
+    private final DBCleanTask dbCleanTask;
 
     @Inject
     public SpongeTaskSystem(
@@ -52,7 +54,8 @@ public class SpongeTaskSystem extends ServerTaskSystem {
             PingCountTimerSponge pingCountTimer,
             LogsFolderCleanTask logsFolderCleanTask,
             PlayersPageRefreshTask playersPageRefreshTask,
-            ConfigStoreTask configStoreTask
+            ConfigStoreTask configStoreTask,
+            DBCleanTask dbCleanTask
     ) {
         super(
                 runnableFactory,
@@ -66,6 +69,7 @@ public class SpongeTaskSystem extends ServerTaskSystem {
         this.shutdownHook = shutdownHook;
         this.pingCountTimer = pingCountTimer;
         this.configStoreTask = configStoreTask;
+        this.dbCleanTask = dbCleanTask;
     }
 
     @Override
@@ -80,6 +84,11 @@ public class SpongeTaskSystem extends ServerTaskSystem {
         // +40 ticks / 2 seconds so that update check task runs first.
         long storeDelay = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS) + 40;
         registerTask("Config Store Task", configStoreTask).runTaskLaterAsynchronously(storeDelay);
+
+        registerTask("DB Clean Task", dbCleanTask).runTaskTimerAsynchronously(
+                TimeAmount.toTicks(20, TimeUnit.SECONDS),
+                TimeAmount.toTicks(config.get(TimeSettings.CLEAN_DATABASE_PERIOD), TimeUnit.MILLISECONDS)
+        );
 
         shutdownHook.register();
     }

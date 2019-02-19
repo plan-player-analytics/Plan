@@ -29,12 +29,6 @@ import org.apache.commons.text.TextStringBuilder;
  */
 public class CreateIndexTransaction extends Transaction {
 
-    private final DBType dbType;
-
-    public CreateIndexTransaction(DBType dbType) {
-        this.dbType = dbType;
-    }
-
     @Override
     protected void performOperations() {
         createIndex(UsersTable.TABLE_NAME, "plan_users_uuid_index",
