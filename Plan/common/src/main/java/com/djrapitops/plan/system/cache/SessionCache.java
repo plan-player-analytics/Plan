@@ -38,6 +38,7 @@ public class SessionCache {
 
     @Inject
     public SessionCache() {
+        // Dagger requires empty inject constructor
     }
 
     public static Map<UUID, Session> getActiveSessions() {
