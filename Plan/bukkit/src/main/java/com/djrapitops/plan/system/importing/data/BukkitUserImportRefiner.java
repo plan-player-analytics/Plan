@@ -157,7 +157,7 @@ public class BukkitUserImportRefiner {
     private void addFoundUUIDs(Map<String, String> foundUUIDs) {
         List<UserImportData> found = new ArrayList<>();
 
-        missingUUIDs.entrySet().parallelStream().forEach((entry) -> {
+        missingUUIDs.entrySet().parallelStream().forEach(entry -> {
             UserImportData importer = entry.getKey();
             String name = entry.getValue();
 

@@ -75,7 +75,6 @@ public class H2DB extends SQLDB {
             throw new DBInitException(e.getMessage(), e);
         }
 
-        // TODO Figure out if execute("SET REFERENTIAL_INTEGRITY FALSE"); is required
         startConnectionPingTask();
     }
 

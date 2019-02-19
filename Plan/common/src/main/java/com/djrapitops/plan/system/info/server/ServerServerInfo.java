@@ -33,6 +33,7 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Manages the Server UUID for Bukkit servers.
@@ -120,7 +121,7 @@ public class ServerServerInfo extends ServerInfo {
         return registerServer(generateNewUUID());
     }
 
-    private Server registerServer(UUID serverUUID) throws Exception {
+    private Server registerServer(UUID serverUUID) throws ExecutionException, InterruptedException, IOException {
         Database db = dbSystem.getDatabase();
 
         // Create the server object
