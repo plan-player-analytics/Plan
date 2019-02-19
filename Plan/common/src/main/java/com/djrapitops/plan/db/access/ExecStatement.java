@@ -64,16 +64,6 @@ public abstract class ExecStatement implements Executable {
         }
     }
 
-    @Deprecated
-    public void executeBatch(PreparedStatement statement) throws SQLException {
-        try {
-            prepare(statement);
-            statement.executeBatch();
-        } finally {
-            statement.close();
-        }
-    }
-
     public abstract void prepare(PreparedStatement statement) throws SQLException;
 
     public String getSql() {
