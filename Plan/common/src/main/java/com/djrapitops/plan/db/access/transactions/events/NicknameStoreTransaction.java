@@ -21,6 +21,7 @@ import com.djrapitops.plan.db.access.queries.DataStoreQueries;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 
 import java.util.UUID;
+import java.util.function.BiPredicate;
 
 /**
  * Transaction to store player's nickname information in the database.
@@ -31,10 +32,17 @@ public class NicknameStoreTransaction extends Transaction {
 
     private final UUID playerUUID;
     private final Nickname nickname;
+    private final BiPredicate<UUID, String> isNicknameCachedCheck;
 
-    public NicknameStoreTransaction(UUID playerUUID, Nickname nickname) {
+    public NicknameStoreTransaction(UUID playerUUID, Nickname nickname, BiPredicate<UUID, String> isNicknameCachedCheck) {
         this.playerUUID = playerUUID;
         this.nickname = nickname;
+        this.isNicknameCachedCheck = isNicknameCachedCheck;
+    }
+
+    @Override
+    protected boolean shouldBeExecuted() {
+        return !isNicknameCachedCheck.test(playerUUID, nickname.getName());
     }
 
     @Override

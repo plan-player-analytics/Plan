@@ -167,11 +167,10 @@ public class PlayerOnlineListener implements Listener {
         sessionCache.cacheSession(uuid, new Session(uuid, serverUUID, time, world, gm))
                 .ifPresent(previousSession -> database.executeTransaction(new SessionEndTransaction(previousSession)));
 
-        if (!displayName.equals(nicknameCache.getDisplayName(uuid))) {
-            database.executeTransaction(
-                    new NicknameStoreTransaction(uuid, new Nickname(displayName, time, serverUUID))
-            );
-        }
+        database.executeTransaction(new NicknameStoreTransaction(
+                uuid, new Nickname(displayName, time, serverUUID),
+                (playerUUID, name) -> name.equals(nicknameCache.getDisplayName(playerUUID))
+        ));
 
         processing.submitNonCritical(processors.info().playerPageUpdateProcessor(uuid));
 

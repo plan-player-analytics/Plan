@@ -142,11 +142,11 @@ public class SpongePlayerListener {
     private void actOnJoinEvent(ClientConnectionEvent.Join event) {
         Player player = event.getTargetEntity();
 
-        UUID playerUUID = player.getUniqueId();
+        UUID uuid = player.getUniqueId();
         UUID serverUUID = serverInfo.getServerUUID();
         long time = System.currentTimeMillis();
 
-        SpongeAFKListener.AFK_TRACKER.performedAction(playerUUID, time);
+        SpongeAFKListener.AFK_TRACKER.performedAction(uuid, time);
 
         String world = player.getWorld().getName();
         Optional<GameMode> gameMode = player.getGameModeData().get(Keys.GAME_MODE);
@@ -163,21 +163,20 @@ public class SpongePlayerListener {
         boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
         if (gatheringGeolocations) {
             database.executeTransaction(
-                    new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
+                    new GeoInfoStoreTransaction(uuid, address, time, geolocationCache::getCountry)
             );
         }
 
-        database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> time, playerName, serverUUID));
-        sessionCache.cacheSession(playerUUID, new Session(playerUUID, serverUUID, time, world, gm))
+        database.executeTransaction(new PlayerServerRegisterTransaction(uuid, () -> time, playerName, serverUUID));
+        sessionCache.cacheSession(uuid, new Session(uuid, serverUUID, time, world, gm))
                 .ifPresent(previousSession -> database.executeTransaction(new SessionEndTransaction(previousSession)));
 
-        if (!displayName.equals(nicknameCache.getDisplayName(playerUUID))) {
-            database.executeTransaction(
-                    new NicknameStoreTransaction(playerUUID, new Nickname(displayName, time, serverUUID))
-            );
-        }
+        database.executeTransaction(new NicknameStoreTransaction(
+                uuid, new Nickname(displayName, time, serverUUID),
+                (playerUUID, name) -> name.equals(nicknameCache.getDisplayName(playerUUID))
+        ));
 
-        processing.submitNonCritical(processors.info().playerPageUpdateProcessor(playerUUID));
+        processing.submitNonCritical(processors.info().playerPageUpdateProcessor(uuid));
     }
 
     @Listener(order = Order.POST)

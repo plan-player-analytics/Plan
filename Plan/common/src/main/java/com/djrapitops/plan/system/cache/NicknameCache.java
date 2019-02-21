@@ -68,18 +68,6 @@ public class NicknameCache implements SubSystem {
         displayNames.clear();
     }
 
-    /**
-     * Used to update PlayerName and DisplayName caches.
-     *
-     * @param uuid        UUID of the player.
-     * @param displayName DisplayName of the player.
-     */
-    public void updateDisplayName(UUID uuid, String displayName) {
-        if (displayName != null) {
-            displayNames.put(uuid, displayName);
-        }
-    }
-
     public void removeDisplayName(UUID uuid) {
         displayNames.remove(uuid);
     }

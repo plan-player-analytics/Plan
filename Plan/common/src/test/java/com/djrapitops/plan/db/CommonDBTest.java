@@ -259,8 +259,8 @@ public abstract class CommonDBTest {
         saveUserOne();
 
         Nickname expected = new Nickname("TestNickname", System.currentTimeMillis(), serverUUID);
-        db.executeTransaction(new NicknameStoreTransaction(playerUUID, expected));
-        db.executeTransaction(new NicknameStoreTransaction(playerUUID, expected));
+        db.executeTransaction(new NicknameStoreTransaction(playerUUID, expected, (uuid, name) -> false /* Not cached */));
+        db.executeTransaction(new NicknameStoreTransaction(playerUUID, expected, (uuid, name) -> true /* Cached */));
         commitTest();
 
         List<Nickname> nicknames = db.query(NicknameQueries.fetchNicknameDataOfPlayer(playerUUID));
@@ -472,7 +472,7 @@ public abstract class CommonDBTest {
         session.setPlayerKills(createKills());
 
         execute(DataStoreQueries.storeSession(session));
-        db.executeTransaction(new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID)));
+        db.executeTransaction(new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID), (uuid, name) -> false /* Not cached */));
         saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L, "3"));
 
         assertTrue(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
@@ -522,7 +522,7 @@ public abstract class CommonDBTest {
 
         execute(DataStoreQueries.storeSession(session));
         db.executeTransaction(
-                new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID))
+                new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID), (uuid, name) -> false /* Not cached */)
         );
         saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L,
                 new SHA256Hash("1.2.3.4").create()));
@@ -953,8 +953,8 @@ public abstract class CommonDBTest {
         db.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 1L, "Not random"));
 
         String nickname = "2" + RandomData.randomString(10);
-        db.executeTransaction(new NicknameStoreTransaction(uuid, new Nickname(nickname, System.currentTimeMillis(), serverUUID)));
-        db.executeTransaction(new NicknameStoreTransaction(playerUUID, new Nickname("No nick", System.currentTimeMillis(), serverUUID)));
+        db.executeTransaction(new NicknameStoreTransaction(uuid, new Nickname(nickname, System.currentTimeMillis(), serverUUID), (u, name) -> false /* Not cached */));
+        db.executeTransaction(new NicknameStoreTransaction(playerUUID, new Nickname("No nick", System.currentTimeMillis(), serverUUID), (u, name) -> true /* Cached */));
 
         String searchFor = "2";
 
