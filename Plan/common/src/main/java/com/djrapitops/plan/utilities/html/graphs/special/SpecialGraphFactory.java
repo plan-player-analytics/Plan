@@ -23,6 +23,7 @@ import com.djrapitops.plan.utilities.html.graphs.HighChart;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Factory class for different objects representing special HTML graphs.
@@ -39,6 +40,10 @@ public class SpecialGraphFactory {
 
     public HighChart punchCard(Collection<Session> sessions) {
         return new PunchCard(sessions);
+    }
+
+    public HighChart worldMap(Map<String, Integer> geolocationCounts) {
+        return new WorldMap(geolocationCounts);
     }
 
     public HighChart worldMap(PlayersMutator mutator) {

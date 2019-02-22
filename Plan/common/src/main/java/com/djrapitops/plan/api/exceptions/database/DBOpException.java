@@ -23,7 +23,7 @@ import java.sql.SQLException;
  *
  * @author Rsl1122
  */
-public class DBOpException extends RuntimeException {
+public class DBOpException extends IllegalStateException {
 
     public DBOpException(String message) {
         super(message);

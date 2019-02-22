@@ -24,6 +24,8 @@ import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 import com.djrapitops.plan.data.store.mutators.GeoInfoMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -101,6 +103,12 @@ public class QInspectCommand extends CommandNode {
             return;
         }
 
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState != Database.State.OPEN) {
+            sender.sendMessage(locale.getString(CommandLang.FAIL_DATABASE_NOT_OPEN, dbState.name()));
+            return;
+        }
+
         runInspectTask(playerName, sender);
     }
 
@@ -113,7 +121,7 @@ public class QInspectCommand extends CommandNode {
                     return;
                 }
 
-                PlayerContainer container = dbSystem.getDatabase().fetch().getPlayerContainer(uuid);
+                PlayerContainer container = dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(uuid));
                 if (!container.getValue(PlayerKeys.REGISTERED).isPresent()) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_KNOWN));
                     return;

@@ -17,7 +17,10 @@
 package com.djrapitops.plan.system.listeners.sponge;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.WorldAliasSettings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -38,14 +41,20 @@ import java.util.UUID;
 public class SpongeGMChangeListener {
 
     private final WorldAliasSettings worldAliasSettings;
+    private final ServerInfo serverInfo;
+    private final DBSystem dbSystem;
     private ErrorHandler errorHandler;
 
     @Inject
     public SpongeGMChangeListener(
             WorldAliasSettings worldAliasSettings,
+            ServerInfo serverInfo,
+            DBSystem dbSystem,
             ErrorHandler errorHandler
     ) {
         this.worldAliasSettings = worldAliasSettings;
+        this.serverInfo = serverInfo;
+        this.dbSystem = dbSystem;
         this.errorHandler = errorHandler;
     }
 
@@ -70,6 +79,7 @@ public class SpongeGMChangeListener {
         String gameMode = event.getGameMode().getName().toUpperCase();
         String worldName = player.getWorld().getName();
 
+        dbSystem.getDatabase().executeTransaction(new WorldNameStoreTransaction(serverInfo.getServerUUID(), worldName));
         worldAliasSettings.addWorld(worldName);
 
         Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);

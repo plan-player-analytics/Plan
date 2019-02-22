@@ -100,7 +100,7 @@ public class HtmlTables {
      * Create a new Nickname table.
      *
      * @param nicknames   List of {@link Nickname}s to be added to the table.
-     * @param serverNames Names of the servers, for the server column. // TODO Move Server names to Nickname object.
+     * @param serverNames Names of the servers, for the server column.
      * @return a new {@link NicknameTable}.
      */
     public TableContainer nicknameTable(List<Nickname> nicknames, Map<UUID, String> serverNames) {
@@ -134,7 +134,7 @@ public class HtmlTables {
     /**
      * Create a new Session table for a server.
      *
-     * @param playerNames Map of UUID - Name pairs of the players. // TODO Move Player names to Session object.
+     * @param playerNames Map of UUID - Name pairs of the players.
      * @param sessions    List of {@link Session}s that occurred on the server.
      * @return a new {@link ServerSessionTable}.
      */

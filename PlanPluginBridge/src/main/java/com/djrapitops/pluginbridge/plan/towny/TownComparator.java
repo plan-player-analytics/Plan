@@ -28,7 +28,7 @@ import java.util.Comparator;
  * Note: this comparator imposes orderings that are inconsistent with equals.
  *
  * @author Rsl1122
- * @since 3.1.0
+
  * @see TownyHook
  */
 public class TownComparator implements Comparator<Town> {

@@ -182,4 +182,7 @@ public class WorldTimes {
         }
     }
 
+    public boolean contains(String worldName) {
+        return times.containsKey(worldName);
+    }
 }

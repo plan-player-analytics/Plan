@@ -18,8 +18,9 @@ package com.djrapitops.plan.system.cache;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.system.database.DBSystem;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -30,26 +31,26 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Singleton
 public class SessionCache {
 
-    private static final Map<UUID, Session> activeSessions = new HashMap<>();
+    private static final Map<UUID, Session> ACTIVE_SESSIONS = new HashMap<>();
 
-    protected final DBSystem dbSystem;
-
-    public SessionCache(DBSystem dbSystem) {
-        this.dbSystem = dbSystem;
+    @Inject
+    public SessionCache() {
+        // Dagger requires empty inject constructor
     }
 
     public static Map<UUID, Session> getActiveSessions() {
-        return activeSessions;
+        return ACTIVE_SESSIONS;
     }
 
     public static void clear() {
-        activeSessions.clear();
+        ACTIVE_SESSIONS.clear();
     }
 
     public static void refreshActiveSessionsState() {
-        for (Session session : activeSessions.values()) {
+        for (Session session : ACTIVE_SESSIONS.values()) {
             session.getUnsafe(SessionKeys.WORLD_TIMES).updateState(System.currentTimeMillis());
         }
     }
@@ -57,45 +58,46 @@ public class SessionCache {
     /**
      * Used to get the Session of the player in the sessionCache.
      *
-     * @param uuid UUID of the player.
+     * @param playerUUID UUID of the player.
      * @return Optional with the session inside it if found.
      */
-    public static Optional<Session> getCachedSession(UUID uuid) {
-        return Optional.ofNullable(activeSessions.get(uuid));
+    public static Optional<Session> getCachedSession(UUID playerUUID) {
+        return Optional.ofNullable(ACTIVE_SESSIONS.get(playerUUID));
     }
 
-    public void cacheSession(UUID uuid, Session session) {
-        if (getCachedSession(uuid).isPresent()) {
-            endSession(uuid, System.currentTimeMillis());
+    /**
+     * Cache a new session.
+     *
+     * @param playerUUID UUID of the player
+     * @param session    Session to cache.
+     * @return Optional: previous session. Recipients of this object should decide if it needs to be saved.
+     */
+    public Optional<Session> cacheSession(UUID playerUUID, Session session) {
+        if (getCachedSession(playerUUID).isPresent()) {
+            return endSession(playerUUID, session.getUnsafe(SessionKeys.START));
         }
-        activeSessions.put(uuid, session);
+        ACTIVE_SESSIONS.put(playerUUID, session);
+        return Optional.empty();
     }
 
     /**
      * End a session and save it to database.
      *
-     * @param uuid UUID of the player.
-     * @param time Time the session ended.
-     * @throws com.djrapitops.plan.api.exceptions.database.DBOpException If saving failed.
+     * @param playerUUID UUID of the player.
+     * @param time       Time the session ended.
+     * @return Optional: ended session. Recipients of this object should decide if it needs to be saved.
      */
-    public void endSession(UUID uuid, long time) {
-        Session session = activeSessions.get(uuid);
-        if (session == null) {
-            return;
+    public Optional<Session> endSession(UUID playerUUID, long time) {
+        Session session = ACTIVE_SESSIONS.get(playerUUID);
+        if (session == null || session.getUnsafe(SessionKeys.START) > time) {
+            return Optional.empty();
         }
-        if (session.getUnsafe(SessionKeys.START) > time) {
-            return;
-        }
-        try {
-            session.endSession(time);
-            // Might throw a DBOpException
-            dbSystem.getDatabase().save().session(uuid, session);
-        } finally {
-            removeSessionFromCache(uuid);
-        }
+        removeSessionFromCache(playerUUID);
+        session.endSession(time);
+        return Optional.of(session);
     }
 
-    protected void removeSessionFromCache(UUID uuid) {
-        activeSessions.remove(uuid);
+    protected void removeSessionFromCache(UUID playerUUID) {
+        ACTIVE_SESSIONS.remove(playerUUID);
     }
 }

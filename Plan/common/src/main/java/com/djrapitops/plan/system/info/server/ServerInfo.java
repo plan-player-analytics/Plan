@@ -63,4 +63,8 @@ public abstract class ServerInfo implements SubSystem {
     public void disable() {
 
     }
+
+    protected UUID generateNewUUID() {
+        return UUID.randomUUID();
+    }
 }

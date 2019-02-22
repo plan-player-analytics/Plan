@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.*;
@@ -30,8 +31,10 @@ import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * ConnectionSystem for proxy servers.
@@ -70,7 +73,9 @@ public class ProxyConnectionSystem extends ConnectionSystem {
     private void refreshServerMap() {
         if (latestServerMapRefresh < System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(15L)) {
             try {
-                bukkitServers = dbSystem.getDatabase().fetch().getBukkitServers();
+                dataServers = dbSystem.getDatabase().query(ServerQueries.fetchPlanServerInformation()).entrySet().stream()
+                        .filter(entry -> entry.getValue().isNotProxy())
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
                 latestServerMapRefresh = System.currentTimeMillis();
             } catch (DBOpException e) {
                 errorHandler.log(L.ERROR, this.getClass(), e);
@@ -89,7 +94,7 @@ public class ProxyConnectionSystem extends ConnectionSystem {
             return serverInfo.getServer();
         } else if (infoRequest instanceof GenerateAnalysisPageRequest) {
             UUID serverUUID = ((GenerateAnalysisPageRequest) infoRequest).getServerUUID();
-            server = bukkitServers.get(serverUUID);
+            server = dataServers.get(serverUUID);
         }
         if (server == null) {
             throw new NoServersException("Proper server is not available to process request: " + infoRequest.getClass().getSimpleName());
@@ -100,10 +105,10 @@ public class ProxyConnectionSystem extends ConnectionSystem {
     @Override
     public void sendWideInfoRequest(WideRequest infoRequest) throws NoServersException {
         refreshServerMap();
-        if (bukkitServers.isEmpty()) {
+        if (dataServers.isEmpty()) {
             throw new NoServersException("No Servers available to make wide-request: " + infoRequest.getClass().getSimpleName());
         }
-        for (Server server : bukkitServers.values()) {
+        for (Server server : dataServers.values()) {
             webExceptionLogger.logIfOccurs(this.getClass(), () -> sendInfoRequest(infoRequest, server));
         }
         // Quick hack for Bungee Plugins Tab

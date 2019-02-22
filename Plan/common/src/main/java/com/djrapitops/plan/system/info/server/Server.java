@@ -55,6 +55,10 @@ public class Server implements Comparable<Server> {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getWebAddress() {
         return webAddress;
     }
@@ -72,8 +76,7 @@ public class Server implements Comparable<Server> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Server that = (Server) o;
-        return id == that.id &&
-                Objects.equals(uuid, that.uuid) &&
+        return Objects.equals(uuid, that.uuid) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(webAddress, that.webAddress);
     }
@@ -97,5 +100,17 @@ public class Server implements Comparable<Server> {
     @Override
     public int compareTo(Server other) {
         return Integer.compare(this.id, other.id);
+    }
+
+    public boolean isProxy() {
+        return "BungeeCord".equals(name);
+    }
+
+    public boolean isNotProxy() {
+        return !isProxy();
+    }
+
+    public void setMaxPlayers(int maxPlayers) {
+        this.maxPlayers = maxPlayers;
     }
 }

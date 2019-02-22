@@ -16,66 +16,56 @@
  */
 package com.djrapitops.plan.data.store.containers;
 
-import com.djrapitops.plan.data.store.CachingSupplier;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 /**
- * Abstract representation of an object that holds the Values for different Keys.
+ * Interface for an object that can store arbitrary data referenced via {@link Key} objects.
  * <p>
- * The methods in this object are used for placing and fetching the data from the container.
- * Methods to use depend on your use case.
+ * Implementations should mainly be concerned on how the data given to it is stored.
+ * Retrieval has some details that should be followed.
  *
  * @author Rsl1122
  */
-public class DataContainer {
-
-    private final Map<Key, Supplier> map;
-    private long timeToLive;
-
-    public DataContainer() {
-        this(TimeUnit.SECONDS.toMillis(30L));
-    }
-
-    public DataContainer(long timeToLive) {
-        this.timeToLive = timeToLive;
-        map = new HashMap<>();
-    }
+public interface DataContainer {
 
     /**
      * Place your data inside the container.
+     * <p>
+     * What the container does with the object depends on the implementation.
      *
      * @param key Key of type T that identifies the data and will be used later when the data needs to be fetched.
      * @param obj object to store
      * @param <T> Type of the object
      */
-    public <T> void putRawData(Key<T> key, T obj) {
-        putSupplier(key, () -> obj);
-    }
+    <T> void putRawData(Key<T> key, T obj);
 
-    public <T> void putSupplier(Key<T> key, Supplier<T> supplier) {
-        if (supplier == null) {
-            return;
-        }
-        map.put(key, supplier);
-    }
+    /**
+     * Place a data supplier inside the container.
+     * <p>
+     * What the container does with the supplier depends on the implementation.
+     *
+     * @param key      Key of type T that identifies the data and will be used later when the data needs to be fetched.
+     * @param supplier Supplier to store
+     * @param <T>      Type of the object
+     */
+    <T> void putSupplier(Key<T> key, Supplier<T> supplier);
 
-    public <T> void putCachingSupplier(Key<T> key, Supplier<T> supplier) {
-        if (supplier == null) {
-            return;
-        }
-        map.put(key, new CachingSupplier<>(supplier, timeToLive));
-    }
-
-    public <T> Supplier<T> getSupplier(Key<T> key) {
-        return (Supplier<T>) map.get(key);
-    }
+    /**
+     * Place a caching data supplier inside the container.
+     * <p>
+     * If the supplier is called the value is cached according to the implementation of the container.
+     * What the container does with the supplier depends on the implementation.
+     *
+     * @param key      Key of type T that identifies the data and will be used later when the data needs to be fetched.
+     * @param supplier Supplier to store
+     * @param <T>      Type of the object
+     */
+    <T> void putCachingSupplier(Key<T> key, Supplier<T> supplier);
 
     /**
      * Check if a Value with the given Key has been placed into the container.
@@ -84,65 +74,79 @@ public class DataContainer {
      * @param <T> Type of the object returned by the Value if it is present.
      * @return true if found, false if not.
      */
-    public <T> boolean supports(Key<T> key) {
-        return map.containsKey(key);
-    }
+    <T> boolean supports(Key<T> key);
 
     /**
-     * Get an Optional of the data identified by the Key.
+     * Get an Optional of the Value identified by the Key.
      * <p>
-     * Since Value is a functional interface, its method may call blocking methods via Value implementations,
-     * It is therefore recommended to not call this method on the server thread.
-     * <p>
-     * It is recommended to check if the Optional is present as null values returned by plugins will be empty.
+     * It is recommended to check if the Optional is present as null values will be empty.
      *
      * @param key Key that identifies the Value
      * @param <T> Type of the object returned by Value
      * @return Optional of the object if the key is registered and key matches the type of the object. Otherwise empty.
      */
-    public <T> Optional<T> getValue(Key<T> key) {
-        Supplier<T> supplier = getSupplier(key);
-        if (supplier == null) {
-            return Optional.empty();
-        }
-        try {
-            return Optional.ofNullable(supplier.get());
-        } catch (ClassCastException e) {
-            return Optional.empty();
-        }
-    }
+    <T> Optional<T> getValue(Key<T> key);
 
-    public <T> T getUnsafe(Key<T> key) {
-        Supplier supplier = map.get(key);
-        if (supplier == null) {
-            throw new IllegalArgumentException("Unsupported Key: " + key.getKeyName());
-        }
-        return (T) supplier.get();
-    }
+    /**
+     * Get data identified by the Key, or throw an exception.
+     * <p>
+     * It is recommended to use {@link DataContainer#supports(Key)} before using this method.
+     *
+     * @param key Key that identifies the Value
+     * @param <T> Type of the object returned by Value
+     * @return the value
+     * @throws IllegalArgumentException If the key is not supported.
+     */
+    <T> T getUnsafe(Key<T> key);
 
-    public <T> String getFormatted(Key<T> key, Formatter<Optional<T>> formatter) {
+    /**
+     * Get formatted Value identified by the Key.
+     * <p>
+     *
+     * @param key       Key that identifies the Value
+     * @param formatter Formatter for the Optional returned by {@link DataContainer#getValue(Key)}
+     * @param <T>       Type of the object returned by Value
+     * @return Optional of the object if the key is registered and key matches the type of the object. Otherwise empty.
+     */
+    default <T> String getFormatted(Key<T> key, Formatter<Optional<T>> formatter) {
         Optional<T> value = getValue(key);
         return formatter.apply(value);
     }
 
-    public <T> String getFormattedUnsafe(Key<T> key, Formatter<T> formatter) {
+    /**
+     * Get formatted Value identified by the Key, or throw an exception.
+     * <p>
+     * It is recommended to use {@link DataContainer#supports(Key)} before using this method.
+     *
+     * @param key       Key that identifies the Value
+     * @param formatter Formatter for the value
+     * @param <T>       Type of the object returned by Value
+     * @return the value
+     * @throws IllegalArgumentException If the key is not supported.
+     */
+    default <T> String getFormattedUnsafe(Key<T> key, Formatter<T> formatter) {
         T value = getUnsafe(key);
         return formatter.apply(value);
     }
 
-    public void putAll(Map<Key, Supplier> toPut) {
-        map.putAll(toPut);
-    }
+    /**
+     * Place all values from given DataContainer into this container.
+     *
+     * @param dataContainer Container with values.
+     */
+    void putAll(DataContainer dataContainer);
 
-    public void putAll(DataContainer dataContainer) {
-        putAll(dataContainer.map);
-    }
+    /**
+     * Clear the container of all data.
+     */
+    void clear();
 
-    public void clear() {
-        map.clear();
-    }
-
-    public Map<Key, Supplier> getMap() {
-        return map;
-    }
+    /**
+     * Return a Key - Value Map of the data in the container.
+     * <p>
+     * This method may call blocking methods if underlying implementation uses the given Suppliers.
+     *
+     * @return Map: Key - Object
+     */
+    Map<Key, Object> getMap();
 }

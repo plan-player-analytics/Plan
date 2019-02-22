@@ -29,7 +29,7 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
  * A Class responsible for hooking to Essentials.
  *
  * @author Rsl1122
- * @since 3.1.0
+
  */
 @Singleton
 public class EssentialsHook extends Hook {

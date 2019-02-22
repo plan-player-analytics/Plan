@@ -81,4 +81,17 @@ public class Key<T> {
     public int hashCode() {
         return Objects.hash(type, keyName);
     }
+
+    /**
+     * Cast an object to the type of the key.
+     *
+     * @param object Object to cast.
+     * @return The object with the type of T.
+     */
+    public T typeCast(Object object) {
+        // Since Type can have a List<Subtype>, Class can not be obtained in order to use Class while casting.
+        // This could be done since Google Gson does it, but I don't know how they do it since
+        // the implementation is hidden.
+        return (T) object;
+    }
 }

@@ -16,8 +16,11 @@
  */
 package com.djrapitops.plan.system.listeners.sponge;
 
-import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.player.PlayerProcessors;
+import com.djrapitops.plan.data.store.objects.Nickname;
+import com.djrapitops.plan.db.access.transactions.events.NicknameStoreTransaction;
+import com.djrapitops.plan.system.cache.NicknameCache;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.entity.living.player.Player;
@@ -36,18 +39,21 @@ import java.util.UUID;
  */
 public class SpongeChatListener {
 
-    private final PlayerProcessors processorFactory;
-    private final Processing processing;
+    private final ServerInfo serverInfo;
+    private final DBSystem dbSystem;
+    private final NicknameCache nicknameCache;
     private ErrorHandler errorHandler;
 
     @Inject
     public SpongeChatListener(
-            PlayerProcessors processorFactory,
-            Processing processing,
+            ServerInfo serverInfo,
+            DBSystem dbSystem,
+            NicknameCache nicknameCache,
             ErrorHandler errorHandler
     ) {
-        this.processorFactory = processorFactory;
-        this.processing = processing;
+        this.serverInfo = serverInfo;
+        this.dbSystem = dbSystem;
+        this.nicknameCache = nicknameCache;
         this.errorHandler = errorHandler;
     }
 
@@ -65,10 +71,13 @@ public class SpongeChatListener {
     }
 
     private void actOnChatEvent(@First Player player) {
+        long time = System.currentTimeMillis();
         UUID uuid = player.getUniqueId();
-        String name = player.getName();
         String displayName = player.getDisplayNameData().displayName().get().toPlain();
-        processing.submit(processorFactory.nameProcessor(uuid, name, displayName));
-    }
 
+        dbSystem.getDatabase().executeTransaction(new NicknameStoreTransaction(
+                uuid, new Nickname(displayName, time, serverInfo.getServerUUID()),
+                (playerUUID, name) -> name.equals(nicknameCache.getDisplayName(playerUUID))
+        ));
+    }
 }

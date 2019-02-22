@@ -16,8 +16,11 @@
  */
 package com.djrapitops.plan.command.commands.webuser;
 
+import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.objects.WebUserQueries;
+import com.djrapitops.plan.db.access.transactions.commands.RemoveWebUserTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
@@ -34,6 +37,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * Subcommand for deleting a WebUser.
@@ -68,6 +72,12 @@ public class WebDeleteCommand extends CommandNode {
 
     @Override
     public void onCommand(Sender sender, String commandLabel, String[] args) {
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState != Database.State.OPEN) {
+            sender.sendMessage(locale.getString(CommandLang.FAIL_DATABASE_NOT_OPEN, dbState.name()));
+            return;
+        }
+
         Verify.isTrue(args.length >= 1,
                 () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments()))));
 
@@ -76,11 +86,12 @@ public class WebDeleteCommand extends CommandNode {
         processing.submitNonCritical(() -> {
             try {
                 Database db = dbSystem.getDatabase();
-                if (!db.check().doesWebUserExists(user)) {
+                Optional<WebUser> found = db.query(WebUserQueries.fetchWebUser(user));
+                if (!found.isPresent()) {
                     sender.sendMessage("§c[Plan] User Doesn't exist.");
                     return;
                 }
-                db.remove().webUser(user);
+                db.executeTransaction(new RemoveWebUserTransaction(user));
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (Exception e) {
                 errorHandler.log(L.ERROR, this.getClass(), e);

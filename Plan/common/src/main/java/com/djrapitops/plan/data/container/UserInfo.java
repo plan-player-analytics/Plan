@@ -20,46 +20,39 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Used for storing information of players after it has been fetched.
+ * Represents user information stored in plan_user_info.
+ * <p>
+ * Unlike {@link BaseUser} one instance is stored per server for a single player.
+ * Proxy servers are an exception, and UserInfo is not stored for them.
  *
  * @author Rsl1122
  */
 public class UserInfo {
 
-    private final UUID uuid;
-    private String name;
+    private final UUID playerUUID;
+    private final UUID serverUUID;
     private long registered;
-    private long lastSeen;
     private boolean banned;
     private boolean opped;
 
-    public UserInfo(UUID uuid, String name, long registered, boolean opped, boolean banned) {
-        this.uuid = uuid;
-        this.name = name;
+    public UserInfo(UUID playerUUID, UUID serverUUID, long registered, boolean opped, boolean banned) {
+        this.playerUUID = playerUUID;
+        this.serverUUID = serverUUID;
         this.registered = registered;
         this.opped = opped;
         this.banned = banned;
-        lastSeen = 0L;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public UUID getPlayerUuid() {
+        return playerUUID;
     }
 
-    public String getName() {
-        return name;
+    public UUID getServerUUID() {
+        return serverUUID;
     }
 
     public long getRegistered() {
         return registered;
-    }
-
-    public long getLastSeen() {
-        return lastSeen;
-    }
-
-    public void setLastSeen(long lastSeen) {
-        this.lastSeen = lastSeen;
     }
 
     public boolean isBanned() {
@@ -73,28 +66,26 @@ public class UserInfo {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof UserInfo)) return false;
         UserInfo userInfo = (UserInfo) o;
         return registered == userInfo.registered &&
-                lastSeen == userInfo.lastSeen &&
                 banned == userInfo.banned &&
                 opped == userInfo.opped &&
-                Objects.equals(uuid, userInfo.uuid) &&
-                Objects.equals(name, userInfo.name);
+                playerUUID.equals(userInfo.playerUUID) &&
+                serverUUID.equals(userInfo.serverUUID);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, name, registered, lastSeen, banned, opped);
+        return Objects.hash(playerUUID, serverUUID, registered, banned, opped);
     }
 
     @Override
     public String toString() {
         return "UserInfo{" +
-                "uuid=" + uuid +
-                ", name='" + name + '\'' +
+                "playerUUID=" + playerUUID +
+                ", serverUUID=" + serverUUID +
                 ", registered=" + registered +
-                ", lastSeen=" + lastSeen +
                 ", banned=" + banned +
                 ", opped=" + opped +
                 '}';

@@ -28,6 +28,7 @@ public enum FailReason implements Lang {
     USER_AND_PASS_NOT_SPECIFIED("User and Password not specified"),
     USER_DOES_NOT_EXIST("User does not exist"),
     USER_PASS_MISMATCH("User and Password did not match"),
+    DATABASE_NOT_OPEN("Database is not open, check db status with /plan info"),
     ERROR("Authentication failed due to error");
 
     private final String reason;

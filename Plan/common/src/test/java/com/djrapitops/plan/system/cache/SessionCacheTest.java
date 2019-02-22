@@ -38,7 +38,7 @@ public class SessionCacheTest {
     public void setUp() {
         session = new Session(uuid, serverUUID, 12345L, "World1", "SURVIVAL");
 
-        SessionCache sessionCache = new SessionCache(null);
+        SessionCache sessionCache = new SessionCache();
         sessionCache.cacheSession(uuid, session);
     }
 
@@ -52,17 +52,5 @@ public class SessionCacheTest {
         Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
         assertTrue(cachedSession.isPresent());
         assertEquals(session, cachedSession.get());
-    }
-
-    @Test
-    public void testBungeeReCaching() {
-        SessionCache cache = new ProxyDataCache(null, null);
-        cache.cacheSession(uuid, session);
-        Session expected = new Session(uuid, serverUUID, 0, "", "");
-        cache.cacheSession(uuid, expected);
-
-        Optional<Session> result = SessionCache.getCachedSession(uuid);
-        assertTrue(result.isPresent());
-        assertEquals(expected, result.get());
     }
 }

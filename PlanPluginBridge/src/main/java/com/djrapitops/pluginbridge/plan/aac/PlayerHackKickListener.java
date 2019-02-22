@@ -16,7 +16,7 @@
  */
 package com.djrapitops.pluginbridge.plan.aac;
 
-import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.db.Database;
 import me.konsolas.aac.api.AACAPIProvider;
 import me.konsolas.aac.api.HackType;
 import me.konsolas.aac.api.PlayerViolationCommandEvent;
@@ -31,16 +31,13 @@ import java.util.UUID;
  * Class responsible for listening kick events made by AAC.
  *
  * @author Rsl1122
- * @since 4.1.0
  */
 public class PlayerHackKickListener implements Listener {
 
-    private final HackerTable hackerTable;
-    private final Processing processing;
+    private final Database database;
 
-    PlayerHackKickListener(HackerTable hackerTable, Processing processing) {
-        this.hackerTable = hackerTable;
-        this.processing = processing;
+    PlayerHackKickListener(Database database) {
+        this.database = database;
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -58,6 +55,6 @@ public class PlayerHackKickListener implements Listener {
 
         HackObject hackObject = new HackObject(uuid, time, hackTypeName, violations);
 
-        processing.submitNonCritical(() -> hackerTable.insertHackRow(hackObject));
+        database.executeTransaction(new StoreHackViolationKickTransaction(hackObject));
     }
 }

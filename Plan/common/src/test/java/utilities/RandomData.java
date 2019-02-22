@@ -55,7 +55,7 @@ public class RandomData {
         List<TPS> test = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             int randInt = r.nextInt();
-            long randLong = r.nextLong();
+            long randLong = Math.abs(r.nextLong());
             test.add(new TPS(randLong, randLong, randInt, randLong, randLong, randInt, randInt, randLong));
         }
         return test;
@@ -89,8 +89,7 @@ public class RandomData {
     public static List<UserInfo> randomUserData() {
         List<UserInfo> test = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            UserInfo info = new UserInfo(UUID.randomUUID(), randomString(10), r.nextLong(), r.nextBoolean(), r.nextBoolean());
-            info.setLastSeen(r.nextLong());
+            UserInfo info = new UserInfo(UUID.randomUUID(), UUID.randomUUID(), r.nextLong(), r.nextBoolean(), r.nextBoolean());
             test.add(info);
         }
         return test;

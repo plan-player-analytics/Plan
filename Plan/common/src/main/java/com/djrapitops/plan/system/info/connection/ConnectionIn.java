@@ -18,7 +18,8 @@ package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.request.SetupRequest;
 import com.djrapitops.plan.system.webserver.Request;
@@ -60,7 +61,7 @@ public class ConnectionIn {
         UUID serverUUID = getServerUUID();
 
         try {
-            if (database.check().isServerInDatabase(serverUUID)) {
+            if (database.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID)).isPresent()) {
                 return;
             }
         } catch (DBOpException e) {

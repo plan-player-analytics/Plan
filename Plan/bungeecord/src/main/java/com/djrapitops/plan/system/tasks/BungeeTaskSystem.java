@@ -17,6 +17,7 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.db.tasks.DBCleanTask;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.tasks.bungee.BungeeTPSCountTimer;
@@ -43,6 +44,7 @@ public class BungeeTaskSystem extends TaskSystem {
     private final LogsFolderCleanTask logsFolderCleanTask;
     private final PlayersPageRefreshTask playersPageRefreshTask;
     private final NetworkConfigStoreTask networkConfigStoreTask;
+    private final DBCleanTask dbCleanTask;
 
     @Inject
     public BungeeTaskSystem(
@@ -54,7 +56,8 @@ public class BungeeTaskSystem extends TaskSystem {
             PingCountTimerBungee pingCountTimer,
             LogsFolderCleanTask logsFolderCleanTask,
             PlayersPageRefreshTask playersPageRefreshTask,
-            NetworkConfigStoreTask networkConfigStoreTask
+            NetworkConfigStoreTask networkConfigStoreTask,
+            DBCleanTask dbCleanTask
     ) {
         super(runnableFactory, bungeeTPSCountTimer);
         this.plugin = plugin;
@@ -65,6 +68,7 @@ public class BungeeTaskSystem extends TaskSystem {
         this.logsFolderCleanTask = logsFolderCleanTask;
         this.playersPageRefreshTask = playersPageRefreshTask;
         this.networkConfigStoreTask = networkConfigStoreTask;
+        this.dbCleanTask = dbCleanTask;
     }
 
     @Override
@@ -87,5 +91,10 @@ public class BungeeTaskSystem extends TaskSystem {
         // +40 ticks / 2 seconds so that update check task runs first.
         long storeDelay = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS) + 40;
         registerTask("Config Store Task", networkConfigStoreTask).runTaskLaterAsynchronously(storeDelay);
+
+        registerTask("DB Clean Task", dbCleanTask).runTaskTimerAsynchronously(
+                TimeAmount.toTicks(20, TimeUnit.SECONDS),
+                TimeAmount.toTicks(config.get(TimeSettings.CLEAN_DATABASE_PERIOD), TimeUnit.MILLISECONDS)
+        );
     }
 }

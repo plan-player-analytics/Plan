@@ -17,8 +17,10 @@
 package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
+import com.djrapitops.plan.db.access.transactions.commands.RemovePlayerTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
@@ -94,15 +96,15 @@ public class ManageRemoveCommand extends CommandNode {
     private void runRemoveTask(String playerName, Sender sender, String[] args) {
         processing.submitCritical(() -> {
             try {
-                UUID uuid = uuidUtility.getUUIDOf(playerName);
+                UUID playerUUID = uuidUtility.getUUIDOf(playerName);
 
-                if (uuid == null) {
+                if (playerUUID == null) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_VALID));
                     return;
                 }
 
                 Database db = dbSystem.getDatabase();
-                if (!db.check().isPlayerRegistered(uuid)) {
+                if (!db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID))) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_KNOWN));
                     return;
                 }
@@ -118,7 +120,7 @@ public class ManageRemoveCommand extends CommandNode {
 
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
-                db.remove().player(uuid);
+                db.executeTransaction(new RemovePlayerTransaction(playerUUID));
 
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (DBOpException e) {

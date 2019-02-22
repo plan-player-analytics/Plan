@@ -16,12 +16,14 @@
  */
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.db.DBType;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.SQLiteDB;
+import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
+import com.djrapitops.plan.db.access.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.DBType;
-import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
@@ -41,8 +43,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * This command is used to backup a database to a .db file.
@@ -109,6 +110,10 @@ public class ManageBackupCommand extends CommandNode {
     private void runBackupTask(Sender sender, String[] args, Database database) {
         processing.submitCritical(() -> {
             try {
+                Database.State dbState = database.getState();
+                if (dbState != Database.State.OPEN) {
+                    sender.sendMessage(locale.getString(CommandLang.WARN_DATABASE_NOT_OPEN, dbState.name()));
+                }
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
                 createNewBackup(args[0], database);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
@@ -126,19 +131,22 @@ public class ManageBackupCommand extends CommandNode {
      * @param copyFromDB Database you want to backup.
      */
     private void createNewBackup(String dbName, Database copyFromDB) {
+        Integer userCount = copyFromDB.query(ServerAggregateQueries.baseUserCount());
+        if (userCount <= 0) {
+            return;
+        }
         SQLiteDB backupDB = null;
         try {
             String timeStamp = iso8601LongFormatter.apply(System.currentTimeMillis());
             String fileName = dbName + "-backup-" + timeStamp;
             backupDB = sqliteFactory.usingFileCalled(fileName);
-            Collection<UUID> uuids = copyFromDB.fetch().getSavedUUIDs();
-            if (uuids.isEmpty()) {
-                return;
-            }
             backupDB.init();
-            copyFromDB.backup().backup(backupDB);
-        } catch (DBException e) {
+            backupDB.executeTransaction(new BackupCopyTransaction(copyFromDB, backupDB)).get();
+        } catch (DBOpException | ExecutionException e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
+        } catch (InterruptedException e) {
+            backupDB.close();
+            Thread.currentThread().interrupt();
         } finally {
             if (backupDB != null) {
                 backupDB.close();

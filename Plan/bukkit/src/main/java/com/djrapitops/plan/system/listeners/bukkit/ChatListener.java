@@ -16,8 +16,11 @@
  */
 package com.djrapitops.plan.system.listeners.bukkit;
 
-import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.player.PlayerProcessors;
+import com.djrapitops.plan.data.store.objects.Nickname;
+import com.djrapitops.plan.db.access.transactions.events.NicknameStoreTransaction;
+import com.djrapitops.plan.system.cache.NicknameCache;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.bukkit.entity.Player;
@@ -36,18 +39,21 @@ import java.util.UUID;
  */
 public class ChatListener implements Listener {
 
-    private final PlayerProcessors processorFactory;
-    private final Processing processing;
+    private final ServerInfo serverInfo;
+    private final DBSystem dbSystem;
+    private final NicknameCache nicknameCache;
     private final ErrorHandler errorHandler;
 
     @Inject
     public ChatListener(
-            PlayerProcessors processorFactory,
-            Processing processing,
+            ServerInfo serverInfo,
+            DBSystem dbSystem,
+            NicknameCache nicknameCache,
             ErrorHandler errorHandler
     ) {
-        this.processorFactory = processorFactory;
-        this.processing = processing;
+        this.serverInfo = serverInfo;
+        this.dbSystem = dbSystem;
+        this.nicknameCache = nicknameCache;
         this.errorHandler = errorHandler;
     }
 
@@ -65,10 +71,14 @@ public class ChatListener implements Listener {
     }
 
     private void actOnChatEvent(AsyncPlayerChatEvent event) {
-        Player p = event.getPlayer();
-        UUID uuid = p.getUniqueId();
-        String name = p.getName();
-        String displayName = p.getDisplayName();
-        processing.submit(processorFactory.nameProcessor(uuid, name, displayName));
+        long time = System.currentTimeMillis();
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+        String displayName = player.getDisplayName();
+
+        dbSystem.getDatabase().executeTransaction(new NicknameStoreTransaction(
+                uuid, new Nickname(displayName, time, serverInfo.getServerUUID()),
+                (playerUUID, name) -> name.equals(nicknameCache.getDisplayName(playerUUID))
+        ));
     }
 }

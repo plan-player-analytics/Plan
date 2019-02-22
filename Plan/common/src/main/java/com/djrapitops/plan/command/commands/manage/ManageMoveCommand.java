@@ -16,9 +16,10 @@
  */
 package com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plan.db.DBType;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.DBType;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
@@ -111,7 +112,7 @@ public class ManageMoveCommand extends CommandNode {
             try {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
-                fromDatabase.backup().backup(toDatabase);
+                toDatabase.executeTransaction(new BackupCopyTransaction(fromDatabase, toDatabase)).get();
 
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
 
@@ -119,6 +120,8 @@ public class ManageMoveCommand extends CommandNode {
                 if (movingToCurrentDB) {
                     sender.sendMessage(locale.getString(ManageLang.HOTSWAP_REMINDER, toDatabase.getType().getConfigName()));
                 }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             } catch (Exception e) {
                 errorHandler.log(L.ERROR, this.getClass(), e);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));

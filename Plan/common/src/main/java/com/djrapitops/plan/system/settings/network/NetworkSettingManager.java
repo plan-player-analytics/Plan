@@ -17,9 +17,12 @@
 package com.djrapitops.plan.system.settings.network;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.objects.NewerConfigQuery;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.db.access.transactions.StoreConfigTransaction;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.*;
@@ -39,8 +42,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -166,7 +169,7 @@ public class NetworkSettingManager implements SubSystem {
 
     private void updateConfigFromDBIfUpdated() {
         Database database = dbSystem.getDatabase();
-        List<UUID> serverUUIDs = database.fetch().getServerUUIDs();
+        Set<UUID> serverUUIDs = database.query(ServerQueries.fetchPlanServerInformation()).keySet();
         // Remove the proxy server from the list
         serverUUIDs.remove(serverInfo.getServerUUID());
 
@@ -179,7 +182,7 @@ public class NetworkSettingManager implements SubSystem {
         File configFile = getServerConfigFile(serverUUID);
         long lastModified = configFile.exists() ? configFile.lastModified() : -1;
 
-        Optional<Config> foundConfig = database.fetch().getNewConfig(lastModified, serverUUID);
+        Optional<Config> foundConfig = database.query(new NewerConfigQuery(serverUUID, lastModified));
         if (foundConfig.isPresent()) {
             try {
                 Config writing = foundConfig.get();
@@ -203,7 +206,7 @@ public class NetworkSettingManager implements SubSystem {
 
         try (ConfigReader reader = new ConfigReader(file.toPath())) {
             Config config = reader.read();
-            database.save().saveConfig(serverUUID, config, file.lastModified());
+            database.executeTransaction(new StoreConfigTransaction(serverUUID, config, file.lastModified()));
             String serverName = config.getNode(PluginSettings.SERVER_NAME.getPath()).map(ConfigNode::getString).orElse("Unknown");
             logger.debug("Server config '" + serverName + "' in db now up to date.");
         } catch (IOException e) {

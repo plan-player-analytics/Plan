@@ -18,9 +18,10 @@ package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.db.DBType;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.DBType;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
@@ -101,7 +102,7 @@ public class ManageClearCommand extends CommandNode {
             try {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
-                database.remove().everything();
+                database.executeTransaction(new RemoveEverythingTransaction());
 
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (DBOpException e) {

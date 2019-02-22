@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.system.tasks.server;
 
+import com.djrapitops.plan.db.access.transactions.StoreConfigTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -58,7 +59,7 @@ public class ConfigStoreTask extends AbsRunnable {
     @Override
     public void run() {
         long lastModified = files.getConfigFile().lastModified();
-        dbSystem.getDatabase().save().saveConfig(serverInfo.getServerUUID(), config, lastModified);
+        dbSystem.getDatabase().executeTransaction(new StoreConfigTransaction(serverInfo.getServerUUID(), config, lastModified));
         logger.debug("Config Store Task - Config in db now up to date.");
         cancel();
     }

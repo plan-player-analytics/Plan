@@ -17,6 +17,10 @@
 package com.djrapitops.plan.system.webserver.pages;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
+import com.djrapitops.plan.api.exceptions.connection.ForbiddenException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.cache.PageId;
@@ -36,15 +40,24 @@ import java.util.List;
 @Singleton
 public class PlayersPageHandler implements PageHandler {
 
+    private final DBSystem dbSystem;
     private final ResponseFactory responseFactory;
 
     @Inject
-    public PlayersPageHandler(ResponseFactory responseFactory) {
+    public PlayersPageHandler(
+            DBSystem dbSystem,
+            ResponseFactory responseFactory
+    ) {
+        this.dbSystem = dbSystem;
         this.responseFactory = responseFactory;
     }
 
     @Override
-    public Response getResponse(Request request, List<String> target) {
+    public Response getResponse(Request request, List<String> target) throws WebException {
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState != Database.State.OPEN) {
+            throw new ForbiddenException("Database is " + dbState.name() + " - Please try again later. You can check database status with /plan info");
+        }
         return ResponseCache.loadResponse(PageId.PLAYERS.id(), responseFactory::playersPageResponse);
     }
 

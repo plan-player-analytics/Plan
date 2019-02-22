@@ -16,10 +16,8 @@
  */
 package com.djrapitops.plan.modules;
 
+import com.djrapitops.plan.api.CommonAPI;
 import com.djrapitops.plan.api.PlanAPI;
-import com.djrapitops.plan.api.ProxyAPI;
-import com.djrapitops.plan.system.cache.DataCache;
-import com.djrapitops.plan.system.cache.ProxyDataCache;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.ProxyDBSystem;
 import com.djrapitops.plan.system.importing.EmptyImportSystem;
@@ -42,7 +40,7 @@ import dagger.Module;
 public interface ProxySuperClassBindingModule {
 
     @Binds
-    PlanAPI bindProxyPlanAPI(ProxyAPI proxyAPI);
+    PlanAPI bindProxyPlanAPI(CommonAPI proxyAPI);
 
     @Binds
     DBSystem bindProxyDatabaseSystem(ProxyDBSystem proxyDBSystem);
@@ -55,9 +53,6 @@ public interface ProxySuperClassBindingModule {
 
     @Binds
     ConnectionSystem bindProxyConnectionSystem(ProxyConnectionSystem proxyConnectionSystem);
-
-    @Binds
-    DataCache bindProxyDataCache(ProxyDataCache proxyDataCache);
 
     @Binds
     ImportSystem bindImportSystem(EmptyImportSystem emptyImportSystem);

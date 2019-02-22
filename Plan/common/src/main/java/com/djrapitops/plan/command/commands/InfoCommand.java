@@ -17,6 +17,7 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.locale.Locale;
@@ -70,12 +71,15 @@ public class InfoCommand extends CommandNode {
 
         String updateAvailable = versionCheckSystem.isNewVersionAvailable() ? yes : no;
         String connectedToBungee = connectionSystem.isServerAvailable() ? yes : no;
+
+        Database database = dbSystem.getDatabase();
+
         String[] messages = {
                 locale.getString(CommandLang.HEADER_INFO),
                 "",
                 locale.getString(CommandLang.INFO_VERSION, plugin.getVersion()),
                 locale.getString(CommandLang.INFO_UPDATE, updateAvailable),
-                locale.getString(CommandLang.INFO_DATABASE, dbSystem.getDatabase().getType().getName()),
+                locale.getString(CommandLang.INFO_DATABASE, database.getType().getName() + " (" + database.getState().name() + ")"),
                 locale.getString(CommandLang.INFO_BUNGEE_CONNECTION, connectedToBungee),
                 "",
                 ">"

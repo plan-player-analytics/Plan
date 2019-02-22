@@ -17,9 +17,12 @@
 package com.djrapitops.plan.system.webserver;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
+import com.djrapitops.plan.db.access.transactions.events.SessionEndTransaction;
+import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.system.webserver.cache.PageId;
@@ -76,12 +79,13 @@ public class JSErrorRegressionTest {
 
     private static void savePlayerData() {
         DBSystem dbSystem = bukkitSystem.getDatabaseSystem();
-        SaveOperations save = dbSystem.getDatabase().save();
+        Database database = dbSystem.getDatabase();
         UUID uuid = TestConstants.PLAYER_ONE_UUID;
-        save.registerNewUser(uuid, 1000L, "TestPlayer");
+        database.executeTransaction(new PlayerRegisterTransaction(uuid, () -> 1000L, "name"));
         Session session = new Session(uuid, TestConstants.SERVER_UUID, 1000L, "world", "SURVIVAL");
         session.endSession(11000L);
-        save.session(uuid, session);
+        database.executeTransaction(new WorldNameStoreTransaction(TestConstants.SERVER_UUID, "world"));
+        database.executeTransaction(new SessionEndTransaction(session));
     }
 
     @After

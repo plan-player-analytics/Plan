@@ -29,6 +29,8 @@ public class TestConstants {
     public static final UUID PLAYER_ONE_UUID = UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db");
     public static final UUID PLAYER_TWO_UUID = UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80");
 
+    public static final String PLAYER_ONE_NAME = "Test_Player_one";
+
     public static final int BUKKIT_MAX_PLAYERS = 20;
     public static final int BUNGEE_MAX_PLAYERS = 100;
 

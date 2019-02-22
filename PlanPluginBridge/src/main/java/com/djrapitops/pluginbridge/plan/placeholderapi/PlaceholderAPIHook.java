@@ -71,7 +71,7 @@ public class PlaceholderAPIHook extends Hook {
         if (enabled) {
             PlaceholderAPI.unregisterPlaceholderHook("plan");
             PlaceholderAPI.registerPlaceholderHook("plan",
-                    new PlanPlaceholders(plugin, config, dbSystem, serverInfo, webServer, formatters, errorHandler)
+                    new PlanPlaceholders(plugin, config, serverInfo, webServer, formatters, errorHandler)
             );
         }
     }

@@ -17,8 +17,10 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.objects.WebUserQueries;
+import com.djrapitops.plan.db.access.transactions.commands.RegisterWebUserTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
@@ -86,6 +88,12 @@ public class RegisterCommand extends CommandNode {
     @Override
     public void onCommand(Sender sender, String commandLabel, String[] args) {
         try {
+            Database.State dbState = dbSystem.getDatabase().getState();
+            if (dbState != Database.State.OPEN) {
+                sender.sendMessage(locale.getString(CommandLang.FAIL_DATABASE_NOT_OPEN, dbState.name()));
+                return;
+            }
+
             if (CommandUtils.isPlayer(sender)) {
                 playerRegister(args, sender);
             } else {
@@ -147,12 +155,12 @@ public class RegisterCommand extends CommandNode {
             String userName = webUser.getName();
             try {
                 Database database = dbSystem.getDatabase();
-                boolean userExists = database.check().doesWebUserExists(userName);
+                boolean userExists = database.query(WebUserQueries.fetchWebUser(userName)).isPresent();
                 if (userExists) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_WEB_USER_EXISTS));
                     return;
                 }
-                database.save().webUser(webUser);
+                database.executeTransaction(new RegisterWebUserTransaction(webUser));
                 sender.sendMessage(locale.getString(CommandLang.WEB_USER_REGISTER_SUCCESS, userName));
                 logger.info(locale.getString(CommandLang.WEB_USER_REGISTER_NOTIFY, userName, webUser.getPermLevel()));
             } catch (Exception e) {

@@ -43,7 +43,7 @@ public abstract class ConnectionSystem implements SubSystem {
     protected final Lazy<InfoSystem> infoSystem;
     protected final ServerInfo serverInfo;
 
-    protected Map<UUID, Server> bukkitServers;
+    protected Map<UUID, Server> dataServers;
     private boolean setupAllowed;
 
     public ConnectionSystem(
@@ -56,7 +56,7 @@ public abstract class ConnectionSystem implements SubSystem {
         this.infoSystem = infoSystem;
         this.serverInfo = serverInfo;
         setupAllowed = false;
-        bukkitServers = new HashMap<>();
+        dataServers = new HashMap<>();
         this.infoRequests = infoRequests;
     }
 
@@ -98,8 +98,8 @@ public abstract class ConnectionSystem implements SubSystem {
 
     public abstract void sendWideInfoRequest(WideRequest infoRequest) throws NoServersException;
 
-    public List<Server> getBukkitServers() {
-        return new ArrayList<>(bukkitServers.values());
+    public List<Server> getDataServers() {
+        return new ArrayList<>(dataServers.values());
     }
 
     @Override
@@ -110,7 +110,7 @@ public abstract class ConnectionSystem implements SubSystem {
     @Override
     public void disable() {
         setupAllowed = false;
-        bukkitServers.clear();
+        dataServers.clear();
         infoRequests.clear();
     }
 }

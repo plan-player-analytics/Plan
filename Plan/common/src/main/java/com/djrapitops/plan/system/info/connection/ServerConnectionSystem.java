@@ -18,8 +18,9 @@ package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
@@ -36,6 +37,8 @@ import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -87,9 +90,16 @@ public class ServerConnectionSystem extends ConnectionSystem {
     private void refreshServerMap() {
         processing.submitNonCritical(() -> {
             if (latestServerMapRefresh < System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(15L)) {
-                FetchOperations fetch = dbSystem.getDatabase().fetch();
-                mainServer = fetch.getBungeeInformation().orElse(null);
-                bukkitServers = fetch.getBukkitServers();
+                Database database = dbSystem.getDatabase();
+                Map<UUID, Server> servers = database.query(ServerQueries.fetchPlanServerInformation());
+                Optional<Server> proxy = servers.values().stream()
+                        .filter(Server::isProxy)
+                        .findFirst();
+                mainServer = proxy.orElse(null);
+
+                proxy.ifPresent(proxyServer -> servers.remove(proxyServer.getUuid()));
+
+                dataServers = servers;
                 latestServerMapRefresh = System.currentTimeMillis();
             }
         });
@@ -99,7 +109,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
     protected Server selectServerForRequest(InfoRequest infoRequest) throws NoServersException {
         refreshServerMap();
 
-        if (mainServer == null && bukkitServers.isEmpty()) {
+        if (mainServer == null && dataServers.isEmpty()) {
             throw new NoServersException("Zero servers available to process requests.");
         }
 
@@ -109,7 +119,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
             server = mainServer;
         } else if (infoRequest instanceof GenerateAnalysisPageRequest) {
             UUID serverUUID = ((GenerateAnalysisPageRequest) infoRequest).getServerUUID();
-            server = bukkitServers.get(serverUUID);
+            server = dataServers.get(serverUUID);
         }
         if (server == null) {
             throw new NoServersException("Proper server is not available to process request: " + infoRequest.getClass().getSimpleName());
@@ -119,10 +129,10 @@ public class ServerConnectionSystem extends ConnectionSystem {
 
     @Override
     public void sendWideInfoRequest(WideRequest infoRequest) throws NoServersException {
-        if (bukkitServers.isEmpty()) {
+        if (dataServers.isEmpty()) {
             throw new NoServersException("No Servers available to make wide-request: " + infoRequest.getClass().getSimpleName());
         }
-        for (Server server : bukkitServers.values()) {
+        for (Server server : dataServers.values()) {
             webExceptionLogger.logIfOccurs(this.getClass(), () -> {
                 try {
                     sendInfoRequest(infoRequest, server);

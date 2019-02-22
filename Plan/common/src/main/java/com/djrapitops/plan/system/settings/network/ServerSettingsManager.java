@@ -16,9 +16,11 @@
  */
 package com.djrapitops.plan.system.settings.network;
 
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.objects.NewerConfigQuery;
+import com.djrapitops.plan.db.access.transactions.StoreConfigTransaction;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.Config;
@@ -109,7 +111,7 @@ public class ServerSettingsManager implements SubSystem {
 
         try (ConfigReader reader = new ConfigReader(file.toPath())) {
             Config config = reader.read();
-            database.save().saveConfig(serverInfo.getServerUUID(), config, file.lastModified());
+            database.executeTransaction(new StoreConfigTransaction(serverInfo.getServerUUID(), config, file.lastModified()));
             logger.debug("Server config saved to database.");
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -130,7 +132,7 @@ public class ServerSettingsManager implements SubSystem {
         File configFile = files.getConfigFile();
         long lastModified = configFile.exists() ? configFile.lastModified() : -1;
 
-        Optional<Config> foundConfig = database.fetch().getNewConfig(lastModified, serverInfo.getServerUUID());
+        Optional<Config> foundConfig = database.query(new NewerConfigQuery(serverInfo.getServerUUID(), lastModified));
         if (foundConfig.isPresent()) {
             try {
                 new ConfigWriter(configFile.toPath()).write(foundConfig.get());

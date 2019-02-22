@@ -18,8 +18,10 @@ package com.djrapitops.plan.system.info.server;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.db.access.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -29,6 +31,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Manages Server information on the Bungee instance.
@@ -61,15 +64,17 @@ public class BungeeServerInfo extends ServerInfo {
 
         try {
             Database database = dbSystem.getDatabase();
-            Optional<Server> bungeeInfo = database.fetch().getBungeeInformation();
-            if (bungeeInfo.isPresent()) {
-                server = bungeeInfo.get();
+            Optional<Server> proxyInfo = database.query(ServerQueries.fetchProxyServerInformation());
+            if (proxyInfo.isPresent()) {
+                server = proxyInfo.get();
                 updateServerInfo(database);
             } else {
                 server = registerBungeeInfo(database);
             }
-        } catch (DBOpException e) {
+        } catch (DBOpException | ExecutionException e) {
             throw new EnableException("Failed to read Server information from Database.");
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
         return server;
     }
@@ -78,7 +83,7 @@ public class BungeeServerInfo extends ServerInfo {
         String accessAddress = webServer.get().getAccessAddress();
         if (!accessAddress.equals(server.getWebAddress())) {
             server.setWebAddress(accessAddress);
-            db.save().serverInfoForThisServer(server);
+            db.executeTransaction(new StoreServerInformationTransaction(server));
         }
     }
 
@@ -91,26 +96,18 @@ public class BungeeServerInfo extends ServerInfo {
         }
     }
 
-    private Server registerBungeeInfo(Database db) throws EnableException {
+    private Server registerBungeeInfo(Database db) throws EnableException, ExecutionException, InterruptedException {
         UUID serverUUID = generateNewUUID();
         String accessAddress = webServer.get().getAccessAddress();
 
-        Server bungeeCord = new Server(-1, serverUUID, "BungeeCord", accessAddress, serverProperties.getMaxPlayers());
-        db.save().serverInfoForThisServer(bungeeCord);
+        Server proxy = new Server(-1, serverUUID, "BungeeCord", accessAddress, serverProperties.getMaxPlayers());
+        db.executeTransaction(new StoreServerInformationTransaction(proxy))
+                .get();
 
-        Optional<Server> bungeeInfo = db.fetch().getBungeeInformation();
-        if (bungeeInfo.isPresent()) {
-            return bungeeInfo.get();
+        Optional<Server> proxyInfo = db.query(ServerQueries.fetchProxyServerInformation());
+        if (proxyInfo.isPresent()) {
+            return proxyInfo.get();
         }
         throw new EnableException("BungeeCord registration failed (DB)");
-    }
-
-    private UUID generateNewUUID() {
-        String seed = serverProperties.getName() +
-                serverProperties.getIp() +
-                serverProperties.getPort() +
-                serverProperties.getVersion() +
-                serverProperties.getImplVersion();
-        return UUID.nameUUIDFromBytes(seed.getBytes());
     }
 }

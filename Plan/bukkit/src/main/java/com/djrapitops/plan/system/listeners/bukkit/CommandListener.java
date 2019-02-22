@@ -17,8 +17,9 @@
 package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.Processors;
+import com.djrapitops.plan.db.access.transactions.events.CommandStoreTransaction;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DataGatheringSettings;
@@ -41,22 +42,22 @@ public class CommandListener implements Listener {
 
     private final Plan plugin;
     private final PlanConfig config;
-    private final Processors processors;
-    private final Processing processing;
+    private final ServerInfo serverInfo;
+    private final DBSystem dbSystem;
     private final ErrorHandler errorHandler;
 
     @Inject
     public CommandListener(
             Plan plugin,
             PlanConfig config,
-            Processors processors,
-            Processing processing,
+            ServerInfo serverInfo,
+            DBSystem dbSystem,
             ErrorHandler errorHandler
     ) {
         this.plugin = plugin;
         this.config = config;
-        this.processors = processors;
-        this.processing = processing;
+        this.serverInfo = serverInfo;
+        this.dbSystem = dbSystem;
         this.errorHandler = errorHandler;
     }
 
@@ -90,7 +91,7 @@ public class CommandListener implements Listener {
                 commandName = command.getName();
             }
         }
-        processing.submit(processors.commandProcessor(commandName));
+        dbSystem.getDatabase().executeTransaction(new CommandStoreTransaction(serverInfo.getServerUUID(), commandName));
     }
 
     private Command getBukkitCommand(String commandName) {

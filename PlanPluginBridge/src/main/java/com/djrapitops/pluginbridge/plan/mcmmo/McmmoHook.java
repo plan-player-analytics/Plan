@@ -28,7 +28,7 @@ import javax.inject.Singleton;
  * A Class responsible for hooking to MCMMO and registering data sources.
  *
  * @author Rsl1122
- * @since 3.2.1
+
  */
 @Singleton
 public class McmmoHook extends Hook {
