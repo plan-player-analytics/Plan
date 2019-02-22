@@ -55,6 +55,11 @@ public class BasicAuthentication implements Authentication {
         String user = userInfo[0];
         String passwordRaw = userInfo[1];
 
+        Database.State dbState = database.getState();
+        if (dbState != Database.State.OPEN) {
+            throw new WebUserAuthException(FailReason.DATABASE_NOT_OPEN, "State was: " + dbState.name());
+        }
+
         try {
             WebUser webUser = database.query(WebUserQueries.fetchWebUser(user))
                     .orElseThrow(() -> new WebUserAuthException(FailReason.USER_DOES_NOT_EXIST, user));

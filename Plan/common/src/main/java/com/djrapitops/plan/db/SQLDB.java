@@ -89,7 +89,7 @@ public abstract class SQLDB extends AbstractDatabase {
         List<Runnable> unfinishedTransactions = closeTransactionExecutor(transactionExecutor);
         this.transactionExecutor = transactionExecutorServiceProvider.get();
 
-        setState(State.INITIALIZING);
+        setState(State.PATCHING);
 
         setupDataSource();
         setupDatabase();
@@ -159,7 +159,7 @@ public abstract class SQLDB extends AbstractDatabase {
         executeTransaction(new OperationCriticalTransaction() {
             @Override
             protected void performOperations() {
-                if (getState() == State.INITIALIZING) setState(State.OPEN);
+                if (getState() == State.PATCHING) setState(State.OPEN);
             }
         });
         registerIndexCreationTask();

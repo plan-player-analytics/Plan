@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.system.webserver;
 
-import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -26,7 +25,6 @@ import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.auth.BasicAuthentication;
 import com.djrapitops.plan.system.webserver.response.PromptAuthorizationResponse;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plugin.benchmarking.Benchmark;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -85,14 +83,8 @@ public class RequestHandler implements HttpHandler {
         Request request = new Request(exchange, locale);
         request.setAuth(getAuthorization(requestHeaders));
 
-        String requestString = request.toString();
-        timings.start(requestString);
-        int responseCode = -1;
-
-        boolean inDevMode = config.isTrue(PluginSettings.DEV_MODE);
         try {
             Response response = responseHandler.getResponse(request);
-            responseCode = response.getCode();
             if (response instanceof PromptAuthorizationResponse) {
                 responseHeaders.set("WWW-Authenticate", "Basic realm=\"/\"");
             }
@@ -100,18 +92,12 @@ public class RequestHandler implements HttpHandler {
             response.setResponseHeaders(responseHeaders);
             response.send(exchange, locale, theme);
         } catch (Exception e) {
-            if (inDevMode) {
+            if (config.isTrue(PluginSettings.DEV_MODE)) {
                 logger.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
                 errorHandler.log(L.WARN, this.getClass(), e);
             }
         } finally {
             exchange.close();
-            if (inDevMode) {
-                logger.getDebugLogger().logOn(
-                        DebugChannels.WEB_REQUESTS,
-                        timings.end(requestString).map(Benchmark::toString).orElse("-") + " Code: " + responseCode
-                );
-            }
         }
     }
 

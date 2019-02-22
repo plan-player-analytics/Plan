@@ -71,7 +71,7 @@ public interface Database {
 
     enum State {
         CLOSED,
-        INITIALIZING,
+        PATCHING,
         OPEN
     }
 }
