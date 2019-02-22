@@ -110,6 +110,10 @@ public class ManageBackupCommand extends CommandNode {
     private void runBackupTask(Sender sender, String[] args, Database database) {
         processing.submitCritical(() -> {
             try {
+                Database.State dbState = database.getState();
+                if (dbState != Database.State.OPEN) {
+                    sender.sendMessage(locale.getString(CommandLang.WARN_DATABASE_NOT_OPEN, dbState.name()));
+                }
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
                 createNewBackup(args[0], database);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));

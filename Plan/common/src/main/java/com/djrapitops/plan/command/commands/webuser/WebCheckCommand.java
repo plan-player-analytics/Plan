@@ -71,6 +71,12 @@ public class WebCheckCommand extends CommandNode {
 
     @Override
     public void onCommand(Sender sender, String commandLabel, String[] args) {
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState != Database.State.OPEN) {
+            sender.sendMessage(locale.getString(CommandLang.FAIL_DATABASE_NOT_OPEN, dbState.name()));
+            return;
+        }
+
         Verify.isTrue(args.length >= 1,
                 () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments()))));
 

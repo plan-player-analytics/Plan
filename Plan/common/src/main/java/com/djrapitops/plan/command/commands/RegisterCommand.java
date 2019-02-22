@@ -88,6 +88,12 @@ public class RegisterCommand extends CommandNode {
     @Override
     public void onCommand(Sender sender, String commandLabel, String[] args) {
         try {
+            Database.State dbState = dbSystem.getDatabase().getState();
+            if (dbState != Database.State.OPEN) {
+                sender.sendMessage(locale.getString(CommandLang.FAIL_DATABASE_NOT_OPEN, dbState.name()));
+                return;
+            }
+
             if (CommandUtils.isPlayer(sender)) {
                 playerRegister(args, sender);
             } else {

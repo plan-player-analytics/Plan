@@ -18,6 +18,7 @@ package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.db.access.queries.objects.WebUserQueries;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -90,6 +91,12 @@ public class AnalyzeCommand extends CommandNode {
 
     @Override
     public void onCommand(Sender sender, String commandLabel, String[] args) {
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState != Database.State.OPEN) {
+            sender.sendMessage(locale.getString(CommandLang.FAIL_DATABASE_NOT_OPEN, dbState.name()));
+            return;
+        }
+
         sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
         processing.submitNonCritical(() -> {

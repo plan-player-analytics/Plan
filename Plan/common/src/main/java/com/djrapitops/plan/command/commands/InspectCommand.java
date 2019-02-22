@@ -17,6 +17,7 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
 import com.djrapitops.plan.db.access.queries.objects.WebUserQueries;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -90,6 +91,12 @@ public class InspectCommand extends CommandNode {
 
         if (playerName == null) {
             sender.sendMessage(locale.getString(CommandLang.FAIL_NO_PERMISSION));
+        }
+
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState != Database.State.OPEN) {
+            sender.sendMessage(locale.getString(CommandLang.FAIL_DATABASE_NOT_OPEN, dbState.name()));
+            return;
         }
 
         runInspectTask(playerName, sender);

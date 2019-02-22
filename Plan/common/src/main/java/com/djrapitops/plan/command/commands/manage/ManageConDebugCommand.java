@@ -17,6 +17,7 @@
 package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.api.exceptions.connection.*;
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
@@ -120,6 +121,12 @@ public class ManageConDebugCommand extends CommandNode {
     public void onCommand(Sender sender, String commandLabel, String[] args) {
         if (!webServer.isEnabled()) {
             sender.sendMessage(locale.getString(CommandLang.CONNECT_WEBSERVER_NOT_ENABLED));
+            return;
+        }
+
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState != Database.State.OPEN) {
+            sender.sendMessage(locale.getString(CommandLang.FAIL_DATABASE_NOT_OPEN, dbState.name()));
             return;
         }
 

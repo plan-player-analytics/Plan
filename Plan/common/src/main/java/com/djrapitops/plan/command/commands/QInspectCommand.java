@@ -24,6 +24,7 @@ import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 import com.djrapitops.plan.data.store.mutators.GeoInfoMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
@@ -99,6 +100,12 @@ public class QInspectCommand extends CommandNode {
 
         if (playerName == null) {
             sender.sendMessage(locale.getString(CommandLang.FAIL_NO_PERMISSION));
+            return;
+        }
+
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState != Database.State.OPEN) {
+            sender.sendMessage(locale.getString(CommandLang.FAIL_DATABASE_NOT_OPEN, dbState.name()));
             return;
         }
 

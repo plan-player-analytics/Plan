@@ -122,6 +122,11 @@ public class ManageRestoreCommand extends CommandNode {
                 SQLiteDB backupDB = sqliteFactory.usingFile(backupDBFile);
                 backupDB.init();
 
+                Database.State dbState = database.getState();
+                if (dbState != Database.State.OPEN) {
+                    sender.sendMessage(locale.getString(CommandLang.WARN_DATABASE_NOT_OPEN, dbState.name()));
+                }
+
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
                 database.executeTransaction(new BackupCopyTransaction(backupDB, database)).get();

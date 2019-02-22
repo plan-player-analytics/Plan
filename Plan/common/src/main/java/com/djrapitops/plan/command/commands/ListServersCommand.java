@@ -17,6 +17,7 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
@@ -70,6 +71,12 @@ public class ListServersCommand extends CommandNode {
 
     @Override
     public void onCommand(Sender sender, String commandLabel, String[] args) {
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState != Database.State.OPEN) {
+            sender.sendMessage(locale.getString(CommandLang.FAIL_DATABASE_NOT_OPEN, dbState.name()));
+            return;
+        }
+
         String sCol = colorScheme.getSecondaryColor();
         String tCol = colorScheme.getTertiaryColor();
         Formatter<Server> serverFormatter = serverLister(sCol, tCol);
