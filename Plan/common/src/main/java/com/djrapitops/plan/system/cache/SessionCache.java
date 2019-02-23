@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.cache;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
+import com.google.common.collect.ImmutableMap;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,7 +43,7 @@ public class SessionCache {
     }
 
     public static Map<UUID, Session> getActiveSessions() {
-        return ACTIVE_SESSIONS;
+        return ImmutableMap.copyOf(ACTIVE_SESSIONS);
     }
 
     public static void clear() {
