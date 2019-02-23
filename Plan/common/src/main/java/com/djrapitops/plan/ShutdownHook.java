@@ -82,6 +82,7 @@ public class ShutdownHook extends Thread {
 
             prepareSessionsForStorage(activeSessions, System.currentTimeMillis());
             saveActiveSessions(activeSessions);
+            SessionCache.clear();
         } catch (DBInitException e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
         } catch (IllegalStateException ignored) {
