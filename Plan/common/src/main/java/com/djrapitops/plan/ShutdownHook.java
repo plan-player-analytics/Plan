@@ -76,6 +76,10 @@ public class ShutdownHook extends Thread {
     public void run() {
         try {
             Map<UUID, Session> activeSessions = SessionCache.getActiveSessions();
+            if (activeSessions.isEmpty()) {
+                return;
+            }
+
             prepareSessionsForStorage(activeSessions, System.currentTimeMillis());
             saveActiveSessions(activeSessions);
         } catch (DBInitException e) {
