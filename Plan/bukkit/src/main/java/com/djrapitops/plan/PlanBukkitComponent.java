@@ -53,6 +53,8 @@ public interface PlanBukkitComponent {
 
     PlanSystem system();
 
+    ServerShutdownSave serverShutdownSave();
+
     @Component.Builder
     interface Builder {
 

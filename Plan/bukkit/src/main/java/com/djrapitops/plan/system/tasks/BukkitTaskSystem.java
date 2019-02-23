@@ -33,6 +33,7 @@ import com.djrapitops.plugin.task.RunnableFactory;
 import org.bukkit.Bukkit;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -41,6 +42,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Rsl1122
  */
+@Singleton
 public class BukkitTaskSystem extends ServerTaskSystem {
 
     private final Plan plugin;
