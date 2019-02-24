@@ -69,6 +69,8 @@ public class SQLiteDB extends SQLDB {
     @Override
     public void setupDataSource() {
         try {
+            if (connection != null) connection.close();
+
             connection = getNewConnection(databaseFile);
         } catch (SQLException e) {
             throw new DBInitException(e.getMessage(), e);
@@ -139,11 +141,12 @@ public class SQLiteDB extends SQLDB {
 
     @Override
     public void close() {
+        logger.debug("SQLite Connection close prompted by: " + ThrowableUtils.findCallerAfterClass(Thread.currentThread().getStackTrace(), SQLiteDB.class));
+
         super.close();
         stopConnectionPingTask();
 
         if (connection != null) {
-            logger.debug("SQLite Connection close prompted by: " + ThrowableUtils.findCallerAfterClass(Thread.currentThread().getStackTrace(), SQLiteDB.class));
             logger.debug("SQLite " + dbName + ": Closed Connection");
             MiscUtils.close(connection);
         }

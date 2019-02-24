@@ -91,6 +91,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
     @Override
     public void onDisable() {
         if (serverShutdownSave != null) {
+            logger.info(locale != null ? locale.getString(PluginLang.DISABLED_UNSAVED_SESSIONS) : PluginLang.DISABLED_UNSAVED_SESSIONS.getDefault());
             serverShutdownSave.performSave();
         }
         if (system != null) {

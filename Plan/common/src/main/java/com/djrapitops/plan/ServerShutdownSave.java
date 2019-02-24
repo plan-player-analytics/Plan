@@ -30,6 +30,7 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Class in charge of performing save operations when the server shuts down.
@@ -105,9 +106,12 @@ public abstract class ServerShutdownSave {
 
     private void saveSessions(Map<UUID, Session> activeSessions, Database database) {
         try {
-            database.executeTransaction(new ServerShutdownTransaction(activeSessions.values()));
-        } catch (DBOpException e) {
+            database.executeTransaction(new ServerShutdownTransaction(activeSessions.values()))
+                    .get(); // Ensure that the transaction is executed before shutdown.
+        } catch (ExecutionException | DBOpException e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 

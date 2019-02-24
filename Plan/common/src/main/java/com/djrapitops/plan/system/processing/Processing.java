@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.system.processing;
 
-import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
@@ -38,8 +37,8 @@ public class Processing implements SubSystem {
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
 
-    private final ExecutorService nonCriticalExecutor;
-    private final ExecutorService criticalExecutor;
+    private ExecutorService nonCriticalExecutor;
+    private ExecutorService criticalExecutor;
 
     @Inject
     public Processing(
@@ -50,8 +49,12 @@ public class Processing implements SubSystem {
         this.locale = locale;
         this.logger = logger;
         this.errorHandler = errorHandler;
-        nonCriticalExecutor = Executors.newFixedThreadPool(6, new ThreadFactoryBuilder().setNameFormat("Plan Non critical-pool-%d").build());
-        criticalExecutor = Executors.newFixedThreadPool(2, new ThreadFactoryBuilder().setNameFormat("Plan Critical-pool-%d").build());
+        nonCriticalExecutor = createExecutor(6, "Plan Non critical-pool-%d");
+        criticalExecutor = createExecutor(2, "Plan Critical-pool-%d");
+    }
+
+    private ExecutorService createExecutor(int i, String s) {
+        return Executors.newFixedThreadPool(i, new ThreadFactoryBuilder().setNameFormat(s).build());
     }
 
     public void submit(Runnable runnable) {
@@ -126,18 +129,28 @@ public class Processing implements SubSystem {
     }
 
     @Override
-    public void enable() throws EnableException {
+    public void enable() {
         if (nonCriticalExecutor.isShutdown()) {
-            throw new EnableException("Non Critical ExecutorService was shut down on enable");
+            nonCriticalExecutor = createExecutor(6, "Plan Non critical-pool-%d");
         }
         if (criticalExecutor.isShutdown()) {
-            throw new EnableException("Critical ExecutorService was shut down on enable");
+            criticalExecutor = createExecutor(2, "Plan Critical-pool-%d");
         }
     }
 
     @Override
     public void disable() {
+        shutdownNonCriticalExecutor();
+        shutdownCriticalExecutor();
+        ensureShutdown();
+        logger.info(locale.get().getString(PluginLang.DISABLED_PROCESSING_COMPLETE));
+    }
+
+    private void shutdownNonCriticalExecutor() {
         nonCriticalExecutor.shutdown();
+    }
+
+    private void shutdownCriticalExecutor() {
         List<Runnable> criticalTasks = criticalExecutor.shutdownNow();
         logger.info(locale.get().getString(PluginLang.DISABLED_PROCESSING, criticalTasks.size()));
         for (Runnable runnable : criticalTasks) {
@@ -148,6 +161,9 @@ public class Processing implements SubSystem {
                 errorHandler.log(L.WARN, this.getClass(), e);
             }
         }
+    }
+
+    private void ensureShutdown() {
         try {
             if (!nonCriticalExecutor.isTerminated() && !nonCriticalExecutor.awaitTermination(1, TimeUnit.SECONDS)) {
                 nonCriticalExecutor.shutdownNow();
@@ -161,6 +177,5 @@ public class Processing implements SubSystem {
             criticalExecutor.shutdownNow();
             Thread.currentThread().interrupt();
         }
-        logger.info(locale.get().getString(PluginLang.DISABLED_PROCESSING_COMPLETE));
     }
 }
