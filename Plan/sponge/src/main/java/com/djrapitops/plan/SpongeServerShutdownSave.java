@@ -17,6 +17,8 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.GameState;
 import org.spongepowered.api.event.Listener;
@@ -37,8 +39,13 @@ public class SpongeServerShutdownSave extends ServerShutdownSave {
     private boolean shuttingDown = false;
 
     @Inject
-    public SpongeServerShutdownSave(DBSystem dbSystem, ErrorHandler errorHandler) {
-        super(dbSystem, errorHandler);
+    public SpongeServerShutdownSave(
+            Locale locale,
+            DBSystem dbSystem,
+            PluginLogger logger,
+            ErrorHandler errorHandler
+    ) {
+        super(locale, dbSystem, logger, errorHandler);
     }
 
     @Override

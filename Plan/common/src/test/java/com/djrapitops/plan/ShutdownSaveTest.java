@@ -27,6 +27,7 @@ import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransacti
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import extension.PrintExtension;
@@ -84,7 +85,8 @@ public class ShutdownSaveTest {
         DBSystem dbSystemMock = mock(DBSystem.class);
         when(dbSystemMock.getDatabase()).thenReturn(database);
 
-        underTest = new ServerShutdownSave(dbSystemMock, new ConsoleErrorLogger(new TestPluginLogger())) {
+        TestPluginLogger logger = new TestPluginLogger();
+        underTest = new ServerShutdownSave(new Locale(), dbSystemMock, logger, new ConsoleErrorLogger(logger)) {
             @Override
             protected boolean checkServerShuttingDownStatus() {
                 return shutdownStatus;

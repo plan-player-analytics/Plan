@@ -24,7 +24,10 @@ import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.transactions.events.ServerShutdownTransaction;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import java.util.Map;
@@ -39,15 +42,21 @@ import java.util.concurrent.ExecutionException;
  */
 public abstract class ServerShutdownSave {
 
+    protected final PluginLogger logger;
     private final DBSystem dbSystem;
+    private final Locale locale;
     private final ErrorHandler errorHandler;
     private boolean shuttingDown = false;
 
     public ServerShutdownSave(
+            Locale locale,
             DBSystem dbSystem,
+            PluginLogger logger,
             ErrorHandler errorHandler
     ) {
+        this.locale = locale;
         this.dbSystem = dbSystem;
+        this.logger = logger;
         this.errorHandler = errorHandler;
     }
 
@@ -67,6 +76,11 @@ public abstract class ServerShutdownSave {
             return;
         }
 
+        // This check ensures that logging is not attempted on JVM shutdown.
+        // Underlying Logger might not be available leading to an exception.
+        if (!shuttingDown) {
+            logger.info(locale.getString(PluginLang.DISABLED_UNSAVED_SESSIONS));
+        }
         attemptSave(activeSessions);
 
         SessionCache.clear();

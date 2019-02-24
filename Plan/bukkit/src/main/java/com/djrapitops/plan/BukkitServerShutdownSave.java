@@ -17,6 +17,7 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.utilities.java.Reflection;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -32,16 +33,14 @@ import javax.inject.Singleton;
 @Singleton
 public class BukkitServerShutdownSave extends ServerShutdownSave {
 
-    private final PluginLogger logger;
-
     @Inject
     public BukkitServerShutdownSave(
+            Locale locale,
             DBSystem dbSystem,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        super(dbSystem, errorHandler);
-        this.logger = logger;
+        super(locale, dbSystem, logger, errorHandler);
     }
 
     @Override
