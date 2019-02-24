@@ -28,6 +28,7 @@ import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.RunnableFactory;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -35,6 +36,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Rsl1122
  */
+@Singleton
 public class BungeeTaskSystem extends TaskSystem {
 
     private final PlanBungee plugin;

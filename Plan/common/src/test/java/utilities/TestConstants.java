@@ -31,6 +31,8 @@ public class TestConstants {
 
     public static final String PLAYER_ONE_NAME = "Test_Player_one";
 
+    public static final String WORLD_ONE_NAME = "World One";
+
     public static final int BUKKIT_MAX_PLAYERS = 20;
     public static final int BUNGEE_MAX_PLAYERS = 100;
 

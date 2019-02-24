@@ -30,11 +30,17 @@ import javax.inject.Singleton;
 @Singleton
 public class CacheSystem implements SubSystem {
 
+    private final SessionCache sessionCache;
     private final NicknameCache nicknameCache;
     private final GeolocationCache geolocationCache;
 
     @Inject
-    public CacheSystem(NicknameCache nicknameCache, GeolocationCache geolocationCache) {
+    public CacheSystem(
+            SessionCache sessionCache,
+            NicknameCache nicknameCache,
+            GeolocationCache geolocationCache
+    ) {
+        this.sessionCache = sessionCache;
         this.nicknameCache = nicknameCache;
         this.geolocationCache = geolocationCache;
     }
@@ -58,4 +64,7 @@ public class CacheSystem implements SubSystem {
         return geolocationCache;
     }
 
+    public SessionCache getSessionCache() {
+        return sessionCache;
+    }
 }

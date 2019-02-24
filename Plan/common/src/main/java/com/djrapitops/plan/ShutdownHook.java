@@ -16,21 +16,8 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.transactions.events.ServerShutdownTransaction;
-import com.djrapitops.plan.system.cache.SessionCache;
-import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
-
 import javax.inject.Inject;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import javax.inject.Singleton;
 
 /**
  * Thread that is run when JVM shuts down.
@@ -39,16 +26,16 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Singleton
 public class ShutdownHook extends Thread {
 
     private static ShutdownHook activated;
-    private final DBSystem dbSystem;
-    private final ErrorHandler errorHandler;
+
+    private final ServerShutdownSave serverShutdownSave;
 
     @Inject
-    public ShutdownHook(DBSystem dbSystem, ErrorHandler errorHandler) {
-        this.dbSystem = dbSystem;
-        this.errorHandler = errorHandler;
+    public ShutdownHook(ServerShutdownSave serverShutdownSave) {
+        this.serverShutdownSave = serverShutdownSave;
     }
 
     private static boolean isActivated() {
@@ -74,47 +61,7 @@ public class ShutdownHook extends Thread {
 
     @Override
     public void run() {
-        try {
-            Map<UUID, Session> activeSessions = SessionCache.getActiveSessions();
-            prepareSessionsForStorage(activeSessions, System.currentTimeMillis());
-            saveActiveSessions(activeSessions);
-        } catch (DBInitException e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
-        } catch (IllegalStateException ignored) {
-            /* Database is not initialized */
-        } finally {
-            closeDatabase(dbSystem.getDatabase());
-        }
-    }
-
-    private void saveActiveSessions(Map<UUID, Session> activeSessions) {
-        Database database = dbSystem.getDatabase();
-        if (database.getState() == Database.State.CLOSED) {
-            // Ensure that database is not closed when performing the transaction.
-            database.init();
-        }
-
-        saveSessions(activeSessions, database);
-    }
-
-    private void prepareSessionsForStorage(Map<UUID, Session> activeSessions, long now) {
-        for (Session session : activeSessions.values()) {
-            Optional<Long> end = session.getValue(SessionKeys.END);
-            if (!end.isPresent()) {
-                session.endSession(now);
-            }
-        }
-    }
-
-    private void saveSessions(Map<UUID, Session> activeSessions, Database database) {
-        try {
-            database.executeTransaction(new ServerShutdownTransaction(activeSessions.values()));
-        } catch (DBOpException e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
-        }
-    }
-
-    private void closeDatabase(Database database) {
-        database.close();
+        serverShutdownSave.serverIsKnownToBeShuttingDown();
+        serverShutdownSave.performSave();
     }
 }

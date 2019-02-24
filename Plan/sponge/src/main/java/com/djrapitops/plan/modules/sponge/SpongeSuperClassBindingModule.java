@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.modules.sponge;
 
+import com.djrapitops.plan.ServerShutdownSave;
+import com.djrapitops.plan.SpongeServerShutdownSave;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.SpongeDBSystem;
 import com.djrapitops.plan.system.importing.EmptyImportSystem;
@@ -56,5 +58,8 @@ public interface SpongeSuperClassBindingModule {
 
     @Binds
     ImportSystem bindImportSystem(EmptyImportSystem emptyImportSystem);
+
+    @Binds
+    ServerShutdownSave bindSpongeServerShutdownSave(SpongeServerShutdownSave spongeServerShutdownSave);
 
 }

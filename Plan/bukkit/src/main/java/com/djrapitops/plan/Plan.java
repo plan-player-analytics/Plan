@@ -40,6 +40,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
 
     private PlanSystem system;
     private Locale locale;
+    private ServerShutdownSave serverShutdownSave;
 
     @Override
     public void onEnable() {
@@ -47,6 +48,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
         try {
             timings.start("Enable");
             system = component.system();
+            serverShutdownSave = component.serverShutdownSave();
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
@@ -88,6 +90,10 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
      */
     @Override
     public void onDisable() {
+        if (serverShutdownSave != null) {
+            logger.info(locale != null ? locale.getString(PluginLang.DISABLED_UNSAVED_SESSIONS) : PluginLang.DISABLED_UNSAVED_SESSIONS.getDefault());
+            serverShutdownSave.performSave();
+        }
         if (system != null) {
             system.disable();
         }

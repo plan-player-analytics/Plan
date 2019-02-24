@@ -17,8 +17,11 @@
 package utilities.mocks;
 
 import com.djrapitops.plan.PlanPlugin;
+import utilities.TestResources;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 import static org.mockito.Mockito.doReturn;
 
@@ -34,42 +37,23 @@ abstract class Mocker {
     File getFile(String fileName) {
         // Read the resource from jar to a temporary file
         File file = new File(new File(planMock.getDataFolder(), "jar"), fileName);
-        try {
-            file.getParentFile().mkdirs();
-            if (!file.exists() && !file.createNewFile()) {
-                throw new FileNotFoundException("Could not create file: " + fileName);
-            }
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-        try (InputStream in = PlanPlugin.class.getResourceAsStream(fileName);
-             OutputStream out = new FileOutputStream(file)) {
-
-            int read;
-            byte[] bytes = new byte[1024];
-
-            while ((read = in.read(bytes)) != -1) {
-                out.write(bytes, 0, read);
-            }
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        TestResources.copyResourceIntoFile(file, fileName);
         return file;
     }
 
-    private void withPluginFile(String fileName) throws FileNotFoundException {
+    private void withPluginFile(String fileName) throws IOException {
         if (planMock.getDataFolder() == null) {
             throw new IllegalStateException("withDataFolder needs to be called before setting files");
         }
         try {
             File file = getFile("/" + fileName);
-            doReturn(new FileInputStream(file)).when(planMock).getResource(fileName);
+            doReturn(Files.newInputStream(file.toPath())).when(planMock).getResource(fileName);
         } catch (NullPointerException e) {
             System.out.println("File is missing! " + fileName);
         }
     }
 
-    void withPluginFiles() throws FileNotFoundException {
+    void withPluginFiles() throws IOException {
         for (String fileName : new String[]{
                 "bungeeconfig.yml",
                 "config.yml",

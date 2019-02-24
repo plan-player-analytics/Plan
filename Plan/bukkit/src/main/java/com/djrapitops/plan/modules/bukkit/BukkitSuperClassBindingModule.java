@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.modules.bukkit;
 
+import com.djrapitops.plan.BukkitServerShutdownSave;
+import com.djrapitops.plan.ServerShutdownSave;
 import com.djrapitops.plan.system.database.BukkitDBSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.importing.BukkitImportSystem;
@@ -55,6 +57,9 @@ public interface BukkitSuperClassBindingModule {
     ListenerSystem bindBukkitListenerSystem(BukkitListenerSystem bukkitListenerSystem);
 
     @Binds
-    ImportSystem bindImportSsytem(BukkitImportSystem bukkitImportSystem);
+    ImportSystem bindImportSystem(BukkitImportSystem bukkitImportSystem);
+
+    @Binds
+    ServerShutdownSave bindBukkitServerShutdownSave(BukkitServerShutdownSave bukkitServerShutdownSave);
 
 }

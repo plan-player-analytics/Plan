@@ -53,6 +53,8 @@ public interface PlanSpongeComponent {
 
     PlanSystem system();
 
+    ServerShutdownSave serverShutdownSave();
+
     @Component.Builder
     interface Builder {
 

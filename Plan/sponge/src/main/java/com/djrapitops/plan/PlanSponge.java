@@ -63,6 +63,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
     private File dataFolder;
     private PlanSystem system;
     private Locale locale;
+    private ServerShutdownSave serverShutdownSave;
 
     @Listener
     public void onServerStart(GameStartedServerEvent event) {
@@ -79,6 +80,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
         PlanSpongeComponent component = DaggerPlanSpongeComponent.builder().plan(this).build();
         try {
             system = component.system();
+            serverShutdownSave = component.serverShutdownSave();
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
@@ -112,6 +114,9 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
     @Override
     public void onDisable() {
+        if (serverShutdownSave != null) {
+            serverShutdownSave.performSave();
+        }
         if (system != null) {
             system.disable();
         }

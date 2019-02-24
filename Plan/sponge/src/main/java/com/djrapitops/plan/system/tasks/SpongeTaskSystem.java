@@ -32,8 +32,10 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.scheduler.Task;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.concurrent.TimeUnit;
 
+@Singleton
 public class SpongeTaskSystem extends ServerTaskSystem {
 
     private final PlanSponge plugin;
