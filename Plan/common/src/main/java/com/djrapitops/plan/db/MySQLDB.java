@@ -87,7 +87,8 @@ public class MySQLDB extends SQLDB {
             String port = config.get(DatabaseSettings.MYSQL_PORT);
             String database = config.get(DatabaseSettings.MYSQL_DATABASE);
             String launchOptions = config.get(DatabaseSettings.MYSQL_LAUNCH_OPTIONS);
-            if (launchOptions.isEmpty() || !launchOptions.startsWith("?") || launchOptions.endsWith("&")) {
+            // REGEX: match "?", match "word=word&" *-times, match "word=word"
+            if (launchOptions.isEmpty() || !launchOptions.matches("\\?((\\w*=\\w*)&)*(\\w*=\\w*)")) {
                 launchOptions = "?rewriteBatchedStatements=true&useSSL=false";
                 logger.error(locale.getString(PluginLang.DB_MYSQL_LAUNCH_OPTIONS_FAIL, launchOptions));
             }
