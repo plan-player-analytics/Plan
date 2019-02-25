@@ -60,7 +60,7 @@ subprojects {
     ext.httpClientVersion = "4.5.7"
     ext.commonsTextVersion = "1.6"
     ext.htmlCompressorVersion = "1.5.2"
-    ext.caffeineVersion = "2.6.2"
+    ext.caffeineVersion = "2.7.0"
     ext.h2Version = "1.4.196"
     ext.hikariVersion = "3.3.1"
     ext.slf4jVersion = "1.7.26"
