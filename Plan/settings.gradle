@@ -1,5 +1,6 @@
 rootProject.name = 'Plan'
 
+include 'api'
 include 'common'
 include 'bukkit'
 include 'sponge'

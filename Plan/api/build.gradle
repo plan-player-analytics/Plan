@@ -1,0 +1,11 @@
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'com.djrapitops'
+            artifactId = 'Plan-api'
+            version = project.version
+
+            artifact jar
+        }
+    }
+}
