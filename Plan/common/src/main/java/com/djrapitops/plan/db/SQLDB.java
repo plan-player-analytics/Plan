@@ -28,6 +28,7 @@ import com.djrapitops.plan.db.access.transactions.init.OperationCriticalTransact
 import com.djrapitops.plan.db.patches.*;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.L;
@@ -112,8 +113,14 @@ public abstract class SQLDB extends AbstractDatabase {
         }
         transactionExecutor.shutdown();
         try {
-            if (!transactionExecutor.awaitTermination(20L, TimeUnit.SECONDS)) {
-                return transactionExecutor.shutdownNow();
+            Long waitMs = config.get(TimeSettings.DB_TRANSACTION_FINISH_WAIT_DELAY);
+            if (!transactionExecutor.awaitTermination(waitMs, TimeUnit.MILLISECONDS)) {
+                List<Runnable> unfinished = transactionExecutor.shutdownNow();
+                int unfinishedCount = unfinished.size();
+                if (unfinishedCount > 0) {
+                    logger.warn(unfinishedCount + " unfinished database transactions were not executed.");
+                }
+                return unfinished;
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

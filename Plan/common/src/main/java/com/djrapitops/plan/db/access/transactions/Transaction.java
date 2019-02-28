@@ -148,4 +148,9 @@ public abstract class Transaction {
     protected UUID getServerUUID() {
         return db.getServerUUIDSupplier().get();
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + (success ? " (finished)" : "");
+    }
 }

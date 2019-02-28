@@ -31,6 +31,7 @@ public class TimeSettings {
     public static final Setting<Boolean> USE_SERVER_TIME = new BooleanSetting("Time.Use_server_timezone");
     public static final Setting<Long> PING_SERVER_ENABLE_DELAY = new TimeSetting("Time.Delays.Ping_server_enable_delay");
     public static final Setting<Long> PING_PLAYER_LOGIN_DELAY = new TimeSetting("Time.Delays.Ping_player_join_delay");
+    public static final Setting<Long> DB_TRANSACTION_FINISH_WAIT_DELAY = new TimeSetting("Time.Delays.Wait_for_DB_Transactions_on_disable");
     public static final Setting<Long> AFK_THRESHOLD = new TimeSetting("Time.Thresholds.AFK_threshold");
     public static final Setting<Integer> ACTIVE_LOGIN_THRESHOLD = new IntegerSetting("Time.Thresholds.Activity_index.Login_threshold", Setting::timeValidator);
     public static final Setting<Long> ACTIVE_PLAY_THRESHOLD = new TimeSetting("Time.Thresholds.Activity_index.Playtime_threshold");
