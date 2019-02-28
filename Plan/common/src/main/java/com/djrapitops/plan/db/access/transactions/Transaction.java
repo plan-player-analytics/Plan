@@ -140,9 +140,11 @@ public abstract class Transaction {
     }
 
     protected void executeOther(Transaction transaction) {
+        transaction.db = db;
         transaction.connection = this.connection;
         transaction.performOperations();
         transaction.connection = null;
+        transaction.db = null;
     }
 
     protected UUID getServerUUID() {
