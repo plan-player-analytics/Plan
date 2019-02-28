@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.*;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 /**
@@ -111,7 +112,7 @@ public abstract class SQLDB extends AbstractDatabase {
         }
         transactionExecutor.shutdown();
         try {
-            if (!transactionExecutor.awaitTermination(5L, TimeUnit.SECONDS)) {
+            if (!transactionExecutor.awaitTermination(20L, TimeUnit.SECONDS)) {
                 return transactionExecutor.shutdownNow();
             }
         } catch (InterruptedException e) {
@@ -213,7 +214,11 @@ public abstract class SQLDB extends AbstractDatabase {
             accessLock.checkAccess(transaction);
             transaction.executeTransaction(this);
             return CompletableFuture.completedFuture(null);
-        }, getTransactionExecutor()).handle((obj, throwable) -> {
+        }, getTransactionExecutor()).handle(errorHandler(origin));
+    }
+
+    private BiFunction<CompletableFuture<Object>, Throwable, CompletableFuture<Object>> errorHandler(Exception origin) {
+        return (obj, throwable) -> {
             if (throwable == null) {
                 return CompletableFuture.completedFuture(null);
             }
@@ -224,8 +229,7 @@ public abstract class SQLDB extends AbstractDatabase {
 
             errorHandler.log(L.ERROR, getClass(), throwable);
             return CompletableFuture.completedFuture(null);
-        });
-
+        };
     }
 
     private ExecutorService getTransactionExecutor() {
