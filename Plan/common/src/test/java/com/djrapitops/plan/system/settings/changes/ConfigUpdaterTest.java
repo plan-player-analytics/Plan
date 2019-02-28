@@ -84,7 +84,7 @@ class ConfigUpdaterTest {
         Path config = tempDir.resolve("oldconfig.yml");
         Files.copy(oldConfig.toPath(), config, StandardCopyOption.REPLACE_EXISTING);
 
-        PlanConfig planConfig = new PlanConfig(config.toFile(), null);
+        PlanConfig planConfig = new PlanConfig(config.toFile(), null, logger);
 
         UNDER_TEST.applyConfigUpdate(planConfig);
 
@@ -100,7 +100,7 @@ class ConfigUpdaterTest {
         Path config = tempDir.resolve("oldconfig.yml");
         Files.copy(oldBungeeConfig.toPath(), config, StandardCopyOption.REPLACE_EXISTING);
 
-        PlanConfig planConfig = new PlanConfig(config.toFile(), null);
+        PlanConfig planConfig = new PlanConfig(config.toFile(), null, logger);
 
         UNDER_TEST.applyConfigUpdate(planConfig);
 
@@ -122,7 +122,7 @@ class ConfigUpdaterTest {
         Path config = tempDir.resolve("oldconfig.yml");
         Files.copy(oldConfig.toPath(), config, StandardCopyOption.REPLACE_EXISTING);
 
-        PlanConfig planConfig = new PlanConfig(config.toFile(), null);
+        PlanConfig planConfig = new PlanConfig(config.toFile(), null, logger);
 
         ConfigChange[] changes = UNDER_TEST.configEnhancementPatch();
         assertMoveChangesAreAppliedProperly(planConfig, changes);
@@ -133,7 +133,7 @@ class ConfigUpdaterTest {
         Path config = tempDir.resolve("oldconfig.yml");
         Files.copy(oldBungeeConfig.toPath(), config, StandardCopyOption.REPLACE_EXISTING);
 
-        PlanConfig planConfig = new PlanConfig(config.toFile(), null);
+        PlanConfig planConfig = new PlanConfig(config.toFile(), null, logger);
 
         ConfigChange[] changes = UNDER_TEST.configEnhancementPatch();
         assertMoveChangesAreAppliedProperly(planConfig, changes);

@@ -134,7 +134,7 @@ public class ConfigSettingKeyTest {
     }
 
     private PlanConfig createConfig(File configFile) throws IOException {
-        PlanConfig config = new PlanConfig(configFile, null);
+        PlanConfig config = new PlanConfig(configFile, null, logger);
         config.save();
         return config;
     }
