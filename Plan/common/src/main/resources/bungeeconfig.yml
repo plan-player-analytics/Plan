@@ -70,7 +70,7 @@ Time:
       Unit: SECONDS
     Ping_player_join_delay: 30
       Unit: SECONDS
-    Wait_for_DB_Transactions_on_disable:
+    Wait_for_DB_Transactions_on_disable: 20
       Unit: SECONDS
   Thresholds:
     # How long player needs to be idle until Plan considers them AFK
