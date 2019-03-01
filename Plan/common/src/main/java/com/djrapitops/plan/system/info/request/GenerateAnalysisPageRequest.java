@@ -20,7 +20,9 @@ import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.InternalErrorException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.InfoSystem;
+import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.utilities.html.pages.PageFactory;
@@ -29,6 +31,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * InfoRequest to generate Analysis page HTML at the receiving end.
@@ -37,20 +40,26 @@ import java.util.UUID;
  */
 public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implements GenerateRequest {
 
+    private final Processing processing;
+    private final WebExceptionLogger webExceptionLogger;
     private final InfoRequestFactory infoRequestFactory;
     private final ServerInfo serverInfo;
     private final InfoSystem infoSystem;
     private final PageFactory pageFactory;
 
-    private boolean runningAnalysis = false;
+    private AtomicBoolean runningAnalysis = new AtomicBoolean(false);
     private UUID serverUUID;
 
     GenerateAnalysisPageRequest(
+            Processing processing,
+            WebExceptionLogger webExceptionLogger,
             InfoRequestFactory infoRequestFactory,
             ServerInfo serverInfo,
             InfoSystem infoSystem,
             PageFactory pageFactory
     ) {
+        this.processing = processing;
+        this.webExceptionLogger = webExceptionLogger;
         this.infoRequestFactory = infoRequestFactory;
         this.serverInfo = serverInfo;
         this.infoSystem = infoSystem;
@@ -59,11 +68,15 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
 
     GenerateAnalysisPageRequest(
             UUID serverUUID,
+            Processing processing,
+            WebExceptionLogger webExceptionLogger,
             InfoRequestFactory infoRequestFactory,
             ServerInfo serverInfo,
             InfoSystem infoSystem,
             PageFactory pageFactory
     ) {
+        this.processing = processing;
+        this.webExceptionLogger = webExceptionLogger;
         this.infoRequestFactory = infoRequestFactory;
         this.serverInfo = serverInfo;
         this.infoSystem = infoSystem;
@@ -86,8 +99,11 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
             throw new BadRequestException("Requested Analysis page from wrong server.");
         }
 
-        if (!runningAnalysis) {
-            generateAndCache(serverUUID);
+        if (!runningAnalysis.get()) {
+            runningAnalysis.set(true);
+            processing.submitNonCritical(() ->
+                    webExceptionLogger.logIfOccurs(GenerateAnalysisPageRequest.class, () -> generateAndCache(serverUUID))
+            );
         }
 
         return DefaultResponses.SUCCESS.get();
@@ -108,13 +124,12 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
 
     private String analyseAndGetHtml() throws InternalErrorException {
         try {
-            runningAnalysis = true;
             UUID serverUUID = serverInfo.getServerUUID();
             return pageFactory.analysisPage(serverUUID).toHtml();
         } catch (Exception e) {
             throw new InternalErrorException("Analysis failed due to exception", e);
         } finally {
-            runningAnalysis = false;
+            runningAnalysis.set(false);
         }
     }
 
