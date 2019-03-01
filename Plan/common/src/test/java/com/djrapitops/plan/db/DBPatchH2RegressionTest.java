@@ -109,7 +109,7 @@ public class DBPatchH2RegressionTest extends DBPatchRegressionTest {
     }
 
     @Test
-    public void h2PatchTaskWorksWithoutErrors() {
+    public void h2PatchesAreApplied() {
         Patch[] patches = underTest.patches();
         for (Patch patch : patches) {
             underTest.executeTransaction(patch);

@@ -102,7 +102,7 @@ public class DBPatchSQLiteRegressionTest extends DBPatchRegressionTest {
     }
 
     @Test
-    public void sqlitePatchTaskWorksWithoutErrors() {
+    public void sqlitePatchesAreApplied() {
         Patch[] patches = underTest.patches();
         for (Patch patch : patches) {
             underTest.executeTransaction(patch);

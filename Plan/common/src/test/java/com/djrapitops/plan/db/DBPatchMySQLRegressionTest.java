@@ -23,6 +23,7 @@ import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.access.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
+import com.djrapitops.plan.db.patches.KillsOptimizationPatch;
 import com.djrapitops.plan.db.patches.Patch;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -37,6 +38,7 @@ import utilities.OptionalAssert;
 import utilities.RandomData;
 import utilities.TestConstants;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
 /**
@@ -138,7 +140,7 @@ public class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
     }
 
     @Test
-    public void mysqlPatchTaskWorksWithoutErrors() {
+    public void mysqlPatchesAreApplied() {
         Patch[] patches = underTest.patches();
         for (Patch patch : patches) {
             underTest.executeTransaction(patch);
@@ -152,5 +154,15 @@ public class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
 
         // Make sure no foreign key checks fail on removal
         underTest.executeTransaction(new RemoveEverythingTransaction());
+    }
+
+    @Test
+    public void mysqlDoesNotApplyKillsOptimizationPatchAgain() {
+        mysqlPatchesAreApplied();
+
+        KillsOptimizationPatch patch = new KillsOptimizationPatch();
+        underTest.executeTransaction(patch);
+
+        assertTrue(patch.hasBeenApplied());
     }
 }
