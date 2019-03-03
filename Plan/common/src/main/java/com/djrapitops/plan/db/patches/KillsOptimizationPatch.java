@@ -43,6 +43,15 @@ public class KillsOptimizationPatch extends Patch {
     @Override
     protected void applyPatch() {
         try {
+            if (hasTable(tempTableName) && hasColumn(tempTableName, KillsTable.VICTIM_UUID)) {
+                // In this case a patch has made a table with almost correct schema to a temporary table.
+                renameTable(tempTableName, tableName);
+                return;
+            } else if (hasColumn(tableName, KillsTable.VICTIM_UUID)) {
+                // In this case a patch has made a table with almost correct schema, but something is not right.
+                return;
+            }
+
             tempOldTable();
             execute(KillsTable.createTableSQL(dbType));
 
