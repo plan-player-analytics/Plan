@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.listeners;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSponge;
+import com.djrapitops.plan.SpongeServerShutdownSave;
 import com.djrapitops.plan.api.events.PlanSpongeEnableEvent;
 import com.djrapitops.plan.system.listeners.sponge.*;
 import org.spongepowered.api.Sponge;
@@ -36,16 +37,19 @@ public class SpongeListenerSystem extends ListenerSystem {
     private final SpongeGMChangeListener gmChangeListener;
     private final SpongePlayerListener playerListener;
     private final SpongeWorldChangeListener worldChangeListener;
+    private final SpongeServerShutdownSave spongeServerShutdownSave;
 
     @Inject
-    public SpongeListenerSystem(PlanSponge plugin,
-                                SpongeAFKListener afkListener,
-                                SpongeChatListener chatListener,
-                                SpongeCommandListener commandListener,
-                                SpongeDeathListener deathListener,
-                                SpongeGMChangeListener gmChangeListener,
-                                SpongePlayerListener playerListener,
-                                SpongeWorldChangeListener worldChangeListener
+    public SpongeListenerSystem(
+            PlanSponge plugin,
+            SpongeAFKListener afkListener,
+            SpongeChatListener chatListener,
+            SpongeCommandListener commandListener,
+            SpongeDeathListener deathListener,
+            SpongeGMChangeListener gmChangeListener,
+            SpongePlayerListener playerListener,
+            SpongeWorldChangeListener worldChangeListener,
+            SpongeServerShutdownSave spongeServerShutdownSave
     ) {
         this.plugin = plugin;
 
@@ -56,6 +60,7 @@ public class SpongeListenerSystem extends ListenerSystem {
         this.gmChangeListener = gmChangeListener;
         this.playerListener = playerListener;
         this.worldChangeListener = worldChangeListener;
+        this.spongeServerShutdownSave = spongeServerShutdownSave;
     }
 
     @Override
@@ -67,7 +72,8 @@ public class SpongeListenerSystem extends ListenerSystem {
                 deathListener,
                 playerListener,
                 gmChangeListener,
-                worldChangeListener
+                worldChangeListener,
+                spongeServerShutdownSave
         );
     }
 

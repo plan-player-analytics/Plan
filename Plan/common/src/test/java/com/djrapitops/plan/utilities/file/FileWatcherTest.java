@@ -19,10 +19,9 @@ package com.djrapitops.plan.utilities.file;
 import com.jayway.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.junitpioneer.jupiter.TempDirectory;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,13 +33,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @RunWith(JUnitPlatform.class)
-@ExtendWith(TempDirectory.class)
 class FileWatcherTest {
 
     private Path temporaryDir;
 
     @BeforeEach
-    void setUpTemporaryDir(@TempDirectory.TempDir Path dir) {
+    void setUpTemporaryDir(@TempDir Path dir) {
         temporaryDir = dir;
     }
 

@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.ShutdownHook;
+import com.djrapitops.plan.db.tasks.DBCleanTask;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.tasks.bukkit.BukkitTPSCountTimer;
@@ -32,6 +33,7 @@ import com.djrapitops.plugin.task.RunnableFactory;
 import org.bukkit.Bukkit;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -40,12 +42,14 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Rsl1122
  */
+@Singleton
 public class BukkitTaskSystem extends ServerTaskSystem {
 
     private final Plan plugin;
     private final ShutdownHook shutdownHook;
     private final PingCountTimerBukkit pingCountTimer;
     private final ConfigStoreTask configStoreTask;
+    private final DBCleanTask dbCleanTask;
 
     @Inject
     public BukkitTaskSystem(
@@ -60,7 +64,8 @@ public class BukkitTaskSystem extends ServerTaskSystem {
             PingCountTimerBukkit pingCountTimer,
             LogsFolderCleanTask logsFolderCleanTask,
             PlayersPageRefreshTask playersPageRefreshTask,
-            ConfigStoreTask configStoreTask
+            ConfigStoreTask configStoreTask,
+            DBCleanTask dbCleanTask
     ) {
         super(
                 runnableFactory,
@@ -74,6 +79,7 @@ public class BukkitTaskSystem extends ServerTaskSystem {
         this.shutdownHook = shutdownHook;
         this.pingCountTimer = pingCountTimer;
         this.configStoreTask = configStoreTask;
+        this.dbCleanTask = dbCleanTask;
     }
 
     @Override
@@ -88,6 +94,11 @@ public class BukkitTaskSystem extends ServerTaskSystem {
             // +40 ticks / 2 seconds so that update check task runs first.
             long storeDelay = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS) + 40;
             registerTask("Config Store Task", configStoreTask).runTaskLaterAsynchronously(storeDelay);
+
+            registerTask("DB Clean Task", dbCleanTask).runTaskTimerAsynchronously(
+                    TimeAmount.toTicks(20, TimeUnit.SECONDS),
+                    TimeAmount.toTicks(config.get(TimeSettings.CLEAN_DATABASE_PERIOD), TimeUnit.MILLISECONDS)
+            );
         } catch (ExceptionInInitializerError | NoClassDefFoundError ignore) {
             // Running CraftBukkit
         }

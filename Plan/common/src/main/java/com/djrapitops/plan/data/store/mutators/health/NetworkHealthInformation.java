@@ -19,6 +19,7 @@ package com.djrapitops.plan.data.store.mutators.health;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
+import com.djrapitops.plan.data.store.containers.SupplierDataContainer;
 import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.keys.NetworkKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
@@ -146,7 +147,7 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
 
         for (Server server : servers) {
             UUID serverUUID = server.getUuid();
-            DataContainer serverContainer = new DataContainer();
+            DataContainer serverContainer = new SupplierDataContainer();
             serverContainer.putRawData(serverKey, server);
 
             PlayersMutator serverPlayers = playersMutator.filterPlayedOnServer(serverUUID);

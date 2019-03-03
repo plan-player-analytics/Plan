@@ -17,7 +17,13 @@
 package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.objects.Nickname;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.transactions.events.*;
+import com.djrapitops.plan.system.cache.GeolocationCache;
+import com.djrapitops.plan.system.cache.NicknameCache;
 import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
@@ -26,7 +32,6 @@ import com.djrapitops.plan.system.settings.paths.DataGatheringSettings;
 import com.djrapitops.plan.system.status.Status;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.plugin.task.RunnableFactory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -51,10 +56,12 @@ public class PlayerOnlineListener implements Listener {
     private final Processors processors;
     private final Processing processing;
     private final ServerInfo serverInfo;
+    private final DBSystem dbSystem;
+    private final GeolocationCache geolocationCache;
+    private final NicknameCache nicknameCache;
     private final SessionCache sessionCache;
     private final ErrorHandler errorHandler;
     private final Status status;
-    private final RunnableFactory runnableFactory;
 
     @Inject
     public PlayerOnlineListener(
@@ -62,18 +69,22 @@ public class PlayerOnlineListener implements Listener {
             Processors processors,
             Processing processing,
             ServerInfo serverInfo,
+            DBSystem dbSystem,
+            GeolocationCache geolocationCache,
+            NicknameCache nicknameCache,
             SessionCache sessionCache,
             Status status,
-            RunnableFactory runnableFactory,
             ErrorHandler errorHandler
     ) {
         this.config = config;
         this.processors = processors;
         this.processing = processing;
         this.serverInfo = serverInfo;
+        this.dbSystem = dbSystem;
+        this.geolocationCache = geolocationCache;
+        this.nicknameCache = nicknameCache;
         this.sessionCache = sessionCache;
         this.status = status;
-        this.runnableFactory = runnableFactory;
         this.errorHandler = errorHandler;
     }
 
@@ -81,10 +92,11 @@ public class PlayerOnlineListener implements Listener {
     public void onPlayerLogin(PlayerLoginEvent event) {
         try {
             PlayerLoginEvent.Result result = event.getResult();
-            UUID uuid = event.getPlayer().getUniqueId();
-            boolean op = event.getPlayer().isOp();
+            UUID playerUUID = event.getPlayer().getUniqueId();
+            boolean operator = event.getPlayer().isOp();
             boolean banned = result == PlayerLoginEvent.Result.KICK_BANNED;
-            processing.submit(processors.player().banAndOpProcessor(uuid, () -> banned, op));
+            dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, () -> banned));
+            dbSystem.getDatabase().executeTransaction(new OperatorStatusTransaction(playerUUID, operator));
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
         }
@@ -109,7 +121,7 @@ public class PlayerOnlineListener implements Listener {
                 return;
             }
 
-            processing.submit(processors.player().kickProcessor(uuid));
+            dbSystem.getDatabase().executeTransaction(new KickStoreTransaction(uuid));
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
         }
@@ -126,9 +138,9 @@ public class PlayerOnlineListener implements Listener {
 
     private void actOnJoinEvent(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        // TODO Move update notification to the website.
 
         UUID uuid = player.getUniqueId();
+        UUID serverUUID = serverInfo.getServerUUID();
         long time = System.currentTimeMillis();
 
         AFKListener.AFK_TRACKER.performedAction(uuid, time);
@@ -136,21 +148,32 @@ public class PlayerOnlineListener implements Listener {
         String world = player.getWorld().getName();
         String gm = player.getGameMode().name();
 
+        Database database = dbSystem.getDatabase();
+        database.executeTransaction(new WorldNameStoreTransaction(serverUUID, world));
+
         InetAddress address = player.getAddress().getAddress();
 
         String playerName = player.getName();
         String displayName = player.getDisplayName();
 
         boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
+        if (gatheringGeolocations) {
+            database.executeTransaction(
+                    new GeoInfoStoreTransaction(uuid, address, time, geolocationCache::getCountry)
+            );
+        }
 
-        processing.submitCritical(() -> sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, world, gm)));
-        runnableFactory.create("Player Register: " + uuid,
-                processors.player().registerProcessor(uuid, player::getFirstPlayed, playerName,
-                        gatheringGeolocations ? processors.player().ipUpdateProcessor(uuid, address, time) : null,
-                        processors.player().nameProcessor(uuid, playerName, displayName),
-                        processors.info().playerPageUpdateProcessor(uuid)
-                )
-        ).runTaskAsynchronously();
+        database.executeTransaction(new PlayerServerRegisterTransaction(uuid, player::getFirstPlayed, playerName, serverUUID));
+        sessionCache.cacheSession(uuid, new Session(uuid, serverUUID, time, world, gm))
+                .ifPresent(previousSession -> database.executeTransaction(new SessionEndTransaction(previousSession)));
+
+        database.executeTransaction(new NicknameStoreTransaction(
+                uuid, new Nickname(displayName, time, serverUUID),
+                (playerUUID, name) -> name.equals(nicknameCache.getDisplayName(playerUUID))
+        ));
+
+        processing.submitNonCritical(processors.info().playerPageUpdateProcessor(uuid));
+
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -165,12 +188,17 @@ public class PlayerOnlineListener implements Listener {
     private void actOnQuitEvent(PlayerQuitEvent event) {
         long time = System.currentTimeMillis();
         Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
+        UUID playerUUID = player.getUniqueId();
 
-        AFKListener.AFK_TRACKER.loggedOut(uuid, time);
+        AFKListener.AFK_TRACKER.loggedOut(playerUUID, time);
 
-        processing.submit(processors.player().banAndOpProcessor(uuid, player::isBanned, player.isOp()));
-        processing.submit(processors.player().endSessionProcessor(uuid, time));
-        processing.submit(processors.info().playerPageUpdateProcessor(uuid));
+        nicknameCache.removeDisplayName(playerUUID);
+
+        dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, player::isBanned));
+
+        sessionCache.endSession(playerUUID, time)
+                .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new SessionEndTransaction(endedSession)));
+
+        processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
     }
 }

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.pluginbridge.plan.viaversion;
 
-import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.db.Database;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -29,29 +29,26 @@ import java.util.UUID;
  * Class responsible for listening join events for Version protocol.
  *
  * @author Rsl1122
- * @since 3.5.0
+
  */
 public class BukkitPlayerVersionListener implements Listener {
 
     private final ViaAPI viaAPI;
 
-    private final ProtocolTable protocolTable;
-    private final Processing processing;
+    private final Database database;
 
     BukkitPlayerVersionListener(
             ViaAPI viaAPI,
-            ProtocolTable protocolTable,
-            Processing processing
+            Database database
     ) {
         this.viaAPI = viaAPI;
-        this.protocolTable = protocolTable;
-        this.processing = processing;
+        this.database = database;
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(PlayerJoinEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
         int playerVersion = viaAPI.getPlayerVersion(uuid);
-        processing.submitNonCritical(() -> protocolTable.saveProtocolVersion(uuid, playerVersion));
+        database.executeTransaction(new StoreUsedProtocolTransaction(uuid, playerVersion));
     }
 }

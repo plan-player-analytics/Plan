@@ -31,7 +31,7 @@ import java.util.Optional;
  * A Class responsible for hooking to Sponge and registering 1 data sources
  *
  * @author BrainStone
- * @since 4.4.6
+
  */
 @Singleton
 public class SpongeEconomyHook extends Hook {

@@ -17,7 +17,12 @@
 package com.djrapitops.plan.system.listeners.velocity;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.transactions.events.GeoInfoStoreTransaction;
+import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
+import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
@@ -51,6 +56,8 @@ public class PlayerOnlineListener {
     private final PlanConfig config;
     private final Processors processors;
     private final Processing processing;
+    private final DBSystem dbSystem;
+    private final GeolocationCache geolocationCache;
     private final SessionCache sessionCache;
     private final ServerInfo serverInfo;
     private final ErrorHandler errorHandler;
@@ -60,6 +67,8 @@ public class PlayerOnlineListener {
             PlanConfig config,
             Processing processing,
             Processors processors,
+            DBSystem dbSystem,
+            GeolocationCache geolocationCache,
             SessionCache sessionCache,
             ServerInfo serverInfo,
             ErrorHandler errorHandler
@@ -67,6 +76,8 @@ public class PlayerOnlineListener {
         this.config = config;
         this.processing = processing;
         this.processors = processors;
+        this.dbSystem = dbSystem;
+        this.geolocationCache = geolocationCache;
         this.sessionCache = sessionCache;
         this.serverInfo = serverInfo;
         this.errorHandler = errorHandler;
@@ -76,19 +87,24 @@ public class PlayerOnlineListener {
     public void onPostLogin(PostLoginEvent event) {
         try {
             Player player = event.getPlayer();
-            UUID uuid = player.getUniqueId();
+            UUID playerUUID = player.getUniqueId();
             String name = player.getUsername();
             InetAddress address = player.getRemoteAddress().getAddress();
             long time = System.currentTimeMillis();
 
-            sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, null, null));
+            sessionCache.cacheSession(playerUUID, new Session(playerUUID, serverInfo.getServerUUID(), time, null, null));
+
+            Database database = dbSystem.getDatabase();
 
             boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
+            if (gatheringGeolocations) {
+                database.executeTransaction(
+                        new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
+                );
+            }
 
-            processing.submit(processors.player().proxyRegisterProcessor(uuid, name, time,
-                    gatheringGeolocations ? processors.player().ipUpdateProcessor(uuid, address, time) : null
-            ));
-            processing.submit(processors.info().playerPageUpdateProcessor(uuid));
+            database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> time, name));
+            processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
             ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
@@ -99,10 +115,10 @@ public class PlayerOnlineListener {
     public void onLogout(DisconnectEvent event) {
         try {
             Player player = event.getPlayer();
-            UUID uuid = player.getUniqueId();
+            UUID playerUUID = player.getUniqueId();
 
-            sessionCache.endSession(uuid, System.currentTimeMillis());
-            processing.submit(processors.info().playerPageUpdateProcessor(uuid));
+            sessionCache.endSession(playerUUID, System.currentTimeMillis());
+            processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
             ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
@@ -113,12 +129,13 @@ public class PlayerOnlineListener {
     public void onServerSwitch(ServerConnectedEvent event) {
         try {
             Player player = event.getPlayer();
-            UUID uuid = player.getUniqueId();
+            UUID playerUUID = player.getUniqueId();
+            long time = System.currentTimeMillis();
 
-            long now = System.currentTimeMillis();
             // Replaces the current session in the cache.
-            sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), now, null, null));
-            processing.submit(processors.info().playerPageUpdateProcessor(uuid));
+            sessionCache.cacheSession(playerUUID, new Session(playerUUID, serverInfo.getServerUUID(), time, null, null));
+
+            processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
         }

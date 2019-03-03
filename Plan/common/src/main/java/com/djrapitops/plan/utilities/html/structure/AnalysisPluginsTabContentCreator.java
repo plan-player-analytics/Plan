@@ -140,8 +140,9 @@ public class AnalysisPluginsTabContentCreator {
         List<PluginData> sources = hookHandler.getAdditionalDataSources();
 
         sources.parallelStream().forEach(source -> {
+            String pluginName = source.getSourcePlugin();
             try {
-                timings.start("Source " + source.getSourcePlugin());
+                timings.start("Source " + pluginName);
 
                 source.setAnalysisData(analysisContainer);
                 AnalysisContainer container = source.getServerData(uuids, new AnalysisContainer());
@@ -150,10 +151,11 @@ public class AnalysisPluginsTabContentCreator {
                 }
 
             } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
-                logger.error("A PluginData-source caused an exception: " + source.getSourcePlugin());
+                logger.error("A PluginData-source caused an exception: " + pluginName +
+                        ", you can disable the integration under 'Plugins." + pluginName + ".Enabled'");
                 errorHandler.log(L.WARN, this.getClass(), e);
             } finally {
-                timings.end(DebugChannels.ANALYSIS, "Source " + source.getSourcePlugin());
+                timings.end(DebugChannels.ANALYSIS, "Source " + pluginName);
                 source.setAnalysisData(null);
             }
         });

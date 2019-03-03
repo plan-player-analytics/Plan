@@ -19,8 +19,8 @@ package com.djrapitops.plan.utilities.html.pages;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.system.cache.SessionCache;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.connection.ConnectionLog;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.Server;
@@ -201,7 +201,7 @@ public class DebugPage implements Page {
             content.append("</pre>");
 
             content.append("<pre>### Servers:<br><br>");
-            List<Server> servers = connectionSystem.getBukkitServers();
+            List<Server> servers = connectionSystem.getDataServers();
             content.append("Server Name | Address <br>")
                     .append("-- | --<br>");
             for (Server server : servers) {

@@ -17,6 +17,8 @@
 package com.djrapitops.plan.command.commands.webuser;
 
 import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.objects.WebUserQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -24,7 +26,6 @@ import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.utilities.comparators.WebUserComparator;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;
@@ -67,10 +68,15 @@ public class WebListUsersCommand extends CommandNode {
 
     @Override
     public void onCommand(Sender sender, String commandLabel, String[] args) {
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState != Database.State.OPEN) {
+            sender.sendMessage(locale.getString(CommandLang.FAIL_DATABASE_NOT_OPEN, dbState.name()));
+            return;
+        }
+
         processing.submitNonCritical(() -> {
             try {
-                List<WebUser> users = dbSystem.getDatabase().fetch().getWebUsers();
-                users.sort(new WebUserComparator());
+                List<WebUser> users = dbSystem.getDatabase().query(WebUserQueries.fetchAllPlanWebUsers());
                 sender.sendMessage(locale.getString(CommandLang.HEADER_WEB_USERS, users.size()));
                 for (WebUser user : users) {
                     sender.sendMessage(locale.getString(CommandLang.WEB_USER_LIST, user.getName(), user.getPermLevel()));

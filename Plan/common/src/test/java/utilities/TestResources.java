@@ -22,6 +22,7 @@ import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -53,8 +54,10 @@ public class TestResources {
     }
 
     private static void copyResourceToFile(File toFile, InputStream testResource) {
-        try (InputStream in = testResource;
-             OutputStream out = new FileOutputStream(toFile)) {
+        try (
+                InputStream in = testResource;
+                OutputStream out = Files.newOutputStream(toFile.toPath())
+        ) {
             copy(in, out);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -62,8 +65,10 @@ public class TestResources {
     }
 
     private static void writeResourceToFile(File toFile, String resourcePath) {
-        try (InputStream in = PlanPlugin.class.getResourceAsStream(resourcePath);
-             OutputStream out = new FileOutputStream(toFile)) {
+        try (
+                InputStream in = PlanPlugin.class.getResourceAsStream(resourcePath);
+                OutputStream out = Files.newOutputStream(toFile.toPath())
+        ) {
             if (in == null) {
                 throw new FileNotFoundException("Resource with name '" + resourcePath + "' not found");
             }
@@ -83,11 +88,10 @@ public class TestResources {
     }
 
     private static void createEmptyFile(File toFile) {
-        String path = toFile.getAbsolutePath();
         try {
-            toFile.getParentFile().mkdirs();
-            if (!toFile.exists() && !toFile.createNewFile()) {
-                throw new FileNotFoundException("Could not create file: " + path);
+            Files.createDirectories(toFile.toPath().getParent());
+            if (!toFile.exists()) {
+                Files.createFile(toFile.toPath());
             }
         } catch (IOException e) {
             throw new UncheckedIOException(e);

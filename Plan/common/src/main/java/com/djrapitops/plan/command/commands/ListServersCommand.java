@@ -17,6 +17,8 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.locale.Locale;
@@ -33,6 +35,8 @@ import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -67,6 +71,12 @@ public class ListServersCommand extends CommandNode {
 
     @Override
     public void onCommand(Sender sender, String commandLabel, String[] args) {
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState != Database.State.OPEN) {
+            sender.sendMessage(locale.getString(CommandLang.FAIL_DATABASE_NOT_OPEN, dbState.name()));
+            return;
+        }
+
         String sCol = colorScheme.getSecondaryColor();
         String tCol = colorScheme.getTertiaryColor();
         Formatter<Server> serverFormatter = serverLister(sCol, tCol);
@@ -81,7 +91,8 @@ public class ListServersCommand extends CommandNode {
     }
 
     private void sendServers(Sender sender, Formatter<Server> serverFormatter) {
-        List<Server> servers = dbSystem.getDatabase().fetch().getServers();
+        List<Server> servers = new ArrayList<>(dbSystem.getDatabase().query(ServerQueries.fetchPlanServerInformation()).values());
+        Collections.sort(servers);
         for (Server server : servers) {
             sender.sendMessage(serverFormatter.apply(server));
         }

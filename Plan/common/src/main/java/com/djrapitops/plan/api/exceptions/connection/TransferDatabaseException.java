@@ -17,7 +17,7 @@
 package com.djrapitops.plan.api.exceptions.connection;
 
 /**
- * Thrown when DBException occurs during InfoRequest#placeIntoDatabase.
+ * Thrown when {@link com.djrapitops.plan.api.exceptions.database.DBOpException} occurs during {@link com.djrapitops.plan.system.info.request.InfoRequest#placeIntoDatabase}.
  *
  * @author Rsl1122
  */

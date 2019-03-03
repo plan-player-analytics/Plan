@@ -17,12 +17,10 @@
 package com.djrapitops.pluginbridge.plan.protocolsupport;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.exceptions.database.DBException;
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.sql.SQLDB;
-import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.pluginbridge.plan.Hook;
 import com.djrapitops.pluginbridge.plan.viaversion.ProtocolTable;
 
@@ -38,18 +36,15 @@ import javax.inject.Singleton;
 public class ProtocolSupportHook extends Hook {
 
     private final Plan plugin;
-    private final Processing processing;
     private final DBSystem dbSystem;
 
     @Inject
     public ProtocolSupportHook(
             Plan plugin,
-            Processing processing,
             DBSystem dbSystem
     ) {
         super("protocolsupport.ProtocolSupport");
         this.plugin = plugin;
-        this.processing = processing;
         this.dbSystem = dbSystem;
     }
 
@@ -58,13 +53,15 @@ public class ProtocolSupportHook extends Hook {
         if (!enabled) {
             return;
         }
-        ProtocolTable protocolTable = new ProtocolTable((SQLDB) dbSystem.getDatabase());
-        try {
-            protocolTable.createTable();
-        } catch (DBException e) {
-            throw new DBOpException("Failed to create Protocol table", e);
-        }
-        plugin.registerListener(new PlayerVersionListener(processing, protocolTable));
-        handler.addPluginDataSource(new ProtocolSupportData(protocolTable));
+        Database database = dbSystem.getDatabase();
+        database.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute(ProtocolTable.createTableSQL(database.getType()));
+            }
+        });
+
+        plugin.registerListener(new PlayerVersionListener(database));
+        handler.addPluginDataSource(new ProtocolSupportData(database));
     }
 }

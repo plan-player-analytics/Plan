@@ -23,6 +23,9 @@ import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.mutators.health.NetworkHealthInformation;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
+import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
@@ -54,7 +57,7 @@ import java.util.concurrent.TimeUnit;
  * @see com.djrapitops.plan.data.store.keys.NetworkKeys for Key objects
  * @see com.djrapitops.plan.data.store.PlaceholderKey for placeholder information
  */
-public class NetworkContainer extends DataContainer {
+public class NetworkContainer extends DynamicDataContainer {
 
     private final ServerContainer bungeeContainer;
 
@@ -62,10 +65,10 @@ public class NetworkContainer extends DataContainer {
     private final PlanConfig config;
     private final Locale locale;
     private final Theme theme;
-    private final DBSystem dbSystem;
     private final ServerProperties serverProperties;
     private final Formatters formatters;
     private final Graphs graphs;
+    private final Database database;
 
     public NetworkContainer(
             ServerContainer bungeeContainer,
@@ -83,7 +86,7 @@ public class NetworkContainer extends DataContainer {
         this.config = config;
         this.locale = locale;
         this.theme = theme;
-        this.dbSystem = dbSystem;
+        this.database = dbSystem.getDatabase();
         this.serverProperties = serverProperties;
         this.formatters = formatters;
         this.graphs = graphs;
@@ -97,22 +100,19 @@ public class NetworkContainer extends DataContainer {
     }
 
     private void addServerBoxes() {
-        putSupplier(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA, () -> dbSystem.getDatabase().fetch().getPlayersOnlineForServers(
+        putSupplier(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA, () -> database.query(TPSQueries.fetchPlayerOnlineDataOfServers(
                 getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>()))
-        );
-        putSupplier(NetworkKeys.SERVER_REGISTER_DATA, () -> dbSystem.getDatabase().fetch().getPlayersRegisteredForServers(
-                getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>()))
-        );
+        ));
         putSupplier(NetworkKeys.SERVERS_TAB, () -> {
             StringBuilder serverBoxes = new StringBuilder();
             Map<Integer, List<TPS>> playersOnlineData = getValue(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA).orElse(new HashMap<>());
-            Map<UUID, Integer> registerData = getValue(NetworkKeys.SERVER_REGISTER_DATA).orElse(new HashMap<>());
+            Map<UUID, Integer> userCounts = database.query(ServerAggregateQueries.serverUserCounts());
             Collection<Server> servers = getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>());
             servers.stream()
                     .sorted((one, two) -> String.CASE_INSENSITIVE_ORDER.compare(one.getName(), two.getName()))
                     .forEach(server -> {
                         TPSMutator tpsMutator = new TPSMutator(playersOnlineData.getOrDefault(server.getId(), new ArrayList<>()));
-                        int registered = registerData.getOrDefault(server.getUuid(), 0);
+                        int registered = userCounts.getOrDefault(server.getUuid(), 0);
                         NetworkServerBox serverBox = new NetworkServerBox(server, registered, tpsMutator, graphs);
                         serverBoxes.append(serverBox.toHtml());
                     });
@@ -170,7 +170,7 @@ public class NetworkContainer extends DataContainer {
     private void addPlayerInformation() {
         putSupplier(NetworkKeys.PLAYERS_TOTAL, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR).count());
         putSupplier(NetworkKeys.WORLD_MAP_SERIES, () ->
-                graphs.special().worldMap(PlayersMutator.forContainer(bungeeContainer)).toHighChartsSeries()
+                graphs.special().worldMap(database.query(ServerAggregateQueries.networkGeolocationCounts())).toHighChartsSeries()
         );
         Key<BarGraph> geolocationBarChart = new Key<>(BarGraph.class, "GEOLOCATION_BAR_GRAPH");
         putSupplier(geolocationBarChart, () -> graphs.bar().geolocationBarGraph(getUnsafe(NetworkKeys.PLAYERS_MUTATOR)));

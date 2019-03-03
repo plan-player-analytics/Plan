@@ -17,12 +17,16 @@
 package com.djrapitops.pluginbridge.plan.placeholderapi;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.PlanAPI;
+import com.djrapitops.plan.api.data.PlayerContainer;
+import com.djrapitops.plan.api.data.ServerContainer;
 import com.djrapitops.plan.data.container.GeoInfo;
-import com.djrapitops.plan.data.store.containers.PlayerContainer;
-import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
-import com.djrapitops.plan.data.store.mutators.*;
-import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.data.store.keys.ServerKeys;
+import com.djrapitops.plan.data.store.mutators.GeoInfoMutator;
+import com.djrapitops.plan.data.store.mutators.PlayersMutator;
+import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DisplaySettings;
@@ -37,6 +41,7 @@ import org.bukkit.entity.Player;
 
 import javax.inject.Singleton;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -50,7 +55,6 @@ public class PlanPlaceholders extends PlaceholderExpansion {
 
     private final PlanPlugin plugin;
     private final PlanConfig config;
-    private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final WebServer webServer;
     private final Formatters formatters;
@@ -59,7 +63,6 @@ public class PlanPlaceholders extends PlaceholderExpansion {
     public PlanPlaceholders(
             PlanPlugin plugin,
             PlanConfig config,
-            DBSystem dbSystem,
             ServerInfo serverInfo,
             WebServer webServer,
             Formatters formatters,
@@ -67,7 +70,6 @@ public class PlanPlaceholders extends PlaceholderExpansion {
     ) {
         this.plugin = plugin;
         this.config = config;
-        this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.webServer = webServer;
         this.formatters = formatters;
@@ -125,7 +127,7 @@ public class PlanPlaceholders extends PlaceholderExpansion {
     }
 
     private Serializable getServerValue(String identifier) {
-        ServerContainer serverContainer = dbSystem.getDatabase().fetch().getServerContainer(serverInfo.getServerUUID());
+        ServerContainer serverContainer = PlanAPI.getInstance().fetchServerContainer(serverInfo.getServerUUID());
 
         long now = System.currentTimeMillis();
         long dayAgo = now - TimeUnit.DAYS.toMillis(1L);
@@ -133,7 +135,7 @@ public class PlanPlaceholders extends PlaceholderExpansion {
         long monthAgo = now - TimeAmount.MONTH.toMillis(1L);
 
         try {
-            PlayersMutator playersMutator = PlayersMutator.forContainer(serverContainer);
+            PlayersMutator playersMutator = new PlayersMutator(serverContainer.getValue(ServerKeys.PLAYERS).orElse(new ArrayList<>()));
             switch (identifier.toLowerCase()) {
                 case "players_total":
                     return playersMutator.count();
@@ -162,9 +164,9 @@ public class PlanPlaceholders extends PlaceholderExpansion {
                 case "deaths_total":
                     return new SessionsMutator(playersMutator.getSessions()).toDeathCount();
                 case "tps_day":
-                    return TPSMutator.forContainer(serverContainer).filterDataBetween(dayAgo, now).averageTPS();
+                    return new TPSMutator(serverContainer.getValue(ServerKeys.TPS).orElse(new ArrayList<>())).filterDataBetween(dayAgo, now).averageTPS();
                 case "tps_drops_week":
-                    return TPSMutator.forContainer(serverContainer).filterDataBetween(weekAgo, now)
+                    return new TPSMutator(serverContainer.getValue(ServerKeys.TPS).orElse(new ArrayList<>())).filterDataBetween(weekAgo, now)
                             .lowTpsSpikeCount(config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED));
                 default:
                     break;
@@ -177,7 +179,7 @@ public class PlanPlaceholders extends PlaceholderExpansion {
 
     private Serializable getPlayerValue(Player player, String identifier) {
         UUID uuid = player.getUniqueId();
-        PlayerContainer playerContainer = dbSystem.getDatabase().fetch().getPlayerContainer(uuid);
+        PlayerContainer playerContainer = PlanAPI.getInstance().fetchPlayerContainer(uuid);
 
         long now = System.currentTimeMillis();
         long dayAgo = now - TimeUnit.DAYS.toMillis(1L);
@@ -185,7 +187,7 @@ public class PlanPlaceholders extends PlaceholderExpansion {
         long monthAgo = now - TimeAmount.MONTH.toMillis(1L);
 
         try {
-            SessionsMutator sessionsMutator = SessionsMutator.forContainer(playerContainer);
+            SessionsMutator sessionsMutator = new SessionsMutator(playerContainer.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>()));
             switch (identifier.toLowerCase()) {
                 case "playtime":
                     return formatters.timeAmount().apply(sessionsMutator.toPlaytime());
@@ -196,14 +198,14 @@ public class PlanPlaceholders extends PlaceholderExpansion {
                 case "playtime_month":
                     return formatters.timeAmount().apply(sessionsMutator.filterSessionsBetween(monthAgo, now).toPlaytime());
                 case "geolocation":
-                    return GeoInfoMutator.forContainer(playerContainer).mostRecent().map(GeoInfo::getGeolocation).orElse("Unknown");
+                    return new GeoInfoMutator(playerContainer.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>())).mostRecent().map(GeoInfo::getGeolocation).orElse("Unknown");
                 case "activity_index":
-                    ActivityIndex activityIndex = playerContainer.getActivityIndex(
+                    double activityIndex = playerContainer.getActivityIndex(
                             now,
                             config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD),
                             config.get(TimeSettings.ACTIVE_LOGIN_THRESHOLD)
                     );
-                    return activityIndex.getValue() + " (" + activityIndex.getGroup() + ")";
+                    return activityIndex;
                 case "registered":
                     return formatters.yearLong().apply(playerContainer.getValue(PlayerKeys.REGISTERED).orElse(0L));
                 case "last_seen":

@@ -21,9 +21,9 @@ import com.djrapitops.plan.system.settings.config.ConfigReader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.junitpioneer.jupiter.TempDirectory;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.nio.file.Path;
@@ -33,7 +33,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(JUnitPlatform.class)
 @ExtendWith(MockitoExtension.class)
-@ExtendWith(TempDirectory.class)
 class ConfigChangeTest {
 
     private Path temporaryFolder;
@@ -41,7 +40,7 @@ class ConfigChangeTest {
     private Config config;
 
     @BeforeEach
-    void prepareTemporaryFolder(@TempDirectory.TempDir Path temporaryFolder) {
+    void prepareTemporaryFolder(@TempDir Path temporaryFolder) {
         this.temporaryFolder = temporaryFolder;
     }
 

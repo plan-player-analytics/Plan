@@ -315,7 +315,7 @@ Yesterday                                       || 'Eilen'
 Today                                           || 'Tänään'
 Health - Active Playtime Comparison Decrease    ||  Aktiivisilta pelaajilta voi olla loppumassa tekeminen (Pelasivat ${0} vs ${1}, viimeisen kahden viikon vs viikot 2-4)
 Health - Active Playtime Comparison Increase    ||  Aktiivisilta pelaajilta vaikuttaa olevan tekemistä (Pelasivat ${0} vs ${1}, viimeisen kahden viikon vs viikot 2-4)
-Health - Downtime                               || Palvelimen downtime (Ei Dataa) oli ${0}
+Health - Downtime                               ||  Palvelimen downtime (Ei Dataa) oli ${0}
 Health - New Player Join Players, No            ||  Uusilla pelaajilla voi olla yksinäistä (${0} paikalla keskimäärin)
 Health - New Player Join Players, Yes           ||  Uusilla pelaajilla on kavereita liittyessä (${0} paikalla keskimäärin)
 Health - New Player Stickiness                  ||  ${0} uusista pelaajista jäi pelaamaan (${1}/${2})

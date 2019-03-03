@@ -17,12 +17,10 @@
 package com.djrapitops.pluginbridge.plan.aac;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.sql.SQLDB;
-import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.pluginbridge.plan.Hook;
 
@@ -38,20 +36,17 @@ import javax.inject.Singleton;
 public class AdvancedAntiCheatHook extends Hook {
 
     private final Plan plugin;
-    private final Processing processing;
     private final DBSystem dbSystem;
     private final Formatters formatters;
 
     @Inject
     public AdvancedAntiCheatHook(
             Plan plugin,
-            Processing processing,
             DBSystem dbSystem,
             Formatters formatters
     ) {
         super("me.konsolas.aac.AAC");
         this.plugin = plugin;
-        this.processing = processing;
         this.dbSystem = dbSystem;
         this.formatters = formatters;
     }
@@ -62,14 +57,15 @@ public class AdvancedAntiCheatHook extends Hook {
             return;
         }
 
-        HackerTable hackerTable = new HackerTable((SQLDB) dbSystem.getDatabase());
-        try {
-            hackerTable.createTable();
-        } catch (DBInitException e) {
-            throw new DBOpException("Failed to create AAC database table", e);
-        }
+        Database database = dbSystem.getDatabase();
+        database.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute(HackerTable.createTableSQL(database.getType()));
+            }
+        });
 
-        plugin.registerListener(new PlayerHackKickListener(hackerTable, processing));
-        hookHandler.addPluginDataSource(new AdvancedAntiCheatData(hackerTable, formatters.yearLong()));
+        plugin.registerListener(new PlayerHackKickListener(database));
+        hookHandler.addPluginDataSource(new AdvancedAntiCheatData(database, formatters.yearLong()));
     }
 }

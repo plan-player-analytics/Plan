@@ -25,10 +25,9 @@ import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.junitpioneer.jupiter.TempDirectory;
 import utilities.TestResources;
 
 import java.io.File;
@@ -47,10 +46,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author Rsl1122
  */
 @RunWith(JUnitPlatform.class)
-@ExtendWith(TempDirectory.class)
 class ConfigUpdaterTest {
 
-    private static Path tempDir;
+    @TempDir
+    public static Path tempDir;
 
     private static File oldConfig;
     private static File oldBungeeConfig;
@@ -61,9 +60,7 @@ class ConfigUpdaterTest {
     private static ConfigUpdater UNDER_TEST;
 
     @BeforeAll
-    static void prepareConfigFiles(@TempDirectory.TempDir Path temporaryDir) throws URISyntaxException, IOException {
-        tempDir = temporaryDir;
-
+    static void prepareConfigFiles() throws URISyntaxException, IOException {
         oldConfig = tempDir.resolve("config.yml").toFile();
         File configResource = TestResources.getTestResourceFile("config/4.5.2-config.yml", ConfigUpdater.class);
         Files.copy(configResource.toPath(), oldConfig.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -87,7 +84,7 @@ class ConfigUpdaterTest {
         Path config = tempDir.resolve("oldconfig.yml");
         Files.copy(oldConfig.toPath(), config, StandardCopyOption.REPLACE_EXISTING);
 
-        PlanConfig planConfig = new PlanConfig(config.toFile(), null);
+        PlanConfig planConfig = new PlanConfig(config.toFile(), null, new TestPluginLogger());
 
         UNDER_TEST.applyConfigUpdate(planConfig);
 
@@ -103,7 +100,7 @@ class ConfigUpdaterTest {
         Path config = tempDir.resolve("oldconfig.yml");
         Files.copy(oldBungeeConfig.toPath(), config, StandardCopyOption.REPLACE_EXISTING);
 
-        PlanConfig planConfig = new PlanConfig(config.toFile(), null);
+        PlanConfig planConfig = new PlanConfig(config.toFile(), null, new TestPluginLogger());
 
         UNDER_TEST.applyConfigUpdate(planConfig);
 
@@ -125,7 +122,7 @@ class ConfigUpdaterTest {
         Path config = tempDir.resolve("oldconfig.yml");
         Files.copy(oldConfig.toPath(), config, StandardCopyOption.REPLACE_EXISTING);
 
-        PlanConfig planConfig = new PlanConfig(config.toFile(), null);
+        PlanConfig planConfig = new PlanConfig(config.toFile(), null, new TestPluginLogger());
 
         ConfigChange[] changes = UNDER_TEST.configEnhancementPatch();
         assertMoveChangesAreAppliedProperly(planConfig, changes);
@@ -136,7 +133,7 @@ class ConfigUpdaterTest {
         Path config = tempDir.resolve("oldconfig.yml");
         Files.copy(oldBungeeConfig.toPath(), config, StandardCopyOption.REPLACE_EXISTING);
 
-        PlanConfig planConfig = new PlanConfig(config.toFile(), null);
+        PlanConfig planConfig = new PlanConfig(config.toFile(), null, new TestPluginLogger());
 
         ConfigChange[] changes = UNDER_TEST.configEnhancementPatch();
         assertMoveChangesAreAppliedProperly(planConfig, changes);

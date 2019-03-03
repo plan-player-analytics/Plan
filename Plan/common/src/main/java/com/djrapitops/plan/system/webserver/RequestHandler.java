@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.system.webserver;
 
-import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -26,12 +25,14 @@ import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.auth.BasicAuthentication;
 import com.djrapitops.plan.system.webserver.response.PromptAuthorizationResponse;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plugin.benchmarking.Benchmark;
-import com.djrapitops.plugin.benchmarking.Timings;
+import com.djrapitops.plan.system.webserver.response.ResponseFactory;
+import com.djrapitops.plan.system.webserver.response.errors.ForbiddenResponse;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -39,6 +40,8 @@ import com.sun.net.httpserver.HttpHandler;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * HttpHandler for WebServer request management.
@@ -53,9 +56,13 @@ public class RequestHandler implements HttpHandler {
     private final Theme theme;
     private final DBSystem dbSystem;
     private final ResponseHandler responseHandler;
-    private final Timings timings;
+    private final ResponseFactory responseFactory;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
+
+    private final Cache<String, Integer> failedLoginAttempts = Caffeine.newBuilder()
+            .expireAfterWrite(90, TimeUnit.SECONDS)
+            .build();
 
     @Inject
     RequestHandler(
@@ -64,7 +71,7 @@ public class RequestHandler implements HttpHandler {
             Theme theme,
             DBSystem dbSystem,
             ResponseHandler responseHandler,
-            Timings timings,
+            ResponseFactory responseFactory,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
@@ -73,7 +80,7 @@ public class RequestHandler implements HttpHandler {
         this.theme = theme;
         this.dbSystem = dbSystem;
         this.responseHandler = responseHandler;
-        this.timings = timings;
+        this.responseFactory = responseFactory;
         this.logger = logger;
         this.errorHandler = errorHandler;
     }
@@ -85,34 +92,77 @@ public class RequestHandler implements HttpHandler {
         Request request = new Request(exchange, locale);
         request.setAuth(getAuthorization(requestHeaders));
 
-        String requestString = request.toString();
-        timings.start(requestString);
-        int responseCode = -1;
-
-        boolean inDevMode = config.isTrue(PluginSettings.DEV_MODE);
         try {
-            Response response = responseHandler.getResponse(request);
-            responseCode = response.getCode();
+            Response response = shouldPreventRequest(request.getRemoteAddress()) // Forbidden response (Optional)
+                    .orElse(responseHandler.getResponse(request)); // Or the actual requested response
+
+            // Increase attempt count and block if too high
+            Optional<Response> forbid = handlePasswordBruteForceAttempts(request, response);
+            if (forbid.isPresent()) {
+                response = forbid.get();
+            }
+
+            // Authentication failed, but was not blocked
             if (response instanceof PromptAuthorizationResponse) {
-                responseHeaders.set("WWW-Authenticate", "Basic realm=\"/\"");
+                responseHeaders.set("WWW-Authenticate", response.getHeader("WWW-Authenticate").orElse("Basic realm=\"Plan WebUser (/plan register)\";"));
             }
 
             response.setResponseHeaders(responseHeaders);
             response.send(exchange, locale, theme);
         } catch (Exception e) {
-            if (inDevMode) {
+            if (config.isTrue(PluginSettings.DEV_MODE)) {
                 logger.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
                 errorHandler.log(L.WARN, this.getClass(), e);
             }
         } finally {
             exchange.close();
-            if (inDevMode) {
-                logger.getDebugLogger().logOn(
-                        DebugChannels.WEB_REQUESTS,
-                        timings.end(requestString).map(Benchmark::toString).orElse("-") + " Code: " + responseCode
-                );
-            }
         }
+    }
+
+    private Optional<Response> shouldPreventRequest(String accessor) {
+        Integer attempts = failedLoginAttempts.getIfPresent(accessor);
+        if (attempts == null) {
+            attempts = 0;
+        }
+
+        // Too many attempts, forbid further attempts.
+        if (attempts >= 5) {
+            return createForbiddenResponse();
+        }
+        return Optional.empty();
+    }
+
+    private Optional<Response> handlePasswordBruteForceAttempts(Request request, Response response) {
+        if (request.getAuth().isPresent() && response instanceof PromptAuthorizationResponse) {
+            // Authentication was attempted, but failed so new attempt is going to be given if not forbidden
+
+            failedLoginAttempts.cleanUp();
+
+            String accessor = request.getRemoteAddress();
+            Integer attempts = failedLoginAttempts.getIfPresent(accessor);
+            if (attempts == null) {
+                attempts = 0;
+            }
+
+            // Too many attempts, forbid further attempts.
+            if (attempts >= 5) {
+                logger.warn(accessor + " failed to login 5 times. Their access is blocked for 90 seconds.");
+                return createForbiddenResponse();
+            }
+
+            // Attempts only increased if less than 5 attempts to prevent frustration from the cache value not
+            // getting removed.
+            failedLoginAttempts.put(accessor, attempts + 1);
+        } else if (!(response instanceof PromptAuthorizationResponse) && !(response instanceof ForbiddenResponse)) {
+            // Successful login
+            failedLoginAttempts.invalidate(request.getRemoteAddress());
+        }
+        // First connection, no authentication headers present.
+        return Optional.empty();
+    }
+
+    private Optional<Response> createForbiddenResponse() {
+        return Optional.of(responseFactory.forbidden403("You have too many failed login attempts. Please wait 2 minutes until attempting again."));
     }
 
     private Authentication getAuthorization(Headers requestHeaders) {

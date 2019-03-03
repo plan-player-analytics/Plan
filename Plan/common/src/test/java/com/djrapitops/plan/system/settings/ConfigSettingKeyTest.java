@@ -19,6 +19,7 @@ package com.djrapitops.plan.system.settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.*;
 import com.djrapitops.plan.system.settings.paths.key.Setting;
+import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -134,7 +135,7 @@ public class ConfigSettingKeyTest {
     }
 
     private PlanConfig createConfig(File configFile) throws IOException {
-        PlanConfig config = new PlanConfig(configFile, null);
+        PlanConfig config = new PlanConfig(configFile, null, new TestPluginLogger());
         config.save();
         return config;
     }

@@ -25,6 +25,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -51,6 +52,15 @@ public abstract class Response {
 
     protected String getHeader() {
         return header;
+    }
+
+    public Optional<String> getHeader(String called) {
+        for (String header : header.split("\r\n")) {
+            if (header.startsWith(called)) {
+                return Optional.of(header.split(": ")[1]);
+            }
+        }
+        return Optional.empty();
     }
 
     public void setHeader(String header) {

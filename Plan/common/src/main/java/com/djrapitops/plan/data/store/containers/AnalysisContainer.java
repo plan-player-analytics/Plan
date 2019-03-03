@@ -24,7 +24,6 @@ import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.*;
 import com.djrapitops.plan.data.store.mutators.health.HealthInformation;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -59,7 +58,7 @@ import java.util.stream.Collectors;
  * @see com.djrapitops.plan.data.store.keys.AnalysisKeys for Key objects
  * @see com.djrapitops.plan.data.store.PlaceholderKey for placeholder information
  */
-public class AnalysisContainer extends DataContainer {
+public class AnalysisContainer extends DynamicDataContainer {
 
     private final ServerContainer serverContainer;
 
@@ -67,7 +66,6 @@ public class AnalysisContainer extends DataContainer {
     private final Locale locale;
     private final PlanConfig config;
     private final Theme theme;
-    private final DBSystem dbSystem;
     private final ServerProperties serverProperties;
     private final Formatters formatters;
     private final Graphs graphs;
@@ -75,16 +73,12 @@ public class AnalysisContainer extends DataContainer {
     private final Accordions accordions;
     private final AnalysisPluginsTabContentCreator pluginsTabContentCreator;
 
-    private static final Key<Map<UUID, String>> serverNames = new Key<>(new Type<Map<UUID, String>>() {
-    }, "SERVER_NAMES");
-
     public AnalysisContainer(
             ServerContainer serverContainer,
             String version,
             Locale locale,
             PlanConfig config,
             Theme theme,
-            DBSystem dbSystem,
             ServerProperties serverProperties,
             Formatters formatters,
             Graphs graphs,
@@ -97,7 +91,6 @@ public class AnalysisContainer extends DataContainer {
         this.locale = locale;
         this.config = config;
         this.theme = theme;
-        this.dbSystem = dbSystem;
         this.serverProperties = serverProperties;
         this.formatters = formatters;
         this.graphs = graphs;
@@ -148,9 +141,7 @@ public class AnalysisContainer extends DataContainer {
     }
 
     private void addServerProperties() {
-        putCachingSupplier(AnalysisKeys.SERVER_NAME, () ->
-                getUnsafe(serverNames).getOrDefault(serverContainer.getUnsafe(ServerKeys.SERVER_UUID), "Plan")
-        );
+        putCachingSupplier(AnalysisKeys.SERVER_NAME, () -> serverContainer.getValue(ServerKeys.NAME).orElse("Plan"));
 
         putRawData(AnalysisKeys.PLAYERS_MAX, serverProperties.getMaxPlayers());
         putRawData(AnalysisKeys.PLAYERS_ONLINE, serverProperties.getOnlinePlayers());
@@ -308,10 +299,12 @@ public class AnalysisContainer extends DataContainer {
 
     private void addSessionSuppliers() {
         Key<SessionAccordion> sessionAccordion = new Key<>(SessionAccordion.class, "SESSION_ACCORDION");
-        putCachingSupplier(serverNames, () -> dbSystem.getDatabase().fetch().getServerNames());
         putCachingSupplier(sessionAccordion, () -> accordions.serverSessionAccordion(
                 getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).all(),
-                getSupplier(serverNames),
+                () -> Collections.singletonMap(
+                        serverContainer.getUnsafe(ServerKeys.SERVER_UUID),
+                        serverContainer.getValue(ServerKeys.NAME).orElse("This server")
+                ),
                 () -> getUnsafe(AnalysisKeys.PLAYER_NAMES)
         ));
         putSupplier(AnalysisKeys.SESSION_ACCORDION_HTML, () -> getUnsafe(sessionAccordion).toHtml());
@@ -511,7 +504,6 @@ public class AnalysisContainer extends DataContainer {
         private final PlanConfig config;
         private final Locale locale;
         private final Theme theme;
-        private final DBSystem dbSystem;
         private final ServerProperties serverProperties;
         private final Formatters formatters;
         private final Graphs graphs;
@@ -525,7 +517,6 @@ public class AnalysisContainer extends DataContainer {
                 PlanConfig config,
                 Locale locale,
                 Theme theme,
-                DBSystem dbSystem,
                 ServerProperties serverProperties,
                 Formatters formatters,
                 Graphs graphs,
@@ -537,7 +528,6 @@ public class AnalysisContainer extends DataContainer {
             this.config = config;
             this.locale = locale;
             this.theme = theme;
-            this.dbSystem = dbSystem;
             this.serverProperties = serverProperties;
             this.formatters = formatters;
             this.graphs = graphs;
@@ -553,7 +543,6 @@ public class AnalysisContainer extends DataContainer {
                     locale,
                     config,
                     theme,
-                    dbSystem,
                     serverProperties,
                     formatters,
                     graphs,

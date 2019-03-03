@@ -19,10 +19,9 @@ package com.djrapitops.plan.system.settings.config;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.junitpioneer.jupiter.TempDirectory;
 import utilities.TestResources;
 
 import java.io.File;
@@ -41,13 +40,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * @author Rsl1122
  */
 @RunWith(JUnitPlatform.class)
-@ExtendWith(TempDirectory.class)
 class ConfigWriterTest {
 
     private Path tempFolder;
 
     @BeforeEach
-    void prepareTempFolder(@TempDirectory.TempDir Path tempFolder) {
+    void prepareTempFolder(@TempDir Path tempFolder) {
         this.tempFolder = tempFolder;
     }
 

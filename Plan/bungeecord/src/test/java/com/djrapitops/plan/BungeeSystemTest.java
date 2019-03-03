@@ -17,11 +17,13 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.db.SQLiteDB;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.ProxySettings;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
+import com.google.common.util.concurrent.MoreExecutors;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -62,7 +64,9 @@ public class BungeeSystemTest {
             config.set(ProxySettings.IP, "8.8.8.8");
 
             DBSystem dbSystem = bungeeSystem.getDatabaseSystem();
-            dbSystem.setActiveDatabase(dbSystem.getSqLiteFactory().usingDefaultFile());
+            SQLiteDB db = dbSystem.getSqLiteFactory().usingDefaultFile();
+            db.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
+            dbSystem.setActiveDatabase(db);
 
             bungeeSystem.enable();
         } finally {
@@ -82,7 +86,9 @@ public class BungeeSystemTest {
             config.set(ProxySettings.IP, "0.0.0.0");
 
             DBSystem dbSystem = bungeeSystem.getDatabaseSystem();
-            dbSystem.setActiveDatabase(dbSystem.getSqLiteFactory().usingDefaultFile());
+            SQLiteDB db = dbSystem.getSqLiteFactory().usingDefaultFile();
+            db.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
+            dbSystem.setActiveDatabase(db);
 
             bungeeSystem.enable();
             assertTrue(bungeeSystem.isEnabled());

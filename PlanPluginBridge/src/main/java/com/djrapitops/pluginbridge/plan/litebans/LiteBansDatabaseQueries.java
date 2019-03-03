@@ -17,9 +17,8 @@
 package com.djrapitops.pluginbridge.plan.litebans;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
-import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
-import com.djrapitops.plan.system.database.databases.sql.tables.Table;
+import com.djrapitops.plan.db.access.QueryAllStatement;
+import com.djrapitops.plan.db.access.QueryStatement;
 import litebans.api.Database;
 
 import java.sql.PreparedStatement;
@@ -33,9 +32,8 @@ import java.util.UUID;
  * Class responsible for making queries to LiteBans database.
  *
  * @author Rsl1122
- * @since 3.5.0
  */
-public class LiteBansDatabaseQueries extends Table {
+public class LiteBansDatabaseQueries {
     private final Database database;
 
     private final String banTable;
@@ -46,7 +44,6 @@ public class LiteBansDatabaseQueries extends Table {
     private final String selectSQL;
 
     public LiteBansDatabaseQueries() {
-        super("litebans", null);
         database = Database.get();
         banTable = "{bans}";
         mutesTable = "{mutes}";
@@ -55,7 +52,6 @@ public class LiteBansDatabaseQueries extends Table {
         selectSQL = "SELECT uuid, reason, banned_by_name, until, active, time FROM ";
     }
 
-    @Override
     protected <T> T query(QueryStatement<T> statement) {
         try (PreparedStatement preparedStatement = database.prepareStatement(statement.getSql())) {
             return statement.executeQuery(preparedStatement);
@@ -144,10 +140,5 @@ public class LiteBansDatabaseQueries extends Table {
                 return processIntoObjects(resultSet);
             }
         });
-    }
-
-    @Override
-    public void createTable() {
-        throw new IllegalStateException("Not Supposed to be called.");
     }
 }

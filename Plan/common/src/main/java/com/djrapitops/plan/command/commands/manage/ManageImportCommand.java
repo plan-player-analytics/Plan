@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.importing.ImportSystem;
 import com.djrapitops.plan.system.importing.importers.Importer;
 import com.djrapitops.plan.system.locale.Locale;
@@ -44,18 +46,21 @@ import java.util.Optional;
 public class ManageImportCommand extends CommandNode {
 
     private final Locale locale;
+    private final DBSystem dbSystem;
     private final Processing processing;
     private final ImportSystem importSystem;
 
     @Inject
     public ManageImportCommand(
             Locale locale,
+            DBSystem dbSystem,
             Processing processing,
             ImportSystem importSystem
     ) {
         super("import", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
 
         this.locale = locale;
+        this.dbSystem = dbSystem;
         this.processing = processing;
         this.importSystem = importSystem;
 
@@ -74,6 +79,12 @@ public class ManageImportCommand extends CommandNode {
         if ("list".equals(importArg)) {
             sender.sendMessage(locale.getString(ManageLang.IMPORTERS));
             importSystem.getImporterNames().forEach(name -> sender.sendMessage("- " + name));
+            return;
+        }
+
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState != Database.State.OPEN) {
+            sender.sendMessage(locale.getString(CommandLang.FAIL_DATABASE_NOT_OPEN, dbState.name()));
             return;
         }
 

@@ -18,6 +18,9 @@ package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.db.access.queries.objects.WebUserQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
@@ -40,7 +43,6 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -89,6 +91,12 @@ public class AnalyzeCommand extends CommandNode {
 
     @Override
     public void onCommand(Sender sender, String commandLabel, String[] args) {
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState != Database.State.OPEN) {
+            sender.sendMessage(locale.getString(CommandLang.FAIL_DATABASE_NOT_OPEN, dbState.name()));
+            return;
+        }
+
         sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
         processing.submitNonCritical(() -> {
@@ -125,23 +133,16 @@ public class AnalyzeCommand extends CommandNode {
     private void sendWebUserNotificationIfNecessary(Sender sender) {
         if (webServer.isAuthRequired() &&
                 CommandUtils.isPlayer(sender) &&
-                !dbSystem.getDatabase().check().doesWebUserExists(sender.getName())) {
+                !dbSystem.getDatabase().query(WebUserQueries.fetchWebUser(sender.getName())).isPresent()) {
             sender.sendMessage("§e" + locale.getString(CommandLang.NO_WEB_USER_NOTIFY));
         }
     }
 
     private Optional<Server> getServer(String[] args) {
         if (args.length >= 1 && connectionSystem.isServerAvailable()) {
-            Map<UUID, Server> bukkitServers = dbSystem.getDatabase().fetch().getBukkitServers();
             String serverIdentifier = getGivenIdentifier(args);
-            for (Map.Entry<UUID, Server> entry : bukkitServers.entrySet()) {
-                Server server = entry.getValue();
-
-                if (Integer.toString(server.getId()).equals(serverIdentifier)
-                        || server.getName().equalsIgnoreCase(serverIdentifier)) {
-                    return Optional.of(server);
-                }
-            }
+            return dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverIdentifier))
+                    .filter(server -> !server.isProxy());
         }
         return Optional.empty();
     }

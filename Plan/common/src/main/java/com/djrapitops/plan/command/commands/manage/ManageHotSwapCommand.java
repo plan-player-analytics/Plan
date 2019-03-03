@@ -17,9 +17,9 @@
 package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.db.DBType;
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.DBType;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
@@ -84,7 +84,7 @@ public class ManageHotSwapCommand extends CommandNode {
             Database database = dbSystem.getActiveDatabaseByName(dbName);
             database.init();
 
-            if (!database.isOpen()) {
+            if (database.getState() == Database.State.CLOSED) {
                 return;
             }
         } catch (Exception e) {

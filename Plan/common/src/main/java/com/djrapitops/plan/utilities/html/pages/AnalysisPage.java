@@ -20,10 +20,10 @@ import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.store.containers.AnalysisContainer;
 import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plan.system.file.PlanFiles;
+import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.benchmarking.Timings;
 
 import java.io.IOException;
@@ -41,6 +41,7 @@ public class AnalysisPage implements Page {
 
     private final AnalysisContainer analysisContainer;
 
+    private final ConnectionSystem connectionSystem;
     private final VersionCheckSystem versionCheckSystem;
     private final PlanFiles files;
     private final Formatter<Double> decimalFormatter;
@@ -48,12 +49,14 @@ public class AnalysisPage implements Page {
 
     AnalysisPage(
             AnalysisContainer analysisContainer,
+            ConnectionSystem connectionSystem,
             VersionCheckSystem versionCheckSystem,
             PlanFiles files,
             Formatter<Double> decimalFormatter,
             Timings timings
     ) {
         this.analysisContainer = analysisContainer;
+        this.connectionSystem = connectionSystem;
         this.versionCheckSystem = versionCheckSystem;
         this.files = files;
         this.decimalFormatter = decimalFormatter;
@@ -75,7 +78,8 @@ public class AnalysisPage implements Page {
                 TPS_LOW_COLOR, WORLD_MAP_HIGH_COLOR, WORLD_MAP_LOW_COLOR,
                 AVG_PING_COLOR, MAX_PING_COLOR, MIN_PING_COLOR
         );
-        if (Check.isBungeeAvailable() || Check.isVelocityAvailable()) {
+
+        if (connectionSystem.isServerAvailable()) {
             placeholderReplacer.put("backButton", "<li><a title=\"to Network page\" href=\"/network\"><i class=\"material-icons\">arrow_back</i><i class=\"material-icons\">cloud</i></a></li>");
         } else {
             placeholderReplacer.put("backButton", "");

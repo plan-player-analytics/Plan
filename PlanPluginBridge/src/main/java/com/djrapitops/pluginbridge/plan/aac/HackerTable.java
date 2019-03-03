@@ -16,13 +16,13 @@
  */
 package com.djrapitops.pluginbridge.plan.aac;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.system.database.databases.sql.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
-import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
-import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
-import com.djrapitops.plan.system.database.databases.sql.statements.Select;
-import com.djrapitops.plan.system.database.databases.sql.tables.Table;
+import com.djrapitops.plan.db.DBType;
+import com.djrapitops.plan.db.access.Query;
+import com.djrapitops.plan.db.access.QueryAllStatement;
+import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
+import com.djrapitops.plan.db.sql.parsing.Select;
+import com.djrapitops.plan.db.sql.parsing.Sql;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,41 +30,36 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- * Class responsible for AAC kick information in Plan database.
+ * Table information about 'plan_aac_hack_table'.
  *
  * @author Rsl1122
- * @since 3.5.0
  */
-public class HackerTable extends Table {
+public class HackerTable {
 
-    private final String columnUUID;
-    private final String columnDate;
-    private final String columnHackType;
-    private final String columnViolations;
+    public static final String TABLE_NAME = "plan_aac_hack_table";
+    public static final String COL_ID = "id";
+    public static final String COL_UUID = "uuid";
+    public static final String COL_DATE = "date";
+    public static final String COL_HACK_TYPE = "hack_type";
+    public static final String COL_VIOLATION_LEVEL = "violation_level";
 
-    public HackerTable(SQLDB db) {
-        super("plan_aac_hack_table", db);
-        columnUUID = "uuid";
-        columnDate = "date";
-        columnHackType = "hack_type";
-        columnViolations = "violation_level";
+    private HackerTable() {
+        /* Static information class */
     }
 
-    @Override
-    public void createTable() throws DBInitException {
-        createTable("CREATE TABLE IF NOT EXISTS " + tableName + " ("
-                + columnUUID + " varchar(36) NOT NULL, "
-                + columnDate + " bigint NOT NULL, "
-                + columnHackType + " varchar(100) NOT NULL, "
-                + columnViolations + " integer NOT NULL"
-                + ")"
-        );
+    public static String createTableSQL(DBType dbType) {
+        return CreateTableParser.create(TABLE_NAME, dbType)
+                .column(COL_ID, Sql.INT).primaryKey()
+                .column(COL_UUID, Sql.varchar(36)).notNull()
+                .column(COL_HACK_TYPE, Sql.varchar(100)).notNull()
+                .column(COL_VIOLATION_LEVEL, Sql.INT).notNull()
+                .build();
     }
 
-    public List<HackObject> getHackObjects(UUID uuid) {
-        String sql = "SELECT * FROM " + tableName + " WHERE " + columnUUID + "=?";
+    public static Query<List<HackObject>> getHackObjects(UUID uuid) {
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + COL_UUID + "=?";
 
-        return query(new QueryStatement<List<HackObject>>(sql) {
+        return new QueryStatement<List<HackObject>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
@@ -74,52 +69,33 @@ public class HackerTable extends Table {
             public List<HackObject> processResults(ResultSet set) throws SQLException {
                 List<HackObject> hackObjects = new ArrayList<>();
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(columnUUID));
-                    long date = set.getLong(columnDate);
-                    String hackType = set.getString(columnHackType);
-                    int violationLevel = set.getInt(columnViolations);
+                    UUID uuid = UUID.fromString(set.getString(COL_UUID));
+                    long date = set.getLong(COL_DATE);
+                    String hackType = set.getString(COL_HACK_TYPE);
+                    int violationLevel = set.getInt(COL_VIOLATION_LEVEL);
                     hackObjects.add(new HackObject(uuid, date, hackType, violationLevel));
                 }
                 return hackObjects;
             }
-        });
+        };
     }
 
-    public Map<UUID, List<HackObject>> getHackObjects() {
-        return query(new QueryAllStatement<Map<UUID, List<HackObject>>>(Select.all(tableName).toString(), 5000) {
+    public static Query<Map<UUID, List<HackObject>>> getHackObjects() {
+        return new QueryAllStatement<Map<UUID, List<HackObject>>>(Select.all(TABLE_NAME).toString(), 5000) {
             @Override
             public Map<UUID, List<HackObject>> processResults(ResultSet set) throws SQLException {
                 Map<UUID, List<HackObject>> hackObjects = new HashMap<>();
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(columnUUID));
-                    long date = set.getLong(columnDate);
-                    String hackType = set.getString(columnHackType);
-                    int violationLevel = set.getInt(columnViolations);
+                    UUID uuid = UUID.fromString(set.getString(COL_UUID));
+                    long date = set.getLong(COL_DATE);
+                    String hackType = set.getString(COL_HACK_TYPE);
+                    int violationLevel = set.getInt(COL_VIOLATION_LEVEL);
                     List<HackObject> list = hackObjects.getOrDefault(uuid, new ArrayList<>());
                     list.add(new HackObject(uuid, date, hackType, violationLevel));
                     hackObjects.put(uuid, list);
                 }
                 return hackObjects;
             }
-        });
-    }
-
-    public void insertHackRow(HackObject hackObject) {
-        String sql = "INSERT INTO " + tableName + " ("
-                + columnUUID + ", "
-                + columnDate + ", "
-                + columnHackType + ", "
-                + columnViolations
-                + ") VALUES (?, ?, ?, ?)";
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, hackObject.getUuid().toString());
-                statement.setLong(2, hackObject.getDate());
-                statement.setString(3, hackObject.getHackType());
-                statement.setInt(4, hackObject.getViolationLevel());
-            }
-        });
+        };
     }
 }

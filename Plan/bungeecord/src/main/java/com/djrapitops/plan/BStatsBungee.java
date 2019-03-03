@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import org.bstats.bungeecord.Metrics;
 
@@ -49,7 +49,7 @@ public class BStatsBungee {
 
         addStringSettingPie("server_type", serverType);
         addStringSettingPie("database_type", databaseType);
-        addStringSettingPie("network_servers", connectionSystem.getBukkitServers().size());
+        addStringSettingPie("network_servers", connectionSystem.getDataServers().size());
     }
 
     protected void addStringSettingPie(String id, Serializable setting) {

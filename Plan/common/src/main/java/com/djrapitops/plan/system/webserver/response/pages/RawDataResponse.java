@@ -57,17 +57,16 @@ public class RawDataResponse extends Response {
         Map<String, Object> values = new HashMap<>();
         player.getMap().forEach((key, value) ->
                 {
-                    Object object = value.get();
-                    if (object instanceof DataContainer) {
-                        object = mapToNormalMap((DataContainer) object);
+                    if (value instanceof DataContainer) {
+                        value = mapToNormalMap((DataContainer) value);
                     }
-                    if (object instanceof Map) {
-                        object = handleMap((Map) object);
+                    if (value instanceof Map) {
+                        value = handleMap((Map) value);
                     }
-                    if (object instanceof List) {
-                        object = handleList((List) object);
+                    if (value instanceof List) {
+                        value = handleList((List) value);
                     }
-                    values.put(key.getKeyName(), object);
+                    values.put(key.getKeyName(), value);
                 }
         );
         return values;

@@ -77,6 +77,8 @@ public class WorldTimes {
      * @param changeTime Epoch ms the change occurred.
      */
     public void updateState(String worldName, String gameMode, long changeTime) {
+        if (worldName == null || gameMode == null) return;
+
         GMTimes currentGMTimes = times.get(currentWorld);
         if (currentWorld.equals(worldName)) {
             currentGMTimes.changeState(gameMode, changeTime);
@@ -182,4 +184,7 @@ public class WorldTimes {
         }
     }
 
+    public boolean contains(String worldName) {
+        return times.containsKey(worldName);
+    }
 }

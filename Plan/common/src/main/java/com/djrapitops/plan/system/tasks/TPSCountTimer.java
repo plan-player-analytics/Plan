@@ -17,8 +17,9 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.Processors;
+import com.djrapitops.plan.db.access.transactions.events.TPSStoreTransaction;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -39,8 +40,8 @@ public abstract class TPSCountTimer extends AbsRunnable {
 
     protected final List<TPS> history;
 
-    protected final Processors processors;
-    protected final Processing processing;
+    protected final DBSystem dbSystem;
+    protected final ServerInfo serverInfo;
     protected final PluginLogger logger;
     protected final ErrorHandler errorHandler;
 
@@ -49,13 +50,13 @@ public abstract class TPSCountTimer extends AbsRunnable {
     protected int latestPlayersOnline = 0;
 
     public TPSCountTimer(
-            Processors processors,
-            Processing processing,
+            DBSystem dbSystem,
+            ServerInfo serverInfo,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        this.processors = processors;
-        this.processing = processing;
+        this.dbSystem = dbSystem;
+        this.serverInfo = serverInfo;
         this.logger = logger;
         this.errorHandler = errorHandler;
         history = new ArrayList<>();
@@ -70,7 +71,10 @@ public abstract class TPSCountTimer extends AbsRunnable {
             addNewTPSEntry(nanoTime, now);
 
             if (history.size() >= 60) {
-                processing.submit(processors.tpsInsertProcessor(new ArrayList<>(history)));
+                dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
+                        serverInfo.getServerUUID(),
+                        new ArrayList<>(history)
+                ));
                 history.clear();
             }
         } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {

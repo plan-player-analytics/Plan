@@ -29,7 +29,7 @@ import javax.inject.Singleton;
  * A Class responsible for hooking to ASkyBlock and registering data sources.
  *
  * @author Rsl1122
- * @since 3.5.0
+
  */
 @Singleton
 public class ASkyBlockHook extends Hook {

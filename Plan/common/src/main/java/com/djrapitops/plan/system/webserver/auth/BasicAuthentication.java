@@ -20,7 +20,8 @@ import com.djrapitops.plan.api.exceptions.PassEncryptException;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.objects.WebUserQueries;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 
@@ -54,12 +55,14 @@ public class BasicAuthentication implements Authentication {
         String user = userInfo[0];
         String passwordRaw = userInfo[1];
 
-        try {
-            if (!database.check().doesWebUserExists(user)) {
-                throw new WebUserAuthException(FailReason.USER_DOES_NOT_EXIST, user);
-            }
+        Database.State dbState = database.getState();
+        if (dbState != Database.State.OPEN) {
+            throw new WebUserAuthException(FailReason.DATABASE_NOT_OPEN, "State was: " + dbState.name());
+        }
 
-            WebUser webUser = database.fetch().getWebUser(user);
+        try {
+            WebUser webUser = database.query(WebUserQueries.fetchWebUser(user))
+                    .orElseThrow(() -> new WebUserAuthException(FailReason.USER_DOES_NOT_EXIST, user));
 
             boolean correctPass = PassEncryptUtil.verifyPassword(passwordRaw, webUser.getSaltedPassHash());
             if (!correctPass) {

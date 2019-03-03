@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.webserver;
 
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.db.access.transactions.commands.RegisterWebUserTransaction;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
@@ -78,8 +79,8 @@ public class HTTPSWebServerAuthTest {
 
         system.enable();
 
-        system.getDatabaseSystem().getDatabase().save()
-                .webUser(new WebUser("test", PassEncryptUtil.createHash("testPass"), 0));
+        WebUser webUser = new WebUser("test", PassEncryptUtil.createHash("testPass"), 0);
+        system.getDatabaseSystem().getDatabase().executeTransaction(new RegisterWebUserTransaction(webUser));
     }
 
     @AfterClass

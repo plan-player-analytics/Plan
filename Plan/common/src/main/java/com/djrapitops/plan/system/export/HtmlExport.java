@@ -19,10 +19,14 @@ package com.djrapitops.plan.system.export;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.data.container.UserInfo;
+import com.djrapitops.plan.data.container.BaseUser;
+import com.djrapitops.plan.db.access.queries.objects.BaseUserQueries;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.db.access.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.ExportSettings;
@@ -92,28 +96,30 @@ public class HtmlExport extends SpecificExport {
         if (Check.isBukkitAvailable() && connectionSystem.isServerAvailable()) {
             return;
         }
-        Optional<String> serverName = dbSystem.getDatabase().fetch().getServerName(serverUUID);
-        serverName.ifPresent(name -> {
-            try {
-                exportAvailableServerPage(serverUUID, name);
-            } catch (IOException e) {
-                errorHandler.log(L.WARN, this.getClass(), e);
-            }
-        });
+        dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
+                .map(Server::getName)
+                .ifPresent(serverName -> {
+                    try {
+                        exportAvailableServerPage(serverUUID, serverName);
+                    } catch (IOException e) {
+                        errorHandler.log(L.WARN, this.getClass(), e);
+                    }
+                });
     }
 
-    public void exportPlayer(UUID uuid) {
+    public void exportPlayer(UUID playerUUID) {
         if (Check.isBukkitAvailable() && connectionSystem.isServerAvailable()) {
             return;
         }
-        String playerName = dbSystem.getDatabase().fetch().getPlayerName(uuid);
-        if (playerName != null) {
-            try {
-                exportAvailablePlayerPage(uuid, playerName);
-            } catch (IOException e) {
-                errorHandler.log(L.WARN, this.getClass(), e);
-            }
-        }
+
+        dbSystem.getDatabase().query(UserIdentifierQueries.fetchPlayerNameOf(playerUUID))
+                .ifPresent(playerName -> {
+                    try {
+                        exportAvailablePlayerPage(playerUUID, playerName);
+                    } catch (IOException e) {
+                        errorHandler.log(L.WARN, this.getClass(), e);
+                    }
+                });
     }
 
     public void exportPlayersPage() {
@@ -137,8 +143,9 @@ public class HtmlExport extends SpecificExport {
 
     public void exportAvailablePlayers() {
         try {
-            for (Map.Entry<UUID, UserInfo> entry : dbSystem.getDatabase().fetch().getUsers().entrySet()) {
-                exportAvailablePlayerPage(entry.getKey(), entry.getValue().getName());
+            Collection<BaseUser> users = dbSystem.getDatabase().query(BaseUserQueries.fetchAllBaseUsers());
+            for (BaseUser user : users) {
+                exportAvailablePlayerPage(user.getUuid(), user.getName());
             }
         } catch (IOException | DBOpException e) {
             errorHandler.log(L.WARN, this.getClass(), e);
@@ -147,7 +154,7 @@ public class HtmlExport extends SpecificExport {
 
     public void exportAvailableServerPages() {
         try {
-            Map<UUID, String> serverNames = dbSystem.getDatabase().fetch().getServerNames();
+            Map<UUID, String> serverNames = dbSystem.getDatabase().query(ServerQueries.fetchServerNames());
 
             for (Map.Entry<UUID, String> entry : serverNames.entrySet()) {
                 exportAvailableServerPage(entry.getKey(), entry.getValue());

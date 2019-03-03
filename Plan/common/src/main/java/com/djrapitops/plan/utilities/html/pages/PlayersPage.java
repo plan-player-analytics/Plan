@@ -18,7 +18,8 @@ package com.djrapitops.plan.utilities.html.pages;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -81,7 +82,7 @@ public class PlayersPage implements Page {
             }
 
             timings.start("Players page players table parsing");
-            List<PlayerContainer> playerContainers = database.fetch().getAllPlayerContainers();
+            List<PlayerContainer> playerContainers = database.query(ContainerFetchQueries.fetchAllPlayerContainers());
             placeholderReplacer.put("playersTable", tables.playerTableForPlayersPage(playerContainers).parseHtml());
             timings.end("Pages", "Players page players table parsing");
 

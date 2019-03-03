@@ -17,9 +17,12 @@
 package com.djrapitops.plan.system.webserver.pages;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
+import com.djrapitops.plan.api.exceptions.connection.ForbiddenException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.webserver.Request;
@@ -77,8 +80,12 @@ public class PlayerPageHandler implements PageHandler {
             return responseFactory.uuidNotFound404();
         }
         try {
+            Database.State dbState = dbSystem.getDatabase().getState();
+            if (dbState != Database.State.OPEN) {
+                throw new ForbiddenException("Database is " + dbState.name() + " - Please try again later. You can check database status with /plan info");
+            }
             // TODO Move this Database dependency to PlayerPage generation in PageFactory instead.
-            if (dbSystem.getDatabase().check().isPlayerRegistered(uuid)) {
+            if (dbSystem.getDatabase().query(PlayerFetchQueries.isPlayerRegistered(uuid))) {
                 if (raw) {
                     return ResponseCache.loadResponse(PageId.RAW_PLAYER.of(uuid), () -> responseFactory.rawPlayerPageResponse(uuid));
                 }

@@ -17,7 +17,13 @@
 package com.djrapitops.plan.system.listeners.sponge;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.objects.Nickname;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.transactions.events.*;
+import com.djrapitops.plan.system.cache.GeolocationCache;
+import com.djrapitops.plan.system.cache.NicknameCache;
 import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
@@ -26,7 +32,6 @@ import com.djrapitops.plan.system.settings.paths.DataGatheringSettings;
 import com.djrapitops.plan.system.status.Status;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.plugin.task.RunnableFactory;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
@@ -55,10 +60,12 @@ public class SpongePlayerListener {
     private final Processors processors;
     private final Processing processing;
     private final ServerInfo serverInfo;
-    private SessionCache sessionCache;
+    private final DBSystem dbSystem;
+    private final GeolocationCache geolocationCache;
+    private final NicknameCache nicknameCache;
+    private final SessionCache sessionCache;
     private final Status status;
-    private RunnableFactory runnableFactory;
-    private ErrorHandler errorHandler;
+    private final ErrorHandler errorHandler;
 
     @Inject
     public SpongePlayerListener(
@@ -66,18 +73,22 @@ public class SpongePlayerListener {
             Processors processors,
             Processing processing,
             ServerInfo serverInfo,
+            DBSystem dbSystem,
+            GeolocationCache geolocationCache,
+            NicknameCache nicknameCache,
             SessionCache sessionCache,
             Status status,
-            RunnableFactory runnableFactory,
             ErrorHandler errorHandler
     ) {
         this.config = config;
         this.processors = processors;
         this.processing = processing;
         this.serverInfo = serverInfo;
+        this.dbSystem = dbSystem;
+        this.geolocationCache = geolocationCache;
+        this.nicknameCache = nicknameCache;
         this.sessionCache = sessionCache;
         this.status = status;
-        this.runnableFactory = runnableFactory;
         this.errorHandler = errorHandler;
     }
 
@@ -92,19 +103,19 @@ public class SpongePlayerListener {
 
     private void actOnLoginEvent(ClientConnectionEvent.Login event) {
         GameProfile profile = event.getProfile();
-        UUID uuid = profile.getUniqueId();
+        UUID playerUUID = profile.getUniqueId();
         boolean banned = isBanned(profile);
-        processing.submit(processors.player().banAndOpProcessor(uuid, () -> banned, false));
+        dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, () -> banned));
     }
 
     @Listener(order = Order.POST)
     public void onKick(KickPlayerEvent event) {
         try {
-            UUID uuid = event.getTargetEntity().getUniqueId();
-            if (!status.areKicksCounted() || SpongeAFKListener.AFK_TRACKER.isAfk(uuid)) {
+            UUID playerUUID = event.getTargetEntity().getUniqueId();
+            if (!status.areKicksCounted() || SpongeAFKListener.AFK_TRACKER.isAfk(playerUUID)) {
                 return;
             }
-            processing.submit(processors.player().kickProcessor(uuid));
+            dbSystem.getDatabase().executeTransaction(new KickStoreTransaction(playerUUID));
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
         }
@@ -132,6 +143,7 @@ public class SpongePlayerListener {
         Player player = event.getTargetEntity();
 
         UUID uuid = player.getUniqueId();
+        UUID serverUUID = serverInfo.getServerUUID();
         long time = System.currentTimeMillis();
 
         SpongeAFKListener.AFK_TRACKER.performedAction(uuid, time);
@@ -140,21 +152,31 @@ public class SpongePlayerListener {
         Optional<GameMode> gameMode = player.getGameModeData().get(Keys.GAME_MODE);
         String gm = gameMode.map(mode -> mode.getName().toUpperCase()).orElse("ADVENTURE");
 
+        Database database = dbSystem.getDatabase();
+        database.executeTransaction(new WorldNameStoreTransaction(serverUUID, world));
+
         InetAddress address = player.getConnection().getAddress().getAddress();
 
         String playerName = player.getName();
         String displayName = player.getDisplayNameData().displayName().get().toPlain();
 
         boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
+        if (gatheringGeolocations) {
+            database.executeTransaction(
+                    new GeoInfoStoreTransaction(uuid, address, time, geolocationCache::getCountry)
+            );
+        }
 
-        processing.submitCritical(() -> sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, world, gm)));
-        runnableFactory.create("Player Register: " + uuid,
-                processors.player().registerProcessor(uuid, () -> time, playerName,
-                        gatheringGeolocations ? processors.player().ipUpdateProcessor(uuid, address, time) : null,
-                        processors.player().nameProcessor(uuid, playerName, displayName),
-                        processors.info().playerPageUpdateProcessor(uuid)
-                )
-        ).runTaskAsynchronously();
+        database.executeTransaction(new PlayerServerRegisterTransaction(uuid, () -> time, playerName, serverUUID));
+        sessionCache.cacheSession(uuid, new Session(uuid, serverUUID, time, world, gm))
+                .ifPresent(previousSession -> database.executeTransaction(new SessionEndTransaction(previousSession)));
+
+        database.executeTransaction(new NicknameStoreTransaction(
+                uuid, new Nickname(displayName, time, serverUUID),
+                (playerUUID, name) -> name.equals(nicknameCache.getDisplayName(playerUUID))
+        ));
+
+        processing.submitNonCritical(processors.info().playerPageUpdateProcessor(uuid));
     }
 
     @Listener(order = Order.POST)
@@ -169,13 +191,18 @@ public class SpongePlayerListener {
     private void actOnQuitEvent(ClientConnectionEvent.Disconnect event) {
         long time = System.currentTimeMillis();
         Player player = event.getTargetEntity();
-        UUID uuid = player.getUniqueId();
+        UUID playerUUID = player.getUniqueId();
 
-        SpongeAFKListener.AFK_TRACKER.loggedOut(uuid, time);
+        SpongeAFKListener.AFK_TRACKER.loggedOut(playerUUID, time);
+
+        nicknameCache.removeDisplayName(playerUUID);
 
         boolean banned = isBanned(player.getProfile());
-        processing.submit(processors.player().banAndOpProcessor(uuid, () -> banned, false));
-        processing.submit(processors.player().endSessionProcessor(uuid, time));
-        processing.submit(processors.info().playerPageUpdateProcessor(uuid));
+        dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, () -> banned));
+
+        sessionCache.endSession(playerUUID, time)
+                .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new SessionEndTransaction(endedSession)));
+
+        processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
     }
 }

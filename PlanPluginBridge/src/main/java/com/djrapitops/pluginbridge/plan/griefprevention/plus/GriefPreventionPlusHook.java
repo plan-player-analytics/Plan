@@ -31,7 +31,7 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
  * sources.
  *
  * @author Rsl1122
- * @since 3.5.0
+
  */
 @Singleton
 public class GriefPreventionPlusHook extends Hook {

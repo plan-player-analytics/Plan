@@ -44,10 +44,6 @@ public class SessionsMutator {
         return new SessionsMutator(container.getValue(CommonKeys.SESSIONS).orElse(new ArrayList<>()));
     }
 
-    public static SessionsMutator copyOf(SessionsMutator mutator) {
-        return new SessionsMutator(new ArrayList<>(mutator.sessions));
-    }
-
     public SessionsMutator(List<Session> sessions) {
         this.sessions = sessions;
     }
@@ -206,6 +202,28 @@ public class SessionsMutator {
             Long end = session.getValue(SessionKeys.END).orElse(System.currentTimeMillis());
             return (after <= start && start <= before) || (after <= end && end <= before);
         };
+    }
+
+    public static Map<UUID, List<Session>> sortByPlayers(List<Session> sessions) {
+        Map<UUID, List<Session>> sorted = new HashMap<>();
+        for (Session session : sessions) {
+            UUID playerUUID = session.getUnsafe(SessionKeys.UUID);
+            List<Session> playerSessions = sorted.getOrDefault(playerUUID, new ArrayList<>());
+            playerSessions.add(session);
+            sorted.put(playerUUID, playerSessions);
+        }
+        return sorted;
+    }
+
+    public static Map<UUID, List<Session>> sortByServers(List<Session> sessions) {
+        Map<UUID, List<Session>> sorted = new HashMap<>();
+        for (Session session : sessions) {
+            UUID serverUUID = session.getUnsafe(SessionKeys.SERVER_UUID);
+            List<Session> serverSessions = sorted.getOrDefault(serverUUID, new ArrayList<>());
+            serverSessions.add(session);
+            sorted.put(serverUUID, serverSessions);
+        }
+        return sorted;
     }
 
     public int toPlayerDeathCount() {

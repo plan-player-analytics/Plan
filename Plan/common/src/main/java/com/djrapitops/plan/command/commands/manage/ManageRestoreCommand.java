@@ -16,10 +16,11 @@
  */
 package com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plan.db.DBType;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.SQLiteDB;
+import com.djrapitops.plan.db.access.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.DBType;
-import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -121,11 +122,18 @@ public class ManageRestoreCommand extends CommandNode {
                 SQLiteDB backupDB = sqliteFactory.usingFile(backupDBFile);
                 backupDB.init();
 
+                Database.State dbState = database.getState();
+                if (dbState != Database.State.OPEN) {
+                    sender.sendMessage(locale.getString(CommandLang.WARN_DATABASE_NOT_OPEN, dbState.name()));
+                }
+
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
-                database.backup().restore(backupDB);
+                database.executeTransaction(new BackupCopyTransaction(backupDB, database)).get();
 
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             } catch (Exception e) {
                 errorHandler.log(L.ERROR, this.getClass(), e);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));

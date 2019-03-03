@@ -22,6 +22,7 @@ import org.apache.commons.text.StringSubstitutor;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * Formatter for replacing ${placeholder} values inside strings.
@@ -31,10 +32,7 @@ import java.util.HashMap;
 public class PlaceholderReplacer extends HashMap<String, Serializable> implements Formatter<String> {
 
     public <T> void addPlaceholderFrom(DataContainer container, PlaceholderKey<T> key) {
-        if (!container.supports(key)) {
-            return;
-        }
-        put(key.getPlaceholder(), container.getSupplier(key).get().toString());
+        put(key.getPlaceholder(), container.getValue(key).map(Objects::toString).orElse("Missing value " + key.getPlaceholder()));
     }
 
     public void addAllPlaceholdersFrom(DataContainer container, PlaceholderKey... keys) {
@@ -47,7 +45,7 @@ public class PlaceholderReplacer extends HashMap<String, Serializable> implement
         if (!container.supports(key)) {
             return;
         }
-        put(key.getPlaceholder(), formatter.apply(container.getSupplier(key).get()));
+        put(key.getPlaceholder(), container.getFormattedUnsafe(key, formatter));
     }
 
     public <T> void addAllPlaceholdersFrom(DataContainer container, Formatter<T> formatter, PlaceholderKey<T>... keys) {

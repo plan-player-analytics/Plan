@@ -20,8 +20,10 @@ import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.store.containers.AnalysisContainer;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -124,14 +126,14 @@ public class PageFactory {
 
     public AnalysisPage analysisPage(UUID serverUUID) {
         AnalysisContainer analysisContainer = analysisContainerFactory.get()
-                .forServerContainer(dbSystem.get().getDatabase().fetch().getServerContainer(serverUUID));
-        return new AnalysisPage(analysisContainer, versionCheckSystem.get(), fileSystem.get(), formatters.get().decimals(), timings.get());
+                .forServerContainer(dbSystem.get().getDatabase().query(ContainerFetchQueries.fetchServerContainer(serverUUID)));
+        return new AnalysisPage(analysisContainer, connectionSystem.get(), versionCheckSystem.get(), fileSystem.get(), formatters.get().decimals(), timings.get());
     }
 
     public InspectPage inspectPage(UUID uuid) {
-        FetchOperations fetch = dbSystem.get().getDatabase().fetch();
-        PlayerContainer player = fetch.getPlayerContainer(uuid);
-        Map<UUID, String> serverNames = fetch.getServerNames();
+        Database db = dbSystem.get().getDatabase();
+        PlayerContainer player = db.query(ContainerFetchQueries.fetchPlayerContainer(uuid));
+        Map<UUID, String> serverNames = db.query(ServerQueries.fetchServerNames());
         return new InspectPage(
                 player, serverNames,
                 versionCheckSystem.get(),
@@ -146,7 +148,8 @@ public class PageFactory {
     }
 
     public NetworkPage networkPage() {
-        NetworkContainer networkContainer = dbSystem.get().getDatabase().fetch().getNetworkContainer(); // Not cached, big.
+        NetworkContainer networkContainer = dbSystem.get().getDatabase()
+                .query(ContainerFetchQueries.fetchNetworkContainer()); // Not cached, big.
         return new NetworkPage(networkContainer,
                 analysisPluginsTabContentCreator.get(),
                 versionCheckSystem.get(), fileSystem.get(), serverInfo.get().getServerProperties());

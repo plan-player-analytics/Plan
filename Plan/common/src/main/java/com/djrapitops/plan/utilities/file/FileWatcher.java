@@ -116,7 +116,7 @@ public class FileWatcher extends Thread {
     }
 
     private void actOnModification(Path modifiedFile) {
-        for (WatchedFile watchedFile : watchedFiles) {
+        for (WatchedFile watchedFile : new HashSet<>(watchedFiles)) {
             watchedFile.modified(modifiedFile);
         }
     }

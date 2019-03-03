@@ -17,6 +17,7 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanVelocity;
+import com.djrapitops.plan.db.tasks.DBCleanTask;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.tasks.proxy.NetworkConfigStoreTask;
@@ -27,6 +28,7 @@ import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.RunnableFactory;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -34,6 +36,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Rsl1122
  */
+@Singleton
 public class VelocityTaskSystem extends TaskSystem {
 
     private final PlanVelocity plugin;
@@ -43,6 +46,7 @@ public class VelocityTaskSystem extends TaskSystem {
     private final LogsFolderCleanTask logsFolderCleanTask;
     private final PlayersPageRefreshTask playersPageRefreshTask;
     private final NetworkConfigStoreTask networkConfigStoreTask;
+    private final DBCleanTask dbCleanTask;
 
     @Inject
     public VelocityTaskSystem(
@@ -54,7 +58,8 @@ public class VelocityTaskSystem extends TaskSystem {
             PingCountTimerVelocity pingCountTimer,
             LogsFolderCleanTask logsFolderCleanTask,
             PlayersPageRefreshTask playersPageRefreshTask,
-            NetworkConfigStoreTask networkConfigStoreTask
+            NetworkConfigStoreTask networkConfigStoreTask,
+            DBCleanTask dbCleanTask
     ) {
         super(runnableFactory, velocityTPSCountTimer);
         this.plugin = plugin;
@@ -65,6 +70,7 @@ public class VelocityTaskSystem extends TaskSystem {
         this.logsFolderCleanTask = logsFolderCleanTask;
         this.playersPageRefreshTask = playersPageRefreshTask;
         this.networkConfigStoreTask = networkConfigStoreTask;
+        this.dbCleanTask = dbCleanTask;
     }
 
     @Override
@@ -87,5 +93,10 @@ public class VelocityTaskSystem extends TaskSystem {
         // +40 ticks / 2 seconds so that update check task runs first.
         long storeDelay = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS) + 40;
         registerTask("Config Store Task", networkConfigStoreTask).runTaskLaterAsynchronously(storeDelay);
+
+        registerTask("DB Clean Task", dbCleanTask).runTaskTimerAsynchronously(
+                TimeAmount.toTicks(20, TimeUnit.SECONDS),
+                TimeAmount.toTicks(config.get(TimeSettings.CLEAN_DATABASE_PERIOD), TimeUnit.MILLISECONDS)
+        );
     }
 }

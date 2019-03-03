@@ -17,11 +17,15 @@
 package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.db.access.transactions.commands.SetServerAsUninstalledTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.processing.Processing;
@@ -34,7 +38,6 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -77,6 +80,12 @@ public class ManageUninstalledCommand extends CommandNode {
     public void onCommand(Sender sender, String commandLabel, String[] args) {
         sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState != Database.State.OPEN) {
+            sender.sendMessage(locale.getString(CommandLang.FAIL_DATABASE_NOT_OPEN, dbState.name()));
+            return;
+        }
+
         processing.submitNonCritical(() -> {
             try {
                 Optional<Server> serverOptional = getServer(args);
@@ -91,7 +100,7 @@ public class ManageUninstalledCommand extends CommandNode {
                     return;
                 }
 
-                dbSystem.getDatabase().save().setAsUninstalled(serverUUID);
+                dbSystem.getDatabase().executeTransaction(new SetServerAsUninstalledTransaction(serverUUID));
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (DBOpException e) {
                 sender.sendMessage("§cError occurred: " + e.toString());
@@ -102,16 +111,9 @@ public class ManageUninstalledCommand extends CommandNode {
 
     private Optional<Server> getServer(String[] args) {
         if (args.length >= 1) {
-            Map<UUID, Server> bukkitServers = dbSystem.getDatabase().fetch().getBukkitServers();
             String serverIdentifier = getGivenIdentifier(args);
-            for (Map.Entry<UUID, Server> entry : bukkitServers.entrySet()) {
-                Server server = entry.getValue();
-
-                if (Integer.toString(server.getId()).equals(serverIdentifier)
-                        || server.getName().equalsIgnoreCase(serverIdentifier)) {
-                    return Optional.of(server);
-                }
-            }
+            return dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverIdentifier))
+                    .filter(Server::isNotProxy);
         }
         return Optional.empty();
     }

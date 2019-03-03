@@ -17,24 +17,24 @@
 package com.djrapitops.plan.system.importing.importers;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.exceptions.database.DBException;
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.data.container.BaseUser;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.LargeStoreQueries;
+import com.djrapitops.plan.db.access.queries.objects.UserIdentifierQueries;
+import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
-import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
+import com.djrapitops.plan.system.importing.data.BukkitUserImportRefiner;
 import com.djrapitops.plan.system.importing.data.ServerImportData;
 import com.djrapitops.plan.system.importing.data.UserImportData;
-import com.djrapitops.plan.system.importing.data.UserImportRefiner;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.SHA256Hash;
 import com.djrapitops.plugin.utilities.Verify;
-import com.google.common.collect.ImmutableMap;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -45,6 +45,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
+ * Generic importer for user data into Plan on the Bukkit platform.
+ *
  * @author Fuzzlemann
  */
 public abstract class BukkitImporter implements Importer {
@@ -88,17 +90,12 @@ public abstract class BukkitImporter implements Importer {
     public final void processImport() {
         ExecutorService service = Executors.newCachedThreadPool();
 
-        submitTo(service, this::processServerData);
-        submitTo(service, this::processUserData);
-
-        service.shutdown();
         try {
-            service.awaitTermination(20, TimeUnit.MINUTES);
-        } catch (InterruptedException e) {
-            service.shutdownNow();
-            Thread.currentThread().interrupt();
+            service.submit(this::processServerData);
+            service.submit(this::processUserData);
+        } finally {
+            shutdownService(service);
         }
-
     }
 
     private void processServerData() {
@@ -108,19 +105,13 @@ public abstract class BukkitImporter implements Importer {
             return;
         }
 
-        ExecutorService service = Executors.newCachedThreadPool();
-
-        SaveOperations save = dbSystem.getDatabase().save();
-        submitTo(service, () -> save.insertTPS(ImmutableMap.of(serverUUID.get(), serverImportData.getTpsData())));
-        submitTo(service, () -> save.insertCommandUsage(ImmutableMap.of(serverUUID.get(), serverImportData.getCommandUsages())));
-
-        service.shutdown();
-        try {
-            service.awaitTermination(20, TimeUnit.MINUTES);
-        } catch (InterruptedException e) {
-            service.shutdownNow();
-            Thread.currentThread().interrupt();
-        }
+        dbSystem.getDatabase().executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute(LargeStoreQueries.storeAllTPSData(Collections.singletonMap(serverUUID.get(), serverImportData.getTpsData())));
+                execute(LargeStoreQueries.storeAllCommandUsageData(Collections.singletonMap(serverUUID.get(), serverImportData.getCommandUsages())));
+            }
+        });
     }
 
     private void processUserData() {
@@ -130,70 +121,76 @@ public abstract class BukkitImporter implements Importer {
             return;
         }
 
-        UserImportRefiner userImportRefiner = new UserImportRefiner(plugin, userImportData);
+        BukkitUserImportRefiner userImportRefiner = new BukkitUserImportRefiner(plugin, userImportData);
         userImportData = userImportRefiner.refineData();
 
-        FetchOperations fetch = dbSystem.getDatabase().fetch();
-        Set<UUID> existingUUIDs = fetch.getSavedUUIDs();
-        Set<UUID> existingUserInfoTableUUIDs = fetch.getSavedUUIDs(serverUUID.get());
+        Database db = dbSystem.getDatabase();
 
-        Map<UUID, UserInfo> users = new HashMap<>();
+        Set<UUID> existingUUIDs = db.query(UserIdentifierQueries.fetchAllPlayerUUIDs());
+        Set<UUID> existingUserInfoTableUUIDs = db.query(UserIdentifierQueries.fetchPlayerUUIDsOfServer(serverUUID.get()));
+
+        Map<UUID, BaseUser> users = new HashMap<>();
         List<UserInfo> userInfo = new ArrayList<>();
         Map<UUID, List<Nickname>> nickNames = new HashMap<>();
-        Map<UUID, List<Session>> sessions = new HashMap<>();
+        List<Session> sessions = new ArrayList<>();
         Map<UUID, List<GeoInfo>> geoInfo = new HashMap<>();
-        Map<UUID, Integer> timesKicked = new HashMap<>();
 
         userImportData.parallelStream().forEach(data -> {
             UUID uuid = data.getUuid();
-            UserInfo info = toUserInfo(data);
 
             if (!existingUUIDs.contains(uuid)) {
-                users.put(uuid, info);
+                users.put(uuid, toBaseUser(data));
             }
 
             if (!existingUserInfoTableUUIDs.contains(uuid)) {
-                userInfo.add(info);
+                userInfo.add(toUserInfo(data));
             }
 
             nickNames.put(uuid, data.getNicknames());
             geoInfo.put(uuid, convertGeoInfo(data));
-            timesKicked.put(uuid, data.getTimesKicked());
-            sessions.put(uuid, Collections.singletonList(toSession(data)));
+            sessions.add(toSession(data));
         });
 
-        ExecutorService service = Executors.newCachedThreadPool();
+        db.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute(LargeStoreQueries.storeAllCommonUserInformation(users.values()));
+                execute(LargeStoreQueries.storeAllSessionsWithKillAndWorldData(sessions));
+                Map<UUID, List<UserInfo>> userInformation = Collections.singletonMap(serverUUID.get(), userInfo);
+                execute(LargeStoreQueries.storePerServerUserInformation(userInformation));
+                execute(LargeStoreQueries.storeAllNicknameData(Collections.singletonMap(serverUUID.get(), nickNames)));
+                execute(LargeStoreQueries.storeAllGeoInformation(geoInfo));
+            }
+        });
+    }
 
-        SaveOperations save = dbSystem.getDatabase().save();
-
-        save.insertUsers(users);
-        submitTo(service, () -> save.insertSessions(ImmutableMap.of(serverUUID.get(), sessions), true));
-        submitTo(service, () -> save.kickAmount(timesKicked));
-        submitTo(service, () -> save.insertUserInfo(ImmutableMap.of(serverUUID.get(), userInfo)));
-        submitTo(service, () -> save.insertNicknames(ImmutableMap.of(serverUUID.get(), nickNames)));
-        submitTo(service, () -> save.insertAllGeoInfo(geoInfo));
-
+    private void shutdownService(ExecutorService service) {
         service.shutdown();
         try {
-            service.awaitTermination(20, TimeUnit.MINUTES);
+            if (!service.awaitTermination(20, TimeUnit.MINUTES)) {
+                service.shutdownNow();
+            }
         } catch (InterruptedException e) {
             service.shutdownNow();
             Thread.currentThread().interrupt();
         }
     }
 
-    private void submitTo(ExecutorService service, ImportExecutorHelper helper) {
-        helper.submit(service);
+    private BaseUser toBaseUser(UserImportData userImportData) {
+        UUID uuid = userImportData.getUuid();
+        String name = userImportData.getName();
+        long registered = userImportData.getRegistered();
+        int timesKicked = userImportData.getTimesKicked();
+        return new BaseUser(uuid, name, registered, timesKicked);
     }
 
     private UserInfo toUserInfo(UserImportData userImportData) {
         UUID uuid = userImportData.getUuid();
-        String name = userImportData.getName();
         long registered = userImportData.getRegistered();
         boolean op = userImportData.isOp();
         boolean banned = userImportData.isBanned();
 
-        return new UserInfo(uuid, name, registered, op, banned);
+        return new UserInfo(uuid, serverUUID.get(), registered, op, banned);
     }
 
     private Session toSession(UserImportData userImportData) {
@@ -220,19 +217,5 @@ public abstract class BukkitImporter implements Importer {
                         throw new IllegalArgumentException(e);
                     }
                 }).collect(Collectors.toList());
-    }
-
-    private interface ImportExecutorHelper {
-        void execute() throws DBException;
-
-        default void submit(ExecutorService service) {
-            service.submit(() -> {
-                try {
-                    execute();
-                } catch (DBException e) {
-                    throw new DBOpException("Import Execution failed", e);
-                }
-            });
-        }
     }
 }

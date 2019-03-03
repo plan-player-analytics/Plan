@@ -18,10 +18,14 @@ package com.djrapitops.plan.system.webserver.pages;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
+import com.djrapitops.plan.api.exceptions.connection.ForbiddenException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.webserver.Request;
@@ -68,11 +72,12 @@ public class ServerPageHandler implements PageHandler {
     }
 
     @Override
-    public Response getResponse(Request request, List<String> target) {
+    public Response getResponse(Request request, List<String> target) throws WebException {
         UUID serverUUID = getServerUUID(target);
 
         boolean raw = target.size() >= 2 && target.get(1).equalsIgnoreCase("raw");
         if (raw) {
+            checkDBState();
             return ResponseCache.loadResponse(PageId.RAW_SERVER.of(serverUUID), () -> responseFactory.rawServerPageResponse(serverUUID));
         }
 
@@ -81,10 +86,18 @@ public class ServerPageHandler implements PageHandler {
         if (response != null) {
             return response;
         } else {
+            checkDBState();
             if ((Check.isBungeeAvailable() || Check.isVelocityAvailable()) && serverInfo.getServerUUID().equals(serverUUID)) {
                 return ResponseCache.loadResponse(PageId.SERVER.of(serverUUID), responseFactory::networkPageResponse);
             }
             return refreshNow(serverUUID);
+        }
+    }
+
+    private void checkDBState() throws ForbiddenException {
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState != Database.State.OPEN) {
+            throw new ForbiddenException("Database is " + dbState.name() + " - Please try again later. You can check database status with /plan info");
         }
     }
 
@@ -109,7 +122,9 @@ public class ServerPageHandler implements PageHandler {
         if (!target.isEmpty()) {
             try {
                 String serverName = target.get(0);
-                Optional<UUID> serverUUIDOptional = dbSystem.getDatabase().fetch().getServerUUID(serverName);
+                Optional<UUID> serverUUIDOptional = dbSystem.getDatabase()
+                        .query(ServerQueries.fetchServerMatchingIdentifier(serverName))
+                        .map(Server::getUuid);
                 if (serverUUIDOptional.isPresent()) {
                     serverUUID = serverUUIDOptional.get();
                 }

@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.info.request;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.connection.*;
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
@@ -107,8 +107,8 @@ public class GenerateInspectPageRequest extends InfoRequestWithVariables impleme
 
         } catch (ParseException e) {
             Throwable cause = e.getCause();
-            if (cause instanceof DBException) {
-                throw new TransferDatabaseException((DBException) cause);
+            if (cause instanceof DBOpException) {
+                throw new TransferDatabaseException((DBOpException) cause);
             } else if (cause instanceof IllegalStateException && "Player profile was null!".equals(cause.getMessage())) {
                 throw new NotFoundException("Player has not played on this server.");
             } else {

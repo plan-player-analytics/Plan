@@ -23,7 +23,6 @@ import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
-import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.PluginDataSettings;
 import com.djrapitops.plan.utilities.html.Html;
@@ -48,18 +47,16 @@ import java.util.stream.Collectors;
 class TownyData extends PluginData {
 
     private final PlanConfig config;
-    private final DataCache dataCache;
 
-    TownyData(PlanConfig config, DataCache dataCache) {
+    TownyData(PlanConfig config) {
         super(ContainerSize.TAB, "Towny");
         this.config = config;
-        this.dataCache = dataCache;
         setPluginIcon(Icon.called("university").of(Color.BROWN).build());
     }
 
     @Override
     public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
-        String playerName = dataCache.getName(uuid);
+        String playerName = PlanAPI.getInstance().getPlayerName(uuid);
 
         try {
             Resident resident = TownyUniverse.getDataSource().getResident(playerName);
@@ -104,10 +101,11 @@ class TownyData extends PluginData {
             for (Town town : towns) {
                 String townName = town.getName();
                 String mayor = town.getMayor().getName();
-                UUID mayorUUID = dataCache.getUUIDof(mayor);
+                PlanAPI planAPI = PlanAPI.getInstance();
+                UUID mayorUUID = planAPI.playerNameToUUID(mayor);
                 town.getResidents().stream()
                         .map(Resident::getName)
-                        .map(dataCache::getUUIDof)
+                        .map(planAPI::playerNameToUUID)
                         .filter(Verify::notNull)
                         .forEach(uuid -> userTowns.put(uuid, uuid.equals(mayorUUID) ? "<b>" + townName + "</b>" : townName));
             }

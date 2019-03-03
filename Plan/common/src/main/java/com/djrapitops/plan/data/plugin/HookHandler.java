@@ -125,8 +125,9 @@ public class HookHandler implements SubSystem {
                     containers.put(pluginData, container);
                 }
             } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
-                String sourcePlugin = pluginData.getSourcePlugin();
-                logger.error("PluginData caused exception: " + sourcePlugin);
+                String pluginName = pluginData.getSourcePlugin();
+                logger.error("PluginData caused exception: " + pluginName +
+                        ", you can disable the integration under 'Plugins." + pluginName + ".Enabled'");
                 errorHandler.log(L.WARN, pluginData.getClass(), e);
             }
         }

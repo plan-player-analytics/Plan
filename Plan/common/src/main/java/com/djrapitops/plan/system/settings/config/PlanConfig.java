@@ -19,6 +19,7 @@ package com.djrapitops.plan.system.settings.config;
 import com.djrapitops.plan.data.plugin.PluginsConfigSection;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.settings.paths.key.Setting;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
@@ -39,15 +40,18 @@ public class PlanConfig extends Config {
 
     private final PluginsConfigSection pluginsConfigSection;
     private final WorldAliasSettings worldAliasSettings;
+    private final PluginLogger logger;
 
     @Inject
     public PlanConfig(
             @Named("configFile") File file,
-            WorldAliasSettings worldAliasSettings
+            WorldAliasSettings worldAliasSettings,
+            PluginLogger logger
     ) {
         super(file);
 
         this.worldAliasSettings = worldAliasSettings;
+        this.logger = logger;
 
         pluginsConfigSection = new PluginsConfigSection(this);
     }
@@ -67,6 +71,15 @@ public class PlanConfig extends Config {
                 "Config value for " + setting.getPath() + " has a bad value: '" + value + "'"
         ));
         return value;
+    }
+
+    public <T> T getOrDefault(Setting<T> setting, T defaultValue) {
+        try {
+            return get(setting);
+        } catch (IllegalStateException e) {
+            logger.warn(e.getMessage() + ", using '" + defaultValue + "'");
+            return defaultValue;
+        }
     }
 
     public boolean isTrue(Setting<Boolean> setting) {
