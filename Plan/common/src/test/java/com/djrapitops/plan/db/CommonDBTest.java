@@ -711,7 +711,7 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testSaveSessionsWorldTimes() {
+    public void worldTimesAreSavedWithSession() {
         saveTwoWorlds();
         saveUserOne();
 
@@ -733,21 +733,21 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testGetUserWorldTimes() {
-        testSaveSessionsWorldTimes();
+    public void playersWorldTimesMatchTotal() {
+        worldTimesAreSavedWithSession();
         WorldTimes worldTimesOfUser = db.query(WorldTimesQueries.fetchPlayerTotalWorldTimes(playerUUID));
         assertEquals(createWorldTimes(), worldTimesOfUser);
     }
 
     @Test
-    public void testGetServerWorldTimes() {
-        testSaveSessionsWorldTimes();
+    public void serverWorldTimesMatchTotal() {
+        worldTimesAreSavedWithSession();
         WorldTimes worldTimesOfServer = db.query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID));
         assertEquals(createWorldTimes(), worldTimesOfServer);
     }
 
     @Test
-    public void testGetServerWorldTimesNoSessions() {
+    public void emptyServerWorldTimesIsEmpty() {
         WorldTimes worldTimesOfServer = db.query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID));
         assertEquals(new WorldTimes(new HashMap<>()), worldTimesOfServer);
     }
