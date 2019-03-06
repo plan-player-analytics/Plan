@@ -19,6 +19,11 @@ package com.djrapitops.plan.extension.annotation;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * Method annotation to provide a boolean value about a Player.
  * <p>
@@ -34,6 +39,8 @@ import com.djrapitops.plan.extension.icon.Family;
  *
  * @author Rsl1122
  */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
 public @interface BooleanProvider {
 
     /**
