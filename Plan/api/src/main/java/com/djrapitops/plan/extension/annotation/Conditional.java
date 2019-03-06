@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * Method Annotation to determine that a method can not be called unless a condition is fulfilled.
  * <p>
  * Condition information is provided with {@link com.djrapitops.plan.extension.annotation.data.BooleanProvider}.
- * If {@link com.djrapitops.plan.extension.annotation.data.BooleanProvider} for the condition is not specified the
+ * If {@link com.djrapitops.plan.extension.annotation.BooleanProvider} for the condition is not specified the
  * method tagged with this annotation will not be called, (Condition is assumed false).
  *
  * @author Rsl1122
