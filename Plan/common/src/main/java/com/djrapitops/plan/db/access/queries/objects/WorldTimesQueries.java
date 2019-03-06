@@ -40,15 +40,14 @@ import static com.djrapitops.plan.db.sql.parsing.Sql.*;
 public class WorldTimesQueries {
 
     private static String worldColumn = "world";
+    private static final String SELECT_WORLD_TIMES_JOIN_WORLD_NAME = WorldTable.TABLE_NAME + "." + WorldTable.NAME + " as " + worldColumn +
+            FROM + WorldTimesTable.TABLE_NAME +
+            INNER_JOIN + WorldTable.TABLE_NAME + " on " + WorldTable.TABLE_NAME + "." + WorldTable.ID + "=" + WorldTimesTable.WORLD_ID;
     private static final String SELECT_WORLD_TIMES_STATEMENT_START = SELECT +
             "SUM(" + WorldTimesTable.SURVIVAL + ") as survival, " +
             "SUM(" + WorldTimesTable.CREATIVE + ") as creative, " +
             "SUM(" + WorldTimesTable.ADVENTURE + ") as adventure, " +
-            "SUM(" + WorldTimesTable.SPECTATOR + ") as spectator, " +
-            WorldTimesTable.TABLE_NAME + "." + WorldTimesTable.SERVER_UUID + ", " +
-            WorldTable.TABLE_NAME + "." + WorldTable.NAME + " as " + worldColumn +
-            FROM + WorldTimesTable.TABLE_NAME +
-            " INNER JOIN " + WorldTable.TABLE_NAME + " on " + WorldTable.TABLE_NAME + "." + WorldTable.ID + "=" + WorldTimesTable.WORLD_ID;
+            "SUM(" + WorldTimesTable.SPECTATOR + ") as spectator, ";
 
     private WorldTimesQueries() {
         /* Static method class */
@@ -62,6 +61,7 @@ public class WorldTimesQueries {
      */
     public static Query<WorldTimes> fetchServerTotalWorldTimes(UUID serverUUID) {
         String sql = SELECT_WORLD_TIMES_STATEMENT_START +
+                SELECT_WORLD_TIMES_JOIN_WORLD_NAME +
                 WHERE + WorldTimesTable.TABLE_NAME + "." + WorldTimesTable.SERVER_UUID + "=?" +
                 GROUP_BY + worldColumn;
 
@@ -96,6 +96,7 @@ public class WorldTimesQueries {
      */
     public static Query<WorldTimes> fetchPlayerTotalWorldTimes(UUID playerUUID) {
         String sql = SELECT_WORLD_TIMES_STATEMENT_START +
+                SELECT_WORLD_TIMES_JOIN_WORLD_NAME +
                 WHERE + WorldTimesTable.USER_UUID + "=?" +
                 GROUP_BY + worldColumn;
 
@@ -130,6 +131,8 @@ public class WorldTimesQueries {
      */
     public static Query<Map<UUID, WorldTimes>> fetchPlayerWorldTimesOnServers(UUID playerUUID) {
         String sql = SELECT_WORLD_TIMES_STATEMENT_START +
+                WorldTimesTable.TABLE_NAME + "." + WorldTimesTable.SERVER_UUID + ", " +
+                SELECT_WORLD_TIMES_JOIN_WORLD_NAME +
                 WHERE + WorldTimesTable.TABLE_NAME + "." + WorldTimesTable.USER_UUID + "=?" +
                 GROUP_BY + worldColumn + ", " + WorldTimesTable.TABLE_NAME + "." + WorldTimesTable.SERVER_UUID;
 

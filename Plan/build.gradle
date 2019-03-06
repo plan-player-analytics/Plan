@@ -12,7 +12,7 @@ allprojects {
     wrapper.gradleVersion = "5.0"
 
     group "com.djrapitops"
-    version "4.7.0"
+    version "4.7.1"
 
     test {
 //        useJUnitPlatform()
@@ -107,8 +107,8 @@ subprojects {
         testCompile "org.junit.platform:junit-platform-runner:1.4.0" // JUnit 4 runner for JUnit 5 tests
         testCompile "org.junit.vintage:junit-vintage-engine:5.4.0"   // JUnit 4 compatibility for JUnit 5
         testCompile "org.junit.jupiter:junit-jupiter-params:5.4.0"   // JUnit 5, parameterized tests
-        testCompile "org.mockito:mockito-core:2.24.5"                // Mockito Core
-        testCompile "org.mockito:mockito-junit-jupiter:2.24.5"       // Mockito JUnit 5 Extension
+        testCompile "org.mockito:mockito-core:2.25.0"                // Mockito Core
+        testCompile "org.mockito:mockito-junit-jupiter:2.25.0"       // Mockito JUnit 5 Extension
         testCompile "org.seleniumhq.selenium:selenium-java:3.141.59" // Selenium (Browser tests)
         testCompile "com.jayway.awaitility:awaitility:1.7.0"         // Awaitility (Concurrent wait conditions)
 
