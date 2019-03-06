@@ -92,6 +92,9 @@ public class SQLiteTest extends CommonDBTest {
         UUID firstUuid = UUID.randomUUID();
         UUID secondUuid = UUID.randomUUID();
         UUID thirdUuid = UUID.randomUUID();
+        UUID fourthUuid = UUID.randomUUID();
+        UUID fifthUuid = UUID.randomUUID();
+        UUID sixthUuid = UUID.randomUUID();
 
         db.executeTransaction(new PlayerRegisterTransaction(firstUuid, () -> 0L, ""));
         db.executeTransaction(new PlayerRegisterTransaction(secondUuid, () -> 0L, ""));
@@ -101,6 +104,9 @@ public class SQLiteTest extends CommonDBTest {
         saveGeoInfo(firstUuid, new GeoInfo("-", "Finland", 5, "3"));
         saveGeoInfo(secondUuid, new GeoInfo("-", "Sweden", 0, "3"));
         saveGeoInfo(thirdUuid, new GeoInfo("-", "Denmark", 0, "3"));
+        saveGeoInfo(fourthUuid, new GeoInfo("-", "Denmark", 0, "3"));
+        saveGeoInfo(fifthUuid, new GeoInfo("-", "Not Known", 0, "3"));
+        saveGeoInfo(sixthUuid, new GeoInfo("-", "Local Machine", 0, "3"));
 
         Map<String, Integer> got = db.query(ServerAggregateQueries.networkGeolocationCounts());
 
@@ -108,7 +114,9 @@ public class SQLiteTest extends CommonDBTest {
         // first user has a more recent connection from Finland so their country should be counted as Finland.
         expected.put("Finland", 1);
         expected.put("Sweden", 1);
-        expected.put("Denmark", 1);
+        expected.put("Not Known", 1);
+        expected.put("Local Machine", 1);
+        expected.put("Denmark", 2);
 
         assertEquals(expected, got);
     }

@@ -60,11 +60,12 @@ public class PerServerContainer extends HashMap<UUID, DataContainer> {
             container.putSupplier(PerServerKeys.WORLD_TIMES, () -> SessionsMutator.forContainer(container).toTotalWorldTimes());
             container.putSupplier(PerServerKeys.PLAYER_DEATHS, () -> SessionsMutator.forContainer(container).toPlayerDeathList());
             container.putSupplier(PerServerKeys.PLAYER_KILLS, () -> SessionsMutator.forContainer(container).toPlayerKillList());
-            container.putSupplier(PerServerKeys.PLAYER_KILL_COUNT, () -> container.getUnsafe(PerServerKeys.PLAYER_KILLS).size());
+            container.putSupplier(PerServerKeys.PLAYER_KILL_COUNT, () -> container.getValue(PerServerKeys.PLAYER_KILLS).map(Collection::size).orElse(0));
             container.putSupplier(PerServerKeys.MOB_KILL_COUNT, () -> SessionsMutator.forContainer(container).toMobKillCount());
             container.putSupplier(PerServerKeys.DEATH_COUNT, () -> SessionsMutator.forContainer(container).toDeathCount());
+            container.putSupplier(PerServerKeys.PLAYER_DEATH_COUNT, () -> SessionsMutator.forContainer(container).toPlayerDeathCount());
             container.putSupplier(PerServerKeys.MOB_DEATH_COUNT, () ->
-                    container.getUnsafe(PerServerKeys.DEATH_COUNT) - container.getUnsafe(PerServerKeys.PLAYER_DEATH_COUNT)
+                    container.getValue(PerServerKeys.DEATH_COUNT).orElse(0) - container.getValue(PerServerKeys.PLAYER_DEATH_COUNT).orElse(0)
             );
         }
     }
