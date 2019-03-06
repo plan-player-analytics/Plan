@@ -1,3 +1,4 @@
+REL|4.7.1|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.7.1/Plan-4.7.1.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.7.1
 DEV|4.7.0-b1|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.7.1-DEV1/Plan-4.7.1-SNAPSHOT-b1.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.7.1-DEV1
 REL|4.7.0|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.7.0/Plan-4.7.0.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.7.0
 DEV|4.6.2-b3|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.7.0-DEV3/Plan-4.7.0-SNAPSHOT-b3.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.7.0-DEV3
