@@ -19,10 +19,7 @@ package com.djrapitops.plan.extension.annotation;
 import com.djrapitops.plan.extension.ElementOrder;
 import com.djrapitops.plan.extension.icon.Family;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Class Annotation that allows determining an Icon and {@link ElementOrder} of a tab.
@@ -31,6 +28,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
+@Repeatable(TabInfo.Multiple.class)
 public @interface TabInfo {
 
     /**
@@ -67,4 +65,10 @@ public @interface TabInfo {
      * @return ElementOrders in the order that they want to be displayed in.
      */
     ElementOrder[] elementOrder();
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.TYPE)
+    @interface Multiple {
+        TabInfo[] value();
+    }
 }

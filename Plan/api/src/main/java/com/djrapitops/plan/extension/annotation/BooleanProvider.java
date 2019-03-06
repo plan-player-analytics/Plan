@@ -64,6 +64,13 @@ public @interface BooleanProvider {
     String description() default "";
 
     /**
+     * Name of the {@link Conditional} condition limited to 50 characters.
+     *
+     * @return Case sensitive string of max 50 characters.
+     */
+    String conditionName() default "";
+
+    /**
      * Name of Font Awesome icon.
      * <p>
      * See https://fontawesome.com/icons?d=gallery&m=free for icons and their {@link Family}.
