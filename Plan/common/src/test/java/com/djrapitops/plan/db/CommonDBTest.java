@@ -605,6 +605,11 @@ public abstract class CommonDBTest {
     }
 
     @Test
+    public void serverBaseUserQueriesDoesNotReturnDuplicateUsers() {
+
+    }
+
+    @Test
     public void testKillTableGetKillsOfServer() {
         saveUserOne();
         saveUserTwo();
