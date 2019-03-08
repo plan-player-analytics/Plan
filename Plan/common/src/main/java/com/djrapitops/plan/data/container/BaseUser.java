@@ -66,15 +66,12 @@ public class BaseUser {
         if (this == o) return true;
         if (!(o instanceof BaseUser)) return false;
         BaseUser baseUser = (BaseUser) o;
-        return registered == baseUser.registered &&
-                timesKicked == baseUser.timesKicked &&
-                uuid.equals(baseUser.uuid) &&
-                name.equals(baseUser.name);
+        return uuid.equals(baseUser.uuid) && name.equals(baseUser.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, name, registered, timesKicked);
+        return Objects.hash(uuid, name);
     }
 
     @Override

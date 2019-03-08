@@ -604,11 +604,6 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void serverBaseUserQueriesDoesNotReturnDuplicateUsers() {
-
-    }
-
-    @Test
     public void testKillTableGetKillsOfServer() {
         saveUserOne();
         saveUserTwo();
@@ -1027,12 +1022,12 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void baseUserQueryDoesNotReturnDuplicatePlayers() {
+    public void baseUsersQueryDoesNotReturnDuplicatePlayers() {
         db.executeTransaction(TestData.storeServers());
         executeTransactions(TestData.storePlayerOneData());
         executeTransactions(TestData.storePlayerTwoData());
 
-        Collection<BaseUser> expected = Arrays.asList(TestData.getPlayerBaseUser(), TestData.getPlayer2BaseUser());
+        Collection<BaseUser> expected = new HashSet<>(Arrays.asList(TestData.getPlayerBaseUser(), TestData.getPlayer2BaseUser()));
         Collection<BaseUser> result = db.query(BaseUserQueries.fetchServerBaseUsers(TestConstants.SERVER_UUID));
 
         assertEquals(expected, result);
@@ -1072,6 +1067,29 @@ public abstract class CommonDBTest {
                 .stream().map(player -> player.getUnsafe(PlayerKeys.UUID))
                 .sorted()
                 .collect(Collectors.toList());
+
+        assertEquals(expected, result);
+    }
+
+    // This test is against issue https://github.com/Rsl1122/Plan-PlayerAnalytics/issues/956
+    @Test
+    public void analysisContainerPlayerNamesAreCollectedFromBaseUsersCorrectly() {
+        db.executeTransaction(TestData.storeServers());
+        executeTransactions(TestData.storePlayerOneData());
+        executeTransactions(TestData.storePlayerTwoData());
+
+        BaseUser playerBaseUser = TestData.getPlayerBaseUser();
+        BaseUser player2BaseUser = TestData.getPlayer2BaseUser();
+
+        AnalysisContainer.Factory factory = constructAnalysisContainerFactory();
+        AnalysisContainer analysisContainer = factory.forServerContainer(
+                db.query(ContainerFetchQueries.fetchServerContainer(TestConstants.SERVER_UUID))
+        );
+
+        Map<UUID, String> expected = new HashMap<>();
+        expected.put(playerBaseUser.getUuid(), playerBaseUser.getName());
+        expected.put(player2BaseUser.getUuid(), player2BaseUser.getName());
+        Map<UUID, String> result = analysisContainer.getValue(AnalysisKeys.PLAYER_NAMES).orElseThrow(AssertionError::new);
 
         assertEquals(expected, result);
     }
