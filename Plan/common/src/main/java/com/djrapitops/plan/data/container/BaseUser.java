@@ -76,4 +76,14 @@ public class BaseUser {
     public int hashCode() {
         return Objects.hash(uuid, name, registered, timesKicked);
     }
+
+    @Override
+    public String toString() {
+        return "BaseUser{" +
+                uuid +
+                ", '" + name + '\'' +
+                ", +" + registered +
+                ", kick:" + timesKicked +
+                '}';
+    }
 }

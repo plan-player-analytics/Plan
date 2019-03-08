@@ -32,7 +32,9 @@ import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.queries.*;
+import com.djrapitops.plan.db.access.queries.containers.AllPlayerContainersQuery;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.db.access.queries.containers.ServerPlayerContainersQuery;
 import com.djrapitops.plan.db.access.queries.objects.*;
 import com.djrapitops.plan.db.access.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.db.access.transactions.StoreConfigTransaction;
@@ -60,10 +62,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.rules.Timeout;
 import rules.ComponentMocker;
 import rules.PluginComponentMocker;
-import utilities.FieldFetcher;
-import utilities.OptionalAssert;
-import utilities.RandomData;
-import utilities.TestConstants;
+import utilities.*;
 
 import java.io.File;
 import java.lang.management.ManagementFactory;
@@ -1018,6 +1017,56 @@ public abstract class CommonDBTest {
         saveUserOne();
 
         Map<UUID, Integer> result = db.query(ServerAggregateQueries.serverUserCounts());
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void baseUserQueryDoesNotReturnDuplicatePlayers() {
+        db.executeTransaction(TestData.storeServers());
+        db.executeTransaction(TestData.storePlayerOneData());
+        db.executeTransaction(TestData.storePlayerTwoData());
+
+        Collection<BaseUser> expected = Arrays.asList(TestData.getPlayerBaseUser(), TestData.getPlayer2BaseUser());
+        Collection<BaseUser> result = db.query(BaseUserQueries.fetchServerBaseUsers(TestConstants.SERVER_UUID));
+
+        assertEquals(expected, result);
+
+        result = db.query(BaseUserQueries.fetchServerBaseUsers(TestConstants.SERVER_TWO_UUID));
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void serverPlayerContainersQueryDoesNotReturnDuplicatePlayers() {
+        db.executeTransaction(TestData.storeServers());
+        db.executeTransaction(TestData.storePlayerOneData());
+        db.executeTransaction(TestData.storePlayerTwoData());
+
+        List<UUID> expected = Arrays.asList(playerUUID, player2UUID);
+        Collections.sort(expected);
+
+        Collection<UUID> result = db.query(new ServerPlayerContainersQuery(TestConstants.SERVER_UUID))
+                .stream().map(player -> player.getUnsafe(PlayerKeys.UUID))
+                .sorted()
+                .collect(Collectors.toList());
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void allPlayerContainersQueryDoesNotReturnDuplicatePlayers() {
+        db.executeTransaction(TestData.storeServers());
+        db.executeTransaction(TestData.storePlayerOneData());
+        db.executeTransaction(TestData.storePlayerTwoData());
+
+        List<UUID> expected = Arrays.asList(playerUUID, player2UUID);
+        Collections.sort(expected);
+
+        Collection<UUID> result = db.query(new AllPlayerContainersQuery())
+                .stream().map(player -> player.getUnsafe(PlayerKeys.UUID))
+                .sorted()
+                .collect(Collectors.toList());
+
         assertEquals(expected, result);
     }
 }

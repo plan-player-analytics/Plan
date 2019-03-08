@@ -16,6 +16,7 @@
  */
 package utilities;
 
+import com.djrapitops.plan.data.container.BaseUser;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
@@ -173,5 +174,13 @@ public class TestData {
 
     public static List<GeoInfo> getPlayerGeoInfo() {
         return playerGeoInfo;
+    }
+
+    public static BaseUser getPlayerBaseUser() {
+        return new BaseUser(playerUUID, playerName, playerFirstJoin, 0);
+    }
+
+    public static BaseUser getPlayer2BaseUser() {
+        return new BaseUser(player2UUID, player2Name, playerFirstJoin, 0);
     }
 }
