@@ -1020,11 +1020,17 @@ public abstract class CommonDBTest {
         assertEquals(expected, result);
     }
 
+    private void executeTransactions(Transaction... transactions) {
+        for (Transaction transaction : transactions) {
+            db.executeTransaction(transaction);
+        }
+    }
+
     @Test
     public void baseUserQueryDoesNotReturnDuplicatePlayers() {
         db.executeTransaction(TestData.storeServers());
-        db.executeTransaction(TestData.storePlayerOneData());
-        db.executeTransaction(TestData.storePlayerTwoData());
+        executeTransactions(TestData.storePlayerOneData());
+        executeTransactions(TestData.storePlayerTwoData());
 
         Collection<BaseUser> expected = Arrays.asList(TestData.getPlayerBaseUser(), TestData.getPlayer2BaseUser());
         Collection<BaseUser> result = db.query(BaseUserQueries.fetchServerBaseUsers(TestConstants.SERVER_UUID));
@@ -1039,8 +1045,8 @@ public abstract class CommonDBTest {
     @Test
     public void serverPlayerContainersQueryDoesNotReturnDuplicatePlayers() {
         db.executeTransaction(TestData.storeServers());
-        db.executeTransaction(TestData.storePlayerOneData());
-        db.executeTransaction(TestData.storePlayerTwoData());
+        executeTransactions(TestData.storePlayerOneData());
+        executeTransactions(TestData.storePlayerTwoData());
 
         List<UUID> expected = Arrays.asList(playerUUID, player2UUID);
         Collections.sort(expected);
@@ -1056,8 +1062,8 @@ public abstract class CommonDBTest {
     @Test
     public void allPlayerContainersQueryDoesNotReturnDuplicatePlayers() {
         db.executeTransaction(TestData.storeServers());
-        db.executeTransaction(TestData.storePlayerOneData());
-        db.executeTransaction(TestData.storePlayerTwoData());
+        executeTransactions(TestData.storePlayerOneData());
+        executeTransactions(TestData.storePlayerTwoData());
 
         List<UUID> expected = Arrays.asList(playerUUID, player2UUID);
         Collections.sort(expected);

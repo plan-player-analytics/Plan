@@ -118,41 +118,45 @@ public class TestData {
         };
     }
 
-    public static Transaction storePlayerOneData() {
-        return new Transaction() {
-            @Override
-            protected void performOperations() {
-                executeOther(new PlayerRegisterTransaction(playerUUID, () -> playerFirstJoin, playerName));
-                executeOther(new PlayerServerRegisterTransaction(playerUUID, () -> playerFirstJoin, playerName, serverUUID));
-                executeOther(new PlayerServerRegisterTransaction(playerUUID, () -> playerSecondJoin, playerName, server2UUID));
+    public static Transaction[] storePlayerOneData() {
+        return new Transaction[]{
+                new PlayerRegisterTransaction(playerUUID, () -> playerFirstJoin, playerName),
+                new Transaction() {
+                    @Override
+                    protected void performOperations() {
+                        executeOther(new PlayerServerRegisterTransaction(playerUUID, () -> playerFirstJoin, playerName, serverUUID));
+                        executeOther(new PlayerServerRegisterTransaction(playerUUID, () -> playerSecondJoin, playerName, server2UUID));
 
-                for (GeoInfo geoInfo : playerGeoInfo) {
-                    executeOther(new GeoInfoStoreTransaction(playerUUID, geoInfo));
-                }
+                        for (GeoInfo geoInfo : playerGeoInfo) {
+                            executeOther(new GeoInfoStoreTransaction(playerUUID, geoInfo));
+                        }
 
-                for (Session session : playerSessions) {
-                    executeOther(new SessionEndTransaction(session));
+                        for (Session session : playerSessions) {
+                            executeOther(new SessionEndTransaction(session));
+                        }
+                    }
                 }
-            }
         };
     }
 
-    public static Transaction storePlayerTwoData() {
-        return new Transaction() {
-            @Override
-            protected void performOperations() {
-                executeOther(new PlayerRegisterTransaction(player2UUID, () -> playerFirstJoin, player2Name));
-                executeOther(new PlayerServerRegisterTransaction(player2UUID, () -> playerFirstJoin, player2Name, serverUUID));
-                executeOther(new PlayerServerRegisterTransaction(player2UUID, () -> playerSecondJoin, player2Name, server2UUID));
+    public static Transaction[] storePlayerTwoData() {
+        return new Transaction[]{
+                new PlayerRegisterTransaction(player2UUID, () -> playerFirstJoin, player2Name),
+                new Transaction() {
+                    @Override
+                    protected void performOperations() {
+                        executeOther(new PlayerServerRegisterTransaction(player2UUID, () -> playerFirstJoin, player2Name, serverUUID));
+                        executeOther(new PlayerServerRegisterTransaction(player2UUID, () -> playerSecondJoin, player2Name, server2UUID));
 
-                for (GeoInfo geoInfo : playerGeoInfo) {
-                    executeOther(new GeoInfoStoreTransaction(player2UUID, geoInfo));
-                }
+                        for (GeoInfo geoInfo : playerGeoInfo) {
+                            executeOther(new GeoInfoStoreTransaction(player2UUID, geoInfo));
+                        }
 
-                for (Session session : player2Sessions) {
-                    executeOther(new SessionEndTransaction(session));
+                        for (Session session : player2Sessions) {
+                            executeOther(new SessionEndTransaction(session));
+                        }
+                    }
                 }
-            }
         };
     }
 
