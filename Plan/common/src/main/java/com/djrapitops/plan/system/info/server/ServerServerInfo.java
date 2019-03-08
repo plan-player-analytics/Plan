@@ -23,9 +23,12 @@ import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.db.access.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plan.system.webserver.WebServer;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import dagger.Lazy;
 
 import javax.inject.Inject;
@@ -45,24 +48,31 @@ import java.util.concurrent.ExecutionException;
 @Singleton
 public class ServerServerInfo extends ServerInfo {
 
-    private final Lazy<WebServer> webServer;
+    private final ServerInfoFile serverInfoFile;
+
     private final PlanConfig config;
-    private ServerInfoFile serverInfoFile;
-    private DBSystem dbSystem;
+    private final Processing processing;
+    private final DBSystem dbSystem;
+    private final Lazy<WebServer> webServer;
+    private final ErrorHandler errorHandler;
 
     @Inject
     public ServerServerInfo(
             ServerProperties serverProperties,
             ServerInfoFile serverInfoFile,
+            Processing processing,
+            PlanConfig config,
             DBSystem dbSystem,
             Lazy<WebServer> webServer,
-            PlanConfig config
+            ErrorHandler errorHandler
     ) {
         super(serverProperties);
         this.serverInfoFile = serverInfoFile;
+        this.processing = processing;
         this.dbSystem = dbSystem;
         this.webServer = webServer;
         this.config = config;
+        this.errorHandler = errorHandler;
     }
 
     @Override
@@ -76,10 +86,15 @@ public class ServerServerInfo extends ServerInfo {
     }
 
     @Override
-    protected Server loadServerInfo() throws EnableException {
+    protected void loadServerInfo() throws EnableException {
         Optional<UUID> serverUUID = serverInfoFile.getUUID();
         try {
-            return serverUUID.isPresent() ? updateDbInfo(serverUUID.get()) : registerServer();
+            if (serverUUID.isPresent()) {
+                server = createServerObject(serverUUID.get());
+                processing.submitNonCritical(() -> updateDbInfo(serverUUID.get()));
+            } else {
+                server = registerServer();
+            }
         } catch (DBOpException e) {
             String causeMsg = e.getMessage();
             throw new EnableException("Failed to read Server information from Database: " + causeMsg, e);
@@ -87,34 +102,38 @@ public class ServerServerInfo extends ServerInfo {
             throw new EnableException("Failed to read ServerInfoFile.yml", e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            return null; // This line is not reached due to the thread interrupt.
         } catch (Exception e) {
             throw new EnableException("Failed to perform a database transaction to store the server information", e);
         }
     }
 
-    private Server updateDbInfo(UUID serverUUID) throws Exception {
-        Database db = dbSystem.getDatabase();
+    private void updateDbInfo(UUID serverUUID) {
+        try {
+            Database db = dbSystem.getDatabase();
 
-        Optional<Server> foundServer = db.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID));
-        if (!foundServer.isPresent()) {
-            return registerServer(serverUUID);
+            Optional<Server> foundServer = db.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID));
+            if (!foundServer.isPresent()) {
+                server = registerServer(serverUUID);
+                return;
+            }
+
+            server = foundServer.get();
+
+            // Update information
+            String name = config.get(PluginSettings.SERVER_NAME).replaceAll("[^a-zA-Z0-9_\\s]", "_");
+            server.setName("plan".equalsIgnoreCase(name) ? "Server " + server.getId() : name);
+
+            String webAddress = webServer.get().getAccessAddress();
+            server.setWebAddress(webAddress);
+
+            int maxPlayers = serverProperties.getMaxPlayers();
+            server.setMaxPlayers(maxPlayers);
+
+            // Save
+            db.executeTransaction(new StoreServerInformationTransaction(server));
+        } catch (InterruptedException | ExecutionException | IOException e) {
+            errorHandler.log(L.CRITICAL, this.getClass(), e);
         }
-        Server server = foundServer.get();
-
-        // Update information
-        String name = config.get(PluginSettings.SERVER_NAME).replaceAll("[^a-zA-Z0-9_\\s]", "_");
-        server.setName("plan".equalsIgnoreCase(name) ? "Server " + server.getId() : name);
-
-        String webAddress = webServer.get().getAccessAddress();
-        server.setWebAddress(webAddress);
-
-        int maxPlayers = serverProperties.getMaxPlayers();
-        server.setMaxPlayers(maxPlayers);
-
-        // Save
-        db.executeTransaction(new StoreServerInformationTransaction(server));
-        return server;
     }
 
     private Server registerServer() throws Exception {
@@ -124,11 +143,7 @@ public class ServerServerInfo extends ServerInfo {
     private Server registerServer(UUID serverUUID) throws ExecutionException, InterruptedException, IOException {
         Database db = dbSystem.getDatabase();
 
-        // Create the server object
-        String webAddress = webServer.get().getAccessAddress();
-        String name = config.get(PluginSettings.SERVER_NAME).replaceAll("[^a-zA-Z0-9_\\s]", "_");
-        int maxPlayers = serverProperties.getMaxPlayers();
-        Server server = new Server(-1, serverUUID, name, webAddress, maxPlayers);
+        Server server = createServerObject(serverUUID);
 
         // Save
         db.executeTransaction(new StoreServerInformationTransaction(server))
@@ -141,5 +156,12 @@ public class ServerServerInfo extends ServerInfo {
         // Store the UUID in ServerInfoFile
         serverInfoFile.saveServerUUID(serverUUID);
         return server;
+    }
+
+    private Server createServerObject(UUID serverUUID) {
+        String webAddress = webServer.get().getAccessAddress();
+        String name = config.get(PluginSettings.SERVER_NAME).replaceAll("[^a-zA-Z0-9_\\s]", "_");
+        int maxPlayers = serverProperties.getMaxPlayers();
+        return new Server(-1, serverUUID, name, webAddress, maxPlayers);
     }
 }
