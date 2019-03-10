@@ -32,6 +32,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -77,7 +78,7 @@ public class JSONExport extends SpecificExport {
                     try {
                         File htmlLocation = getPlayerFolder();
                         htmlLocation.mkdirs();
-                        File exportFile = new File(htmlLocation, playerName.replace(" ", "%20").replace(".", "%2E") + ".json");
+                        File exportFile = new File(htmlLocation, URLEncoder.encode(playerName, "UTF-8") + ".json");
 
                         export(exportFile, Collections.singletonList(json));
                     } catch (IOException e) {
@@ -94,7 +95,7 @@ public class JSONExport extends SpecificExport {
                     try {
                         File htmlLocation = getServerFolder();
                         htmlLocation.mkdirs();
-                        File exportFile = new File(htmlLocation, serverName.replace(" ", "%20").replace(".", "%2E") + ".json");
+                        File exportFile = new File(htmlLocation, URLEncoder.encode(serverName, "UTF-8") + ".json");
 
                         export(exportFile, Collections.singletonList(json));
                     } catch (IOException e) {

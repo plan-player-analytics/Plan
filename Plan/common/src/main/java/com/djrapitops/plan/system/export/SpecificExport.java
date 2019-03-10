@@ -25,6 +25,7 @@ import com.djrapitops.plugin.api.Check;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -92,7 +93,7 @@ public abstract class SpecificExport {
     protected void exportPlayerPage(String playerName, String html) throws IOException {
         List<String> lines = Arrays.asList(html.split("\n"));
 
-        File htmlLocation = new File(getPlayerFolder(), playerName.replace(" ", "%20").replace(".", "%2E"));
+        File htmlLocation = new File(getPlayerFolder(), URLEncoder.encode(playerName, "UTF-8").replace(".", "%2E"));
         htmlLocation.mkdirs();
         File exportFile = new File(htmlLocation, "index.html");
 
@@ -127,7 +128,7 @@ public abstract class SpecificExport {
             if (serverUUID.equals(serverInfo.getServerUUID())) {
                 htmlLocation = new File(getFolder(), "network");
             } else {
-                htmlLocation = new File(getServerFolder(), serverName.replace(" ", "%20").replace(".", "%2E"));
+                htmlLocation = new File(getServerFolder(), URLEncoder.encode(serverName, "UTF-8").replace(".", "%2E"));
                 html = html.replace("../", "../../");
             }
         } else {
