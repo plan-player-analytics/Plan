@@ -48,6 +48,7 @@ public enum CmdHelpLang implements Lang {
     MANAGE_CLEAR("Command Help - /plan manage clear", "Clear a Database"),
     MANAGE_CON("Command Help - /plan manage con", "Debug Server-Bungee connections"),
     MANAGE_IMPORT("Command Help - /plan manage import", "Import data from elsewhere"),
+    MANAGE_EXPORT("Command Help - /plan manage export", "Trigger export manually"),
     MANAGE_DISABLE("Command Help - /plan manage disable", "Disable a feature temporarily"),
     MANAGE_SETUP("Command Help - /plan manage setup", "Set-up Server-Bungee connection"),
 

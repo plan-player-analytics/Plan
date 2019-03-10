@@ -105,13 +105,13 @@ public class CacheInspectPageRequest extends InfoRequestWithVariables implements
         return DefaultResponses.SUCCESS.get();
     }
 
-    private void cache(UUID uuid, String html) {
-        ResponseCache.cacheResponse(PageId.PLAYER.of(uuid), () -> new InspectPageResponse(uuid, html));
+    private void cache(UUID playerUUID, String html) {
+        ResponseCache.cacheResponse(PageId.PLAYER.of(playerUUID), () -> new InspectPageResponse(playerUUID, html));
         if (config.get(ExportSettings.PLAYER_PAGES)) {
-            processing.submitNonCritical(() -> htmlExport.exportPlayer(uuid));
+            processing.submitNonCritical(() -> htmlExport.exportCachedPlayerPage(playerUUID));
         }
         if (config.get(ExportSettings.PLAYER_JSON)) {
-            processing.submitNonCritical(() -> jsonExport.exportPlayerJSON(uuid));
+            processing.submitNonCritical(() -> jsonExport.exportPlayerJSON(playerUUID));
         }
     }
 

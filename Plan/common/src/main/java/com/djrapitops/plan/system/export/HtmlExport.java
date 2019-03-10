@@ -33,6 +33,7 @@ import com.djrapitops.plan.system.settings.paths.ExportSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.file.FileUtil;
+import com.djrapitops.plan.utilities.html.pages.InspectPage;
 import com.djrapitops.plan.utilities.html.pages.PageFactory;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.logging.L;
@@ -107,7 +108,21 @@ public class HtmlExport extends SpecificExport {
                 });
     }
 
-    public void exportPlayer(UUID playerUUID) {
+    public void exportPlayerPage(UUID playerUUID) {
+        Optional<String> name = dbSystem.getDatabase().query(UserIdentifierQueries.fetchPlayerNameOf(playerUUID));
+        exportPlayerPage(playerUUID, name.orElse("Unknown"));
+    }
+
+    public void exportPlayerPage(UUID playerUUID, String playerName) {
+        InspectPage playerPage = pageFactory.inspectPage(playerUUID);
+        try {
+            exportPlayerPage(playerName, playerPage.toHtml());
+        } catch (ParseException | IOException e) {
+            errorHandler.log(L.ERROR, this.getClass(), e);
+        }
+    }
+
+    public void exportCachedPlayerPage(UUID playerUUID) {
         if (Check.isBukkitAvailable() && connectionSystem.isServerAvailable()) {
             return;
         }

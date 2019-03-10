@@ -89,20 +89,24 @@ public abstract class SpecificExport {
         return player;
     }
 
-    protected void exportAvailablePlayerPage(UUID uuid, String name) throws IOException {
-        Response response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
+    protected void exportPlayerPage(String playerName, String html) throws IOException {
+        List<String> lines = Arrays.asList(html.split("\n"));
+
+        File htmlLocation = new File(getPlayerFolder(), playerName.replace(" ", "%20").replace(".", "%2E"));
+        htmlLocation.mkdirs();
+        File exportFile = new File(htmlLocation, "index.html");
+
+        export(exportFile, lines);
+    }
+
+    protected void exportAvailablePlayerPage(UUID playerUUID, String name) throws IOException {
+        Response response = ResponseCache.loadResponse(PageId.PLAYER.of(playerUUID));
         if (response == null) {
             return;
         }
 
         String html = response.getContent().replace("../", "../../");
-        List<String> lines = Arrays.asList(html.split("\n"));
-
-        File htmlLocation = new File(getPlayerFolder(), name.replace(" ", "%20").replace(".", "%2E"));
-        htmlLocation.mkdirs();
-        File exportFile = new File(htmlLocation, "index.html");
-
-        export(exportFile, lines);
+        exportPlayerPage(name, html);
     }
 
     protected void exportAvailableServerPage(UUID serverUUID, String serverName) throws IOException {

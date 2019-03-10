@@ -51,6 +51,7 @@ public class ManageCommand extends TreeCmdNode {
                          ManageSetupCommand setupCommand,
                          ManageConDebugCommand conDebugCommand,
                          ManageImportCommand importCommand,
+                         ManageExportCommand exportCommand,
                          ManageDisableCommand disableCommand,
                          ManageUninstalledCommand uninstalledCommand
     ) {
@@ -72,6 +73,7 @@ public class ManageCommand extends TreeCmdNode {
                 setupCommand,
                 conDebugCommand,
                 importCommand,
+                exportCommand,
                 disableCommand,
                 uninstalledCommand
         };
