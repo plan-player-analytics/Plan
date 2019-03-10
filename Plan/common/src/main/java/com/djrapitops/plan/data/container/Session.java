@@ -21,7 +21,10 @@ import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.WorldTimes;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * DataContainer for information about a player's play session.
@@ -91,7 +94,7 @@ public class Session extends DynamicDataContainer implements DateHolder {
      */
     public Session(int id, UUID uuid, UUID serverUUID, long sessionStart, long sessionEnd, int mobKills, int deaths, long afkTime) {
         this.sessionStart = sessionStart;
-        worldTimes = new WorldTimes(new HashMap<>());
+        worldTimes = new WorldTimes();
         playerKills = new ArrayList<>();
 
         this.mobKills = mobKills;

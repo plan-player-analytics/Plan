@@ -19,6 +19,7 @@ package com.djrapitops.plan.db.access.queries.containers;
 import com.djrapitops.plan.data.container.BaseUser;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.Key;
+import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
@@ -29,7 +30,7 @@ import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.queries.objects.*;
 
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,11 +65,11 @@ public class PlayerContainerQuery implements Query<PlayerContainer> {
         container.putCachingSupplier(PlayerKeys.NICKNAMES, () -> db.query(NicknameQueries.fetchNicknameDataOfPlayer(uuid)));
         container.putCachingSupplier(PlayerKeys.PER_SERVER, () -> db.query(new PerServerContainerQuery(uuid)));
 
-        container.putSupplier(PlayerKeys.BANNED, () -> new PerServerMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).isBanned());
-        container.putSupplier(PlayerKeys.OPERATOR, () -> new PerServerMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).isOperator());
+        container.putSupplier(PlayerKeys.BANNED, () -> new PerServerMutator(container.getValue(PlayerKeys.PER_SERVER).orElse(new PerServerContainer())).isBanned());
+        container.putSupplier(PlayerKeys.OPERATOR, () -> new PerServerMutator(container.getValue(PlayerKeys.PER_SERVER).orElse(new PerServerContainer())).isOperator());
 
         container.putCachingSupplier(PlayerKeys.SESSIONS, () -> {
-                    List<Session> sessions = new PerServerMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).flatMapSessions();
+            List<Session> sessions = new PerServerMutator(container.getValue(PlayerKeys.PER_SERVER).orElse(new PerServerContainer())).flatMapSessions();
                     container.getValue(PlayerKeys.ACTIVE_SESSION).ifPresent(sessions::add);
                     return sessions;
                 }
@@ -77,7 +78,7 @@ public class PlayerContainerQuery implements Query<PlayerContainer> {
         {
             WorldTimes worldTimes = db.query(WorldTimesQueries.fetchPlayerTotalWorldTimes(uuid));
             container.getValue(PlayerKeys.ACTIVE_SESSION).ifPresent(session -> worldTimes.add(
-                    session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>())))
+                    session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes()))
             );
             return worldTimes;
         });
@@ -86,7 +87,7 @@ public class PlayerContainerQuery implements Query<PlayerContainer> {
 
         container.putSupplier(PlayerKeys.PLAYER_KILLS, () -> SessionsMutator.forContainer(container).toPlayerKillList());
         container.putSupplier(PlayerKeys.PLAYER_DEATHS, () -> SessionsMutator.forContainer(container).toPlayerDeathList());
-        container.putSupplier(PlayerKeys.PLAYER_KILL_COUNT, () -> container.getUnsafe(PlayerKeys.PLAYER_KILLS).size());
+        container.putSupplier(PlayerKeys.PLAYER_KILL_COUNT, () -> container.getValue(PlayerKeys.PLAYER_KILLS).map(Collection::size).orElse(0));
         container.putSupplier(PlayerKeys.MOB_KILL_COUNT, () -> SessionsMutator.forContainer(container).toMobKillCount());
         container.putSupplier(PlayerKeys.DEATH_COUNT, () -> SessionsMutator.forContainer(container).toDeathCount());
 

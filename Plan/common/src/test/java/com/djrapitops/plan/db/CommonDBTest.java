@@ -748,7 +748,7 @@ public abstract class CommonDBTest {
     @Test
     public void emptyServerWorldTimesIsEmpty() {
         WorldTimes worldTimesOfServer = db.query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID));
-        assertEquals(new WorldTimes(new HashMap<>()), worldTimesOfServer);
+        assertEquals(new WorldTimes(), worldTimesOfServer);
     }
 
     @Test
