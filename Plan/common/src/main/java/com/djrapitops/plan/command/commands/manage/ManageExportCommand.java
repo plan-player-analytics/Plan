@@ -137,12 +137,18 @@ public class ManageExportCommand extends CommandNode {
         Boolean exportPlayerHTML = config.get(ExportSettings.PLAYER_PAGES);
         processing.submitNonCritical(() -> {
             Map<UUID, String> players = dbSystem.getDatabase().query(UserIdentifierQueries.fetchAllPlayerNames());
+            int size = players.size();
+            int i = 1;
             for (Map.Entry<UUID, String> entry : players.entrySet()) {
                 if (exportPlayerJSON) {
                     jsonExport.exportPlayerJSON(entry.getKey());
                 }
                 if (exportPlayerHTML) {
                     htmlExport.exportPlayerPage(entry.getKey(), entry.getValue());
+                }
+                i++;
+                if (i % 1000 == 0) {
+                    sender.sendMessage(i + " / " + size + " processed..");
                 }
             }
             sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
