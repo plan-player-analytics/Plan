@@ -59,7 +59,7 @@ public class BungeeServerInfo extends ServerInfo {
     }
 
     @Override
-    public Server loadServerInfo() throws EnableException {
+    public void loadServerInfo() throws EnableException {
         checkIfDefaultIP();
 
         try {
@@ -76,7 +76,6 @@ public class BungeeServerInfo extends ServerInfo {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        return server;
     }
 
     private void updateServerInfo(Database db) {

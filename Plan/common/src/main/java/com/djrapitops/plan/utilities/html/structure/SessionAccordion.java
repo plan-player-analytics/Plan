@@ -33,7 +33,10 @@ import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.icon.Icons;
 import com.djrapitops.plan.utilities.html.tables.HtmlTables;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
@@ -119,7 +122,7 @@ public class SessionAccordion extends Accordion {
             String playerName = playerNames.getOrDefault(session.getValue(SessionKeys.UUID).orElse(null), "Unknown");
             String sessionStart = yearFormatter.apply(session);
 
-            WorldTimes worldTimes = session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
+            WorldTimes worldTimes = session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes());
             WorldPie worldPie = graphs.pie().worldPie(worldTimes);
             String longestWorldPlayed = worldAliasSettings.getLongestWorldPlayed(session);
 
@@ -191,7 +194,7 @@ public class SessionAccordion extends Accordion {
             String serverName = serverNames.getOrDefault(session.getValue(SessionKeys.SERVER_UUID).orElse(null), "Unknown");
             String sessionStart = yearFormatter.apply(session);
 
-            WorldTimes worldTimes = session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
+            WorldTimes worldTimes = session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes());
             WorldPie worldPie = graphs.pie().worldPie(worldTimes);
             String longestWorldPlayed = worldAliasSettings.getLongestWorldPlayed(session);
 

@@ -27,7 +27,10 @@ import com.djrapitops.plan.db.sql.tables.UsersTable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Queries for {@link BaseUser} objects.
@@ -126,8 +129,8 @@ public class BaseUserQueries {
             }
 
             @Override
-            public List<BaseUser> processResults(ResultSet set) throws SQLException {
-                List<BaseUser> users = new ArrayList<>();
+            public Collection<BaseUser> processResults(ResultSet set) throws SQLException {
+                Collection<BaseUser> users = new HashSet<>();
                 while (set.next()) {
                     UUID playerUUID = UUID.fromString(set.getString(UsersTable.USER_UUID));
                     String name = set.getString(UsersTable.USER_NAME);

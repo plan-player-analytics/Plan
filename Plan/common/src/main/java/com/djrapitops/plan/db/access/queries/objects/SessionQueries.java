@@ -214,7 +214,7 @@ public class SessionQueries {
                     set.getLong(SessionsTable.AFK_TIME)
             ));
 
-            WorldTimes worldTimes = session.getUnsafe(SessionKeys.WORLD_TIMES);
+            WorldTimes worldTimes = session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes());
             String worldName = set.getString(WorldTable.NAME);
 
             if (!worldTimes.contains(worldName)) {

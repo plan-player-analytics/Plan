@@ -75,7 +75,7 @@ public class SessionsMutator {
     }
 
     public WorldTimes toTotalWorldTimes() {
-        WorldTimes total = new WorldTimes(new HashMap<>());
+        WorldTimes total = new WorldTimes();
 
         for (Session session : sessions) {
             session.getValue(SessionKeys.WORLD_TIMES).ifPresent(total::add);

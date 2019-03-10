@@ -363,7 +363,7 @@ public class AnalysisContainer extends DynamicDataContainer {
     private void addGraphSuppliers() {
         Key<WorldPie> worldPie = new Key<>(WorldPie.class, "WORLD_PIE");
         putCachingSupplier(worldPie, () -> graphs.pie().worldPie(
-                serverContainer.getValue(ServerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()))
+                serverContainer.getValue(ServerKeys.WORLD_TIMES).orElse(new WorldTimes())
         ));
         putSupplier(AnalysisKeys.WORLD_PIE_SERIES, () -> getUnsafe(worldPie).toHighChartsSeries());
         putSupplier(AnalysisKeys.GM_PIE_SERIES, () -> getUnsafe(worldPie).toHighChartsDrilldown());

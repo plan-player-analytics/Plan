@@ -16,8 +16,11 @@
  */
 package com.djrapitops.plan.system.processing.processors.info;
 
+import com.djrapitops.plan.system.export.HtmlExport;
+import com.djrapitops.plan.system.export.JSONExport;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.command.Sender;
 import dagger.Lazy;
 
@@ -34,14 +37,23 @@ import java.util.function.BiConsumer;
 @Singleton
 public class InfoProcessors {
 
+    private final Lazy<PlanConfig> config;
+    private final Lazy<HtmlExport> htmlExport;
+    private final Lazy<JSONExport> jsonExport;
     private final Lazy<InfoSystem> infoSystem;
     private final Lazy<WebExceptionLogger> webExceptionLogger;
 
     @Inject
     public InfoProcessors(
+            Lazy<PlanConfig> config,
+            Lazy<HtmlExport> htmlExport,
+            Lazy<JSONExport> jsonExport,
             Lazy<InfoSystem> infoSystem,
             Lazy<WebExceptionLogger> webExceptionLogger
     ) {
+        this.config = config;
+        this.htmlExport = htmlExport;
+        this.jsonExport = jsonExport;
         this.infoSystem = infoSystem;
         this.webExceptionLogger = webExceptionLogger;
     }
@@ -58,6 +70,6 @@ public class InfoProcessors {
     }
 
     public PlayerPageUpdateProcessor playerPageUpdateProcessor(UUID uuid) {
-        return new PlayerPageUpdateProcessor(uuid);
+        return new PlayerPageUpdateProcessor(uuid, config.get(), htmlExport.get(), jsonExport.get());
     }
 }

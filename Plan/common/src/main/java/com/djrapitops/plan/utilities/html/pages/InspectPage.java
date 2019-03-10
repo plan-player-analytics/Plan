@@ -223,7 +223,7 @@ public class InspectPage implements Page {
         sessionsAndPlaytime(replacer, sessionsMutator, daySessionsMutator, weekSessionsMutator, monthSessionsMutator);
 
         String punchCardData = graphs.special().punchCard(allSessions).toHighChartsSeries();
-        WorldTimes worldTimes = player.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
+        WorldTimes worldTimes = player.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes());
 
         WorldPie worldPie = graphs.pie().worldPie(worldTimes);
 
