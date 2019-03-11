@@ -17,14 +17,17 @@
 package com.djrapitops.plan.extension.extractor;
 
 import com.djrapitops.plan.extension.DataExtension;
+import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.annotation.*;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Implementation details for extracting methods from {@link com.djrapitops.plan.extension.DataExtension}.
+ * Implementation detail, for extracting methods from {@link com.djrapitops.plan.extension.DataExtension}.
  * <p>
  * This class can be used for testing validity of annotation implementations
  * in your unit tests to avoid runtime errors. {@link ExtensionExtractor#validateAnnotations()}
@@ -34,11 +37,18 @@ import java.util.stream.Collectors;
 public final class ExtensionExtractor {
 
     private final DataExtension extension;
+    private final String extensionName;
 
-    private final List<String> errors = new ArrayList<>();
+    private final List<String> warnings = new ArrayList<>();
+
+    private PluginInfo pluginInfo;
+    private TabOrder tabOrder;
+    private List<TabInfo> tabInformation;
+    private MethodAnnotations methodAnnotations;
 
     public ExtensionExtractor(DataExtension extension) {
         this.extension = extension;
+        extensionName = extension.getClass().getSimpleName();
     }
 
     /**
@@ -47,295 +57,276 @@ public final class ExtensionExtractor {
      * @throws IllegalArgumentException If an implementation error is found.
      */
     public void validateAnnotations() {
+        extractAnnotationInformation();
+
+        if (!warnings.isEmpty()) {
+            throw new IllegalArgumentException("Warnings: " + warnings.toString());
+        }
+    }
+
+    private <T extends Annotation> Optional<T> getClassAnnotation(Class<T> ofClass) {
+        return Optional.ofNullable(extension.getClass().getAnnotation(ofClass));
+    }
+
+    private Method[] getMethods() {
+        return extension.getClass().getDeclaredMethods();
+    }
+
+    public void extractAnnotationInformation() {
         extractPluginInfo();
+
+        extractMethodAnnotations();
+        validateMethodAnnotations();
+
+        validateConditionals();
+
         extractTabInfo();
-        List<Method> booleanMethods = extractBooleanMethods();
-        extractConditionals(booleanMethods);
-        extractNumberMethods();
-        extractDoubleMethods();
-        extractPercentageMethods();
-        extractStringMethods();
-        if (errors.isEmpty()) {
-            return;
-        }
-        throw new IllegalArgumentException("Found errors: " + errors.toString());
     }
 
-    public PluginInfo extractPluginInfo() {
-        Class<? extends DataExtension> extClass = extension.getClass();
-        PluginInfo info = extClass.getAnnotation(PluginInfo.class);
+    private void extractMethodAnnotations() {
+        methodAnnotations = new MethodAnnotations();
 
-        if (info.name().length() > 50) {
-            errors.add(extClass.getName() + "Plugin name was over 50 characters.");
-        }
-
-        return info;
-    }
-
-    public List<TabInfo> extractTabInfo() {
-        Set<String> tabNames = new HashSet<>();
-        List<TabInfo> tabInformation = new ArrayList<>();
-
-        Class<? extends DataExtension> extClass = extension.getClass();
-
-        for (Method method : extClass.getDeclaredMethods()) {
-            Tab tab = method.getAnnotation(Tab.class);
-            if (tab == null) {
+        for (Method method : getMethods()) {
+            if (!Modifier.isPublic(method.getModifiers())) {
                 continue;
             }
-            String tabName = tab.value();
-            // Length restriction check
-            if (tabName.length() > 50) {
-                errors.add(extClass.getName() + "." + method.getName() + " tab name was over 50 characters.");
+
+            MethodAnnotations.get(method, BooleanProvider.class).ifPresent(annotation -> methodAnnotations.put(method, BooleanProvider.class, annotation));
+            MethodAnnotations.get(method, NumberProvider.class).ifPresent(annotation -> methodAnnotations.put(method, NumberProvider.class, annotation));
+            MethodAnnotations.get(method, DoubleProvider.class).ifPresent(annotation -> methodAnnotations.put(method, DoubleProvider.class, annotation));
+            MethodAnnotations.get(method, PercentageProvider.class).ifPresent(annotation -> methodAnnotations.put(method, PercentageProvider.class, annotation));
+            MethodAnnotations.get(method, StringProvider.class).ifPresent(annotation -> methodAnnotations.put(method, StringProvider.class, annotation));
+
+            MethodAnnotations.get(method, Conditional.class).ifPresent(annotation -> methodAnnotations.put(method, Conditional.class, annotation));
+            MethodAnnotations.get(method, Tab.class).ifPresent(annotation -> methodAnnotations.put(method, Tab.class, annotation));
+        }
+
+        if (methodAnnotations.isEmpty()) {
+            throw new IllegalArgumentException(extensionName + " class had no methods annotated with a Provider annotation");
+        }
+    }
+
+    private <T> void validateReturnType(Method method, Class<T> expectedType) {
+        Class<?> returnType = method.getReturnType();
+        if (!expectedType.isAssignableFrom(returnType)) {
+            throw new IllegalArgumentException(extensionName + "." + method.getName() + " has invalid return type. was: " + returnType.getName() + ", expected: " + expectedType.getName());
+        }
+    }
+
+    private void validateMethodAnnotationPropertyLength(String property, String name, int maxLength, Method method) {
+        if (property.length() > maxLength) {
+            warnings.add(extensionName + "." + method.getName() + " '" + name + "' was over 50 characters.");
+        }
+    }
+
+    private void validateMethodArguments(Method method, boolean parameterIsRequired, Class... parameterOptions) {
+        Class<?>[] parameterTypes = method.getParameterTypes();
+
+        // Possible parameters for the methods:
+        // UUID playerUUID, String playerName, Group group, none
+
+        int parameters = parameterTypes.length;
+
+        if (parameterIsRequired && parameters == 0) {
+            // Does not have parameters, but one is required
+            throw new IllegalArgumentException(extensionName + "." + method.getName() + " requires one of " + Arrays.toString(parameterOptions) + " as a parameter.");
+        } else if (parameters == 0) {
+            // Has no parameters & it is acceptable.
+            return;
+        }
+
+        if (parameters > 1) {
+            // Has too many parameters
+            throw new IllegalArgumentException(extensionName + "." + method.getName() + " has too many parameters, only one of " + Arrays.toString(parameterOptions) + " is required as a parameter.");
+        }
+
+        Class<?> methodParameter = parameterTypes[0];
+
+        boolean validParameter = false;
+        for (Class option : parameterOptions) {
+            if (option.equals(methodParameter)) {
+                validParameter = true;
             }
-            tabNames.add(tabName);
         }
 
-        TabInfo.Multiple tabInfoAnnotations = extClass.getAnnotation(TabInfo.Multiple.class);
-        if (tabInfoAnnotations == null) {
-            // No tab info, go with default order
-            return tabInformation;
+        if (!validParameter) {
+            // Has invalid parameter
+            throw new IllegalArgumentException(extensionName + "." + method.getName() + " has invalid parameter: '" + methodParameter.getName() + "' one of " + Arrays.toString(parameterOptions) + " is required as a parameter.");
+        }
+        // Has valid parameter & it is acceptable.
+    }
+
+    private void validateMethodAnnotations() {
+        validateBooleanProviderAnnotations();
+        validateNumberProviderAnnotations();
+        validateDoubleProviderAnnotations();
+        validatePercentageProviderAnnotations();
+        validateStringProviderAnnotations();
+    }
+
+    private void validateBooleanProviderAnnotations() {
+        for (Map.Entry<Method, BooleanProvider> booleanProvider : methodAnnotations.getMethodAnnotations(BooleanProvider.class).entrySet()) {
+            Method method = booleanProvider.getKey();
+            BooleanProvider annotation = booleanProvider.getValue();
+
+            validateReturnType(method, boolean.class);
+            validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
+            validateMethodAnnotationPropertyLength(annotation.description(), "description", 150, method);
+            validateMethodAnnotationPropertyLength(annotation.conditionName(), "conditionName", 50, method);
+            validateMethodArguments(method, false, UUID.class, String.class, Group.class);
+
+            String condition = MethodAnnotations.get(method, Conditional.class).map(Conditional::value).orElse(null);
+            if (annotation.conditionName().equals(condition)) {
+                warnings.add(extensionName + "." + method.getName() + " can not be conditional of itself. required condition: " + condition + ", provided condition: " + annotation.conditionName());
+            }
+        }
+    }
+
+    private void validateNumberProviderAnnotations() {
+        for (Map.Entry<Method, NumberProvider> numberProvider : methodAnnotations.getMethodAnnotations(NumberProvider.class).entrySet()) {
+            Method method = numberProvider.getKey();
+            NumberProvider annotation = numberProvider.getValue();
+
+            validateReturnType(method, long.class);
+            validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
+            validateMethodAnnotationPropertyLength(annotation.description(), "description", 150, method);
+            validateMethodArguments(method, false, UUID.class, String.class, Group.class);
+        }
+    }
+
+    private void validateDoubleProviderAnnotations() {
+        for (Map.Entry<Method, DoubleProvider> numberProvider : methodAnnotations.getMethodAnnotations(DoubleProvider.class).entrySet()) {
+            Method method = numberProvider.getKey();
+            DoubleProvider annotation = numberProvider.getValue();
+
+            validateReturnType(method, double.class);
+            validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
+            validateMethodAnnotationPropertyLength(annotation.description(), "description", 150, method);
+            validateMethodArguments(method, false, UUID.class, String.class, Group.class);
+        }
+    }
+
+    private void validatePercentageProviderAnnotations() {
+        for (Map.Entry<Method, PercentageProvider> numberProvider : methodAnnotations.getMethodAnnotations(PercentageProvider.class).entrySet()) {
+            Method method = numberProvider.getKey();
+            PercentageProvider annotation = numberProvider.getValue();
+
+            validateReturnType(method, double.class);
+            validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
+            validateMethodAnnotationPropertyLength(annotation.description(), "description", 150, method);
+            validateMethodArguments(method, false, UUID.class, String.class, Group.class);
+        }
+    }
+
+    private void validateStringProviderAnnotations() {
+        for (Map.Entry<Method, StringProvider> numberProvider : methodAnnotations.getMethodAnnotations(StringProvider.class).entrySet()) {
+            Method method = numberProvider.getKey();
+            StringProvider annotation = numberProvider.getValue();
+
+            validateReturnType(method, String.class);
+            validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
+            validateMethodAnnotationPropertyLength(annotation.description(), "description", 150, method);
+            validateMethodArguments(method, false, UUID.class, String.class, Group.class);
+        }
+    }
+
+    private void validateConditionals() {
+        Collection<Conditional> conditionals = methodAnnotations.getAnnotations(Conditional.class);
+        Collection<BooleanProvider> conditionProviders = methodAnnotations.getAnnotations(BooleanProvider.class);
+
+        Set<String> providedConditions = conditionProviders.stream().map(BooleanProvider::conditionName).collect(Collectors.toSet());
+
+        for (Conditional condition : conditionals) {
+            String conditionName = condition.value();
+
+            if (conditionName.length() > 50) {
+                warnings.add(extensionName + ": '" + conditionName + "' conditionName was over 50 characters.");
+            }
+
+            if (!providedConditions.contains(conditionName)) {
+                warnings.add(extensionName + ": '" + conditionName + "' Condition was not provided by any BooleanProvider.");
+            }
         }
 
-        for (TabInfo tabInfo : tabInfoAnnotations.value()) {
+        // Make sure that all methods annotated with Conditional have a Provider annotation
+        Collection<Method> conditionalMethods = methodAnnotations.getMethodAnnotations(Conditional.class).keySet();
+        for (Method conditionalMethod : conditionalMethods) {
+            if (!MethodAnnotations.hasAnyOf(conditionalMethod,
+                    BooleanProvider.class, DoubleProvider.class, NumberProvider.class,
+                    PercentageProvider.class, StringProvider.class
+            )) {
+                throw new IllegalArgumentException(extensionName + "." + conditionalMethod.getName() + " did not have any associated Provider for Conditional.");
+            }
+        }
+    }
+
+    private void extractPluginInfo() {
+        pluginInfo = getClassAnnotation(PluginInfo.class).orElseThrow(() -> new IllegalArgumentException("Given class had no PluginInfo annotation"));
+
+        if (pluginInfo.name().length() > 50) {
+            warnings.add(extensionName + " PluginInfo 'name' was over 50 characters.");
+        }
+    }
+
+    private void extractTabInfo() {
+        tabInformation = new ArrayList<>();
+        getClassAnnotation(TabInfo.Multiple.class).ifPresent(tabs -> {
+            for (TabInfo tabInfo : tabs.value()) {
+                String tabName = tabInfo.tab();
+
+                // Length restriction check
+                if (tabName.length() > 50) {
+                    warnings.add(extensionName + " tabName '" + tabName + "' was over 50 characters.");
+                }
+
+                tabInformation.add(tabInfo);
+            }
+        });
+
+        tabOrder = getClassAnnotation(TabOrder.class).orElse(null);
+
+        Map<Method, Tab> tabs = this.methodAnnotations.getMethodAnnotations(Tab.class);
+        Set<String> tabNames = tabs.values().stream().map(Tab::value).collect(Collectors.toSet());
+
+        // Check for unused TabInfo annotations
+        for (TabInfo tabInfo : tabInformation) {
             String tabName = tabInfo.tab();
 
-            // Length restriction check
             if (tabName.length() > 50) {
-                errors.add(extClass.getName() + " tabName '" + tabName + "' was over 50 characters.");
+                warnings.add(extensionName + " TabInfo " + tabName + " name was over 50 characters.");
             }
 
             if (!tabNames.contains(tabName)) {
-                errors.add(extClass.getName() + " tab for '" + tabName + "' was not used.");
-                continue;
+                warnings.add(extensionName + " has TabInfo for " + tabName + ", but it is not used.");
             }
-
-            tabInformation.add(tabInfo);
         }
 
-        TabOrder tabOrder = extClass.getAnnotation(TabOrder.class);
-        if (tabOrder != null) {
-            for (String tabName : tabOrder.value()) {
-                // Length restriction check
-                if (tabName.length() > 50) {
-                    errors.add(extClass.getName() + " tabName '" + tabName + "' found in TabOrder was over 50 characters.");
-                }
-
-                if (!tabNames.contains(tabName)) {
-                    errors.add(extClass.getName() + " tab '" + tabName + "' found in TabOrder was not used.");
-                }
+        // Check Tab name lengths
+        for (Map.Entry<Method, Tab> tab : tabs.entrySet()) {
+            String tabName = tab.getValue().value();
+            if (tabName.length() > 50) {
+                warnings.add(extensionName + "." + tab.getKey().getName() + " Tab '" + tabName + "' name was over 50 characters.");
             }
-
-            Set<String> tabOrderNames = Arrays.stream(tabOrder.value()).collect(Collectors.toSet());
-            for (String tabName : tabNames) {
-                if (!tabOrderNames.contains(tabName)) {
-                    errors.add(extClass.getName() + " tab '" + tabName + "' was not in TabOrder.");
-                }
-            }
-
         }
+    }
 
+    public List<String> getWarnings() {
+        return warnings;
+    }
+
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
+    }
+
+    public Optional<TabOrder> getTabOrder() {
+        return Optional.ofNullable(tabOrder);
+    }
+
+    public List<TabInfo> getTabInformation() {
         return tabInformation;
     }
 
-    public List<Conditional> extractConditionals(List<Method> booleanMethods) {
-        Set<String> conditionNames = booleanMethods.stream()
-                .map(method -> method.getAnnotation(BooleanProvider.class).conditionName())
-                .collect(Collectors.toSet());
-
-        List<Conditional> conditionals = new ArrayList<>();
-
-        Class<? extends DataExtension> extClass = extension.getClass();
-        for (Method method : extClass.getMethods()) {
-            Conditional conditional = method.getAnnotation(Conditional.class);
-            if (conditional == null) {
-                continue;
-            }
-
-            conditionals.add(conditional);
-        }
-
-        for (Conditional conditional : conditionals) {
-            String conditionName = conditional.value();
-            if (conditionName.length() > 50) {
-                errors.add(extClass.getName() + " '" + conditionName + "' conditionName was over 50 characters.");
-            }
-
-            if (!conditionNames.contains(conditionName)) {
-                errors.add(extClass.getName() + " '" + conditionName + "' Condition was not provided by any BooleanProvider.");
-            }
-        }
-
-        return conditionals;
-    }
-
-    public List<Method> extractBooleanMethods() {
-        List<Method> booleanProviderMethods = new ArrayList<>();
-
-        Class<? extends DataExtension> extClass = extension.getClass();
-        for (Method method : extClass.getMethods()) {
-            BooleanProvider provider = method.getAnnotation(BooleanProvider.class);
-            if (provider == null) {
-                continue;
-            }
-
-            // Return type check
-            Class<?> returnType = method.getReturnType();
-            if (!boolean.class.isAssignableFrom(returnType)) {
-                errors.add(extClass.getName() + "." + method.getName() + " has invalid return type. was: " + returnType.getName() + ", expected: " + boolean.class.getName());
-                continue;
-            }
-
-            // Cyclic conditional check
-            Conditional conditional = method.getAnnotation(Conditional.class);
-            if (conditional != null) {
-                String conditionName = provider.conditionName();
-                String requiredConditionName = conditional.value();
-
-                if (!conditionName.isEmpty() && conditionName.equals(requiredConditionName)) {
-                    errors.add(extClass.getName() + "." + method.getName() + " can not be conditional of itself. required condition: " + requiredConditionName + ", provided condition: " + conditionName);
-                    continue;
-                }
-            }
-
-            // Length restriction checks
-            if (provider.text().length() > 50) {
-                errors.add(extClass.getName() + "." + method.getName() + " text was over 50 characters.");
-            }
-            if (provider.description().length() > 150) {
-                errors.add(extClass.getName() + "." + method.getName() + " description was over 150 characters.");
-            }
-            if (provider.conditionName().length() > 50) {
-                errors.add(extClass.getName() + "." + method.getName() + " conditionName was over 50 characters.");
-            }
-
-            booleanProviderMethods.add(method);
-        }
-
-        return booleanProviderMethods;
-    }
-
-    public List<Method> extractNumberMethods() {
-        List<Method> numberProviderMethods = new ArrayList<>();
-
-        Class<? extends DataExtension> extClass = extension.getClass();
-        for (Method method : extClass.getMethods()) {
-            NumberProvider provider = method.getAnnotation(NumberProvider.class);
-            if (provider == null) {
-                continue;
-            }
-
-            // Return type check
-            Class<?> returnType = method.getReturnType();
-            if (!long.class.isAssignableFrom(returnType)) {
-                errors.add(extClass.getName() + "." + method.getName() + " has invalid return type. was: " + returnType.getName() + ", expected: " + long.class.getName());
-                continue;
-            }
-
-            // Length restriction checks
-            if (provider.text().length() > 50) {
-                errors.add(extClass.getName() + "." + method.getName() + " text was over 50 characters.");
-            }
-            if (provider.description().length() > 150) {
-                errors.add(extClass.getName() + "." + method.getName() + " description was over 150 characters.");
-            }
-
-            numberProviderMethods.add(method);
-        }
-
-        return numberProviderMethods;
-    }
-
-    public List<Method> extractDoubleMethods() {
-        List<Method> doubleProviderMethods = new ArrayList<>();
-
-        Class<? extends DataExtension> extClass = extension.getClass();
-        for (Method method : extClass.getMethods()) {
-            DoubleProvider provider = method.getAnnotation(DoubleProvider.class);
-            if (provider == null) {
-                continue;
-            }
-
-            // Return type check
-            Class<?> returnType = method.getReturnType();
-            if (!double.class.isAssignableFrom(returnType)) {
-                errors.add(extClass.getName() + "." + method.getName() + " has invalid return type. was: " + returnType.getName() + ", expected: " + double.class.getName());
-                continue;
-            }
-
-            // Length restriction checks
-            if (provider.text().length() > 50) {
-                errors.add(extClass.getName() + "." + method.getName() + " text was over 50 characters.");
-            }
-            if (provider.description().length() > 150) {
-                errors.add(extClass.getName() + "." + method.getName() + " description was over 150 characters.");
-            }
-
-            doubleProviderMethods.add(method);
-        }
-
-        return doubleProviderMethods;
-    }
-
-    public List<Method> extractPercentageMethods() {
-        List<Method> percentageProviderMethods = new ArrayList<>();
-
-        Class<? extends DataExtension> extClass = extension.getClass();
-        for (Method method : extClass.getMethods()) {
-            PercentageProvider provider = method.getAnnotation(PercentageProvider.class);
-            if (provider == null) {
-                continue;
-            }
-
-            // Return type check
-            Class<?> returnType = method.getReturnType();
-            if (!double.class.isAssignableFrom(returnType)) {
-                errors.add(extClass.getName() + "." + method.getName() + " has invalid return type. was: " + returnType.getName() + ", expected: " + double.class.getName());
-                continue;
-            }
-
-            // Length restriction checks
-            if (provider.text().length() > 50) {
-                errors.add(extClass.getName() + "." + method.getName() + " text was over 50 characters.");
-            }
-            if (provider.description().length() > 150) {
-                errors.add(extClass.getName() + "." + method.getName() + " description was over 150 characters.");
-            }
-
-            percentageProviderMethods.add(method);
-        }
-
-        return percentageProviderMethods;
-    }
-
-    public List<Method> extractStringMethods() {
-        List<Method> stringProviderMethods = new ArrayList<>();
-
-        Class<? extends DataExtension> extClass = extension.getClass();
-        for (Method method : extClass.getMethods()) {
-            StringProvider provider = method.getAnnotation(StringProvider.class);
-            if (provider == null) {
-                continue;
-            }
-
-            // Return type check
-            Class<?> returnType = method.getReturnType();
-            if (!double.class.isAssignableFrom(returnType)) {
-                errors.add(extClass.getName() + "." + method.getName() + " has invalid return type. was: " + returnType.getName() + ", expected: " + double.class.getName());
-                continue;
-            }
-
-            // Length restriction checks
-            if (provider.text().length() > 50) {
-                errors.add(extClass.getName() + "." + method.getName() + " text was over 50 characters.");
-            }
-            if (provider.description().length() > 150) {
-                errors.add(extClass.getName() + "." + method.getName() + " description was over 150 characters.");
-            }
-
-            stringProviderMethods.add(method);
-        }
-
-        return stringProviderMethods;
+    public MethodAnnotations getMethodAnnotations() {
+        return methodAnnotations;
     }
 }
