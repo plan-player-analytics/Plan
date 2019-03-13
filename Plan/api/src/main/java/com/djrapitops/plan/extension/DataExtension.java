@@ -36,6 +36,10 @@ package com.djrapitops.plan.extension;
  * {@link Group group} - Provided group the data is about (In case a group needs additional information)
  * nothing - The data is interpreted to be about the server.
  * <p>
+ * The name of the method will be used as an identifier in the database, so that a single provider does not duplicate entries.
+ * Only first 50 characters of the method name are stored.
+ * If you need to change a method name add a class annotation with the old method name: {@link com.djrapitops.plan.extension.annotation.InvalidateMethod}
+ * <p>
  * Some additional annotations are available for controlling appearance of the results:
  * {@link com.djrapitops.plan.extension.annotation.Conditional} A {@code boolean} returned by {@link com.djrapitops.plan.extension.annotation.BooleanProvider} has to be {@code true} for this method to be called.
  * {@link com.djrapitops.plan.extension.annotation.Tab} The value of this provider should be placed on a tab with a specific name
