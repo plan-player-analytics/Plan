@@ -46,6 +46,15 @@ public @interface DoubleProvider {
     String text();
 
     /**
+     * Display-priority of the value, highest value is placed top most.
+     * <p>
+     * Two values with same priority may appear in a random order.
+     *
+     * @return Priority between 0 and {@code Integer.MAX_VALUE}.
+     */
+    int priority() default 0;
+
+    /**
      * Text displayed when hovering over the value, limited to 150 characters.
      * <p>
      * Should be used to clarify what the value is if not self evident, for example

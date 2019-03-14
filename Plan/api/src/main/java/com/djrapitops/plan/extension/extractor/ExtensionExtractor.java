@@ -44,6 +44,7 @@ public final class ExtensionExtractor {
     private PluginInfo pluginInfo;
     private TabOrder tabOrder;
     private List<TabInfo> tabInformation;
+    private List<InvalidateMethod> invalidMethods;
     private MethodAnnotations methodAnnotations;
 
     public ExtensionExtractor(DataExtension extension) {
@@ -74,6 +75,7 @@ public final class ExtensionExtractor {
 
     public void extractAnnotationInformation() {
         extractPluginInfo();
+        extractInvalidMethods();
 
         extractMethodAnnotations();
         validateMethodAnnotations();
@@ -310,6 +312,22 @@ public final class ExtensionExtractor {
         }
     }
 
+    private void extractInvalidMethods() {
+        invalidMethods = new ArrayList<>();
+        getClassAnnotation(InvalidateMethod.Multiple.class).ifPresent(tabs -> {
+            for (InvalidateMethod tabInfo : tabs.value()) {
+                String methodName = tabInfo.value();
+
+                // Length restriction check
+                if (methodName.length() > 50) {
+                    warnings.add(extensionName + " invalidated method '" + methodName + "' was over 50 characters.");
+                }
+
+                invalidMethods.add(tabInfo);
+            }
+        });
+    }
+
     public List<String> getWarnings() {
         return warnings;
     }
@@ -323,10 +341,14 @@ public final class ExtensionExtractor {
     }
 
     public List<TabInfo> getTabInformation() {
-        return tabInformation;
+        return tabInformation != null ? tabInformation : Collections.emptyList();
     }
 
     public MethodAnnotations getMethodAnnotations() {
         return methodAnnotations;
+    }
+
+    public List<InvalidateMethod> getInvalidateMethodAnnotations() {
+        return invalidMethods != null ? invalidMethods : Collections.emptyList();
     }
 }

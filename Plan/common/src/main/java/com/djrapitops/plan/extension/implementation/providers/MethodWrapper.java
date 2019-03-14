@@ -29,15 +29,23 @@ import java.lang.reflect.Method;
 public class MethodWrapper<T, K> {
 
     private final Method method;
-    private final Class<K> result;
+    private final Class<T> parameterType;
+    private final Class<K> resultType;
 
-    public MethodWrapper(Method method, Class<T> parameter, Class<K> result) {
+    public MethodWrapper(Method method, Class<T> parameterType, Class<K> resultType) {
         this.method = method;
-        this.result = result;
+        this.parameterType = parameterType;
+        this.resultType = resultType;
     }
 
     public K callMethod(DataExtension extension, T parameter) throws InvocationTargetException, IllegalAccessException {
-        return result.cast(method.invoke(extension, parameter));
+        if (parameterType == null) {
+            return resultType.cast(method.invoke(extension));
+        }
+        if (parameterType.isInstance(parameter)) {
+            return resultType.cast(method.invoke(extension, parameter));
+        }
+        throw new IllegalArgumentException(parameter.getClass().getName() + " can not be accepted as parameter when type is " + parameterType.getName());
     }
 
     public String getMethodName() {
