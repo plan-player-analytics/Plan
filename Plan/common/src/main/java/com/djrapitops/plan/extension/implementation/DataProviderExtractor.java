@@ -54,6 +54,9 @@ public class DataProviderExtractor {
         extensionExtractor = new ExtensionExtractor(extension);
 
         extensionExtractor.extractAnnotationInformation();
+
+        dataProviders = new DataProviders();
+        extractAllDataProviders();
     }
 
     public String getPluginName() {
@@ -69,6 +72,7 @@ public class DataProviderExtractor {
         Map<String, TabInfo> tabInformation = extensionExtractor.getTabInformation()
                 .stream().collect(Collectors.toMap(TabInfo::tab, Function.identity(), (one, two) -> one));
 
+        // Extracts PluginTabs
         return extensionExtractor.getMethodAnnotations().getAnnotations(Tab.class).stream()
                 .map(Tab::value)
                 .distinct()
@@ -92,14 +96,16 @@ public class DataProviderExtractor {
                 .collect(Collectors.toSet());
     }
 
+    public DataProviders getDataProviders() {
+        return dataProviders;
+    }
+
     private Optional<Class> extractParameterClass(Method method) {
         Class<?>[] parameterTypes = method.getParameterTypes();
         return parameterTypes.length == 1 ? Optional.of(parameterTypes[0]) : Optional.empty();
     }
 
-    public DataProviders getDataProviders() {
-        dataProviders = new DataProviders();
-
+    private void extractAllDataProviders() {
         PluginInfo pluginInfo = extensionExtractor.getPluginInfo();
         MethodAnnotations methodAnnotations = extensionExtractor.getMethodAnnotations();
         Map<Method, Tab> tabs = methodAnnotations.getMethodAnnotations(Tab.class);
@@ -110,8 +116,6 @@ public class DataProviderExtractor {
         extractDataProviders(pluginInfo, tabs, conditions, PercentageProvider.class, PercentageDataProvider::placeToDataProviders);
         extractDataProviders(pluginInfo, tabs, conditions, NumberProvider.class, NumberDataProvider::placeToDataProviders);
         extractDataProviders(pluginInfo, tabs, conditions, StringProvider.class, StringDataProvider::placeToDataProviders);
-
-        return dataProviders;
     }
 
     private <T extends Annotation> void extractDataProviders(PluginInfo pluginInfo, Map<Method, Tab> tabs, Map<Method, Conditional> conditions, Class<T> ofKind, DataProviderFactory<T> factory) {

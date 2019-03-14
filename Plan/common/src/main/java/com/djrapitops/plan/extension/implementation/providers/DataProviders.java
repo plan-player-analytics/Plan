@@ -28,24 +28,23 @@ import java.util.Map;
  */
 public class DataProviders {
 
-    // Return type, Parameter type, DataProvider
-    private Map<Class, Map<Class, List<DataProvider>>> providers;
+    private Map<Class, Map<Class, List<DataProvider>>> byReturnType;
 
     public DataProviders() {
-        providers = new HashMap<>();
+        byReturnType = new HashMap<>();
     }
 
     public <T, K> void put(Class<T> parameterType, Class<K> returnType, DataProvider<T, K> provider) {
-        Map<Class, List<DataProvider>> byParameterType = providers.getOrDefault(returnType, new HashMap<>());
+        Map<Class, List<DataProvider>> byParameterType = byReturnType.getOrDefault(returnType, new HashMap<>());
         List<DataProvider> dataProviders = byParameterType.getOrDefault(parameterType, new ArrayList<>());
 
         dataProviders.add(provider);
 
         byParameterType.put(parameterType, dataProviders);
-        providers.put(returnType, byParameterType);
+        byReturnType.put(returnType, byParameterType);
     }
 
     public <T, K> List<DataProvider> get(Class<T> parameterType, Class<K> returnType) {
-        return this.providers.getOrDefault(returnType, new HashMap<>()).getOrDefault(parameterType, new ArrayList<>());
+        return byReturnType.getOrDefault(returnType, new HashMap<>()).getOrDefault(parameterType, new ArrayList<>());
     }
 }
