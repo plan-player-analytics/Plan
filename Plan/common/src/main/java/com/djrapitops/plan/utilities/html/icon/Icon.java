@@ -35,6 +35,18 @@ public class Icon {
         this.color = color;
     }
 
+    public Family getFamily() {
+        return type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
     public static Builder called(String name) {
         return new Builder().called(name);
     }

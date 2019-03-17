@@ -27,6 +27,7 @@ import com.djrapitops.plan.extension.implementation.providers.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -72,6 +73,8 @@ public class DataProviderExtractor {
         Map<String, TabInfo> tabInformation = extensionExtractor.getTabInformation()
                 .stream().collect(Collectors.toMap(TabInfo::tab, Function.identity(), (one, two) -> one));
 
+        Map<String, Integer> order = getTabOrder().map(this::orderToMap).orElse(new HashMap<>());
+
         // Extracts PluginTabs
         return extensionExtractor.getMethodAnnotations().getAnnotations(Tab.class).stream()
                 .map(Tab::value)
@@ -81,9 +84,18 @@ public class DataProviderExtractor {
                     return new PluginTab(
                             tabName,
                             tabInfo.map(info -> new Icon(info.iconFamily(), info.iconName(), Color.NONE)).orElse(null),
-                            tabInfo.map(TabInfo::elementOrder).orElse(null)
+                            tabInfo.map(TabInfo::elementOrder).orElse(null),
+                            order.getOrDefault(tabName, 100)
                     );
                 }).collect(Collectors.toList());
+    }
+
+    private Map<String, Integer> orderToMap(String[] order) {
+        Map<String, Integer> map = new HashMap<>();
+        for (int i = 0; i < order.length; i++) {
+            map.put(order[i], i);
+        }
+        return map;
     }
 
     public Optional<String[]> getTabOrder() {

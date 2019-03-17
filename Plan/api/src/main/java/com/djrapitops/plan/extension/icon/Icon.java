@@ -52,7 +52,7 @@ public class Icon {
         return new Builder().of(color);
     }
 
-    public Family getType() {
+    public Family getFamily() {
         return type;
     }
 

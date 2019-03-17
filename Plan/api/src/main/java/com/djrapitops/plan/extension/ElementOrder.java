@@ -16,6 +16,9 @@
  */
 package com.djrapitops.plan.extension;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Enum representing big elements of a plugin.
  * <p>
@@ -36,5 +39,39 @@ public enum ElementOrder {
     /**
      * Represents graphs.
      */
-    GRAPH
+    GRAPH;
+
+    public static String serialize(ElementOrder[] order) {
+        StringBuilder builder = new StringBuilder();
+
+        int length = order.length;
+        for (int i = 0; i < length; i++) {
+            builder.append(order[i].name());
+            if (i < length - 1) {
+                builder.append(',');
+            }
+        }
+
+        return builder.toString();
+    }
+
+    public static ElementOrder[] deserialize(String serializedOrder) {
+        if (serializedOrder == null || serializedOrder.isEmpty()) {
+            return null;
+        }
+
+        String[] split = serializedOrder.split(",");
+
+        List<ElementOrder> order = new ArrayList<>();
+        for (String elementName : split) {
+            try {
+                ElementOrder element = valueOf(elementName);
+                order.add(element);
+            } catch (IllegalArgumentException ignore) {
+                /* Has been deleted */
+            }
+        }
+
+        return order.toArray(new ElementOrder[0]);
+    }
 }

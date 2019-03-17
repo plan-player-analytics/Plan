@@ -17,6 +17,8 @@
 package com.djrapitops.plan.extension.implementation;
 
 import com.djrapitops.plan.extension.ElementOrder;
+import com.djrapitops.plan.extension.icon.Color;
+import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plugin.utilities.ArrayUtil;
 
@@ -34,19 +36,25 @@ public class PluginTab {
     private final String tabName;
     private final Icon icon; // can be null
     private ElementOrder[] elementOrder; // can be null / miss values
+    private int tabPriority;
 
-    public PluginTab(String tabName, Icon icon, ElementOrder[] elementOrder) {
+    public PluginTab(String tabName, Icon icon, ElementOrder[] elementOrder, int tabPriority) {
         this.tabName = tabName;
         this.icon = icon;
         this.elementOrder = elementOrder;
+        this.tabPriority = tabPriority;
     }
 
     public String getTabName() {
         return tabName;
     }
 
-    public Optional<Icon> getTabIcon() {
-        return Optional.ofNullable(icon);
+    public Icon getTabIcon() {
+        return icon != null ? icon : new Icon(Family.SOLID, "circle", Color.NONE);
+    }
+
+    public int getTabPriority() {
+        return tabPriority;
     }
 
     public Optional<ElementOrder[]> getTabElementOrder() {
