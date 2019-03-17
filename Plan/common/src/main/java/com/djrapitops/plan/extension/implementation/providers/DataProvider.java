@@ -16,77 +16,28 @@
  */
 package com.djrapitops.plan.extension.implementation.providers;
 
-import com.djrapitops.plan.extension.icon.Icon;
-
-import java.util.Optional;
+import com.djrapitops.plan.extension.implementation.ProviderInformation;
 
 /**
  * Abstract representation of all values a Provider annotation provides.
  *
  * @author Rsl1122
  */
-public abstract class DataProvider<T, K> {
+public abstract class DataProvider<T> {
 
-    private final String plugin;
-    private final String condition; // can be null
-    private final String tab; // can be null
-    private final int priority;
+    private final ProviderInformation providerInformation;
+    private final MethodWrapper<T> method;
 
-    private final Icon icon;
-    private final String text;
-    private final String description;
-
-    private final MethodWrapper<T, K> method;
-
-    public DataProvider(
-            String plugin,
-            String condition,
-            String tab,
-            int priority,
-            Icon icon,
-            String text,
-            String description,
-            MethodWrapper<T, K> method
-    ) {
-        this.plugin = plugin;
-        this.condition = condition;
-        this.tab = tab;
-        this.priority = priority;
-        this.icon = icon;
-        this.text = text;
-        this.description = description;
+    public DataProvider(ProviderInformation providerInformation, MethodWrapper<T> method) {
+        this.providerInformation = providerInformation;
         this.method = method;
     }
 
-    public String getPlugin() {
-        return plugin;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public Icon getIcon() {
-        return icon;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Optional<String> getCondition() {
-        return Optional.ofNullable(condition);
-    }
-
-    public Optional<String> getTab() {
-        return Optional.ofNullable(tab);
-    }
-
-    public MethodWrapper<T, K> getMethod() {
+    public MethodWrapper<T> getMethod() {
         return method;
+    }
+
+    public ProviderInformation getProviderInformation() {
+        return providerInformation;
     }
 }

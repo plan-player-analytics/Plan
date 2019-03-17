@@ -16,13 +16,11 @@
  */
 package com.djrapitops.plan.extension.implementation.providers;
 
-import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.annotation.PercentageProvider;
 import com.djrapitops.plan.extension.icon.Icon;
+import com.djrapitops.plan.extension.implementation.ProviderInformation;
 
 import java.lang.reflect.Method;
-import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Represents a DataExtension API method annotated with {@link PercentageProvider} annotation.
@@ -31,65 +29,23 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class PercentageDataProvider<T> extends DataProvider<T, Double> {
+public class PercentageDataProvider extends DataProvider<Double> {
 
-    private PercentageDataProvider(
-            String plugin, String condition, String tab, int priority, Icon icon,
-            String text, String description, MethodWrapper<T, Double> method
-    ) {
-        super(plugin, condition, tab, priority, icon, text, description, method);
+    private PercentageDataProvider(ProviderInformation providerInformation, MethodWrapper<Double> methodWrapper) {
+        super(providerInformation, methodWrapper);
     }
 
     public static void placeToDataProviders(
             DataProviders dataProviders, Method method, PercentageProvider annotation,
-            String condition, String tab, String pluginName, Optional<Class> parameterClass
+            String condition, String tab, String pluginName
     ) {
-        if (parameterClass.isPresent()) {
-            if (UUID.class.isAssignableFrom(parameterClass.get())) {
-                dataProviders.put(
-                        UUID.class, Double.class,
-                        new PercentageDataProvider<>(
-                                pluginName, condition, tab,
-                                annotation.priority(),
-                                new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor()),
-                                annotation.text(), annotation.description(),
-                                new MethodWrapper<>(method, UUID.class, Double.class)
-                        )
-                );
-            } else if (String.class.isAssignableFrom(parameterClass.get())) {
-                dataProviders.put(
-                        String.class, Double.class,
-                        new PercentageDataProvider<>(
-                                pluginName, condition, tab,
-                                annotation.priority(),
-                                new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor()),
-                                annotation.text(), annotation.description(),
-                                new MethodWrapper<>(method, String.class, Double.class)
-                        )
-                );
-            } else if (Group.class.isAssignableFrom(parameterClass.get())) {
-                dataProviders.put(
-                        Group.class, Double.class,
-                        new PercentageDataProvider<>(
-                                pluginName, condition, tab,
-                                annotation.priority(),
-                                new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor()),
-                                annotation.text(), annotation.description(),
-                                new MethodWrapper<>(method, Group.class, Double.class)
-                        )
-                );
-            }
-        } else {
-            dataProviders.put(
-                    null, Double.class,
-                    new PercentageDataProvider<>(
-                            pluginName, condition, tab,
-                            annotation.priority(),
-                            new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor()),
-                            annotation.text(), annotation.description(),
-                            new MethodWrapper<>(method, null, Double.class)
-                    )
-            );
-        }
+        MethodWrapper<Double> methodWrapper = new MethodWrapper<>(method, Double.class);
+        Icon providerIcon = new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor());
+
+        ProviderInformation providerInformation = new ProviderInformation(
+                pluginName, method.getName(), annotation.text(), annotation.description(), providerIcon, annotation.priority(), tab, condition
+        );
+
+        dataProviders.put(new PercentageDataProvider(providerInformation, methodWrapper));
     }
 }

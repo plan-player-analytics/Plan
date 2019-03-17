@@ -112,11 +112,6 @@ public class DataProviderExtractor {
         return dataProviders;
     }
 
-    private Optional<Class> extractParameterClass(Method method) {
-        Class<?>[] parameterTypes = method.getParameterTypes();
-        return parameterTypes.length == 1 ? Optional.of(parameterTypes[0]) : Optional.empty();
-    }
-
     private void extractAllDataProviders() {
         PluginInfo pluginInfo = extensionExtractor.getPluginInfo();
         MethodAnnotations methodAnnotations = extensionExtractor.getMethodAnnotations();
@@ -136,13 +131,12 @@ public class DataProviderExtractor {
             T annotation = entry.getValue();
             Optional<Conditional> conditional = Optional.ofNullable(conditions.get(method));
             Optional<Tab> tab = Optional.ofNullable(tabs.get(method));
-            Optional<Class> parameterClass = extractParameterClass(method);
 
             factory.placeToDataProviders(
                     dataProviders, method, annotation,
                     conditional.map(Conditional::value).orElse(null),
                     tab.map(Tab::value).orElse(null),
-                    pluginInfo.name(), parameterClass
+                    pluginInfo.name()
             );
         }
     }
@@ -155,7 +149,7 @@ public class DataProviderExtractor {
     interface DataProviderFactory<T extends Annotation> {
         void placeToDataProviders(
                 DataProviders dataProviders,
-                Method method, T annotation, String condition, String tab, String pluginName, Optional<Class> parameter
+                Method method, T annotation, String condition, String tab, String pluginName
         );
     }
 }

@@ -16,13 +16,11 @@
  */
 package com.djrapitops.plan.extension.implementation.providers;
 
-import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.annotation.StringProvider;
 import com.djrapitops.plan.extension.icon.Icon;
+import com.djrapitops.plan.extension.implementation.ProviderInformation;
 
 import java.lang.reflect.Method;
-import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Represents a DataExtension API method annotated with {@link StringProvider} annotation.
@@ -31,65 +29,23 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class StringDataProvider<T> extends DataProvider<T, String> {
+public class StringDataProvider extends DataProvider<String> {
 
-    private StringDataProvider(
-            String plugin, String condition, String tab, int priority, Icon icon,
-            String text, String description, MethodWrapper<T, String> method
-    ) {
-        super(plugin, condition, tab, priority, icon, text, description, method);
+    private StringDataProvider(ProviderInformation providerInformation, MethodWrapper<String> methodWrapper) {
+        super(providerInformation, methodWrapper);
     }
 
     public static void placeToDataProviders(
             DataProviders dataProviders, Method method, StringProvider annotation,
-            String condition, String tab, String pluginName, Optional<Class> parameterClass
+            String condition, String tab, String pluginName
     ) {
-        if (parameterClass.isPresent()) {
-            if (UUID.class.isAssignableFrom(parameterClass.get())) {
-                dataProviders.put(
-                        UUID.class, String.class,
-                        new StringDataProvider<>(
-                                pluginName, condition, tab,
-                                annotation.priority(),
-                                new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor()),
-                                annotation.text(), annotation.description(),
-                                new MethodWrapper<>(method, UUID.class, String.class)
-                        )
-                );
-            } else if (String.class.isAssignableFrom(parameterClass.get())) {
-                dataProviders.put(
-                        String.class, String.class,
-                        new StringDataProvider<>(
-                                pluginName, condition, tab,
-                                annotation.priority(),
-                                new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor()),
-                                annotation.text(), annotation.description(),
-                                new MethodWrapper<>(method, String.class, String.class)
-                        )
-                );
-            } else if (Group.class.isAssignableFrom(parameterClass.get())) {
-                dataProviders.put(
-                        Group.class, String.class,
-                        new StringDataProvider<>(
-                                pluginName, condition, tab,
-                                annotation.priority(),
-                                new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor()),
-                                annotation.text(), annotation.description(),
-                                new MethodWrapper<>(method, Group.class, String.class)
-                        )
-                );
-            }
-        } else {
-            dataProviders.put(
-                    null, String.class,
-                    new StringDataProvider<>(
-                            pluginName, condition, tab,
-                            annotation.priority(),
-                            new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor()),
-                            annotation.text(), annotation.description(),
-                            new MethodWrapper<>(method, null, String.class)
-                    )
-            );
-        }
+        MethodWrapper<String> methodWrapper = new MethodWrapper<>(method, String.class);
+        Icon providerIcon = new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor());
+
+        ProviderInformation providerInformation = new ProviderInformation(
+                pluginName, method.getName(), annotation.text(), annotation.description(), providerIcon, annotation.priority(), tab, condition
+        );
+
+        dataProviders.put(new StringDataProvider(providerInformation, methodWrapper));
     }
 }

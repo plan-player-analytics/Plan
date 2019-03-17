@@ -16,13 +16,12 @@
  */
 package com.djrapitops.plan.extension.implementation.providers;
 
-import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.annotation.BooleanProvider;
 import com.djrapitops.plan.extension.icon.Icon;
+import com.djrapitops.plan.extension.implementation.ProviderInformation;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Represents a DataExtension API method annotated with {@link BooleanProvider} annotation.
@@ -31,74 +30,28 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class BooleanDataProvider<T> extends DataProvider<T, Boolean> {
+public class BooleanDataProvider extends DataProvider<Boolean> {
 
     private final String providedCondition;
 
-    private BooleanDataProvider(
-            String plugin, String condition, String tab, int priority, Icon icon,
-            String text, String description, MethodWrapper<T, Boolean> method, String providedCondition
-    ) {
-        super(plugin, condition, tab, priority, icon, text, description, method);
+    private BooleanDataProvider(ProviderInformation providerInformation, MethodWrapper<Boolean> method, String providedCondition) {
+        super(providerInformation, method);
 
         this.providedCondition = providedCondition;
     }
 
     public static void placeToDataProviders(
             DataProviders dataProviders, Method method, BooleanProvider annotation,
-            String condition, String tab, String pluginName, Optional<Class> parameterClass
+            String condition, String tab, String pluginName
     ) {
-        if (parameterClass.isPresent()) {
-            if (UUID.class.isAssignableFrom(parameterClass.get())) {
-                dataProviders.put(
-                        UUID.class, Boolean.class,
-                        new BooleanDataProvider<>(
-                                pluginName, condition, tab,
-                                annotation.priority(),
-                                new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor()),
-                                annotation.text(), annotation.description(),
-                                new MethodWrapper<>(method, UUID.class, Boolean.class),
-                                annotation.conditionName()
-                        )
-                );
-            } else if (String.class.isAssignableFrom(parameterClass.get())) {
-                dataProviders.put(
-                        String.class, Boolean.class,
-                        new BooleanDataProvider<>(
-                                pluginName, condition, tab,
-                                annotation.priority(),
-                                new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor()),
-                                annotation.text(), annotation.description(),
-                                new MethodWrapper<>(method, String.class, Boolean.class),
-                                annotation.conditionName()
-                        )
-                );
-            } else if (Group.class.isAssignableFrom(parameterClass.get())) {
-                dataProviders.put(
-                        Group.class, Boolean.class,
-                        new BooleanDataProvider<>(
-                                pluginName, condition, tab,
-                                annotation.priority(),
-                                new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor()),
-                                annotation.text(), annotation.description(),
-                                new MethodWrapper<>(method, Group.class, Boolean.class),
-                                annotation.conditionName()
-                        )
-                );
-            }
-        } else {
-            dataProviders.put(
-                    null, Boolean.class,
-                    new BooleanDataProvider<>(
-                            pluginName, condition, tab,
-                            annotation.priority(),
-                            new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor()),
-                            annotation.text(), annotation.description(),
-                            new MethodWrapper<>(method, null, Boolean.class),
-                            annotation.conditionName()
-                    )
-            );
-        }
+        MethodWrapper<Boolean> methodWrapper = new MethodWrapper<>(method, Boolean.class);
+        Icon providerIcon = new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor());
+
+        ProviderInformation providerInformation = new ProviderInformation(
+                pluginName, method.getName(), annotation.text(), annotation.description(), providerIcon, annotation.priority(), tab, condition
+        );
+
+        dataProviders.put(new BooleanDataProvider(providerInformation, methodWrapper, annotation.conditionName()));
     }
 
     public Optional<String> getProvidedCondition() {

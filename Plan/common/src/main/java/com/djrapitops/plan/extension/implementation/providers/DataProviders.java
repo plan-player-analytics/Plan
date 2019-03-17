@@ -16,10 +16,9 @@
  */
 package com.djrapitops.plan.extension.implementation.providers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.djrapitops.plan.extension.implementation.MethodType;
+
+import java.util.*;
 
 /**
  * Group class for handling multiple different types of {@link DataProvider}s.
@@ -28,23 +27,54 @@ import java.util.Map;
  */
 public class DataProviders {
 
-    private Map<Class, Map<Class, List<DataProvider>>> byReturnType;
+    private Map<MethodType, Map<Class, List<DataProvider>>> byMethodType;
 
     public DataProviders() {
-        byReturnType = new HashMap<>();
+        byMethodType = new EnumMap<>(MethodType.class);
     }
 
-    public <T, K> void put(Class<T> parameterType, Class<K> returnType, DataProvider<T, K> provider) {
-        Map<Class, List<DataProvider>> byParameterType = byReturnType.getOrDefault(returnType, new HashMap<>());
-        List<DataProvider> dataProviders = byParameterType.getOrDefault(parameterType, new ArrayList<>());
+    public <T> void put(DataProvider<T> provider) {
+        MethodWrapper<T> method = provider.getMethod();
+
+        MethodType methodType = method.getMethodType();
+        Class<T> resultType = method.getResultType();
+
+        Map<Class, List<DataProvider>> byParameterType = byMethodType.getOrDefault(methodType, new HashMap<>());
+        List<DataProvider> dataProviders = byParameterType.getOrDefault(resultType, new ArrayList<>());
 
         dataProviders.add(provider);
 
-        byParameterType.put(parameterType, dataProviders);
-        byReturnType.put(returnType, byParameterType);
+        byParameterType.put(resultType, dataProviders);
+        byMethodType.put(methodType, byParameterType);
     }
 
-    public <T, K> List<DataProvider> get(Class<T> parameterType, Class<K> returnType) {
-        return byReturnType.getOrDefault(returnType, new HashMap<>()).getOrDefault(parameterType, new ArrayList<>());
+    public <T> List<DataProvider<T>> getPlayerMethodsByType(Class<T> returnType) {
+        Map<Class, List<DataProvider>> providersAcceptingUUID = byMethodType.getOrDefault(MethodType.PLAYER_UUID, new HashMap<>());
+        Map<Class, List<DataProvider>> providersAcceptingName = byMethodType.getOrDefault(MethodType.PLAYER_NAME, new HashMap<>());
+
+        List<DataProvider<T>> byReturnType = new ArrayList<>();
+        for (DataProvider dataProvider : providersAcceptingUUID.getOrDefault(returnType, Collections.emptyList())) {
+            byReturnType.add((DataProvider<T>) dataProvider);
+        }
+        for (DataProvider dataProvider : providersAcceptingName.getOrDefault(returnType, Collections.emptyList())) {
+            byReturnType.add((DataProvider<T>) dataProvider);
+        }
+        return byReturnType;
+    }
+
+    public <T> List<DataProvider<T>> getServerMethodsByType(Class<T> returnType) {
+        List<DataProvider<T>> byReturnType = new ArrayList<>();
+        for (DataProvider dataProvider : byMethodType.getOrDefault(MethodType.SERVER, new HashMap<>()).getOrDefault(returnType, Collections.emptyList())) {
+            byReturnType.add((DataProvider<T>) dataProvider);
+        }
+        return byReturnType;
+    }
+
+    public <T> List<DataProvider<T>> getGroupMethodsByType(Class<T> returnType) {
+        List<DataProvider<T>> byReturnType = new ArrayList<>();
+        for (DataProvider dataProvider : byMethodType.getOrDefault(MethodType.GROUP, new HashMap<>()).getOrDefault(returnType, Collections.emptyList())) {
+            byReturnType.add((DataProvider<T>) dataProvider);
+        }
+        return byReturnType;
     }
 }

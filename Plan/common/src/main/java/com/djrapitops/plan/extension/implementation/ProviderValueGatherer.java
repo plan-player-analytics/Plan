@@ -19,14 +19,19 @@ package com.djrapitops.plan.extension.implementation;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.icon.Icon;
-import com.djrapitops.plan.extension.implementation.storage.transactions.RemoveInvalidResultsTransaction;
-import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
-import com.djrapitops.plan.extension.implementation.storage.transactions.StorePluginTabTransaction;
-import com.djrapitops.plan.extension.implementation.storage.transactions.StorePluginTransaction;
+import com.djrapitops.plan.extension.implementation.providers.BooleanDataProvider;
+import com.djrapitops.plan.extension.implementation.providers.DataProvider;
+import com.djrapitops.plan.extension.implementation.providers.DataProviders;
+import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
+import com.djrapitops.plan.extension.implementation.storage.transactions.*;
+import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerBooleanResultTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -75,7 +80,39 @@ public class ProviderValueGatherer {
         database.executeTransaction(new RemoveInvalidResultsTransaction(pluginName, serverUUID, extractor.getInvalidatedMethods()));
     }
 
-    public void updateValues(UUID playerUUID) {
+    public void updateValues(UUID playerUUID, String playerName) {
+        gatherBooleanData(playerUUID, playerName);
+    }
 
+    private void gatherBooleanData(UUID playerUUID, String playerName) {
+        String pluginName = extractor.getPluginName();
+        UUID serverUUID = serverInfo.getServerUUID();
+        Database database = dbSystem.getDatabase();
+        DataProviders dataProviders = extractor.getDataProviders();
+        Set<String> providedConditions = new HashSet<>();
+
+        // TODO parse condition tree and traverse based on that.
+        for (DataProvider<Boolean> booleanProvider : dataProviders.getPlayerMethodsByType(Boolean.class)) {
+            Optional<String> providedCondition = Optional.empty();
+            if (booleanProvider instanceof BooleanDataProvider) {
+                providedCondition = ((BooleanDataProvider) booleanProvider).getProvidedCondition();
+            }
+            MethodWrapper<Boolean> method = booleanProvider.getMethod();
+
+            boolean result;
+            try {
+                result = method.callMethod(extension, playerUUID, playerName);
+            } catch (Exception | NoSuchFieldError | NoSuchMethodError e) {
+                logger.warn(pluginName + " has invalid implementation, method " + method.getMethodName() + " threw exception: " + e.toString());
+                continue;
+            }
+
+            if (result && providedCondition.isPresent()) {
+                providedConditions.add(providedCondition.get());
+            }
+
+            database.executeTransaction(new StoreBooleanProviderTransaction(booleanProvider, providedCondition.orElse(null), serverInfo.getServerUUID()));
+            database.executeTransaction(new StorePlayerBooleanResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result));
+        }
     }
 }

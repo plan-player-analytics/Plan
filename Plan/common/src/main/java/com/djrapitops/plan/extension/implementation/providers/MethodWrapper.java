@@ -17,38 +17,75 @@
 package com.djrapitops.plan.extension.implementation.providers;
 
 import com.djrapitops.plan.extension.DataExtension;
+import com.djrapitops.plan.extension.Group;
+import com.djrapitops.plan.extension.implementation.MethodType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.UUID;
 
 /**
  * Wrap a Method so that it is easier to call.
  *
  * @author Rsl1122
  */
-public class MethodWrapper<T, K> {
+public class MethodWrapper<T> {
 
     private final Method method;
-    private final Class<T> parameterType;
-    private final Class<K> resultType;
+    private final Class<T> resultType;
+    private MethodType methodType;
 
-    public MethodWrapper(Method method, Class<T> parameterType, Class<K> resultType) {
+    public MethodWrapper(Method method, Class<T> resultType) {
         this.method = method;
-        this.parameterType = parameterType;
         this.resultType = resultType;
+        methodType = MethodType.forMethod(this.method);
     }
 
-    public K callMethod(DataExtension extension, T parameter) throws InvocationTargetException, IllegalAccessException {
-        if (parameterType == null) {
-            return resultType.cast(method.invoke(extension));
+    public T callMethod(DataExtension extension, UUID playerUUID, String playerName) throws InvocationTargetException, IllegalAccessException {
+        if (methodType != MethodType.PLAYER_NAME && methodType != MethodType.PLAYER_UUID) {
+            throw new IllegalStateException(method.getDeclaringClass() + " method " + method.getName() + " is not GROUP method.");
         }
-        if (parameterType.isInstance(parameter)) {
-            return resultType.cast(method.invoke(extension, parameter));
+        return callMethod(extension, playerUUID, playerName, null);
+    }
+
+    public T callMethod(DataExtension extension, Group group) throws InvocationTargetException, IllegalAccessException {
+        if (methodType != MethodType.GROUP) {
+            throw new IllegalStateException(method.getDeclaringClass() + " method " + method.getName() + " is not GROUP method.");
         }
-        throw new IllegalArgumentException(parameter.getClass().getName() + " can not be accepted as parameter when type is " + parameterType.getName());
+        return callMethod(extension, null, null, group);
+    }
+
+    public T callMethod(DataExtension extension) throws InvocationTargetException, IllegalAccessException {
+        if (methodType != MethodType.SERVER) {
+            throw new IllegalStateException(method.getDeclaringClass() + " method " + method.getName() + " is not SERVER method.");
+        }
+        return callMethod(extension, null, null, null);
+    }
+
+    public T callMethod(DataExtension extension, UUID playerUUID, String playerName, Group group) throws InvocationTargetException, IllegalAccessException {
+        switch (methodType) {
+            case SERVER:
+                return resultType.cast(method.invoke(extension));
+            case PLAYER_UUID:
+                return resultType.cast(method.invoke(extension, playerUUID));
+            case PLAYER_NAME:
+                return resultType.cast(method.invoke(extension, playerName));
+            case GROUP:
+                return resultType.cast(method.invoke(extension, group));
+            default:
+                throw new IllegalArgumentException(method.getDeclaringClass() + " method " + method.getName() + " had invalid parameters.");
+        }
     }
 
     public String getMethodName() {
         return method.getName();
+    }
+
+    public MethodType getMethodType() {
+        return methodType;
+    }
+
+    public Class<T> getResultType() {
+        return resultType;
     }
 }
