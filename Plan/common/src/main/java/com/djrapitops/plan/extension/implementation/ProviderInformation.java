@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension.implementation;
 
 import com.djrapitops.plan.extension.icon.Icon;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
 
@@ -50,19 +51,19 @@ public class ProviderInformation {
     }
 
     public String getPluginName() {
-        return pluginName;
+        return StringUtils.truncate(pluginName, 50);
     }
 
     public String getName() {
-        return name;
+        return StringUtils.truncate(name, 50);
     }
 
     public String getText() {
-        return text;
+        return StringUtils.truncate(text, 50);
     }
 
     public Optional<String> getDescription() {
-        return description == null || description.isEmpty() ? Optional.empty() : Optional.of(description);
+        return description == null || description.isEmpty() ? Optional.empty() : Optional.of(StringUtils.truncate(description, 150));
     }
 
     public Icon getIcon() {
@@ -74,10 +75,10 @@ public class ProviderInformation {
     }
 
     public Optional<String> getTab() {
-        return tab == null || tab.isEmpty() ? Optional.empty() : Optional.of(tab);
+        return tab == null || tab.isEmpty() ? Optional.empty() : Optional.of(StringUtils.truncate(tab, 50));
     }
 
     public Optional<String> getCondition() {
-        return condition == null || condition.isEmpty() ? Optional.empty() : Optional.of(condition);
+        return condition == null || condition.isEmpty() ? Optional.empty() : Optional.of(StringUtils.truncate(condition, 50));
     }
 }

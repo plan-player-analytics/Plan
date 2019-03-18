@@ -21,6 +21,7 @@ import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plugin.utilities.ArrayUtil;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -46,7 +47,7 @@ public class PluginTab {
     }
 
     public String getTabName() {
-        return tabName;
+        return StringUtils.truncate(tabName, 50);
     }
 
     public Icon getTabIcon() {

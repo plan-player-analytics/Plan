@@ -22,6 +22,7 @@ import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -53,7 +54,7 @@ public class ExtensionIconTable {
     }
 
     public static void set3IconValuesToStatement(PreparedStatement statement, int parameterIndex, Icon icon) throws SQLException {
-        statement.setString(parameterIndex, icon.getName());
+        statement.setString(parameterIndex, StringUtils.truncate(icon.getName(), 50));
         statement.setString(parameterIndex + 1, icon.getFamily().name());
         statement.setString(parameterIndex + 2, icon.getColor().name());
     }

@@ -26,6 +26,7 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIc
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreStringProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerStringResultTransaction;
 import com.djrapitops.plugin.logging.console.PluginLogger;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
 import java.util.Set;
@@ -77,6 +78,8 @@ class StringProviderValueGatherer {
             if (result == null) {
                 continue;
             }
+
+            result = StringUtils.truncate(result, 50);
 
             database.executeTransaction(new StoreIconTransaction(stringProvider.getProviderInformation().getIcon()));
             database.executeTransaction(new StoreStringProviderTransaction(stringProvider, StringDataProvider.isPlayerName(stringProvider), serverUUID));

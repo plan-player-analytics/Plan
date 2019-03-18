@@ -19,6 +19,7 @@ package com.djrapitops.plan.extension.implementation.providers;
 import com.djrapitops.plan.extension.annotation.BooleanProvider;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -62,6 +63,6 @@ public class BooleanDataProvider extends DataProvider<Boolean> {
     }
 
     public Optional<String> getProvidedCondition() {
-        return providedCondition == null || providedCondition.isEmpty() ? Optional.empty() : Optional.of(providedCondition);
+        return providedCondition == null || providedCondition.isEmpty() ? Optional.empty() : Optional.of(StringUtils.truncate(providedCondition, 50));
     }
 }
