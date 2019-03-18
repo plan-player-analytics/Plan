@@ -141,6 +141,10 @@ public class DataProviderExtractor {
         }
     }
 
+    public Collection<String> getWarnings() {
+        return extensionExtractor.getWarnings();
+    }
+
     /**
      * Functional interface for defining a method that places required DataProvider to DataProviders.
      *

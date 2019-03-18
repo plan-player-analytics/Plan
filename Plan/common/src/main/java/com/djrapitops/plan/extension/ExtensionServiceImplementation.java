@@ -65,6 +65,11 @@ public class ExtensionServiceImplementation implements ExtensionService {
     @Override
     public void register(DataExtension extension) {
         DataProviderExtractor extractor = new DataProviderExtractor(extension);
+
+        for (String warning : extractor.getWarnings()) {
+            logger.warn("DataExtension API implementation mistake for " + extractor.getPluginName() + ": " + warning);
+        }
+
         ProviderValueGatherer gatherer = new ProviderValueGatherer(extension, extractor, dbSystem, serverInfo, logger);
         gatherer.storeExtensionInformation();
         extensionGatherers.put(extractor.getPluginName(), gatherer);
