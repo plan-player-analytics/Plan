@@ -16,6 +16,12 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.UUID;
+
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Table information about 'plan_extension_providers'.
  *
@@ -39,5 +45,14 @@ public class ExtensionProviderTable {
     public static final String PROVIDED_CONDITION = "provided_condition"; // Can be null
     public static final String FORMAT_TYPE = "format_type"; // Can be null
     public static final String IS_PLAYER_NAME = "player_name"; // default false
+
+    public static final String STATEMENT_SELECT_PROVIDER_ID = SELECT + ID + FROM + TABLE_NAME +
+            WHERE + PROVIDER_NAME + "=?" +
+            AND + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID;
+
+    public static void set3PluginValuesToStatement(PreparedStatement statement, int parameterIndex, String providerName, String pluginName, UUID serverUUID) throws SQLException {
+        statement.setString(parameterIndex, providerName);
+        ExtensionPluginTable.set2PluginValuesToStatement(statement, parameterIndex + 1, pluginName, serverUUID);
+    }
 
 }
