@@ -16,11 +16,22 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.providers;
 
+import com.djrapitops.plan.db.access.ExecStatement;
+import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.transactions.Transaction;
+import com.djrapitops.plan.db.sql.tables.ExtensionIconTable;
+import com.djrapitops.plan.db.sql.tables.ExtensionPluginTable;
+import com.djrapitops.plan.db.sql.tables.ExtensionTabTable;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.UUID;
+
+import static com.djrapitops.plan.db.sql.parsing.Sql.AND;
+import static com.djrapitops.plan.db.sql.parsing.Sql.WHERE;
+import static com.djrapitops.plan.db.sql.tables.ExtensionProviderTable.*;
 
 /**
  * Transaction to store information about a dobule {@link DataProvider}.
@@ -33,18 +44,81 @@ import java.util.UUID;
  */
 public class StoreDoubleProviderTransaction extends Transaction {
 
-    private final DataProvider<Double> provider;
     private final UUID serverUUID;
+    private final ProviderInformation providerInformation;
 
     public StoreDoubleProviderTransaction(DataProvider<Double> provider, UUID serverUUID) {
-        this.provider = provider;
         this.serverUUID = serverUUID;
+        this.providerInformation = provider.getProviderInformation();
     }
 
     @Override
     protected void performOperations() {
-        ProviderInformation providerInformation = provider.getProviderInformation();
+        execute(storeProvider());
+    }
 
-        // TODO Store provider in a table
+    private Executable storeProvider() {
+        return connection -> {
+            if (!updateProvider().execute(connection)) {
+                return insertProvider().execute(connection);
+            }
+            return false;
+        };
+    }
+
+    private Executable updateProvider() {
+        String sql = "UPDATE " + TABLE_NAME +
+                " SET (" +
+                TEXT + "=?," +
+                DESCRIPTION + "=?," +
+                PRIORITY + "=?," +
+                CONDITION + "=?," +
+                TAB_ID + "=" + ExtensionTabTable.STATEMENT_SELECT_TAB_ID + "," +
+                ICON_ID + "=" + ExtensionIconTable.STATEMENT_SELECT_ICON_ID +
+                ")" + WHERE + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID +
+                AND + PROVIDER_NAME + "=?";
+
+        return new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, providerInformation.getText());
+                statement.setString(2, providerInformation.getDescription());
+                statement.setInt(3, providerInformation.getPriority());
+                statement.setString(4, providerInformation.getCondition().orElse(null));
+                ExtensionTabTable.set3TabValuesToStatement(statement, 5, providerInformation.getTab().orElse(null), providerInformation.getPluginName(), serverUUID);
+                ExtensionIconTable.set3IconValuesToStatement(statement, 8, providerInformation.getIcon());
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 10, providerInformation.getPluginName(), serverUUID);
+                statement.setString(13, providerInformation.getName());
+            }
+        };
+    }
+
+    private Executable insertProvider() {
+        String sql = "INSERT INTO " + TABLE_NAME + "(" +
+                PROVIDER_NAME + "," +
+                TEXT + "," +
+                DESCRIPTION + "," +
+                PRIORITY + "," +
+                CONDITION + "," +
+                TAB_ID + "," +
+                ICON_ID + "," +
+                PLUGIN_ID +
+                ") VALUES (?,?,?,?,?,?," +
+                ExtensionTabTable.STATEMENT_SELECT_TAB_ID + "," +
+                ExtensionIconTable.STATEMENT_SELECT_ICON_ID + "," +
+                ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ")";
+        return new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, providerInformation.getName());
+                statement.setString(2, providerInformation.getText());
+                statement.setString(3, providerInformation.getDescription());
+                statement.setInt(4, providerInformation.getPriority());
+                statement.setString(5, providerInformation.getCondition().orElse(null));
+                ExtensionTabTable.set3TabValuesToStatement(statement, 6, providerInformation.getTab().orElse(null), providerInformation.getPluginName(), serverUUID);
+                ExtensionIconTable.set3IconValuesToStatement(statement, 9, providerInformation.getIcon());
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 11, providerInformation.getPluginName(), serverUUID);
+            }
+        };
     }
 }
