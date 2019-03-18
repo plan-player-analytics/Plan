@@ -16,9 +16,18 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
+import com.djrapitops.plan.db.access.ExecStatement;
+import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.transactions.Transaction;
+import com.djrapitops.plan.db.sql.tables.ExtensionProviderTable;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.UUID;
+
+import static com.djrapitops.plan.db.sql.parsing.Sql.AND;
+import static com.djrapitops.plan.db.sql.parsing.Sql.WHERE;
+import static com.djrapitops.plan.db.sql.tables.ExtensionPlayerValues.*;
 
 /**
  * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.StringDataProvider}.
@@ -29,21 +38,63 @@ public class StorePlayerStringResultTransaction extends Transaction {
 
     private final String pluginName;
     private final UUID serverUUID;
-    private final String methodName;
+    private final String providerName;
     private final UUID playerUUID;
 
     private final String value;
 
-    public StorePlayerStringResultTransaction(String pluginName, UUID serverUUID, String methodName, UUID playerUUID, String value) {
+    public StorePlayerStringResultTransaction(String pluginName, UUID serverUUID, String providerName, UUID playerUUID, String value) {
         this.pluginName = pluginName;
         this.serverUUID = serverUUID;
-        this.methodName = methodName;
+        this.providerName = providerName;
         this.playerUUID = playerUUID;
         this.value = value;
     }
 
     @Override
     protected void performOperations() {
-        // TODO Store data in a table
+        execute(storeValue());
+    }
+
+    private Executable storeValue() {
+        return connection -> {
+            if (!updateValue().execute(connection)) {
+                return insertValue().execute(connection);
+            }
+            return false;
+        };
+    }
+
+    private Executable updateValue() {
+        String sql = "UPDATE " + TABLE_NAME +
+                " SET (" +
+                STRING_VALUE + "=?" +
+                ")" + WHERE + USER_UUID + "=?" +
+                AND + PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID;
+
+        return new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, value);
+                statement.setString(2, playerUUID.toString());
+                ExtensionProviderTable.set3PluginValuesToStatement(statement, 3, providerName, pluginName, serverUUID);
+            }
+        };
+    }
+
+    private Executable insertValue() {
+        String sql = "INSERT INTO " + TABLE_NAME + "(" +
+                STRING_VALUE + "," +
+                USER_UUID + "," +
+                PROVIDER_ID +
+                ") VALUES (?,?," + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID + ")";
+        return new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, value);
+                statement.setString(2, playerUUID.toString());
+                ExtensionProviderTable.set3PluginValuesToStatement(statement, 3, providerName, pluginName, serverUUID);
+            }
+        };
     }
 }
