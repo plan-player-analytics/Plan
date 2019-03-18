@@ -1,6 +1,6 @@
 # ![Player Analytics](http://puu.sh/AXSg7/5f2f78c06c.jpg)
 
-[![Build Status](https://travis-ci.com/Rsl1122/Plan-PlayerAnalytics.svg?branch=master)](https://travis-ci.com/Rsl1122/Plan-PlayerAnalytics)
+[![Build Status](https://travis-ci.com/plan-player-analytics/Plan.svg?branch=master)](https://travis-ci.com/plan-player-analytics/Plan)
 [![Discord](https://img.shields.io/discord/364107873267089409.svg?logo=discord)](https://discord.gg/yXKmjzT)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)  
 [![Maintainability](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
