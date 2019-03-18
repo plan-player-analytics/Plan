@@ -58,7 +58,7 @@ public class StoreIconTransaction extends Transaction {
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                ExtensionIconTable.setIconValuesToStatement(statement, icon);
+                ExtensionIconTable.set3IconValuesToStatement(statement, icon);
             }
         };
     }
@@ -72,7 +72,7 @@ public class StoreIconTransaction extends Transaction {
         return new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                ExtensionIconTable.setIconValuesToStatement(statement, icon);
+                ExtensionIconTable.set3IconValuesToStatement(statement, icon);
             }
         };
     }

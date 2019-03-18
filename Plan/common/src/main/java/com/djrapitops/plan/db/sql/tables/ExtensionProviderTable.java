@@ -26,7 +26,7 @@ public class ExtensionProviderTable {
     public static final String TABLE_NAME = "plan_extension_providers";
 
     public static final String ID = "id";
-    public static final String NAME = "name";
+    public static final String PROVIDER_NAME = "name";
     public static final String TEXT = "text"; // Can be null
     public static final String DESCRIPTION = "description"; // Can be null
     public static final String PRIORITY = "priority";

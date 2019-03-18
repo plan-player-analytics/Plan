@@ -74,7 +74,7 @@ public class StorePluginTransaction extends Transaction {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, time);
-                ExtensionIconTable.setIconValuesToStatement(statement, 2, icon);
+                ExtensionIconTable.set3IconValuesToStatement(statement, 2, icon);
                 statement.setString(5, pluginName);
                 statement.setString(6, serverUUID.toString());
             }
@@ -82,7 +82,7 @@ public class StorePluginTransaction extends Transaction {
     }
 
     private Executable insertPlugin() {
-        String sql = "INSERT INFO " + ExtensionPluginTable.TABLE_NAME + "(" +
+        String sql = "INSERT INTO " + ExtensionPluginTable.TABLE_NAME + "(" +
                 ExtensionPluginTable.PLUGIN_NAME + "," +
                 ExtensionPluginTable.LAST_UPDATED + "," +
                 ExtensionPluginTable.SERVER_UUID + "," +
@@ -94,7 +94,7 @@ public class StorePluginTransaction extends Transaction {
                 statement.setString(1, pluginName);
                 statement.setLong(2, time);
                 statement.setString(3, serverUUID.toString());
-                ExtensionIconTable.setIconValuesToStatement(statement, 4, icon);
+                ExtensionIconTable.set3IconValuesToStatement(statement, 4, icon);
             }
         };
     }

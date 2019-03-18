@@ -76,15 +76,15 @@ public class StorePluginTabTransaction extends Transaction {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setInt(1, pluginTab.getTabPriority());
                 statement.setString(2, pluginTab.getTabElementOrder().map(ElementOrder::serialize).orElse(null));
-                ExtensionIconTable.setIconValuesToStatement(statement, 3, pluginTab.getTabIcon());
-                ExtensionPluginTable.setPluginValuesToStatement(statement, 6, pluginName, serverUUID);
+                ExtensionIconTable.set3IconValuesToStatement(statement, 3, pluginTab.getTabIcon());
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 6, pluginName, serverUUID);
                 statement.setString(8, pluginTab.getTabName());
             }
         };
     }
 
     private Executable insertTab() {
-        String sql = "INSERT INFO " + ExtensionTabTable.TABLE_NAME + "(" +
+        String sql = "INSERT INTO " + ExtensionTabTable.TABLE_NAME + "(" +
                 ExtensionTabTable.TAB_NAME + "," +
                 ExtensionTabTable.ELEMENT_ORDER + "," +
                 ExtensionTabTable.TAB_PRIORITY + "," +
@@ -97,8 +97,8 @@ public class StorePluginTabTransaction extends Transaction {
                 statement.setString(1, pluginTab.getTabName());
                 statement.setString(2, pluginTab.getTabElementOrder().map(ElementOrder::serialize).orElse(null));
                 statement.setInt(3, pluginTab.getTabPriority());
-                ExtensionIconTable.setIconValuesToStatement(statement, 4, pluginTab.getTabIcon());
-                ExtensionPluginTable.setPluginValuesToStatement(statement, 7, pluginName, serverUUID);
+                ExtensionIconTable.set3IconValuesToStatement(statement, 4, pluginTab.getTabIcon());
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 7, pluginName, serverUUID);
             }
         };
     }

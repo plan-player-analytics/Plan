@@ -16,6 +16,12 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.UUID;
+
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Table information about 'plan_extension_tabs'.
  *
@@ -32,4 +38,13 @@ public class ExtensionTabTable {
     public static final String PLUGIN_ID = "plugin_id";
     public static final String ICON_ID = "icon_id";
 
+    public static final String STATEMENT_SELECT_TAB_ID = SELECT + ID +
+            FROM + TABLE_NAME +
+            WHERE + TAB_NAME + "=?" +
+            AND + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID;
+
+    public static void set3TabValuesToStatement(PreparedStatement statement, int parameterIndex, String tabName, String pluginName, UUID serverUUID) throws SQLException {
+        statement.setString(parameterIndex, tabName);
+        ExtensionPluginTable.set2PluginValuesToStatement(statement, parameterIndex + 1, pluginName, serverUUID);
+    }
 }

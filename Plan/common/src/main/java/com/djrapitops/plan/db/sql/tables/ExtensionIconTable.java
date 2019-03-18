@@ -43,11 +43,11 @@ public class ExtensionIconTable {
             AND + FAMILY + "=?" +
             AND + COLOR + "=?)";
 
-    public static void setIconValuesToStatement(PreparedStatement statement, Icon icon) throws SQLException {
-        setIconValuesToStatement(statement, 1, icon);
+    public static void set3IconValuesToStatement(PreparedStatement statement, Icon icon) throws SQLException {
+        set3IconValuesToStatement(statement, 1, icon);
     }
 
-    public static void setIconValuesToStatement(PreparedStatement statement, int parameterIndex, Icon icon) throws SQLException {
+    public static void set3IconValuesToStatement(PreparedStatement statement, int parameterIndex, Icon icon) throws SQLException {
         statement.setString(parameterIndex, icon.getName());
         statement.setString(parameterIndex + 1, icon.getFamily().name());
         statement.setString(parameterIndex + 2, icon.getColor().name());
