@@ -38,6 +38,6 @@ public class ExtensionProviderTable {
 
     public static final String PROVIDED_CONDITION = "provided_condition"; // Can be null
     public static final String FORMAT_TYPE = "format_type"; // Can be null
-    public static final String PLAYER_NAME = "player_name"; // default false
+    public static final String IS_PLAYER_NAME = "player_name"; // default false
 
 }
