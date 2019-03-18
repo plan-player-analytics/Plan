@@ -19,7 +19,7 @@ package com.djrapitops.plan.extension.implementation.storage.transactions.result
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.db.sql.tables.ExtensionPlayerValues;
+import com.djrapitops.plan.db.sql.tables.ExtensionPlayerValueTable;
 import com.djrapitops.plan.db.sql.tables.ExtensionPluginTable;
 import com.djrapitops.plan.db.sql.tables.ExtensionProviderTable;
 
@@ -57,8 +57,8 @@ public class RemoveInvalidResultsTransaction extends Transaction {
     }
 
     private Executable deleteInvalidMethodResults(String invalidMethod) {
-        String sql = "DELETE FROM " + ExtensionPlayerValues.TABLE_NAME +
-                WHERE + ExtensionPlayerValues.PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID;
+        String sql = "DELETE FROM " + ExtensionPlayerValueTable.TABLE_NAME +
+                WHERE + ExtensionPlayerValueTable.PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID;
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

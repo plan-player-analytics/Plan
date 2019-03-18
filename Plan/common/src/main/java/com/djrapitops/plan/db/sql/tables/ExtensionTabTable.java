@@ -16,6 +16,11 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
+import com.djrapitops.plan.db.DBType;
+import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
+import com.djrapitops.plan.db.sql.parsing.Sql;
+import com.djrapitops.plan.extension.ElementOrder;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
@@ -46,5 +51,18 @@ public class ExtensionTabTable {
     public static void set3TabValuesToStatement(PreparedStatement statement, int parameterIndex, String tabName, String pluginName, UUID serverUUID) throws SQLException {
         statement.setString(parameterIndex, tabName);
         ExtensionPluginTable.set2PluginValuesToStatement(statement, parameterIndex + 1, pluginName, serverUUID);
+    }
+
+    public static String createTableSQL(DBType dbType) {
+        return CreateTableParser.create(TABLE_NAME, dbType)
+                .column(ID, INT).primaryKey()
+                .column(TAB_NAME, Sql.varchar(50)).notNull()
+                .column(ELEMENT_ORDER, Sql.varchar(100)).notNull().defaultValue("'" + ElementOrder.serialize(ElementOrder.values()) + "'")
+                .column(TAB_PRIORITY, INT).notNull()
+                .column(PLUGIN_ID, INT).notNull()
+                .column(ICON_ID, INT).notNull()
+                .foreignKey(PLUGIN_ID, ExtensionPluginTable.TABLE_NAME, ExtensionPluginTable.ID)
+                .foreignKey(ICON_ID, ExtensionIconTable.TABLE_NAME, ExtensionIconTable.ID)
+                .build();
     }
 }

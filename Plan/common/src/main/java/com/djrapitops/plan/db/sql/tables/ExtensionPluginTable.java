@@ -16,6 +16,10 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
+import com.djrapitops.plan.db.DBType;
+import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
+import com.djrapitops.plan.db.sql.parsing.Sql;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
@@ -45,5 +49,16 @@ public class ExtensionPluginTable {
     public static void set2PluginValuesToStatement(PreparedStatement statement, int parameterIndex, String pluginName, UUID serverUUID) throws SQLException {
         statement.setString(parameterIndex, pluginName);
         statement.setString(parameterIndex + 1, serverUUID.toString());
+    }
+
+    public static String createTableSQL(DBType dbType) {
+        return CreateTableParser.create(TABLE_NAME, dbType)
+                .column(ID, INT).primaryKey()
+                .column(PLUGIN_NAME, Sql.varchar(50)).notNull()
+                .column(LAST_UPDATED, LONG).notNull()
+                .column(SERVER_UUID, Sql.varchar(36)).notNull()
+                .column(ICON_ID, INT).notNull()
+                .foreignKey(ICON_ID, ExtensionIconTable.TABLE_NAME, ExtensionIconTable.ID)
+                .build();
     }
 }

@@ -16,6 +16,11 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
+import com.djrapitops.plan.db.DBType;
+import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
+import com.djrapitops.plan.db.sql.parsing.Sql;
+import com.djrapitops.plan.extension.icon.Color;
+import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 
 import java.sql.PreparedStatement;
@@ -51,5 +56,14 @@ public class ExtensionIconTable {
         statement.setString(parameterIndex, icon.getName());
         statement.setString(parameterIndex + 1, icon.getFamily().name());
         statement.setString(parameterIndex + 2, icon.getColor().name());
+    }
+
+    public static String createTableSQL(DBType dbType) {
+        return CreateTableParser.create(TABLE_NAME, dbType)
+                .column(ID, INT).primaryKey()
+                .column(ICON_NAME, Sql.varchar(50)).notNull().defaultValue("'question'")
+                .column(FAMILY, Sql.varchar(15)).notNull().defaultValue(Family.SOLID.name())
+                .column(COLOR, Sql.varchar(25)).notNull().defaultValue(Color.NONE.name())
+                .build();
     }
 }

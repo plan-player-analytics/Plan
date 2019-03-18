@@ -16,6 +16,10 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
+import com.djrapitops.plan.db.DBType;
+import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
+import com.djrapitops.plan.db.sql.parsing.Sql;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
@@ -55,4 +59,24 @@ public class ExtensionProviderTable {
         ExtensionPluginTable.set2PluginValuesToStatement(statement, parameterIndex + 1, pluginName, serverUUID);
     }
 
+    public static String createTableSQL(DBType dbType) {
+        return CreateTableParser.create(TABLE_NAME, dbType)
+                .column(ID, INT).primaryKey()
+                .column(PROVIDER_NAME, Sql.varchar(50)).notNull()
+                .column(TEXT, Sql.varchar(50)).notNull()
+                .column(DESCRIPTION, Sql.varchar(150))
+                .column(PRIORITY, INT).notNull().defaultValue("0")
+                .column(GROUPABLE, BOOL).notNull().defaultValue(false)
+                .column(CONDITION, Sql.varchar(50))
+                .column(PROVIDED_CONDITION, Sql.varchar(50))
+                .column(FORMAT_TYPE, Sql.varchar(25))
+                .column(IS_PLAYER_NAME, BOOL).notNull().defaultValue(false)
+                .column(PLUGIN_ID, INT).notNull()
+                .column(ICON_ID, INT).notNull()
+                .column(TAB_ID, INT).notNull()
+                .foreignKey(PLUGIN_ID, ExtensionPluginTable.TABLE_NAME, ExtensionPluginTable.ID)
+                .foreignKey(ICON_ID, ExtensionIconTable.TABLE_NAME, ExtensionIconTable.ID)
+                .foreignKey(TAB_ID, ExtensionTabTable.TABLE_NAME, ExtensionTabTable.ID)
+                .build();
+    }
 }

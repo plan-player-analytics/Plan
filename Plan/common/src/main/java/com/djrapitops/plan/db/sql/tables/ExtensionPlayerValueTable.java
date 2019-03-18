@@ -16,12 +16,16 @@
  */
 package com.djrapitops.plan.db.sql.tables;
 
+import com.djrapitops.plan.db.DBType;
+import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
+import com.djrapitops.plan.db.sql.parsing.Sql;
+
 /**
  * Table information about 'plan_extension_user_values'.
  *
  * @author Rsl1122
  */
-public class ExtensionPlayerValues {
+public class ExtensionPlayerValueTable {
 
     public static final String TABLE_NAME = "plan_extension_user_values";
 
@@ -35,5 +39,20 @@ public class ExtensionPlayerValues {
     public static final String LONG_VALUE = "long_value";
     public static final String STRING_VALUE = "string_value";
     public static final String GROUP_VALUE = "group_value";
+
+    public static String createTableSQL(DBType dbType) {
+        return CreateTableParser.create(TABLE_NAME, dbType)
+                .column(ID, Sql.INT).primaryKey()
+                .column(BOOLEAN_VALUE, Sql.BOOL)
+                .column(DOUBLE_VALUE, Sql.DOUBLE)
+                .column(PERCENTAGE_VALUE, Sql.DOUBLE)
+                .column(LONG_VALUE, Sql.LONG)
+                .column(STRING_VALUE, Sql.varchar(50))
+                .column(GROUP_VALUE, Sql.varchar(50))
+                .column(USER_UUID, Sql.varchar(36)).notNull()
+                .column(PROVIDER_ID, Sql.INT).notNull()
+                .foreignKey(PROVIDER_ID, ExtensionProviderTable.TABLE_NAME, ExtensionProviderTable.ID)
+                .build();
+    }
 
 }

@@ -27,7 +27,7 @@ import java.util.UUID;
 
 import static com.djrapitops.plan.db.sql.parsing.Sql.AND;
 import static com.djrapitops.plan.db.sql.parsing.Sql.WHERE;
-import static com.djrapitops.plan.db.sql.tables.ExtensionPlayerValues.*;
+import static com.djrapitops.plan.db.sql.tables.ExtensionPlayerValueTable.*;
 
 /**
  * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.NumberDataProvider}.
