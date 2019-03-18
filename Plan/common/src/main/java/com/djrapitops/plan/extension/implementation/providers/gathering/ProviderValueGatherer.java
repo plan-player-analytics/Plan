@@ -14,23 +14,21 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.extension.implementation;
+package com.djrapitops.plan.extension.implementation.providers.gathering;
 
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.icon.Icon;
-import com.djrapitops.plan.extension.implementation.providers.BooleanDataProvider;
-import com.djrapitops.plan.extension.implementation.providers.DataProvider;
-import com.djrapitops.plan.extension.implementation.providers.DataProviders;
-import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
-import com.djrapitops.plan.extension.implementation.storage.transactions.*;
-import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerBooleanResultTransaction;
+import com.djrapitops.plan.extension.implementation.DataProviderExtractor;
+import com.djrapitops.plan.extension.implementation.PluginTab;
+import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.StorePluginTabTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.StorePluginTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveInvalidResultsTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 
-import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -78,41 +76,37 @@ public class ProviderValueGatherer {
 
         // TODO implement after storage
         database.executeTransaction(new RemoveInvalidResultsTransaction(pluginName, serverUUID, extractor.getInvalidatedMethods()));
+        // TODO remove data in db that are updated with a 'false' condition
     }
 
     public void updateValues(UUID playerUUID, String playerName) {
-        gatherBooleanData(playerUUID, playerName);
+        Set<String> providedConditions = gatherBooleanData(playerUUID, playerName);
+        gatherValueData(playerUUID, playerName, providedConditions);
     }
 
-    private void gatherBooleanData(UUID playerUUID, String playerName) {
-        String pluginName = extractor.getPluginName();
-        UUID serverUUID = serverInfo.getServerUUID();
-        Database database = dbSystem.getDatabase();
-        DataProviders dataProviders = extractor.getDataProviders();
-        Set<String> providedConditions = new HashSet<>();
+    private Set<String> gatherBooleanData(UUID playerUUID, String playerName) {
+        return new BooleanProviderValueGatherer(
+                extractor.getPluginName(), extension,
+                serverInfo.getServerUUID(), dbSystem.getDatabase(),
+                extractor.getDataProviders(), logger
+        ).gatherBooleanData(playerUUID, playerName);
+    }
 
-        // TODO parse condition tree and traverse based on that.
-        for (DataProvider<Boolean> booleanProvider : dataProviders.getPlayerMethodsByType(Boolean.class)) {
-            Optional<String> providedCondition = Optional.empty();
-            if (booleanProvider instanceof BooleanDataProvider) {
-                providedCondition = ((BooleanDataProvider) booleanProvider).getProvidedCondition();
-            }
-            MethodWrapper<Boolean> method = booleanProvider.getMethod();
-
-            boolean result;
-            try {
-                result = method.callMethod(extension, playerUUID, playerName);
-            } catch (Exception | NoSuchFieldError | NoSuchMethodError e) {
-                logger.warn(pluginName + " has invalid implementation, method " + method.getMethodName() + " threw exception: " + e.toString());
-                continue;
-            }
-
-            if (result && providedCondition.isPresent()) {
-                providedConditions.add(providedCondition.get());
-            }
-
-            database.executeTransaction(new StoreBooleanProviderTransaction(booleanProvider, providedCondition.orElse(null), serverInfo.getServerUUID()));
-            database.executeTransaction(new StorePlayerBooleanResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result));
-        }
+    private void gatherValueData(UUID playerUUID, String playerName, Set<String> providedConditions) {
+        new NumberProviderValueGatherer(
+                extractor.getPluginName(), extension,
+                serverInfo.getServerUUID(), dbSystem.getDatabase(),
+                extractor.getDataProviders(), logger
+        ).gatherNumberData(playerUUID, playerName, providedConditions);
+        new DoubleAndPercentageProviderValueGatherer(
+                extractor.getPluginName(), extension,
+                serverInfo.getServerUUID(), dbSystem.getDatabase(),
+                extractor.getDataProviders(), logger
+        ).gatherDoubleData(playerUUID, playerName, providedConditions);
+        new StringProviderValueGatherer(
+                extractor.getPluginName(), extension,
+                serverInfo.getServerUUID(), dbSystem.getDatabase(),
+                extractor.getDataProviders(), logger
+        ).gatherStringData(playerUUID, playerName, providedConditions);
     }
 }

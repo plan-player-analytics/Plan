@@ -14,32 +14,36 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.extension.implementation.storage.transactions;
+package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
 import com.djrapitops.plan.db.access.transactions.Transaction;
 
-import java.util.Collection;
 import java.util.UUID;
 
 /**
- * Transaction to remove method results that correspond to {@link com.djrapitops.plan.extension.annotation.InvalidateMethod} annotations.
+ * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.PercentageDataProvider}.
  *
  * @author Rsl1122
  */
-public class RemoveInvalidResultsTransaction extends Transaction {
+public class StorePlayerPercentageResultTransaction extends Transaction {
 
     private final String pluginName;
     private final UUID serverUUID;
-    private final Collection<String> invalidatedMethods;
+    private final String methodName;
+    private final UUID playerUUID;
 
-    public RemoveInvalidResultsTransaction(String pluginName, UUID serverUUID, Collection<String> invalidatedMethods) {
+    private final double value;
+
+    public StorePlayerPercentageResultTransaction(String pluginName, UUID serverUUID, String methodName, UUID playerUUID, double value) {
         this.pluginName = pluginName;
         this.serverUUID = serverUUID;
-        this.invalidatedMethods = invalidatedMethods;
+        this.methodName = methodName;
+        this.playerUUID = playerUUID;
+        this.value = value;
     }
 
     @Override
     protected void performOperations() {
-        // TODO implement after storage
+        // TODO Store data in a table
     }
 }

@@ -14,35 +14,32 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.extension.implementation.storage.transactions;
+package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
 import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.extension.implementation.ProviderInformation;
-import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 
+import java.util.Collection;
 import java.util.UUID;
 
 /**
- * Transaction to store information about a {@link com.djrapitops.plan.extension.implementation.providers.BooleanDataProvider}.
+ * Transaction to remove method results that correspond to {@link com.djrapitops.plan.extension.annotation.InvalidateMethod} annotations.
  *
  * @author Rsl1122
  */
-public class StoreBooleanProviderTransaction extends Transaction {
+public class RemoveInvalidResultsTransaction extends Transaction {
 
-    private final DataProvider<Boolean> booleanProvider;
-    private final String providedCondition;
+    private final String pluginName;
     private final UUID serverUUID;
+    private final Collection<String> invalidatedMethods;
 
-    public StoreBooleanProviderTransaction(DataProvider<Boolean> booleanProvider, String providedCondition, UUID serverUUID) {
-        this.booleanProvider = booleanProvider;
-        this.providedCondition = providedCondition;
+    public RemoveInvalidResultsTransaction(String pluginName, UUID serverUUID, Collection<String> invalidatedMethods) {
+        this.pluginName = pluginName;
         this.serverUUID = serverUUID;
+        this.invalidatedMethods = invalidatedMethods;
     }
 
     @Override
     protected void performOperations() {
-        ProviderInformation providerInformation = booleanProvider.getProviderInformation();
-
-        // TODO Store provider in a table
+        // TODO implement after storage
     }
 }

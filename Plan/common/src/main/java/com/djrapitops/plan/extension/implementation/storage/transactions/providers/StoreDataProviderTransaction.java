@@ -14,36 +14,38 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.extension.implementation.storage.transactions.results;
+package com.djrapitops.plan.extension.implementation.storage.transactions.providers;
 
 import com.djrapitops.plan.db.access.transactions.Transaction;
+import com.djrapitops.plan.extension.implementation.ProviderInformation;
+import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 
 import java.util.UUID;
 
 /**
- * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.BooleanDataProvider}.
+ * Transaction to store information about a {@link DataProvider} that has no extra info.
+ * <p>
+ * Includes:
+ * {@link com.djrapitops.plan.extension.implementation.providers.DoubleDataProvider}.
+ * {@link com.djrapitops.plan.extension.implementation.providers.PercentageDataProvider}.
+ * {@link com.djrapitops.plan.extension.implementation.providers.StringDataProvider}.
  *
  * @author Rsl1122
  */
-public class StorePlayerBooleanResultTransaction extends Transaction {
+public class StoreDataProviderTransaction<T> extends Transaction {
 
-    private final String pluginName;
+    private final DataProvider<T> provider;
     private final UUID serverUUID;
-    private final String methodName;
-    private final UUID playerUUID;
 
-    private final boolean value;
-
-    public StorePlayerBooleanResultTransaction(String pluginName, UUID serverUUID, String methodName, UUID playerUUID, boolean value) {
-        this.pluginName = pluginName;
+    public StoreDataProviderTransaction(DataProvider<T> provider, UUID serverUUID) {
+        this.provider = provider;
         this.serverUUID = serverUUID;
-        this.methodName = methodName;
-        this.playerUUID = playerUUID;
-        this.value = value;
     }
 
     @Override
     protected void performOperations() {
-        // TODO Store data in a table
+        ProviderInformation providerInformation = provider.getProviderInformation();
+
+        // TODO Store provider in a table
     }
 }

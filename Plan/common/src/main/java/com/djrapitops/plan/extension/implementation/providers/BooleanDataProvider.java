@@ -54,6 +54,13 @@ public class BooleanDataProvider extends DataProvider<Boolean> {
         dataProviders.put(new BooleanDataProvider(providerInformation, methodWrapper, annotation.conditionName()));
     }
 
+    public static Optional<String> getProvidedCondition(DataProvider<Boolean> provider) {
+        if (provider instanceof BooleanDataProvider) {
+            return ((BooleanDataProvider) provider).getProvidedCondition();
+        }
+        return Optional.empty();
+    }
+
     public Optional<String> getProvidedCondition() {
         return Optional.ofNullable(providedCondition);
     }

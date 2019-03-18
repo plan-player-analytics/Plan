@@ -21,20 +21,20 @@ import com.djrapitops.plan.db.access.transactions.Transaction;
 import java.util.UUID;
 
 /**
- * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.BooleanDataProvider}.
+ * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.NumberDataProvider}.
  *
  * @author Rsl1122
  */
-public class StorePlayerBooleanResultTransaction extends Transaction {
+public class StorePlayerNumberResultTransaction extends Transaction {
 
     private final String pluginName;
     private final UUID serverUUID;
     private final String methodName;
     private final UUID playerUUID;
 
-    private final boolean value;
+    private final long value;
 
-    public StorePlayerBooleanResultTransaction(String pluginName, UUID serverUUID, String methodName, UUID playerUUID, boolean value) {
+    public StorePlayerNumberResultTransaction(String pluginName, UUID serverUUID, String methodName, UUID playerUUID, long value) {
         this.pluginName = pluginName;
         this.serverUUID = serverUUID;
         this.methodName = methodName;

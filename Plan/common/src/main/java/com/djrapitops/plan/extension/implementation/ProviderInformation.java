@@ -18,6 +18,8 @@ package com.djrapitops.plan.extension.implementation;
 
 import com.djrapitops.plan.extension.icon.Icon;
 
+import java.util.Optional;
+
 /**
  * Represents the annotation information provided on a method.
  *
@@ -71,11 +73,11 @@ public class ProviderInformation {
         return priority;
     }
 
-    public String getTab() {
-        return tab;
+    public Optional<String> getTab() {
+        return Optional.ofNullable(tab);
     }
 
-    public String getCondition() {
-        return condition;
+    public Optional<String> getCondition() {
+        return Optional.ofNullable(condition);
     }
 }

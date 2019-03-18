@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.implementation.providers;
 
+import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.annotation.NumberProvider;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
@@ -31,8 +32,11 @@ import java.lang.reflect.Method;
  */
 public class NumberDataProvider extends DataProvider<Long> {
 
-    private NumberDataProvider(ProviderInformation providerInformation, MethodWrapper<Long> methodWrapper) {
+    private final FormatType formatType;
+
+    private NumberDataProvider(ProviderInformation providerInformation, MethodWrapper<Long> methodWrapper, FormatType formatType) {
         super(providerInformation, methodWrapper);
+        this.formatType = formatType;
     }
 
     public static void placeToDataProviders(
@@ -46,6 +50,17 @@ public class NumberDataProvider extends DataProvider<Long> {
                 pluginName, method.getName(), annotation.text(), annotation.description(), providerIcon, annotation.priority(), tab, condition
         );
 
-        dataProviders.put(new NumberDataProvider(providerInformation, methodWrapper));
+        dataProviders.put(new NumberDataProvider(providerInformation, methodWrapper, annotation.format()));
+    }
+
+    public static FormatType getFormatType(DataProvider<Long> provider) {
+        if (provider instanceof NumberDataProvider) {
+            return ((NumberDataProvider) provider).getFormatType();
+        }
+        return FormatType.NONE;
+    }
+
+    public FormatType getFormatType() {
+        return formatType;
     }
 }
