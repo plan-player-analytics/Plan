@@ -23,21 +23,20 @@ import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import java.util.UUID;
 
 /**
- * Transaction to store information about a {@link DataProvider} that has no extra info.
+ * Transaction to store information about a dobule {@link DataProvider}.
  * <p>
  * Includes:
  * {@link com.djrapitops.plan.extension.implementation.providers.DoubleDataProvider}.
  * {@link com.djrapitops.plan.extension.implementation.providers.PercentageDataProvider}.
- * {@link com.djrapitops.plan.extension.implementation.providers.StringDataProvider}.
  *
  * @author Rsl1122
  */
-public class StoreDataProviderTransaction<T> extends Transaction {
+public class StoreDoubleProviderTransaction extends Transaction {
 
-    private final DataProvider<T> provider;
+    private final DataProvider<Double> provider;
     private final UUID serverUUID;
 
-    public StoreDataProviderTransaction(DataProvider<T> provider, UUID serverUUID) {
+    public StoreDoubleProviderTransaction(DataProvider<Double> provider, UUID serverUUID) {
         this.provider = provider;
         this.serverUUID = serverUUID;
     }

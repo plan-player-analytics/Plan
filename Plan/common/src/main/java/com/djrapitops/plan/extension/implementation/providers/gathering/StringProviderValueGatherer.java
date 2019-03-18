@@ -21,8 +21,9 @@ import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProviders;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
+import com.djrapitops.plan.extension.implementation.providers.StringDataProvider;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
-import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreDataProviderTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreStringProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerStringResultTransaction;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 
@@ -78,7 +79,7 @@ class StringProviderValueGatherer {
             }
 
             database.executeTransaction(new StoreIconTransaction(stringProvider.getProviderInformation().getIcon()));
-            database.executeTransaction(new StoreDataProviderTransaction<>(stringProvider, serverUUID));
+            database.executeTransaction(new StoreStringProviderTransaction(stringProvider, StringDataProvider.isPlayerName(stringProvider), serverUUID));
             database.executeTransaction(new StorePlayerStringResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result));
         }
     }

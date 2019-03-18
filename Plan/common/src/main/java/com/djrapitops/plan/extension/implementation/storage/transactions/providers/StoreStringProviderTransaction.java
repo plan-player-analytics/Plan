@@ -17,26 +17,25 @@
 package com.djrapitops.plan.extension.implementation.storage.transactions.providers;
 
 import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 
 import java.util.UUID;
 
 /**
- * Transaction to store information about a {@link com.djrapitops.plan.extension.implementation.providers.NumberDataProvider}.
+ * Transaction to store information about a {@link com.djrapitops.plan.extension.implementation.providers.StringDataProvider}.
  *
  * @author Rsl1122
  */
-public class StoreNumberProviderTransaction extends Transaction {
+public class StoreStringProviderTransaction extends Transaction {
 
-    private final DataProvider<Long> provider;
-    private final FormatType formatType;
+    private final DataProvider<String> provider;
+    private final boolean playerName;
     private final UUID serverUUID;
 
-    public StoreNumberProviderTransaction(DataProvider<Long> provider, FormatType formatType, UUID serverUUID) {
+    public StoreStringProviderTransaction(DataProvider<String> provider, boolean playerName, UUID serverUUID) {
         this.provider = provider;
-        this.formatType = formatType;
+        this.playerName = playerName;
         this.serverUUID = serverUUID;
     }
 

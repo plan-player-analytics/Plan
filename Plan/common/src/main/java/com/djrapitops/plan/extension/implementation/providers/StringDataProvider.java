@@ -31,8 +31,11 @@ import java.lang.reflect.Method;
  */
 public class StringDataProvider extends DataProvider<String> {
 
-    private StringDataProvider(ProviderInformation providerInformation, MethodWrapper<String> methodWrapper) {
+    private final boolean playerName;
+
+    private StringDataProvider(ProviderInformation providerInformation, MethodWrapper<String> methodWrapper, boolean playerName) {
         super(providerInformation, methodWrapper);
+        this.playerName = playerName;
     }
 
     public static void placeToDataProviders(
@@ -46,6 +49,19 @@ public class StringDataProvider extends DataProvider<String> {
                 pluginName, method.getName(), annotation.text(), annotation.description(), providerIcon, annotation.priority(), tab, condition
         );
 
-        dataProviders.put(new StringDataProvider(providerInformation, methodWrapper));
+        boolean playerName = annotation.playerName();
+
+        dataProviders.put(new StringDataProvider(providerInformation, methodWrapper, playerName));
+    }
+
+    public static boolean isPlayerName(DataProvider<String> provider) {
+        if (provider instanceof StringDataProvider) {
+            return ((StringDataProvider) provider).isPlayerName();
+        }
+        return false;
+    }
+
+    public boolean isPlayerName() {
+        return playerName;
     }
 }
