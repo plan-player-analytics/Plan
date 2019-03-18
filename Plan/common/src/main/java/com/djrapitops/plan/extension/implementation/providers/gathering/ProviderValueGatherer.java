@@ -59,7 +59,7 @@ public class ProviderValueGatherer {
         this.logger = logger;
     }
 
-    public void storeProviderInformation() {
+    public void storeExtensionInformation() {
         String pluginName = extractor.getPluginName();
         Icon pluginIcon = extractor.getPluginIcon();
 

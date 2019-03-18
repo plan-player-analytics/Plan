@@ -22,6 +22,7 @@ import com.djrapitops.plan.extension.implementation.providers.BooleanDataProvide
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProviders;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
+import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreBooleanProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerBooleanResultTransaction;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -92,6 +93,7 @@ class BooleanProviderValueGatherer {
                 }
 
                 satisfied.add(booleanProvider); // Prevents further attempts to call this provider for this player.
+                database.executeTransaction(new StoreIconTransaction(booleanProvider.getProviderInformation().getIcon()));
                 database.executeTransaction(new StoreBooleanProviderTransaction(booleanProvider, providedCondition.orElse(null), serverUUID));
                 database.executeTransaction(new StorePlayerBooleanResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result));
             }

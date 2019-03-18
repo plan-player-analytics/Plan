@@ -23,6 +23,7 @@ import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProviders;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 import com.djrapitops.plan.extension.implementation.providers.NumberDataProvider;
+import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreNumberProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerNumberResultTransaction;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -80,6 +81,7 @@ class NumberProviderValueGatherer {
 
             FormatType formatType = NumberDataProvider.getFormatType(numberProvider);
 
+            database.executeTransaction(new StoreIconTransaction(numberProvider.getProviderInformation().getIcon()));
             database.executeTransaction(new StoreNumberProviderTransaction(numberProvider, formatType, serverUUID));
             database.executeTransaction(new StorePlayerNumberResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result));
         }
