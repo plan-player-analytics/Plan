@@ -82,7 +82,7 @@ public class StoreDoubleProviderTransaction extends Transaction {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, providerInformation.getText());
-                statement.setString(2, providerInformation.getDescription());
+                statement.setString(2, providerInformation.getDescription().orElse(null));
                 statement.setInt(3, providerInformation.getPriority());
                 statement.setString(4, providerInformation.getCondition().orElse(null));
                 ExtensionTabTable.set3TabValuesToStatement(statement, 5, providerInformation.getTab().orElse(null), providerInformation.getPluginName(), serverUUID);
@@ -112,7 +112,7 @@ public class StoreDoubleProviderTransaction extends Transaction {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, providerInformation.getName());
                 statement.setString(2, providerInformation.getText());
-                statement.setString(3, providerInformation.getDescription());
+                statement.setString(3, providerInformation.getDescription().orElse(null));
                 statement.setInt(4, providerInformation.getPriority());
                 statement.setString(5, providerInformation.getCondition().orElse(null));
                 ExtensionTabTable.set3TabValuesToStatement(statement, 6, providerInformation.getTab().orElse(null), providerInformation.getPluginName(), serverUUID);

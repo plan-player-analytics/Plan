@@ -30,7 +30,7 @@ public class ProviderInformation {
     private final String pluginName;
     private final String name;
     private final String text;
-    private final String description;
+    private final String description; // can be null
     private final Icon icon;
     private final int priority;
     private final String tab; // can be null
@@ -61,8 +61,8 @@ public class ProviderInformation {
         return text;
     }
 
-    public String getDescription() {
-        return description;
+    public Optional<String> getDescription() {
+        return description == null || description.isEmpty() ? Optional.empty() : Optional.of(description);
     }
 
     public Icon getIcon() {
@@ -74,10 +74,10 @@ public class ProviderInformation {
     }
 
     public Optional<String> getTab() {
-        return Optional.ofNullable(tab);
+        return tab == null || tab.isEmpty() ? Optional.empty() : Optional.of(tab);
     }
 
     public Optional<String> getCondition() {
-        return Optional.ofNullable(condition);
+        return condition == null || condition.isEmpty() ? Optional.empty() : Optional.of(condition);
     }
 }

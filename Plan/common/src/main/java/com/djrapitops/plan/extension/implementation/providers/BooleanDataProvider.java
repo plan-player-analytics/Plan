@@ -62,6 +62,6 @@ public class BooleanDataProvider extends DataProvider<Boolean> {
     }
 
     public Optional<String> getProvidedCondition() {
-        return Optional.ofNullable(providedCondition);
+        return providedCondition == null || providedCondition.isEmpty() ? Optional.empty() : Optional.of(providedCondition);
     }
 }
