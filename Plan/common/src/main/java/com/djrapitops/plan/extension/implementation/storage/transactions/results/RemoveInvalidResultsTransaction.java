@@ -16,10 +16,20 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
+import com.djrapitops.plan.db.access.ExecStatement;
+import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.transactions.Transaction;
+import com.djrapitops.plan.db.sql.tables.ExtensionPlayerValues;
+import com.djrapitops.plan.db.sql.tables.ExtensionPluginTable;
+import com.djrapitops.plan.db.sql.tables.ExtensionProviderTable;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.UUID;
+
+import static com.djrapitops.plan.db.sql.parsing.Sql.AND;
+import static com.djrapitops.plan.db.sql.parsing.Sql.WHERE;
 
 /**
  * Transaction to remove method results that correspond to {@link com.djrapitops.plan.extension.annotation.InvalidateMethod} annotations.
@@ -40,6 +50,33 @@ public class RemoveInvalidResultsTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
-        // TODO implement after storage
+        for (String invalidatedMethod : invalidatedMethods) {
+            execute(deleteInvalidMethodResults(invalidatedMethod));
+            execute(deleteInvalidMethodProvider(invalidatedMethod));
+        }
+    }
+
+    private Executable deleteInvalidMethodResults(String invalidMethod) {
+        String sql = "DELETE FROM " + ExtensionPlayerValues.TABLE_NAME +
+                WHERE + ExtensionPlayerValues.PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID;
+        return new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                ExtensionProviderTable.set3PluginValuesToStatement(statement, 1, invalidMethod, pluginName, serverUUID);
+            }
+        };
+    }
+
+    private Executable deleteInvalidMethodProvider(String invalidMethod) {
+        String sql = "DELETE FROM " + ExtensionProviderTable.TABLE_NAME +
+                WHERE + ExtensionProviderTable.PROVIDER_NAME + "=?" +
+                AND + ExtensionProviderTable.PLUGIN_ID + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID;
+        return new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, invalidMethod);
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 2, pluginName, serverUUID);
+            }
+        };
     }
 }

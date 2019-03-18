@@ -74,7 +74,6 @@ public class ProviderValueGatherer {
             database.executeTransaction(new StorePluginTabTransaction(pluginName, serverUUID, tab));
         }
 
-        // TODO implement after storage
         database.executeTransaction(new RemoveInvalidResultsTransaction(pluginName, serverUUID, extractor.getInvalidatedMethods()));
         // TODO remove data in db that are updated with a 'false' condition
     }
