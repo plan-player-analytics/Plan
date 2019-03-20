@@ -20,6 +20,7 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.transactions.events.GeoInfoStoreTransaction;
 import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
+import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -54,6 +55,7 @@ public class PlayerOnlineListener implements Listener {
     private final Processors processors;
     private final Processing processing;
     private final DBSystem dbSystem;
+    private final ExtensionServiceImplementation extensionService;
     private final GeolocationCache geolocationCache;
     private final SessionCache sessionCache;
     private final ServerInfo serverInfo;
@@ -65,6 +67,7 @@ public class PlayerOnlineListener implements Listener {
             Processors processors,
             Processing processing,
             DBSystem dbSystem,
+            ExtensionServiceImplementation extensionService,
             GeolocationCache geolocationCache,
             SessionCache sessionCache,
             ServerInfo serverInfo,
@@ -74,6 +77,7 @@ public class PlayerOnlineListener implements Listener {
         this.processors = processors;
         this.processing = processing;
         this.dbSystem = dbSystem;
+        this.extensionService = extensionService;
         this.geolocationCache = geolocationCache;
         this.sessionCache = sessionCache;
         this.serverInfo = serverInfo;
@@ -85,7 +89,7 @@ public class PlayerOnlineListener implements Listener {
         try {
             ProxiedPlayer player = event.getPlayer();
             UUID playerUUID = player.getUniqueId();
-            String name = player.getName();
+            String playerName = player.getName();
             InetAddress address = player.getAddress().getAddress();
             long time = System.currentTimeMillis();
 
@@ -99,8 +103,9 @@ public class PlayerOnlineListener implements Listener {
                 );
             }
 
-            database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> time, name));
+            database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> time, playerName));
             processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
+            processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName));
             ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);

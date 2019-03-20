@@ -20,6 +20,7 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.transactions.events.*;
+import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.cache.NicknameCache;
 import com.djrapitops.plan.system.cache.SessionCache;
@@ -57,6 +58,7 @@ public class PlayerOnlineListener implements Listener {
     private final Processing processing;
     private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
+    private final ExtensionServiceImplementation extensionService;
     private final GeolocationCache geolocationCache;
     private final NicknameCache nicknameCache;
     private final SessionCache sessionCache;
@@ -70,6 +72,7 @@ public class PlayerOnlineListener implements Listener {
             Processing processing,
             ServerInfo serverInfo,
             DBSystem dbSystem,
+            ExtensionServiceImplementation extensionService,
             GeolocationCache geolocationCache,
             NicknameCache nicknameCache,
             SessionCache sessionCache,
@@ -81,6 +84,7 @@ public class PlayerOnlineListener implements Listener {
         this.processing = processing;
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
+        this.extensionService = extensionService;
         this.geolocationCache = geolocationCache;
         this.nicknameCache = nicknameCache;
         this.sessionCache = sessionCache;
@@ -139,11 +143,11 @@ public class PlayerOnlineListener implements Listener {
     private void actOnJoinEvent(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        UUID uuid = player.getUniqueId();
+        UUID playerUUID = player.getUniqueId();
         UUID serverUUID = serverInfo.getServerUUID();
         long time = System.currentTimeMillis();
 
-        AFKListener.AFK_TRACKER.performedAction(uuid, time);
+        AFKListener.AFK_TRACKER.performedAction(playerUUID, time);
 
         String world = player.getWorld().getName();
         String gm = player.getGameMode().name();
@@ -159,20 +163,21 @@ public class PlayerOnlineListener implements Listener {
         boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
         if (gatheringGeolocations) {
             database.executeTransaction(
-                    new GeoInfoStoreTransaction(uuid, address, time, geolocationCache::getCountry)
+                    new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
             );
         }
 
-        database.executeTransaction(new PlayerServerRegisterTransaction(uuid, player::getFirstPlayed, playerName, serverUUID));
-        sessionCache.cacheSession(uuid, new Session(uuid, serverUUID, time, world, gm))
+        database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, player::getFirstPlayed, playerName, serverUUID));
+        sessionCache.cacheSession(playerUUID, new Session(playerUUID, serverUUID, time, world, gm))
                 .ifPresent(previousSession -> database.executeTransaction(new SessionEndTransaction(previousSession)));
 
         database.executeTransaction(new NicknameStoreTransaction(
-                uuid, new Nickname(displayName, time, serverUUID),
-                (playerUUID, name) -> name.equals(nicknameCache.getDisplayName(playerUUID))
+                playerUUID, new Nickname(displayName, time, serverUUID),
+                (uuid, name) -> name.equals(nicknameCache.getDisplayName(uuid))
         ));
 
-        processing.submitNonCritical(processors.info().playerPageUpdateProcessor(uuid));
+        processing.submitNonCritical(processors.info().playerPageUpdateProcessor(playerUUID));
+        processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName));
 
     }
 

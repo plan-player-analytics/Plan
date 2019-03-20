@@ -20,6 +20,7 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.transactions.events.GeoInfoStoreTransaction;
 import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
+import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -57,6 +58,7 @@ public class PlayerOnlineListener {
     private final Processors processors;
     private final Processing processing;
     private final DBSystem dbSystem;
+    private final ExtensionServiceImplementation extensionService;
     private final GeolocationCache geolocationCache;
     private final SessionCache sessionCache;
     private final ServerInfo serverInfo;
@@ -68,6 +70,7 @@ public class PlayerOnlineListener {
             Processing processing,
             Processors processors,
             DBSystem dbSystem,
+            ExtensionServiceImplementation extensionService,
             GeolocationCache geolocationCache,
             SessionCache sessionCache,
             ServerInfo serverInfo,
@@ -77,6 +80,7 @@ public class PlayerOnlineListener {
         this.processing = processing;
         this.processors = processors;
         this.dbSystem = dbSystem;
+        this.extensionService = extensionService;
         this.geolocationCache = geolocationCache;
         this.sessionCache = sessionCache;
         this.serverInfo = serverInfo;
@@ -88,7 +92,7 @@ public class PlayerOnlineListener {
         try {
             Player player = event.getPlayer();
             UUID playerUUID = player.getUniqueId();
-            String name = player.getUsername();
+            String playerName = player.getUsername();
             InetAddress address = player.getRemoteAddress().getAddress();
             long time = System.currentTimeMillis();
 
@@ -103,8 +107,9 @@ public class PlayerOnlineListener {
                 );
             }
 
-            database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> time, name));
+            database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> time, playerName));
             processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
+            processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName));
             ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
