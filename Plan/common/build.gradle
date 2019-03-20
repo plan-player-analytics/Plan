@@ -13,6 +13,8 @@ dependencies {
     compile "org.slf4j:slf4j-api:$slf4jVersion"
     compile "com.maxmind.geoip2:geoip2:$geoIpVersion"
     compileOnly "com.google.guava:guava:$guavaVersion"
+
+    testCompile project(path: ":api", configuration: 'shadow')
 }
 
 shadowJar {

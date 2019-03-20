@@ -28,6 +28,7 @@ import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.UUID;
 
 import static com.djrapitops.plan.db.sql.parsing.Sql.AND;
@@ -39,6 +40,7 @@ import static com.djrapitops.plan.db.sql.tables.ExtensionProviderTable.*;
  *
  * @author Rsl1122
  */
+@SuppressWarnings("Duplicates")
 public class StoreNumberProviderTransaction extends Transaction {
 
     private final FormatType formatType;
@@ -66,8 +68,7 @@ public class StoreNumberProviderTransaction extends Transaction {
     }
 
     private Executable updateProvider() {
-        String sql = "UPDATE " + TABLE_NAME +
-                " SET " +
+        String sql = "UPDATE " + TABLE_NAME + " SET " +
                 TEXT + "=?," +
                 DESCRIPTION + "=?," +
                 PRIORITY + "=?," +
@@ -82,14 +83,22 @@ public class StoreNumberProviderTransaction extends Transaction {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, providerInformation.getText());
-                statement.setString(2, providerInformation.getDescription().orElse(null));
+                if (providerInformation.getDescription().isPresent()) {
+                    statement.setString(2, providerInformation.getDescription().get());
+                } else {
+                    statement.setNull(2, Types.VARCHAR);
+                }
                 statement.setInt(3, providerInformation.getPriority());
-                statement.setString(4, providerInformation.getCondition().orElse(null));
+                if (providerInformation.getCondition().isPresent()) {
+                    statement.setString(4, providerInformation.getCondition().orElse(null));
+                } else {
+                    statement.setNull(4, Types.VARCHAR);
+                }
                 statement.setString(5, formatType.name());
-                ExtensionTabTable.set3TabValuesToStatement(statement, 6, providerInformation.getTab().orElse(null), providerInformation.getPluginName(), serverUUID);
+                ExtensionTabTable.set3TabValuesToStatement(statement, 6, providerInformation.getTab().orElse("No Tab"), providerInformation.getPluginName(), serverUUID);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 9, providerInformation.getIcon());
-                ExtensionPluginTable.set2PluginValuesToStatement(statement, 11, providerInformation.getPluginName(), serverUUID);
-                statement.setString(13, providerInformation.getName());
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 12, providerInformation.getPluginName(), serverUUID);
+                statement.setString(14, providerInformation.getName());
             }
         };
     }
@@ -114,13 +123,21 @@ public class StoreNumberProviderTransaction extends Transaction {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, providerInformation.getName());
                 statement.setString(2, providerInformation.getText());
-                statement.setString(3, providerInformation.getDescription().orElse(null));
+                if (providerInformation.getDescription().isPresent()) {
+                    statement.setString(3, providerInformation.getDescription().get());
+                } else {
+                    statement.setNull(3, Types.VARCHAR);
+                }
                 statement.setInt(4, providerInformation.getPriority());
-                statement.setString(5, providerInformation.getCondition().orElse(null));
+                if (providerInformation.getCondition().isPresent()) {
+                    statement.setString(5, providerInformation.getCondition().orElse(null));
+                } else {
+                    statement.setNull(5, Types.VARCHAR);
+                }
                 statement.setString(6, formatType.name());
-                ExtensionTabTable.set3TabValuesToStatement(statement, 7, providerInformation.getTab().orElse(null), providerInformation.getPluginName(), serverUUID);
+                ExtensionTabTable.set3TabValuesToStatement(statement, 7, providerInformation.getTab().orElse("No Tab"), providerInformation.getPluginName(), serverUUID);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 10, providerInformation.getIcon());
-                ExtensionPluginTable.set2PluginValuesToStatement(statement, 12, providerInformation.getPluginName(), serverUUID);
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 13, providerInformation.getPluginName(), serverUUID);
             }
         };
     }

@@ -30,6 +30,7 @@ import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.access.Executable;
+import com.djrapitops.plan.db.access.HasMoreThanZeroQueryStatement;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.queries.*;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
@@ -44,12 +45,17 @@ import com.djrapitops.plan.db.access.transactions.init.CleanTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.db.patches.Patch;
+import com.djrapitops.plan.db.sql.tables.ExtensionPlayerValueTable;
+import com.djrapitops.plan.extension.DataExtension;
+import com.djrapitops.plan.extension.ExtensionServiceImplementation;
+import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.Config;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.utilities.SHA256Hash;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
@@ -69,6 +75,8 @@ import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.security.NoSuchAlgorithmException;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -104,7 +112,9 @@ public abstract class CommonDBTest {
 
     static void handleSetup(String dbName) throws Exception {
         system = component.getPlanSystem();
-        system.getConfigSystem().getConfig().set(WebserverSettings.PORT, TEST_PORT_NUMBER);
+        PlanConfig config = system.getConfigSystem().getConfig();
+        config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
+        config.set(DatabaseSettings.TYPE, dbName);
         system.enable();
 
         dbSystem = system.getDatabaseSystem();
@@ -1014,5 +1024,49 @@ public abstract class CommonDBTest {
 
         Map<UUID, Integer> result = db.query(ServerAggregateQueries.serverUserCounts());
         assertEquals(expected, result);
+    }
+
+    @Test
+    public void extensionValuesAreStored() {
+        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
+
+        extensionService.register(new TestExtension());
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME);
+
+        assertTrue(db.query(new HasMoreThanZeroQueryStatement("SELECT COUNT(1) as c FROM " + ExtensionPlayerValueTable.TABLE_NAME +
+                " WHERE " + ExtensionPlayerValueTable.USER_UUID + "=?") {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+            }
+        }));
+    }
+
+    @PluginInfo(name = "TestExtension")
+    public class TestExtension implements DataExtension {
+        @NumberProvider(text = "a number")
+        public long value(UUID playerUUD) {
+            return 5L;
+        }
+
+        @BooleanProvider(text = "a boolean")
+        public boolean boolVal(UUID playerUUID) {
+            return false;
+        }
+
+        @DoubleProvider(text = "a double")
+        public double doubleVal(UUID playerUUID) {
+            return 0.5;
+        }
+
+        @PercentageProvider(text = "a percentage")
+        public double percentageVal(UUID playerUUID) {
+            return 0.5;
+        }
+
+        @StringProvider(text = "a string")
+        public String stringVal(UUID playerUUID) {
+            return "";
+        }
     }
 }

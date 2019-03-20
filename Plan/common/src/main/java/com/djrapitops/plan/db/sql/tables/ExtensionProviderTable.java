@@ -73,7 +73,7 @@ public class ExtensionProviderTable {
                 .column(IS_PLAYER_NAME, BOOL).notNull().defaultValue(false)
                 .column(PLUGIN_ID, INT).notNull()
                 .column(ICON_ID, INT).notNull()
-                .column(TAB_ID, INT).notNull()
+                .column(TAB_ID, INT)
                 .foreignKey(PLUGIN_ID, ExtensionPluginTable.TABLE_NAME, ExtensionPluginTable.ID)
                 .foreignKey(ICON_ID, ExtensionIconTable.TABLE_NAME, ExtensionIconTable.ID)
                 .foreignKey(TAB_ID, ExtensionTabTable.TABLE_NAME, ExtensionTabTable.ID)

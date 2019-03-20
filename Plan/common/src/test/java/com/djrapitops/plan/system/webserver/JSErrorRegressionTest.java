@@ -23,6 +23,7 @@ import com.djrapitops.plan.db.access.transactions.events.SessionEndTransaction;
 import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.system.webserver.cache.PageId;
@@ -113,7 +114,7 @@ public class JSErrorRegressionTest {
         System.out.println("Testing Player Page via UUID");
         WebDriver driver = seleniumDriver.getDriver();
         driver.get("http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_UUID);
-        assertFalse(driver.getPageSource(), driver.getPageSource().contains("404 "));
+        assertFalse(driver.getPageSource(), driver.getPageSource().contains(ErrorPageLang.NOT_PLAYED_404.getDefault()));
     }
 
     @Test

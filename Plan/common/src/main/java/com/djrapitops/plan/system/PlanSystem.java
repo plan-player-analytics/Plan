@@ -19,6 +19,7 @@ package com.djrapitops.plan.system;
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.extension.ExtensionService;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.system.cache.CacheSystem;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -252,5 +253,9 @@ public class PlanSystem implements SubSystem {
 
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public ExtensionService getExtensionService() {
+        return extensionService;
     }
 }
