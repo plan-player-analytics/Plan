@@ -43,10 +43,10 @@ public class ExtensionTabTable {
     public static final String PLUGIN_ID = "plugin_id";
     public static final String ICON_ID = "icon_id";
 
-    public static final String STATEMENT_SELECT_TAB_ID = SELECT + ID +
+    public static final String STATEMENT_SELECT_TAB_ID = "(" + SELECT + ID +
             FROM + TABLE_NAME +
             WHERE + TAB_NAME + "=?" +
-            AND + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID;
+            AND + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ")";
 
     public static void set3TabValuesToStatement(PreparedStatement statement, int parameterIndex, String tabName, String pluginName, UUID serverUUID) throws SQLException {
         statement.setString(parameterIndex, tabName);
