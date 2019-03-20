@@ -92,7 +92,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
         gatherer.storeExtensionInformation();
         extensionGatherers.put(pluginName, gatherer);
 
-        logger.debug(DebugChannels.DATA_EXTENSIONS, pluginName + " extension registered.");
+        logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, pluginName + " extension disabled in the config.");
     }
 
     private boolean shouldNotAllowRegistration(String pluginName) {
@@ -108,7 +108,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
         }
 
         if (!pluginsConfig.isEnabled(pluginName)) {
-            logger.debug(DebugChannels.DATA_EXTENSIONS, pluginName + " extension disabled in the config.");
+            logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, pluginName + " extension disabled in the config.");
             return true;
         }
         return false; // Should register.
