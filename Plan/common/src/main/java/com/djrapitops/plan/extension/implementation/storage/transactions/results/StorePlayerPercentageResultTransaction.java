@@ -67,9 +67,9 @@ public class StorePlayerPercentageResultTransaction extends Transaction {
 
     private Executable updateValue() {
         String sql = "UPDATE " + TABLE_NAME +
-                " SET (" +
+                " SET " +
                 PERCENTAGE_VALUE + "=?" +
-                ")" + WHERE + USER_UUID + "=?" +
+                WHERE + USER_UUID + "=?" +
                 AND + PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID;
 
         return new ExecStatement(sql) {

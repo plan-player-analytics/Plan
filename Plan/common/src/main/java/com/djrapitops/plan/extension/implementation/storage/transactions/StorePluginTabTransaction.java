@@ -65,11 +65,11 @@ public class StorePluginTabTransaction extends Transaction {
 
     private Executable updateTab() {
         String sql = "UPDATE " + ExtensionTabTable.TABLE_NAME +
-                " SET (" +
+                " SET " +
                 ExtensionTabTable.TAB_PRIORITY + "=?," +
                 ExtensionTabTable.ELEMENT_ORDER + "=?," +
                 ExtensionTabTable.ICON_ID + "=" + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + "," +
-                ")" + WHERE + ExtensionTabTable.PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID +
+                WHERE + ExtensionTabTable.PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID +
                 AND + ExtensionTabTable.TAB_NAME + "=?";
         return new ExecStatement(sql) {
             @Override

@@ -63,8 +63,8 @@ public class ExtensionIconTable {
         return CreateTableParser.create(TABLE_NAME, dbType)
                 .column(ID, INT).primaryKey()
                 .column(ICON_NAME, Sql.varchar(50)).notNull().defaultValue("'question'")
-                .column(FAMILY, Sql.varchar(15)).notNull().defaultValue(Family.SOLID.name())
-                .column(COLOR, Sql.varchar(25)).notNull().defaultValue(Color.NONE.name())
+                .column(FAMILY, Sql.varchar(15)).notNull().defaultValue("'" + Family.SOLID.name() + "'")
+                .column(COLOR, Sql.varchar(25)).notNull().defaultValue("'" + Color.NONE.name() + "'")
                 .build();
     }
 }

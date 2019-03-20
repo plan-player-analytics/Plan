@@ -67,7 +67,7 @@ public class StoreNumberProviderTransaction extends Transaction {
 
     private Executable updateProvider() {
         String sql = "UPDATE " + TABLE_NAME +
-                " SET (" +
+                " SET " +
                 TEXT + "=?," +
                 DESCRIPTION + "=?," +
                 PRIORITY + "=?," +
@@ -75,7 +75,7 @@ public class StoreNumberProviderTransaction extends Transaction {
                 FORMAT_TYPE + "=?," +
                 TAB_ID + "=" + ExtensionTabTable.STATEMENT_SELECT_TAB_ID + "," +
                 ICON_ID + "=" + ExtensionIconTable.STATEMENT_SELECT_ICON_ID +
-                ")" + WHERE + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID +
+                WHERE + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID +
                 AND + PROVIDER_NAME + "=?";
 
         return new ExecStatement(sql) {

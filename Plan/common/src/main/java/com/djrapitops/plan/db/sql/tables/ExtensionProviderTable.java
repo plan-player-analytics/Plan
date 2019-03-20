@@ -41,7 +41,7 @@ public class ExtensionProviderTable {
     public static final String DESCRIPTION = "description"; // Can be null
     public static final String PRIORITY = "priority";
     public static final String GROUPABLE = "groupable"; // default false
-    public static final String CONDITION = "condition"; // Can be null
+    public static final String CONDITION = "condition_name"; // Can be null
     public static final String PLUGIN_ID = "plugin_id";
     public static final String ICON_ID = "icon_id";
     public static final String TAB_ID = "tab_id"; // Can be null

@@ -65,10 +65,10 @@ public class StorePluginTransaction extends Transaction {
 
     private Executable updatePlugin() {
         String sql = "UPDATE " + ExtensionPluginTable.TABLE_NAME +
-                " SET (" +
+                " SET " +
                 ExtensionPluginTable.LAST_UPDATED + "=?," +
                 ExtensionPluginTable.ICON_ID + "=" + ExtensionIconTable.STATEMENT_SELECT_ICON_ID +
-                ")" + WHERE + ExtensionPluginTable.PLUGIN_NAME + "=?" +
+                WHERE + ExtensionPluginTable.PLUGIN_NAME + "=?" +
                 AND + ExtensionPluginTable.SERVER_UUID + "=?";
         return new ExecStatement(sql) {
             @Override

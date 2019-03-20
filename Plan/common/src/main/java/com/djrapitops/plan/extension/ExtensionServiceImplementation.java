@@ -20,6 +20,7 @@ import com.djrapitops.plan.data.plugin.PluginsConfigSection;
 import com.djrapitops.plan.extension.implementation.DataProviderExtractor;
 import com.djrapitops.plan.extension.implementation.ExtensionRegister;
 import com.djrapitops.plan.extension.implementation.providers.gathering.ProviderValueGatherer;
+import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -91,7 +92,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
         gatherer.storeExtensionInformation();
         extensionGatherers.put(pluginName, gatherer);
 
-        logger.debug(pluginName + " extension registered.");
+        logger.debug(DebugChannels.DATA_EXTENSIONS, pluginName + " extension registered.");
     }
 
     private boolean shouldNotAllowRegistration(String pluginName) {
@@ -107,7 +108,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
         }
 
         if (!pluginsConfig.isEnabled(pluginName)) {
-            logger.debug(pluginName + " extension disabled in the config.");
+            logger.debug(DebugChannels.DATA_EXTENSIONS, pluginName + " extension disabled in the config.");
             return true;
         }
         return false; // Should register.
