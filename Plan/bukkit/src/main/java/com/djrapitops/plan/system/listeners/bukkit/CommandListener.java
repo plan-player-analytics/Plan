@@ -100,7 +100,7 @@ public class CommandListener implements Listener {
             try {
                 command = plugin.getServer().getCommandMap().getCommand(commandName);
             } catch (NoSuchMethodError ignored) {
-                /* Ignored, Bukkit 1.8 has no such method */
+                /* Ignored, Bukkit 1.8 has no such method. This method is from Paper */
             }
         }
         return command;

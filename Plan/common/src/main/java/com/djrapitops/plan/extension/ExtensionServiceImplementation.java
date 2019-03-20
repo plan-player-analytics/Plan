@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension;
 
 import com.djrapitops.plan.extension.implementation.DataProviderExtractor;
+import com.djrapitops.plan.extension.implementation.ExtensionRegister;
 import com.djrapitops.plan.extension.implementation.providers.gathering.ProviderValueGatherer;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -40,6 +41,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
 
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
+    private final ExtensionRegister extensionRegister;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
 
@@ -49,17 +51,23 @@ public class ExtensionServiceImplementation implements ExtensionService {
     public ExtensionServiceImplementation(
             DBSystem dbSystem,
             ServerInfo serverInfo,
+            ExtensionRegister extensionRegister,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
+        this.extensionRegister = extensionRegister;
         this.logger = logger;
         this.errorHandler = errorHandler;
 
         extensionGatherers = new HashMap<>();
 
         ExtensionService.ExtensionServiceHolder.set(this);
+    }
+
+    public void enable() {
+        extensionRegister.registerBuiltInExtensions();
     }
 
     @Override
