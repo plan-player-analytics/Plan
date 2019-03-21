@@ -23,7 +23,7 @@ import com.djrapitops.plan.db.sql.tables.ExtensionIconTable;
 import com.djrapitops.plan.db.sql.tables.ExtensionPluginTable;
 import com.djrapitops.plan.db.sql.tables.ExtensionTabTable;
 import com.djrapitops.plan.extension.ElementOrder;
-import com.djrapitops.plan.extension.implementation.PluginTab;
+import com.djrapitops.plan.extension.implementation.TabInformation;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -33,20 +33,20 @@ import static com.djrapitops.plan.db.sql.parsing.Sql.AND;
 import static com.djrapitops.plan.db.sql.parsing.Sql.WHERE;
 
 /**
- * Transaction for storing {@link com.djrapitops.plan.extension.implementation.PluginTab}s.
+ * Transaction for storing {@link TabInformation}s.
  *
  * @author Rsl1122
  */
-public class StorePluginTabTransaction extends Transaction {
+public class StoreTabInformationTransaction extends Transaction {
 
     private final String pluginName;
     private final UUID serverUUID;
-    private final PluginTab pluginTab;
+    private final TabInformation tabInformation;
 
-    public StorePluginTabTransaction(String pluginName, UUID serverUUID, PluginTab pluginTab) {
+    public StoreTabInformationTransaction(String pluginName, UUID serverUUID, TabInformation tabInformation) {
         this.pluginName = pluginName;
         this.serverUUID = serverUUID;
-        this.pluginTab = pluginTab;
+        this.tabInformation = tabInformation;
     }
 
     @Override
@@ -74,11 +74,11 @@ public class StorePluginTabTransaction extends Transaction {
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setInt(1, pluginTab.getTabPriority());
-                statement.setString(2, pluginTab.getTabElementOrder().map(ElementOrder::serialize).orElse(null));
-                ExtensionIconTable.set3IconValuesToStatement(statement, 3, pluginTab.getTabIcon());
+                statement.setInt(1, tabInformation.getTabPriority());
+                statement.setString(2, tabInformation.getTabElementOrder().map(ElementOrder::serialize).orElse(null));
+                ExtensionIconTable.set3IconValuesToStatement(statement, 3, tabInformation.getTabIcon());
                 ExtensionPluginTable.set2PluginValuesToStatement(statement, 6, pluginName, serverUUID);
-                statement.setString(8, pluginTab.getTabName());
+                statement.setString(8, tabInformation.getTabName());
             }
         };
     }
@@ -94,10 +94,10 @@ public class StorePluginTabTransaction extends Transaction {
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, pluginTab.getTabName());
-                statement.setString(2, pluginTab.getTabElementOrder().map(ElementOrder::serialize).orElse(null));
-                statement.setInt(3, pluginTab.getTabPriority());
-                ExtensionIconTable.set3IconValuesToStatement(statement, 4, pluginTab.getTabIcon());
+                statement.setString(1, tabInformation.getTabName());
+                statement.setString(2, tabInformation.getTabElementOrder().map(ElementOrder::serialize).orElse(null));
+                statement.setInt(3, tabInformation.getTabPriority());
+                ExtensionIconTable.set3IconValuesToStatement(statement, 4, tabInformation.getTabIcon());
                 ExtensionPluginTable.set2PluginValuesToStatement(statement, 7, pluginName, serverUUID);
             }
         };

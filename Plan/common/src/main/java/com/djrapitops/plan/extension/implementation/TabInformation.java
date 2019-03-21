@@ -32,14 +32,14 @@ import java.util.Optional;
  *
  * @author Rsl1122
  */
-public class PluginTab {
+public class TabInformation {
 
     private final String tabName;
     private final Icon icon; // can be null
     private ElementOrder[] elementOrder; // can be null / miss values
     private int tabPriority;
 
-    public PluginTab(String tabName, Icon icon, ElementOrder[] elementOrder, int tabPriority) {
+    public TabInformation(String tabName, Icon icon, ElementOrder[] elementOrder, int tabPriority) {
         this.tabName = tabName;
         this.icon = icon;
         this.elementOrder = elementOrder;

@@ -69,7 +69,7 @@ public class DataProviderExtractor {
         return new Icon(pluginInfo.iconFamily(), pluginInfo.iconName(), pluginInfo.color());
     }
 
-    public Collection<PluginTab> getPluginTabs() {
+    public Collection<TabInformation> getPluginTabs() {
         Map<String, TabInfo> tabInformation = extensionExtractor.getTabInformation()
                 .stream().collect(Collectors.toMap(TabInfo::tab, Function.identity(), (one, two) -> one));
 
@@ -81,7 +81,7 @@ public class DataProviderExtractor {
                 .distinct()
                 .map(tabName -> {
                     Optional<TabInfo> tabInfo = Optional.ofNullable(tabInformation.get(tabName));
-                    return new PluginTab(
+                    return new TabInformation(
                             tabName,
                             tabInfo.map(info -> new Icon(info.iconFamily(), info.iconName(), Color.NONE)).orElse(null),
                             tabInfo.map(TabInfo::elementOrder).orElse(null),

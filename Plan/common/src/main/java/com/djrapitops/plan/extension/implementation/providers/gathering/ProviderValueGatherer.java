@@ -20,10 +20,10 @@ import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.DataProviderExtractor;
-import com.djrapitops.plan.extension.implementation.PluginTab;
+import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
-import com.djrapitops.plan.extension.implementation.storage.transactions.StorePluginTabTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StorePluginTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.StoreTabInformationTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveInvalidResultsTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -69,9 +69,9 @@ public class ProviderValueGatherer {
         Database database = dbSystem.getDatabase();
         database.executeTransaction(new StoreIconTransaction(pluginIcon));
         database.executeTransaction(new StorePluginTransaction(pluginName, time, serverUUID, pluginIcon));
-        for (PluginTab tab : extractor.getPluginTabs()) {
+        for (TabInformation tab : extractor.getPluginTabs()) {
             database.executeTransaction(new StoreIconTransaction(tab.getTabIcon()));
-            database.executeTransaction(new StorePluginTabTransaction(pluginName, serverUUID, tab));
+            database.executeTransaction(new StoreTabInformationTransaction(pluginName, serverUUID, tab));
         }
 
         database.executeTransaction(new RemoveInvalidResultsTransaction(pluginName, serverUUID, extractor.getInvalidatedMethods()));

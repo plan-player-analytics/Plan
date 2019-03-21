@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension.implementation;
 
 import com.djrapitops.plan.extension.icon.Icon;
+import com.djrapitops.plan.extension.implementation.results.player.ExtensionDescriptive;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
@@ -26,52 +27,23 @@ import java.util.Optional;
  *
  * @author Rsl1122
  */
-public class ProviderInformation {
+public class ProviderInformation extends ExtensionDescriptive {
 
     private final String pluginName;
-    private final String name;
-    private final String text;
-    private final String description; // can be null
-    private final Icon icon;
-    private final int priority;
     private final String tab; // can be null
     private final String condition; // can be null
 
     public ProviderInformation(
             String pluginName, String name, String text, String description, Icon icon, int priority, String tab, String condition
     ) {
+        super(name, text, description, icon, priority);
         this.pluginName = pluginName;
-        this.name = name;
-        this.text = text;
-        this.description = description;
-        this.icon = icon;
-        this.priority = priority;
         this.tab = tab;
         this.condition = condition;
     }
 
     public String getPluginName() {
         return StringUtils.truncate(pluginName, 50);
-    }
-
-    public String getName() {
-        return StringUtils.truncate(name, 50);
-    }
-
-    public String getText() {
-        return StringUtils.truncate(text, 50);
-    }
-
-    public Optional<String> getDescription() {
-        return description == null || description.isEmpty() ? Optional.empty() : Optional.of(StringUtils.truncate(description, 150));
-    }
-
-    public Icon getIcon() {
-        return icon;
-    }
-
-    public int getPriority() {
-        return priority;
     }
 
     public Optional<String> getTab() {
