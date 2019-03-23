@@ -83,9 +83,9 @@ class DoubleAndPercentageProviderValueGatherer {
             database.executeTransaction(new StoreDoubleProviderTransaction(doubleProvider, serverUUID));
 
             if (doubleProvider instanceof PercentageDataProvider) {
-                database.executeTransaction(new StorePlayerDoubleResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result));
-            } else {
                 database.executeTransaction(new StorePlayerPercentageResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result));
+            } else {
+                database.executeTransaction(new StorePlayerDoubleResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result));
             }
         }
     }
