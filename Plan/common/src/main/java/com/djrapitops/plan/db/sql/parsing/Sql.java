@@ -29,6 +29,7 @@ public class Sql {
     public static final String GROUP_BY = " GROUP BY ";
     public static final String ORDER_BY = " ORDER BY ";
     public static final String INNER_JOIN = " INNER JOIN ";
+    public static final String LEFT_JOIN = " LEFT JOIN ";
     public static final String AND = " AND ";
 
     private Sql() {

@@ -29,8 +29,8 @@ import static org.junit.Assert.assertTrue;
 public class OptionalAssert {
 
     public static <T> void equals(T expected, Optional<T> result) {
-        assertTrue(result.isPresent());
-        assertEquals(expected, result.get());
+        assertTrue("No result present, expected: " + expected, result.isPresent());
+        assertEquals("Wrong result, expected: " + expected + ", got: " + result.get(), expected, result.get());
     }
 
 }

@@ -16,18 +16,39 @@
  */
 package com.djrapitops.plan.extension.implementation.results.player;
 
+import com.djrapitops.plan.extension.icon.Icon;
+
 /**
- * Represents a data-point given by a Provider method of a DataExtension.
+ * Information about a DataExtension stored in the database.
  *
  * @author Rsl1122
  */
-public interface ExtensionData {
+public class ExtensionInformation {
 
-    /**
-     * Get Descriptive information about the data point.
-     *
-     * @return a {@link ExtensionDescriptive}.
-     */
-    ExtensionDescriptive getDescriptive();
+    private final int id;
+    private final String pluginName;
+    private final Icon icon;
 
+    public ExtensionInformation(int id, String pluginName, Icon icon) {
+        this.id = id;
+        this.pluginName = pluginName;
+        this.icon = icon;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getPluginName() {
+        return pluginName;
+    }
+
+    public Icon getIcon() {
+        return icon;
+    }
+
+    @Override
+    public String toString() {
+        return '{' + "id=" + id + ", pluginName='" + pluginName + '\'' + '}';
+    }
 }

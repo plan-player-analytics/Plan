@@ -30,7 +30,6 @@ import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.access.Executable;
-import com.djrapitops.plan.db.access.HasMoreThanZeroQueryStatement;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.queries.*;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
@@ -45,10 +44,14 @@ import com.djrapitops.plan.db.access.transactions.init.CleanTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.db.patches.Patch;
-import com.djrapitops.plan.db.sql.tables.ExtensionPlayerValueTable;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.extension.annotation.*;
+import com.djrapitops.plan.extension.implementation.results.player.ExtensionBooleanData;
+import com.djrapitops.plan.extension.implementation.results.player.ExtensionPlayerData;
+import com.djrapitops.plan.extension.implementation.results.player.ExtensionStringData;
+import com.djrapitops.plan.extension.implementation.results.player.ExtensionTabData;
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
@@ -75,8 +78,6 @@ import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.security.NoSuchAlgorithmException;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -1033,13 +1034,21 @@ public abstract class CommonDBTest {
         extensionService.register(new TestExtension());
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME);
 
-        assertTrue(db.query(new HasMoreThanZeroQueryStatement("SELECT COUNT(1) as c FROM " + ExtensionPlayerValueTable.TABLE_NAME +
-                " WHERE " + ExtensionPlayerValueTable.USER_UUID + "=?") {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, playerUUID.toString());
-            }
-        }));
+        Map<UUID, List<ExtensionPlayerData>> playerDataByServerUUID = db.query(new ExtensionPlayerDataQuery(playerUUID));
+        List<ExtensionPlayerData> ofServer = playerDataByServerUUID.get(serverUUID);
+        assertNotNull(ofServer);
+        assertFalse(ofServer.isEmpty());
+
+        ExtensionPlayerData extensionPlayerData = ofServer.get(0);
+        List<ExtensionTabData> tabs = extensionPlayerData.getTabs();
+        assertEquals(1, tabs.size()); // No tab defined, should contain 1 tab
+        ExtensionTabData tabData = tabs.get(0);
+
+        OptionalAssert.equals("5", tabData.getNumber("value").map(data -> data.getFormattedValue(Object::toString)));
+        OptionalAssert.equals("No", tabData.getBoolean("boolVal").map(ExtensionBooleanData::getFormattedValue));
+        OptionalAssert.equals("0.5", tabData.getDouble("doubleVal").map(data -> data.getFormattedValue(Object::toString)));
+        OptionalAssert.equals("0.5", tabData.getPercentage("percentageVal").map(data -> data.getFormattedValue(Object::toString)));
+        OptionalAssert.equals("Something", tabData.getString("stringVal").map(ExtensionStringData::getFormattedValue));
     }
 
     @PluginInfo(name = "TestExtension")
@@ -1066,7 +1075,7 @@ public abstract class CommonDBTest {
 
         @StringProvider(text = "a string")
         public String stringVal(UUID playerUUID) {
-            return "";
+            return "Something";
         }
     }
 }

@@ -50,8 +50,12 @@ public class TabInformation {
         return StringUtils.truncate(tabName, 50);
     }
 
+    public static Icon defaultIcon() {
+        return new Icon(Family.SOLID, "circle", Color.NONE);
+    }
+
     public Icon getTabIcon() {
-        return icon != null ? icon : new Icon(Family.SOLID, "circle", Color.NONE);
+        return icon != null ? icon : defaultIcon();
     }
 
     public int getTabPriority() {

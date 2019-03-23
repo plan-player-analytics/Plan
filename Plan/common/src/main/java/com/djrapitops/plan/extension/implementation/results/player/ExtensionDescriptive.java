@@ -64,6 +64,6 @@ public class ExtensionDescriptive implements Comparable<ExtensionDescriptive> {
 
     @Override
     public int compareTo(ExtensionDescriptive other) {
-        Integer.compare(other.priority, this.priority); // Higher is first
+        return Integer.compare(other.priority, this.priority); // Higher is first
     }
 }

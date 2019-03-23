@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.extension.implementation.results.player;
 
-import com.djrapitops.plan.extension.icon.Icon;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,28 +27,44 @@ import java.util.List;
  */
 public class ExtensionPlayerData {
 
-    private String pluginName;
-    private Icon pluginIcon;
+    private final int pluginID;
+
+    private ExtensionInformation extensionInformation;
 
     private List<ExtensionTabData> tabs;
 
-    public ExtensionPlayerData(String pluginName, Icon pluginIcon) {
-        this.pluginName = pluginName;
-        this.pluginIcon = pluginIcon;
+    private ExtensionPlayerData(int pluginID) {
+        this.pluginID = pluginID;
 
         tabs = new ArrayList<>();
+    }
+
+    public int getPluginID() {
+        return pluginID;
+    }
+
+    public ExtensionInformation getExtensionInformation() {
+        return extensionInformation;
     }
 
     public List<ExtensionTabData> getTabs() {
         return tabs;
     }
 
-    public class Factory {
+    public static class Factory {
 
         private final ExtensionPlayerData data;
 
-        public Factory() {
-            data = new ExtensionPlayerData(pluginName, pluginIcon);
+        public Factory(int pluginId) {
+            data = new ExtensionPlayerData(pluginId);
+        }
+
+        public Factory setInformation(ExtensionInformation information) {
+            if (information.getId() != data.pluginID) {
+                throw new IllegalArgumentException("ID mismatch, wanted id: " + data.pluginID + " but got " + information);
+            }
+            data.extensionInformation = information;
+            return this;
         }
 
         public Factory addTab(ExtensionTabData tab) {

@@ -93,11 +93,11 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         return Integer.compare(this.tabInformation.getTabPriority(), other.tabInformation.getTabPriority()); // Lower is first
     }
 
-    public class Factory {
+    public static class Factory {
 
         private final ExtensionTabData data;
 
-        Factory(TabInformation tabInformation) {
+        public Factory(TabInformation tabInformation) {
             data = new ExtensionTabData(tabInformation);
         }
 
