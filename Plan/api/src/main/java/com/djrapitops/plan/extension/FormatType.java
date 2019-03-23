@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.extension;
 
+import java.util.Optional;
+
 /**
  * Enum for determining additional formatter for a value given by a {@link com.djrapitops.plan.extension.annotation.NumberProvider}.
  *
@@ -38,6 +40,12 @@ public enum FormatType {
     /**
      * Applies no formatting to the value.
      */
-    NONE
+    NONE;
 
-}
+    public static Optional<FormatType> getByName(String name) {
+        try {
+            return Optional.of(valueOf(name));
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
+    }}

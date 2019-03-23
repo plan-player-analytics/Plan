@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.extension.icon;
 
+import java.util.Optional;
+
 /**
  * Enum to determine font-awesome icon family.
  *
@@ -24,5 +26,13 @@ package com.djrapitops.plan.extension.icon;
 public enum Family {
     SOLID,
     REGULAR,
-    BRAND
+    BRAND;
+
+    public static Optional<Family> getByName(String name) {
+        try {
+            return Optional.of(valueOf(name));
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
+    }
 }

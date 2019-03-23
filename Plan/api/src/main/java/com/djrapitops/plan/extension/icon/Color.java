@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.extension.icon;
 
+import java.util.Optional;
+
 /**
  * Enum to determine what color to use for some element.
  *
@@ -43,6 +45,12 @@ public enum Color {
     GREY,
     BLUE_GREY,
     BLACK,
-    NONE
+    NONE;
 
-}
+    public static Optional<Color> getByName(String name) {
+        try {
+            return Optional.of(valueOf(name));
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
+    }}
