@@ -41,4 +41,14 @@ public @interface Conditional {
      */
     String value();
 
+    /**
+     * Reverse the condition.
+     * <p>
+     * Example:
+     * - Method with {@code Conditional("expires", negated = true)} will only be called when the condition "expires" is false.
+     *
+     * @return {@code false} by default.
+     */
+    boolean negated() default false;
+
 }
