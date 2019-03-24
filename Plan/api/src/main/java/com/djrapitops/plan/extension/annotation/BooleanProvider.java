@@ -80,6 +80,13 @@ public @interface BooleanProvider {
     String conditionName() default "";
 
     /**
+     * Should the result of this method be hidden from the user.
+     *
+     * @return true if the value should not be displayed on the page.
+     */
+    boolean hidden() default false;
+
+    /**
      * Name of Font Awesome icon.
      * <p>
      * See https://fontawesome.com/icons?d=gallery&m=free for icons and their {@link Family}.

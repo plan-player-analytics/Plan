@@ -181,6 +181,10 @@ public final class ExtensionExtractor {
             if (annotation.conditionName().equals(condition)) {
                 warnings.add(extensionName + "." + method.getName() + " can not be conditional of itself. required condition: " + condition + ", provided condition: " + annotation.conditionName());
             }
+
+            if (annotation.conditionName().isEmpty() && annotation.hidden()) {
+                throw new IllegalArgumentException(extensionName + "." + method.getName() + " can not be 'hidden' without a 'conditionName'");
+            }
         }
     }
 
