@@ -18,6 +18,7 @@ package com.djrapitops.plan.extension.implementation;
 
 import com.djrapitops.extension.AdvancedAchievementsExtensionFactory;
 import com.djrapitops.extension.AdvancedBanExtensionFactory;
+import com.djrapitops.extension.BanManagerExtensionFactory;
 import com.djrapitops.plan.extension.ExtensionService;
 
 import javax.inject.Inject;
@@ -43,6 +44,7 @@ public class ExtensionRegister {
 
         new AdvancedAchievementsExtensionFactory().createExtension().ifPresent(extensionService::register);
         new AdvancedBanExtensionFactory().createExtension().ifPresent(extensionService::register);
+        new BanManagerExtensionFactory().createExtension().ifPresent(extensionService::register);
     }
 
 }
