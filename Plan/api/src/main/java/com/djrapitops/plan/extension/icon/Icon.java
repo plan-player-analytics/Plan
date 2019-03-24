@@ -68,6 +68,11 @@ public class Icon {
         this.color = color;
     }
 
+    @Override
+    public String toString() {
+        return "Icon{" + type.name() + ", '" + name + '\'' + ", " + color.name() + '}';
+    }
+
     public static class Builder {
 
         private final Icon icon;

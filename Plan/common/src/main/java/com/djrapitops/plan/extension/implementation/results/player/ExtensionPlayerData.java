@@ -25,7 +25,7 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public class ExtensionPlayerData {
+public class ExtensionPlayerData implements Comparable<ExtensionPlayerData> {
 
     private final int pluginID;
 
@@ -47,8 +47,17 @@ public class ExtensionPlayerData {
         return extensionInformation;
     }
 
+    public boolean hasOnlyGenericTab() {
+        return tabs.size() == 1 && tabs.get(0).getTabInformation().getTabName().isEmpty();
+    }
+
     public List<ExtensionTabData> getTabs() {
         return tabs;
+    }
+
+    @Override
+    public int compareTo(ExtensionPlayerData o) {
+        return String.CASE_INSENSITIVE_ORDER.compare(this.extensionInformation.getPluginName(), o.extensionInformation.getPluginName());
     }
 
     public static class Factory {

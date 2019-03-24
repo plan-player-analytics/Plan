@@ -105,9 +105,9 @@ public class ExtensionPlayerDataQuery implements Query<Map<UUID, List<ExtensionP
                 "t1." + ExtensionTabTable.TAB_NAME + " as tab_name," +
                 "t1." + ExtensionTabTable.TAB_PRIORITY + " as tab_priority," +
                 "t1." + ExtensionTabTable.ELEMENT_ORDER + " as element_order," +
-                "i1." + ExtensionIconTable.ICON_NAME + " as plugin_icon_name," +
-                "i1." + ExtensionIconTable.FAMILY + " as plugin_icon_family," +
-                "i1." + ExtensionIconTable.COLOR + " as plugin_icon_color," +
+                "i1." + ExtensionIconTable.ICON_NAME + " as provider_icon_name," +
+                "i1." + ExtensionIconTable.FAMILY + " as provider_icon_family," +
+                "i1." + ExtensionIconTable.COLOR + " as provider_icon_color," +
                 "i2." + ExtensionIconTable.ICON_NAME + " as tab_icon_name," +
                 "i2." + ExtensionIconTable.FAMILY + " as tab_icon_family," +
                 "i2." + ExtensionIconTable.COLOR + " as tab_icon_color" +
@@ -204,9 +204,9 @@ public class ExtensionPlayerDataQuery implements Query<Map<UUID, List<ExtensionP
         String description = set.getString(ExtensionProviderTable.DESCRIPTION);
         int priority = set.getInt("provider_priority");
 
-        String iconName = set.getString("plugin_icon_name");
-        Family family = Family.getByName("plugin_icon_family").orElse(Family.SOLID);
-        Color color = Color.getByName("plugin_icon_color").orElse(Color.NONE);
+        String iconName = set.getString("provider_icon_name");
+        Family family = Family.getByName(set.getString("provider_icon_family")).orElse(Family.SOLID);
+        Color color = Color.getByName(set.getString("provider_icon_color")).orElse(Color.NONE);
         Icon icon = new Icon(family, iconName, color);
 
         return new ExtensionDescriptive(name, text, description, icon, priority);

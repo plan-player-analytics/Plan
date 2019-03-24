@@ -21,10 +21,7 @@ import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.pages.parts.InspectPagePluginsContent;
 import org.apache.commons.text.StringSubstitutor;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Rsl1122
@@ -42,11 +39,12 @@ public class InspectPageResponse extends PageResponse {
     @Override
     public String getContent() {
         Map<String, String> replaceMap = new HashMap<>();
-        InspectPagePluginsContent pluginsTab = (InspectPagePluginsContent)
-                ResponseCache.loadResponse(PageId.PLAYER_PLUGINS_TAB.of(uuid));
-        String[] inspectPagePluginsTab = pluginsTab != null ? pluginsTab.getContents() : getCalculating();
-        replaceMap.put("navPluginsTabs", inspectPagePluginsTab[0]);
-        replaceMap.put("pluginsTabs", inspectPagePluginsTab[1]);
+        // PluginData compatibility
+        Optional<String[]> pluginsTab = Optional.ofNullable((InspectPagePluginsContent) ResponseCache.loadResponse(PageId.PLAYER_PLUGINS_TAB.of(uuid)))
+                .map(InspectPagePluginsContent::getContents);
+
+        replaceMap.put("navPluginsTabs", pluginsTab.map(nav -> nav[0]).orElse(""));
+        replaceMap.put("pluginsTabs", pluginsTab.map(tab -> tab[1]).orElse(""));
 
         return StringSubstitutor.replace(super.getContent(), replaceMap);
     }

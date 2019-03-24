@@ -50,6 +50,10 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         stringData = new HashMap<>();
     }
 
+    public TabInformation getTabInformation() {
+        return tabInformation;
+    }
+
     public List<String> getValueOrder() {
         return order;
     }

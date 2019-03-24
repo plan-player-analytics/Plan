@@ -29,6 +29,14 @@ public class Icon {
         color = Color.NONE;
     }
 
+    public static Icon fromExtensionIcon(com.djrapitops.plan.extension.icon.Icon icon) {
+        return new Icon(
+                Family.getByName(icon.getFamily().name()).orElse(Family.SOLID),
+                icon.getName(),
+                Color.getByName(icon.getColor().name()).orElse(Color.NONE)
+        );
+    }
+
     public Icon(Family type, String name, Color color) {
         this.type = type;
         this.name = name;

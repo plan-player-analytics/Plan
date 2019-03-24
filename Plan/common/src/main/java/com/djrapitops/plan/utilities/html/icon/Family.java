@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.utilities.html.icon;
 
+import java.util.Optional;
+
 public enum Family {
     SOLID(" fa fa-", "\"></i>"),
     REGULAR(" far fa-", "\"></i>"),
@@ -32,5 +34,13 @@ public enum Family {
 
     public String appendAround(String color, String name) {
         return "<i class=\"" + color + middle + name + suffix;
+    }
+
+    public static Optional<Family> getByName(String name) {
+        try {
+            return Optional.of(valueOf(name));
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
     }
 }

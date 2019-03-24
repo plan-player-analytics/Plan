@@ -23,9 +23,12 @@ import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.extension.implementation.results.player.ExtensionPlayerData;
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
@@ -43,8 +46,7 @@ import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Factory for creating different {@link Page} objects.
@@ -130,17 +132,50 @@ public class PageFactory {
         return new AnalysisPage(analysisContainer, connectionSystem.get(), versionCheckSystem.get(), fileSystem.get(), formatters.get().decimals(), timings.get());
     }
 
-    public InspectPage inspectPage(UUID uuid) {
+    public InspectPage inspectPage(UUID playerUUID) {
         Database db = dbSystem.get().getDatabase();
-        PlayerContainer player = db.query(ContainerFetchQueries.fetchPlayerContainer(uuid));
+        PlayerContainer player = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
         Map<UUID, String> serverNames = db.query(ServerQueries.fetchServerNames());
         return new InspectPage(
                 player, serverNames,
                 versionCheckSystem.get(),
-                fileSystem.get(), config.get(), theme.get(),
+                fileSystem.get(), config.get(), this, theme.get(),
                 graphs.get(), tables.get(), accordions.get(), formatters.get(),
                 serverInfo.get(), timings.get()
         );
+    }
+
+    public InspectPluginTab inspectPluginTabs(UUID playerUUID) {
+        Database database = dbSystem.get().getDatabase();
+
+        Map<UUID, List<ExtensionPlayerData>> extensionPlayerData = database.query(new ExtensionPlayerDataQuery(playerUUID));
+
+        if (extensionPlayerData.isEmpty()) {
+            return new InspectPluginTab("No Extensions", Collections.emptyList(), formatters.get());
+        }
+
+        List<InspectPluginTab> inspectPluginTabs = new ArrayList<>();
+        for (Map.Entry<UUID, Server> entry : database.query(ServerQueries.fetchPlanServerInformation()).entrySet()) {
+            UUID serverUUID = entry.getKey();
+            String serverName = entry.getValue().getIdentifiableName();
+
+            List<ExtensionPlayerData> ofServer = extensionPlayerData.get(serverUUID);
+            if (ofServer == null) {
+                continue;
+            }
+
+            inspectPluginTabs.add(new InspectPluginTab(serverName, ofServer, formatters.get()));
+        }
+
+        StringBuilder navs = new StringBuilder();
+        StringBuilder tabs = new StringBuilder();
+
+        inspectPluginTabs.stream().sorted().forEach(tab -> {
+            navs.append(tab.getNav());
+            tabs.append(tab.getTab());
+        });
+
+        return new InspectPluginTab(navs.toString(), tabs.toString());
     }
 
     @Deprecated
