@@ -35,6 +35,7 @@ import java.util.*;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class InspectPagePluginsContent extends PageResponse {
 
     // ServerUUID, {nav, html}

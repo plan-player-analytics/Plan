@@ -32,6 +32,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class GenerateInspectPluginsTabRequest extends InfoRequestWithVariables implements GenerateRequest, WideRequest {
 
     private final InfoSystem infoSystem;

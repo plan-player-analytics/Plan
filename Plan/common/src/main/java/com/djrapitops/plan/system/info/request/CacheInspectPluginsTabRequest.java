@@ -35,6 +35,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables implements CacheRequest {
 
     private final ServerInfo serverInfo;

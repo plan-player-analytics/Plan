@@ -143,6 +143,7 @@ public class PageFactory {
         );
     }
 
+    @Deprecated
     public InspectPagePluginsContent inspectPagePluginsContent(UUID playerUUID) {
         return InspectPagePluginsContent.generateForThisServer(playerUUID, serverInfo.get(), hookHandler.get());
     }
