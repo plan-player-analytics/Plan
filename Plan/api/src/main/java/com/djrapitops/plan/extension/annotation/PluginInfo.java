@@ -67,4 +67,22 @@ public @interface PluginInfo {
      * @return Preferred color. If none are specified defaults are used.
      */
     Color color() default Color.NONE;
+
+    /**
+     * Should Plan call the player data provider methods when the player leaves.
+     * <p>
+     * By default Plan calls the player methods only short time after joining.
+     *
+     * @return {@code false} by default.
+     */
+    boolean updatePlayerDataOnLeave() default false;
+
+    /**
+     * Should Plan call the server data provider methods periodically.
+     * <p>
+     * By default Plan calls the server methods only short time after the extension is registered.
+     *
+     * @return {@code false} by default.
+     */
+    boolean updateServerDataPeriodically() default false;
 }
