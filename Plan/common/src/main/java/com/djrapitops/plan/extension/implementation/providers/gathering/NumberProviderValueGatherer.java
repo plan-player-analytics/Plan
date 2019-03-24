@@ -19,17 +19,18 @@ package com.djrapitops.plan.extension.implementation.providers.gathering;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.FormatType;
+import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProviders;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 import com.djrapitops.plan.extension.implementation.providers.NumberDataProvider;
+import com.djrapitops.plan.extension.implementation.results.player.Conditions;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreNumberProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerNumberResultTransaction;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
@@ -63,10 +64,11 @@ class NumberProviderValueGatherer {
         this.logger = logger;
     }
 
-    void gatherNumberData(UUID playerUUID, String playerName, Set<String> providedConditions) {
+    void gatherNumberData(UUID playerUUID, String playerName, Conditions conditions) {
         for (DataProvider<Long> numberProvider : dataProviders.getPlayerMethodsByType(Long.class)) {
-            Optional<String> condition = numberProvider.getProviderInformation().getCondition();
-            if (condition.isPresent() && !providedConditions.contains(condition.get())) {
+            ProviderInformation providerInformation = numberProvider.getProviderInformation();
+            Optional<String> condition = providerInformation.getCondition();
+            if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
                 continue; // Condition not met
             }
 
@@ -81,7 +83,7 @@ class NumberProviderValueGatherer {
 
             FormatType formatType = NumberDataProvider.getFormatType(numberProvider);
 
-            database.executeTransaction(new StoreIconTransaction(numberProvider.getProviderInformation().getIcon()));
+            database.executeTransaction(new StoreIconTransaction(providerInformation.getIcon()));
             database.executeTransaction(new StoreNumberProviderTransaction(numberProvider, formatType, serverUUID));
             database.executeTransaction(new StorePlayerNumberResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result));
         }

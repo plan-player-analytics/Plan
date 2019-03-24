@@ -18,10 +18,12 @@ package com.djrapitops.plan.extension.implementation.providers.gathering;
 
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.extension.DataExtension;
+import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.BooleanDataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProviders;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
+import com.djrapitops.plan.extension.implementation.results.player.Conditions;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreBooleanProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerBooleanResultTransaction;
@@ -60,8 +62,8 @@ class BooleanProviderValueGatherer {
         this.logger = logger;
     }
 
-    Set<String> gatherBooleanData(UUID playerUUID, String playerName) {
-        Set<String> providedConditions = new HashSet<>();
+    Conditions gatherBooleanData(UUID playerUUID, String playerName) {
+        Conditions conditions = new Conditions();
 
         List<DataProvider<Boolean>> unsatisifiedProviders = new ArrayList<>(dataProviders.getPlayerMethodsByType(Boolean.class));
         Set<DataProvider<Boolean>> satisfied = new HashSet<>();
@@ -71,9 +73,11 @@ class BooleanProviderValueGatherer {
             satisfied.clear();
             // Loop through all unsatisfied providers to see if more conditions are satisfied
             for (DataProvider<Boolean> booleanProvider : unsatisifiedProviders) {
-                Optional<String> condition = booleanProvider.getProviderInformation().getCondition();
-                if (condition.isPresent() && !providedConditions.contains(condition.get())) {
-                    continue; // Condition not met
+                ProviderInformation providerInformation = booleanProvider.getProviderInformation();
+
+                Optional<String> condition = providerInformation.getCondition();
+                if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
+                    continue;
                 }
 
                 Optional<String> providedCondition = BooleanDataProvider.getProvidedCondition(booleanProvider);
@@ -88,12 +92,18 @@ class BooleanProviderValueGatherer {
                     continue;
                 }
 
-                if (result && providedCondition.isPresent()) {
-                    providedConditions.add(providedCondition.get()); // The condition was fulfilled for this player.
+                if (providedCondition.isPresent()) {
+                    if (result) {
+                        // The condition was fulfilled (true) for this player.
+                        conditions.conditionFulfilled(providedCondition.get());
+                    } else {
+                        // The negated condition was fulfilled (false) for this player.
+                        conditions.conditionFulfilled("not_" + providedCondition.get());
+                    }
                 }
 
                 satisfied.add(booleanProvider); // Prevents further attempts to call this provider for this player.
-                database.executeTransaction(new StoreIconTransaction(booleanProvider.getProviderInformation().getIcon()));
+                database.executeTransaction(new StoreIconTransaction(providerInformation.getIcon()));
                 database.executeTransaction(new StoreBooleanProviderTransaction(booleanProvider, providedCondition.orElse(null), serverUUID));
                 database.executeTransaction(new StorePlayerBooleanResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result));
             }
@@ -102,7 +112,7 @@ class BooleanProviderValueGatherer {
             // If no new conditions could be satisfied, stop looping.
         } while (!satisfied.isEmpty());
 
-        return providedConditions;
+        return conditions;
     }
 
     private <T> T getMethodResult(Callable<T> callable, Function<Throwable, String> errorMsg) {

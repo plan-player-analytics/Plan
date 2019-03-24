@@ -67,7 +67,7 @@ public class ExtensionProviderTable {
                 .column(DESCRIPTION, Sql.varchar(150))
                 .column(PRIORITY, INT).notNull().defaultValue("0")
                 .column(GROUPABLE, BOOL).notNull().defaultValue(false)
-                .column(CONDITION, Sql.varchar(50))
+                .column(CONDITION, Sql.varchar(54)) // 50 + 4 for "not_"
                 .column(PROVIDED_CONDITION, Sql.varchar(50))
                 .column(FORMAT_TYPE, Sql.varchar(25))
                 .column(IS_PLAYER_NAME, BOOL).notNull().defaultValue(false)

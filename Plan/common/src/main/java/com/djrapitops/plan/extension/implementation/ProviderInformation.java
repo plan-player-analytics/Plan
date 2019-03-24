@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.implementation;
 
+import com.djrapitops.plan.extension.annotation.Conditional;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.player.ExtensionDescriptive;
 import org.apache.commons.lang3.StringUtils;
@@ -31,10 +32,10 @@ public class ProviderInformation extends ExtensionDescriptive {
 
     private final String pluginName;
     private final String tab; // can be null
-    private final String condition; // can be null
+    private final Conditional condition; // can be null
 
     public ProviderInformation(
-            String pluginName, String name, String text, String description, Icon icon, int priority, String tab, String condition
+            String pluginName, String name, String text, String description, Icon icon, int priority, String tab, Conditional condition
     ) {
         super(name, text, description, icon, priority);
         this.pluginName = pluginName;
@@ -51,6 +52,6 @@ public class ProviderInformation extends ExtensionDescriptive {
     }
 
     public Optional<String> getCondition() {
-        return condition == null || condition.isEmpty() ? Optional.empty() : Optional.of(StringUtils.truncate(condition, 50));
+        return condition == null || condition.value().isEmpty() ? Optional.empty() : Optional.of((condition.negated() ? "not_" : "") + StringUtils.truncate(condition.value(), 50));
     }
 }

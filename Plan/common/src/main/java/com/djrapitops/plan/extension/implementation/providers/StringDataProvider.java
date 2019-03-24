@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.implementation.providers;
 
+import com.djrapitops.plan.extension.annotation.Conditional;
 import com.djrapitops.plan.extension.annotation.StringProvider;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
@@ -40,7 +41,7 @@ public class StringDataProvider extends DataProvider<String> {
 
     public static void placeToDataProviders(
             DataProviders dataProviders, Method method, StringProvider annotation,
-            String condition, String tab, String pluginName
+            Conditional condition, String tab, String pluginName
     ) {
         MethodWrapper<String> methodWrapper = new MethodWrapper<>(method, String.class);
         Icon providerIcon = new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor());

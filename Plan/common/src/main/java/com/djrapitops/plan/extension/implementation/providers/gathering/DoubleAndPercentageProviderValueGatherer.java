@@ -18,10 +18,12 @@ package com.djrapitops.plan.extension.implementation.providers.gathering;
 
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.extension.DataExtension;
+import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProviders;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 import com.djrapitops.plan.extension.implementation.providers.PercentageDataProvider;
+import com.djrapitops.plan.extension.implementation.results.player.Conditions;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreDoubleProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerDoubleResultTransaction;
@@ -29,7 +31,6 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.results
 import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
@@ -63,10 +64,11 @@ class DoubleAndPercentageProviderValueGatherer {
         this.logger = logger;
     }
 
-    void gatherDoubleData(UUID playerUUID, String playerName, Set<String> providedConditions) {
+    void gatherDoubleData(UUID playerUUID, String playerName, Conditions conditions) {
         for (DataProvider<Double> doubleProvider : dataProviders.getPlayerMethodsByType(Double.class)) {
-            Optional<String> condition = doubleProvider.getProviderInformation().getCondition();
-            if (condition.isPresent() && !providedConditions.contains(condition.get())) {
+            ProviderInformation providerInformation = doubleProvider.getProviderInformation();
+            Optional<String> condition = providerInformation.getCondition();
+            if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
                 continue; // Condition not met
             }
 
@@ -79,7 +81,7 @@ class DoubleAndPercentageProviderValueGatherer {
                 continue;
             }
 
-            database.executeTransaction(new StoreIconTransaction(doubleProvider.getProviderInformation().getIcon()));
+            database.executeTransaction(new StoreIconTransaction(providerInformation.getIcon()));
             database.executeTransaction(new StoreDoubleProviderTransaction(doubleProvider, serverUUID));
 
             if (doubleProvider instanceof PercentageDataProvider) {

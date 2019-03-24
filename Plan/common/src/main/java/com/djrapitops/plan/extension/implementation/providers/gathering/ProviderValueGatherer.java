@@ -21,6 +21,7 @@ import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.DataProviderExtractor;
 import com.djrapitops.plan.extension.implementation.TabInformation;
+import com.djrapitops.plan.extension.implementation.results.player.Conditions;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StorePluginTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreTabInformationTransaction;
@@ -29,7 +30,6 @@ import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -79,11 +79,11 @@ public class ProviderValueGatherer {
     }
 
     public void updateValues(UUID playerUUID, String playerName) {
-        Set<String> providedConditions = gatherBooleanData(playerUUID, playerName);
-        gatherValueData(playerUUID, playerName, providedConditions);
+        Conditions conditions = gatherBooleanData(playerUUID, playerName);
+        gatherValueData(playerUUID, playerName, conditions);
     }
 
-    private Set<String> gatherBooleanData(UUID playerUUID, String playerName) {
+    private Conditions gatherBooleanData(UUID playerUUID, String playerName) {
         return new BooleanProviderValueGatherer(
                 extractor.getPluginName(), extension,
                 serverInfo.getServerUUID(), dbSystem.getDatabase(),
@@ -91,21 +91,21 @@ public class ProviderValueGatherer {
         ).gatherBooleanData(playerUUID, playerName);
     }
 
-    private void gatherValueData(UUID playerUUID, String playerName, Set<String> providedConditions) {
+    private void gatherValueData(UUID playerUUID, String playerName, Conditions conditions) {
         new NumberProviderValueGatherer(
                 extractor.getPluginName(), extension,
                 serverInfo.getServerUUID(), dbSystem.getDatabase(),
                 extractor.getDataProviders(), logger
-        ).gatherNumberData(playerUUID, playerName, providedConditions);
+        ).gatherNumberData(playerUUID, playerName, conditions);
         new DoubleAndPercentageProviderValueGatherer(
                 extractor.getPluginName(), extension,
                 serverInfo.getServerUUID(), dbSystem.getDatabase(),
                 extractor.getDataProviders(), logger
-        ).gatherDoubleData(playerUUID, playerName, providedConditions);
+        ).gatherDoubleData(playerUUID, playerName, conditions);
         new StringProviderValueGatherer(
                 extractor.getPluginName(), extension,
                 serverInfo.getServerUUID(), dbSystem.getDatabase(),
                 extractor.getDataProviders(), logger
-        ).gatherStringData(playerUUID, playerName, providedConditions);
+        ).gatherStringData(playerUUID, playerName, conditions);
     }
 }

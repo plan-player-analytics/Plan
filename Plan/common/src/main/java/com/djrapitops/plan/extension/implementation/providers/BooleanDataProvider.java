@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension.implementation.providers;
 
 import com.djrapitops.plan.extension.annotation.BooleanProvider;
+import com.djrapitops.plan.extension.annotation.Conditional;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import org.apache.commons.lang3.StringUtils;
@@ -43,7 +44,7 @@ public class BooleanDataProvider extends DataProvider<Boolean> {
 
     public static void placeToDataProviders(
             DataProviders dataProviders, Method method, BooleanProvider annotation,
-            String condition, String tab, String pluginName
+            Conditional condition, String tab, String pluginName
     ) {
         MethodWrapper<Boolean> methodWrapper = new MethodWrapper<>(method, Boolean.class);
         Icon providerIcon = new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor());

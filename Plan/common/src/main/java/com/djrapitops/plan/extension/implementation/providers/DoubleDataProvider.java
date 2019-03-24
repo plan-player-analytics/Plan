@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.implementation.providers;
 
+import com.djrapitops.plan.extension.annotation.Conditional;
 import com.djrapitops.plan.extension.annotation.DoubleProvider;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
@@ -37,7 +38,7 @@ public class DoubleDataProvider extends DataProvider<Double> {
 
     public static void placeToDataProviders(
             DataProviders dataProviders, Method method, DoubleProvider annotation,
-            String condition, String tab, String pluginName
+            Conditional condition, String tab, String pluginName
     ) {
         MethodWrapper<Double> methodWrapper = new MethodWrapper<>(method, Double.class);
         Icon providerIcon = new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor());

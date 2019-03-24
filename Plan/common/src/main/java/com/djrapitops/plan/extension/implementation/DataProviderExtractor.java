@@ -138,7 +138,7 @@ public class DataProviderExtractor {
 
             factory.placeToDataProviders(
                     dataProviders, method, annotation,
-                    conditional.map(Conditional::value).orElse(null),
+                    conditional.orElse(null),
                     tab.map(Tab::value).orElse(null),
                     pluginInfo.name()
             );
@@ -157,7 +157,7 @@ public class DataProviderExtractor {
     interface DataProviderFactory<T extends Annotation> {
         void placeToDataProviders(
                 DataProviders dataProviders,
-                Method method, T annotation, String condition, String tab, String pluginName
+                Method method, T annotation, Conditional condition, String tab, String pluginName
         );
     }
 }
