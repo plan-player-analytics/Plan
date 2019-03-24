@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension.implementation;
 
 import com.djrapitops.extension.AdvancedAchievementsExtensionFactory;
+import com.djrapitops.extension.AdvancedBanExtensionFactory;
 import com.djrapitops.plan.extension.ExtensionService;
 
 import javax.inject.Inject;
@@ -37,10 +38,11 @@ public class ExtensionRegister {
 
     public void registerBuiltInExtensions() {
         // No need to catch exceptions here,
-        // this method will not be called unless Plan has enabled properly
+        // registerBuiltInExtensions method will not be called unless Plan has enabled properly
         ExtensionService extensionService = ExtensionService.getInstance();
 
         new AdvancedAchievementsExtensionFactory().createExtension().ifPresent(extensionService::register);
+        new AdvancedBanExtensionFactory().createExtension().ifPresent(extensionService::register);
     }
 
 }
