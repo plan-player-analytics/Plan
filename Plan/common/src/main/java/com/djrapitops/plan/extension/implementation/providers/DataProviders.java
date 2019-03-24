@@ -29,8 +29,27 @@ public class DataProviders {
 
     private Map<MethodType, Map<Class, List<DataProvider>>> byMethodType;
 
+    private boolean callPlayerMethodsOnPlayerLeave;
+    private boolean callServerMethodsPeriodically;
+
     public DataProviders() {
         byMethodType = new EnumMap<>(MethodType.class);
+    }
+
+    public void setCallPlayerMethodsOnPlayerLeave(boolean callPlayerMethodsOnPlayerLeave) {
+        this.callPlayerMethodsOnPlayerLeave = callPlayerMethodsOnPlayerLeave;
+    }
+
+    public void setCallServerMethodsPeriodically(boolean callServerMethodsPeriodically) {
+        this.callServerMethodsPeriodically = callServerMethodsPeriodically;
+    }
+
+    public boolean shouldCallPlayerMethodsOnPlayerLeave() {
+        return callPlayerMethodsOnPlayerLeave;
+    }
+
+    public boolean shouldCallServerMethodsPeriodically() {
+        return callServerMethodsPeriodically;
     }
 
     public <T> void put(DataProvider<T> provider) {

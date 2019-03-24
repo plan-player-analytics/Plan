@@ -114,6 +114,10 @@ public class DataProviderExtractor {
 
     private void extractAllDataProviders() {
         PluginInfo pluginInfo = extensionExtractor.getPluginInfo();
+
+        dataProviders.setCallPlayerMethodsOnPlayerLeave(pluginInfo.updatePlayerDataOnLeave());
+        dataProviders.setCallServerMethodsPeriodically(pluginInfo.updateServerDataPeriodically());
+
         MethodAnnotations methodAnnotations = extensionExtractor.getMethodAnnotations();
         Map<Method, Tab> tabs = methodAnnotations.getMethodAnnotations(Tab.class);
         Map<Method, Conditional> conditions = methodAnnotations.getMethodAnnotations(Conditional.class);
