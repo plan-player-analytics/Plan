@@ -35,11 +35,13 @@ import java.util.Optional;
 public class BooleanDataProvider extends DataProvider<Boolean> {
 
     private final String providedCondition;
+    private final boolean hidden;
 
-    private BooleanDataProvider(ProviderInformation providerInformation, MethodWrapper<Boolean> method, String providedCondition) {
+    private BooleanDataProvider(ProviderInformation providerInformation, MethodWrapper<Boolean> method, String providedCondition, boolean hidden) {
         super(providerInformation, method);
 
         this.providedCondition = providedCondition;
+        this.hidden = hidden;
     }
 
     public static void placeToDataProviders(
@@ -53,7 +55,7 @@ public class BooleanDataProvider extends DataProvider<Boolean> {
                 pluginName, method.getName(), annotation.text(), annotation.description(), providerIcon, annotation.priority(), tab, condition
         );
 
-        dataProviders.put(new BooleanDataProvider(providerInformation, methodWrapper, annotation.conditionName()));
+        dataProviders.put(new BooleanDataProvider(providerInformation, methodWrapper, annotation.conditionName(), annotation.hidden()));
     }
 
     public static Optional<String> getProvidedCondition(DataProvider<Boolean> provider) {
@@ -65,5 +67,13 @@ public class BooleanDataProvider extends DataProvider<Boolean> {
 
     public Optional<String> getProvidedCondition() {
         return providedCondition == null || providedCondition.isEmpty() ? Optional.empty() : Optional.of(StringUtils.truncate(providedCondition, 50));
+    }
+
+    public static boolean isHidden(DataProvider<Boolean> provider) {
+        return provider instanceof BooleanDataProvider && ((BooleanDataProvider) provider).isHidden();
+    }
+
+    public boolean isHidden() {
+        return hidden;
     }
 }

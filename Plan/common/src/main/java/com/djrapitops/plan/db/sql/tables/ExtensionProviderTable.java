@@ -41,14 +41,15 @@ public class ExtensionProviderTable {
     public static final String DESCRIPTION = "description"; // Can be null
     public static final String PRIORITY = "priority";
     public static final String GROUPABLE = "groupable"; // default false
-    public static final String CONDITION = "condition_name"; // Can be null
+    public static final String CONDITION = "condition_name"; // Can be null, related to @Conditional
     public static final String PLUGIN_ID = "plugin_id";
     public static final String ICON_ID = "icon_id";
-    public static final String TAB_ID = "tab_id"; // Can be null
+    public static final String TAB_ID = "tab_id"; // Can be null, related to @Tab
 
-    public static final String PROVIDED_CONDITION = "provided_condition"; // Can be null
-    public static final String FORMAT_TYPE = "format_type"; // Can be null
-    public static final String IS_PLAYER_NAME = "player_name"; // default false
+    public static final String HIDDEN = "hidden"; // default false, related to @BooleanProvider
+    public static final String PROVIDED_CONDITION = "provided_condition"; // Can be null, related to @BooleanProvider
+    public static final String FORMAT_TYPE = "format_type"; // Can be null,  related to @NumberProvider
+    public static final String IS_PLAYER_NAME = "player_name"; // default false, related to @StringProvider
 
     public static final String STATEMENT_SELECT_PROVIDER_ID = "(" + SELECT + ID + FROM + TABLE_NAME +
             WHERE + PROVIDER_NAME + "=?" +
@@ -70,6 +71,7 @@ public class ExtensionProviderTable {
                 .column(CONDITION, Sql.varchar(54)) // 50 + 4 for "not_"
                 .column(PROVIDED_CONDITION, Sql.varchar(50))
                 .column(FORMAT_TYPE, Sql.varchar(25))
+                .column(HIDDEN, BOOL).notNull().defaultValue(false)
                 .column(IS_PLAYER_NAME, BOOL).notNull().defaultValue(false)
                 .column(PLUGIN_ID, INT).notNull()
                 .column(ICON_ID, INT).notNull()

@@ -116,12 +116,14 @@ public class ExtensionPlayerDataQuery implements Query<Map<UUID, List<ExtensionP
                 LEFT_JOIN + ExtensionTabTable.TABLE_NAME + " t1 on t1." + ExtensionTabTable.ID + "=p1." + ExtensionProviderTable.TAB_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i1 on i1." + ExtensionIconTable.ID + "=p1." + ExtensionProviderTable.ICON_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i2 on i2." + ExtensionIconTable.ID + "=p1." + ExtensionTabTable.ICON_ID +
-                WHERE + ExtensionPlayerValueTable.USER_UUID + "=?";
+                WHERE + ExtensionPlayerValueTable.USER_UUID + "=?" +
+                AND + "p1." + ExtensionProviderTable.HIDDEN + "=?";
 
         return new QueryStatement<Map<Integer, ExtensionPlayerData.Factory>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
+                statement.setBoolean(2, false); // Don't select hidden values
             }
 
             @Override

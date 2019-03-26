@@ -81,6 +81,7 @@ class BooleanProviderValueGatherer {
                 }
 
                 Optional<String> providedCondition = BooleanDataProvider.getProvidedCondition(booleanProvider);
+                boolean hidden = BooleanDataProvider.isHidden(booleanProvider);
 
                 MethodWrapper<Boolean> method = booleanProvider.getMethod();
                 Boolean result = getMethodResult(
@@ -104,7 +105,7 @@ class BooleanProviderValueGatherer {
 
                 satisfied.add(booleanProvider); // Prevents further attempts to call this provider for this player.
                 database.executeTransaction(new StoreIconTransaction(providerInformation.getIcon()));
-                database.executeTransaction(new StoreBooleanProviderTransaction(booleanProvider, providedCondition.orElse(null), serverUUID));
+                database.executeTransaction(new StoreBooleanProviderTransaction(booleanProvider, providedCondition.orElse(null), hidden, serverUUID));
                 database.executeTransaction(new StorePlayerBooleanResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result));
             }
             // Remove now satisfied Providers so that they are not called again

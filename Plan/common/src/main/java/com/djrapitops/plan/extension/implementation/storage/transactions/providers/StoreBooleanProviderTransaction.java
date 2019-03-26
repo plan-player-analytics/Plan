@@ -42,11 +42,13 @@ import static com.djrapitops.plan.db.sql.tables.ExtensionProviderTable.*;
 public class StoreBooleanProviderTransaction extends Transaction {
 
     private final String providedCondition;
+    private final boolean hidden;
     private final UUID serverUUID;
     private final ProviderInformation providerInformation;
 
-    public StoreBooleanProviderTransaction(DataProvider<Boolean> booleanProvider, String providedCondition, UUID serverUUID) {
+    public StoreBooleanProviderTransaction(DataProvider<Boolean> booleanProvider, String providedCondition, boolean hidden, UUID serverUUID) {
         this.providedCondition = providedCondition;
+        this.hidden = hidden;
         this.serverUUID = serverUUID;
         this.providerInformation = booleanProvider.getProviderInformation();
     }
@@ -76,7 +78,8 @@ public class StoreBooleanProviderTransaction extends Transaction {
                 TAB_ID + "=" + ExtensionTabTable.STATEMENT_SELECT_TAB_ID + "," +
                 ICON_ID + "=" + ExtensionIconTable.STATEMENT_SELECT_ICON_ID +
                 WHERE + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID +
-                AND + PROVIDER_NAME + "=?";
+                AND + PROVIDER_NAME + "=?," +
+                HIDDEN + "=?";
 
         return new ExecStatement(sql) {
             @Override
@@ -102,6 +105,7 @@ public class StoreBooleanProviderTransaction extends Transaction {
                 ExtensionIconTable.set3IconValuesToStatement(statement, 9, providerInformation.getIcon());
                 ExtensionPluginTable.set2PluginValuesToStatement(statement, 12, providerInformation.getPluginName(), serverUUID);
                 statement.setString(14, providerInformation.getName());
+                statement.setBoolean(15, hidden);
             }
         };
     }
@@ -120,7 +124,7 @@ public class StoreBooleanProviderTransaction extends Transaction {
                 ") VALUES (?,?,?,?,?,?," +
                 ExtensionTabTable.STATEMENT_SELECT_TAB_ID + "," +
                 ExtensionIconTable.STATEMENT_SELECT_ICON_ID + "," +
-                ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ")";
+                ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ", ?)";
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -145,6 +149,7 @@ public class StoreBooleanProviderTransaction extends Transaction {
                 ExtensionTabTable.set3TabValuesToStatement(statement, 7, providerInformation.getTab().orElse("No Tab"), providerInformation.getPluginName(), serverUUID);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 10, providerInformation.getIcon());
                 ExtensionPluginTable.set2PluginValuesToStatement(statement, 13, providerInformation.getPluginName(), serverUUID);
+                statement.setBoolean(15, hidden);
             }
         };
     }
