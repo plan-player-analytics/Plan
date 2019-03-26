@@ -92,7 +92,7 @@ public class RemoveUnsatisfiedConditionalResultsTransaction extends Transaction 
                 AND + ExtensionProviderTable.CONDITION + " IS NOT NULL"; // Ignore values that don't need condition
 
         String sql = "DELETE FROM " + playerValueTable +
-                WHERE + ExtensionPlayerValueTable.ID + " IN (" + SELECT + ExtensionPlayerValueTable.ID + FROM + '(' + selectUnsatisfiedValueIDs + "))";
+                WHERE + ExtensionPlayerValueTable.ID + " IN (" + SELECT + ExtensionPlayerValueTable.ID + FROM + '(' + selectUnsatisfiedValueIDs + ") as ids)";
 
         return new ExecStatement(sql) {
             @Override
