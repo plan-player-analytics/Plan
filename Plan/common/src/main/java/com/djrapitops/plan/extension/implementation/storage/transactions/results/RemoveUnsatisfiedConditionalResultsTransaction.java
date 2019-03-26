@@ -55,24 +55,33 @@ public class RemoveUnsatisfiedConditionalResultsTransaction extends Transaction 
         String selectSatisfiedPositiveConditions = SELECT +
                 ExtensionProviderTable.PROVIDED_CONDITION + ',' +
                 ExtensionPlayerValueTable.USER_UUID +
-                FROM + playerValueTable +
-                INNER_JOIN + providerTable + " on " + providerTable + '.' + ExtensionProviderTable.ID + "=" + ExtensionPlayerValueTable.PROVIDER_ID +
+                FROM + providerTable +
+                INNER_JOIN + playerValueTable + " on " + providerTable + '.' + ExtensionProviderTable.ID + "=" + ExtensionPlayerValueTable.PROVIDER_ID +
                 WHERE + ExtensionPlayerValueTable.BOOLEAN_VALUE + "=?" +
                 AND + ExtensionProviderTable.PROVIDED_CONDITION + " IS NOT NULL";
         String selectSatisfiedNegativeConditions = SELECT +
                 reversedCondition + " as " + ExtensionProviderTable.PROVIDED_CONDITION + ',' +
                 ExtensionPlayerValueTable.USER_UUID +
-                FROM + playerValueTable +
-                INNER_JOIN + providerTable + " on " + providerTable + '.' + ExtensionProviderTable.ID + "=" + ExtensionPlayerValueTable.PROVIDER_ID +
+                FROM + providerTable +
+                INNER_JOIN + playerValueTable + " on " + providerTable + '.' + ExtensionProviderTable.ID + "=" + ExtensionPlayerValueTable.PROVIDER_ID +
                 WHERE + ExtensionPlayerValueTable.BOOLEAN_VALUE + "=?" +
                 AND + ExtensionProviderTable.PROVIDED_CONDITION + " IS NOT NULL";
 
+        // Query contents: Set of provided_conditions
         String selectSatisfiedConditions = '(' + selectSatisfiedPositiveConditions + " UNION " + selectSatisfiedNegativeConditions + ") q1";
 
+        // Query contents:
+        // id | uuid | q1.uuid | condition | q1.provided_condition
+        // -- | ---- | ------- | --------- | ---------------------
+        // 1  | ...  | ...     | A         | A                     Satisfied condition
+        // 2  | ...  | ...     | not_B     | not_B                 Satisfied condition
+        // 3  | ...  | ...     | NULL      | NULL                  Satisfied condition
+        // 4  | ...  | ...     | B         | NULL                  Unsatisfied condition, filtered to these in WHERE clause.
+        // 5  | ...  | ...     | not_C     | NULL                  Unsatisfied condition
         String selectUnsatisfiedValueIDs = SELECT + playerValueTable + '.' + ExtensionPlayerValueTable.ID +
-                FROM + playerValueTable +
-                INNER_JOIN + providerTable + " on " + providerTable + '.' + ExtensionProviderTable.ID + "=" + ExtensionPlayerValueTable.PROVIDER_ID +
-                LEFT_JOIN + selectSatisfiedConditions + // Left join to preserver values that don't have their condition fulfilled
+                FROM + providerTable +
+                INNER_JOIN + playerValueTable + " on " + providerTable + '.' + ExtensionProviderTable.ID + "=" + ExtensionPlayerValueTable.PROVIDER_ID +
+                LEFT_JOIN + selectSatisfiedConditions + // Left join to preserve values that don't have their condition fulfilled
                 " on (" +
                 playerValueTable + '.' + ExtensionPlayerValueTable.USER_UUID +
                 "=q1." + ExtensionPlayerValueTable.USER_UUID +
