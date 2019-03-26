@@ -58,6 +58,16 @@ public interface ExtensionService {
      */
     void register(DataExtension extension);
 
+    /**
+     * Unregister your {@link DataExtension} implementation.
+     * <p>
+     * This method should be used if calling methods on the DataExtension suddenly becomes unavailable, due to
+     * plugin disable for example.
+     *
+     * @param extension Your DataExtension implementation that was registered before.
+     */
+    void unregister(DataExtension extension);
+
     class ExtensionServiceHolder {
         static ExtensionService API;
 

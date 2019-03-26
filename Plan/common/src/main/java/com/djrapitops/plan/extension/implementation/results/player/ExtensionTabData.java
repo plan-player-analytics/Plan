@@ -135,4 +135,11 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
             return data;
         }
     }
+
+    @Override
+    public String toString() {
+        return "ExtensionTabData{" +
+                "available=" + order +
+                '}';
+    }
 }

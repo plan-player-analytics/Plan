@@ -31,6 +31,7 @@ public class Sql {
     public static final String INNER_JOIN = " INNER JOIN ";
     public static final String LEFT_JOIN = " LEFT JOIN ";
     public static final String AND = " AND ";
+    public static final String OR = " OR ";
 
     private Sql() {
         throw new IllegalStateException("Variable Class");

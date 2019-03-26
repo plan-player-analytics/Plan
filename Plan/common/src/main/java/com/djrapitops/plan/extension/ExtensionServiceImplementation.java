@@ -95,6 +95,16 @@ public class ExtensionServiceImplementation implements ExtensionService {
         logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, pluginName + " extension registered.");
     }
 
+    @Override
+    public void unregister(DataExtension extension) {
+        DataProviderExtractor extractor = new DataProviderExtractor(extension);
+        String pluginName = extractor.getPluginName();
+        if (extensionGatherers.remove(pluginName) != null) {
+            logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, pluginName + " extension unregistered.");
+        }
+
+    }
+
     private boolean shouldNotAllowRegistration(String pluginName) {
         PluginsConfigSection pluginsConfig = config.getPluginsConfigSection();
 
@@ -118,7 +128,11 @@ public class ExtensionServiceImplementation implements ExtensionService {
     public void updatePlayerValues(UUID playerUUID, String playerName) {
         for (Map.Entry<String, ProviderValueGatherer> gatherer : extensionGatherers.entrySet()) {
             try {
+                logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, "Gathering values for: " + playerName);
+
                 gatherer.getValue().updateValues(playerUUID, playerName);
+
+                logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, "Gathering completed:  " + playerName);
             } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
                 logger.warn(gatherer.getKey() + " ran into (but failed safely) " + e.getClass().getSimpleName() +
                         " when updating value for '" + playerName +

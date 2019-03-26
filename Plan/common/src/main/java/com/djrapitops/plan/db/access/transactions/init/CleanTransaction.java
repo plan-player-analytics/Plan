@@ -27,6 +27,7 @@ import com.djrapitops.plan.db.access.transactions.commands.RemovePlayerTransacti
 import com.djrapitops.plan.db.sql.tables.PingTable;
 import com.djrapitops.plan.db.sql.tables.SessionsTable;
 import com.djrapitops.plan.db.sql.tables.TPSTable;
+import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalResultsTransaction;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plugin.api.TimeAmount;
@@ -72,6 +73,9 @@ public class CleanTransaction extends Transaction {
 
         execute(cleanTPSTable(allTimePeak.orElse(-1)));
         execute(cleanPingTable());
+
+        // Clean DataExtension data
+        executeOther(new RemoveUnsatisfiedConditionalResultsTransaction());
 
         int removed = cleanOldPlayers();
         if (removed > 0) {

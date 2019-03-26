@@ -44,6 +44,11 @@ public class RemoveEverythingTransaction extends Transaction {
         clearTable(TPSTable.TABLE_NAME);
         clearTable(SecurityTable.TABLE_NAME);
         clearTable(ServerTable.TABLE_NAME);
+        clearTable(ExtensionPlayerValueTable.TABLE_NAME);
+        clearTable(ExtensionProviderTable.TABLE_NAME);
+        clearTable(ExtensionTabTable.TABLE_NAME);
+        clearTable(ExtensionPluginTable.TABLE_NAME);
+        clearTable(ExtensionIconTable.TABLE_NAME);
     }
 
     private void clearTable(String tableName) {

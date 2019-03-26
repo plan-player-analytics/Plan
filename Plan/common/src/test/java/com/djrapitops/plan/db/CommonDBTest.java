@@ -52,6 +52,7 @@ import com.djrapitops.plan.extension.implementation.results.player.ExtensionPlay
 import com.djrapitops.plan.extension.implementation.results.player.ExtensionStringData;
 import com.djrapitops.plan.extension.implementation.results.player.ExtensionTabData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
+import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalResultsTransaction;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
@@ -79,6 +80,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -153,6 +155,9 @@ public abstract class CommonDBTest {
 
         db.executeTransaction(new StoreServerInformationTransaction(new Server(-1, serverUUID, "ServerName", "", 20)));
         assertEquals(serverUUID, db.getServerUUIDSupplier().get());
+
+        system.getExtensionService().unregister(new TestExtension());
+        system.getExtensionService().unregister(new ConditionalExtension());
     }
 
     private void execute(Executable executable) {
@@ -1051,6 +1056,58 @@ public abstract class CommonDBTest {
         OptionalAssert.equals("Something", tabData.getString("stringVal").map(ExtensionStringData::getFormattedValue));
     }
 
+    @Test
+    public void unsatisfiedConditionalResultsAreCleaned() throws ExecutionException, InterruptedException {
+        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
+
+        extensionService.register(new ConditionalExtension());
+
+        ConditionalExtension.condition = true;
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME);
+
+        // Check that the wanted data exists
+        checkThatDataExists(ConditionalExtension.condition);
+
+        // Reverse condition
+        ConditionalExtension.condition = false;
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME);
+
+        db.executeTransaction(new RemoveUnsatisfiedConditionalResultsTransaction());
+
+        // Check that the wanted data exists
+        checkThatDataExists(ConditionalExtension.condition);
+
+        // Reverse condition
+        ConditionalExtension.condition = false;
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME);
+
+        db.executeTransaction(new RemoveUnsatisfiedConditionalResultsTransaction());
+
+        // Check that the wanted data exists
+        checkThatDataExists(ConditionalExtension.condition);
+    }
+
+    private void checkThatDataExists(boolean condition) {
+        if (condition) { // Condition is true, conditional values exist
+            List<ExtensionPlayerData> ofServer = db.query(new ExtensionPlayerDataQuery(playerUUID)).get(serverUUID);
+            assertTrue("There was no data left", ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty());
+
+            ExtensionTabData tabData = ofServer.get(0).getTabs().get(0);
+            OptionalAssert.equals("Yes", tabData.getBoolean("isCondition").map(ExtensionBooleanData::getFormattedValue));
+            OptionalAssert.equals("Conditional", tabData.getString("conditionalValue").map(ExtensionStringData::getFormattedValue));
+            OptionalAssert.equals("unconditional", tabData.getString("unconditional").map(ExtensionStringData::getFormattedValue)); // Was not removed
+            assertFalse("Value was not removed: reversedConditionalValue", tabData.getString("reversedConditionalValue").isPresent());
+        } else { // Condition is false, reversed conditional values exist
+            List<ExtensionPlayerData> ofServer = db.query(new ExtensionPlayerDataQuery(playerUUID)).get(serverUUID);
+            assertTrue("There was no data left", ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty());
+            ExtensionTabData tabData = ofServer.get(0).getTabs().get(0);
+            OptionalAssert.equals("No", tabData.getBoolean("isCondition").map(ExtensionBooleanData::getFormattedValue));
+            OptionalAssert.equals("Reversed", tabData.getString("reversedConditionalValue").map(ExtensionStringData::getFormattedValue));
+            OptionalAssert.equals("unconditional", tabData.getString("unconditional").map(ExtensionStringData::getFormattedValue)); // Was not removed
+            assertFalse("Value was not removed: conditionalValue", tabData.getString("conditionalValue").isPresent());
+        }
+    }
+
     @PluginInfo(name = "TestExtension")
     public class TestExtension implements DataExtension {
         @NumberProvider(text = "a number")
@@ -1076,6 +1133,34 @@ public abstract class CommonDBTest {
         @StringProvider(text = "a string")
         public String stringVal(UUID playerUUID) {
             return "Something";
+        }
+    }
+
+    @PluginInfo(name = "Conditional TestExtension")
+    public static class ConditionalExtension implements DataExtension {
+
+        static boolean condition = true;
+
+        @BooleanProvider(text = "a boolean", conditionName = "condition")
+        public boolean isCondition(UUID playerUUID) {
+            return condition;
+        }
+
+        @StringProvider(text = "Conditional Value")
+        @Conditional("condition")
+        public String conditionalValue(UUID playerUUID) {
+            return "Conditional";
+        }
+
+        @StringProvider(text = "Reversed Conditional Value")
+        @Conditional(value = "condition", negated = true)
+        public String reversedConditionalValue(UUID playerUUID) {
+            return "Reversed";
+        }
+
+        @StringProvider(text = "Unconditional")
+        public String unconditional(UUID playerUUID) {
+            return "unconditional";
         }
     }
 }
