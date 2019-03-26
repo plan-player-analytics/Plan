@@ -91,6 +91,9 @@ public class RemoveUnsatisfiedConditionalResultsTransaction extends Transaction 
                 WHERE + "q1." + ExtensionProviderTable.PROVIDED_CONDITION + " IS NULL" + // Conditions that were not in the satisfied condition query
                 AND + ExtensionProviderTable.CONDITION + " IS NOT NULL"; // Ignore values that don't need condition
 
+        // Nested query here is required because MySQL limits update statements with nested queries:
+        // The nested query creates a temporary table that bypasses the same table query-update limit.
+        // Note: MySQL versions 5.6.7+ might optimize this nested query away leading to an exception.
         String sql = "DELETE FROM " + playerValueTable +
                 WHERE + ExtensionPlayerValueTable.ID + " IN (" + SELECT + ExtensionPlayerValueTable.ID + FROM + '(' + selectUnsatisfiedValueIDs + ") as ids)";
 
