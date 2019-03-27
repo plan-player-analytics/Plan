@@ -38,7 +38,7 @@ import java.util.*;
 public class InspectPluginTab implements Comparable<InspectPluginTab> {
 
     private String serverName;
-    private List<ExtensionPlayerData> data;
+    private List<ExtensionPlayerData> playerData;
 
     private Map<FormatType, Formatter<Long>> numberFormatters;
 
@@ -55,11 +55,11 @@ public class InspectPluginTab implements Comparable<InspectPluginTab> {
 
     public InspectPluginTab(
             String serverName,
-            List<ExtensionPlayerData> data,
+            List<ExtensionPlayerData> playerData,
             Formatters formatters
     ) {
         this.serverName = serverName;
-        this.data = data;
+        this.playerData = playerData;
 
         numberFormatters = new EnumMap<>(FormatType.class);
         numberFormatters.put(FormatType.DATE_SECOND, formatters.secondLong());
@@ -82,7 +82,7 @@ public class InspectPluginTab implements Comparable<InspectPluginTab> {
     }
 
     private void generate() {
-        if (data.isEmpty()) {
+        if (playerData.isEmpty()) {
             nav = "<li><a class=\"nav-button\" href=\"javascript:void(0)\">" + serverName + " (No Data)</a></li>";
             tab = "<div class=\"tab\"><div class=\"row clearfix\">" +
                     "<div class=\"col-md-12\">" + Html.CARD.parse("<p>No Data (" + serverName + ")</p>") +
@@ -94,11 +94,11 @@ public class InspectPluginTab implements Comparable<InspectPluginTab> {
     }
 
     private String generatePageTab() {
-        Collections.sort(data);
+        Collections.sort(playerData);
 
         StringBuilder tabBuilder = new StringBuilder();
 
-        for (ExtensionPlayerData datum : data) {
+        for (ExtensionPlayerData datum : playerData) {
             ExtensionInformation extensionInformation = datum.getExtensionInformation();
 
             boolean onlyGeneric = datum.hasOnlyGenericTab();
@@ -159,6 +159,20 @@ public class InspectPluginTab implements Comparable<InspectPluginTab> {
                 "</div>" +
                 tabsElement +
                 "</div></div>";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof InspectPluginTab)) return false;
+        InspectPluginTab that = (InspectPluginTab) o;
+        return Objects.equals(serverName, that.serverName) &&
+                Objects.equals(nav, that.nav);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(serverName, nav);
     }
 
     @Override

@@ -51,6 +51,10 @@ public class ExtensionPluginTable {
         statement.setString(parameterIndex + 1, serverUUID.toString());
     }
 
+    private ExtensionPluginTable() {
+        /* Static information class */
+    }
+
     public static String createTableSQL(DBType dbType) {
         return CreateTableParser.create(TABLE_NAME, dbType)
                 .column(ID, INT).primaryKey()

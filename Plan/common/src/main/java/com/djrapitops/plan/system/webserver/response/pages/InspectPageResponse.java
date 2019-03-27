@@ -49,10 +49,6 @@ public class InspectPageResponse extends PageResponse {
         return StringSubstitutor.replace(super.getContent(), replaceMap);
     }
 
-    private String[] getCalculating() {
-        return new String[]{"<li><i class=\"fa fa-spin fa-refresh\"></i><a> Calculating...</a></li>", ""};
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

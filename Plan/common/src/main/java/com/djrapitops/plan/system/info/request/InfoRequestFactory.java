@@ -107,7 +107,7 @@ public class InfoRequestFactory {
     }
 
     public CacheRequest cacheInspectPluginsTabRequest(UUID uuid, String nav, String html) {
-        return new CacheInspectPluginsTabRequest(uuid, nav, html, serverInfo.get());
+        return new CacheInspectPluginsTabRequest(uuid, nav, html);
     }
 
     public GenerateRequest generateAnalysisPageRequest(UUID serverUUID) {
@@ -165,7 +165,7 @@ public class InfoRequestFactory {
         }
 
         CacheRequest cacheInspectPluginsTabRequest() {
-            return new CacheInspectPluginsTabRequest(factory.serverInfo.get());
+            return new CacheInspectPluginsTabRequest();
         }
 
         CheckConnectionRequest checkConnectionRequest() {

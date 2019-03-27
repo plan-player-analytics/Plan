@@ -60,6 +60,10 @@ public class ExtensionProviderTable {
         ExtensionPluginTable.set2PluginValuesToStatement(statement, parameterIndex + 1, pluginName, serverUUID);
     }
 
+    private ExtensionProviderTable() {
+        /* Static information class */
+    }
+
     public static String createTableSQL(DBType dbType) {
         return CreateTableParser.create(TABLE_NAME, dbType)
                 .column(ID, INT).primaryKey()

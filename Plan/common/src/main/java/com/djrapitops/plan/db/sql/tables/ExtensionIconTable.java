@@ -59,6 +59,10 @@ public class ExtensionIconTable {
         statement.setString(parameterIndex + 2, icon.getColor().name());
     }
 
+    private ExtensionIconTable() {
+        /* Static information class */
+    }
+
     public static String createTableSQL(DBType dbType) {
         return CreateTableParser.create(TABLE_NAME, dbType)
                 .column(ID, INT).primaryKey()

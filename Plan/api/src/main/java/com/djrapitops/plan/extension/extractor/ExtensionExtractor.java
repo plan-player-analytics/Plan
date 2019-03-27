@@ -47,6 +47,8 @@ public final class ExtensionExtractor {
     private List<InvalidateMethod> invalidMethods;
     private MethodAnnotations methodAnnotations;
 
+    private static final String WAS_OVER_50_CHARACTERS = "' was over 50 characters.";
+
     public ExtensionExtractor(DataExtension extension) {
         this.extension = extension;
         extensionName = extension.getClass().getSimpleName();
@@ -117,7 +119,7 @@ public final class ExtensionExtractor {
 
     private void validateMethodAnnotationPropertyLength(String property, String name, int maxLength, Method method) {
         if (property.length() > maxLength) {
-            warnings.add(extensionName + "." + method.getName() + " '" + name + "' was over 50 characters.");
+            warnings.add(extensionName + "." + method.getName() + " '" + name + WAS_OVER_50_CHARACTERS);
         }
     }
 
@@ -282,7 +284,7 @@ public final class ExtensionExtractor {
 
                 // Length restriction check
                 if (tabName.length() > 50) {
-                    warnings.add(extensionName + " tabName '" + tabName + "' was over 50 characters.");
+                    warnings.add(extensionName + " tabName '" + tabName + WAS_OVER_50_CHARACTERS);
                 }
 
                 tabInformation.add(tabInfo);
@@ -324,7 +326,7 @@ public final class ExtensionExtractor {
 
                 // Length restriction check
                 if (methodName.length() > 50) {
-                    warnings.add(extensionName + " invalidated method '" + methodName + "' was over 50 characters.");
+                    warnings.add(extensionName + " invalidated method '" + methodName + WAS_OVER_50_CHARACTERS);
                 }
 
                 invalidMethods.add(tabInfo);

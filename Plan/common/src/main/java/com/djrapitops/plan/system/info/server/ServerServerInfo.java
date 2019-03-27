@@ -93,7 +93,7 @@ public class ServerServerInfo extends ServerInfo {
         }
     }
 
-    private Server updateDbInfo(UUID serverUUID) throws Exception {
+    private Server updateDbInfo(UUID serverUUID) throws InterruptedException, ExecutionException, IOException {
         Database db = dbSystem.getDatabase();
 
         Optional<Server> foundServer = db.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID));

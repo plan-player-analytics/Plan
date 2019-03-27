@@ -40,6 +40,10 @@ public class ExtensionPlayerValueTable {
     public static final String STRING_VALUE = "string_value";
     public static final String GROUP_VALUE = "group_value";
 
+    private ExtensionPlayerValueTable() {
+        /* Static information class */
+    }
+
     public static String createTableSQL(DBType dbType) {
         return CreateTableParser.create(TABLE_NAME, dbType)
                 .column(ID, Sql.INT).primaryKey()

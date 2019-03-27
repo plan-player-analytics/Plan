@@ -178,6 +178,9 @@ public class PageFactory {
         return new InspectPluginTab(navs.toString(), tabs.toString());
     }
 
+    /**
+     * @deprecated Marked for removal when the connection system will be removed.
+     */
     @Deprecated
     public InspectPagePluginsContent inspectPagePluginsContent(UUID playerUUID) {
         return InspectPagePluginsContent.generateForThisServer(playerUUID, serverInfo.get(), hookHandler.get());

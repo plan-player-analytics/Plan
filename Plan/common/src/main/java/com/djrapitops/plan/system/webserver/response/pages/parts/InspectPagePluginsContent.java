@@ -33,6 +33,7 @@ import java.util.*;
  * <p>
  * Extends Response so that it can be stored in ResponseCache.
  *
+ * @deprecated Marked for removal when the connection system will be removed.
  * @author Rsl1122
  */
 @Deprecated

@@ -58,14 +58,14 @@ public class RemoveUnsatisfiedConditionalResultsTransaction extends Transaction 
                 FROM + providerTable +
                 INNER_JOIN + playerValueTable + " on " + providerTable + '.' + ExtensionProviderTable.ID + "=" + ExtensionPlayerValueTable.PROVIDER_ID +
                 WHERE + ExtensionPlayerValueTable.BOOLEAN_VALUE + "=?" +
-                AND + ExtensionProviderTable.PROVIDED_CONDITION + " IS NOT NULL";
+                AND + ExtensionProviderTable.PROVIDED_CONDITION + IS_NOT_NULL;
         String selectSatisfiedNegativeConditions = SELECT +
                 reversedCondition + " as " + ExtensionProviderTable.PROVIDED_CONDITION + ',' +
                 ExtensionPlayerValueTable.USER_UUID +
                 FROM + providerTable +
                 INNER_JOIN + playerValueTable + " on " + providerTable + '.' + ExtensionProviderTable.ID + "=" + ExtensionPlayerValueTable.PROVIDER_ID +
                 WHERE + ExtensionPlayerValueTable.BOOLEAN_VALUE + "=?" +
-                AND + ExtensionProviderTable.PROVIDED_CONDITION + " IS NOT NULL";
+                AND + ExtensionProviderTable.PROVIDED_CONDITION + IS_NOT_NULL;
 
         // Query contents: Set of provided_conditions
         String selectSatisfiedConditions = '(' + selectSatisfiedPositiveConditions + " UNION " + selectSatisfiedNegativeConditions + ") q1";
@@ -88,8 +88,8 @@ public class RemoveUnsatisfiedConditionalResultsTransaction extends Transaction 
                 AND + ExtensionProviderTable.CONDITION +
                 "=q1." + ExtensionProviderTable.PROVIDED_CONDITION +
                 ')' +
-                WHERE + "q1." + ExtensionProviderTable.PROVIDED_CONDITION + " IS NULL" + // Conditions that were not in the satisfied condition query
-                AND + ExtensionProviderTable.CONDITION + " IS NOT NULL"; // Ignore values that don't need condition
+                WHERE + "q1." + ExtensionProviderTable.PROVIDED_CONDITION + IS_NULL + // Conditions that were not in the satisfied condition query
+                AND + ExtensionProviderTable.CONDITION + IS_NOT_NULL; // Ignore values that don't need condition
 
         // Nested query here is required because MySQL limits update statements with nested queries:
         // The nested query creates a temporary table that bypasses the same table query-update limit.

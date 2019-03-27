@@ -28,6 +28,7 @@ import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.djrapitops.plan.db.sql.parsing.Sql.AND;
@@ -85,14 +86,16 @@ public class StoreBooleanProviderTransaction extends Transaction {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, providerInformation.getText());
-                if (providerInformation.getDescription().isPresent()) {
-                    statement.setString(2, providerInformation.getDescription().get());
+                Optional<String> description = providerInformation.getDescription();
+                if (description.isPresent()) {
+                    statement.setString(2, description.get());
                 } else {
                     statement.setNull(2, Types.VARCHAR);
                 }
                 statement.setInt(3, providerInformation.getPriority());
-                if (providerInformation.getCondition().isPresent()) {
-                    statement.setString(4, providerInformation.getCondition().orElse(null));
+                Optional<String> condition = providerInformation.getCondition();
+                if (condition.isPresent()) {
+                    statement.setString(4, condition.get());
                 } else {
                     statement.setNull(4, Types.VARCHAR);
                 }
@@ -130,14 +133,16 @@ public class StoreBooleanProviderTransaction extends Transaction {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, providerInformation.getName());
                 statement.setString(2, providerInformation.getText());
-                if (providerInformation.getDescription().isPresent()) {
-                    statement.setString(3, providerInformation.getDescription().get());
+                Optional<String> description = providerInformation.getDescription();
+                if (description.isPresent()) {
+                    statement.setString(3, description.get());
                 } else {
                     statement.setNull(3, Types.VARCHAR);
                 }
                 statement.setInt(4, providerInformation.getPriority());
-                if (providerInformation.getCondition().isPresent()) {
-                    statement.setString(5, providerInformation.getCondition().orElse(null));
+                Optional<String> condition = providerInformation.getCondition();
+                if (condition.isPresent()) {
+                    statement.setString(5, condition.get());
                 } else {
                     statement.setNull(5, Types.VARCHAR);
                 }

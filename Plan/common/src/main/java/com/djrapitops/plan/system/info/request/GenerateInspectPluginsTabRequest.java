@@ -30,6 +30,7 @@ import java.util.UUID;
 /**
  * InfoRequest for Generating Inspect page plugins tab on receiving WebServer.
  *
+ * @deprecated Marked for removal when the connection system will be removed.
  * @author Rsl1122
  */
 @Deprecated

@@ -69,51 +69,57 @@ class BooleanProviderValueGatherer {
         Set<DataProvider<Boolean>> satisfied = new HashSet<>();
 
         do {
-            // Clear conditions satisfied in previous loop
-            satisfied.clear();
             // Loop through all unsatisfied providers to see if more conditions are satisfied
-            for (DataProvider<Boolean> booleanProvider : unsatisifiedProviders) {
-                ProviderInformation providerInformation = booleanProvider.getProviderInformation();
-
-                Optional<String> condition = providerInformation.getCondition();
-                if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
-                    continue;
-                }
-
-                Optional<String> providedCondition = BooleanDataProvider.getProvidedCondition(booleanProvider);
-                boolean hidden = BooleanDataProvider.isHidden(booleanProvider);
-
-                MethodWrapper<Boolean> method = booleanProvider.getMethod();
-                Boolean result = getMethodResult(
-                        () -> method.callMethod(extension, playerUUID, playerName),
-                        throwable -> pluginName + " has invalid implementation, method " + method.getMethodName() + " threw exception: " + throwable.toString()
-                );
-                if (result == null) {
-                    satisfied.add(booleanProvider); // Prevents further attempts to call this provider for this player.
-                    continue;
-                }
-
-                if (providedCondition.isPresent()) {
-                    if (result) {
-                        // The condition was fulfilled (true) for this player.
-                        conditions.conditionFulfilled(providedCondition.get());
-                    } else {
-                        // The negated condition was fulfilled (false) for this player.
-                        conditions.conditionFulfilled("not_" + providedCondition.get());
-                    }
-                }
-
-                satisfied.add(booleanProvider); // Prevents further attempts to call this provider for this player.
-                database.executeTransaction(new StoreIconTransaction(providerInformation.getIcon()));
-                database.executeTransaction(new StoreBooleanProviderTransaction(booleanProvider, providedCondition.orElse(null), hidden, serverUUID));
-                database.executeTransaction(new StorePlayerBooleanResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result));
-            }
+            satisfied = attemptToSatisfyMoreConditionsAndStoreResults(playerUUID, playerName, conditions, unsatisifiedProviders);
             // Remove now satisfied Providers so that they are not called again
             unsatisifiedProviders.removeAll(satisfied);
             // If no new conditions could be satisfied, stop looping.
         } while (!satisfied.isEmpty());
 
         return conditions;
+    }
+
+    private Set<DataProvider<Boolean>> attemptToSatisfyMoreConditionsAndStoreResults(UUID playerUUID, String playerName, Conditions conditions, List<DataProvider<Boolean>> unsatisifiedProviders) {
+        Set<DataProvider<Boolean>> satisfied = new HashSet<>();
+        for (DataProvider<Boolean> booleanProvider : unsatisifiedProviders) {
+            ProviderInformation providerInformation = booleanProvider.getProviderInformation();
+
+            Optional<String> condition = providerInformation.getCondition();
+            if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
+                // Condition required by the BooleanProvider is not satisfied
+                continue;
+            }
+
+            Optional<String> providedCondition = BooleanDataProvider.getProvidedCondition(booleanProvider);
+            boolean hidden = BooleanDataProvider.isHidden(booleanProvider);
+
+            MethodWrapper<Boolean> method = booleanProvider.getMethod();
+            Boolean result = getMethodResult(
+                    () -> method.callMethod(extension, playerUUID, playerName),
+                    throwable -> pluginName + " has invalid implementation, method " + method.getMethodName() + " threw exception: " + throwable.toString()
+            );
+            if (result == null) {
+                // Error during method call
+                satisfied.add(booleanProvider); // Prevents further attempts to call this provider for this player.
+                continue;
+            }
+
+            if (providedCondition.isPresent()) {
+                if (result) {
+                    // The condition was fulfilled (true) for this player.
+                    conditions.conditionFulfilled(providedCondition.get());
+                } else {
+                    // The negated condition was fulfilled (false) for this player.
+                    conditions.conditionFulfilled("not_" + providedCondition.get());
+                }
+            }
+
+            satisfied.add(booleanProvider); // Prevents further attempts to call this provider for this player.
+            database.executeTransaction(new StoreIconTransaction(providerInformation.getIcon()));
+            database.executeTransaction(new StoreBooleanProviderTransaction(booleanProvider, providedCondition.orElse(null), hidden, serverUUID));
+            database.executeTransaction(new StorePlayerBooleanResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result));
+        }
+        return satisfied;
     }
 
     private <T> T getMethodResult(Callable<T> callable, Function<Throwable, String> errorMsg) {
