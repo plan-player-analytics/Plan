@@ -76,11 +76,11 @@ public class StoreBooleanProviderTransaction extends Transaction {
                 PRIORITY + "=?," +
                 CONDITION + "=?," +
                 PROVIDED_CONDITION + "=?," +
-                TAB_ID + "=" + ExtensionTabTable.STATEMENT_SELECT_TAB_ID + "," +
-                ICON_ID + "=" + ExtensionIconTable.STATEMENT_SELECT_ICON_ID +
-                WHERE + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID +
-                AND + PROVIDER_NAME + "=?," +
-                HIDDEN + "=?";
+                TAB_ID + '=' + ExtensionTabTable.STATEMENT_SELECT_TAB_ID + ',' +
+                ICON_ID + '=' + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
+                HIDDEN + "=?" +
+                WHERE + PLUGIN_ID + '=' + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID +
+                AND + PROVIDER_NAME + "=?";
 
         return new ExecStatement(sql) {
             @Override
@@ -106,28 +106,29 @@ public class StoreBooleanProviderTransaction extends Transaction {
                 }
                 ExtensionTabTable.set3TabValuesToStatement(statement, 6, providerInformation.getTab().orElse("No Tab"), providerInformation.getPluginName(), serverUUID);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 9, providerInformation.getIcon());
-                ExtensionPluginTable.set2PluginValuesToStatement(statement, 12, providerInformation.getPluginName(), serverUUID);
-                statement.setString(14, providerInformation.getName());
-                statement.setBoolean(15, hidden);
+                statement.setBoolean(12, hidden);
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 13, providerInformation.getPluginName(), serverUUID);
+                statement.setString(15, providerInformation.getName());
             }
         };
     }
 
     private Executable insertProvider() {
-        String sql = "INSERT INTO " + TABLE_NAME + "(" +
-                PROVIDER_NAME + "," +
-                TEXT + "," +
-                DESCRIPTION + "," +
-                PRIORITY + "," +
-                CONDITION + "," +
-                PROVIDED_CONDITION + "," +
-                TAB_ID + "," +
-                ICON_ID + "," +
+        String sql = "INSERT INTO " + TABLE_NAME + '(' +
+                PROVIDER_NAME + ',' +
+                TEXT + ',' +
+                DESCRIPTION + ',' +
+                PRIORITY + ',' +
+                CONDITION + ',' +
+                PROVIDED_CONDITION + ',' +
+                HIDDEN + ',' +
+                TAB_ID + ',' +
+                ICON_ID + ',' +
                 PLUGIN_ID +
-                ") VALUES (?,?,?,?,?,?," +
-                ExtensionTabTable.STATEMENT_SELECT_TAB_ID + "," +
-                ExtensionIconTable.STATEMENT_SELECT_ICON_ID + "," +
-                ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ", ?)";
+                ") VALUES (?,?,?,?,?,?,?," +
+                ExtensionTabTable.STATEMENT_SELECT_TAB_ID + ',' +
+                ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
+                ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ')';
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -151,10 +152,10 @@ public class StoreBooleanProviderTransaction extends Transaction {
                 } else {
                     statement.setNull(6, Types.VARCHAR);
                 }
-                ExtensionTabTable.set3TabValuesToStatement(statement, 7, providerInformation.getTab().orElse("No Tab"), providerInformation.getPluginName(), serverUUID);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 10, providerInformation.getIcon());
-                ExtensionPluginTable.set2PluginValuesToStatement(statement, 13, providerInformation.getPluginName(), serverUUID);
-                statement.setBoolean(15, hidden);
+                statement.setBoolean(7, hidden);
+                ExtensionTabTable.set3TabValuesToStatement(statement, 8, providerInformation.getTab().orElse("No Tab"), providerInformation.getPluginName(), serverUUID);
+                ExtensionIconTable.set3IconValuesToStatement(statement, 11, providerInformation.getIcon());
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 14, providerInformation.getPluginName(), serverUUID);
             }
         };
     }
