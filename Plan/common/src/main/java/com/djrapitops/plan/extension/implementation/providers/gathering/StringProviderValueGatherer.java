@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension.implementation.providers.gathering;
 
 import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
@@ -27,12 +28,14 @@ import com.djrapitops.plan.extension.implementation.results.player.Conditions;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreStringProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerStringResultTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerStringResultTransaction;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -64,29 +67,54 @@ class StringProviderValueGatherer {
         this.logger = logger;
     }
 
-    void gatherStringData(UUID playerUUID, String playerName, Conditions conditions) {
+    void gatherStringDataOfPlayer(UUID playerUUID, String playerName, Conditions conditions) {
+        // Method parameters abstracted away so that same method can be used for all parameter types
+        // Same with Method result store transaction creation
+        Function<MethodWrapper<String>, Callable<String>> methodCaller = method -> () -> method.callMethod(extension, playerUUID, playerName);
+        BiFunction<MethodWrapper<String>, String, Transaction> storeTransactionCreator = (method, result) -> new StorePlayerStringResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result);
+
         for (DataProvider<String> stringProvider : dataProviders.getPlayerMethodsByType(String.class)) {
-            ProviderInformation providerInformation = stringProvider.getProviderInformation();
-            Optional<String> condition = providerInformation.getCondition();
-            if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
-                continue; // Condition not met
-            }
-
-            MethodWrapper<String> method = stringProvider.getMethod();
-            String result = getMethodResult(
-                    () -> method.callMethod(extension, playerUUID, playerName),
-                    throwable -> pluginName + " has invalid implementation, method " + method.getMethodName() + " threw exception: " + throwable.toString()
-            );
-            if (result == null) {
-                continue;
-            }
-
-            result = StringUtils.truncate(result, 50);
-
-            database.executeTransaction(new StoreIconTransaction(providerInformation.getIcon()));
-            database.executeTransaction(new StoreStringProviderTransaction(stringProvider, StringDataProvider.isPlayerName(stringProvider), serverUUID));
-            database.executeTransaction(new StorePlayerStringResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result));
+            gatherStringDataOfProvider(methodCaller, storeTransactionCreator, conditions, stringProvider);
         }
+    }
+
+    void gatherStringDataOfServer(Conditions conditions) {
+        // Method parameters abstracted away so that same method can be used for all parameter types
+        // Same with Method result store transaction creation
+        Function<MethodWrapper<String>, Callable<String>> methodCaller = method -> () -> method.callMethod(extension);
+        BiFunction<MethodWrapper<String>, String, Transaction> storeTransactionCreator = (method, result) -> new StoreServerStringResultTransaction(pluginName, serverUUID, method.getMethodName(), result);
+
+        for (DataProvider<String> stringProvider : dataProviders.getServerMethodsByType(String.class)) {
+            gatherStringDataOfProvider(methodCaller, storeTransactionCreator, conditions, stringProvider);
+        }
+    }
+
+    private void gatherStringDataOfProvider(
+            Function<MethodWrapper<String>, Callable<String>> methodCaller,
+            BiFunction<MethodWrapper<String>, String, Transaction> storeTransactionCreator,
+            Conditions conditions,
+            DataProvider<String> stringProvider
+    ) {
+        ProviderInformation providerInformation = stringProvider.getProviderInformation();
+        Optional<String> condition = providerInformation.getCondition();
+        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
+            return;
+        }
+
+        MethodWrapper<String> method = stringProvider.getMethod();
+        String result = getMethodResult(
+                methodCaller.apply(method),
+                throwable -> pluginName + " has invalid implementation, method " + method.getMethodName() + " threw exception: " + throwable.toString()
+        );
+        if (result == null) {
+            return;
+        }
+
+        result = StringUtils.truncate(result, 50);
+
+        database.executeTransaction(new StoreIconTransaction(providerInformation.getIcon()));
+        database.executeTransaction(new StoreStringProviderTransaction(stringProvider, StringDataProvider.isPlayerName(stringProvider), serverUUID));
+        database.executeTransaction(storeTransactionCreator.apply(method, result));
     }
 
     private <T> T getMethodResult(Callable<T> callable, Function<Throwable, String> errorMsg) {

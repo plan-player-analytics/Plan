@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension.implementation.providers.gathering;
 
 import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
@@ -28,11 +29,13 @@ import com.djrapitops.plan.extension.implementation.results.player.Conditions;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreNumberProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerNumberResultTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerNumberResultTransaction;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -64,29 +67,53 @@ class NumberProviderValueGatherer {
         this.logger = logger;
     }
 
-    void gatherNumberData(UUID playerUUID, String playerName, Conditions conditions) {
+    void gatherNumberDataOfPlayer(UUID playerUUID, String playerName, Conditions conditions) {
+        // Method parameters abstracted away so that same method can be used for all parameter types
+        // Same with Method result store transaction creation
+        Function<MethodWrapper<Long>, Callable<Long>> methodCaller = method -> () -> method.callMethod(extension, playerUUID, playerName);
+        BiFunction<MethodWrapper<Long>, Long, Transaction> storeTransactionCreator = (method, result) -> new StorePlayerNumberResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result);
+
         for (DataProvider<Long> numberProvider : dataProviders.getPlayerMethodsByType(Long.class)) {
-            ProviderInformation providerInformation = numberProvider.getProviderInformation();
-            Optional<String> condition = providerInformation.getCondition();
-            if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
-                continue; // Condition not met
-            }
-
-            MethodWrapper<Long> method = numberProvider.getMethod();
-            Long result = getMethodResult(
-                    () -> method.callMethod(extension, playerUUID, playerName),
-                    throwable -> pluginName + " has invalid implementation, method " + method.getMethodName() + " threw exception: " + throwable.toString()
-            );
-            if (result == null) {
-                continue;
-            }
-
-            FormatType formatType = NumberDataProvider.getFormatType(numberProvider);
-
-            database.executeTransaction(new StoreIconTransaction(providerInformation.getIcon()));
-            database.executeTransaction(new StoreNumberProviderTransaction(numberProvider, formatType, serverUUID));
-            database.executeTransaction(new StorePlayerNumberResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result));
+            gatherNumberDataOfProvider(methodCaller, storeTransactionCreator, conditions, numberProvider);
         }
+    }
+
+    void gatherNumberDataOfServer(Conditions conditions) {
+        // Method parameters abstracted away so that same method can be used for all parameter types
+        // Same with Method result store transaction creation
+        Function<MethodWrapper<Long>, Callable<Long>> methodCaller = method -> () -> method.callMethod(extension);
+        BiFunction<MethodWrapper<Long>, Long, Transaction> storeTransactionCreator = (method, result) -> new StoreServerNumberResultTransaction(pluginName, serverUUID, method.getMethodName(), result);
+
+        for (DataProvider<Long> numberProvider : dataProviders.getServerMethodsByType(Long.class)) {
+            gatherNumberDataOfProvider(methodCaller, storeTransactionCreator, conditions, numberProvider);
+        }
+    }
+
+    private void gatherNumberDataOfProvider(
+            Function<MethodWrapper<Long>, Callable<Long>> methodCaller,
+            BiFunction<MethodWrapper<Long>, Long, Transaction> storeTransactionCreator,
+            Conditions conditions, DataProvider<Long> numberProvider
+    ) {
+        ProviderInformation providerInformation = numberProvider.getProviderInformation();
+        Optional<String> condition = providerInformation.getCondition();
+        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
+            return;
+        }
+
+        MethodWrapper<Long> method = numberProvider.getMethod();
+        Long result = getMethodResult(
+                methodCaller.apply(method),
+                throwable -> pluginName + " has invalid implementation, method " + method.getMethodName() + " threw exception: " + throwable.toString()
+        );
+        if (result == null) {
+            return;
+        }
+
+        FormatType formatType = NumberDataProvider.getFormatType(numberProvider);
+
+        database.executeTransaction(new StoreIconTransaction(providerInformation.getIcon()));
+        database.executeTransaction(new StoreNumberProviderTransaction(numberProvider, formatType, serverUUID));
+        database.executeTransaction(storeTransactionCreator.apply(method, result));
     }
 
     private <T> T getMethodResult(Callable<T> callable, Function<Throwable, String> errorMsg) {
@@ -97,5 +124,4 @@ class NumberProviderValueGatherer {
             return null;
         }
     }
-
 }

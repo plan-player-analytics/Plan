@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension.implementation.providers.gathering;
 
 import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
@@ -28,11 +29,14 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIc
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreDoubleProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerDoubleResultTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerPercentageResultTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerDoubleResultTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerPercentageResultTransaction;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -64,31 +68,59 @@ class DoubleAndPercentageProviderValueGatherer {
         this.logger = logger;
     }
 
-    void gatherDoubleData(UUID playerUUID, String playerName, Conditions conditions) {
+    void gatherDoubleDataOfPlayer(UUID playerUUID, String playerName, Conditions conditions) {
+        // Method parameters abstracted away so that same method can be used for all parameter types
+        // Same with Method result store transaction creation
+        Function<MethodWrapper<Double>, Callable<Double>> methodCaller = method -> () -> method.callMethod(extension, playerUUID, playerName);
+        BiFunction<MethodWrapper<Double>, Double, Transaction> percStoreTransactionCreator = (method, result) -> new StorePlayerPercentageResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result);
+        BiFunction<MethodWrapper<Double>, Double, Transaction> doubleStoreTransactionCreator = (method, result) -> new StorePlayerDoubleResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result);
+
         for (DataProvider<Double> doubleProvider : dataProviders.getPlayerMethodsByType(Double.class)) {
-            ProviderInformation providerInformation = doubleProvider.getProviderInformation();
-            Optional<String> condition = providerInformation.getCondition();
-            if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
-                continue; // Condition not met
-            }
+            gatherDoubleDataOfProvider(methodCaller, percStoreTransactionCreator, doubleStoreTransactionCreator, conditions, doubleProvider);
+        }
+    }
 
-            MethodWrapper<Double> method = doubleProvider.getMethod();
-            Double result = getMethodResult(
-                    () -> method.callMethod(extension, playerUUID, playerName),
-                    throwable -> pluginName + " has invalid implementation, method " + method.getMethodName() + " threw exception: " + throwable.toString()
-            );
-            if (result == null) {
-                continue;
-            }
+    void gatherDoubleDataOfServer(Conditions conditions) {
+        // Method parameters abstracted away so that same method can be used for all parameter types
+        // Same with Method result store transaction creation
+        Function<MethodWrapper<Double>, Callable<Double>> methodCaller = method -> () -> method.callMethod(extension);
+        BiFunction<MethodWrapper<Double>, Double, Transaction> percStoreTransactionCreator = (method, result) -> new StoreServerPercentageResultTransaction(pluginName, serverUUID, method.getMethodName(), result);
+        BiFunction<MethodWrapper<Double>, Double, Transaction> doubleStoreTransactionCreator = (method, result) -> new StoreServerDoubleResultTransaction(pluginName, serverUUID, method.getMethodName(), result);
 
-            database.executeTransaction(new StoreIconTransaction(providerInformation.getIcon()));
-            database.executeTransaction(new StoreDoubleProviderTransaction(doubleProvider, serverUUID));
+        for (DataProvider<Double> doubleProvider : dataProviders.getServerMethodsByType(Double.class)) {
+            gatherDoubleDataOfProvider(methodCaller, percStoreTransactionCreator, doubleStoreTransactionCreator, conditions, doubleProvider);
+        }
+    }
 
-            if (doubleProvider instanceof PercentageDataProvider) {
-                database.executeTransaction(new StorePlayerPercentageResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result));
-            } else {
-                database.executeTransaction(new StorePlayerDoubleResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result));
-            }
+    private void gatherDoubleDataOfProvider(
+            Function<MethodWrapper<Double>, Callable<Double>> methodCaller,
+            BiFunction<MethodWrapper<Double>, Double, Transaction> percStoreTransactionCreator,
+            BiFunction<MethodWrapper<Double>, Double, Transaction> doubleStoreTransactionCreator,
+            Conditions conditions, DataProvider<Double> doubleProvider
+
+    ) {
+        ProviderInformation providerInformation = doubleProvider.getProviderInformation();
+        Optional<String> condition = providerInformation.getCondition();
+        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
+            return;
+        }
+
+        MethodWrapper<Double> method = doubleProvider.getMethod();
+        Double result = getMethodResult(
+                methodCaller.apply(method),
+                throwable -> pluginName + " has invalid implementation, method " + method.getMethodName() + " threw exception: " + throwable.toString()
+        );
+        if (result == null) {
+            return;
+        }
+
+        database.executeTransaction(new StoreIconTransaction(providerInformation.getIcon()));
+        database.executeTransaction(new StoreDoubleProviderTransaction(doubleProvider, serverUUID));
+
+        if (doubleProvider instanceof PercentageDataProvider) {
+            database.executeTransaction(percStoreTransactionCreator.apply(method, result));
+        } else {
+            database.executeTransaction(doubleStoreTransactionCreator.apply(method, result));
         }
     }
 

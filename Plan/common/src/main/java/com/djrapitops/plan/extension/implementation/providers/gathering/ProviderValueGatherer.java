@@ -44,6 +44,10 @@ public class ProviderValueGatherer {
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final PluginLogger logger;
+    private BooleanProviderValueGatherer booleanGatherer;
+    private NumberProviderValueGatherer numberGatherer;
+    private DoubleAndPercentageProviderValueGatherer doubleAndPercentageGatherer;
+    private StringProviderValueGatherer stringGatherer;
 
     public ProviderValueGatherer(
             DataExtension extension,
@@ -57,6 +61,27 @@ public class ProviderValueGatherer {
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.logger = logger;
+
+        booleanGatherer = new BooleanProviderValueGatherer(
+                extractor.getPluginName(), extension,
+                serverInfo.getServerUUID(), dbSystem.getDatabase(),
+                extractor.getDataProviders(), logger
+        );
+        numberGatherer = new NumberProviderValueGatherer(
+                extractor.getPluginName(), extension,
+                serverInfo.getServerUUID(), dbSystem.getDatabase(),
+                extractor.getDataProviders(), logger
+        );
+        doubleAndPercentageGatherer = new DoubleAndPercentageProviderValueGatherer(
+                extractor.getPluginName(), extension,
+                serverInfo.getServerUUID(), dbSystem.getDatabase(),
+                extractor.getDataProviders(), logger
+        );
+        stringGatherer = new StringProviderValueGatherer(
+                extractor.getPluginName(), extension,
+                serverInfo.getServerUUID(), dbSystem.getDatabase(),
+                extractor.getDataProviders(), logger
+        );
     }
 
     public void storeExtensionInformation() {
@@ -78,33 +103,16 @@ public class ProviderValueGatherer {
     }
 
     public void updateValues(UUID playerUUID, String playerName) {
-        Conditions conditions = gatherBooleanData(playerUUID, playerName);
-        gatherValueData(playerUUID, playerName, conditions);
+        Conditions conditions = booleanGatherer.gatherBooleanDataOfPlayer(playerUUID, playerName);
+        numberGatherer.gatherNumberDataOfPlayer(playerUUID, playerName, conditions);
+        doubleAndPercentageGatherer.gatherDoubleDataOfPlayer(playerUUID, playerName, conditions);
+        stringGatherer.gatherStringDataOfPlayer(playerUUID, playerName, conditions);
     }
 
-    private Conditions gatherBooleanData(UUID playerUUID, String playerName) {
-        return new BooleanProviderValueGatherer(
-                extractor.getPluginName(), extension,
-                serverInfo.getServerUUID(), dbSystem.getDatabase(),
-                extractor.getDataProviders(), logger
-        ).gatherBooleanData(playerUUID, playerName);
-    }
-
-    private void gatherValueData(UUID playerUUID, String playerName, Conditions conditions) {
-        new NumberProviderValueGatherer(
-                extractor.getPluginName(), extension,
-                serverInfo.getServerUUID(), dbSystem.getDatabase(),
-                extractor.getDataProviders(), logger
-        ).gatherNumberData(playerUUID, playerName, conditions);
-        new DoubleAndPercentageProviderValueGatherer(
-                extractor.getPluginName(), extension,
-                serverInfo.getServerUUID(), dbSystem.getDatabase(),
-                extractor.getDataProviders(), logger
-        ).gatherDoubleData(playerUUID, playerName, conditions);
-        new StringProviderValueGatherer(
-                extractor.getPluginName(), extension,
-                serverInfo.getServerUUID(), dbSystem.getDatabase(),
-                extractor.getDataProviders(), logger
-        ).gatherStringData(playerUUID, playerName, conditions);
+    public void updateValues() {
+        Conditions conditions = booleanGatherer.gatherBooleanDataOfServer();
+        numberGatherer.gatherNumberDataOfServer(conditions);
+        doubleAndPercentageGatherer.gatherDoubleDataOfServer(conditions);
+        stringGatherer.gatherStringDataOfServer(conditions);
     }
 }
