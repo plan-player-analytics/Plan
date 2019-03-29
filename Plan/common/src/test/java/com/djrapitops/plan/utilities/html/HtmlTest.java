@@ -16,18 +16,22 @@
  */
 package com.djrapitops.plan.utilities.html;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
+ * Tests for different functions of the {@link Html} class.
+ *
  * @author Rsl1122
  */
+@RunWith(JUnitPlatform.class)
 public class HtmlTest {
 
     @Test
-    public void testParseWithZeroArgs() {
+    void parsingWithNoArgsDoesNotReplacePlaceholder() {
         String expResult = "${0}</span>";
         String result = Html.SPAN.parse();
 
@@ -35,7 +39,7 @@ public class HtmlTest {
     }
 
     @Test
-    public void testParseStringArr() {
+    void parsingWithArgsReplacesPlaceholder() {
         String expResult = "Test</span>";
         String result = Html.SPAN.parse("Test");
 
@@ -43,7 +47,10 @@ public class HtmlTest {
     }
 
     @Test
-    public void testNoBackSlash() {
-        assertNotNull(Html.TABLELINE_2.parse("/\\", "0"));
+    void colorsToSpanResetsColors() {
+        String testString = "§fHello, §aPerson§r - How Are you?";
+        String expected = Html.COLOR_F.parse() + "Hello, " + Html.COLOR_A.parse() + "Person</span></span> - How Are you?";
+        String result = Html.swapColorCodesToSpan(testString);
+        assertEquals(expected, result);
     }
 }

@@ -41,6 +41,7 @@ public class ExtensionStringData implements ExtensionData {
     }
 
     public String getFormattedValue() {
-        return !playerName ? value : Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(value), value);
+        String withColors = Html.swapColorCodesToSpan(value);
+        return !playerName ? withColors : Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(value), withColors);
     }
 }

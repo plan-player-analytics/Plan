@@ -110,14 +110,78 @@ public enum Html {
     }
 
     /**
-     * @param p The replacement Strings
+     * Changes Minecraft color codes to HTML span elements with correct color class assignments.
+     *
+     * @param string String to replace Minecraft color codes from
+     * @return String with span elements.
+     */
+    public static String swapColorCodesToSpan(String string) {
+        Html[] replacer = new Html[]{
+                Html.COLOR_0, Html.COLOR_1, Html.COLOR_2, Html.COLOR_3,
+                Html.COLOR_4, Html.COLOR_5, Html.COLOR_6, Html.COLOR_7,
+                Html.COLOR_8, Html.COLOR_9, Html.COLOR_A, Html.COLOR_B,
+                Html.COLOR_C, Html.COLOR_D, Html.COLOR_E, Html.COLOR_F
+        };
+        Map<Character, String> colorMap = new HashMap<>();
+
+        for (Html html : replacer) {
+            colorMap.put(Character.toLowerCase(html.name().charAt(6)), html.parse());
+            colorMap.put('k', "");
+            colorMap.put('l', "");
+            colorMap.put('m', "");
+            colorMap.put('n', "");
+            colorMap.put('o', "");
+        }
+
+        StringBuilder result = new StringBuilder(string.length());
+        String[] split = string.split("§");
+
+        int placedSpans = 0;
+        for (String part : split) {
+            if (part.isEmpty()) {
+                continue;
+            }
+
+            char colorChar = part.charAt(0);
+            if (colorChar == 'r') {
+                appendEndTags(result, placedSpans);
+                placedSpans = 0; // Colors were reset
+                result.append(part.substring(1));
+                continue;
+            }
+
+            String replacement = colorMap.get(colorChar);
+            if (replacement != null) {
+                result.append(replacement).append(part.substring(1));
+
+                if (!replacement.isEmpty()) {
+                    placedSpans++;
+                }
+            } else {
+                result.append(part);
+            }
+        }
+
+        appendEndTags(result, placedSpans);
+
+        return result.toString();
+    }
+
+    private static void appendEndTags(StringBuilder result, int placedSpans) {
+        for (int i = 0; i < placedSpans; i++) {
+            result.append("</span>");
+        }
+    }
+
+    /**
+     * @param replacements The replacement Strings
      * @return The parsed HTML String
      */
-    public String parse(Serializable... p) {
+    public String parse(Serializable... replacements) {
         Map<String, Serializable> replaceMap = new HashMap<>();
 
-        for (int i = 0; i < p.length; i++) {
-            replaceMap.put(String.valueOf(i), p[i]);
+        for (int i = 0; i < replacements.length; i++) {
+            replaceMap.put(String.valueOf(i), replacements[i]);
         }
 
         StringSubstitutor sub = new StringSubstitutor(replaceMap);
