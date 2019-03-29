@@ -157,6 +157,7 @@ public abstract class CommonDBTest {
         assertEquals(serverUUID, db.getServerUUIDSupplier().get());
 
         system.getExtensionService().unregister(new TestExtension());
+        system.getExtensionService().unregister(new ServerExtension());
         system.getExtensionService().unregister(new ConditionalExtension());
     }
 
@@ -1033,7 +1034,7 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void extensionValuesAreStored() {
+    public void extensionPlayerValuesAreStored() {
         ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
 
         extensionService.register(new TestExtension());
@@ -1132,6 +1133,34 @@ public abstract class CommonDBTest {
 
         @StringProvider(text = "a string")
         public String stringVal(UUID playerUUID) {
+            return "Something";
+        }
+    }
+
+    @PluginInfo(name = "ServerExtension")
+    public class ServerExtension implements DataExtension {
+        @NumberProvider(text = "a number")
+        public long value() {
+            return 5L;
+        }
+
+        @BooleanProvider(text = "a boolean")
+        public boolean boolVal() {
+            return false;
+        }
+
+        @DoubleProvider(text = "a double")
+        public double doubleVal() {
+            return 0.5;
+        }
+
+        @PercentageProvider(text = "a percentage")
+        public double percentageVal() {
+            return 0.5;
+        }
+
+        @StringProvider(text = "a string")
+        public String stringVal() {
             return "Something";
         }
     }

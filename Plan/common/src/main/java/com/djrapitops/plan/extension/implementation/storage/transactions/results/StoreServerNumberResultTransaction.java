@@ -16,9 +16,17 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
+import com.djrapitops.plan.db.access.ExecStatement;
+import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.transactions.Transaction;
+import com.djrapitops.plan.db.sql.tables.ExtensionProviderTable;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.UUID;
+
+import static com.djrapitops.plan.db.sql.parsing.Sql.WHERE;
+import static com.djrapitops.plan.db.sql.tables.ExtensionServerValueTable.*;
 
 /**
  * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.NumberDataProvider}.
@@ -31,17 +39,55 @@ public class StoreServerNumberResultTransaction extends Transaction {
     private final UUID serverUUID;
     private final String providerName;
 
-    private final long result;
+    private final long value;
 
-    public StoreServerNumberResultTransaction(String pluginName, UUID serverUUID, String providerName, long result) {
+    public StoreServerNumberResultTransaction(String pluginName, UUID serverUUID, String providerName, long value) {
         this.pluginName = pluginName;
         this.serverUUID = serverUUID;
         this.providerName = providerName;
-        this.result = result;
+        this.value = value;
     }
 
     @Override
     protected void performOperations() {
-        // TODO
+        execute(storeValue());
+    }
+
+    private Executable storeValue() {
+        return connection -> {
+            if (!updateValue().execute(connection)) {
+                return insertValue().execute(connection);
+            }
+            return false;
+        };
+    }
+
+    private Executable updateValue() {
+        String sql = "UPDATE " + TABLE_NAME +
+                " SET " +
+                LONG_VALUE + "=?" +
+                WHERE + PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID;
+
+        return new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, value);
+                ExtensionProviderTable.set3PluginValuesToStatement(statement, 2, providerName, pluginName, serverUUID);
+            }
+        };
+    }
+
+    private Executable insertValue() {
+        String sql = "INSERT INTO " + TABLE_NAME + "(" +
+                LONG_VALUE + "," +
+                PROVIDER_ID +
+                ") VALUES (?," + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID + ")";
+        return new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, value);
+                ExtensionProviderTable.set3PluginValuesToStatement(statement, 2, providerName, pluginName, serverUUID);
+            }
+        };
     }
 }

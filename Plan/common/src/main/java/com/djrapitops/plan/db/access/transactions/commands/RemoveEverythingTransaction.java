@@ -45,6 +45,7 @@ public class RemoveEverythingTransaction extends Transaction {
         clearTable(SecurityTable.TABLE_NAME);
         clearTable(ServerTable.TABLE_NAME);
         clearTable(ExtensionPlayerValueTable.TABLE_NAME);
+        clearTable(ExtensionServerValueTable.TABLE_NAME);
         clearTable(ExtensionProviderTable.TABLE_NAME);
         clearTable(ExtensionTabTable.TABLE_NAME);
         clearTable(ExtensionPluginTable.TABLE_NAME);
