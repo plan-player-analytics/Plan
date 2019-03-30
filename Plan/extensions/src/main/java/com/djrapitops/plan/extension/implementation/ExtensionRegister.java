@@ -16,11 +16,7 @@
  */
 package com.djrapitops.plan.extension.implementation;
 
-import com.djrapitops.extension.AdvancedAchievementsExtensionFactory;
-import com.djrapitops.extension.AdvancedBanExtensionFactory;
-import com.djrapitops.extension.BanManagerExtensionFactory;
-import com.djrapitops.extension.DiscordSRVExtensionFactory;
-import com.djrapitops.extension.EssentialsExtensionFactory;
+import com.djrapitops.extension.*;
 import com.djrapitops.plan.extension.ExtensionService;
 
 import javax.inject.Inject;
@@ -49,6 +45,7 @@ public class ExtensionRegister {
         new BanManagerExtensionFactory().createExtension().ifPresent(extensionService::register);
         new DiscordSRVExtensionFactory().createExtension().ifPresent(extensionService::register);
         new EssentialsExtensionFactory().createExtension().ifPresent(extensionService::register);
+        new SpongeEconomyExtensionFactory().createExtension().ifPresent(extensionService::register);
     }
 
 }

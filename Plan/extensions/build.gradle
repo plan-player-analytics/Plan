@@ -5,6 +5,7 @@ dependencies {
     compile "com.djrapitops:Extension-BanManager:5.15.0-R0.3"
     compile "com.djrapitops:Extension-DiscordSRV:1.16.6-R0.1"
     compile "com.djrapitops:Extension-EssentialsX:2.15.0-R0.1"
+    compile "com.djrapitops:Extension-Sponge-Economy:7.1.0-R0.1"
 }
 
 shadowJar {
