@@ -191,6 +191,6 @@ public class PageFactory {
                 .query(ContainerFetchQueries.fetchNetworkContainer()); // Not cached, big.
         return new NetworkPage(networkContainer,
                 analysisPluginsTabContentCreator.get(),
-                versionCheckSystem.get(), fileSystem.get(), serverInfo.get().getServerProperties());
+                versionCheckSystem.get(), fileSystem.get(), serverInfo.get().getServerProperties(), formatters.get());
     }
 }
