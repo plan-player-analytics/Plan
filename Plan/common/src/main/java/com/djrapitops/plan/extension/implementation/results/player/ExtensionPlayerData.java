@@ -16,6 +16,9 @@
  */
 package com.djrapitops.plan.extension.implementation.results.player;
 
+import com.djrapitops.plan.extension.implementation.results.ExtensionInformation;
+import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

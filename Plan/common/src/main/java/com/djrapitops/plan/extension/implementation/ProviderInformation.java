@@ -18,7 +18,7 @@ package com.djrapitops.plan.extension.implementation;
 
 import com.djrapitops.plan.extension.annotation.Conditional;
 import com.djrapitops.plan.extension.icon.Icon;
-import com.djrapitops.plan.extension.implementation.results.player.ExtensionDescriptive;
+import com.djrapitops.plan.extension.implementation.results.ExtensionDescriptive;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;

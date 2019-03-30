@@ -18,10 +18,10 @@ package com.djrapitops.plan.utilities.html.pages;
 
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.implementation.TabInformation;
-import com.djrapitops.plan.extension.implementation.results.player.ExtensionDescriptive;
-import com.djrapitops.plan.extension.implementation.results.player.ExtensionInformation;
+import com.djrapitops.plan.extension.implementation.results.ExtensionDescriptive;
+import com.djrapitops.plan.extension.implementation.results.ExtensionInformation;
+import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
 import com.djrapitops.plan.extension.implementation.results.player.ExtensionPlayerData;
-import com.djrapitops.plan.extension.implementation.results.player.ExtensionTabData;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.Html;

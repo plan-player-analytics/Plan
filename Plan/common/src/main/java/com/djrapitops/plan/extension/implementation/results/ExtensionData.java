@@ -14,30 +14,20 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.extension.implementation.results.player;
-
-import com.djrapitops.plan.utilities.formatting.Formatter;
+package com.djrapitops.plan.extension.implementation.results;
 
 /**
- * Represents double data returned by a DoubleProvider or PercentageProvider method.
+ * Represents a data-point given by a Provider method of a DataExtension.
  *
  * @author Rsl1122
  */
-public class ExtensionDoubleData implements ExtensionData {
+public interface ExtensionData {
 
-    private ExtensionDescriptive descriptive;
-    private double value;
+    /**
+     * Get Descriptive information about the data point.
+     *
+     * @return a {@link ExtensionDescriptive}.
+     */
+    ExtensionDescriptive getDescriptive();
 
-    public ExtensionDoubleData(ExtensionDescriptive descriptive, double value) {
-        this.descriptive = descriptive;
-        this.value = value;
-    }
-
-    public ExtensionDescriptive getDescriptive() {
-        return descriptive;
-    }
-
-    public String getFormattedValue(Formatter<Double> formatter) {
-        return formatter.apply(value);
-    }
 }

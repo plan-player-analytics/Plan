@@ -24,7 +24,7 @@ import com.djrapitops.plan.db.sql.tables.ExtensionPluginTable;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
-import com.djrapitops.plan.extension.implementation.results.player.ExtensionInformation;
+import com.djrapitops.plan.extension.implementation.results.ExtensionInformation;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

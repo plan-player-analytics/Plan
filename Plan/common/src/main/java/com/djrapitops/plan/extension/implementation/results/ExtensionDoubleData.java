@@ -14,25 +14,22 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.extension.implementation.results.player;
+package com.djrapitops.plan.extension.implementation.results;
 
-import com.djrapitops.plan.api.PlanAPI;
-import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 
 /**
  * Represents double data returned by a DoubleProvider or PercentageProvider method.
  *
  * @author Rsl1122
  */
-public class ExtensionStringData implements ExtensionData {
+public class ExtensionDoubleData implements ExtensionData {
 
-    private final ExtensionDescriptive descriptive;
-    private final boolean playerName;
-    private final String value;
+    private ExtensionDescriptive descriptive;
+    private double value;
 
-    public ExtensionStringData(ExtensionDescriptive descriptive, boolean playerName, String value) {
+    public ExtensionDoubleData(ExtensionDescriptive descriptive, double value) {
         this.descriptive = descriptive;
-        this.playerName = playerName;
         this.value = value;
     }
 
@@ -40,8 +37,7 @@ public class ExtensionStringData implements ExtensionData {
         return descriptive;
     }
 
-    public String getFormattedValue() {
-        String withColors = Html.swapColorCodesToSpan(value);
-        return !playerName ? withColors : Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(value), withColors);
+    public String getFormattedValue(Formatter<Double> formatter) {
+        return formatter.apply(value);
     }
 }

@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.extension.implementation.results.player;
+package com.djrapitops.plan.extension.implementation.results;
 
 import com.djrapitops.plan.extension.implementation.TabInformation;
 
@@ -78,20 +78,6 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         return Optional.ofNullable(stringData.get(providerName));
     }
 
-    private void createOrderingList() {
-        List<ExtensionDescriptive> descriptives = new ArrayList<>();
-        booleanData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
-        doubleData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
-        percentageData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
-        numberData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
-        stringData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
-
-        order = descriptives.stream().sorted()
-                .map(ExtensionDescriptive::getName)
-                .distinct()// Method names are usually different, but in case someone had same method name with different parameters.
-                .collect(Collectors.toList());
-    }
-
     @Override
     public int compareTo(ExtensionTabData other) {
         return Integer.compare(this.tabInformation.getTabPriority(), other.tabInformation.getTabPriority()); // Lower is first
@@ -130,8 +116,22 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
             return this;
         }
 
+        private void createOrderingList() {
+            List<ExtensionDescriptive> descriptives = new ArrayList<>();
+            data.booleanData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
+            data.doubleData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
+            data.percentageData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
+            data.numberData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
+            data.stringData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
+
+            data.order = descriptives.stream().sorted()
+                    .map(ExtensionDescriptive::getName)
+                    .distinct()// Method names are usually different, but in case someone had same method name with different parameters.
+                    .collect(Collectors.toList());
+        }
+
         public ExtensionTabData build() {
-            data.createOrderingList();
+            createOrderingList();
             return data;
         }
     }

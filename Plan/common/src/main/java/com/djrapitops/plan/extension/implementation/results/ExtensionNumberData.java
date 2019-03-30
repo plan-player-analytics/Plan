@@ -14,20 +14,25 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.extension.implementation.results.player;
+package com.djrapitops.plan.extension.implementation.results;
+
+import com.djrapitops.plan.extension.FormatType;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 
 /**
- * Represents boolean data returned by a BooleanProvider method.
+ * Represents double data returned by a DoubleProvider or PercentageProvider method.
  *
  * @author Rsl1122
  */
-public class ExtensionBooleanData implements ExtensionData {
+public class ExtensionNumberData implements ExtensionData {
 
-    private ExtensionDescriptive descriptive;
-    private boolean value;
+    private final ExtensionDescriptive descriptive;
+    private final FormatType formatType;
+    private final long value;
 
-    public ExtensionBooleanData(ExtensionDescriptive descriptive, boolean value) {
+    public ExtensionNumberData(ExtensionDescriptive descriptive, FormatType formatType, long value) {
         this.descriptive = descriptive;
+        this.formatType = formatType;
         this.value = value;
     }
 
@@ -35,7 +40,11 @@ public class ExtensionBooleanData implements ExtensionData {
         return descriptive;
     }
 
-    public String getFormattedValue() {
-        return value ? "Yes" : "No";
+    public FormatType getFormatType() {
+        return formatType;
+    }
+
+    public String getFormattedValue(Formatter<Long> formatter) {
+        return formatter.apply(value);
     }
 }
