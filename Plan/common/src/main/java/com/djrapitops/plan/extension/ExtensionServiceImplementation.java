@@ -143,4 +143,23 @@ public class ExtensionServiceImplementation implements ExtensionService {
             }
         }
     }
+
+    public void updateServerValues() {
+        for (Map.Entry<String, ProviderValueGatherer> gatherer : extensionGatherers.entrySet()) {
+            try {
+                logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, "Gathering values for server");
+
+                gatherer.getValue().updateValues();
+
+                logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, "Gathering completed for server");
+            } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
+                logger.warn(gatherer.getKey() + " ran into (but failed safely) " + e.getClass().getSimpleName() +
+                        " when updating value for server" +
+                        ", (You can disable integration with setting 'Plugins." + gatherer.getKey() + ".Enabled')" +
+                        " reason: '" + e.getMessage() +
+                        "', stack trace to follow:");
+                errorHandler.log(L.WARN, gatherer.getValue().getClass(), e);
+            }
+        }
+    }
 }

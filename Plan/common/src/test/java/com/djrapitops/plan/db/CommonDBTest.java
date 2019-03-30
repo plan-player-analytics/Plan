@@ -51,7 +51,9 @@ import com.djrapitops.plan.extension.implementation.results.ExtensionBooleanData
 import com.djrapitops.plan.extension.implementation.results.ExtensionStringData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
 import com.djrapitops.plan.extension.implementation.results.player.ExtensionPlayerData;
+import com.djrapitops.plan.extension.implementation.results.server.ExtensionServerData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalResultsTransaction;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -156,7 +158,7 @@ public abstract class CommonDBTest {
         db.executeTransaction(new StoreServerInformationTransaction(new Server(-1, serverUUID, "ServerName", "", 20)));
         assertEquals(serverUUID, db.getServerUUIDSupplier().get());
 
-        system.getExtensionService().unregister(new TestExtension());
+        system.getExtensionService().unregister(new PlayerExtension());
         system.getExtensionService().unregister(new ServerExtension());
         system.getExtensionService().unregister(new ConditionalExtension());
     }
@@ -1037,7 +1039,7 @@ public abstract class CommonDBTest {
     public void extensionPlayerValuesAreStored() {
         ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
 
-        extensionService.register(new TestExtension());
+        extensionService.register(new PlayerExtension());
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME);
 
         Map<UUID, List<ExtensionPlayerData>> playerDataByServerUUID = db.query(new ExtensionPlayerDataQuery(playerUUID));
@@ -1055,6 +1057,46 @@ public abstract class CommonDBTest {
         OptionalAssert.equals("0.5", tabData.getDouble("doubleVal").map(data -> data.getFormattedValue(Object::toString)));
         OptionalAssert.equals("0.5", tabData.getPercentage("percentageVal").map(data -> data.getFormattedValue(Object::toString)));
         OptionalAssert.equals("Something", tabData.getString("stringVal").map(ExtensionStringData::getFormattedValue));
+    }
+
+    @Test
+    public void extensionServerValuesAreStored() {
+        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
+
+        extensionService.register(new ServerExtension());
+        extensionService.updateServerValues();
+
+        List<ExtensionServerData> ofServer = db.query(new ExtensionServerDataQuery(serverUUID));
+        assertFalse(ofServer.isEmpty());
+
+        ExtensionServerData extensionServerData = ofServer.get(0);
+        List<ExtensionTabData> tabs = extensionServerData.getTabs();
+        assertEquals(1, tabs.size()); // No tab defined, should contain 1 tab
+        ExtensionTabData tabData = tabs.get(0);
+
+        OptionalAssert.equals("5", tabData.getNumber("value").map(data -> data.getFormattedValue(Object::toString)));
+        OptionalAssert.equals("No", tabData.getBoolean("boolVal").map(ExtensionBooleanData::getFormattedValue));
+        OptionalAssert.equals("0.5", tabData.getDouble("doubleVal").map(data -> data.getFormattedValue(Object::toString)));
+        OptionalAssert.equals("0.5", tabData.getPercentage("percentageVal").map(data -> data.getFormattedValue(Object::toString)));
+        OptionalAssert.equals("Something", tabData.getString("stringVal").map(ExtensionStringData::getFormattedValue));
+    }
+
+    @Test
+    public void extensionServerAggregateQueriesWork() {
+        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
+
+        extensionService.register(new PlayerExtension());
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME);
+
+        List<ExtensionServerData> ofServer = db.query(new ExtensionServerDataQuery(serverUUID));
+        assertFalse(ofServer.isEmpty());
+
+        ExtensionServerData extensionServerData = ofServer.get(0);
+        List<ExtensionTabData> tabs = extensionServerData.getTabs();
+        assertEquals(1, tabs.size()); // No tab defined, should contain 1 tab
+        ExtensionTabData tabData = tabs.get(0);
+
+        OptionalAssert.equals("0.0", tabData.getPercentage("boolVal_aggregate").map(data -> data.getFormattedValue(Objects::toString)));
     }
 
     @Test
@@ -1109,31 +1151,31 @@ public abstract class CommonDBTest {
         }
     }
 
-    @PluginInfo(name = "TestExtension")
-    public class TestExtension implements DataExtension {
-        @NumberProvider(text = "a number")
-        public long value(UUID playerUUD) {
-            return 5L;
+    @PluginInfo(name = "ConditionalExtension")
+    public static class ConditionalExtension implements DataExtension {
+
+        static boolean condition = true;
+
+        @BooleanProvider(text = "a boolean", conditionName = "condition")
+        public boolean isCondition(UUID playerUUID) {
+            return condition;
         }
 
-        @BooleanProvider(text = "a boolean")
-        public boolean boolVal(UUID playerUUID) {
-            return false;
+        @StringProvider(text = "Conditional Value")
+        @Conditional("condition")
+        public String conditionalValue(UUID playerUUID) {
+            return "Conditional";
         }
 
-        @DoubleProvider(text = "a double")
-        public double doubleVal(UUID playerUUID) {
-            return 0.5;
+        @StringProvider(text = "Reversed Conditional Value")
+        @Conditional(value = "condition", negated = true)
+        public String reversedConditionalValue(UUID playerUUID) {
+            return "Reversed";
         }
 
-        @PercentageProvider(text = "a percentage")
-        public double percentageVal(UUID playerUUID) {
-            return 0.5;
-        }
-
-        @StringProvider(text = "a string")
-        public String stringVal(UUID playerUUID) {
-            return "Something";
+        @StringProvider(text = "Unconditional")
+        public String unconditional(UUID playerUUID) {
+            return "unconditional";
         }
     }
 
@@ -1165,31 +1207,31 @@ public abstract class CommonDBTest {
         }
     }
 
-    @PluginInfo(name = "Conditional TestExtension")
-    public static class ConditionalExtension implements DataExtension {
-
-        static boolean condition = true;
-
-        @BooleanProvider(text = "a boolean", conditionName = "condition")
-        public boolean isCondition(UUID playerUUID) {
-            return condition;
+    @PluginInfo(name = "PlayerExtension")
+    public class PlayerExtension implements DataExtension {
+        @NumberProvider(text = "a number")
+        public long value(UUID playerUUD) {
+            return 5L;
         }
 
-        @StringProvider(text = "Conditional Value")
-        @Conditional("condition")
-        public String conditionalValue(UUID playerUUID) {
-            return "Conditional";
+        @BooleanProvider(text = "a boolean")
+        public boolean boolVal(UUID playerUUID) {
+            return false;
         }
 
-        @StringProvider(text = "Reversed Conditional Value")
-        @Conditional(value = "condition", negated = true)
-        public String reversedConditionalValue(UUID playerUUID) {
-            return "Reversed";
+        @DoubleProvider(text = "a double")
+        public double doubleVal(UUID playerUUID) {
+            return 0.5;
         }
 
-        @StringProvider(text = "Unconditional")
-        public String unconditional(UUID playerUUID) {
-            return "unconditional";
+        @PercentageProvider(text = "a percentage")
+        public double percentageVal(UUID playerUUID) {
+            return 0.5;
+        }
+
+        @StringProvider(text = "a string")
+        public String stringVal(UUID playerUUID) {
+            return "Something";
         }
     }
 }

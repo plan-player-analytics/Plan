@@ -19,9 +19,7 @@ package com.djrapitops.plan.extension.implementation.results.server;
 import com.djrapitops.plan.extension.implementation.results.ExtensionInformation;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Represents data of a single extension about a server.
@@ -34,12 +32,12 @@ public class ExtensionServerData implements Comparable<ExtensionServerData> {
 
     private ExtensionInformation extensionInformation;
 
-    private List<ExtensionTabData> tabs;
+    private Map<String, ExtensionTabData> tabs;
 
     private ExtensionServerData(int pluginID) {
         this.pluginID = pluginID;
 
-        tabs = new ArrayList<>();
+        tabs = new HashMap<>();
     }
 
     public int getPluginID() {
@@ -51,11 +49,13 @@ public class ExtensionServerData implements Comparable<ExtensionServerData> {
     }
 
     public boolean hasOnlyGenericTab() {
-        return tabs.size() == 1 && tabs.get(0).getTabInformation().getTabName().isEmpty();
+        return tabs.size() == 1 && tabs.containsKey("");
     }
 
     public List<ExtensionTabData> getTabs() {
-        return tabs;
+        List<ExtensionTabData> tabList = new ArrayList<>(tabs.values());
+        Collections.sort(tabList);
+        return tabList;
     }
 
     @Override
@@ -71,6 +71,20 @@ public class ExtensionServerData implements Comparable<ExtensionServerData> {
             data = new ExtensionServerData(pluginId);
         }
 
+        public Factory combine(Factory with) {
+            if (with != null) {
+                for (ExtensionTabData tab : with.build().getTabs()) {
+                    Optional<ExtensionTabData> found = getTab(tab.getTabInformation().getTabName());
+                    if (found.isPresent()) {
+                        found.get().combine(tab);
+                    } else {
+                        addTab(tab);
+                    }
+                }
+            }
+            return this;
+        }
+
         public Factory setInformation(ExtensionInformation information) {
             if (information.getId() != data.pluginID) {
                 throw new IllegalArgumentException("ID mismatch, wanted id: " + data.pluginID + " but got " + information);
@@ -80,12 +94,15 @@ public class ExtensionServerData implements Comparable<ExtensionServerData> {
         }
 
         public Factory addTab(ExtensionTabData tab) {
-            data.tabs.add(tab);
+            data.tabs.put(tab.getTabInformation().getTabName(), tab);
             return this;
         }
 
+        public Optional<ExtensionTabData> getTab(String tabName) {
+            return Optional.ofNullable(data.tabs.get(tabName));
+        }
+
         public ExtensionServerData build() {
-            Collections.sort(data.tabs);
             return data;
         }
     }

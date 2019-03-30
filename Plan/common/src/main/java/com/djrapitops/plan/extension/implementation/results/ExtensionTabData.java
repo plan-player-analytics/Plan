@@ -83,6 +83,14 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         return Integer.compare(this.tabInformation.getTabPriority(), other.tabInformation.getTabPriority()); // Lower is first
     }
 
+    public void combine(ExtensionTabData other) {
+        this.booleanData.putAll(other.booleanData);
+        this.doubleData.putAll(other.doubleData);
+        this.percentageData.putAll(other.percentageData);
+        this.numberData.putAll(other.numberData);
+        this.stringData.putAll(other.stringData);
+    }
+
     public static class Factory {
 
         private final ExtensionTabData data;
