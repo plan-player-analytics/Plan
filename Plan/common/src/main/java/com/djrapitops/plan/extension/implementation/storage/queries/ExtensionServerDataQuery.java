@@ -80,6 +80,9 @@ public class ExtensionServerDataQuery implements Query<List<ExtensionServerData>
         Map<Integer, ExtensionServerData.Factory> extensionDataByPluginID = db.query(fetchIncompleteServerDataByPluginID());
 
         combine(extensionDataByPluginID, db.query(new ExtensionAggregateBooleansQuery(serverUUID)));
+        combine(extensionDataByPluginID, db.query(new ExtensionAggregateDoublesQuery(serverUUID)));
+        combine(extensionDataByPluginID, db.query(new ExtensionAggregateNumbersQuery(serverUUID)));
+        combine(extensionDataByPluginID, db.query(new ExtensionAggregatePercentagesQuery(serverUUID)));
 
         return combineWithExtensionInfo(extensionsOfServer, extensionDataByPluginID);
     }

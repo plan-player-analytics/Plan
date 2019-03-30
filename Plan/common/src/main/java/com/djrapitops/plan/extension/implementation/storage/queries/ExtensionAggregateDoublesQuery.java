@@ -55,33 +55,33 @@ import static com.djrapitops.plan.db.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, ExtensionServerData.Factory>> {
+public class ExtensionAggregateDoublesQuery implements Query<Map<Integer, ExtensionServerData.Factory>> {
 
     private final UUID serverUUID;
 
-    public ExtensionAggregateBooleansQuery(UUID serverUUID) {
+    public ExtensionAggregateDoublesQuery(UUID serverUUID) {
         this.serverUUID = serverUUID;
     }
 
     @Override
     public Map<Integer, ExtensionServerData.Factory> executeQuery(SQLDB db) {
-        String selectTrueBooleans = SELECT +
+        String selectDoubleAverage = SELECT +
                 ExtensionPlayerValueTable.PROVIDER_ID +
-                ",COUNT(1) as positive" +
+                ",AVG(" + ExtensionPlayerValueTable.DOUBLE_VALUE + ") as average" +
                 FROM + ExtensionPlayerValueTable.TABLE_NAME +
-                WHERE + ExtensionPlayerValueTable.BOOLEAN_VALUE + "=?" +
+                WHERE + ExtensionPlayerValueTable.DOUBLE_VALUE + IS_NOT_NULL +
                 GROUP_BY + ExtensionPlayerValueTable.PROVIDER_ID;
 
-        String selectBooleanCount = SELECT +
+        String selectDoubleTotal = SELECT +
                 ExtensionPlayerValueTable.PROVIDER_ID +
-                ",COUNT(1) as total" +
+                ",SUM(" + ExtensionPlayerValueTable.DOUBLE_VALUE + ") as total" +
                 FROM + ExtensionPlayerValueTable.TABLE_NAME +
-                WHERE + ExtensionPlayerValueTable.BOOLEAN_VALUE + IS_NOT_NULL +
+                WHERE + ExtensionPlayerValueTable.DOUBLE_VALUE + IS_NOT_NULL +
                 GROUP_BY + ExtensionPlayerValueTable.PROVIDER_ID;
 
         String sql = SELECT +
                 "b1.total as total," +
-                "b2.positive as positive," +
+                "b2.average as average," +
                 "p1." + ExtensionProviderTable.PLUGIN_ID + " as plugin_id," +
                 "p1." + ExtensionProviderTable.PROVIDER_NAME + " as provider_name," +
                 "p1." + ExtensionProviderTable.TEXT + " as text," +
@@ -97,10 +97,10 @@ public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, Exten
                 "i2." + ExtensionIconTable.ICON_NAME + " as tab_icon_name," +
                 "i2." + ExtensionIconTable.FAMILY + " as tab_icon_family," +
                 "i2." + ExtensionIconTable.COLOR + " as tab_icon_color" +
-                FROM + '(' + selectBooleanCount + ") b1" +
+                FROM + '(' + selectDoubleTotal + ") b1" +
                 INNER_JOIN + ExtensionProviderTable.TABLE_NAME + " p1 on p1." + ExtensionProviderTable.ID + "=b1." + ExtensionPlayerValueTable.PROVIDER_ID +
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " e1 on p1." + ExtensionProviderTable.PLUGIN_ID + "=e1." + ExtensionPluginTable.ID +
-                LEFT_JOIN + '(' + selectTrueBooleans + ") b2 on b2." + ExtensionPlayerValueTable.PROVIDER_ID + "=b1." + ExtensionPlayerValueTable.PROVIDER_ID +
+                LEFT_JOIN + '(' + selectDoubleAverage + ") b2 on b2." + ExtensionPlayerValueTable.PROVIDER_ID + "=b1." + ExtensionPlayerValueTable.PROVIDER_ID +
                 LEFT_JOIN + ExtensionTabTable.TABLE_NAME + " t1 on t1." + ExtensionTabTable.ID + "=p1." + ExtensionProviderTable.TAB_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i1 on i1." + ExtensionIconTable.ID + "=p1." + ExtensionProviderTable.ICON_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i2 on i2." + ExtensionIconTable.ID + "=p1." + ExtensionTabTable.ICON_ID +
@@ -110,9 +110,8 @@ public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, Exten
         return db.query(new QueryStatement<Map<Integer, ExtensionServerData.Factory>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setBoolean(1, true); // selectTrueBooleans parameter
-                statement.setString(2, serverUUID.toString());
-                statement.setBoolean(3, false); // Don't select hidden values
+                statement.setString(1, serverUUID.toString());
+                statement.setBoolean(2, false); // Don't select hidden values
             }
 
             @Override
@@ -144,19 +143,16 @@ public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, Exten
     }
 
     private void extractAndPutDataTo(ExtensionTabData.Factory extensionTab, ExtensionDescriptive descriptive, ResultSet set) throws SQLException {
-        double percentageValue = percentage(set.getInt("positive"), set.getInt("total"));
-        extensionTab.putPercentageData(new ExtensionDoubleData(descriptive, percentageValue));
+        extensionTab.putDoubleData(new ExtensionDoubleData(modifiedDescriptive(descriptive, "_avg", "Average "), set.getDouble("average")));
+        extensionTab.putDoubleData(new ExtensionDoubleData(modifiedDescriptive(descriptive, "_total", "Total "), set.getDouble("total")));
     }
 
-    private double percentage(double first, double second) {
-        if (first == 0.0 || second == 0.0) {
-            return 0.0;
-        }
-        return first / second;
+    private ExtensionDescriptive modifiedDescriptive(ExtensionDescriptive descriptive, String appendToName, String appendToText) {
+        return new ExtensionDescriptive(descriptive.getName() + appendToName, descriptive.getText() + appendToText, descriptive.getDescription().orElse(null), descriptive.getIcon(), descriptive.getPriority());
     }
 
     private ExtensionDescriptive extractDescriptive(ResultSet set) throws SQLException {
-        String name = set.getString("provider_name") + "_aggregate";
+        String name = set.getString("provider_name");
         String text = set.getString(ExtensionProviderTable.TEXT);
         String description = set.getString(ExtensionProviderTable.DESCRIPTION);
         int priority = set.getInt("provider_priority");
