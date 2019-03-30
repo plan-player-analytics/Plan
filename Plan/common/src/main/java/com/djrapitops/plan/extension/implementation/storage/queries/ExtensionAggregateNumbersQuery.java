@@ -107,13 +107,17 @@ public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, Extens
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i1 on i1." + ExtensionIconTable.ID + "=p1." + ExtensionProviderTable.ICON_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i2 on i2." + ExtensionIconTable.ID + "=p1." + ExtensionTabTable.ICON_ID +
                 WHERE + ExtensionPluginTable.SERVER_UUID + "=?" +
-                AND + "p1." + ExtensionProviderTable.HIDDEN + "=?";
+                AND + "p1." + ExtensionProviderTable.HIDDEN + "=?" +
+                AND + "p1." + ExtensionProviderTable.FORMAT_TYPE + "!=?" +
+                AND + "p1." + ExtensionProviderTable.FORMAT_TYPE + "!=?";
 
         return db.query(new QueryStatement<Map<Integer, ExtensionServerData.Factory>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
                 statement.setBoolean(2, false); // Don't select hidden values
+                statement.setString(3, FormatType.DATE_YEAR.name());
+                statement.setString(4, FormatType.DATE_SECOND.name());
             }
 
             @Override
