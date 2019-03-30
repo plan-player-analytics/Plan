@@ -37,6 +37,7 @@ import com.djrapitops.plan.utilities.html.graphs.bar.BarGraph;
 import com.djrapitops.plan.utilities.html.graphs.line.PingGraph;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.graphs.stack.StackGraph;
+import com.djrapitops.plan.utilities.html.pages.AnalysisPluginTabs;
 import com.djrapitops.plan.utilities.html.structure.Accordions;
 import com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
 import com.djrapitops.plan.utilities.html.structure.RecentLoginList;
@@ -488,13 +489,14 @@ public class AnalysisContainer extends DynamicDataContainer {
 
     private void addPluginSuppliers() {
         // TODO Refactor into a system that supports running the analysis on Bungee
-        Key<String[]> navAndTabs = new Key<>(new Type<String[]>() {
-        }, "NAV_AND_TABS");
+        Key<String[]> navAndTabs = new Key<>(new Type<String[]>() {}, "NAV_AND_TABS");
+        Key<AnalysisPluginTabs> pluginTabs = new Key<>(AnalysisPluginTabs.class, "PLUGIN_TABS");
         putCachingSupplier(navAndTabs, () -> pluginsTabContentCreator.createContent(
                 this, getValue(AnalysisKeys.PLAYERS_MUTATOR).orElse(new PlayersMutator(new ArrayList<>()))
         ));
-        putSupplier(AnalysisKeys.PLUGINS_TAB_NAV, () -> getUnsafe(navAndTabs)[0]);
-        putSupplier(AnalysisKeys.PLUGINS_TAB, () -> getUnsafe(navAndTabs)[1]);
+        putCachingSupplier(pluginTabs, () -> new AnalysisPluginTabs(serverContainer.getValue(ServerKeys.EXTENSION_DATA).orElse(new ArrayList<>()), formatters));
+        putSupplier(AnalysisKeys.PLUGINS_TAB_NAV, () -> getUnsafe(pluginTabs).getNav() + getUnsafe(navAndTabs)[0]);
+        putSupplier(AnalysisKeys.PLUGINS_TAB, () -> getUnsafe(pluginTabs).getTabs() + getUnsafe(navAndTabs)[1]);
     }
 
     @Singleton

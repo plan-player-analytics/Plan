@@ -68,7 +68,7 @@ public class AnalysisPluginsTabContentCreator {
     ) {
 
         if (mutator.all().isEmpty()) {
-            return new String[]{"<li><a>No Data</a></li>", ""};
+            return new String[]{"", ""};
         }
 
         List<UUID> uuids = mutator.uuids();
@@ -125,7 +125,7 @@ public class AnalysisPluginsTabContentCreator {
                 "</div></div>";
 
         return new String[]{
-                (displayGeneralTab ? "<li><a class=\"nav-button\" href=\"javascript:void(0)\">General</a></li>" : "")
+                (displayGeneralTab ? "<li><a class=\"nav-button\" href=\"javascript:void(0)\">General (Legacy)</a></li>" : "")
                         + "<li><a class=\"nav-button\" href=\"javascript:void(0)\">Player Data</a></li>" + nav.toString(),
                 (displayGeneralTab ? generalTab.toString() : "") + playerListTab + otherTabs.toString()
         };

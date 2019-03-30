@@ -25,6 +25,7 @@ import com.djrapitops.plan.data.store.Type;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.extension.implementation.results.server.ExtensionServerData;
 
 import java.util.List;
 import java.util.Map;
@@ -63,4 +64,5 @@ public class ServerKeys {
     public static final Key<DateObj<Integer>> ALL_TIME_PEAK_PLAYERS = new Key<>(new Type<DateObj<Integer>>() {}, "all_time_peak_players");
     public static final Key<DateObj<Integer>> RECENT_PEAK_PLAYERS = new Key<>(new Type<DateObj<Integer>>() {}, "recent_peak_players");
     public static final Key<Map<String, Integer>> COMMAND_USAGE = new Key<>(new Type<Map<String, Integer>>() {}, "command_usage");
+    public static final Key<List<ExtensionServerData>> EXTENSION_DATA = new Key<>(new Type<List<ExtensionServerData>>() {}, "extension_data");
 }
