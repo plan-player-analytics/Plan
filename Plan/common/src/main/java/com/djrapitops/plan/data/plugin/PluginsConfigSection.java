@@ -38,8 +38,11 @@ public class PluginsConfigSection {
     }
 
     public boolean hasSection(PluginData dataSource) {
+        return hasSection(dataSource.getSourcePlugin());
+    }
+
+    public boolean hasSection(String pluginName) {
         ConfigNode section = getPluginsSection();
-        String pluginName = dataSource.getSourcePlugin();
         return section.getNode(pluginName + ".Enabled").isPresent();
     }
 
@@ -49,8 +52,11 @@ public class PluginsConfigSection {
     }
 
     public void createSection(PluginData dataSource) throws IOException {
+        createSection(dataSource.getSourcePlugin());
+    }
+
+    public void createSection(String pluginName) throws IOException {
         ConfigNode section = getPluginsSection();
-        String pluginName = dataSource.getSourcePlugin();
 
         section.set(pluginName + ".Enabled", true);
         section.sort();
@@ -58,9 +64,11 @@ public class PluginsConfigSection {
     }
 
     public boolean isEnabled(PluginData dataSource) {
-        ConfigNode section = getPluginsSection();
+        return isEnabled(dataSource.getSourcePlugin());
+    }
 
-        String pluginName = dataSource.getSourcePlugin();
+    public boolean isEnabled(String pluginName) {
+        ConfigNode section = getPluginsSection();
         return section.getBoolean(pluginName + ".Enabled");
     }
 }

@@ -37,10 +37,10 @@ import java.util.UUID;
 /**
  * Listener that keeps track of actions that are not considered being AFK.
  * <p>
- * Additional Listener calls in SpongePlayerListener to avoid having HIGHEST priority listeners.
+ * Additional Listener calls in PlayerOnlineListener to avoid having HIGHEST priority listeners.
  *
  * @author Rsl1122
- * @see SpongePlayerListener
+ * @see PlayerOnlineListener
  */
 public class SpongeAFKListener {
 

@@ -33,20 +33,22 @@ import java.util.*;
  * <p>
  * Extends Response so that it can be stored in ResponseCache.
  *
+ * @deprecated Marked for removal when the connection system will be removed.
  * @author Rsl1122
  */
+@Deprecated
 public class InspectPagePluginsContent extends PageResponse {
 
     // ServerUUID, {nav, html}
-    private final Map<UUID, String[]> pluginsTab;
+    private final Map<String, String[]> pluginsTab;
 
     public InspectPagePluginsContent() {
         pluginsTab = new HashMap<>();
     }
 
-    public InspectPagePluginsContent(UUID serverUUID, String nav, String html) {
+    public InspectPagePluginsContent(String nav, String html) {
         pluginsTab = new HashMap<>();
-        addTab(serverUUID, nav, html);
+        addTab(nav, html);
     }
 
     public static InspectPagePluginsContent generateForThisServer(UUID playerUUID, ServerInfo serverInfo, HookHandler hookHandler) {
@@ -55,16 +57,16 @@ public class InspectPagePluginsContent extends PageResponse {
 
         Map<PluginData, InspectContainer> containers = hookHandler.getInspectContainersFor(playerUUID);
         if (containers.isEmpty()) {
-            return new InspectPagePluginsContent(playerUUID, "<li><a>" + actualServerName + " (No Data)</a></li>",
+            return new InspectPagePluginsContent("<li><a>" + actualServerName + " (No Data)</a></li>",
                     "<div class=\"tab\"><div class=\"row clearfix\">" +
                             "<div class=\"col-md-12\">" + Html.CARD.parse("<p>No Data (" + actualServerName + ")</p>") +
                             "</div></div></div>");
         }
 
-        String nav = "<li><a class=\"nav-button\" href=\"javascript:void(0)\">" + actualServerName + "</a></li>";
+        String nav = "<li><a class=\"nav-button\" href=\"javascript:void(0)\">" + actualServerName + " (Legacy)</a></li>";
         String tab = createTab(containers);
 
-        return new InspectPagePluginsContent(serverInfo.getServerUUID(), nav, tab);
+        return new InspectPagePluginsContent(nav, tab);
     }
 
     private static String createTab(Map<PluginData, InspectContainer> containers) {
@@ -83,8 +85,8 @@ public class InspectPagePluginsContent extends PageResponse {
         return tab.toString();
     }
 
-    public void addTab(UUID serverUUID, String nav, String html) {
-        pluginsTab.put(serverUUID, new String[]{nav, html});
+    public void addTab(String nav, String html) {
+        pluginsTab.put(nav, new String[]{nav, html});
     }
 
     public void addTab(InspectPagePluginsContent content) {

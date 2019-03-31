@@ -21,6 +21,7 @@ import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.util.List;
@@ -54,7 +55,7 @@ class NicknameTable extends TableContainer {
             UUID serverUUID = nickname.getServerUUID();
             String serverName = serverNames.getOrDefault(serverUUID, "Unknown");
             addRow(
-                    HtmlUtils.swapColorsToSpan(HtmlUtils.removeXSS(nickname.getName())),
+                    Html.swapColorCodesToSpan(HtmlUtils.removeXSS(nickname.getName())),
                     serverName,
                     yearFormatter.apply(nickname)
             );

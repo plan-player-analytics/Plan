@@ -108,35 +108,37 @@ public class ServerServerInfo extends ServerInfo {
     }
 
     private void updateDbInfo(UUID serverUUID) {
-        try {
-            Database db = dbSystem.getDatabase();
+        Database db = dbSystem.getDatabase();
 
-            Optional<Server> foundServer = db.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID));
-            if (!foundServer.isPresent()) {
+        Optional<Server> foundServer = db.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID));
+        if (!foundServer.isPresent()) {
+            try {
                 server = registerServer(serverUUID);
-                return;
+            } catch (ExecutionException | IOException e) {
+                errorHandler.log(L.CRITICAL, this.getClass(), e);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
-
-            server = foundServer.get();
-
-            // Update information
-            String name = config.get(PluginSettings.SERVER_NAME).replaceAll("[^a-zA-Z0-9_\\s]", "_");
-            server.setName("plan".equalsIgnoreCase(name) ? "Server " + server.getId() : name);
-
-            String webAddress = webServer.get().getAccessAddress();
-            server.setWebAddress(webAddress);
-
-            int maxPlayers = serverProperties.getMaxPlayers();
-            server.setMaxPlayers(maxPlayers);
-
-            // Save
-            db.executeTransaction(new StoreServerInformationTransaction(server));
-        } catch (InterruptedException | ExecutionException | IOException e) {
-            errorHandler.log(L.CRITICAL, this.getClass(), e);
+            return;
         }
+
+        server = foundServer.get();
+
+        // Update information
+        String name = config.get(PluginSettings.SERVER_NAME).replaceAll("[^a-zA-Z0-9_\\s]", "_");
+        server.setName("plan".equalsIgnoreCase(name) ? "Server " + server.getId() : name);
+
+        String webAddress = webServer.get().getAccessAddress();
+        server.setWebAddress(webAddress);
+
+        int maxPlayers = serverProperties.getMaxPlayers();
+        server.setMaxPlayers(maxPlayers);
+
+        // Save
+        db.executeTransaction(new StoreServerInformationTransaction(server));
     }
 
-    private Server registerServer() throws Exception {
+    private Server registerServer() throws ExecutionException, InterruptedException, IOException {
         return registerServer(generateNewUUID());
     }
 

@@ -37,6 +37,7 @@ public class TimeSettings {
     public static final Setting<Long> ACTIVE_PLAY_THRESHOLD = new TimeSetting("Time.Thresholds.Activity_index.Playtime_threshold");
     public static final Setting<Long> KEEP_INACTIVE_PLAYERS = new TimeSetting("Time.Thresholds.Remove_inactive_player_data_after");
     public static final Setting<Long> ANALYSIS_REFRESH_PERIOD = new TimeSetting("Time.Periodic_tasks.Analysis_refresh_every");
+    public static final Setting<Long> EXTENSION_DATA_REFRESH_PERIOD = new TimeSetting("Time.Periodic_tasks.Extension_data_refresh_every");
     public static final Setting<Long> CLEAN_CACHE_PERIOD = new TimeSetting("Time.Periodic_tasks.Clean_caches_every");
     public static final Setting<Long> CLEAN_DATABASE_PERIOD = new TimeSetting("Time.Periodic_tasks.Clean_Database_every");
     public static final Setting<Long> CONFIG_UPDATE_INTERVAL = new TimeSetting("Time.Periodic_tasks.Check_DB_for_server_config_files_every");

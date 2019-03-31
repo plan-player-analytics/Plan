@@ -150,7 +150,7 @@ public class ConfigReader implements Closeable {
         }
         String key = keyAndValue[0].trim();
         String value = keyAndValue[1].trim();
-        return handleNewNode(key, value);
+        return handleNewNode(key, !value.isEmpty() ? value : null);
     }
 
     private ConfigNode handleMultiline(String line) {

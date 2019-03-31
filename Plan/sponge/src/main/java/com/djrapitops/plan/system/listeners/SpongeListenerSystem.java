@@ -35,7 +35,7 @@ public class SpongeListenerSystem extends ListenerSystem {
     private final SpongeCommandListener commandListener;
     private final SpongeDeathListener deathListener;
     private final SpongeGMChangeListener gmChangeListener;
-    private final SpongePlayerListener playerListener;
+    private final PlayerOnlineListener playerListener;
     private final SpongeWorldChangeListener worldChangeListener;
     private final SpongeServerShutdownSave spongeServerShutdownSave;
 
@@ -47,7 +47,7 @@ public class SpongeListenerSystem extends ListenerSystem {
             SpongeCommandListener commandListener,
             SpongeDeathListener deathListener,
             SpongeGMChangeListener gmChangeListener,
-            SpongePlayerListener playerListener,
+            PlayerOnlineListener playerListener,
             SpongeWorldChangeListener worldChangeListener,
             SpongeServerShutdownSave spongeServerShutdownSave
     ) {
@@ -79,12 +79,20 @@ public class SpongeListenerSystem extends ListenerSystem {
 
     @Override
     protected void unregisterListeners() {
-        Sponge.getEventManager().unregisterPluginListeners(plugin);
+        try {
+            Sponge.getEventManager().unregisterPluginListeners(plugin);
+        } catch (IllegalStateException ignore) {
+            /* Ignore, Sponge is not initialized */
+        }
     }
 
     @Override
     public void callEnableEvent(PlanPlugin plugin) {
-        Event event = new PlanSpongeEnableEvent((PlanSponge) plugin);
-        Sponge.getEventManager().post(event);
+        try {
+            Event event = new PlanSpongeEnableEvent((PlanSponge) plugin);
+            Sponge.getEventManager().post(event);
+        } catch (IllegalStateException ignore) {
+            /* Ignore, Sponge is not initialized */
+        }
     }
 }

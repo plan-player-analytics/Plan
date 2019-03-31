@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.utilities.html.icon;
 
+import java.util.Optional;
+
 public enum Color {
     RED("col-red"),
     PINK("col-pink"),
@@ -53,6 +55,14 @@ public enum Color {
             }
         }
         return Color.BLACK;
+    }
+
+    public static Optional<Color> getByName(String name) {
+        try {
+            return Optional.of(valueOf(name));
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
     }
 
     public String getHtmlClass() {

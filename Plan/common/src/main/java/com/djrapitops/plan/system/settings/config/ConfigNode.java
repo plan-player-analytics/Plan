@@ -365,11 +365,6 @@ public class ConfigNode {
 
     @Override
     public String toString() {
-        return "ConfigNode{" +
-                "key='" + key + '\'' +
-                ", nodeOrder=" + nodeOrder +
-                ", comment=" + comment +
-                ", value='" + value + '\'' +
-                '}';
+        return "{'" + value + "' " + (!childNodes.isEmpty() ? childNodes : "") + '}';
     }
 }

@@ -93,6 +93,8 @@ Time:
   Periodic_tasks:
     Analysis_refresh_every: 60
       Unit: MINUTES
+    Extension_data_refresh_every: 1
+      Unit: HOURS
     Check_DB_for_server_config_files_every: 1
       Unit: MINUTES
     Clean_caches_every: 10

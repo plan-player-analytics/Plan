@@ -20,6 +20,8 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.transactions.events.*;
+import com.djrapitops.plan.extension.CallEvents;
+import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.cache.NicknameCache;
 import com.djrapitops.plan.system.cache.SessionCache;
@@ -54,13 +56,14 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class SpongePlayerListener {
+public class PlayerOnlineListener {
 
     private final PlanConfig config;
     private final Processors processors;
     private final Processing processing;
     private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
+    private final ExtensionServiceImplementation extensionService;
     private final GeolocationCache geolocationCache;
     private final NicknameCache nicknameCache;
     private final SessionCache sessionCache;
@@ -68,12 +71,13 @@ public class SpongePlayerListener {
     private final ErrorHandler errorHandler;
 
     @Inject
-    public SpongePlayerListener(
+    public PlayerOnlineListener(
             PlanConfig config,
             Processors processors,
             Processing processing,
             ServerInfo serverInfo,
             DBSystem dbSystem,
+            ExtensionServiceImplementation extensionService,
             GeolocationCache geolocationCache,
             NicknameCache nicknameCache,
             SessionCache sessionCache,
@@ -85,6 +89,7 @@ public class SpongePlayerListener {
         this.processing = processing;
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
+        this.extensionService = extensionService;
         this.geolocationCache = geolocationCache;
         this.nicknameCache = nicknameCache;
         this.sessionCache = sessionCache;
@@ -142,11 +147,11 @@ public class SpongePlayerListener {
     private void actOnJoinEvent(ClientConnectionEvent.Join event) {
         Player player = event.getTargetEntity();
 
-        UUID uuid = player.getUniqueId();
+        UUID playerUUID = player.getUniqueId();
         UUID serverUUID = serverInfo.getServerUUID();
         long time = System.currentTimeMillis();
 
-        SpongeAFKListener.AFK_TRACKER.performedAction(uuid, time);
+        SpongeAFKListener.AFK_TRACKER.performedAction(playerUUID, time);
 
         String world = player.getWorld().getName();
         Optional<GameMode> gameMode = player.getGameModeData().get(Keys.GAME_MODE);
@@ -163,20 +168,29 @@ public class SpongePlayerListener {
         boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
         if (gatheringGeolocations) {
             database.executeTransaction(
-                    new GeoInfoStoreTransaction(uuid, address, time, geolocationCache::getCountry)
+                    new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
             );
         }
 
-        database.executeTransaction(new PlayerServerRegisterTransaction(uuid, () -> time, playerName, serverUUID));
-        sessionCache.cacheSession(uuid, new Session(uuid, serverUUID, time, world, gm))
+        database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> time, playerName, serverUUID));
+        sessionCache.cacheSession(playerUUID, new Session(playerUUID, serverUUID, time, world, gm))
                 .ifPresent(previousSession -> database.executeTransaction(new SessionEndTransaction(previousSession)));
 
         database.executeTransaction(new NicknameStoreTransaction(
-                uuid, new Nickname(displayName, time, serverUUID),
-                (playerUUID, name) -> name.equals(nicknameCache.getDisplayName(playerUUID))
+                playerUUID, new Nickname(displayName, time, serverUUID),
+                (uuid, name) -> name.equals(nicknameCache.getDisplayName(uuid))
         ));
 
-        processing.submitNonCritical(processors.info().playerPageUpdateProcessor(uuid));
+        processing.submitNonCritical(processors.info().playerPageUpdateProcessor(playerUUID));
+        processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
+    }
+
+    @Listener(order = Order.DEFAULT)
+    public void beforeQuit(ClientConnectionEvent.Disconnect event) {
+        Player player = event.getTargetEntity();
+        UUID playerUUID = player.getUniqueId();
+        String playerName = player.getName();
+        processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_LEAVE));
     }
 
     @Listener(order = Order.POST)
