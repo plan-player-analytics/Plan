@@ -163,6 +163,7 @@ Export:
     Players_page: false
     Server_page: false
     Server_JSON: false
+  Export_player_on_login_and_logout: false
 # -----------------------------------------------------
 # These settings affect Plugin data integration.
 # If a plugin is causing issues the integration can be disabled by setting Plugin_name.Enabled: false

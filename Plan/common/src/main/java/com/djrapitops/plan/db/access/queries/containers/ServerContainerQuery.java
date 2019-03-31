@@ -31,6 +31,7 @@ import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionSer
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.info.server.Server;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -66,7 +67,7 @@ public class ServerContainerQuery implements Query<ServerContainer> {
         container.putRawData(ServerKeys.SERVER_UUID, serverUUID);
         container.putRawData(ServerKeys.NAME, serverInfo.get().getName());
         container.putCachingSupplier(ServerKeys.PLAYERS, () -> db.query(new ServerPlayerContainersQuery(serverUUID)));
-        container.putSupplier(ServerKeys.PLAYER_COUNT, () -> container.getUnsafe(ServerKeys.PLAYERS).size());
+        container.putSupplier(ServerKeys.PLAYER_COUNT, () -> container.getValue(ServerKeys.PLAYERS).map(Collection::size).orElse(0));
 
         container.putCachingSupplier(ServerKeys.TPS, () -> db.query(TPSQueries.fetchTPSDataOfServer(serverUUID)));
         container.putCachingSupplier(ServerKeys.PING, () -> PlayersMutator.forContainer(container).pings());

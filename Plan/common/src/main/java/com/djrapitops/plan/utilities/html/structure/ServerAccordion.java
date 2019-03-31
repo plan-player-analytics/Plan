@@ -33,7 +33,6 @@ import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plan.utilities.html.icon.Icons;
 import com.djrapitops.plugin.utilities.Format;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -92,7 +91,7 @@ public class ServerAccordion extends Accordion {
             UUID serverUUID = entry.getKey();
             DataContainer container = entry.getValue();
             String serverName = serverNames.getOrDefault(serverUUID, "Unknown");
-            WorldTimes worldTimes = container.getValue(PerServerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
+            WorldTimes worldTimes = container.getValue(PerServerKeys.WORLD_TIMES).orElse(new WorldTimes());
             SessionsMutator sessionsMutator = SessionsMutator.forContainer(container);
 
             boolean banned = container.getValue(PerServerKeys.BANNED).orElse(false);

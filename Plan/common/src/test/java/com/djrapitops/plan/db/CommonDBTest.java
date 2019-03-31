@@ -32,7 +32,9 @@ import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.queries.*;
+import com.djrapitops.plan.db.access.queries.containers.AllPlayerContainersQuery;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.db.access.queries.containers.ServerPlayerContainersQuery;
 import com.djrapitops.plan.db.access.queries.objects.*;
 import com.djrapitops.plan.db.access.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.db.access.transactions.StoreConfigTransaction;
@@ -73,10 +75,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.rules.Timeout;
 import rules.ComponentMocker;
 import rules.PluginComponentMocker;
-import utilities.FieldFetcher;
-import utilities.OptionalAssert;
-import utilities.RandomData;
-import utilities.TestConstants;
+import utilities.*;
 
 import java.io.File;
 import java.lang.management.ManagementFactory;
@@ -769,7 +768,7 @@ public abstract class CommonDBTest {
     @Test
     public void emptyServerWorldTimesIsEmpty() {
         WorldTimes worldTimesOfServer = db.query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID));
-        assertEquals(new WorldTimes(new HashMap<>()), worldTimesOfServer);
+        assertEquals(new WorldTimes(), worldTimesOfServer);
     }
 
     @Test
@@ -1036,6 +1035,85 @@ public abstract class CommonDBTest {
         assertEquals(expected, result);
     }
 
+    private void executeTransactions(Transaction... transactions) {
+        for (Transaction transaction : transactions) {
+            db.executeTransaction(transaction);
+        }
+    }
+
+    @Test
+    public void baseUsersQueryDoesNotReturnDuplicatePlayers() {
+        db.executeTransaction(TestData.storeServers());
+        executeTransactions(TestData.storePlayerOneData());
+        executeTransactions(TestData.storePlayerTwoData());
+
+        Collection<BaseUser> expected = new HashSet<>(Arrays.asList(TestData.getPlayerBaseUser(), TestData.getPlayer2BaseUser()));
+        Collection<BaseUser> result = db.query(BaseUserQueries.fetchServerBaseUsers(TestConstants.SERVER_UUID));
+
+        assertEquals(expected, result);
+
+        result = db.query(BaseUserQueries.fetchServerBaseUsers(TestConstants.SERVER_TWO_UUID));
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void serverPlayerContainersQueryDoesNotReturnDuplicatePlayers() {
+        db.executeTransaction(TestData.storeServers());
+        executeTransactions(TestData.storePlayerOneData());
+        executeTransactions(TestData.storePlayerTwoData());
+
+        List<UUID> expected = Arrays.asList(playerUUID, player2UUID);
+        Collections.sort(expected);
+
+        Collection<UUID> result = db.query(new ServerPlayerContainersQuery(TestConstants.SERVER_UUID))
+                .stream().map(player -> player.getUnsafe(PlayerKeys.UUID))
+                .sorted()
+                .collect(Collectors.toList());
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void allPlayerContainersQueryDoesNotReturnDuplicatePlayers() {
+        db.executeTransaction(TestData.storeServers());
+        executeTransactions(TestData.storePlayerOneData());
+        executeTransactions(TestData.storePlayerTwoData());
+
+        List<UUID> expected = Arrays.asList(playerUUID, player2UUID);
+        Collections.sort(expected);
+
+        Collection<UUID> result = db.query(new AllPlayerContainersQuery())
+                .stream().map(player -> player.getUnsafe(PlayerKeys.UUID))
+                .sorted()
+                .collect(Collectors.toList());
+
+        assertEquals(expected, result);
+    }
+
+    // This test is against issue https://github.com/Rsl1122/Plan-PlayerAnalytics/issues/956
+    @Test
+    public void analysisContainerPlayerNamesAreCollectedFromBaseUsersCorrectly() {
+        db.executeTransaction(TestData.storeServers());
+        executeTransactions(TestData.storePlayerOneData());
+        executeTransactions(TestData.storePlayerTwoData());
+
+        BaseUser playerBaseUser = TestData.getPlayerBaseUser();
+        BaseUser player2BaseUser = TestData.getPlayer2BaseUser();
+
+        AnalysisContainer.Factory factory = constructAnalysisContainerFactory();
+        AnalysisContainer analysisContainer = factory.forServerContainer(
+                db.query(ContainerFetchQueries.fetchServerContainer(TestConstants.SERVER_UUID))
+        );
+
+        Map<UUID, String> expected = new HashMap<>();
+        expected.put(playerBaseUser.getUuid(), playerBaseUser.getName());
+        expected.put(player2BaseUser.getUuid(), player2BaseUser.getName());
+        Map<UUID, String> result = analysisContainer.getValue(AnalysisKeys.PLAYER_NAMES).orElseThrow(AssertionError::new);
+
+        assertEquals(expected, result);
+    }
+
     @Test
     public void extensionPlayerValuesAreStored() {
         ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
@@ -1241,5 +1319,4 @@ public abstract class CommonDBTest {
         public String stringVal(UUID playerUUID) {
             return "Something";
         }
-    }
 }

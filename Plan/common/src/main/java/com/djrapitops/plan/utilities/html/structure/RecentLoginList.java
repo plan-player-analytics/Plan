@@ -25,6 +25,7 @@ import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -85,7 +86,7 @@ public class RecentLoginList {
             String name = player.getUnsafe(PlayerKeys.NAME);
             long registerDate = player.getValue(PlayerKeys.REGISTERED).orElse(0L);
 
-            List<Session> sessions = player.getUnsafe(PlayerKeys.SESSIONS);
+            List<Session> sessions = player.getValue(PlayerKeys.SESSIONS).orElse(Collections.emptyList());
             if (sessions.isEmpty()) {
                 continue;
             }

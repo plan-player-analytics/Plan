@@ -103,7 +103,7 @@ public class ServerPlayerContainersQuery implements Query<List<PlayerContainer>>
                 WorldTimes worldTimes = new PerServerMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).flatMapWorldTimes();
                 container.getValue(PlayerKeys.ACTIVE_SESSION)
                         .ifPresent(session -> worldTimes.add(
-                                session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>())))
+                                session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes()))
                         );
                 return worldTimes;
             });

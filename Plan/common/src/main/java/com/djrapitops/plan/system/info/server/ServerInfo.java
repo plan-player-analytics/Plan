@@ -53,11 +53,11 @@ public abstract class ServerInfo implements SubSystem {
 
     @Override
     public void enable() throws EnableException {
-        server = loadServerInfo();
+        loadServerInfo();
         Verify.nullCheck(server, () -> new EnableException("Server information did not load!"));
     }
 
-    protected abstract Server loadServerInfo() throws EnableException;
+    protected abstract void loadServerInfo() throws EnableException;
 
     @Override
     public void disable() {

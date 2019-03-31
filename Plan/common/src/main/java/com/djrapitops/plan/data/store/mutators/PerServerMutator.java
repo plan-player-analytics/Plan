@@ -46,13 +46,13 @@ public class PerServerMutator {
     public List<Session> flatMapSessions() {
         return data.values().stream()
                 .filter(container -> container.supports(PerServerKeys.SESSIONS))
-                .map(container -> container.getUnsafe(PerServerKeys.SESSIONS))
+                .map(container -> container.getValue(PerServerKeys.SESSIONS).orElse(Collections.emptyList()))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
 
     public WorldTimes flatMapWorldTimes() {
-        WorldTimes total = new WorldTimes(new HashMap<>());
+        WorldTimes total = new WorldTimes();
 
         for (DataContainer container : data.values()) {
             if (container.supports(PerServerKeys.WORLD_TIMES)) {
@@ -68,7 +68,7 @@ public class PerServerMutator {
         Map<UUID, WorldTimes> timesMap = new HashMap<>();
         for (Map.Entry<UUID, DataContainer> entry : data.entrySet()) {
             DataContainer container = entry.getValue();
-            timesMap.put(entry.getKey(), container.getValue(PerServerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>())));
+            timesMap.put(entry.getKey(), container.getValue(PerServerKeys.WORLD_TIMES).orElse(new WorldTimes()));
         }
         return timesMap;
     }

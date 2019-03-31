@@ -54,6 +54,10 @@ public class WorldTimes {
         this.times = times;
     }
 
+    public WorldTimes() {
+        this(new HashMap<>());
+    }
+
     private void addWorld(String worldName, String gameMode, long changeTime) {
         if (worldName == null || gameMode == null) return;
         times.put(worldName, new GMTimes(gameMode, changeTime));

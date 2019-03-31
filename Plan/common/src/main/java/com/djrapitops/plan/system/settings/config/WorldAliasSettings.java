@@ -165,7 +165,7 @@ public class WorldAliasSettings {
         if (!session.supports(SessionKeys.WORLD_TIMES)) {
             return "No World Time Data";
         }
-        WorldTimes worldTimes = session.getUnsafe(SessionKeys.WORLD_TIMES);
+        WorldTimes worldTimes = session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes());
         if (!session.supports(SessionKeys.END)) {
             return "Current: " + aliases.getOrDefault(worldTimes.getCurrentWorld(), "Unknown");
         }

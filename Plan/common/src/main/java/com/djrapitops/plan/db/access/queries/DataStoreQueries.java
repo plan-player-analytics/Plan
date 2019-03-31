@@ -103,9 +103,9 @@ public class DataStoreQueries {
                 statement.setString(1, session.getUnsafe(SessionKeys.UUID).toString());
                 statement.setLong(2, session.getUnsafe(SessionKeys.START));
                 statement.setLong(3, session.getUnsafe(SessionKeys.END));
-                statement.setInt(4, session.getUnsafe(SessionKeys.DEATH_COUNT));
-                statement.setInt(5, session.getUnsafe(SessionKeys.MOB_KILL_COUNT));
-                statement.setLong(6, session.getUnsafe(SessionKeys.AFK_TIME));
+                statement.setInt(4, session.getValue(SessionKeys.DEATH_COUNT).orElse(0));
+                statement.setInt(5, session.getValue(SessionKeys.MOB_KILL_COUNT).orElse(0));
+                statement.setLong(6, session.getValue(SessionKeys.AFK_TIME).orElse(0L));
                 statement.setString(7, session.getUnsafe(SessionKeys.SERVER_UUID).toString());
             }
         };

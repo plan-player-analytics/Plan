@@ -63,7 +63,7 @@ public class PerServerContainerQuery implements Query<PerServerContainer> {
         // After-values that can be calculated without database.
         for (DataContainer serverContainer : perServerContainer.values()) {
             serverContainer.putSupplier(PerServerKeys.MOB_DEATH_COUNT, () ->
-                    serverContainer.getUnsafe(PerServerKeys.DEATH_COUNT) - serverContainer.getUnsafe(PerServerKeys.PLAYER_DEATH_COUNT)
+                    serverContainer.getValue(PerServerKeys.DEATH_COUNT).orElse(0) - serverContainer.getValue(PerServerKeys.PLAYER_DEATH_COUNT).orElse(0)
             );
         }
 

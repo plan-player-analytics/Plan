@@ -118,7 +118,7 @@ public class PlayerCalendar {
                     .orElse(System.currentTimeMillis()))
                     .append("}");
 
-            for (PlayerKill kill : session.getUnsafe(SessionKeys.PLAYER_KILLS)) {
+            for (PlayerKill kill : session.getPlayerKills()) {
                 long time = kill.getDate();
 
                 series.append(",{title: 'Killed: ").append(kill.getVictim())

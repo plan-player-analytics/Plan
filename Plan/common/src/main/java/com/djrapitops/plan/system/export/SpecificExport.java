@@ -25,6 +25,7 @@ import com.djrapitops.plugin.api.Check;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -89,20 +90,24 @@ public abstract class SpecificExport {
         return player;
     }
 
-    protected void exportAvailablePlayerPage(UUID uuid, String name) throws IOException {
-        Response response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
+    protected void exportPlayerPage(String playerName, String html) throws IOException {
+        List<String> lines = Arrays.asList(html.split("\n"));
+
+        File htmlLocation = new File(getPlayerFolder(), URLEncoder.encode(playerName, "UTF-8").replace(".", "%2E"));
+        htmlLocation.mkdirs();
+        File exportFile = new File(htmlLocation, "index.html");
+
+        export(exportFile, lines);
+    }
+
+    protected void exportAvailablePlayerPage(UUID playerUUID, String name) throws IOException {
+        Response response = ResponseCache.loadResponse(PageId.PLAYER.of(playerUUID));
         if (response == null) {
             return;
         }
 
         String html = response.getContent().replace("../", "../../");
-        List<String> lines = Arrays.asList(html.split("\n"));
-
-        File htmlLocation = new File(getPlayerFolder(), name.replace(" ", "%20").replace(".", "%2E"));
-        htmlLocation.mkdirs();
-        File exportFile = new File(htmlLocation, "index.html");
-
-        export(exportFile, lines);
+        exportPlayerPage(name, html);
     }
 
     protected void exportAvailableServerPage(UUID serverUUID, String serverName) throws IOException {
@@ -123,7 +128,7 @@ public abstract class SpecificExport {
             if (serverUUID.equals(serverInfo.getServerUUID())) {
                 htmlLocation = new File(getFolder(), "network");
             } else {
-                htmlLocation = new File(getServerFolder(), serverName.replace(" ", "%20").replace(".", "%2E"));
+                htmlLocation = new File(getServerFolder(), URLEncoder.encode(serverName, "UTF-8").replace(".", "%2E"));
                 html = html.replace("../", "../../");
             }
         } else {

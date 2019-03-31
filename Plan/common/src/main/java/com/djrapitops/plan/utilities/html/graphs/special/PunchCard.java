@@ -110,7 +110,7 @@ public class PunchCard implements HighChart {
     private List<Long> getSessionStarts(Collection<Session> data) {
         return data.stream()
                 .filter(Objects::nonNull)
-                .map(s -> s.getUnsafe(SessionKeys.START))
+                .map(session -> session.getUnsafe(SessionKeys.START))
                 .sorted()
                 .collect(Collectors.toList());
     }

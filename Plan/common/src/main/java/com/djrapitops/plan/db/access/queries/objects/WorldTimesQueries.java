@@ -75,7 +75,7 @@ public class WorldTimesQueries {
             public WorldTimes processResults(ResultSet set) throws SQLException {
                 String[] gms = GMTimes.getGMKeyArray();
 
-                WorldTimes worldTimes = new WorldTimes(new HashMap<>());
+                WorldTimes worldTimes = new WorldTimes();
                 while (set.next()) {
                     String worldName = set.getString(worldColumn);
 
@@ -110,7 +110,7 @@ public class WorldTimesQueries {
             public WorldTimes processResults(ResultSet set) throws SQLException {
                 String[] gms = GMTimes.getGMKeyArray();
 
-                WorldTimes worldTimes = new WorldTimes(new HashMap<>());
+                WorldTimes worldTimes = new WorldTimes();
                 while (set.next()) {
                     String worldName = set.getString(worldColumn);
 
@@ -149,7 +149,7 @@ public class WorldTimesQueries {
                 Map<UUID, WorldTimes> worldTimesMap = new HashMap<>();
                 while (set.next()) {
                     UUID serverUUID = UUID.fromString(set.getString(WorldTimesTable.SERVER_UUID));
-                    WorldTimes worldTimes = worldTimesMap.getOrDefault(serverUUID, new WorldTimes(new HashMap<>()));
+                    WorldTimes worldTimes = worldTimesMap.getOrDefault(serverUUID, new WorldTimes());
                     String worldName = set.getString(worldColumn);
 
                     GMTimes gmTimes = extractGMTimes(set, gms);
