@@ -107,12 +107,18 @@ public class ServerServerInfo extends ServerInfo {
         }
     }
 
-    private Server updateDbInfo(UUID serverUUID) throws InterruptedException, ExecutionException, IOException {
+    private void updateDbInfo(UUID serverUUID) {
         Database db = dbSystem.getDatabase();
 
         Optional<Server> foundServer = db.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID));
         if (!foundServer.isPresent()) {
-            server = registerServer(serverUUID);
+            try {
+                server = registerServer(serverUUID);
+            } catch (ExecutionException | IOException e) {
+                errorHandler.log(L.CRITICAL, this.getClass(), e);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
             return;
         }
 
@@ -132,7 +138,7 @@ public class ServerServerInfo extends ServerInfo {
         db.executeTransaction(new StoreServerInformationTransaction(server));
     }
 
-    private Server registerServer() throws Exception {
+    private Server registerServer() throws ExecutionException, InterruptedException, IOException {
         return registerServer(generateNewUUID());
     }
 
