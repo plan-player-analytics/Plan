@@ -86,6 +86,8 @@ Time:
     Remove_inactive_player_data_after: 180
       Unit: DAYS
   Periodic_tasks:
+    Extension_data_refresh_every: 1
+      Unit: HOURS
     Check_DB_for_server_config_files_every: 1
       Unit: MINUTES
     Clean_caches_every: 10

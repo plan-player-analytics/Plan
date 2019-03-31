@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanVelocity;
 import com.djrapitops.plan.db.tasks.DBCleanTask;
+import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.tasks.proxy.NetworkConfigStoreTask;
@@ -47,6 +48,7 @@ public class VelocityTaskSystem extends TaskSystem {
     private final PlayersPageRefreshTask playersPageRefreshTask;
     private final NetworkConfigStoreTask networkConfigStoreTask;
     private final DBCleanTask dbCleanTask;
+    private final ExtensionServerMethodCallerTask extensionServerMethodCallerTask;
 
     @Inject
     public VelocityTaskSystem(
@@ -59,7 +61,8 @@ public class VelocityTaskSystem extends TaskSystem {
             LogsFolderCleanTask logsFolderCleanTask,
             PlayersPageRefreshTask playersPageRefreshTask,
             NetworkConfigStoreTask networkConfigStoreTask,
-            DBCleanTask dbCleanTask
+            DBCleanTask dbCleanTask,
+            ExtensionServerMethodCallerTask extensionServerMethodCallerTask
     ) {
         super(runnableFactory, velocityTPSCountTimer);
         this.plugin = plugin;
@@ -71,6 +74,7 @@ public class VelocityTaskSystem extends TaskSystem {
         this.playersPageRefreshTask = playersPageRefreshTask;
         this.networkConfigStoreTask = networkConfigStoreTask;
         this.dbCleanTask = dbCleanTask;
+        this.extensionServerMethodCallerTask = extensionServerMethodCallerTask;
     }
 
     @Override
@@ -85,18 +89,22 @@ public class VelocityTaskSystem extends TaskSystem {
 
         plugin.registerListener(pingCountTimer);
         long startDelay = TimeAmount.toTicks(config.get(TimeSettings.PING_SERVER_ENABLE_DELAY), TimeUnit.MILLISECONDS);
-        runnableFactory.create("PingCountTimer", pingCountTimer).runTaskTimer(startDelay, PingCountTimerVelocity.PING_INTERVAL);
+        registerTask(pingCountTimer).runTaskTimer(startDelay, PingCountTimerVelocity.PING_INTERVAL);
 
-        registerTask(playersPageRefreshTask)
-                .runTaskTimerAsynchronously(TimeAmount.toTicks(5L, TimeUnit.MINUTES), TimeAmount.toTicks(5L, TimeUnit.MINUTES));
+        registerTask(playersPageRefreshTask).runTaskTimerAsynchronously(TimeAmount.toTicks(5L, TimeUnit.MINUTES), TimeAmount.toTicks(5L, TimeUnit.MINUTES));
 
         // +40 ticks / 2 seconds so that update check task runs first.
         long storeDelay = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS) + 40;
-        registerTask("Config Store Task", networkConfigStoreTask).runTaskLaterAsynchronously(storeDelay);
+        registerTask(networkConfigStoreTask).runTaskLaterAsynchronously(storeDelay);
 
-        registerTask("DB Clean Task", dbCleanTask).runTaskTimerAsynchronously(
+        registerTask(dbCleanTask).runTaskTimerAsynchronously(
                 TimeAmount.toTicks(20, TimeUnit.SECONDS),
                 TimeAmount.toTicks(config.get(TimeSettings.CLEAN_DATABASE_PERIOD), TimeUnit.MILLISECONDS)
+        );
+
+        long extensionRefreshPeriod = TimeAmount.toTicks(config.get(TimeSettings.EXTENSION_DATA_REFRESH_PERIOD), TimeUnit.MILLISECONDS);
+        registerTask(extensionServerMethodCallerTask).runTaskTimerAsynchronously(
+                TimeAmount.toTicks(30, TimeUnit.SECONDS), extensionRefreshPeriod
         );
     }
 }
