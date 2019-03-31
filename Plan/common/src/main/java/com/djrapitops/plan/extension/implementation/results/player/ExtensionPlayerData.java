@@ -22,6 +22,7 @@ import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents data of a single extension about a player.
@@ -61,6 +62,21 @@ public class ExtensionPlayerData implements Comparable<ExtensionPlayerData> {
     @Override
     public int compareTo(ExtensionPlayerData o) {
         return String.CASE_INSENSITIVE_ORDER.compare(this.extensionInformation.getPluginName(), o.extensionInformation.getPluginName());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ExtensionPlayerData)) return false;
+        ExtensionPlayerData that = (ExtensionPlayerData) o;
+        return pluginID == that.pluginID &&
+                extensionInformation.equals(that.extensionInformation) &&
+                tabs.equals(that.tabs);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pluginID, extensionInformation, tabs);
     }
 
     public static class Factory {

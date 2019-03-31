@@ -83,6 +83,20 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         return Integer.compare(this.tabInformation.getTabPriority(), other.tabInformation.getTabPriority()); // Lower is first
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ExtensionTabData)) return false;
+        ExtensionTabData that = (ExtensionTabData) o;
+        return tabInformation.equals(that.tabInformation) &&
+                order.equals(that.order);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tabInformation, order);
+    }
+
     public void combine(ExtensionTabData other) {
         this.booleanData.putAll(other.booleanData);
         this.doubleData.putAll(other.doubleData);

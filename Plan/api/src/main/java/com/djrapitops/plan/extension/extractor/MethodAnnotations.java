@@ -30,10 +30,10 @@ import java.util.Optional;
  */
 public class MethodAnnotations {
 
-    private final Map<Class, Map<Method, Annotation>> methodAnnotations;
+    private final Map<Class, Map<Method, Annotation>> byAnnotationType;
 
     public MethodAnnotations() {
-        methodAnnotations = new HashMap<>();
+        byAnnotationType = new HashMap<>();
     }
 
     public static boolean hasAnyOf(Method method, Class... annotationClasses) {
@@ -52,13 +52,13 @@ public class MethodAnnotations {
     }
 
     public <T extends Annotation> void put(Method method, Class<T> annotationClass, T annotation) {
-        Map<Method, Annotation> methods = methodAnnotations.getOrDefault(annotationClass, new HashMap<>());
+        Map<Method, Annotation> methods = byAnnotationType.getOrDefault(annotationClass, new HashMap<>());
         methods.put(method, annotation);
-        methodAnnotations.put(annotationClass, methods);
+        byAnnotationType.put(annotationClass, methods);
     }
 
     public <T extends Annotation> Map<Method, T> getMethodAnnotations(Class<T> ofType) {
-        return (Map<Method, T>) methodAnnotations.getOrDefault(ofType, new HashMap<>());
+        return (Map<Method, T>) byAnnotationType.getOrDefault(ofType, new HashMap<>());
     }
 
     public <T extends Annotation> Collection<T> getAnnotations(Class<T> ofType) {
@@ -66,11 +66,11 @@ public class MethodAnnotations {
     }
 
     public boolean isEmpty() {
-        return methodAnnotations.isEmpty();
+        return byAnnotationType.isEmpty();
     }
 
     @Override
     public String toString() {
-        return "MethodAnnotations{" + methodAnnotations + '}';
+        return "MethodAnnotations{" + byAnnotationType + '}';
     }
 }

@@ -19,6 +19,7 @@ package com.djrapitops.plan.extension.implementation.results;
 import com.djrapitops.plan.extension.icon.Icon;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -65,5 +66,22 @@ public class ExtensionDescriptive implements Comparable<ExtensionDescriptive> {
     @Override
     public int compareTo(ExtensionDescriptive other) {
         return Integer.compare(other.priority, this.priority); // Higher is first
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ExtensionDescriptive)) return false;
+        ExtensionDescriptive that = (ExtensionDescriptive) o;
+        return priority == that.priority &&
+                name.equals(that.name) &&
+                text.equals(that.text) &&
+                Objects.equals(description, that.description) &&
+                icon.equals(that.icon);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, text, description, icon, priority);
     }
 }

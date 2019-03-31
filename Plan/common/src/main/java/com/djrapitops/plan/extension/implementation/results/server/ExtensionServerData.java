@@ -63,6 +63,21 @@ public class ExtensionServerData implements Comparable<ExtensionServerData> {
         return String.CASE_INSENSITIVE_ORDER.compare(this.extensionInformation.getPluginName(), o.extensionInformation.getPluginName());
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ExtensionServerData)) return false;
+        ExtensionServerData that = (ExtensionServerData) o;
+        return pluginID == that.pluginID &&
+                Objects.equals(extensionInformation, that.extensionInformation) &&
+                Objects.equals(tabs, that.tabs);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pluginID, extensionInformation, tabs);
+    }
+
     public static class Factory {
 
         private final ExtensionServerData data;
