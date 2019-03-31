@@ -79,12 +79,20 @@ public class SpongeListenerSystem extends ListenerSystem {
 
     @Override
     protected void unregisterListeners() {
-        Sponge.getEventManager().unregisterPluginListeners(plugin);
+        try {
+            Sponge.getEventManager().unregisterPluginListeners(plugin);
+        } catch (IllegalStateException ignore) {
+            /* Ignore, Sponge is not initialized */
+        }
     }
 
     @Override
     public void callEnableEvent(PlanPlugin plugin) {
-        Event event = new PlanSpongeEnableEvent((PlanSponge) plugin);
-        Sponge.getEventManager().post(event);
+        try {
+            Event event = new PlanSpongeEnableEvent((PlanSponge) plugin);
+            Sponge.getEventManager().post(event);
+        } catch (IllegalStateException ignore) {
+            /* Ignore, Sponge is not initialized */
+        }
     }
 }
