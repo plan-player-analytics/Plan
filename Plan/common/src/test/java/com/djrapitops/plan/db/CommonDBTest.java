@@ -1319,4 +1319,5 @@ public abstract class CommonDBTest {
         public String stringVal(UUID playerUUID) {
             return "Something";
         }
+    }
 }
