@@ -141,9 +141,11 @@ public abstract class Transaction {
 
     protected void executeOther(Transaction transaction) {
         transaction.db = db;
+        transaction.dbType = dbType;
         transaction.connection = this.connection;
         transaction.performOperations();
         transaction.connection = null;
+        transaction.dbType = null;
         transaction.db = null;
     }
 
