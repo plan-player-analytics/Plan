@@ -179,7 +179,14 @@ public class PlayerOnlineListener implements Listener {
 
         processing.submitNonCritical(processors.info().playerPageUpdateProcessor(playerUUID));
         processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
+    }
 
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void beforePlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        UUID playerUUID = player.getUniqueId();
+        String playerName = player.getName();
+        processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_LEAVE));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

@@ -20,6 +20,7 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.transactions.events.*;
+import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.cache.NicknameCache;
@@ -181,7 +182,15 @@ public class PlayerOnlineListener {
         ));
 
         processing.submitNonCritical(processors.info().playerPageUpdateProcessor(playerUUID));
-        processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, com.djrapitops.plan.extension.CallEvents.PLAYER_JOIN));
+        processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
+    }
+
+    @Listener(order = Order.DEFAULT)
+    public void beforeQuit(ClientConnectionEvent.Disconnect event) {
+        Player player = event.getTargetEntity();
+        UUID playerUUID = player.getUniqueId();
+        String playerName = player.getName();
+        processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_LEAVE));
     }
 
     @Listener(order = Order.POST)
