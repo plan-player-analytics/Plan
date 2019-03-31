@@ -50,6 +50,8 @@ package com.djrapitops.plan.extension;
  * {@link com.djrapitops.plan.extension.annotation.TabOrder} Optional information about preferred tab
  * <hr>
  * <p>
+ * Method calls are asynchronous. You can control when the calls are made via {@link DataExtension#callExtensionMethodsOn()} and {@link Caller}.
+ * <p>
  * You can check against implementation violations by using {@link com.djrapitops.plan.extension.extractor.ExtensionExtractor#validateAnnotations()} in your Unit Tests.
  * <p>
  * Implementation violations:
@@ -64,6 +66,28 @@ package com.djrapitops.plan.extension;
  * - Method name is over 50 characters (Used as an identifier for storage)
  *
  * @author Rsl1122
+ * @see com.djrapitops.plan.extension.annotation.PluginInfo Required Annotation
+ * @see CallEvents for method call event types.
  */
 public interface DataExtension {
+
+    /**
+     * Determines when DataExtension methods are called automatically by Plan.
+     * <p>
+     * Override this method to determine more suitable call times for your plugin.
+     * You can also use {@link Caller} to update manually.
+     * <p>
+     * If an empty array is supplied the DataExtension methods are not called by Plan automatically.
+     *
+     * @return Event types that will trigger method calls to the DataExtension.
+     * @see CallEvents for details when the methods are called.
+     */
+    default CallEvents[] callExtensionMethodsOn() {
+        return new CallEvents[]{
+                CallEvents.PLAYER_JOIN,
+                CallEvents.PLAYER_LEAVE,
+                CallEvents.SERVER_EXTENSION_REGISTER
+        };
+    }
+
 }

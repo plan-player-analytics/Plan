@@ -22,6 +22,7 @@ package com.djrapitops.plan.extension;
  * Usage Example: {@code @StringProvider String provideStringAboutGroup(Group group)}
  * <p>
  * Group names of users are provided with {@code @GroupProvider String[] provideGroups(UUID playerUUID)}
+ * {@code Group} parameter methods are not called without knowledge of a group name.
  * <p>
  * This method parameter is used since it is not possible to differentiate String playerName and String groupName.
  *

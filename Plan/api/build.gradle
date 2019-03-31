@@ -2,7 +2,7 @@ plugins {
     id "com.jfrog.bintray" version "1.8.1"
 }
 
-ext.apiVersion = '0.0.2'
+ext.apiVersion = '0.0.3'
 
 bintray {
     user = System.getenv('BINTRAY_USER')
@@ -15,7 +15,7 @@ bintray {
         issueTrackerUrl = 'https://github.com/plan-player-analytics/Plan/issues'
         version {
             name = "$apiVersion"
-            desc = 'Plan APIv5 version 0.0.1'
+            desc = "Plan APIv5 version $apiVersion"
         }
         publications = ['BintrayPublication']
     }

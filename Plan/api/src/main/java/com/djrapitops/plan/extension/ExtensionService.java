@@ -54,9 +54,10 @@ public interface ExtensionService {
      * You can use {@link ExtensionExtractor#validateAnnotations()} in your Unit Tests to prevent IllegalArgumentExceptions here at runtime.
      *
      * @param extension Your DataExtension implementation, see {@link DataExtension} for requirements.
+     * @return Optional {@link Caller} that can be used to call for data update in Plan database manually - If the Optional is not present the user has disabled the extension in Plan config.
      * @throws IllegalArgumentException If an implementation violation is found.
      */
-    void register(DataExtension extension);
+    Optional<Caller> register(DataExtension extension);
 
     /**
      * Unregister your {@link DataExtension} implementation.
