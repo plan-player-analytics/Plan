@@ -157,7 +157,7 @@ public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, Exten
 
     private ExtensionDescriptive extractDescriptive(ResultSet set) throws SQLException {
         String name = set.getString("provider_name") + "_aggregate";
-        String text = set.getString(ExtensionProviderTable.TEXT);
+        String text = set.getString(ExtensionProviderTable.TEXT) + " / Players";
         String description = set.getString(ExtensionProviderTable.DESCRIPTION);
         int priority = set.getInt("provider_priority");
 

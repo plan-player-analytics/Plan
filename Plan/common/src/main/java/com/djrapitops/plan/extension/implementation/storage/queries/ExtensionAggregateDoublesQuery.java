@@ -148,7 +148,7 @@ public class ExtensionAggregateDoublesQuery implements Query<Map<Integer, Extens
     }
 
     private ExtensionDescriptive modifiedDescriptive(ExtensionDescriptive descriptive, String appendToName, String appendToText) {
-        return new ExtensionDescriptive(descriptive.getName() + appendToName, descriptive.getText() + appendToText, descriptive.getDescription().orElse(null), descriptive.getIcon(), descriptive.getPriority());
+        return new ExtensionDescriptive(descriptive.getName() + appendToName, appendToText + descriptive.getText(), descriptive.getDescription().orElse(null), descriptive.getIcon(), descriptive.getPriority());
     }
 
     private ExtensionDescriptive extractDescriptive(ResultSet set) throws SQLException {
