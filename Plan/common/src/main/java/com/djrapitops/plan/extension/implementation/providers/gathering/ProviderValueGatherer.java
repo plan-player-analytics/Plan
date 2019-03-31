@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension.implementation.providers.gathering;
 
 import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.DataProviderExtractor;
@@ -38,11 +39,10 @@ import java.util.UUID;
  */
 public class ProviderValueGatherer {
 
-    private final DataExtension extension;
+    private final CallEvents[] callEvents;
     private final DataProviderExtractor extractor;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
-    private final PluginLogger logger;
     private BooleanProviderValueGatherer booleanGatherer;
     private NumberProviderValueGatherer numberGatherer;
     private DoubleAndPercentageProviderValueGatherer doubleAndPercentageGatherer;
@@ -55,11 +55,10 @@ public class ProviderValueGatherer {
             ServerInfo serverInfo,
             PluginLogger logger
     ) {
-        this.extension = extension;
+        this.callEvents = extension.callExtensionMethodsOn();
         this.extractor = extractor;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
-        this.logger = logger;
 
         booleanGatherer = new BooleanProviderValueGatherer(
                 extractor.getPluginName(), extension,
@@ -81,6 +80,22 @@ public class ProviderValueGatherer {
                 serverInfo.getServerUUID(), dbSystem.getDatabase(),
                 extractor.getDataProviders(), logger
         );
+    }
+
+    public boolean canCallEvent(CallEvents event) {
+        if (event == CallEvents.MANUAL) {
+            return true;
+        }
+        for (CallEvents accepted : callEvents) {
+            if (event == accepted) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String getPluginName() {
+        return extractor.getPluginName();
     }
 
     public void storeExtensionInformation() {

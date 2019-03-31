@@ -109,7 +109,7 @@ public class PlayerOnlineListener {
 
             database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> time, playerName));
             processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
-            processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName));
+            processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, com.djrapitops.plan.extension.CallEvents.PLAYER_JOIN));
             ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);

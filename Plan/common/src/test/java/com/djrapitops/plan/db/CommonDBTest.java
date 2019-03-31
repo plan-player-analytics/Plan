@@ -44,6 +44,7 @@ import com.djrapitops.plan.db.access.transactions.init.CleanTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.db.patches.Patch;
+import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.extension.annotation.*;
@@ -1040,7 +1041,7 @@ public abstract class CommonDBTest {
         ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
 
         extensionService.register(new PlayerExtension());
-        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME);
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.PLAYER_JOIN);
 
         Map<UUID, List<ExtensionPlayerData>> playerDataByServerUUID = db.query(new ExtensionPlayerDataQuery(playerUUID));
         List<ExtensionPlayerData> ofServer = playerDataByServerUUID.get(serverUUID);
@@ -1064,7 +1065,7 @@ public abstract class CommonDBTest {
         ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
 
         extensionService.register(new ServerExtension());
-        extensionService.updateServerValues();
+        extensionService.updateServerValues(CallEvents.SERVER_EXTENSION_REGISTER);
 
         List<ExtensionServerData> ofServer = db.query(new ExtensionServerDataQuery(serverUUID));
         assertFalse(ofServer.isEmpty());
@@ -1086,7 +1087,7 @@ public abstract class CommonDBTest {
         ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
 
         extensionService.register(new PlayerExtension());
-        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME);
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.PLAYER_JOIN);
 
         List<ExtensionServerData> ofServer = db.query(new ExtensionServerDataQuery(serverUUID));
         assertFalse(ofServer.isEmpty());
@@ -1113,14 +1114,14 @@ public abstract class CommonDBTest {
         extensionService.register(new ConditionalExtension());
 
         ConditionalExtension.condition = true;
-        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME);
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.PLAYER_JOIN);
 
         // Check that the wanted data exists
         checkThatDataExists(ConditionalExtension.condition);
 
         // Reverse condition
         ConditionalExtension.condition = false;
-        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME);
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.PLAYER_JOIN);
 
         db.executeTransaction(new RemoveUnsatisfiedConditionalResultsTransaction());
 
@@ -1129,7 +1130,7 @@ public abstract class CommonDBTest {
 
         // Reverse condition
         ConditionalExtension.condition = false;
-        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME);
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.PLAYER_JOIN);
 
         db.executeTransaction(new RemoveUnsatisfiedConditionalResultsTransaction());
 

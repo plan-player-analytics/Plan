@@ -181,7 +181,7 @@ public class PlayerOnlineListener {
         ));
 
         processing.submitNonCritical(processors.info().playerPageUpdateProcessor(playerUUID));
-        processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName));
+        processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, com.djrapitops.plan.extension.CallEvents.PLAYER_JOIN));
     }
 
     @Listener(order = Order.POST)

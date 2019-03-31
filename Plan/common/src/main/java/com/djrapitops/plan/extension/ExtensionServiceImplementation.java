@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension;
 
 import com.djrapitops.plan.data.plugin.PluginsConfigSection;
+import com.djrapitops.plan.extension.implementation.CallerImplementation;
 import com.djrapitops.plan.extension.implementation.DataProviderExtractor;
 import com.djrapitops.plan.extension.implementation.ExtensionRegister;
 import com.djrapitops.plan.extension.implementation.providers.gathering.ProviderValueGatherer;
@@ -33,6 +34,7 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -78,11 +80,11 @@ public class ExtensionServiceImplementation implements ExtensionService {
     }
 
     @Override
-    public void register(DataExtension extension) {
+    public Optional<Caller> register(DataExtension extension) {
         DataProviderExtractor extractor = new DataProviderExtractor(extension);
         String pluginName = extractor.getPluginName();
 
-        if (shouldNotAllowRegistration(pluginName)) return;
+        if (shouldNotAllowRegistration(pluginName)) return Optional.empty();
 
         for (String warning : extractor.getWarnings()) {
             logger.warn("DataExtension API implementation mistake for " + pluginName + ": " + warning);
@@ -93,6 +95,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
         extensionGatherers.put(pluginName, gatherer);
 
         logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, pluginName + " extension registered.");
+        return Optional.of(new CallerImplementation(gatherer, this));
     }
 
     @Override
@@ -125,41 +128,55 @@ public class ExtensionServiceImplementation implements ExtensionService {
         return false; // Should register.
     }
 
-    public void updatePlayerValues(UUID playerUUID, String playerName) {
-        for (Map.Entry<String, ProviderValueGatherer> gatherer : extensionGatherers.entrySet()) {
-            try {
-                logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, "Gathering values for: " + playerName);
-
-                gatherer.getValue().updateValues(playerUUID, playerName);
-
-                logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, "Gathering completed:  " + playerName);
-            } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
-                logger.warn(gatherer.getKey() + " ran into (but failed safely) " + e.getClass().getSimpleName() +
-                        " when updating value for '" + playerName +
-                        "', (You can disable integration with setting 'Plugins." + gatherer.getKey() + ".Enabled')" +
-                        " reason: '" + e.getMessage() +
-                        "', stack trace to follow:");
-                errorHandler.log(L.WARN, gatherer.getValue().getClass(), e);
-            }
+    public void updatePlayerValues(UUID playerUUID, String playerName, CallEvents event) {
+        for (ProviderValueGatherer gatherer : extensionGatherers.values()) {
+            updatePlayerValues(gatherer, playerUUID, playerName, event);
         }
     }
 
-    public void updateServerValues() {
-        for (Map.Entry<String, ProviderValueGatherer> gatherer : extensionGatherers.entrySet()) {
-            try {
-                logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, "Gathering values for server");
+    public void updatePlayerValues(ProviderValueGatherer gatherer, UUID playerUUID, String playerName, CallEvents event) {
+        if (!gatherer.canCallEvent(event)) {
+            return;
+        }
+        try {
+            logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, "Gathering values for: " + playerName);
 
-                gatherer.getValue().updateValues();
+            gatherer.updateValues(playerUUID, playerName);
 
-                logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, "Gathering completed for server");
-            } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
-                logger.warn(gatherer.getKey() + " ran into (but failed safely) " + e.getClass().getSimpleName() +
-                        " when updating value for server" +
-                        ", (You can disable integration with setting 'Plugins." + gatherer.getKey() + ".Enabled')" +
-                        " reason: '" + e.getMessage() +
-                        "', stack trace to follow:");
-                errorHandler.log(L.WARN, gatherer.getValue().getClass(), e);
-            }
+            logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, "Gathering completed:  " + playerName);
+        } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
+            logger.warn(gatherer.getPluginName() + " ran into (but failed safely) " + e.getClass().getSimpleName() +
+                    " when updating value for '" + playerName +
+                    "', (You can disable integration with setting 'Plugins." + gatherer.getPluginName() + ".Enabled')" +
+                    " reason: '" + e.getMessage() +
+                    "', stack trace to follow:");
+            errorHandler.log(L.WARN, gatherer.getClass(), e);
+        }
+    }
+
+    public void updateServerValues(CallEvents event) {
+        for (ProviderValueGatherer gatherer : extensionGatherers.values()) {
+            updateServerValues(gatherer, event);
+        }
+    }
+
+    public void updateServerValues(ProviderValueGatherer gatherer, CallEvents event) {
+        if (!gatherer.canCallEvent(event)) {
+            return;
+        }
+        try {
+            logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, "Gathering values for server");
+
+            gatherer.updateValues();
+
+            logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, "Gathering completed for server");
+        } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
+            logger.warn(gatherer.getPluginName() + " ran into (but failed safely) " + e.getClass().getSimpleName() +
+                    " when updating value for server" +
+                    ", (You can disable integration with setting 'Plugins." + gatherer.getPluginName() + ".Enabled')" +
+                    " reason: '" + e.getMessage() +
+                    "', stack trace to follow:");
+            errorHandler.log(L.WARN, gatherer.getClass(), e);
         }
     }
 }
