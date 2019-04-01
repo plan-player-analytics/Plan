@@ -57,7 +57,7 @@ subprojects {
     ext.velocityVersion = "1.0-SNAPSHOT"
     ext.redisBungeeVersion = "0.3.8-SNAPSHOT"
 
-    ext.httpClientVersion = "4.5.7"
+    ext.httpClientVersion = "4.5.8"
     ext.commonsTextVersion = "1.6"
     ext.htmlCompressorVersion = "1.5.2"
     ext.caffeineVersion = "2.7.0"
