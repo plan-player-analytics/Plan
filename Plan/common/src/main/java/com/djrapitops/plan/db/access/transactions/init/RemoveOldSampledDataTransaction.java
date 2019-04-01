@@ -19,25 +19,14 @@ package com.djrapitops.plan.db.access.transactions.init;
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.Executable;
-import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
 import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.db.access.transactions.commands.RemovePlayerTransaction;
 import com.djrapitops.plan.db.sql.tables.PingTable;
-import com.djrapitops.plan.db.sql.tables.SessionsTable;
 import com.djrapitops.plan.db.sql.tables.TPSTable;
-import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalResultsTransaction;
-import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -46,25 +35,14 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class CleanTransaction extends Transaction {
+public class RemoveOldSampledDataTransaction extends Transaction {
 
     private final UUID serverUUID;
 
-    private final long keepInactiveForMs;
-
-    private final PluginLogger logger;
-    private final Locale locale;
-
-    public CleanTransaction(
-            UUID serverUUID,
-            long keepInactiveForMs,
-            PluginLogger logger,
-            Locale locale
+    public RemoveOldSampledDataTransaction(
+            UUID serverUUID
     ) {
         this.serverUUID = serverUUID;
-        this.keepInactiveForMs = keepInactiveForMs;
-        this.logger = logger;
-        this.locale = locale;
     }
 
     @Override
@@ -73,25 +51,6 @@ public class CleanTransaction extends Transaction {
 
         execute(cleanTPSTable(allTimePeak.orElse(-1)));
         execute(cleanPingTable());
-
-        // Clean DataExtension data
-        executeOther(new RemoveUnsatisfiedConditionalResultsTransaction());
-
-        int removed = cleanOldPlayers();
-        if (removed > 0) {
-            logger.info(locale.getString(PluginLang.DB_NOTIFY_CLEAN, removed));
-        }
-    }
-
-    private int cleanOldPlayers() {
-        long now = System.currentTimeMillis();
-        long keepActiveAfter = now - keepInactiveForMs;
-
-        List<UUID> inactivePlayers = query(fetchInactivePlayerUUIDs(keepActiveAfter));
-        for (UUID uuid : inactivePlayers) {
-            executeOther(new RemovePlayerTransaction(uuid));
-        }
-        return inactivePlayers.size();
     }
 
     private Executable cleanTPSTable(int allTimePlayerPeak) {
@@ -120,30 +79,6 @@ public class CleanTransaction extends Transaction {
             public void prepare(PreparedStatement statement) throws SQLException {
                 long twoWeeks = TimeAmount.WEEK.toMillis(2L);
                 statement.setLong(1, System.currentTimeMillis() - twoWeeks);
-            }
-        };
-    }
-
-    private Query<List<UUID>> fetchInactivePlayerUUIDs(long keepActiveAfter) {
-        String sql = "SELECT uuid, last_seen FROM (SELECT" +
-                " MAX(" + SessionsTable.SESSION_END + ") as last_seen, " + SessionsTable.USER_UUID +
-                " FROM " + SessionsTable.TABLE_NAME +
-                " GROUP BY " + SessionsTable.USER_UUID + ") as q1" +
-                " WHERE last_seen < ?";
-        return new QueryStatement<List<UUID>>(sql, 20000) {
-
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, keepActiveAfter);
-            }
-
-            @Override
-            public List<UUID> processResults(ResultSet set) throws SQLException {
-                List<UUID> inactiveUUIDs = new ArrayList<>();
-                while (set.next()) {
-                    inactiveUUIDs.add(UUID.fromString(set.getString("uuid")));
-                }
-                return inactiveUUIDs;
             }
         };
     }

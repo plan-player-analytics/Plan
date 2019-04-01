@@ -42,10 +42,10 @@ import com.djrapitops.plan.db.access.transactions.StoreServerInformationTransact
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.access.transactions.commands.*;
 import com.djrapitops.plan.db.access.transactions.events.*;
-import com.djrapitops.plan.db.access.transactions.init.CleanTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.db.patches.Patch;
+import com.djrapitops.plan.db.tasks.DBCleanTask;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
@@ -69,6 +69,7 @@ import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.utilities.SHA256Hash;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
+import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import com.google.common.util.concurrent.MoreExecutors;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
@@ -608,7 +609,7 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void cleanTransactionDoesNotCleanActivePlayers() {
+    public void cleanDoesNotCleanActivePlayers() {
         saveUserOne();
         saveTwoWorlds();
 
@@ -617,7 +618,14 @@ public abstract class CommonDBTest {
         session.endSession(sessionStart + 22345L);
         execute(DataStoreQueries.storeSession(session));
 
-        db.executeTransaction(new CleanTransaction(serverUUID, TimeUnit.DAYS.toMillis(1L), new TestPluginLogger(), new Locale()));
+        new DBCleanTask(
+                system.getConfigSystem().getConfig(),
+                new Locale(),
+                system.getDatabaseSystem(),
+                system.getServerInfo(),
+                new TestPluginLogger(),
+                new ConsoleErrorLogger(new TestPluginLogger())
+        ).cleanOldPlayers(db);
 
         Collection<BaseUser> found = db.query(BaseUserQueries.fetchServerBaseUsers(serverUUID));
         assertFalse("All users were deleted!! D:", found.isEmpty());
