@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension.implementation;
 
 import com.djrapitops.extension.*;
+import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.ExtensionService;
 
 import javax.inject.Inject;
@@ -46,10 +47,16 @@ public class ExtensionRegister {
         new BanManagerExtensionFactory().createExtension().ifPresent(extensionService::register);
         new CoreProtectExtensionFactory().createExtension().ifPresent(extensionService::register);
         new DiscordSRVExtensionFactory().createExtension().ifPresent(extensionService::register);
+
         EssentialsExtensionFactory essentials = new EssentialsExtensionFactory();
         essentials.createExtension()
                 .map(extensionService::register).flatMap(Function.identity()) // If the extension was registered this is present.
                 .ifPresent(essentials::registerUpdateListeners);
+
+        for (DataExtension minigame : new MinigameLibExtensionFactory().createExtensions()) {
+            extensionService.register(minigame);
+        }
+
         new SpongeEconomyExtensionFactory().createExtension().ifPresent(extensionService::register);
     }
 
