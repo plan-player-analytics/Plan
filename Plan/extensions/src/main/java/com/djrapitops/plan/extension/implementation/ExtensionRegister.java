@@ -44,6 +44,7 @@ public class ExtensionRegister {
         new AdvancedAchievementsExtensionFactory().createExtension().ifPresent(extensionService::register);
         new AdvancedBanExtensionFactory().createExtension().ifPresent(extensionService::register);
         new BanManagerExtensionFactory().createExtension().ifPresent(extensionService::register);
+        new CoreProtectExtensionFactory().createExtension().ifPresent(extensionService::register);
         new DiscordSRVExtensionFactory().createExtension().ifPresent(extensionService::register);
         EssentialsExtensionFactory essentials = new EssentialsExtensionFactory();
         essentials.createExtension()
