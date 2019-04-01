@@ -24,6 +24,7 @@ import com.djrapitops.plan.extension.implementation.providers.gathering.Provider
 import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -48,6 +49,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
+    private final Processing processing;
     private final ExtensionRegister extensionRegister;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
@@ -59,6 +61,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
             PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
+            Processing processing,
             ExtensionRegister extensionRegister,
             PluginLogger logger,
             ErrorHandler errorHandler
@@ -66,6 +69,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
         this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
+        this.processing = processing;
         this.extensionRegister = extensionRegister;
         this.logger = logger;
         this.errorHandler = errorHandler;
@@ -97,7 +101,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
         updateServerValues(gatherer, CallEvents.SERVER_EXTENSION_REGISTER);
 
         logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, pluginName + " extension registered.");
-        return Optional.of(new CallerImplementation(gatherer, this));
+        return Optional.of(new CallerImplementation(gatherer, this, processing));
     }
 
     @Override
