@@ -45,6 +45,7 @@ import com.djrapitops.plan.db.access.transactions.events.*;
 import com.djrapitops.plan.db.access.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.db.patches.Patch;
+import com.djrapitops.plan.db.patches.RemoveDuplicateUserInfoTransaction;
 import com.djrapitops.plan.db.tasks.DBCleanTask;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
@@ -629,6 +630,33 @@ public abstract class CommonDBTest {
 
         Collection<BaseUser> found = db.query(BaseUserQueries.fetchServerBaseUsers(serverUUID));
         assertFalse("All users were deleted!! D:", found.isEmpty());
+    }
+
+    @Test
+    public void cleanRemovesOnlyDuplicatedUserInfo() {
+        // Store one duplicate
+        db.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute(DataStoreQueries.registerUserInfo(playerUUID, 0L, serverUUID));
+                execute(DataStoreQueries.registerUserInfo(playerUUID, 0L, serverUUID));
+                execute(DataStoreQueries.registerUserInfo(player2UUID, 0L, serverUUID));
+            }
+        });
+
+        db.executeTransaction(new RemoveDuplicateUserInfoTransaction());
+
+        List<UserInfo> found = db.query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
+        assertEquals(
+                Collections.singletonList(new UserInfo(playerUUID, serverUUID, 0, false, false)),
+                found
+        );
+
+        List<UserInfo> found2 = db.query(UserInfoQueries.fetchUserInformationOfUser(player2UUID));
+        assertEquals(
+                Collections.singletonList(new UserInfo(player2UUID, serverUUID, 0, false, false)),
+                found2
+        );
     }
 
     @Test

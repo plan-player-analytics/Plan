@@ -22,6 +22,7 @@ import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.access.transactions.commands.RemovePlayerTransaction;
 import com.djrapitops.plan.db.access.transactions.init.RemoveOldSampledDataTransaction;
+import com.djrapitops.plan.db.patches.RemoveDuplicateUserInfoTransaction;
 import com.djrapitops.plan.db.sql.tables.SessionsTable;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalResultsTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -84,6 +85,7 @@ public class DBCleanTask extends AbsRunnable {
         try {
             if (database.getState() != Database.State.CLOSED) {
                 database.executeTransaction(new RemoveOldSampledDataTransaction(serverInfo.getServerUUID()));
+                database.executeTransaction(new RemoveDuplicateUserInfoTransaction());
                 database.executeTransaction(new RemoveUnsatisfiedConditionalResultsTransaction());
                 int removed = cleanOldPlayers(database);
                 if (removed > 0) {
