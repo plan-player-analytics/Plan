@@ -91,7 +91,7 @@ public abstract class SpecificExport {
     }
 
     protected void exportPlayerPage(String playerName, String html) throws IOException {
-        List<String> lines = Arrays.asList(html.split("\n"));
+        List<String> lines = Arrays.asList(html.replace("../", "../../").split("\n"));
 
         File htmlLocation = new File(getPlayerFolder(), URLEncoder.encode(playerName, "UTF-8").replace(".", "%2E"));
         htmlLocation.mkdirs();
@@ -106,7 +106,7 @@ public abstract class SpecificExport {
             return;
         }
 
-        String html = response.getContent().replace("../", "../../");
+        String html = response.getContent();
         exportPlayerPage(name, html);
     }
 
