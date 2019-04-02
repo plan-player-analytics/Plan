@@ -36,6 +36,7 @@ import java.util.*;
 public class NetworkHealthInformation extends AbstractHealthInfo {
 
     private final NetworkContainer container;
+    private final TimeZone timeZone;
 
     public NetworkHealthInformation(
             NetworkContainer container,
@@ -44,7 +45,8 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
             int activeLoginThreshold,
             Formatter<Long> timeAmountFormatter,
             Formatter<Double> decimalFormatter,
-            Formatter<Double> percentageFormatter
+            Formatter<Double> percentageFormatter,
+            TimeZone timeZone
     ) {
         super(
                 container.getUnsafe(NetworkKeys.REFRESH_TIME),
@@ -54,6 +56,7 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
                 timeAmountFormatter, decimalFormatter, percentageFormatter
         );
         this.container = container;
+        this.timeZone = timeZone;
         calculate();
     }
 
@@ -152,12 +155,12 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
 
             PlayersMutator serverPlayers = playersMutator.filterPlayedOnServer(serverUUID);
             PlayersMutator serverRegistered = serverPlayers.filterRegisteredBetween(monthAgo, now);
-            int averageNewPerDay = serverRegistered.averageNewPerDay();
+            int averageNewPerDay = serverRegistered.averageNewPerDay(timeZone);
             serverContainer.putRawData(AnalysisKeys.AVG_PLAYERS_NEW_MONTH, averageNewPerDay);
             SessionsMutator serverSessions = new SessionsMutator(serverPlayers.getSessions())
                     .filterSessionsBetween(monthAgo, now)
                     .filterPlayedOnServer(serverUUID);
-            int averageUniquePerDay = serverSessions.toAverageUniqueJoinsPerDay();
+            int averageUniquePerDay = serverSessions.toAverageUniqueJoinsPerDay(timeZone);
             int uniquePlayers = serverSessions.toUniquePlayers();
             serverContainer.putRawData(AnalysisKeys.AVG_PLAYERS_MONTH, averageUniquePerDay);
             serverContainer.putRawData(AnalysisKeys.PLAYERS_MONTH, uniquePlayers);

@@ -139,7 +139,8 @@ public class NetworkContainer extends DynamicDataContainer {
                 locale,
                 config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD),
                 config.get(TimeSettings.ACTIVE_LOGIN_THRESHOLD),
-                formatters.timeAmount(), formatters.decimals(), formatters.percentage()
+                formatters.timeAmount(), formatters.decimals(), formatters.percentage(),
+                config.get(TimeSettings.USE_SERVER_TIME) ? TimeZone.getDefault() : TimeZone.getTimeZone("GMT")
         ));
         putCachingSupplier(NetworkKeys.HEALTH_INDEX, () -> getUnsafe(healthInformation).getServerHealth());
         putCachingSupplier(NetworkKeys.HEALTH_NOTES, () -> getUnsafe(healthInformation).toHtml());

@@ -159,12 +159,13 @@ public class SessionsMutator {
         return (long) Median.forList(sessionLengths).calculate();
     }
 
-    public int toAverageUniqueJoinsPerDay() {
-        return MutatorFunctions.average(uniqueJoinsPerDay());
+    public int toAverageUniqueJoinsPerDay(TimeZone timeZone) {
+        return MutatorFunctions.average(uniqueJoinsPerDay(timeZone));
     }
 
-    public TreeMap<Long, Integer> uniqueJoinsPerDay() {
-        SortedMap<Long, List<Session>> byStartOfDay = toDateHoldersMutator().groupByStartOfDay();
+    public TreeMap<Long, Integer> uniqueJoinsPerDay(TimeZone timeZone) {
+        // Adds Timezone offset
+        SortedMap<Long, List<Session>> byStartOfDay = toDateHoldersMutator().groupByStartOfDay(timeZone);
 
         TreeMap<Long, Integer> uniqueJoins = new TreeMap<>();
         for (Map.Entry<Long, List<Session>> entry : byStartOfDay.entrySet()) {

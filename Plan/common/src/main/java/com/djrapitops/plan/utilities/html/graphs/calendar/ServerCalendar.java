@@ -39,12 +39,14 @@ public class ServerCalendar {
     private final Formatter<Long> iso8601Formatter;
     private final Formatter<Long> timeAmountFormatter;
     private final Theme theme;
+    private final TimeZone timeZone;
 
     ServerCalendar(
             PlayersMutator mutator, TreeMap<Long, Integer> uniquePerDay, TreeMap<Long, Integer> newPerDay,
             Formatter<Long> iso8601Formatter,
             Formatter<Long> timeAmountFormatter,
-            Theme theme
+            Theme theme,
+            TimeZone timeZone
     ) {
         this.mutator = mutator;
         this.uniquePerDay = uniquePerDay;
@@ -52,6 +54,7 @@ public class ServerCalendar {
         this.iso8601Formatter = iso8601Formatter;
         this.timeAmountFormatter = timeAmountFormatter;
         this.theme = theme;
+        this.timeZone = timeZone;
     }
 
     public String toCalendarSeries() {
@@ -85,15 +88,17 @@ public class ServerCalendar {
 
     private void appendSessionRelatedData(StringBuilder series) {
         SessionsMutator sessionsMutator = new SessionsMutator(mutator.getSessions());
-        SortedMap<Long, List<Session>> byStartOfDay = sessionsMutator.toDateHoldersMutator().groupByStartOfDay();
+        // Adds a timezone offset
+        SortedMap<Long, List<Session>> byStartOfDay = sessionsMutator.toDateHoldersMutator().groupByStartOfDay(timeZone);
 
+        // Has a timezone offset
         for (Map.Entry<Long, Integer> entry : uniquePerDay.entrySet()) {
             if (entry.getValue() <= 0) {
                 continue;
             }
 
             Long key = entry.getKey();
-            String day = iso8601Formatter.apply(key);
+            String day = iso8601Formatter.apply(key - timeZone.getOffset(entry.getKey()));// Remove the timezone offset since Calendar uses UTC
             List<Session> sessions = byStartOfDay.getOrDefault(key, new ArrayList<>());
 
             SessionsMutator dayMutator = new SessionsMutator(sessions);
