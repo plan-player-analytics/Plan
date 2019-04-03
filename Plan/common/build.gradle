@@ -1,6 +1,6 @@
 dependencies {
     compile "com.djrapitops:AbstractPluginFramework-api:$abstractPluginFrameworkVersion"
-    compile project(path: ":api", configuration: 'shadow')
+    compile project(":api")
     compile project(path: ":extensions", configuration: 'shadow')
     compile "com.djrapitops:PlanPluginBridge:$planPluginBridgeVersion"
     compile "org.apache.httpcomponents:httpclient:$httpClientVersion"
@@ -14,7 +14,7 @@ dependencies {
     compile "com.maxmind.geoip2:geoip2:$geoIpVersion"
     compileOnly "com.google.guava:guava:$guavaVersion"
 
-    testCompile project(path: ":api", configuration: 'shadow')
+    testCompile project(":api")
 }
 
 shadowJar {
