@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.settings.config;
 
-import com.djrapitops.plan.utilities.file.FileUtil;
+import com.djrapitops.plan.system.file.FileResource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -54,14 +54,14 @@ class ConfigWriterTest {
         File original = tempFolder.resolve("loaded.yml").toFile();
         File written = tempFolder.resolve("written.yml").toFile();
 
-        TestResources.copyResourceIntoFile(original, "/config.yml");
+        TestResources.copyResourceIntoFile(original, "/assets/config.yml");
 
         try (ConfigReader reader = new ConfigReader(Files.newInputStream(original.toPath()))) {
             new ConfigWriter(written.toPath()).write(reader.read());
         }
 
-        List<String> originalLines = FileUtil.lines(original);
-        List<String> writtenLines = FileUtil.lines(written);
+        List<String> originalLines = FileResource.lines(original);
+        List<String> writtenLines = FileResource.lines(written);
 
         assertFalse(originalLines.isEmpty());
         assertFalse(writtenLines.isEmpty());
@@ -84,7 +84,7 @@ class ConfigWriterTest {
         File indented = tempFolder.resolve("indented.yml").toFile();
         File written = tempFolder.resolve("written.yml").toFile();
 
-        TestResources.copyResourceIntoFile(original, "/config.yml");
+        TestResources.copyResourceIntoFile(original, "/assets/config.yml");
 
         try (ConfigReader reader = new ConfigReader(Files.newInputStream(original.toPath()))) {
             new ConfigWriter(indented.toPath()).write(reader.read());
@@ -93,8 +93,8 @@ class ConfigWriterTest {
             new ConfigWriter(written.toPath()).write(reader.read());
         }
 
-        List<String> originalLines = FileUtil.lines(indented);
-        List<String> writtenLines = FileUtil.lines(written);
+        List<String> originalLines = FileResource.lines(indented);
+        List<String> writtenLines = FileResource.lines(written);
 
         assertFalse(originalLines.isEmpty());
         assertFalse(writtenLines.isEmpty());
@@ -119,7 +119,7 @@ class ConfigWriterTest {
         Path out = tempFolder.resolve("listIndent.yml");
         new ConfigWriter(out).write(root);
 
-        List<String> writtenLines = FileUtil.lines(out.toFile());
+        List<String> writtenLines = FileResource.lines(out.toFile());
         List<String> expected = Arrays.asList(
                 "Test:",
                 "  - First",
@@ -137,7 +137,7 @@ class ConfigWriterTest {
         Path out = tempFolder.resolve("listIndent.yml");
         new ConfigWriter(out).write(root);
 
-        List<String> writtenLines = FileUtil.lines(out.toFile());
+        List<String> writtenLines = FileResource.lines(out.toFile());
         List<String> expected = Arrays.asList(
                 "Test:",
                 "    List:",
@@ -159,7 +159,7 @@ class ConfigWriterTest {
         Path out = tempFolder.resolve("listIndent.yml");
         new ConfigWriter(out).write(root);
 
-        List<String> writtenLines = FileUtil.lines(out.toFile());
+        List<String> writtenLines = FileResource.lines(out.toFile());
         List<String> expected = Arrays.asList(
                 "Test:",
                 "    List:",

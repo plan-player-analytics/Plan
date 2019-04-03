@@ -271,7 +271,7 @@ public class InspectPage implements Page {
         InspectPagePluginsContent pluginsTab = (InspectPagePluginsContent) ResponseCache.loadResponse(PageId.PLAYER_PLUGINS_TAB.of(playerUUID), InspectPagePluginsContent::new);
         pluginsTab.addTab(new InspectPagePluginsContent(pluginTabs.getNav(), pluginTabs.getTab()));
 
-        return replacer.apply(files.readCustomizableResourceFlat("web/player.html"));
+        return replacer.apply(files.getCustomizableResourceOrDefault("web/player.html").asString());
     }
 
     private void sessionsAndPlaytime(PlaceholderReplacer replacer, SessionsMutator sessionsMutator, SessionsMutator daySessionsMutator, SessionsMutator weekSessionsMutator, SessionsMutator monthSessionsMutator) {

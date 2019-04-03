@@ -95,7 +95,7 @@ public class AnalysisPage implements Page {
         performanceNumbers(placeholderReplacer);
 
         try {
-            return placeholderReplacer.apply(files.readCustomizableResourceFlat("web/server.html"));
+            return placeholderReplacer.apply(files.getCustomizableResourceOrDefault("web/server.html").asString());
         } catch (IOException e) {
             throw new ParseException(e);
         } finally {

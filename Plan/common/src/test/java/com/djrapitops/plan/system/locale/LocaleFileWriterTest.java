@@ -16,14 +16,13 @@
  */
 package com.djrapitops.plan.system.locale;
 
-import com.djrapitops.plan.utilities.file.FileUtil;
+import com.djrapitops.plan.system.file.FileResource;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
 
@@ -43,7 +42,7 @@ public class LocaleFileWriterTest {
         new LocaleFileWriter(new Locale()).writeToFile(file);
 
         long expected = LocaleSystem.getIdentifiers().size();
-        int result = FileUtil.lines(file, StandardCharsets.UTF_8).size();
+        int result = FileResource.lines(file).size();
         assertEquals(expected, result);
     }
 

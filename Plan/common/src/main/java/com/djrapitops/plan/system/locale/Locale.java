@@ -16,7 +16,8 @@
  */
 package com.djrapitops.plan.system.locale;
 
-import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.system.file.FileResource;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.locale.lang.*;
 
 import java.io.File;
@@ -36,16 +37,16 @@ import java.util.stream.Collectors;
  */
 public class Locale extends HashMap<Lang, Message> {
 
-    public static Locale forLangCodeString(PlanPlugin plugin, String code) throws IOException {
-        return forLangCode(LangCode.fromString(code), plugin);
+    public static Locale forLangCodeString(PlanFiles files, String code) throws IOException {
+        return forLangCode(LangCode.fromString(code), files);
     }
 
-    public static Locale forLangCode(LangCode code, PlanPlugin plugin) throws IOException {
-        return new LocaleFileReader(plugin, code.getFileName()).load();
+    public static Locale forLangCode(LangCode code, PlanFiles files) throws IOException {
+        return new LocaleFileReader(files.getResourceFromJar("locale/" + code.getFileName())).load();
     }
 
     public static Locale fromFile(File file) throws IOException {
-        return new LocaleFileReader(file).load();
+        return new LocaleFileReader(new FileResource(file.getName(), file)).load();
     }
 
     @Override

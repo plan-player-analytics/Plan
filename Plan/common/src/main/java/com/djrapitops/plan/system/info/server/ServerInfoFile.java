@@ -45,7 +45,7 @@ public class ServerInfoFile extends Config {
     }
 
     public void prepare() throws IOException {
-        try (ConfigReader reader = new ConfigReader(files.readStreamFromResource("DefaultServerInfoFile.yml"))) {
+        try (ConfigReader reader = new ConfigReader(files.getResourceFromJar("DefaultServerInfoFile.yml").asInputStream())) {
             copyMissing(reader.read());
         }
         save();

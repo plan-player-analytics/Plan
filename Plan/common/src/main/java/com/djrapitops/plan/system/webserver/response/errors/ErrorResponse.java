@@ -40,7 +40,7 @@ public class ErrorResponse extends PageResponse {
 
     public ErrorResponse(VersionCheckSystem versionCheckSystem, PlanFiles files) throws IOException {
         this.versionCheckSystem = versionCheckSystem;
-        setContent(files.readCustomizableResourceFlat("web/error.html"));
+        setContent(files.getCustomizableResourceOrDefault("web/error.html").asString());
     }
 
     public ErrorResponse(String message) {

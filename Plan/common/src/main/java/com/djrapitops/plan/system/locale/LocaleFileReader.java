@@ -16,11 +16,9 @@
  */
 package com.djrapitops.plan.system.locale;
 
-import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.system.file.Resource;
 import com.djrapitops.plan.system.locale.lang.Lang;
-import com.djrapitops.plan.utilities.file.FileUtil;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -34,12 +32,8 @@ public class LocaleFileReader {
 
     private List<String> lines;
 
-    public LocaleFileReader(File from) throws IOException {
-        lines = FileUtil.lines(from);
-    }
-
-    public LocaleFileReader(PlanPlugin planPlugin, String fileName) throws IOException {
-        lines = FileUtil.lines(planPlugin, "locale/" + fileName);
+    public LocaleFileReader(Resource resource) throws IOException {
+        lines = resource.asLines();
     }
 
     public Locale load() {

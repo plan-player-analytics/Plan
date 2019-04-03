@@ -86,7 +86,7 @@ public class PlayersPage implements Page {
             placeholderReplacer.put("playersTable", tables.playerTableForPlayersPage(playerContainers).parseHtml());
             timings.end("Pages", "Players page players table parsing");
 
-            return placeholderReplacer.apply(files.readCustomizableResourceFlat("web/players.html"));
+            return placeholderReplacer.apply(files.getCustomizableResourceOrDefault("web/players.html").asString());
         } catch (Exception e) {
             throw new ParseException(e);
         }

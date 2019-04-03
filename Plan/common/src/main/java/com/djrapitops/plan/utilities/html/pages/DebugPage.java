@@ -21,13 +21,13 @@ import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.file.FileResource;
 import com.djrapitops.plan.system.info.connection.ConnectionLog;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
-import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.Html;
@@ -282,7 +282,7 @@ public class DebugPage implements Page {
                 .flatMap(FolderTimeStampFileLogger::getCurrentFile)
                 .map(file -> {
                     try {
-                        return FileUtil.lines(file);
+                        return FileResource.lines(file);
                     } catch (IOException e) {
                         errorHandler.log(L.WARN, this.getClass(), e);
                         return new ArrayList<String>();

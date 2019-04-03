@@ -130,7 +130,7 @@ public class ConfigSettingKeyTest {
 
     private PlanConfig createConfig(String copyDefaultSettingsFrom) throws IOException {
         File configFile = temporaryFolder.newFile();
-        TestResources.copyResourceIntoFile(configFile, "/" + copyDefaultSettingsFrom);
+        TestResources.copyResourceIntoFile(configFile, "/assets/" + copyDefaultSettingsFrom);
         return createConfig(configFile);
     }
 

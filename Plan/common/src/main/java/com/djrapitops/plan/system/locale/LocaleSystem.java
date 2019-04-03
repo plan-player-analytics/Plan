@@ -132,7 +132,7 @@ public class LocaleSystem implements SubSystem {
         try {
             String setting = config.get(PluginSettings.LOCALE);
             if (!"default".equalsIgnoreCase(setting)) {
-                return Optional.of(Locale.forLangCodeString(plugin, setting));
+                return Optional.of(Locale.forLangCodeString(files, setting));
             }
         } catch (IOException e) {
             logger.warn("Failed to read locale from jar: " + config.get(PluginSettings.LOCALE) + ", " + e.toString());

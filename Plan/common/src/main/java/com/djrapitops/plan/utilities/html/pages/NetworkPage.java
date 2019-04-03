@@ -92,7 +92,7 @@ public class NetworkPage implements Page {
             placeholderReplacer.put("navPluginsTabs", nav);
             placeholderReplacer.put("tabsPlugins", tabs);
 
-            return placeholderReplacer.apply(files.readCustomizableResourceFlat("web/network.html"));
+            return placeholderReplacer.apply(files.getCustomizableResourceOrDefault("web/network.html").asString());
         } catch (Exception e) {
             throw new ParseException(e);
         }
