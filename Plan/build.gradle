@@ -116,11 +116,7 @@ subprojects {
         testCompile "org.xerial:sqlite-jdbc:3.27.2.1"     // SQLite
         testCompile "mysql:mysql-connector-java:8.0.15" // MySQL
     }
-
-    shadowJar {
-        exclude 'META-INF/versions/'
-    }
-
+    
     configurations {
         testArtifacts.extendsFrom testRuntime
     }
