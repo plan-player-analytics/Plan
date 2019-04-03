@@ -70,10 +70,10 @@ class ConfigUpdaterTest {
         Files.copy(bungeeConfigResource.toPath(), oldBungeeConfig.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
         newConfig = tempDir.resolve("newconfig.yml");
-        TestResources.copyResourceIntoFile(newConfig.toFile(), "/assets/config.yml");
+        TestResources.copyResourceIntoFile(newConfig.toFile(), "/assets/plan/config.yml");
 
         newBungeeConfig = tempDir.resolve("newbungeeconfig.yml");
-        TestResources.copyResourceIntoFile(newBungeeConfig.toFile(), "/assets/bungeeconfig.yml");
+        TestResources.copyResourceIntoFile(newBungeeConfig.toFile(), "/assets/plan/bungeeconfig.yml");
 
         PluginLogger testLogger = new TestPluginLogger();
         UNDER_TEST = new ConfigUpdater(testLogger, new ConsoleErrorLogger(testLogger));

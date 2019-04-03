@@ -46,8 +46,8 @@ abstract class Mocker {
             throw new IllegalStateException("withDataFolder needs to be called before setting files");
         }
         try {
-            File file = getFile("/assets/" + fileName);
-            doReturn(Files.newInputStream(file.toPath())).when(planMock).getResource("assets/" + fileName);
+            File file = getFile("/assets/plan/" + fileName);
+            doReturn(Files.newInputStream(file.toPath())).when(planMock).getResource("assets/plan/" + fileName);
         } catch (NullPointerException e) {
             System.out.println("File is missing! " + fileName);
         }

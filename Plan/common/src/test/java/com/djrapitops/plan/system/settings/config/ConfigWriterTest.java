@@ -54,7 +54,7 @@ class ConfigWriterTest {
         File original = tempFolder.resolve("loaded.yml").toFile();
         File written = tempFolder.resolve("written.yml").toFile();
 
-        TestResources.copyResourceIntoFile(original, "/assets/config.yml");
+        TestResources.copyResourceIntoFile(original, "/assets/plan/config.yml");
 
         try (ConfigReader reader = new ConfigReader(Files.newInputStream(original.toPath()))) {
             new ConfigWriter(written.toPath()).write(reader.read());
@@ -84,7 +84,7 @@ class ConfigWriterTest {
         File indented = tempFolder.resolve("indented.yml").toFile();
         File written = tempFolder.resolve("written.yml").toFile();
 
-        TestResources.copyResourceIntoFile(original, "/assets/config.yml");
+        TestResources.copyResourceIntoFile(original, "/assets/plan/config.yml");
 
         try (ConfigReader reader = new ConfigReader(Files.newInputStream(original.toPath()))) {
             new ConfigWriter(indented.toPath()).write(reader.read());

@@ -47,7 +47,7 @@ public class SpongeAssetResource implements Resource {
 
     private void nullCheck() throws FileNotFoundException {
         if (asset == null) {
-            throw new FileNotFoundException("a Resource was not found inside the jar (" + resourceName + "), " +
+            throw new FileNotFoundException("a Resource was not found inside the jar (/assets/plan/" + resourceName + "), " +
                     "Plan does not support /reload or updates using " +
                     "Plugin Managers, restart the server and see if the error persists.");
         }

@@ -91,11 +91,11 @@ public class PlanFiles implements SubSystem {
     /**
      * Get a file in the jar as a {@link Resource}.
      *
-     * @param resourceName Path to the file inside jar/assets/ folder.
+     * @param resourceName Path to the file inside jar/assets/plan/ folder.
      * @return a {@link Resource} for accessing the resource.
      */
     public Resource getResourceFromJar(String resourceName) {
-        return new JarResource("assets/" + resourceName, () -> plugin.getResource("assets/" + resourceName));
+        return new JarResource("assets/plan/" + resourceName, () -> plugin.getResource("assets/plan/" + resourceName));
     }
 
     /**
