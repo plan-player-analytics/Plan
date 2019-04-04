@@ -17,38 +17,41 @@
 package com.djrapitops.plan.system.cache;
 
 import com.djrapitops.plan.data.container.Session;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import utilities.TestConstants;
 
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SessionCacheTest {
+@RunWith(JUnitPlatform.class)
+class SessionCacheTest {
 
     private Session session;
     private final UUID uuid = TestConstants.PLAYER_ONE_UUID;
     private final UUID serverUUID = TestConstants.SERVER_UUID;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         session = new Session(uuid, serverUUID, 12345L, "World1", "SURVIVAL");
 
         SessionCache sessionCache = new SessionCache();
         sessionCache.cacheSession(uuid, session);
     }
 
-    @After
-    public void tearDown() {
+    @AfterEach
+    void tearDown() {
         SessionCache.clear();
     }
 
     @Test
-    public void testAtomity() {
+    void testAtomity() {
         Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
         assertTrue(cachedSession.isPresent());
         assertEquals(session, cachedSession.get());

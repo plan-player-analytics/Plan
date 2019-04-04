@@ -19,13 +19,15 @@ package com.djrapitops.plan.data.store.mutators.formatting;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.FormatSettings;
 import com.djrapitops.plan.utilities.formatting.time.TimeAmountFormatter;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 /**
@@ -33,12 +35,13 @@ import static org.mockito.Mockito.when;
  *
  * @author Rsl1122
  */
-public class TimeAmountFormatterExtraZerosTest {
+@RunWith(JUnitPlatform.class)
+class TimeAmountFormatterExtraZerosTest {
 
     private static TimeAmountFormatter underTest;
 
-    @BeforeClass
-    public static void setUpClass() {
+    @BeforeAll
+    static void setUpFormatter() {
         PlanConfig config = Mockito.mock(PlanConfig.class);
         when(config.get(FormatSettings.YEAR)).thenReturn("1 year, ");
         when(config.get(FormatSettings.YEARS)).thenReturn("%years% years, ");
@@ -54,7 +57,7 @@ public class TimeAmountFormatterExtraZerosTest {
     }
 
     @Test
-    public void exampleOne() {
+    void exampleOne() {
         String expected = "1 year, 1 month, 5d 12:30:20";
 
         long ms = TimeUnit.DAYS.toMillis(400L) +
@@ -67,7 +70,7 @@ public class TimeAmountFormatterExtraZerosTest {
     }
 
     @Test
-    public void exampleTwo() {
+    void exampleTwo() {
         String expected = "1 year, 1 month, 5d 00:00:00";
 
         long ms = TimeUnit.DAYS.toMillis(400L);
@@ -77,7 +80,7 @@ public class TimeAmountFormatterExtraZerosTest {
     }
 
     @Test
-    public void exampleThree() {
+    void exampleThree() {
         String expected = "12:00:20";
 
         long ms = TimeUnit.HOURS.toMillis(12L) +
@@ -88,7 +91,7 @@ public class TimeAmountFormatterExtraZerosTest {
     }
 
     @Test
-    public void exampleFour() {
+    void exampleFour() {
         String expected = "00:30:00";
 
         long ms = TimeUnit.MINUTES.toMillis(30L);
@@ -98,7 +101,7 @@ public class TimeAmountFormatterExtraZerosTest {
     }
 
     @Test
-    public void exampleFive() {
+    void exampleFive() {
         String expected = "00:00:20";
 
         long ms = TimeUnit.SECONDS.toMillis(20L);
@@ -108,7 +111,7 @@ public class TimeAmountFormatterExtraZerosTest {
     }
 
     @Test
-    public void exampleZero() {
+    void exampleZero() {
         String expected = "-";
 
         long ms = 0L;
@@ -118,7 +121,7 @@ public class TimeAmountFormatterExtraZerosTest {
     }
 
     @Test
-    public void exampleOneSecond() {
+    void exampleOneSecond() {
         String expected = "00:00:01";
 
         long ms = TimeUnit.SECONDS.toMillis(1L);
@@ -128,7 +131,7 @@ public class TimeAmountFormatterExtraZerosTest {
     }
 
     @Test
-    public void exampleOneMinute() {
+    void exampleOneMinute() {
         String expected = "00:01:00";
 
         long ms = TimeUnit.MINUTES.toMillis(1L);

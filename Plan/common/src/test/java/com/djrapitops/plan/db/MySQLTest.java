@@ -45,8 +45,8 @@ public class MySQLTest extends CommonDBTest {
 
     @BeforeClass
     public static void setUpDatabase() throws Exception {
-        boolean isTravis = Boolean.parseBoolean(System.getenv(CIProperties.IS_TRAVIS));
-        assumeTrue(isTravis);
+        boolean isCI = Boolean.parseBoolean(System.getenv(CIProperties.IS_CI_SERVICE));
+        assumeTrue(isCI);
 
         PlanConfig config = component.getPlanSystem().getConfigSystem().getConfig();
         config.set(DatabaseSettings.MYSQL_DATABASE, "Plan");

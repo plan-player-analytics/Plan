@@ -25,18 +25,20 @@ import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransacti
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.ExportSettings;
+import com.jayway.awaitility.Awaitility;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import utilities.TestConstants;
-import utilities.dagger.DaggerPlanPluginComponent;
-import utilities.dagger.PlanPluginComponent;
-import utilities.mocks.PlanPluginMocker;
+import utilities.mocks.PluginMockComponent;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -46,19 +48,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Rsl1122
  */
+@RunWith(JUnitPlatform.class)
 class AnalysisExportTest {
 
     private PlanSystem system;
 
     @BeforeEach
     void setupPlanSystem(@TempDir Path dir) throws Exception {
-        PlanPluginComponent component = DaggerPlanPluginComponent.builder().plan(PlanPluginMocker.setUp()
-                .withDataFolder(dir.toFile()).withLogging()
-                .withResourceFetchingFromJar()
-                .getPlanMock()
-        ).build();
+        PluginMockComponent component = new PluginMockComponent(dir);
 
-        system = component.system();
+        system = component.getPlanSystem();
         PlanConfig config = system.getConfigSystem().getConfig();
         config.set(ExportSettings.JSON_EXPORT_PATH, "Test");
         config.set(ExportSettings.SERVER_JSON, true);
@@ -84,9 +83,13 @@ class AnalysisExportTest {
 
     @Test
     void serverJSONIsExported() throws WebException {
-        system.getInfoSystem().generateAnalysisPage(TestConstants.SERVER_UUID);
+        system.getInfoSystem().generateAnalysisPage(system.getServerInfo().getServerUUID());
 
         File exportFolder = system.getPlanFiles().getFileFromPluginFolder("Test");
+
+        Awaitility.await().atMost(5, TimeUnit.SECONDS)
+                .until(() -> exportFolder.listFiles() != null);
+
         File[] folders = exportFolder.listFiles();
         assertNotNull(folders);
 
@@ -97,7 +100,7 @@ class AnalysisExportTest {
             }
             if (folder.getName().equals("server")) {
                 for (File file : folder.listFiles()) {
-                    if (file.getName().contains("Test.json")) {
+                    if (file.getName().contains("Plan.json")) {
                         found = true;
                     }
                 }

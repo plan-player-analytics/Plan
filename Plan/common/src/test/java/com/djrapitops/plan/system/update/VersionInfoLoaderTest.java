@@ -17,7 +17,9 @@
 package com.djrapitops.plan.system.update;
 
 import com.djrapitops.plugin.api.utility.Version;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,10 +27,11 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class VersionInfoLoaderTest {
+@RunWith(JUnitPlatform.class)
+class VersionInfoLoaderTest {
 
     @Test
-    public void versionLoaderTest() throws IOException {
+    void versionLoaderTest() throws IOException {
         List<VersionInfo> versions = VersionInfoLoader.load();
 
         VersionInfo oldest = versions.get(versions.size() - 1);

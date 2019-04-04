@@ -19,13 +19,15 @@ package com.djrapitops.plan.data.store.mutators.formatting;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.FormatSettings;
 import com.djrapitops.plan.utilities.formatting.time.TimeAmountFormatter;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 /**
@@ -33,12 +35,13 @@ import static org.mockito.Mockito.when;
  *
  * @author Rsl1122
  */
-public class TimeAmountFormatterDefaultTest {
+@RunWith(JUnitPlatform.class)
+class TimeAmountFormatterDefaultTest {
 
     private static TimeAmountFormatter underTest;
 
-    @BeforeClass
-    public static void setUpClass() {
+    @BeforeAll
+    static void setUpFormatter() {
         PlanConfig config = Mockito.mock(PlanConfig.class);
         when(config.get(FormatSettings.YEAR)).thenReturn("1 year, ");
         when(config.get(FormatSettings.YEARS)).thenReturn("%years% years, ");
@@ -56,7 +59,7 @@ public class TimeAmountFormatterDefaultTest {
     }
 
     @Test
-    public void exampleOne() {
+    void exampleOne() {
         String expected = "1 year, 1 month, 5d 12h 30m 20s";
 
         long ms = TimeUnit.DAYS.toMillis(400L) +
@@ -69,7 +72,7 @@ public class TimeAmountFormatterDefaultTest {
     }
 
     @Test
-    public void exampleTwo() {
+    void exampleTwo() {
         String expected = "1 year, 1 month, 5d ";
 
         long ms = TimeUnit.DAYS.toMillis(400L);
@@ -79,7 +82,7 @@ public class TimeAmountFormatterDefaultTest {
     }
 
     @Test
-    public void exampleThree() {
+    void exampleThree() {
         String expected = "12h 20s";
 
         long ms = TimeUnit.HOURS.toMillis(12L) +
@@ -90,7 +93,7 @@ public class TimeAmountFormatterDefaultTest {
     }
 
     @Test
-    public void exampleFour() {
+    void exampleFour() {
         String expected = "30m ";
 
         long ms = TimeUnit.MINUTES.toMillis(30L);
@@ -100,7 +103,7 @@ public class TimeAmountFormatterDefaultTest {
     }
 
     @Test
-    public void exampleFive() {
+    void exampleFive() {
         String expected = "20s";
 
         long ms = TimeUnit.SECONDS.toMillis(20L);
@@ -110,7 +113,7 @@ public class TimeAmountFormatterDefaultTest {
     }
 
     @Test
-    public void exampleZero() {
+    void exampleZero() {
         String expected = "-";
 
         long ms = 0L;
@@ -120,7 +123,7 @@ public class TimeAmountFormatterDefaultTest {
     }
 
     @Test
-    public void exampleOneSecond() {
+    void exampleOneSecond() {
         String expected = "1s";
 
         long ms = TimeUnit.SECONDS.toMillis(1L);
@@ -130,7 +133,7 @@ public class TimeAmountFormatterDefaultTest {
     }
 
     @Test
-    public void exampleOneMinute() {
+    void exampleOneMinute() {
         String expected = "1m ";
 
         long ms = TimeUnit.MINUTES.toMillis(1L);

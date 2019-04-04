@@ -16,23 +16,26 @@
  */
 package com.djrapitops.plan.data.container;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test for functionality of GeoInfo object.
  *
  * @author Rsl1122
  */
-public class GeoInfoTest {
+@RunWith(JUnitPlatform.class)
+class GeoInfoTest {
 
     @Test
-    public void automaticallyHidesLast16Bits() throws NoSuchAlgorithmException, UnknownHostException {
+    void automaticallyHidesLast16Bits() throws NoSuchAlgorithmException, UnknownHostException {
         InetAddress test = InetAddress.getByName("1.2.3.4");
         String expected = "1.2.xx.xx";
         String result = new GeoInfo(test, "Irrelevant", 3).getIp();
@@ -41,7 +44,7 @@ public class GeoInfoTest {
     }
 
     @Test
-    public void testFormatIP() throws UnknownHostException {
+    void testFormatIP() throws UnknownHostException {
         InetAddress ip = InetAddress.getByName("1.2.3.4");
         InetAddress ip2 = InetAddress.getByName("1.2.3.26");
         InetAddress ip3 = InetAddress.getByName("1.2.3.235");
@@ -53,7 +56,7 @@ public class GeoInfoTest {
     }
 
     @Test
-    public void testFormatIPv6() throws UnknownHostException {
+    void testFormatIPv6() throws UnknownHostException {
         InetAddress ip = InetAddress.getByName("1234:1234:1234:1234:1234:1234:1234:1234%0");
         String expected = "1234:1234:1234:xx..";
 

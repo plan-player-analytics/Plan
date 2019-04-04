@@ -18,15 +18,18 @@ package com.djrapitops.plan.data.cache;
 
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import utilities.RandomData;
 
-import static junit.framework.TestCase.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Fuzzlemann
  */
-public class ResponseCacheTest {
+@RunWith(JUnitPlatform.class)
+class ResponseCacheTest {
     private final String IDENTIFIER = RandomData.randomString(10);
     private final String RESPONSE_STRING = RandomData.randomString(10);
     private final Response RESPONSE = new Response() {
@@ -37,7 +40,7 @@ public class ResponseCacheTest {
     };
 
     @Test
-    public void testCache() {
+    void responseIsCachedIfNotFoundDuringLoad() {
         assertFalse(ResponseCache.isCached(IDENTIFIER));
 
         Response response = ResponseCache.loadResponse(IDENTIFIER, () -> RESPONSE);
@@ -47,7 +50,7 @@ public class ResponseCacheTest {
     }
 
     @Test
-    public void testClearCache() {
+    void responseIsClearedWhenCacheIsCleared() {
         ResponseCache.cacheResponse(IDENTIFIER, () -> RESPONSE);
         assertTrue(ResponseCache.isCached(IDENTIFIER));
 

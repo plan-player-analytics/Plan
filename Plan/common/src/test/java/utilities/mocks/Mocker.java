@@ -23,7 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 /**
  * Abstract Mocker for methods that can be used for both Bungee and Bukkit.
@@ -47,7 +47,7 @@ abstract class Mocker {
         }
         try {
             File file = getFile("/assets/plan/" + fileName);
-            doReturn(Files.newInputStream(file.toPath())).when(planMock).getResource("assets/plan/" + fileName);
+            when(planMock.getResource("assets/plan/" + fileName)).thenAnswer(invocationOnMock -> Files.newInputStream(file.toPath()));
         } catch (NullPointerException e) {
             System.out.println("File is missing! " + fileName);
         }

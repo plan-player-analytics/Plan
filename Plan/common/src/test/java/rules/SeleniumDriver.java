@@ -47,7 +47,7 @@ public class SeleniumDriver extends ExternalResource {
     }
 
     private WebDriver getChromeWebDriver() {
-        if (Boolean.parseBoolean(System.getenv(CIProperties.IS_TRAVIS))) {
+        if (Boolean.parseBoolean(System.getenv(CIProperties.IS_CI_SERVICE))) {
             ChromeOptions chromeOptions = new ChromeOptions();
             chromeOptions.setBinary("/usr/bin/google-chrome-stable");
             chromeOptions.setHeadless(true);

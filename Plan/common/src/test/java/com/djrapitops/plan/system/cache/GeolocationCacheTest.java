@@ -22,22 +22,25 @@ import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DataGatheringSettings;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 /**
@@ -45,26 +48,25 @@ import static org.mockito.Mockito.when;
  *
  * @author Fuzzlemann
  */
-@RunWith(MockitoJUnitRunner.Silent.class)
-public class GeolocationCacheTest {
+@RunWith(JUnitPlatform.class)
+@ExtendWith(MockitoExtension.class)
+class GeolocationCacheTest {
 
     private static final Map<String, String> TEST_DATA = new HashMap<>();
     private static File IP_STORE;
+    private static Path tempDir;
+
     @Mock
     public PlanFiles files;
     @Mock
     public PlanConfig config;
 
-    @ClassRule
-    public static TemporaryFolder temporaryFolder = new TemporaryFolder();
     private GeolocationCache underTest;
 
-    @BeforeClass
-    public static void setUpClass() throws IOException {
-        IP_STORE = temporaryFolder.newFile("GeoIP.dat");
-        // TemporaryFolder creates the file, which prevents cache from downloading the GeoIP database from the internet.
-        // This is why the file needs to be removed first.
-        Files.delete(IP_STORE.toPath());
+    @BeforeAll
+    static void setUpTestData(@TempDir Path tempDir) throws IOException {
+        GeolocationCacheTest.tempDir = tempDir;
+        IP_STORE = GeolocationCacheTest.tempDir.resolve("GeoIP.dat").toFile();
 
         TEST_DATA.put("8.8.8.8", "United States");
         TEST_DATA.put("8.8.4.4", "United States");
@@ -77,8 +79,8 @@ public class GeolocationCacheTest {
         TEST_DATA.put("127.0.0.1", "Local Machine");
     }
 
-    @Before
-    public void setUp() throws EnableException {
+    @BeforeEach
+    void setUpCache() throws EnableException {
         when(config.isTrue(DataGatheringSettings.GEOLOCATIONS)).thenReturn(true);
         when(files.getFileFromPluginFolder("GeoIP.dat")).thenReturn(IP_STORE);
 
@@ -88,8 +90,14 @@ public class GeolocationCacheTest {
         underTest.enable();
     }
 
+    @AfterEach
+    void tearDownCache() throws IOException {
+        underTest.disable();
+        Files.deleteIfExists(IP_STORE.toPath());
+    }
+
     @Test
-    public void countryIsFetched() {
+    void countryIsFetched() {
         for (Map.Entry<String, String> entry : TEST_DATA.entrySet()) {
             String ip = entry.getKey();
             String expCountry = entry.getValue();
@@ -101,7 +109,7 @@ public class GeolocationCacheTest {
     }
 
     @Test
-    public void callsToCachedIPsReturnCachedEntries() {
+    void callsToCachedIPsReturnCachedEntries() {
         for (Map.Entry<String, String> entry : TEST_DATA.entrySet()) {
             String ip = entry.getKey();
             String expIp = entry.getValue();

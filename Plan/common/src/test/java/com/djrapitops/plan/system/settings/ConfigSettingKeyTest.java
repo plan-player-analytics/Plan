@@ -20,14 +20,19 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.*;
 import com.djrapitops.plan.system.settings.paths.key.Setting;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import utilities.FieldFetcher;
 import utilities.TestResources;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -40,10 +45,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Rsl1122
  */
+@RunWith(JUnitPlatform.class)
 public class ConfigSettingKeyTest {
 
-    @ClassRule
-    public static TemporaryFolder temporaryFolder = new TemporaryFolder();
+    public static Path temporaryFolder;
+
+    @BeforeAll
+    static void prepareTempDir(@TempDir Path tempDir) {
+        temporaryFolder = tempDir;
+    }
 
     public static void assertValidDefaultValuesForAllSettings(PlanConfig config, Iterable<Setting> settings) {
         List<String> fails = new ArrayList<>();
@@ -115,21 +125,23 @@ public class ConfigSettingKeyTest {
     }
 
     @Test
-    public void serverConfigHasValidDefaultValues() throws IOException, IllegalAccessException {
+    @DisplayName("config.yml has valid default values")
+    void serverConfigHasValidDefaultValues() throws IOException, IllegalAccessException {
         PlanConfig planConfig = createConfig("config.yml");
         Collection<Setting> settings = getServerSettings();
         assertValidDefaultValuesForAllSettings(planConfig, settings);
     }
 
     @Test
-    public void proxyConfigHasValidDefaultValues() throws IOException, IllegalAccessException {
+    @DisplayName("bungeeconfig.yml has valid default values")
+    void proxyConfigHasValidDefaultValues() throws IOException, IllegalAccessException {
         PlanConfig planConfig = createConfig("bungeeconfig.yml");
         Collection<Setting> settings = getProxySettings();
         assertValidDefaultValuesForAllSettings(planConfig, settings);
     }
 
     private PlanConfig createConfig(String copyDefaultSettingsFrom) throws IOException {
-        File configFile = temporaryFolder.newFile();
+        File configFile = Files.createTempFile(temporaryFolder, "config", ".yml").toFile();
         TestResources.copyResourceIntoFile(configFile, "/assets/plan/" + copyDefaultSettingsFrom);
         return createConfig(configFile);
     }

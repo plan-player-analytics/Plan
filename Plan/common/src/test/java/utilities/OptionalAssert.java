@@ -18,8 +18,8 @@ package utilities;
 
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Utility for asserts containing Optionals.
@@ -29,8 +29,8 @@ import static org.junit.Assert.assertTrue;
 public class OptionalAssert {
 
     public static <T> void equals(T expected, Optional<T> result) {
-        assertTrue("No result present, expected: " + expected, result.isPresent());
-        assertEquals("Wrong result, expected: " + expected + ", got: " + result.get(), expected, result.get());
+        assertTrue(result.isPresent(), () -> "No result present, expected: " + expected);
+        assertEquals(expected, result.get(), () -> "Wrong result, expected: " + expected + ", got: " + result.get());
     }
 
 }

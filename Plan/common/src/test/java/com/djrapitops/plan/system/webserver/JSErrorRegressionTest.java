@@ -26,22 +26,22 @@ import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
-import com.djrapitops.plan.system.webserver.cache.PageId;
-import com.djrapitops.plan.system.webserver.cache.ResponseCache;
-import com.jayway.awaitility.Awaitility;
-import org.junit.*;
-import org.junit.rules.TemporaryFolder;
+import extension.SeleniumExtension;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.openqa.selenium.WebDriver;
-import rules.ComponentMocker;
-import rules.PluginComponentMocker;
-import rules.SeleniumDriver;
 import utilities.RandomData;
 import utilities.TestConstants;
+import utilities.mocks.PluginMockComponent;
 
+import java.nio.file.Path;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertFalse;
 
@@ -53,22 +53,19 @@ import static org.junit.Assert.assertFalse;
  * - Automatic formatting of plugin javascript (See https://github.com/Rsl1122/Plan-PlayerAnalytics/issues/820)
  * - Missing file definition in Mocker
  */
-@RunWith(MockitoJUnitRunner.Silent.class)
-public class JSErrorRegressionTest {
+@RunWith(JUnitPlatform.class)
+@ExtendWith(SeleniumExtension.class)
+class JSErrorRegressionTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
-    @ClassRule
-    public static TemporaryFolder temporaryFolder = new TemporaryFolder();
-    @ClassRule
-    public static ComponentMocker component = new PluginComponentMocker(temporaryFolder);
-    @ClassRule
-    public static SeleniumDriver seleniumDriver = new SeleniumDriver();
+    public static PluginMockComponent component;
 
     private static PlanSystem bukkitSystem;
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
+    @BeforeAll
+    static void setUpClass(@TempDir Path tempDir) throws Exception {
+        component = new PluginMockComponent(tempDir);
         bukkitSystem = component.getPlanSystem();
 
         PlanConfig config = bukkitSystem.getConfigSystem().getConfig();
@@ -89,67 +86,60 @@ public class JSErrorRegressionTest {
         database.executeTransaction(new SessionEndTransaction(session));
     }
 
-    @After
-    public void tearDownTest() {
-        seleniumDriver.newTab();
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         if (bukkitSystem != null) {
             bukkitSystem.disable();
         }
     }
 
+    @AfterEach
+    void tearDownTest(WebDriver driver) {
+        SeleniumExtension.newTab(driver);
+    }
+
     @Test
-    public void playerPageDoesNotHaveJavascriptErrors() {
+    void playerPageDoesNotHaveJavascriptErrors(WebDriver driver) {
         System.out.println("Testing Player Page");
-        WebDriver driver = seleniumDriver.getDriver();
         driver.get("http://localhost:" + TEST_PORT_NUMBER + "/player/TestPlayer");
         assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
     }
 
     @Test
-    public void playerPageAccessibleViaUUID() {
+    void playerPageAccessibleViaUUID(WebDriver driver) {
         System.out.println("Testing Player Page via UUID");
-        WebDriver driver = seleniumDriver.getDriver();
         driver.get("http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_UUID);
         assertFalse(driver.getPageSource(), driver.getPageSource().contains(ErrorPageLang.NOT_PLAYED_404.getDefault()));
     }
 
-    @Test
-    @Ignore("PlanPluginMocker displays network page for some reason. Investigate")
-    public void serverPageDoesNotHaveJavascriptErrors() {
-        System.out.println("Testing Server Page");
-        WebDriver driver = seleniumDriver.getDriver();
-        // Open the page that has refreshing info
-        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/server");
-        assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
+//    @Test TODO Figure out why /network page is shown
+//    void serverPageDoesNotHaveJavascriptErrors(WebDriver driver) {
+//        System.out.println("Testing Server Page");
+//        // Open the page that has refreshing info
+//        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/server");
+//        assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
+//
+//        // Wait until Plan caches analysis results
+//        Awaitility.await()
+//                .atMost(10, TimeUnit.SECONDS)
+//                .until(() -> ResponseCache.isCached(PageId.SERVER.of(TestConstants.SERVER_UUID)));
+//
+//        // Open the page with analysis stuff
+//        SeleniumExtension.newTab(driver);
+//        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/server");
+//        assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
+//    }
 
-        // Wait until Plan caches analysis results
-        Awaitility.await()
-                .atMost(10, TimeUnit.SECONDS)
-                .until(() -> ResponseCache.isCached(PageId.SERVER.of(TestConstants.SERVER_UUID)));
-
-        // Open the page with analysis stuff
-        seleniumDriver.newTab();
-        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/server");
-        assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
-    }
-
-    @Test
-    @Ignore("PlanPluginMocker displays network page for some reason. Investigate")
-    public void playersPageDoesNotHaveJavascriptErrors() {
-        System.out.println("Testing Players Page");
-        WebDriver driver = seleniumDriver.getDriver();
-        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/players");
-        assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
-    }
+//    @Test TODO Figure out why /network players page is shown
+//    void playersPageDoesNotHaveJavascriptErrors(WebDriver driver) {
+//        System.out.println("Testing Players Page");
+//        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/players");
+//        assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
+//    }
 
     @Test
-    public void debugPageDoesNotHaveJavascriptErrors() {
+    void debugPageDoesNotHaveJavascriptErrors(WebDriver driver) {
         System.out.println("Testing Debug Page");
-        WebDriver driver = seleniumDriver.getDriver();
         driver.get("http://localhost:" + TEST_PORT_NUMBER + "/debug");
         assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
     }

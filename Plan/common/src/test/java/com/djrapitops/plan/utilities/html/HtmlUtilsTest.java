@@ -16,18 +16,21 @@
  */
 package com.djrapitops.plan.utilities.html;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import utilities.RandomData;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Rsl1122
  */
-public class HtmlUtilsTest {
+@RunWith(JUnitPlatform.class)
+class HtmlUtilsTest {
 
     @Test
-    public void testRemoveXSS() {
+    void testRemoveXSS() {
         String randomString = RandomData.randomString(10);
 
         String xss = "<script>" + randomString + "</script><!---->";

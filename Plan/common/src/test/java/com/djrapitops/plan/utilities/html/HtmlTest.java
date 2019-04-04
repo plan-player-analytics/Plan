@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author Rsl1122
  */
 @RunWith(JUnitPlatform.class)
-public class HtmlTest {
+class HtmlTest {
 
     @Test
     void parsingWithNoArgsDoesNotReplacePlaceholder() {

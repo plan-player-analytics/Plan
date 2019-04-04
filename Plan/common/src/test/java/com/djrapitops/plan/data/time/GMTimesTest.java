@@ -16,20 +16,24 @@
  */
 package com.djrapitops.plan.data.time;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 import java.util.HashMap;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests for {@link GMTimes}.
  *
  * @author Rsl1122
  */
-public class GMTimesTest {
+@RunWith(JUnitPlatform.class)
+class GMTimesTest {
+
     @Test
-    public void allGMTimesAreSet() {
+    void allGMTimesAreSet() {
         GMTimes times = new GMTimes();
         times.setAllGMTimes(1L, 2L, 3L, 4L);
 
@@ -40,7 +44,7 @@ public class GMTimesTest {
     }
 
     @Test
-    public void allGMTimesAreSetWithTooFewArguments() {
+    void allGMTimesAreSetWithTooFewArguments() {
         GMTimes times = new GMTimes();
         times.setAllGMTimes(1L, 2L);
 
@@ -51,7 +55,7 @@ public class GMTimesTest {
     }
 
     @Test
-    public void allGMTimesAreSetWithTooManyArguments() {
+    void allGMTimesAreSetWithTooManyArguments() {
         GMTimes times = new GMTimes();
         times.setAllGMTimes(1L, 2L, 3L, 4L, 5L, 6L);
 
@@ -62,7 +66,7 @@ public class GMTimesTest {
     }
 
     @Test
-    public void timesAreReset() {
+    void timesAreReset() {
         GMTimes gmTimes = new GMTimes();
         gmTimes.setAllGMTimes(4, 3, 2, 1);
         gmTimes.resetTimes(10L);
@@ -73,7 +77,7 @@ public class GMTimesTest {
     }
 
     @Test
-    public void timeIsSet() {
+    void timeIsSet() {
         GMTimes gmTimes = new GMTimes();
         gmTimes.setTime("SURVIVAL", 5L);
 
@@ -81,7 +85,7 @@ public class GMTimesTest {
     }
 
     @Test
-    public void stateIsRenamed() {
+    void stateIsRenamed() {
         GMTimes gmTimes = new GMTimes();
         gmTimes.setAllGMTimes(5L);
         gmTimes.renameState("SURVIVAL", "Survival");
@@ -91,7 +95,7 @@ public class GMTimesTest {
     }
 
     @Test
-    public void stateIsChangedAppropriately() {
+    void stateIsChangedAppropriately() {
         GMTimes gmTimes = new GMTimes(new HashMap<>(), "SURVIVAL", 0);
         gmTimes.changeState("CREATIVE", 5L);
 
@@ -106,7 +110,7 @@ public class GMTimesTest {
     }
 
     @Test
-    public void stateIsChangedWhenStartTimeIsDefault() {
+    void stateIsChangedWhenStartTimeIsDefault() {
         GMTimes gmTimes = new GMTimes("SURVIVAL");
         gmTimes.changeState("CREATIVE", 5L);
 
@@ -121,7 +125,7 @@ public class GMTimesTest {
     }
 
     @Test
-    public void stateIsChangedWhenBeginStateIsDefault() {
+    void stateIsChangedWhenBeginStateIsDefault() {
         GMTimes test = new GMTimes();
         test.changeState("CREATIVE", 5L);
 

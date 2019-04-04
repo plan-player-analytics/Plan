@@ -16,25 +16,28 @@
  */
 package com.djrapitops.plan.utilities;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import utilities.RandomData;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Fuzzlemann
  */
-public class PassEncryptTest {
+@RunWith(JUnitPlatform.class)
+class PassEncryptTest {
 
-    private final Map<String, String> PASSWORD_MAP = new HashMap<>();
+    private static final Map<String, String> PASSWORD_MAP = new HashMap<>();
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeAll
+    static void setUpPasswords() throws Exception {
         for (int i = 0; i < RandomData.randomInt(1, 10); i++) {
             String password = RandomData.randomString(RandomData.randomInt(5, 16));
             PASSWORD_MAP.put(password, PassEncryptUtil.createHash(password));
@@ -42,7 +45,7 @@ public class PassEncryptTest {
     }
 
     @Test
-    public void testVerification() throws Exception {
+    void testVerification() throws Exception {
         for (Map.Entry<String, String> entry : PASSWORD_MAP.entrySet()) {
             String password = entry.getKey();
             String hash = entry.getValue();

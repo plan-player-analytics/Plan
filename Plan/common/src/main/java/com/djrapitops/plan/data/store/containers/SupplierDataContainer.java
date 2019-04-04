@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * DataContainer implementation that stores everything in {@link Supplier} objects.
@@ -129,6 +128,11 @@ public class SupplierDataContainer implements DataContainer {
 
     @Override
     public Map<Key, Object> getMap() {
-        return map.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().get()));
+        // Fetches all objects from their Suppliers.
+        Map<Key, Object> objectMap = new HashMap<>();
+        for (Map.Entry<Key, Supplier> entry : map.entrySet()) {
+            objectMap.put(entry.getKey(), entry.getValue().get());
+        }
+        return objectMap;
     }
 }

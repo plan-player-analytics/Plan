@@ -19,11 +19,13 @@ package com.djrapitops.plan.utilities;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.command.SenderType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 /**
@@ -31,7 +33,8 @@ import static org.mockito.Mockito.when;
  *
  * @author Rsl1122
  */
-public class MiscUtilsTest {
+@RunWith(JUnitPlatform.class)
+class MiscUtilsTest {
 
     private Sender mockAPlayerSender(String name, boolean hasPermission) {
         Sender sender = Mockito.mock(Sender.class);
@@ -42,7 +45,7 @@ public class MiscUtilsTest {
     }
 
     @Test
-    public void getNameShouldReturnNameWithPermission() {
+    void getNameShouldReturnNameWithPermission() {
         String[] args = new String[]{"Rsl1122", "Test"};
         Sender sender = mockAPlayerSender("TestName", true);
 
@@ -53,7 +56,7 @@ public class MiscUtilsTest {
     }
 
     @Test
-    public void getNameShouldReturnNullWithoutPermission() {
+    void getNameShouldReturnNullWithoutPermission() {
         String[] args = new String[]{"Rsl1122", "Test"};
         Sender sender = mockAPlayerSender("TestName", false);
 
@@ -63,7 +66,7 @@ public class MiscUtilsTest {
     }
 
     @Test
-    public void getNameShouldReturnPlayerNameWithoutArgs() {
+    void getNameShouldReturnPlayerNameWithoutArgs() {
         String[] args = new String[]{};
         String expected = "TestName";
         Sender sender = mockAPlayerSender(expected, true);
@@ -74,7 +77,7 @@ public class MiscUtilsTest {
     }
 
     @Test
-    public void getNameShouldReturnPlayerNameWithoutArgsOrPermission() {
+    void getNameShouldReturnPlayerNameWithoutArgsOrPermission() {
         String[] args = new String[]{};
         String expected = "TestName2";
         Sender sender = mockAPlayerSender(expected, false);
@@ -85,7 +88,7 @@ public class MiscUtilsTest {
     }
 
     @Test
-    public void getNameShouldReturnPlayerNameWithoutPermissionForOwnName() {
+    void getNameShouldReturnPlayerNameWithoutPermissionForOwnName() {
         String[] args = new String[]{"testname2"};
         String expected = "TestName2";
         Sender sender = mockAPlayerSender(expected, false);
@@ -96,7 +99,7 @@ public class MiscUtilsTest {
     }
 
     @Test
-    public void getNameShouldReturnArgumentForConsole() {
+    void getNameShouldReturnArgumentForConsole() {
         String[] args = new String[]{"TestConsoleSender"};
         String expected = "TestConsoleSender";
 
