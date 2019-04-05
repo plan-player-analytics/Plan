@@ -85,7 +85,7 @@ public class AnalysisPluginTabs {
         if (serverData.isEmpty()) {
             nav = "<li><a class=\"nav-button\" href=\"javascript:void(0)\">Extensions (No Data)</a></li>";
             tab = "<div class=\"tab\"><div class=\"row clearfix\">" +
-                    "<div class=\"col-md-12\">" + Html.CARD.parse("<p>No Extension Data</p>") +
+                    "<div class=\"col-md-12\">" + Html.CARD.parse("<div class=\"body\"><p>No Extension Data</p></div>") +
                     "</div></div></div>";
         } else {
             nav = "<li><a class=\"nav-button\" href=\"javascript:void(0)\">General</a></li>";

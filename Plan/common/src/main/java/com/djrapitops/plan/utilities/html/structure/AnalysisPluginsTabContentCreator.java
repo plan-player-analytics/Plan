@@ -63,13 +63,13 @@ public class AnalysisPluginsTabContentCreator {
     }
 
     private static void appendNewTab(PluginData pluginData, AnalysisContainer container, StringBuilder nav, StringBuilder otherTabs) {
-        nav.append("<li><a class=\"nav-button\" href=\"javascript:void(0)\">").append(pluginData.getSourcePlugin()).append("</a></li>");
+        nav.append("<li><a class=\"nav-button\" href=\"javascript:void(0)\">").append(pluginData.getSourcePlugin()).append(" (Legacy)</a></li>");
         otherTabs.append("<div class=\"tab\"><div class=\"row clearfix\"><div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\">" +
                 "<div class=\"card\">" +
                 "<div class=\"header\">" +
                 "<h2>")
                 .append(pluginData.parsePluginIcon()).append(" ").append(pluginData.getSourcePlugin())
-                .append(" (Legacy)</h2></div>")
+                .append("</h2></div>")
                 .append(container.parseHtml())
                 .append("</div></div></div></div>");
     }
