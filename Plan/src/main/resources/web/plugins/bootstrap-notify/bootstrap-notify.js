@@ -77,7 +77,7 @@
 		this.animations = {
 			start: 'webkitAnimationStart oanimationstart MSAnimationStart animationstart',
 			end: 'webkitAnimationEnd oanimationend MSAnimationEnd animationend'
-		}
+		};
 
 		if (typeof this.settings.offset == 'number') {
 		    this.settings.offset = {
@@ -87,9 +87,8 @@
 		}
 
 		this.init();
-	};
-
-	$.extend(Notify.prototype, {
+    }
+    $.extend(Notify.prototype, {
 		init: function () {
 			var self = this;
 
@@ -145,8 +144,8 @@
 								break;
 							default:
 								this.$ele.find('[data-notify="' + command +'"]').html(commands[command]);
-						};
-					}
+                        }
+                    }
 					var posX = this.$ele.outerHeight() + parseInt(self.settings.spacing) + parseInt(self.settings.offset.y);
 					self.reposition(posX);
 				},
@@ -264,7 +263,7 @@
 
 			this.$ele.find('[data-notify="dismiss"]').on('click', function() {
 				self.close();
-			})
+			});
 
 			this.$ele.mouseover(function(e) {
 				$(this).data('data-hover', "true");

@@ -75,6 +75,8 @@ Time:
       Unit: SECONDS
     Ping_player_join_delay: 30
       Unit: SECONDS
+    Wait_for_DB_Transactions_on_disable: 20
+      Unit: SECONDS
   Thresholds:
     # How long player needs to be idle until Plan considers them AFK
     AFK_threshold: 3
@@ -91,6 +93,8 @@ Time:
   Periodic_tasks:
     Analysis_refresh_every: 60
       Unit: MINUTES
+    Extension_data_refresh_every: 1
+      Unit: HOURS
     Check_DB_for_server_config_files_every: 1
       Unit: MINUTES
     Clean_caches_every: 10
@@ -172,6 +176,8 @@ Export:
     Players_page: false
     Server_page: false
     Server_JSON: false
+  # All player pages/JSON can be exported by using /plan m export players
+  Export_player_on_login_and_logout: false
 # -----------------------------------------------------
 # These settings affect Plugin data integration.
 # If a plugin is causing issues the integration can be disabled by setting Plugin_name.Enabled: false

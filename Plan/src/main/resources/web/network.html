@@ -36,8 +36,8 @@
     <script src="plugins/jquery/jquery.min.js"></script>
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <link href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.8.1/css/v4-shims.css" rel="stylesheet">
 </head>
 
 <body class="theme-red">
@@ -267,7 +267,7 @@
                     <div class="card">
                         <div class="header">
                             <div class="col-xs-6 col-sm-6 col-lg-6">
-                                <h2><i class="col-blue fa fa-area-chart"></i> Network Online Activity</h2>
+                                <h2><i class="col-blue fa fa-fw fa-area-chart"></i> Network Online Activity</h2>
                             </div>
                             <div class="col-xs-6 col-sm-6 col-lg-6">
                                 <a href="javascript:void(0)" class="help material-icons pull-right"
@@ -292,17 +292,17 @@
                             <div class="m-b--35 font-bold">NETWORK INFORMATION</div>
                             <ul class="dashboard-stat-list">
                                 <li>
-                                    <i class="fa fa-users"></i> Total Players
+                                    <i class="fa fa-fw fa-users"></i> Total Players
                                     <span class="pull-right"><b>${playersTotal}</b></span>
                                 </li>
                                 <li>
-                                    <i class="col-blue fa fa-user"></i> Players Online
+                                    <i class="col-blue fa fa-fw fa-user"></i> Players Online
                                     <span class="pull-right"><b>${playersOnline}</b></span>
                                 </li>
                                 <li></li>
-                                <li><i class="col-green fa fa-line-chart"></i> Last Peak: ${lastPeakTime}<span
+                                <li><i class="col-green fa fa-fw fa-line-chart"></i> Last Peak: ${lastPeakTime}<span
                                         class="pull-right"><b>${playersLastPeak}</b> Players</span></li>
-                                <li><i class="col-blue fa fa-line-chart"></i> All Time Peak: ${bestPeakTime}<span
+                                <li><i class="col-blue fa fa-fw fa-line-chart"></i> All Time Peak: ${bestPeakTime}<span
                                         class="pull-right"><b>${playersBestPeak}</b> Players</span></li>
                             </ul>
                         </div>
@@ -312,29 +312,29 @@
                             <div class="m-b--35 font-bold">PLAYERS</div>
                             <ul class="dashboard-stat-list">
                                 <li>
-                                    <i class="col-blue fa fa-users"></i> Unique | 24h
+                                    <i class="col-blue fa fa-fw fa-users"></i> Unique | 24h
                                     <span class="pull-right"><b>${playersDay}</b></span>
                                 </li>
                                 <li>
-                                    <i class="col-light-green fa fa-user-plus"></i> New | 24h
+                                    <i class="col-light-green fa fa-fw fa-user-plus"></i> New | 24h
                                     <span class="pull-right"><b>${playersNewDay}</b></span>
                                 </li>
                                 <li></li>
                                 <li>
-                                    <i class="col-blue fa fa-users"></i> Unique | 7d
+                                    <i class="col-blue fa fa-fw fa-users"></i> Unique | 7d
                                     <span class="pull-right"><b>${playersWeek}</b></span>
                                 </li>
                                 <li>
-                                    <i class="col-light-green fa fa-user-plus"></i> New | 7d
+                                    <i class="col-light-green fa fa-fw fa-user-plus"></i> New | 7d
                                     <span class="pull-right"><b>${playersNewWeek}</b></span>
                                 </li>
                                 <li></li>
                                 <li>
-                                    <i class="col-blue fa fa-users"></i> Unique | 30d
+                                    <i class="col-blue fa fa-fw fa-users"></i> Unique | 30d
                                     <span class="pull-right"><b>${playersMonth}</b></span>
                                 </li>
                                 <li>
-                                    <i class="col-light-green fa fa-user-plus"></i> New | 30d
+                                    <i class="col-light-green fa fa-fw fa-user-plus"></i> New | 30d
                                     <span class="pull-right"><b>${playersNewMonth}</b></span>
                                 </li>
                             </ul>
@@ -356,7 +356,7 @@
                             <div class="header">
                                 <div class="row clearfix">
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
-                                        <h2><i class="col-red fa fa-heartbeat"></i> Health Estimate</h2>
+                                        <h2><i class="col-red fa fa-fw fa-heartbeat"></i> Health Estimate</h2>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <a href="javascript:void(0)" class="help material-icons pull-right"
@@ -381,7 +381,7 @@
                             <div class="header">
                                 <div class="row clearfix">
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
-                                        <h2><i class="col-red far fa-life-ring"></i> Last 30 Days</h2>
+                                        <h2><i class="col-red far fa-fw fa-life-ring"></i> Last 30 Days</h2>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <a href="javascript:void(0)" class="help material-icons pull-right"
@@ -410,7 +410,7 @@
                             <div class="header">
                                 <div class="row clearfix">
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
-                                        <h2><i class="col-amber fa fa-line-chart"></i> Playerbase Development</h2>
+                                        <h2><i class="col-amber fa fa-fw fa-line-chart"></i> Playerbase Development</h2>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <a href="javascript:void(0)" class="help material-icons pull-right"
@@ -436,7 +436,7 @@
                             <div class="header">
                                 <div class="row clearfix">
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
-                                        <h2><i class="col-amber fa fa-users"></i> Current Playerbase</h2>
+                                        <h2><i class="col-amber fa fa-fw fa-users"></i> Current Playerbase</h2>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <a href="javascript:void(0)" class="help material-icons pull-right"
@@ -467,7 +467,7 @@
                             <div class="header">
                                 <div class="row clearfix">
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
-                                        <h2><i class="col-green fa fa-globe"></i> Geolocations</h2>
+                                        <h2><i class="col-green fa fa-fw fa-globe"></i> Geolocations</h2>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <a href="javascript:void(0)" class="help material-icons pull-right"

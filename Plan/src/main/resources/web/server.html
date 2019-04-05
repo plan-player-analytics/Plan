@@ -36,8 +36,8 @@
     <script src="plugins/jquery/jquery.min.js"></script>
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <link href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.8.1/css/v4-shims.css" rel="stylesheet">
 </head>
 
 <body class="theme-red">
@@ -338,7 +338,7 @@
                             <div class="header">
                                 <div class="row clearfix">
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
-                                        <h2><i class="col-blue fa fa-area-chart"></i> Online Activity</h2>
+                                        <h2><i class="col-blue fa fa-fw fa-area-chart"></i> Online Activity</h2>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <a href="javascript:void(0)" class="help material-icons pull-right"
@@ -366,23 +366,24 @@
                                 <div class="m-b--35 font-bold">SERVER INFORMATION</div>
                                 <ul class="dashboard-stat-list">
                                     <li>
-                                        <i class="fa fa-users"></i> Total Players
+                                        <i class="fa fa-fw fa-users"></i> Total Players
                                         <span class="pull-right"><b>${playersTotal}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-blue fa fa-user"></i> Unique Players / Day
+                                        <i class="col-blue fa fa-fw fa-user"></i> Unique Players / Day
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${playersAverage}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-light-green fa fa-user-plus"></i> New Players / Day
+                                        <i class="col-light-green fa fa-fw fa-user-plus"></i> New Players / Day
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${playersNewAverage}</b></span>
                                     </li>
                                     <li></li>
-                                    <li><i class="col-green fa fa-line-chart"></i> Last Peak: ${lastPeakTime}<span
+                                    <li><i class="col-green fa fa-fw fa-line-chart"></i> Last Peak: ${lastPeakTime}<span
                                             class="pull-right"><b>${playersLastPeak}</b> Players</span></li>
-                                    <li><i class="col-blue fa fa-line-chart"></i> All Time Peak: ${bestPeakTime}<span
+                                    <li><i class="col-blue fa fa-fw fa-line-chart"></i> All Time Peak:
+                                        ${bestPeakTime}<span
                                             class="pull-right"><b>${playersBestPeak}</b> Players</span></li>
                                 </ul>
                             </div>
@@ -396,32 +397,34 @@
                                 <div class="m-b--35 font-bold">USER INFORMATION</div>
                                 <ul class="dashboard-stat-list">
                                     <li>
-                                        <i class="col-teal far fa-clock"></i> Playtime
+                                        <i class="col-teal far fa-fw fa-clock"></i> Playtime
                                         <small>(TOTAL)</small>
                                         <span class="pull-right">
                                             ${playtimeTotal}
                                         </span>
                                     </li>
                                     <li>
-                                        <i class="col-teal far fa-clock"></i> Playtime
+                                        <i class="col-teal far fa-fw fa-clock"></i> Playtime
                                         <small>(AVG.)</small>
                                         <span class="pull-right">
                                             ${playtimeAverage}
                                         </span>
                                     </li>
-                                    <li><i class="col-teal far fa-calendar-check"></i> Sessions<span
+                                    <li><i class="col-teal far fa-fw fa-calendar-check"></i> Sessions<span
                                             class="pull-right">
                                             <b>${sessionCount}</b>
                                         </span></li>
                                     <li></li>
-                                    <li><i class="col-red fa fa-crosshairs"></i> Player Kills<span class="pull-right">
+                                    <li><i class="col-red fa fa-fw fa-crosshairs"></i> Player Kills<span
+                                            class="pull-right">
                                             <b>${killCount}</b>
                                         </span></li>
-                                    <li><i class="col-green fa fa-crosshairs"></i> Mob Kills<span class="pull-right">
+                                    <li><i class="col-green fa fa-fw fa-crosshairs"></i> Mob Kills<span
+                                            class="pull-right">
                                             <b>${mobKillCount}</b>
                                         </span></li>
                                     <li>
-                                        <i class="fa fa-skull"></i> Deaths<span class="pull-right">
+                                        <i class="fa fa-fw fa-skull"></i> Deaths<span class="pull-right">
                                             <b>${deaths}</b>
                                         </span>
                                     </li>
@@ -472,9 +475,9 @@
                                         <ul class="nav nav-tabs tab-nav-right" role="tablist">
                                             <li role="presentation" class="active"><a href="#playersOnline"
                                                                                       data-toggle="tab"><i
-                                                    class="fa fa-area-chart"></i> ONLINE ACTIVITY</a></li>
+                                                    class="fa fa-fw fa-area-chart"></i> ONLINE ACTIVITY</a></li>
                                             <li role="presentation"><a href="#uniqueAndNew" data-toggle="tab"><i
-                                                    class="fa fa-area-chart"></i> UNIQUE PLAYERS</a></li>
+                                                    class="fa fa-fw fa-area-chart"></i> UNIQUE PLAYERS</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -513,9 +516,9 @@
                                         <ul class="nav nav-tabs tab-nav-right" role="tablist">
                                             <li role="presentation" class="active"><a href="#calendarTab"
                                                                                       data-toggle="tab"><i
-                                                    class="far fa-calendar"></i> CALENDAR</a></li>
+                                                    class="far fa-fw fa-calendar"></i> CALENDAR</a></li>
                                             <li role="presentation"><a href="#punchCardTab" data-toggle="tab"><i
-                                                    class="fa fa-braille"></i> PUNCHCARD</a></li>
+                                                    class="fa fa-fw fa-braille"></i> PUNCHCARD</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -542,27 +545,27 @@
                                 <div class="m-b--35 font-bold">LAST 30 DAYS</div>
                                 <ul class="dashboard-stat-list">
                                     <li>
-                                        <i class="col-blue fa fa-users"></i> Unique Players
+                                        <i class="col-blue fa fa-fw fa-users"></i> Unique Players
                                         <small>(TOTAL.)</small>
                                         <span class="pull-right"><b>${playersMonth}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-blue fa fa-user"></i> Unique Players / Day
+                                        <i class="col-blue fa fa-fw fa-user"></i> Unique Players / Day
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${playersAverageMonth}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-light-green fa fa-users"></i> New Players
+                                        <i class="col-light-green fa fa-fw fa-users"></i> New Players
                                         <small>(TOTAL.)</small>
                                         <span class="pull-right"><b>${playersNewMonth}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-light-green fa fa-user-plus"></i> New Players / Day
+                                        <i class="col-light-green fa fa-fw fa-user-plus"></i> New Players / Day
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${playersNewAverageMonth}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-light-green fa fa-user-circle"></i> New Player Retention
+                                        <i class="col-light-green fa fa-fw fa-user-circle"></i> New Player Retention
                                         <span class="pull-right">(${playersStuckMonth}/${playersNewMonth}) <b>${playersStuckPercMonth}</b></span>
                                     </li>
                                 </ul>
@@ -577,27 +580,27 @@
                                 <div class="m-b--35 font-bold">LAST 7 DAYS</div>
                                 <ul class="dashboard-stat-list">
                                     <li>
-                                        <i class="col-blue fa fa-users"></i> Unique Players
+                                        <i class="col-blue fa fa-fw fa-users"></i> Unique Players
                                         <small>(TOTAL.)</small>
                                         <span class="pull-right"><b>${playersWeek}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-blue fa fa-user"></i> Unique Players / Day
+                                        <i class="col-blue fa fa-fw fa-user"></i> Unique Players / Day
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${playersAverageWeek}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-light-green fa fa-users"></i> New Players
+                                        <i class="col-light-green fa fa-fw fa-users"></i> New Players
                                         <small>(TOTAL.)</small>
                                         <span class="pull-right"><b>${playersNewWeek}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-light-green fa fa-user-plus"></i> New Players / Day
+                                        <i class="col-light-green fa fa-fw fa-user-plus"></i> New Players / Day
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${playersNewAverageWeek}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-light-green fa fa-user-circle"></i> New Player Retention
+                                        <i class="col-light-green fa fa-fw fa-user-circle"></i> New Player Retention
                                         <span class="pull-right">(${playersStuckWeek}/${playersNewWeek}) <b>${playersStuckPercWeek}</b></span>
                                     </li>
                                 </ul>
@@ -612,27 +615,27 @@
                                 <div class="font-bold m-b--35">LAST 24 HOURS</div>
                                 <ul class="dashboard-stat-list">
                                     <li>
-                                        <i class="col-blue fa fa-users"></i> Unique Players
+                                        <i class="col-blue fa fa-fw fa-users"></i> Unique Players
                                         <small>(TOTAL.)</small>
                                         <span class="pull-right"><b>${playersDay}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-blue fa fa-user"></i> Unique Players / Day
+                                        <i class="col-blue fa fa-fw fa-user"></i> Unique Players / Day
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${playersAverageDay}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-light-green fa fa-users"></i> New Players
+                                        <i class="col-light-green fa fa-fw fa-users"></i> New Players
                                         <small>(TOTAL.)</small>
                                         <span class="pull-right"><b>${playersNewDay}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-light-green fa fa-user-plus"></i> New Players / Day
+                                        <i class="col-light-green fa fa-fw fa-user-plus"></i> New Players / Day
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${playersNewAverageDay}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-light-green fa fa-user-circle"></i> Predicted Retention
+                                        <i class="col-light-green fa fa-fw fa-user-circle"></i> Predicted Retention
                                         <span class="pull-right">(${playersStuckDay}/${playersNewDay}) <b>${playersStuckPercDay}</b></span>
                                     </li>
                                 </ul>
@@ -651,7 +654,7 @@
                             <div class="header">
                                 <div class="row clearfix">
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
-                                        <h2><i class="col-red fa fa-heartbeat"></i> Server Health Estimate</h2>
+                                        <h2><i class="col-red fa fa-fw fa-heartbeat"></i> Server Health Estimate</h2>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <a href="javascript:void(0)" class="help material-icons pull-right"
@@ -676,7 +679,7 @@
                             <div class="header">
                                 <div class="row clearfix">
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
-                                        <h2><i class="col-red far fa-life-ring"></i> Last 30 Days</h2>
+                                        <h2><i class="col-red far fa-fw fa-life-ring"></i> Last 30 Days</h2>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <a href="javascript:void(0)" class="help material-icons pull-right"
@@ -705,7 +708,7 @@
                             <div class="header">
                                 <div class="row clearfix">
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
-                                        <h2><i class="col-amber fa fa-line-chart"></i> Playerbase Development</h2>
+                                        <h2><i class="col-amber fa fa-fw fa-line-chart"></i> Playerbase Development</h2>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <a href="javascript:void(0)" class="help material-icons pull-right"
@@ -731,7 +734,7 @@
                             <div class="header">
                                 <div class="row clearfix">
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
-                                        <h2><i class="col-amber fa fa-users"></i> Current Playerbase</h2>
+                                        <h2><i class="col-amber fa fa-fw fa-users"></i> Current Playerbase</h2>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <a href="javascript:void(0)" class="help material-icons pull-right"
@@ -762,7 +765,7 @@
                             <div class="header">
                                 <div class="row clearfix">
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
-                                        <h2><i class="col-teal far fa-calendar"></i> Most Recent Sessions</h2>
+                                        <h2><i class="col-teal far fa-fw fa-calendar"></i> Most Recent Sessions</h2>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <a href="javascript:void(0)" class="help material-icons pull-right"
@@ -784,7 +787,7 @@
                             <div class="header">
                                 <div class="row clearfix">
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
-                                        <h2><i class="col-teal far fa-clock"></i> World Playtime</h2>
+                                        <h2><i class="col-teal far fa-fw fa-clock"></i> World Playtime</h2>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <a href="javascript:void(0)" class="help material-icons pull-right"
@@ -826,19 +829,19 @@
                                         <ul class="nav nav-tabs tab-nav-right" role="tablist">
                                             <li role="presentation" class="active"><a href="#performance"
                                                                                       data-toggle="tab"><i
-                                                    class="fa fa-cogs"></i> ALL</a></li>
+                                                    class="fa fa-fw fa-cogs"></i> ALL</a></li>
                                             <li role="presentation"><a href="#tps" data-toggle="tab"><i
-                                                    class="fa fa-tachometer-alt"></i> TPS</a></li>
+                                                    class="fa fa-fw fa-tachometer-alt"></i> TPS</a></li>
                                             <li role="presentation"><a href="#resource" data-toggle="tab"><i
-                                                    class="fa fa-microchip"></i> CPU & RAM</a></li>
+                                                    class="fa fa-fw fa-microchip"></i> CPU & RAM</a></li>
                                             <li role="presentation"><a href="#world" data-toggle="tab"><i
-                                                    class="fa fa-map"></i>
+                                                    class="fa fa-fw fa-map"></i>
                                                 WORLD LOAD</a></li>
                                             <li role="presentation"><a href="#ping" data-toggle="tab"><i
-                                                    class="fa fa-signal"></i>
+                                                    class="fa fa-fw fa-signal"></i>
                                                 PING</a></li>
                                             <li role="presentation"><a href="#disk" data-toggle="tab"><i
-                                                    class="fa fa-hdd"></i>
+                                                    class="fa fa-fw fa-hdd"></i>
                                                 DISK SPACE</a></li>
                                         </ul>
                                     </div>
@@ -879,41 +882,41 @@
                                 <div class="m-b--35 font-bold">LAST 30 DAYS</div>
                                 <ul class="dashboard-stat-list">
                                     <li>
-                                        <i class="col-red fa fa-exclamation-circle"></i> Low TPS Spikes
+                                        <i class="col-red fa fa-fw fa-exclamation-circle"></i> Low TPS Spikes
                                         <span class="pull-right"><b>${tpsSpikeMonth}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-orange fa fa-tachometer-alt"></i> TPS
+                                        <i class="col-orange fa fa-fw fa-tachometer-alt"></i> TPS
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${tpsAverageMonth}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-amber fa fa-tachometer-alt"></i> CPU Usage
+                                        <i class="col-amber fa fa-fw fa-tachometer-alt"></i> CPU Usage
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${cpuAverageMonth}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-light-green fa fa-microchip"></i> RAM Usage
+                                        <i class="col-light-green fa fa-fw fa-microchip"></i> RAM Usage
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${ramAverageMonth}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-purple fa fa-umbrella"></i> Entities
+                                        <i class="col-purple fa fa-fw fa-umbrella"></i> Entities
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${entityAverageMonth}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-blue-grey fa fa-map"></i> Chunks
+                                        <i class="col-blue-grey fa fa-fw fa-map"></i> Chunks
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${chunkAverageMonth}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-green fa fa-hdd"></i> Free Disk
+                                        <i class="col-green fa fa-fw fa-hdd"></i> Free Disk
                                         <small>(MAX)</small>
                                         <span class="pull-right"><b>${freeDiskMaximumMonth} Mb</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-green fa fa-hdd"></i> Free Disk
+                                        <i class="col-green fa fa-fw fa-hdd"></i> Free Disk
                                         <small>(MIN)</small>
                                         <span class="pull-right"><b>${freeDiskMinimumMonth} Mb</b></span>
                                     </li>
@@ -929,41 +932,41 @@
                                 <div class="m-b--35 font-bold">LAST 7 DAYS</div>
                                 <ul class="dashboard-stat-list">
                                     <li>
-                                        <i class="col-red fa fa-exclamation-circle"></i> Low TPS Spikes
+                                        <i class="col-red fa fa-fw fa-exclamation-circle"></i> Low TPS Spikes
                                         <span class="pull-right"><b>${tpsSpikeWeek}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-orange fa fa-tachometer-alt"></i> TPS
+                                        <i class="col-orange fa fa-fw fa-tachometer-alt"></i> TPS
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${tpsAverageWeek}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-amber fa fa-tachometer-alt"></i> CPU Usage
+                                        <i class="col-amber fa fa-fw fa-tachometer-alt"></i> CPU Usage
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${cpuAverageWeek}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-light-green fa fa-microchip"></i> RAM Usage
+                                        <i class="col-light-green fa fa-fw fa-microchip"></i> RAM Usage
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${ramAverageWeek}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-purple fa fa-umbrella"></i> Entities
+                                        <i class="col-purple fa fa-fw fa-umbrella"></i> Entities
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${entityAverageWeek}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-blue-grey fa fa-map"></i> Chunks
+                                        <i class="col-blue-grey fa fa-fw fa-map"></i> Chunks
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${chunkAverageWeek}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-green fa fa-hdd"></i> Free Disk
+                                        <i class="col-green fa fa-fw fa-hdd"></i> Free Disk
                                         <small>(MAX)</small>
                                         <span class="pull-right"><b>${freeDiskMaximumWeek} Mb</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-green fa fa-hdd"></i> Free Disk
+                                        <i class="col-green fa fa-fw fa-hdd"></i> Free Disk
                                         <small>(MIN)</small>
                                         <span class="pull-right"><b>${freeDiskMinimumWeek} Mb</b></span>
                                     </li>
@@ -979,41 +982,41 @@
                                 <div class="font-bold m-b--35">LAST 24 HOURS</div>
                                 <ul class="dashboard-stat-list">
                                     <li>
-                                        <i class="col-red fa fa-exclamation-circle"></i> Low TPS Spikes
+                                        <i class="col-red fa fa-fw fa-exclamation-circle"></i> Low TPS Spikes
                                         <span class="pull-right"><b>${tpsSpikeDay}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-orange fa fa-tachometer-alt"></i> TPS
+                                        <i class="col-orange fa fa-fw fa-tachometer-alt"></i> TPS
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${tpsAverageDay}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-amber fa fa-tachometer-alt"></i> CPU Usage
+                                        <i class="col-amber fa fa-fw fa-tachometer-alt"></i> CPU Usage
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${cpuAverageDay}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-light-green fa fa-microchip"></i> RAM Usage
+                                        <i class="col-light-green fa fa-fw fa-microchip"></i> RAM Usage
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${ramAverageDay}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-purple fa fa-umbrella"></i> Entities
+                                        <i class="col-purple fa fa-fw fa-umbrella"></i> Entities
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${entityAverageDay}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-blue-grey fa fa-map"></i> Chunks
+                                        <i class="col-blue-grey fa fa-fw fa-map"></i> Chunks
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${chunkAverageDay}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-green fa fa-hdd"></i> Free Disk
+                                        <i class="col-green fa fa-fw fa-hdd"></i> Free Disk
                                         <small>(MAX)</small>
                                         <span class="pull-right"><b>${freeDiskMaximumDay} Mb</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-green fa fa-hdd"></i> Free Disk
+                                        <i class="col-green fa fa-fw fa-hdd"></i> Free Disk
                                         <small>(MIN)</small>
                                         <span class="pull-right"><b>${freeDiskMinimumDay} Mb</b></span>
                                     </li>
@@ -1035,7 +1038,7 @@
                                 <div class="row clearfix">
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <h2>
-                                            <i class="fa fa-users"></i> Player List
+                                            <i class="fa fa-fw fa-users"></i> Player List
                                         </h2>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
@@ -1070,7 +1073,7 @@
                             <div class="header">
                                 <div class="row clearfix">
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
-                                        <h2><i class="col-green fa fa-globe"></i> Geolocations</h2>
+                                        <h2><i class="col-green fa fa-fw fa-globe"></i> Geolocations</h2>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <a href="javascript:void(0)" class="help material-icons pull-right"
@@ -1103,7 +1106,7 @@
                             <div class="header">
                                 <div class="row clearfix">
                                     <div class="col-xs-8 col-sm-8 col-lg-8">
-                                        <h2><i class="fa fa-wifi"></i> Connection Information</h2>
+                                        <h2><i class="fa fa-fw fa-wifi"></i> Connection Information</h2>
                                     </div>
                                     <div class="col-xs-4 col-sm-4 col-lg-4">
                                         <a href="javascript:void(0)" class="help material-icons pull-right"
@@ -1132,11 +1135,12 @@
                             <div class="header">
                                 <div class="row clearfix">
                                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                        <h2><i class="col-lime fa fa-terminal"></i> Command Usage</h2>
+                                        <h2><i class="col-lime fa fa-fw fa-terminal"></i> Command Usage</h2>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                        <p class="pull-right"><i class="col-light-green fa fa-chevron-right"></i> Used
-                                            Commands: ${commandCount} <i class="col-lime fa fa-chevron-right"></i>
+                                        <p class="pull-right"><i class="col-light-green fa fa-fw fa-chevron-right"></i>
+                                            Used
+                                            Commands: ${commandCount} <i class="col-lime fa fa-fw fa-chevron-right"></i>
                                             Unique: ${commandUniqueCount}</p>
                                     </div>
                                 </div>
