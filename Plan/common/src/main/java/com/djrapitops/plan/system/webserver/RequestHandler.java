@@ -104,7 +104,7 @@ public class RequestHandler implements HttpHandler {
 
             // Authentication failed, but was not blocked
             if (response instanceof PromptAuthorizationResponse) {
-                responseHeaders.set("WWW-Authenticate", response.getHeader("WWW-Authenticate").orElse("Basic realm=\"Plan WebUser (/plan register)\";"));
+                responseHeaders.set("WWW-Authenticate", response.getHeader("WWW-Authenticate").orElse("Basic realm=\"Plan WebUser (/plan register)\""));
             }
 
             response.setResponseHeaders(responseHeaders);

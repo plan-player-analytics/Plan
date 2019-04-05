@@ -17,22 +17,25 @@
 package com.djrapitops.plan.data.store.containers;
 
 import com.djrapitops.plan.data.store.Key;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test for {@link SupplierDataContainer} programming errors.
  *
  * @author Rsl1122
  */
-public class SupplierDataContainerTest {
+@RunWith(JUnitPlatform.class)
+class SupplierDataContainerTest {
 
     private static final Key<String> TEST_KEY = new Key<>(String.class, "TEST_KEY");
     private static final Key<String> TEST_KEY_COPY = new Key<>(String.class, "TEST_KEY");
 
     @Test
-    public void safeUnsafeKeySupplierSameObject() {
+    void safeUnsafeKeySupplierSameObject() {
         DataContainer container = new SupplierDataContainer();
         container.putSupplier(TEST_KEY, () -> "Success");
 
@@ -40,7 +43,7 @@ public class SupplierDataContainerTest {
     }
 
     @Test
-    public void safeUnsafeKeySupplierDifferentObject() {
+    void safeUnsafeKeySupplierDifferentObject() {
         DataContainer container = new SupplierDataContainer();
         container.putSupplier(TEST_KEY, () -> "Success");
 
@@ -48,7 +51,7 @@ public class SupplierDataContainerTest {
     }
 
     @Test
-    public void safeUnsafeKeyRawSameObject() {
+    void safeUnsafeKeyRawSameObject() {
         DataContainer container = new SupplierDataContainer();
         container.putRawData(TEST_KEY, "Success");
 
@@ -56,7 +59,7 @@ public class SupplierDataContainerTest {
     }
 
     @Test
-    public void safeUnsafeKeyRawDifferentObject() {
+    void safeUnsafeKeyRawDifferentObject() {
         DataContainer container = new SupplierDataContainer();
         container.putRawData(TEST_KEY, "Success");
 
@@ -64,7 +67,7 @@ public class SupplierDataContainerTest {
     }
 
     @Test
-    public void safeUnsafeKeyRawNull() {
+    void safeUnsafeKeyRawNull() {
         DataContainer container = new SupplierDataContainer();
         container.putRawData(TEST_KEY, null);
 
@@ -73,7 +76,7 @@ public class SupplierDataContainerTest {
     }
 
     @Test
-    public void safeUnsafeKeyNullSupplier() {
+    void safeUnsafeKeyNullSupplier() {
         DataContainer container = new SupplierDataContainer();
         container.putSupplier(TEST_KEY, null);
 
@@ -81,7 +84,7 @@ public class SupplierDataContainerTest {
     }
 
     @Test
-    public void safeUnsafeKeySupplierNull() {
+    void safeUnsafeKeySupplierNull() {
         DataContainer container = new SupplierDataContainer();
         container.putSupplier(TEST_KEY, () -> null);
 
@@ -90,7 +93,7 @@ public class SupplierDataContainerTest {
     }
 
     @Test
-    public void cachingSupplier() {
+    void cachingSupplier() {
         DataContainer container = new SupplierDataContainer();
         String firstObj = "First";
         String secondObj = "Second";

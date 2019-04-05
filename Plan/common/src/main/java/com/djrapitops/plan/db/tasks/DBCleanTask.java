@@ -18,19 +18,33 @@ package com.djrapitops.plan.db.tasks;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.transactions.init.CleanTransaction;
+import com.djrapitops.plan.db.access.Query;
+import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.access.transactions.commands.RemovePlayerTransaction;
+import com.djrapitops.plan.db.access.transactions.init.RemoveDuplicateUserInfoTransaction;
+import com.djrapitops.plan.db.access.transactions.init.RemoveOldSampledDataTransaction;
+import com.djrapitops.plan.db.sql.tables.SessionsTable;
+import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalResultsTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
+import com.google.common.annotations.VisibleForTesting;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Task for cleaning the active database.
@@ -70,13 +84,53 @@ public class DBCleanTask extends AbsRunnable {
         Database database = dbSystem.getDatabase();
         try {
             if (database.getState() != Database.State.CLOSED) {
-                database.executeTransaction(new CleanTransaction(serverInfo.getServerUUID(),
-                        config.get(TimeSettings.KEEP_INACTIVE_PLAYERS), logger, locale)
-                );
+                database.executeTransaction(new RemoveOldSampledDataTransaction(serverInfo.getServerUUID()));
+                database.executeTransaction(new RemoveDuplicateUserInfoTransaction());
+                database.executeTransaction(new RemoveUnsatisfiedConditionalResultsTransaction());
+                int removed = cleanOldPlayers(database);
+                if (removed > 0) {
+                    logger.info(locale.getString(PluginLang.DB_NOTIFY_CLEAN, removed));
+                }
             }
         } catch (DBOpException e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
             cancel();
         }
+    }
+
+    @VisibleForTesting
+    public int cleanOldPlayers(Database database) {
+        long now = System.currentTimeMillis();
+        long keepActiveAfter = now - config.get(TimeSettings.KEEP_INACTIVE_PLAYERS);
+
+        List<UUID> inactivePlayers = database.query(fetchInactivePlayerUUIDs(keepActiveAfter));
+        for (UUID uuid : inactivePlayers) {
+            database.executeTransaction(new RemovePlayerTransaction(uuid));
+        }
+        return inactivePlayers.size();
+    }
+
+    private Query<List<UUID>> fetchInactivePlayerUUIDs(long keepActiveAfter) {
+        String sql = "SELECT uuid, last_seen FROM (SELECT" +
+                " MAX(" + SessionsTable.SESSION_END + ") as last_seen, " + SessionsTable.USER_UUID +
+                " FROM " + SessionsTable.TABLE_NAME +
+                " GROUP BY " + SessionsTable.USER_UUID + ") as q1" +
+                " WHERE last_seen < ?";
+        return new QueryStatement<List<UUID>>(sql, 20000) {
+
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, keepActiveAfter);
+            }
+
+            @Override
+            public List<UUID> processResults(ResultSet set) throws SQLException {
+                List<UUID> inactiveUUIDs = new ArrayList<>();
+                while (set.next()) {
+                    inactiveUUIDs.add(UUID.fromString(set.getString("uuid")));
+                }
+                return inactiveUUIDs;
+            }
+        };
     }
 }

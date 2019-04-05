@@ -19,15 +19,15 @@ package com.djrapitops.plan.system.file;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * Abstracts File methods of Plugin classes so that they can be tested without Mocks.
@@ -37,7 +37,7 @@ import java.util.List;
 @Singleton
 public class PlanFiles implements SubSystem {
 
-    private final PlanPlugin plugin;
+    protected final PlanPlugin plugin;
 
     private final File dataFolder;
     private final File configFile;
@@ -68,7 +68,7 @@ public class PlanFiles implements SubSystem {
     }
 
     public File getFileFromPluginFolder(String name) {
-        return new File(dataFolder, name);
+        return new File(dataFolder, name.replace("/", File.separator));
     }
 
     @Override
@@ -89,53 +89,53 @@ public class PlanFiles implements SubSystem {
     }
 
     /**
-     * Read a file from jar as lines.
+     * Get a file in the jar as a {@link Resource}.
      *
-     * @param fileName Name of the file.
-     * @return lines of the file
-     * @throws IOException If the resource can not be read.
+     * @param resourceName Path to the file inside jar/assets/plan/ folder.
+     * @return a {@link Resource} for accessing the resource.
      */
-    public List<String> readFromResource(String fileName) throws IOException {
-        return FileUtil.lines(plugin, fileName);
-    }
-
-    public InputStream readStreamFromResource(String fileName) throws IOException {
-        return plugin.getResource(fileName);
+    public Resource getResourceFromJar(String resourceName) {
+        return new JarResource("assets/plan/" + resourceName, () -> plugin.getResource("assets/plan/" + resourceName));
     }
 
     /**
-     * Read a file from jar as a flat String.
+     * Get a file from plugin folder as a {@link Resource}.
      *
-     * @param fileName Name of the file
-     * @return Flattened lines with {@code \r\n} line separators.
-     * @throws IOException If the resource can not be read.
+     * @param resourceName Path to the file inside the plugin folder.
+     * @return a {@link Resource} for accessing the resource.
      */
-    public String readFromResourceFlat(String fileName) throws IOException {
-        return flatten(readFromResource(fileName));
+    public Resource getResourceFromPluginFolder(String resourceName) {
+        return new FileResource(resourceName, getFileFromPluginFolder(resourceName));
     }
 
     /**
-     * Read a file from jar or /plugins/Plan/ folder.
+     * Get a customizable resource from the plugin files or from the jar if one doesn't exist.
      *
-     * @param fileName Name of the file
-     * @return Flattened lines with {@code \r\n} line separators.
-     * @throws IOException If the resource can not be read.
+     * @param resourceName Path to the file inside the plugin folder.
+     * @return a {@link Resource} for accessing the resource, either from the plugin folder or jar.
      */
-    public String readCustomizableResourceFlat(String fileName) throws IOException {
-        return flatten(FileUtil.lines(
-                plugin, new File(plugin.getDataFolder(), fileName.replace("/", File.separator)), fileName
-        ));
+    public Resource getCustomizableResourceOrDefault(String resourceName) {
+        return attemptToFind(resourceName).map(file -> (Resource) new FileResource(resourceName, file)).orElse(getResourceFromJar(resourceName));
     }
 
-    public InputStream readCustomizableResource(String fileName) {
-        return FileUtil.stream(plugin, new File(plugin.getDataFolder(), fileName.replace("/", File.separator)), fileName);
-    }
+    private Optional<File> attemptToFind(String resourceName) {
+        if (dataFolder.exists() && dataFolder.isDirectory()) {
+            ArrayDeque<File> que = new ArrayDeque<>();
+            que.add(dataFolder);
 
-    private String flatten(List<String> lines) {
-        StringBuilder flat = new StringBuilder();
-        for (String line : lines) {
-            flat.append(line).append("\r\n");
+            while (!que.isEmpty()) {
+                File file = que.pop();
+                if (file.isFile() && resourceName.equals(file.getName())) {
+                    return Optional.of(file);
+                }
+                if (file.isDirectory()) {
+                    File[] files = file.listFiles();
+                    if (files != null) {
+                        que.addAll(Arrays.asList(files));
+                    }
+                }
+            }
         }
-        return flat.toString();
+        return Optional.empty();
     }
 }

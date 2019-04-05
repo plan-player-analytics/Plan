@@ -26,19 +26,22 @@ import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.Lang;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plan.utilities.html.graphs.line.Point;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import utilities.RandomData;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ComparatorTest {
+@RunWith(JUnitPlatform.class)
+class ComparatorTest {
 
     @Test
-    public void pointComparator() {
+    void pointComparator() {
         List<Point> points = RandomData.randomPoints();
 
         List<Long> expected = points.stream().map(Point::getX).map(i -> (long) (double) i)
@@ -51,7 +54,7 @@ public class ComparatorTest {
     }
 
     @Test
-    public void sessionDataComparator() {
+    void sessionDataComparator() {
         List<Session> sessions = RandomData.randomSessions();
 
         List<Long> expected = sessions.stream().map(s -> s.getUnsafe(SessionKeys.START))
@@ -65,7 +68,7 @@ public class ComparatorTest {
     }
 
     @Test
-    public void tpsComparator() {
+    void tpsComparator() {
         List<TPS> tpsList = RandomData.randomTPS();
 
         List<Long> expected = tpsList.stream().map(TPS::getDate)
@@ -78,7 +81,7 @@ public class ComparatorTest {
     }
 
     @Test
-    public void webUserComparator() throws PassEncryptUtil.CannotPerformOperationException {
+    void webUserComparator() throws PassEncryptUtil.CannotPerformOperationException {
         List<WebUser> webUsers = RandomData.randomWebUsers();
 
         List<Integer> expected = webUsers.stream().map(WebUser::getPermLevel)
@@ -92,7 +95,7 @@ public class ComparatorTest {
     }
 
     @Test
-    public void stringLengthComparator() {
+    void stringLengthComparator() {
         List<Integer> result = Stream.of(
                 RandomData.randomString(10),
                 RandomData.randomString(3),
@@ -112,7 +115,7 @@ public class ComparatorTest {
     }
 
     @Test
-    public void localeEntryComparator() {
+    void localeEntryComparator() {
         Map<Lang, Message> messageMap = new HashMap<>();
         messageMap.put(CmdHelpLang.SERVERS, new Message(RandomData.randomString(10)));
         messageMap.put(CmdHelpLang.ANALYZE, new Message(RandomData.randomString(10)));
@@ -132,7 +135,7 @@ public class ComparatorTest {
     }
 
     @Test
-    public void geoInfoComparator() {
+    void geoInfoComparator() {
         List<GeoInfo> geoInfos = RandomData.randomGeoInfo();
 
         List<Long> expected = geoInfos.stream().map(GeoInfo::getDate)

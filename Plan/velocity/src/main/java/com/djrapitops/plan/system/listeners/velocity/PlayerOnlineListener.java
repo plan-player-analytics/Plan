@@ -20,6 +20,8 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.transactions.events.GeoInfoStoreTransaction;
 import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
+import com.djrapitops.plan.extension.CallEvents;
+import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -32,6 +34,7 @@ import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
+import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
@@ -57,6 +60,7 @@ public class PlayerOnlineListener {
     private final Processors processors;
     private final Processing processing;
     private final DBSystem dbSystem;
+    private final ExtensionServiceImplementation extensionService;
     private final GeolocationCache geolocationCache;
     private final SessionCache sessionCache;
     private final ServerInfo serverInfo;
@@ -68,6 +72,7 @@ public class PlayerOnlineListener {
             Processing processing,
             Processors processors,
             DBSystem dbSystem,
+            ExtensionServiceImplementation extensionService,
             GeolocationCache geolocationCache,
             SessionCache sessionCache,
             ServerInfo serverInfo,
@@ -77,18 +82,19 @@ public class PlayerOnlineListener {
         this.processing = processing;
         this.processors = processors;
         this.dbSystem = dbSystem;
+        this.extensionService = extensionService;
         this.geolocationCache = geolocationCache;
         this.sessionCache = sessionCache;
         this.serverInfo = serverInfo;
         this.errorHandler = errorHandler;
     }
 
-    @Subscribe
+    @Subscribe(order = PostOrder.LAST)
     public void onPostLogin(PostLoginEvent event) {
         try {
             Player player = event.getPlayer();
             UUID playerUUID = player.getUniqueId();
-            String name = player.getUsername();
+            String playerName = player.getUsername();
             InetAddress address = player.getRemoteAddress().getAddress();
             long time = System.currentTimeMillis();
 
@@ -103,15 +109,24 @@ public class PlayerOnlineListener {
                 );
             }
 
-            database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> time, name));
+            database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> time, playerName));
             processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
+            processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
             ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 
-    @Subscribe
+    @Subscribe(order = PostOrder.NORMAL)
+    public void beforeLogout(DisconnectEvent event) {
+        Player player = event.getPlayer();
+        UUID playerUUID = player.getUniqueId();
+        String playerName = player.getUsername();
+        processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_LEAVE));
+    }
+
+    @Subscribe(order = PostOrder.LAST)
     public void onLogout(DisconnectEvent event) {
         try {
             Player player = event.getPlayer();
@@ -125,7 +140,7 @@ public class PlayerOnlineListener {
         }
     }
 
-    @Subscribe
+    @Subscribe(order = PostOrder.LAST)
     public void onServerSwitch(ServerConnectedEvent event) {
         try {
             Player player = event.getPlayer();

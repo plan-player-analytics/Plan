@@ -24,8 +24,10 @@ import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
@@ -34,17 +36,18 @@ import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests for {@link PlayersTable}
  *
  * @author Rsl1122
  */
-public class PlayersTableTest {
+@RunWith(JUnitPlatform.class)
+class PlayersTableTest {
 
-    @BeforeClass
-    public static void setUpClass() {
+    @BeforeAll
+    static void setUpClass() {
         new CommonAPI(
                 Mockito.mock(DBSystem.class),
                 Mockito.mock(UUIDUtility.class),
@@ -55,7 +58,7 @@ public class PlayersTableTest {
     }
 
     @Test
-    public void noClassCastExceptionsFromFormatting() {
+    void noClassCastExceptionsFromFormatting() {
         PlayerContainer container = new PlayerContainer();
         container.putRawData(PlayerKeys.SESSIONS, new ArrayList<>());
         List<PlayerContainer> players = Collections.singletonList(container);
@@ -79,12 +82,12 @@ public class PlayersTableTest {
         for (String s : split) {
             if (s.startsWith("/")) {
                 String expectedElement = stack.pop();
-                assertTrue("Element not properly closed: " + expectedElement, s.startsWith("/" + expectedElement));
+                assertTrue(s.startsWith("/" + expectedElement), () -> "Element not properly closed: " + expectedElement);
             } else {
                 stack.push(s.split(" ", 2)[0].split(">", 2)[0]);
             }
         }
         stack.pop(); // Pop the empty string since the html string starts with <
-        assertTrue("Stack was not empty: " + stack.toString(), stack.empty());
+        assertTrue(stack.empty(), () -> "Stack was not empty: " + stack.toString());
     }
 }

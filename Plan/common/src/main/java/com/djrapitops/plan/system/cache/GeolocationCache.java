@@ -40,7 +40,9 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
@@ -150,7 +152,12 @@ public class GeolocationCache implements SubSystem {
         try {
             checkDB();
 
-            try (DatabaseReader reader = new DatabaseReader.Builder(geolocationDB).build()) {
+            try (
+                    // See https://github.com/maxmind/MaxMind-DB-Reader-java#file-lock-on-windows
+                    // for why InputStream is being used here instead.
+                    InputStream in = Files.newInputStream(geolocationDB.toPath());
+                    DatabaseReader reader = new DatabaseReader.Builder(in).build()
+            ) {
                 InetAddress inetAddress = InetAddress.getByName(ipAddress);
 
                 CountryResponse response = reader.country(inetAddress);
@@ -178,9 +185,10 @@ public class GeolocationCache implements SubSystem {
                 InputStream in = downloadSite.openStream();
                 GZIPInputStream gzipIn = new GZIPInputStream(in);
                 ReadableByteChannel rbc = Channels.newChannel(gzipIn);
-                FileOutputStream fos = new FileOutputStream(geolocationDB.getAbsoluteFile())
+                FileOutputStream fos = new FileOutputStream(geolocationDB.getAbsoluteFile());
+                FileChannel channel = fos.getChannel()
         ) {
-            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+            channel.transferFrom(rbc, 0, Long.MAX_VALUE);
         }
     }
 

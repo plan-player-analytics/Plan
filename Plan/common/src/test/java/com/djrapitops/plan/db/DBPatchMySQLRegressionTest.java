@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db;
 
-import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
@@ -30,56 +29,76 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.google.common.util.concurrent.MoreExecutors;
-import org.junit.*;
-import org.junit.rules.TemporaryFolder;
-import rules.PluginComponentMocker;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import utilities.CIProperties;
 import utilities.OptionalAssert;
 import utilities.RandomData;
 import utilities.TestConstants;
+import utilities.mocks.PluginMockComponent;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeTrue;
+import java.nio.file.Path;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * Test for the patching of Plan 4.5.2 MySQL DB into the newest schema.
  *
  * @author Rsl1122
  */
-public class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
+@RunWith(JUnitPlatform.class)
+class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
-    @Rule
-    public PluginComponentMocker component = new PluginComponentMocker(temporaryFolder);
+    public static PluginMockComponent component;
 
-    String serverTable = "CREATE TABLE IF NOT EXISTS plan_servers (id integer NOT NULL AUTO_INCREMENT, uuid varchar(36) NOT NULL UNIQUE, name varchar(100), web_address varchar(100), is_installed boolean NOT NULL DEFAULT 1, max_players integer NOT NULL DEFAULT -1, PRIMARY KEY (id))";
-    String usersTable = "CREATE TABLE IF NOT EXISTS plan_users (id integer NOT NULL AUTO_INCREMENT, uuid varchar(36) NOT NULL UNIQUE, registered bigint NOT NULL, name varchar(16) NOT NULL, times_kicked integer NOT NULL DEFAULT 0, PRIMARY KEY (id))";
-    String userInfoTable = "CREATE TABLE IF NOT EXISTS plan_user_info (user_id integer NOT NULL, registered bigint NOT NULL, opped boolean NOT NULL DEFAULT 0, banned boolean NOT NULL DEFAULT 0, server_id integer NOT NULL, FOREIGN KEY(user_id) REFERENCES plan_users(id), FOREIGN KEY(server_id) REFERENCES plan_servers(id))";
-    String geoInfoTable = "CREATE TABLE IF NOT EXISTS plan_ips (user_id integer NOT NULL, ip varchar(39) NOT NULL, geolocation varchar(50) NOT NULL, ip_hash varchar(200), last_used bigint NOT NULL DEFAULT 0, FOREIGN KEY(user_id) REFERENCES plan_users(id))";
-    String nicknameTable = "CREATE TABLE IF NOT EXISTS plan_nicknames (user_id integer NOT NULL, nickname varchar(75) NOT NULL, server_id integer NOT NULL, last_used bigint NOT NULL, FOREIGN KEY(user_id) REFERENCES plan_users(id), FOREIGN KEY(server_id) REFERENCES plan_servers(id))";
-    String sessionsTable = "CREATE TABLE IF NOT EXISTS plan_sessions (id integer NOT NULL AUTO_INCREMENT, user_id integer NOT NULL, server_id integer NOT NULL, session_start bigint NOT NULL, session_end bigint NOT NULL, mob_kills integer NOT NULL, deaths integer NOT NULL, afk_time bigint NOT NULL, FOREIGN KEY(user_id) REFERENCES plan_users(id), FOREIGN KEY(server_id) REFERENCES plan_servers(id), PRIMARY KEY (id))";
-    String killsTable = "CREATE TABLE IF NOT EXISTS plan_kills (killer_id integer NOT NULL, victim_id integer NOT NULL, server_id integer NOT NULL, weapon varchar(30) NOT NULL, date bigint NOT NULL, session_id integer NOT NULL, FOREIGN KEY(killer_id) REFERENCES plan_users(id), FOREIGN KEY(victim_id) REFERENCES plan_users(id), FOREIGN KEY(session_id) REFERENCES plan_sessions(id), FOREIGN KEY(server_id) REFERENCES plan_servers(id))";
-    String pingTable = "CREATE TABLE IF NOT EXISTS plan_ping (id integer NOT NULL AUTO_INCREMENT, user_id integer NOT NULL, server_id integer NOT NULL, date bigint NOT NULL, max_ping integer NOT NULL, min_ping integer NOT NULL, avg_ping double NOT NULL, PRIMARY KEY (id), FOREIGN KEY(user_id) REFERENCES plan_users(id), FOREIGN KEY(server_id) REFERENCES plan_servers(id))";
-    String commandUseTable = "CREATE TABLE IF NOT EXISTS plan_commandusages (id integer NOT NULL AUTO_INCREMENT, command varchar(20) NOT NULL, times_used integer NOT NULL, server_id integer NOT NULL, PRIMARY KEY (id), FOREIGN KEY(server_id) REFERENCES plan_servers(id))";
-    String tpsTable = "CREATE TABLE IF NOT EXISTS plan_tps (server_id integer NOT NULL, date bigint NOT NULL, tps double NOT NULL, players_online integer NOT NULL, cpu_usage double NOT NULL, ram_usage bigint NOT NULL, entities integer NOT NULL, chunks_loaded integer NOT NULL, free_disk_space bigint NOT NULL, FOREIGN KEY(server_id) REFERENCES plan_servers(id))";
-    String worldsTable = "CREATE TABLE IF NOT EXISTS plan_worlds (id integer NOT NULL AUTO_INCREMENT, world_name varchar(100) NOT NULL, server_id integer NOT NULL, PRIMARY KEY (id), FOREIGN KEY(server_id) REFERENCES plan_servers(id))";
-    String worldTimesTable = "CREATE TABLE IF NOT EXISTS plan_world_times (user_id integer NOT NULL, world_id integer NOT NULL, server_id integer NOT NULL, session_id integer NOT NULL, survival_time bigint NOT NULL DEFAULT 0, creative_time bigint NOT NULL DEFAULT 0, adventure_time bigint NOT NULL DEFAULT 0, spectator_time bigint NOT NULL DEFAULT 0, FOREIGN KEY(user_id) REFERENCES plan_users(id), FOREIGN KEY(world_id) REFERENCES plan_worlds(id), FOREIGN KEY(server_id) REFERENCES plan_servers(id), FOREIGN KEY(session_id) REFERENCES plan_sessions(id))";
-    String securityTable = "CREATE TABLE IF NOT EXISTS plan_security (username varchar(100) NOT NULL UNIQUE, salted_pass_hash varchar(100) NOT NULL UNIQUE, permission_level integer NOT NULL)";
-    String transferTable = "CREATE TABLE IF NOT EXISTS plan_transfer (sender_server_id integer NOT NULL, expiry_date bigint NOT NULL DEFAULT 0, type varchar(100) NOT NULL, extra_variables varchar(255) DEFAULT '', content_64 MEDIUMTEXT, part bigint NOT NULL DEFAULT 0, FOREIGN KEY(sender_server_id) REFERENCES plan_servers(id))";
+    private String serverTable = "CREATE TABLE IF NOT EXISTS plan_servers (id integer NOT NULL AUTO_INCREMENT, uuid varchar(36) NOT NULL UNIQUE, name varchar(100), web_address varchar(100), is_installed boolean NOT NULL DEFAULT 1, max_players integer NOT NULL DEFAULT -1, PRIMARY KEY (id))";
+    private String usersTable = "CREATE TABLE IF NOT EXISTS plan_users (id integer NOT NULL AUTO_INCREMENT, uuid varchar(36) NOT NULL UNIQUE, registered bigint NOT NULL, name varchar(16) NOT NULL, times_kicked integer NOT NULL DEFAULT 0, PRIMARY KEY (id))";
+    private String userInfoTable = "CREATE TABLE IF NOT EXISTS plan_user_info (user_id integer NOT NULL, registered bigint NOT NULL, opped boolean NOT NULL DEFAULT 0, banned boolean NOT NULL DEFAULT 0, server_id integer NOT NULL, FOREIGN KEY(user_id) REFERENCES plan_users(id), FOREIGN KEY(server_id) REFERENCES plan_servers(id))";
+    private String geoInfoTable = "CREATE TABLE IF NOT EXISTS plan_ips (user_id integer NOT NULL, ip varchar(39) NOT NULL, geolocation varchar(50) NOT NULL, ip_hash varchar(200), last_used bigint NOT NULL DEFAULT 0, FOREIGN KEY(user_id) REFERENCES plan_users(id))";
+    private String nicknameTable = "CREATE TABLE IF NOT EXISTS plan_nicknames (user_id integer NOT NULL, nickname varchar(75) NOT NULL, server_id integer NOT NULL, last_used bigint NOT NULL, FOREIGN KEY(user_id) REFERENCES plan_users(id), FOREIGN KEY(server_id) REFERENCES plan_servers(id))";
+    private String sessionsTable = "CREATE TABLE IF NOT EXISTS plan_sessions (id integer NOT NULL AUTO_INCREMENT, user_id integer NOT NULL, server_id integer NOT NULL, session_start bigint NOT NULL, session_end bigint NOT NULL, mob_kills integer NOT NULL, deaths integer NOT NULL, afk_time bigint NOT NULL, FOREIGN KEY(user_id) REFERENCES plan_users(id), FOREIGN KEY(server_id) REFERENCES plan_servers(id), PRIMARY KEY (id))";
+    private String killsTable = "CREATE TABLE IF NOT EXISTS plan_kills (killer_id integer NOT NULL, victim_id integer NOT NULL, server_id integer NOT NULL, weapon varchar(30) NOT NULL, date bigint NOT NULL, session_id integer NOT NULL, FOREIGN KEY(killer_id) REFERENCES plan_users(id), FOREIGN KEY(victim_id) REFERENCES plan_users(id), FOREIGN KEY(session_id) REFERENCES plan_sessions(id), FOREIGN KEY(server_id) REFERENCES plan_servers(id))";
+    private String pingTable = "CREATE TABLE IF NOT EXISTS plan_ping (id integer NOT NULL AUTO_INCREMENT, user_id integer NOT NULL, server_id integer NOT NULL, date bigint NOT NULL, max_ping integer NOT NULL, min_ping integer NOT NULL, avg_ping double NOT NULL, PRIMARY KEY (id), FOREIGN KEY(user_id) REFERENCES plan_users(id), FOREIGN KEY(server_id) REFERENCES plan_servers(id))";
+    private String commandUseTable = "CREATE TABLE IF NOT EXISTS plan_commandusages (id integer NOT NULL AUTO_INCREMENT, command varchar(20) NOT NULL, times_used integer NOT NULL, server_id integer NOT NULL, PRIMARY KEY (id), FOREIGN KEY(server_id) REFERENCES plan_servers(id))";
+    private String tpsTable = "CREATE TABLE IF NOT EXISTS plan_tps (server_id integer NOT NULL, date bigint NOT NULL, tps double NOT NULL, players_online integer NOT NULL, cpu_usage double NOT NULL, ram_usage bigint NOT NULL, entities integer NOT NULL, chunks_loaded integer NOT NULL, free_disk_space bigint NOT NULL, FOREIGN KEY(server_id) REFERENCES plan_servers(id))";
+    private String worldsTable = "CREATE TABLE IF NOT EXISTS plan_worlds (id integer NOT NULL AUTO_INCREMENT, world_name varchar(100) NOT NULL, server_id integer NOT NULL, PRIMARY KEY (id), FOREIGN KEY(server_id) REFERENCES plan_servers(id))";
+    private String worldTimesTable = "CREATE TABLE IF NOT EXISTS plan_world_times (user_id integer NOT NULL, world_id integer NOT NULL, server_id integer NOT NULL, session_id integer NOT NULL, survival_time bigint NOT NULL DEFAULT 0, creative_time bigint NOT NULL DEFAULT 0, adventure_time bigint NOT NULL DEFAULT 0, spectator_time bigint NOT NULL DEFAULT 0, FOREIGN KEY(user_id) REFERENCES plan_users(id), FOREIGN KEY(world_id) REFERENCES plan_worlds(id), FOREIGN KEY(server_id) REFERENCES plan_servers(id), FOREIGN KEY(session_id) REFERENCES plan_sessions(id))";
+    private String securityTable = "CREATE TABLE IF NOT EXISTS plan_security (username varchar(100) NOT NULL UNIQUE, salted_pass_hash varchar(100) NOT NULL UNIQUE, permission_level integer NOT NULL)";
+    private String transferTable = "CREATE TABLE IF NOT EXISTS plan_transfer (sender_server_id integer NOT NULL, expiry_date bigint NOT NULL DEFAULT 0, type varchar(100) NOT NULL, extra_variables varchar(255) DEFAULT '', content_64 MEDIUMTEXT, part bigint NOT NULL DEFAULT 0, FOREIGN KEY(sender_server_id) REFERENCES plan_servers(id))";
 
     private MySQLDB underTest;
 
-    @BeforeClass
-    public static void ensureTravisInUse() {
-        boolean isTravis = Boolean.parseBoolean(System.getenv(CIProperties.IS_TRAVIS));
-        assumeTrue(isTravis);
+    @BeforeAll
+    static void ensureCIServiceInUse(@TempDir Path tempDir) {
+        boolean isCI = Boolean.parseBoolean(System.getenv(CIProperties.IS_CI_SERVICE));
+        assumeTrue(isCI);
+
+        component = new PluginMockComponent(tempDir);
     }
 
-    @Before
-    public void setUpDBWithOldSchema() throws EnableException {
+    @AfterAll
+    static void closeSystem() throws Exception {
+        if (component != null) component.getPlanSystem().disable();
+    }
+
+    private void dropAllTables() {
+        underTest.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute("DROP DATABASE Plan");
+                execute("CREATE DATABASE Plan");
+                execute("USE Plan");
+            }
+        });
+    }
+
+    @BeforeEach
+    void setUpDBWithOldSchema() throws Exception {
         PlanSystem system = component.getPlanSystem();
         PlanConfig config = system.getConfigSystem().getConfig();
         config.set(DatabaseSettings.MYSQL_DATABASE, "Plan");
@@ -123,24 +142,13 @@ public class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
         insertData(underTest);
     }
 
-    private void dropAllTables() {
-        underTest.executeTransaction(new Transaction() {
-            @Override
-            protected void performOperations() {
-                execute("DROP DATABASE Plan");
-                execute("CREATE DATABASE Plan");
-                execute("USE Plan");
-            }
-        });
-    }
-
-    @After
-    public void closeDatabase() {
+    @AfterEach
+    void closeDatabase() {
         underTest.close();
     }
 
     @Test
-    public void mysqlPatchesAreApplied() {
+    void mysqlPatchesAreApplied() {
         Patch[] patches = underTest.patches();
         for (Patch patch : patches) {
             underTest.executeTransaction(patch);
@@ -157,7 +165,7 @@ public class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
     }
 
     @Test
-    public void mysqlDoesNotApplyKillsOptimizationPatchAgain() {
+    void mysqlDoesNotApplyKillsOptimizationPatchAgain() {
         mysqlPatchesAreApplied();
 
         KillsOptimizationPatch patch = new KillsOptimizationPatch();

@@ -1,8 +1,10 @@
 rootProject.name = 'Plan'
 
+include 'api'
 include 'common'
 include 'bukkit'
 include 'sponge'
 include 'bungeecord'
 include 'velocity'
 include 'plugin'
+include 'extensions'

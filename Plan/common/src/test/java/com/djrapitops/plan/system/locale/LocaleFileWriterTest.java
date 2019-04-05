@@ -16,14 +16,15 @@
  */
 package com.djrapitops.plan.system.locale;
 
-import com.djrapitops.plan.utilities.file.FileUtil;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import com.djrapitops.plan.system.file.FileResource;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 
 import static org.junit.Assert.assertEquals;
 
@@ -32,18 +33,16 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Rsl1122
  */
-public class LocaleFileWriterTest {
-
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+@RunWith(JUnitPlatform.class)
+class LocaleFileWriterTest {
 
     @Test
-    public void writesAllIdentifiers() throws IOException {
-        File file = temporaryFolder.newFile();
+    void writesAllIdentifiers(@TempDir Path tempDir) throws IOException {
+        File file = tempDir.resolve("localeFile.txt").toFile();
         new LocaleFileWriter(new Locale()).writeToFile(file);
 
         long expected = LocaleSystem.getIdentifiers().size();
-        int result = FileUtil.lines(file, StandardCharsets.UTF_8).size();
+        int result = FileResource.lines(file).size();
         assertEquals(expected, result);
     }
 

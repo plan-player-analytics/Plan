@@ -37,6 +37,7 @@ import com.djrapitops.plan.utilities.html.graphs.bar.BarGraph;
 import com.djrapitops.plan.utilities.html.graphs.line.PingGraph;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.graphs.stack.StackGraph;
+import com.djrapitops.plan.utilities.html.pages.AnalysisPluginTabs;
 import com.djrapitops.plan.utilities.html.structure.Accordions;
 import com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
 import com.djrapitops.plan.utilities.html.structure.RecentLoginList;
@@ -72,6 +73,7 @@ public class AnalysisContainer extends DynamicDataContainer {
     private final HtmlTables tables;
     private final Accordions accordions;
     private final AnalysisPluginsTabContentCreator pluginsTabContentCreator;
+    private TimeZone timeZone;
 
     public AnalysisContainer(
             ServerContainer serverContainer,
@@ -97,6 +99,9 @@ public class AnalysisContainer extends DynamicDataContainer {
         this.tables = tables;
         this.accordions = accordions;
         this.pluginsTabContentCreator = pluginsTabContentCreator;
+
+        timeZone = config.get(TimeSettings.USE_SERVER_TIME) ? TimeZone.getDefault() : TimeZone.getTimeZone("GMT");
+
         addAnalysisSuppliers();
     }
 
@@ -231,18 +236,18 @@ public class AnalysisContainer extends DynamicDataContainer {
         putSupplier(AnalysisKeys.PLAYERS_DAY, () -> getUnsafe(uniqueDay).count());
         putSupplier(AnalysisKeys.PLAYERS_WEEK, () -> getUnsafe(uniqueWeek).count());
         putSupplier(AnalysisKeys.PLAYERS_MONTH, () -> getUnsafe(uniqueMonth).count());
-        putSupplier(AnalysisKeys.AVG_PLAYERS_NEW, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).averageNewPerDay());
-        putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_DAY, () -> getUnsafe(newDay).averageNewPerDay());
-        putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_WEEK, () -> getUnsafe(newWeek).averageNewPerDay());
-        putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_MONTH, () -> getUnsafe(newMonth).averageNewPerDay());
+        putSupplier(AnalysisKeys.AVG_PLAYERS_NEW, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).averageNewPerDay(timeZone));
+        putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_DAY, () -> getUnsafe(newDay).averageNewPerDay(timeZone));
+        putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_WEEK, () -> getUnsafe(newWeek).averageNewPerDay(timeZone));
+        putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_MONTH, () -> getUnsafe(newMonth).averageNewPerDay(timeZone));
 
-        putSupplier(AnalysisKeys.UNIQUE_PLAYERS_PER_DAY, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).uniqueJoinsPerDay());
-        putSupplier(AnalysisKeys.NEW_PLAYERS_PER_DAY, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).newPerDay());
+        putSupplier(AnalysisKeys.UNIQUE_PLAYERS_PER_DAY, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).uniqueJoinsPerDay(timeZone));
+        putSupplier(AnalysisKeys.NEW_PLAYERS_PER_DAY, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).newPerDay(timeZone));
         putSupplier(AnalysisKeys.UNIQUE_PLAYERS_SERIES, () -> graphs.line().lineGraph(
-                MutatorFunctions.toPoints(getUnsafe(AnalysisKeys.UNIQUE_PLAYERS_PER_DAY))).toHighChartsSeries()
+                MutatorFunctions.toPointsWithRemovedOffset(getUnsafe(AnalysisKeys.UNIQUE_PLAYERS_PER_DAY), timeZone)).toHighChartsSeries()
         );
         putSupplier(AnalysisKeys.NEW_PLAYERS_SERIES, () -> graphs.line().lineGraph(
-                MutatorFunctions.toPoints(getUnsafe(AnalysisKeys.NEW_PLAYERS_PER_DAY))).toHighChartsSeries()
+                MutatorFunctions.toPointsWithRemovedOffset(getUnsafe(AnalysisKeys.NEW_PLAYERS_PER_DAY), timeZone)).toHighChartsSeries()
         );
 
         Key<Integer> retentionDay = new Key<>(Integer.class, "RETENTION_DAY");
@@ -354,10 +359,10 @@ public class AnalysisContainer extends DynamicDataContainer {
         );
 
         putSupplier(AnalysisKeys.PUNCHCARD_SERIES, () -> graphs.special().punchCard(getUnsafe(sessionsMonth).all()).toHighChartsSeries());
-        putSupplier(AnalysisKeys.AVG_PLAYERS, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toAverageUniqueJoinsPerDay());
-        putSupplier(AnalysisKeys.AVG_PLAYERS_DAY, () -> getUnsafe(sessionsDay).toAverageUniqueJoinsPerDay());
-        putSupplier(AnalysisKeys.AVG_PLAYERS_WEEK, () -> getUnsafe(sessionsWeek).toAverageUniqueJoinsPerDay());
-        putSupplier(AnalysisKeys.AVG_PLAYERS_MONTH, () -> getUnsafe(sessionsMonth).toAverageUniqueJoinsPerDay());
+        putSupplier(AnalysisKeys.AVG_PLAYERS, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toAverageUniqueJoinsPerDay(timeZone));
+        putSupplier(AnalysisKeys.AVG_PLAYERS_DAY, () -> getUnsafe(sessionsDay).toAverageUniqueJoinsPerDay(timeZone));
+        putSupplier(AnalysisKeys.AVG_PLAYERS_WEEK, () -> getUnsafe(sessionsWeek).toAverageUniqueJoinsPerDay(timeZone));
+        putSupplier(AnalysisKeys.AVG_PLAYERS_MONTH, () -> getUnsafe(sessionsMonth).toAverageUniqueJoinsPerDay(timeZone));
     }
 
     private void addGraphSuppliers() {
@@ -488,13 +493,14 @@ public class AnalysisContainer extends DynamicDataContainer {
 
     private void addPluginSuppliers() {
         // TODO Refactor into a system that supports running the analysis on Bungee
-        Key<String[]> navAndTabs = new Key<>(new Type<String[]>() {
-        }, "NAV_AND_TABS");
+        Key<String[]> navAndTabs = new Key<>(new Type<String[]>() {}, "NAV_AND_TABS");
+        Key<AnalysisPluginTabs> pluginTabs = new Key<>(AnalysisPluginTabs.class, "PLUGIN_TABS");
         putCachingSupplier(navAndTabs, () -> pluginsTabContentCreator.createContent(
                 this, getValue(AnalysisKeys.PLAYERS_MUTATOR).orElse(new PlayersMutator(new ArrayList<>()))
         ));
-        putSupplier(AnalysisKeys.PLUGINS_TAB_NAV, () -> getUnsafe(navAndTabs)[0]);
-        putSupplier(AnalysisKeys.PLUGINS_TAB, () -> getUnsafe(navAndTabs)[1]);
+        putCachingSupplier(pluginTabs, () -> new AnalysisPluginTabs(serverContainer.getValue(ServerKeys.EXTENSION_DATA).orElse(new ArrayList<>()), formatters));
+        putSupplier(AnalysisKeys.PLUGINS_TAB_NAV, () -> getUnsafe(pluginTabs).getNav() + getUnsafe(navAndTabs)[0]);
+        putSupplier(AnalysisKeys.PLUGINS_TAB, () -> getUnsafe(pluginTabs).getTabs() + getUnsafe(navAndTabs)[1]);
     }
 
     @Singleton

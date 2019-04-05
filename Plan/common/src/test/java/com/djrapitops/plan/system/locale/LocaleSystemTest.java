@@ -16,12 +16,15 @@
  */
 package com.djrapitops.plan.system.locale;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
-public class LocaleSystemTest {
+@RunWith(JUnitPlatform.class)
+class LocaleSystemTest {
 
     @Test
-    public void noIdentifierCollisions() {
+    void noIdentifierCollisions() {
         // No Exception wanted
         LocaleSystem.getIdentifiers();
     }

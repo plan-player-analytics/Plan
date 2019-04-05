@@ -58,7 +58,7 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(JUnitPlatform.class)
 @ExtendWith(PrintExtension.class)
-public class ShutdownSaveTest {
+class ShutdownSaveTest {
 
     private boolean shutdownStatus;
     private ServerShutdownSave underTest;

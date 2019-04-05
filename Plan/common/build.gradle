@@ -1,5 +1,7 @@
 dependencies {
     compile "com.djrapitops:AbstractPluginFramework-api:$abstractPluginFrameworkVersion"
+    compile project(":api")
+    compile project(path: ":extensions", configuration: 'shadow')
     compile "com.djrapitops:PlanPluginBridge:$planPluginBridgeVersion"
     compile "org.apache.httpcomponents:httpclient:$httpClientVersion"
     compile "org.apache.commons:commons-text:$commonsTextVersion"
@@ -11,13 +13,14 @@ dependencies {
     compile "org.slf4j:slf4j-api:$slf4jVersion"
     compile "com.maxmind.geoip2:geoip2:$geoIpVersion"
     compileOnly "com.google.guava:guava:$guavaVersion"
+
+    testCompile project(":api")
 }
 
 shadowJar {
     configurations = [project.configurations.compile]
 
     // Exclude these files
-    exclude "org/json/**/*"
     exclude "**/*.svg"
     exclude "**/*.ttf"
     exclude "**/*.woff"
@@ -25,14 +28,26 @@ shadowJar {
     exclude "**/*.woff2"
     exclude "**/*.psd"
 
+    exclude 'META-INF/versions/' // Causes Sponge to crash
+
     relocate('org.apache', 'plan.org.apache') {
         exclude 'org/apache/logging/**'
     }
     relocate 'com.maxmind', 'plan.com.maxmind'
     relocate 'com.fasterxml', 'plan.com.fasterxml'
     relocate 'com.zaxxer', 'plan.com.zaxxer'
+    relocate 'com.github.benmanes', 'plan.com.github.benmanes'
+    relocate 'com.googlecode', 'plan.com.googlecode'
     relocate 'org.h2', 'plan.org.h2'
     relocate 'org.bstats', 'plan.org.bstats'
     relocate 'org.slf4j', 'plan.org.slf4j'
-    relocate 'com.google.dagger', 'plan.com.google.dagger'
+
+    // Exclude test dependencies
+    exclude "org/junit/**/*"
+    exclude "org/opentest4j/**/*"
+    exclude "org/checkerframework/**/*"
+    exclude "org/apiguardian/**/*"
+    exclude "org/mockito/**/*"
+    exclude "org/selenium/**/*"
+    exclude "org/jayway/**/*"
 }

@@ -20,6 +20,8 @@ import com.djrapitops.plan.ServerShutdownSave;
 import com.djrapitops.plan.SpongeServerShutdownSave;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.SpongeDBSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
+import com.djrapitops.plan.system.file.SpongePlanFiles;
 import com.djrapitops.plan.system.importing.EmptyImportSystem;
 import com.djrapitops.plan.system.importing.ImportSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -40,6 +42,9 @@ import dagger.Module;
  */
 @Module
 public interface SpongeSuperClassBindingModule {
+
+    @Binds
+    PlanFiles bindSpongePlanFiles(SpongePlanFiles files);
 
     @Binds
     ServerInfo bindSpongeServerInfo(ServerServerInfo serverServerInfo);

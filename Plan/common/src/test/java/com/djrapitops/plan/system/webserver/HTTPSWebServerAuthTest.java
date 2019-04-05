@@ -24,48 +24,45 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
-import rules.ComponentMocker;
-import rules.PluginComponentMocker;
 import utilities.HTTPConnector;
 import utilities.RandomData;
 import utilities.TestResources;
+import utilities.mocks.PluginMockComponent;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Path;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
 import static org.junit.Assert.assertTrue;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
-public class HTTPSWebServerAuthTest {
+@RunWith(JUnitPlatform.class)
+class HTTPSWebServerAuthTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
-    @ClassRule
-    public static TemporaryFolder temporaryFolder = new TemporaryFolder();
-    @ClassRule
-    public static ComponentMocker component = new PluginComponentMocker(temporaryFolder);
+    public static PluginMockComponent component;
 
     private static PlanSystem system;
 
     private HTTPConnector connector = new HTTPConnector();
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        File file = temporaryFolder.newFile();
+    @BeforeAll
+    static void setUpClass(@TempDir Path tempDir) throws Exception {
+        File file = tempDir.resolve("Cert.keystore").toFile();
         TestResources.copyResourceIntoFile(file, "/Cert.keystore");
         String absolutePath = file.getAbsolutePath();
 
+        component = new PluginMockComponent(tempDir);
         system = component.getPlanSystem();
 
         PlanConfig config = system.getConfigSystem().getConfig();
@@ -83,8 +80,8 @@ public class HTTPSWebServerAuthTest {
         system.getDatabaseSystem().getDatabase().executeTransaction(new RegisterWebUserTransaction(webUser));
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         if (system != null) {
             system.disable();
         }
@@ -93,9 +90,8 @@ public class HTTPSWebServerAuthTest {
     /**
      * Test case against "Perm level 0 required, got 0".
      */
-    @Test(timeout = 5000)
-//    @Ignore("HTTPS Start fails due to paths being bad for some reason")
-    public void testHTTPSAuthForPages() throws IOException, WebException, KeyManagementException, NoSuchAlgorithmException {
+    @Test
+    void testHTTPSAuthForPages() throws IOException, WebException, KeyManagementException, NoSuchAlgorithmException {
         assertTrue("WebServer is not using https", system.getWebServerSystem().getWebServer().isUsingHTTPS());
 
         String address = "https://localhost:" + TEST_PORT_NUMBER;

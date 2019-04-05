@@ -21,6 +21,7 @@ import com.djrapitops.plan.utilities.html.graphs.line.Point;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 public class MutatorFunctions {
@@ -28,6 +29,12 @@ public class MutatorFunctions {
     public static List<Point> toPoints(NavigableMap<Long, Integer> map) {
         return map.entrySet().stream()
                 .map(entry -> new Point(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+    }
+
+    public static List<Point> toPointsWithRemovedOffset(NavigableMap<Long, Integer> map, TimeZone timeZone) {
+        return map.entrySet().stream()
+                .map(entry -> new Point(entry.getKey() - timeZone.getOffset(entry.getKey()), entry.getValue()))
                 .collect(Collectors.toList());
     }
 

@@ -76,7 +76,7 @@ public class BukkitConfigSystem extends ConfigSystem {
     @Override
     protected void copyDefaults() throws IOException {
         configUpdater.applyConfigUpdate(config);
-        try (ConfigReader reader = new ConfigReader(files.readStreamFromResource("config.yml"))) {
+        try (ConfigReader reader = new ConfigReader(files.getResourceFromJar("config.yml").asInputStream())) {
             config.copyMissing(reader.read());
         }
     }

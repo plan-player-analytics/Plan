@@ -21,7 +21,9 @@ import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.google.common.collect.ImmutableMap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import utilities.RandomData;
 import utilities.TestConstants;
 
@@ -30,22 +32,21 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
 
-import static junit.framework.TestCase.assertNull;
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for various {@link com.djrapitops.plan.system.importing.importers.Importer}s.
  *
  * @author Fuzzlemann
  */
-public class ImportBuilderTest {
+@RunWith(JUnitPlatform.class)
+class ImportBuilderTest {
 
     private int randomInt = RandomData.randomInt(0, 10);
     private String randomString = RandomData.randomString(randomInt);
 
     @Test
-    public void emptyServerBuilderInitializesCollections() {
+    void emptyServerBuilderInitializesCollections() {
         ServerImportData data = ServerImportData.builder().build();
 
         assertNotNull(data.getCommandUsages());
@@ -53,7 +54,7 @@ public class ImportBuilderTest {
     }
 
     @Test
-    public void emptyUserBuilderInitializesSomeVariables() {
+    void emptyUserBuilderInitializesSomeVariables() {
         UserImportData data = UserImportData.builder(TestConstants.SERVER_UUID).build();
 
         assertEquals(0, data.getRegistered());
@@ -79,7 +80,7 @@ public class ImportBuilderTest {
     }
 
     @Test
-    public void serverDataBuilderConstructsCorrectItem() {
+    void serverDataBuilderConstructsCorrectItem() {
         ServerImportData.ServerImportDataBuilder builder = ServerImportData.builder();
 
         TPS tps = new TPS(randomInt, randomInt, randomInt, randomInt, randomInt, randomInt, randomInt, randomInt);
@@ -107,7 +108,7 @@ public class ImportBuilderTest {
     }
 
     @Test
-    public void userDataBuilderConstructsCorrectItem() {
+    void userDataBuilderConstructsCorrectItem() {
         UserImportData.UserImportDataBuilder builder = UserImportData.builder(TestConstants.SERVER_UUID);
 
         UUID uuid = UUID.randomUUID();

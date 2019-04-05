@@ -32,7 +32,7 @@ public class FileResponse extends Response {
 
     public FileResponse(String fileName, PlanFiles files) throws IOException {
         super.setHeader("HTTP/1.1 200 OK");
-        super.setContent(files.readCustomizableResourceFlat(fileName));
+        super.setContent(files.getCustomizableResourceOrDefault(fileName).asString());
     }
 
     public static String format(String fileName) {

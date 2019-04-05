@@ -18,8 +18,10 @@ package com.djrapitops.plan.db.access.transactions.events;
 
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.utilities.analysis.Median;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import utilities.RandomData;
 import utilities.TestConstants;
 
@@ -36,12 +38,13 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Rsl1122
  */
-public class PingMedianTest {
+@RunWith(JUnitPlatform.class)
+class PingMedianTest {
 
-    private List<DateObj<Integer>> testPing;
+    private static List<DateObj<Integer>> testPing;
 
-    @Before
-    public void setUp() {
+    @BeforeAll
+    static void setUpTestData() {
         testPing = new ArrayList<>();
 
         for (int i = 0; i < TimeUnit.MINUTES.toMillis(1L); i += TimeUnit.SECONDS.toMillis(2L)) {
@@ -50,7 +53,7 @@ public class PingMedianTest {
     }
 
     @Test
-    public void medianCalculation() {
+    void medianCalculationIsCorrect() {
         List<Integer> collect = testPing.stream().map(DateObj::getValue).sorted().collect(Collectors.toList());
 
         int expected = (int) Median.forList(collect).calculate();
@@ -61,7 +64,7 @@ public class PingMedianTest {
     }
 
     @Test
-    public void medianCalculationForSingleEntry() {
+    void medianCalculationForSingleEntryIsEntry() {
         int expected = 50;
         int result = new PingStoreTransaction(TestConstants.PLAYER_ONE_UUID, TestConstants.SERVER_UUID,
                 Collections.singletonList(new DateObj<>(0, expected)))
@@ -71,7 +74,7 @@ public class PingMedianTest {
     }
 
     @Test
-    public void medianCalculationForNoEntries() {
+    void medianCalculationForNoEntriesIsMinusOne() {
         int expected = -1;
         int result = new PingStoreTransaction(TestConstants.PLAYER_ONE_UUID, TestConstants.SERVER_UUID, new ArrayList<>())
                 .getMeanValue();

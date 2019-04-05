@@ -5,17 +5,17 @@ plugins {
     id "org.sonarqube" version "2.6.2"
     id "net.ltgt.apt" version "0.19"
     id "net.ltgt.apt-idea" version "0.19"
-    id "com.github.johnrengelman.shadow" version "4.0.2"
+    id "com.github.johnrengelman.shadow" version "5.0.0"
 }
 
 allprojects {
     wrapper.gradleVersion = "5.0"
 
     group "com.djrapitops"
-    version "4.7.2"
+    version "4.8.0"
 
     test {
-//        useJUnitPlatform()
+        useJUnitPlatform()
         testLogging {
             events "passed", "failed"
             exceptionFormat "full"
@@ -57,7 +57,7 @@ subprojects {
     ext.velocityVersion = "1.0-SNAPSHOT"
     ext.redisBungeeVersion = "0.3.8-SNAPSHOT"
 
-    ext.httpClientVersion = "4.5.7"
+    ext.httpClientVersion = "4.5.8"
     ext.commonsTextVersion = "1.6"
     ext.htmlCompressorVersion = "1.5.2"
     ext.caffeineVersion = "2.7.0"
@@ -103,21 +103,20 @@ subprojects {
         testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerCompilerVersion"
 
         // Test Tooling Dependencies
-        testCompile "org.junit.jupiter:junit-jupiter-engine:5.4.0"   // JUnit 5
-        testCompile "org.junit.platform:junit-platform-runner:1.4.0" // JUnit 4 runner for JUnit 5 tests
-        testCompile "org.junit.vintage:junit-vintage-engine:5.4.0"   // JUnit 4 compatibility for JUnit 5
-        testCompile "org.junit.jupiter:junit-jupiter-params:5.4.0"   // JUnit 5, parameterized tests
-        testCompile "org.mockito:mockito-core:2.25.0"                // Mockito Core
-        testCompile "org.mockito:mockito-junit-jupiter:2.25.0"       // Mockito JUnit 5 Extension
+        testCompile "org.junit.jupiter:junit-jupiter-engine:5.4.1"   // JUnit 5
+        testCompile "org.junit.platform:junit-platform-runner:1.4.1" // JUnit 4 runner for JUnit 5 tests
+        testCompile "org.junit.vintage:junit-vintage-engine:5.4.1"   // JUnit 4 compatibility for JUnit 5
+        testCompile "org.junit.jupiter:junit-jupiter-params:5.4.1"   // JUnit 5, parameterized tests
+        testCompile "org.mockito:mockito-core:2.25.1"                // Mockito Core
+        testCompile "org.mockito:mockito-junit-jupiter:2.25.1"       // Mockito JUnit 5 Extension
         testCompile "org.seleniumhq.selenium:selenium-java:3.141.59" // Selenium (Browser tests)
         testCompile "com.jayway.awaitility:awaitility:1.7.0"         // Awaitility (Concurrent wait conditions)
 
         // Testing dependencies required by Plan
-        testCompile "org.xerial:sqlite-jdbc:3.25.2"     // SQLite
+        testCompile "org.xerial:sqlite-jdbc:3.27.2.1"     // SQLite
         testCompile "mysql:mysql-connector-java:8.0.15" // MySQL
     }
-
-
+    
     configurations {
         testArtifacts.extendsFrom testRuntime
     }

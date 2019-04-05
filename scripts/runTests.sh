@@ -1,4 +1,4 @@
 set -e
 cd $TRAVIS_BUILD_DIR/Plan
-gradle test --info
+./gradlew test --info
 cd $HOME

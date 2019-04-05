@@ -40,6 +40,7 @@ public enum PageId {
 
     FAVICON("Favicon"),
 
+    @Deprecated
     PLAYER_PLUGINS_TAB("playerPluginsTab:"),
     NETWORK_CONTENT("networkContent");
 

@@ -18,34 +18,38 @@ package com.djrapitops.plan.utilities.html.graphs.line;
 
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test class for {@link LineGraph}.
  *
  * @author Rsl1122
  */
-public class LineGraphTest {
+@RunWith(JUnitPlatform.class)
+class LineGraphTest {
 
-    private final List<TPS> tpsList = new ArrayList<>();
+    private static List<TPS> DATA;
 
-    @Before
-    public void setUp() {
+    @BeforeAll
+    static void setUp() {
+        DATA = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            tpsList.add(new TPS(i, i, i, i, i, i, i, i));
+            DATA.add(new TPS(i, i, i, i, i, i, i, i));
         }
     }
 
     @Test
-    public void testLineGraphsForBracketErrors() {
-        TPSMutator mutator = new TPSMutator(tpsList);
+    void testLineGraphsForBracketErrors() {
+        TPSMutator mutator = new TPSMutator(DATA);
         LineGraph[] graphs = new LineGraph[]{
                 new CPUGraph(mutator, true),
                 new PlayersOnlineGraph(mutator, false),
@@ -79,15 +83,15 @@ public class LineGraphTest {
                     break;
                 case ')':
                     Character pop = bracketStack.pop();
-                    assertEquals("Bracket mismatch at char: " + i + " Expected (, got " + pop, '(', (char) pop);
+                    assertEquals('(', (char) pop, "Bracket mismatch at char: " + i + " Expected (, got " + pop);
                     break;
                 case ']':
                     Character pop1 = bracketStack.pop();
-                    assertEquals("Bracket mismatch at char: " + i + " Expected [, got " + pop1, '[', (char) pop1);
+                    assertEquals('[', (char) pop1, "Bracket mismatch at char: " + i + " Expected [, got " + pop1);
                     break;
                 case '}':
                     Character pop2 = bracketStack.pop();
-                    assertEquals("Bracket mismatch at char: " + i + " Expected {, got " + pop2, '{', (char) pop2);
+                    assertEquals('{', (char) pop2, "Bracket mismatch at char: " + i + " Expected {, got " + pop2);
                     break;
                 default:
                     break;

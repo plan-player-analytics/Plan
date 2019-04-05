@@ -4,13 +4,13 @@ dependencies {
     compile "com.djrapitops:AbstractPluginFramework-bukkit:$abstractPluginFrameworkVersion"
     compile "org.bstats:bstats-bukkit:$bstatsVersion"
 
-	compileOnly "com.destroystokyo.paper:paper-api:$paperVersion"
-	compileOnly "org.spigotmc:spigot-api:$spigotVersion"
-    compileOnly "org.bukkit:bukkit:$bukkitVersion"
+//    compileOnly "org.spigotmc:spigot-api:$spigotVersion"
+//    compileOnly "org.bukkit:bukkit:$bukkitVersion"
+    compileOnly "com.destroystokyo.paper:paper-api:$paperVersion"
 
-	testCompile "com.destroystokyo.paper:paper-api:$paperVersion"
-    testCompile "org.spigotmc:spigot-api:$spigotVersion"
-    testCompile "org.bukkit:bukkit:$bukkitVersion"
+//    testCompile "org.spigotmc:spigot-api:$spigotVersion"
+//    testCompile "org.bukkit:bukkit:$bukkitVersion"
+    testCompile "com.destroystokyo.paper:paper-api:$paperVersion"
 
     testCompile project(path: ":common", configuration: 'testArtifacts')
 }

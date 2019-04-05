@@ -32,7 +32,6 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.ExportSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.html.pages.InspectPage;
 import com.djrapitops.plan.utilities.html.pages.PageFactory;
 import com.djrapitops.plugin.api.Check;
@@ -217,12 +216,13 @@ public class HtmlExport extends SpecificExport {
         copyFromJar(resources);
 
         try {
-            String demo = files.readFromResourceFlat("web/js/demo.js")
+            String demo = files.getCustomizableResourceOrDefault("web/js/demo.js")
+                    .asString()
                     .replace("${defaultTheme}", theme.getValue(ThemeVal.THEME_DEFAULT));
             List<String> lines = Arrays.asList(demo.split("\n"));
             File outputFolder = new File(getFolder(), "js");
             Verify.isTrue(outputFolder.exists() && outputFolder.isDirectory() || outputFolder.mkdirs(),
-                    () -> new FileNotFoundException("Output folder could not be created at" + outputFolder.getAbsolutePath()));
+                    () -> new FileNotFoundException("Output folder could not be created at " + outputFolder.getAbsolutePath()));
             export(new File(outputFolder, "demo.js"), lines);
         } catch (IOException e) {
             errorHandler.log(L.WARN, this.getClass(), e);
@@ -258,19 +258,21 @@ public class HtmlExport extends SpecificExport {
     }
 
     private void copyFromJar(String resource) throws IOException {
-        String possibleFile = resource.replace("web/", "").replace("/", File.separator);
-        List<String> lines = FileUtil.lines(plugin, new File(plugin.getDataFolder(), possibleFile), resource);
-        String outputFile = possibleFile.replace("web/", "");
-        File to = new File(getFolder(), outputFile);
+        List<String> lines = files.getCustomizableResourceOrDefault(resource).asLines();
+
+        File to = new File(getFolder(), resource.replace("web/", "").replace("/", File.separator));
         File locationFolder = to.getParentFile();
+
         Verify.isTrue(locationFolder.exists() && locationFolder.isDirectory() || locationFolder.mkdirs(),
                 () -> new FileNotFoundException("Output folder could not be created at" + locationFolder.getAbsolutePath()));
+
         if (to.exists()) {
             Files.delete(to.toPath());
             if (!to.createNewFile()) {
                 return;
             }
         }
+
         export(to, lines);
     }
 }

@@ -46,6 +46,7 @@ public class PaperTPSCountTimer extends BukkitTPSCountTimer {
         try {
             tps = plugin.getServer().getTPS()[0];
         } catch (NoSuchMethodError e) {
+            // This method is from Paper
             return super.getTPS(diff, now, cpuUsage, usedMemory, entityCount, chunksLoaded, playersOnline, freeDiskSpace);
         }
 

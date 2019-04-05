@@ -49,7 +49,7 @@ public class ByteResponse extends Response {
         exchange.sendResponseHeaders(getCode(), 0);
 
         try (OutputStream out = exchange.getResponseBody();
-             InputStream bis = files.readCustomizableResource(fileName)) {
+             InputStream bis = files.getCustomizableResourceOrDefault(fileName).asInputStream()) {
             byte[] buffer = new byte[2048];
             int count;
             while ((count = bis.read(buffer)) != -1) {

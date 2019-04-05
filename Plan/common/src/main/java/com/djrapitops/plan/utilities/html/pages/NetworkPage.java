@@ -19,11 +19,15 @@ package com.djrapitops.plan.utilities.html.pages;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.keys.NetworkKeys;
+import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
+
+import java.util.ArrayList;
 
 import static com.djrapitops.plan.data.store.keys.NetworkKeys.*;
 
@@ -40,19 +44,22 @@ public class NetworkPage implements Page {
     private final VersionCheckSystem versionCheckSystem;
     private final PlanFiles files;
     private final ServerProperties serverProperties;
+    private final Formatters formatters;
 
     NetworkPage(
             NetworkContainer networkContainer,
             AnalysisPluginsTabContentCreator analysisPluginsTabContentCreator,
             VersionCheckSystem versionCheckSystem,
             PlanFiles files,
-            ServerProperties serverProperties
+            ServerProperties serverProperties,
+            Formatters formatters
     ) {
         this.networkContainer = networkContainer;
         this.analysisPluginsTabContentCreator = analysisPluginsTabContentCreator;
         this.versionCheckSystem = versionCheckSystem;
         this.files = files;
         this.serverProperties = serverProperties;
+        this.formatters = formatters;
     }
 
     @Override
@@ -76,14 +83,16 @@ public class NetworkPage implements Page {
             );
             placeholderReplacer.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
 
+            AnalysisPluginTabs analysisPluginTabs = new AnalysisPluginTabs(networkContainer.getBungeeContainer().getValue(ServerKeys.EXTENSION_DATA).orElse(new ArrayList<>()), formatters);
+
             String[] content = analysisPluginsTabContentCreator.createContent(null, networkContainer.getUnsafe(NetworkKeys.PLAYERS_MUTATOR));
-            String nav = content[0];
-            String tabs = content[1];
+            String nav = analysisPluginTabs.getNav() + content[0];
+            String tabs = analysisPluginTabs.getTabs() + content[1];
 
             placeholderReplacer.put("navPluginsTabs", nav);
             placeholderReplacer.put("tabsPlugins", tabs);
 
-            return placeholderReplacer.apply(files.readCustomizableResourceFlat("web/network.html"));
+            return placeholderReplacer.apply(files.getCustomizableResourceOrDefault("web/network.html").asString());
         } catch (Exception e) {
             throw new ParseException(e);
         }

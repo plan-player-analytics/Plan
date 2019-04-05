@@ -26,6 +26,7 @@ import com.djrapitops.plan.db.access.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.db.access.transactions.init.OperationCriticalTransaction;
 import com.djrapitops.plan.db.patches.*;
+import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
@@ -219,6 +220,7 @@ public abstract class SQLDB extends AbstractDatabase {
 
         return CompletableFuture.supplyAsync(() -> {
             accessLock.checkAccess(transaction);
+            logger.getDebugLogger().logOn(DebugChannels.SQL, "Executing: " + transaction.getClass().getSimpleName());
             transaction.executeTransaction(this);
             return CompletableFuture.completedFuture(null);
         }, getTransactionExecutor()).handle(errorHandler(origin));

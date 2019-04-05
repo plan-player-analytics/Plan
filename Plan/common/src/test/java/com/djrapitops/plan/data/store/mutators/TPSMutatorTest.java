@@ -19,8 +19,10 @@ package com.djrapitops.plan.data.store.mutators;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
 import com.djrapitops.plugin.api.TimeAmount;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,20 +30,21 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for {@link TPSMutator}
  *
  * @author Rsl1122
  */
-public class TPSMutatorTest {
+@RunWith(JUnitPlatform.class)
+class TPSMutatorTest {
 
-    private List<TPS> testData;
-    private long time;
+    private static List<TPS> testData;
+    private static long time;
 
-    @Before
-    public void setUp() {
+    @BeforeAll
+    static void setUpTestData() {
         testData = new ArrayList<>();
 
         time = System.currentTimeMillis();
@@ -63,14 +66,14 @@ public class TPSMutatorTest {
     }
 
     @Test
-    public void noDownTimeIsCorrect() {
+    void noDowntimeIsCorrect() {
         long expected = 0;
         long result = new TPSMutator(testData).serverDownTime();
         assertEquals(expected, result);
     }
 
     @Test
-    public void noDownTimeOnSingleEntry() {
+    void noDowntimeOnSingleEntry() {
         long expected = 0;
         long result = new TPSMutator(Collections.singletonList(
                 TPSBuilder.get().date(time - TimeUnit.DAYS.toMillis(1L))
@@ -87,7 +90,7 @@ public class TPSMutatorTest {
     }
 
     @Test
-    public void fullDownTime() {
+    void fullDowntime() {
         long periodLength = TimeUnit.MINUTES.toMillis(5L);
         long expected = TimeAmount.MONTH.toMillis(2L) - periodLength;
 
@@ -102,7 +105,7 @@ public class TPSMutatorTest {
     }
 
     @Test
-    public void filteredFullMonthDownTime() {
+    void filteredFullMonthDowntime() {
         long periodLength = TimeUnit.MINUTES.toMillis(5L);
         long expected = TimeAmount.MONTH.toMillis(1L) - periodLength;
 
@@ -120,7 +123,7 @@ public class TPSMutatorTest {
     }
 
     @Test
-    public void filteredFullMonthDownTimeWhenRandomOrder() {
+    void filteredFullMonthDowntimeWhenRandomOrder() {
         long periodLength = TimeUnit.MINUTES.toMillis(5L);
         long expected = TimeAmount.MONTH.toMillis(1L) - periodLength;
 
@@ -140,7 +143,7 @@ public class TPSMutatorTest {
     }
 
     @Test
-    public void filterWorksCorrectly() {
+    void filterWorksCorrectly() {
         long monthAgo = time - TimeAmount.MONTH.toMillis(1L);
         List<TPS> filtered = new TPSMutator(testData).filterDataBetween(monthAgo, time).all();
 

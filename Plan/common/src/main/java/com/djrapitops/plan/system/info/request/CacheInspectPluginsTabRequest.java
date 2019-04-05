@@ -18,7 +18,6 @@ package com.djrapitops.plan.system.info.request;
 
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
@@ -33,22 +32,19 @@ import java.util.UUID;
 /**
  * InfoRequest used to place HTML of player's Plugins Tab to ResponseCache.
  *
+ * @deprecated Marked for removal when the connection system will be removed.
  * @author Rsl1122
  */
+@Deprecated
 public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables implements CacheRequest {
-
-    private final ServerInfo serverInfo;
 
     private UUID player;
     private String html;
 
-    CacheInspectPluginsTabRequest(ServerInfo serverInfo) {
-        this.serverInfo = serverInfo;
+    CacheInspectPluginsTabRequest() {
     }
 
-    CacheInspectPluginsTabRequest(UUID player, String nav, String html, ServerInfo serverInfo) {
-        this.serverInfo = serverInfo;
-
+    CacheInspectPluginsTabRequest(UUID player, String nav, String html) {
         Verify.nullCheck(player, nav);
         variables.put("player", player.toString());
         variables.put("nav", nav);
@@ -64,7 +60,6 @@ public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables impl
         String player = variables.get("player");
         Verify.nullCheck(player, () -> new BadRequestException("Player UUID 'player' variable not supplied in the request."));
         UUID uuid = UUID.fromString(player);
-        UUID serverUUID = UUID.fromString(variables.get("sender"));
 
         String nav = variables.get("nav");
         String html = variables.get("html");
@@ -73,7 +68,7 @@ public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables impl
 
         InspectPagePluginsContent pluginsTab = getPluginsTab(uuid);
 
-        pluginsTab.addTab(serverUUID, nav, Base64Util.decode(html));
+        pluginsTab.addTab(nav, Base64Util.decode(html));
         return DefaultResponses.SUCCESS.get();
     }
 
@@ -83,6 +78,6 @@ public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables impl
 
     @Override
     public void runLocally() {
-        getPluginsTab(player).addTab(serverInfo.getServerUUID(), variables.get("nav"), html);
+        getPluginsTab(player).addTab(variables.get("nav"), html);
     }
 }

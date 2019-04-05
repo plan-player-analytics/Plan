@@ -95,7 +95,7 @@ public class TableContainer {
                     Serializable value = row[i];
                     Formatter formatter = formatters[i];
                     body.append("<td").append(formatter != null ? " data-order=\"" + value + "\">" : ">");
-                    body.append(formatter != null ? formatter.apply(value) : value);
+                    body.append(formatter != null ? formatter.apply(value) : (value != null ? value : '-'));
                 }
                 body.append("</td>");
             } catch (ClassCastException | ArrayIndexOutOfBoundsException e) {

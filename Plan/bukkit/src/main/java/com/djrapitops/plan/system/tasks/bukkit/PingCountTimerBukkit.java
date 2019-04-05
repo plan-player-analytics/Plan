@@ -175,6 +175,7 @@ public class PingCountTimerBukkit extends AbsRunnable implements Listener {
 
     private int getPing(Player player) {
         if (PING_METHOD_AVAILABLE) {
+            // This method is from Paper
             return player.spigot().getPing();
         }
 

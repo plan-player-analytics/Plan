@@ -19,11 +19,13 @@ package com.djrapitops.plan.data.store.mutators.formatting;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.FormatSettings;
 import com.djrapitops.plan.utilities.formatting.DecimalFormatter;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -31,12 +33,13 @@ import static org.mockito.Mockito.when;
  *
  * @author Rsl1122
  */
-public class DecimalFormatterTest {
+@RunWith(JUnitPlatform.class)
+class DecimalFormatterTest {
 
     private DecimalFormatter underTest;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUpFormatter() {
         PlanConfig config = Mockito.mock(PlanConfig.class);
         when(config.get(FormatSettings.DECIMALS)).thenReturn("#.##");
 
@@ -44,7 +47,7 @@ public class DecimalFormatterTest {
     }
 
     @Test
-    public void testCutDecimalsWhichIsRoundedDown() {
+    void cutDecimalsWhichIsRoundedDown() {
         double d = 0.05234;
 
         String result = underTest.apply(d);
@@ -53,7 +56,7 @@ public class DecimalFormatterTest {
     }
 
     @Test
-    public void testCutDecimalsWhichIsRoundedUp() {
+    void cutDecimalsWhichIsRoundedUp() {
         double d = 0.05634;
 
         String result = underTest.apply(d);

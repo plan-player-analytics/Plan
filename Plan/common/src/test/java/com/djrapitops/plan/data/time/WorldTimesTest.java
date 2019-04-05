@@ -17,19 +17,22 @@
 package com.djrapitops.plan.data.time;
 
 import com.google.common.collect.ImmutableMap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import utilities.RandomData;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Rsl1122
  */
-public class WorldTimesTest {
+@RunWith(JUnitPlatform.class)
+class WorldTimesTest {
 
     private final String worldOne = "ONE";
     private final String worldTwo = "TWO";
@@ -38,7 +41,7 @@ public class WorldTimesTest {
     private WorldTimes worldTimes = new WorldTimes(worldOne, gms[0], time);
 
     @Test
-    public void stateAffectedByWorldChange() {
+    void stateAffectedByWorldChange() {
         long changeTime = time + 1000L;
         worldTimes.updateState(worldTwo, gms[0], changeTime);
 
@@ -47,7 +50,7 @@ public class WorldTimesTest {
     }
 
     @Test
-    public void stateAffectedByGamemodeChange() {
+    void stateAffectedByGamemodeChange() {
         long changeTime = time + 1000L;
         worldTimes.updateState(worldOne, gms[0], changeTime);
 
@@ -56,7 +59,7 @@ public class WorldTimesTest {
     }
 
     @Test
-    public void stateAffectedByTwoChangesAtOnce() {
+    void stateAffectedByTwoChangesAtOnce() {
         long changeTime = time + 1000L;
         long changeTime2 = changeTime + 1000L;
 
@@ -73,7 +76,7 @@ public class WorldTimesTest {
     }
 
     @Test
-    public void stateAffectedByManyWorldChanges() {
+    void stateAffectedByManyWorldChanges() {
         long amount = 1000L;
         String[] worlds = new String[]{worldOne, worldTwo};
 
@@ -111,7 +114,7 @@ public class WorldTimesTest {
     }
 
     @Test
-    public void gamemodeTrackingWorksForASingleWorld() {
+    void gamemodeTrackingWorksForASingleWorld() {
         long changeTime = time + 1000L;
         long changeTime2 = changeTime + 1000L;
 
@@ -130,7 +133,7 @@ public class WorldTimesTest {
     }
 
     @Test
-    public void gamemodeTrackingWorksForTwoWorlds() {
+    void gamemodeTrackingWorksForTwoWorlds() {
         long changeTime = time + 1000L;
         long changeTime2 = time + 2000L;
 

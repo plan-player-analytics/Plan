@@ -45,7 +45,7 @@ public class PromptAuthorizationResponse extends ErrorResponse {
     public static PromptAuthorizationResponse getBasicAuthResponse(VersionCheckSystem versionCheckSystem, PlanFiles files) throws IOException {
         PromptAuthorizationResponse response = new PromptAuthorizationResponse(versionCheckSystem, files);
         response.setHeader("HTTP/1.1 401 Access Denied\r\n"
-                + "WWW-Authenticate: Basic realm=\"Plan WebUser (/plan register)\";");
+                + "WWW-Authenticate: Basic realm=\"Plan WebUser (/plan register)\"");
 
         response.setParagraph("Authentication Failed." + TIPS);
         response.replacePlaceholders();
@@ -69,7 +69,7 @@ public class PromptAuthorizationResponse extends ErrorResponse {
         }
 
         response.setHeader("HTTP/1.1 401 Access Denied\r\n"
-                + "WWW-Authenticate: Basic realm=\"" + failReason.getReason() + "\";");
+                + "WWW-Authenticate: Basic realm=\"" + failReason.getReason() + "\"");
         response.setParagraph("Authentication Failed.</p><p><b>Reason: " + reason + "</b></p><p>" + TIPS);
         response.replacePlaceholders();
         return response;

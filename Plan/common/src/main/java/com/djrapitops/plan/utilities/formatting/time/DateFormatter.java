@@ -65,7 +65,12 @@ public abstract class DateFormatter implements Formatter<Long> {
     protected String replaceRecentDays(long epochMs, String format, String pattern) {
         long now = System.currentTimeMillis();
 
-        long fromStartOfDay = now % TimeUnit.DAYS.toMillis(1L);
+        boolean useServerTime = config.isTrue(TimeSettings.USE_SERVER_TIME);
+        TimeZone timeZone = useServerTime ? TimeZone.getDefault() : TimeZone.getTimeZone("GMT");
+        int offset = timeZone.getOffset(epochMs);
+
+        // Time since Start of day: UTC + Timezone % 24 hours
+        long fromStartOfDay = (now + offset) % TimeUnit.DAYS.toMillis(1L);
         if (epochMs > now - fromStartOfDay) {
             format = format.replace(pattern, locale.getString(GenericLang.TODAY));
         } else if (epochMs > now - TimeUnit.DAYS.toMillis(1L) - fromStartOfDay) {

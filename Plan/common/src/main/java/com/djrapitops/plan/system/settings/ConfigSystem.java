@@ -84,7 +84,7 @@ public abstract class ConfigSystem implements SubSystem {
                 setDebugMode();
             }
         } catch (IOException e) {
-            throw new EnableException("Failed to save default config.", e);
+            throw new EnableException("Failed to save default config: " + e.getMessage(), e);
         }
         theme.enable();
     }

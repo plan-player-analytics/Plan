@@ -18,11 +18,14 @@ package com.djrapitops.plan.utilities.html.graphs.calendar;
 
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.TimeZone;
 import java.util.TreeMap;
 
 /**
@@ -33,13 +36,16 @@ import java.util.TreeMap;
 @Singleton
 public class CalendarFactory {
     private final Theme theme;
+    private final PlanConfig config;
     private final Formatters formatters;
 
     @Inject
     public CalendarFactory(
+            PlanConfig config,
             Formatters formatters,
             Theme theme
     ) {
+        this.config = config;
         this.formatters = formatters;
         this.theme = theme;
     }
@@ -47,7 +53,8 @@ public class CalendarFactory {
     public PlayerCalendar playerCalendar(PlayerContainer player) {
         return new PlayerCalendar(
                 player,
-                formatters.timeAmount(), formatters.yearLong(), formatters.iso8601NoClock(), theme
+                formatters.timeAmount(), formatters.yearLong(), formatters.iso8601NoClockLong(), theme,
+                config.get(TimeSettings.USE_SERVER_TIME) ? TimeZone.getDefault() : TimeZone.getTimeZone("GMT")
         );
     }
 
@@ -58,7 +65,8 @@ public class CalendarFactory {
     ) {
         return new ServerCalendar(
                 mutator, uniquePerDay, newPerDay,
-                formatters.iso8601NoClockLong(), formatters.timeAmount(), theme
+                formatters.iso8601NoClockLong(), formatters.timeAmount(), theme,
+                config.get(TimeSettings.USE_SERVER_TIME) ? TimeZone.getDefault() : TimeZone.getTimeZone("GMT")
         );
     }
 }

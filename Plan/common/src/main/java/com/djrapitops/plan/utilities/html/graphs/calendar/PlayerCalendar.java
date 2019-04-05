@@ -21,15 +21,11 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -41,8 +37,9 @@ public class PlayerCalendar {
 
     private final Formatter<Long> timeAmountFormatter;
     private final Formatter<Long> yearLongFormatter;
-    private final Formatter<DateHolder> iso8601Formatter;
+    private final Formatter<Long> iso8601Formatter;
     private final Theme theme;
+    private final TimeZone timeZone;
 
     private final List<Session> allSessions;
     private final long registered;
@@ -51,8 +48,9 @@ public class PlayerCalendar {
             PlayerContainer container,
             Formatter<Long> timeAmountFormatter,
             Formatter<Long> yearLongFormatter,
-            Formatter<DateHolder> iso8601Formatter,
-            Theme theme
+            Formatter<Long> iso8601Formatter,
+            Theme theme,
+            TimeZone timeZone
     ) {
         this.allSessions = container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>());
         this.registered = container.getValue(PlayerKeys.REGISTERED).orElse(0L);
@@ -61,6 +59,7 @@ public class PlayerCalendar {
         this.yearLongFormatter = yearLongFormatter;
         this.iso8601Formatter = iso8601Formatter;
         this.theme = theme;
+        this.timeZone = timeZone;
     }
 
     public String toCalendarSeries() {
@@ -97,7 +96,7 @@ public class PlayerCalendar {
     private Map<String, List<Session>> getSessionsByDay() {
         Map<String, List<Session>> sessionsByDay = new HashMap<>();
         for (Session session : allSessions) {
-            String day = iso8601Formatter.apply(session);
+            String day = iso8601Formatter.apply(session.getDate());
 
             List<Session> sessionsOfDay = sessionsByDay.getOrDefault(day, new ArrayList<>());
             sessionsOfDay.add(session);
@@ -111,11 +110,12 @@ public class PlayerCalendar {
 
         for (Session session : allSessions) {
             String length = timeAmountFormatter.apply(session.getLength());
+            Long start = session.getUnsafe(SessionKeys.START);
+            Long end = session.getValue(SessionKeys.END).orElse(System.currentTimeMillis());
 
             series.append(",{title: 'Session: ").append(length)
-                    .append("',start:").append(session.getUnsafe(SessionKeys.START))
-                    .append(",end:").append(session.getValue(SessionKeys.END)
-                    .orElse(System.currentTimeMillis()))
+                    .append("',start:").append(start + timeZone.getOffset(start))
+                    .append(",end:").append(end + timeZone.getOffset(end))
                     .append("}");
 
             for (PlayerKill kill : session.getPlayerKills()) {

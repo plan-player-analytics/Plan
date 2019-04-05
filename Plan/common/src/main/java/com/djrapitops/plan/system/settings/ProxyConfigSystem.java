@@ -73,7 +73,7 @@ public class ProxyConfigSystem extends ConfigSystem {
     @Override
     protected void copyDefaults() throws IOException {
         configUpdater.applyConfigUpdate(config);
-        try (ConfigReader reader = new ConfigReader(files.readStreamFromResource("bungeeconfig.yml"))) {
+        try (ConfigReader reader = new ConfigReader(files.getResourceFromJar("bungeeconfig.yml").asInputStream())) {
             config.copyMissing(reader.read());
         }
     }

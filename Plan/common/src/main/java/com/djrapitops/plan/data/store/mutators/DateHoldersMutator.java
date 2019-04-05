@@ -18,10 +18,7 @@ package com.djrapitops.plan.data.store.mutators;
 
 import com.djrapitops.plan.data.store.objects.DateHolder;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class DateHoldersMutator<T extends DateHolder> {
@@ -33,10 +30,26 @@ public class DateHoldersMutator<T extends DateHolder> {
     }
 
     public SortedMap<Long, List<T>> groupByStartOfMinute() {
-        return groupByStartOfSections(TimeUnit.MINUTES.toMillis(1L));
+        TreeMap<Long, List<T>> map = new TreeMap<>();
+
+        if (dateHolders.isEmpty()) {
+            return map;
+        }
+
+        long sectionLenght = TimeUnit.MINUTES.toMillis(1L);
+        for (T holder : dateHolders) {
+            long date = holder.getDate();
+            long startOfSection = date - (date % sectionLenght);
+
+            List<T> list = map.getOrDefault(startOfSection, new ArrayList<>());
+            list.add(holder);
+            map.put(startOfSection, list);
+        }
+        return map;
     }
 
-    private SortedMap<Long, List<T>> groupByStartOfSections(long sectionLength) {
+    public SortedMap<Long, List<T>> groupByStartOfDay(TimeZone timeZone) {
+        long twentyFourHours = TimeUnit.DAYS.toMillis(1L);
         TreeMap<Long, List<T>> map = new TreeMap<>();
 
         if (dateHolders.isEmpty()) {
@@ -45,18 +58,13 @@ public class DateHoldersMutator<T extends DateHolder> {
 
         for (T holder : dateHolders) {
             long date = holder.getDate();
-            long startOfMinute = date - (date % sectionLength);
+            long dateWithOffset = date + timeZone.getOffset(date);
+            long startOfSection = dateWithOffset - (dateWithOffset % twentyFourHours);
 
-            List<T> list = map.getOrDefault(startOfMinute, new ArrayList<>());
+            List<T> list = map.getOrDefault(startOfSection, new ArrayList<>());
             list.add(holder);
-            map.put(startOfMinute, list);
+            map.put(startOfSection, list);
         }
-        return map;
-    }
-
-    public SortedMap<Long, List<T>> groupByStartOfDay() {
-        long twentyFourHours = TimeUnit.DAYS.toMillis(1L);
-        SortedMap<Long, List<T>> map = groupByStartOfSections(twentyFourHours);
 
         // Empty map firstKey attempt causes NPE if not checked.
         if (!map.isEmpty()) {

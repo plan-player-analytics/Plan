@@ -54,7 +54,7 @@ public class ThemeConfig extends Config {
         String fileName = config.get(DisplaySettings.THEME);
         String fileLocation = getFileLocation(fileName);
 
-        try (ConfigReader reader = new ConfigReader(files.readStreamFromResource(fileLocation))) {
+        try (ConfigReader reader = new ConfigReader(files.getResourceFromJar(fileLocation).asInputStream())) {
             return reader.read();
         } catch (IOException e) {
             logger.error("Could not find theme " + fileLocation + ". Attempting to use default.");

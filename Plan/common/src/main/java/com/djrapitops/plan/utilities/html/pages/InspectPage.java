@@ -33,6 +33,9 @@ import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
+import com.djrapitops.plan.system.webserver.cache.PageId;
+import com.djrapitops.plan.system.webserver.cache.ResponseCache;
+import com.djrapitops.plan.system.webserver.response.pages.parts.InspectPagePluginsContent;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
@@ -67,6 +70,7 @@ public class InspectPage implements Page {
 
     private final PlanFiles files;
     private final PlanConfig config;
+    private final PageFactory pageFactory;
     private final Theme theme;
     private final Graphs graphs;
     private final HtmlTables tables;
@@ -85,6 +89,7 @@ public class InspectPage implements Page {
             VersionCheckSystem versionCheckSystem,
             PlanFiles files,
             PlanConfig config,
+            PageFactory pageFactory,
             Theme theme,
             Graphs graphs,
             HtmlTables tables,
@@ -98,6 +103,7 @@ public class InspectPage implements Page {
         this.versionCheckSystem = versionCheckSystem;
         this.files = files;
         this.config = config;
+        this.pageFactory = pageFactory;
         this.theme = theme;
         this.graphs = graphs;
         this.tables = tables;
@@ -131,7 +137,7 @@ public class InspectPage implements Page {
 
     public String parse(PlayerContainer player, UUID serverUUID, Map<UUID, String> serverNames) throws IOException {
         long now = System.currentTimeMillis();
-        UUID uuid = player.getUnsafe(PlayerKeys.UUID);
+        UUID playerUUID = player.getUnsafe(PlayerKeys.UUID);
 
         PlaceholderReplacer replacer = new PlaceholderReplacer();
 
@@ -142,7 +148,7 @@ public class InspectPage implements Page {
         replacer.put("timeZone", config.getTimeZoneOffsetHours());
 
         boolean online = false;
-        Optional<Session> activeSession = SessionCache.getCachedSession(uuid);
+        Optional<Session> activeSession = SessionCache.getCachedSession(playerUUID);
         if (activeSession.isPresent()) {
             Session session = activeSession.get();
             session.setSessionID(Integer.MAX_VALUE);
@@ -259,7 +265,13 @@ public class InspectPage implements Page {
             replacer.put("backButton", "<li><a title=\"to Server page\" href=\"/server\"><i class=\"material-icons\">arrow_back</i><i class=\"material-icons\">storage</i></a></li>");
         }
 
-        return replacer.apply(files.readCustomizableResourceFlat("web/player.html"));
+        InspectPluginTab pluginTabs = pageFactory.inspectPluginTabs(playerUUID);
+
+        // Legacy PluginData support until moved to database.
+        InspectPagePluginsContent pluginsTab = (InspectPagePluginsContent) ResponseCache.loadResponse(PageId.PLAYER_PLUGINS_TAB.of(playerUUID), InspectPagePluginsContent::new);
+        pluginsTab.addTab(new InspectPagePluginsContent(pluginTabs.getNav(), pluginTabs.getTab()));
+
+        return replacer.apply(files.getCustomizableResourceOrDefault("web/player.html").asString());
     }
 
     private void sessionsAndPlaytime(PlaceholderReplacer replacer, SessionsMutator sessionsMutator, SessionsMutator daySessionsMutator, SessionsMutator weekSessionsMutator, SessionsMutator monthSessionsMutator) {

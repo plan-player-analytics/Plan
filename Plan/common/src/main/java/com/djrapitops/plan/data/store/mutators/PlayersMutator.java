@@ -165,19 +165,23 @@ public class PlayersMutator {
         return players.size();
     }
 
-    public int averageNewPerDay() {
-        return MutatorFunctions.average(newPerDay());
+    public int averageNewPerDay(TimeZone timeZone) {
+        return MutatorFunctions.average(newPerDay(timeZone));
     }
 
-    public TreeMap<Long, Integer> newPerDay() {
+    public TreeMap<Long, Integer> newPerDay(TimeZone timeZone) {
         List<DateObj> registerDates = registerDates().stream()
                 .map(value -> new DateObj<>(value, value))
                 .collect(Collectors.toList());
-        SortedMap<Long, List<DateObj>> byDay = new DateHoldersMutator<>(registerDates).groupByStartOfDay();
+        // Adds timezone offset
+        SortedMap<Long, List<DateObj>> byDay = new DateHoldersMutator<>(registerDates).groupByStartOfDay(timeZone);
         TreeMap<Long, Integer> byDayCounts = new TreeMap<>();
 
         for (Map.Entry<Long, List<DateObj>> entry : byDay.entrySet()) {
-            byDayCounts.put(entry.getKey(), entry.getValue().size());
+            byDayCounts.put(
+                    entry.getKey(),
+                    entry.getValue().size()
+            );
         }
 
         return byDayCounts;
