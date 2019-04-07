@@ -20,6 +20,7 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.SpongeServerShutdownSave;
 import com.djrapitops.plan.api.events.PlanSpongeEnableEvent;
+import com.djrapitops.plan.capability.CapabilityServiceImplementation;
 import com.djrapitops.plan.system.listeners.sponge.*;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Event;
@@ -94,5 +95,6 @@ public class SpongeListenerSystem extends ListenerSystem {
         } catch (IllegalStateException ignore) {
             /* Ignore, Sponge is not initialized */
         }
+        CapabilityServiceImplementation.notifyAboutEnable(plugin.isSystemEnabled());
     }
 }
