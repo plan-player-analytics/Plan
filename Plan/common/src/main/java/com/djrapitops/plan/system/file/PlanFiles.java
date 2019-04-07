@@ -25,8 +25,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.Arrays;
+import java.nio.file.Path;
 import java.util.Optional;
 
 /**
@@ -120,20 +119,17 @@ public class PlanFiles implements SubSystem {
 
     private Optional<File> attemptToFind(String resourceName) {
         if (dataFolder.exists() && dataFolder.isDirectory()) {
-            ArrayDeque<File> que = new ArrayDeque<>();
-            que.add(dataFolder);
 
-            while (!que.isEmpty()) {
-                File file = que.pop();
-                if (file.isFile() && resourceName.equals(file.getName())) {
-                    return Optional.of(file);
-                }
-                if (file.isDirectory()) {
-                    File[] files = file.listFiles();
-                    if (files != null) {
-                        que.addAll(Arrays.asList(files));
-                    }
-                }
+            String[] path = resourceName.split("/");
+
+            Path toFile = dataFolder.getAbsoluteFile().toPath().toAbsolutePath();
+            for (String next : path) {
+                toFile = toFile.resolve(next);
+            }
+
+            File found = toFile.toFile();
+            if (found.exists()) {
+                return Optional.of(found);
             }
         }
         return Optional.empty();

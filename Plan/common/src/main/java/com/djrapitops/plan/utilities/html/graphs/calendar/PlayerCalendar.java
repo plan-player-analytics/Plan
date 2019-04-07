@@ -121,7 +121,7 @@ public class PlayerCalendar {
             for (PlayerKill kill : session.getPlayerKills()) {
                 long time = kill.getDate();
 
-                series.append(",{title: 'Killed: ").append(kill.getVictim())
+                series.append(",{title: 'Killed: ").append(kill.getVictimName().orElse(kill.getVictim().toString()))
                         .append("',start:").append(time)
                         .append(",end:").append(time + fiveMinutes)
                         .append(",color: '").append(theme.getValue(ThemeVal.RED)).append("'")
