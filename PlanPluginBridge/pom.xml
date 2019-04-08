@@ -186,7 +186,7 @@
         <dependency> <!-- Maven Central -->
             <groupId>me.lucko.luckperms</groupId>
             <artifactId>luckperms-api</artifactId>
-            <version>4.3</version>
+            <version>4.4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
