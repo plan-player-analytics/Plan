@@ -56,6 +56,13 @@ public class TableDataProvider extends DataProvider<Table> {
         dataProviders.put(new TableDataProvider(providerInformation, methodWrapper, annotation.tableColor()));
     }
 
+    public static Color getTableColor(DataProvider<Table> provider) {
+        if (provider instanceof TableDataProvider) {
+            return ((TableDataProvider) provider).getTableColor();
+        }
+        return Color.NONE;
+    }
+
     public Color getTableColor() {
         return tableColor;
     }
