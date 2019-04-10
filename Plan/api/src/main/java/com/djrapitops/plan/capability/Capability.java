@@ -36,7 +36,11 @@ enum Capability {
     /**
      * ExtensionService, DataExtension API base package, PluginInfo, Conditional, Tab, TabInfo, TabOrder and BooleanProvider, DoubleProvider, PercentageProvider, NumberProvider, StringProvider annotations.
      */
-    DATA_EXTENSION_VALUES;
+    DATA_EXTENSION_VALUES,
+    /**
+     * DataExtension API table package, TableProvider, Table and Table.Factory
+     */
+    DATA_EXTENSION_TABLES;
 
     static Optional<Capability> getByName(String name) {
         try {
