@@ -243,10 +243,7 @@ public final class ExtensionExtractor {
     }
 
     private void validateTableProviderAnnotations() {
-        for (Map.Entry<Method, TableProvider> tableProvider : methodAnnotations.getMethodAnnotations(TableProvider.class).entrySet()) {
-            Method method = tableProvider.getKey();
-            TableProvider annotation = tableProvider.getValue();
-
+        for (Method method : methodAnnotations.getMethodAnnotations(TableProvider.class).keySet()) {
             validateReturnType(method, Table.class);
             validateMethodArguments(method, false, UUID.class, String.class, Group.class);
         }

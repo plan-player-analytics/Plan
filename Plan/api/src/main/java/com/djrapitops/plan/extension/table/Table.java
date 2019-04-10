@@ -64,10 +64,6 @@ public final class Table {
         return new Table.Factory();
     }
 
-    private void addRow(String[] row) {
-        rows.add(row);
-    }
-
     public String[] getColumns() {
         return columns;
     }
@@ -83,7 +79,7 @@ public final class Table {
     /**
      * Factory for creating new {@link Table} objects.
      */
-    public final static class Factory {
+    public static final class Factory {
 
         private final Table building;
 
