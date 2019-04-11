@@ -40,7 +40,6 @@ public class ExtensionPlayerTableValueTable {
     public static final String VALUE_2 = "col_2_value";
     public static final String VALUE_3 = "col_3_value";
     public static final String VALUE_4 = "col_4_value";
-    public static final String VALUE_5 = "col_5_name";
 
     private ExtensionPlayerTableValueTable() {
         /* Static information class */
@@ -54,7 +53,6 @@ public class ExtensionPlayerTableValueTable {
                 .column(VALUE_2, Sql.varchar(50))
                 .column(VALUE_3, Sql.varchar(50))
                 .column(VALUE_4, Sql.varchar(50))
-                .column(VALUE_5, Sql.varchar(50))
                 .column(TABLE_ID, INT).notNull()
                 .foreignKey(TABLE_ID, ExtensionTableProviderTable.TABLE_NAME, ExtensionPluginTable.ID)
                 .build();

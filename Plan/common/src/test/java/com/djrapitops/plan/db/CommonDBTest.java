@@ -1280,7 +1280,7 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void tableProviderIsInserted() {
+    public void playerTableValuesAreInserted() {
         ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
 
         extensionService.register(new ConditionalExtension());
@@ -1381,8 +1381,9 @@ public abstract class CommonDBTest {
             return Table.builder()
                     .columnOne("first", Icon.called("gavel").of(Color.AMBER).build())
                     .columnTwo("second", Icon.called("what").of(Color.BROWN).build()) // Colors are ignored
-                    .columnThree("third", null)    // Can handle improper icons
-                    .addRow("value", 3, 0.5, 400L) // Can handle too many row values
+                    .columnThree("third", null)                  // Can handle improper icons
+                    .columnFive("five", Icon.called("").build()) // Can handle null column in between and ignore the next column
+                    .addRow("value", 3, 0.5, 400L)               // Can handle too many row values
                     .build();
         }
     }

@@ -68,6 +68,17 @@ public final class Table {
         return columns;
     }
 
+    public int getMaxColumnSize() {
+        int columnCount = 0;
+        for (String column : columns) {
+            if (column == null) {
+                break; // Prevent having one null column between two columns
+            }
+            columnCount++;
+        }
+        return columnCount;
+    }
+
     public Icon[] getIcons() {
         return icons;
     }
@@ -153,13 +164,30 @@ public final class Table {
          *
          * @param values One value per column you have defined, {@code Object#toString()} will be called on the objects.
          * @return Factory.
+         * @throws IllegalArgumentException If given varargs for 'values' is null.
          */
         public Factory addRow(Object... values) {
             if (values == null) {
                 throw new IllegalArgumentException("'values' for Table#addRow can not be null!");
             }
+
+            if (areAllValuesNull(values)) {
+                return this; // Ignore row when all values are null.
+            }
+
             building.rows.add(Arrays.copyOf(values, 5));
             return this;
+        }
+
+        private boolean areAllValuesNull(Object[] values) {
+            boolean allNull = true;
+            for (Object value : values) {
+                if (value != null) {
+                    allNull = false;
+                    break;
+                }
+            }
+            return allNull;
         }
 
         /**
