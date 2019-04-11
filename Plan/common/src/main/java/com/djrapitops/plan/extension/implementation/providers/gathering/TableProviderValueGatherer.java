@@ -115,7 +115,7 @@ class TableProviderValueGatherer {
                 database.executeTransaction(new StoreIconTransaction(icon));
             }
         }
-        database.executeTransaction(new StoreTableProviderTransaction(serverUUID, pluginName, method.getMethodName(), TableDataProvider.getTableColor(tableProvider), result));
+        database.executeTransaction(new StoreTableProviderTransaction(serverUUID, providerInformation, TableDataProvider.getTableColor(tableProvider), result));
         database.executeTransaction(storeTransactionCreator.apply(method, result));
     }
 
