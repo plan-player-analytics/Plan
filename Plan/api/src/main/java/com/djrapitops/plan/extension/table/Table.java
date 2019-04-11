@@ -100,7 +100,7 @@ public final class Table {
 
         private Factory column(int indx, String columnName, Icon icon) {
             building.columns[indx] = columnName;
-            building.icons[indx] = icon;
+            building.icons[indx] = icon != null ? Icon.called(icon.getName()).of(icon.getFamily()).build() : Icon.called("question").build();
             return this;
         }
 

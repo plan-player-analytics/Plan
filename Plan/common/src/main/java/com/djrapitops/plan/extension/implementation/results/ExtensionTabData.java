@@ -36,6 +36,8 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
     private final Map<String, ExtensionNumberData> numberData;
     private final Map<String, ExtensionStringData> stringData;
 
+    private final List<ExtensionTableData> tableData;
+
     private List<String> order;
 
     // Table and Graph data will be added later.
@@ -48,6 +50,8 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         percentageData = new HashMap<>();
         numberData = new HashMap<>();
         stringData = new HashMap<>();
+
+        tableData = new ArrayList<>();
     }
 
     public TabInformation getTabInformation() {
@@ -78,6 +82,10 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         return Optional.ofNullable(stringData.get(providerName));
     }
 
+    public List<ExtensionTableData> getTableData() {
+        return tableData;
+    }
+
     @Override
     public int compareTo(ExtensionTabData other) {
         return Integer.compare(this.tabInformation.getTabPriority(), other.tabInformation.getTabPriority()); // Lower is first
@@ -103,6 +111,8 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         this.percentageData.putAll(other.percentageData);
         this.numberData.putAll(other.numberData);
         this.stringData.putAll(other.stringData);
+
+        this.tableData.addAll(other.tableData);
     }
 
     public static class Factory {
@@ -138,6 +148,11 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
             return this;
         }
 
+        public Factory putTableData(ExtensionTableData extensionTableData) {
+            data.tableData.add(extensionTableData);
+            return this;
+        }
+
         private void createOrderingList() {
             List<ExtensionDescriptive> descriptives = new ArrayList<>();
             data.booleanData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
@@ -154,6 +169,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
 
         public ExtensionTabData build() {
             createOrderingList();
+            Collections.sort(data.tableData);
             return data;
         }
     }
