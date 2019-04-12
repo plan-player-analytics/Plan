@@ -21,7 +21,9 @@ import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.table.Table;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -55,7 +57,7 @@ public class ExtensionTableData implements Comparable<ExtensionTableData> {
         }
 
         for (Object[] row : rows) {
-            htmlTable.addRow(row);
+            htmlTable.addRow(Arrays.stream(row).map(value -> value != null ? value.toString() : null).toArray(Serializable[]::new));
         }
 
         return htmlTable;

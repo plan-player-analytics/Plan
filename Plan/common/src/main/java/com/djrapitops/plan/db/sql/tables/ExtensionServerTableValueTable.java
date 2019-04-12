@@ -40,7 +40,7 @@ public class ExtensionServerTableValueTable {
     public static final String VALUE_2 = "col_2_value";
     public static final String VALUE_3 = "col_3_value";
     public static final String VALUE_4 = "col_4_value";
-    public static final String VALUE_5 = "col_5_name";
+    public static final String VALUE_5 = "col_5_value";
 
     private ExtensionServerTableValueTable() {
         /* Static information class */

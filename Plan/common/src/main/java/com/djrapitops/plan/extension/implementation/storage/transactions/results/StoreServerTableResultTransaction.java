@@ -19,6 +19,7 @@ package com.djrapitops.plan.extension.implementation.storage.transactions.result
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.access.*;
 import com.djrapitops.plan.db.access.transactions.Transaction;
+import com.djrapitops.plan.db.sql.tables.ExtensionPluginTable;
 import com.djrapitops.plan.db.sql.tables.ExtensionTableProviderTable;
 import com.djrapitops.plan.extension.table.Table;
 
@@ -28,8 +29,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.UUID;
 
-import static com.djrapitops.plan.db.sql.parsing.Sql.AND;
-import static com.djrapitops.plan.db.sql.parsing.Sql.WHERE;
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
 import static com.djrapitops.plan.db.sql.tables.ExtensionServerTableValueTable.*;
 
 /**
@@ -128,7 +128,12 @@ public class StoreServerTableResultTransaction extends Transaction {
     }
 
     private Query<Integer> tableID() {
-        return new QueryStatement<Integer>(ExtensionTableProviderTable.STATEMENT_SELECT_TABLE_ID) {
+        String sql = SELECT + ExtensionTableProviderTable.ID +
+                FROM + ExtensionTableProviderTable.TABLE_NAME +
+                WHERE + ExtensionTableProviderTable.PROVIDER_NAME + "=?" +
+                AND + ExtensionTableProviderTable.PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID +
+                " LIMIT 1";
+        return new QueryStatement<Integer>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 ExtensionTableProviderTable.set3PluginValuesToStatement(statement, 1, providerName, pluginName, serverUUID);
@@ -136,11 +141,13 @@ public class StoreServerTableResultTransaction extends Transaction {
 
             @Override
             public Integer processResults(ResultSet set) throws SQLException {
-                int id = set.getInt(ExtensionTableProviderTable.ID);
-                if (set.wasNull()) {
-                    throw new DBOpException("Table Provider was not saved before storing results. Please report this issue. Extension method: " + pluginName + "#" + providerName);
+                if (set.next()) {
+                    int id = set.getInt(ExtensionTableProviderTable.ID);
+                    if (!set.wasNull()) {
+                        return id;
+                    }
                 }
-                return id;
+                throw new DBOpException("Table Provider was not saved before storing results. Please report this issue. Extension method: " + pluginName + "#" + providerName);
             }
         };
     }

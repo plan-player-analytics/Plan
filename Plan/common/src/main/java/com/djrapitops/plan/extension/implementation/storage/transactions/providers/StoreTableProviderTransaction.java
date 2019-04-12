@@ -73,7 +73,7 @@ public class StoreTableProviderTransaction extends Transaction {
         String[] columns = table.getColumns();
         Icon[] icons = table.getIcons();
 
-        String sql = "UPDATE " + TABLE_NAME + " SET (" +
+        String sql = "UPDATE " + TABLE_NAME + " SET " +
                 COLOR + "=?," +
                 COL_1 + "=?," +
                 COL_2 + "=?," +
@@ -86,8 +86,7 @@ public class StoreTableProviderTransaction extends Transaction {
                 ICON_2_ID + '=' + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
                 ICON_3_ID + '=' + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
                 ICON_4_ID + '=' + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
-                ICON_5_ID + '=' + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
-                ')' +
+                ICON_5_ID + '=' + ExtensionIconTable.STATEMENT_SELECT_ICON_ID +
                 WHERE + PROVIDER_NAME + "=?" +
                 AND + PLUGIN_ID + '=' + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID;
 
@@ -95,18 +94,18 @@ public class StoreTableProviderTransaction extends Transaction {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tableColor.name());
-                setStringOrNull(statement, 2, columns[1]);
-                setStringOrNull(statement, 3, columns[2]);
-                setStringOrNull(statement, 4, columns[3]);
-                setStringOrNull(statement, 5, columns[4]);
-                setStringOrNull(statement, 6, columns[5]);
+                setStringOrNull(statement, 2, columns[0]);
+                setStringOrNull(statement, 3, columns[1]);
+                setStringOrNull(statement, 4, columns[2]);
+                setStringOrNull(statement, 5, columns[3]);
+                setStringOrNull(statement, 6, columns[4]);
                 setStringOrNull(statement, 7, providerInformation.getCondition().orElse(null));
                 ExtensionTabTable.set3TabValuesToStatement(statement, 8, providerInformation.getTab().orElse("No Tab"), providerInformation.getPluginName(), serverUUID);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 11, icons[0]);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 14, icons[0]);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 17, icons[0]);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 20, icons[0]);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 23, icons[0]);
+                ExtensionIconTable.set3IconValuesToStatement(statement, 14, icons[1]);
+                ExtensionIconTable.set3IconValuesToStatement(statement, 17, icons[2]);
+                ExtensionIconTable.set3IconValuesToStatement(statement, 20, icons[3]);
+                ExtensionIconTable.set3IconValuesToStatement(statement, 23, icons[4]);
                 statement.setString(26, providerInformation.getName());
                 ExtensionPluginTable.set2PluginValuesToStatement(statement, 27, providerInformation.getPluginName(), serverUUID);
             }
@@ -133,7 +132,7 @@ public class StoreTableProviderTransaction extends Transaction {
                 ICON_3_ID + ',' +
                 ICON_4_ID + ',' +
                 ICON_5_ID +
-                ") VALUES (?,?,?,?,?,?,?," +
+                ") VALUES (?,?,?,?,?,?,?,?," +
                 ExtensionTabTable.STATEMENT_SELECT_TAB_ID + ',' +
                 ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ',' +
                 ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
@@ -147,19 +146,19 @@ public class StoreTableProviderTransaction extends Transaction {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, providerInformation.getName());
                 statement.setString(2, tableColor.name());
-                setStringOrNull(statement, 3, columns[1]);
-                setStringOrNull(statement, 4, columns[2]);
-                setStringOrNull(statement, 5, columns[3]);
-                setStringOrNull(statement, 6, columns[4]);
-                setStringOrNull(statement, 7, columns[5]);
+                setStringOrNull(statement, 3, columns[0]);
+                setStringOrNull(statement, 4, columns[1]);
+                setStringOrNull(statement, 5, columns[2]);
+                setStringOrNull(statement, 6, columns[3]);
+                setStringOrNull(statement, 7, columns[4]);
                 setStringOrNull(statement, 8, providerInformation.getCondition().orElse(null));
                 ExtensionTabTable.set3TabValuesToStatement(statement, 9, providerInformation.getTab().orElse("No Tab"), providerInformation.getPluginName(), serverUUID);
                 ExtensionPluginTable.set2PluginValuesToStatement(statement, 12, providerInformation.getPluginName(), serverUUID);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 14, icons[0]);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 17, icons[0]);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 20, icons[0]);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 23, icons[0]);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 26, icons[0]);
+                ExtensionIconTable.set3IconValuesToStatement(statement, 17, icons[1]);
+                ExtensionIconTable.set3IconValuesToStatement(statement, 20, icons[2]);
+                ExtensionIconTable.set3IconValuesToStatement(statement, 23, icons[3]);
+                ExtensionIconTable.set3IconValuesToStatement(statement, 26, icons[4]);
             }
         };
     }

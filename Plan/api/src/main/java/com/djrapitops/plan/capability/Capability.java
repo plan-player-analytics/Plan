@@ -43,6 +43,9 @@ enum Capability {
     DATA_EXTENSION_TABLES;
 
     static Optional<Capability> getByName(String name) {
+        if (name == null) {
+            return Optional.empty();
+        }
         try {
             return Optional.of(valueOf(name));
         } catch (IllegalArgumentException e) {

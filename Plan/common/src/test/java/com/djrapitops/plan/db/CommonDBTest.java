@@ -18,6 +18,7 @@ package com.djrapitops.plan.db;
 
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
+import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.containers.AnalysisContainer;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
@@ -57,6 +58,7 @@ import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.ExtensionBooleanData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionStringData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
+import com.djrapitops.plan.extension.implementation.results.ExtensionTableData;
 import com.djrapitops.plan.extension.implementation.results.player.ExtensionPlayerData;
 import com.djrapitops.plan.extension.implementation.results.server.ExtensionServerData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
@@ -1280,14 +1282,33 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void playerTableValuesAreInserted() {
+    public void extensionServerTableValuesAreInserted() {
         ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
 
-        extensionService.register(new ConditionalExtension());
-        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
-        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
+        extensionService.register(new TableExtension());
+        extensionService.updateServerValues(CallEvents.MANUAL);
+        extensionService.updateServerValues(CallEvents.MANUAL);
 
-        // TODO query
+        List<ExtensionServerData> ofServer = db.query(new ExtensionServerDataQuery(serverUUID));
+        assertFalse(ofServer.isEmpty());
+
+        ExtensionServerData extensionServerData = ofServer.get(0);
+        List<ExtensionTabData> tabs = extensionServerData.getTabs();
+        assertEquals(1, tabs.size()); // No tab defined, should contain 1 tab
+        ExtensionTabData tabData = tabs.get(0);
+
+        List<ExtensionTableData> tableData = tabData.getTableData();
+        assertEquals(1, tableData.size());
+        ExtensionTableData table = tableData.get(0);
+
+        TableContainer expected = new TableContainer(
+                "<i class=\" fa fa-gavel\"></i> first",
+                "<i class=\" fa fa-what\"></i> second",
+                "<i class=\" fa fa-question\"></i> third"
+        );
+        expected.addRow("value", 3, 0.5, 400L);
+
+        assertEquals(expected.parseHtml(), table.getHtmlTable().parseHtml());
     }
 
     @PluginInfo(name = "ConditionalExtension")
@@ -1377,7 +1398,7 @@ public abstract class CommonDBTest {
     @PluginInfo(name = "TableExtension")
     public class TableExtension implements DataExtension {
         @TableProvider(tableColor = Color.AMBER)
-        public Table table(UUID playerUUID) {
+        public Table table() {
             return Table.builder()
                     .columnOne("first", Icon.called("gavel").of(Color.AMBER).build())
                     .columnTwo("second", Icon.called("what").of(Color.BROWN).build()) // Colors are ignored

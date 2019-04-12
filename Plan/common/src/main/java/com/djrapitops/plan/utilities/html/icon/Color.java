@@ -58,6 +58,9 @@ public enum Color {
     }
 
     public static Optional<Color> getByName(String name) {
+        if (name == null) {
+            return Optional.empty();
+        }
         try {
             return Optional.of(valueOf(name));
         } catch (IllegalArgumentException e) {

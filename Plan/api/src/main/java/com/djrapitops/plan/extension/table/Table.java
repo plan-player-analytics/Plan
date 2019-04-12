@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.extension.table;
 
+import com.djrapitops.plan.extension.ElementOrder;
+import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
 
 import java.util.ArrayList;
@@ -94,6 +96,14 @@ public final class Table {
 
         private final Table building;
 
+        // These variable are related to implementation, and is used when the table is being fetched from the database.
+        Color color;              // Table color is defined with TableProvider annotation.
+        String tableName;         // tableName is defined by method name annotated by TableProvider.
+        String tabName;           // Tab name is defined with Tab annotation
+        int tabPriority;          // Tab priority is defined with TabOrder annotation
+        ElementOrder[] tabOrder;  // Tab element order is defined with TabInfo annotation
+        Icon tabIcon;             // Tab icon is defined with TabInfo annotation
+
         private Factory() {
             building = new Table();
         }
@@ -171,11 +181,14 @@ public final class Table {
                 throw new IllegalArgumentException("'values' for Table#addRow can not be null!");
             }
 
-            if (areAllValuesNull(values)) {
-                return this; // Ignore row when all values are null.
+            if (values.length == 0 || areAllValuesNull(values)) {
+                return this; // Ignore row when all values are null or no values are present.
             }
 
-            building.rows.add(Arrays.copyOf(values, 5));
+            System.out.println(Arrays.toString(values));
+            Object[] copy = Arrays.copyOf(values, 5);
+            System.out.println(Arrays.toString(copy));
+            building.rows.add(copy);
             return this;
         }
 
