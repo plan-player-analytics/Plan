@@ -20,7 +20,7 @@ import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.tables.ExtensionIconTable;
-import com.djrapitops.plan.db.sql.tables.ExtensionServerTableValueTable;
+import com.djrapitops.plan.db.sql.tables.ExtensionPlayerTableValueTable;
 import com.djrapitops.plan.db.sql.tables.ExtensionTabTable;
 import com.djrapitops.plan.db.sql.tables.ExtensionTableProviderTable;
 import com.djrapitops.plan.extension.ElementOrder;
@@ -30,7 +30,7 @@ import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTableData;
-import com.djrapitops.plan.extension.implementation.results.server.ExtensionServerData;
+import com.djrapitops.plan.extension.implementation.results.player.ExtensionPlayerData;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.extension.table.TableAccessor;
 
@@ -42,36 +42,49 @@ import java.util.*;
 import static com.djrapitops.plan.db.sql.parsing.Sql.*;
 
 /**
- * Query server tables from tableprovider table.
+ * Query player tables from tableprovider table.
  * <p>
- * Returns Map: PluginID - ExtensionServerData.Factory.
+ * Returns Map: PluginID - ExtensionPlayerData.Factory.
  * <p>
  * How it is done:
  * - TableProviders are queried and formed into Table.Factory objects sorted into a multi-map: PluginID - TableID - Table.Factory
  * - Table values are queried and merged into the above multimap
  * - Data query is sorted into a multi-map: PluginID - Tab Name - Tab Data
  * - (Tab Name can be empty.)
- * - Multi-map is sorted into ExtensionServerData objects by PluginID, one per ID
+ * - Multi-map is sorted into ExtensionPlayerData objects by PluginID, one per ID
  * <p>
  * There are multiple data extraction methods to make extracting the value query easier.
  *
  * @author Rsl1122
  */
-public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionServerData.Factory>> {
+public class ExtensionPlayerTablesQuery implements Query<Map<Integer, ExtensionPlayerData.Factory>> {
 
-    private final UUID serverUUID;
+    private final UUID playerUUID;
 
-    public ExtensionServerTablesQuery(UUID serverUUID) {
-        this.serverUUID = serverUUID;
+    public ExtensionPlayerTablesQuery(UUID playerUUID) {
+        this.playerUUID = playerUUID;
+    }
+
+    private static Map<Integer, ExtensionPlayerData.Factory> flatMapByPluginID(Map<Integer, Map<String, ExtensionTabData.Factory>> tabDataByPluginID) {
+        Map<Integer, ExtensionPlayerData.Factory> dataByPluginID = new HashMap<>();
+        for (Map.Entry<Integer, Map<String, ExtensionTabData.Factory>> entry : tabDataByPluginID.entrySet()) {
+            Integer pluginID = entry.getKey();
+            ExtensionPlayerData.Factory data = dataByPluginID.getOrDefault(pluginID, new ExtensionPlayerData.Factory(pluginID));
+            for (ExtensionTabData.Factory tabData : entry.getValue().values()) {
+                data.addTab(tabData.build());
+            }
+            dataByPluginID.put(pluginID, data);
+        }
+        return dataByPluginID;
     }
 
     @Override
-    public Map<Integer, ExtensionServerData.Factory> executeQuery(SQLDB db) {
+    public Map<Integer, ExtensionPlayerData.Factory> executeQuery(SQLDB db) {
         Map<Integer, Map<Integer, Table.Factory>> tablesByPluginIDAndTableID = db.query(queryTableProviders());
         Map<Integer, Map<Integer, Table.Factory>> tablesWithValues = db.query(queryTableValues(tablesByPluginIDAndTableID));
 
         Map<Integer, Map<String, ExtensionTabData.Factory>> tabDataByPluginID = mapToTabsByPluginID(tablesWithValues);
-        return ExtensionServerDataQuery.flatMapToServerData(tabDataByPluginID);
+        return flatMapByPluginID(tabDataByPluginID);
     }
 
     /**
@@ -111,20 +124,19 @@ public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionS
     private Query<Map<Integer, Map<Integer, Table.Factory>>> queryTableValues(Map<Integer, Map<Integer, Table.Factory>> tables) {
         String selectTableValues = SELECT +
                 ExtensionTableProviderTable.PLUGIN_ID + ',' +
-                ExtensionServerTableValueTable.TABLE_ID + ',' +
-                ExtensionServerTableValueTable.VALUE_1 + ',' +
-                ExtensionServerTableValueTable.VALUE_2 + ',' +
-                ExtensionServerTableValueTable.VALUE_3 + ',' +
-                ExtensionServerTableValueTable.VALUE_4 + ',' +
-                ExtensionServerTableValueTable.VALUE_5 +
-                FROM + ExtensionServerTableValueTable.TABLE_NAME +
-                INNER_JOIN + ExtensionTableProviderTable.TABLE_NAME + " on " + ExtensionTableProviderTable.TABLE_NAME + '.' + ExtensionTableProviderTable.ID + '=' + ExtensionServerTableValueTable.TABLE_NAME + '.' + ExtensionServerTableValueTable.TABLE_ID +
-                WHERE + ExtensionServerTableValueTable.SERVER_UUID + "=?";
+                ExtensionPlayerTableValueTable.TABLE_ID + ',' +
+                ExtensionPlayerTableValueTable.VALUE_1 + ',' +
+                ExtensionPlayerTableValueTable.VALUE_2 + ',' +
+                ExtensionPlayerTableValueTable.VALUE_3 + ',' +
+                ExtensionPlayerTableValueTable.VALUE_4 +
+                FROM + ExtensionPlayerTableValueTable.TABLE_NAME +
+                INNER_JOIN + ExtensionTableProviderTable.TABLE_NAME + " on " + ExtensionTableProviderTable.TABLE_NAME + '.' + ExtensionTableProviderTable.ID + '=' + ExtensionPlayerTableValueTable.TABLE_NAME + '.' + ExtensionPlayerTableValueTable.TABLE_ID +
+                WHERE + ExtensionPlayerTableValueTable.USER_UUID + "=?";
 
         return new QueryStatement<Map<Integer, Map<Integer, Table.Factory>>>(selectTableValues, 10000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
+                statement.setString(1, playerUUID.toString());
             }
 
             @Override
@@ -135,7 +147,7 @@ public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionS
                     if (byTableID == null) {
                         continue;
                     }
-                    int tableID = set.getInt(ExtensionServerTableValueTable.TABLE_ID);
+                    int tableID = set.getInt(ExtensionPlayerTableValueTable.TABLE_ID);
                     Table.Factory table = byTableID.get(tableID);
                     if (table == null) {
                         continue;
@@ -154,7 +166,7 @@ public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionS
     private Object[] extractTableRow(ResultSet set) throws SQLException {
         List<Object> row = new ArrayList<>();
         for (int i = 1; i <= 5; i++) {
-            String columnName = "col_" + i + "_value"; // See ExtensionServerTableValueTable.VALUE_1
+            String columnName = "col_" + i + "_value"; // See ExtensionPlayerTableValueTable.VALUE_1
             String value = set.getString(columnName);
             if (value == null) {
                 return row.toArray(new Object[0]);
@@ -175,7 +187,6 @@ public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionS
                 ExtensionTableProviderTable.COL_2 + ',' +
                 ExtensionTableProviderTable.COL_3 + ',' +
                 ExtensionTableProviderTable.COL_4 + ',' +
-                ExtensionTableProviderTable.COL_5 + ',' +
                 "t1." + ExtensionTabTable.TAB_NAME + " as tab_name," +
                 "t1." + ExtensionTabTable.TAB_PRIORITY + " as tab_priority," +
                 "t1." + ExtensionTabTable.ELEMENT_ORDER + " as element_order," +
@@ -191,27 +202,23 @@ public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionS
                 "i4." + ExtensionIconTable.ICON_NAME + " as i4_name," +
                 "i4." + ExtensionIconTable.FAMILY + " as i4_family," +
                 "i4." + ExtensionIconTable.COLOR + " as i4_color," +
-                "i5." + ExtensionIconTable.ICON_NAME + " as i5_name," +
-                "i5." + ExtensionIconTable.FAMILY + " as i5_family," +
-                "i5." + ExtensionIconTable.COLOR + " as i5_color," +
                 "i6." + ExtensionIconTable.ICON_NAME + " as tab_icon_name," +
                 "i6." + ExtensionIconTable.FAMILY + " as tab_icon_family," +
                 "i6." + ExtensionIconTable.COLOR + " as tab_icon_color" +
                 FROM + ExtensionTableProviderTable.TABLE_NAME + " p1" +
-                INNER_JOIN + ExtensionServerTableValueTable.TABLE_NAME + " v1 on v1." + ExtensionServerTableValueTable.TABLE_ID + "=p1." + ExtensionTableProviderTable.ID +
+                INNER_JOIN + ExtensionPlayerTableValueTable.TABLE_NAME + " v1 on v1." + ExtensionPlayerTableValueTable.TABLE_ID + "=p1." + ExtensionTableProviderTable.ID +
                 LEFT_JOIN + ExtensionTabTable.TABLE_NAME + " t1 on t1." + ExtensionTabTable.ID + "=p1." + ExtensionTableProviderTable.TAB_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i1 on i1." + ExtensionIconTable.ID + "=p1." + ExtensionTableProviderTable.ICON_1_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i2 on i2." + ExtensionIconTable.ID + "=p1." + ExtensionTableProviderTable.ICON_2_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i3 on i3." + ExtensionIconTable.ID + "=p1." + ExtensionTableProviderTable.ICON_3_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i4 on i4." + ExtensionIconTable.ID + "=p1." + ExtensionTableProviderTable.ICON_4_ID +
-                LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i5 on i5." + ExtensionIconTable.ID + "=p1." + ExtensionTableProviderTable.ICON_5_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i6 on i6." + ExtensionIconTable.ID + "=t1." + ExtensionTabTable.ICON_ID +
-                WHERE + "v1." + ExtensionServerTableValueTable.SERVER_UUID + "=?";
+                WHERE + "v1." + ExtensionPlayerTableValueTable.USER_UUID + "=?";
 
         return new QueryStatement<Map<Integer, Map<Integer, Table.Factory>>>(selectTables, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
+                statement.setString(1, playerUUID.toString());
             }
 
             @Override
@@ -259,10 +266,6 @@ public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionS
         String col4 = set.getString(ExtensionTableProviderTable.COL_4);
         if (col4 != null) {
             table.columnFour(col4, extractIcon(set, "i4"));
-        }
-        String col5 = set.getString(ExtensionTableProviderTable.COL_5);
-        if (col5 != null) {
-            table.columnFive(col5, extractIcon(set, "i5"));
         }
     }
 

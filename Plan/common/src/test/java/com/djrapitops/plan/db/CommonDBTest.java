@@ -1311,6 +1311,38 @@ public abstract class CommonDBTest {
         assertEquals(expected.parseHtml(), table.getHtmlTable().parseHtml());
     }
 
+    @Test
+    public void extensionPlayerTableValuesAreInserted() {
+        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
+
+        extensionService.register(new TableExtension());
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
+
+        Map<UUID, List<ExtensionPlayerData>> ofPlayer = db.query(new ExtensionPlayerDataQuery(playerUUID));
+        assertFalse(ofPlayer.isEmpty());
+
+        List<ExtensionPlayerData> ofServer = ofPlayer.get(serverUUID);
+        assertEquals(1, ofServer.size());
+        ExtensionPlayerData extensionServerData = ofServer.get(0);
+        List<ExtensionTabData> tabs = extensionServerData.getTabs();
+        assertEquals(1, tabs.size()); // No tab defined, should contain 1 tab
+        ExtensionTabData tabData = tabs.get(0);
+
+        List<ExtensionTableData> tableData = tabData.getTableData();
+        assertEquals(1, tableData.size());
+        ExtensionTableData table = tableData.get(0);
+
+        TableContainer expected = new TableContainer(
+                "<i class=\" fa fa-gavel\"></i> first",
+                "<i class=\" fa fa-what\"></i> second",
+                "<i class=\" fa fa-question\"></i> third"
+        );
+        expected.addRow("value", 3, 0.5, 400L);
+
+        assertEquals(expected.parseHtml(), table.getHtmlTable().parseHtml());
+    }
+
     @PluginInfo(name = "ConditionalExtension")
     public static class ConditionalExtension implements DataExtension {
 
@@ -1399,6 +1431,15 @@ public abstract class CommonDBTest {
     public class TableExtension implements DataExtension {
         @TableProvider(tableColor = Color.AMBER)
         public Table table() {
+            return createTestTable();
+        }
+
+        @TableProvider(tableColor = Color.AMBER)
+        public Table playerTable(UUID playerUUID) {
+            return createTestTable();
+        }
+
+        private Table createTestTable() {
             return Table.builder()
                     .columnOne("first", Icon.called("gavel").of(Color.AMBER).build())
                     .columnTwo("second", Icon.called("what").of(Color.BROWN).build()) // Colors are ignored
