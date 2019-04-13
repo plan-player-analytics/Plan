@@ -185,10 +185,7 @@ public final class Table {
                 return this; // Ignore row when all values are null or no values are present.
             }
 
-            System.out.println(Arrays.toString(values));
-            Object[] copy = Arrays.copyOf(values, 5);
-            System.out.println(Arrays.toString(copy));
-            building.rows.add(copy);
+            building.rows.add(Arrays.copyOf(values, 5));
             return this;
         }
 
