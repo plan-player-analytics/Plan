@@ -133,7 +133,11 @@ public class InspectPluginTab implements Comparable<InspectPluginTab> {
         TabInformation tabInformation = tabData.getTabInformation();
         String tabContentHtml = parseContentHtml(tabData);
 
-        return new TabsElement.Tab(tabInformation.getTabName(), tabContentHtml);
+        String tabName = tabInformation.getTabName();
+        return new TabsElement.Tab(tabName.isEmpty()
+                ? Icon.called("information-circle").build().toHtml() + " General"
+                : Icon.fromExtensionIcon(tabInformation.getTabIcon()).toHtml() + ' ' + tabName,
+                tabContentHtml);
     }
 
     private String parseContentHtml(ExtensionTabData tabData) {
