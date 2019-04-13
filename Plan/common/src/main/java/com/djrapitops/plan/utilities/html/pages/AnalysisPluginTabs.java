@@ -112,7 +112,7 @@ public class AnalysisPluginTabs {
             String tabsElement;
             if (onlyGeneric) {
                 ExtensionTabData genericTabData = datum.getTabs().get(0);
-                tabsElement = Html.BODY.parse(parseContentHtml(genericTabData));
+                tabsElement = parseContentHtml(genericTabData);
             } else {
                 tabsElement = new TabsElement(
                         datum.getTabs().stream().map(this::wrapToTabElementTab).toArray(TabsElement.Tab[]::new)
@@ -135,7 +135,7 @@ public class AnalysisPluginTabs {
 
         String tabName = tabInformation.getTabName();
         return new TabsElement.Tab(tabName.isEmpty()
-                ? Icon.called("information-circle").build().toHtml() + " General"
+                ? Icon.called("info-circle").build().toHtml() + " General"
                 : Icon.fromExtensionIcon(tabInformation.getTabIcon()).toHtml() + ' ' + tabName,
                 tabContentHtml);
     }
@@ -144,7 +144,8 @@ public class AnalysisPluginTabs {
         TabInformation tabInformation = tabData.getTabInformation();
 
         ElementOrder[] order = tabInformation.getTabElementOrder().orElse(ElementOrder.values());
-        String valuesHtml = parseValuesHtml(tabData);
+        String values = parseValuesHtml(tabData);
+        String valuesHtml = values.isEmpty() ? "" : Html.BODY.parse(values);
         String tablesHtml = parseTablesHtml(tabData);
 
         StringBuilder builder = new StringBuilder();
