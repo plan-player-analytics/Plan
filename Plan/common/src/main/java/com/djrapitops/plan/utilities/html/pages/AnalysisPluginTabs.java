@@ -52,6 +52,8 @@ public class AnalysisPluginTabs {
     private String nav;
     private String tab;
 
+    private boolean hasWideTable;
+
     public AnalysisPluginTabs(String nav, String tab) {
         this.nav = nav;
         this.tab = tab;
@@ -71,6 +73,8 @@ public class AnalysisPluginTabs {
 
         this.decimalFormatter = formatters.decimals();
         this.percentageFormatter = formatters.percentage();
+
+        hasWideTable = false;
 
         generate();
     }
@@ -160,6 +164,9 @@ public class AnalysisPluginTabs {
     private String parseTablesHtml(ExtensionTabData tabData) {
         StringBuilder builder = new StringBuilder();
         for (ExtensionTableData tableData : tabData.getTableData()) {
+            if (tableData.isWideTable()) {
+                hasWideTable = true;
+            }
             builder.append(tableData.getHtmlTable().parseHtml());
         }
         return builder.toString();
@@ -189,7 +196,8 @@ public class AnalysisPluginTabs {
     }
 
     private String wrapInContainer(ExtensionInformation information, String tabsElement) {
-        return "<div class=\"col-xs-12 col-sm-12 col-md-4 col-lg-4\"><div class=\"card\">" +
+        String colWidth = hasWideTable ? "col-md-8 col-lg-8" : "col-md-4 col-lg-4";
+        return "<div class=\"col-xs-12 col-sm-12 " + colWidth + "\"><div class=\"card\">" +
                 "<div class=\"header\">" +
                 "<h2>" + Icon.fromExtensionIcon(information.getIcon()) + ' ' + information.getPluginName() + "</h2>" +
                 "</div>" +

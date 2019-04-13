@@ -95,4 +95,8 @@ public class ExtensionTableData implements Comparable<ExtensionTableData> {
     public int compareTo(ExtensionTableData other) {
         return String.CASE_INSENSITIVE_ORDER.compare(providerName, other.providerName);
     }
+
+    public boolean isWideTable() {
+        return table.getMaxColumnSize() > 3;
+    }
 }
