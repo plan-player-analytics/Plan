@@ -16,11 +16,13 @@
  */
 package com.djrapitops.plan.utilities.html.pages;
 
+import com.djrapitops.plan.extension.ElementOrder;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.results.ExtensionDescriptive;
 import com.djrapitops.plan.extension.implementation.results.ExtensionInformation;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
+import com.djrapitops.plan.extension.implementation.results.ExtensionTableData;
 import com.djrapitops.plan.extension.implementation.results.player.ExtensionPlayerData;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
@@ -106,7 +108,7 @@ public class InspectPluginTab implements Comparable<InspectPluginTab> {
             String tabsElement;
             if (onlyGeneric) {
                 ExtensionTabData genericTabData = datum.getTabs().get(0);
-                tabsElement = Html.BODY.parse(parseDataHtml(genericTabData));
+                tabsElement = Html.BODY.parse(parseContentHtml(genericTabData));
             } else {
                 tabsElement = new TabsElement(
                         datum.getTabs().stream().map(this::wrapToTabElementTab).toArray(TabsElement.Tab[]::new)
@@ -125,11 +127,45 @@ public class InspectPluginTab implements Comparable<InspectPluginTab> {
 
     private TabsElement.Tab wrapToTabElementTab(ExtensionTabData tabData) {
         TabInformation tabInformation = tabData.getTabInformation();
+        String tabContentHtml = parseContentHtml(tabData);
 
-        return new TabsElement.Tab(tabInformation.getTabName(), parseDataHtml(tabData));
+        return new TabsElement.Tab(tabInformation.getTabName(), tabContentHtml);
     }
 
-    private String parseDataHtml(ExtensionTabData tabData) {
+    private String parseContentHtml(ExtensionTabData tabData) {
+        TabInformation tabInformation = tabData.getTabInformation();
+
+        ElementOrder[] order = tabInformation.getTabElementOrder().orElse(ElementOrder.values());
+        String valuesHtml = parseValuesHtml(tabData);
+        String tablesHtml = parseTablesHtml(tabData);
+
+        StringBuilder builder = new StringBuilder();
+
+        for (ElementOrder ordering : order) {
+            switch (ordering) {
+                case VALUES:
+                    builder.append(valuesHtml);
+                    break;
+                case TABLE:
+                    builder.append(tablesHtml);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return builder.toString();
+    }
+
+    private String parseTablesHtml(ExtensionTabData tabData) {
+        StringBuilder builder = new StringBuilder();
+        for (ExtensionTableData tableData : tabData.getTableData()) {
+            builder.append(tableData.getHtmlTable().parseHtml());
+        }
+        return builder.toString();
+    }
+
+    private String parseValuesHtml(ExtensionTabData tabData) {
         StringBuilder builder = new StringBuilder();
         for (String key : tabData.getValueOrder()) {
             tabData.getBoolean(key).ifPresent(data -> append(builder, data.getDescriptive(), data.getFormattedValue()));
