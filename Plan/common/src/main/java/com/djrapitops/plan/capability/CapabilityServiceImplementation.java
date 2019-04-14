@@ -38,11 +38,10 @@ public class CapabilityServiceImplementation implements CapabilityService {
     }
 
     private static CapabilityServiceImplementation get() {
-        CapabilityService instance = CapabilityService.getInstance();
-        if (instance == null) {
+        if (CapabilityServiceHolder.service == null) {
             return new CapabilityServiceImplementation();
         }
-        return (CapabilityServiceImplementation) instance;
+        return (CapabilityServiceImplementation) CapabilityServiceHolder.service;
     }
 
     public static void notifyAboutEnable(boolean isEnabled) {

@@ -124,6 +124,7 @@ public class DataProviderExtractor {
         extractDataProviders(pluginInfo, tabs, conditions, PercentageProvider.class, PercentageDataProvider::placeToDataProviders);
         extractDataProviders(pluginInfo, tabs, conditions, NumberProvider.class, NumberDataProvider::placeToDataProviders);
         extractDataProviders(pluginInfo, tabs, conditions, StringProvider.class, StringDataProvider::placeToDataProviders);
+        extractDataProviders(pluginInfo, tabs, conditions, TableProvider.class, TableDataProvider::placeToDataProviders);
     }
 
     private <T extends Annotation> void extractDataProviders(PluginInfo pluginInfo, Map<Method, Tab> tabs, Map<Method, Conditional> conditions, Class<T> ofKind, DataProviderFactory<T> factory) {

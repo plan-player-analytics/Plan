@@ -37,6 +37,9 @@ public enum Family {
     }
 
     public static Optional<Family> getByName(String name) {
+        if (name == null) {
+            return Optional.empty();
+        }
         try {
             return Optional.of(valueOf(name));
         } catch (IllegalArgumentException e) {

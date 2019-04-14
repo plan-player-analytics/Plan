@@ -19,6 +19,7 @@ package com.djrapitops.plan.db.sql.tables;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
+import com.djrapitops.plan.extension.icon.Color;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -27,61 +28,72 @@ import java.util.UUID;
 import static com.djrapitops.plan.db.sql.parsing.Sql.*;
 
 /**
- * Table information about 'plan_extension_providers'.
+ * Table information about 'plan_extension_tables'.
  *
  * @author Rsl1122
  */
-public class ExtensionProviderTable {
+public class ExtensionTableProviderTable {
 
-    public static final String TABLE_NAME = "plan_extension_providers";
+    public static final String TABLE_NAME = "plan_extension_tables";
 
     public static final String ID = "id";
     public static final String PROVIDER_NAME = "name";
-    public static final String TEXT = "text";
-    public static final String DESCRIPTION = "description"; // Can be null
-    public static final String PRIORITY = "priority";
-    public static final String GROUPABLE = "groupable"; // default false
+    public static final String COLOR = "color";
     public static final String CONDITION = "condition_name"; // Can be null, related to @Conditional
     public static final String PLUGIN_ID = "plugin_id";
-    public static final String ICON_ID = "icon_id";
     public static final String TAB_ID = "tab_id"; // Can be null, related to @Tab
 
-    public static final String HIDDEN = "hidden"; // default false, related to @BooleanProvider
-    public static final String PROVIDED_CONDITION = "provided_condition"; // Can be null, related to @BooleanProvider
-    public static final String FORMAT_TYPE = "format_type"; // Can be null,  related to @NumberProvider
-    public static final String IS_PLAYER_NAME = "player_name"; // default false, related to @StringProvider
+    // All columns can be null
+    public static final String COL_1 = "col_1_name";
+    public static final String COL_2 = "col_2_name";
+    public static final String COL_3 = "col_3_name";
+    public static final String COL_4 = "col_4_name";
+    public static final String COL_5 = "col_5_name";
 
-    public static final String STATEMENT_SELECT_PROVIDER_ID = "(" + SELECT + ID + FROM + TABLE_NAME +
+    // All icons can be null
+    public static final String ICON_1_ID = "icon_1_id";
+    public static final String ICON_2_ID = "icon_2_id";
+    public static final String ICON_3_ID = "icon_3_id";
+    public static final String ICON_4_ID = "icon_4_id";
+    public static final String ICON_5_ID = "icon_5_id";
+
+    public static final String STATEMENT_SELECT_TABLE_ID = "(" + SELECT + ID + FROM + TABLE_NAME +
             WHERE + PROVIDER_NAME + "=?" +
             AND + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ")";
+
+    private ExtensionTableProviderTable() {
+        /* Static information class */
+    }
 
     public static void set3PluginValuesToStatement(PreparedStatement statement, int parameterIndex, String providerName, String pluginName, UUID serverUUID) throws SQLException {
         statement.setString(parameterIndex, providerName);
         ExtensionPluginTable.set2PluginValuesToStatement(statement, parameterIndex + 1, pluginName, serverUUID);
     }
 
-    private ExtensionProviderTable() {
-        /* Static information class */
-    }
-
     public static String createTableSQL(DBType dbType) {
         return CreateTableParser.create(TABLE_NAME, dbType)
                 .column(ID, INT).primaryKey()
                 .column(PROVIDER_NAME, Sql.varchar(50)).notNull()
-                .column(TEXT, Sql.varchar(50)).notNull()
-                .column(DESCRIPTION, Sql.varchar(150))
-                .column(PRIORITY, INT).notNull().defaultValue("0")
-                .column(GROUPABLE, BOOL).notNull().defaultValue(false)
+                .column(COLOR, Sql.varchar(25)).notNull().defaultValue("'" + Color.NONE.name() + "'")
                 .column(CONDITION, Sql.varchar(54)) // 50 + 4 for "not_"
-                .column(PROVIDED_CONDITION, Sql.varchar(50))
-                .column(FORMAT_TYPE, Sql.varchar(25))
-                .column(HIDDEN, BOOL).notNull().defaultValue(false)
-                .column(IS_PLAYER_NAME, BOOL).notNull().defaultValue(false)
+                .column(COL_1, Sql.varchar(50))
+                .column(COL_2, Sql.varchar(50))
+                .column(COL_3, Sql.varchar(50))
+                .column(COL_4, Sql.varchar(50))
+                .column(COL_5, Sql.varchar(50))
                 .column(PLUGIN_ID, INT).notNull()
-                .column(ICON_ID, INT).notNull()
+                .column(ICON_1_ID, INT)
+                .column(ICON_2_ID, INT)
+                .column(ICON_3_ID, INT)
+                .column(ICON_4_ID, INT)
+                .column(ICON_5_ID, INT)
                 .column(TAB_ID, INT)
                 .foreignKey(PLUGIN_ID, ExtensionPluginTable.TABLE_NAME, ExtensionPluginTable.ID)
-                .foreignKey(ICON_ID, ExtensionIconTable.TABLE_NAME, ExtensionIconTable.ID)
+                .foreignKey(ICON_1_ID, ExtensionIconTable.TABLE_NAME, ExtensionIconTable.ID)
+                .foreignKey(ICON_2_ID, ExtensionIconTable.TABLE_NAME, ExtensionIconTable.ID)
+                .foreignKey(ICON_3_ID, ExtensionIconTable.TABLE_NAME, ExtensionIconTable.ID)
+                .foreignKey(ICON_4_ID, ExtensionIconTable.TABLE_NAME, ExtensionIconTable.ID)
+                .foreignKey(ICON_5_ID, ExtensionIconTable.TABLE_NAME, ExtensionIconTable.ID)
                 .foreignKey(TAB_ID, ExtensionTabTable.TABLE_NAME, ExtensionTabTable.ID)
                 .build();
     }
