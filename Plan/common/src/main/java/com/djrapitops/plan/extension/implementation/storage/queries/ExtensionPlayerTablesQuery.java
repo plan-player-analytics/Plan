@@ -142,13 +142,7 @@ public class ExtensionPlayerTablesQuery implements Query<Map<Integer, ExtensionP
             @Override
             public Map<Integer, Map<Integer, Table.Factory>> processResults(ResultSet set) throws SQLException {
                 while (set.next()) {
-                    int pluginID = set.getInt(ExtensionTableProviderTable.PLUGIN_ID);
-                    Map<Integer, Table.Factory> byTableID = tables.get(pluginID);
-                    if (byTableID == null) {
-                        continue;
-                    }
-                    int tableID = set.getInt(ExtensionPlayerTableValueTable.TABLE_ID);
-                    Table.Factory table = byTableID.get(tableID);
+                    Table.Factory table = getTable(set);
                     if (table == null) {
                         continue;
                     }
@@ -159,6 +153,16 @@ public class ExtensionPlayerTablesQuery implements Query<Map<Integer, ExtensionP
                     }
                 }
                 return tables;
+            }
+
+            private Table.Factory getTable(ResultSet set) throws SQLException {
+                int pluginID = set.getInt(ExtensionTableProviderTable.PLUGIN_ID);
+                Map<Integer, Table.Factory> byTableID = tables.get(pluginID);
+                if (byTableID == null) {
+                    return null;
+                }
+                int tableID = set.getInt(ExtensionPlayerTableValueTable.TABLE_ID);
+                return byTableID.get(tableID);
             }
         };
     }
