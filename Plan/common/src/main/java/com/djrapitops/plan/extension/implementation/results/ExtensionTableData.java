@@ -54,6 +54,10 @@ public class ExtensionTableData implements Comparable<ExtensionTableData> {
         TableContainer htmlTable = new TableContainer(header);
         if (rows.size() > 50) {
             htmlTable.useJqueryDataTables(); // Use a jQuery data table since there are a lot of rows.
+        } else {
+            String tableColor = com.djrapitops.plan.utilities.html.icon.Color.getByName(this.tableColor.name()).orElse(com.djrapitops.plan.utilities.html.icon.Color.NONE).getHtmlClass()
+                    .replace("col-", ""); // TODO after PluginData deprecation, change this thing
+            htmlTable.setColor(tableColor);
         }
 
         for (Object[] row : rows) {
