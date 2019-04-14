@@ -1306,6 +1306,7 @@ public abstract class CommonDBTest {
                 "<i class=\" fa fa-what\"></i> second",
                 "<i class=\" fa fa-question\"></i> third"
         );
+        expected.setColor("amber");
         expected.addRow("value", 3, 0.5, 400L);
 
         assertEquals(expected.parseHtml(), table.getHtmlTable().parseHtml());
@@ -1338,6 +1339,7 @@ public abstract class CommonDBTest {
                 "<i class=\" fa fa-what\"></i> second",
                 "<i class=\" fa fa-question\"></i> third"
         );
+        expected.setColor("amber");
         expected.addRow("value", 3, 0.5, 400L);
 
         assertEquals(expected.parseHtml(), table.getHtmlTable().parseHtml());
