@@ -57,6 +57,7 @@ public class ExtensionRegister {
         new GriefPreventionExtensionFactory().createExtension().ifPresent(extensionService::register);
         new GriefPreventionSpongeExtensionFactory().createExtension().ifPresent(extensionService::register);
         new GriefPreventionPlusExtensionFactory().createExtension().ifPresent(extensionService::register);
+        new McMMOExtensionFactory().createExtension().ifPresent(extensionService::register);
 
         for (DataExtension minigame : new MinigameLibExtensionFactory().createExtensions()) {
             extensionService.register(minigame);
