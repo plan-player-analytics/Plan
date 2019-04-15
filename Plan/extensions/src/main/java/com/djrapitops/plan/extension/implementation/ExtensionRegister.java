@@ -54,6 +54,8 @@ public class ExtensionRegister {
                 .map(extensionService::register).flatMap(Function.identity()) // If the extension was registered this is present.
                 .ifPresent(essentials::registerUpdateListeners);
 
+        new GriefPreventionExtensionFactory().createExtension().ifPresent(extensionService::register);
+
         for (DataExtension minigame : new MinigameLibExtensionFactory().createExtensions()) {
             extensionService.register(minigame);
         }
