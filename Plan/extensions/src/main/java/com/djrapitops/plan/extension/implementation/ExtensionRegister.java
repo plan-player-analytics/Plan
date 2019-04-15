@@ -55,6 +55,7 @@ public class ExtensionRegister {
                 .ifPresent(essentials::registerUpdateListeners);
 
         new GriefPreventionExtensionFactory().createExtension().ifPresent(extensionService::register);
+        new GriefPreventionPlusExtensionFactory().createExtension().ifPresent(extensionService::register);
 
         for (DataExtension minigame : new MinigameLibExtensionFactory().createExtensions()) {
             extensionService.register(minigame);
