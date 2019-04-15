@@ -2,7 +2,7 @@ dependencies {
     compile project(path: ":api")
     compile "com.djrapitops:Extension-AdvancedAchievements:1.1-R0.2"
     compile "com.djrapitops:Extension-AdvancedBan:2.1.5-R0.5"
-    compile "com.djrapitops:Extension-ASkyBlock:3.0.9.4-R0.1"
+    compile "com.djrapitops:Extension-ASkyBlock:3.0.9.4-R0.2"
     compile "com.djrapitops:Extension-BanManager:5.15.0-R0.4"
     compile "com.djrapitops:Extension-CoreProtect:2.16.0-R0.2"
     compile "com.djrapitops:Extension-DiscordSRV:1.16.6-R0.2"

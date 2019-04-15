@@ -113,6 +113,22 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         this.stringData.putAll(other.stringData);
 
         this.tableData.addAll(other.tableData);
+
+        createOrderingList();
+    }
+
+    private void createOrderingList() {
+        List<ExtensionDescriptive> descriptives = new ArrayList<>();
+        booleanData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
+        doubleData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
+        percentageData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
+        numberData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
+        stringData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
+
+        order = descriptives.stream().sorted()
+                .map(ExtensionDescriptive::getName)
+                .distinct()// Method names are usually different, but in case someone had same method name with different parameters.
+                .collect(Collectors.toList());
     }
 
     public static class Factory {
@@ -153,22 +169,8 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
             return this;
         }
 
-        private void createOrderingList() {
-            List<ExtensionDescriptive> descriptives = new ArrayList<>();
-            data.booleanData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
-            data.doubleData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
-            data.percentageData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
-            data.numberData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
-            data.stringData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
-
-            data.order = descriptives.stream().sorted()
-                    .map(ExtensionDescriptive::getName)
-                    .distinct()// Method names are usually different, but in case someone had same method name with different parameters.
-                    .collect(Collectors.toList());
-        }
-
         public ExtensionTabData build() {
-            createOrderingList();
+            data.createOrderingList();
             Collections.sort(data.tableData);
             return data;
         }
