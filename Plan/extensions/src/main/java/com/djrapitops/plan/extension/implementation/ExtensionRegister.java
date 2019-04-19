@@ -22,7 +22,6 @@ import com.djrapitops.plan.extension.ExtensionService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.function.Function;
 
 /**
  * In charge of registering built in {@link com.djrapitops.plan.extension.DataExtension} implementations.
@@ -48,22 +47,27 @@ public class ExtensionRegister {
         new BanManagerExtensionFactory().createExtension().ifPresent(extensionService::register);
         new CoreProtectExtensionFactory().createExtension().ifPresent(extensionService::register);
         new DiscordSRVExtensionFactory().createExtension().ifPresent(extensionService::register);
-
-        EssentialsExtensionFactory essentials = new EssentialsExtensionFactory();
-        essentials.createExtension()
-                .map(extensionService::register).flatMap(Function.identity()) // If the extension was registered this is present.
-                .ifPresent(essentials::registerUpdateListeners);
-
+        registerEssentialsExtension(extensionService);
         new GriefPreventionExtensionFactory().createExtension().ifPresent(extensionService::register);
         new GriefPreventionSpongeExtensionFactory().createExtension().ifPresent(extensionService::register);
         new GriefPreventionPlusExtensionFactory().createExtension().ifPresent(extensionService::register);
         new McMMOExtensionFactory().createExtension().ifPresent(extensionService::register);
+        registerMinigameLibExtensions(extensionService);
+        new NucleusExtensionFactory().createExtension().ifPresent(extensionService::register);
+        new SpongeEconomyExtensionFactory().createExtension().ifPresent(extensionService::register);
+    }
 
+    private void registerEssentialsExtension(ExtensionService extensionService) {
+        EssentialsExtensionFactory essentials = new EssentialsExtensionFactory();
+        essentials.createExtension()
+                .flatMap(extensionService::register) // If the extension was registered this is present.
+                .ifPresent(essentials::registerUpdateListeners);
+    }
+
+    private void registerMinigameLibExtensions(ExtensionService extensionService) {
         for (DataExtension minigame : new MinigameLibExtensionFactory().createExtensions()) {
             extensionService.register(minigame);
         }
-
-        new SpongeEconomyExtensionFactory().createExtension().ifPresent(extensionService::register);
     }
 
 }

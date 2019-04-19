@@ -12,6 +12,7 @@ dependencies {
     compile "com.djrapitops:Extension-GriefPreventionPlus:13.3-R0.1"
     compile "com.djrapitops:Extension-McMMO:2.1.44-R0.1"
     compile 'com.djrapitops:Extension-MinigamesLib:1.14.17-R0.1'
+    compile 'com.djrapitops:Extension-Nucleus:1.9.2-R0.1'
     compile "com.djrapitops:Extension-Sponge-Economy:7.1.0-R0.2"
 }
 
