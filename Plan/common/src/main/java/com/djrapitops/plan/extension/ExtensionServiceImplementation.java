@@ -98,7 +98,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
         gatherer.storeExtensionInformation();
         extensionGatherers.put(pluginName, gatherer);
 
-        updateServerValues(gatherer, CallEvents.SERVER_EXTENSION_REGISTER);
+        processing.submitNonCritical(() -> updateServerValues(gatherer, CallEvents.SERVER_EXTENSION_REGISTER));
 
         logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, pluginName + " extension registered.");
         return Optional.of(new CallerImplementation(gatherer, this, processing));

@@ -41,39 +41,46 @@ public class MethodWrapper<T> {
         methodType = MethodType.forMethod(this.method);
     }
 
-    public T callMethod(DataExtension extension, UUID playerUUID, String playerName) throws InvocationTargetException, IllegalAccessException {
+    public T callMethod(DataExtension extension, UUID playerUUID, String playerName) {
         if (methodType != MethodType.PLAYER_NAME && methodType != MethodType.PLAYER_UUID) {
             throw new IllegalStateException(method.getDeclaringClass() + " method " + method.getName() + " is not GROUP method.");
         }
         return callMethod(extension, playerUUID, playerName, null);
     }
 
-    public T callMethod(DataExtension extension, Group group) throws InvocationTargetException, IllegalAccessException {
+    public T callMethod(DataExtension extension, Group group) {
         if (methodType != MethodType.GROUP) {
             throw new IllegalStateException(method.getDeclaringClass() + " method " + method.getName() + " is not GROUP method.");
         }
         return callMethod(extension, null, null, group);
     }
 
-    public T callMethod(DataExtension extension) throws InvocationTargetException, IllegalAccessException {
+    public T callMethod(DataExtension extension) {
         if (methodType != MethodType.SERVER) {
             throw new IllegalStateException(method.getDeclaringClass() + " method " + method.getName() + " is not SERVER method.");
         }
         return callMethod(extension, null, null, null);
     }
 
-    public T callMethod(DataExtension extension, UUID playerUUID, String playerName, Group group) throws InvocationTargetException, IllegalAccessException {
-        switch (methodType) {
-            case SERVER:
-                return resultType.cast(method.invoke(extension));
-            case PLAYER_UUID:
-                return resultType.cast(method.invoke(extension, playerUUID));
-            case PLAYER_NAME:
-                return resultType.cast(method.invoke(extension, playerName));
-            case GROUP:
-                return resultType.cast(method.invoke(extension, group));
-            default:
-                throw new IllegalArgumentException(method.getDeclaringClass() + " method " + method.getName() + " had invalid parameters.");
+    public T callMethod(DataExtension extension, UUID playerUUID, String playerName, Group group) {
+        try {
+            switch (methodType) {
+                case SERVER:
+                    return resultType.cast(method.invoke(extension));
+                case PLAYER_UUID:
+                    return resultType.cast(method.invoke(extension, playerUUID));
+                case PLAYER_NAME:
+                    return resultType.cast(method.invoke(extension, playerName));
+                case GROUP:
+                    return resultType.cast(method.invoke(extension, group));
+                default:
+                    throw new IllegalArgumentException(method.getDeclaringClass() + " method " + method.getName() + " had invalid parameters.");
+            }
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            Throwable cause = e.getCause();
+            boolean hasCause = cause != null;
+            throw new IllegalArgumentException(method.getDeclaringClass() + " method " + method.getName() + " had invalid parameters; caused " +
+                    (hasCause ? cause.toString() : e.toString()));
         }
     }
 
