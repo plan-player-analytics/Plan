@@ -55,6 +55,7 @@ public class ExtensionRegister {
         registerMinigameLibExtensions(extensionService);
         new NucleusExtensionFactory().createExtension().ifPresent(extensionService::register);
         new SpongeEconomyExtensionFactory().createExtension().ifPresent(extensionService::register);
+        new VaultExtensionFactory().createExtension().ifPresent(extensionService::register);
     }
 
     private void registerEssentialsExtension(ExtensionService extensionService) {
