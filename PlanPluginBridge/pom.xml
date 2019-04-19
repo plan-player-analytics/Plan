@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.djrapitops</groupId>
     <artifactId>PlanPluginBridge</artifactId>
-    <version>4.7.0</version>
+    <version>4.8.2-R0.1</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -58,16 +58,8 @@
             <url>https://repo.spongepowered.org/maven</url>
         </repository>
         <repository>
-            <id>vault-repo</id> <!-- Essentials build repository since Vault repo goes down often. -->
-            <url>https://ci.ender.zone/plugin/repository/everything/</url>
-        </repository>
-        <repository>
             <id>jitpack.io (GriefPrevention)</id>
             <url>https://jitpack.io</url>
-        </repository>
-        <repository>
-            <id>redprotect-repo</id>
-            <url>https://raw.github.com/FabioZumbi12/RedProtect/mvn-repo/</url>
         </repository>
         <repository>
             <id>viaversion-repo</id>
@@ -76,18 +68,6 @@
         <repository>
             <id>placeholderapi</id>
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-        </repository>
-        <repository>
-            <id>advanced-achievements-repo</id>
-            <url>https://raw.github.com/PyvesB/AdvancedAchievements/mvn-repo/</url>
-        </repository>
-        <repository>
-            <id>nucleus-repo</id>
-            <url>http://repo.drnaylor.co.uk/artifactory/list/minecraft</url>
-        </repository>
-        <repository>
-            <id>discordsrv-repo</id>
-            <url>https://nexus.scarsz.me/content/groups/public/</url>
         </repository>
     </repositories>
 
@@ -142,33 +122,9 @@
         <!--        Plugins from repositories -->
 
         <dependency>
-            <groupId>com.hm.achievement</groupId>
-            <artifactId>advanced-achievements-api</artifactId>
-            <version>1.0.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.TechFortress</groupId>
-            <artifactId>GriefPrevention</artifactId>
-            <version>16.8</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
             <version>2.9.2</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>br.net.fabiozumbi12.RedProtect</groupId>
-            <artifactId>RedProtect-Spigot</artifactId>
-            <version>7.5.3</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.milkbowl.vault</groupId>
-            <artifactId>VaultAPI</artifactId>
-            <version>1.7</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -177,22 +133,10 @@
             <version>1.5.0</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>io.github.nucleuspowered</groupId>
-            <artifactId>nucleus-api</artifactId>
-            <version>1.9.3-S7.1</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency> <!-- Maven Central -->
             <groupId>me.lucko.luckperms</groupId>
             <artifactId>luckperms-api</artifactId>
             <version>4.4</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.discordsrv</groupId>
-            <artifactId>discordsrv</artifactId>
-            <version>1.16.6</version>
             <scope>provided</scope>
         </dependency>
 
@@ -205,30 +149,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>me.leoko</groupId>
-            <artifactId>advancedban</artifactId>
-            <version>2.1.5</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.wasteofplastic.askyblock</groupId>
-            <artifactId>ASkyBlock</artifactId>
-            <version>3.0.9.4</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.confuser</groupId>
-            <artifactId>banmanager</artifactId>
-            <version>5.15.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.ess3</groupId>
-            <artifactId>EssentialsX</artifactId>
-            <version>2.15.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.massivecraft</groupId>
             <artifactId>factions</artifactId>
             <version>2.14.0</version>
@@ -238,12 +158,6 @@
             <groupId>com.massivecraft</groupId>
             <artifactId>mcore</artifactId>
             <version>2.14.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.kaikk.mc</groupId>
-            <artifactId>GriefPreventionPlus</artifactId>
-            <version>13.3</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -262,12 +176,6 @@
             <groupId>litebans</groupId>
             <artifactId>api</artifactId>
             <version>0.3</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.gmail.nossr50</groupId>
-            <artifactId>mcMMO</artifactId>
-            <version>1.6.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
