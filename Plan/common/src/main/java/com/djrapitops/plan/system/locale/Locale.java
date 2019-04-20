@@ -26,7 +26,6 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -41,12 +40,26 @@ public class Locale extends HashMap<Lang, Message> {
         return forLangCode(LangCode.fromString(code), files);
     }
 
+    private LangCode langCode;
+
+    public Locale() {
+        this(LangCode.EN);
+    }
+
+    public Locale(LangCode langCode) {
+        this.langCode = langCode;
+    }
+
     public static Locale forLangCode(LangCode code, PlanFiles files) throws IOException {
-        return new LocaleFileReader(files.getResourceFromJar("locale/" + code.getFileName())).load();
+        return new LocaleFileReader(files.getResourceFromJar("locale/" + code.getFileName())).load(code);
     }
 
     public static Locale fromFile(File file) throws IOException {
-        return new LocaleFileReader(new FileResource(file.getName(), file)).load();
+        return new LocaleFileReader(new FileResource(file.getName(), file)).load(LangCode.CUSTOM);
+    }
+
+    public LangCode getLangCode() {
+        return langCode;
     }
 
     @Override
@@ -75,8 +88,9 @@ public class Locale extends HashMap<Lang, Message> {
         return get(key).toArray(values);
     }
 
-    public void loadFromAnotherLocale(Map<Lang, Message> locale) {
+    public void loadFromAnotherLocale(Locale locale) {
         putAll(locale);
+        this.langCode = locale.langCode;
     }
 
     public String replaceMatchingLanguage(String from) {

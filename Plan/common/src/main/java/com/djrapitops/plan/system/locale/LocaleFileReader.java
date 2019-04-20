@@ -36,8 +36,8 @@ public class LocaleFileReader {
         lines = resource.asLines();
     }
 
-    public Locale load() {
-        Locale locale = new Locale();
+    public Locale load(LangCode code) {
+        Locale locale = new Locale(code);
 
         Map<String, Lang> identifiers = LocaleSystem.getIdentifiers();
         lines.forEach(line -> {

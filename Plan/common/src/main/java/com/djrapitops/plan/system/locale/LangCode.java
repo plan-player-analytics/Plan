@@ -23,23 +23,21 @@ package com.djrapitops.plan.system.locale;
  */
 public enum LangCode {
 
-    CUSTOM("Custom"),
-    EN("English"),
-    FI("Finnish"),
-    DE("Deutch"),
-    FR("French"),
-    GA("Irish (Gaeilge)"),
-    CS("Czech"),
-    PT("Portugese"),
-    NL("Dutch"),
-    NO("Norwegian"),
-    PL("Polish"),
-    IT("Italian");
+    CUSTOM("Custom", ""),
+    EN("English", "Rsl1122"),
+    CN("Simplified Chinese", "f0rb1d (佛壁灯) & qsefthuopq"),
+    DE("Deutch", "Eyremba & fuzzlemann & Morsmorse"),
+    FI("Finnish", "Rsl1122"),
+    FR("French", "- (Outdated, using English)"),
+    JA("Japanese", "yukieji"),
+    IT("Italian", "- (Outdated, using English)");
 
     private final String name;
+    private final String authors;
 
-    LangCode(String name) {
+    LangCode(String name, String authors) {
         this.name = name;
+        this.authors = authors;
     }
 
     public static LangCode fromString(String code) {
@@ -52,6 +50,10 @@ public enum LangCode {
 
     public String getName() {
         return name;
+    }
+
+    public String getAuthors() {
+        return authors;
     }
 
     public String getFileName() {
