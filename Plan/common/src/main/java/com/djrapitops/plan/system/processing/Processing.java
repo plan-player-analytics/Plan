@@ -53,7 +53,7 @@ public class Processing implements SubSystem {
         criticalExecutor = createExecutor(2, "Plan Critical-pool-%d");
     }
 
-    private ExecutorService createExecutor(int i, String s) {
+    protected ExecutorService createExecutor(int i, String s) {
         return Executors.newFixedThreadPool(i, new ThreadFactoryBuilder().setNameFormat(s).build());
     }
 
