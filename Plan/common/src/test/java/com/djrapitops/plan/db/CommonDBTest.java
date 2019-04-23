@@ -74,7 +74,6 @@ import com.djrapitops.plan.system.settings.config.Config;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
-import com.djrapitops.plan.utilities.SHA256Hash;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
@@ -273,13 +272,13 @@ public abstract class CommonDBTest {
         String expectedGeoLoc = "TestLocation";
         long time = System.currentTimeMillis();
 
-        saveGeoInfo(playerUUID, new GeoInfo(expectedIP, expectedGeoLoc, time, "3"));
+        saveGeoInfo(playerUUID, new GeoInfo(expectedIP, expectedGeoLoc, time));
         commitTest();
 
         List<GeoInfo> geolocations = db.query(GeoInfoQueries.fetchAllGeoInformation()).getOrDefault(playerUUID, new ArrayList<>());
         assertEquals(1, geolocations.size());
 
-        GeoInfo expected = new GeoInfo("1.2.xx.xx", expectedGeoLoc, time, new SHA256Hash(expectedIP).create());
+        GeoInfo expected = new GeoInfo("1.2.xx.xx", expectedGeoLoc, time);
         assertEquals(expected, geolocations.get(0));
     }
 
@@ -502,7 +501,7 @@ public abstract class CommonDBTest {
 
         execute(DataStoreQueries.storeSession(session));
         db.executeTransaction(new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID), (uuid, name) -> false /* Not cached */));
-        saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L, "3"));
+        saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L));
 
         assertTrue(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
 
@@ -553,8 +552,7 @@ public abstract class CommonDBTest {
         db.executeTransaction(
                 new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID), (uuid, name) -> false /* Not cached */)
         );
-        saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L,
-                new SHA256Hash("1.2.3.4").create()));
+        saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L));
 
         assertTrue(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
 
@@ -875,7 +873,7 @@ public abstract class CommonDBTest {
         OptionalAssert.equals(1, container.getValue(PlayerKeys.KICK_COUNT));
 
         List<GeoInfo> expectedGeoInfo =
-                Collections.singletonList(new GeoInfo("1.2.3.4", "TestLoc", 223456789, "ZpT4PJ9HbaMfXfa8xSADTn5X1CHSR7nTT0ntv8hKdkw="));
+                Collections.singletonList(new GeoInfo("1.2.3.4", "TestLoc", 223456789));
         OptionalAssert.equals(expectedGeoInfo, container.getValue(PlayerKeys.GEO_INFO));
 
         List<Nickname> expectedNicknames = Collections.singletonList(new Nickname("TestNick", -1, serverUUID));

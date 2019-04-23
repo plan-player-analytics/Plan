@@ -44,13 +44,11 @@ public class GeoInfoOptimizationPatch extends Patch {
         execute("INSERT INTO " + tableName + " (" +
                 GeoInfoTable.USER_UUID + ", " +
                 GeoInfoTable.IP + ", " +
-                GeoInfoTable.IP_HASH + ", " +
                 GeoInfoTable.LAST_USED + ", " +
                 GeoInfoTable.GEOLOCATION +
                 ") SELECT " +
                 "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
                 GeoInfoTable.IP + ", " +
-                GeoInfoTable.IP_HASH + ", " +
                 GeoInfoTable.LAST_USED + ", " +
                 GeoInfoTable.GEOLOCATION +
                 " FROM " + tempTableName

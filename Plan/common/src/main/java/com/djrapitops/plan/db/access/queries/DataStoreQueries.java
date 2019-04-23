@@ -164,8 +164,7 @@ public class DataStoreQueries {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, geoInfo.getDate());
                 statement.setString(2, playerUUID.toString());
-                statement.setString(3, geoInfo.getIpHash());
-                statement.setString(4, geoInfo.getGeolocation());
+                statement.setString(3, geoInfo.getGeolocation());
             }
         };
     }
@@ -176,9 +175,8 @@ public class DataStoreQueries {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
                 statement.setString(2, geoInfo.getIp());
-                statement.setString(3, geoInfo.getIpHash());
-                statement.setString(4, geoInfo.getGeolocation());
-                statement.setLong(5, geoInfo.getDate());
+                statement.setString(3, geoInfo.getGeolocation());
+                statement.setLong(4, geoInfo.getDate());
             }
         };
     }

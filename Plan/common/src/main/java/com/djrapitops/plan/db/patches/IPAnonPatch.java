@@ -24,7 +24,6 @@ import com.djrapitops.plan.db.sql.tables.GeoInfoTable;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -73,8 +72,7 @@ public class IPAnonPatch extends Patch {
 
     private void anonymizeIPs(Map<UUID, List<GeoInfo>> allGeoInfo) {
         String sql = "UPDATE " + GeoInfoTable.TABLE_NAME + " SET " +
-                GeoInfoTable.IP + "=?, " +
-                GeoInfoTable.IP_HASH + "=? " +
+                GeoInfoTable.IP + "=? " +
                 "WHERE " + GeoInfoTable.IP + "=?";
 
         execute(new ExecBatchStatement(sql) {
@@ -99,11 +97,10 @@ public class IPAnonPatch extends Patch {
                             geoInfo.getDate()
                     );
                     statement.setString(1, updatedInfo.getIp());
-                    statement.setString(2, updatedInfo.getIpHash());
-                    statement.setString(3, geoInfo.getIp());
+                    statement.setString(2, geoInfo.getIp());
                     statement.addBatch();
-                } catch (UnknownHostException | NoSuchAlgorithmException ignore) {
-                    // This ip is already anonymised or completely unusable.
+                } catch (UnknownHostException ignore) {
+                    // This ip is completely unusable.
                 }
             }
         });
@@ -120,11 +117,11 @@ public class IPAnonPatch extends Patch {
         String identifiers = hasUserIdColumn ? userIdColumn : "id, uuid";
 
         execute("INSERT INTO plan_ips (" +
-                identifiers + ", ip, ip_hash, geolocation, last_used" +
+                identifiers + ", ip, geolocation, last_used" +
                 ") SELECT " +
-                identifiers + ", ip, ip_hash, geolocation, MAX(last_used) FROM plan_ips_temp GROUP BY ip_hash, " +
+                identifiers + ", ip, geolocation, MAX(last_used) FROM plan_ips_temp GROUP BY ip, " +
                 (hasUserIdColumn ? userIdColumn : "uuid") +
-                ", ip, geolocation");
+                ", geolocation");
         dropTable(tempTableName);
     }
 
