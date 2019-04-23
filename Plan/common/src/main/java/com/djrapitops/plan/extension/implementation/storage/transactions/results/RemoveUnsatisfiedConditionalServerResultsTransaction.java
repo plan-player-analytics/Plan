@@ -21,7 +21,9 @@ import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.sql.tables.ExtensionProviderTable;
+import com.djrapitops.plan.db.sql.tables.ExtensionServerTableValueTable;
 import com.djrapitops.plan.db.sql.tables.ExtensionServerValueTable;
+import com.djrapitops.plan.db.sql.tables.ExtensionTableProviderTable;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -42,35 +44,26 @@ import static com.djrapitops.plan.db.sql.parsing.Sql.*;
  */
 public class RemoveUnsatisfiedConditionalServerResultsTransaction extends Transaction {
 
+    private final String providerTable;
+    private final String serverValueTable;
+    private final String serverTableValueTable;
+    private final String tableTable;
+
+    public RemoveUnsatisfiedConditionalServerResultsTransaction() {
+        providerTable = ExtensionProviderTable.TABLE_NAME;
+        serverValueTable = ExtensionServerValueTable.TABLE_NAME;
+        tableTable = ExtensionTableProviderTable.TABLE_NAME;
+        serverTableValueTable = ExtensionServerTableValueTable.TABLE_NAME;
+    }
+    
     @Override
     protected void performOperations() {
-        execute(deleteUnsatisfied());
+        String selectSatisfiedConditions = getSatisfiedConditionsSQL();
+        execute(deleteUnsatisfiedValues(selectSatisfiedConditions));
+        execute(deleteUnsatisfiedTableValues(selectSatisfiedConditions));
     }
 
-    private Executable deleteUnsatisfied() {
-        String reversedCondition = dbType == DBType.SQLITE ? "'not_' || " + ExtensionProviderTable.PROVIDED_CONDITION : "CONCAT('not_'," + ExtensionProviderTable.PROVIDED_CONDITION + ')';
-
-        String providerTable = ExtensionProviderTable.TABLE_NAME;
-        String serverValueTable = ExtensionServerValueTable.TABLE_NAME;
-
-        String selectSatisfiedPositiveConditions = SELECT +
-                ExtensionProviderTable.PROVIDED_CONDITION + ',' +
-                ExtensionProviderTable.PLUGIN_ID +
-                FROM + providerTable +
-                INNER_JOIN + serverValueTable + " on " + providerTable + '.' + ExtensionProviderTable.ID + "=" + ExtensionServerValueTable.PROVIDER_ID +
-                WHERE + ExtensionServerValueTable.BOOLEAN_VALUE + "=?" +
-                AND + ExtensionProviderTable.PROVIDED_CONDITION + IS_NOT_NULL;
-        String selectSatisfiedNegativeConditions = SELECT +
-                reversedCondition + " as " + ExtensionProviderTable.PROVIDED_CONDITION + ',' +
-                ExtensionProviderTable.PLUGIN_ID +
-                FROM + providerTable +
-                INNER_JOIN + serverValueTable + " on " + providerTable + '.' + ExtensionProviderTable.ID + "=" + ExtensionServerValueTable.PROVIDER_ID +
-                WHERE + ExtensionServerValueTable.BOOLEAN_VALUE + "=?" +
-                AND + ExtensionProviderTable.PROVIDED_CONDITION + IS_NOT_NULL;
-
-        // Query contents: Set of provided_conditions
-        String selectSatisfiedConditions = '(' + selectSatisfiedPositiveConditions + " UNION " + selectSatisfiedNegativeConditions + ") q1";
-
+    private Executable deleteUnsatisfiedValues(String selectSatisfiedConditions) {
         // Query contents:
         // id | provider_id | q1.provider_id | condition | q1.provided_condition
         // -- | ----------- | -------------- | --------- | ---------------------
@@ -97,6 +90,56 @@ public class RemoveUnsatisfiedConditionalServerResultsTransaction extends Transa
                 WHERE + ExtensionServerValueTable.ID + " IN (" + SELECT + ExtensionServerValueTable.ID + FROM + '(' + selectUnsatisfiedValueIDs + ") as ids)";
 
         return new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setBoolean(1, true);  // Select provided conditions with 'true' value
+                statement.setBoolean(2, false); // Select negated conditions with 'false' value
+            }
+        };
+    }
+
+    private String getSatisfiedConditionsSQL() {
+        String reversedCondition = dbType == DBType.SQLITE ? "'not_' || " + ExtensionProviderTable.PROVIDED_CONDITION : "CONCAT('not_'," + ExtensionProviderTable.PROVIDED_CONDITION + ')';
+
+        String selectSatisfiedPositiveConditions = SELECT +
+                ExtensionProviderTable.PROVIDED_CONDITION + ',' +
+                ExtensionProviderTable.PLUGIN_ID +
+                FROM + providerTable +
+                INNER_JOIN + serverValueTable + " on " + providerTable + '.' + ExtensionProviderTable.ID + "=" + ExtensionServerValueTable.PROVIDER_ID +
+                WHERE + ExtensionServerValueTable.BOOLEAN_VALUE + "=?" +
+                AND + ExtensionProviderTable.PROVIDED_CONDITION + IS_NOT_NULL;
+        String selectSatisfiedNegativeConditions = SELECT +
+                reversedCondition + " as " + ExtensionProviderTable.PROVIDED_CONDITION + ',' +
+                ExtensionProviderTable.PLUGIN_ID +
+                FROM + providerTable +
+                INNER_JOIN + serverValueTable + " on " + providerTable + '.' + ExtensionProviderTable.ID + "=" + ExtensionServerValueTable.PROVIDER_ID +
+                WHERE + ExtensionServerValueTable.BOOLEAN_VALUE + "=?" +
+                AND + ExtensionProviderTable.PROVIDED_CONDITION + IS_NOT_NULL;
+
+        // Query contents: Set of provided_conditions
+        return '(' + selectSatisfiedPositiveConditions + " UNION " + selectSatisfiedNegativeConditions + ") q1";
+    }
+
+    private Executable deleteUnsatisfiedTableValues(String selectSatisfiedConditions) {
+        String selectUnsatisfiedValueIDs = SELECT + ExtensionTableProviderTable.ID +
+                FROM + tableTable +
+                LEFT_JOIN + selectSatisfiedConditions + // Left join to preserve values that don't have their condition fulfilled
+                " on (" +
+                tableTable + '.' + ExtensionTableProviderTable.CONDITION +
+                "=q1." + ExtensionProviderTable.PROVIDED_CONDITION +
+                AND + tableTable + '.' + ExtensionTableProviderTable.PLUGIN_ID +
+                "=q1." + ExtensionProviderTable.PLUGIN_ID +
+                ')' +
+                WHERE + "q1." + ExtensionProviderTable.PROVIDED_CONDITION + IS_NULL + // Conditions that were not in the satisfied condition query
+                AND + ExtensionProviderTable.CONDITION + IS_NOT_NULL; // Ignore values that don't need condition
+
+        // Nested query here is required because MySQL limits update statements with nested queries:
+        // The nested query creates a temporary table that bypasses the same table query-update limit.
+        // Note: MySQL versions 5.6.7+ might optimize this nested query away leading to an exception.
+        String deleteValuesSQL = "DELETE FROM " + serverTableValueTable +
+                WHERE + ExtensionServerTableValueTable.TABLE_ID + " IN (" + SELECT + ExtensionTableProviderTable.ID + FROM + '(' + selectUnsatisfiedValueIDs + ") as ids)";
+
+        return new ExecStatement(deleteValuesSQL) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setBoolean(1, true);  // Select provided conditions with 'true' value
