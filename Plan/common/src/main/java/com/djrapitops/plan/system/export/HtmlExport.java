@@ -92,7 +92,7 @@ public class HtmlExport extends SpecificExport {
     }
 
     public void exportServer(UUID serverUUID) {
-        if (!usingProxy && connectionSystem.isServerAvailable()) {
+        if (serverInfo.getServer().isNotProxy() && connectionSystem.isServerAvailable()) {
             return;
         }
         dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
@@ -121,7 +121,7 @@ public class HtmlExport extends SpecificExport {
     }
 
     public void exportCachedPlayerPage(UUID playerUUID) {
-        if (!usingProxy && connectionSystem.isServerAvailable()) {
+        if (serverInfo.getServer().isNotProxy() && connectionSystem.isServerAvailable()) {
             return;
         }
 

@@ -40,9 +40,7 @@ import java.util.UUID;
 public abstract class SpecificExport {
 
     private final PlanFiles files;
-    private final ServerInfo serverInfo;
-
-    protected final boolean usingProxy;
+    protected final ServerInfo serverInfo;
 
     protected SpecificExport(
             PlanFiles files,
@@ -50,7 +48,6 @@ public abstract class SpecificExport {
     ) {
         this.files = files;
         this.serverInfo = serverInfo;
-        usingProxy = serverInfo.getServer().isProxy();
     }
 
     protected File getFolder() {
@@ -123,7 +120,7 @@ public abstract class SpecificExport {
                 .replace("src=\"js/", "src=\"../js/");
 
         File htmlLocation;
-        if (usingProxy) {
+        if (serverInfo.getServer().isProxy()) {
             if (serverUUID.equals(serverInfo.getServerUUID())) {
                 htmlLocation = new File(getFolder(), "network");
             } else {
