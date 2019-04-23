@@ -63,7 +63,8 @@ import com.djrapitops.plan.extension.implementation.results.player.ExtensionPlay
 import com.djrapitops.plan.extension.implementation.results.server.ExtensionServerData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
-import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalResultsTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalPlayerResultsTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalServerResultsTransaction;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -90,7 +91,6 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -1230,7 +1230,7 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void unsatisfiedConditionalResultsAreCleaned() throws ExecutionException, InterruptedException {
+    public void unsatisfiedPlayerConditionalResultsAreCleaned() {
         ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
 
         extensionService.register(new ConditionalExtension());
@@ -1239,28 +1239,28 @@ public abstract class CommonDBTest {
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
         // Check that the wanted data exists
-        checkThatDataExists(ConditionalExtension.condition);
+        checkThatPlayerDataExists(ConditionalExtension.condition);
 
         // Reverse condition
         ConditionalExtension.condition = false;
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        db.executeTransaction(new RemoveUnsatisfiedConditionalResultsTransaction());
+        db.executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
 
         // Check that the wanted data exists
-        checkThatDataExists(ConditionalExtension.condition);
+        checkThatPlayerDataExists(ConditionalExtension.condition);
 
         // Reverse condition
         ConditionalExtension.condition = false;
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        db.executeTransaction(new RemoveUnsatisfiedConditionalResultsTransaction());
+        db.executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
 
         // Check that the wanted data exists
-        checkThatDataExists(ConditionalExtension.condition);
+        checkThatPlayerDataExists(ConditionalExtension.condition);
     }
 
-    private void checkThatDataExists(boolean condition) {
+    private void checkThatPlayerDataExists(boolean condition) {
         if (condition) { // Condition is true, conditional values exist
             List<ExtensionPlayerData> ofServer = db.query(new ExtensionPlayerDataQuery(playerUUID)).get(serverUUID);
             assertTrue("There was no data left", ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty());
@@ -1272,6 +1272,57 @@ public abstract class CommonDBTest {
             assertFalse("Value was not removed: reversedConditionalValue", tabData.getString("reversedConditionalValue").isPresent());
         } else { // Condition is false, reversed conditional values exist
             List<ExtensionPlayerData> ofServer = db.query(new ExtensionPlayerDataQuery(playerUUID)).get(serverUUID);
+            assertTrue("There was no data left", ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty());
+            ExtensionTabData tabData = ofServer.get(0).getTabs().get(0);
+            OptionalAssert.equals("No", tabData.getBoolean("isCondition").map(ExtensionBooleanData::getFormattedValue));
+            OptionalAssert.equals("Reversed", tabData.getString("reversedConditionalValue").map(ExtensionStringData::getFormattedValue));
+            OptionalAssert.equals("unconditional", tabData.getString("unconditional").map(ExtensionStringData::getFormattedValue)); // Was not removed
+            assertFalse("Value was not removed: conditionalValue", tabData.getString("conditionalValue").isPresent());
+        }
+    }
+
+    @Test
+    public void unsatisfiedServerConditionalResultsAreCleaned() {
+        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
+
+        ConditionalExtension.condition = true;
+        extensionService.register(new ConditionalExtension());
+        extensionService.updateServerValues(CallEvents.MANUAL);
+
+        // Check that the wanted data exists
+        checkThatServerDataExists(ConditionalExtension.condition);
+
+        // Reverse condition
+        ConditionalExtension.condition = false;
+        extensionService.updateServerValues(CallEvents.MANUAL);
+
+        db.executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
+
+        // Check that the wanted data exists
+        checkThatServerDataExists(ConditionalExtension.condition);
+
+        // Reverse condition
+        ConditionalExtension.condition = false;
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
+
+        db.executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
+
+        // Check that the wanted data exists
+        checkThatServerDataExists(ConditionalExtension.condition);
+    }
+
+    private void checkThatServerDataExists(boolean condition) {
+        if (condition) { // Condition is true, conditional values exist
+            List<ExtensionServerData> ofServer = db.query(new ExtensionServerDataQuery(serverUUID));
+            assertTrue("There was no data left", ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty());
+
+            ExtensionTabData tabData = ofServer.get(0).getTabs().get(0);
+            OptionalAssert.equals("Yes", tabData.getBoolean("isCondition").map(ExtensionBooleanData::getFormattedValue));
+            OptionalAssert.equals("Conditional", tabData.getString("conditionalValue").map(ExtensionStringData::getFormattedValue));
+            OptionalAssert.equals("unconditional", tabData.getString("unconditional").map(ExtensionStringData::getFormattedValue)); // Was not removed
+            assertFalse("Value was not removed: reversedConditionalValue", tabData.getString("reversedConditionalValue").isPresent());
+        } else { // Condition is false, reversed conditional values exist
+            List<ExtensionServerData> ofServer = db.query(new ExtensionServerDataQuery(serverUUID));
             assertTrue("There was no data left", ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty());
             ExtensionTabData tabData = ofServer.get(0).getTabs().get(0);
             OptionalAssert.equals("No", tabData.getBoolean("isCondition").map(ExtensionBooleanData::getFormattedValue));
@@ -1369,6 +1420,28 @@ public abstract class CommonDBTest {
 
         @StringProvider(text = "Unconditional")
         public String unconditional(UUID playerUUID) {
+            return "unconditional";
+        }
+
+        @BooleanProvider(text = "a boolean", conditionName = "condition")
+        public boolean isCondition() {
+            return condition;
+        }
+
+        @StringProvider(text = "Conditional Value")
+        @Conditional("condition")
+        public String conditionalValue() {
+            return "Conditional";
+        }
+
+        @StringProvider(text = "Reversed Conditional Value")
+        @Conditional(value = "condition", negated = true)
+        public String reversedConditionalValue() {
+            return "Reversed";
+        }
+
+        @StringProvider(text = "Unconditional")
+        public String unconditional() {
             return "unconditional";
         }
     }
