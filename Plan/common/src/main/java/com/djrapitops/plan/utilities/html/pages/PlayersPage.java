@@ -28,7 +28,6 @@ import com.djrapitops.plan.system.settings.paths.ProxySettings;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.utilities.html.tables.HtmlTables;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.benchmarking.Timings;
 
 import java.util.List;
@@ -75,10 +74,10 @@ public class PlayersPage implements Page {
 
             placeholderReplacer.put("version", versionCheckSystem.getCurrentVersion());
             placeholderReplacer.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
-            if (Check.isBukkitAvailable()) {
-                placeholderReplacer.put("networkName", config.get(PluginSettings.SERVER_NAME));
-            } else {
+            if (serverInfo.getServer().isProxy()) {
                 placeholderReplacer.put("networkName", config.get(ProxySettings.NETWORK_NAME));
+            } else {
+                placeholderReplacer.put("networkName", config.get(PluginSettings.SERVER_NAME));
             }
 
             timings.start("Players page players table parsing");

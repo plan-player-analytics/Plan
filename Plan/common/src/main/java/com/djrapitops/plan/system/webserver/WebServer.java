@@ -19,12 +19,12 @@ package com.djrapitops.plan.system.webserver;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -58,6 +58,7 @@ public class WebServer implements SubSystem {
     private final Locale locale;
     private final PlanFiles files;
     private final PlanConfig config;
+    private final ServerInfo serverInfo;
 
     private final ServerProperties serverProperties;
     private final RequestHandler requestHandler;
@@ -76,7 +77,7 @@ public class WebServer implements SubSystem {
             Locale locale,
             PlanFiles files,
             PlanConfig config,
-            ServerProperties serverProperties,
+            ServerInfo serverInfo,
             PluginLogger logger,
             ErrorHandler errorHandler,
             RequestHandler requestHandler
@@ -84,7 +85,8 @@ public class WebServer implements SubSystem {
         this.locale = locale;
         this.files = files;
         this.config = config;
-        this.serverProperties = serverProperties;
+        this.serverInfo = serverInfo;
+        this.serverProperties = serverInfo.getServerProperties();
 
         this.requestHandler = requestHandler;
 
@@ -99,8 +101,8 @@ public class WebServer implements SubSystem {
         initServer();
 
         if (!isEnabled()) {
-            if (Check.isBungeeAvailable() || Check.isVelocityAvailable()) {
-                throw new EnableException(locale.getString(PluginLang.ENABLE_FAIL_NO_WEB_SERVER_BUNGEE));
+            if (serverInfo.getServer().isProxy()) {
+                throw new EnableException(locale.getString(PluginLang.ENABLE_FAIL_NO_WEB_SERVER_PROXY));
             }
             if (config.isTrue(WebserverSettings.DISABLED)) {
                 logger.warn(locale.getString(PluginLang.ENABLE_NOTIFY_WEB_SERVER_DISABLED));
@@ -116,7 +118,7 @@ public class WebServer implements SubSystem {
      * Starts up the WebServer in a new Thread Pool.
      */
     private void initServer() {
-        if (!(Check.isBungeeAvailable() || Check.isVelocityAvailable()) && config.isTrue(WebserverSettings.DISABLED)) {
+        if (serverInfo.getServer().isNotProxy() && config.isTrue(WebserverSettings.DISABLED)) {
             // Bukkit WebServer has been disabled.
             return;
         }

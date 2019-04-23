@@ -34,7 +34,6 @@ import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.ResponseFactory;
-import com.djrapitops.plugin.api.Check;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -87,7 +86,7 @@ public class ServerPageHandler implements PageHandler {
             return response;
         } else {
             checkDBState();
-            if ((Check.isBungeeAvailable() || Check.isVelocityAvailable()) && serverInfo.getServerUUID().equals(serverUUID)) {
+            if (serverInfo.getServer().isProxy() && serverInfo.getServerUUID().equals(serverUUID)) {
                 return ResponseCache.loadResponse(PageId.SERVER.of(serverUUID), responseFactory::networkPageResponse);
             }
             return refreshNow(serverUUID);

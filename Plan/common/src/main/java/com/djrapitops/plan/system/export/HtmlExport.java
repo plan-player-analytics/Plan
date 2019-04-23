@@ -34,7 +34,6 @@ import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.html.pages.InspectPage;
 import com.djrapitops.plan.utilities.html.pages.PageFactory;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
@@ -93,7 +92,7 @@ public class HtmlExport extends SpecificExport {
     }
 
     public void exportServer(UUID serverUUID) {
-        if (Check.isBukkitAvailable() && connectionSystem.isServerAvailable()) {
+        if (!usingProxy && connectionSystem.isServerAvailable()) {
             return;
         }
         dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
@@ -122,7 +121,7 @@ public class HtmlExport extends SpecificExport {
     }
 
     public void exportCachedPlayerPage(UUID playerUUID) {
-        if (Check.isBukkitAvailable() && connectionSystem.isServerAvailable()) {
+        if (!usingProxy && connectionSystem.isServerAvailable()) {
             return;
         }
 

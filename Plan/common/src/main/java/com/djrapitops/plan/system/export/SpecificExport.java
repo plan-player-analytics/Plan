@@ -21,7 +21,6 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plugin.api.Check;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +42,7 @@ public abstract class SpecificExport {
     private final PlanFiles files;
     private final ServerInfo serverInfo;
 
-    private final boolean usingProxy;
+    protected final boolean usingProxy;
 
     protected SpecificExport(
             PlanFiles files,
@@ -51,7 +50,7 @@ public abstract class SpecificExport {
     ) {
         this.files = files;
         this.serverInfo = serverInfo;
-        usingProxy = Check.isBungeeAvailable() || Check.isVelocityAvailable();
+        usingProxy = serverInfo.getServer().isProxy();
     }
 
     protected File getFolder() {

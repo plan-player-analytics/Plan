@@ -18,10 +18,10 @@ package com.djrapitops.plan.system.export;
 
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.ExportSettings;
-import com.djrapitops.plugin.api.Check;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -35,6 +35,7 @@ import javax.inject.Singleton;
 public class ExportSystem implements SubSystem {
 
     private final PlanConfig config;
+    private final ServerInfo serverInfo;
     private final Processing processing;
     private final HtmlExport htmlExport;
     private final ConnectionSystem connectionSystem;
@@ -42,11 +43,13 @@ public class ExportSystem implements SubSystem {
     @Inject
     public ExportSystem(
             PlanConfig config,
+            ServerInfo serverInfo,
             Processing processing,
             HtmlExport htmlExport,
             ConnectionSystem connectionSystem
     ) {
         this.config = config;
+        this.serverInfo = serverInfo;
         this.processing = processing;
         this.htmlExport = htmlExport;
         this.connectionSystem = connectionSystem;
@@ -54,7 +57,7 @@ public class ExportSystem implements SubSystem {
 
     @Override
     public void enable() {
-        if (Check.isBukkitAvailable() && connectionSystem.isServerAvailable()) {
+        if (serverInfo.getServer().isNotProxy() && connectionSystem.isServerAvailable()) {
             return;
         }
         if (config.isTrue(ExportSettings.JS_AND_CSS)) {

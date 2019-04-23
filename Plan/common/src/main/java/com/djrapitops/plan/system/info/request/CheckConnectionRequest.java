@@ -22,9 +22,9 @@ import com.djrapitops.plan.api.exceptions.connection.GatewayException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Map;
@@ -37,9 +37,11 @@ import java.util.UUID;
  */
 public class CheckConnectionRequest extends InfoRequestWithVariables {
 
+    private final ServerInfo serverInfo;
     private final ConnectionSystem connectionSystem;
 
-    CheckConnectionRequest(String webServerAddress, ConnectionSystem connectionSystem) {
+    CheckConnectionRequest(String webServerAddress, ServerInfo serverInfo, ConnectionSystem connectionSystem) {
+        this.serverInfo = serverInfo;
         this.connectionSystem = connectionSystem;
         Verify.nullCheck(webServerAddress, () -> new IllegalArgumentException("webServerAddress can not be null."));
 
@@ -47,7 +49,8 @@ public class CheckConnectionRequest extends InfoRequestWithVariables {
         variables.put("continue", "yes");
     }
 
-    CheckConnectionRequest(ConnectionSystem connectionSystem) {
+    CheckConnectionRequest(ServerInfo serverInfo, ConnectionSystem connectionSystem) {
+        this.serverInfo = serverInfo;
         this.connectionSystem = connectionSystem;
     }
 
@@ -60,7 +63,7 @@ public class CheckConnectionRequest extends InfoRequestWithVariables {
     public Response handleRequest(Map<String, String> variables) throws WebException {
         // Available variables: sender, address
 
-        if (Check.isBungeeAvailable() || Check.isVelocityAvailable()) {
+        if (serverInfo.getServer().isProxy()) {
             attemptConnection(variables);
         }
 
@@ -82,7 +85,7 @@ public class CheckConnectionRequest extends InfoRequestWithVariables {
         Server bukkit = new Server(-1, serverUUID, "", address, -1);
 
         try {
-            connectionSystem.sendInfoRequest(new CheckConnectionRequest(connectionSystem), bukkit);
+            connectionSystem.sendInfoRequest(new CheckConnectionRequest(serverInfo, connectionSystem), bukkit);
         } catch (ConnectionFailException e) {
             throw new GatewayException(e.getMessage());
         }
