@@ -25,6 +25,7 @@ import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
+import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -101,7 +102,7 @@ public class WebServer implements SubSystem {
         initServer();
 
         if (!isEnabled()) {
-            if (serverInfo.getServer().isProxy()) {
+            if (Check.isBungeeAvailable() || Check.isVelocityAvailable()) {
                 throw new EnableException(locale.getString(PluginLang.ENABLE_FAIL_NO_WEB_SERVER_PROXY));
             }
             if (config.isTrue(WebserverSettings.DISABLED)) {
@@ -118,8 +119,8 @@ public class WebServer implements SubSystem {
      * Starts up the WebServer in a new Thread Pool.
      */
     private void initServer() {
-        if (serverInfo.getServer().isNotProxy() && config.isTrue(WebserverSettings.DISABLED)) {
-            // Bukkit WebServer has been disabled.
+        if ((Check.isBukkitAvailable() || Check.isSpongeAvailable()) && config.isTrue(WebserverSettings.DISABLED)) {
+            // Bukkit/Sponge WebServer has been disabled.
             return;
         }
 

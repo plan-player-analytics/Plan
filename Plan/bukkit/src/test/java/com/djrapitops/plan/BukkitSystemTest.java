@@ -17,7 +17,10 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.settings.ConfigSettingKeyTest;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
@@ -31,9 +34,11 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import rules.BukkitComponentMocker;
 import rules.ComponentMocker;
+import utilities.OptionalAssert;
 import utilities.RandomData;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import static org.junit.Assert.assertTrue;
 
@@ -66,6 +71,21 @@ public class BukkitSystemTest {
         try {
             system.enable();
             assertTrue(system.isEnabled());
+        } finally {
+            system.disable();
+        }
+    }
+
+    @Test
+    public void correctWebAddressInDatabaseAfterEnable() throws EnableException {
+        try {
+            system.enable();
+            Database database = system.getDatabaseSystem().getDatabase();
+            String expectedAddress = system.getWebServerSystem().getWebServer().getAccessAddress();
+            Optional<String> found = database.query(ServerQueries.fetchServerMatchingIdentifier(system.getServerInfo().getServerUUID()))
+                    .map(Server::getWebAddress);
+
+            OptionalAssert.equals(expectedAddress, found);
         } finally {
             system.disable();
         }
