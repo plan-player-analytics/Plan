@@ -155,8 +155,8 @@ HTML - LAST_SEEN_TEXT                           || Dernière connexion
 HTML - LOADED_CHUNKS                            || Tronçons chargés
 HTML - LOADED_ENTITIES                          || Entités chargés
 HTML - LOCAL_MACHINE                            || Machine locale
-HTML - LONGEST                                  || Plus long
-HTML - LOW_TPS_SPIKES                           || Pointes basses de Tps
+HTML - LONGEST                                  || Plus long.ue
+HTML - LOW_TPS_SPIKES                           || Pointes basses des TPS
 HTML - MOB_CAUSED_DEATHS                        || Morts causées par un Mob
 HTML - MOB_KDR                                  || Mob KDR
 HTML - MOB_KILLS                                || Kills de Mobs
@@ -190,9 +190,9 @@ HTML - OPERATOR                                 || Opérateur
 HTML - OVERVIEW                                 || Vue d'ensemble
 HTML - PER_DAY                                  || / Jour
 HTML - PLAYER_CAUSED_DEATHS                     || Décès causés par le joueur
-HTML - PLAYER_KILLS                             || Kills du joueur
+HTML - PLAYER_KILLS                             || Kills de joueurs
 HTML - PLAYER_LIST                              || Liste des joueurs
-HTML - PLAYERBASE_DEVELOPMENT                   || Développement de la base de joueurs
+HTML - PLAYERBASE_DEVELOPMENT                   || Évolution de la base de joueurs
 HTML - PLAYERS                                  || JOUEURS
 HTML - PLAYERS_ONLINE                           || JOUEURS EN LIGNE
 HTML - PLAYERS_ONLINE_TEXT                      || Joueurs en ligne
@@ -202,9 +202,9 @@ HTML - PLEASE_WAIT                              || Merci de patienter...
 HTML - PREDICETED_RETENTION                     || Rétention prévue
 HTML - PUNCH_CARD                               || Carte perforée
 HTML - PUNCHCARD                                || CARTE PERFORÉE
-HTML - RECENT_LOGINS                            || CONNEXIONS RÉCENTS
-HTML - REGISTERED                               || INSCRIT
-HTML - REGISTERED_TEXT                          || Inscrit
+HTML - RECENT_LOGINS                            || CONNEXIONS RÉCENTES
+HTML - REGISTERED                               || INSCRIPTION
+HTML - REGISTERED_TEXT                          || Inscription
 HTML - REGULAR                                  || RÉGULIER(S)
 HTML - SEEN_NICKNAMES                           || Surnoms Vus
 HTML - SERVER                                   || Serveur
@@ -239,7 +239,7 @@ HTML - USER_PASS_MISMATCH                       || L'utilisateur et le mot de pa
 HTML - WITH                                     || <th>Avec
 HTML - WORLD                                    ||  Monde
 HTML - WORLD_LOAD                               || CHARGE DU MONDE
-HTML - WORLD_PLAYTIME                           || Temps de jeu du monde
+HTML - WORLD_PLAYTIME                           || Temps de jeu par monde
 HTML - WORST_PING                               || Pire latence
 HTML ERRORS - ACCESS_DENIED_403                 || Accès refusé.
 HTML ERRORS - ANALYSIS_REFRESH                  || L'analyseur est en cours de rafraîchissement...
@@ -330,7 +330,7 @@ Health - Regular Activity Change Increase       || augmenté (+${0}).
 Health - Regular Activity Change Zero           || stagné (+/-${0}).
 Health - Regular Activity Remain                ||  ${0} des joueurs réguliers sont restés actifs (${1}/${2}).
 Health - Single Servers Inaccuracy              ||  Un seul serveur Bukkit/Sponge pour collecter les données de session.
-Health - TPS Above Low Threshold                ||  Le Tps moyen était supérieur au seuil bas ${0} du temps.
-Health - TPS Low Dips                           ||  Le Tps moyen est descendu sous le seuil bas (${0}) ${1} fois.
+Health - TPS Above Low Threshold                ||  Les TPS moyens étaient supérieurs au seuil bas ${0} du temps.
+Health - TPS Low Dips                           ||  Les TPS moyens sont descendus sous le seuil bas (${0}) ${1} fois.
 HTML - FREE_DISK_SPACE                          || Espace disque disponible
-HTML - DISK_SPACE                               || Espace disque
+HTML - DISK_SPACE                               || ESPACE DISQUE
