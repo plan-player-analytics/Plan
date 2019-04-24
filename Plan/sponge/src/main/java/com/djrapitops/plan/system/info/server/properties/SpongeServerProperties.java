@@ -29,7 +29,6 @@ public class SpongeServerProperties extends ServerProperties {
 
     public SpongeServerProperties(Game game) {
         super(
-                game.getServer().getMotd().toPlain(),
                 "Sponge",
                 game.getServer().getBoundAddress().orElseGet(() -> new InetSocketAddress(25565)).getPort(),
                 game.getPlatform().getMinecraftVersion().getName(),

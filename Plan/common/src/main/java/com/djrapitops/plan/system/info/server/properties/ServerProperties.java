@@ -27,7 +27,6 @@ import java.util.function.Supplier;
  */
 public abstract class ServerProperties {
 
-    private final String id;
     private final String name;
     private final int port;
     private final String version;
@@ -38,7 +37,6 @@ public abstract class ServerProperties {
     private final IntSupplier onlinePlayers;
 
     protected ServerProperties(
-            String id,
             String name,
             int port,
             String version,
@@ -47,7 +45,6 @@ public abstract class ServerProperties {
             int maxPlayers,
             IntSupplier onlinePlayers
     ) {
-        this.id = id;
         this.name = name;
         this.port = port;
         this.version = version;
@@ -84,10 +81,6 @@ public abstract class ServerProperties {
 
     public int getMaxPlayers() {
         return maxPlayers;
-    }
-
-    public String getServerId() {
-        return id;
     }
 
     public int getOnlinePlayers() {
