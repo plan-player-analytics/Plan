@@ -175,7 +175,7 @@ HTML - NAV_SESSIONS                             || Sessions
 HTML - NAV_SEVER_HEALTH                         || Santé du serveur
 HTML - NETWORK                                  || Réseau
 HTML - NETWORK_INFORMATION                      || INFORMATIONS SUR LE RÉSEAU
-HTML - NEW                                      || NOUVEAU
+HTML - NEW                                      || NOUVEAU(X)
 HTML - NEW_CALENDAR                             || Nouveau :
 HTML - NEW_PLAYERS_TEXT                         || Nouveaux joueurs
 HTML - NEW_RETENTION                            || Rétention des nouveaux joueurs
@@ -205,7 +205,7 @@ HTML - PUNCHCARD                                || CARTE PERFORÉE
 HTML - RECENT_LOGINS                            || CONNEXIONS RÉCENTS
 HTML - REGISTERED                               || INSCRIT
 HTML - REGISTERED_TEXT                          || Inscrit
-HTML - REGULAR                                  || RÉGULIER
+HTML - REGULAR                                  || RÉGULIER(S)
 HTML - SEEN_NICKNAMES                           || Surnoms Vus
 HTML - SERVER                                   || Serveur
 HTML - SERVER_ANALYSIS                          || Analyse du serveur
@@ -225,7 +225,7 @@ HTML - TOTAL_ACTIVE_TEXT                        || Temps actif total
 HTML - TOTAL_AFK                                || Temps inactif total
 HTML - TOTAL_PLAYERS                            || Joueurs totaux
 HTML - TOTAL_PLAYTIME                           || Temps de jeu total
-HTML - UNIQUE                                   || UNIQUE
+HTML - UNIQUE                                   || UNIQUE(S)
 HTML - UNIQUE_CALENDAR                          || Unique :
 HTML - UNIQUE_PLAYERS                           || JOUEURS UNIQUES
 HTML - UNIQUE_PLAYERS_TEXT                      || Joueurs uniques
