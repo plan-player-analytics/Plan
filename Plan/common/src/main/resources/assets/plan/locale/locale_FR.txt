@@ -147,7 +147,7 @@ HTML - KILLED_BY                                || Tué par
 HTML - LAST_24_HOURS                            || 24 DERNIÈRES HEURES
 HTML - LAST_30_DAYS                             || 30 DERNIERS JOURS
 HTML - LAST_30_DAYS_TEXT                        || 30 derniers jours
-HTML - LAST_7_DAYS                              || 7 derniers jours
+HTML - LAST_7_DAYS                              || 7 DERNIERS JOURS
 HTML - LAST_CONNECTED                           || Dernier connecté
 HTML - LAST_PEAK                                || Dernier pic de joueurs connectés
 HTML - LAST_SEEN                                || DERNIÈRE CONNEXION
