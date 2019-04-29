@@ -28,7 +28,7 @@ public enum LangCode {
     CN("Simplified Chinese", "f0rb1d (佛壁灯) & qsefthuopq"),
     DE("Deutch", "Eyremba & fuzzlemann & Morsmorse"),
     FI("Finnish", "Rsl1122"),
-    FR("French", "- (Outdated, using English)"),
+    FR("French", "CyanTech & Aurelien"),
     JA("Japanese", "yukieji"),
     IT("Italian", "- (Outdated, using English)");
 
