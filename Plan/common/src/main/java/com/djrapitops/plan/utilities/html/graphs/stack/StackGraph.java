@@ -51,9 +51,9 @@ public class StackGraph implements HighChart {
     }
 
     private String toSeries(StackDataSet dataSet) {
-        StringBuilder dataSetBuilder = new StringBuilder("{name: '");
+        StringBuilder dataSetBuilder = new StringBuilder("{name: \"");
 
-        dataSetBuilder.append(dataSet.getName()).append("',")
+        dataSetBuilder.append(dataSet.getName()).append("\",")
                 .append("color:").append(dataSet.getColor())
                 .append(",data: [");
 

@@ -313,7 +313,7 @@ WebServer FAIL - Port Bind                      || Le Serveur Web n'a pas été 
 WebServer FAIL - SSL Context                    || Serveur Web : Échec d'initialisation du contexte SSL.
 WebServer FAIL - Store Load                     || Serveur Web : Échec du chargement du certificat SSL.
 Yesterday                                       || 'Hier'
-Today                                           || 'Aujourd"hui'
+Today                                           || 'Aujourd''hui'
 Health - Active Playtime Comparison Decrease    ||  Les joueurs actifs risquent de manquer de choses à faire (Joué ${0} contre ${1}, les deux dernières semaines par rapport aux semaines 2 à 4).
 Health - Active Playtime Comparison Increase    ||  Les joueurs actifs semblent avoir des choses à faire (Joué ${0} contre ${1}, les deux dernières semaines par rapport aux semaines 2 à 4).
 Health - Downtime                               ||  Le temps total d'arrêt du serveur (absence de données) était de ${0}.
