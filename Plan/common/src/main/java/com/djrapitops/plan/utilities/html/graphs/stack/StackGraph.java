@@ -39,7 +39,7 @@ public class StackGraph implements HighChart {
         int length = this.labels.length;
         int i = 0;
         for (String label : this.labels) {
-            labelBuilder.append("'").append(label).append("'");
+            labelBuilder.append('"').append(label).append('"');
 
             if (i < length - 1) {
                 labelBuilder.append(",");
@@ -51,9 +51,9 @@ public class StackGraph implements HighChart {
     }
 
     private String toSeries(StackDataSet dataSet) {
-        StringBuilder dataSetBuilder = new StringBuilder("{name: \"");
+        StringBuilder dataSetBuilder = new StringBuilder("{name: '");
 
-        dataSetBuilder.append(dataSet.getName()).append("\",")
+        dataSetBuilder.append(dataSet.getName()).append("',")
                 .append("color:").append(dataSet.getColor())
                 .append(",data: [");
 
