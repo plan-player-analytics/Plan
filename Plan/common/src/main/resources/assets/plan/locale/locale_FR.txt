@@ -179,7 +179,7 @@ HTML - NEW                                      || NOUVEAU(X)
 HTML - NEW_CALENDAR                             || Nouveau :
 HTML - NEW_PLAYERS_TEXT                         || Nouveaux joueurs
 HTML - NEW_RETENTION                            || Rétention des nouveaux joueurs
-HTML - NEW_TEXT                                 || Nouveau(x)
+HTML - NEW_TEXT                                 || Nouveau
 HTML - NICKNAME                                 || Surnom
 HTML - NO_KILLS                                 || Pas de Kills
 HTML - NO_PLAYER_CAUSED_DEATHS                  || Aucun joueur n'a causé de mort
@@ -225,7 +225,7 @@ HTML - TOTAL_ACTIVE_TEXT                        || Temps actif total
 HTML - TOTAL_AFK                                || Temps inactif total
 HTML - TOTAL_PLAYERS                            || Joueurs totaux
 HTML - TOTAL_PLAYTIME                           || Temps de jeu total
-HTML - UNIQUE                                   || UNIQUE(S)
+HTML - UNIQUE                                   || UNIQUE
 HTML - UNIQUE_CALENDAR                          || Unique :
 HTML - UNIQUE_PLAYERS                           || JOUEURS UNIQUES
 HTML - UNIQUE_PLAYERS_TEXT                      || Joueurs uniques
