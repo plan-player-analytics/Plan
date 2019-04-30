@@ -17,16 +17,16 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.db.Database;
-import org.bstats.sponge.Metrics;
+import org.bstats.sponge.Metrics2;
 
 import java.io.Serializable;
 
 public class BStatsSponge {
 
-    private final Metrics metrics;
+    private final Metrics2 metrics;
     private final Database database;
 
-    public BStatsSponge(Metrics metrics, Database database) {
+    public BStatsSponge(Metrics2 metrics, Database database) {
         this.metrics = metrics;
         this.database = database;
     }
@@ -46,6 +46,6 @@ public class BStatsSponge {
     }
 
     protected void addStringSettingPie(String id, Serializable setting) {
-        metrics.addCustomChart(new Metrics.SimplePie(id, setting::toString));
+        metrics.addCustomChart(new Metrics2.SimplePie(id, setting::toString));
     }
 }

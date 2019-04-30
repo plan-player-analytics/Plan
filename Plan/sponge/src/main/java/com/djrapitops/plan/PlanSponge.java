@@ -25,7 +25,7 @@ import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plugin.SpongePlugin;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.logging.L;
-import org.bstats.sponge.Metrics;
+import org.bstats.sponge.Metrics2;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
@@ -55,7 +55,7 @@ import java.io.InputStream;
 public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
     @com.google.inject.Inject
-    private Metrics metrics;
+    private Metrics2 metrics;
 
     @com.google.inject.Inject
     private Logger slf4jLogger;

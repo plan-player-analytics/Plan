@@ -14,6 +14,4 @@ dependencies {
 
 shadowJar {
     configurations = [project.configurations.compile]
-
-    relocate "org.bstats", "com.djrapitops.plan.utilities.metrics"
 }

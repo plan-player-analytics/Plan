@@ -66,7 +66,7 @@ subprojects {
     ext.slf4jVersion = "1.7.26"
     ext.geoIpVersion = "2.12.0"
     ext.guavaVersion = "26.0-jre"
-    ext.bstatsVersion = "1.2"
+    ext.bstatsVersion = "1.4"
 
     repositories {
         mavenCentral()
@@ -89,7 +89,7 @@ subprojects {
             url = "https://repo.velocitypowered.com/snapshots/"
         }
         maven { // bStats Repository
-            url = "http://repo.bstats.org/content/repositories/releases/"
+            url = "https://repo.codemc.org/repository/maven-public"
         }
         maven { // PlanPluginBridge Repository
             url = "https://dl.bintray.com/rsl1122/Plan-repository"
