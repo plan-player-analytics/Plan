@@ -105,7 +105,10 @@ public class CacheAnalysisPageRequest extends InfoRequestWithVariables implement
         }
 
         if (config.get(ExportSettings.SERVER_PAGE)) {
-            processing.submitNonCritical(() -> htmlExport.exportServer(serverUUID));
+            processing.submitNonCritical(() -> {
+                htmlExport.exportNetworkPage();
+                htmlExport.exportServer(serverUUID);
+            });
         }
         if (config.get(ExportSettings.SERVER_JSON)) {
             processing.submitNonCritical(() -> jsonExport.exportServerJSON(serverUUID));

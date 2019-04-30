@@ -32,7 +32,11 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.ExportSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
+import com.djrapitops.plan.system.webserver.cache.PageId;
+import com.djrapitops.plan.system.webserver.cache.ResponseCache;
+import com.djrapitops.plan.system.webserver.response.pages.NetworkPageResponse;
 import com.djrapitops.plan.utilities.html.pages.InspectPage;
+import com.djrapitops.plan.utilities.html.pages.NetworkPage;
 import com.djrapitops.plan.utilities.html.pages.PageFactory;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -161,6 +165,35 @@ public class HtmlExport extends SpecificExport {
                 exportAvailablePlayerPage(user.getUuid(), user.getName());
             }
         } catch (IOException | DBOpException e) {
+            errorHandler.log(L.WARN, this.getClass(), e);
+        }
+    }
+
+    public void cacheNetworkPage() {
+        if (serverInfo.getServer().isNotProxy()) {
+            return;
+        }
+
+        NetworkPage networkPage = pageFactory.networkPage();
+        ResponseCache.cacheResponse(PageId.SERVER.of(serverInfo.getServerUUID()), () -> {
+            try {
+                return new NetworkPageResponse(networkPage);
+            } catch (ParseException e) {
+                errorHandler.log(L.WARN, this.getClass(), e);
+                return null;
+            }
+        });
+    }
+
+    public void exportNetworkPage() {
+        if (serverInfo.getServer().isNotProxy()) {
+            return;
+        }
+
+        cacheNetworkPage();
+        try {
+            exportAvailableServerPage(serverInfo.getServerUUID(), serverInfo.getServer().getName());
+        } catch (IOException e) {
             errorHandler.log(L.WARN, this.getClass(), e);
         }
     }

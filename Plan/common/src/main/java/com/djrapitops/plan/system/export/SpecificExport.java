@@ -42,7 +42,7 @@ public abstract class SpecificExport {
     private final PlanFiles files;
     protected final ServerInfo serverInfo;
 
-    protected SpecificExport(
+    SpecificExport(
             PlanFiles files,
             ServerInfo serverInfo
     ) {
@@ -74,19 +74,19 @@ public abstract class SpecificExport {
         Files.write(to.toPath(), lines, StandardCharsets.UTF_8);
     }
 
-    protected File getServerFolder() {
+    File getServerFolder() {
         File server = new File(getFolder(), "server");
         server.mkdirs();
         return server;
     }
 
-    protected File getPlayerFolder() {
+    File getPlayerFolder() {
         File player = new File(getFolder(), "player");
         player.mkdirs();
         return player;
     }
 
-    protected void exportPlayerPage(String playerName, String html) throws IOException {
+    void exportPlayerPage(String playerName, String html) throws IOException {
         List<String> lines = Arrays.asList(html.replace("../", "../../").split("\n"));
 
         File htmlLocation = new File(getPlayerFolder(), URLEncoder.encode(playerName, "UTF-8").replace(".", "%2E"));
@@ -96,7 +96,7 @@ public abstract class SpecificExport {
         export(exportFile, lines);
     }
 
-    protected void exportAvailablePlayerPage(UUID playerUUID, String name) throws IOException {
+    void exportAvailablePlayerPage(UUID playerUUID, String name) throws IOException {
         Response response = ResponseCache.loadResponse(PageId.PLAYER.of(playerUUID));
         if (response == null) {
             return;
@@ -106,7 +106,7 @@ public abstract class SpecificExport {
         exportPlayerPage(name, html);
     }
 
-    protected void exportAvailableServerPage(UUID serverUUID, String serverName) throws IOException {
+    void exportAvailableServerPage(UUID serverUUID, String serverName) throws IOException {
 
         Response response = ResponseCache.loadResponse(PageId.SERVER.of(serverUUID));
         if (response == null) {

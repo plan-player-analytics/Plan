@@ -72,7 +72,10 @@ public class ExportSystem implements SubSystem {
             processing.submitNonCritical(htmlExport::exportAvailablePlayers);
         }
         if (config.isTrue(ExportSettings.SERVER_PAGE)) {
-            processing.submitNonCritical(htmlExport::exportAvailableServerPages);
+            processing.submitNonCritical(() -> {
+                htmlExport.cacheNetworkPage();
+                htmlExport.exportAvailableServerPages();
+            });
         }
     }
 
