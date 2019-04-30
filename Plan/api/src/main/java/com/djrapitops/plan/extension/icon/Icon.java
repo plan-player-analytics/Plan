@@ -64,8 +64,9 @@ public class Icon {
         return color;
     }
 
-    public void setColor(Color color) {
+    public Icon setColor(Color color) {
         this.color = color;
+        return this;
     }
 
     @Override

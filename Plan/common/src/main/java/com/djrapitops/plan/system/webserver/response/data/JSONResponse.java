@@ -14,7 +14,6 @@ public class JSONResponse<T> extends Response {
 
     public JSONResponse(T object) {
         super(ResponseType.JSON);
-
         super.setHeader("HTTP/1.1 200 OK");
 
         try {
@@ -26,5 +25,11 @@ public class JSONResponse<T> extends Response {
         } catch (ReflectiveOperationException e) {
             super.setContent("{\"error\":\"Gson for json responses not available on this server: " + e.toString() + "\"}");
         }
+    }
+
+    public JSONResponse(String jsonString) {
+        super(ResponseType.JSON);
+        super.setHeader("HTTP/1.1 200 OK");
+        super.setContent(jsonString);
     }
 }

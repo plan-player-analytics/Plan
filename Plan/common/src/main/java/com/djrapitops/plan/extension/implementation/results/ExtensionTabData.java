@@ -39,6 +39,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
     private final List<ExtensionTableData> tableData;
 
     private List<String> order;
+    private List<ExtensionDescriptive> descriptives;
 
     // Table and Graph data will be added later.
 
@@ -52,6 +53,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         stringData = new HashMap<>();
 
         tableData = new ArrayList<>();
+        descriptives = new ArrayList<>();
     }
 
     public TabInformation getTabInformation() {
@@ -86,6 +88,17 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         return tableData;
     }
 
+    /**
+     * Get all Descriptives for this tabs data.
+     * <p>
+     * Only available after the Tab has been built.
+     *
+     * @return List of {@link ExtensionDescriptive}s.
+     */
+    public List<ExtensionDescriptive> getDescriptives() {
+        return descriptives;
+    }
+
     @Override
     public int compareTo(ExtensionTabData other) {
         return Integer.compare(this.tabInformation.getTabPriority(), other.tabInformation.getTabPriority()); // Lower is first
@@ -118,7 +131,6 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
     }
 
     private void createOrderingList() {
-        List<ExtensionDescriptive> descriptives = new ArrayList<>();
         booleanData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
         doubleData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
         percentageData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
