@@ -85,7 +85,11 @@ public class DBCleanTask extends AbsRunnable {
         Database database = dbSystem.getDatabase();
         try {
             if (database.getState() != Database.State.CLOSED) {
-                database.executeTransaction(new RemoveOldSampledDataTransaction(serverInfo.getServerUUID()));
+                database.executeTransaction(new RemoveOldSampledDataTransaction(
+                        serverInfo.getServerUUID(),
+                        config.get(TimeSettings.DELETE_TPS_DATA_AFTER),
+                        config.get(TimeSettings.DELETE_PING_DATA_AFTER)
+                ));
                 database.executeTransaction(new RemoveDuplicateUserInfoTransaction());
                 database.executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
                 database.executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
@@ -103,7 +107,7 @@ public class DBCleanTask extends AbsRunnable {
     @VisibleForTesting
     public int cleanOldPlayers(Database database) {
         long now = System.currentTimeMillis();
-        long keepActiveAfter = now - config.get(TimeSettings.KEEP_INACTIVE_PLAYERS);
+        long keepActiveAfter = now - config.get(TimeSettings.DELETE_INACTIVE_PLAYERS_AFTER);
 
         List<UUID> inactivePlayers = database.query(fetchInactivePlayerUUIDs(keepActiveAfter));
         for (UUID uuid : inactivePlayers) {
