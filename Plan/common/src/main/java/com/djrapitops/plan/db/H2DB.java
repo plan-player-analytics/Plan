@@ -92,7 +92,7 @@ public class H2DB extends SQLDB {
         String password = config.get(DatabaseSettings.MYSQL_PASS);
 
         JdbcDataSource jdbcDataSource = new JdbcDataSource();
-        jdbcDataSource.setURL("jdbc:h2:file:" + dbFilePath + ";mode=MySQL");
+        jdbcDataSource.setURL("jdbc:h2:file:" + dbFilePath + ";mode=MySQL;DATABASE_TO_UPPER=false");
         jdbcDataSource.setUser(username);
         jdbcDataSource.setPassword(password);
 
