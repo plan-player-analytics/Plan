@@ -3,7 +3,7 @@ plugins {
     id "jacoco"
     id "checkstyle"
     id "org.sonarqube" version "2.7"
-    id "net.ltgt.apt" version "0.19"
+    id "net.ltgt.apt" version "0.21"
     id "net.ltgt.apt-idea" version "0.21"
     id "com.github.johnrengelman.shadow" version "5.0.0"
 }
