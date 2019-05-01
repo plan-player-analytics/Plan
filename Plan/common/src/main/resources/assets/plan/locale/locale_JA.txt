@@ -1,13 +1,13 @@
 ﻿Cmd - Click Me                                  || ここをクリック
 Cmd - Link                                      ||   §2リンク: §f
-Cmd Disable - Disabled                          || §a現在、Planシステムは無効になりました。「/planbungee reload」コマンドを使ってプラグインを再起動できます
+Cmd Disable - Disabled                          || §a「Plan」は無効になりました。「/planbungee reload」コマンドを使ってプラグインを再起動できます
 Cmd FAIL - Database not open                    || §cデータベースは${0}です - しばらくしてからもう一度お試し下さい
 Cmd FAIL - Invalid Username                     || §cこのユーザーはUUIDを所持していません
 Cmd FAIL - No Feature                           || §eこの機能は現在使用されていません！ (現在、「${0}」をサポートしています)
 Cmd FAIL - No Permission                        || §cあなたには実行する権限がありません
 Cmd FAIL - Require only one Argument            || §c一つの引数「${1}」が必要です
 Cmd FAIL - Requires Arguments                   || §c引数「(${0}) ${1}」が必要です
-Cmd FAIL - Unknown Username                     || §c入力されたユーザーはこのサーバーにいません
+Cmd FAIL - Unknown Username                     || §c入力されたユーザーはBukkit/Spigotサーバー上にいません
 Cmd FAIL - WebUser does not exists              || §c入力されたユーザーは存在しません!
 Cmd FAIL - WebUser exists                       || §c入力されたユーザー名は既に使われています!
 Cmd Header - Analysis                           || > §2分析結果
@@ -18,10 +18,10 @@ Cmd Header - Players                            || > §2プレイヤー
 Cmd Header - Search                             || > §2${0} §f${1}§2 の結果:
 Cmd Header - Servers                            || > §2サーバー
 Cmd Header - Web Users                          || > §2${0} ウェブユーザー
-Cmd Info - Bungee Connection                    ||   §2Bungeeに接続済み: §f${0}
+Cmd Info - Bungee Connection                    ||   §2BungeeCordに接続済み: §f${0}
 Cmd Info - Database                             ||   §2動作中のデータベース: §f${0}
-Cmd Info - Reload Complete                      || §aリロード完了
-Cmd Info - Reload Failed                        || §cプラグインのリロード中に何らかの問題が発生したため、再起動をお勧めします。
+Cmd Info - Reload Complete                      || §aリロードが完了しました
+Cmd Info - Reload Failed                        || §cプラグインのリロード中に何らかの問題が発生しました、Bukkit/SpigotサーバーかBungeeCordの再起動をお勧めします
 Cmd Info - Update                               ||   §2利用可能なアップデート: §f${0}
 Cmd Info - Version                              ||   §2バージョン: §f${0}
 Cmd Notify - No WebUser                         || ウェブユーザーの情報がない可能性があります、「/plan register <password>」を使用して登録して下さい
@@ -40,13 +40,13 @@ Cmd Setup - Allowed                             || §aセットアップモー�
 Cmd Setup - Bad Request                         || §e接続は成功しましたが、受信サーバーはBungeeCordのサーバーではありませんでした。代わりにBungeeCordのアドレスを使用して下さい
 Cmd Setup - Disallowed                          || §cセットアップモードが無効になりました
 Cmd Setup - Forbidden                           || §e接続は成功しましたが、BungeeCordの「Plan」のセットアップモードが無効になっています。「/planbungee setup」コマンドを使用して有効にして下さい
-Cmd Setup - Gateway Error                       || §e接続は成功しましたが、BungeeCordの「Plan」がサーバーに接続できませんでした。(Webサーバーの再起動?)。「/plan m con 」と「/planbungee con」でデバック情報を表示できます
+Cmd Setup - Gateway Error                       || §e接続は成功しましたが、BungeeCordの「Plan」のウェブサーバーに接続できませんでした。(ウェブサーバーが再起動中の可能性があります)。「/plan m con 」と「/planbungee con」でデバック情報を表示できます
 Cmd Setup - Generic Fail                        || §e以下の理由で接続に失敗しました: ${0}
-Cmd Setup - Internal Error                      || §e接続は成功しました。 $ {0}、受信サーバーのデバッグページでエラーログを確認できるようになりました
+Cmd Setup - Internal Error                      || §e接続は成功しました。 ${0}、受信サーバーのデバッグページでエラーログを確認できるようになりました
 Cmd Setup - Success                             || §a接続は成功しました。「Plan」は数秒以内に再起動します。
-Cmd Setup - Unauthorized                        || §e接続は成功しましたが、このサーバーを受信サーバーが拒否しました。Discordのサポートに連絡して下さい
-Cmd Setup - Url mistake                         || §cWebアドレスの入力を確かめて下さい(「http://」もしくは「https://」で始まります )。アドレスについてはBungeeCordの「Plan」を有効化した時のログを確認して下さい。
-Cmd Setup - WebServer not Enabled               || §cこのサーバーでウェブサーバーは有効になっていません。サーバー起動時にウェブサーバーが有効になっていることを確認して下さい！
+Cmd Setup - Unauthorized                        || §e接続は成功しましたが、このBukkit/Spigotサーバーを受信サーバーが拒否しました。Discordのサポートに連絡して下さい
+Cmd Setup - Url mistake                         || §cウェブアドレスの入力を確かめて下さい(「http://」もしくは「https://」で始まります )。アドレスについてはBungeeCordの「Plan」を有効化した時のログを確認して下さい。
+Cmd Setup - WebServer not Enabled               || §cこのBukkit/Spigotサーバーでウェブサーバーは有効になっていません。Bukkit/Spigotサーバー起動時にウェブサーバーが有効になっていることを確認して下さい！
 Cmd SUCCESS - Feature disabled                  || §a次にプラグインがリロードされるまで一時的に「$ {0}」を無効にしました。
 Cmd SUCCESS - WebUser register                  || §a新規ユーザー「(${0})」の登録に成功しました！
 Cmd WARN - Database not open                    || §eデータベースは${0}です - 予想以上に時間がかかるかもしれません
@@ -59,7 +59,7 @@ Command Help - /plan inspect                    || 「プレイヤー」のURL�
 Command Help - /plan manage                     || 「Plan」のデータベースを管理します
 Command Help - /plan manage backup              || データベースをバックアップします
 Command Help - /plan manage clear               || データベースを消去します
-Command Help - /plan manage con                 || Bungeeとサーバーとの接続をデバックします
+Command Help - /plan manage con                 || BungeeCordとBukkit/Spigotサーバーとの接続をデバックします
 Command Help - /plan manage disable             || 機能を一時的に無効にします
 Command Help - /plan manage export              || 手動でデータのエクスポートを行います
 Command Help - /plan manage hotswap             || データベースを高速で変更します
@@ -68,7 +68,7 @@ Command Help - /plan manage move                || データベース間でデ�
 Command Help - /plan manage raw                 || プレイヤーデータのJSONファイルを直接表示ます
 Command Help - /plan manage remove              || プレイヤーのデータを削除します
 Command Help - /plan manage restore             || 以前のバックアップから復元します
-Command Help - /plan manage setup               || Bungeeとサーバーとの接続をセットアップします
+Command Help - /plan manage setup               || BungeeCordとBukkit/Spigotサーバーとの接続をセットアップします
 Command Help - /plan manage uninstalled         || 指定されたサーバーをデータベースからアンインストールします
 Command Help - /plan network                    || 「ネットワーク」のページのURLを表示します
 Command Help - /plan players                    || 「プレイヤー」のページのURLを表示します
@@ -76,13 +76,13 @@ Command Help - /plan qinspect                   || プレイヤー情報をゲ�
 Command Help - /plan register                   || ウェブユーザーを登録します
 Command Help - /plan reload                     || 「Plan」を再起動します
 Command Help - /plan search                     || プレイヤー名を検索します
-Command Help - /plan servers                    || データベース内のサーバー一覧を表示します
+Command Help - /plan servers                    || データベース内のBukkit/Spigotサーバー一覧を表示します
 Command Help - /plan web check                  || ウェブユーザーの点検を行います
 Command Help - /plan web delete                 || ウェブユーザーの削除を行います
 Command Help - /plan web level                  || 権限レベルに関する情報を表示します
 Command Help - /plan web list                   || ウェブユーザーの一覧を表示します
 Command Help - /plan webuser                    || ウェブユーザーを管理します
-Command Help - /planbungee con                  || Bungeeとサーバーとの接続をデバックします
+Command Help - /planbungee con                  || BungeeとBukkit/Spigotサーバーとの接続をデバックします
 Command Help - /planbungee disable              || プラグインを一時的に無効にします
 Command Help - /planbungee setup                || セットアップモードを切り替えます
 Database - Apply Patch                          || 次のパッチを適用しています: ${0}..
@@ -101,7 +101,7 @@ Enable - Database                               || ${0}のデータベースの�
 Enable - Notify Address Confirmation            || 次に表示されるアドレスがこのサーバーをである事を確認して下さい: ${0}
 Enable - Notify Empty IP                        || server.propertiesの設定で、IPの項目が設定されておらずAlternative IPが使用されていません。そのため誤ったリンクが表示されます!
 Enable - Notify Geolocations disabled           || 位置情報サービスが有効ではありません。 (Data.Geolocations: false)
-Enable - Notify Geolocations Internet Required  || Planは初回起動時、GeoLite2の位置情報データベースをダウンロードするためインターネットアクセスが必要です
+Enable - Notify Geolocations Internet Required  || 「Plan」は初回起動時、「GeoLite2」の位置情報データベースをダウンロードするためインターネットアクセスが必要です
 Enable - Notify Webserver disabled              || ウェブサーバーの初期化に失敗しました (WebServer.DisableWebServer: true)
 Enable - WebServer                              || ウェブサーバーは次のポートで実行されています: ${0} (${1})
 Enable FAIL - Database                          || ${0}のデータベースの接続に失敗しました: ${1}
@@ -115,7 +115,7 @@ Health - Downtime                               || サーバーの合計停止�
 Health - New Player Join Players, No            ||  新規プレイヤーが参加時、一緒にプレイするプレイヤーがいないかもしれません。(平均${0}人のプレイヤーがオンラインです)
 Health - New Player Join Players, Yes           ||  新規プレイヤーが参加時、一緒にプレイするプレイヤーがいます。(平均${0}人のプレイヤーがオンラインです)
 Health - New Player Stickiness                  ||  ${0}人の新規プレイヤーが行き詰詰まっています。(${1}/${2})
-Health - No Servers Inaccuracy                  ||  セッションデータを収集するBukkit/Spongeサーバーが接続されていません - ここに不正確なデータが表示されます
+Health - No Servers Inaccuracy                  ||  セッションデータを収集するBukkit/Spongeサーバーが接続されていません - 不正確なデータが表示されます
 Health - Player Play on Network                 ||  人のプレイヤーがネットワーク上でプレイしています:
 Health - Player Register Server                 ||  人のプレイヤーが1日あたり登録されています。以下サーバーごとの1日の登録数:
 Health - Player Visit Server                    ||  人のプレイヤーが1日あたりこのサーバーに接続しています。以下サーバーごとの1日の接続数:
@@ -271,34 +271,34 @@ HTML ERRORS - NOT_PLAYED_404                    || プレイヤーはこのサ�
 HTML ERRORS - PAGE_NOT_FOUND_404                || ページは存在しません
 HTML ERRORS - PLUGIN_TAB_REFRESH                || 計算中です・・・
 HTML ERRORS - UNAUTHORIZED_401                  || 未認証状態です
-HTML ERRORS - UNKNOWN_PAGE_404                  || リンクが間違っています、コマンドを使用してURLを確認して下さい。 例:</p><p>/player/PlayerName<br>/server/ServerName</p>
+HTML ERRORS - UNKNOWN_PAGE_404                  || リンクが間違っています、コマンドを使用してURLを確認して下さい。 URL例:</p><p>/player/PlayerName<br>/server/ServerName</p>
 HTML ERRORS - UUID_404                          || データベース内にプレヤーのUUIDが存在しません
 In Depth Help - /plan ?                         || > §2主要なコマンド\  補助コマンドの表示とヘルプ\  §2/plan §f補助コマンドの一覧を表示します\  §2/plan <subcommand> ? §f詳細なヘルプを表示します
-In Depth Help - /plan analyze ?                 || > §2分析コマンド\  サーバーページを更新して、Webページへのリンクを表示します
-In Depth Help - /plan inspect ?                 || > §2検査コマンド\  プレイヤーページを更新して、Webページへのリンクを表示します
-In Depth Help - /plan manage ?                  || > §2管理コマンド\  MySQLまたはSQLiteのPlanのデータベースを管理します\  §2/plan m §f補助コマンドの一覧を表示します\  §2/plan m <subcommand> ? §f詳細なヘルプを表示します
-In Depth Help - /plan manage backup ?           || > §2バックアップコマンド\  現在アクティブになっているデータベースの内容を含むSQLiteの新しいデータベースをPlanのプラグインフォルダ内に作成します(拡張子は「.db」です)
+In Depth Help - /plan analyze ?                 || > §2分析コマンド\  サーバーページを更新して、ウェブページへのリンクを表示します
+In Depth Help - /plan inspect ?                 || > §2検査コマンド\  プレイヤーページを更新して、ウェブページへのリンクを表示します
+In Depth Help - /plan manage ?                  || > §2管理コマンド\  MySQLまたはSQLiteの「Plan」のデータベースを管理します\  §2/plan m §f補助コマンドの一覧を表示します\  §2/plan m <subcommand> ? §f詳細なヘルプを表示します
+In Depth Help - /plan manage backup ?           || > §2バックアップコマンド\  現在アクティブになっているデータベースの内容を含むSQLiteの新しいデータベースを「Plan」のプラグインフォルダ内に作成します(拡張子は「.db」です)
 In Depth Help - /plan manage clear ?            || > §2クリア補助コマンド\  アクティブになっているデータベースの全てを削除します。使用には注意が必要です
 In Depth Help - /plan manage con ?              || > §2接続デバッグ補助コマンド\  ネットワーク内の接続をデバッグするために使用します\  データベース内の各サーバーにリクエストを送信します。
 In Depth Help - /plan manage disable ?          || > §2無効補助コマンド\  次回のリロードまでプラグインの一部を無効にすることができます\  使用できる引数:\    §2キックカウント §fシャットダウンマクロで「/kickball」が使用されている場合の無効化されたキックカウント。
 In Depth Help - /plan manage export ?           || > §2エクスポート補助コマンド\  分析結果を特定のフォルダーへのエクスポートを有効化します\  使用できる引数:\    §2list §fList possible arguments.\    §2players §fExport /players, /player pages + /player/raw json depending on config values.\    §2server_json §fExport /server/raw JSON if enabled in config.
 In Depth Help - /plan manage import ?           || > §2インポート補助コマンド\  別のソースからデータをインポートします\  使用できる引数:\    §2オフライン §fBukkitのプレイヤーデータ、登録日と名前のみを登録できます
 In Depth Help - /plan manage move ?             || > §2移動補助コマンド\  SQLiteからMySQLもしくは他の形式にデータを移行させます\  ターゲットとなるデータベースは移行前に空である必要があります
-In Depth Help - /plan manage raw ?              || > §2生のデータ補助コマンド\ 生のJSONデータページへのリンクを表示します\  Planの内部Webサーバーが有効になっていない場合は利用できません
+In Depth Help - /plan manage raw ?              || > §2生のデータ補助コマンド\ 生のJSONデータページへのリンクを表示します\  「Plan」の内部ウェブサーバーが有効になっていない場合は利用できません
 In Depth Help - /plan manage remove ?           || > §2削除補助コマンド\  プレイヤーのデータをアクティブになっているデータベースから削除します
 In Depth Help - /plan manage restore ?          || > §2復元補助コマンド\  データベースを以前にバックアップしたSQLiteデータベース(拡張子が「.db」のファイル)に復元します\  他のサーバーの拡張子が「.db」のデータベースをMySQLに復元することもできます\  ターゲットとなるデータベースは移行前に空である必要があります
-In Depth Help - /plan manage setup ?            || > §2セットアップ補助コマンド\  「ネットワーク」のページを機能させるために、Bungeeとこのサーバーの間の接続を設定します.\  BungeeのアドレスはBungeeでPlanが有効化された時のログで見つけることができます。
+In Depth Help - /plan manage setup ?            || > §2セットアップ補助コマンド\  「ネットワーク」のページを機能させるために、BungeeCordとこのBukkit/Spigotサーバーの間の接続を設定します.\  BungeeCordのアドレスはBungeeCordで「Plan」が有効化された時のログで見つけることができます。
 In Depth Help - /plan manage uninstalled ?      || > §2サーバーアンインストール補助コマンド\  指定されたサーバーをデータベースからアンインストールします\  コマンドが実行されているサーバーをアンインストールするサーバーとしてマークすることはできません\  サーバーの接続システムに影響します
-In Depth Help - /plan network ?                 || > §2ネットワークコマンド\  「ネットワーク」のページのURLを表示します\  Bungeeのネットワーク上にない場合は、このページにサーバーページが表示されます。
+In Depth Help - /plan network ?                 || > §2ネットワークコマンド\  「ネットワーク」のページのURLを表示します\  BungeeCordのネットワーク上にない場合は、このページにサーバーページが表示されます。
 In Depth Help - /plan players ?                 || > §2プレイヤーコマンド\  「プレイヤー」のページのURLを表示します
 In Depth Help - /plan qinspect ?                || > §2クイック検査コマンド\  ゲーム内にいるプレイヤーに関する情報を表示します。
 In Depth Help - /plan reload ?                  || > §2リロードコマンド\ 「onDisable」と「onEnable」を使ってプラグインを再起動します。\  §bその状態で「Swapping jar」は対応していません
 In Depth Help - /plan search ?                  || > §2検索コマンド\  与えられた引数に一致するプレイヤー名のリストを取得します\§7  例: /plan search 123 - 名前に「123」を含むすべてのユーザーを検索します
-In Depth Help - /plan servers ?                 || > §2サーバーコマンド\  データベース内のPlanサーバーのリストを表示します\  Bungeeネットワークのデータベースにサーバーを登録する際の問題をデバッグするために使用できます
-In Depth Help - /plan web ?                     || < §2Webユーザー管理コマンド\  §2/plan web §f補助コマンドの一覧を表示します\  §2/plan web <subcommand> ? §f詳細なヘルプを表示します
+In Depth Help - /plan servers ?                 || > §2サーバーコマンド\  データベース内の「Plan」サーバーのリストを表示します\  BungeeCordネットワークのデータベースにサーバーを登録する際の問題をデバッグするために使用できます
+In Depth Help - /plan web ?                     || < §2ウェブユーザー管理コマンド\  §2/plan web §f補助コマンドの一覧を表示します\  §2/plan web <subcommand> ? §f詳細なヘルプを表示します
 In Depth Help - /plan web register ?            || > §2登録コマンド\  新しいウェブユーザーを登録します。\  プレイヤーが他のプレイヤーをユーザー登録するには「plan.webmanage」権限が必要です\  パスワードはPBKDF2(64,000回のSHA1の繰り返し)でソルト(暗号論)をかけてハッシュされます。
-In Depth Help - /planbungee disable ?           || > §2無効化コマンド\  PlanBungee「onDisable」を実行します\  あとで「/planbungee reload」を使ってプラグインを有効にすることができます\  §bその状態で「Swapping jar」は対応していません
-In Depth Help - /planbungee setup ?             || > §2セットアップ切り替えコマンド\  Bungeeでセットアップモードを切り替えます\  許可されていない他のサーバーがMySQLを詮索するのを防ぎます。
+In Depth Help - /planbungee disable ?           || > §2無効化コマンド\  BungeeCordの「Plan」で「onDisable」を実行します\  あとで「/planbungee reload」を使ってプラグインを有効にすることができます\  §bその状態で「Swapping jar」は対応していません
+In Depth Help - /planbungee setup ?             || > §2セットアップ切り替えコマンド\  BungeeCordでセットアップモードを切り替えます\  許可されていない他のサーバーがMySQLを詮索するのを防ぎます。
 Manage - Confirm Overwrite                      || ${0}のデータは上書きされます!
 Manage - Confirm Removal                        || ${0}のデータは削除されます!
 Manage - Fail                                   || > §c何かがうまくいきませんでした: ${0}
@@ -326,7 +326,7 @@ Today                                           || '今日'
 Yesterday                                       || '昨日'
 Unknown                                         || 不明
 Version - DEV                                   ||  このバージョンは開発版です
-Version - Latest                                || 最新版のPlanを使用しています
+Version - Latest                                || 最新版の「Plan」を使用しています
 Version - New                                   || 新しいバージョンの${0}が次のURLで入手可能です ${1}
 Version - New (old)                             || 新しいバージョンは次のURLで入手可能です${0}
 Version FAIL - Read info (old)                  || 新しいバージョンのチェックに失敗しました
