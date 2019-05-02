@@ -22,6 +22,7 @@ import com.djrapitops.plan.extension.implementation.MethodType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -94,5 +95,20 @@ public class MethodWrapper<T> {
 
     public Class<T> getResultType() {
         return resultType;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MethodWrapper)) return false;
+        MethodWrapper<?> that = (MethodWrapper<?>) o;
+        return method.equals(that.method) &&
+                resultType.equals(that.resultType) &&
+                methodType == that.methodType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(method, resultType, methodType);
     }
 }

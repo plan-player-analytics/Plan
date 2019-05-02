@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.implementation.providers.gathering;
 
+import com.djrapitops.plan.api.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.extension.DataExtension;
@@ -29,7 +30,6 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIc
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreNumberProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerNumberResultTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerNumberResultTransaction;
-import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -50,20 +50,17 @@ class NumberProviderValueGatherer {
 
     private final Database database;
     private final DataProviders dataProviders;
-    private final PluginLogger logger;
 
     NumberProviderValueGatherer(
             String pluginName, DataExtension extension,
             UUID serverUUID, Database database,
-            DataProviders dataProviders,
-            PluginLogger logger
+            DataProviders dataProviders
     ) {
         this.pluginName = pluginName;
         this.extension = extension;
         this.serverUUID = serverUUID;
         this.database = database;
         this.dataProviders = dataProviders;
-        this.logger = logger;
     }
 
     void gatherNumberDataOfPlayer(UUID playerUUID, String playerName, Conditions conditions) {
@@ -100,10 +97,7 @@ class NumberProviderValueGatherer {
         }
 
         MethodWrapper<Long> method = numberProvider.getMethod();
-        Long result = getMethodResult(
-                methodCaller.apply(method),
-                throwable -> pluginName + " has invalid implementation, method " + method.getMethodName() + " threw exception: " + throwable.toString()
-        );
+        Long result = getMethodResult(methodCaller.apply(method), method);
         if (result == null) {
             return;
         }
@@ -115,12 +109,11 @@ class NumberProviderValueGatherer {
         database.executeTransaction(storeTransactionCreator.apply(method, result));
     }
 
-    private <T> T getMethodResult(Callable<T> callable, Function<Throwable, String> errorMsg) {
+    private <T> T getMethodResult(Callable<T> callable, MethodWrapper<T> method) {
         try {
             return callable.call();
-        } catch (Exception | NoSuchFieldError | NoSuchMethodError e) {
-            logger.warn(errorMsg.apply(e));
-            return null;
+        } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
+            throw new DataExtensionMethodCallException(e, pluginName, method);
         }
     }
 }

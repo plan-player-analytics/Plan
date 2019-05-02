@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension;
 
+import com.djrapitops.plan.api.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.data.plugin.PluginsConfigSection;
 import com.djrapitops.plan.extension.implementation.CallerImplementation;
 import com.djrapitops.plan.extension.implementation.DataProviderExtractor;
@@ -111,7 +112,6 @@ public class ExtensionServiceImplementation implements ExtensionService {
         if (extensionGatherers.remove(pluginName) != null) {
             logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, pluginName + " extension unregistered.");
         }
-
     }
 
     private boolean shouldNotAllowRegistration(String pluginName) {
@@ -150,14 +150,27 @@ public class ExtensionServiceImplementation implements ExtensionService {
             gatherer.updateValues(playerUUID, playerName);
 
             logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, "Gathering completed:  " + playerName);
-        } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
-            logger.warn(gatherer.getPluginName() + " ran into (but failed safely) " + e.getClass().getSimpleName() +
-                    " when updating value for '" + playerName +
-                    "', (You can disable integration with setting 'Plugins." + gatherer.getPluginName() + ".Enabled')" +
-                    " reason: '" + e.getMessage() +
+        } catch (DataExtensionMethodCallException methodCallFailed) {
+            logFailure(playerName, methodCallFailed);
+            gatherer.disableMethodFromUse(methodCallFailed.getMethod());
+            // Try again
+            updatePlayerValues(gatherer, playerUUID, playerName, event);
+        } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
+            logger.warn(gatherer.getPluginName() + " ran into unexpected error (please report this)" + unexpectedError +
+                    " (but failed safely) when updating value for '" + playerName +
                     "', stack trace to follow:");
-            errorHandler.log(L.WARN, gatherer.getClass(), e);
+            errorHandler.log(L.WARN, gatherer.getClass(), unexpectedError);
         }
+    }
+
+    private void logFailure(String playerName, DataExtensionMethodCallException methodCallFailed) {
+        Throwable cause = methodCallFailed.getCause();
+        String causeName = cause.getClass().getSimpleName();
+        logger.warn(methodCallFailed.getPluginName() + " ran into " + causeName +
+                " (but failed safely) when updating value for '" + playerName +
+                "', the method was disabled temporarily (won't be called until next Plan reload)" +
+                ", stack trace to follow:");
+        errorHandler.log(L.WARN, getClass(), cause);
     }
 
     public void updateServerValues(CallEvents event) {
@@ -176,13 +189,15 @@ public class ExtensionServiceImplementation implements ExtensionService {
             gatherer.updateValues();
 
             logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, "Gathering completed for server");
-        } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
-            logger.warn(gatherer.getPluginName() + " ran into (but failed safely) " + e.getClass().getSimpleName() +
-                    " when updating value for server" +
-                    ", (You can disable integration with setting 'Plugins." + gatherer.getPluginName() + ".Enabled')" +
-                    " reason: '" + e.getMessage() +
-                    "', stack trace to follow:");
-            errorHandler.log(L.WARN, gatherer.getClass(), e);
+        } catch (DataExtensionMethodCallException methodCallFailed) {
+            logFailure("server", methodCallFailed);
+            gatherer.disableMethodFromUse(methodCallFailed.getMethod());
+            // Try again
+            updateServerValues(gatherer, event);
+        } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
+            logger.warn(gatherer.getPluginName() + " ran into unexpected error (please report this)" + unexpectedError +
+                    " (but failed safely) when updating value for server, stack trace to follow:");
+            errorHandler.log(L.WARN, gatherer.getClass(), unexpectedError);
         }
     }
 }

@@ -23,6 +23,7 @@ import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.DataProviderExtractor;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProviders;
+import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StorePluginTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreTabInformationTransaction;
@@ -44,11 +45,14 @@ public class ProviderValueGatherer {
     private final DataProviderExtractor extractor;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
+
+    private DataProviders dataProviders;
     private BooleanProviderValueGatherer booleanGatherer;
     private NumberProviderValueGatherer numberGatherer;
     private DoubleAndPercentageProviderValueGatherer doubleAndPercentageGatherer;
     private StringProviderValueGatherer stringGatherer;
     private TableProviderValueGatherer tableGatherer;
+
 
     public ProviderValueGatherer(
             DataExtension extension,
@@ -65,22 +69,26 @@ public class ProviderValueGatherer {
         String pluginName = extractor.getPluginName();
         UUID serverUUID = serverInfo.getServerUUID();
         Database database = dbSystem.getDatabase();
-        DataProviders dataProviders = extractor.getDataProviders();
+        dataProviders = extractor.getDataProviders();
         booleanGatherer = new BooleanProviderValueGatherer(
-                pluginName, extension, serverUUID, database, dataProviders, logger
+                pluginName, extension, serverUUID, database, dataProviders
         );
         numberGatherer = new NumberProviderValueGatherer(
-                pluginName, extension, serverUUID, database, dataProviders, logger
+                pluginName, extension, serverUUID, database, dataProviders
         );
         doubleAndPercentageGatherer = new DoubleAndPercentageProviderValueGatherer(
-                pluginName, extension, serverUUID, database, dataProviders, logger
+                pluginName, extension, serverUUID, database, dataProviders
         );
         stringGatherer = new StringProviderValueGatherer(
-                pluginName, extension, serverUUID, database, dataProviders, logger
+                pluginName, extension, serverUUID, database, dataProviders
         );
         tableGatherer = new TableProviderValueGatherer(
-                pluginName, extension, serverUUID, database, dataProviders, logger
+                pluginName, extension, serverUUID, database, dataProviders
         );
+    }
+
+    public void disableMethodFromUse(MethodWrapper method) {
+        dataProviders.removeProviderWithMethod(method);
     }
 
     public boolean canCallEvent(CallEvents event) {
