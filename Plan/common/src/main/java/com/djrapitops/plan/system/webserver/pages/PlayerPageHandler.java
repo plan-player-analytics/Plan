@@ -105,7 +105,7 @@ public class PlayerPageHandler implements PageHandler {
             infoSystem.generateAndCachePlayerPage(uuid);
             response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
         }
-        return response != null ? response : responseFactory.serverNotFound404();
+        return response != null ? response : responseFactory.playerNotFound404();
     }
 
     @Override
