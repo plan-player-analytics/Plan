@@ -1050,8 +1050,10 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void indexCreationWorksWithoutErrors() {
-        db.executeTransaction(new CreateIndexTransaction());
+    public void indexCreationWorksWithoutErrors() throws Exception {
+        Transaction transaction = new CreateIndexTransaction();
+        db.executeTransaction(transaction).get(); // get to ensure transaction is finished
+        assertTrue(transaction.wasSuccessful());
     }
 
     @Test

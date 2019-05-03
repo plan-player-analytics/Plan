@@ -21,6 +21,7 @@ import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.ExtensionDescriptive;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -48,10 +49,38 @@ public class ProviderInformation extends ExtensionDescriptive {
     }
 
     public Optional<String> getTab() {
-        return tab == null || tab.isEmpty() ? Optional.empty() : Optional.of(StringUtils.truncate(tab, 50));
+        return tab == null || tab.isEmpty()
+                ? Optional.empty()
+                : Optional.of(StringUtils.truncate(tab, 50));
     }
 
     public Optional<String> getCondition() {
-        return condition == null || condition.value().isEmpty() ? Optional.empty() : Optional.of((condition.negated() ? "not_" : "") + StringUtils.truncate(condition.value(), 50));
+        if (condition == null || condition.value().isEmpty()) {
+            return Optional.empty();
+        } else if (condition.negated()) {
+            return Optional.of("not_" + getTruncatedConditionName());
+        } else {
+            return Optional.of(getTruncatedConditionName());
+        }
+    }
+
+    private String getTruncatedConditionName() {
+        return StringUtils.truncate(condition.value(), 50);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ProviderInformation)) return false;
+        if (!super.equals(o)) return false;
+        ProviderInformation that = (ProviderInformation) o;
+        return pluginName.equals(that.pluginName) &&
+                Objects.equals(tab, that.tab) &&
+                Objects.equals(condition, that.condition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), pluginName, tab, condition);
     }
 }

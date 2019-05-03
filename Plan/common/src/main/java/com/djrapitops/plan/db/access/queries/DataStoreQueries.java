@@ -27,6 +27,7 @@ import com.djrapitops.plan.db.access.ExecBatchStatement;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.sql.tables.*;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -88,7 +89,7 @@ public class DataStoreQueries {
      * @throws IllegalArgumentException If {@link Session#endSession(long)} has not yet been called.
      */
     public static Executable storeSession(Session session) {
-        session.getValue(SessionKeys.END).orElseThrow(() -> new IllegalArgumentException("Attempted to save a session that has not ended."));
+        Verify.isTrue(session.supports(SessionKeys.END), () -> new IllegalArgumentException("Attempted to save a session that has not ended."));
         return connection -> {
             storeSessionInformation(session).execute(connection);
             storeSessionKills(session).execute(connection);

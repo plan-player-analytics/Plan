@@ -59,7 +59,7 @@ public class RawDataResponse extends JSONResponse<Map<String, Object>> {
 
     private static List handleList(List list) {
         if (list.stream().findAny().orElse(null) instanceof DataContainer) {
-            return (List) list.stream().map((obj) -> mapToNormalMap((DataContainer) obj)).collect(Collectors.toList());
+            return (List) list.stream().map(obj -> mapToNormalMap((DataContainer) obj)).collect(Collectors.toList());
         }
         return list;
     }

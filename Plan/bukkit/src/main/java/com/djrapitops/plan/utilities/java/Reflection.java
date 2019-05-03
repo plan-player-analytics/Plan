@@ -122,7 +122,7 @@ public final class Reflection {
                         try {
                             return (T) field.get(target);
                         } catch (IllegalAccessException e) {
-                            throw new RuntimeException("Cannot access reflection.", e);
+                            throw new IllegalStateException("Cannot access reflection.", e);
                         }
                     }
 
@@ -131,7 +131,7 @@ public final class Reflection {
                         try {
                             field.set(target, value);
                         } catch (IllegalAccessException e) {
-                            throw new RuntimeException("Cannot access reflection.", e);
+                            throw new IllegalStateException("Cannot access reflection.", e);
                         }
                     }
 
@@ -197,7 +197,7 @@ public final class Reflection {
                     try {
                         return method.invoke(target, arguments);
                     } catch (Exception e) {
-                        throw new RuntimeException("Cannot invoke method " + method, e);
+                        throw new IllegalStateException("Cannot invoke method " + method, e);
                     }
                 };
             }
@@ -240,7 +240,7 @@ public final class Reflection {
                     try {
                         return constructor.newInstance(arguments);
                     } catch (Exception e) {
-                        throw new RuntimeException("Cannot invoke constructor " + constructor, e);
+                        throw new IllegalStateException("Cannot invoke constructor " + constructor, e);
                     }
                 };
             }

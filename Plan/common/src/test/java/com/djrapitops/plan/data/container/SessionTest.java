@@ -21,6 +21,7 @@ import com.djrapitops.plan.data.time.WorldTimes;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+import utilities.RandomData;
 import utilities.TestConstants;
 
 import java.util.List;
@@ -42,21 +43,22 @@ class SessionTest {
     @Test
     void safeStartKeyConstructor() {
         for (int i = 0; i < 10000; i++) {
-            Session session = new Session(null, serverUUID, System.currentTimeMillis(), null, null);
+            long expected = RandomData.randomLong(0, System.currentTimeMillis());
+            Session session = new Session(null, serverUUID, expected, null, null);
 
             // Should not throw
-            session.getUnsafe(SessionKeys.START);
+            assertEquals(expected, session.getUnsafe(SessionKeys.START));
         }
     }
 
     @Test
     void safeStartKeyDBConstructor() {
         for (int i = 0; i < 10000; i++) {
-            long time = System.currentTimeMillis();
-            Session session = new Session(-1, null, null, time, time + 1, 0, 0, 0);
+            long expected = RandomData.randomLong(0, System.currentTimeMillis());
+            Session session = new Session(-1, null, null, expected, expected + 1, 0, 0, 0);
 
             // Should not throw
-            session.getUnsafe(SessionKeys.START);
+            assertEquals(expected, session.getUnsafe(SessionKeys.START));
         }
     }
 

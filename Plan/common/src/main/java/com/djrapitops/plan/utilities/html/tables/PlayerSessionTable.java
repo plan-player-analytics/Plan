@@ -75,7 +75,7 @@ class PlayerSessionTable extends TableContainer {
             String world = worldAliasSettings.getLongestWorldPlayed(session);
 
             String toolTip = "Session ID: " + session.getValue(SessionKeys.DB_ID)
-                    .map(id -> Integer.toString(id))
+                    .map(Object::toString)
                     .orElse("Not Saved.");
             addRow(Html.LINK_TOOLTIP.parse(inspectUrl, playerName, toolTip), start, length, world);
 

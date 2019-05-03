@@ -39,6 +39,10 @@ public class RandomData {
         return ThreadLocalRandom.current().nextInt(rangeStart, rangeEnd);
     }
 
+    public static long randomLong(long rangeStart, long rangeEnd) {
+        return ThreadLocalRandom.current().nextLong(rangeStart, rangeEnd);
+    }
+
     public static String randomString(int size) {
         return RandomStringUtils.randomAlphanumeric(size);
     }

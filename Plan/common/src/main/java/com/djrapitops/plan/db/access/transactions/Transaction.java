@@ -157,4 +157,8 @@ public abstract class Transaction {
     public String toString() {
         return getClass().getSimpleName() + (success ? " (finished)" : "");
     }
+
+    public boolean wasSuccessful() {
+        return success;
+    }
 }

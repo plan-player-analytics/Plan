@@ -175,11 +175,11 @@ public abstract class BukkitImporter implements Importer {
     }
 
     private BaseUser toBaseUser(UserImportData userImportData) {
-        UUID uuid = userImportData.getUuid();
-        String name = userImportData.getName();
+        UUID playerUUID = userImportData.getUuid();
+        String playerName = userImportData.getName();
         long registered = userImportData.getRegistered();
         int timesKicked = userImportData.getTimesKicked();
-        return new BaseUser(uuid, name, registered, timesKicked);
+        return new BaseUser(playerUUID, playerName, registered, timesKicked);
     }
 
     private UserInfo toUserInfo(UserImportData userImportData) {

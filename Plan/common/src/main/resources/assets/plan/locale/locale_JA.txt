@@ -261,7 +261,7 @@ HTML ERRORS - ACCESS_DENIED_403                 || アクセスが拒否され�
 HTML ERRORS - ANALYSIS_REFRESH                  || 分析結果に基づいてデータを更新中です・・・
 HTML ERRORS - ANALYSIS_REFRESH_LONG             || サーバーを分析中です・・・・<br>数秒後にページが更新されない場合、ページを更新して下さい
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - 登録したユーザーを<b>「/plan register 」</b>で確認できます。<br>- 入力したユーザー名とパスワードが正しいことを確認して下さい<br>- ユーザー名とパスワードは大文字と小文字が区別されています<br><br>パスワードを忘れた場合は、管理者に古いユーザーを削除して新しくユーザーを再登録するよう依頼して下さい
-HTML ERRORS - AUTHENTICATION_FAIlED_401         || 認証に失敗しました
+HTML ERRORS - AUTHENTICATION_FAILED_401         || 認証に失敗しました
 HTML ERRORS - FORBIDDEN_403                     || 閲覧禁止
 HTML ERRORS - INSPECT_REFRESH                   || プレーヤページのリクエスト処理が実行中です・・
 HTML ERRORS - INSPECT_REFRESH_LONG              || ページは自動的に更新されます・・

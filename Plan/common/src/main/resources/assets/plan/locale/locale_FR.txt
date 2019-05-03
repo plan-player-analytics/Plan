@@ -245,7 +245,7 @@ HTML ERRORS - ACCESS_DENIED_403                 || Accès refusé.
 HTML ERRORS - ANALYSIS_REFRESH                  || L'analyseur est en cours de rafraîchissement...
 HTML ERRORS - ANALYSIS_REFRESH_LONG             || L'analyse est en cours d'exécution, actualisez la page après quelques secondes....
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Assurez-vous d'avoir enregistré un utilisateur avec :<b>'/plan register'.</b><br>- Vérifiez que le nom d'utilisateur et le mot de passe soient corrects.<br>- Le nom d'utilisateur et le mot de passe sont sensibles au format majuscule/minuscule.<br><br>Si vous avez oublié votre mot de passe, demandez à un membre du staff de supprimer votre ancien utilisateur puis de vous réinscrire.
-HTML ERRORS - AUTHENTICATION_FAIlED_401         || Authentification échouée.
+HTML ERRORS - AUTHENTICATION_FAILED_401         || Authentification échouée.
 HTML ERRORS - FORBIDDEN_403                     || Accès interdit.
 HTML ERRORS - NO_SERVERS_404                    || Aucun serveur en ligne pour exécuter la demande.
 HTML ERRORS - NOT_FOUND_404                     || Non trouvé.

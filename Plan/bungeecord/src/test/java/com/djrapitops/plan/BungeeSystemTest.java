@@ -69,6 +69,7 @@ public class BungeeSystemTest {
             dbSystem.setActiveDatabase(db);
 
             bungeeSystem.enable();
+            assertTrue(bungeeSystem.isEnabled());
         } finally {
             bungeeSystem.disable();
         }
@@ -90,8 +91,7 @@ public class BungeeSystemTest {
             db.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
             dbSystem.setActiveDatabase(db);
 
-            bungeeSystem.enable();
-            assertTrue(bungeeSystem.isEnabled());
+            bungeeSystem.enable(); // Throws EnableException
         } finally {
             bungeeSystem.disable();
         }
@@ -107,7 +107,7 @@ public class BungeeSystemTest {
             config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
             config.set(ProxySettings.IP, "8.8.8.8");
 
-            bungeeSystem.enable();
+            bungeeSystem.enable(); // Throws EnableException
         } finally {
             bungeeSystem.disable();
         }
