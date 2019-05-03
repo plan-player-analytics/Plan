@@ -63,6 +63,7 @@ import com.djrapitops.plan.extension.implementation.results.player.ExtensionPlay
 import com.djrapitops.plan.extension.implementation.results.server.ExtensionServerData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerPlayerDataTableQuery;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalPlayerResultsTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalServerResultsTransaction;
 import com.djrapitops.plan.extension.table.Table;
@@ -401,7 +402,7 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testSessionSaving() {
+    public void sessionsAreStoredWithAllData() {
         saveUserOne();
         saveUserTwo();
 
@@ -419,7 +420,6 @@ public abstract class CommonDBTest {
 
         assertNotNull(savedSessions);
         assertEquals(1, savedSessions.size());
-        assertNull(sessions.get(UUID.randomUUID()));
 
         assertEquals(session, savedSessions.get(0));
     }
@@ -1180,6 +1180,23 @@ public abstract class CommonDBTest {
         OptionalAssert.equals("0.5", tabData.getDouble("doubleVal").map(data -> data.getFormattedValue(Object::toString)));
         OptionalAssert.equals("0.5", tabData.getPercentage("percentageVal").map(data -> data.getFormattedValue(Object::toString)));
         OptionalAssert.equals("Something", tabData.getString("stringVal").map(ExtensionStringData::getFormattedValue));
+    }
+
+    @Test
+    public void extensionPlayerValuesCanBeQueriedAsTableData() {
+        extensionPlayerValuesAreStored();
+        sessionsAreStoredWithAllData(); // This query requires sessions for a last seen date
+
+        Map<UUID, ExtensionTabData> result = db.query(new ExtensionServerPlayerDataTableQuery(serverUUID, 50));
+        assertEquals(1, result.size());
+        ExtensionTabData playerData = result.get(playerUUID);
+        assertNotNull(playerData);
+
+        OptionalAssert.equals("5", playerData.getNumber("value").map(data -> data.getFormattedValue(Object::toString)));
+        assertFalse(playerData.getBoolean("boolVal").isPresent());
+        OptionalAssert.equals("0.5", playerData.getDouble("doubleVal").map(data -> data.getFormattedValue(Object::toString)));
+        OptionalAssert.equals("0.5", playerData.getPercentage("percentageVal").map(data -> data.getFormattedValue(Object::toString)));
+        OptionalAssert.equals("Something", playerData.getString("stringVal").map(ExtensionStringData::getFormattedValue));
     }
 
     @Test
