@@ -145,13 +145,16 @@ public class PlayersTableJSONParser {
 
         Html link = openPlayerPageInNewTab ? Html.LINK_EXTERNAL : Html.LINK;
 
+        String display = "{display:\"";
+        String sort = "\",sort: ";
+
         appendData(dataJSON,
                 '"' + link.parse(url, name) + '"',
-                "{display:\"" + activityString + "\",sort: " + activityIndex + '}',
-                "{display:\"" + numberFormatters.get(FormatType.TIME_MILLISECONDS).apply(playtime) + "\",sort: " + playtime + '}',
+                display + activityString + sort + activityIndex + '}',
+                display + numberFormatters.get(FormatType.TIME_MILLISECONDS).apply(playtime) + sort + playtime + '}',
                 loginTimes,
-                "{display:\"" + numberFormatters.get(FormatType.DATE_YEAR).apply(registered) + "\",sort: " + registered + '}',
-                "{display:\"" + numberFormatters.get(FormatType.DATE_YEAR).apply(lastSeen) + "\",sort: " + lastSeen + '}',
+                display + numberFormatters.get(FormatType.DATE_YEAR).apply(registered) + sort + registered + '}',
+                display + numberFormatters.get(FormatType.DATE_YEAR).apply(lastSeen) + sort + lastSeen + '}',
                 geolocation
         );
     }
@@ -194,14 +197,6 @@ public class PlayersTableJSONParser {
             String stringValue = tabData.getString(key).map(ExtensionStringData::getFormattedValue).orElse("-");
             dataJSON.append('"').append(stringValue).append('"');
         }
-    }
-
-    private String getValue(ExtensionTabData tabData, String key) {
-        tabData.getPercentage(key).map(data -> data.getFormattedValue(percentageFormatter));
-        tabData.getNumber(key).map(data -> data.getFormattedValue(numberFormatters.get(data.getFormatType())));
-        tabData.getString(key).map(ExtensionStringData::getFormattedValue);
-
-        return "-";
     }
 
     private void appendData(StringBuilder dataJSON, Serializable... dataRows) {

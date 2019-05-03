@@ -36,18 +36,21 @@ import static com.djrapitops.plan.db.sql.parsing.Sql.*;
  */
 public class DeleteIPHashesPatch extends Patch {
 
+    private static final String IP_HASH = "ip_hash";
+
     private boolean hasNoHashColumn;
 
     @Override
     public boolean hasBeenApplied() {
-        hasNoHashColumn = !hasColumn(GeoInfoTable.TABLE_NAME, "ip_hash");
+        hasNoHashColumn = !hasColumn(GeoInfoTable.TABLE_NAME, IP_HASH);
 
         String sql = SELECT + "COUNT(1) as c" + FROM + GeoInfoTable.TABLE_NAME +
-                WHERE + "ip_hash" + IS_NOT_NULL;
+                WHERE + IP_HASH + IS_NOT_NULL;
 
         return hasNoHashColumn || !query(new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) {
+                /* No variables needed */
             }
         });
     }
@@ -58,7 +61,7 @@ public class DeleteIPHashesPatch extends Patch {
             return;
         }
 
-        String sql = "UPDATE " + GeoInfoTable.TABLE_NAME + " SET ip_hash=?" + WHERE + "ip_hash" + IS_NOT_NULL;
+        String sql = "UPDATE " + GeoInfoTable.TABLE_NAME + " SET ip_hash=?" + WHERE + IP_HASH + IS_NOT_NULL;
         execute(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

@@ -20,6 +20,7 @@ import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.implementation.MethodType;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
@@ -30,7 +31,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class MethodWrapper<T> {
+public class MethodWrapper<T> implements Serializable {
 
     private final Method method;
     private final Class<T> resultType;

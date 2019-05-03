@@ -59,7 +59,6 @@ public class WebServer implements SubSystem {
     private final Locale locale;
     private final PlanFiles files;
     private final PlanConfig config;
-    private final ServerInfo serverInfo;
 
     private final ServerProperties serverProperties;
     private final RequestHandler requestHandler;
@@ -86,7 +85,6 @@ public class WebServer implements SubSystem {
         this.locale = locale;
         this.files = files;
         this.config = config;
-        this.serverInfo = serverInfo;
         this.serverProperties = serverInfo.getServerProperties();
 
         this.requestHandler = requestHandler;

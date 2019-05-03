@@ -30,7 +30,6 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.StoreTa
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveInvalidResultsTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import java.util.UUID;
 
@@ -58,8 +57,7 @@ public class ProviderValueGatherer {
             DataExtension extension,
             DataProviderExtractor extractor,
             DBSystem dbSystem,
-            ServerInfo serverInfo,
-            PluginLogger logger
+            ServerInfo serverInfo
     ) {
         this.callEvents = extension.callExtensionMethodsOn();
         this.extractor = extractor;

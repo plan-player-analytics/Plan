@@ -26,6 +26,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -124,5 +125,19 @@ public class Locale extends HashMap<Lang, Message> {
             replaced = replaced.replace(defaultValue, replacement);
         }
         return replaced;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Locale)) return false;
+        if (!super.equals(o)) return false;
+        Locale locale = (Locale) o;
+        return langCode == locale.langCode;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), langCode);
     }
 }

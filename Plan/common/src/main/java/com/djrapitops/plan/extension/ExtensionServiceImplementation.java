@@ -95,7 +95,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
             logger.warn("DataExtension API implementation mistake for " + pluginName + ": " + warning);
         }
 
-        ProviderValueGatherer gatherer = new ProviderValueGatherer(extension, extractor, dbSystem, serverInfo, logger);
+        ProviderValueGatherer gatherer = new ProviderValueGatherer(extension, extractor, dbSystem, serverInfo);
         gatherer.storeExtensionInformation();
         extensionGatherers.put(pluginName, gatherer);
 
