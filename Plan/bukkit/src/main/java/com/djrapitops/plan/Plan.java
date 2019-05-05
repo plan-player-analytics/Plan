@@ -26,6 +26,7 @@ import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plugin.BukkitPlugin;
 import com.djrapitops.plugin.benchmarking.Benchmark;
 import com.djrapitops.plugin.command.ColorScheme;
+import com.djrapitops.plugin.task.AbsRunnable;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.logging.Level;
@@ -52,8 +53,6 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
-            new BStatsBukkit(this).registerMetrics();
-
             logger.debug("Verbose debug messages are enabled.");
             String benchTime = " (" + timings.end("Enable").map(Benchmark::toDurationString).orElse("-") + ")";
             logger.info(locale.getString(PluginLang.ENABLED) + benchTime);
@@ -78,6 +77,19 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
         if (system != null) {
             system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
         }
+    }
+
+    private void registerMetrics() {
+        Plan plugin = this;
+        // Spigot 1.14 requires Sync events to be fired from a server thread.
+        // Registering a service fires a sync event, and bStats registers a service,
+        // so this has to be run on the server thread.
+        runnableFactory.create("Register Metrics task", new AbsRunnable() {
+            @Override
+            public void run() {
+                new BStatsBukkit(plugin).registerMetrics();
+            }
+        }).runTask();
     }
 
     @Override
