@@ -64,6 +64,7 @@ public class AdvancedAntiCheatHook extends Hook {
                 execute(HackerTable.createTableSQL(database.getType()));
             }
         });
+        database.executeTransaction(new HackerTableMissingDateColumnPatch());
 
         plugin.registerListener(new PlayerHackKickListener(database));
         hookHandler.addPluginDataSource(new AdvancedAntiCheatData(database, formatters.yearLong()));
