@@ -95,13 +95,13 @@ public class ResponseHandler extends TreePageHandler {
     }
 
     public Response getResponse(Request request) {
-        String targetString = request.getTarget();
+        String targetString = request.getTargetString();
         List<String> target = new ArrayList<>(Arrays.asList(targetString.split("/")));
         if (!target.isEmpty()) {
             target.remove(0);
         }
         try {
-            return getResponse(request, targetString, target);
+            return tryToGetResponse(request);
         } catch (NoServersException | NotFoundException e) {
             return responseFactory.notFound404(e.getMessage());
         } catch (WebUserAuthException e) {
@@ -116,32 +116,33 @@ public class ResponseHandler extends TreePageHandler {
             return responseFactory.gatewayError504(e.getMessage());
         } catch (InternalErrorException e) {
             if (e.getCause() != null) {
-                return responseFactory.internalErrorResponse(e.getCause(), request.getTarget());
+                return responseFactory.internalErrorResponse(e.getCause(), request.getTargetString());
             } else {
-                return responseFactory.internalErrorResponse(e, request.getTarget());
+                return responseFactory.internalErrorResponse(e, request.getTargetString());
             }
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
-            return responseFactory.internalErrorResponse(e, request.getTarget());
+            return responseFactory.internalErrorResponse(e, request.getTargetString());
         }
     }
 
-    private Response getResponse(Request request, String targetString, List<String> target) throws WebException {
-        Optional<Authentication> authentication = Optional.empty();
+    private Response tryToGetResponse(Request request) throws WebException {
+        Optional<Authentication> authentication = request.getAuth();
+        RequestTarget target = request.getTarget();
+        String resource = target.getResourceString();
 
-        if (targetString.endsWith(".css")) {
-            return ResponseCache.loadResponse(PageId.CSS.of(targetString), () -> responseFactory.cssResponse(targetString));
+        if (target.endsWith(".css")) {
+            return ResponseCache.loadResponse(PageId.CSS.of(resource), () -> responseFactory.cssResponse(resource));
         }
-        if (targetString.endsWith(".js")) {
-            return ResponseCache.loadResponse(PageId.JS.of(targetString), () -> responseFactory.javaScriptResponse(targetString));
+        if (target.endsWith(".js")) {
+            return ResponseCache.loadResponse(PageId.JS.of(resource), () -> responseFactory.javaScriptResponse(resource));
         }
-        if (targetString.endsWith("favicon.ico")) {
+        if (target.endsWith("favicon.ico")) {
             return ResponseCache.loadResponse(PageId.FAVICON.id(), responseFactory::faviconResponse);
         }
         boolean isNotInfoRequest = target.isEmpty() || !target.get(0).equals("info");
         boolean isAuthRequired = webServer.get().isAuthRequired() && isNotInfoRequest;
         if (isAuthRequired) {
-            authentication = request.getAuth();
             if (!authentication.isPresent()) {
                 if (webServer.get().isUsingHTTPS()) {
                     return responseFactory.basicAuth();

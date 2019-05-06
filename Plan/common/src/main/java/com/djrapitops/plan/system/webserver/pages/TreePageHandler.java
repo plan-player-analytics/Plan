@@ -19,12 +19,12 @@ package com.djrapitops.plan.system.webserver.pages;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.webserver.Request;
+import com.djrapitops.plan.system.webserver.RequestTarget;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,31 +50,31 @@ public abstract class TreePageHandler implements PageHandler {
     public void registerPage(String targetPage, Response response, int requiredPerm) {
         pages.put(targetPage, new PageHandler() {
             @Override
-            public Response getResponse(Request request, List<String> target) {
+            public Response getResponse(Request request, RequestTarget target) {
                 return response;
             }
 
             @Override
-            public boolean isAuthorized(Authentication auth, List<String> target) throws WebUserAuthException {
+            public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
                 return auth.getWebUser().getPermLevel() <= requiredPerm;
             }
         });
     }
 
     @Override
-    public Response getResponse(Request request, List<String> target) throws WebException {
+    public Response getResponse(Request request, RequestTarget target) throws WebException {
         PageHandler pageHandler = getPageHandler(target);
         return pageHandler != null
                 ? pageHandler.getResponse(request, target)
                 : responseFactory.pageNotFound404();
     }
 
-    public PageHandler getPageHandler(List<String> target) {
+    public PageHandler getPageHandler(RequestTarget target) {
         if (target.isEmpty()) {
             return pages.get("");
         }
         String targetPage = target.get(0);
-        target.remove(0);
+        target.removeFirst();
         return pages.get(targetPage);
     }
 

@@ -32,7 +32,7 @@ import java.util.Optional;
  */
 public class Request {
     private final String requestMethod;
-    private final String target;
+    private final String targetString;
     private final HttpExchange exchange;
     private final String remoteAddress;
     private final Locale locale;
@@ -40,7 +40,7 @@ public class Request {
 
     public Request(HttpExchange exchange, Locale locale) {
         this.requestMethod = exchange.getRequestMethod();
-        this.target = exchange.getRequestURI().getPath();
+        this.targetString = exchange.getRequestURI().getPath();
 
         remoteAddress = exchange.getRemoteAddress().getAddress().getHostAddress();
 
@@ -61,8 +61,12 @@ public class Request {
         return requestMethod;
     }
 
-    public String getTarget() {
-        return target;
+    public String getTargetString() {
+        return targetString;
+    }
+
+    public RequestTarget getTarget() {
+        return new RequestTarget(targetString);
     }
 
     public InputStream getRequestBody() {
@@ -71,7 +75,7 @@ public class Request {
 
     @Override
     public String toString() {
-        return "Request:" + requestMethod + " " + target;
+        return "Request:" + requestMethod + " " + targetString;
     }
 
     public String getRemoteAddress() {

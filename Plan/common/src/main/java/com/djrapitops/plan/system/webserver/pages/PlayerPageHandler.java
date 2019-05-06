@@ -26,6 +26,7 @@ import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.webserver.Request;
+import com.djrapitops.plan.system.webserver.RequestTarget;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
@@ -36,7 +37,6 @@ import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -66,7 +66,7 @@ public class PlayerPageHandler implements PageHandler {
     }
 
     @Override
-    public Response getResponse(Request request, List<String> target) throws WebException {
+    public Response getResponse(Request request, RequestTarget target) throws WebException {
         if (target.isEmpty()) {
             return responseFactory.pageNotFound404();
         }
@@ -109,7 +109,7 @@ public class PlayerPageHandler implements PageHandler {
     }
 
     @Override
-    public boolean isAuthorized(Authentication auth, List<String> target) throws WebUserAuthException {
+    public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
         WebUser webUser = auth.getWebUser();
         return webUser.getPermLevel() <= 1 || webUser.getName().equalsIgnoreCase(target.get(target.size() - 1));
     }
