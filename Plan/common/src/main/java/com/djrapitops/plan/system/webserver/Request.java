@@ -21,6 +21,7 @@ import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.InputStream;
+import java.net.URI;
 import java.util.Optional;
 
 /**
@@ -32,7 +33,9 @@ import java.util.Optional;
  */
 public class Request {
     private final String requestMethod;
-    private final String targetString;
+
+    private URI requestURI;
+
     private final HttpExchange exchange;
     private final String remoteAddress;
     private final Locale locale;
@@ -40,7 +43,7 @@ public class Request {
 
     public Request(HttpExchange exchange, Locale locale) {
         this.requestMethod = exchange.getRequestMethod();
-        this.targetString = exchange.getRequestURI().getPath();
+        requestURI = exchange.getRequestURI();
 
         remoteAddress = exchange.getRemoteAddress().getAddress().getHostAddress();
 
@@ -62,11 +65,11 @@ public class Request {
     }
 
     public String getTargetString() {
-        return targetString;
+        return requestURI.getPath() + '?' + requestURI.getQuery();
     }
 
     public RequestTarget getTarget() {
-        return new RequestTarget(targetString);
+        return new RequestTarget(requestURI);
     }
 
     public InputStream getRequestBody() {
@@ -75,7 +78,7 @@ public class Request {
 
     @Override
     public String toString() {
-        return "Request:" + requestMethod + " " + targetString;
+        return "Request:" + requestMethod + " " + requestURI.getPath();
     }
 
     public String getRemoteAddress() {

@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.system.webserver;
 
+import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,13 +31,11 @@ public class RequestTarget {
     private final List<String> resource;
     private final Map<String, String> parameters;
 
-    public RequestTarget(String targetString) {
-        String[] resourceAndParameters = targetString.split("\\?", 2);
-
-        resourceString = resourceAndParameters.length >= 1 ? resourceAndParameters[0] : "/";
+    public RequestTarget(URI targetURI) {
+        resourceString = targetURI.getPath();
         resource = Arrays.stream(resourceString.split("/")).filter(part -> !part.isEmpty()).collect(Collectors.toList());
 
-        String parameterString = resourceAndParameters.length >= 2 ? resourceAndParameters[1] : null;
+        String parameterString = targetURI.getQuery();
         parameters = parseParameters(parameterString);
     }
 
