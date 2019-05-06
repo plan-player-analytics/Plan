@@ -23,6 +23,7 @@ import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.pages.*;
+import com.djrapitops.plan.system.webserver.pages.json.RootJSONHandler;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 import com.djrapitops.plan.system.webserver.response.errors.BadRequestResponse;
@@ -32,9 +33,6 @@ import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -50,6 +48,7 @@ public class ResponseHandler extends TreePageHandler {
     private final PlayerPageHandler playerPageHandler;
     private final ServerPageHandler serverPageHandler;
     private final InfoRequestPageHandler infoRequestPageHandler;
+    private final RootJSONHandler rootJSONHandler;
     private final ErrorHandler errorHandler;
 
     private Lazy<WebServer> webServer;
@@ -64,6 +63,7 @@ public class ResponseHandler extends TreePageHandler {
             PlayerPageHandler playerPageHandler,
             ServerPageHandler serverPageHandler,
             InfoRequestPageHandler infoRequestPageHandler,
+            RootJSONHandler rootJSONHandler,
 
             ErrorHandler errorHandler
     ) {
@@ -74,6 +74,7 @@ public class ResponseHandler extends TreePageHandler {
         this.playerPageHandler = playerPageHandler;
         this.serverPageHandler = serverPageHandler;
         this.infoRequestPageHandler = infoRequestPageHandler;
+        this.rootJSONHandler = rootJSONHandler;
         this.errorHandler = errorHandler;
     }
 
@@ -92,14 +93,10 @@ public class ResponseHandler extends TreePageHandler {
         }
 
         registerPage("info", infoRequestPageHandler);
+        registerPage("json", rootJSONHandler);
     }
 
     public Response getResponse(Request request) {
-        String targetString = request.getTargetString();
-        List<String> target = new ArrayList<>(Arrays.asList(targetString.split("/")));
-        if (!target.isEmpty()) {
-            target.remove(0);
-        }
         try {
             return tryToGetResponse(request);
         } catch (NoServersException | NotFoundException e) {
@@ -109,7 +106,7 @@ public class ResponseHandler extends TreePageHandler {
         } catch (ForbiddenException e) {
             return responseFactory.forbidden403(e.getMessage());
         } catch (BadRequestException e) {
-            return new BadRequestResponse(e.getMessage());
+            return new BadRequestResponse(e.getMessage() + " (when requesting '" + request.getTargetString() + "')");
         } catch (UnauthorizedServerException e) {
             return responseFactory.unauthorizedServer(e.getMessage());
         } catch (GatewayException e) {

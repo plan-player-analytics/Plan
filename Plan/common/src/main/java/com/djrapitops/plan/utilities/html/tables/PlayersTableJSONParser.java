@@ -97,7 +97,7 @@ public class PlayersTableJSONParser {
     public String toJSONString() {
         String data = parseData();
         String columnHeaders = parseColumnHeaders();
-        return "{columns:" + columnHeaders + ",data:" + data + '}';
+        return "{\"columns\":" + columnHeaders + ",\"data\":" + data + '}';
     }
 
     private String parseData() {
@@ -112,14 +112,20 @@ public class PlayersTableJSONParser {
             if (currentPlayerNumber >= maxPlayers) {
                 break;
             }
-
             UUID playerUUID = player.getValue(PlayerKeys.UUID).orElse(null);
             if (playerUUID == null) {
                 continue;
             }
 
+            if (currentPlayerNumber > 0) {
+                dataJSON.append(',');       // Previous item
+            }
+            dataJSON.append('[');           // Start new item
+
             appendPlayerData(dataJSON, planAPI, now, player);
-            appendExtensionData(dataJSON, extensionData.get(playerUUID));
+            appendExtensionData(dataJSON, extensionData.getOrDefault(playerUUID, new ExtensionTabData.Factory(null).build()));
+
+            dataJSON.append(']');           // Close new item
 
             currentPlayerNumber++;
         }
@@ -145,17 +151,17 @@ public class PlayersTableJSONParser {
 
         Html link = openPlayerPageInNewTab ? Html.LINK_EXTERNAL : Html.LINK;
 
-        String display = "{display:\"";
-        String sort = "\",sort: ";
+        String display = "{\"display\":\"";
+        String sort = "\",\"sort\": ";
 
         appendData(dataJSON,
-                '"' + link.parse(url, name) + '"',
-                display + activityString + sort + activityIndex + '}',
+                '"' + link.parse(url, name).replace('"', '\'') + '"',
+                display + activityString + sort + activityIndex.getValue() + '}',
                 display + numberFormatters.get(FormatType.TIME_MILLISECONDS).apply(playtime) + sort + playtime + '}',
                 loginTimes,
                 display + numberFormatters.get(FormatType.DATE_YEAR).apply(registered) + sort + registered + '}',
                 display + numberFormatters.get(FormatType.DATE_YEAR).apply(lastSeen) + sort + lastSeen + '}',
-                geolocation
+                '"' + geolocation + '"'
         );
     }
 
@@ -174,7 +180,8 @@ public class PlayersTableJSONParser {
             // If it's a percentage, append a percentage
             Optional<ExtensionDoubleData> percentageValue = tabData.getPercentage(key);
             if (percentageValue.isPresent()) {
-                dataJSON.append(percentageValue.get().getFormattedValue(percentageFormatter));
+                dataJSON.append("{\"display\": \"").append(percentageValue.get().getFormattedValue(percentageFormatter))
+                        .append("\",\"sort\": ").append(percentageValue.get().getRawValue()).append('}');
                 continue;
             }
 
@@ -187,8 +194,8 @@ public class PlayersTableJSONParser {
                     dataJSON.append(numberData.getFormattedValue(numberFormatters.get(formatType)));
                 } else {
                     // If it's a formatted number, append a formatted number and sort by the number value
-                    dataJSON.append("{display: \"").append(numberData.getFormattedValue(numberFormatters.get(formatType)))
-                            .append("\",sort: ").append(numberData.getRawValue()).append('}');
+                    dataJSON.append("{\"display\": \"").append(numberData.getFormattedValue(numberFormatters.get(formatType)))
+                            .append("\",\"sort\": ").append(numberData.getRawValue()).append('}');
                 }
                 continue;
             }
@@ -202,7 +209,7 @@ public class PlayersTableJSONParser {
     private void appendData(StringBuilder dataJSON, Serializable... dataRows) {
         int max = dataRows.length;
         for (int i = 0; i < max; i++) {
-            dataJSON.append("{").append(dataRows[i]).append("}");
+            dataJSON.append(dataRows[i]);
             if (i < max - 1) {
                 dataJSON.append(',');
             }
@@ -230,7 +237,7 @@ public class PlayersTableJSONParser {
     private void appendDataHeaders(StringBuilder columnHeaders, Serializable... headers) {
         int max = headers.length;
         for (int i = 0; i < max; i++) {
-            columnHeaders.append("{title: \"").append(headers[i]).append("\"}");
+            columnHeaders.append("{\"title\": \"").append(headers[i].toString().replace('"', '\'')).append("\"}");
             if (i < max - 1) {
                 columnHeaders.append(',');
             }
@@ -240,7 +247,10 @@ public class PlayersTableJSONParser {
     private void appendExtensionHeaders(StringBuilder columnHeaders) {
         for (ExtensionDescriptive provider : extensionDescriptives) {
             columnHeaders.append(',');
-            columnHeaders.append(Icon.fromExtensionIcon(provider.getIcon().setColor(Color.NONE)).toHtml()).append(' ').append(provider.getText());
+            columnHeaders.append("{\"title\": \"")
+                    .append(Icon.fromExtensionIcon(provider.getIcon().setColor(Color.NONE)).toHtml().replace('"', '\''))
+                    .append(' ').append(provider.getText())
+                    .append("\"}");
         }
     }
 }
