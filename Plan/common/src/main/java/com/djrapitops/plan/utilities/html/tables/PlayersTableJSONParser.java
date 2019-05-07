@@ -33,7 +33,6 @@ import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Family;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 
-import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,7 +57,6 @@ public class PlayersTableJSONParser {
     private Map<FormatType, Formatter<Long>> numberFormatters;
 
     private Formatter<Double> decimalFormatter;
-    private Formatter<Double> percentageFormatter;
 
     public PlayersTableJSONParser(
             // Data
@@ -75,7 +73,7 @@ public class PlayersTableJSONParser {
         extensionDescriptives = extensionData.values().stream()
                 .map(ExtensionTabData::getDescriptives)
                 .flatMap(Collection::stream)
-                .distinct().sorted()
+                .distinct().sorted((one, two) -> String.CASE_INSENSITIVE_ORDER.compare(one.getName(), two.getName()))
                 .collect(Collectors.toList());
         // Settings
         this.maxPlayers = maxPlayers;
@@ -90,8 +88,6 @@ public class PlayersTableJSONParser {
         numberFormatters.put(FormatType.NONE, Object::toString);
 
         this.decimalFormatter = formatters.decimals();
-        this.percentageFormatter = formatters.percentage();
-
     }
 
     public String toJSONString() {
@@ -120,12 +116,12 @@ public class PlayersTableJSONParser {
             if (currentPlayerNumber > 0) {
                 dataJSON.append(',');       // Previous item
             }
-            dataJSON.append('[');           // Start new item
+            dataJSON.append('{');           // Start new item
 
             appendPlayerData(dataJSON, planAPI, now, player);
             appendExtensionData(dataJSON, extensionData.getOrDefault(playerUUID, new ExtensionTabData.Factory(null).build()));
 
-            dataJSON.append(']');           // Close new item
+            dataJSON.append('}');           // Close new item
 
             currentPlayerNumber++;
         }
@@ -151,18 +147,23 @@ public class PlayersTableJSONParser {
 
         Html link = openPlayerPageInNewTab ? Html.LINK_EXTERNAL : Html.LINK;
 
-        String display = "{\"display\":\"";
-        String sort = "\",\"sort\": ";
+        dataJSON
+                .append(makeDataEntry(link.parse(url, name), "name")).append(',')
+                .append(makeDataEntry(activityIndex.getValue(), activityString, "index")).append(',')
+                .append(makeDataEntry(playtime, numberFormatters.get(FormatType.TIME_MILLISECONDS).apply(playtime), "playtime")).append(',')
+                .append(makeDataEntry(loginTimes, "sessions")).append(',')
+                .append(makeDataEntry(registered, numberFormatters.get(FormatType.DATE_YEAR).apply(registered), "registered")).append(',')
+                .append(makeDataEntry(lastSeen, numberFormatters.get(FormatType.DATE_YEAR).apply(lastSeen), "seen")).append(',')
+                .append(makeDataEntry(geolocation, "geolocation"))
+        ;
+    }
 
-        appendData(dataJSON,
-                '"' + link.parse(url, name).replace('"', '\'') + '"',
-                display + activityString + sort + activityIndex.getValue() + '}',
-                display + numberFormatters.get(FormatType.TIME_MILLISECONDS).apply(playtime) + sort + playtime + '}',
-                loginTimes,
-                display + numberFormatters.get(FormatType.DATE_YEAR).apply(registered) + sort + registered + '}',
-                display + numberFormatters.get(FormatType.DATE_YEAR).apply(lastSeen) + sort + lastSeen + '}',
-                '"' + geolocation + '"'
-        );
+    private String makeDataEntry(Object data, String dataName) {
+        return "\"" + dataName + "\":\"" + data.toString().replace('"', '\'') + "\"";
+    }
+
+    private String makeDataEntry(Object data, String formatted, String dataName) {
+        return "\"" + dataName + "\":{\"v\":\"" + data.toString().replace('"', '\'') + "\", \"d\":\"" + formatted.replace('"', '\'') + "\"}";
     }
 
     private void appendExtensionData(StringBuilder dataJSON, ExtensionTabData tabData) {
@@ -172,16 +173,9 @@ public class PlayersTableJSONParser {
 
             // If it's a double, append a double
             Optional<ExtensionDoubleData> doubleValue = tabData.getDouble(key);
-            if (doubleValue.isPresent()) {
-                dataJSON.append(doubleValue.get().getFormattedValue(decimalFormatter));
-                continue;
-            }
 
-            // If it's a percentage, append a percentage
-            Optional<ExtensionDoubleData> percentageValue = tabData.getPercentage(key);
-            if (percentageValue.isPresent()) {
-                dataJSON.append("{\"display\": \"").append(percentageValue.get().getFormattedValue(percentageFormatter))
-                        .append("\",\"sort\": ").append(percentageValue.get().getRawValue()).append('}');
+            if (doubleValue.isPresent()) {
+                dataJSON.append(makeDataEntry(doubleValue.get().getRawValue(), doubleValue.get().getFormattedValue(decimalFormatter), key));
                 continue;
             }
 
@@ -189,68 +183,48 @@ public class PlayersTableJSONParser {
             if (numberValue.isPresent()) {
                 ExtensionNumberData numberData = numberValue.get();
                 FormatType formatType = numberData.getFormatType();
-                if (formatType == FormatType.NONE) {
-                    // If it's a number, append a number
-                    dataJSON.append(numberData.getFormattedValue(numberFormatters.get(formatType)));
-                } else {
-                    // If it's a formatted number, append a formatted number and sort by the number value
-                    dataJSON.append("{\"display\": \"").append(numberData.getFormattedValue(numberFormatters.get(formatType)))
-                            .append("\",\"sort\": ").append(numberData.getRawValue()).append('}');
-                }
+                dataJSON.append(makeDataEntry(numberData.getRawValue(), numberData.getFormattedValue(numberFormatters.get(formatType)), key));
                 continue;
             }
 
             // If it's a String append a String, otherwise the player has no value for this extension provider.
             String stringValue = tabData.getString(key).map(ExtensionStringData::getFormattedValue).orElse("-");
-            dataJSON.append('"').append(stringValue).append('"');
-        }
-    }
-
-    private void appendData(StringBuilder dataJSON, Serializable... dataRows) {
-        int max = dataRows.length;
-        for (int i = 0; i < max; i++) {
-            dataJSON.append(dataRows[i]);
-            if (i < max - 1) {
-                dataJSON.append(',');
-            }
+            dataJSON.append(makeDataEntry(stringValue, stringValue, key));
         }
     }
 
     private String parseColumnHeaders() {
         StringBuilder columnHeaders = new StringBuilder("[");
 
-        appendDataHeaders(columnHeaders,
-                Icon.called("user") + " Name",
-                Icon.called("check") + " Activity Index",
-                Icon.called("clock").of(Family.REGULAR) + " Playtime",
-                Icon.called("calendar-plus").of(Family.REGULAR) + " Sessions",
-                Icon.called("user-plus") + " Registered",
-                Icon.called("calendar-check").of(Family.REGULAR) + " Last Seen",
-                Icon.called("globe") + " Geolocation"
-        );
+        // Is the data for the column formatted
+
+        columnHeaders
+                .append(makeColumnHeader(Icon.called("user") + " Name", "name")).append(',')
+                .append(makeFColumnHeader(Icon.called("check") + " Activity Index", "index")).append(',')
+                .append(makeFColumnHeader(Icon.called("clock").of(Family.REGULAR) + " Playtime", "playtime")).append(',')
+                .append(makeColumnHeader(Icon.called("calendar-plus").of(Family.REGULAR) + " Sessions", "sessions")).append(',')
+                .append(makeFColumnHeader(Icon.called("user-plus") + " Registered", "registered")).append(',')
+                .append(makeFColumnHeader(Icon.called("calendar-check").of(Family.REGULAR) + " Last Seen", "seen")).append(',')
+                .append(makeColumnHeader(Icon.called("globe") + " Geolocation", "geolocation"));
 
         appendExtensionHeaders(columnHeaders);
 
         return columnHeaders.append(']').toString();
     }
 
-    private void appendDataHeaders(StringBuilder columnHeaders, Serializable... headers) {
-        int max = headers.length;
-        for (int i = 0; i < max; i++) {
-            columnHeaders.append("{\"title\": \"").append(headers[i].toString().replace('"', '\'')).append("\"}");
-            if (i < max - 1) {
-                columnHeaders.append(',');
-            }
-        }
+    private String makeColumnHeader(String title, String dataProperty) {
+        return "{\"title\": \"" + title.replace('"', '\'') + "\",\"data\":\"" + dataProperty + "\"}";
+    }
+
+    private String makeFColumnHeader(String title, String dataProperty) {
+        return "{\"title\": \"" + title.replace('"', '\'') + "\",\"data\":{\"_\":\"" + dataProperty + ".v\",\"display\":\"" + dataProperty + ".d\"}}";
     }
 
     private void appendExtensionHeaders(StringBuilder columnHeaders) {
         for (ExtensionDescriptive provider : extensionDescriptives) {
             columnHeaders.append(',');
-            columnHeaders.append("{\"title\": \"")
-                    .append(Icon.fromExtensionIcon(provider.getIcon().setColor(Color.NONE)).toHtml().replace('"', '\''))
-                    .append(' ').append(provider.getText())
-                    .append("\"}");
+            String headerText = Icon.fromExtensionIcon(provider.getIcon().setColor(Color.NONE)).toHtml().replace('"', '\'') + ' ' + provider.getText();
+            columnHeaders.append(makeFColumnHeader(headerText, provider.getName()));
         }
     }
 }

@@ -69,7 +69,6 @@ public class ExtensionServerPlayerDataTableQuery implements Query<Map<UUID, Exte
         String sql = SELECT +
                 "v1." + ExtensionPlayerValueTable.USER_UUID + " as uuid," +
                 "v1." + ExtensionPlayerValueTable.DOUBLE_VALUE + " as double_value," +
-                "v1." + ExtensionPlayerValueTable.PERCENTAGE_VALUE + " as percentage_value," +
                 "v1." + ExtensionPlayerValueTable.LONG_VALUE + " as long_value," +
                 "v1." + ExtensionPlayerValueTable.STRING_VALUE + " as string_value," +
                 "p1." + ExtensionProviderTable.PROVIDER_NAME + " as provider_name," +
@@ -85,6 +84,7 @@ public class ExtensionServerPlayerDataTableQuery implements Query<Map<UUID, Exte
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i1 on i1." + ExtensionIconTable.ID + "=p1." + ExtensionProviderTable.ICON_ID +
                 WHERE + "e1." + ExtensionPluginTable.SERVER_UUID + "=?" +
                 AND + " v1." + ExtensionPlayerValueTable.BOOLEAN_VALUE + IS_NULL + // Don't select Boolean value rows
+                AND + " v1." + ExtensionPlayerValueTable.PERCENTAGE_VALUE + IS_NULL + // Don't select Percentage value rows
                 AND + " p1." + ExtensionProviderTable.IS_PLAYER_NAME + "=?";
 
         return new QueryStatement<Map<UUID, ExtensionTabData>>(sql, 1000) {
@@ -121,12 +121,6 @@ public class ExtensionServerPlayerDataTableQuery implements Query<Map<UUID, Exte
         double doubleValue = set.getDouble(ExtensionPlayerValueTable.DOUBLE_VALUE);
         if (!set.wasNull()) {
             extensionTab.putDoubleData(new ExtensionDoubleData(descriptive, doubleValue));
-            return;
-        }
-
-        double percentageValue = set.getDouble(ExtensionPlayerValueTable.PERCENTAGE_VALUE);
-        if (!set.wasNull()) {
-            extensionTab.putPercentageData(new ExtensionDoubleData(descriptive, percentageValue));
             return;
         }
 
