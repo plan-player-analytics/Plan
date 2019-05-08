@@ -1195,7 +1195,7 @@ public abstract class CommonDBTest {
         OptionalAssert.equals("5", playerData.getNumber("value").map(data -> data.getFormattedValue(Object::toString)));
         assertFalse(playerData.getBoolean("boolVal").isPresent());
         OptionalAssert.equals("0.5", playerData.getDouble("doubleVal").map(data -> data.getFormattedValue(Object::toString)));
-        OptionalAssert.equals("0.5", playerData.getPercentage("percentageVal").map(data -> data.getFormattedValue(Object::toString)));
+        assertFalse(playerData.getBoolean("percentageVal").isPresent());
         OptionalAssert.equals("Something", playerData.getString("stringVal").map(ExtensionStringData::getFormattedValue));
     }
 
