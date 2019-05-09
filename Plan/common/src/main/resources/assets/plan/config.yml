@@ -61,6 +61,7 @@ Webserver:
 # -----------------------------------------------------
 Data_gathering:
   Geolocations: true
+  Ping: true
   Commands:
     Log_unknown: false
     Log_aliases_as_main_command: true

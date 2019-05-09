@@ -21,6 +21,7 @@ import com.djrapitops.plan.ShutdownHook;
 import com.djrapitops.plan.db.tasks.DBCleanTask;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DataGatheringSettings;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.tasks.bukkit.BukkitTPSCountTimer;
 import com.djrapitops.plan.system.tasks.bukkit.PaperTPSCountTimer;
@@ -91,7 +92,7 @@ public class BukkitTaskSystem extends ServerTaskSystem {
         super.enable();
         try {
             Long pingDelay = config.get(TimeSettings.PING_SERVER_ENABLE_DELAY);
-            if (pingDelay < TimeUnit.HOURS.toMillis(1L)) {
+            if (pingDelay < TimeUnit.HOURS.toMillis(1L) && config.get(DataGatheringSettings.PING)) {
                 plugin.registerListener(pingCountTimer);
                 long startDelay = TimeAmount.toTicks(pingDelay, TimeUnit.MILLISECONDS);
                 registerTask(pingCountTimer).runTaskTimer(startDelay, 40L);

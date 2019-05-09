@@ -59,6 +59,7 @@ Webserver:
 # -----------------------------------------------------
 Data_gathering:
   Geolocations: true
+  Ping: true
 # -----------------------------------------------------
 # Supported time units: MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS
 # -----------------------------------------------------
