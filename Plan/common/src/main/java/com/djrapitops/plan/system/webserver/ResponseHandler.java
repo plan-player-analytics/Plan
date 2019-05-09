@@ -139,13 +139,11 @@ public class ResponseHandler extends TreePageHandler {
         }
         boolean isNotInfoRequest = target.isEmpty() || !target.get(0).equals("info");
         boolean isAuthRequired = webServer.get().isAuthRequired() && isNotInfoRequest;
-        if (isAuthRequired) {
-            if (!authentication.isPresent()) {
-                if (webServer.get().isUsingHTTPS()) {
-                    return responseFactory.basicAuth();
-                } else {
-                    return responseFactory.forbidden403();
-                }
+        if (isAuthRequired && !authentication.isPresent()) {
+            if (webServer.get().isUsingHTTPS()) {
+                return responseFactory.basicAuth();
+            } else {
+                return responseFactory.forbidden403();
             }
         }
         PageHandler pageHandler = getPageHandler(target);

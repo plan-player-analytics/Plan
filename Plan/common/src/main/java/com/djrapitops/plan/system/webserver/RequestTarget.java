@@ -35,16 +35,14 @@ public class RequestTarget {
         resourceString = targetURI.getPath();
         resource = Arrays.stream(resourceString.split("/")).filter(part -> !part.isEmpty()).collect(Collectors.toList());
 
-        String parameterString = targetURI.getQuery();
-        parameters = parseParameters(parameterString);
+        parameters = new TreeMap<>();
+        parseParameters(targetURI.getQuery());
     }
 
-    private Map<String, String> parseParameters(String parameterString) {
+    private void parseParameters(String parameterString) {
         if (parameterString == null || parameterString.isEmpty()) {
-            return Collections.emptyMap();
+            return;
         }
-
-        TreeMap<String, String> parameters = new TreeMap<>();
 
         String[] keysAndValues = parameterString.split("&");
         for (String kv : keysAndValues) {
@@ -56,8 +54,6 @@ public class RequestTarget {
                 parameters.put(keyAndValue[0], keyAndValue[1]);
             }
         }
-
-        return parameters;
     }
 
     public boolean isEmpty() {
