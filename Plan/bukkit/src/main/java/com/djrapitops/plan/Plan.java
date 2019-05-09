@@ -53,6 +53,8 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
+            registerMetrics();
+
             logger.debug("Verbose debug messages are enabled.");
             String benchTime = " (" + timings.end("Enable").map(Benchmark::toDurationString).orElse("-") + ")";
             logger.info(locale.getString(PluginLang.ENABLED) + benchTime);
