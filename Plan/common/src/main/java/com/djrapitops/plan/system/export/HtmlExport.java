@@ -261,15 +261,11 @@ public class HtmlExport extends SpecificExport {
 
     public void exportPlugins() {
         String[] resources = new String[]{
-                "web/plugins/bootstrap/css/bootstrap.css",
                 "web/plugins/node-waves/waves.css",
                 "web/plugins/node-waves/waves.js",
                 "web/plugins/animate-css/animate.css",
                 "web/plugins/jquery-slimscroll/jquery.slimscroll.js",
                 "web/plugins/jquery/jquery.min.js",
-                "web/plugins/bootstrap/js/bootstrap.js",
-                "web/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js",
-                "web/plugins/jquery-datatable/jquery.dataTables.js",
                 "web/plugins/fullcalendar/fullcalendar.min.js",
                 "web/plugins/fullcalendar/fullcalendar.min.css",
                 "web/plugins/momentjs/moment.js",
