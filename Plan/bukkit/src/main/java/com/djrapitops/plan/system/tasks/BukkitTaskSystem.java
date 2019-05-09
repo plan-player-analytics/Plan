@@ -90,9 +90,12 @@ public class BukkitTaskSystem extends ServerTaskSystem {
     public void enable() {
         super.enable();
         try {
-            plugin.registerListener(pingCountTimer);
-            long startDelay = TimeAmount.toTicks(config.get(TimeSettings.PING_SERVER_ENABLE_DELAY), TimeUnit.MILLISECONDS);
-            registerTask(pingCountTimer).runTaskTimer(startDelay, 40L);
+            Long pingDelay = config.get(TimeSettings.PING_SERVER_ENABLE_DELAY);
+            if (pingDelay < TimeUnit.HOURS.toMillis(1L)) {
+                plugin.registerListener(pingCountTimer);
+                long startDelay = TimeAmount.toTicks(pingDelay, TimeUnit.MILLISECONDS);
+                registerTask(pingCountTimer).runTaskTimer(startDelay, 40L);
+            }
         } catch (ExceptionInInitializerError | NoClassDefFoundError ignore) {
             // Running CraftBukkit
         }

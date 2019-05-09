@@ -115,6 +115,10 @@ public abstract class SQLDB extends AbstractDatabase {
         transactionExecutor.shutdown();
         try {
             Long waitMs = config.getOrDefault(TimeSettings.DB_TRANSACTION_FINISH_WAIT_DELAY, TimeUnit.SECONDS.toMillis(20L));
+            if (waitMs > TimeUnit.MINUTES.toMillis(5L)) {
+                logger.warn(TimeSettings.DB_TRANSACTION_FINISH_WAIT_DELAY.getPath() + " was set to over 5 minutes, using 5 min instead.");
+                waitMs = TimeUnit.MINUTES.toMillis(5L);
+            }
             if (!transactionExecutor.awaitTermination(waitMs, TimeUnit.MILLISECONDS)) {
                 List<Runnable> unfinished = transactionExecutor.shutdownNow();
                 int unfinishedCount = unfinished.size();

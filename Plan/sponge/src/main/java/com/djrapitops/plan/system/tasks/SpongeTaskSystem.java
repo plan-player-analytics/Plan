@@ -82,9 +82,12 @@ public class SpongeTaskSystem extends ServerTaskSystem {
     public void enable() {
         super.enable();
 
-        plugin.registerListener(pingCountTimer);
-        long startDelay = TimeAmount.toTicks(config.get(TimeSettings.PING_SERVER_ENABLE_DELAY), TimeUnit.MILLISECONDS);
-        registerTask(pingCountTimer).runTaskTimer(startDelay, PingCountTimerSponge.PING_INTERVAL);
+        Long pingDelay = config.get(TimeSettings.PING_SERVER_ENABLE_DELAY);
+        if (pingDelay < TimeUnit.HOURS.toMillis(1L)) {
+            plugin.registerListener(pingCountTimer);
+            long startDelay = TimeAmount.toTicks(pingDelay, TimeUnit.MILLISECONDS);
+            registerTask(pingCountTimer).runTaskTimer(startDelay, 40L);
+        }
 
         // +40 ticks / 2 seconds so that update check task runs first.
         long storeDelay = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS) + 40;
