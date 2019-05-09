@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.system.export;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.BaseUser;
@@ -34,6 +33,7 @@ import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
+import com.djrapitops.plan.system.webserver.pages.json.JSONFactory;
 import com.djrapitops.plan.system.webserver.response.pages.NetworkPageResponse;
 import com.djrapitops.plan.utilities.html.pages.InspectPage;
 import com.djrapitops.plan.utilities.html.pages.NetworkPage;
@@ -58,7 +58,6 @@ import java.util.*;
 @Singleton
 public class HtmlExport extends SpecificExport {
 
-    private final PlanPlugin plugin;
     private final PlanConfig config;
     private final Theme theme;
     private final PlanFiles files;
@@ -69,18 +68,17 @@ public class HtmlExport extends SpecificExport {
 
     @Inject
     public HtmlExport(
-            PlanPlugin plugin,
             PlanFiles files,
             PlanConfig config,
             Theme theme,
             DBSystem dbSystem,
             PageFactory pageFactory,
+            JSONFactory jsonFactory,
             ServerInfo serverInfo,
             ConnectionSystem connectionSystem,
             ErrorHandler errorHandler
     ) {
-        super(files, serverInfo);
-        this.plugin = plugin;
+        super(files, jsonFactory, serverInfo);
         this.config = config;
         this.theme = theme;
         this.files = files;

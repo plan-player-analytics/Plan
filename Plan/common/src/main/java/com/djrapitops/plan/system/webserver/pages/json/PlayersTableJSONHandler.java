@@ -19,23 +19,15 @@ package com.djrapitops.plan.system.webserver.pages.json;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.queries.containers.ServerPlayersTableContainersQuery;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
-import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerPlayerDataTableQuery;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.DisplaySettings;
-import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.RequestTarget;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.pages.PageHandler;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.data.JSONResponse;
-import com.djrapitops.plan.utilities.formatting.Formatters;
-import com.djrapitops.plan.utilities.html.tables.PlayersTableJSONParser;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -51,41 +43,22 @@ import java.util.UUID;
 @Singleton
 public class PlayersTableJSONHandler implements PageHandler {
 
-    private final PlanConfig config;
     private final DBSystem dbSystem;
-    private final Formatters formatters;
+    private final JSONFactory jsonFactory;
 
     @Inject
     public PlayersTableJSONHandler(
-            PlanConfig config,
             DBSystem dbSystem,
-            Formatters formatters
+            JSONFactory jsonFactory
     ) {
-        this.config = config;
+        this.jsonFactory = jsonFactory;
         this.dbSystem = dbSystem;
-        this.formatters = formatters;
     }
 
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
         UUID serverUUID = getServerUUID(target); // Can throw BadRequestException
-        return new JSONResponse(parseJSON(serverUUID));
-    }
-
-    public String parseJSON(UUID serverUUID) {
-        Integer xMostRecentPlayers = config.get(DisplaySettings.PLAYERS_PER_SERVER_PAGE);
-        Integer loginThreshold = config.get(TimeSettings.ACTIVE_LOGIN_THRESHOLD);
-        Long playtimeThreshold = config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD);
-        Boolean openPlayerLinksInNewTab = config.get(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB);
-
-        Database database = dbSystem.getDatabase();
-
-        return new PlayersTableJSONParser(
-                database.query(new ServerPlayersTableContainersQuery(serverUUID)),
-                database.query(new ExtensionServerPlayerDataTableQuery(serverUUID, xMostRecentPlayers)),
-                xMostRecentPlayers, playtimeThreshold, loginThreshold, openPlayerLinksInNewTab,
-                formatters
-        ).toJSONString();
+        return new JSONResponse(jsonFactory.serverPlayersTableJSON(serverUUID));
     }
 
     private UUID getServerUUID(RequestTarget target) throws BadRequestException {

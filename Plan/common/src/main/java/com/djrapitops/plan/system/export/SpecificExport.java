@@ -20,6 +20,7 @@ import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
+import com.djrapitops.plan.system.webserver.pages.json.JSONFactory;
 import com.djrapitops.plan.system.webserver.response.Response;
 
 import java.io.File;
@@ -29,6 +30,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,13 +42,15 @@ import java.util.UUID;
 public abstract class SpecificExport {
 
     private final PlanFiles files;
+    private final JSONFactory jsonFactory; // Hacky, TODO export needs a rework
     protected final ServerInfo serverInfo;
 
     SpecificExport(
             PlanFiles files,
-            ServerInfo serverInfo
+            JSONFactory jsonFactory, ServerInfo serverInfo
     ) {
         this.files = files;
+        this.jsonFactory = jsonFactory;
         this.serverInfo = serverInfo;
     }
 
@@ -117,7 +121,8 @@ public abstract class SpecificExport {
                 .replace("href=\"plugins/", "href=\"../plugins/")
                 .replace("href=\"css/", "href=\"../css/")
                 .replace("src=\"plugins/", "src=\"../plugins/")
-                .replace("src=\"js/", "src=\"../js/");
+                .replace("src=\"js/", "src=\"../js/")
+                .replace("../json/players?serverName=" + serverName, "./players_table.json");
 
         File htmlLocation;
         if (serverInfo.getServer().isProxy()) {
@@ -126,15 +131,23 @@ public abstract class SpecificExport {
             } else {
                 htmlLocation = new File(getServerFolder(), URLEncoder.encode(serverName, "UTF-8").replace(".", "%2E"));
                 html = html.replace("../", "../../");
+                exportPlayersTableJSON(htmlLocation, serverUUID);
             }
         } else {
             htmlLocation = getServerFolder();
+            exportPlayersTableJSON(htmlLocation, serverUUID);
         }
+
         htmlLocation.mkdirs();
         File exportFile = new File(htmlLocation, "index.html");
 
         List<String> lines = Arrays.asList(html.split("\n"));
 
         export(exportFile, lines);
+    }
+
+    private void exportPlayersTableJSON(File htmlLocation, UUID serverUUID) throws IOException {
+        File exportFile = new File(htmlLocation, "players_table.json");
+        export(exportFile, Collections.singletonList(jsonFactory.serverPlayersTableJSON(serverUUID)));
     }
 }
