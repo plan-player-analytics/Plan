@@ -16,11 +16,13 @@
  */
 package com.djrapitops.plan.utilities.html.pages;
 
+import com.djrapitops.plan.extension.ElementOrder;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.results.ExtensionDescriptive;
 import com.djrapitops.plan.extension.implementation.results.ExtensionInformation;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
+import com.djrapitops.plan.extension.implementation.results.ExtensionTableData;
 import com.djrapitops.plan.extension.implementation.results.player.ExtensionPlayerData;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
@@ -48,6 +50,8 @@ public class InspectPluginTab implements Comparable<InspectPluginTab> {
     private String nav;
     private String tab;
 
+    private boolean hasWideTable;
+
     public InspectPluginTab(String nav, String tab) {
         this.nav = nav;
         this.tab = tab;
@@ -69,6 +73,8 @@ public class InspectPluginTab implements Comparable<InspectPluginTab> {
 
         this.decimalFormatter = formatters.decimals();
         this.percentageFormatter = formatters.percentage();
+
+        hasWideTable = false;
 
         generate();
     }
@@ -106,7 +112,7 @@ public class InspectPluginTab implements Comparable<InspectPluginTab> {
             String tabsElement;
             if (onlyGeneric) {
                 ExtensionTabData genericTabData = datum.getTabs().get(0);
-                tabsElement = Html.BODY.parse(parseDataHtml(genericTabData));
+                tabsElement = parseContentHtml(genericTabData);
             } else {
                 tabsElement = new TabsElement(
                         datum.getTabs().stream().map(this::wrapToTabElementTab).toArray(TabsElement.Tab[]::new)
@@ -125,11 +131,53 @@ public class InspectPluginTab implements Comparable<InspectPluginTab> {
 
     private TabsElement.Tab wrapToTabElementTab(ExtensionTabData tabData) {
         TabInformation tabInformation = tabData.getTabInformation();
+        String tabContentHtml = parseContentHtml(tabData);
 
-        return new TabsElement.Tab(tabInformation.getTabName(), parseDataHtml(tabData));
+        String tabName = tabInformation.getTabName();
+        return new TabsElement.Tab(tabName.isEmpty()
+                ? Icon.called("info-circle").build().toHtml() + " General"
+                : Icon.fromExtensionIcon(tabInformation.getTabIcon()).toHtml() + ' ' + tabName,
+                tabContentHtml);
     }
 
-    private String parseDataHtml(ExtensionTabData tabData) {
+    private String parseContentHtml(ExtensionTabData tabData) {
+        TabInformation tabInformation = tabData.getTabInformation();
+
+        ElementOrder[] order = tabInformation.getTabElementOrder().orElse(ElementOrder.values());
+        String values = parseValuesHtml(tabData);
+        String valuesHtml = values.isEmpty() ? "" : Html.BODY.parse(values);
+        String tablesHtml = parseTablesHtml(tabData);
+
+        StringBuilder builder = new StringBuilder();
+
+        for (ElementOrder ordering : order) {
+            switch (ordering) {
+                case VALUES:
+                    builder.append(valuesHtml);
+                    break;
+                case TABLE:
+                    builder.append(tablesHtml);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return builder.toString();
+    }
+
+    private String parseTablesHtml(ExtensionTabData tabData) {
+        StringBuilder builder = new StringBuilder();
+        for (ExtensionTableData tableData : tabData.getTableData()) {
+            if (tableData.isWideTable()) {
+                hasWideTable = true;
+            }
+            builder.append(tableData.getHtmlTable().parseHtml());
+        }
+        return builder.toString();
+    }
+
+    private String parseValuesHtml(ExtensionTabData tabData) {
         StringBuilder builder = new StringBuilder();
         for (String key : tabData.getValueOrder()) {
             tabData.getBoolean(key).ifPresent(data -> append(builder, data.getDescriptive(), data.getFormattedValue()));
@@ -153,7 +201,8 @@ public class InspectPluginTab implements Comparable<InspectPluginTab> {
     }
 
     private String wrapInContainer(ExtensionInformation information, String tabsElement) {
-        return "<div class=\"col-xs-12 col-sm-12 col-md-4 col-lg-4\"><div class=\"card\">" +
+        String colWidth = hasWideTable ? "col-md-8 col-lg-8" : "col-md-4 col-lg-4";
+        return "<div class=\"col-xs-12 col-sm-12 " + colWidth + "\"><div class=\"card\">" +
                 "<div class=\"header\">" +
                 "<h2>" + Icon.fromExtensionIcon(information.getIcon()) + ' ' + information.getPluginName() + "</h2>" +
                 "</div>" +

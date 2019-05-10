@@ -28,7 +28,6 @@ import com.djrapitops.plan.system.info.server.Server;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -72,7 +71,7 @@ public class TestData {
             geoInfos.add(new GeoInfo(InetAddress.getByName("43b9:416b:3cb2:649d:ebaf:872:d89a:343d"), "Not Known", playerFirstJoin));
             geoInfos.add(new GeoInfo(InetAddress.getByName("127.0.0.1"), "Local Machine", playerFirstJoin));
             geoInfos.add(new GeoInfo(InetAddress.getByName("181.103.227.78"), "Argentina", playerFirstJoin));
-        } catch (UnknownHostException | NoSuchAlgorithmException e) {
+        } catch (UnknownHostException e) {
             Logger.getGlobal().log(Level.WARNING, e, () -> "Failed to create GeoInfo");
         }
 

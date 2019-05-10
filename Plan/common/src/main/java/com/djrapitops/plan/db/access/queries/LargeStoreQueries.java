@@ -97,15 +97,13 @@ public class LargeStoreQueries {
                     // Every GeoInfo
                     for (GeoInfo info : playerEntry.getValue()) {
                         String ip = info.getIp();
-                        String ipHash = info.getIpHash();
                         String geoLocation = info.getGeolocation();
                         long lastUsed = info.getDate();
 
                         statement.setString(1, playerUUID.toString());
                         statement.setString(2, ip);
-                        statement.setString(3, ipHash);
-                        statement.setString(4, geoLocation);
-                        statement.setLong(5, lastUsed);
+                        statement.setString(3, geoLocation);
+                        statement.setLong(4, lastUsed);
 
                         statement.addBatch();
                     }

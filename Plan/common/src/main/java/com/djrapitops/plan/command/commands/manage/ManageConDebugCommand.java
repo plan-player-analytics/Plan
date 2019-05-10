@@ -32,7 +32,6 @@ import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.webserver.WebServer;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -82,7 +81,7 @@ public class ManageConDebugCommand extends CommandNode {
         this.webServer = webServer;
         this.dbSystem = dbSystem;
 
-        setShortHelp(locale.getString(Check.isBungeeAvailable() || Check.isVelocityAvailable() ? CmdHelpLang.CON : CmdHelpLang.MANAGE_CON));
+        setShortHelp(locale.getString(serverInfo.getServer().isProxy() ? CmdHelpLang.CON : CmdHelpLang.MANAGE_CON));
         setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_CON));
     }
 

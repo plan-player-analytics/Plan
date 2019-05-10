@@ -31,7 +31,6 @@ public class BungeeServerProperties extends ServerProperties {
 
     public BungeeServerProperties(ProxyServer server, PlanConfig config) {
         super(
-                server.getServers().toString(),
                 "BungeeCord",
                 -1,
                 server.getVersion(),

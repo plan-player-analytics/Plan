@@ -51,6 +51,7 @@ public class HackerTable {
         return CreateTableParser.create(TABLE_NAME, dbType)
                 .column(COL_ID, Sql.INT).primaryKey()
                 .column(COL_UUID, Sql.varchar(36)).notNull()
+                .column(COL_DATE, Sql.LONG).notNull()
                 .column(COL_HACK_TYPE, Sql.varchar(100)).notNull()
                 .column(COL_VIOLATION_LEVEL, Sql.INT).notNull()
                 .build();

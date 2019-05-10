@@ -59,6 +59,7 @@ Webserver:
 # -----------------------------------------------------
 Data_gathering:
   Geolocations: true
+  Ping: true
 # -----------------------------------------------------
 # Supported time units: MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS
 # -----------------------------------------------------
@@ -84,6 +85,11 @@ Time:
       Playtime_threshold: 30
         Unit: MINUTES
     Remove_inactive_player_data_after: 180
+      Unit: DAYS
+    # Includes players online, tps and performance time series
+    Remove_time_series_data_after: 90
+      Unit: DAYS
+    Remove_ping_data_after: 14
       Unit: DAYS
   Periodic_tasks:
     Extension_data_refresh_every: 1

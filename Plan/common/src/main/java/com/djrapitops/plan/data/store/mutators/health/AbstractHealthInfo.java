@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractHealthInfo {
 
-    protected final String subNote = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+    protected static final String SUB_NOTE = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
     protected final List<String> notes;
     protected final long now;
@@ -109,7 +109,7 @@ public abstract class AbstractHealthInfo {
 
         StringBuilder remainNote = new StringBuilder();
         if (activeFWAGNum != 0) {
-            remainNote.append(subNote);
+            remainNote.append(SUB_NOTE);
             if (percRemain > 0.5) {
                 remainNote.append(Icons.GREEN_THUMB);
             } else if (percRemain > 0.2) {

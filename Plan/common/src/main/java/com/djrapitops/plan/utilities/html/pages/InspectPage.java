@@ -48,7 +48,6 @@ import com.djrapitops.plan.utilities.html.structure.Accordions;
 import com.djrapitops.plan.utilities.html.structure.ServerAccordion;
 import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
 import com.djrapitops.plan.utilities.html.tables.HtmlTables;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.benchmarking.Timings;
 
@@ -259,7 +258,7 @@ public class InspectPage implements Page {
                         : serverName
         );
 
-        if (Check.isBungeeAvailable() || Check.isVelocityAvailable()) {
+        if (serverInfo.getServer().isProxy()) {
             replacer.put("backButton", "<li><a title=\"to Network page\" href=\"/network\"><i class=\"material-icons\">arrow_back</i><i class=\"material-icons\">cloud</i></a></li>");
         } else {
             replacer.put("backButton", "<li><a title=\"to Server page\" href=\"/server\"><i class=\"material-icons\">arrow_back</i><i class=\"material-icons\">storage</i></a></li>");

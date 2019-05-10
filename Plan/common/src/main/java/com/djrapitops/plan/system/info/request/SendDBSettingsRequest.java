@@ -22,10 +22,10 @@ import com.djrapitops.plan.api.exceptions.connection.GatewayException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.errors.BadRequestResponse;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.net.SocketException;
@@ -39,20 +39,23 @@ import java.util.UUID;
  */
 public class SendDBSettingsRequest extends InfoRequestWithVariables implements SetupRequest {
 
+    private final ServerInfo serverInfo;
     private final InfoRequestFactory infoRequestFactory;
     private final ConnectionSystem connectionSystem;
 
     SendDBSettingsRequest(
-            InfoRequestFactory infoRequestFactory, ConnectionSystem connectionSystem
+            ServerInfo serverInfo, InfoRequestFactory infoRequestFactory, ConnectionSystem connectionSystem
     ) {
+        this.serverInfo = serverInfo;
         this.infoRequestFactory = infoRequestFactory;
         this.connectionSystem = connectionSystem;
     }
 
     SendDBSettingsRequest(
             String webServerAddress,
-            InfoRequestFactory infoRequestFactory, ConnectionSystem connectionSystem
+            ServerInfo serverInfo, InfoRequestFactory infoRequestFactory, ConnectionSystem connectionSystem
     ) {
+        this.serverInfo = serverInfo;
         this.infoRequestFactory = infoRequestFactory;
         this.connectionSystem = connectionSystem;
 
@@ -68,11 +71,8 @@ public class SendDBSettingsRequest extends InfoRequestWithVariables implements S
     @Override
     public Response handleRequest(Map<String, String> variables) throws WebException {
         // Available variables: sender, address
-        if (Check.isBukkitAvailable()) {
-            return new BadRequestResponse("Not supposed to be called on a Bukkit server");
-        }
-        if (Check.isSpongeAvailable()) {
-            return new BadRequestResponse("Not supposed to be called on a Sponge server");
+        if (serverInfo.getServer().isNotProxy()) {
+            return new BadRequestResponse("Not supposed to be called on a non proxy server");
         }
 
         String address = variables.get("address");

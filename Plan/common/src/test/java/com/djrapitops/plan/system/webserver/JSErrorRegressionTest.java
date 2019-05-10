@@ -26,6 +26,9 @@ import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
+import com.djrapitops.plan.system.webserver.cache.PageId;
+import com.djrapitops.plan.system.webserver.cache.ResponseCache;
+import com.jayway.awaitility.Awaitility;
 import extension.SeleniumExtension;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -42,6 +45,7 @@ import utilities.mocks.PluginMockComponent;
 
 import java.nio.file.Path;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertFalse;
 
@@ -62,6 +66,7 @@ class JSErrorRegressionTest {
     public static PluginMockComponent component;
 
     private static PlanSystem bukkitSystem;
+    private static UUID serverUUID;
 
     @BeforeAll
     static void setUpClass(@TempDir Path tempDir) throws Exception {
@@ -72,6 +77,7 @@ class JSErrorRegressionTest {
         config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
 
         bukkitSystem.enable();
+        serverUUID = bukkitSystem.getServerInfo().getServerUUID();
         savePlayerData();
     }
 
@@ -80,9 +86,9 @@ class JSErrorRegressionTest {
         Database database = dbSystem.getDatabase();
         UUID uuid = TestConstants.PLAYER_ONE_UUID;
         database.executeTransaction(new PlayerRegisterTransaction(uuid, () -> 1000L, "name"));
-        Session session = new Session(uuid, TestConstants.SERVER_UUID, 1000L, "world", "SURVIVAL");
+        Session session = new Session(uuid, serverUUID, 1000L, "world", "SURVIVAL");
         session.endSession(11000L);
-        database.executeTransaction(new WorldNameStoreTransaction(TestConstants.SERVER_UUID, "world"));
+        database.executeTransaction(new WorldNameStoreTransaction(serverUUID, "world"));
         database.executeTransaction(new SessionEndTransaction(session));
     }
 
@@ -112,30 +118,30 @@ class JSErrorRegressionTest {
         assertFalse(driver.getPageSource(), driver.getPageSource().contains(ErrorPageLang.NOT_PLAYED_404.getDefault()));
     }
 
-//    @Test TODO Figure out why /network page is shown
-//    void serverPageDoesNotHaveJavascriptErrors(WebDriver driver) {
-//        System.out.println("Testing Server Page");
-//        // Open the page that has refreshing info
-//        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/server");
-//        assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
-//
-//        // Wait until Plan caches analysis results
-//        Awaitility.await()
-//                .atMost(10, TimeUnit.SECONDS)
-//                .until(() -> ResponseCache.isCached(PageId.SERVER.of(TestConstants.SERVER_UUID)));
-//
-//        // Open the page with analysis stuff
-//        SeleniumExtension.newTab(driver);
-//        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/server");
-//        assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
-//    }
+    @Test
+    void serverPageDoesNotHaveJavascriptErrors(WebDriver driver) {
+        System.out.println("Testing Server Page");
+        // Open the page that has refreshing info
+        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/server");
+        assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
 
-//    @Test TODO Figure out why /network players page is shown
-//    void playersPageDoesNotHaveJavascriptErrors(WebDriver driver) {
-//        System.out.println("Testing Players Page");
-//        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/players");
-//        assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
-//    }
+        // Wait until Plan caches analysis results
+        Awaitility.await()
+                .atMost(10, TimeUnit.SECONDS)
+                .until(() -> ResponseCache.loadResponse(PageId.SERVER.of(serverUUID)) != null);
+
+        // Open the page with analysis stuff
+        SeleniumExtension.newTab(driver);
+        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/server");
+        assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
+    }
+
+    @Test
+    void playersPageDoesNotHaveJavascriptErrors(WebDriver driver) {
+        System.out.println("Testing Players Page");
+        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/players");
+        assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
+    }
 
     @Test
     void debugPageDoesNotHaveJavascriptErrors(WebDriver driver) {

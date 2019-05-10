@@ -27,6 +27,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -133,5 +134,10 @@ public class PlanConfig extends Config {
         if (this == o) return true;
         if (o == null) return false;
         return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode());
     }
 }

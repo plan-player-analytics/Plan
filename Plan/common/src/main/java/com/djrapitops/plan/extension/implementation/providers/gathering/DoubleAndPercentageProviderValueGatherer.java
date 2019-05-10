@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.implementation.providers.gathering;
 
+import com.djrapitops.plan.api.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.extension.DataExtension;
@@ -30,7 +31,6 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.results
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerPercentageResultTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerDoubleResultTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerPercentageResultTransaction;
-import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -51,20 +51,17 @@ class DoubleAndPercentageProviderValueGatherer {
 
     private final Database database;
     private final DataProviders dataProviders;
-    private final PluginLogger logger;
 
     DoubleAndPercentageProviderValueGatherer(
             String pluginName, DataExtension extension,
             UUID serverUUID, Database database,
-            DataProviders dataProviders,
-            PluginLogger logger
+            DataProviders dataProviders
     ) {
         this.pluginName = pluginName;
         this.extension = extension;
         this.serverUUID = serverUUID;
         this.database = database;
         this.dataProviders = dataProviders;
-        this.logger = logger;
     }
 
     void gatherDoubleDataOfPlayer(UUID playerUUID, String playerName, Conditions conditions) {
@@ -105,10 +102,7 @@ class DoubleAndPercentageProviderValueGatherer {
         }
 
         MethodWrapper<Double> method = doubleProvider.getMethod();
-        Double result = getMethodResult(
-                methodCaller.apply(method),
-                throwable -> pluginName + " has invalid implementation, method " + method.getMethodName() + " threw exception: " + throwable.toString()
-        );
+        Double result = getMethodResult(methodCaller.apply(method), method);
         if (result == null) {
             return;
         }
@@ -123,13 +117,11 @@ class DoubleAndPercentageProviderValueGatherer {
         }
     }
 
-    private <T> T getMethodResult(Callable<T> callable, Function<Throwable, String> errorMsg) {
+    private <T> T getMethodResult(Callable<T> callable, MethodWrapper<T> method) {
         try {
             return callable.call();
-        } catch (Exception | NoSuchFieldError | NoSuchMethodError e) {
-            logger.warn(errorMsg.apply(e));
-            return null;
+        } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
+            throw new DataExtensionMethodCallException(e, pluginName, method);
         }
     }
-
 }

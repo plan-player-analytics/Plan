@@ -68,7 +68,27 @@ public class ExtensionPlayerDataQuery implements Query<Map<UUID, List<ExtensionP
         Map<UUID, List<ExtensionInformation>> extensionsByServerUUID = db.query(ExtensionInformationQueries.allExtensions());
         Map<Integer, ExtensionPlayerData.Factory> extensionDataByPluginID = db.query(fetchIncompletePlayerDataByPluginID());
 
+        Map<Integer, ExtensionPlayerData.Factory> tableDataByPluginID = db.query(new ExtensionPlayerTablesQuery(playerUUID));
+        combine(extensionDataByPluginID, tableDataByPluginID);
+
         return flatMapByServerUUID(extensionsByServerUUID, extensionDataByPluginID);
+    }
+
+    private void combine(
+            Map<Integer, ExtensionPlayerData.Factory> extensionDataByPluginID,
+            Map<Integer, ExtensionPlayerData.Factory> aggregates
+    ) {
+        for (Map.Entry<Integer, ExtensionPlayerData.Factory> entry : aggregates.entrySet()) {
+            Integer pluginID = entry.getKey();
+            ExtensionPlayerData.Factory data = entry.getValue();
+
+            ExtensionPlayerData.Factory found = extensionDataByPluginID.get(pluginID);
+            if (found == null) {
+                extensionDataByPluginID.put(pluginID, data);
+            } else {
+                found.combine(data);
+            }
+        }
     }
 
     private Map<UUID, List<ExtensionPlayerData>> flatMapByServerUUID(Map<UUID, List<ExtensionInformation>> extensionsByServerUUID, Map<Integer, ExtensionPlayerData.Factory> extensionDataByPluginID) {

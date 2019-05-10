@@ -2,12 +2,20 @@ dependencies {
     compile project(path: ":api")
     compile "com.djrapitops:Extension-AdvancedAchievements:1.1-R0.2"
     compile "com.djrapitops:Extension-AdvancedBan:2.1.5-R0.5"
+    compile "com.djrapitops:Extension-ASkyBlock:3.0.9.4-R0.3"
     compile "com.djrapitops:Extension-BanManager:5.15.0-R0.4"
     compile "com.djrapitops:Extension-CoreProtect:2.16.0-R0.2"
     compile "com.djrapitops:Extension-DiscordSRV:1.16.6-R0.2"
     compile "com.djrapitops:Extension-EssentialsX:2.15.0-R0.3"
+    compile "com.djrapitops:Extension-GriefPrevention:16.11.6-R0.1"
+    compile "com.djrapitops:Extension-GriefPrevention-Sponge:4.0.1-R0.1"
+    compile "com.djrapitops:Extension-GriefPreventionPlus:13.3-R0.1"
+    compile "com.djrapitops:Extension-McMMO:2.1.44-R0.1"
     compile 'com.djrapitops:Extension-MinigamesLib:1.14.17-R0.1'
+    compile 'com.djrapitops:Extension-Nucleus:1.9.2-R0.1'
+    compile "com.djrapitops:Extension-RedProtect:7.5.6-R0.1"
     compile "com.djrapitops:Extension-Sponge-Economy:7.1.0-R0.2"
+    compile "com.djrapitops:Extension-Vault:1.7-R0.1"
 }
 
 shadowJar {

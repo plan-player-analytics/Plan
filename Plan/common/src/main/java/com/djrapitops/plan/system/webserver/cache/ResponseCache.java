@@ -82,7 +82,9 @@ public class ResponseCache {
      */
     public static void cacheResponse(String identifier, Supplier<Response> loader) {
         Response response = loader.get();
-        cache.put(identifier, response);
+        if (response != null) {
+            cache.put(identifier, response);
+        }
     }
 
     /**

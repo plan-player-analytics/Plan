@@ -27,7 +27,7 @@ public enum ErrorPageLang implements Lang {
     NOT_PLAYED_404("Player has not played on this server."),
     UNKNOWN_PAGE_404("Make sure you're accessing a link given by a command, Examples:</p><p>/player/PlayerName<br>/server/ServerName</p>"),
     UNAUTHORIZED_401("Unauthorized"),
-    AUTHENTICATION_FAIlED_401("Authentication Failed."),
+    AUTHENTICATION_FAILED_401("Authentication Failed."),
     AUTH_FAIL_TIPS_401("- Ensure you have registered a user with <b>/plan register</b><br>- Check that the username and password are correct<br>- Username and password are case-sensitive<br><br>If you have forgotten your password, ask a staff member to delete your old user and re-register."),
     FORBIDDEN_403("Forbidden"),
     ACCESS_DENIED_403("Access Denied"),

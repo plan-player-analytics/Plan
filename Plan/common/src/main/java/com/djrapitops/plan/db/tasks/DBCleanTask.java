@@ -24,7 +24,8 @@ import com.djrapitops.plan.db.access.transactions.commands.RemovePlayerTransacti
 import com.djrapitops.plan.db.access.transactions.init.RemoveDuplicateUserInfoTransaction;
 import com.djrapitops.plan.db.access.transactions.init.RemoveOldSampledDataTransaction;
 import com.djrapitops.plan.db.sql.tables.SessionsTable;
-import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalResultsTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalPlayerResultsTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalServerResultsTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
@@ -84,9 +85,14 @@ public class DBCleanTask extends AbsRunnable {
         Database database = dbSystem.getDatabase();
         try {
             if (database.getState() != Database.State.CLOSED) {
-                database.executeTransaction(new RemoveOldSampledDataTransaction(serverInfo.getServerUUID()));
+                database.executeTransaction(new RemoveOldSampledDataTransaction(
+                        serverInfo.getServerUUID(),
+                        config.get(TimeSettings.DELETE_TPS_DATA_AFTER),
+                        config.get(TimeSettings.DELETE_PING_DATA_AFTER)
+                ));
                 database.executeTransaction(new RemoveDuplicateUserInfoTransaction());
-                database.executeTransaction(new RemoveUnsatisfiedConditionalResultsTransaction());
+                database.executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
+                database.executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
                 int removed = cleanOldPlayers(database);
                 if (removed > 0) {
                     logger.info(locale.getString(PluginLang.DB_NOTIFY_CLEAN, removed));
@@ -101,7 +107,7 @@ public class DBCleanTask extends AbsRunnable {
     @VisibleForTesting
     public int cleanOldPlayers(Database database) {
         long now = System.currentTimeMillis();
-        long keepActiveAfter = now - config.get(TimeSettings.KEEP_INACTIVE_PLAYERS);
+        long keepActiveAfter = now - config.get(TimeSettings.DELETE_INACTIVE_PLAYERS_AFTER);
 
         List<UUID> inactivePlayers = database.query(fetchInactivePlayerUUIDs(keepActiveAfter));
         for (UUID uuid : inactivePlayers) {

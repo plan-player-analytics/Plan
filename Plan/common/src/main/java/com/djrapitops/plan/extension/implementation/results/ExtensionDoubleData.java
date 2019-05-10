@@ -40,4 +40,8 @@ public class ExtensionDoubleData implements ExtensionData {
     public String getFormattedValue(Formatter<Double> formatter) {
         return formatter.apply(value);
     }
+
+    public double getRawValue() {
+        return value;
+    }
 }

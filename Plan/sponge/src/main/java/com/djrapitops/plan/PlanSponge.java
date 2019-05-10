@@ -25,7 +25,7 @@ import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plugin.SpongePlugin;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.logging.L;
-import org.bstats.sponge.Metrics;
+import org.bstats.sponge.Metrics2;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
@@ -42,18 +42,20 @@ import java.io.InputStream;
 @Plugin(
         id = "plan",
         name = "Plan",
-        version = "4.8.1",
+        version = "4.8.2",
         description = "Player Analytics Plugin by Rsl1122",
         authors = {"Rsl1122"},
         dependencies = {
+                @Dependency(id = "griefprevention", optional = true),
+                @Dependency(id = "luckperms", optional = true),
                 @Dependency(id = "nucleus", optional = true),
-                @Dependency(id = "luckperms", optional = true)
+                @Dependency(id = "redprotect", optional = true)
         }
 )
 public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
     @com.google.inject.Inject
-    private Metrics metrics;
+    private Metrics2 metrics;
 
     @com.google.inject.Inject
     private Logger slf4jLogger;

@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.system.export;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.BaseUser;
@@ -32,9 +31,13 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.ExportSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
+import com.djrapitops.plan.system.webserver.cache.PageId;
+import com.djrapitops.plan.system.webserver.cache.ResponseCache;
+import com.djrapitops.plan.system.webserver.pages.json.JSONFactory;
+import com.djrapitops.plan.system.webserver.response.pages.NetworkPageResponse;
 import com.djrapitops.plan.utilities.html.pages.InspectPage;
+import com.djrapitops.plan.utilities.html.pages.NetworkPage;
 import com.djrapitops.plan.utilities.html.pages.PageFactory;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
@@ -55,7 +58,6 @@ import java.util.*;
 @Singleton
 public class HtmlExport extends SpecificExport {
 
-    private final PlanPlugin plugin;
     private final PlanConfig config;
     private final Theme theme;
     private final PlanFiles files;
@@ -66,18 +68,17 @@ public class HtmlExport extends SpecificExport {
 
     @Inject
     public HtmlExport(
-            PlanPlugin plugin,
             PlanFiles files,
             PlanConfig config,
             Theme theme,
             DBSystem dbSystem,
             PageFactory pageFactory,
+            JSONFactory jsonFactory,
             ServerInfo serverInfo,
             ConnectionSystem connectionSystem,
             ErrorHandler errorHandler
     ) {
-        super(files, serverInfo);
-        this.plugin = plugin;
+        super(files, jsonFactory, serverInfo);
         this.config = config;
         this.theme = theme;
         this.files = files;
@@ -93,7 +94,7 @@ public class HtmlExport extends SpecificExport {
     }
 
     public void exportServer(UUID serverUUID) {
-        if (Check.isBukkitAvailable() && connectionSystem.isServerAvailable()) {
+        if (serverInfo.getServer().isNotProxy() && connectionSystem.isServerAvailable()) {
             return;
         }
         dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
@@ -122,7 +123,7 @@ public class HtmlExport extends SpecificExport {
     }
 
     public void exportCachedPlayerPage(UUID playerUUID) {
-        if (Check.isBukkitAvailable() && connectionSystem.isServerAvailable()) {
+        if (serverInfo.getServer().isNotProxy() && connectionSystem.isServerAvailable()) {
             return;
         }
 
@@ -162,6 +163,35 @@ public class HtmlExport extends SpecificExport {
                 exportAvailablePlayerPage(user.getUuid(), user.getName());
             }
         } catch (IOException | DBOpException e) {
+            errorHandler.log(L.WARN, this.getClass(), e);
+        }
+    }
+
+    public void cacheNetworkPage() {
+        if (serverInfo.getServer().isNotProxy()) {
+            return;
+        }
+
+        NetworkPage networkPage = pageFactory.networkPage();
+        ResponseCache.cacheResponse(PageId.SERVER.of(serverInfo.getServerUUID()), () -> {
+            try {
+                return new NetworkPageResponse(networkPage);
+            } catch (ParseException e) {
+                errorHandler.log(L.WARN, this.getClass(), e);
+                return null;
+            }
+        });
+    }
+
+    public void exportNetworkPage() {
+        if (serverInfo.getServer().isNotProxy()) {
+            return;
+        }
+
+        cacheNetworkPage();
+        try {
+            exportAvailableServerPage(serverInfo.getServerUUID(), serverInfo.getServer().getName());
+        } catch (IOException e) {
             errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
@@ -231,15 +261,11 @@ public class HtmlExport extends SpecificExport {
 
     public void exportPlugins() {
         String[] resources = new String[]{
-                "web/plugins/bootstrap/css/bootstrap.css",
                 "web/plugins/node-waves/waves.css",
                 "web/plugins/node-waves/waves.js",
                 "web/plugins/animate-css/animate.css",
                 "web/plugins/jquery-slimscroll/jquery.slimscroll.js",
                 "web/plugins/jquery/jquery.min.js",
-                "web/plugins/bootstrap/js/bootstrap.js",
-                "web/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js",
-                "web/plugins/jquery-datatable/jquery.dataTables.js",
                 "web/plugins/fullcalendar/fullcalendar.min.js",
                 "web/plugins/fullcalendar/fullcalendar.min.css",
                 "web/plugins/momentjs/moment.js",

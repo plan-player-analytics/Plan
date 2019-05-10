@@ -47,4 +47,8 @@ public class ExtensionNumberData implements ExtensionData {
     public String getFormattedValue(Formatter<Long> formatter) {
         return formatter.apply(value);
     }
+
+    public long getRawValue() {
+        return value;
+    }
 }

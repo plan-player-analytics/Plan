@@ -49,7 +49,6 @@ public class GeoInfoQueries {
                 GeoInfoTable.IP + ", " +
                 GeoInfoTable.GEOLOCATION + ", " +
                 GeoInfoTable.LAST_USED + ", " +
-                GeoInfoTable.IP_HASH + ", " +
                 GeoInfoTable.USER_UUID +
                 " FROM " + GeoInfoTable.TABLE_NAME;
 
@@ -64,9 +63,8 @@ public class GeoInfoQueries {
 
                     String ip = set.getString(GeoInfoTable.IP);
                     String geolocation = set.getString(GeoInfoTable.GEOLOCATION);
-                    String ipHash = set.getString(GeoInfoTable.IP_HASH);
                     long lastUsed = set.getLong(GeoInfoTable.LAST_USED);
-                    userGeoInfo.add(new GeoInfo(ip, geolocation, lastUsed, ipHash));
+                    userGeoInfo.add(new GeoInfo(ip, geolocation, lastUsed));
 
                     geoInformation.put(uuid, userGeoInfo);
                 }
@@ -97,9 +95,8 @@ public class GeoInfoQueries {
                 while (set.next()) {
                     String ip = set.getString(GeoInfoTable.IP);
                     String geolocation = set.getString(GeoInfoTable.GEOLOCATION);
-                    String ipHash = set.getString(GeoInfoTable.IP_HASH);
                     long lastUsed = set.getLong(GeoInfoTable.LAST_USED);
-                    geoInfo.add(new GeoInfo(ip, geolocation, lastUsed, ipHash));
+                    geoInfo.add(new GeoInfo(ip, geolocation, lastUsed));
                 }
                 return geoInfo;
             }
@@ -110,8 +107,7 @@ public class GeoInfoQueries {
         String sql = "SELECT " + GeoInfoTable.TABLE_NAME + "." + GeoInfoTable.USER_UUID + ", " +
                 GeoInfoTable.GEOLOCATION + ", " +
                 GeoInfoTable.LAST_USED + ", " +
-                GeoInfoTable.IP + ", " +
-                GeoInfoTable.IP_HASH +
+                GeoInfoTable.IP +
                 " FROM " + GeoInfoTable.TABLE_NAME +
                 " INNER JOIN " + UserInfoTable.TABLE_NAME + " on " +
                 GeoInfoTable.TABLE_NAME + "." + GeoInfoTable.USER_UUID + "=" + UserInfoTable.TABLE_NAME + "." + UserInfoTable.USER_UUID +
@@ -132,9 +128,8 @@ public class GeoInfoQueries {
 
                     String ip = set.getString(GeoInfoTable.IP);
                     String geolocation = set.getString(GeoInfoTable.GEOLOCATION);
-                    String ipHash = set.getString(GeoInfoTable.IP_HASH);
                     long lastUsed = set.getLong(GeoInfoTable.LAST_USED);
-                    userGeoInfo.add(new GeoInfo(ip, geolocation, lastUsed, ipHash));
+                    userGeoInfo.add(new GeoInfo(ip, geolocation, lastUsed));
 
                     geoInformation.put(uuid, userGeoInfo);
                 }

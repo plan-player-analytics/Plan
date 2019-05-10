@@ -21,6 +21,7 @@ import com.djrapitops.plan.db.SQLiteDB;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plan.system.settings.paths.ProxySettings;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -33,9 +34,11 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import rules.BungeeComponentMocker;
 import rules.ComponentMocker;
+import utilities.CIProperties;
 import utilities.RandomData;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * Test for Bungee PlanSystem.
@@ -69,6 +72,7 @@ public class BungeeSystemTest {
             dbSystem.setActiveDatabase(db);
 
             bungeeSystem.enable();
+            assertTrue(bungeeSystem.isEnabled());
         } finally {
             bungeeSystem.disable();
         }
@@ -90,8 +94,7 @@ public class BungeeSystemTest {
             db.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
             dbSystem.setActiveDatabase(db);
 
-            bungeeSystem.enable();
-            assertTrue(bungeeSystem.isEnabled());
+            bungeeSystem.enable(); // Throws EnableException
         } finally {
             bungeeSystem.disable();
         }
@@ -107,7 +110,31 @@ public class BungeeSystemTest {
             config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
             config.set(ProxySettings.IP, "8.8.8.8");
 
+            bungeeSystem.enable(); // Throws EnableException
+        } finally {
+            bungeeSystem.disable();
+        }
+    }
+
+    @Test
+    public void testEnableWithMySQL() throws EnableException {
+        boolean isCI = Boolean.parseBoolean(System.getenv(CIProperties.IS_CI_SERVICE));
+        assumeTrue(isCI);
+
+        PlanSystem bungeeSystem = component.getPlanSystem();
+        try {
+            PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
+            config.set(DatabaseSettings.MYSQL_DATABASE, "Plan");
+            config.set(DatabaseSettings.MYSQL_USER, "travis");
+            config.set(DatabaseSettings.MYSQL_PASS, "");
+            config.set(DatabaseSettings.MYSQL_HOST, "127.0.0.1");
+            config.set(DatabaseSettings.TYPE, "MySQL");
+
+            config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
+            config.set(ProxySettings.IP, "8.8.8.8");
+
             bungeeSystem.enable();
+            assertTrue(bungeeSystem.isEnabled());
         } finally {
             bungeeSystem.disable();
         }

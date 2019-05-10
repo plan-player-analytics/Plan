@@ -123,15 +123,15 @@ public class InfoRequestFactory {
     }
 
     public SaveDBSettingsRequest saveDBSettingsRequest() {
-        return new SaveDBSettingsRequest(plugin.get(), config.get(), logger.get(), runnableFactory.get());
+        return new SaveDBSettingsRequest(plugin.get(), config.get(), serverInfo.get(), logger.get(), runnableFactory.get());
     }
 
     public SetupRequest sendDBSettingsRequest(String addressOfThisServer) {
-        return new SendDBSettingsRequest(addressOfThisServer, this, connectionSystem.get());
+        return new SendDBSettingsRequest(addressOfThisServer, serverInfo.get(), this, connectionSystem.get());
     }
 
     public CheckConnectionRequest checkConnectionRequest(String webAddress) {
-        return new CheckConnectionRequest(webAddress, connectionSystem.get());
+        return new CheckConnectionRequest(webAddress, serverInfo.get(), connectionSystem.get());
     }
 
     @Singleton
@@ -169,7 +169,7 @@ public class InfoRequestFactory {
         }
 
         CheckConnectionRequest checkConnectionRequest() {
-            return new CheckConnectionRequest(factory.connectionSystem.get());
+            return new CheckConnectionRequest(factory.serverInfo.get(), factory.connectionSystem.get());
         }
 
         GenerateRequest generateAnalysisPageRequest() {
@@ -204,6 +204,7 @@ public class InfoRequestFactory {
             return new SaveDBSettingsRequest(
                     factory.plugin.get(),
                     factory.config.get(),
+                    factory.serverInfo.get(),
                     factory.logger.get(),
                     factory.runnableFactory.get()
             );
@@ -211,6 +212,7 @@ public class InfoRequestFactory {
 
         SetupRequest sendDBSettingsRequest() {
             return new SendDBSettingsRequest(
+                    factory.serverInfo.get(),
                     factory,
                     factory.connectionSystem.get()
             );

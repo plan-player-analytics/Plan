@@ -53,10 +53,6 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class PingCountTimerVelocity extends AbsRunnable {
 
-    //the server is pinging the client every 40 Ticks (2 sec) - so check it then
-    //https://github.com/bergerkiller/CraftSource/blob/master/net.minecraft.server/PlayerConnection.java#L178
-    public static final int PING_INTERVAL = 2 * 20;
-
     final Map<UUID, List<DateObj<Integer>>> playerHistory;
 
     private final PlanVelocity plugin;
@@ -125,6 +121,10 @@ public class PingCountTimerVelocity extends AbsRunnable {
     @Subscribe
     public void onPlayerJoin(ServerConnectedEvent joinEvent) {
         Player player = joinEvent.getPlayer();
+        Long pingDelay = config.get(TimeSettings.PING_PLAYER_LOGIN_DELAY);
+        if (pingDelay >= TimeUnit.HOURS.toMillis(2L)) {
+            return;
+        }
         runnableFactory.create("Add Player to Ping list", new AbsRunnable() {
             @Override
             public void run() {
@@ -132,7 +132,7 @@ public class PingCountTimerVelocity extends AbsRunnable {
                     addPlayer(player);
                 }
             }
-        }).runTaskLater(TimeAmount.toTicks(config.get(TimeSettings.PING_PLAYER_LOGIN_DELAY), TimeUnit.MILLISECONDS));
+        }).runTaskLater(TimeAmount.toTicks(pingDelay, TimeUnit.MILLISECONDS));
     }
 
     @Subscribe

@@ -22,6 +22,7 @@ import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.webserver.Request;
+import com.djrapitops.plan.system.webserver.RequestTarget;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
@@ -30,7 +31,6 @@ import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
 
 /**
  * PageHandler for /players page.
@@ -53,7 +53,7 @@ public class PlayersPageHandler implements PageHandler {
     }
 
     @Override
-    public Response getResponse(Request request, List<String> target) throws WebException {
+    public Response getResponse(Request request, RequestTarget target) throws WebException {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState != Database.State.OPEN) {
             throw new ForbiddenException("Database is " + dbState.name() + " - Please try again later. You can check database status with /plan info");
@@ -62,7 +62,7 @@ public class PlayersPageHandler implements PageHandler {
     }
 
     @Override
-    public boolean isAuthorized(Authentication auth, List<String> target) throws WebUserAuthException {
+    public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
         return auth.getWebUser().getPermLevel() <= 1;
     }
 }

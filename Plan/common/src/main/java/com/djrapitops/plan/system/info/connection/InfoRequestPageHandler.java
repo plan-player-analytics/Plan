@@ -21,6 +21,7 @@ import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.webserver.Request;
+import com.djrapitops.plan.system.webserver.RequestTarget;
 import com.djrapitops.plan.system.webserver.pages.PageHandler;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.ResponseFactory;
@@ -30,7 +31,6 @@ import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
 
 /**
  * PageHandler for /info/requestclassname pages.
@@ -62,7 +62,7 @@ public class InfoRequestPageHandler implements PageHandler {
     }
 
     @Override
-    public Response getResponse(Request request, List<String> target) throws WebException {
+    public Response getResponse(Request request, RequestTarget target) throws WebException {
         int responseCode = 200;
 
         try {
@@ -85,7 +85,7 @@ public class InfoRequestPageHandler implements PageHandler {
             responseCode = getResponseCodeFor(e);
             throw e;
         } finally {
-            connectionSystem.getConnectionLog().logConnectionFrom(request.getRemoteAddress(), request.getTarget(), responseCode);
+            connectionSystem.getConnectionLog().logConnectionFrom(request.getRemoteAddress(), request.getTargetString(), responseCode);
         }
     }
 

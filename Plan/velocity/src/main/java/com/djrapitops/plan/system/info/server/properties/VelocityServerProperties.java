@@ -31,7 +31,6 @@ public class VelocityServerProperties extends ServerProperties {
 
     public VelocityServerProperties(ProxyServer server, PlanConfig config) {
         super(
-                server.getAllServers().toString(),
                 "Velocity",
                 server.getBoundAddress().getPort(),
                 server.getClass().getPackage().getImplementationVersion(),

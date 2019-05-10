@@ -20,6 +20,7 @@ import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.db.tasks.DBCleanTask;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DataGatheringSettings;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.tasks.bungee.BungeeTPSCountTimer;
 import com.djrapitops.plan.system.tasks.bungee.PingCountTimerBungee;
@@ -87,9 +88,12 @@ public class BungeeTaskSystem extends TaskSystem {
         registerTask(networkPageRefreshTask).runTaskTimerAsynchronously(1500, TimeAmount.toTicks(5L, TimeUnit.MINUTES));
         registerTask(logsFolderCleanTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
 
-        plugin.registerListener(pingCountTimer);
-        long startDelay = TimeAmount.toTicks(config.get(TimeSettings.PING_SERVER_ENABLE_DELAY), TimeUnit.MILLISECONDS);
-        registerTask(pingCountTimer).runTaskTimer(startDelay, PingCountTimerBungee.PING_INTERVAL);
+        Long pingDelay = config.get(TimeSettings.PING_SERVER_ENABLE_DELAY);
+        if (pingDelay < TimeUnit.HOURS.toMillis(1L) && config.get(DataGatheringSettings.PING)) {
+            plugin.registerListener(pingCountTimer);
+            long startDelay = TimeAmount.toTicks(pingDelay, TimeUnit.MILLISECONDS);
+            registerTask(pingCountTimer).runTaskTimer(startDelay, 40L);
+        }
 
         registerTask(playersPageRefreshTask)
                 .runTaskTimerAsynchronously(TimeAmount.toTicks(5L, TimeUnit.MINUTES), TimeAmount.toTicks(5L, TimeUnit.MINUTES));
