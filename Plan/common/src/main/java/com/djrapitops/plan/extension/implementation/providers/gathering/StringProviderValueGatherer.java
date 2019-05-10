@@ -100,7 +100,7 @@ class StringProviderValueGatherer {
         MethodWrapper<String> method = stringProvider.getMethod();
         String result = getMethodResult(methodCaller.apply(method), method);
         if (result == null) {
-            return;
+            return; // Error during call
         }
 
         result = StringUtils.truncate(result, 50);

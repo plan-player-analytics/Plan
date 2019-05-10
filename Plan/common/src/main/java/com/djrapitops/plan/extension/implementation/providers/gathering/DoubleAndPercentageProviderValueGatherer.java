@@ -104,7 +104,7 @@ class DoubleAndPercentageProviderValueGatherer {
         MethodWrapper<Double> method = doubleProvider.getMethod();
         Double result = getMethodResult(methodCaller.apply(method), method);
         if (result == null) {
-            return;
+            return; // Error during call
         }
 
         database.executeTransaction(new StoreIconTransaction(providerInformation.getIcon()));

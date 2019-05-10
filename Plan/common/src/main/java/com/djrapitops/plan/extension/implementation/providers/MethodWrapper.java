@@ -18,6 +18,7 @@ package com.djrapitops.plan.extension.implementation.providers;
 
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.Group;
+import com.djrapitops.plan.extension.NotReadyException;
 import com.djrapitops.plan.extension.implementation.MethodType;
 
 import java.io.Serializable;
@@ -78,11 +79,11 @@ public class MethodWrapper<T> implements Serializable {
                 default:
                     throw new IllegalArgumentException(method.getDeclaringClass() + " method " + method.getName() + " had invalid parameters.");
             }
+        } catch (NotReadyException notReadyToBeCalled) {
+            /* Data or API not available to make the call. */
+            return null;
         } catch (InvocationTargetException | IllegalAccessException e) {
-            Throwable cause = e.getCause();
-            boolean hasCause = cause != null;
-            throw new IllegalArgumentException(method.getDeclaringClass() + " method " + method.getName() + " had invalid parameters; caused " +
-                    (hasCause ? cause.toString() : e.toString()));
+            throw new IllegalArgumentException(method.getDeclaringClass() + " method " + method.getName() + " could not be called: " + e.getMessage(), e);
         }
     }
 

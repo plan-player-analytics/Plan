@@ -40,7 +40,11 @@ enum Capability {
     /**
      * DataExtension API table package, TableProvider, Table and Table.Factory
      */
-    DATA_EXTENSION_TABLES;
+    DATA_EXTENSION_TABLES,
+    /**
+     * DataExtension API
+     */
+    DATA_EXTENSION_NOT_READY_EXCEPTION;
 
     static Optional<Capability> getByName(String name) {
         if (name == null) {
