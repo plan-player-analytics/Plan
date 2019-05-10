@@ -244,7 +244,7 @@ HTML ERRORS - ACCESS_DENIED_403                 || Pääsy Kielletty
 HTML ERRORS - ANALYSIS_REFRESH                  || Analyysiä suoritetaan..
 HTML ERRORS - ANALYSIS_REFRESH_LONG             || Analyysiä suoritetaan, sivu päivittyy hetken kuluttua..
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Varmista että olet rekisteröinyt käyttäjän komennolla <b>/plan register</b><br>- Tarkista että käyttäjänimi ja salaasana ovat oikein<br>- Nimi ja salasana ovat CASE SENSITIVE<br><br>Jos unohdit salasanasi, pyydä valvojia poistamaan käyttäjäsi ja uudelleenrekisteröidy.
-HTML ERRORS - AUTHENTICATION_FAIlED_401         || Autentikaatio ei onnistunut.
+HTML ERRORS - AUTHENTICATION_FAILED_401         || Autentikaatio ei onnistunut.
 HTML ERRORS - FORBIDDEN_403                     || Kielletty
 HTML ERRORS - NO_SERVERS_404                    || Ei palvelimia jolla toiminto voitaisiin suorittaa.
 HTML ERRORS - NOT_FOUND_404                     || Ei löytynyt

@@ -68,14 +68,14 @@ public class StoreTabInformationTransaction extends Transaction {
                 " SET " +
                 ExtensionTabTable.TAB_PRIORITY + "=?," +
                 ExtensionTabTable.ELEMENT_ORDER + "=?," +
-                ExtensionTabTable.ICON_ID + "=" + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + "," +
+                ExtensionTabTable.ICON_ID + "=" + ExtensionIconTable.STATEMENT_SELECT_ICON_ID +
                 WHERE + ExtensionTabTable.PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID +
                 AND + ExtensionTabTable.TAB_NAME + "=?";
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setInt(1, tabInformation.getTabPriority());
-                statement.setString(2, tabInformation.getTabElementOrder().map(ElementOrder::serialize).orElse(null));
+                statement.setString(2, ElementOrder.serialize(tabInformation.getTabElementOrder().orElse(ElementOrder.values())));
                 ExtensionIconTable.set3IconValuesToStatement(statement, 3, tabInformation.getTabIcon());
                 ExtensionPluginTable.set2PluginValuesToStatement(statement, 6, pluginName, serverUUID);
                 statement.setString(8, tabInformation.getTabName());
@@ -88,14 +88,14 @@ public class StoreTabInformationTransaction extends Transaction {
                 ExtensionTabTable.TAB_NAME + "," +
                 ExtensionTabTable.ELEMENT_ORDER + "," +
                 ExtensionTabTable.TAB_PRIORITY + "," +
-                ExtensionTabTable.ICON_ID +
+                ExtensionTabTable.ICON_ID + "," +
                 ExtensionTabTable.PLUGIN_ID +
                 ") VALUES (?,?,?," + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + "," + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ")";
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tabInformation.getTabName());
-                statement.setString(2, tabInformation.getTabElementOrder().map(ElementOrder::serialize).orElse(null));
+                statement.setString(2, ElementOrder.serialize(tabInformation.getTabElementOrder().orElse(ElementOrder.values())));
                 statement.setInt(3, tabInformation.getTabPriority());
                 ExtensionIconTable.set3IconValuesToStatement(statement, 4, tabInformation.getTabIcon());
                 ExtensionPluginTable.set2PluginValuesToStatement(statement, 7, pluginName, serverUUID);

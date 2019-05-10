@@ -106,6 +106,9 @@ public class LocaleSystem implements SubSystem {
             loaded = loadSettingLocale();
         }
         loaded.ifPresent(locale::loadFromAnotherLocale);
+
+        LangCode langCode = locale.getLangCode();
+        logger.info("Locale: '" + langCode.getName() + "' by " + langCode.getAuthors());
     }
 
     private void writeNewDefaultLocale(File localeFile) {

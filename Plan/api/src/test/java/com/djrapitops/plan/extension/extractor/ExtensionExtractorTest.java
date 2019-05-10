@@ -167,6 +167,20 @@ class ExtensionExtractorTest {
     }
 
     @Test
+    void tableProviderMustReturnTable() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @TableProvider
+            public Double method(UUID playerUUID) {
+                return null;
+            }
+        }
+
+        ExtensionExtractor underTest = new ExtensionExtractor(new Extension());
+        assertEquals("Extension.method has invalid return type. was: java.lang.Double, expected: com.djrapitops.plan.extension.table.Table", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
+    }
+
+    @Test
     void booleanProviderCanNotSupplyItsOwnConditional() {
         @PluginInfo(name = "Extension")
         class Extension implements DataExtension {

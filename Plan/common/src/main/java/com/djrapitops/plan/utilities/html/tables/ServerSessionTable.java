@@ -76,7 +76,7 @@ class ServerSessionTable extends TableContainer {
             String world = worldAliasSettings.getLongestWorldPlayed(session);
 
             String toolTip = "Session ID: " + session.getValue(SessionKeys.DB_ID)
-                    .map(id -> Integer.toString(id))
+                    .map(Object::toString)
                     .orElse("Not Saved.");
 
             String playerName = playerNames.getOrDefault(session.getValue(SessionKeys.UUID).orElse(null), "Unknown");

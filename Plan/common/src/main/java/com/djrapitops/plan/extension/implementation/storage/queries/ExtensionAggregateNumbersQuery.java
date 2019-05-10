@@ -150,8 +150,8 @@ public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, Extens
 
     private void extractAndPutDataTo(ExtensionTabData.Factory extensionTab, ExtensionDescriptive descriptive, ResultSet set) throws SQLException {
         FormatType formatType = FormatType.getByName(set.getString(ExtensionProviderTable.FORMAT_TYPE)).orElse(FormatType.NONE);
-        extensionTab.putNumberData(new ExtensionNumberData(modifiedDescriptive(descriptive, "_avg", "Average "), formatType, set.getLong("average")));
-        extensionTab.putNumberData(new ExtensionNumberData(modifiedDescriptive(descriptive, "_total", "Total "), formatType, set.getLong("total")));
+        extensionTab.putNumberData(new ExtensionNumberData(modifiedDescriptive(descriptive, "_avg", "Average "), formatType, (long) set.getDouble("average")));
+        extensionTab.putNumberData(new ExtensionNumberData(modifiedDescriptive(descriptive, "_total", "Total "), formatType, (long) set.getDouble("total")));
     }
 
     private ExtensionDescriptive modifiedDescriptive(ExtensionDescriptive descriptive, String appendToName, String appendToText) {

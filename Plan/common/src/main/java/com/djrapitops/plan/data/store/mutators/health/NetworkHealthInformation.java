@@ -112,7 +112,7 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
                 .map(c -> {
                     int playersPerMonth = c.getUnsafe(AnalysisKeys.AVG_PLAYERS_MONTH);
                     Server server = c.getUnsafe(serverKey);
-                    return subNote + (playersPerMonth >= average && playersPerMonth > 0 ? Icons.GREEN_PLUS : Icons.RED_MINUS) + " " +
+                    return SUB_NOTE + (playersPerMonth >= average && playersPerMonth > 0 ? Icons.GREEN_PLUS : Icons.RED_MINUS) + " " +
                             server.getName() + ": " + playersPerMonth;
                 }).forEach(subNotes::append);
         addNote(icon + " " + decimalFormatter.apply(average) + uniquePlayersNote + subNotes.toString());
@@ -139,7 +139,7 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
                 .map(c -> {
                     int playersPerMonth = c.getUnsafe(AnalysisKeys.AVG_PLAYERS_NEW_MONTH);
                     Server server = c.getUnsafe(serverKey);
-                    return subNote + (playersPerMonth >= average && playersPerMonth > 0 ? Icons.GREEN_PLUS : Icons.RED_MINUS) + " " +
+                    return SUB_NOTE + (playersPerMonth >= average && playersPerMonth > 0 ? Icons.GREEN_PLUS : Icons.RED_MINUS) + " " +
                             server.getName() + ": " + playersPerMonth;
                 }).forEach(subNotes::append);
         addNote(icon + " " + decimalFormatter.apply(average) + newPlayersNote + subNotes.toString());
@@ -179,7 +179,7 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
                 .map(c -> {
                     int playersPerMonth = c.getUnsafe(AnalysisKeys.PLAYERS_MONTH);
                     Server server = c.getUnsafe(serverKey);
-                    return subNote + (playersPerMonth > 0 ? Icons.GREEN_PLUS : Icons.RED_MINUS) + " " +
+                    return SUB_NOTE + (playersPerMonth > 0 ? Icons.GREEN_PLUS : Icons.RED_MINUS) + " " +
                             server.getName() + ": " + playersPerMonth;
                 }).forEach(subNotes::append);
         addNote(icon.toHtml() + " " + uniquePlayersNote + subNotes.toString());

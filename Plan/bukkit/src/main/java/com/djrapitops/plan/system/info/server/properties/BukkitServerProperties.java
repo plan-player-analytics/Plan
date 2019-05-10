@@ -27,7 +27,6 @@ public class BukkitServerProperties extends ServerProperties {
 
     public BukkitServerProperties(Server server) {
         super(
-                server.getServerId(),
                 server.getName(),
                 server.getPort(),
                 server.getVersion(),

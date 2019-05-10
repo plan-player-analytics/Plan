@@ -19,10 +19,7 @@ package com.djrapitops.plan.extension.implementation.results.player;
 import com.djrapitops.plan.extension.implementation.results.ExtensionInformation;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Represents data of a single extension about a player.
@@ -104,6 +101,31 @@ public class ExtensionPlayerData implements Comparable<ExtensionPlayerData> {
             Collections.sort(data.tabs);
             return data;
         }
+
+        public Factory combine(Factory with) {
+            if (with != null) {
+                for (ExtensionTabData tab : with.build().getTabs()) {
+                    Optional<ExtensionTabData> found = getTab(tab.getTabInformation().getTabName());
+                    if (found.isPresent()) {
+                        found.get().combine(tab);
+                    } else {
+                        addTab(tab);
+                    }
+                }
+            }
+            return this;
+        }
+
+        public Optional<ExtensionTabData> getTab(String tabName) {
+            for (ExtensionTabData tab : data.tabs) {
+                if (tabName.equals(tab.getTabInformation().getTabName())) {
+                    return Optional.of(tab);
+                }
+            }
+            return Optional.empty();
+        }
+
+
     }
 
 }

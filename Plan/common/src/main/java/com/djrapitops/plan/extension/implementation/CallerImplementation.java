@@ -47,7 +47,7 @@ public class CallerImplementation implements Caller {
     }
 
     @Override
-    public void updatePlayerData(UUID playerUUID, String playerName) throws IllegalArgumentException {
+    public void updatePlayerData(UUID playerUUID, String playerName) {
         Verify.nullCheck(playerUUID, () -> new IllegalArgumentException("'playerUUID' can not be null!"));
         Verify.nullCheck(playerName, () -> new IllegalArgumentException("'playerName' can not be null!"));
         processing.submitNonCritical(() -> extensionServiceImplementation.updatePlayerValues(gatherer, playerUUID, playerName, CallEvents.MANUAL));

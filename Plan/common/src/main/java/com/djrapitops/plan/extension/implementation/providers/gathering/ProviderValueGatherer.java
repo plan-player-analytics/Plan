@@ -22,13 +22,14 @@ import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.DataProviderExtractor;
 import com.djrapitops.plan.extension.implementation.TabInformation;
+import com.djrapitops.plan.extension.implementation.providers.DataProviders;
+import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StorePluginTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreTabInformationTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveInvalidResultsTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import java.util.UUID;
 
@@ -43,43 +44,49 @@ public class ProviderValueGatherer {
     private final DataProviderExtractor extractor;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
+
+    private DataProviders dataProviders;
     private BooleanProviderValueGatherer booleanGatherer;
     private NumberProviderValueGatherer numberGatherer;
     private DoubleAndPercentageProviderValueGatherer doubleAndPercentageGatherer;
     private StringProviderValueGatherer stringGatherer;
+    private TableProviderValueGatherer tableGatherer;
+
 
     public ProviderValueGatherer(
             DataExtension extension,
             DataProviderExtractor extractor,
             DBSystem dbSystem,
-            ServerInfo serverInfo,
-            PluginLogger logger
+            ServerInfo serverInfo
     ) {
         this.callEvents = extension.callExtensionMethodsOn();
         this.extractor = extractor;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
 
+        String pluginName = extractor.getPluginName();
+        UUID serverUUID = serverInfo.getServerUUID();
+        Database database = dbSystem.getDatabase();
+        dataProviders = extractor.getDataProviders();
         booleanGatherer = new BooleanProviderValueGatherer(
-                extractor.getPluginName(), extension,
-                serverInfo.getServerUUID(), dbSystem.getDatabase(),
-                extractor.getDataProviders(), logger
+                pluginName, extension, serverUUID, database, dataProviders
         );
         numberGatherer = new NumberProviderValueGatherer(
-                extractor.getPluginName(), extension,
-                serverInfo.getServerUUID(), dbSystem.getDatabase(),
-                extractor.getDataProviders(), logger
+                pluginName, extension, serverUUID, database, dataProviders
         );
         doubleAndPercentageGatherer = new DoubleAndPercentageProviderValueGatherer(
-                extractor.getPluginName(), extension,
-                serverInfo.getServerUUID(), dbSystem.getDatabase(),
-                extractor.getDataProviders(), logger
+                pluginName, extension, serverUUID, database, dataProviders
         );
         stringGatherer = new StringProviderValueGatherer(
-                extractor.getPluginName(), extension,
-                serverInfo.getServerUUID(), dbSystem.getDatabase(),
-                extractor.getDataProviders(), logger
+                pluginName, extension, serverUUID, database, dataProviders
         );
+        tableGatherer = new TableProviderValueGatherer(
+                pluginName, extension, serverUUID, database, dataProviders
+        );
+    }
+
+    public void disableMethodFromUse(MethodWrapper method) {
+        dataProviders.removeProviderWithMethod(method);
     }
 
     public boolean canCallEvent(CallEvents event) {
@@ -121,6 +128,7 @@ public class ProviderValueGatherer {
         numberGatherer.gatherNumberDataOfPlayer(playerUUID, playerName, conditions);
         doubleAndPercentageGatherer.gatherDoubleDataOfPlayer(playerUUID, playerName, conditions);
         stringGatherer.gatherStringDataOfPlayer(playerUUID, playerName, conditions);
+        tableGatherer.gatherTableDataOfPlayer(playerUUID, playerName, conditions);
     }
 
     public void updateValues() {
@@ -128,5 +136,6 @@ public class ProviderValueGatherer {
         numberGatherer.gatherNumberDataOfServer(conditions);
         doubleAndPercentageGatherer.gatherDoubleDataOfServer(conditions);
         stringGatherer.gatherStringDataOfServer(conditions);
+        tableGatherer.gatherTableDataOfServer(conditions);
     }
 }

@@ -19,12 +19,12 @@ package com.djrapitops.plan.system.webserver.pages;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.webserver.Request;
+import com.djrapitops.plan.system.webserver.RequestTarget;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.response.RedirectResponse;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -43,7 +43,7 @@ public class RootPageHandler implements PageHandler {
     }
 
     @Override
-    public Response getResponse(Request request, List<String> target) throws WebException {
+    public Response getResponse(Request request, RequestTarget target) throws WebException {
         Optional<Authentication> auth = request.getAuth();
         if (!auth.isPresent()) {
             return responseFactory.basicAuth();
@@ -65,7 +65,7 @@ public class RootPageHandler implements PageHandler {
     }
 
     @Override
-    public boolean isAuthorized(Authentication auth, List<String> target) {
+    public boolean isAuthorized(Authentication auth, RequestTarget target) {
         return true;
     }
 }

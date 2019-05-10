@@ -28,8 +28,8 @@ import com.djrapitops.plan.db.sql.parsing.Sql;
  * {@link Version10Patch}
  * {@link GeoInfoLastUsedPatch}
  * {@link IPAnonPatch}
- * {@link IPHashPatch}
  * {@link GeoInfoOptimizationPatch}
+ * {@link DeleteIPHashesPatch}
  *
  * @author Rsl1122
  */
@@ -40,22 +40,19 @@ public class GeoInfoTable {
     public static final String ID = "id";
     public static final String USER_UUID = "uuid";
     public static final String IP = "ip";
-    public static final String IP_HASH = "ip_hash";
     public static final String GEOLOCATION = "geolocation";
     public static final String LAST_USED = "last_used";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
             + USER_UUID + ", "
             + IP + ", "
-            + IP_HASH + ", "
             + GEOLOCATION + ", "
             + LAST_USED
-            + ") VALUES (?, ?, ?, ?, ?)";
+            + ") VALUES (?, ?, ?, ?)";
 
     public static final String UPDATE_STATEMENT = "UPDATE " + TABLE_NAME + " SET "
             + LAST_USED + "=?" +
             " WHERE " + USER_UUID + "=?" +
-            " AND " + IP_HASH + "=?" +
             " AND " + GEOLOCATION + "=?";
 
     private GeoInfoTable() {
@@ -68,7 +65,6 @@ public class GeoInfoTable {
                 .column(USER_UUID, Sql.varchar(36)).notNull()
                 .column(IP, Sql.varchar(39)).notNull()
                 .column(GEOLOCATION, Sql.varchar(50)).notNull()
-                .column(IP_HASH, Sql.varchar(200))
                 .column(LAST_USED, Sql.LONG).notNull().defaultValue("0")
                 .toString();
     }

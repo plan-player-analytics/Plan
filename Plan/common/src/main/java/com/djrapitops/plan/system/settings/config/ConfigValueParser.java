@@ -76,6 +76,10 @@ public interface ConfigValueParser<T> {
      */
     String decompose(T ofValue);
 
+    static IllegalArgumentException nullInvalidException() {
+        return new IllegalArgumentException("Null value is not valid for saving");
+    }
+
     class StringParser implements ConfigValueParser<String> {
         @Override
         public String compose(String fromValue) {
@@ -89,7 +93,7 @@ public interface ConfigValueParser<T> {
 
         @Override
         public String decompose(String value) {
-            Verify.nullCheck(value, () -> new IllegalArgumentException("Null value is not valid for saving"));
+            Verify.nullCheck(value, ConfigValueParser::nullInvalidException);
 
             boolean surroundedByQuotes = value.startsWith("'") || value.endsWith("'");
             boolean surroundedByDoubleQuotes = value.startsWith("\"") || value.endsWith("\"");
@@ -116,7 +120,7 @@ public interface ConfigValueParser<T> {
 
         @Override
         public String decompose(Integer ofValue) {
-            Verify.nullCheck(ofValue, () -> new IllegalArgumentException("Null value is not valid for saving"));
+            Verify.nullCheck(ofValue, ConfigValueParser::nullInvalidException);
             return Integer.toString(ofValue);
         }
     }
@@ -133,7 +137,7 @@ public interface ConfigValueParser<T> {
 
         @Override
         public String decompose(Long ofValue) {
-            Verify.nullCheck(ofValue, () -> new IllegalArgumentException("Null value is not valid for saving"));
+            Verify.nullCheck(ofValue, ConfigValueParser::nullInvalidException);
             return Long.toString(ofValue);
         }
     }
@@ -146,7 +150,7 @@ public interface ConfigValueParser<T> {
 
         @Override
         public String decompose(Boolean ofValue) {
-            Verify.nullCheck(ofValue, () -> new IllegalArgumentException("Null value is not valid for saving"));
+            Verify.nullCheck(ofValue, ConfigValueParser::nullInvalidException);
             return Boolean.toString(ofValue);
         }
     }
@@ -174,7 +178,7 @@ public interface ConfigValueParser<T> {
 
         @Override
         public String decompose(List<String> ofValue) {
-            Verify.nullCheck(ofValue, () -> new IllegalArgumentException("Null value is not valid for saving"));
+            Verify.nullCheck(ofValue, ConfigValueParser::nullInvalidException);
 
             StringBuilder decomposedString = new StringBuilder();
             for (String value : ofValue) {

@@ -37,7 +37,7 @@ public class ExtensionProviderTable {
 
     public static final String ID = "id";
     public static final String PROVIDER_NAME = "name";
-    public static final String TEXT = "text"; // Can be null
+    public static final String TEXT = "text";
     public static final String DESCRIPTION = "description"; // Can be null
     public static final String PRIORITY = "priority";
     public static final String GROUPABLE = "groupable"; // default false

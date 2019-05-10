@@ -1,9 +1,9 @@
-Cmd - Click Me                                  || 点击此处
+Cmd - Click Me                                  || 请点击此处
 Cmd - Link                                      || §7 •§2 链接：§f
-Cmd Disable - Disabled                          || §a现已禁用计划系统。阁下仍可使用 /planbungee reload 重启插件。
+Cmd Disable - Disabled                          || §a现已禁用计划系统。您仍可使用 /planbungee reload 重启插件。
 Cmd FAIL - Invalid Username                     || §c[计划] 此玩家不存在。
-Cmd FAIL - No Feature                           || §e请定义要禁用的功能！（当前支持 ${0}）
-Cmd FAIL - No Permission                        || §c[计划] 阁下没有所需权限。
+Cmd FAIL - No Feature                           || §e请设置要禁用的功能！（当前支持 ${0}）
+Cmd FAIL - No Permission                        || §c[计划] 您没有所需权限。
 Cmd FAIL - Require only one Argument            || §c[计划] 命令需要一个参数。
 Cmd FAIL - Requires Arguments                   || §c[计划] 命令缺少参数。${0}
 Cmd FAIL - Unknown Username                     || §c[计划] 未在数据库中找到此玩家。
@@ -18,16 +18,16 @@ Cmd Header - Search                             || §f»§2 玩家统计 - 搜�
 Cmd Header - Servers                            || > §2服务器
 Cmd Header - Web Users                          || > §2${0} 个网页用户
 Cmd Info - Bungee Connection                    ||   §2已连接至 Bungee：§f${0}
-Cmd Info - Database                             ||   §2活跃数据库：§f${0}
+Cmd Info - Database                             ||   §2可用数据库：§f${0}
 Cmd Info - Reload Complete                      || §a重新载入完毕
 Cmd Info - Reload Failed                        || §c重载插件时发生错误，建议重新启动服务器。
 Cmd Info - Update                               ||   §2更新可用：§f${0}
 Cmd Info - Version                              ||   §2版本：§f${0}
-Cmd Notify - No WebUser                         || 阁下可能还没有网页账户，请输入 /plan register <密码>
+Cmd Notify - No WebUser                         || 您可能还没有网页账户，请输入 /plan register <密码>
 Cmd Notify - WebUser register                   || 已注册新用户：'${0}' 权限级别：${1}
-Cmd Qinspect - Activity Index                   ||   §2活动索引：§f${0} | ${1}
+Cmd Qinspect - Activity Index                   ||   §2活跃指数：§f${0} | ${1}
 Cmd Qinspect - Deaths                           ||   §2死亡数：§f${0}
-Cmd Qinspect - Geolocation                      ||   §2从 §f${0} 处登录
+Cmd Qinspect - Geolocation                      ||   §2从 §f${0} 登录
 Cmd Qinspect - Last Seen                        ||   §2最后在线：§f${0}
 Cmd Qinspect - Longest Session                  ||   §2最长在线时间：§f${0}
 Cmd Qinspect - Mob Kills                        ||   §2怪物击杀数：§f${0}
@@ -44,7 +44,7 @@ Cmd Setup - Generic Fail                        || §e连接失败：${0}
 Cmd Setup - Internal Error                      || §e连接成功。${0}，请检查接收服务器调试页面的错误日志。
 Cmd Setup - Success                             || §a连接成功，计划可能将在几秒内重启···
 Cmd Setup - Unauthorized                        || §e连接成功，但接收服务器并未授权此服务器。请在 Discord 上联系以寻求帮助
-Cmd Setup - Url mistake                         || §c请确保阁下所输入的是完整地址（以 http:// 或 https:// 开头）- 请检查 Bungee 启用日志获取完整地址。
+Cmd Setup - Url mistake                         || §c请确保您所输入的是完整地址（以 http:// 或 https:// 开头）- 请检查 Bungee 启用日志获取完整地址。
 Cmd Setup - WebServer not Enabled               || §c未在此服务器上启用网页服务器！请确保其在开机时启用！
 Cmd SUCCESS - Feature disabled                  || §a已在下次插件重载前暂时禁用 '${0}'。
 Cmd SUCCESS - WebUser register                  || §a已成功添加新用户（${0}）！
@@ -53,11 +53,11 @@ Cmd Update - Cancelled                          || §c已取消更新。
 Cmd Update - Change log                         || 更新日志 版本${0}：
 Cmd Update - Fail Cacnel                        || §c某个服务器更新失败，正在取消所有服务器的更新···
 Cmd Update - Fail Force Notify                  || §e${0} 无法更新，但使用了 -force，正在继续更新。
-Cmd Update - Fail Not Online                    || §c并非所有服务器均在线或可访问，阁下仍可通过使用 /plan update -u -force 的方式强制更新。
-Cmd Update - Notify Cancel                      || §a阁下可以使用 /plan update cancel 以取消尚未重启的服务器上的更新。
+Cmd Update - Fail Not Online                    || §c并非所有服务器均在线或可访问，您仍可通过使用 /plan update -u -force 的方式强制更新。
+Cmd Update - Notify Cancel                      || §a您可以使用 /plan update cancel 以取消尚未重启的服务器上的更新。
 Cmd Update - Online Check                       || 正在检查是否所有服务器均在线···
 Cmd Update - Scheduled                          || §a已为 ${0} 计划了更新。
-Cmd Update - Url mismatch                       || §c版本下载网址不以 ${0} 开头故可能不受信任。阁下可手动下载此版本（直接下载）：
+Cmd Update - Url mismatch                       || §c版本下载网址不以 ${0} 开头故可能不受信任。您可手动下载此版本（直接下载）：
 Cmd Web - Permission Levels                     || >\§70：访问所有页面\§71：访问 '/players' 及所有玩家页\§72：访问用户名与网页用户名一致的玩家页\§73+：无权限
 Command Help - /plan analyze                    || 查看服务器分析
 Command Help - /plan dev                        || 开发模式命令
@@ -97,16 +97,16 @@ Database - Patches Applied Already              || 已应用所有数据库补�
 Database MySQL - Launch Options Error           || 启动参数出错，正使用默认参数（${0}）
 Database Notify - Clean                         || 移除了 ${0} 位用户的数据。
 Database Notify - SQLite No WAL                 || 此服务器版本不支持 SQLite WAL 模式，正使用默认模式。这可能会影响性能。
-Disable                                         || 已禁用玩家分析。
+Disable                                         || 已禁用插件。
 Disable - Processing                            || 正在处理未处理的关键任务。（${0}）
 Disable - Processing Complete                   || 处理完毕。
 Disable - WebServer                             || 正在关闭网页服务器···
-Enable                                          || 已启用玩家分析。
+Enable                                          || 已启用插件。
 Enable - Database                               || ${0}-已建立数据库连接。
 Enable - Notify Address Confirmation            || 确保此地址指向此服务器：${0}
-Enable - Notify Empty IP                        || server.properties 中的 IP 为空且未使用替代 IP。这将给出错误地址！
-Enable - Notify Geolocations disabled           || 地理位置收集不活跃。（Data.Geolocations: false）
-Enable - Notify Geolocations Internet Required  || 计划需要在首次运行时访问互联网以下载 GeoLite2 地理位置数据库。
+Enable - Notify Empty IP                        || server.properties 中的 IP 为空且未使用替代 IP。这将会导致地址出错！
+Enable - Notify Geolocations disabled           || 已关闭地理位置收集。（Data.Geolocations: false）
+Enable - Notify Geolocations Internet Required  || 插件需要在首次运行时访问互联网以下载 GeoLite2 地理位置数据库。
 Enable - Notify Webserver disabled              || 未初始化网页服务器。（WebServer.DisableWebServer: true）
 Enable - WebServer                              || 正在初始化网页服务器···
 Enable FAIL - Database                          || ${0}-连接数据库失败：${1}
@@ -114,7 +114,7 @@ Enable FAIL - Database Patch                    || 数据库补丁失败，插�
 Enable FAIL - GeoDB Write                       || 保存已下载的 GeoLite2 地理位置数据库时发生问题
 Enable FAIL - WebServer (Bungee)                || 网页服务器未初始化
 Enable FAIL - Wrong Database Type               || ${0} 此数据类型不存在。
-HTML - ACTIVITY_INDEX                           || 活动索引
+HTML - ACTIVITY_INDEX                           || 活跃指数
 HTML - ALL                                      || 全部
 HTML - ALL_TIME_PEAK                            || 所有时间峰值
 HTML - AVERAGE_PING                             || 平均延迟
@@ -125,7 +125,7 @@ HTML - CALENDAR                                 || 日历
 HTML - CALENDAR_TEXT                            ||  日历
 HTML - CHUNKS                                   || 区块
 HTML - COMMAND                                  ||  命令
-HTML - COMMNAND_USAGE                           || 命令用法
+HTML - COMMNAND_USAGE                           || 使用命令
 HTML - CONNECTION_INFORMATION                   || 连接信息
 HTML - COUNTRY                                  || 国家
 HTML - CURRENT_PLAYERBASE                       || 当前玩家
@@ -138,8 +138,8 @@ HTML - GEOLOCATION_TEXT                         || 地理位置
 HTML - HEALTH_ESTIMATE                          || 预计健康度
 HTML - INDEX_ACTIVE                             || 活跃
 HTML - INDEX_INACTIVE                           || 不活跃
-HTML - INDEX_IRREGULAR                          || 偶尔
-HTML - INDEX_REGULAR                            || 经常
+HTML - INDEX_IRREGULAR                          || 偶尔上线
+HTML - INDEX_REGULAR                            || 经常上线
 HTML - INDEX_VERY_ACTIVE                        || 非常活跃
 HTML - IP_ADDRESS                               || IP 地址
 HTML - KILLED                                   || 被击杀
@@ -160,25 +160,25 @@ HTML - LOW_TPS_SPIKES                           || 最低 TPS 值
 HTML - MOB_CAUSED_DEATHS                        || 被怪物击杀数
 HTML - MOB_KDR                                  || 怪物击杀比
 HTML - MOB_KILLS                                || 怪物击杀数
-HTML - MOST_RECENT_SESSIONS                     || 最近会话
+HTML - MOST_RECENT_SESSIONS                     || 最近时域
 HTML - NAME                                     ||  名称
-HTML - NAV_COMMAND_USAGE                        || 指令用法
+HTML - NAV_COMMAND_USAGE                        || 使用指令
 HTML - NAV_GEOLOCATIONS                         || 地理位置
 HTML - NAV_INFORMATION                          || 信息
 HTML - NAV_NETWORK_PLAYERS                      || 网络玩家
-HTML - NAV_ONLINE_ACTIVITY                      || 在线活动
+HTML - NAV_ONLINE_ACTIVITY                      || 在线玩家
 HTML - NAV_OVERVIEW                             || 预览
 HTML - NAV_PERFORMANCE                          || 性能
 HTML - NAV_PLAYERS                              || 玩家
 HTML - NAV_PLUGINS                              || 插件
-HTML - NAV_SESSIONS                             || 会话
+HTML - NAV_SESSIONS                             || 时域
 HTML - NAV_SEVER_HEALTH                         || 服务器健康度
-HTML - NETWORK                                  || 网络
-HTML - NETWORK_INFORMATION                      || 网络信息
+HTML - NETWORK                                  || 服务器网络
+HTML - NETWORK_INFORMATION                      || 服务器网络信息
 HTML - NEW                                      || 新建
 HTML - NEW_CALENDAR                             || 新：
 HTML - NEW_PLAYERS_TEXT                         || 新玩家
-HTML - NEW_RETENTION                            || 新玩家保留
+HTML - NEW_RETENTION                            || 新玩家留坑率
 HTML - NEW_TEXT                                 || 新建
 HTML - NICKNAME                                 || 昵称
 HTML - NO_KILLS                                 || 无击杀数
@@ -186,7 +186,7 @@ HTML - NO_PLAYER_CAUSED_DEATHS                  || 无被玩家击杀数
 HTML - OFFLINE                                  ||  离线
 HTML - ONLINE                                   ||  在线
 HTML - ONLINE_ACTIVITY                          || 在线活动
-HTML - OPERATOR                                 || 操作员
+HTML - OPERATOR                                 || 管理员
 HTML - OVERVIEW                                 || 预览
 HTML - PER_DAY                                  || / 天
 HTML - PLAYER_CAUSED_DEATHS                     || 被玩家击杀数
@@ -199,39 +199,39 @@ HTML - PLAYERS_ONLINE_TEXT                      || 在线玩家
 HTML - PLAYERS_TEXT                             || 玩家
 HTML - PLAYTIME                                 || 游玩时间
 HTML - PLEASE_WAIT                              || 请稍候···
-HTML - PREDICETED_RETENTION                     || 预计保留
+HTML - PREDICETED_RETENTION                     || 预计留坑率
 HTML - PUNCH_CARD                               || 打卡签到
 HTML - PUNCHCARD                                || 打卡签到
 HTML - RECENT_LOGINS                            || 近期登陆
 HTML - REGISTERED                               || 已注册
 HTML - REGISTERED_TEXT                          || 已注册
 HTML - REGULAR                                  || 经常
-HTML - SEEN_NICKNAMES                           || 可见昵称
+HTML - SEEN_NICKNAMES                           || 可视昵称
 HTML - SERVER                                   || 服务器
 HTML - SERVER_ANALYSIS                          || 服务器分析
 HTML - SERVER_HEALTH_ESTIMATE                   || 服务器健康估计
 HTML - SERVER_INFORMATION                       || 服务器信息
 HTML - SERVER_PREFERENCE                        || 服务器偏好设置
 HTML - SERVERS                                  || 服务器
-HTML - SESSION                                  || 会话
-HTML - SESSION_ENDED                            || 会话已结束
-HTML - SESSION_LENGTH                           || 会话长度
-HTML - SESSION_MEDIAN                           || 会话中位数
-HTML - SESSIONS                                 || 会话
+HTML - SESSION                                  || 时域
+HTML - SESSION_ENDED                            || 时域之末
+HTML - SESSION_LENGTH                           || 时域长度
+HTML - SESSION_MEDIAN                           || 平均时域
+HTML - SESSIONS                                 || 时域
 # Not sure if this is the time or count of numbers.
 HTML - TIME                                     ||  次数
 HTML - TIMES_KICKED                             || 被踢次数
-HTML - TIMES_USED                               || 使用次数
+HTML - TIMES_USED                               || 占用
 HTML - TOTAL_ACTIVE_TEXT                        || 总活跃玩家
 HTML - TOTAL_AFK                                || 总挂机玩家
 HTML - TOTAL_PLAYERS                            || 总玩家
 HTML - TOTAL_PLAYTIME                           || 总在线时长
-HTML - UNIQUE                                   || 唯一
-HTML - UNIQUE_CALENDAR                          || 唯一:
-HTML - UNIQUE_PLAYERS                           || 唯一玩家
-HTML - UNIQUE_PLAYERS_TEXT                      || 唯一玩家
-HTML - UNIQUE_TEXT                              || 唯一
-HTML - USAGE                                    ||  用法
+HTML - UNIQUE                                   || 普通
+HTML - UNIQUE_CALENDAR                          || 普通玩家:
+HTML - UNIQUE_PLAYERS                           || 普通玩家
+HTML - UNIQUE_PLAYERS_TEXT                      || 普通玩家
+HTML - UNIQUE_TEXT                              || 普通玩家
+HTML - USAGE                                    ||  占用
 HTML - USED_COMMANDS                            || 使用的命令
 HTML - USER_AND_PASS_NOT_SPECIFIED              || 未指定用户名与密码
 HTML - USER_DOES_NOT_EXIST                      || 用户不存在
@@ -239,21 +239,21 @@ HTML - USER_INFORMATION                         || 用户信息
 HTML - USER_PASS_MISMATCH                       || 用户名与密码不匹配
 HTML - WITH                                     || <th> 与
 HTML - WORLD                                    ||  世界
-HTML - WORLD_LOAD                               || 世界载入
+HTML - WORLD_LOAD                               || 世界加载
 HTML - WORLD_PLAYTIME                           || 世界游玩时间
 HTML - WORST_PING                               || 最高延迟
 HTML ERRORS - ACCESS_DENIED_403                 || 拒绝访问
 HTML ERRORS - ANALYSIS_REFRESH                  || 正在刷新分析···
 HTML ERRORS - ANALYSIS_REFRESH_LONG             || 正在执行分析，请在几秒后刷新页面···
-HTML ERRORS - AUTH_FAIL_TIPS_401                || - 确保阁下已使用 <b>/plan register</b> 注册用户<br>- 检查用户名与密码是否正确<br>- 用户名与密码区分大小写<br><br>若阁下忘记了密码，请让工作人员删除阁下的旧密码并重新注册。
-HTML ERRORS - AUTHENTICATION_FAIlED_401         || 认证失败。
+HTML ERRORS - AUTH_FAIL_TIPS_401                || - 确保您已使用 <b>/plan register</b> 注册用户<br>- 检查用户名与密码是否正确<br>- 用户名与密码区分大小写<br><br>若您忘记了密码，请让工作人员删除您的旧密码并重新注册。
+HTML ERRORS - AUTHENTICATION_FAILED_401         || 认证失败。
 HTML ERRORS - FORBIDDEN_403                     || 禁止访问
 HTML ERRORS - NO_SERVERS_404                    || 无可执行此请求的在线服务器。
 HTML ERRORS - NOT_FOUND_404                     || 未找到
 HTML ERRORS - NOT_PLAYED_404                    || 玩家从未在此服务器上游玩过。
 HTML ERRORS - PAGE_NOT_FOUND_404                || 页面不存在。
 HTML ERRORS - UNAUTHORIZED_401                  || 未认证
-HTML ERRORS - UNKNOWN_PAGE_404                  || 请确保阁下正通过命令所给出的链接访问，示例：</p><p>/player/玩家名<br>/server/服务器名</p>
+HTML ERRORS - UNKNOWN_PAGE_404                  || 请确保您正通过命令所给出的链接访问，示例：</p><p>/player/玩家名<br>/server/服务器名</p>
 HTML ERRORS - UUID_404                          || 未在数据库中找到玩家的 UUID。
 In Depth Help - /plan ?                         || §2/plan - 主命令\§f  用于访问所有子命令及帮助\§7  /plan - 列出子命令\§7  /plan <子命令> ? - 详细帮助
 In Depth Help - /plan analyze ?                 || §2分析命令\§f  用于刷新分析缓存及访问结果页面\§7  /plan status 可用于在网页在线时检查分析状态fen.\§7  别名：analyze, analyse, analysis, a
@@ -266,7 +266,7 @@ In Depth Help - /plan manage disable ?          || > §2禁用命令\  用于在
 In Depth Help - /plan manage import ?           || §2管理导入命令\§f  用于从其它来源导入数据\§7  在导入过程中将禁用数据分析。
 In Depth Help - /plan manage move ?             || > §2移动指令\  将数据从 SQLite 移动至 MySQL，反之亦然。\  目标数据库将在转移前被清除。
 In Depth Help - /plan manage remove ?           || §2管理移除命令\§f  用于从活跃数据库中移除用户数据。
-In Depth Help - /plan manage restore ?          || > §2恢复命令\  从先前备份的 SQLite 数据库中恢复数据（.db 文件）\  阁下也可以从其他服务器中恢复 database.db 到 MySQL。\  目标数据库将在传输前被清除。
+In Depth Help - /plan manage restore ?          || > §2恢复命令\  从先前备份的 SQLite 数据库中恢复数据（.db 文件）\  您也可以从其他服务器中恢复 database.db 到 MySQL。\  目标数据库将在传输前被清除。
 In Depth Help - /plan manage setup ?            || > §2安装命令\  设置 Bungee 与此服务器之间的网络连接。\  Bungee 地址可在计划于 Bungee 上启动时的控制台日志中找到。
 In Depth Help - /plan network ?                 || > §2网络命令\  显示到网络页的链接。\  若不在群组网络上，此页面将显示为服务器页面。
 In Depth Help - /plan players ?                 || > §2玩家命令\  显示到玩家页的链接。
@@ -289,10 +289,10 @@ Manage - Fail Same Database                     || > §c[计划] 无法移动至
 Manage - Fail, Confirmation                     || > §c[计划] 请添加 -a 以确认执行！${0}
 Manage - Fail, Connection Exception             || §e失败原因：
 Manage - Fail, No Servers                       || §c未在数据库中找到服务器。
-Manage - Fail, Old version                      || §e失败原因：接收服务器正运行计划的老版本。
-Manage - Fail, Unauthorized                     || §e失败原因：未授权。服务器可能使用不同的数据库。
+Manage - Fail, Old version                      || §e失败原因：接收服务器使用了旧版本的插件。
+Manage - Fail, Unauthorized                     || §e失败原因：未获得授权。服务器可能使用不同的数据库。
 Manage - Fail, Unexpected Exception             || §e异常例外：${0}
-Manage - List Importers                         || 导入器： 
+Manage - List Importers                         || 导入器：
 Manage - Notify External Url                    || §e非本地地址，请检查端口是否开放
 Manage - Remind HotSwap                         || §e[计划] 请记住要切换至新数据库并重新载入插件（/plan m hotswap ${0}）
 Manage - Start                                  || »§7 正在处理数据···
@@ -301,11 +301,11 @@ Negative                                        || 否
 Positive                                        || 是
 Unknown                                         || 未知
 Version - DEV                                   ||  这是开发者版本。
-Version - Latest                                || 阁下正使用最新版本。
+Version - Latest                                || 您正使用最新版本。
 Version - New                                   || 新版本（${0}）可用 ${1}
 Version - New (old)                             || 新版本在 ${0} 可用
 Version FAIL - Read info (old)                  || 无法检查最新版本号
-Version FAIL - Read versions.txt                || 无法从 Github/versions.txt 处载入版本信息
+Version FAIL - Read versions.txt                || 无法从 Github/versions.txt 载入版本信息
 Web User Listing                                ||   §2${0} §7：§f${1}
 WebServer - Notify HTTP                         || 网页服务器：无证书 -> 正使用 HTTP 服务器提供可视化效果。
 WebServer - Notify HTTP User Auth               || 网页服务器：已禁用用户认证！（HTTP 方式不安全）
@@ -313,25 +313,25 @@ WebServer - Notify no Cert file                 || 网页服务器：未找到�
 WebServer FAIL - Port Bind                      || 未成功初始化网页服务器。端口（${0}）是否被占用？
 WebServer FAIL - SSL Context                    || 网页服务器：SSL 环境初始化失败。
 WebServer FAIL - Store Load                     || 网页服务器：SSL 证书载入失败。
-Yesterday                                       || 'Yesterday'
-Today                                           || 'Today'
-Health - Active Playtime Comparison Decrease    ||  Active players might be running out of things to do (Played ${0} vs ${1}, last two weeks vs weeks 2-4)
-Health - Active Playtime Comparison Increase    ||  Active players seem to have things to do (Played ${0} vs ${1}, last two weeks vs weeks 2-4)
-Health - Downtime                               ||  Total Server downtime (No Data) was ${0}
-Health - New Player Join Players, No            ||  New Players may not have players to play with when they join (${0} on average)
-Health - New Player Join Players, Yes           ||  New Players have players to play with when they join (${0} on average)
-Health - New Player Stickiness                  ||  ${0} of new players have stuck around (${1}/${2})
-Health - No Servers Inaccuracy                  ||  No Bukkit/Sponge servers to gather session data - These measures are inaccurate.
-Health - Player Play on Network                 ||  players played on the network:
-Health - Player Register Server                 ||  players register on servers per day/server on average.
-Health - Player Visit Server                    ||  players visit on servers per day/server on average.
-Health - Regular Activity Change                ||  Number of regular players has
-Health - Regular Activity Change Decrease       || decreased (${0})
-Health - Regular Activity Change Increase       || increased (+${0})
-Health - Regular Activity Change Zero           || stayed the same (+${0})
-Health - Regular Activity Remain                ||  ${0} of regular players have remained active (${1}/${2})
-Health - Single Servers Inaccuracy              ||  Single Bukkit/Sponge server to gather session data.
-Health - TPS Above Low Threshold                ||  Average TPS was above Low Threshold ${0} of the time
-Health - TPS Low Dips                           ||  Average TPS dropped below Low Threshold (${0}) ${1} times
-HTML - FREE_DISK_SPACE                          || Free Disk Space
-HTML - DISK_SPACE                               || DISK SPACE
+Yesterday                                       || '昨天'
+Today                                           || '今天'
+Health - Active Playtime Comparison Decrease    ||  玩家可能闲得没事干了 (活跃玩家数 ${0} vs ${1}, 最近2周 vs 2-4周)
+Health - Active Playtime Comparison Increase    ||  玩家可能有很多事要做 (活跃玩家数 ${0} vs ${1}, 最近2周 vs 2-4周)
+Health - Downtime                               ||  服务器停机时间为 (无数据传输的时间) ${0}
+Health - New Player Join Players, No            ||  新玩家里也许很少有人继续玩下去 (平均为 ${0} )
+Health - New Player Join Players, Yes           ||  新玩家里有人玩了下去 (平均为 ${0} )
+Health - New Player Stickiness                  ||  ${0} 的新玩家留了下来 (${1}/${2})
+Health - No Servers Inaccuracy                  ||  没有可收集数据的 Bukkit/Sponge 服务器 - 这些数据不准确.
+Health - Player Play on Network                 ||  在这个服务器网络内游玩的玩家:
+Health - Player Register Server                 ||  平均每日每服务器注册玩家数.
+Health - Player Visit Server                    ||  平均每日每服务器登录服务器玩家数.
+Health - Regular Activity Change                ||  普通玩家数
+Health - Regular Activity Change Decrease       || 减少了 (${0})
+Health - Regular Activity Change Increase       || 增加了 (+${0})
+Health - Regular Activity Change Zero           || 保持不变 (+${0})
+Health - Regular Activity Remain                ||  ${0} 普通玩家仍保持活跃 (${1}/${2})
+Health - Single Servers Inaccuracy              ||  收集单个 Bukkit/Sponge 服务器的时域数据.
+Health - TPS Above Low Threshold                ||  ${0} 的平均TPS超过了最低门槛
+Health - TPS Low Dips                           ||  平均TPS低于最低门槛 (${0}) ${1} 此
+HTML - FREE_DISK_SPACE                          || 剩余磁盘空间
+HTML - DISK_SPACE                               || 磁盘空间

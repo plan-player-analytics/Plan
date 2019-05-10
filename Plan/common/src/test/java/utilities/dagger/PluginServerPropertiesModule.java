@@ -36,7 +36,6 @@ public class PluginServerPropertiesModule {
     @Singleton
     ServerProperties provideServerProperties() {
         return new ServerProperties(
-                "ID",
                 "Plugin_Server_Mock",
                 7302,
                 "1.13",

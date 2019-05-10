@@ -17,8 +17,7 @@
 package com.djrapitops.plan.system.webserver.response.pages;
 
 import com.djrapitops.plan.data.store.containers.DataContainer;
-import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.system.webserver.response.ResponseType;
+import com.djrapitops.plan.system.webserver.response.data.JSONResponse;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,27 +32,13 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class RawDataResponse extends Response {
+public class RawDataResponse extends JSONResponse<Map<String, Object>> {
 
     public RawDataResponse(DataContainer dataContainer) {
-        super(ResponseType.JSON);
-
-        Map<String, Object> values = mapToNormalMap(dataContainer);
-
-        super.setHeader("HTTP/1.1 200 OK");
-
-        try {
-            Class<?> gsonClass = Class.forName("com.google.gson.Gson");
-            Object gson = gsonClass.getConstructor().newInstance();
-            Object json = gsonClass.getMethod("toJson", Object.class).invoke(gson, values);
-
-            super.setContent(json.toString());
-        } catch (ReflectiveOperationException e) {
-            super.setContent("{\"error\":\"Gson for raw json responses not available on this server: " + e.toString() + "\"}");
-        }
+        super(mapToNormalMap(dataContainer));
     }
 
-    private Map<String, Object> mapToNormalMap(DataContainer player) {
+    private static Map<String, Object> mapToNormalMap(DataContainer player) {
         Map<String, Object> values = new HashMap<>();
         player.getMap().forEach((key, value) ->
                 {
@@ -72,14 +57,14 @@ public class RawDataResponse extends Response {
         return values;
     }
 
-    private List handleList(List list) {
+    private static List handleList(List list) {
         if (list.stream().findAny().orElse(null) instanceof DataContainer) {
-            return (List) list.stream().map((obj) -> mapToNormalMap((DataContainer) obj)).collect(Collectors.toList());
+            return (List) list.stream().map(obj -> mapToNormalMap((DataContainer) obj)).collect(Collectors.toList());
         }
         return list;
     }
 
-    private Map handleMap(Map map) {
+    private static Map handleMap(Map map) {
         if (map.values().stream().findAny().orElse(null) instanceof DataContainer) {
             Map<Object, Object> newMap = new HashMap<>();
             map.forEach((key, value) -> newMap.put(key, mapToNormalMap((DataContainer) value)));

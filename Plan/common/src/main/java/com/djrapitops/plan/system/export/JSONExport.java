@@ -24,6 +24,7 @@ import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.ExportSettings;
+import com.djrapitops.plan.system.webserver.pages.json.JSONFactory;
 import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -55,10 +56,11 @@ public class JSONExport extends SpecificExport {
             PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
+            JSONFactory jsonFactory,
             ResponseFactory responseFactory,
             ErrorHandler errorHandler
     ) {
-        super(files, serverInfo);
+        super(files, jsonFactory, serverInfo);
         this.config = config;
         this.dbSystem = dbSystem;
         this.responseFactory = responseFactory;

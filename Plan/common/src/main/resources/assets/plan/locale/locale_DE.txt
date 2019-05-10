@@ -245,7 +245,7 @@ HTML ERRORS - ACCESS_DENIED_403                 || Zugriff verweigert
 HTML ERRORS - ANALYSIS_REFRESH                  || Plan wird aktualisiert...
 HTML ERRORS - ANALYSIS_REFRESH_LONG             || Plan wird ausgeführt. Es wird in ein paar Sekunden neu geladen.
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Stelle sicher, dass du einen Account mit <b>/plan register</b> hinzugefügt hast.<br>- Überprüfe, ob Passwort und Benutzername korrekt sind<br>- Bei Benutzername und Passwort auf Groß- und Kleinschreibung achten! <br><br>- Wenn du dein Passwort vergessen hast, bitte ein Teammitglied deinen Account zu löschen und neu zu erstellen.
-HTML ERRORS - AUTHENTICATION_FAIlED_401         || Authentifizierung fehlgeschlagen.
+HTML ERRORS - AUTHENTICATION_FAILED_401         || Authentifizierung fehlgeschlagen.
 HTML ERRORS - FORBIDDEN_403                     || Verboten
 HTML ERRORS - NO_SERVERS_404                    || Keine Server online, die die Anfrage ausführen können.
 HTML ERRORS - NOT_FOUND_404                     || Nicht gefunden.

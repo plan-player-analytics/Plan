@@ -23,7 +23,6 @@ import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.sql.tables.PingTable;
 import com.djrapitops.plan.db.sql.tables.TPSTable;
-import com.djrapitops.plugin.api.TimeAmount;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -38,11 +37,17 @@ import java.util.UUID;
 public class RemoveOldSampledDataTransaction extends Transaction {
 
     private final UUID serverUUID;
+    private final long deleteTPSOlderThanMs;
+    private final long deletePingOlderThanMs;
 
     public RemoveOldSampledDataTransaction(
-            UUID serverUUID
+            UUID serverUUID,
+            long deleteTPSOlderThanMs,
+            long deletePingOlderThanMs
     ) {
         this.serverUUID = serverUUID;
+        this.deleteTPSOlderThanMs = deleteTPSOlderThanMs;
+        this.deletePingOlderThanMs = deletePingOlderThanMs;
     }
 
     @Override
@@ -61,9 +66,7 @@ public class RemoveOldSampledDataTransaction extends Transaction {
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                // More than 3 Months ago.
-                long threeMonths = TimeAmount.MONTH.toMillis(3L);
-                statement.setLong(1, System.currentTimeMillis() - threeMonths);
+                statement.setLong(1, System.currentTimeMillis() - deleteTPSOlderThanMs);
                 statement.setInt(2, allTimePlayerPeak);
             }
         };
@@ -77,8 +80,7 @@ public class RemoveOldSampledDataTransaction extends Transaction {
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                long twoWeeks = TimeAmount.WEEK.toMillis(2L);
-                statement.setLong(1, System.currentTimeMillis() - twoWeeks);
+                statement.setLong(1, System.currentTimeMillis() - deletePingOlderThanMs);
             }
         };
     }

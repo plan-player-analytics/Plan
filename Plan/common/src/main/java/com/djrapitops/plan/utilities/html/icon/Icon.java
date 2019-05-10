@@ -30,6 +30,9 @@ public class Icon {
     }
 
     public static Icon fromExtensionIcon(com.djrapitops.plan.extension.icon.Icon icon) {
+        if (icon == null) {
+            return Icon.called("question").build();
+        }
         return new Icon(
                 Family.getByName(icon.getFamily().name()).orElse(Family.SOLID),
                 icon.getName(),

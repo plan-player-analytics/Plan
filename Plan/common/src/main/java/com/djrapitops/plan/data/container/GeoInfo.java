@@ -18,13 +18,11 @@ package com.djrapitops.plan.data.container;
 
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.store.objects.DateMap;
-import com.djrapitops.plan.utilities.SHA256Hash;
 import com.google.common.base.Objects;
 
 import java.io.Serializable;
 import java.net.Inet6Address;
 import java.net.InetAddress;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * Data class that contains information about IP and Geolocation.
@@ -35,18 +33,16 @@ public class GeoInfo implements DateHolder, Serializable {
 
     private final String ip;
     private final String geolocation;
-    private final String ipHash;
     private final long date;
 
-    public GeoInfo(InetAddress address, String geolocation, long lastUsed) throws NoSuchAlgorithmException {
-        this(formatIP(address), geolocation, lastUsed, new SHA256Hash(address.getHostAddress()).create());
+    public GeoInfo(InetAddress address, String geolocation, long lastUsed) {
+        this(formatIP(address), geolocation, lastUsed);
     }
 
-    public GeoInfo(String ip, String geolocation, long date, String ipHash) {
+    public GeoInfo(String ip, String geolocation, long date) {
         this.ip = ip;
         this.geolocation = geolocation;
         this.date = date;
-        this.ipHash = ipHash;
     }
 
     public static DateMap<GeoInfo> intoDateMap(Iterable<GeoInfo> geoInfo) {
@@ -106,23 +102,18 @@ public class GeoInfo implements DateHolder, Serializable {
         return date;
     }
 
-    public String getIpHash() {
-        return ipHash;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GeoInfo geoInfo = (GeoInfo) o;
         return Objects.equal(ip, geoInfo.ip) &&
-                Objects.equal(geolocation, geoInfo.geolocation) &&
-                Objects.equal(ipHash, geoInfo.ipHash);
+                Objects.equal(geolocation, geoInfo.geolocation);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(ip, geolocation, ipHash);
+        return Objects.hashCode(ip, geolocation);
     }
 
     @Override
@@ -130,7 +121,6 @@ public class GeoInfo implements DateHolder, Serializable {
         return "GeoInfo{" +
                 "ip='" + ip + '\'' +
                 ", geolocation='" + geolocation + '\'' +
-                ", ipHash='" + ipHash + '\'' +
                 ", date=" + date +
                 '}';
     }

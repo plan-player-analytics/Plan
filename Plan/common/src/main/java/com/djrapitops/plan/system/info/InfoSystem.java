@@ -29,7 +29,6 @@ import com.djrapitops.plan.system.info.request.InfoRequestFactory;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.WebServer;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import dagger.Lazy;
 
@@ -159,11 +158,8 @@ public abstract class InfoSystem implements SubSystem {
      * @throws WebException If fails.
      */
     public void requestSetUp(String addressToRequestServer) throws WebException {
-        if (Check.isBungeeAvailable()) {
-            throw new BadRequestException("Method not available on Bungee.");
-        }
-        if (Check.isVelocityAvailable()) {
-            throw new BadRequestException("Method not available on Velocity.");
+        if (serverInfo.getServer().isProxy()) {
+            throw new BadRequestException("Method not available on a Proxy server.");
         }
         Server bungee = new Server(-1, null, "Bungee", addressToRequestServer, -1);
         String addressOfThisServer = webServer.get().getAccessAddress();

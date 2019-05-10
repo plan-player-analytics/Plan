@@ -25,7 +25,7 @@ Plugin:
 # Supported databases: SQLite, H2, MySQL
 # -----------------------------------------------------
 Database:
-  Type: SQLite
+  Type: H2
   MySQL:
     Host: localhost
     Port: 3306
@@ -61,6 +61,7 @@ Webserver:
 # -----------------------------------------------------
 Data_gathering:
   Geolocations: true
+  Ping: true
   Commands:
     Log_unknown: false
     Log_aliases_as_main_command: true
@@ -89,6 +90,11 @@ Time:
       Playtime_threshold: 30
         Unit: MINUTES
     Remove_inactive_player_data_after: 180
+      Unit: DAYS
+    # Includes players online, tps and performance time series
+    Remove_time_series_data_after: 90
+      Unit: DAYS
+    Remove_ping_data_after: 14
       Unit: DAYS
   Periodic_tasks:
     Analysis_refresh_every: 60

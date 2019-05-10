@@ -33,13 +33,13 @@ public enum ElementOrder {
      */
     VALUES,
     /**
-     * Represents tables.
-     */
-    TABLE,
-    /**
      * Represents graphs.
      */
-    GRAPH;
+    GRAPH,
+    /**
+     * Represents tables.
+     */
+    TABLE;
 
     public static String serialize(ElementOrder[] order) {
         StringBuilder builder = new StringBuilder();

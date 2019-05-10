@@ -19,6 +19,7 @@ package com.djrapitops.plan.system.listeners;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanVelocity;
 import com.djrapitops.plan.api.events.PlanVelocityEnableEvent;
+import com.djrapitops.plan.capability.CapabilityServiceImplementation;
 import com.djrapitops.plan.system.listeners.velocity.PlayerOnlineListener;
 
 import javax.inject.Inject;
@@ -52,7 +53,9 @@ public class VelocityListenerSystem extends ListenerSystem {
 
     @Override
     public void callEnableEvent(PlanPlugin plugin) {
-        PlanVelocityEnableEvent event = new PlanVelocityEnableEvent(plugin.isSystemEnabled());
+        boolean isEnabled = plugin.isSystemEnabled();
+        PlanVelocityEnableEvent event = new PlanVelocityEnableEvent(isEnabled);
         ((PlanVelocity) plugin).getProxy().getEventManager().fireAndForget(event);
+        CapabilityServiceImplementation.notifyAboutEnable(isEnabled);
     }
 }

@@ -53,5 +53,8 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
         execute(ExtensionProviderTable.createTableSQL(dbType));
         execute(ExtensionPlayerValueTable.createTableSQL(dbType));
         execute(ExtensionServerValueTable.createTableSQL(dbType));
+        execute(ExtensionTableProviderTable.createTableSQL(dbType));
+        execute(ExtensionPlayerTableValueTable.createTableSQL(dbType));
+        execute(ExtensionServerTableValueTable.createTableSQL(dbType));
     }
 }

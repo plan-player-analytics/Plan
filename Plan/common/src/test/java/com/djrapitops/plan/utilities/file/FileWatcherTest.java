@@ -32,6 +32,8 @@ import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @RunWith(JUnitPlatform.class)
 class FileWatcherTest {
 
@@ -63,6 +65,8 @@ class FileWatcherTest {
             Awaitility.await()
                     .atMost(1, TimeUnit.SECONDS)
                     .until(methodWasCalled::get);
+
+            assertTrue(methodWasCalled.get());
         } finally {
             underTest.interrupt();
         }

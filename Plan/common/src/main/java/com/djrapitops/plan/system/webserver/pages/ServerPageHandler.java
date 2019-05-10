@@ -29,16 +29,15 @@ import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.webserver.Request;
+import com.djrapitops.plan.system.webserver.RequestTarget;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.ResponseFactory;
-import com.djrapitops.plugin.api.Check;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -72,7 +71,7 @@ public class ServerPageHandler implements PageHandler {
     }
 
     @Override
-    public Response getResponse(Request request, List<String> target) throws WebException {
+    public Response getResponse(Request request, RequestTarget target) throws WebException {
         UUID serverUUID = getServerUUID(target);
 
         boolean raw = target.size() >= 2 && target.get(1).equalsIgnoreCase("raw");
@@ -87,7 +86,7 @@ public class ServerPageHandler implements PageHandler {
             return response;
         } else {
             checkDBState();
-            if ((Check.isBungeeAvailable() || Check.isVelocityAvailable()) && serverInfo.getServerUUID().equals(serverUUID)) {
+            if (serverInfo.getServer().isProxy() && serverInfo.getServerUUID().equals(serverUUID)) {
                 return ResponseCache.loadResponse(PageId.SERVER.of(serverUUID), responseFactory::networkPageResponse);
             }
             return refreshNow(serverUUID);
@@ -115,7 +114,7 @@ public class ServerPageHandler implements PageHandler {
         return responseFactory.refreshingAnalysisResponse();
     }
 
-    private UUID getServerUUID(List<String> target) {
+    private UUID getServerUUID(RequestTarget target) {
         // Default to current server's page
         UUID serverUUID = serverInfo.getServerUUID();
 
@@ -136,7 +135,7 @@ public class ServerPageHandler implements PageHandler {
     }
 
     @Override
-    public boolean isAuthorized(Authentication auth, List<String> target) throws WebUserAuthException {
+    public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
         return auth.getWebUser().getPermLevel() <= 0;
     }
 }

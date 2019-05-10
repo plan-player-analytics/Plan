@@ -20,13 +20,13 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.InternalErrorException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.errors.BadRequestResponse;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.task.AbsRunnable;
@@ -46,17 +46,19 @@ public class SaveDBSettingsRequest extends InfoRequestWithVariables implements S
 
     private final PlanPlugin plugin;
     private final PlanConfig config;
+    private final ServerInfo serverInfo;
     private final PluginLogger logger;
     private final RunnableFactory runnableFactory;
 
     SaveDBSettingsRequest(
             PlanPlugin plugin,
             PlanConfig config,
-            PluginLogger logger,
+            ServerInfo serverInfo, PluginLogger logger,
             RunnableFactory runnableFactory
     ) {
         this.plugin = plugin;
         this.config = config;
+        this.serverInfo = serverInfo;
         this.logger = logger;
         this.runnableFactory = runnableFactory;
 
@@ -75,11 +77,8 @@ public class SaveDBSettingsRequest extends InfoRequestWithVariables implements S
 
     @Override
     public Response handleRequest(Map<String, String> variables) throws WebException {
-        if (Check.isBungeeAvailable()) {
-            return new BadRequestResponse("Not supposed to be called on a Bungee server");
-        }
-        if (Check.isVelocityAvailable()) {
-            return new BadRequestResponse("Not supposed to be called on a Velocity server");
+        if (serverInfo.getServer().isProxy()) {
+            return new BadRequestResponse("Not supposed to be called on a proxy server");
         }
         if (config.isFalse(PluginSettings.BUNGEE_COPY_CONFIG)) {
             return new BadRequestResponse("Bungee config settings overridden on this server.");

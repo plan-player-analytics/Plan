@@ -39,7 +39,7 @@ public class StackGraph implements HighChart {
         int length = this.labels.length;
         int i = 0;
         for (String label : this.labels) {
-            labelBuilder.append("'").append(label).append("'");
+            labelBuilder.append('"').append(label).append('"');
 
             if (i < length - 1) {
                 labelBuilder.append(",");

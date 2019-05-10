@@ -19,6 +19,7 @@ package com.djrapitops.plan.extension.implementation.providers;
 import com.djrapitops.plan.extension.implementation.MethodType;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Group class for handling multiple different types of {@link DataProvider}s.
@@ -76,5 +77,25 @@ public class DataProviders {
             byReturnType.add((DataProvider<T>) dataProvider);
         }
         return byReturnType;
+    }
+
+    public void removeProviderWithMethod(MethodWrapper method) {
+        MethodType methodType = method.getMethodType();
+        Map<Class, List<DataProvider>> byResultType = byMethodType.getOrDefault(methodType, Collections.emptyMap());
+        if (byResultType.isEmpty()) {
+            return;
+        }
+
+        Class resultType = method.getResultType();
+        List<DataProvider> providers = byResultType.getOrDefault(resultType, Collections.emptyList());
+        if (providers.isEmpty()) {
+            return;
+        }
+
+        byResultType.put(resultType, providers.stream()
+                .filter(provider -> provider.getMethod().equals(method))
+                .collect(Collectors.toList())
+        );
+        byMethodType.put(methodType, byResultType);
     }
 }

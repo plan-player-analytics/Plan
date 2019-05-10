@@ -39,6 +39,10 @@ public class RandomData {
         return ThreadLocalRandom.current().nextInt(rangeStart, rangeEnd);
     }
 
+    public static long randomLong(long rangeStart, long rangeEnd) {
+        return ThreadLocalRandom.current().nextLong(rangeStart, rangeEnd);
+    }
+
     public static String randomString(int size) {
         return RandomStringUtils.randomAlphanumeric(size);
     }
@@ -98,7 +102,7 @@ public class RandomData {
     public static List<GeoInfo> randomGeoInfo() {
         List<GeoInfo> test = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            GeoInfo geoInfo = new GeoInfo(randomString(10), randomString(10), r.nextLong(), "");
+            GeoInfo geoInfo = new GeoInfo(randomString(10), randomString(10), r.nextLong());
             test.add(geoInfo);
         }
         return test;

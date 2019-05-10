@@ -41,7 +41,7 @@ public interface ConfigChange {
         }
 
         @Override
-        public void apply(Config config) {
+        public synchronized void apply(Config config) {
             if (!config.moveChild(oldPath, newPath)) {
                 throw new IllegalStateException("Failed to move config node from '" + oldPath + "' to '" + newPath + "'");
             }
@@ -63,7 +63,7 @@ public interface ConfigChange {
         }
 
         @Override
-        public void apply(Config config) {
+        public synchronized void apply(Config config) {
             config.getNode(oldPath).ifPresent(oldNode -> config.addNode(newPath).copyAll(oldNode));
         }
 

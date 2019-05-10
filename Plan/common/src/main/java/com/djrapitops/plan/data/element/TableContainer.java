@@ -92,10 +92,7 @@ public class TableContainer {
                 if (i > maxIndex) {
                     body.append("<td>-");
                 } else {
-                    Serializable value = row[i];
-                    Formatter formatter = formatters[i];
-                    body.append("<td").append(formatter != null ? " data-order=\"" + value + "\">" : ">");
-                    body.append(formatter != null ? formatter.apply(value) : (value != null ? value : '-'));
+                    appendValue(body, row[i], formatters[i]);
                 }
                 body.append("</td>");
             } catch (ClassCastException | ArrayIndexOutOfBoundsException e) {
@@ -103,6 +100,15 @@ public class TableContainer {
             }
         }
         body.append("</tr>");
+    }
+
+    private void appendValue(StringBuilder body, Serializable value, Formatter formatter) {
+        body.append("<td").append(formatter != null ? " data-order=\"" + value + "\">" : ">");
+        if (formatter != null) {
+            body.append(formatter.apply(value));
+        } else {
+            body.append(value != null ? value : '-');
+        }
     }
 
     public final void setColor(String color) {

@@ -124,7 +124,7 @@ public class HealthInformation extends AbstractHealthInfo {
         double aboveThreshold = tpsMutator.percentageTPSAboveThreshold(lowTPSThreshold);
         long tpsSpikeMonth = analysisContainer.getValue(AnalysisKeys.TPS_SPIKE_MONTH).orElse(0);
 
-        StringBuilder avgLowThresholdString = new StringBuilder(subNote);
+        StringBuilder avgLowThresholdString = new StringBuilder(SUB_NOTE);
         if (aboveThreshold >= 0.96) {
             avgLowThresholdString.append(Icons.GREEN_THUMB);
         } else if (aboveThreshold >= 0.9) {

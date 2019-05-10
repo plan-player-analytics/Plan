@@ -18,6 +18,7 @@ package com.djrapitops.plan.db;
 
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
+import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.containers.AnalysisContainer;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
@@ -49,16 +50,23 @@ import com.djrapitops.plan.db.patches.Patch;
 import com.djrapitops.plan.db.tasks.DBCleanTask;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
+import com.djrapitops.plan.extension.ExtensionService;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.extension.annotation.*;
+import com.djrapitops.plan.extension.icon.Color;
+import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.ExtensionBooleanData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionStringData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
+import com.djrapitops.plan.extension.implementation.results.ExtensionTableData;
 import com.djrapitops.plan.extension.implementation.results.player.ExtensionPlayerData;
 import com.djrapitops.plan.extension.implementation.results.server.ExtensionServerData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
-import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalResultsTransaction;
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerPlayerDataTableQuery;
+import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalPlayerResultsTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalServerResultsTransaction;
+import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
@@ -67,7 +75,6 @@ import com.djrapitops.plan.system.settings.config.Config;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
-import com.djrapitops.plan.utilities.SHA256Hash;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
@@ -84,7 +91,6 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -160,9 +166,11 @@ public abstract class CommonDBTest {
         db.executeTransaction(new StoreServerInformationTransaction(new Server(-1, serverUUID, "ServerName", "", 20)));
         assertEquals(serverUUID, db.getServerUUIDSupplier().get());
 
-        system.getExtensionService().unregister(new PlayerExtension());
-        system.getExtensionService().unregister(new ServerExtension());
-        system.getExtensionService().unregister(new ConditionalExtension());
+        ExtensionService extensionService = system.getExtensionService();
+        extensionService.unregister(new PlayerExtension());
+        extensionService.unregister(new ServerExtension());
+        extensionService.unregister(new ConditionalExtension());
+        extensionService.unregister(new TableExtension());
     }
 
     private void execute(Executable executable) {
@@ -265,13 +273,13 @@ public abstract class CommonDBTest {
         String expectedGeoLoc = "TestLocation";
         long time = System.currentTimeMillis();
 
-        saveGeoInfo(playerUUID, new GeoInfo(expectedIP, expectedGeoLoc, time, "3"));
+        saveGeoInfo(playerUUID, new GeoInfo(expectedIP, expectedGeoLoc, time));
         commitTest();
 
         List<GeoInfo> geolocations = db.query(GeoInfoQueries.fetchAllGeoInformation()).getOrDefault(playerUUID, new ArrayList<>());
         assertEquals(1, geolocations.size());
 
-        GeoInfo expected = new GeoInfo("1.2.xx.xx", expectedGeoLoc, time, new SHA256Hash(expectedIP).create());
+        GeoInfo expected = new GeoInfo("1.2.xx.xx", expectedGeoLoc, time);
         assertEquals(expected, geolocations.get(0));
     }
 
@@ -394,7 +402,7 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testSessionSaving() {
+    public void sessionsAreStoredWithAllData() {
         saveUserOne();
         saveUserTwo();
 
@@ -412,7 +420,6 @@ public abstract class CommonDBTest {
 
         assertNotNull(savedSessions);
         assertEquals(1, savedSessions.size());
-        assertNull(sessions.get(UUID.randomUUID()));
 
         assertEquals(session, savedSessions.get(0));
     }
@@ -494,7 +501,7 @@ public abstract class CommonDBTest {
 
         execute(DataStoreQueries.storeSession(session));
         db.executeTransaction(new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID), (uuid, name) -> false /* Not cached */));
-        saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L, "3"));
+        saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L));
 
         assertTrue(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
 
@@ -545,8 +552,7 @@ public abstract class CommonDBTest {
         db.executeTransaction(
                 new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID), (uuid, name) -> false /* Not cached */)
         );
-        saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L,
-                new SHA256Hash("1.2.3.4").create()));
+        saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L));
 
         assertTrue(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
 
@@ -867,7 +873,7 @@ public abstract class CommonDBTest {
         OptionalAssert.equals(1, container.getValue(PlayerKeys.KICK_COUNT));
 
         List<GeoInfo> expectedGeoInfo =
-                Collections.singletonList(new GeoInfo("1.2.3.4", "TestLoc", 223456789, "ZpT4PJ9HbaMfXfa8xSADTn5X1CHSR7nTT0ntv8hKdkw="));
+                Collections.singletonList(new GeoInfo("1.2.3.4", "TestLoc", 223456789));
         OptionalAssert.equals(expectedGeoInfo, container.getValue(PlayerKeys.GEO_INFO));
 
         List<Nickname> expectedNicknames = Collections.singletonList(new Nickname("TestNick", -1, serverUUID));
@@ -1044,8 +1050,10 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void indexCreationWorksWithoutErrors() {
-        db.executeTransaction(new CreateIndexTransaction());
+    public void indexCreationWorksWithoutErrors() throws Exception {
+        Transaction transaction = new CreateIndexTransaction();
+        db.executeTransaction(transaction).get(); // get to ensure transaction is finished
+        assertTrue(transaction.wasSuccessful());
     }
 
     @Test
@@ -1155,7 +1163,7 @@ public abstract class CommonDBTest {
         ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
 
         extensionService.register(new PlayerExtension());
-        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.PLAYER_JOIN);
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
         Map<UUID, List<ExtensionPlayerData>> playerDataByServerUUID = db.query(new ExtensionPlayerDataQuery(playerUUID));
         List<ExtensionPlayerData> ofServer = playerDataByServerUUID.get(serverUUID);
@@ -1172,6 +1180,23 @@ public abstract class CommonDBTest {
         OptionalAssert.equals("0.5", tabData.getDouble("doubleVal").map(data -> data.getFormattedValue(Object::toString)));
         OptionalAssert.equals("0.5", tabData.getPercentage("percentageVal").map(data -> data.getFormattedValue(Object::toString)));
         OptionalAssert.equals("Something", tabData.getString("stringVal").map(ExtensionStringData::getFormattedValue));
+    }
+
+    @Test
+    public void extensionPlayerValuesCanBeQueriedAsTableData() {
+        extensionPlayerValuesAreStored();
+        sessionsAreStoredWithAllData(); // This query requires sessions for a last seen date
+
+        Map<UUID, ExtensionTabData> result = db.query(new ExtensionServerPlayerDataTableQuery(serverUUID, 50));
+        assertEquals(1, result.size());
+        ExtensionTabData playerData = result.get(playerUUID);
+        assertNotNull(playerData);
+
+        OptionalAssert.equals("5", playerData.getNumber("value").map(data -> data.getFormattedValue(Object::toString)));
+        assertFalse(playerData.getBoolean("boolVal").isPresent());
+        OptionalAssert.equals("0.5", playerData.getDouble("doubleVal").map(data -> data.getFormattedValue(Object::toString)));
+        assertFalse(playerData.getBoolean("percentageVal").isPresent());
+        OptionalAssert.equals("Something", playerData.getString("stringVal").map(ExtensionStringData::getFormattedValue));
     }
 
     @Test
@@ -1201,7 +1226,7 @@ public abstract class CommonDBTest {
         ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
 
         extensionService.register(new PlayerExtension());
-        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.PLAYER_JOIN);
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
         List<ExtensionServerData> ofServer = db.query(new ExtensionServerDataQuery(serverUUID));
         assertFalse(ofServer.isEmpty());
@@ -1222,37 +1247,37 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void unsatisfiedConditionalResultsAreCleaned() throws ExecutionException, InterruptedException {
+    public void unsatisfiedPlayerConditionalResultsAreCleaned() {
         ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
 
         extensionService.register(new ConditionalExtension());
 
         ConditionalExtension.condition = true;
-        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.PLAYER_JOIN);
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
         // Check that the wanted data exists
-        checkThatDataExists(ConditionalExtension.condition);
+        checkThatPlayerDataExists(ConditionalExtension.condition);
 
         // Reverse condition
         ConditionalExtension.condition = false;
-        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.PLAYER_JOIN);
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        db.executeTransaction(new RemoveUnsatisfiedConditionalResultsTransaction());
+        db.executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
 
         // Check that the wanted data exists
-        checkThatDataExists(ConditionalExtension.condition);
+        checkThatPlayerDataExists(ConditionalExtension.condition);
 
         // Reverse condition
         ConditionalExtension.condition = false;
-        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.PLAYER_JOIN);
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        db.executeTransaction(new RemoveUnsatisfiedConditionalResultsTransaction());
+        db.executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
 
         // Check that the wanted data exists
-        checkThatDataExists(ConditionalExtension.condition);
+        checkThatPlayerDataExists(ConditionalExtension.condition);
     }
 
-    private void checkThatDataExists(boolean condition) {
+    private void checkThatPlayerDataExists(boolean condition) {
         if (condition) { // Condition is true, conditional values exist
             List<ExtensionPlayerData> ofServer = db.query(new ExtensionPlayerDataQuery(playerUUID)).get(serverUUID);
             assertTrue("There was no data left", ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty());
@@ -1271,6 +1296,121 @@ public abstract class CommonDBTest {
             OptionalAssert.equals("unconditional", tabData.getString("unconditional").map(ExtensionStringData::getFormattedValue)); // Was not removed
             assertFalse("Value was not removed: conditionalValue", tabData.getString("conditionalValue").isPresent());
         }
+    }
+
+    @Test
+    public void unsatisfiedServerConditionalResultsAreCleaned() {
+        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
+
+        ConditionalExtension.condition = true;
+        extensionService.register(new ConditionalExtension());
+        extensionService.updateServerValues(CallEvents.MANUAL);
+
+        // Check that the wanted data exists
+        checkThatServerDataExists(ConditionalExtension.condition);
+
+        // Reverse condition
+        ConditionalExtension.condition = false;
+        extensionService.updateServerValues(CallEvents.MANUAL);
+
+        db.executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
+
+        // Check that the wanted data exists
+        checkThatServerDataExists(ConditionalExtension.condition);
+
+        // Reverse condition
+        ConditionalExtension.condition = false;
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
+
+        db.executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
+
+        // Check that the wanted data exists
+        checkThatServerDataExists(ConditionalExtension.condition);
+    }
+
+    private void checkThatServerDataExists(boolean condition) {
+        if (condition) { // Condition is true, conditional values exist
+            List<ExtensionServerData> ofServer = db.query(new ExtensionServerDataQuery(serverUUID));
+            assertTrue("There was no data left", ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty());
+
+            ExtensionTabData tabData = ofServer.get(0).getTabs().get(0);
+            OptionalAssert.equals("Yes", tabData.getBoolean("isCondition").map(ExtensionBooleanData::getFormattedValue));
+            OptionalAssert.equals("Conditional", tabData.getString("conditionalValue").map(ExtensionStringData::getFormattedValue));
+            OptionalAssert.equals("unconditional", tabData.getString("unconditional").map(ExtensionStringData::getFormattedValue)); // Was not removed
+            assertFalse("Value was not removed: reversedConditionalValue", tabData.getString("reversedConditionalValue").isPresent());
+        } else { // Condition is false, reversed conditional values exist
+            List<ExtensionServerData> ofServer = db.query(new ExtensionServerDataQuery(serverUUID));
+            assertTrue("There was no data left", ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty());
+            ExtensionTabData tabData = ofServer.get(0).getTabs().get(0);
+            OptionalAssert.equals("No", tabData.getBoolean("isCondition").map(ExtensionBooleanData::getFormattedValue));
+            OptionalAssert.equals("Reversed", tabData.getString("reversedConditionalValue").map(ExtensionStringData::getFormattedValue));
+            OptionalAssert.equals("unconditional", tabData.getString("unconditional").map(ExtensionStringData::getFormattedValue)); // Was not removed
+            assertFalse("Value was not removed: conditionalValue", tabData.getString("conditionalValue").isPresent());
+        }
+    }
+
+    @Test
+    public void extensionServerTableValuesAreInserted() {
+        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
+
+        extensionService.register(new TableExtension());
+        extensionService.updateServerValues(CallEvents.MANUAL);
+        extensionService.updateServerValues(CallEvents.MANUAL);
+
+        List<ExtensionServerData> ofServer = db.query(new ExtensionServerDataQuery(serverUUID));
+        assertFalse(ofServer.isEmpty());
+
+        ExtensionServerData extensionServerData = ofServer.get(0);
+        List<ExtensionTabData> tabs = extensionServerData.getTabs();
+        assertEquals(1, tabs.size()); // No tab defined, should contain 1 tab
+        ExtensionTabData tabData = tabs.get(0);
+
+        List<ExtensionTableData> tableData = tabData.getTableData();
+        assertEquals(1, tableData.size());
+        ExtensionTableData table = tableData.get(0);
+
+        TableContainer expected = new TableContainer(
+                "<i class=\" fa fa-gavel\"></i> first",
+                "<i class=\" fa fa-what\"></i> second",
+                "<i class=\" fa fa-question\"></i> third"
+        );
+        expected.setColor("amber");
+        expected.addRow("value", 3, 0.5, 400L);
+
+        assertEquals(expected.parseHtml(), table.getHtmlTable().parseHtml());
+    }
+
+    @Test
+    public void extensionPlayerTableValuesAreInserted() {
+        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
+
+        extensionService.register(new TableExtension());
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
+
+        Map<UUID, List<ExtensionPlayerData>> ofPlayer = db.query(new ExtensionPlayerDataQuery(playerUUID));
+        assertFalse(ofPlayer.isEmpty());
+
+        List<ExtensionPlayerData> ofServer = ofPlayer.get(serverUUID);
+        assertEquals(1, ofServer.size());
+        ExtensionPlayerData extensionServerData = ofServer.get(0);
+        List<ExtensionTabData> tabs = extensionServerData.getTabs();
+        assertEquals(1, tabs.size()); // No tab defined, should contain 1 tab
+        ExtensionTabData tabData = tabs.get(0);
+
+        List<ExtensionTableData> tableData = tabData.getTableData();
+        assertEquals(1, tableData.size());
+        ExtensionTableData table = tableData.get(0);
+
+        TableContainer expected = new TableContainer(
+                "<i class=\" fa fa-gavel\"></i> first",
+                "<i class=\" fa fa-what\"></i> second",
+                "<i class=\" fa fa-question\"></i> third"
+        );
+        expected.setColor("amber");
+        expected.addRow("value", 3, 0.5, 400L);
+
+        assertEquals(expected.parseHtml(), table.getHtmlTable().parseHtml());
     }
 
     @PluginInfo(name = "ConditionalExtension")
@@ -1297,6 +1437,28 @@ public abstract class CommonDBTest {
 
         @StringProvider(text = "Unconditional")
         public String unconditional(UUID playerUUID) {
+            return "unconditional";
+        }
+
+        @BooleanProvider(text = "a boolean", conditionName = "condition")
+        public boolean isCondition() {
+            return condition;
+        }
+
+        @StringProvider(text = "Conditional Value")
+        @Conditional("condition")
+        public String conditionalValue() {
+            return "Conditional";
+        }
+
+        @StringProvider(text = "Reversed Conditional Value")
+        @Conditional(value = "condition", negated = true)
+        public String reversedConditionalValue() {
+            return "Reversed";
+        }
+
+        @StringProvider(text = "Unconditional")
+        public String unconditional() {
             return "unconditional";
         }
     }
@@ -1354,6 +1516,29 @@ public abstract class CommonDBTest {
         @StringProvider(text = "a string")
         public String stringVal(UUID playerUUID) {
             return "Something";
+        }
+    }
+
+    @PluginInfo(name = "TableExtension")
+    public class TableExtension implements DataExtension {
+        @TableProvider(tableColor = Color.AMBER)
+        public Table table() {
+            return createTestTable();
+        }
+
+        @TableProvider(tableColor = Color.AMBER)
+        public Table playerTable(UUID playerUUID) {
+            return createTestTable();
+        }
+
+        private Table createTestTable() {
+            return Table.builder()
+                    .columnOne("first", Icon.called("gavel").of(Color.AMBER).build())
+                    .columnTwo("second", Icon.called("what").of(Color.BROWN).build()) // Colors are ignored
+                    .columnThree("third", null)                  // Can handle improper icons
+                    .columnFive("five", Icon.called("").build()) // Can handle null column in between and ignore the next column
+                    .addRow("value", 3, 0.5, 400L)               // Can handle too many row values
+                    .build();
         }
     }
 }

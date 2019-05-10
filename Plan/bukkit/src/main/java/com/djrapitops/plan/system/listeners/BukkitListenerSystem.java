@@ -19,6 +19,7 @@ package com.djrapitops.plan.system.listeners;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.events.PlanBukkitEnableEvent;
+import com.djrapitops.plan.capability.CapabilityServiceImplementation;
 import com.djrapitops.plan.system.listeners.bukkit.*;
 import com.djrapitops.plan.system.status.Status;
 import org.bukkit.Bukkit;
@@ -83,7 +84,9 @@ public class BukkitListenerSystem extends ListenerSystem {
 
     @Override
     public void callEnableEvent(PlanPlugin plugin) {
-        PlanBukkitEnableEvent event = new PlanBukkitEnableEvent(plugin.isSystemEnabled());
+        boolean isEnabled = plugin.isSystemEnabled();
+        PlanBukkitEnableEvent event = new PlanBukkitEnableEvent(isEnabled);
         Bukkit.getServer().getPluginManager().callEvent(event);
+        CapabilityServiceImplementation.notifyAboutEnable(isEnabled);
     }
 }

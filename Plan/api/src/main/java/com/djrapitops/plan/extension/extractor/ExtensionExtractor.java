@@ -19,6 +19,7 @@ package com.djrapitops.plan.extension.extractor;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.annotation.*;
+import com.djrapitops.plan.extension.table.Table;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -103,6 +104,8 @@ public final class ExtensionExtractor {
 
             MethodAnnotations.get(method, Conditional.class).ifPresent(annotation -> methodAnnotations.put(method, Conditional.class, annotation));
             MethodAnnotations.get(method, Tab.class).ifPresent(annotation -> methodAnnotations.put(method, Tab.class, annotation));
+
+            MethodAnnotations.get(method, TableProvider.class).ifPresent(annotation -> methodAnnotations.put(method, TableProvider.class, annotation));
         }
 
         if (methodAnnotations.isEmpty()) {
@@ -166,6 +169,7 @@ public final class ExtensionExtractor {
         validateDoubleProviderAnnotations();
         validatePercentageProviderAnnotations();
         validateStringProviderAnnotations();
+        validateTableProviderAnnotations();
     }
 
     private void validateBooleanProviderAnnotations() {
@@ -234,6 +238,13 @@ public final class ExtensionExtractor {
             validateReturnType(method, String.class);
             validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
             validateMethodAnnotationPropertyLength(annotation.description(), "description", 150, method);
+            validateMethodArguments(method, false, UUID.class, String.class, Group.class);
+        }
+    }
+
+    private void validateTableProviderAnnotations() {
+        for (Method method : methodAnnotations.getMethodAnnotations(TableProvider.class).keySet()) {
+            validateReturnType(method, Table.class);
             validateMethodArguments(method, false, UUID.class, String.class, Group.class);
         }
     }

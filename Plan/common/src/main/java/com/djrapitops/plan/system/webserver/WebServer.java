@@ -19,6 +19,7 @@ package com.djrapitops.plan.system.webserver;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
@@ -76,7 +77,7 @@ public class WebServer implements SubSystem {
             Locale locale,
             PlanFiles files,
             PlanConfig config,
-            ServerProperties serverProperties,
+            ServerInfo serverInfo,
             PluginLogger logger,
             ErrorHandler errorHandler,
             RequestHandler requestHandler
@@ -84,7 +85,7 @@ public class WebServer implements SubSystem {
         this.locale = locale;
         this.files = files;
         this.config = config;
-        this.serverProperties = serverProperties;
+        this.serverProperties = serverInfo.getServerProperties();
 
         this.requestHandler = requestHandler;
 
@@ -100,7 +101,7 @@ public class WebServer implements SubSystem {
 
         if (!isEnabled()) {
             if (Check.isBungeeAvailable() || Check.isVelocityAvailable()) {
-                throw new EnableException(locale.getString(PluginLang.ENABLE_FAIL_NO_WEB_SERVER_BUNGEE));
+                throw new EnableException(locale.getString(PluginLang.ENABLE_FAIL_NO_WEB_SERVER_PROXY));
             }
             if (config.isTrue(WebserverSettings.DISABLED)) {
                 logger.warn(locale.getString(PluginLang.ENABLE_NOTIFY_WEB_SERVER_DISABLED));
@@ -116,8 +117,8 @@ public class WebServer implements SubSystem {
      * Starts up the WebServer in a new Thread Pool.
      */
     private void initServer() {
-        if (!(Check.isBungeeAvailable() || Check.isVelocityAvailable()) && config.isTrue(WebserverSettings.DISABLED)) {
-            // Bukkit WebServer has been disabled.
+        if ((Check.isBukkitAvailable() || Check.isSpongeAvailable()) && config.isTrue(WebserverSettings.DISABLED)) {
+            // Bukkit/Sponge WebServer has been disabled.
             return;
         }
 

@@ -89,6 +89,7 @@ public class RequestHandler implements HttpHandler {
     public void handle(HttpExchange exchange) {
         Headers requestHeaders = exchange.getRequestHeaders();
         Headers responseHeaders = exchange.getResponseHeaders();
+
         Request request = new Request(exchange, locale);
         request.setAuth(getAuthorization(requestHeaders));
 

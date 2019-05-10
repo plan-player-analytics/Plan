@@ -33,10 +33,8 @@ import com.djrapitops.plan.system.importing.data.BukkitUserImportRefiner;
 import com.djrapitops.plan.system.importing.data.ServerImportData;
 import com.djrapitops.plan.system.importing.data.UserImportData;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.utilities.SHA256Hash;
 import com.djrapitops.plugin.utilities.Verify;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -177,11 +175,11 @@ public abstract class BukkitImporter implements Importer {
     }
 
     private BaseUser toBaseUser(UserImportData userImportData) {
-        UUID uuid = userImportData.getUuid();
-        String name = userImportData.getName();
+        UUID playerUUID = userImportData.getUuid();
+        String playerName = userImportData.getName();
         long registered = userImportData.getRegistered();
         int timesKicked = userImportData.getTimesKicked();
-        return new BaseUser(uuid, name, registered, timesKicked);
+        return new BaseUser(playerUUID, playerName, registered, timesKicked);
     }
 
     private UserInfo toUserInfo(UserImportData userImportData) {
@@ -211,11 +209,7 @@ public abstract class BukkitImporter implements Importer {
         return userImportData.getIps().parallelStream()
                 .map(ip -> {
                     String geoLoc = geolocationCache.getCountry(ip);
-                    try {
-                        return new GeoInfo(ip, geoLoc, date, new SHA256Hash(ip).create());
-                    } catch (NoSuchAlgorithmException e) {
-                        throw new IllegalArgumentException(e);
-                    }
+                    return new GeoInfo(ip, geoLoc, date);
                 }).collect(Collectors.toList());
     }
 }

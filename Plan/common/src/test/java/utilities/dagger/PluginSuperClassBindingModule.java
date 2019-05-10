@@ -24,6 +24,7 @@ import com.djrapitops.plan.db.SQLiteDB;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
 import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plan.system.tasks.TaskSystem;
@@ -35,6 +36,7 @@ import com.djrapitops.pluginbridge.plan.Bridge;
 import dagger.Module;
 import dagger.Provides;
 import org.mockito.Mockito;
+import utilities.mocks.TestProcessing;
 
 import javax.inject.Singleton;
 
@@ -103,6 +105,12 @@ public class PluginSuperClassBindingModule {
     @Singleton
     Bridge providePluginBridge() {
         return Mockito.mock(Bridge.class);
+    }
+
+    @Provides
+    @Singleton
+    Processing provideProcessing(TestProcessing testProcessing) {
+        return testProcessing;
     }
 
 }

@@ -114,6 +114,12 @@ public class UserInfoQueries {
         };
     }
 
+    /**
+     * Query database for all User information of a specific server.
+     *
+     * @param serverUUID UUID of the Plan server.
+     * @return Map: Player UUID - user information
+     */
     public static Query<Map<UUID, UserInfo>> fetchUserInformationOfServer(UUID serverUUID) {
         String sql = SELECT +
                 UserInfoTable.REGISTERED + ", " +
@@ -143,6 +149,36 @@ public class UserInfoQueries {
                     userInformation.put(uuid, new UserInfo(uuid, serverUUID, registered, op, banned));
                 }
                 return userInformation;
+            }
+        };
+    }
+
+    /**
+     * Query database for UUIDs of banned players on a server.
+     *
+     * @param serverUUID UUID of the Plan server.
+     * @return Set: Player UUID of a banned player.
+     */
+    public static Query<Set<UUID>> fetchBannedUUIDsOfServer(UUID serverUUID) {
+        String sql = SELECT +
+                UserInfoTable.USER_UUID +
+                FROM + UserInfoTable.TABLE_NAME +
+                WHERE + UserInfoTable.SERVER_UUID + "=?" +
+                AND + UserInfoTable.BANNED + "=?";
+        return new QueryStatement<Set<UUID>>(sql, 1000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setBoolean(2, true);
+            }
+
+            @Override
+            public Set<UUID> processResults(ResultSet set) throws SQLException {
+                Set<UUID> bannedUsers = new HashSet<>();
+                while (set.next()) {
+                    bannedUsers.add(UUID.fromString(set.getString(UserInfoTable.USER_UUID)));
+                }
+                return bannedUsers;
             }
         };
     }

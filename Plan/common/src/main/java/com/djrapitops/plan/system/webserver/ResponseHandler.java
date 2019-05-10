@@ -23,6 +23,7 @@ import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.pages.*;
+import com.djrapitops.plan.system.webserver.pages.json.RootJSONHandler;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 import com.djrapitops.plan.system.webserver.response.errors.BadRequestResponse;
@@ -32,9 +33,6 @@ import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -50,6 +48,7 @@ public class ResponseHandler extends TreePageHandler {
     private final PlayerPageHandler playerPageHandler;
     private final ServerPageHandler serverPageHandler;
     private final InfoRequestPageHandler infoRequestPageHandler;
+    private final RootJSONHandler rootJSONHandler;
     private final ErrorHandler errorHandler;
 
     private Lazy<WebServer> webServer;
@@ -64,6 +63,7 @@ public class ResponseHandler extends TreePageHandler {
             PlayerPageHandler playerPageHandler,
             ServerPageHandler serverPageHandler,
             InfoRequestPageHandler infoRequestPageHandler,
+            RootJSONHandler rootJSONHandler,
 
             ErrorHandler errorHandler
     ) {
@@ -74,6 +74,7 @@ public class ResponseHandler extends TreePageHandler {
         this.playerPageHandler = playerPageHandler;
         this.serverPageHandler = serverPageHandler;
         this.infoRequestPageHandler = infoRequestPageHandler;
+        this.rootJSONHandler = rootJSONHandler;
         this.errorHandler = errorHandler;
     }
 
@@ -92,16 +93,12 @@ public class ResponseHandler extends TreePageHandler {
         }
 
         registerPage("info", infoRequestPageHandler);
+        registerPage("json", rootJSONHandler);
     }
 
     public Response getResponse(Request request) {
-        String targetString = request.getTarget();
-        List<String> target = new ArrayList<>(Arrays.asList(targetString.split("/")));
-        if (!target.isEmpty()) {
-            target.remove(0);
-        }
         try {
-            return getResponse(request, targetString, target);
+            return tryToGetResponse(request);
         } catch (NoServersException | NotFoundException e) {
             return responseFactory.notFound404(e.getMessage());
         } catch (WebUserAuthException e) {
@@ -109,45 +106,44 @@ public class ResponseHandler extends TreePageHandler {
         } catch (ForbiddenException e) {
             return responseFactory.forbidden403(e.getMessage());
         } catch (BadRequestException e) {
-            return new BadRequestResponse(e.getMessage());
+            return new BadRequestResponse(e.getMessage() + " (when requesting '" + request.getTargetString() + "')");
         } catch (UnauthorizedServerException e) {
             return responseFactory.unauthorizedServer(e.getMessage());
         } catch (GatewayException e) {
             return responseFactory.gatewayError504(e.getMessage());
         } catch (InternalErrorException e) {
             if (e.getCause() != null) {
-                return responseFactory.internalErrorResponse(e.getCause(), request.getTarget());
+                return responseFactory.internalErrorResponse(e.getCause(), request.getTargetString());
             } else {
-                return responseFactory.internalErrorResponse(e, request.getTarget());
+                return responseFactory.internalErrorResponse(e, request.getTargetString());
             }
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
-            return responseFactory.internalErrorResponse(e, request.getTarget());
+            return responseFactory.internalErrorResponse(e, request.getTargetString());
         }
     }
 
-    private Response getResponse(Request request, String targetString, List<String> target) throws WebException {
-        Optional<Authentication> authentication = Optional.empty();
+    private Response tryToGetResponse(Request request) throws WebException {
+        Optional<Authentication> authentication = request.getAuth();
+        RequestTarget target = request.getTarget();
+        String resource = target.getResourceString();
 
-        if (targetString.endsWith(".css")) {
-            return ResponseCache.loadResponse(PageId.CSS.of(targetString), () -> responseFactory.cssResponse(targetString));
+        if (target.endsWith(".css")) {
+            return ResponseCache.loadResponse(PageId.CSS.of(resource), () -> responseFactory.cssResponse(resource));
         }
-        if (targetString.endsWith(".js")) {
-            return ResponseCache.loadResponse(PageId.JS.of(targetString), () -> responseFactory.javaScriptResponse(targetString));
+        if (target.endsWith(".js")) {
+            return ResponseCache.loadResponse(PageId.JS.of(resource), () -> responseFactory.javaScriptResponse(resource));
         }
-        if (targetString.endsWith("favicon.ico")) {
+        if (target.endsWith("favicon.ico")) {
             return ResponseCache.loadResponse(PageId.FAVICON.id(), responseFactory::faviconResponse);
         }
         boolean isNotInfoRequest = target.isEmpty() || !target.get(0).equals("info");
         boolean isAuthRequired = webServer.get().isAuthRequired() && isNotInfoRequest;
-        if (isAuthRequired) {
-            authentication = request.getAuth();
-            if (!authentication.isPresent()) {
-                if (webServer.get().isUsingHTTPS()) {
-                    return responseFactory.basicAuth();
-                } else {
-                    return responseFactory.forbidden403();
-                }
+        if (isAuthRequired && !authentication.isPresent()) {
+            if (webServer.get().isUsingHTTPS()) {
+                return responseFactory.basicAuth();
+            } else {
+                return responseFactory.forbidden403();
             }
         }
         PageHandler pageHandler = getPageHandler(target);
