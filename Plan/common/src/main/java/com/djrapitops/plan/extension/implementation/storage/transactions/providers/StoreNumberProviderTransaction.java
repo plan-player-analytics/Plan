@@ -74,6 +74,7 @@ public class StoreNumberProviderTransaction extends Transaction {
                 DESCRIPTION + "=?," +
                 PRIORITY + "=?," +
                 CONDITION + "=?," +
+                SHOW_IN_PLAYERS_TABLE + "=?," +
                 FORMAT_TYPE + "=?," +
                 TAB_ID + "=" + ExtensionTabTable.STATEMENT_SELECT_TAB_ID + "," +
                 ICON_ID + "=" + ExtensionIconTable.STATEMENT_SELECT_ICON_ID +
@@ -97,11 +98,12 @@ public class StoreNumberProviderTransaction extends Transaction {
                 } else {
                     statement.setNull(4, Types.VARCHAR);
                 }
-                statement.setString(5, formatType.name());
-                ExtensionTabTable.set3TabValuesToStatement(statement, 6, providerInformation.getTab().orElse("No Tab"), providerInformation.getPluginName(), serverUUID);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 9, providerInformation.getIcon());
-                ExtensionPluginTable.set2PluginValuesToStatement(statement, 12, providerInformation.getPluginName(), serverUUID);
-                statement.setString(14, providerInformation.getName());
+                statement.setBoolean(5, providerInformation.isShownInPlayersTable());
+                statement.setString(6, formatType.name());
+                ExtensionTabTable.set3TabValuesToStatement(statement, 7, providerInformation.getTab().orElse("No Tab"), providerInformation.getPluginName(), serverUUID);
+                ExtensionIconTable.set3IconValuesToStatement(statement, 10, providerInformation.getIcon());
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 13, providerInformation.getPluginName(), serverUUID);
+                statement.setString(15, providerInformation.getName());
             }
         };
     }
@@ -113,11 +115,12 @@ public class StoreNumberProviderTransaction extends Transaction {
                 DESCRIPTION + "," +
                 PRIORITY + "," +
                 CONDITION + "," +
+                SHOW_IN_PLAYERS_TABLE + ',' +
                 FORMAT_TYPE + "," +
                 TAB_ID + "," +
                 ICON_ID + "," +
                 PLUGIN_ID +
-                ") VALUES (?,?,?,?,?,?," +
+                ") VALUES (?,?,?,?,?,?,?," +
                 ExtensionTabTable.STATEMENT_SELECT_TAB_ID + "," +
                 ExtensionIconTable.STATEMENT_SELECT_ICON_ID + "," +
                 ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ")";
@@ -139,10 +142,11 @@ public class StoreNumberProviderTransaction extends Transaction {
                 } else {
                     statement.setNull(5, Types.VARCHAR);
                 }
-                statement.setString(6, formatType.name());
-                ExtensionTabTable.set3TabValuesToStatement(statement, 7, providerInformation.getTab().orElse("No Tab"), providerInformation.getPluginName(), serverUUID);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 10, providerInformation.getIcon());
-                ExtensionPluginTable.set2PluginValuesToStatement(statement, 13, providerInformation.getPluginName(), serverUUID);
+                statement.setBoolean(6, providerInformation.isShownInPlayersTable());
+                statement.setString(7, formatType.name());
+                ExtensionTabTable.set3TabValuesToStatement(statement, 8, providerInformation.getTab().orElse("No Tab"), providerInformation.getPluginName(), serverUUID);
+                ExtensionIconTable.set3IconValuesToStatement(statement, 11, providerInformation.getIcon());
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 14, providerInformation.getPluginName(), serverUUID);
             }
         };
     }

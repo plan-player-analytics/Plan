@@ -68,7 +68,9 @@ public class ExtensionServerPlayerDataTableQuery implements Query<Map<UUID, Exte
 
         String sql = SELECT +
                 "v1." + ExtensionPlayerValueTable.USER_UUID + " as uuid," +
+                "v1." + ExtensionPlayerValueTable.BOOLEAN_VALUE + " as boolean_value," +
                 "v1." + ExtensionPlayerValueTable.DOUBLE_VALUE + " as double_value," +
+                "v1." + ExtensionPlayerValueTable.PERCENTAGE_VALUE + " as percentage_value," +
                 "v1." + ExtensionPlayerValueTable.LONG_VALUE + " as long_value," +
                 "v1." + ExtensionPlayerValueTable.STRING_VALUE + " as string_value," +
                 "p1." + ExtensionProviderTable.PROVIDER_NAME + " as provider_name," +
@@ -83,16 +85,16 @@ public class ExtensionServerPlayerDataTableQuery implements Query<Map<UUID, Exte
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " e1 on e1." + ExtensionPluginTable.ID + "=p1." + ExtensionProviderTable.PLUGIN_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i1 on i1." + ExtensionIconTable.ID + "=p1." + ExtensionProviderTable.ICON_ID +
                 WHERE + "e1." + ExtensionPluginTable.SERVER_UUID + "=?" +
-                AND + " v1." + ExtensionPlayerValueTable.BOOLEAN_VALUE + IS_NULL + // Don't select Boolean value rows
-                AND + " v1." + ExtensionPlayerValueTable.PERCENTAGE_VALUE + IS_NULL + // Don't select Percentage value rows
-                AND + " p1." + ExtensionProviderTable.IS_PLAYER_NAME + "=?";
+                AND + "p1." + ExtensionProviderTable.SHOW_IN_PLAYERS_TABLE + "=?" +
+                AND + "p1." + ExtensionProviderTable.IS_PLAYER_NAME + "=?";
 
         return new QueryStatement<Map<UUID, ExtensionTabData>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setInt(1, xMostRecentPlayers);       // Limit to x most recently seen players
                 statement.setString(2, serverUUID.toString());
-                statement.setBoolean(3, false);                 // Don't select player_name String values
+                statement.setBoolean(3, true);                  // Select only values that should be shown
+                statement.setBoolean(4, false);                 // Don't select player_name String values
             }
 
             @Override
@@ -118,9 +120,21 @@ public class ExtensionServerPlayerDataTableQuery implements Query<Map<UUID, Exte
     }
 
     private void extractAndPutDataTo(ExtensionTabData.Factory extensionTab, ExtensionDescriptive descriptive, ResultSet set) throws SQLException {
+        boolean booleanValue = set.getBoolean(ExtensionServerValueTable.BOOLEAN_VALUE);
+        if (!set.wasNull()) {
+            extensionTab.putBooleanData(new ExtensionBooleanData(descriptive, booleanValue));
+            return;
+        }
+
         double doubleValue = set.getDouble(ExtensionPlayerValueTable.DOUBLE_VALUE);
         if (!set.wasNull()) {
             extensionTab.putDoubleData(new ExtensionDoubleData(descriptive, doubleValue));
+            return;
+        }
+
+        double percentageValue = set.getDouble(ExtensionServerValueTable.PERCENTAGE_VALUE);
+        if (!set.wasNull()) {
+            extensionTab.putPercentageData(new ExtensionDoubleData(descriptive, percentageValue));
             return;
         }
 
