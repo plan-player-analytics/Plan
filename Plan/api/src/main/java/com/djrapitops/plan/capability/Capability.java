@@ -42,9 +42,15 @@ enum Capability {
      */
     DATA_EXTENSION_TABLES,
     /**
-     * DataExtension API
+     * DataExtension API addition, allows throwing {@link com.djrapitops.plan.extension.NotReadyException} inside a Provider method when your API is not ready for a method call.
      */
-    DATA_EXTENSION_NOT_READY_EXCEPTION;
+    DATA_EXTENSION_NOT_READY_EXCEPTION,
+    /**
+     * DataExtension API addition, parameter {@code showInPlayerTable} for BooleanProvider, DoubleProvider, PercentageProvider, NumberProvider, StringProvider annotations.
+     * <p>
+     * When the parameter is set to {@code true} the value from this Provider is shown on a table alongside players.
+     */
+    DATA_EXTENSION_SHOW_IN_PLAYER_TABLE;
 
     static Optional<Capability> getByName(String name) {
         if (name == null) {
