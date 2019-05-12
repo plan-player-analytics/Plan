@@ -1187,6 +1187,14 @@ public abstract class CommonDBTest {
         extensionPlayerValuesAreStored();
         sessionsAreStoredWithAllData(); // This query requires sessions for a last seen date
 
+        // Store a second session to check against issue https://github.com/plan-player-analytics/Plan/issues/1039
+        Session session = new Session(playerUUID, serverUUID, 32345L, worlds[0], "SURVIVAL");
+        session.endSession(42345L);
+        session.setWorldTimes(createWorldTimes());
+        session.setPlayerKills(createKills());
+
+        execute(DataStoreQueries.storeSession(session));
+
         Map<UUID, ExtensionTabData> result = db.query(new ExtensionServerPlayerDataTableQuery(serverUUID, 50));
         assertEquals(1, result.size());
         ExtensionTabData playerData = result.get(playerUUID);

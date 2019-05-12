@@ -63,7 +63,7 @@ public class ExtensionServerPlayerDataTableQuery implements Query<Map<UUID, Exte
                 SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_UUID +
                 ",MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
                 FROM + SessionsTable.TABLE_NAME +
-                GROUP_BY + SessionsTable.USER_UUID +
+                GROUP_BY + SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_UUID + ',' + SessionsTable.SESSION_END +
                 ORDER_BY + SessionsTable.SESSION_END + " DESC LIMIT ?";
 
         String sql = SELECT +
