@@ -1187,15 +1187,23 @@ public abstract class CommonDBTest {
         extensionPlayerValuesAreStored();
         sessionsAreStoredWithAllData(); // This query requires sessions for a last seen date
 
+        // Store a second session to check against issue https://github.com/plan-player-analytics/Plan/issues/1039
+        Session session = new Session(playerUUID, serverUUID, 32345L, worlds[0], "SURVIVAL");
+        session.endSession(42345L);
+        session.setWorldTimes(createWorldTimes());
+        session.setPlayerKills(createKills());
+
+        execute(DataStoreQueries.storeSession(session));
+
         Map<UUID, ExtensionTabData> result = db.query(new ExtensionServerPlayerDataTableQuery(serverUUID, 50));
         assertEquals(1, result.size());
         ExtensionTabData playerData = result.get(playerUUID);
         assertNotNull(playerData);
 
         OptionalAssert.equals("5", playerData.getNumber("value").map(data -> data.getFormattedValue(Object::toString)));
-        assertFalse(playerData.getBoolean("boolVal").isPresent());
+        OptionalAssert.equals("No", playerData.getBoolean("boolVal").map(ExtensionBooleanData::getFormattedValue));
         OptionalAssert.equals("0.5", playerData.getDouble("doubleVal").map(data -> data.getFormattedValue(Object::toString)));
-        assertFalse(playerData.getBoolean("percentageVal").isPresent());
+        OptionalAssert.equals("0.5", playerData.getPercentage("percentageVal").map(data -> data.getFormattedValue(Object::toString)));
         OptionalAssert.equals("Something", playerData.getString("stringVal").map(ExtensionStringData::getFormattedValue));
     }
 
@@ -1493,27 +1501,27 @@ public abstract class CommonDBTest {
 
     @PluginInfo(name = "PlayerExtension")
     public class PlayerExtension implements DataExtension {
-        @NumberProvider(text = "a number")
+        @NumberProvider(text = "a number", showInPlayerTable = true)
         public long value(UUID playerUUD) {
             return 5L;
         }
 
-        @BooleanProvider(text = "a boolean")
+        @BooleanProvider(text = "a boolean", showInPlayerTable = true)
         public boolean boolVal(UUID playerUUID) {
             return false;
         }
 
-        @DoubleProvider(text = "a double")
+        @DoubleProvider(text = "a double", showInPlayerTable = true)
         public double doubleVal(UUID playerUUID) {
             return 0.5;
         }
 
-        @PercentageProvider(text = "a percentage")
+        @PercentageProvider(text = "a percentage", showInPlayerTable = true)
         public double percentageVal(UUID playerUUID) {
             return 0.5;
         }
 
-        @StringProvider(text = "a string")
+        @StringProvider(text = "a string", showInPlayerTable = true)
         public String stringVal(UUID playerUUID) {
             return "Something";
         }

@@ -99,7 +99,7 @@ class NumberProviderValueGatherer {
         MethodWrapper<Long> method = numberProvider.getMethod();
         Long result = getMethodResult(methodCaller.apply(method), method);
         if (result == null) {
-            return;
+            return; // Error during call
         }
 
         FormatType formatType = NumberDataProvider.getFormatType(numberProvider);

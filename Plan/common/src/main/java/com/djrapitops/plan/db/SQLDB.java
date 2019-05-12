@@ -29,6 +29,7 @@ import com.djrapitops.plan.db.patches.*;
 import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plugin.api.TimeAmount;
@@ -68,6 +69,8 @@ public abstract class SQLDB extends AbstractDatabase {
     private Supplier<ExecutorService> transactionExecutorServiceProvider;
     private ExecutorService transactionExecutor;
 
+    private final boolean devMode;
+
     public SQLDB(
             Supplier<UUID> serverUUIDSupplier,
             Locale locale,
@@ -83,6 +86,8 @@ public abstract class SQLDB extends AbstractDatabase {
         this.runnableFactory = runnableFactory;
         this.logger = logger;
         this.errorHandler = errorHandler;
+
+        devMode = config.get(PluginSettings.DEV_MODE);
 
         this.transactionExecutorServiceProvider = () -> Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat("Plan " + getClass().getSimpleName() + "-transaction-thread-%d").build());
     }
@@ -155,7 +160,8 @@ public abstract class SQLDB extends AbstractDatabase {
                 new TransferTableRemovalPatch(),
                 new IPAnonPatch(),
                 new BadAFKThresholdValuePatch(),
-                new DeleteIPHashesPatch()
+                new DeleteIPHashesPatch(),
+                new ExtensionShowInPlayersTablePatch()
         };
     }
 
@@ -224,7 +230,9 @@ public abstract class SQLDB extends AbstractDatabase {
 
         return CompletableFuture.supplyAsync(() -> {
             accessLock.checkAccess(transaction);
-            logger.getDebugLogger().logOn(DebugChannels.SQL, "Executing: " + transaction.getClass().getSimpleName());
+            if (devMode) {
+                logger.getDebugLogger().logOn(DebugChannels.SQL, "Executing: " + transaction.getClass().getSimpleName());
+            }
             transaction.executeTransaction(this);
             return CompletableFuture.completedFuture(null);
         }, getTransactionExecutor()).handle(errorHandler(origin));

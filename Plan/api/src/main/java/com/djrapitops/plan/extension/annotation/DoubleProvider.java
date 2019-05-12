@@ -91,4 +91,10 @@ public @interface DoubleProvider {
      */
     Color iconColor() default Color.NONE;
 
+    /**
+     * When the parameter is set to {@code true} the value from this Provider is shown on a table alongside players.
+     *
+     * @return false by default.
+     */
+    boolean showInPlayerTable() default false;
 }

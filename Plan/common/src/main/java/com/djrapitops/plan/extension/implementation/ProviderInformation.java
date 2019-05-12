@@ -32,20 +32,26 @@ import java.util.Optional;
 public class ProviderInformation extends ExtensionDescriptive {
 
     private final String pluginName;
+    private final boolean showInPlayersTable;
     private final String tab; // can be null
     private final Conditional condition; // can be null
 
     public ProviderInformation(
-            String pluginName, String name, String text, String description, Icon icon, int priority, String tab, Conditional condition
+            String pluginName, String name, String text, String description, Icon icon, int priority, boolean showInPlayersTable, String tab, Conditional condition
     ) {
         super(name, text, description, icon, priority);
         this.pluginName = pluginName;
+        this.showInPlayersTable = showInPlayersTable;
         this.tab = tab;
         this.condition = condition;
     }
 
     public String getPluginName() {
         return StringUtils.truncate(pluginName, 50);
+    }
+
+    public boolean isShownInPlayersTable() {
+        return showInPlayersTable;
     }
 
     public Optional<String> getTab() {

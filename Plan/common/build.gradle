@@ -15,6 +15,7 @@ dependencies {
     compileOnly "com.google.guava:guava:$guavaVersion"
 
     testCompile project(":api")
+    testCompile "com.google.code.gson:gson:2.8.5"
 }
 
 shadowJar {

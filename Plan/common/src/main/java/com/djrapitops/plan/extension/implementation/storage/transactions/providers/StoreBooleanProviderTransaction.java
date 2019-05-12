@@ -78,7 +78,8 @@ public class StoreBooleanProviderTransaction extends Transaction {
                 PROVIDED_CONDITION + "=?," +
                 TAB_ID + '=' + ExtensionTabTable.STATEMENT_SELECT_TAB_ID + ',' +
                 ICON_ID + '=' + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
-                HIDDEN + "=?" +
+                HIDDEN + "=?," +
+                SHOW_IN_PLAYERS_TABLE + "=?" +
                 WHERE + PLUGIN_ID + '=' + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID +
                 AND + PROVIDER_NAME + "=?";
 
@@ -107,8 +108,9 @@ public class StoreBooleanProviderTransaction extends Transaction {
                 ExtensionTabTable.set3TabValuesToStatement(statement, 6, providerInformation.getTab().orElse("No Tab"), providerInformation.getPluginName(), serverUUID);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 9, providerInformation.getIcon());
                 statement.setBoolean(12, hidden);
-                ExtensionPluginTable.set2PluginValuesToStatement(statement, 13, providerInformation.getPluginName(), serverUUID);
-                statement.setString(15, providerInformation.getName());
+                statement.setBoolean(13, providerInformation.isShownInPlayersTable());
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 14, providerInformation.getPluginName(), serverUUID);
+                statement.setString(16, providerInformation.getName());
             }
         };
     }
@@ -122,10 +124,11 @@ public class StoreBooleanProviderTransaction extends Transaction {
                 CONDITION + ',' +
                 PROVIDED_CONDITION + ',' +
                 HIDDEN + ',' +
+                SHOW_IN_PLAYERS_TABLE + ',' +
                 TAB_ID + ',' +
                 ICON_ID + ',' +
                 PLUGIN_ID +
-                ") VALUES (?,?,?,?,?,?,?," +
+                ") VALUES (?,?,?,?,?,?,?,?," +
                 ExtensionTabTable.STATEMENT_SELECT_TAB_ID + ',' +
                 ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
                 ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ')';
@@ -153,9 +156,10 @@ public class StoreBooleanProviderTransaction extends Transaction {
                     statement.setNull(6, Types.VARCHAR);
                 }
                 statement.setBoolean(7, hidden);
-                ExtensionTabTable.set3TabValuesToStatement(statement, 8, providerInformation.getTab().orElse("No Tab"), providerInformation.getPluginName(), serverUUID);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 11, providerInformation.getIcon());
-                ExtensionPluginTable.set2PluginValuesToStatement(statement, 14, providerInformation.getPluginName(), serverUUID);
+                statement.setBoolean(8, providerInformation.isShownInPlayersTable());
+                ExtensionTabTable.set3TabValuesToStatement(statement, 9, providerInformation.getTab().orElse("No Tab"), providerInformation.getPluginName(), serverUUID);
+                ExtensionIconTable.set3IconValuesToStatement(statement, 12, providerInformation.getIcon());
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 15, providerInformation.getPluginName(), serverUUID);
             }
         };
     }
