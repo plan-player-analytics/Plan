@@ -34,7 +34,6 @@ import com.djrapitops.plan.utilities.html.icon.Family;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Parsing utility for creating jQuery Datatables JSON for a Players Table.
@@ -70,11 +69,11 @@ public class PlayersTableJSONParser {
         // Data
         this.players = players;
         this.extensionData = extensionData;
-        extensionDescriptives = extensionData.values().stream()
-                .map(ExtensionTabData::getDescriptives)
-                .flatMap(Collection::stream)
-                .distinct().sorted((one, two) -> String.CASE_INSENSITIVE_ORDER.compare(one.getName(), two.getName()))
-                .collect(Collectors.toList());
+
+        extensionDescriptives = new ArrayList<>();
+        addExtensionDescriptives(extensionData);
+        extensionDescriptives.sort((one, two) -> String.CASE_INSENSITIVE_ORDER.compare(one.getName(), two.getName()));
+
         // Settings
         this.maxPlayers = maxPlayers;
         this.activeMsThreshold = activeMsThreshold;
@@ -88,6 +87,18 @@ public class PlayersTableJSONParser {
         numberFormatters.put(FormatType.NONE, Object::toString);
 
         this.decimalFormatter = formatters.decimals();
+    }
+
+    private void addExtensionDescriptives(Map<UUID, ExtensionTabData> extensionData) {
+        Set<String> foundDescriptives = new HashSet<>();
+        for (ExtensionTabData tabData : extensionData.values()) {
+            for (ExtensionDescriptive descriptive : tabData.getDescriptives()) {
+                if (!foundDescriptives.contains(descriptive.getName())) {
+                    extensionDescriptives.add(descriptive);
+                    foundDescriptives.add(descriptive.getName());
+                }
+            }
+        }
     }
 
     public String toJSONString() {
