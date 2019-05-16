@@ -30,6 +30,7 @@ public enum LangCode {
     FI("Finnish", "Rsl1122"),
     FR("French", "CyanTech & Aurelien"),
     JA("Japanese", "yukieji"),
+    TR("Turkish", "TDJisvan"),
     IT("Italian", "- (Outdated, using English)");
 
     private final String name;
