@@ -44,6 +44,10 @@ public class CapabilityServiceImplementation implements CapabilityService {
         return (CapabilityServiceImplementation) CapabilityServiceHolder.service;
     }
 
+    public static void initialize() {
+        get();
+    }
+
     public static void notifyAboutEnable(boolean isEnabled) {
         for (Consumer<Boolean> enableListener : get().enableListeners) {
             enableListener.accept(isEnabled);
