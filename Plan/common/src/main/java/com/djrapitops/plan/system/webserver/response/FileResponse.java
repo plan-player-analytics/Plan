@@ -40,7 +40,7 @@ public class FileResponse extends Response {
         int i;
         for (i = 0; i < split.length; i++) {
             String s = split[i];
-            if (Verify.equalsOne(s, "css", "js", "plugins", "scss")) {
+            if (Verify.equalsOne(s, "css", "js", "vendor", "img")) {
                 break;
             }
         }
