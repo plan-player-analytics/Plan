@@ -978,8 +978,8 @@
                                             class="fas fa-fw fa-users col-black"></i>
                                         Player List</h6>
                                 </div>
-                                <div class="chart-area">
-                                    <canvas id="myAreaChart"></canvas>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped table-hover player-table dataTable"></table>
                                 </div>
                             </div>
                         </div>
@@ -1476,15 +1476,15 @@
 
 <!-- Custom scripts for all pages-->
 <script src="js/sb-admin-2.js"></script>
+<script src="js/xmlhttprequests.js"></script>
 <script src="js/color-selector.js"></script>
-<script src="js/server-values.js"></script>
 
 <!-- Page level plugins -->
-<script src="vendor/chart.js/Chart.min.js"></script>
+<script src="vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
 <!-- Page level custom scripts -->
-<script src="js/demo/chart-area-demo.js"></script>
-<script src="js/demo/chart-pie-demo.js"></script>
+<script src="js/server-values.js"></script>
 
 <script>
     setLoadingText('Calculating values..');
@@ -1795,6 +1795,21 @@
     );
     setLoadingText('Rendering graphs..');
     setLoadingText('Sorting players table..');
+    jsonRequest("../json/players?serverName=${serverName}", function (playersTableJson, error) {
+        if (playersTableJson) {
+            $('.player-table').DataTable({
+                responsive: true,
+                columns: playersTableJson.columns,
+                data: playersTableJson.data,
+                order: [[5, "desc"]]
+            })
+        } else if (error) {
+            $('.player-table').DataTable({
+                columns: [{title: "Error"}],
+                data: [["Failed to load Players table data: " + error]]
+            })
+        }
+    });
     setLoadingText('Almost done..');
     var navButtons = document.getElementsByClassName("nav-button");
     var tabs = document.getElementsByClassName("tab");
