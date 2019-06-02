@@ -128,6 +128,10 @@ public class ResponseFactory {
         }
     }
 
+    public Response imageResponse(String fileName) {
+        return new ByteResponse(ResponseType.IMAGE, FileResponse.format(fileName), files);
+    }
+
     public Response redirectResponse(String location) {
         return new RedirectResponse(location);
     }

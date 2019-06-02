@@ -134,9 +134,13 @@ public class ResponseHandler extends TreePageHandler {
         if (target.endsWith(".js")) {
             return ResponseCache.loadResponse(PageId.JS.of(resource), () -> responseFactory.javaScriptResponse(resource));
         }
+        if (target.endsWith(".png")) {
+            return responseFactory.imageResponse(resource);
+        }
         if (target.endsWith("favicon.ico")) {
             return ResponseCache.loadResponse(PageId.FAVICON.id(), responseFactory::faviconResponse);
         }
+
         boolean isNotInfoRequest = target.isEmpty() || !target.get(0).equals("info");
         boolean isAuthRequired = webServer.get().isAuthRequired() && isNotInfoRequest;
         if (isAuthRequired && !authentication.isPresent()) {
