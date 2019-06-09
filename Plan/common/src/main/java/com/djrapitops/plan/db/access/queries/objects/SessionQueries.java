@@ -144,19 +144,22 @@ public class SessionQueries {
      * @return Map: Player UUID - List of sessions on the server.
      */
     public static Query<Map<UUID, List<Session>>> fetchSessionsOfServer(UUID serverUUID) {
+        return db -> SessionsMutator.sortByPlayers(db.query(fetchSessionsOfServerFlat(serverUUID)));
+    }
+
+    public static QueryStatement<List<Session>> fetchSessionsOfServerFlat(UUID serverUUID) {
         String sql = SELECT_SESSIONS_STATEMENT +
                 WHERE + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_UUID + "=?" +
                 ORDER_BY_SESSION_START_DESC;
-        return new QueryStatement<Map<UUID, List<Session>>>(sql, 50000) {
+        return new QueryStatement<List<Session>>(sql, 50000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
             }
 
             @Override
-            public Map<UUID, List<Session>> processResults(ResultSet set) throws SQLException {
-                List<Session> sessions = extractDataFromSessionSelectStatement(set);
-                return SessionsMutator.sortByPlayers(sessions);
+            public List<Session> processResults(ResultSet set) throws SQLException {
+                return extractDataFromSessionSelectStatement(set);
             }
         };
     }

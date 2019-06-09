@@ -93,7 +93,7 @@ public class ResponseHandler extends TreePageHandler {
         }
 
         registerPage("info", infoRequestPageHandler);
-        registerPage("json", rootJSONHandler);
+        registerPage("v1", rootJSONHandler);
     }
 
     public Response getResponse(Request request) {

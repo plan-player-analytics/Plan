@@ -31,7 +31,7 @@
 </script>
 <div class="page-loader">
     <span class="loader"></span>
-    <span class="loader-text">Please wait..</span>
+    <p class="loader-text">Please wait..</p>
 </div>
 
 <!-- Page Wrapper -->
@@ -175,7 +175,7 @@
                                             class="fas fa-fw fa-chart-area col-blue"></i>
                                         Online Activity</h6>
                                 </div>
-                                <div class="chart-area" id="playerChartWeek"></div>
+                                <div class="chart-area" id="playersOnlineChart"><span class="loader"></span></div>
                             </div>
                         </div>
 
@@ -352,9 +352,7 @@
                                             class="fas fa-fw fa-chart-area col-blue"></i>
                                         New & Unique Players</h6>
                                 </div>
-                                <div class="chart-area">
-                                    <canvas id="myAreaChart2"></canvas>
-                                </div>
+                                <div class="chart-area" id="uniqueChart"><span class="loader"></span></div>
                             </div>
                         </div>
 
@@ -368,7 +366,7 @@
                                         Calendar</h6>
                                 </div>
                                 <div class="chart-area">
-                                    <canvas id="myAreaChart2"></canvas>
+                                    <span class="loader"></span>
                                 </div>
                             </div>
                         </div>
@@ -823,9 +821,7 @@
                                             class="fas fa-fw fa-chart-line col-amber"></i>
                                         Playerbase development</h6>
                                 </div>
-                                <div class="chart-area">
-                                    <canvas id="myAreaChart2"></canvas>
-                                </div>
+                                <div class="chart-area" id="playerBaseDevelopmentChart"></div>
                             </div>
                         </div>
 
@@ -980,7 +976,11 @@
                                         Player List</h6>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover player-table dataTable"></table>
+                                    <table class="table table-bordered table-striped table-hover player-table dataTable">
+                                        <tr>
+                                            <td>Loading..</td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -1014,7 +1014,7 @@
                                         Geolocations</h6>
                                 </div>
                                 <div class="chart-area">
-                                    <canvas id="myAreaChart"></canvas>
+                                    <span class="loader"></span>
                                 </div>
                             </div>
                         </div>
@@ -1075,49 +1075,66 @@
                                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                                     <li class="nav-item">
                                         <a aria-controls="home" aria-selected="true" class="nav-link active col-black"
-                                           data-toggle="tab" href="#all" id="home-tab" role="tab"><i
+                                           data-toggle="tab" href="#all" id="performance-all-tab" role="tab"><i
                                                 class="fa fa-fw fa-cogs col-blue-grey"></i> All</a>
                                     </li>
                                     <li class="nav-item">
                                         <a aria-controls="profile" aria-selected="false" class="nav-link col-black"
                                            data-toggle="tab"
-                                           href="#tps" id="profile-tab" role="tab"><i
+                                           href="#tps" id="performance-tps-tab" role="tab"><i
                                                 class="fa fa-fw fa-tachometer-alt col-blue-grey"></i> TPS</a>
                                     </li>
                                     <li class="nav-item">
                                         <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
-                                           data-toggle="tab" href="#cpuram" id="contact-tab"
+                                           data-toggle="tab" href="#cpuram" id="performance-hardware-tab"
                                            role="tab"><i
                                                 class="fa fa-fw fa-microchip col-blue-grey"></i> CPU
                                             & RAM</a>
                                     </li>
                                     <li class="nav-item">
                                         <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
-                                           data-toggle="tab" href="#worldload" id="contact-tab"
+                                           data-toggle="tab" href="#worldload" id="performance-minecraft-tab"
                                            role="tab"><i class="fa fa-fw fa-map col-blue-grey"></i>
                                             World
                                             Load</a>
                                     </li>
                                     <li class="nav-item">
                                         <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
-                                           data-toggle="tab" href="#ping" id="contact-tab" role="tab"><i
+                                           data-toggle="tab" href="#ping" id="performance-ping-tab" role="tab"><i
                                                 class="fa fa-fw fa-signal col-blue-grey"></i> Ping</a>
                                     </li>
                                     <li class="nav-item">
                                         <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
-                                           data-toggle="tab" href="#ping" id="contact-tab" role="tab"><i
+                                           data-toggle="tab" href="#disk" id="performance-disk-tab" role="tab"><i
                                                 class="fa fa-fw fa-hdd col-blue-grey"></i> Disk Space</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content" id="myTabContent">
-                                    <div aria-labelledby="home-tab" class="tab-pane fade show active" id="all"
-                                         role="tabpanel">...
+                                    <div aria-labelledby="performance-all-tab" class="tab-pane fade show active"
+                                         id="all"
+                                         role="tabpanel">
+                                        <div class="chart-area" id="performanceGraph"><span class="loader"></span></div>
                                     </div>
-                                    <div aria-labelledby="profile-tab" class="tab-pane fade" id="tps"
-                                         role="tabpanel">...
+                                    <div aria-labelledby="performance-tps-tab" class="tab-pane fade" id="tps"
+                                         role="tabpanel">
+                                        <div class="chart-area" id="tpsGraph"><span class="loader"></span></div>
                                     </div>
-                                    <div aria-labelledby="contact-tab" class="tab-pane fade" id="cpuram"
-                                         role="tabpanel">...
+                                    <div aria-labelledby="performance-hardware-tab" class="tab-pane fade" id="cpuram"
+                                         role="tabpanel">
+                                        <div class="chart-area" id="resourceGraph"><span class="loader"></span></div>
+                                    </div>
+                                    <div aria-labelledby="performance-minecraft-tab" class="tab-pane fade"
+                                         id="worldload"
+                                         role="tabpanel">
+                                        <div class="chart-area" id="worldGraph"><span class="loader"></span></div>
+                                    </div>
+                                    <div aria-labelledby="performance-ping-tab" class="tab-pane fade" id="ping"
+                                         role="tabpanel">
+                                        <div class="chart-area" id="pingGraph"><span class="loader"></span></div>
+                                    </div>
+                                    <div aria-labelledby="performance-disk-tab" class="tab-pane fade" id="disk"
+                                         role="tabpanel">
+                                        <div class="chart-area" id="diskGraph"><span class="loader"></span></div>
                                     </div>
                                 </div>
                             </div>
@@ -1494,6 +1511,20 @@
 <!-- Page level custom scripts -->
 <script src="js/server-values.js"></script>
 <script src="js/charts/playerGraph.js"></script>
+<script src="js/charts/punchCard.js"></script>
+<script src="js/charts/healthGauge.js"></script>
+<script src="js/charts/activityPie.js"></script>
+<script src="js/charts/lineGraph.js"></script>
+<script src="js/charts/stackGraph.js"></script>
+<script src="js/charts/worldPie.js"></script>
+<script src="js/charts/performanceGraph.js"></script>
+<script src="js/charts/tpsGraph.js"></script>
+<script src="js/charts/resourceGraph.js"></script>
+<script src="js/charts/diskGraph.js"></script>
+<script src="js/charts/worldGraph.js"></script>
+<script src="js/charts/worldMap.js"></script>
+<script src="js/charts/onlineActivityCalendar.js"></script>
+<script src="js/charts/horizontalBarGraph.js"></script>
 
 <script>
     setLoadingText('Calculating values..');
@@ -1831,9 +1862,6 @@
             firstDay: ${firstDay}
         },
         data: {
-            playersOnline: ${playersOnlineSeries},
-            uniquePlayers: ${uniquePlayersSeries},
-            newPlayers: ${newPlayersSeries},
             tps: ${tpsSeries},
             cpu: ${cpuSeries},
             ram: ${ramSeries},
@@ -1908,20 +1936,141 @@
             }]
         }
     };
-    var series = {
-        playersOnline: {
-            name: s.name.playersOnline,
-            type: s.type.areaSpline,
-            tooltip: s.tooltip.zeroDecimals,
-            data: v.data.playersOnline,
-            color: v.colors.playersOnline,
-            yAxis: 0
-        }
-    };
 
-    playersChart('playerChartWeek', series.playersOnline, 3);
+    jsonRequest("../v1/graph?type=performance&serverName=${serverName}", function (data, error) {
+        if (data) {
+            var series = {
+                playersOnline: {
+                    name: s.name.playersOnline,
+                    type: s.type.areaSpline,
+                    tooltip: s.tooltip.zeroDecimals,
+                    data: data.playersOnline,
+                    color: v.colors.playersOnline,
+                    yAxis: 0
+                },
+                tps: {
+                    name: s.name.tps,
+                    type: s.type.spline,
+                    color: v.colors.tpsHigh,
+                    zones: s.zones.tps,
+                    tooltip: s.tooltip.twoDecimals,
+                    data: data.tps,
+                    yAxis: 1
+                },
+                cpu: {
+                    name: s.name.cpu,
+                    type: s.type.spline,
+                    tooltip: s.tooltip.twoDecimals,
+                    data: data.cpu,
+                    color: v.colors.cpu,
+                    yAxis: 2
+                },
+                cpu_alt: {
+                    name: s.name.cpu,
+                    type: s.type.spline,
+                    tooltip: s.tooltip.twoDecimals,
+                    data: data.cpu,
+                    color: v.colors.cpu,
+                    yAxis: 1
+                },
+                ram: {
+                    name: s.name.ram,
+                    type: s.type.spline,
+                    tooltip: s.tooltip.zeroDecimals,
+                    data: data.ram,
+                    color: v.colors.ram,
+                    yAxis: 3
+                },
+                ram_alt: {
+                    name: s.name.ram,
+                    type: s.type.spline,
+                    tooltip: s.tooltip.zeroDecimals,
+                    data: data.ram,
+                    color: v.colors.ram,
+                    yAxis: 2
+                },
+                entities: {
+                    name: s.name.entities,
+                    type: s.type.spline,
+                    tooltip: s.tooltip.zeroDecimals,
+                    data: data.entities,
+                    color: v.colors.entities,
+                    yAxis: 4
+                },
+                entities_alt: {
+                    name: s.name.entities,
+                    type: s.type.spline,
+                    tooltip: s.tooltip.zeroDecimals,
+                    data: data.entities,
+                    color: v.colors.entities,
+                    yAxis: 1
+                },
+                chunks: {
+                    name: s.name.chunks,
+                    type: s.type.spline,
+                    tooltip: s.tooltip.zeroDecimals,
+                    data: data.chunks,
+                    color: v.colors.chunks,
+                    yAxis: 5
+                },
+                chunks_alt: {
+                    name: s.name.chunks,
+                    type: s.type.spline,
+                    tooltip: s.tooltip.zeroDecimals,
+                    data: data.chunks,
+                    color: v.colors.chunks,
+                    yAxis: 2
+                },
+                disk: {
+                    name: s.name.disk,
+                    type: s.type.spline,
+                    color: v.colors.tpsHigh,
+                    zones: s.zones.disk,
+                    tooltip: s.tooltip.zeroDecimals,
+                    data: data.disk
+                }
+            };
+            playersChart('playersOnlineChart', series.playersOnline, 2);
+            performanceChart('performanceGraph', series.playersOnline, series.tps, series.cpu, series.ram, series.entities, series.chunks);
+            tpsChart('tpsGraph', series.tps, series.playersOnline);
+            resourceChart('resourceGraph', series.cpu_alt, series.ram_alt, series.playersOnline);
+            worldChart('worldGraph', series.entities_alt, series.chunks_alt, series.playersOnline);
+            diskChart('diskGraph', [series.disk]);
+        } else if (error) {
+            $('#playersOnlineChart').text("Failed to load graph data: " + error);
+            $('#performanceGraph').text("Failed to load graph data: " + error);
+            $('#tpsGraph').text("Failed to load graph data: " + error);
+            $('#resourceGraph').text("Failed to load graph data: " + error);
+            $('#worldGraph').text("Failed to load graph data: " + error);
+            $('#diskGraph').text("Failed to load graph data: " + error);
+        }
+    });
+
+    jsonRequest("../v1/graph?type=uniqueAndNew&serverName=${serverName}", function (data, error) {
+        if (data) {
+            var uniquePlayers = {
+                name: s.name.uniquePlayers,
+                type: s.type.spline,
+                tooltip: s.tooltip.zeroDecimals,
+                data: data.uniquePlayers,
+                color: v.colors.playersOnline
+            };
+            var newPlayers = {
+                name: s.name.newPlayers,
+                type: s.type.spline,
+                tooltip: s.tooltip.zeroDecimals,
+                data: data.newPlayers,
+                color: v.colors.newPlayers
+            };
+            lineChart('uniqueChart', [uniquePlayers, newPlayers]);
+        } else if (error) {
+            $('#uniqueChart').text("Failed to load graph data: " + error)
+        }
+    });
+
     setLoadingText('Sorting players table..');
-    jsonRequest("../json/players?serverName=${serverName}", function (playersTableJson, error) {
+
+    jsonRequest("../v1/players?serverName=${serverName}", function (playersTableJson, error) {
         if (playersTableJson) {
             $('.player-table').DataTable({
                 responsive: true,
