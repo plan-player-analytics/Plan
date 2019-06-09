@@ -36,11 +36,13 @@ public class RootJSONHandler extends TreePageHandler {
     @Inject
     public RootJSONHandler(
             ResponseFactory responseFactory,
+            GraphsJSONHandler graphsJSONHandler,
             PlayersTableJSONHandler playersTableJSONHandler
     ) {
         super(responseFactory);
 
         registerPage("players", playersTableJSONHandler);
+        registerPage("graph", graphsJSONHandler);
     }
 
     @Override
