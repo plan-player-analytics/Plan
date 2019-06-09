@@ -25,10 +25,13 @@
 </head>
 
 <body id="page-top">
-
+<script>
+    var worldPieColors = [${worldPieColors}];
+    var gmPieColors = [${gmPieColors}];
+</script>
 <div class="page-loader">
     <span class="loader"></span>
-    <p class="loader-text">Please wait..</span>
+    <span class="loader-text">Please wait..</span>
 </div>
 
 <!-- Page Wrapper -->
@@ -172,9 +175,7 @@
                                             class="fas fa-fw fa-chart-area col-blue"></i>
                                         Online Activity</h6>
                                 </div>
-                                <div class="chart-area">
-                                    <canvas id="myAreaChart"></canvas>
-                                </div>
+                                <div class="chart-area" id="playerChartWeek"></div>
                             </div>
                         </div>
 
@@ -1482,9 +1483,17 @@
 <!-- Page level plugins -->
 <script src="vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="https://code.highcharts.com/maps/modules/map.js"></script>
+<script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
+<script src="https://code.highcharts.com/modules/drilldown.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+<script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
 
 <!-- Page level custom scripts -->
 <script src="js/server-values.js"></script>
+<script src="js/charts/playerGraph.js"></script>
 
 <script>
     setLoadingText('Calculating values..');
@@ -1794,6 +1803,123 @@
         }, null
     );
     setLoadingText('Rendering graphs..');
+
+    // TODO remove
+    var v = {
+        colors: {
+            playersOnline: '${playersGraphColor}',
+            newPlayers: '#8BC34A',
+            tpsLow: '${tpsLowColor}',
+            tpsMed: '${tpsMediumColor}',
+            tpsHigh: '${tpsHighColor}',
+            cpu: '#e0d264',
+            ram: '#7dcc24',
+            entities: '#ac69ef',
+            chunks: '#b58310',
+            geolocationsLow: '${worldMapColLow}',
+            geolocationsHigh: '${worldMapColHigh}',
+            punchCard: '#222',
+            maxPing: '${maxPingColor}',
+            minPing: '${minPingColor}',
+            avgPing: '${avgPingColor}'
+        },
+        values: {
+            tpsMed: ${tpsMedium},
+            tpsHigh: ${tpsHigh},
+            diskMed: ${diskMedium},
+            diskHigh: ${diskHigh},
+            firstDay: ${firstDay}
+        },
+        data: {
+            playersOnline: ${playersOnlineSeries},
+            uniquePlayers: ${uniquePlayersSeries},
+            newPlayers: ${newPlayersSeries},
+            tps: ${tpsSeries},
+            cpu: ${cpuSeries},
+            ram: ${ramSeries},
+            entities: ${entitySeries},
+            chunks:  ${chunkSeries},
+            activityPie: ${activityPieSeries},
+            worldPie: ${worldSeries},
+            worldPieDrillDown: ${gmSeries},
+            geolocations: ${geoMapSeries},
+            punchCard: ${punchCardSeries},
+            activityStack: ${activityStackSeries},
+            activityStackCategories: ${activityStackCategories},
+            healthIndex: ${healthIndex},
+            calendar: ${calendarSeries},
+            countryCategories: ${countryCategories},
+            country: ${countrySeries},
+            avgPing: ${avgPingSeries},
+            maxPing: ${maxPingSeries},
+            minPing: ${minPingSeries},
+            disk: ${diskSeries}
+        }
+    };
+
+    // HighCharts Series
+    var s = {
+        name: {
+            playersOnline: 'Players Online',
+            uniquePlayers: 'Unique Players',
+            newPlayers: 'New Players',
+            tps: 'TPS',
+            cpu: 'CPU Usage (%)',
+            ram: 'RAM Usage (Mb)',
+            entities: 'Loaded Entities',
+            chunks: 'Loaded Chunks',
+            maxPing: 'Worst Ping',
+            minPing: 'Best Ping',
+            avgPing: 'Average Ping',
+            disk: 'Free Disk Space (Mb)'
+        },
+        tooltip: {
+            twoDecimals: {
+                valueDecimals: 2
+            },
+            zeroDecimals: {
+                valueDecimals: 0
+            }
+        },
+        type: {
+            areaSpline: 'areaspline',
+            spline: 'spline'
+        },
+        zones: {
+            tps: [{
+                value: v.values.tpsMed,
+                color: v.colors.tpsLow
+            }, {
+                value: v.values.tpsHigh,
+                color: v.colors.tpsMed
+            }, {
+                value: 30,
+                color: v.colors.tpsHigh
+            }],
+            disk: [{
+                value: v.values.diskMed,
+                color: v.colors.tpsLow
+            }, {
+                value: v.values.diskHigh,
+                color: v.colors.tpsMed
+            }, {
+                value: Number.MAX_VALUE,
+                color: v.colors.tpsHigh
+            }]
+        }
+    };
+    var series = {
+        playersOnline: {
+            name: s.name.playersOnline,
+            type: s.type.areaSpline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.playersOnline,
+            color: v.colors.playersOnline,
+            yAxis: 0
+        }
+    };
+
+    playersChart('playerChartWeek', series.playersOnline, 3);
     setLoadingText('Sorting players table..');
     jsonRequest("../json/players?serverName=${serverName}", function (playersTableJson, error) {
         if (playersTableJson) {
