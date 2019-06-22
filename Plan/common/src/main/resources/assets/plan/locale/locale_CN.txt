@@ -47,7 +47,7 @@ Cmd Setup - Unauthorized                        || §e连接成功，但接收�
 Cmd Setup - Url mistake                         || §c请确保您所输入的是完整地址（以 http:// 或 https:// 开头）- 请检查 Bungee 启用日志获取完整地址。
 Cmd Setup - WebServer not Enabled               || §c未在此服务器上启用网页服务器！请确保其在开机时启用！
 Cmd SUCCESS - Feature disabled                  || §a已在下次插件重载前暂时禁用 '${0}'。
-Cmd SUCCESS - WebUser register                  || §a已成功添加新用户（${0}）！
+Cmd SUCCESS - WebUser register                  || §a已成功添加新用户（${0}）！您可以在以下链接中查看Web面板。
 Cmd Update - Cancel Success                     || §a已完成取消操作。
 Cmd Update - Cancelled                          || §c已取消更新。
 Cmd Update - Change log                         || 更新日志 版本${0}：

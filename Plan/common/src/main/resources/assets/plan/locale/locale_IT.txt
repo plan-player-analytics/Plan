@@ -47,7 +47,7 @@ Cmd Setup - Unauthorized                        || §eConnection succeeded, but 
 Cmd Setup - Url mistake                         || §cMake sure you're using the full address (Starts with http:// or https://) - Check Bungee enable log for the full address.
 Cmd Setup - WebServer not Enabled               || §cWebServer is not enabled on this server! Make sure it enables on boot!
 Cmd SUCCESS - Feature disabled                  || §aDisabled '${0}' temporarily until next plugin reload.
-Cmd SUCCESS - WebUser register                  || §aAdded a new user (${0}) successfully!
+Cmd SUCCESS - WebUser register                  || §aAdded a new user (${0}) successfully! You can view the web panel in the following link.
 Cmd Update - Cancel Success                     || §aCancel operation performed.
 Cmd Update - Cancelled                          || §cUpdate cancelled.
 Cmd Update - Change log                         || Change Log v${0}:

@@ -21,6 +21,7 @@ import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.objects.WebUserQueries;
 import com.djrapitops.plan.db.access.transactions.commands.RegisterWebUserTransaction;
 import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
@@ -58,6 +59,7 @@ public class RegisterCommand extends CommandNode {
     private final Locale locale;
     private final Processing processing;
     private final DBSystem dbSystem;
+    private final ConnectionSystem connectionSystem;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
 
@@ -66,6 +68,7 @@ public class RegisterCommand extends CommandNode {
             Locale locale,
             Processing processing,
             DBSystem dbSystem,
+            ConnectionSystem connectionSystem,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
@@ -74,6 +77,7 @@ public class RegisterCommand extends CommandNode {
 
         this.locale = locale;
         this.processing = processing;
+        this.connectionSystem = connectionSystem;
         this.logger = logger;
         this.dbSystem = dbSystem;
         this.errorHandler = errorHandler;
@@ -161,11 +165,26 @@ public class RegisterCommand extends CommandNode {
                     return;
                 }
                 database.executeTransaction(new RegisterWebUserTransaction(webUser));
+
                 sender.sendMessage(locale.getString(CommandLang.WEB_USER_REGISTER_SUCCESS, userName));
+                sendLink(sender);
                 logger.info(locale.getString(CommandLang.WEB_USER_REGISTER_NOTIFY, userName, webUser.getPermLevel()));
             } catch (Exception e) {
                 errorHandler.log(L.WARN, this.getClass(), e);
             }
         });
+    }
+
+    private void sendLink(Sender sender) {
+        String url = connectionSystem.getMainAddress();
+        String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
+        // Link
+        boolean console = !CommandUtils.isPlayer(sender);
+        if (console) {
+            sender.sendMessage(linkPrefix + url);
+        } else {
+            sender.sendMessage(linkPrefix);
+            sender.sendLink("   ", locale.getString(CommandLang.LINK_CLICK_ME), url);
+        }
     }
 }
