@@ -25,8 +25,8 @@ import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
-import com.djrapitops.pluginbridge.plan.viaversion.Protocol;
 import com.djrapitops.pluginbridge.plan.viaversion.ProtocolTable;
+import protocolsupport.api.ProtocolVersion;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -55,12 +55,29 @@ class ProtocolSupportData extends PluginData {
             int protocolVersion = database.query(ProtocolTable.getProtocolVersion(uuid));
 
             inspectContainer.addValue(getWithIcon("Last Join Version", Icon.called("signal").of(Color.CYAN)),
-                    protocolVersion != -1 ? Protocol.getMCVersion(protocolVersion) : "Not Yet Known");
+                    getProtocolVersionString(protocolVersion));
         } catch (DBOpException ex) {
             inspectContainer.addValue("Error", ex.toString());
         }
 
         return inspectContainer;
+    }
+
+    private String getProtocolVersionString(int number) {
+        if (number == -1) {
+            return "Not Yet Known";
+        }
+        ProtocolVersion[] versions = ProtocolVersion.getAllSupported();
+        for (ProtocolVersion version : versions) {
+            if (version.getId() == number) {
+                String name = version.getName();
+                if (name == null) {
+                    break; // Unknown name for the version
+                }
+                return name;
+            }
+        }
+        return "Unknown (" + number + ')';
     }
 
     @Override
@@ -75,7 +92,7 @@ class ProtocolSupportData extends PluginData {
         }
 
         Map<UUID, String> userVersions = versions.entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, entry -> Protocol.getMCVersion(entry.getValue())));
+                .collect(Collectors.toMap(Map.Entry::getKey, entry -> getProtocolVersionString(entry.getValue())));
 
         analysisContainer.addPlayerTableValues(getWithIcon("Last Version", Icon.called("signal")), userVersions);
 
@@ -83,7 +100,7 @@ class ProtocolSupportData extends PluginData {
         String membersS = getWithIcon("Users", Icon.called("users"));
         TableContainer versionTable = new TableContainer(versionS, membersS);
         versionTable.setColor("cyan");
-        Map<String, Integer> usersPerVersion = getUsersPerVersion(versions);
+        Map<String, Integer> usersPerVersion = getUsersPerVersion(userVersions);
         for (Map.Entry<String, Integer> entry : usersPerVersion.entrySet()) {
             versionTable.addRow(entry.getKey(), entry.getValue());
         }
@@ -92,15 +109,14 @@ class ProtocolSupportData extends PluginData {
         return analysisContainer;
     }
 
-    private Map<String, Integer> getUsersPerVersion(Map<UUID, Integer> versions) {
+    private Map<String, Integer> getUsersPerVersion(Map<UUID, String> userVersions) {
         Map<String, Integer> usersPerVersion = new HashMap<>();
 
-        for (int protocolVersion : versions.values()) {
-            String mcVer = Protocol.getMCVersion(protocolVersion);
-            if (!usersPerVersion.containsKey(mcVer)) {
-                usersPerVersion.put(mcVer, 0);
+        for (String version : userVersions.values()) {
+            if (!usersPerVersion.containsKey(version)) {
+                usersPerVersion.put(version, 0);
             }
-            usersPerVersion.replace(mcVer, usersPerVersion.get(mcVer) + 1);
+            usersPerVersion.replace(version, usersPerVersion.get(version) + 1);
         }
         return usersPerVersion;
     }

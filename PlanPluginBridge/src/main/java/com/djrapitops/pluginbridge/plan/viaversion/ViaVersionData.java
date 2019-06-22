@@ -25,6 +25,7 @@ import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
+import us.myles.ViaVersion.api.protocol.ProtocolVersion;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -50,15 +51,19 @@ class ViaVersionData extends PluginData {
     @Override
     public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
         try {
-            int protocolVersion = database.query(ProtocolTable.getProtocolVersion(uuid));
+            int version = database.query(ProtocolTable.getProtocolVersion(uuid));
 
             inspectContainer.addValue(getWithIcon("Last Join Version", Icon.called("signal").of(Color.LIGHT_GREEN)),
-                    protocolVersion != -1 ? Protocol.getMCVersion(protocolVersion) : "Not Yet Known");
+                    getProtocolVersionString(version));
         } catch (DBOpException ex) {
             inspectContainer.addValue("Error", ex.toString());
         }
 
         return inspectContainer;
+    }
+
+    private String getProtocolVersionString(int version) {
+        return version != -1 ? ProtocolVersion.getProtocol(version).getName() : "Not Yet Known";
     }
 
     @Override
@@ -73,7 +78,7 @@ class ViaVersionData extends PluginData {
         }
 
         Map<UUID, String> userVersions = versions.entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, entry -> Protocol.getMCVersion(entry.getValue())));
+                .collect(Collectors.toMap(Map.Entry::getKey, entry -> getProtocolVersionString(entry.getValue())));
 
         analysisContainer.addPlayerTableValues(getWithIcon("Last Version", Icon.called("signal")), userVersions);
 
@@ -81,7 +86,7 @@ class ViaVersionData extends PluginData {
         String membersS = getWithIcon("Users", Icon.called("users"));
         TableContainer versionTable = new TableContainer(versionS, membersS);
         versionTable.setColor("light-green");
-        Map<String, Integer> usersPerVersion = getUsersPerVersion(versions);
+        Map<String, Integer> usersPerVersion = getUsersPerVersion(userVersions);
         for (Map.Entry<String, Integer> entry : usersPerVersion.entrySet()) {
             versionTable.addRow(entry.getKey(), entry.getValue());
         }
@@ -90,15 +95,14 @@ class ViaVersionData extends PluginData {
         return analysisContainer;
     }
 
-    private Map<String, Integer> getUsersPerVersion(Map<UUID, Integer> versions) {
+    private Map<String, Integer> getUsersPerVersion(Map<UUID, String> userVersions) {
         Map<String, Integer> usersPerVersion = new HashMap<>();
 
-        for (int protocolVersion : versions.values()) {
-            String mcVer = Protocol.getMCVersion(protocolVersion);
-            if (!usersPerVersion.containsKey(mcVer)) {
-                usersPerVersion.put(mcVer, 0);
+        for (String version : userVersions.values()) {
+            if (!usersPerVersion.containsKey(version)) {
+                usersPerVersion.put(version, 0);
             }
-            usersPerVersion.replace(mcVer, usersPerVersion.get(mcVer) + 1);
+            usersPerVersion.replace(version, usersPerVersion.get(version) + 1);
         }
         return usersPerVersion;
     }
