@@ -47,7 +47,7 @@ Cmd Setup - Unauthorized                        || §eVerbindung erfolgreich, ab
 Cmd Setup - Url mistake                         || §cNutze die gesamte Adresse (Beginnend mit http:// oder https://) - Diese kannst du dem Bungee enable log entnehmen.
 Cmd Setup - WebServer not Enabled               || §cWebServer ist auf diesem Server deaktiviert! Dies sollte beim Start aktiviert werden!
 Cmd SUCCESS - Feature disabled                  || §a'${0}' wurde bis zum nächsten Reload des Plugins deaktiviert.
-Cmd SUCCESS - WebUser register                  || §aNeuer Account (${0}) erfolgreich hinzugefügt!
+Cmd SUCCESS - WebUser register                  || §aNeuer Account (${0}) erfolgreich hinzugefügt! Sie können das Web-Panel über den folgenden Link anzeigen.
 Cmd Update - Cancel Success                     || §aErfolgreich abgebrochen.
 Cmd Update - Cancelled                          || §cUpdate abgebrochen.
 Cmd Update - Change log                         || Change Log v${0}:

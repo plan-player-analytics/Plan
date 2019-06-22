@@ -29,6 +29,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -75,7 +76,7 @@ public abstract class SpecificExport {
     protected abstract String getPath();
 
     protected void export(File to, List<String> lines) throws IOException {
-        Files.write(to.toPath(), lines, StandardCharsets.UTF_8);
+        Files.write(to.toPath(), lines, StandardCharsets.UTF_8, StandardOpenOption.CREATE);
     }
 
     File getServerFolder() {
@@ -147,6 +148,7 @@ public abstract class SpecificExport {
     }
 
     private void exportPlayersTableJSON(File htmlLocation, UUID serverUUID) throws IOException {
+        htmlLocation.mkdirs();
         File exportFile = new File(htmlLocation, "players_table.json");
         export(exportFile, Collections.singletonList(jsonFactory.serverPlayersTableJSON(serverUUID)));
     }

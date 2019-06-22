@@ -12,7 +12,7 @@ allprojects {
     wrapper.gradleVersion = "5.0"
 
     group "com.djrapitops"
-    version "4.8.5"
+    version "4.8.6"
 
     test {
         useJUnitPlatform()
@@ -43,11 +43,11 @@ subprojects {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
-    ext.daggerVersion = "2.22.1"
-    ext.daggerCompilerVersion = "2.22.1"
+    ext.daggerVersion = "2.23.2"
+    ext.daggerCompilerVersion = "2.23.2"
 
     ext.abstractPluginFrameworkVersion = "3.4.1"
-    ext.planPluginBridgeVersion = "4.8.2-R0.3"
+    ext.planPluginBridgeVersion = "4.8.2-R0.5"
 
     ext.bukkitVersion = "1.12.2-R0.1-SNAPSHOT"
     ext.spigotVersion = "1.12.2-R0.1-SNAPSHOT"
@@ -57,7 +57,7 @@ subprojects {
     ext.velocityVersion = "1.0-SNAPSHOT"
     ext.redisBungeeVersion = "0.3.8-SNAPSHOT"
 
-    ext.httpClientVersion = "4.5.8"
+    ext.httpClientVersion = "4.5.9"
     ext.commonsTextVersion = "1.6"
     ext.htmlCompressorVersion = "1.5.2"
     ext.caffeineVersion = "2.7.0"
@@ -65,7 +65,7 @@ subprojects {
     ext.hikariVersion = "3.3.1"
     ext.slf4jVersion = "1.7.26"
     ext.geoIpVersion = "2.12.0"
-    ext.guavaVersion = "26.0-jre"
+    ext.guavaVersion = "28.0-jre"
     ext.bstatsVersion = "1.4"
 
     repositories {
@@ -107,8 +107,8 @@ subprojects {
         testCompile "org.junit.platform:junit-platform-runner:1.4.2" // JUnit 4 runner for JUnit 5 tests
         testCompile "org.junit.vintage:junit-vintage-engine:5.4.2"   // JUnit 4 compatibility for JUnit 5
         testCompile "org.junit.jupiter:junit-jupiter-params:5.4.2"   // JUnit 5, parameterized tests
-        testCompile "org.mockito:mockito-core:2.27.0"                // Mockito Core
-        testCompile "org.mockito:mockito-junit-jupiter:2.27.0"       // Mockito JUnit 5 Extension
+        testCompile "org.mockito:mockito-core:2.28.2"                // Mockito Core
+        testCompile "org.mockito:mockito-junit-jupiter:2.28.2"       // Mockito JUnit 5 Extension
         testCompile "org.seleniumhq.selenium:selenium-java:3.141.59" // Selenium (Browser tests)
         testCompile "com.jayway.awaitility:awaitility:1.7.0"         // Awaitility (Concurrent wait conditions)
 

@@ -380,7 +380,7 @@ public class AnalysisContainer extends DynamicDataContainer {
         putSupplier(AnalysisKeys.RAM_SERIES, () -> graphs.line().ramGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
         putSupplier(AnalysisKeys.DISK_SERIES, () -> graphs.line().diskGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
         putSupplier(AnalysisKeys.ENTITY_SERIES, () -> graphs.line().entityGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
-        putSupplier(AnalysisKeys.CHUNK_SERIES, () -> graphs.line().cpuGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
+        putSupplier(AnalysisKeys.CHUNK_SERIES, () -> graphs.line().chunkGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
         putSupplier(AnalysisKeys.WORLD_MAP_SERIES, () ->
                 graphs.special().worldMap(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)).toHighChartsSeries()
         );
