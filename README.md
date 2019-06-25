@@ -23,6 +23,16 @@ Originally the plugin only displayed data of other plugins, but now it gathers i
 ## Documentation
 Documentation can be found [On the Wiki](https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki)
 
+## Building
+
+You can build the project by running the following in the repository root
+```
+cd Plan
+./gradlew shadowJar
+```
+
+- [More information about setting up the project](https://github.com/plan-player-analytics/Plan/wiki/Project-Setup)
+
 ## Used Libraries
 
 - **[HighCharts](https://www.highcharts.com/)** | [Free for non-commercial](https://www.highcharts.com/products/highcharts/#non-commercial)
