@@ -113,7 +113,7 @@ subprojects {
         testCompile "com.jayway.awaitility:awaitility:1.7.0"         // Awaitility (Concurrent wait conditions)
 
         // Testing dependencies required by Plan
-        testCompile "org.xerial:sqlite-jdbc:3.27.2.1"     // SQLite
+        testCompile "org.xerial:sqlite-jdbc:3.28.0"     // SQLite
         testCompile "mysql:mysql-connector-java:8.0.16" // MySQL
     }
     
