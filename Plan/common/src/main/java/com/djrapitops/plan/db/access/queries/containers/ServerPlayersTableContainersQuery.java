@@ -27,6 +27,7 @@ import com.djrapitops.plan.db.access.queries.objects.BaseUserQueries;
 import com.djrapitops.plan.db.access.queries.objects.GeoInfoQueries;
 import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
 import com.djrapitops.plan.db.access.queries.objects.UserInfoQueries;
+import com.djrapitops.plan.system.json.PlayersTableJSONParser;
 
 import java.util.*;
 
@@ -34,7 +35,7 @@ import java.util.*;
  * Optimized version of {@link ServerPlayerContainersQuery} for /server page Players table.
  *
  * @author Rsl1122
- * @see com.djrapitops.plan.utilities.html.tables.PlayersTableJSONParser For what needs to be included.
+ * @see PlayersTableJSONParser For what needs to be included.
  */
 public class ServerPlayersTableContainersQuery implements Query<List<PlayerContainer>> {
 

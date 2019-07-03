@@ -194,11 +194,11 @@
                                     <p><i class="col-light-green fa fa-fw fa-users"></i> New Players<span
                                             class="float-right"><b id="data_new"></b></span></p>
                                     <p><i class="col-light-green fa fa-fw fa-user-circle"></i> New Player Retention
-                                        <span class="float-right"><span id="data_retention"></span> <b
+                                        <span class="float-right"><span id="data_retention"></span>&nbsp<b
                                                 id="data_retention_perc"></b></span></p>
                                     <hr>
                                     <p><i class="col-orange fa fa-fw fa-tachometer-alt"></i> Average TPS <span
-                                            class="float-right"><b id="data_avg_tps">19,92</b></span></p>
+                                            class="float-right"><b id="data_avg_tps"></b></span></p>
                                     <p><i class="col-red fa fa-fw fa-exclamation-circle"></i> Low TPS Spikes <span
                                             class="float-right"><b id="data_low_tps_spikes"></b></span></p>
                                     <p><i class="col-red fa fa-fw fa-power-off"></i> Server downtime <span
@@ -1528,86 +1528,7 @@
 
 <script>
     setLoadingText('Calculating values..');
-    loadServerOverviewValues(
-        {
-            last_7_days: {
-                unique_players: 5,
-                unique_players_day: 2,
-                new_players: 0,
-                new_players_retention: 0,
-                new_players_retention_perc: '-',
-                average_tps: '19,92',
-                low_tps_spikes: 0,
-                downtime: '5d 3h 33m 46s'
-            },
-            numbers: {
-                total_players: 4353,
-                regular_players: 432,
-                online_players: 43,
-                last_peak_date: 'Yesterday, 16:28',
-                last_peak_players: 43,
-                best_peak_date: 'Sep 5 2017, 12:43',
-                best_peak_players: 51,
-                playtime: '8h 5m 56s',
-                player_playtime: '43m 5s',
-                sessions: 98,
-                player_kills: 0,
-                mob_kills: 22,
-                deaths: 8
-            },
-            weeks: {
-                unique_before: 5,
-                unique_after: 5,
-                unique_trend: {
-                    text: 0,
-                    direction: null
-                },
-                new_before: 45,
-                new_after: 44,
-                new_trend: {
-                    text: 1,
-                    direction: '-'
-                },
-                regular_before: 427,
-                regular_after: 432,
-                regular_trend: {
-                    text: 5,
-                    direction: '+'
-                },
-                playtime_before: '8h 5m 56s',
-                playtime_after: '8h 53m 24s',
-                playtime_trend: {
-                    text: '47m 32s',
-                    direction: '+'
-                },
-                sessions_before: '32',
-                sessions_after: '64',
-                sessions_trend: {
-                    text: 32,
-                    direction: '+'
-                },
-                player_kills_before: 32,
-                player_kills_after: 64,
-                player_kills_trend: {
-                    text: 32,
-                    direction: '+'
-                },
-                mob_kills_before: 5432,
-                mob_kills_after: 654,
-                mob_kills_trend: {
-                    text: 4778,
-                    direction: '-'
-                },
-                deaths_before: 8,
-                deaths_after: 13,
-                deaths_trend: {
-                    text: 5,
-                    direction: '+',
-                    reversed: true
-                }
-            }
-        }, null // TODO Replace with result of a XMLHTTPRequest
-    );
+    jsonRequest("../v1/serverOverview?serverName=${serverName}", loadServerOverviewValues);
     loadOnlineActivityOverviewValues(
         {
             numbers: {

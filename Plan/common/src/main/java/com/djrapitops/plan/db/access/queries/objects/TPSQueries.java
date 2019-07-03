@@ -81,6 +81,43 @@ public class TPSQueries {
         };
     }
 
+    public static Query<List<TPS>> fetchTPSDataOfServer(long after, long before, UUID serverUUID) {
+        String sql = Select.all(TABLE_NAME)
+                .where(SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID)
+                .and(DATE + ">=?").and(DATE + "<=?")
+                .toString();
+
+        return new QueryStatement<List<TPS>>(sql, 50000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, after);
+                statement.setLong(3, before);
+            }
+
+            @Override
+            public List<TPS> processResults(ResultSet set) throws SQLException {
+                List<TPS> data = new ArrayList<>();
+                while (set.next()) {
+
+                    TPS tps = TPSBuilder.get()
+                            .date(set.getLong(DATE))
+                            .tps(set.getDouble(TPS))
+                            .playersOnline(set.getInt(PLAYERS_ONLINE))
+                            .usedCPU(set.getDouble(CPU_USAGE))
+                            .usedMemory(set.getLong(RAM_USAGE))
+                            .entities(set.getInt(ENTITIES))
+                            .chunksLoaded(set.getInt(CHUNKS))
+                            .freeDiskSpace(set.getLong(FREE_DISK))
+                            .toTPS();
+
+                    data.add(tps);
+                }
+                return data;
+            }
+        };
+    }
+
     public static Query<Map<Integer, List<TPS>>> fetchPlayerOnlineDataOfServers(Collection<Server> servers) {
         if (servers.isEmpty()) {
             return db -> new HashMap<>();
@@ -154,5 +191,36 @@ public class TPSQueries {
 
     public static Query<Optional<DateObj<Integer>>> fetchAllTimePeakPlayerCount(UUID serverUUID) {
         return fetchPeakPlayerCount(serverUUID, 0);
+    }
+
+    public static Query<Optional<TPS>> fetchLatestTPSEntryForServer(UUID serverUUID) {
+        String sql = SELECT + "*" +
+                FROM + TABLE_NAME +
+                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                ORDER_BY + DATE + " DESC LIMIT 1";
+
+        return new QueryStatement<Optional<TPS>>(sql, 50000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+            }
+
+            @Override
+            public Optional<TPS> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(TPSBuilder.get()
+                            .date(set.getLong(DATE))
+                            .tps(set.getDouble(TPS))
+                            .playersOnline(set.getInt(PLAYERS_ONLINE))
+                            .usedCPU(set.getDouble(CPU_USAGE))
+                            .usedMemory(set.getLong(RAM_USAGE))
+                            .entities(set.getInt(ENTITIES))
+                            .chunksLoaded(set.getInt(CHUNKS))
+                            .freeDiskSpace(set.getLong(FREE_DISK))
+                            .toTPS());
+                }
+                return Optional.empty();
+            }
+        };
     }
 }

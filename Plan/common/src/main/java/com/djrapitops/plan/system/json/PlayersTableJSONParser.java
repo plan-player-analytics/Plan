@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.utilities.html.tables;
+package com.djrapitops.plan.system.json;
 
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.container.GeoInfo;
