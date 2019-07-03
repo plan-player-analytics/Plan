@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.webserver.pages.json;
+package com.djrapitops.plan.system.json;
 
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.containers.ServerPlayersTableContainersQuery;
@@ -24,7 +24,6 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DisplaySettings;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.utilities.formatting.Formatters;
-import com.djrapitops.plan.utilities.html.tables.PlayersTableJSONParser;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

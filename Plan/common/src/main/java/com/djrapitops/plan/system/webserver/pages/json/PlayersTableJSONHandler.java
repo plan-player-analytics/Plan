@@ -19,6 +19,8 @@ package com.djrapitops.plan.system.webserver.pages.json;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.json.JSONFactory;
+import com.djrapitops.plan.system.json.PlayersTableJSONParser;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.RequestTarget;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
@@ -33,7 +35,7 @@ import java.util.UUID;
  * JSON handler for different Player table JSON requests.
  *
  * @author Rsl1122
- * @see com.djrapitops.plan.utilities.html.tables.PlayersTableJSONParser For JSON parsing of /server players table.
+ * @see PlayersTableJSONParser For JSON parsing of /server players table.
  */
 @Singleton
 public class PlayersTableJSONHandler extends ServerParameterJSONHandler {

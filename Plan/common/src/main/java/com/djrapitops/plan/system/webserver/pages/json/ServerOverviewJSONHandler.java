@@ -17,10 +17,9 @@
 package com.djrapitops.plan.system.webserver.pages.json;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
-import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.json.GraphJSONParser;
+import com.djrapitops.plan.system.json.ServerOverviewJSONParser;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.RequestTarget;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
@@ -32,42 +31,29 @@ import javax.inject.Singleton;
 import java.util.UUID;
 
 /**
- * JSON handler for different graph data JSON requests.
+ * JSON handler for different Player table JSON requests.
  *
  * @author Rsl1122
+ * @see com.djrapitops.plan.system.json.PlayersTableJSONParser For JSON parsing of /server players table.
  */
 @Singleton
-public class GraphsJSONHandler extends ServerParameterJSONHandler {
+public class ServerOverviewJSONHandler extends ServerParameterJSONHandler {
 
-    private final GraphJSONParser graphJSON;
+    private final ServerOverviewJSONParser serverOverviewJSON;
 
     @Inject
-    public GraphsJSONHandler(
+    public ServerOverviewJSONHandler(
             DBSystem dbSystem,
-            GraphJSONParser graphJSON
+            ServerOverviewJSONParser serverOverviewJSON
     ) {
         super(dbSystem);
-        this.graphJSON = graphJSON;
+        this.serverOverviewJSON = serverOverviewJSON;
     }
 
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
         UUID serverUUID = getServerUUID(target); // Can throw BadRequestException
-        String type = target.getParameter("type")
-                .orElseThrow(() -> new BadRequestException("'type' parameter was not defined."));
-        String graphDataJSON = generateGraphDataJSONOfType(type, serverUUID);
-        return new JSONResponse(graphDataJSON);
-    }
-
-    private String generateGraphDataJSONOfType(String type, UUID serverUUID) throws BadRequestException {
-        switch (type) {
-            case "performance":
-                return graphJSON.performanceGraphJSON(serverUUID);
-            case "uniqueAndNew":
-                return graphJSON.uniqueAndNewGraphJSON(serverUUID);
-            default:
-                throw new BadRequestException("unknown 'type' parameter: " + type);
-        }
+        return new JSONResponse<>(serverOverviewJSON.createServerOverviewJSONAsMap(serverUUID));
     }
 
     @Override

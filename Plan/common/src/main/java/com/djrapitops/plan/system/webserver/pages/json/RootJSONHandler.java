@@ -37,12 +37,14 @@ public class RootJSONHandler extends TreePageHandler {
     public RootJSONHandler(
             ResponseFactory responseFactory,
             GraphsJSONHandler graphsJSONHandler,
-            PlayersTableJSONHandler playersTableJSONHandler
+            PlayersTableJSONHandler playersTableJSONHandler,
+            ServerOverviewJSONHandler serverOverviewJSONHandler
     ) {
         super(responseFactory);
 
         registerPage("players", playersTableJSONHandler);
         registerPage("graph", graphsJSONHandler);
+        registerPage("serverOverview", serverOverviewJSONHandler);
     }
 
     @Override

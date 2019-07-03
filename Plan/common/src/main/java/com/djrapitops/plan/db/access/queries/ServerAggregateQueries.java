@@ -160,4 +160,126 @@ public class ServerAggregateQueries {
             }
         };
     }
+
+    public static Query<Long> totalPlaytime(UUID serverUUID) {
+        String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SERVER_UUID + "=?";
+        return new QueryStatement<Long>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("playtime") : 0L;
+            }
+        };
+    }
+
+    public static Query<Long> sessionCount(long after, long before, UUID serverUUID) {
+        String sql = SELECT + "COUNT(1) as count" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SERVER_UUID + "=?" +
+                AND + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?";
+        return new QueryStatement<Long>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, after);
+                statement.setLong(3, before);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("count") : 0L;
+            }
+        };
+    }
+
+    public static Query<Long> playerKillCount(long after, long before, UUID serverUUID) {
+        String sql = SELECT + "COUNT(1) as count" +
+                FROM + KillsTable.TABLE_NAME +
+                WHERE + KillsTable.SERVER_UUID + "=?" +
+                AND + KillsTable.DATE + ">=?" +
+                AND + KillsTable.DATE + "<=?";
+        return new QueryStatement<Long>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, after);
+                statement.setLong(3, before);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("count") : 0L;
+            }
+        };
+    }
+
+    public static Query<Long> mobKillCount(long after, long before, UUID serverUUID) {
+        String sql = SELECT + "SUM(" + SessionsTable.MOB_KILLS + ") as count" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SERVER_UUID + "=?" +
+                AND + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?";
+        return new QueryStatement<Long>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, after);
+                statement.setLong(3, before);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("count") : 0L;
+            }
+        };
+    }
+
+    public static Query<Long> deathCount(long after, long before, UUID serverUUID) {
+        String sql = SELECT + "SUM(" + SessionsTable.DEATHS + ") as count" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SERVER_UUID + "=?" +
+                AND + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?";
+        return new QueryStatement<Long>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, after);
+                statement.setLong(3, before);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("count") : 0L;
+            }
+        };
+    }
+
+    public static Query<Long> playtime(long after, long before, UUID serverUUID) {
+        String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SERVER_UUID + "=?" +
+                AND + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?";
+        return new QueryStatement<Long>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, after);
+                statement.setLong(3, before);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("playtime") : 0L;
+            }
+        };
+    }
 }
