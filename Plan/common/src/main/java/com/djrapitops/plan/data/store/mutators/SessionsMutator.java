@@ -231,4 +231,16 @@ public class SessionsMutator {
         return toPlayerDeathList().size();
     }
 
+    public List<Long> toSessionStarts() {
+        List<Long> starts = new ArrayList<>();
+        sessions.forEach(session -> starts.add(session.getDate()));
+        return starts;
+    }
+
+    public double toAveragePlayersOnline(PlayersOnlineResolver playersOnlineResolver) {
+        return sessions.stream().map(session -> playersOnlineResolver.getOnlineOn(session.getDate()))
+                .filter(Optional::isPresent)
+                .mapToDouble(Optional::get)
+                .average().orElse(0.0);
+    }
 }

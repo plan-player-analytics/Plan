@@ -161,14 +161,18 @@ public class ServerAggregateQueries {
         };
     }
 
-    public static Query<Long> totalPlaytime(UUID serverUUID) {
+    public static Query<Long> totalPlaytime(long after, long before, UUID serverUUID) {
         String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
                 FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SERVER_UUID + "=?";
+                WHERE + SessionsTable.SERVER_UUID + "=?" +
+                AND + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?";
         return new QueryStatement<Long>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
+                statement.setLong(2, after);
+                statement.setLong(3, before);
             }
 
             @Override

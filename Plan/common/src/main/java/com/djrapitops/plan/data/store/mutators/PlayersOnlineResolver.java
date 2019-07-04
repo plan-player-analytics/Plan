@@ -49,6 +49,14 @@ public class PlayersOnlineResolver extends TreeMap<Long, Integer> {
         return Optional.of(entry.getValue());
     }
 
+    public int findLonelyJoins(List<Long> joinDates) {
+        int lonely = 0;
+        for (Long joinDate : joinDates) {
+            if (getOnlineOn(joinDate).orElse(-1) == 0) lonely++;
+        }
+        return lonely;
+    }
+
     public boolean isServerOnline(long date, long timeLimit) {
         Long lastEntry = floorKey(date);
         return date - lastEntry < timeLimit;

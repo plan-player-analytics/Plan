@@ -57,7 +57,7 @@ public class ServerOverviewJSONParser {
         percentageFormatter = formatters.percentage();
     }
 
-    public Map<String, Object> createServerOverviewJSONAsMap(UUID serverUUID) {
+    public Map<String, Object> createJSONAsMap(UUID serverUUID) {
         Map<String, Object> serverOverview = new HashMap<>();
         serverOverview.put("last_7_days", createLast7DaysMap(serverUUID));
         serverOverview.put("numbers", createNumbersMap(serverUUID));
@@ -101,7 +101,7 @@ public class ServerOverviewJSONParser {
         numbers.put("last_peak_players", lastPeak.map(dateObj -> dateObj.getValue().toString()).orElse("-"));
         numbers.put("best_peak_date", allTimePeak.map(dateFormatter).orElse("-"));
         numbers.put("best_peak_players", allTimePeak.map(dateObj -> dateObj.getValue().toString()).orElse("-"));
-        numbers.put("playtime", timeAmountFormatter.apply(db.query(ServerAggregateQueries.totalPlaytime(serverUUID))));
+        numbers.put("playtime", timeAmountFormatter.apply(db.query(ServerAggregateQueries.totalPlaytime(0L, now, serverUUID))));
         numbers.put("player_playtime", "-"); // TODO
         numbers.put("sessions", db.query(ServerAggregateQueries.sessionCount(0L, now, serverUUID)));
         numbers.put("player_kills", db.query(ServerAggregateQueries.playerKillCount(0L, now, serverUUID)));

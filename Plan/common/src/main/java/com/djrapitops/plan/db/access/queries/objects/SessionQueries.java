@@ -252,4 +252,47 @@ public class SessionQueries {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
+
+    public static Query<List<Session>> fetchServerSessionsWithoutKillOrWorldData(long after, long before, UUID serverUUID) {
+        String sql = SELECT +
+                SessionsTable.ID + ", " +
+                SessionsTable.USER_UUID + ", " +
+                SessionsTable.SESSION_START + ", " +
+                SessionsTable.SESSION_END + ", " +
+                SessionsTable.DEATHS + ", " +
+                SessionsTable.MOB_KILLS + ", " +
+                SessionsTable.AFK_TIME +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SERVER_UUID + "=?" +
+                AND + SessionsTable.SESSION_START + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?";
+
+        return new QueryStatement<List<Session>>(sql, 1000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, after);
+                statement.setLong(3, before);
+            }
+
+            @Override
+            public List<Session> processResults(ResultSet set) throws SQLException {
+                List<Session> sessions = new ArrayList<>();
+                while (set.next()) {
+                    UUID uuid = UUID.fromString(set.getString(SessionsTable.USER_UUID));
+                    long start = set.getLong(SessionsTable.SESSION_START);
+                    long end = set.getLong(SessionsTable.SESSION_END);
+
+                    int deaths = set.getInt(SessionsTable.DEATHS);
+                    int mobKills = set.getInt(SessionsTable.MOB_KILLS);
+                    int id = set.getInt(SessionsTable.ID);
+
+                    long timeAFK = set.getLong(SessionsTable.AFK_TIME);
+
+                    sessions.add(new Session(id, uuid, serverUUID, start, end, mobKills, deaths, timeAFK));
+                }
+                return sessions;
+            }
+        };
+    }
 }
