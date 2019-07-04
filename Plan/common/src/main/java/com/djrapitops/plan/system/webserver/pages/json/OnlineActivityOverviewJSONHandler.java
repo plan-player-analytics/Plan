@@ -17,40 +17,46 @@
 package com.djrapitops.plan.system.webserver.pages.json;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.json.OnlineActivityOverviewJSONParser;
+import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.RequestTarget;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
-import com.djrapitops.plan.system.webserver.pages.TreePageHandler;
-import com.djrapitops.plan.system.webserver.response.ResponseFactory;
+import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.data.JSONResponse;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.UUID;
 
 /**
- * Root handler for different JSON end points.
+ * JSON handler for Online Activity Overview tab JSON requests.
  *
  * @author Rsl1122
  */
 @Singleton
-public class RootJSONHandler extends TreePageHandler {
+public class OnlineActivityOverviewJSONHandler extends ServerParameterJSONHandler {
+
+    private final OnlineActivityOverviewJSONParser jsonParser;
 
     @Inject
-    public RootJSONHandler(
-            ResponseFactory responseFactory,
-            GraphsJSONHandler graphsJSONHandler,
-            PlayersTableJSONHandler playersTableJSONHandler,
-            ServerOverviewJSONHandler serverOverviewJSONHandler,
-            OnlineActivityOverviewJSONHandler onlineActivityOverviewJSONHandler
+    public OnlineActivityOverviewJSONHandler(
+            DBSystem dbSystem,
+            OnlineActivityOverviewJSONParser jsonParser
     ) {
-        super(responseFactory);
+        super(dbSystem);
+        this.jsonParser = jsonParser;
+    }
 
-        registerPage("players", playersTableJSONHandler);
-        registerPage("graph", graphsJSONHandler);
-        registerPage("serverOverview", serverOverviewJSONHandler);
-        registerPage("onlineOverview", onlineActivityOverviewJSONHandler);
+    @Override
+    public Response getResponse(Request request, RequestTarget target) throws WebException {
+        UUID serverUUID = getServerUUID(target); // Can throw BadRequestException
+        return new JSONResponse<>(jsonParser.createJSONAsMap(serverUUID));
     }
 
     @Override
     public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
-        return true;
+        return auth.getWebUser().getPermLevel() <= 0;
     }
 }

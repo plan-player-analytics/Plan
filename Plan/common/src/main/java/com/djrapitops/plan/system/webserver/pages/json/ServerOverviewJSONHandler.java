@@ -31,29 +31,28 @@ import javax.inject.Singleton;
 import java.util.UUID;
 
 /**
- * JSON handler for different Player table JSON requests.
+ * JSON handler for Server Overview tab JSON requests.
  *
  * @author Rsl1122
- * @see com.djrapitops.plan.system.json.PlayersTableJSONParser For JSON parsing of /server players table.
  */
 @Singleton
 public class ServerOverviewJSONHandler extends ServerParameterJSONHandler {
 
-    private final ServerOverviewJSONParser serverOverviewJSON;
+    private final ServerOverviewJSONParser jsonParser;
 
     @Inject
     public ServerOverviewJSONHandler(
             DBSystem dbSystem,
-            ServerOverviewJSONParser serverOverviewJSON
+            ServerOverviewJSONParser jsonParser
     ) {
         super(dbSystem);
-        this.serverOverviewJSON = serverOverviewJSON;
+        this.jsonParser = jsonParser;
     }
 
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
         UUID serverUUID = getServerUUID(target); // Can throw BadRequestException
-        return new JSONResponse<>(serverOverviewJSON.createServerOverviewJSONAsMap(serverUUID));
+        return new JSONResponse<>(jsonParser.createJSONAsMap(serverUUID));
     }
 
     @Override
