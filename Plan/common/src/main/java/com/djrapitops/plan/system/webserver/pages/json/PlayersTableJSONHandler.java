@@ -18,12 +18,13 @@ package com.djrapitops.plan.system.webserver.pages.json;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.Identifiers;
 import com.djrapitops.plan.system.json.JSONFactory;
 import com.djrapitops.plan.system.json.PlayersTableJSONParser;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.RequestTarget;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
+import com.djrapitops.plan.system.webserver.pages.PageHandler;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.data.JSONResponse;
 
@@ -38,22 +39,23 @@ import java.util.UUID;
  * @see PlayersTableJSONParser For JSON parsing of /server players table.
  */
 @Singleton
-public class PlayersTableJSONHandler extends ServerParameterJSONHandler {
+public class PlayersTableJSONHandler implements PageHandler {
 
+    private final Identifiers identifiers;
     private final JSONFactory jsonFactory;
 
     @Inject
     public PlayersTableJSONHandler(
-            DBSystem dbSystem,
+            Identifiers identifiers,
             JSONFactory jsonFactory
     ) {
-        super(dbSystem);
+        this.identifiers = identifiers;
         this.jsonFactory = jsonFactory;
     }
 
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
-        UUID serverUUID = getServerUUID(target); // Can throw BadRequestException
+        UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
         return new JSONResponse(jsonFactory.serverPlayersTableJSON(serverUUID));
     }
 
