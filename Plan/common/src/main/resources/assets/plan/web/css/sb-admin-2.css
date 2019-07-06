@@ -170,6 +170,14 @@ a:hover {
     text-decoration: underline;
 }
 
+.fc-title {
+    color: #fff;
+}
+
+.fc-title {
+    color: #eee;
+}
+
 a:not([href]):not([tabindex]) {
     color: inherit;
     text-decoration: none;
