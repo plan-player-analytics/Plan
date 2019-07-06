@@ -65,6 +65,8 @@ public class GraphsJSONHandler extends ServerParameterJSONHandler {
                 return graphJSON.performanceGraphJSON(serverUUID);
             case "uniqueAndNew":
                 return graphJSON.uniqueAndNewGraphJSON(serverUUID);
+            case "serverCalendar":
+                return graphJSON.serverCalendarJSON(serverUUID);
             default:
                 throw new BadRequestException("unknown 'type' parameter: " + type);
         }
