@@ -25,7 +25,7 @@ public class PieSlice {
     private final String name;
     private final long y;
     private final String color;
-    private final boolean drilldown;
+    private final String drilldown;
 
     public PieSlice(String name, long y) {
         this(name, y, null, false);
@@ -43,7 +43,7 @@ public class PieSlice {
         this.name = name;
         this.y = y;
         this.color = color;
-        this.drilldown = drilldown;
+        this.drilldown = drilldown ? name : null;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class PieSlice {
         return "{name:'" + name + "'," +
                 "y:" + y
                 + (color != null ? "," + "color:" + color : "")
-                + (drilldown ? "," + "drilldown: '" + name + "'" : "")
+                + (drilldown != null ? "," + "drilldown: '" + drilldown + "'" : "")
                 + "}";
     }
 
