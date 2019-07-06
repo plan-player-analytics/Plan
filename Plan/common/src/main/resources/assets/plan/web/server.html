@@ -670,19 +670,7 @@
                                             class="fas fa-fw fa-crosshairs col-red"></i>
                                         Recent Kills</h6>
                                 </div>
-                                <table class="table">
-                                    <tbody>
-                                    <tr>
-                                        <td>Today, 21:54</td>
-                                        <td>Rsl1122 <i class="fa fa-fw fa-angle-right col-red"></i> Bill</td>
-                                        <td>Diamond Sword</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Yesterday, 9:32</td>
-                                        <td>Bill <i class="fa fa-fw fa-angle-right col-red"></i> Rsl1122</td>
-                                        <td>Diamond Sword</td>
-                                    </tr>
-                                    </tbody>
+                                <table class="table" id="playerKillTable">
                                 </table>
                             </div>
                         </div>
@@ -1766,6 +1754,8 @@
             })
         }
     });
+    jsonRequest("../v1/kills?serverName=${serverName}", loadPlayerKills);
+
     setLoadingText('Almost done..');
     var navButtons = document.getElementsByClassName("nav-button");
     var tabs = document.getElementsByClassName("tab");

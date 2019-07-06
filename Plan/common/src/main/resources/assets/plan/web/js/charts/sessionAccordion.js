@@ -6,9 +6,12 @@ function loadSessionAccordion(json, error) {
 
     sessionTable = $("#sessions-overview").find("#tableAccordion").find("tbody");
 
-    if (!sessionTable) throw new Error("Session table not found with ids #session-overview #tableAccordion");
-
     var sessions = json.sessions;
+
+    if (!sessions.length) {
+        sessionTable.append('<tr><td>No Sessions</td><td>-</td><td>-</td><td>-</td></tr>')
+    }
+
     for (var i = 0; i < sessions.length; i++) {
         var session = sessions[i];
         var title = createAccordionTitle(i, session);
@@ -22,6 +25,14 @@ function loadSessionAccordion(json, error) {
 
         worldPie("worldpie_" + i, worldSeries, gmSeries);
     }
+}
+
+function loadPlayerKills(json, error) {
+    if (error) {
+        $('#playerKillTable').replaceWith('<p>Failed to load player kills: ' + error + '</p>');
+        return;
+    }
+    $('#playerKillTable').replaceWith(createKillsTable(json.player_kills));
 }
 
 function createAccordionTitle(i, session) {
@@ -58,14 +69,14 @@ function createKillsTable(player_kills) {
     var table = '<table class="table table-striped scrollbar"><tbody>';
 
     if (player_kills.length === 0) {
-        table += '<td>No Kills</td><td>-</td><td>-</td>'
+        table += '<tr><td>No Kills</td><td>-</td><td>-</td></tr>'
     }
 
     for (var i = 0; i < player_kills.length; i++) {
         var kill = player_kills[i];
-        table += '<td>' + kill.date + '</td>' +
+        table += '<tr><td>' + kill.date + '</td>' +
             '<td>' + kill.killer + '<i class="fa fa-fw fa-angle-right col-red"></i>' + kill.victim + '</td>' +
-            '<td>' + kill.weapon + '</td>'
+            '<td>' + kill.weapon + '</td></tr>'
     }
 
     table += '</tbody></table>';
