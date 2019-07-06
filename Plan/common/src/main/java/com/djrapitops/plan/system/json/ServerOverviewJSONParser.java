@@ -117,7 +117,7 @@ public class ServerOverviewJSONParser {
         numbers.put("last_peak_players", lastPeak.map(dateObj -> dateObj.getValue().toString()).orElse("-"));
         numbers.put("best_peak_date", allTimePeak.map(dateFormatter).orElse("-"));
         numbers.put("best_peak_players", allTimePeak.map(dateObj -> dateObj.getValue().toString()).orElse("-"));
-        numbers.put("playtime", timeAmountFormatter.apply(db.query(ServerAggregateQueries.totalPlaytime(0L, now, serverUUID))));
+        numbers.put("playtime", timeAmountFormatter.apply(db.query(ServerAggregateQueries.playtime(0L, now, serverUUID))));
         numbers.put("player_playtime", "-"); // TODO
         numbers.put("sessions", db.query(ServerAggregateQueries.sessionCount(0L, now, serverUUID)));
         numbers.put("player_kills", db.query(ServerAggregateQueries.playerKillCount(0L, now, serverUUID)));

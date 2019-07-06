@@ -19,6 +19,7 @@ package com.djrapitops.plan.data.time;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * TimeKeeper class that tracks the time spent in each GameMode based on Playtime.
@@ -54,6 +55,18 @@ public class GMTimes extends TimeKeeper {
 
     public static String[] getGMKeyArray() {
         return new String[]{SURVIVAL, CREATIVE, ADVENTURE, SPECTATOR};
+    }
+
+    public Optional<String> getMostUsedGameMode() {
+        long max = 0;
+        String maxGM = null;
+        for (Map.Entry<String, Long> entry : times.entrySet()) {
+            if (entry.getValue() > max) {
+                max = entry.getValue();
+                maxGM = entry.getKey();
+            }
+        }
+        return Optional.ofNullable(maxGM);
     }
 
     /**

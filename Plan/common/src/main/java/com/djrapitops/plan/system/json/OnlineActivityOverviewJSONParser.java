@@ -132,11 +132,11 @@ public class OnlineActivityOverviewJSONParser {
         numbers.put("new_players_retention_24h", 0); // TODO
         numbers.put("new_players_retention_24h_perc", percentageFormatter.apply(-1.0)); // TODO
 
-        Long playtimeMonth = db.query(ServerAggregateQueries.totalPlaytime(monthAgo, now, serverUUID));
-        Long playtimeWeek = db.query(ServerAggregateQueries.totalPlaytime(weekAgo, now, serverUUID));
-        Long playtimeDay = db.query(ServerAggregateQueries.totalPlaytime(dayAgo, now, serverUUID));
-        Long playtimeBefore = db.query(ServerAggregateQueries.totalPlaytime(monthAgo, halfMonthAgo, serverUUID));
-        Long playtimeAfter = db.query(ServerAggregateQueries.totalPlaytime(halfMonthAgo, now, serverUUID));
+        Long playtimeMonth = db.query(ServerAggregateQueries.playtime(monthAgo, now, serverUUID));
+        Long playtimeWeek = db.query(ServerAggregateQueries.playtime(weekAgo, now, serverUUID));
+        Long playtimeDay = db.query(ServerAggregateQueries.playtime(dayAgo, now, serverUUID));
+        Long playtimeBefore = db.query(ServerAggregateQueries.playtime(monthAgo, halfMonthAgo, serverUUID));
+        Long playtimeAfter = db.query(ServerAggregateQueries.playtime(halfMonthAgo, now, serverUUID));
         numbers.put("playtime_30d", timeAmountFormatter.apply(playtimeMonth));
         numbers.put("playtime_30d_trend", new Trend(playtimeBefore, playtimeAfter, false, timeAmountFormatter));
         numbers.put("playtime_7d", timeAmountFormatter.apply(playtimeWeek));

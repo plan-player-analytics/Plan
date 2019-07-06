@@ -188,7 +188,7 @@ function loadSessionValues(json, error) {
     $(element).find('#data_least_active_time').text(data.least_active_time);
     $(element).find('#data_most_active_gamemode').text(data.most_active_gamemode);
     $(element).find('#data_most_active_gamemode_perc').text(data.most_active_gamemode_perc);
-    $(element).find('#data_server_occupied').text(data.server_occupied);
+    $(element).find('#data_server_occupied').text("~" + data.server_occupied);
     $(element).find('#data_server_occupied_perc').text(data.server_occupied_perc);
     $(element).find('#data_total_playtime').text(data.total_playtime);
     $(element).find('#data_afk_time').text(data.afk_time);
