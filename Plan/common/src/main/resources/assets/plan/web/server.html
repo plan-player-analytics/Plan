@@ -535,7 +535,9 @@
                                             class="far fa-fw fa-clock col-teal"></i>
                                         World Playtime</h6>
                                 </div>
-                                <div class="chart-pie"></div>
+                                <div class="chart-pie" id="worldPie">
+                                    <span class="loader"></span>
+                                </div>
                             </div>
                             <!-- Insights -->
                             <div class="card shadow mb-4">
@@ -1767,6 +1769,16 @@
             $('#resourceGraph').text("Failed to load graph data: " + error);
             $('#worldGraph').text("Failed to load graph data: " + error);
             $('#diskGraph').text("Failed to load graph data: " + error);
+        }
+    });
+
+    jsonRequest("../v1/graph?type=worldPie&serverName=${serverName}", function (json, error) {
+        if (data) {
+            var worldSeries = {name: 'World Playtime', colorByPoint: true, data: json.world_series};
+            var gmSeries = json.gm_series;
+            worldPie("worldPie", worldSeries, gmSeries);
+        } else if (error) {
+            $('#worldpie').text("Failed to load graph data: " + error)
         }
     });
 

@@ -20,18 +20,23 @@ import com.djrapitops.plan.data.store.mutators.MutatorFunctions;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
+import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.containers.ServerPlayerContainersQuery;
 import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
 import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
+import com.djrapitops.plan.db.access.queries.objects.WorldTimesQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.line.LineGraphFactory;
+import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -103,5 +108,16 @@ public class GraphJSONParser {
                         playersMutator.newPerDay(timeZone)
                 ).toCalendarSeries() +
                 ",\"firstDay\":" + 1 + '}';
+    }
+
+    public Map<String, Object> serverWorldPieJSONAsMap(UUID serverUUID) {
+        Database db = dbSystem.getDatabase();
+        WorldTimes worldTimes = db.query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID));
+        WorldPie worldPie = graphs.pie().worldPie(worldTimes);
+
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("world_series", worldPie.getSlices());
+        dataMap.put("gm_series", worldPie.toHighChartsDrillDownMaps());
+        return dataMap;
     }
 }
