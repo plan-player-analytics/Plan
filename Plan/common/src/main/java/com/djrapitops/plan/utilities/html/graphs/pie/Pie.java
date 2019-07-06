@@ -40,4 +40,8 @@ public class Pie implements HighChart {
         series.appendWithSeparators(slices, ",");
         return series.append("]").toString();
     }
+
+    public List<PieSlice> getSlices() {
+        return slices;
+    }
 }

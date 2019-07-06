@@ -1835,32 +1835,7 @@
     x.style.opacity = "1";
     openFunc(slideIndex)();
 
-    loadSessionAccordion({
-        sessions: [
-            {
-                name: 'Rsl1122',
-                player_name: 'Rsl1122',
-                server_name: "Test server",
-                start: "Oct 23, 4:32",
-                end: "Oct 23, 5:34",
-                most_used_world: "World (100%)",
-                length: "1h 2m",
-                afk_time: "5m",
-                mob_kills: 4,
-                deaths: 0,
-                player_kills: [
-                    {
-                        date: "Oct 23 4:50",
-                        victim: "Bill",
-                        killer: "Rsl1122",
-                        weapon: "Diamond Sword"
-                    }
-                ],
-                world_series: [{name: 'World', y: 4320}],
-                gm_series: []
-            }
-        ]
-    }, null);
+    jsonRequest("../v1/sessions?serverName=${serverName}", loadSessionAccordion);
 
     setLoadingText('Done.');
     setTimeout(function () {

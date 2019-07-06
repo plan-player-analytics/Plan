@@ -16,17 +16,23 @@
  */
 package com.djrapitops.plan.system.json;
 
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.containers.ServerPlayersTableContainersQuery;
+import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerPlayerDataTableQuery;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DisplaySettings;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.utilities.formatting.Formatters;
+import com.djrapitops.plan.utilities.html.graphs.Graphs;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -39,16 +45,19 @@ public class JSONFactory {
 
     private final PlanConfig config;
     private final DBSystem dbSystem;
+    private final Graphs graphs;
     private final Formatters formatters;
 
     @Inject
     public JSONFactory(
             PlanConfig config,
             DBSystem dbSystem,
+            Graphs graphs,
             Formatters formatters
     ) {
         this.config = config;
         this.dbSystem = dbSystem;
+        this.graphs = graphs;
         this.formatters = formatters;
     }
 
@@ -66,5 +75,13 @@ public class JSONFactory {
                 xMostRecentPlayers, playtimeThreshold, loginThreshold, openPlayerLinksInNewTab,
                 formatters
         ).toJSONString();
+    }
+
+    public List<Map<String, Object>> serverSessionsAsJSONMap(UUID serverUUID) {
+        Database db = dbSystem.getDatabase();
+        List<Session> sessions = db.query(SessionQueries.fetchLatestSessionsOfServer(
+                serverUUID, config.get(DisplaySettings.SESSIONS_PER_PAGE)
+        ));
+        return new SessionsMutator(sessions).toPlayerJSONMaps(graphs, config.getWorldAliasSettings(), formatters);
     }
 }
