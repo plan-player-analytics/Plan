@@ -32,7 +32,6 @@ import dagger.Lazy;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -86,20 +85,13 @@ public class ProxyConnectionSystem extends ConnectionSystem {
     @Override
     protected Server selectServerForRequest(InfoRequest infoRequest) throws NoServersException {
         refreshServerMap();
-        Server server = null;
         if (infoRequest instanceof CacheRequest
                 || infoRequest instanceof GenerateInspectPageRequest
                 || infoRequest instanceof GenerateInspectPluginsTabRequest) {
             // Run locally
             return serverInfo.getServer();
-        } else if (infoRequest instanceof GenerateAnalysisPageRequest) {
-            UUID serverUUID = ((GenerateAnalysisPageRequest) infoRequest).getServerUUID();
-            server = dataServers.get(serverUUID);
         }
-        if (server == null) {
-            throw new NoServersException("Proper server is not available to process request: " + infoRequest.getClass().getSimpleName());
-        }
-        return server;
+        throw new NoServersException("Proper server is not available to process request: " + infoRequest.getClass().getSimpleName());
     }
 
     @Override

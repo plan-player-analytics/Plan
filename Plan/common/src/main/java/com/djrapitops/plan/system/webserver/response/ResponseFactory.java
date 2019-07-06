@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.webserver.response;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
+import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
@@ -101,6 +102,14 @@ public class ResponseFactory {
             return new NetworkPageResponse(pageFactory.networkPage());
         } catch (ParseException e) {
             return internalErrorResponse(e, "Failed to parse network page");
+        }
+    }
+
+    public Response serverPageResponse(UUID serverUUID) throws NotFoundException {
+        try {
+            return new PageResponse(pageFactory.serverPage(serverUUID));
+        } catch (ParseException e) {
+            return internalErrorResponse(e, "Failed to parse server page");
         }
     }
 
@@ -206,14 +215,6 @@ public class ResponseFactory {
             return PromptAuthorizationResponse.getBasicAuthResponse(versionCheckSystem, files);
         } catch (IOException e) {
             return internalErrorResponse(e, "Failed to parse PromptAuthorizationResponse");
-        }
-    }
-
-    public ErrorResponse refreshingAnalysisResponse() {
-        try {
-            return new RefreshingAnalysisResponse(versionCheckSystem, files);
-        } catch (IOException e) {
-            return internalErrorResponse(e, "Failed to parse RefreshingAnalysisResponse");
         }
     }
 }

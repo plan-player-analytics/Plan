@@ -81,7 +81,19 @@ public class ResponseCache {
      * @param loader     The {@link Response} {@link Supplier} (How it should load the page)
      */
     public static void cacheResponse(String identifier, Supplier<Response> loader) {
-        Response response = loader.get();
+        cacheResponse(identifier, loader.get());
+
+    }
+
+    /**
+     * Puts the page into the page cache.
+     * <p>
+     * If the cache already inherits that {@code identifier}, it's renewed.
+     *
+     * @param identifier The identifier of the page
+     * @param response   The {@link Response}
+     */
+    public static void cacheResponse(String identifier, Response response) {
         if (response != null) {
             cache.put(identifier, response);
         }

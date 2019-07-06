@@ -83,23 +83,6 @@ public abstract class InfoSystem implements SubSystem {
     }
 
     /**
-     * Refreshes Analysis page.
-     * <p>
-     * No calls from non-async thread found on 09.02.2018
-     *
-     * @param serverUUID UUID of the server to analyze
-     * @throws WebException If fails.
-     */
-    public void generateAnalysisPage(UUID serverUUID) throws WebException {
-        GenerateRequest request = infoRequestFactory.generateAnalysisPageRequest(serverUUID);
-        if (serverInfo.getServerUUID().equals(serverUUID)) {
-            runLocally(request);
-        } else {
-            sendRequest(request);
-        }
-    }
-
-    /**
      * Send an InfoRequest to another server or run locally if necessary.
      * <p>
      * No calls from non-async thread found on 09.02.2018
