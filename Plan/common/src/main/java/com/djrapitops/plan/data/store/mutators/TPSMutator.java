@@ -130,30 +130,26 @@ public class TPSMutator {
         return downTime;
     }
 
-    public long serverIdleTime() {
+    public long serverOccupiedTime() {
         long lastDate = -1;
-        int lastPlayers = 0;
-        long idleTime = 0;
+        long activeTime = 0;
         tpsData.sort(new TPSComparator());
         for (TPS tps : tpsData) {
             long date = tps.getDate();
             int players = tps.getPlayers();
             if (lastDate == -1) {
                 lastDate = date;
-                lastPlayers = players;
                 continue;
             }
 
-            long diff = date - lastDate;
-            if (lastPlayers == 0 && players == 0) {
-                idleTime += diff;
+            if (players > 0) {
+                activeTime += date - lastDate;
             }
 
             lastDate = date;
-            lastPlayers = players;
         }
 
-        return idleTime;
+        return activeTime;
     }
 
     public double percentageTPSAboveThreshold(int threshold) {

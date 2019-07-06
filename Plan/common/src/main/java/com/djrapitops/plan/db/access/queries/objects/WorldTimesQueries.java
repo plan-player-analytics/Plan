@@ -20,6 +20,7 @@ import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.sql.tables.SessionsTable;
 import com.djrapitops.plan.db.sql.tables.WorldTable;
 import com.djrapitops.plan.db.sql.tables.WorldTimesTable;
 
@@ -168,5 +169,32 @@ public class WorldTimesQueries {
             gmMap.put(gameMode, set.getLong(gameMode));
         }
         return new GMTimes(gmMap);
+    }
+
+    public static Query<GMTimes> fetchGMTimes(long after, long before, UUID serverUUID) {
+        String sql = SELECT +
+                "SUM(" + WorldTimesTable.SURVIVAL + ") as SURVIVAL," +
+                "SUM(" + WorldTimesTable.CREATIVE + ") as CREATIVE," +
+                "SUM(" + WorldTimesTable.ADVENTURE + ") as ADVENTURE," +
+                "SUM(" + WorldTimesTable.SPECTATOR + ") as SPECTATOR" +
+                FROM + WorldTimesTable.TABLE_NAME + " w1" +
+                INNER_JOIN + SessionsTable.TABLE_NAME + " s1 on s1." + SessionsTable.ID + '=' + WorldTimesTable.SESSION_ID +
+                WHERE + "w1." + WorldTimesTable.SERVER_UUID + "=?" +
+                AND + SessionsTable.SESSION_START + ">=?" +
+                AND + SessionsTable.SESSION_END + "<=?";
+
+        return new QueryStatement<GMTimes>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, after);
+                statement.setLong(3, before);
+            }
+
+            @Override
+            public GMTimes processResults(ResultSet set) throws SQLException {
+                return extractGMTimes(set, GMTimes.getGMKeyArray());
+            }
+        };
     }
 }
