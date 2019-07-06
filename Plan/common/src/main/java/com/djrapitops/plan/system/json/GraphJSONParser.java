@@ -74,4 +74,19 @@ public class GraphJSONParser {
                 '}';
     }
 
+    public String serverCalendarJSON(UUID serverUUID) {
+        Database db = dbSystem.getDatabase();
+        SessionsMutator sessionsMutator = new SessionsMutator(db.query(SessionQueries.fetchSessionsOfServerFlat(serverUUID)))
+                .filterSessionsBetween(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(730L), System.currentTimeMillis());
+        PlayersMutator playersMutator = new PlayersMutator(db.query(new ServerPlayerContainersQuery(serverUUID)))
+                .filterRegisteredBetween(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(730L), System.currentTimeMillis());
+
+        return "{\"data\":" +
+                graphs.calendar().serverCalendar(
+                        playersMutator,
+                        sessionsMutator.uniqueJoinsPerDay(timeZone),
+                        playersMutator.newPerDay(timeZone)
+                ).toCalendarSeries() +
+                ",\"firstDay\":" + 1 + '}';
+    }
 }

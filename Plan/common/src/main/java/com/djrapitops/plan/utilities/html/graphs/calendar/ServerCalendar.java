@@ -60,7 +60,7 @@ public class ServerCalendar {
     public String toCalendarSeries() {
         StringBuilder series = new StringBuilder("[");
 
-        series.append("{title: 'badcode',start:0}");
+        series.append("{\"title\": \"badcode\",\"start\":0}");
         appendSessionRelatedData(series);
         appendRegistered(series);
 
@@ -78,9 +78,9 @@ public class ServerCalendar {
 
             String day = entry.getKey();
 
-            series.append(",{title: 'New: ").append(newPlayers)
-                    .append("',start:'").append(day)
-                    .append("',color: '").append(theme.getValue(ThemeVal.LIGHT_GREEN)).append("'")
+            series.append(",{\"title\": \"New: ").append(newPlayers)
+                    .append("\",\"start\":\"").append(day)
+                    .append("\",\"color\": \"").append(theme.getValue(ThemeVal.LIGHT_GREEN)).append('"')
                     .append("}");
         }
 
@@ -106,19 +106,19 @@ public class ServerCalendar {
             long playtime = dayMutator.toPlaytime();
             long uniquePlayers = entry.getValue();
 
-            series.append(",{title: 'Playtime: ").append(timeAmountFormatter.apply(playtime))
-                    .append("',start:'").append(day)
-                    .append("',color: '").append(theme.getValue(ThemeVal.GREEN)).append("'")
+            series.append(",{\"title\": \"Playtime: ").append(timeAmountFormatter.apply(playtime))
+                    .append("\",\"start\":\"").append(day)
+                    .append("\",\"color\": \"").append(theme.getValue(ThemeVal.GREEN)).append('"')
                     .append("}");
 
-            series.append(",{title: 'Sessions: ").append(sessionCount)
-                    .append("',start:'").append(day)
-                    .append("',color: '").append(theme.getValue(ThemeVal.TEAL)).append("'")
+            series.append(",{\"title\": \"Sessions: ").append(sessionCount)
+                    .append("\",\"start\":\"").append(day)
+                    .append("\",\"color\": \"").append(theme.getValue(ThemeVal.TEAL)).append('"')
                     .append("}");
 
-            series.append(",{title: 'Unique: ").append(uniquePlayers)
-                    .append("',start:'").append(day)
-                    .append("'}");
+            series.append(",{\"title\": \"Unique: ").append(uniquePlayers)
+                    .append("\",\"start\":\"").append(day)
+                    .append("\"}");
         }
     }
 
