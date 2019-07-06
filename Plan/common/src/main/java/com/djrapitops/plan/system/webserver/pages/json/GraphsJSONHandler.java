@@ -57,18 +57,19 @@ public class GraphsJSONHandler implements PageHandler {
         UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
         String type = target.getParameter("type")
                 .orElseThrow(() -> new BadRequestException("'type' parameter was not defined."));
-        String graphDataJSON = generateGraphDataJSONOfType(type, serverUUID);
-        return new JSONResponse(graphDataJSON);
+        return generateGraphDataJSONOfType(type, serverUUID);
     }
 
-    private String generateGraphDataJSONOfType(String type, UUID serverUUID) throws BadRequestException {
+    private JSONResponse generateGraphDataJSONOfType(String type, UUID serverUUID) throws BadRequestException {
         switch (type) {
             case "performance":
-                return graphJSON.performanceGraphJSON(serverUUID);
+                return new JSONResponse(graphJSON.performanceGraphJSON(serverUUID));
             case "uniqueAndNew":
-                return graphJSON.uniqueAndNewGraphJSON(serverUUID);
+                return new JSONResponse(graphJSON.uniqueAndNewGraphJSON(serverUUID));
             case "serverCalendar":
-                return graphJSON.serverCalendarJSON(serverUUID);
+                return new JSONResponse(graphJSON.serverCalendarJSON(serverUUID));
+            case "worldPie":
+                return new JSONResponse<>(graphJSON.serverWorldPieJSONAsMap(serverUUID));
             default:
                 throw new BadRequestException("unknown 'type' parameter: " + type);
         }
