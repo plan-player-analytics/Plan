@@ -19,11 +19,12 @@ package com.djrapitops.plan.system.webserver.pages.json;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.Identifiers;
 import com.djrapitops.plan.system.json.GraphJSONParser;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.RequestTarget;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
+import com.djrapitops.plan.system.webserver.pages.PageHandler;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.data.JSONResponse;
 
@@ -37,22 +38,23 @@ import java.util.UUID;
  * @author Rsl1122
  */
 @Singleton
-public class GraphsJSONHandler extends ServerParameterJSONHandler {
+public class GraphsJSONHandler implements PageHandler {
 
+    private final Identifiers identifiers;
     private final GraphJSONParser graphJSON;
 
     @Inject
     public GraphsJSONHandler(
-            DBSystem dbSystem,
+            Identifiers identifiers,
             GraphJSONParser graphJSON
     ) {
-        super(dbSystem);
+        this.identifiers = identifiers;
         this.graphJSON = graphJSON;
     }
 
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
-        UUID serverUUID = getServerUUID(target); // Can throw BadRequestException
+        UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
         String type = target.getParameter("type")
                 .orElseThrow(() -> new BadRequestException("'type' parameter was not defined."));
         String graphDataJSON = generateGraphDataJSONOfType(type, serverUUID);
