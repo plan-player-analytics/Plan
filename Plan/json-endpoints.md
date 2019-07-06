@@ -77,3 +77,4 @@ Type | Description
 `performance` | TPS data points for last 6 months: Players Online, TPS, CPU, RAM, Chunks, Entities, Disk Space
 `uniqueAndNew` | Player data points for each day, how many unique and how many new players were there each day. Last 180 days
 `calendar` | Calendar data points for each day there is data for. Last 2 years.
+`worldPie` | World Pie data of all sessions combined
