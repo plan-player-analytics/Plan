@@ -1422,21 +1422,7 @@
     setLoadingText('Calculating values..');
     jsonRequest("../v1/serverOverview?serverName=${serverName}", loadServerOverviewValues);
     jsonRequest("../v1/onlineOverview?serverName=${serverName}", loadOnlineActivityOverviewValues);
-    loadSessionValues(
-        {
-            insights: {
-                most_active_time: 'Friday 19:24',
-                least_active_time: 'Monday 1:24',
-                most_active_gamemode: 'Survival',
-                most_active_gamemode_perc: '73.5%',
-                server_occupied: '2d 23h 44m 2s',
-                server_occupied_perc: '9.86%',
-                total_playtime: '5d 44h 32m 4s',
-                afk_time: '2d 54h 43m 2s',
-                afk_time_perc: '54.86%'
-            }
-        }, null
-    );
+    jsonRequest("../v1/sessionsOverview?serverName=${serverName}", loadSessionValues);
     loadPvPPvEValues(
         {
             numbers: {
@@ -1667,93 +1653,49 @@
         if (data) {
             var series = {
                 playersOnline: {
-                    name: s.name.playersOnline,
-                    type: s.type.areaSpline,
-                    tooltip: s.tooltip.zeroDecimals,
-                    data: data.playersOnline,
-                    color: v.colors.playersOnline,
-                    yAxis: 0
+                    name: s.name.playersOnline, type: s.type.areaSpline, tooltip: s.tooltip.zeroDecimals,
+                    data: data.playersOnline, color: v.colors.playersOnline, yAxis: 0
                 },
                 tps: {
-                    name: s.name.tps,
-                    type: s.type.spline,
-                    color: v.colors.tpsHigh,
-                    zones: s.zones.tps,
-                    tooltip: s.tooltip.twoDecimals,
-                    data: data.tps,
+                    name: s.name.tps, type: s.type.spline, color: v.colors.tpsHigh,
+                    zones: s.zones.tps, tooltip: s.tooltip.twoDecimals, data: data.tps,
                     yAxis: 1
                 },
                 cpu: {
-                    name: s.name.cpu,
-                    type: s.type.spline,
-                    tooltip: s.tooltip.twoDecimals,
-                    data: data.cpu,
-                    color: v.colors.cpu,
-                    yAxis: 2
+                    name: s.name.cpu, type: s.type.spline, tooltip: s.tooltip.twoDecimals,
+                    data: data.cpu, color: v.colors.cpu, yAxis: 2
                 },
                 cpu_alt: {
-                    name: s.name.cpu,
-                    type: s.type.spline,
-                    tooltip: s.tooltip.twoDecimals,
-                    data: data.cpu,
-                    color: v.colors.cpu,
-                    yAxis: 1
+                    name: s.name.cpu, type: s.type.spline, tooltip: s.tooltip.twoDecimals,
+                    data: data.cpu, color: v.colors.cpu, yAxis: 1
                 },
                 ram: {
-                    name: s.name.ram,
-                    type: s.type.spline,
-                    tooltip: s.tooltip.zeroDecimals,
-                    data: data.ram,
-                    color: v.colors.ram,
-                    yAxis: 3
+                    name: s.name.ram, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                    data: data.ram, color: v.colors.ram, yAxis: 3
                 },
                 ram_alt: {
-                    name: s.name.ram,
-                    type: s.type.spline,
-                    tooltip: s.tooltip.zeroDecimals,
-                    data: data.ram,
-                    color: v.colors.ram,
-                    yAxis: 2
+                    name: s.name.ram, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                    data: data.ram, color: v.colors.ram, yAxis: 2
                 },
                 entities: {
-                    name: s.name.entities,
-                    type: s.type.spline,
-                    tooltip: s.tooltip.zeroDecimals,
-                    data: data.entities,
-                    color: v.colors.entities,
-                    yAxis: 4
+                    name: s.name.entities, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                    data: data.entities, color: v.colors.entities, yAxis: 4
                 },
                 entities_alt: {
-                    name: s.name.entities,
-                    type: s.type.spline,
-                    tooltip: s.tooltip.zeroDecimals,
-                    data: data.entities,
-                    color: v.colors.entities,
-                    yAxis: 1
+                    name: s.name.entities, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                    data: data.entities, color: v.colors.entities, yAxis: 1
                 },
                 chunks: {
-                    name: s.name.chunks,
-                    type: s.type.spline,
-                    tooltip: s.tooltip.zeroDecimals,
-                    data: data.chunks,
-                    color: v.colors.chunks,
-                    yAxis: 5
+                    name: s.name.chunks, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                    data: data.chunks, color: v.colors.chunks, yAxis: 5
                 },
                 chunks_alt: {
-                    name: s.name.chunks,
-                    type: s.type.spline,
-                    tooltip: s.tooltip.zeroDecimals,
-                    data: data.chunks,
-                    color: v.colors.chunks,
-                    yAxis: 2
+                    name: s.name.chunks, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                    data: data.chunks, color: v.colors.chunks, yAxis: 2
                 },
                 disk: {
-                    name: s.name.disk,
-                    type: s.type.spline,
-                    color: v.colors.tpsHigh,
-                    zones: s.zones.disk,
-                    tooltip: s.tooltip.zeroDecimals,
-                    data: data.disk
+                    name: s.name.disk, type: s.type.spline, color: v.colors.tpsHigh,
+                    zones: s.zones.disk, tooltip: s.tooltip.zeroDecimals, data: data.disk
                 }
             };
             playersChart('playersOnlineChart', series.playersOnline, 2);
@@ -1785,18 +1727,12 @@
     jsonRequest("../v1/graph?type=uniqueAndNew&serverName=${serverName}", function (data, error) {
         if (data) {
             var uniquePlayers = {
-                name: s.name.uniquePlayers,
-                type: s.type.spline,
-                tooltip: s.tooltip.zeroDecimals,
-                data: data.uniquePlayers,
-                color: v.colors.playersOnline
+                name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                data: data.uniquePlayers, color: v.colors.playersOnline
             };
             var newPlayers = {
-                name: s.name.newPlayers,
-                type: s.type.spline,
-                tooltip: s.tooltip.zeroDecimals,
-                data: data.newPlayers,
-                color: v.colors.newPlayers
+                name: s.name.newPlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                data: data.newPlayers, color: v.colors.newPlayers
             };
             lineChart('uniqueChart', [uniquePlayers, newPlayers]);
         } else if (error) {

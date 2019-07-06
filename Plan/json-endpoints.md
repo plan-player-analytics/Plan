@@ -37,6 +37,16 @@ Parameter|Expected value|Description
 `serverName` | Name of a Plan server | Used for identifying Plan server that the data should be about
 `serverUUID` | UUID of a Plan server | Used for identifying Plan server that the data should be about
 
+### `GET /v1/sessionsOverview`
+
+Obtain data for Sessions tab.
+
+Required parameters: `serverName` or `serverUUID`
+
+Parameter|Expected value|Description
+--|--|--
+`serverName` | Name of a Plan server | Used for identifying Plan server that the data should be about
+`serverUUID` | UUID of a Plan server | Used for identifying Plan server that the data should be about
 
 ### `GET /v1/players`
 
