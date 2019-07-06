@@ -17,9 +17,7 @@
 package com.djrapitops.plan.system.webserver.pages;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
-import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
 import com.djrapitops.plan.api.exceptions.connection.ForbiddenException;
-import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
@@ -89,7 +87,9 @@ public class ServerPageHandler implements PageHandler {
             if (serverInfo.getServer().isProxy() && serverInfo.getServerUUID().equals(serverUUID)) {
                 return ResponseCache.loadResponse(PageId.SERVER.of(serverUUID), responseFactory::networkPageResponse);
             }
-            return refreshNow(serverUUID);
+            Response serverPageResponse = responseFactory.serverPageResponse(serverUUID);
+            ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), serverPageResponse);
+            return serverPageResponse;
         }
     }
 
@@ -98,20 +98,6 @@ public class ServerPageHandler implements PageHandler {
         if (dbState != Database.State.OPEN) {
             throw new ForbiddenException("Database is " + dbState.name() + " - Please try again later. You can check database status with /plan info");
         }
-    }
-
-    // TODO Split responsibility so that this method does not call system to refresh and also render a refresh page.
-    private Response refreshNow(UUID serverUUID) {
-        processing.submitNonCritical(() -> {
-            try {
-                infoSystem.generateAnalysisPage(serverUUID);
-            } catch (NoServersException | ConnectionFailException e) {
-                ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> responseFactory.notFound404(e.getMessage()));
-            } catch (WebException e) {
-                ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> responseFactory.internalErrorResponse(e, "Failed to generate Analysis Page"));
-            }
-        });
-        return responseFactory.refreshingAnalysisResponse();
     }
 
     private UUID getServerUUID(RequestTarget target) {

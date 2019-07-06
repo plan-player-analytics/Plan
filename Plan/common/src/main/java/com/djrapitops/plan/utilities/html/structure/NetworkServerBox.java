@@ -19,9 +19,6 @@ package com.djrapitops.plan.utilities.html.structure;
 import com.djrapitops.plan.data.store.mutators.PlayersOnlineResolver;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.webserver.cache.PageId;
-import com.djrapitops.plan.system.webserver.cache.ResponseCache;
-import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 
 import java.util.Optional;
@@ -65,11 +62,6 @@ public class NetworkServerBox {
 
         String playersOnlineData = graphs.line().playersOnlineGraph(tpsMutator).toHighChartsSeries();
 
-        String pageID = PageId.SERVER.of(serverUUID);
-        boolean isCached = ResponseCache.isCached(pageID);
-        boolean isOnline = isCached && ResponseCache.loadResponse(pageID) instanceof AnalysisPageResponse;
-        String cached = isCached ? (isOnline ? "Yes" : "Offline") : "No";
-
         return "<div class=\"col-xs-12 col-sm-12 col-md-6 col-lg-6\">" +
                 "<div class=\"card\">" +
                 "<div class=\"header\">" +
@@ -91,11 +83,7 @@ public class NetworkServerBox {
                 "<span class=\"pull-right\">" + onlineCount + " / " + maxCount + "</span></p>" +
                 "</div>" +
                 "<div class=\"col-md-4\">" +
-                "<p><i class=\"fa fa-chart-pie \"></i> Analysis Cached" +
-                "<span class=\"pull-right\"><b>" + cached + "</b></span></p>" +
-                "<a href=\"" + address + "\"><button href=\"" + address + "\" type=\"button\" class=\"pull-right btn bg-" +
-                (isCached ? (isOnline ? "light-green" : "deep-orange") : "grey") +
-                " waves-effect\">" +
+                "<a href=\"" + address + "\"><button href=\"" + address + "\" type=\"button\" class=\"pull-right btn bg-light-green waves-effect\">" +
                 "<i class=\"material-icons\">trending_up</i>" +
                 "<span>ANALYSIS</span>" +
                 "</button></a></div></div></div></div></div></div>" +

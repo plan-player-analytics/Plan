@@ -42,11 +42,9 @@ public class InfoRequests {
     }
 
     public void initializeRequests() {
-        putRequest(handlerFactory.cacheAnalysisPageRequest());
         putRequest(handlerFactory.cacheInspectPageRequest());
         putRequest(handlerFactory.cacheInspectPluginsTabRequest());
 
-        putRequest(handlerFactory.generateAnalysisPageRequest());
         putRequest(handlerFactory.generateInspectPageRequest());
         putRequest(handlerFactory.generateInspectPluginsTabRequest());
 

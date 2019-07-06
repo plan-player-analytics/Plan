@@ -23,7 +23,6 @@ import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DataGatheringSettings;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
-import com.djrapitops.plan.system.tasks.server.BootAnalysisTask;
 import com.djrapitops.plan.system.tasks.server.ConfigStoreTask;
 import com.djrapitops.plan.system.tasks.server.PeriodicAnalysisTask;
 import com.djrapitops.plan.system.tasks.sponge.PingCountTimerSponge;
@@ -54,7 +53,6 @@ public class SpongeTaskSystem extends ServerTaskSystem {
             ShutdownHook shutdownHook,
             RunnableFactory runnableFactory,
             SpongeTPSCountTimer spongeTPSCountTimer,
-            BootAnalysisTask bootAnalysisTask,
             PeriodicAnalysisTask periodicAnalysisTask,
             PingCountTimerSponge pingCountTimer,
             LogsFolderCleanTask logsFolderCleanTask,
@@ -67,7 +65,6 @@ public class SpongeTaskSystem extends ServerTaskSystem {
                 runnableFactory,
                 spongeTPSCountTimer,
                 config,
-                bootAnalysisTask,
                 periodicAnalysisTask,
                 logsFolderCleanTask,
                 playersPageRefreshTask);

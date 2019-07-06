@@ -16,13 +16,12 @@
  */
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.db.access.queries.objects.WebUserQueries;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.info.InfoSystem;
+import com.djrapitops.plan.system.export.HtmlExport;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -30,7 +29,6 @@ import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
-import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.webserver.WebServer;
@@ -44,7 +42,6 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * This SubCommand is used to run the analysis and access the /server link.
@@ -56,7 +53,7 @@ public class AnalyzeCommand extends CommandNode {
 
     private final Locale locale;
     private final Processing processing;
-    private final InfoSystem infoSystem;
+    private final HtmlExport export;
     private final ServerInfo serverInfo;
     private final WebServer webServer;
     private final DBSystem dbSystem;
@@ -67,9 +64,9 @@ public class AnalyzeCommand extends CommandNode {
     public AnalyzeCommand(
             Locale locale,
             Processing processing,
-            InfoSystem infoSystem,
+            HtmlExport export,
             ServerInfo serverInfo,
-            WebServer webServer,
+            ConnectionSystem connectionSystem, WebServer webServer,
             DBSystem dbSystem,
             ErrorHandler errorHandler
     ) {
@@ -77,9 +74,9 @@ public class AnalyzeCommand extends CommandNode {
 
         this.locale = locale;
         this.processing = processing;
-        this.infoSystem = infoSystem;
-        connectionSystem = infoSystem.getConnectionSystem();
+        this.export = export;
         this.serverInfo = serverInfo;
+        this.connectionSystem = connectionSystem;
         this.webServer = webServer;
         this.dbSystem = dbSystem;
         this.errorHandler = errorHandler;
@@ -97,17 +94,15 @@ public class AnalyzeCommand extends CommandNode {
             return;
         }
 
-        sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
-
         processing.submitNonCritical(() -> {
             try {
                 Server server = getServer(args).orElseGet(serverInfo::getServer);
-                UUID serverUUID = server.getUuid();
-
-                infoSystem.generateAnalysisPage(serverUUID);
                 sendWebUserNotificationIfNecessary(sender);
+                if (connectionSystem.isServerAvailable()) {
+                    export.exportServer(server.getUuid());
+                }
                 sendLink(server, sender);
-            } catch (DBOpException | WebException e) {
+            } catch (DBOpException e) {
                 sender.sendMessage("§cError occurred: " + e.toString());
                 errorHandler.log(L.ERROR, this.getClass(), e);
             }

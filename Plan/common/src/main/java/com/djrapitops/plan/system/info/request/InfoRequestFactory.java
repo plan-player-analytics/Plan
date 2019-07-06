@@ -88,15 +88,6 @@ public class InfoRequestFactory {
         this.runnableFactory = runnableFactory;
     }
 
-    public CacheRequest cacheAnalysisPageRequest(UUID serverUUID, String html) {
-        return new CacheAnalysisPageRequest(
-                serverUUID, html,
-                config.get(), processing.get(),
-                htmlExport.get(), jsonExport.get(),
-                serverInfo.get().getServerUUID()
-        );
-    }
-
     public CacheRequest cacheInspectPageRequest(UUID uuid, String html) {
         return new CacheInspectPageRequest(
                 uuid, html,
@@ -109,10 +100,6 @@ public class InfoRequestFactory {
     @Deprecated
     public CacheRequest cacheInspectPluginsTabRequest(UUID uuid, String nav, String html) {
         return new CacheInspectPluginsTabRequest(uuid, nav, html);
-    }
-
-    public GenerateRequest generateAnalysisPageRequest(UUID serverUUID) {
-        return new GenerateAnalysisPageRequest(serverUUID, processing.get(), webExceptionLogger.get(), this, serverInfo.get(), infoSystem.get(), pageFactory.get());
     }
 
     public GenerateRequest generateInspectPageRequest(UUID uuid) {
@@ -146,16 +133,6 @@ public class InfoRequestFactory {
             this.factory = factory;
         }
 
-        CacheRequest cacheAnalysisPageRequest() {
-            return new CacheAnalysisPageRequest(
-                    factory.config.get(),
-                    factory.processing.get(),
-                    factory.htmlExport.get(),
-                    factory.jsonExport.get(),
-                    factory.serverInfo.get().getServerUUID()
-            );
-        }
-
         CacheRequest cacheInspectPageRequest() {
             return new CacheInspectPageRequest(
                     factory.config.get(),
@@ -172,17 +149,6 @@ public class InfoRequestFactory {
 
         CheckConnectionRequest checkConnectionRequest() {
             return new CheckConnectionRequest(factory.serverInfo.get(), factory.connectionSystem.get());
-        }
-
-        GenerateRequest generateAnalysisPageRequest() {
-            return new GenerateAnalysisPageRequest(
-                    factory.processing.get(),
-                    factory.webExceptionLogger.get(),
-                    factory,
-                    factory.serverInfo.get(),
-                    factory.infoSystem.get(),
-                    factory.pageFactory.get()
-            );
         }
 
         GenerateRequest generateInspectPageRequest() {

@@ -18,7 +18,6 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
-import com.djrapitops.plan.system.tasks.server.BootAnalysisTask;
 import com.djrapitops.plan.system.tasks.server.PeriodicAnalysisTask;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.RunnableFactory;
@@ -33,7 +32,6 @@ import java.util.concurrent.TimeUnit;
 public abstract class ServerTaskSystem extends TaskSystem {
 
     protected final PlanConfig config;
-    private final BootAnalysisTask bootAnalysisTask;
     private final PeriodicAnalysisTask periodicAnalysisTask;
     private final LogsFolderCleanTask logsFolderCleanTask;
     private final PlayersPageRefreshTask playersPageRefreshTask;
@@ -42,13 +40,11 @@ public abstract class ServerTaskSystem extends TaskSystem {
             RunnableFactory runnableFactory,
             TPSCountTimer tpsCountTimer,
             PlanConfig config,
-            BootAnalysisTask bootAnalysisTask,
             PeriodicAnalysisTask periodicAnalysisTask,
             LogsFolderCleanTask logsFolderCleanTask,
             PlayersPageRefreshTask playersPageRefreshTask) {
         super(runnableFactory, tpsCountTimer);
         this.config = config;
-        this.bootAnalysisTask = bootAnalysisTask;
         this.periodicAnalysisTask = periodicAnalysisTask;
         this.logsFolderCleanTask = logsFolderCleanTask;
         this.playersPageRefreshTask = playersPageRefreshTask;
@@ -66,10 +62,9 @@ public abstract class ServerTaskSystem extends TaskSystem {
         long analysisPeriod = TimeAmount.toTicks(analysisRefreshMs, TimeUnit.MILLISECONDS);
 
         registerTask(tpsCountTimer).runTaskTimer(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
-        registerTask(bootAnalysisTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
 
         if (analysisRefreshTaskIsEnabled) {
-            registerTask(periodicAnalysisTask).runTaskTimerAsynchronously(analysisPeriod, analysisPeriod);
+            registerTask(periodicAnalysisTask).runTaskTimerAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS), analysisPeriod);
         }
 
         registerTask(logsFolderCleanTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
