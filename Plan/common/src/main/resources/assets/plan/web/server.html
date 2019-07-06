@@ -154,8 +154,7 @@
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>Server
-                            name
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${serverName}
                             &middot; Server Overview</h1>
                         <a class="btn bg-plan btn-icon-split" href="network">
                                 <span class="icon text-white-50">
@@ -331,8 +330,7 @@
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>Server
-                            name
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${serverName}
                             &middot; Online Activity Overview</h1>
                         <a class="btn bg-plan btn-icon-split" href="network">
                                 <span class="icon text-white-50">
@@ -365,7 +363,7 @@
                                             class="far fa-fw fa-calendar-alt col-teal"></i>
                                         Calendar</h6>
                                 </div>
-                                <div class="chart-area">
+                                <div class="chart-area" id="calendar" style="height: 500px;">
                                     <span class="loader"></span>
                                 </div>
                             </div>
@@ -496,8 +494,7 @@
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>Server
-                            name
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${serverName}
                             &middot; Sessions</h1>
                         <a class="btn bg-plan btn-icon-split" href="network">
                                 <span class="icon text-white-50">
@@ -574,8 +571,7 @@
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>Server
-                            name
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${serverName}
                             &middot; PvP & PvE</h1>
                         <a class="btn bg-plan btn-icon-split" href="network">
                                 <span class="icon text-white-50">
@@ -696,8 +692,7 @@
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>Server
-                            name
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${serverName}
                             &middot; Playerbase Overview</h1>
                         <a class="btn bg-plan btn-icon-split" href="network">
                                 <span class="icon text-white-50">
@@ -850,8 +845,7 @@
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>Server
-                            name
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${serverName}
                             &middot; Player List</h1>
                         <a class="btn bg-plan btn-icon-split" href="network">
                                 <span class="icon text-white-50">
@@ -888,8 +882,7 @@
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>Server
-                            name
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${serverName}
                             &middot; Geolocations</h1>
                         <a class="btn bg-plan btn-icon-split" href="network">
                                 <span class="icon text-white-50">
@@ -953,8 +946,7 @@
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>Server
-                            name
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${serverName}
                             &middot; Performance</h1>
                         <a class="btn bg-plan btn-icon-split" href="network">
                                 <span class="icon text-white-50">
@@ -1147,8 +1139,7 @@
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>Server
-                            name
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${serverName}
                             &middot; Plugins Overview</h1>
                         <a class="btn bg-plan btn-icon-split" href="network">
                                 <span class="icon text-white-50">
@@ -1396,13 +1387,15 @@
 <!-- Page level plugins -->
 <script src="vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
-<script src="https://code.highcharts.com/stock/highstock.js"></script>
-<script src="https://code.highcharts.com/maps/modules/map.js"></script>
-<script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
-<script src="https://code.highcharts.com/modules/drilldown.js"></script>
-<script src="https://code.highcharts.com/highcharts-more.js"></script>
-<script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
-<script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
+<script src="vendor/highcharts/highstock.js"></script>
+<script src="vendor/highcharts/map.js"></script>
+<script src="vendor/highcharts/world.js"></script>
+<script src="vendor/highcharts/drilldown.js"></script>
+<script src="vendor/highcharts/highcharts-more.js"></script>
+<script src="vendor/highcharts/no-data-to-display.js"></script>
+<link href='vendor/fullcalendar/fullcalendar.min.css' rel='stylesheet'/>
+<script src='vendor/momentjs/moment.js'></script>
+<script src='vendor/fullcalendar/fullcalendar.min.js'></script>
 
 <!-- Page level custom scripts -->
 <script src="js/server-values.js"></script>
@@ -1601,11 +1594,6 @@
             firstDay: ${firstDay}
         },
         data: {
-            tps: ${tpsSeries},
-            cpu: ${cpuSeries},
-            ram: ${ramSeries},
-            entities: ${entitySeries},
-            chunks:  ${chunkSeries},
             activityPie: ${activityPieSeries},
             worldPie: ${worldSeries},
             worldPieDrillDown: ${gmSeries},
@@ -1613,14 +1601,11 @@
             punchCard: ${punchCardSeries},
             activityStack: ${activityStackSeries},
             activityStackCategories: ${activityStackCategories},
-            healthIndex: ${healthIndex},
-            calendar: ${calendarSeries},
             countryCategories: ${countryCategories},
             country: ${countrySeries},
             avgPing: ${avgPingSeries},
             maxPing: ${maxPingSeries},
             minPing: ${minPingSeries},
-            disk: ${diskSeries}
         }
     };
 
@@ -1804,6 +1789,15 @@
             lineChart('uniqueChart', [uniquePlayers, newPlayers]);
         } else if (error) {
             $('#uniqueChart').text("Failed to load graph data: " + error)
+        }
+    });
+
+    jsonRequest("../v1/graph?type=serverCalendar&serverName=${serverName}", function (json, error) {
+        if (json) {
+            $('#calendar').text('');
+            onlineActivityCalendar('#calendar', json.data, json.firstDay);
+        } else if (error) {
+            $('#calendar').text("Failed to load calendar data: " + error)
         }
     });
 
