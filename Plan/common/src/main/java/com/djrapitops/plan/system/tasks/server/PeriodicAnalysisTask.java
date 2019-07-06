@@ -16,10 +16,7 @@
  */
 package com.djrapitops.plan.system.tasks.server;
 
-import com.djrapitops.plan.system.info.InfoSystem;
-import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
-import com.djrapitops.plan.system.info.request.InfoRequestFactory;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.export.HtmlExport;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -31,35 +28,25 @@ import javax.inject.Singleton;
 @Singleton
 public class PeriodicAnalysisTask extends AbsRunnable {
 
-    private final InfoSystem infoSystem;
-    private final InfoRequestFactory infoRequestFactory;
-    private final ServerInfo serverInfo;
+    private final HtmlExport htmlExport;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
-    private final WebExceptionLogger webExceptionLogger;
 
     @Inject
     public PeriodicAnalysisTask(
-            InfoSystem infoSystem,
-            InfoRequestFactory infoRequestFactory, ServerInfo serverInfo,
+            HtmlExport htmlExport,
             PluginLogger logger,
-            ErrorHandler errorHandler,
-            WebExceptionLogger webExceptionLogger
+            ErrorHandler errorHandler
     ) {
-        this.infoSystem = infoSystem;
-        this.infoRequestFactory = infoRequestFactory;
-        this.serverInfo = serverInfo;
+        this.htmlExport = htmlExport;
         this.logger = logger;
         this.errorHandler = errorHandler;
-        this.webExceptionLogger = webExceptionLogger;
     }
 
     @Override
     public void run() {
         try {
-            webExceptionLogger.logIfOccurs(this.getClass(), () ->
-                    infoSystem.sendRequest(infoRequestFactory.generateAnalysisPageRequest(serverInfo.getServerUUID()))
-            );
+            htmlExport.exportAvailableServerPages();
         } catch (IllegalStateException ignore) {
             /* Plugin was reloading */
         } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {

@@ -16,6 +16,8 @@ function jsonRequest(address, callback) {
                         }, 0);
                     } else if (this.status === 404 || this.status === 403 || this.status === 500) {
                         callback(null, this.status)
+                    } else if (this.status === 400) {
+                        callback(null, this.responseText)
                     }
                 } catch (e) {
                     callback(null, e.message)

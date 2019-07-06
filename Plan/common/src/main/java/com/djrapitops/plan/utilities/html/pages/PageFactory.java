@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.utilities.html.pages;
 
+import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.store.containers.AnalysisContainer;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
@@ -126,10 +127,17 @@ public class PageFactory {
                 timings.get());
     }
 
-    public AnalysisPage analysisPage(UUID serverUUID) {
-        AnalysisContainer analysisContainer = analysisContainerFactory.get()
-                .forServerContainer(dbSystem.get().getDatabase().query(ContainerFetchQueries.fetchServerContainer(serverUUID)));
-        return new AnalysisPage(analysisContainer, connectionSystem.get(), versionCheckSystem.get(), fileSystem.get(), formatters.get().decimals(), timings.get());
+    public ServerPage serverPage(UUID serverUUID) throws NotFoundException {
+        return dbSystem.get().getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
+                .map(server -> new ServerPage(
+                        server,
+                        config.get(),
+                        theme.get(),
+                        connectionSystem.get(),
+                        versionCheckSystem.get(),
+                        fileSystem.get(),
+                        formatters.get()
+                )).orElseThrow(() -> new NotFoundException("Server not found in the database"));
     }
 
     public InspectPage inspectPage(UUID playerUUID) {

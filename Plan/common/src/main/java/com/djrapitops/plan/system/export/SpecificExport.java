@@ -38,6 +38,8 @@ import java.util.UUID;
 /**
  * Abstract Html Export Task.
  *
+ * // TODO Export should check config settings
+ *
  * @author Rsl1122
  */
 public abstract class SpecificExport {
@@ -112,7 +114,7 @@ public abstract class SpecificExport {
     }
 
     void exportAvailableServerPage(UUID serverUUID, String serverName) throws IOException {
-
+        // TODO Force export in the future
         Response response = ResponseCache.loadResponse(PageId.SERVER.of(serverUUID));
         if (response == null) {
             return;

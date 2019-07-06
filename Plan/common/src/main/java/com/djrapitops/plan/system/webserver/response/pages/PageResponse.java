@@ -16,8 +16,10 @@
  */
 package com.djrapitops.plan.system.webserver.response.pages;
 
+import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.ResponseType;
+import com.djrapitops.plan.utilities.html.pages.Page;
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
 
 /**
@@ -35,6 +37,11 @@ public class PageResponse extends Response {
 
     public PageResponse(ResponseType type) {
         super(type);
+    }
+
+    public PageResponse(Page page) throws ParseException {
+        super(ResponseType.HTML);
+        setContent(page.toHtml());
     }
 
     public PageResponse() {

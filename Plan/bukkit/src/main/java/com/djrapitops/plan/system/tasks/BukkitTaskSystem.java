@@ -26,7 +26,6 @@ import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.tasks.bukkit.BukkitTPSCountTimer;
 import com.djrapitops.plan.system.tasks.bukkit.PaperTPSCountTimer;
 import com.djrapitops.plan.system.tasks.bukkit.PingCountTimerBukkit;
-import com.djrapitops.plan.system.tasks.server.BootAnalysisTask;
 import com.djrapitops.plan.system.tasks.server.ConfigStoreTask;
 import com.djrapitops.plan.system.tasks.server.PeriodicAnalysisTask;
 import com.djrapitops.plugin.api.Check;
@@ -62,7 +61,6 @@ public class BukkitTaskSystem extends ServerTaskSystem {
             RunnableFactory runnableFactory,
             PaperTPSCountTimer paperTPSCountTimer,
             BukkitTPSCountTimer bukkitTPSCountTimer,
-            BootAnalysisTask bootAnalysisTask,
             PeriodicAnalysisTask periodicAnalysisTask,
             PingCountTimerBukkit pingCountTimer,
             LogsFolderCleanTask logsFolderCleanTask,
@@ -75,7 +73,6 @@ public class BukkitTaskSystem extends ServerTaskSystem {
                 runnableFactory,
                 Check.isPaperAvailable() ? paperTPSCountTimer : bukkitTPSCountTimer,
                 config,
-                bootAnalysisTask,
                 periodicAnalysisTask,
                 logsFolderCleanTask,
                 playersPageRefreshTask);

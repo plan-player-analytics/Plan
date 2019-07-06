@@ -117,9 +117,6 @@ public class ServerConnectionSystem extends ConnectionSystem {
         if (infoRequest instanceof CacheRequest ||
                 infoRequest instanceof GenerateInspectPageRequest) {
             server = mainServer;
-        } else if (infoRequest instanceof GenerateAnalysisPageRequest) {
-            UUID serverUUID = ((GenerateAnalysisPageRequest) infoRequest).getServerUUID();
-            server = dataServers.get(serverUUID);
         }
         if (server == null) {
             throw new NoServersException("Proper server is not available to process request: " + infoRequest.getClass().getSimpleName());

@@ -108,7 +108,7 @@ public class PlayerOnlineListener implements Listener {
             database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> time, playerName));
             processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
             processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
-            ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
+            ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID())); // TODO Swap to clearing data after creating JSON cache.
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
         }
@@ -130,7 +130,7 @@ public class PlayerOnlineListener implements Listener {
 
             sessionCache.endSession(playerUUID, System.currentTimeMillis());
             processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
-            ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
+            ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID())); // TODO Swap to clearing data after creating JSON cache.
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
         }
