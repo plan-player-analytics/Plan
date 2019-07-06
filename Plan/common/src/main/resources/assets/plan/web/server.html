@@ -526,110 +526,6 @@
                                     <th><i class="far fa-fw fa-map"></i> Most played World</th>
                                     </thead>
                                     <tbody>
-                                    <tr aria-controls="session_t_1" aria-expanded="true"
-                                        class="clickable collapsed bg-teal" data-target="#session_t_1"
-                                        data-toggle="collapse">
-                                        <td>Rsl1122</td>
-                                        <td>Oct 28 2018, 10:05</td>
-                                        <td>3s</td>
-                                        <td>World (100%)</td>
-                                    </tr>
-                                    <tr class="collapse" data-parent="#tableAccordion" id="session_t_1">
-                                        <td colspan="4">
-                                            <div class="collapse row" data-parent="#tableAccordion"
-                                                 id="session_t_1">
-                                                <div class="col-xs-12  col-sm-12 col-md-6 col-lg-6">
-                                                    <p><i class="col-teal far fa-fw fa-clock"></i> Session
-                                                        Ended<span class="float-right"><b>Oct 28 2018,
-                                                                        10:05</b></span>
-                                                    </p>
-                                                    <p><i class="col-green far fa-fw fa-clock"></i> Session
-                                                        Length<span class="float-right"><b>3s</b></span></p>
-                                                    <p><i class="col-grey far fa-fw fa-clock"></i> AFK<span
-                                                            class="float-right"><b>-</b></span></p>
-                                                    <p><i class="col-green fa fa-fw fa-server"></i> Server<span
-                                                            class="float-right"><b>______T</b></span></p><br>
-                                                    <p><i class="col-red fa fa-fw fa-crosshairs"></i> Player
-                                                        Kills<span class="float-right"><b>0</b></span></p>
-                                                    <p><i class="col-green fa fa-fw fa-crosshairs"></i> Mob
-                                                        Kills<span class="float-right"><b>0</b></span></p>
-                                                    <p><i class=" fa fa-fw fa-skull"></i> Deaths<span
-                                                            class="float-right"><b>0</b></span></p>
-                                                    <table class="table table-striped scrollbar">
-                                                        <thead>
-                                                        <tr>
-                                                            <th><i class=" far fa-fw fa-clock"></i> Time
-                                                            </th>
-                                                            <th>Killed</th>
-                                                            <th>With</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        <tr>
-                                                            <td>No Kills</td>
-                                                            <td>-</td>
-                                                            <td>-</td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                <div class="col-xs-12  col-sm-12 col-md-6 col-lg-6">
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr aria-controls="session_t_2" aria-expanded="true"
-                                        class="clickable collapsed bg-teal" data-target="#session_t_2"
-                                        data-toggle="collapse">
-                                        <td>Rsl1122 <i class="far fa-fw fa-calendar-plus" title="Registered"></i></td>
-                                        <td>Oct 28 2018, 9:05</td>
-                                        <td>45s</td>
-                                        <td>World (100%)</td>
-                                    </tr>
-                                    <tr class="collapse" data-parent="#tableAccordion" id="session_t_2">
-                                        <td colspan="4">
-                                            <div class="row collapse" data-parent="#tableAccordion"
-                                                 id="session_t_2">
-                                                <div class="col-xs-12  col-sm-12 col-md-6 col-lg-6">
-                                                    <p><i class="col-teal far fa-fw fa-clock"></i> Session
-                                                        Ended<span class="float-right"><b>Oct 28 2018,
-                                                                        10:05</b></span>
-                                                    </p>
-                                                    <p><i class="col-green far fa-fw fa-clock"></i> Session
-                                                        Length<span class="float-right"><b>3s</b></span></p>
-                                                    <p><i class="col-grey far fa-fw fa-clock"></i> AFK<span
-                                                            class="float-right"><b>-</b></span></p>
-                                                    <p><i class="col-green fa fa-fw fa-server"></i> Server<span
-                                                            class="float-right"><b>______T</b></span></p><br>
-                                                    <p><i class="col-red fa fa-fw fa-crosshairs"></i> Player
-                                                        Kills<span class="float-right"><b>0</b></span></p>
-                                                    <p><i class="col-green fa fa-fw fa-crosshairs"></i> Mob
-                                                        Kills<span class="float-right"><b>0</b></span></p>
-                                                    <p><i class=" fa fa-fw fa-skull"></i> Deaths<span
-                                                            class="float-right"><b>0</b></span></p>
-                                                    <table class="table table-striped scrollbar">
-                                                        <thead>
-                                                        <tr>
-                                                            <th><i class=" far fa-fw fa-clock"></i> Time
-                                                            </th>
-                                                            <th>Killed</th>
-                                                            <th>With</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        <tr>
-                                                            <td>No Kills</td>
-                                                            <td>-</td>
-                                                            <td>-</td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                <div class="col-xs-12  col-sm-12 col-md-6 col-lg-6">
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -1525,6 +1421,7 @@
 <script src="js/charts/worldMap.js"></script>
 <script src="js/charts/onlineActivityCalendar.js"></script>
 <script src="js/charts/horizontalBarGraph.js"></script>
+<script src="js/charts/sessionAccordion.js"></script>
 
 <script>
     setLoadingText('Calculating values..');
@@ -1943,6 +1840,34 @@
     }
     x.style.opacity = "1";
     openFunc(slideIndex)();
+
+    loadSessionAccordion({
+        sessions: [
+            {
+                name: 'Rsl1122',
+                player_name: 'Rsl1122',
+                server_name: "Test server",
+                start: "Oct 23, 4:32",
+                end: "Oct 23, 5:34",
+                most_used_world: "World (100%)",
+                length: "1h 2m",
+                afk_time: "5m",
+                mob_kills: 4,
+                deaths: 0,
+                player_kills: [
+                    {
+                        date: "Oct 23 4:50",
+                        victim: "Bill",
+                        killer: "Rsl1122",
+                        weapon: "Diamond Sword"
+                    }
+                ],
+                world_series: [{name: 'World', y: 4320}],
+                gm_series: []
+            }
+        ]
+    }, null);
+
     setLoadingText('Done.');
     setTimeout(function () {
         $('.page-loader').fadeOut();
