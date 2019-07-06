@@ -19,10 +19,7 @@ package com.djrapitops.plan.utilities.html.graphs.pie;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.utilities.comparators.PieSliceComparator;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class WorldPie extends PieWithDrilldown {
 
@@ -60,6 +57,27 @@ public class WorldPie extends PieWithDrilldown {
         }
 
         return slices;
+    }
+
+    public List<Map<String, Object>> toHighChartsDrillDownMaps() {
+        List<Map<String, Object>> drilldowns = new ArrayList<>();
+        for (Map.Entry<String, GMTimes> worldAlias : gmTimesAliasMap.entrySet()) {
+            Map<String, Object> drilldown = new HashMap<>();
+            drilldown.put("name", worldAlias.getKey());
+            drilldown.put("id", worldAlias.getKey());
+            drilldown.put("data", parseGMTimesForWorld(worldAlias.getValue()));
+            drilldowns.add(drilldown);
+        }
+        return drilldowns;
+    }
+
+    private List<List> parseGMTimesForWorld(GMTimes gmTimes) {
+        List<List> data = new ArrayList<>();
+        for (Map.Entry<String, Long> gmEntry : gmTimes.getTimes().entrySet()) {
+            List gmList = Arrays.asList(gmEntry.getKey(), gmEntry.getValue());
+            data.add(gmList);
+        }
+        return data;
     }
 
     @Override

@@ -295,4 +295,29 @@ public class SessionQueries {
             }
         };
     }
+
+    public static Query<List<Session>> fetchLatestSessionsOfServer(UUID serverUUID, int limit) {
+        String selectLastDateToInclude = SELECT + SessionsTable.TABLE_NAME + '.' + SessionsTable.SESSION_START +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_UUID + "=?" +
+                ORDER_BY_SESSION_START_DESC + " LIMIT 1 OFFSET ?";
+
+        String sql = SELECT_SESSIONS_STATEMENT +
+                WHERE + SessionsTable.TABLE_NAME + '.' + SessionsTable.SESSION_START + ">=(" + selectLastDateToInclude + ')' +
+                AND + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_UUID + "=?";
+
+        return new QueryStatement<List<Session>>(sql, limit) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setInt(2, limit);
+                statement.setString(3, serverUUID.toString());
+            }
+
+            @Override
+            public List<Session> processResults(ResultSet set) throws SQLException {
+                return extractDataFromSessionSelectStatement(set);
+            }
+        };
+    }
 }

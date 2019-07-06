@@ -23,7 +23,11 @@ import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.CommonKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.system.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.utilities.analysis.Median;
+import com.djrapitops.plan.utilities.formatting.Formatters;
+import com.djrapitops.plan.utilities.html.graphs.Graphs;
+import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -242,5 +246,40 @@ public class SessionsMutator {
                 .filter(Optional::isPresent)
                 .mapToDouble(Optional::get)
                 .average().orElse(0.0);
+    }
+
+    public List<Map<String, Object>> toPlayerJSONMaps(
+            Graphs graphs,
+            WorldAliasSettings worldAliasSettings,
+            Formatters formatters
+    ) {
+        return sessions.stream().map(session -> {
+            Map<String, Object> sessionMap = new HashMap<>();
+            sessionMap.put("player_name", session.getValue(SessionKeys.NAME).orElse(session.getUnsafe(SessionKeys.UUID).toString()));
+            sessionMap.put("name", sessionMap.get("player_name"));
+            sessionMap.put("server_name", session.getValue(SessionKeys.SERVER_NAME).orElse(session.getUnsafe(SessionKeys.SERVER_UUID).toString()));
+            sessionMap.put("start", session.getValue(SessionKeys.START).map(formatters.yearLong()).orElse("-") +
+                    (session.supports(SessionKeys.END) ? "" : " (Online)"));
+            sessionMap.put("end", session.getValue(SessionKeys.END).map(formatters.yearLong()).orElse("Online"));
+            sessionMap.put("most_used_world", worldAliasSettings.getLongestWorldPlayed(session));
+            sessionMap.put("length", session.getValue(SessionKeys.LENGTH).map(formatters.timeAmount()).orElse("-"));
+            sessionMap.put("afk_time", session.getValue(SessionKeys.AFK_TIME).map(formatters.timeAmount()).orElse("-"));
+            sessionMap.put("mob_kills", session.getValue(SessionKeys.MOB_KILL_COUNT).orElse(0));
+            sessionMap.put("deaths", session.getValue(SessionKeys.DEATH_COUNT).orElse(0));
+            sessionMap.put("player_kills", session.getPlayerKills().stream().map(
+                    kill -> {
+                        Map<String, Object> killMap = new HashMap<>();
+                        killMap.put("date", formatters.secondLong().apply(kill.getDate()));
+                        killMap.put("victim", kill.getVictimName());
+                        killMap.put("killer", sessionMap.get("player_name"));
+                        killMap.put("weapon", kill.getWeapon());
+                        return killMap;
+                    }
+            ).collect(Collectors.toList()));
+            WorldPie worldPie = graphs.pie().worldPie(session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes()));
+            sessionMap.put("world_series", worldPie.getSlices());
+            sessionMap.put("gm_series", worldPie.toHighChartsDrillDownMaps());
+            return sessionMap;
+        }).collect(Collectors.toList());
     }
 }

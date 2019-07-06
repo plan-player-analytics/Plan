@@ -35,6 +35,8 @@ public class SessionKeys {
     public static final Key<Integer> DB_ID = new Key<>(Integer.class, "db_id");
     public static final Key<UUID> UUID = CommonKeys.UUID;
     public static final Key<UUID> SERVER_UUID = CommonKeys.SERVER_UUID;
+    public static final Key<String> NAME = CommonKeys.NAME;
+    public static final Key<String> SERVER_NAME = new Key<>(String.class, "server_name");
 
     public static final Key<Long> START = new Key<>(Long.class, "start");
     public static final Key<Long> END = new Key<>(Long.class, "end");

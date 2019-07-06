@@ -49,6 +49,17 @@ Parameter|Expected value|Description
 `serverName` | Name of a Plan server | Used for identifying Plan server that the data should be about
 `serverUUID` | UUID of a Plan server | Used for identifying Plan server that the data should be about
 
+### `GET /v1/sessions`
+
+Obtain data for `/server` session accordion. Returns configurable amount of sessions.
+
+Required parameters: `serverName` or `serverUUID`
+
+Parameter|Expected value|Description
+--|--|--
+`serverName` | Name of a Plan server | Used for identifying Plan server that the data should be about
+`serverUUID` | UUID of a Plan server | Used for identifying Plan server that the data should be about
+
 ### `GET /v1/graph`
 
 Obtain data for graphs.
@@ -64,5 +75,5 @@ Parameter|Expected value|Description
 Type | Description
 -- | --
 `performance` | TPS data points for last 6 months: Players Online, TPS, CPU, RAM, Chunks, Entities, Disk Space
-`uniqueAndNew` | Player data points for each day, how many unique and how many new players were there each day.
-
+`uniqueAndNew` | Player data points for each day, how many unique and how many new players were there each day. Last 180 days
+`calendar` | Calendar data points for each day there is data for. Last 2 years.

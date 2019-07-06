@@ -38,7 +38,9 @@ function worldPie(id, worldSeries, gmSeries) {
         },
         series: [worldSeries],
         drilldown: {
-            series: gmSeries
+            series: gmSeries.map(function (d) {
+                return {name: d.name, id: d.id, colors: gmPieColors, data: d.data}
+            })
         }
     });
 }
