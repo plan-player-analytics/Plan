@@ -18,11 +18,12 @@ package com.djrapitops.plan.system.webserver.pages.json;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.Identifiers;
 import com.djrapitops.plan.system.json.OnlineActivityOverviewJSONParser;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.RequestTarget;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
+import com.djrapitops.plan.system.webserver.pages.PageHandler;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.data.JSONResponse;
 
@@ -36,22 +37,23 @@ import java.util.UUID;
  * @author Rsl1122
  */
 @Singleton
-public class OnlineActivityOverviewJSONHandler extends ServerParameterJSONHandler {
+public class OnlineActivityOverviewJSONHandler implements PageHandler {
 
+    private final Identifiers identifiers;
     private final OnlineActivityOverviewJSONParser jsonParser;
 
     @Inject
     public OnlineActivityOverviewJSONHandler(
-            DBSystem dbSystem,
+            Identifiers identifiers,
             OnlineActivityOverviewJSONParser jsonParser
     ) {
-        super(dbSystem);
+        this.identifiers = identifiers;
         this.jsonParser = jsonParser;
     }
 
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
-        UUID serverUUID = getServerUUID(target); // Can throw BadRequestException
+        UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
         return new JSONResponse<>(jsonParser.createJSONAsMap(serverUUID));
     }
 
