@@ -35,6 +35,7 @@ public class PlayerKill implements DateHolder {
     private final long date;
 
     private String victimName;
+    private String killerName;
 
     /**
      * Creates a PlayerKill object with given parameters.
@@ -50,10 +51,13 @@ public class PlayerKill implements DateHolder {
     }
 
     public PlayerKill(UUID victim, String weapon, long date, String victimName) {
-        this.victim = victim;
-        this.date = date;
-        this.weapon = weapon;
+        this(victim, weapon, date);
         this.victimName = victimName;
+    }
+
+    public PlayerKill(UUID victim, String weapon, long date, String victimName, String killerName) {
+        this(victim, weapon, date, victimName);
+        this.killerName = killerName;
     }
 
     /**
@@ -67,6 +71,10 @@ public class PlayerKill implements DateHolder {
 
     public Optional<String> getVictimName() {
         return Optional.ofNullable(victimName);
+    }
+
+    public Optional<String> getKillerName() {
+        return Optional.ofNullable(killerName);
     }
 
     @Override

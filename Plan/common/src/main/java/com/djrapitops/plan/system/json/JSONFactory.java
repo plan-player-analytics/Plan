@@ -16,10 +16,13 @@
  */
 package com.djrapitops.plan.system.json;
 
+import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.mutators.PlayerKillMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.containers.ServerPlayersTableContainersQuery;
+import com.djrapitops.plan.db.access.queries.objects.PlayerKillQueries;
 import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerPlayerDataTableQuery;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -83,5 +86,11 @@ public class JSONFactory {
                 serverUUID, config.get(DisplaySettings.SESSIONS_PER_PAGE)
         ));
         return new SessionsMutator(sessions).toPlayerJSONMaps(graphs, config.getWorldAliasSettings(), formatters);
+    }
+
+    public List<Map<String, Object>> serverPlayerKillsAsJSONMap(UUID serverUUID) {
+        Database db = dbSystem.getDatabase();
+        List<PlayerKill> kills = db.query(PlayerKillQueries.fetchMostRecentPlayerKills(serverUUID, 100));
+        return new PlayerKillMutator(kills).toJSONAsMap(formatters);
     }
 }

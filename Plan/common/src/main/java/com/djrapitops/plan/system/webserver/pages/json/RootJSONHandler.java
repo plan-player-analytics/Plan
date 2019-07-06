@@ -41,12 +41,14 @@ public class RootJSONHandler extends TreePageHandler {
             PlayersTableJSONHandler playersTableJSONHandler,
             ServerOverviewJSONHandler serverOverviewJSONHandler,
             OnlineActivityOverviewJSONHandler onlineActivityOverviewJSONHandler,
-            SessionsOverviewJSONHandler sessionsOverviewJSONHandler
+            SessionsOverviewJSONHandler sessionsOverviewJSONHandler,
+            PlayerKillsJSONHandler playerKillsJSONHandler
     ) {
         super(responseFactory);
 
         registerPage("players", playersTableJSONHandler);
         registerPage("sessions", sessionsJSONHandler);
+        registerPage("kills", playerKillsJSONHandler);
         registerPage("graph", graphsJSONHandler);
         registerPage("serverOverview", serverOverviewJSONHandler);
         registerPage("onlineOverview", onlineActivityOverviewJSONHandler);
