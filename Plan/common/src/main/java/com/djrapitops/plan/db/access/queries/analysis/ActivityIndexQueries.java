@@ -24,6 +24,8 @@ import com.djrapitops.plan.db.sql.tables.SessionsTable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -64,6 +66,10 @@ import static com.djrapitops.plan.db.sql.parsing.Sql.*;
 public class ActivityIndexQueries {
 
     public static Query<Integer> fetchRegularPlayerCount(long date, UUID serverUUID, long playtimeThreshold) {
+        return fetchActivityGroupCount(date, serverUUID, playtimeThreshold, ActivityIndex.REGULAR, 5.1);
+    }
+
+    public static Query<Integer> fetchActivityGroupCount(long date, UUID serverUUID, long playtimeThreshold, double above, double below) {
         String selectActivePlaytimeSQL = SELECT +
                 SessionsTable.USER_UUID +
                 ",SUM(" +
@@ -83,9 +89,12 @@ public class ActivityIndexQueries {
                 FROM + '(' + selectThreeWeeks + ") q1" +
                 GROUP_BY + "q1." + SessionsTable.USER_UUID;
 
+        // TODO Include users with 0 sessions in Inactive group
+        // TODO Take into account player's register date
         String selectActivePlayerCount = SELECT + "COUNT(1) as count" +
                 FROM + '(' + selectActivityIndex + ") q2" +
-                WHERE + "q2.activity_index>=?";
+                WHERE + "q2.activity_index>=?" +
+                AND + "q2.activity_index<?";
 
         return new QueryStatement<Integer>(selectActivePlayerCount) {
             @Override
@@ -103,7 +112,8 @@ public class ActivityIndexQueries {
                 statement.setLong(10, date - TimeUnit.DAYS.toMillis(21L));
                 statement.setLong(11, date - TimeUnit.DAYS.toMillis(14L));
 
-                statement.setDouble(12, ActivityIndex.REGULAR);
+                statement.setDouble(12, above);
+                statement.setDouble(13, below);
             }
 
             @Override
@@ -113,4 +123,15 @@ public class ActivityIndexQueries {
         };
     }
 
+    public static Query<Map<String, Integer>> fetchActivityIndexGroupingsOn(long date, UUID serverUUID, long threshold) {
+        return db -> {
+            Map<String, Integer> groups = new HashMap<>();
+            groups.put("Very Active", db.query(fetchActivityGroupCount(date, serverUUID, threshold, ActivityIndex.VERY_ACTIVE, 5.1)));
+            groups.put("Active", db.query(fetchActivityGroupCount(date, serverUUID, threshold, ActivityIndex.ACTIVE, ActivityIndex.VERY_ACTIVE)));
+            groups.put("Regular", db.query(fetchActivityGroupCount(date, serverUUID, threshold, ActivityIndex.REGULAR, ActivityIndex.ACTIVE)));
+            groups.put("Irregular", db.query(fetchActivityGroupCount(date, serverUUID, threshold, ActivityIndex.IRREGULAR, ActivityIndex.REGULAR)));
+            groups.put("Inactive", db.query(fetchActivityGroupCount(date, serverUUID, threshold, -0.1, ActivityIndex.IRREGULAR)));
+            return groups;
+        };
+    }
 }

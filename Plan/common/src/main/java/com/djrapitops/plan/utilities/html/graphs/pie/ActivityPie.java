@@ -18,7 +18,9 @@ package com.djrapitops.plan.utilities.html.graphs.pie;
 
 import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Pie about different Activity Groups defined by ActivityIndex.
@@ -28,18 +30,17 @@ import java.util.*;
  */
 public class ActivityPie extends Pie {
 
-    ActivityPie(Map<String, Set<UUID>> activityData, String[] colors) {
+    ActivityPie(Map<String, Integer> activityData, String[] colors) {
         super(turnToSlices(activityData, colors));
     }
 
-    private static List<PieSlice> turnToSlices(Map<String, Set<UUID>> activityData, String[] colors) {
+    private static List<PieSlice> turnToSlices(Map<String, Integer> activityData, String[] colors) {
         int maxCol = colors.length;
 
         List<PieSlice> slices = new ArrayList<>();
         int i = 0;
         for (String group : ActivityIndex.getGroups()) {
-            Set<UUID> players = activityData.getOrDefault(group, new HashSet<>());
-            int num = players.size();
+            int num = activityData.getOrDefault(group, 0);
 
             slices.add(new PieSlice(group, num, colors[i % maxCol], false));
             i++;

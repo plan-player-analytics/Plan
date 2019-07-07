@@ -33,6 +33,10 @@ public class StackGraph implements HighChart {
         this.labels = labels;
     }
 
+    public String[] getLabels() {
+        return labels;
+    }
+
     public String toHighChartsLabels() {
         StringBuilder labelBuilder = new StringBuilder("[");
 
@@ -50,24 +54,8 @@ public class StackGraph implements HighChart {
         return labelBuilder.append("]").toString();
     }
 
-    private String toSeries(StackDataSet dataSet) {
-        StringBuilder dataSetBuilder = new StringBuilder("{name: '");
-
-        dataSetBuilder.append(dataSet.getName()).append("',")
-                .append("color:").append(dataSet.getColor())
-                .append(",data: [");
-
-        int size = dataSet.size();
-        int i = 0;
-        for (Double value : dataSet) {
-            dataSetBuilder.append(value);
-            if (i < size - 1) {
-                dataSetBuilder.append(",");
-            }
-            i++;
-        }
-
-        return dataSetBuilder.append("]}").toString();
+    public StackDataSet[] getDataSets() {
+        return dataSets;
     }
 
     @Override
@@ -77,7 +65,7 @@ public class StackGraph implements HighChart {
         int size = dataSets.length;
         int i = 0;
         for (StackDataSet dataSet : dataSets) {
-            seriesBuilder.append(toSeries(dataSet));
+            seriesBuilder.append(dataSet.toSeriesObjectString());
 
             if (i < size - 1) {
                 seriesBuilder.append(",");
