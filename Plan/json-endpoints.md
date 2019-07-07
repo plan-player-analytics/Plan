@@ -48,6 +48,17 @@ Parameter|Expected value|Description
 `serverName` | Name of a Plan server | Used for identifying Plan server that the data should be about
 `serverUUID` | UUID of a Plan server | Used for identifying Plan server that the data should be about
 
+### `GET /v1/playerVersus`
+
+Obtain data for PvP & PvE tab.
+
+Required parameters: `serverName` or `serverUUID`
+
+Parameter|Expected value|Description
+--|--|--
+`serverName` | Name of a Plan server | Used for identifying Plan server that the data should be about
+`serverUUID` | UUID of a Plan server | Used for identifying Plan server that the data should be about
+
 ### `GET /v1/players`
 
 Obtain data for `/server` player list.
