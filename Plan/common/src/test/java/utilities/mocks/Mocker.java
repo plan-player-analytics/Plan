@@ -65,15 +65,14 @@ abstract class Mocker {
                 "web/network.html",
                 "web/error.html",
 
-                "web/css/main.css",
-                "web/css/materialize.css",
                 "web/css/style.css",
-                "web/css/themes/all-themes.css",
+                "web/css/sb-admin-2.css",
 
-                "web/js/demo.js",
-                "web/js/admin.js",
-                "web/js/helpers.js",
-                "web/js/script.js",
+                "web/js/color-selector.js",
+                "web/js/network-values.js",
+                "web/js/sb-admin-2.js",
+                "web/js/server-values.js",
+                "web/js/xmlhttprequests.js",
                 "web/js/charts/activityPie.js",
                 "web/js/charts/lineGraph.js",
                 "web/js/charts/horizontalBarGraph.js",
@@ -93,14 +92,11 @@ abstract class Mocker {
                 "web/js/charts/sessionCalendar.js",
                 "web/js/charts/onlineActivityCalendar.js",
 
-                "web/plugins/node-waves/waves.css",
-                "web/plugins/node-waves/waves.js",
-                "web/plugins/animate-css/animate.css",
-                "web/plugins/jquery-slimscroll/jquery.slimscroll.js",
-                "web/plugins/jquery/jquery.min.js",
-                "web/plugins/fullcalendar/fullcalendar.min.js",
-                "web/plugins/fullcalendar/fullcalendar.min.css",
-                "web/plugins/momentjs/moment.js"
+                "web/vendor/bootstrap/js/bootstrap.bundle.min.js",
+                "web/vendor/jquery/jquery.min.js",
+                "web/vendor/fullcalendar/fullcalendar.min.js",
+                "web/vendor/fullcalendar/fullcalendar.min.css",
+                "web/vendor/momentjs/moment.js"
         }) {
             withPluginFile(fileName);
         }
