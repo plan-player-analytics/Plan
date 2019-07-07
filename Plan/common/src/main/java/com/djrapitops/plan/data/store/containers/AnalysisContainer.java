@@ -403,12 +403,12 @@ public class AnalysisContainer extends DynamicDataContainer {
                 getUnsafe(AnalysisKeys.NEW_PLAYERS_PER_DAY)
         ).toCalendarSeries());
 
-        putCachingSupplier(AnalysisKeys.ACTIVITY_DATA, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).toActivityDataMap(getUnsafe(AnalysisKeys.ANALYSIS_TIME), config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD), config.get(TimeSettings.ACTIVE_LOGIN_THRESHOLD)));
+        putCachingSupplier(AnalysisKeys.ACTIVITY_DATA, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).toActivityDataMap(getUnsafe(AnalysisKeys.ANALYSIS_TIME), config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD)));
         Key<StackGraph> activityStackGraph = new Key<>(StackGraph.class, "ACTIVITY_STACK_GRAPH");
         putCachingSupplier(activityStackGraph, () -> graphs.stack().activityStackGraph(getUnsafe(AnalysisKeys.ACTIVITY_DATA)));
         putSupplier(AnalysisKeys.ACTIVITY_STACK_CATEGORIES, () -> getUnsafe(activityStackGraph).toHighChartsLabels());
         putSupplier(AnalysisKeys.ACTIVITY_STACK_SERIES, () -> getUnsafe(activityStackGraph).toHighChartsSeries());
-        putSupplier(AnalysisKeys.ACTIVITY_PIE_SERIES, () -> graphs.pie().activityPie(
+        putSupplier(AnalysisKeys.ACTIVITY_PIE_SERIES, () -> graphs.pie().activityPie_old(
                 getUnsafe(AnalysisKeys.ACTIVITY_DATA).get(getUnsafe(AnalysisKeys.ANALYSIS_TIME))).toHighChartsSeries()
         );
         putSupplier(AnalysisKeys.PLAYERS_REGULAR, () -> {

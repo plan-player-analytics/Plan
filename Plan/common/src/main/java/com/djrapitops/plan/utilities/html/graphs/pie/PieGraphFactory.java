@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Factory class for different objects representing HTML pie graphs.
@@ -51,10 +52,19 @@ public class PieGraphFactory {
         this.theme = theme;
     }
 
-    public Pie activityPie(Map<String, Set<UUID>> activityData) {
+    public Pie activityPie_old(Map<String, Set<UUID>> activityData) {
         String[] colors = theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE).split(", ");
+        Map<String, Integer> flatActivityData = activityData.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().size()));
+        return new ActivityPie(flatActivityData, colors);
+    }
+
+    public Pie activityPie(Map<String, Integer> activityData) {
+        String[] colors = Arrays.stream(theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE).split(","))
+                .map(color -> color.trim().replace("\"", ""))
+                .toArray(String[]::new);
         return new ActivityPie(activityData, colors);
     }
+
 
     public Pie serverPreferencePie(Map<UUID, String> serverNames, Map<UUID, WorldTimes> serverWorldTimes) {
         return new ServerPreferencePie(serverNames, serverWorldTimes);

@@ -29,6 +29,10 @@ public class DateMap<T> extends TreeMap<Long, T> {
         super(Long::compareTo);
     }
 
+    public DateMap(TreeMap<Long, T> map) {
+        putAll(map);
+    }
+
     public boolean hasValuesBetween(long after, long before) {
         return countBetween(after, before) > 0;
     }

@@ -17,6 +17,7 @@
 package com.djrapitops.plan.utilities.html.graphs.stack;
 
 import com.djrapitops.plan.data.store.mutators.ActivityIndex;
+import com.djrapitops.plan.data.store.objects.DateMap;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 
 import java.util.*;
@@ -33,14 +34,17 @@ class ActivityStackGraph extends StackGraph {
         super(getLabels(activityData.navigableKeySet(), dayFormatter), getDataSets(activityData, colors));
     }
 
+    ActivityStackGraph(DateMap<Map<String, Integer>> activityData, String[] colors, Formatter<Long> dayFormatter) {
+        super(getLabels(activityData.navigableKeySet(), dayFormatter), getDataSets(activityData, colors));
+    }
+
     private static String[] getLabels(Collection<Long> dates, Formatter<Long> dayFormatter) {
         return dates.stream()
                 .map(dayFormatter)
                 .toArray(String[]::new);
     }
 
-    private static StackDataSet[] getDataSets(TreeMap<Long, Map<String, Set<UUID>>> activityData, String[] colors) {
-        String[] groups = ActivityIndex.getGroups();
+    private static StackDataSet[] initializeDataSet(String[] groups, String[] colors) {
         int maxCol = colors.length;
         StackDataSet[] dataSets = new StackDataSet[groups.length];
 
@@ -48,12 +52,30 @@ class ActivityStackGraph extends StackGraph {
             dataSets[i] = new StackDataSet(new ArrayList<>(), groups[i], colors[i % maxCol]);
         }
 
-        for (Long date : activityData.navigableKeySet()) {
-            Map<String, Set<UUID>> data = activityData.get(date);
+        return dataSets;
+    }
 
+    private static StackDataSet[] getDataSets(TreeMap<Long, Map<String, Set<UUID>>> activityData, String[] colors) {
+        String[] groups = ActivityIndex.getGroups();
+        StackDataSet[] dataSets = initializeDataSet(groups, colors);
+
+        for (Map<String, Set<UUID>> data : activityData.values()) {
             for (int j = 0; j < groups.length; j++) {
                 Set<UUID> players = data.get(groups[j]);
                 dataSets[j].add((double) (players != null ? players.size() : 0));
+            }
+        }
+
+        return dataSets;
+    }
+
+    private static StackDataSet[] getDataSets(DateMap<Map<String, Integer>> activityData, String[] colors) {
+        String[] groups = ActivityIndex.getGroups();
+        StackDataSet[] dataSets = initializeDataSet(groups, colors);
+
+        for (Map<String, Integer> data : activityData.values()) {
+            for (int j = 0; j < groups.length; j++) {
+                dataSets[j].add((double) data.getOrDefault(groups[j], 0));
             }
         }
 

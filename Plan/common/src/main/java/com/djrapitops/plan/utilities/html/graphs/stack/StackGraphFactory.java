@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.utilities.html.graphs.stack;
 
+import com.djrapitops.plan.data.store.objects.DateMap;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.formatting.Formatter;
@@ -23,10 +24,7 @@ import com.djrapitops.plan.utilities.formatting.Formatters;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Factory class for different objects representing HTML stack graphs.
@@ -50,6 +48,13 @@ public class StackGraphFactory {
 
     public StackGraph activityStackGraph(TreeMap<Long, Map<String, Set<UUID>>> activityData) {
         String[] colors = theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE).split(", ");
+        return new ActivityStackGraph(activityData, colors, dayFormatter);
+    }
+
+    public StackGraph activityStackGraph(DateMap<Map<String, Integer>> activityData) {
+        String[] colors = Arrays.stream(theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE).split(","))
+                .map(color -> color.trim().replace("\"", ""))
+                .toArray(String[]::new);
         return new ActivityStackGraph(activityData, colors, dayFormatter);
     }
 }
