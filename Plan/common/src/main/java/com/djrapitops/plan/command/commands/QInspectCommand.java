@@ -143,11 +143,7 @@ public class QInspectCommand extends CommandNode {
 
         String playerName = player.getValue(PlayerKeys.NAME).orElse(locale.getString(GenericLang.UNKNOWN));
 
-        ActivityIndex activityIndex = player.getActivityIndex(
-                now,
-                config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD),
-                config.get(TimeSettings.ACTIVE_LOGIN_THRESHOLD)
-        );
+        ActivityIndex activityIndex = player.getActivityIndex(now, config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD));
         Long registered = player.getValue(PlayerKeys.REGISTERED).orElse(0L);
         Long lastSeen = player.getValue(PlayerKeys.LAST_SEEN).orElse(0L);
         List<GeoInfo> geoInfo = player.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>());

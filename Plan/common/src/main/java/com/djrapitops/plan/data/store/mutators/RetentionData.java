@@ -60,16 +60,14 @@ public class RetentionData {
     public RetentionData(
             PlayerContainer player,
             PlayersOnlineResolver onlineOnJoin,
-            long activityMsThreshold,
-            int activityLoginThreshold
+            long activityMsThreshold
     ) {
         Optional<Long> registeredValue = player.getValue(PlayerKeys.REGISTERED);
         activityIndex = registeredValue
                 .map(registered -> new ActivityIndex(
                         player,
                         registered + TimeUnit.DAYS.toMillis(1L),
-                        activityMsThreshold,
-                        activityLoginThreshold
+                        activityMsThreshold
                 ).getValue())
                 .orElse(0.0);
         this.onlineOnJoin = registeredValue

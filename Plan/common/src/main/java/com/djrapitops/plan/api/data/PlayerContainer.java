@@ -39,7 +39,7 @@ public class PlayerContainer {
     }
 
     public double getActivityIndex(long date, long playtimeMsThreshold, int loginThreshold) {
-        return container.getActivityIndex(date, playtimeMsThreshold, loginThreshold).getValue();
+        return container.getActivityIndex(date, playtimeMsThreshold).getValue();
     }
 
     public boolean playedBetween(long after, long before) {
