@@ -38,8 +38,8 @@ public class PlayerContainer extends DynamicDataContainer {
         activityIndexCache = new HashMap<>();
     }
 
-    public ActivityIndex getActivityIndex(long date, long playtimeMsThreshold, int loginThreshold) {
-        return activityIndexCache.computeIfAbsent(date, time -> new ActivityIndex(this, time, playtimeMsThreshold, loginThreshold));
+    public ActivityIndex getActivityIndex(long date, long playtimeMsThreshold) {
+        return activityIndexCache.computeIfAbsent(date, time -> new ActivityIndex(this, time, playtimeMsThreshold));
     }
 
     public boolean playedBetween(long after, long before) {

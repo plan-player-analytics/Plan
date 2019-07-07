@@ -25,21 +25,56 @@ import com.djrapitops.plugin.api.TimeAmount;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Represents Activity index of a player at a certain date.
+ * <p>
+ * Old formula for activity index was not linear and difficult to turn into a query due to conditional multipliers.
+ * Thus a new formula was written.
+ * <p>
+ * {@code T} - Time played after someone is considered active on a particular week
+ * {@code t1, t2, t3} - Time played that week
+ * <p>
+ * Activity index takes into account last 3 weeks.
+ * <p>
+ * Activity for a single week is calculated using {@code A(t) = (1 / (pi/2 * (t/T) + 1))}.
+ * A(t) is based on function f(x) = 1 / (x + 1), which has property f(0) = 1, decreasing from there, but not in a straight line.
+ * You can see the function plotted here https://www.wolframalpha.com/input/?i=1+%2F+(x%2B1)+from+-1+to+2
+ * <p>
+ * To fine tune the curve pi/2 is used since it felt like a good curve.
+ * <p>
+ * Activity index A is calculated by using the formula:
+ * {@code A = 5 - 5 * [A(t1) + A(t2) + A(t3)] / 3}
+ * <p>
+ * Plot for A and limits
+ * https://www.wolframalpha.com/input/?i=plot+y+%3D+5+-+5+*+(1+%2F+(pi%2F2+*+x%2B1))+and+y+%3D1+and+y+%3D+2+and+y+%3D+3+and+y+%3D+3.75+from+-0.5+to+3
+ * <p>
+ * New Limits for A would thus be
+ * {@code < 1: Inactive}
+ * {@code > 1: Irregular}
+ * {@code > 2: Regular}
+ * {@code > 3: Active}
+ * {@code > 3.75: Very Active}
+ */
 public class ActivityIndex {
 
     private final double value;
+    private final long date;
 
-    private final long playtimeMsThreshold;
-    private final int loginThreshold;
+    private long playtimeMsThreshold;
 
     public ActivityIndex(
             DataContainer container, long date,
-            long playtimeMsThreshold, int loginThreshold
+            long playtimeMsThreshold
     ) {
         this.playtimeMsThreshold = playtimeMsThreshold;
-        this.loginThreshold = loginThreshold;
 
         value = calculate(container, date);
+        this.date = date;
+    }
+
+    public ActivityIndex(double value, long date) {
+        this.value = value;
+        this.date = date;
     }
 
     public static String[] getGroups() {
@@ -51,9 +86,6 @@ public class ActivityIndex {
         long weekAgo = date - week;
         long twoWeeksAgo = date - 2L * week;
         long threeWeeksAgo = date - 3L * week;
-
-        long activePlayThreshold = playtimeMsThreshold;
-        int activeLoginThreshold = loginThreshold;
 
         Optional<List<Session>> sessionsValue = container.getValue(PlayerKeys.SESSIONS);
         if (!sessionsValue.isPresent()) {
@@ -68,61 +100,25 @@ public class ActivityIndex {
         SessionsMutator weekTwo = sessionsMutator.filterSessionsBetween(twoWeeksAgo, weekAgo);
         SessionsMutator weekThree = sessionsMutator.filterSessionsBetween(threeWeeksAgo, twoWeeksAgo);
 
-        // Playtime per week multipliers, max out to avoid too high values.
-        double max = 4.0;
+        long playtime1 = weekOne.toActivePlaytime();
+        long playtime2 = weekTwo.toActivePlaytime();
+        long playtime3 = weekThree.toActivePlaytime();
 
-        long playtimeWeek = weekOne.toActivePlaytime();
-        double weekPlay = playtimeWeek * 1.0 / activePlayThreshold;
-        if (weekPlay > max) {
-            weekPlay = max;
-        }
-        long playtimeWeek2 = weekTwo.toActivePlaytime();
-        double week2Play = playtimeWeek2 * 1.0 / activePlayThreshold;
-        if (week2Play > max) {
-            week2Play = max;
-        }
-        long playtimeWeek3 = weekThree.toActivePlaytime();
-        double week3Play = playtimeWeek3 * 1.0 / activePlayThreshold;
-        if (week3Play > max) {
-            week3Play = max;
-        }
+        double A1 = 1.0 / (Math.PI / 2.0 * (playtime1 * 1.0 / playtimeMsThreshold) + 1.0);
+        double A2 = 1.0 / (Math.PI / 2.0 * (playtime2 * 1.0 / playtimeMsThreshold) + 1.0);
+        double A3 = 1.0 / (Math.PI / 2.0 * (playtime3 * 1.0 / playtimeMsThreshold) + 1.0);
 
-        double playtimeMultiplier = 1.0;
-        if (playtimeWeek + playtimeWeek2 + playtimeWeek3 > activePlayThreshold * 3.0) {
-            playtimeMultiplier = 1.25;
-        }
+        double average = (A1 + A2 + A3) / 3.0;
 
-        // Reduce the harshness for new players and players who have had a vacation
-        if (weekPlay > 1 && week3Play > 1 && week2Play == 0.0) {
-            week2Play = 0.5;
-        }
-        if (weekPlay > 1 && week2Play == 0.0) {
-            week2Play = 0.6;
-        }
-        if (weekPlay > 1 && week3Play == 0.0) {
-            week3Play = 0.75;
-        }
-
-        double playAvg = (weekPlay + week2Play + week3Play) / 3.0;
-
-        double weekLogin = weekOne.count() >= activeLoginThreshold ? 1.0 : 0.5;
-        double week2Login = weekTwo.count() >= activeLoginThreshold ? 1.0 : 0.5;
-        double week3Login = weekThree.count() >= activeLoginThreshold ? 1.0 : 0.5;
-
-        double loginMultiplier = 1.0;
-        double loginTotal = weekLogin + week2Login + week3Login;
-        double loginAvg = loginTotal / 3.0;
-
-        if (loginTotal <= 2.0) {
-            // Reduce index for players that have not logged in the threshold amount for 2 weeks
-            loginMultiplier = 0.75;
-        }
-
-        return playAvg * loginAvg * loginMultiplier * playtimeMultiplier;
+        return 5.0 - (5.0 * average);
     }
 
     public double getValue() {
         return value;
+    }
+
+    public long getDate() {
+        return date;
     }
 
     public String getFormattedValue(Formatter<Double> formatter) {
@@ -130,13 +126,13 @@ public class ActivityIndex {
     }
 
     public String getGroup() {
-        if (value >= 3.5) {
+        if (value >= 3.75) {
             return "Very Active";
-        } else if (value >= 1.75) {
+        } else if (value >= 3) {
             return "Active";
-        } else if (value >= 1.0) {
+        } else if (value >= 2) {
             return "Regular";
-        } else if (value >= 0.5) {
+        } else if (value >= 1) {
             return "Irregular";
         } else {
             return "Inactive";
@@ -144,13 +140,13 @@ public class ActivityIndex {
     }
 
     public String getColor() {
-        if (value >= 3.5) {
+        if (value >= 3.75) {
             return "green";
-        } else if (value >= 1.75) {
+        } else if (value >= 3) {
             return "green";
-        } else if (value >= 1.0) {
+        } else if (value >= 2) {
             return "lime";
-        } else if (value >= 0.5) {
+        } else if (value >= 1) {
             return "amber";
         } else {
             return "blue-gray";
