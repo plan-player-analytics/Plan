@@ -42,7 +42,8 @@ public class RootJSONHandler extends TreePageHandler {
             ServerOverviewJSONHandler serverOverviewJSONHandler,
             OnlineActivityOverviewJSONHandler onlineActivityOverviewJSONHandler,
             SessionsOverviewJSONHandler sessionsOverviewJSONHandler,
-            PlayerKillsJSONHandler playerKillsJSONHandler
+            PlayerKillsJSONHandler playerKillsJSONHandler,
+            PvPPvEJSONHandler pvppveJSONHandler
     ) {
         super(responseFactory);
 
@@ -53,6 +54,7 @@ public class RootJSONHandler extends TreePageHandler {
         registerPage("serverOverview", serverOverviewJSONHandler);
         registerPage("onlineOverview", onlineActivityOverviewJSONHandler);
         registerPage("sessionsOverview", sessionsOverviewJSONHandler);
+        registerPage("playerVersus", pvppveJSONHandler);
     }
 
     @Override

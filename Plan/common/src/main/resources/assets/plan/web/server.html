@@ -601,19 +601,26 @@
                                     </thead>
                                     <tbody>
                                     <tr>
+                                        <td><b><i class="col-red fa fa-fw fa-crosshairs"></i></b> Average KDR / Player
+                                        </td>
+                                        <td id="data_player_kdr_avg"></td>
+                                        <td id="data_player_kdr_avg_30d"></td>
+                                        <td id="data_player_kdr_avg_7d"></td>
+                                    </tr>
+                                    <tr>
                                         <td><i class="col-red fa fa-fw fa-crosshairs"></i> Player Kills</td>
                                         <td id="data_player_kills_total"></td>
                                         <td id="data_player_kills_30d"></td>
                                         <td id="data_player_kills_7d"></td>
                                     </tr>
-                                    <tr>
-                                        <td><i class="col-red fa fa-fw fa-skull"></i> Player Caused Deaths</td>
-                                        <td id="data_player_deaths_total"></td>
-                                        <td id="data_player_deaths_30d"></td>
-                                        <td id="data_player_deaths_7d"></td>
-                                    </tr>
                                     </tbody>
                                     <tbody>
+                                    <tr>
+                                        <td><b><i class="col-green fa fa-fw fa-crosshairs"></i></b> Average Mob KDR</td>
+                                        <td id="data_mob_kdr_total"></td>
+                                        <td id="data_mob_kdr_30d"></td>
+                                        <td id="data_mob_kdr_7d"></td>
+                                    </tr>
                                     <tr>
                                         <td><i class="col-green fa fa-fw fa-crosshairs"></i> Mob Kills</td>
                                         <td id="data_mob_kills_total"></td>
@@ -653,8 +660,6 @@
                                         <span class="float-right"><b id="data_weapon_2nd"></b></span></p>
                                     <p><i class="col-brown fa fa-fw fa-khanda"></i> 3rd PvP Weapon
                                         <span class="float-right"><b id="data_weapon_3rd"></b></span></p>
-                                    <p><i class="col-red fa fa-fw fa-skull"></i> Rage Quits
-                                        <span class="float-right"><b id="data_rage_quits"></b></span></p>
                                 </div>
                             </div>
                         </div>
@@ -1411,33 +1416,7 @@
     jsonRequest("../v1/serverOverview?serverName=${serverName}", loadServerOverviewValues);
     jsonRequest("../v1/onlineOverview?serverName=${serverName}", loadOnlineActivityOverviewValues);
     jsonRequest("../v1/sessionsOverview?serverName=${serverName}", loadSessionValues);
-    loadPvPPvEValues(
-        {
-            numbers: {
-                player_kills_total: 342,
-                player_kills_30d: 234,
-                player_kills_7d: 34,
-                player_deaths_total: 40,
-                player_deaths_30d: 34,
-                player_deaths_7d: 32,
-                mob_kills_total: 1232,
-                mob_kills_30d: 332,
-                mob_kills_7d: 32,
-                mob_deaths_total: 34,
-                mob_deaths_30d: 11,
-                mob_deaths_7d: 5,
-                deaths_total: 74,
-                deaths_30d: 44,
-                deaths_7d: 39
-            },
-            insights: {
-                weapon_1st: 'Diamond Sword',
-                weapon_2nd: 'Diamond Axe',
-                weapon_3rd: 'Iron Sword',
-                rage_quits: 4
-            }
-        }, null
-    );
+    jsonRequest("../v1/playerVersus?serverName=${serverName}", loadPvPPvEValues);
     loadPlayerbaseOverviewValues(
         {
             trends: {
