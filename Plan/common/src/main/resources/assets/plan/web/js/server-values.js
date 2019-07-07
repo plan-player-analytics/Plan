@@ -212,9 +212,9 @@ function loadPvPPvEValues(json, error) {
     $(element).find('#data_player_kills_30d').text(data.player_kills_30d);
     $(element).find('#data_player_kills_7d').text(data.player_kills_7d);
 
-    $(element).find('#data_player_deaths_total').text(data.player_deaths_total);
-    $(element).find('#data_player_deaths_30d').text(data.player_deaths_30d);
-    $(element).find('#data_player_deaths_7d').text(data.player_deaths_7d);
+    $(element).find('#data_player_kdr_avg').text(data.player_kdr_avg);
+    $(element).find('#data_player_kdr_avg_30d').text(data.player_kdr_avg_30d);
+    $(element).find('#data_player_kdr_avg_7d').text(data.player_kdr_avg_7d);
 
     $(element).find('#data_mob_kills_total').text(data.mob_kills_total);
     $(element).find('#data_mob_kills_30d').text(data.mob_kills_30d);
@@ -223,6 +223,10 @@ function loadPvPPvEValues(json, error) {
     $(element).find('#data_mob_deaths_total').text(data.mob_deaths_total);
     $(element).find('#data_mob_deaths_30d').text(data.mob_deaths_30d);
     $(element).find('#data_mob_deaths_7d').text(data.mob_deaths_7d);
+
+    $(element).find('#data_mob_kdr_total').text(data.mob_kdr_total);
+    $(element).find('#data_mob_kdr_30d').text(data.mob_kdr_30d);
+    $(element).find('#data_mob_kdr_7d').text(data.mob_kdr_7d);
 
     $(element).find('#data_deaths_total').text(data.deaths_total);
     $(element).find('#data_deaths_30d').text(data.deaths_30d);
@@ -235,7 +239,6 @@ function loadPvPPvEValues(json, error) {
     $(element).find('#data_weapon_1st').text(data.weapon_1st);
     $(element).find('#data_weapon_2nd').text(data.weapon_2nd);
     $(element).find('#data_weapon_3rd').text(data.weapon_3rd);
-    $(element).find('#data_rage_quits').text(data.rage_quits)
 }
 
 /* This function loads Playerbase Overview tab */

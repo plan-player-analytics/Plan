@@ -120,9 +120,10 @@ public class KillQueries {
                 AND + KillsTable.DATE + ">=?" +
                 AND + KillsTable.DATE + "<=?" +
                 GROUP_BY + KillsTable.VICTIM_UUID;
-        String sql = SELECT + "AVG(kills/deaths) as kdr" +
+        String sql = SELECT + "AVG(CAST(kills AS FLOAT)/CAST(deaths AS FLOAT)) as kdr" +
                 FROM + '(' + selectKillCounts + ") q1" +
-                INNER_JOIN + '(' + selectDeathCounts + ") q2 on q1." + KillsTable.KILLER_UUID + "=q2." + KillsTable.VICTIM_UUID;
+                INNER_JOIN + '(' + selectDeathCounts + ") q2 on q1." + KillsTable.KILLER_UUID + "=q2." + KillsTable.VICTIM_UUID +
+                WHERE + "deaths!=0";
 
         return new QueryStatement<Double>(sql) {
             @Override
@@ -180,6 +181,35 @@ public class KillQueries {
             @Override
             public Long processResults(ResultSet set) throws SQLException {
                 return set.next() ? set.getLong("count") : 0L;
+            }
+        };
+    }
+
+    public static Query<List<String>> topWeapons(long after, long before, UUID serverUUID, int limit) {
+        String innerSQL = SELECT + KillsTable.WEAPON + ", COUNT(1) as kills" +
+                FROM + KillsTable.TABLE_NAME +
+                WHERE + KillsTable.SERVER_UUID + "=?" +
+                AND + KillsTable.DATE + ">=?" +
+                AND + KillsTable.DATE + "<=?" +
+                GROUP_BY + KillsTable.WEAPON;
+        String sql = SELECT + KillsTable.WEAPON +
+                FROM + '(' + innerSQL + ')' +
+                ORDER_BY + "kills DESC LIMIT ?";
+
+        return new QueryStatement<List<String>>(sql, limit) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, after);
+                statement.setLong(3, before);
+                statement.setInt(4, limit);
+            }
+
+            @Override
+            public List<String> processResults(ResultSet set) throws SQLException {
+                List<String> weapons = new ArrayList<>();
+                while (set.next()) weapons.add(set.getString(KillsTable.WEAPON));
+                return weapons;
             }
         };
     }
