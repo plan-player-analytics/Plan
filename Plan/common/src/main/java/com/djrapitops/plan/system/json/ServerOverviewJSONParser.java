@@ -49,7 +49,7 @@ import java.util.concurrent.TimeUnit;
  * @author Rsl1122
  */
 @Singleton
-public class ServerOverviewJSONParser {
+public class ServerOverviewJSONParser implements TabJSONParser<Map<String, Object>> {
 
     private PlanConfig config;
     private DBSystem dbSystem;

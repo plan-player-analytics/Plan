@@ -17,6 +17,8 @@
 package com.djrapitops.plan.system.webserver.pages.json;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
+import com.djrapitops.plan.system.Identifiers;
+import com.djrapitops.plan.system.json.*;
 import com.djrapitops.plan.system.webserver.RequestTarget;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.pages.TreePageHandler;
@@ -33,28 +35,42 @@ import javax.inject.Singleton;
 @Singleton
 public class RootJSONHandler extends TreePageHandler {
 
+    private Identifiers identifiers;
+
     @Inject
     public RootJSONHandler(
             ResponseFactory responseFactory,
+            Identifiers identifiers,
+            JSONFactory jsonFactory,
             GraphsJSONHandler graphsJSONHandler,
             SessionsJSONHandler sessionsJSONHandler,
             PlayersTableJSONHandler playersTableJSONHandler,
-            ServerOverviewJSONHandler serverOverviewJSONHandler,
-            OnlineActivityOverviewJSONHandler onlineActivityOverviewJSONHandler,
-            SessionsOverviewJSONHandler sessionsOverviewJSONHandler,
+            ServerOverviewJSONParser serverOverviewJSONParser,
+            OnlineActivityOverviewJSONParser onlineActivityOverviewJSONParser,
+            SessionsOverviewJSONParser sessionsOverviewJSONParser,
             PlayerKillsJSONHandler playerKillsJSONHandler,
-            PvPPvEJSONHandler pvppveJSONHandler
+            PvPPvEJSONParser pvPPvEJSONParser,
+            PlayerBaseOverviewJSONParser playerBaseOverviewJSONParser
     ) {
         super(responseFactory);
+
+        this.identifiers = identifiers;
 
         registerPage("players", playersTableJSONHandler);
         registerPage("sessions", sessionsJSONHandler);
         registerPage("kills", playerKillsJSONHandler);
         registerPage("graph", graphsJSONHandler);
-        registerPage("serverOverview", serverOverviewJSONHandler);
-        registerPage("onlineOverview", onlineActivityOverviewJSONHandler);
-        registerPage("sessionsOverview", sessionsOverviewJSONHandler);
-        registerPage("playerVersus", pvppveJSONHandler);
+
+        registerPage("serverOverview", serverOverviewJSONParser);
+        registerPage("onlineOverview", onlineActivityOverviewJSONParser);
+        registerPage("sessionsOverview", sessionsOverviewJSONParser);
+        registerPage("playerVersus", pvPPvEJSONParser);
+        registerPage("playerbaseOverview", playerBaseOverviewJSONParser);
+    }
+
+    private <T> void registerPage(String identifier, TabJSONParser<T> tabJSONParser) {
+        registerPage(identifier, new ServerTabJSONHandler<>(identifiers, tabJSONParser));
+
     }
 
     @Override

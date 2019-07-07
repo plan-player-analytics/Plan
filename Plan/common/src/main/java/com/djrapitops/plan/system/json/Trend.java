@@ -25,6 +25,11 @@ import com.djrapitops.plan.utilities.formatting.Formatter;
  */
 public class Trend {
 
+    /**
+     * When a trend is reversed increase is "bad" (red) and decrease is "good" (green)
+     */
+    public static final boolean REVERSED = true;
+
     private String text;
     private String direction;
     private boolean reversed;
