@@ -22,6 +22,7 @@ import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
+import com.djrapitops.plan.db.access.queries.analysis.ActivityIndexQueries;
 import com.djrapitops.plan.db.access.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.db.access.queries.objects.KillQueries;
 import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
@@ -30,6 +31,7 @@ import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DisplaySettings;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 
@@ -107,11 +109,12 @@ public class ServerOverviewJSONParser {
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
         long twoDaysAgo = now - TimeUnit.DAYS.toMillis(2L);
+        Long playtimeThreshold = config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD);
 
         Map<String, Object> numbers = new HashMap<>();
 
         numbers.put("total_players", db.query(ServerAggregateQueries.serverUserCount(serverUUID)));
-        numbers.put("regular_players", 0); // TODO
+        numbers.put("regular_players", db.query(ActivityIndexQueries.fetchRegularPlayerCount(now, serverUUID, playtimeThreshold)));
         numbers.put("online_players", getOnlinePlayers(serverUUID, db));
         Optional<DateObj<Integer>> lastPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, twoDaysAgo));
         Optional<DateObj<Integer>> allTimePeak = db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID));
@@ -142,6 +145,7 @@ public class ServerOverviewJSONParser {
         long now = System.currentTimeMillis();
         long oneWeekAgo = now - TimeUnit.DAYS.toMillis(7L);
         long twoWeeksAgo = now - TimeUnit.DAYS.toMillis(14L);
+        Long playtimeThreshold = config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD);
 
         Map<String, Object> weeks = new HashMap<>();
 
@@ -159,9 +163,11 @@ public class ServerOverviewJSONParser {
         weeks.put("new_after", newAfter);
         weeks.put("new_trend", newTrend);
 
-        weeks.put("regular_before", "-"); // TODO
-        weeks.put("regular_after", "-");
-        weeks.put("regular_trend", new Trend(0, 0, false));
+        int regularBefore = db.query(ActivityIndexQueries.fetchRegularPlayerCount(oneWeekAgo, serverUUID, playtimeThreshold));
+        int regularAfter = db.query(ActivityIndexQueries.fetchRegularPlayerCount(now, serverUUID, playtimeThreshold));
+        weeks.put("regular_before", regularBefore);
+        weeks.put("regular_after", regularAfter);
+        weeks.put("regular_trend", new Trend(regularBefore, regularAfter, false));
 
         Long playtimeBefore = db.query(SessionQueries.playtime(twoWeeksAgo, oneWeekAgo, serverUUID));
         Long playtimeAfter = db.query(SessionQueries.playtime(oneWeekAgo, now, serverUUID));
