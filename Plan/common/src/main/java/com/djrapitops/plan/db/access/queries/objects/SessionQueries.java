@@ -320,4 +320,67 @@ public class SessionQueries {
             }
         };
     }
+
+    public static Query<Long> sessionCount(long after, long before, UUID serverUUID) {
+        String sql = SELECT + "COUNT(1) as count" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SERVER_UUID + "=?" +
+                AND + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?";
+        return new QueryStatement<Long>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, after);
+                statement.setLong(3, before);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("count") : 0L;
+            }
+        };
+    }
+
+    public static Query<Long> playtime(long after, long before, UUID serverUUID) {
+        String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SERVER_UUID + "=?" +
+                AND + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?";
+        return new QueryStatement<Long>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, after);
+                statement.setLong(3, before);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("playtime") : 0L;
+            }
+        };
+    }
+
+    public static Query<Long> afkTime(long after, long before, UUID serverUUID) {
+        String sql = SELECT + "SUM(" + SessionsTable.AFK_TIME + ") as afk_time" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SERVER_UUID + "=?" +
+                AND + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?";
+        return new QueryStatement<Long>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, after);
+                statement.setLong(3, before);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("afk_time") : 0L;
+            }
+        };
+    }
 }

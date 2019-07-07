@@ -22,7 +22,6 @@ import com.djrapitops.plan.data.store.mutators.PlayersOnlineResolver;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
 import com.djrapitops.plan.db.access.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
 import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
@@ -132,11 +131,11 @@ public class OnlineActivityOverviewJSONParser {
         numbers.put("new_players_retention_24h", 0); // TODO
         numbers.put("new_players_retention_24h_perc", percentageFormatter.apply(-1.0)); // TODO
 
-        Long playtimeMonth = db.query(ServerAggregateQueries.playtime(monthAgo, now, serverUUID));
-        Long playtimeWeek = db.query(ServerAggregateQueries.playtime(weekAgo, now, serverUUID));
-        Long playtimeDay = db.query(ServerAggregateQueries.playtime(dayAgo, now, serverUUID));
-        Long playtimeBefore = db.query(ServerAggregateQueries.playtime(monthAgo, halfMonthAgo, serverUUID));
-        Long playtimeAfter = db.query(ServerAggregateQueries.playtime(halfMonthAgo, now, serverUUID));
+        Long playtimeMonth = db.query(SessionQueries.playtime(monthAgo, now, serverUUID));
+        Long playtimeWeek = db.query(SessionQueries.playtime(weekAgo, now, serverUUID));
+        Long playtimeDay = db.query(SessionQueries.playtime(dayAgo, now, serverUUID));
+        Long playtimeBefore = db.query(SessionQueries.playtime(monthAgo, halfMonthAgo, serverUUID));
+        Long playtimeAfter = db.query(SessionQueries.playtime(halfMonthAgo, now, serverUUID));
         numbers.put("playtime_30d", timeAmountFormatter.apply(playtimeMonth));
         numbers.put("playtime_30d_trend", new Trend(playtimeBefore, playtimeAfter, false, timeAmountFormatter));
         numbers.put("playtime_7d", timeAmountFormatter.apply(playtimeWeek));
@@ -153,11 +152,11 @@ public class OnlineActivityOverviewJSONParser {
         numbers.put("playtime_7d_avg", timeAmountFormatter.apply(-1L));
         numbers.put("playtime_24h_avg", timeAmountFormatter.apply(-1L));
 
-        Long sessionsMonth = db.query(ServerAggregateQueries.sessionCount(monthAgo, now, serverUUID));
-        Long sessionsWeek = db.query(ServerAggregateQueries.sessionCount(weekAgo, now, serverUUID));
-        Long sessionsDay = db.query(ServerAggregateQueries.sessionCount(dayAgo, now, serverUUID));
-        Long sessionsBefore = db.query(ServerAggregateQueries.sessionCount(monthAgo, halfMonthAgo, serverUUID));
-        Long sessionsAfter = db.query(ServerAggregateQueries.sessionCount(halfMonthAgo, now, serverUUID));
+        Long sessionsMonth = db.query(SessionQueries.sessionCount(monthAgo, now, serverUUID));
+        Long sessionsWeek = db.query(SessionQueries.sessionCount(weekAgo, now, serverUUID));
+        Long sessionsDay = db.query(SessionQueries.sessionCount(dayAgo, now, serverUUID));
+        Long sessionsBefore = db.query(SessionQueries.sessionCount(monthAgo, halfMonthAgo, serverUUID));
+        Long sessionsAfter = db.query(SessionQueries.sessionCount(halfMonthAgo, now, serverUUID));
         numbers.put("sessions_30d", sessionsMonth);
         numbers.put("sessions_30d_trend", new Trend(sessionsBefore, sessionsAfter, false));
         numbers.put("sessions_7d", sessionsWeek);

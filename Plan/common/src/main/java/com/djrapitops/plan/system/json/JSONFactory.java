@@ -22,7 +22,7 @@ import com.djrapitops.plan.data.store.mutators.PlayerKillMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.containers.ServerPlayersTableContainersQuery;
-import com.djrapitops.plan.db.access.queries.objects.PlayerKillQueries;
+import com.djrapitops.plan.db.access.queries.objects.KillQueries;
 import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerPlayerDataTableQuery;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -90,7 +90,7 @@ public class JSONFactory {
 
     public List<Map<String, Object>> serverPlayerKillsAsJSONMap(UUID serverUUID) {
         Database db = dbSystem.getDatabase();
-        List<PlayerKill> kills = db.query(PlayerKillQueries.fetchMostRecentPlayerKills(serverUUID, 100));
+        List<PlayerKill> kills = db.query(KillQueries.fetchMostRecentPlayerKills(serverUUID, 100));
         return new PlayerKillMutator(kills).toJSONAsMap(formatters);
     }
 }

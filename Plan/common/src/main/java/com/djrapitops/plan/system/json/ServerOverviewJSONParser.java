@@ -23,6 +23,8 @@ import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
 import com.djrapitops.plan.db.access.queries.analysis.PlayerCountQueries;
+import com.djrapitops.plan.db.access.queries.objects.KillQueries;
+import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
 import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -117,12 +119,12 @@ public class ServerOverviewJSONParser {
         numbers.put("last_peak_players", lastPeak.map(dateObj -> dateObj.getValue().toString()).orElse("-"));
         numbers.put("best_peak_date", allTimePeak.map(dateFormatter).orElse("-"));
         numbers.put("best_peak_players", allTimePeak.map(dateObj -> dateObj.getValue().toString()).orElse("-"));
-        numbers.put("playtime", timeAmountFormatter.apply(db.query(ServerAggregateQueries.playtime(0L, now, serverUUID))));
+        numbers.put("playtime", timeAmountFormatter.apply(db.query(SessionQueries.playtime(0L, now, serverUUID))));
         numbers.put("player_playtime", "-"); // TODO
-        numbers.put("sessions", db.query(ServerAggregateQueries.sessionCount(0L, now, serverUUID)));
-        numbers.put("player_kills", db.query(ServerAggregateQueries.playerKillCount(0L, now, serverUUID)));
-        numbers.put("mob_kills", db.query(ServerAggregateQueries.mobKillCount(0L, now, serverUUID)));
-        numbers.put("deaths", db.query(ServerAggregateQueries.deathCount(0L, now, serverUUID)));
+        numbers.put("sessions", db.query(SessionQueries.sessionCount(0L, now, serverUUID)));
+        numbers.put("player_kills", db.query(KillQueries.playerKillCount(0L, now, serverUUID)));
+        numbers.put("mob_kills", db.query(KillQueries.mobKillCount(0L, now, serverUUID)));
+        numbers.put("deaths", db.query(KillQueries.deathCount(0L, now, serverUUID)));
 
         return numbers;
     }
@@ -161,36 +163,36 @@ public class ServerOverviewJSONParser {
         weeks.put("regular_after", "-");
         weeks.put("regular_trend", new Trend(0, 0, false));
 
-        Long playtimeBefore = db.query(ServerAggregateQueries.playtime(twoWeeksAgo, oneWeekAgo, serverUUID));
-        Long playtimeAfter = db.query(ServerAggregateQueries.playtime(oneWeekAgo, now, serverUUID));
+        Long playtimeBefore = db.query(SessionQueries.playtime(twoWeeksAgo, oneWeekAgo, serverUUID));
+        Long playtimeAfter = db.query(SessionQueries.playtime(oneWeekAgo, now, serverUUID));
         Trend playtimeTrend = new Trend(playtimeBefore, playtimeAfter, false, timeAmountFormatter);
         weeks.put("playtime_before", timeAmountFormatter.apply(playtimeBefore));
         weeks.put("playtime_after", timeAmountFormatter.apply(playtimeAfter));
         weeks.put("playtime_trend", playtimeTrend);
 
-        Long sessionsBefore = db.query(ServerAggregateQueries.sessionCount(twoWeeksAgo, oneWeekAgo, serverUUID));
-        Long sessionsAfter = db.query(ServerAggregateQueries.sessionCount(oneWeekAgo, now, serverUUID));
+        Long sessionsBefore = db.query(SessionQueries.sessionCount(twoWeeksAgo, oneWeekAgo, serverUUID));
+        Long sessionsAfter = db.query(SessionQueries.sessionCount(oneWeekAgo, now, serverUUID));
         Trend sessionsTrend = new Trend(sessionsBefore, sessionsAfter, false);
         weeks.put("sessions_before", sessionsBefore);
         weeks.put("sessions_after", sessionsAfter);
         weeks.put("sessions_trend", sessionsTrend);
 
-        Long pksBefore = db.query(ServerAggregateQueries.playerKillCount(twoWeeksAgo, oneWeekAgo, serverUUID));
-        Long pksAfter = db.query(ServerAggregateQueries.playerKillCount(oneWeekAgo, now, serverUUID));
+        Long pksBefore = db.query(KillQueries.playerKillCount(twoWeeksAgo, oneWeekAgo, serverUUID));
+        Long pksAfter = db.query(KillQueries.playerKillCount(oneWeekAgo, now, serverUUID));
         Trend pksTrend = new Trend(pksBefore, pksAfter, false);
         weeks.put("player_kills_before", pksBefore);
         weeks.put("player_kills_after", pksAfter);
         weeks.put("player_kills_trend", pksTrend);
 
-        Long mkBefore = db.query(ServerAggregateQueries.mobKillCount(twoWeeksAgo, oneWeekAgo, serverUUID));
-        Long mkAfter = db.query(ServerAggregateQueries.mobKillCount(oneWeekAgo, now, serverUUID));
+        Long mkBefore = db.query(KillQueries.mobKillCount(twoWeeksAgo, oneWeekAgo, serverUUID));
+        Long mkAfter = db.query(KillQueries.mobKillCount(oneWeekAgo, now, serverUUID));
         Trend mkTrend = new Trend(mkBefore, mkAfter, false);
         weeks.put("mob_kills_before", mkBefore);
         weeks.put("mob_kills_after", mkAfter);
         weeks.put("mob_kills_trend", mkTrend);
 
-        Long deathsBefore = db.query(ServerAggregateQueries.deathCount(twoWeeksAgo, oneWeekAgo, serverUUID));
-        Long deathsAfter = db.query(ServerAggregateQueries.deathCount(oneWeekAgo, now, serverUUID));
+        Long deathsBefore = db.query(KillQueries.deathCount(twoWeeksAgo, oneWeekAgo, serverUUID));
+        Long deathsAfter = db.query(KillQueries.deathCount(oneWeekAgo, now, serverUUID));
         Trend deathTrend = new Trend(deathsBefore, deathsAfter, true);
         weeks.put("deaths_before", deathsBefore);
         weeks.put("deaths_after", deathsAfter);
