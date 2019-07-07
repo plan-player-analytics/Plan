@@ -21,7 +21,7 @@ import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
+import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
 import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
 import com.djrapitops.plan.db.access.queries.objects.WorldTimesQueries;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -92,8 +92,8 @@ public class SessionsOverviewJSONParser {
         insights.put("server_occupied", timeAmountFormatter.apply(occupied));
         insights.put("server_occupied_perc", uptime != 0 ? percentageFormatter.apply(1.0 * occupied / uptime) : "-");
 
-        Long playtime = db.query(ServerAggregateQueries.playtime(monthAgo, now, serverUUID));
-        Long afkTime = db.query(ServerAggregateQueries.afkTime(monthAgo, now, serverUUID));
+        Long playtime = db.query(SessionQueries.playtime(monthAgo, now, serverUUID));
+        Long afkTime = db.query(SessionQueries.afkTime(monthAgo, now, serverUUID));
         insights.put("total_playtime", timeAmountFormatter.apply(playtime));
         insights.put("afk_time", timeAmountFormatter.apply(afkTime));
         insights.put("afk_time_perc", playtime != 0 ? percentageFormatter.apply(1.0 * afkTime / playtime) : "-");
