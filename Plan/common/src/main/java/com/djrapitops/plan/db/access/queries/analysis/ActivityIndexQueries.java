@@ -20,6 +20,7 @@ import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.tables.SessionsTable;
+import com.djrapitops.plan.db.sql.tables.UserInfoTable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -69,7 +70,7 @@ public class ActivityIndexQueries {
         return fetchActivityGroupCount(date, serverUUID, playtimeThreshold, ActivityIndex.REGULAR, 5.1);
     }
 
-    public static Query<Integer> fetchActivityGroupCount(long date, UUID serverUUID, long playtimeThreshold, double above, double below) {
+    private static String selectActivityIndexSQL() {
         String selectActivePlaytimeSQL = SELECT +
                 SessionsTable.USER_UUID +
                 ",SUM(" +
@@ -83,11 +84,30 @@ public class ActivityIndexQueries {
 
         String selectThreeWeeks = selectActivePlaytimeSQL + UNION + selectActivePlaytimeSQL + UNION + selectActivePlaytimeSQL;
 
-        String selectActivityIndex = SELECT +
+        return SELECT +
                 "5.0 - 5.0 * AVG(1 / (?/2 * (q1.active_playtime/?) +1)) as activity_index," +
                 "q1." + SessionsTable.USER_UUID +
                 FROM + '(' + selectThreeWeeks + ") q1" +
                 GROUP_BY + "q1." + SessionsTable.USER_UUID;
+    }
+
+    private static void setSelectActivityIndexSQLParameters(PreparedStatement statement, int index, long playtimeThreshold, UUID serverUUID, long date) throws SQLException {
+        statement.setDouble(index, Math.PI);
+        statement.setLong(index + 1, playtimeThreshold);
+
+        statement.setString(index + 2, serverUUID.toString());
+        statement.setLong(index + 3, date - TimeUnit.DAYS.toMillis(7L));
+        statement.setLong(index + 4, date);
+        statement.setString(index + 5, serverUUID.toString());
+        statement.setLong(index + 6, date - TimeUnit.DAYS.toMillis(14L));
+        statement.setLong(index + 7, date - TimeUnit.DAYS.toMillis(7L));
+        statement.setString(index + 8, serverUUID.toString());
+        statement.setLong(index + 9, date - TimeUnit.DAYS.toMillis(21L));
+        statement.setLong(index + 10, date - TimeUnit.DAYS.toMillis(14L));
+    }
+
+    public static Query<Integer> fetchActivityGroupCount(long date, UUID serverUUID, long playtimeThreshold, double above, double below) {
+        String selectActivityIndex = selectActivityIndexSQL();
 
         // TODO Include users with 0 sessions in Inactive group
         // TODO Take into account player's register date
@@ -99,19 +119,7 @@ public class ActivityIndexQueries {
         return new QueryStatement<Integer>(selectActivePlayerCount) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setDouble(1, Math.PI);
-                statement.setLong(2, playtimeThreshold);
-
-                statement.setString(3, serverUUID.toString());
-                statement.setLong(4, date - TimeUnit.DAYS.toMillis(7L));
-                statement.setLong(5, date);
-                statement.setString(6, serverUUID.toString());
-                statement.setLong(7, date - TimeUnit.DAYS.toMillis(14L));
-                statement.setLong(8, date - TimeUnit.DAYS.toMillis(7L));
-                statement.setString(9, serverUUID.toString());
-                statement.setLong(10, date - TimeUnit.DAYS.toMillis(21L));
-                statement.setLong(11, date - TimeUnit.DAYS.toMillis(14L));
-
+                setSelectActivityIndexSQLParameters(statement, 1, playtimeThreshold, serverUUID, date);
                 statement.setDouble(12, above);
                 statement.setDouble(13, below);
             }
@@ -132,6 +140,74 @@ public class ActivityIndexQueries {
             groups.put("Irregular", db.query(fetchActivityGroupCount(date, serverUUID, threshold, ActivityIndex.IRREGULAR, ActivityIndex.REGULAR)));
             groups.put("Inactive", db.query(fetchActivityGroupCount(date, serverUUID, threshold, -0.1, ActivityIndex.IRREGULAR)));
             return groups;
+        };
+    }
+
+    public static Query<Integer> countNewPlayersTurnedRegular(long after, long before, UUID serverUUID, Long threshold) {
+        String selectActivityIndex = selectActivityIndexSQL();
+
+        String selectActivePlayerCount = SELECT + "COUNT(1) as count" +
+                FROM + '(' + selectActivityIndex + ") q2" +
+                INNER_JOIN + UserInfoTable.TABLE_NAME + " u on u." + UserInfoTable.USER_UUID + "=q2." + SessionsTable.USER_UUID +
+                WHERE + "u." + UserInfoTable.SERVER_UUID + "=?" +
+                AND + "u." + UserInfoTable.REGISTERED + ">=?" +
+                AND + "u." + UserInfoTable.REGISTERED + "<=?" +
+                AND + "q2.activity_index>=?" +
+                AND + "q2.activity_index<?";
+
+        return new QueryStatement<Integer>(selectActivePlayerCount) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                setSelectActivityIndexSQLParameters(statement, 1, threshold, serverUUID, before);
+                statement.setString(12, serverUUID.toString());
+                statement.setLong(13, after);
+                statement.setLong(14, before);
+                statement.setDouble(15, ActivityIndex.REGULAR);
+                statement.setDouble(16, 5.1);
+            }
+
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getInt("count") : 0;
+            }
+        };
+    }
+
+    /**
+     * @param start      Start of the tracking, those regular will be counted here.
+     * @param end        End of the tracking, those inactive will be count here.
+     * @param serverUUID UUID of the server.
+     * @param threshold  Playtime threshold
+     * @return Query how many players went from regular to inactive in a span of time.
+     */
+    public static Query<Integer> countRegularPlayersTurnedInactive(long start, long end, UUID serverUUID, Long threshold) {
+        String selectActivityIndex = selectActivityIndexSQL();
+
+        String selectActivePlayerCount = SELECT + "COUNT(1) as count" +
+                FROM + '(' + selectActivityIndex + ") q2" +
+                // Join two select activity index queries together to query Regular and Inactive players
+                INNER_JOIN + '(' + selectActivityIndex.replace("q1", "q3") + ") q4" +
+                " on q2." + SessionsTable.USER_UUID + "=q4." + SessionsTable.USER_UUID +
+                WHERE + "q2.activity_index>=?" +
+                AND + "q2.activity_index<?" +
+                AND + "q4.activity_index>=?" +
+                AND + "q4.activity_index<?";
+
+        return new QueryStatement<Integer>(selectActivePlayerCount) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                setSelectActivityIndexSQLParameters(statement, 1, threshold, serverUUID, end);
+                setSelectActivityIndexSQLParameters(statement, 12, threshold, serverUUID, start);
+                statement.setDouble(22, ActivityIndex.REGULAR);
+                statement.setDouble(23, 5.1);
+                statement.setDouble(24, -0.1);
+                statement.setDouble(25, ActivityIndex.IRREGULAR);
+            }
+
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getInt("count") : 0;
+            }
         };
     }
 }

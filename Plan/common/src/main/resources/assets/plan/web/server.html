@@ -1415,67 +1415,7 @@
     jsonRequest("../v1/onlineOverview?serverName=${serverName}", loadOnlineActivityOverviewValues);
     jsonRequest("../v1/sessionsOverview?serverName=${serverName}", loadSessionValues);
     jsonRequest("../v1/playerVersus?serverName=${serverName}", loadPvPPvEValues);
-    loadPlayerbaseOverviewValues(
-        {
-            trends: {
-                total_players_then: 4532,
-                total_players_now: 5043,
-                total_players_trend: {
-                    text: 511,
-                    direction: '+'
-                },
-                regular_players_then: 467,
-                regular_players_now: 483,
-                regular_players_trend: {
-                    text: 16,
-                    direction: '+'
-                },
-                playtime_avg_then: '8h 5m 56s',
-                playtime_avg_now: '8h 53m 24s',
-                playtime_avg_trend: {
-                    text: '47m 32s',
-                    direction: '+'
-                },
-                afk_then: '34.5%',
-                afk_now: '42.4%',
-                afk_trend: {
-                    text: '7.9%',
-                    direction: '+',
-                    reversed: true
-                },
-                regular_playtime_avg_then: '8h 5m 56s',
-                regular_playtime_avg_now: '8h 53m 24s',
-                regular_playtime_avg_trend: {
-                    text: '47m 32s',
-                    direction: '+'
-                },
-                regular_session_avg_then: '8h 5m 56s',
-                regular_session_avg_now: '8h 53m 24s',
-                regular_session_avg_trend: {
-                    text: '47m 32s',
-                    direction: '+'
-                },
-                regular_afk_then: '34.5%',
-                regular_afk_now: '42.4%',
-                regular_afk_trend: {
-                    text: '7.9%',
-                    direction: '+',
-                    reversed: true
-                }
-            },
-            insights: {
-                new_to_regular: 32,
-                new_to_regular_trend: {
-                    direction: '+'
-                },
-                regular_to_inactive: 45,
-                regular_to_inactive_trend: {
-                    direction: '+',
-                    reversed: true
-                }
-            }
-        }, null
-    );
+    jsonRequest("../v1/playerbaseOverview?serverName=${serverName}", loadPlayerbaseOverviewValues);
     loadPerformanceValues(
         {
             numbers: {
