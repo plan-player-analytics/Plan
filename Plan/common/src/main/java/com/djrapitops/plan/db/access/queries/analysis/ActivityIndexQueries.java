@@ -16,6 +16,19 @@
  */
 package com.djrapitops.plan.db.access.queries.analysis;
 
+import com.djrapitops.plan.data.store.mutators.ActivityIndex;
+import com.djrapitops.plan.db.access.Query;
+import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.sql.tables.SessionsTable;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Queries for Activity Index that attempts to gain insight into player activity levels.
  * <p>
@@ -49,4 +62,55 @@ package com.djrapitops.plan.db.access.queries.analysis;
  * @author Rsl1122
  */
 public class ActivityIndexQueries {
+
+    public static Query<Integer> fetchRegularPlayerCount(long date, UUID serverUUID, long playtimeThreshold) {
+        String selectActivePlaytimeSQL = SELECT +
+                SessionsTable.USER_UUID +
+                ",SUM(" +
+                SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME +
+                ") as active_playtime" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SERVER_UUID + "=?" +
+                AND + SessionsTable.SESSION_START + ">=?" +
+                AND + SessionsTable.SESSION_END + "<=?" +
+                GROUP_BY + SessionsTable.USER_UUID;
+
+        String selectThreeWeeks = selectActivePlaytimeSQL + UNION + selectActivePlaytimeSQL + UNION + selectActivePlaytimeSQL;
+
+        String selectActivityIndex = SELECT +
+                "5.0 - 5.0 * AVG(1 / (?/2 * (q1.active_playtime/?) +1)) as activity_index," +
+                "q1." + SessionsTable.USER_UUID +
+                FROM + '(' + selectThreeWeeks + ") q1" +
+                GROUP_BY + "q1." + SessionsTable.USER_UUID;
+
+        String selectActivePlayerCount = SELECT + "COUNT(1) as count" +
+                FROM + '(' + selectActivityIndex + ") q2" +
+                WHERE + "q2.activity_index>=?";
+
+        return new QueryStatement<Integer>(selectActivePlayerCount) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setDouble(1, Math.PI);
+                statement.setLong(2, playtimeThreshold);
+
+                statement.setString(3, serverUUID.toString());
+                statement.setLong(4, date - TimeUnit.DAYS.toMillis(7L));
+                statement.setLong(5, date);
+                statement.setString(6, serverUUID.toString());
+                statement.setLong(7, date - TimeUnit.DAYS.toMillis(14L));
+                statement.setLong(8, date - TimeUnit.DAYS.toMillis(7L));
+                statement.setString(9, serverUUID.toString());
+                statement.setLong(10, date - TimeUnit.DAYS.toMillis(21L));
+                statement.setLong(11, date - TimeUnit.DAYS.toMillis(14L));
+
+                statement.setDouble(12, ActivityIndex.REGULAR);
+            }
+
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getInt("count") : 0;
+            }
+        };
+    }
+
 }

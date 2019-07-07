@@ -57,6 +57,11 @@ import java.util.Optional;
  */
 public class ActivityIndex {
 
+    public static final double VERY_ACTIVE = 3.75;
+    public static final double ACTIVE = 3.0;
+    public static final double REGULAR = 2.0;
+    public static final double IRREGULAR = 1.0;
+
     private final double value;
     private final long date;
 
@@ -126,13 +131,13 @@ public class ActivityIndex {
     }
 
     public String getGroup() {
-        if (value >= 3.75) {
+        if (value >= VERY_ACTIVE) {
             return "Very Active";
-        } else if (value >= 3) {
+        } else if (value >= ACTIVE) {
             return "Active";
-        } else if (value >= 2) {
+        } else if (value >= REGULAR) {
             return "Regular";
-        } else if (value >= 1) {
+        } else if (value >= IRREGULAR) {
             return "Irregular";
         } else {
             return "Inactive";
@@ -140,13 +145,13 @@ public class ActivityIndex {
     }
 
     public String getColor() {
-        if (value >= 3.75) {
+        if (value >= VERY_ACTIVE) {
             return "green";
-        } else if (value >= 3) {
+        } else if (value >= ACTIVE) {
             return "green";
-        } else if (value >= 2) {
+        } else if (value >= REGULAR) {
             return "lime";
-        } else if (value >= 1) {
+        } else if (value >= IRREGULAR) {
             return "amber";
         } else {
             return "blue-gray";
