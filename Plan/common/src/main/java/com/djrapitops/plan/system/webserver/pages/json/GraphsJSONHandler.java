@@ -70,6 +70,8 @@ public class GraphsJSONHandler implements PageHandler {
                 return new JSONResponse(graphJSON.serverCalendarJSON(serverUUID));
             case "worldPie":
                 return new JSONResponse<>(graphJSON.serverWorldPieJSONAsMap(serverUUID));
+            case "activity":
+                return new JSONResponse<>(graphJSON.activityGraphsJSONAsMap(serverUUID));
             default:
                 throw new BadRequestException("unknown 'type' parameter: " + type);
         }

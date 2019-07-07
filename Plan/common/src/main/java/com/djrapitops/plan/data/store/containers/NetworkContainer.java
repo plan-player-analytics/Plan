@@ -182,11 +182,11 @@ public class NetworkContainer extends DynamicDataContainer {
                 graphs.line().playersOnlineGraph(TPSMutator.forContainer(bungeeContainer)).toHighChartsSeries()
         );
         Key<StackGraph> activityStackGraph = new Key<>(StackGraph.class, "ACTIVITY_STACK_GRAPH");
-        putSupplier(NetworkKeys.ACTIVITY_DATA, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR).toActivityDataMap(getUnsafe(NetworkKeys.REFRESH_TIME), config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD), config.get(TimeSettings.ACTIVE_LOGIN_THRESHOLD)));
+        putSupplier(NetworkKeys.ACTIVITY_DATA, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR).toActivityDataMap(getUnsafe(NetworkKeys.REFRESH_TIME), config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD)));
         putSupplier(activityStackGraph, () -> graphs.stack().activityStackGraph(getUnsafe(NetworkKeys.ACTIVITY_DATA)));
         putSupplier(NetworkKeys.ACTIVITY_STACK_CATEGORIES, () -> getUnsafe(activityStackGraph).toHighChartsLabels());
         putSupplier(NetworkKeys.ACTIVITY_STACK_SERIES, () -> getUnsafe(activityStackGraph).toHighChartsSeries());
-        putSupplier(NetworkKeys.ACTIVITY_PIE_SERIES, () -> graphs.pie().activityPie(
+        putSupplier(NetworkKeys.ACTIVITY_PIE_SERIES, () -> graphs.pie().activityPie_old(
                 getUnsafe(NetworkKeys.ACTIVITY_DATA).get(getUnsafe(NetworkKeys.REFRESH_TIME))).toHighChartsSeries()
         );
 

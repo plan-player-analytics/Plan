@@ -139,7 +139,7 @@ public class PlayersMutator {
         return pingPerCountry;
     }
 
-    public TreeMap<Long, Map<String, Set<UUID>>> toActivityDataMap(long date, long msThreshold, int loginThreshold) {
+    public TreeMap<Long, Map<String, Set<UUID>>> toActivityDataMap(long date, long msThreshold) {
         TreeMap<Long, Map<String, Set<UUID>>> activityData = new TreeMap<>();
         for (long time = date; time >= date - TimeAmount.MONTH.toMillis(2L); time -= TimeAmount.WEEK.toMillis(1L)) {
             Map<String, Set<UUID>> map = activityData.getOrDefault(time, new HashMap<>());

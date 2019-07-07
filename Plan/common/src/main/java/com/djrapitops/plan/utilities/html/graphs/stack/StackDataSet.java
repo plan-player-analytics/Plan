@@ -16,9 +16,7 @@
  */
 package com.djrapitops.plan.utilities.html.graphs.stack;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Represents a value set for a Stack graph.
@@ -29,13 +27,14 @@ import java.util.Objects;
  *
  * @author Rsl1122
  */
-public class StackDataSet extends ArrayList<Double> {
+public class StackDataSet {
 
+    private final List<Double> data;
     private final String name;
     private final String color;
 
-    public StackDataSet(List<Double> values, String name, String color) {
-        super(values);
+    public StackDataSet(List<Double> data, String name, String color) {
+        this.data = data;
         this.name = name;
         this.color = color;
     }
@@ -48,18 +47,31 @@ public class StackDataSet extends ArrayList<Double> {
         return color;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof StackDataSet)) return false;
-        if (!super.equals(o)) return false;
-        StackDataSet doubles = (StackDataSet) o;
-        return Objects.equals(name, doubles.name) &&
-                Objects.equals(color, doubles.color);
+    public List<Double> getData() {
+        return data;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), name, color);
+    public void add(double value) {
+        data.add(value);
+    }
+
+    public String toSeriesObjectString() {
+        StringBuilder dataSetBuilder = new StringBuilder("{name: '");
+
+        dataSetBuilder.append(getName()).append("',")
+                .append("color:").append(getColor())
+                .append(",data: [");
+
+        int size = data.size();
+        int i = 0;
+        for (Double value : data) {
+            dataSetBuilder.append(value);
+            if (i < size - 1) {
+                dataSetBuilder.append(",");
+            }
+            i++;
+        }
+
+        return dataSetBuilder.append("]}").toString();
     }
 }

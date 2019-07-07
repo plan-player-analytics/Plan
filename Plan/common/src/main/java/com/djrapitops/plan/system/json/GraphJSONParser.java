@@ -20,8 +20,10 @@ import com.djrapitops.plan.data.store.mutators.MutatorFunctions;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
+import com.djrapitops.plan.data.store.objects.DateMap;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.analysis.ActivityIndexQueries;
 import com.djrapitops.plan.db.access.queries.containers.ServerPlayerContainersQuery;
 import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
 import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
@@ -31,14 +33,14 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.line.LineGraphFactory;
+import com.djrapitops.plan.utilities.html.graphs.pie.Pie;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
+import com.djrapitops.plan.utilities.html.graphs.stack.StackGraph;
+import com.djrapitops.plugin.api.TimeAmount;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TimeZone;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -49,6 +51,7 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class GraphJSONParser {
 
+    private final PlanConfig config;
     private final DBSystem dbSystem;
     private final Graphs graphs;
     private final TimeZone timeZone;
@@ -59,6 +62,7 @@ public class GraphJSONParser {
             DBSystem dbSystem,
             Graphs graphs
     ) {
+        this.config = config;
         this.dbSystem = dbSystem;
         this.graphs = graphs;
         this.timeZone = config.get(TimeSettings.USE_SERVER_TIME) ? TimeZone.getDefault() : TimeZone.getTimeZone("GMT");
@@ -118,6 +122,27 @@ public class GraphJSONParser {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("world_series", worldPie.getSlices());
         dataMap.put("gm_series", worldPie.toHighChartsDrillDownMaps());
+        return dataMap;
+    }
+
+    public Map<String, Object> activityGraphsJSONAsMap(UUID serverUUID) {
+        Database db = dbSystem.getDatabase();
+        long date = System.currentTimeMillis();
+        Long threshold = config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD);
+
+        DateMap<Map<String, Integer>> activityData = new DateMap<>();
+        for (long time = date; time >= date - TimeAmount.MONTH.toMillis(2L); time -= TimeAmount.WEEK.toMillis(1L)) {
+            activityData.put(time, db.query(ActivityIndexQueries.fetchActivityIndexGroupingsOn(time, serverUUID, threshold)));
+        }
+
+        Map.Entry<Long, Map<String, Integer>> lastActivityEntry = activityData.lastEntry();
+        Pie activityPie = graphs.pie().activityPie(lastActivityEntry != null ? lastActivityEntry.getValue() : Collections.emptyMap());
+        StackGraph activityStackGraph = graphs.stack().activityStackGraph(activityData);
+
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("activity_series", activityStackGraph.getDataSets());
+        dataMap.put("activity_labels", activityStackGraph.getLabels());
+        dataMap.put("activity_pie_series", activityPie.getSlices());
         return dataMap;
     }
 }

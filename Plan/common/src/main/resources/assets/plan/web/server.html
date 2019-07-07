@@ -707,7 +707,7 @@
                                             class="fas fa-fw fa-chart-line col-amber"></i>
                                         Playerbase development</h6>
                                 </div>
-                                <div class="chart-area" id="playerBaseDevelopmentChart"></div>
+                                <div class="chart-area" id="activityStackGraph"></div>
                             </div>
                         </div>
 
@@ -720,9 +720,7 @@
                                             class="fa fa-fw fa-users col-amber"></i>
                                         Current Playerbase</h6>
                                 </div>
-                                <div class="chart-area">
-                                    <canvas id="myAreaChart2"></canvas>
-                                </div>
+                                <div class="chart-area" id="activityPie"></div>
                             </div>
                         </div>
                     </div>
@@ -1687,7 +1685,19 @@
             var gmSeries = json.gm_series;
             worldPie("worldPie", worldSeries, gmSeries);
         } else if (error) {
-            $('#worldpie').text("Failed to load graph data: " + error)
+            $('#worldPie').text("Failed to load graph data: " + error)
+        }
+    });
+
+    jsonRequest("../v1/graph?type=activity&serverName=${serverName}", function (json, error) {
+        if (json) {
+            activityPie('activityPie', {
+                name: 'Players', colorByPoint: true, data: json.activity_pie_series
+            });
+            stackChart('activityStackGraph', json.activity_labels, json.activity_series, 'Players');
+        } else if (error) {
+            $('#activityPie').text("Failed to load graph data: " + error);
+            $('#activityStackGraph').text("Failed to load graph data: " + error);
         }
     });
 
