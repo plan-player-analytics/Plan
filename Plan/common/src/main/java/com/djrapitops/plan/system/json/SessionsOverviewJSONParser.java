@@ -18,15 +18,12 @@ package com.djrapitops.plan.system.json;
 
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
-import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
 import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
 import com.djrapitops.plan.db.access.queries.objects.WorldTimesQueries;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import org.apache.commons.text.WordUtils;
@@ -42,31 +39,21 @@ import java.util.concurrent.TimeUnit;
  * @author Rsl1122
  */
 @Singleton
-public class SessionsOverviewJSONParser {
+public class SessionsOverviewJSONParser implements TabJSONParser<Map<String, Object>> {
 
-    private PlanConfig config;
     private DBSystem dbSystem;
-    private ServerInfo serverInfo;
 
     private Formatter<Long> timeAmountFormatter;
-    private Formatter<Double> decimalFormatter;
     private Formatter<Double> percentageFormatter;
-    private Formatter<DateHolder> dateFormatter;
 
     @Inject
     public SessionsOverviewJSONParser(
-            PlanConfig config,
             DBSystem dbSystem,
-            ServerInfo serverInfo,
             Formatters formatters
     ) {
-        this.config = config;
         this.dbSystem = dbSystem;
-        this.serverInfo = serverInfo;
 
-        dateFormatter = formatters.day();
         timeAmountFormatter = formatters.timeAmount();
-        decimalFormatter = formatters.decimals();
         percentageFormatter = formatters.percentage();
     }
 

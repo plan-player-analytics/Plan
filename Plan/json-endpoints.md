@@ -15,20 +15,9 @@ The body of the response is the error message
 
 Obtain all data in the database for a player.
 
-### `GET /v1/serverOverview`
+### Tab endpoints
 
-Obtain data for Server Overview tab (The first tab on `/server`-page)
-
-Required parameters: `serverName` or `serverUUID`
-
-Parameter|Expected value|Description
---|--|--
-`serverName` | Name of a Plan server | Used for identifying Plan server that the data should be about
-`serverUUID` | UUID of a Plan server | Used for identifying Plan server that the data should be about
-
-### `GET /v1/onlineOverview`
-
-Obtain data for Online Activity Overview tab.
+Endpoints for tab specific number data, processed for display.
 
 Required parameters: `serverName` or `serverUUID`
 
@@ -37,27 +26,15 @@ Parameter|Expected value|Description
 `serverName` | Name of a Plan server | Used for identifying Plan server that the data should be about
 `serverUUID` | UUID of a Plan server | Used for identifying Plan server that the data should be about
 
-### `GET /v1/sessionsOverview`
+#### `GET /v1/serverOverview` - Server Overview tab
 
-Obtain data for Sessions tab.
+#### `GET /v1/onlineOverview` - Online Activity Overview tab.
 
-Required parameters: `serverName` or `serverUUID`
+#### `GET /v1/sessionsOverview` - Sessions tab.
 
-Parameter|Expected value|Description
---|--|--
-`serverName` | Name of a Plan server | Used for identifying Plan server that the data should be about
-`serverUUID` | UUID of a Plan server | Used for identifying Plan server that the data should be about
+#### `GET /v1/playerVersus` - PvP & PvE tab.
 
-### `GET /v1/playerVersus`
-
-Obtain data for PvP & PvE tab.
-
-Required parameters: `serverName` or `serverUUID`
-
-Parameter|Expected value|Description
---|--|--
-`serverName` | Name of a Plan server | Used for identifying Plan server that the data should be about
-`serverUUID` | UUID of a Plan server | Used for identifying Plan server that the data should be about
+#### `GET /v1/playerbaseOverview` - Playerbase Overview tab.
 
 ### `GET /v1/players`
 
