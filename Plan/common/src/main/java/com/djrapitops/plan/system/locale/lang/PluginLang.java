@@ -35,7 +35,7 @@ public enum PluginLang implements Lang {
     ENABLE_FAIL_DB("Enable FAIL - Database", "${0}-Database Connection failed: ${1}"),
     ENABLE_FAIL_WRONG_DB("Enable FAIL - Wrong Database Type", "${0} is not a supported Database"),
     ENABLE_FAIL_DB_PATCH("Enable FAIL - Database Patch", "Database Patching failed, plugin has to be disabled. Please report this issue"),
-    ENABLE_FAIL_NO_WEB_SERVER_PROXY("Enable FAIL - WebServer (Bungee)", "WebServer did not initialize!"),
+    ENABLE_FAIL_NO_WEB_SERVER_PROXY("Enable FAIL - WebServer (Proxy)", "WebServer did not initialize!"),
     ENABLE_FAIL_GEODB_WRITE("Enable FAIL - GeoDB Write", "Something went wrong saving the downloaded GeoLite2 Geolocation database"),
 
     WEB_SERVER_FAIL_PORT_BIND("WebServer FAIL - Port Bind", "WebServer was not initialized successfully. Is the port (${0}) in use?"),

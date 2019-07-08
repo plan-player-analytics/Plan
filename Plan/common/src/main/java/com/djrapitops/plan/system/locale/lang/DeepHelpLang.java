@@ -24,8 +24,8 @@ package com.djrapitops.plan.system.locale.lang;
 public enum DeepHelpLang implements Lang {
     PLAN("In Depth Help - /plan ?", "> §2Main Command\\  Access to subcommands and help\\  §2/plan §fList subcommands\\  §2/plan <subcommand> ? §fIn depth help"),
     ANALYZE("In Depth Help - /plan analyze ?", "> §2Analysis Command\\  Refreshes server page and displays link to the web page."),
-    SETUP("In Depth Help - /planbungee setup ?", "> §2Set-up toggle Command\\  Toggles set-up mode on Bungee.\\  Safeguard against unauthorized MySQL snooping with another server."),
-    DISABLE("In Depth Help - /planbungee disable ?", "> §2Disable Command\\  Runs onDisable on PlanBungee.\\  Plugin can be enabled with /planbungee reload afterwards.\\  §bDoes not support swapping jar on the fly"),
+    SETUP("In Depth Help - /planbungee setup ?", "> §2Set-up toggle Command\\  Toggles set-up mode on Proxy.\\  Safeguard against unauthorized MySQL snooping with another server."),
+    DISABLE("In Depth Help - /planbungee disable ?", "> §2Disable Command\\  Runs Plan onDisable on Proxy.\\  Plugin can be enabled with /planbungee reload afterwards.\\  §bDoes not support swapping jar on the fly"),
     INSPECT("In Depth Help - /plan inspect ?", "> §2Inspect Command\\  Refreshes player page and displays link to the web page."),
     PLAYERS("In Depth Help - /plan players ?", "> §2Players Command\\  Displays link to the players page."),
     SERVERS("In Depth Help - /plan servers ?", "> §2Servers Command\\  Displays list of Plan servers in the Database.\\  Can be used to debug issues with database registration on a network."),
