@@ -62,6 +62,7 @@ subprojects {
     ext.htmlCompressorVersion = "1.5.2"
     ext.caffeineVersion = "2.7.0"
     ext.h2Version = "1.4.199"
+    ext.mysqlVersion = "8.0.16"
     ext.hikariVersion = "3.3.1"
     ext.slf4jVersion = "1.7.26"
     ext.geoIpVersion = "2.12.0"
@@ -114,7 +115,7 @@ subprojects {
 
         // Testing dependencies required by Plan
         testCompile "org.xerial:sqlite-jdbc:3.28.0"     // SQLite
-        testCompile "mysql:mysql-connector-java:8.0.16" // MySQL
+        testCompile "mysql:mysql-connector-java:$mysqlVersion" // MySQL
     }
     
     configurations {
