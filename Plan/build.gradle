@@ -109,7 +109,7 @@ subprojects {
         testCompile "org.junit.vintage:junit-vintage-engine:5.5.0"   // JUnit 4 compatibility for JUnit 5
         testCompile "org.junit.jupiter:junit-jupiter-params:5.5.0"   // JUnit 5, parameterized tests
         testCompile "org.mockito:mockito-core:2.28.2"                // Mockito Core
-        testCompile "org.mockito:mockito-junit-jupiter:2.28.2"       // Mockito JUnit 5 Extension
+        testCompile "org.mockito:mockito-junit-jupiter:3.0.0"       // Mockito JUnit 5 Extension
         testCompile "org.seleniumhq.selenium:selenium-java:3.141.59" // Selenium (Browser tests)
         testCompile "com.jayway.awaitility:awaitility:1.7.0"         // Awaitility (Concurrent wait conditions)
 
