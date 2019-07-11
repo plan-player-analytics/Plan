@@ -39,6 +39,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
 /**
  * This manage SubCommand is used to clear a database of all data.
@@ -101,11 +102,12 @@ public class ManageClearCommand extends CommandNode {
         processing.submitCritical(() -> {
             try {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
-
-                database.executeTransaction(new RemoveEverythingTransaction());
-
+                database.executeTransaction(new RemoveEverythingTransaction())
+                        .get(); // Wait for completion
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
-            } catch (DBOpException e) {
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } catch (DBOpException | ExecutionException e) {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
                 errorHandler.log(L.ERROR, this.getClass(), e);
             }

@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.objects.WebUserQueries;
@@ -41,6 +42,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Command for registering web users.
@@ -164,12 +166,15 @@ public class RegisterCommand extends CommandNode {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_WEB_USER_EXISTS));
                     return;
                 }
-                database.executeTransaction(new RegisterWebUserTransaction(webUser));
+                database.executeTransaction(new RegisterWebUserTransaction(webUser))
+                        .get(); // Wait for completion
 
                 sender.sendMessage(locale.getString(CommandLang.WEB_USER_REGISTER_SUCCESS, userName));
                 sendLink(sender);
                 logger.info(locale.getString(CommandLang.WEB_USER_REGISTER_NOTIFY, userName, webUser.getPermLevel()));
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } catch (DBOpException | ExecutionException e) {
                 errorHandler.log(L.WARN, this.getClass(), e);
             }
         });
