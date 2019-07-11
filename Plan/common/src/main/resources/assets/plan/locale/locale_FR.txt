@@ -36,7 +36,7 @@ Cmd Qinspect - Playtime                         ||   §2Temps de jeu : §f${0}
 Cmd Qinspect - Registered                       ||   §2Incrit depuis : §f${0}
 Cmd Qinspect - Times Kicked                     ||   §2Nombre d'éjections : §f${0}
 Cmd Setup - Allowed                             || §aLa configuration est maintenant autorisée.
-Cmd Setup - Bad Request                         || §eLa connexion a réussi, mais le serveur de réception n'était pas un serveur Bungee. Utilisez l'adresse du Bungee à la place.
+Cmd Setup - Bad Request                         || §eLa connexion a réussi, mais le serveur de réception n'était un serveur Bukkit ou Sponge. Utilisez une autre adresse à la place.
 Cmd Setup - Disallowed                          || §cLa configuration est maintenant interdite.
 Cmd Setup - Forbidden                           || §eConnexion réussie, mais le mode de configuration de Bungee est désactivé. Exécutez '/plan bungee setup' pour l'activer.
 Cmd Setup - Gateway Error                       || §eConnexion réussie, mais Bungee n'a pas réussi à se connecter à ce serveur (Le serveur Web actuel a-t-il redémarré ?). Exécutez '/plan m con' et '/planbungee con' pour déboguer.

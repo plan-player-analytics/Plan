@@ -36,7 +36,7 @@ Cmd Qinspect - Playtime                         ||   §2Peliaika: §f${0}
 Cmd Qinspect - Registered                       ||   §2Rekisteröitynyt: §f${0}
 Cmd Qinspect - Times Kicked                     ||   §2Potkittu Pellolle: §f${0}
 Cmd Setup - Allowed                             || §aYhteydenotto on nyt sallittu.
-Cmd Setup - Bad Request                         || §eYhteys onnistui, mutta Vastaanottava palvelin ei ollut BungeeCord. Käytä BungeeCord:in osoitetta.
+Cmd Setup - Bad Request                         || §eYhteys onnistui, mutta Vastaanottava palvelin oli Bukkit tai Sponge-palvelin. Käytä toista osoitetta.
 Cmd Setup - Disallowed                          || §cYhteydenotto on nyt kielletty.
 Cmd Setup - Forbidden                           || §eYhteys onnistui, mutta BungeeCord:n set-up tila oli poissa käytöstä - käytä '/planbungee setup' laittaaksesi sen päälle.
 Cmd Setup - Gateway Error                       || §eYhteys onnistui, mutta BungeeCord ei saanut yhteyttä tähän palvelimeen (Käynnistyikö Web palvelin uudelleen?). Käytä /plan m con & /planbungee con tutkiaksesi ongelmia.

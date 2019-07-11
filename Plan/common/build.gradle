@@ -8,6 +8,7 @@ dependencies {
     compile "com.googlecode.htmlcompressor:htmlcompressor:$htmlCompressorVersion"
     compile "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
     compile "com.h2database:h2:$h2Version"
+    compile "mysql:mysql-connector-java:$mysqlVersion"
     compile "com.zaxxer:HikariCP:$hikariVersion"
     compile "org.slf4j:slf4j-nop:$slf4jVersion"
     compile "org.slf4j:slf4j-api:$slf4jVersion"

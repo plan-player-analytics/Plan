@@ -80,7 +80,7 @@ public class InfoCommand extends CommandNode {
                 locale.getString(CommandLang.INFO_VERSION, plugin.getVersion()),
                 locale.getString(CommandLang.INFO_UPDATE, updateAvailable),
                 locale.getString(CommandLang.INFO_DATABASE, database.getType().getName() + " (" + database.getState().name() + ")"),
-                locale.getString(CommandLang.INFO_BUNGEE_CONNECTION, connectedToBungee),
+                locale.getString(CommandLang.INFO_PROXY_CONNECTION, connectedToBungee),
                 "",
                 ">"
         };

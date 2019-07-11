@@ -69,15 +69,6 @@ public class WorldAliasSettings {
     }
 
     /**
-     * Used to get all World aliases in the config
-     *
-     * @return Map: Original name, Alias
-     */
-    public Map<String, String> getAliases() {
-        return getAliasSection().getStringMap(false);
-    }
-
-    /**
      * Adds a new World to the config section.
      * <p>
      * If exists does not override old value.
@@ -85,7 +76,7 @@ public class WorldAliasSettings {
      * @param world World name
      */
     public void addWorld(String world) {
-        Verify.isFalse(Verify.isEmpty(world), () -> new IllegalArgumentException("Attempted to save a world alias '" + world + "'"));
+        Verify.isFalse(Verify.isEmpty(world), () -> new IllegalArgumentException("Attempted to save empty world alias"));
 
         ConfigNode aliasSect = getAliasSection();
 
@@ -114,19 +105,18 @@ public class WorldAliasSettings {
                         entry -> entry.getValue().getTotal() // GMTimes.getTotal
                 ));
 
-        Map<String, String> aliases = getAliases();
+        ConfigNode aliases = getAliasSection();
 
         Map<String, Long> playtimePerAlias = new HashMap<>();
         for (Map.Entry<String, Long> entry : playtimePerWorld.entrySet()) {
             String worldName = entry.getKey();
             long playtime = entry.getValue();
 
-            if (!aliases.containsKey(worldName)) {
-                aliases.put(worldName, worldName);
+            if (!aliases.contains(worldName)) {
                 addWorld(worldName);
             }
 
-            String alias = aliases.get(worldName);
+            String alias = aliases.getString(worldName);
 
             playtimePerAlias.put(alias, playtimePerAlias.getOrDefault(alias, 0L) + playtime);
         }
@@ -134,7 +124,7 @@ public class WorldAliasSettings {
     }
 
     public Map<String, GMTimes> getGMTimesPerAlias(WorldTimes worldTimes) {
-        Map<String, String> aliases = getAliases();
+        ConfigNode aliases = getAliasSection();
 
         Map<String, GMTimes> gmTimesPerAlias = new HashMap<>();
 
@@ -144,12 +134,11 @@ public class WorldAliasSettings {
             String worldName = entry.getKey();
             GMTimes gmTimes = entry.getValue();
 
-            if (!aliases.containsKey(worldName)) {
-                aliases.put(worldName, worldName);
+            if (!aliases.contains(worldName)) {
                 addWorld(worldName);
             }
 
-            String alias = aliases.get(worldName);
+            String alias = aliases.getString(worldName);
 
             GMTimes aliasGMTimes = gmTimesPerAlias.getOrDefault(alias, new GMTimes());
             for (String gm : gms) {
@@ -161,13 +150,15 @@ public class WorldAliasSettings {
     }
 
     public String getLongestWorldPlayed(Session session) {
-        Map<String, String> aliases = getAliases();
+        ConfigNode aliases = getAliasSection();
+
         if (!session.supports(SessionKeys.WORLD_TIMES)) {
             return "No World Time Data";
         }
         WorldTimes worldTimes = session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes());
         if (!session.supports(SessionKeys.END)) {
-            return "Current: " + aliases.getOrDefault(worldTimes.getCurrentWorld(), "Unknown");
+            String currentWorld = worldTimes.getCurrentWorld();
+            return "Current: " + (aliases.contains(currentWorld) ? aliases.getString(currentWorld) : currentWorld);
         }
 
         Map<String, Long> playtimePerAlias = getPlaytimePerAlias(worldTimes);
