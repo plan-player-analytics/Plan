@@ -42,7 +42,7 @@ public class SpecialGraphFactory {
         return new PunchCard(sessions);
     }
 
-    public HighChart worldMap(Map<String, Integer> geolocationCounts) {
+    public WorldMap worldMap(Map<String, Integer> geolocationCounts) {
         return new WorldMap(geolocationCounts);
     }
 

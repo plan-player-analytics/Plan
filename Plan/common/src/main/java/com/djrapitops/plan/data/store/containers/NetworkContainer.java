@@ -25,6 +25,7 @@ import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.mutators.health.NetworkHealthInformation;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
+import com.djrapitops.plan.db.access.queries.objects.GeoInfoQueries;
 import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
@@ -171,7 +172,7 @@ public class NetworkContainer extends DynamicDataContainer {
     private void addPlayerInformation() {
         putSupplier(NetworkKeys.PLAYERS_TOTAL, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR).count());
         putSupplier(NetworkKeys.WORLD_MAP_SERIES, () ->
-                graphs.special().worldMap(database.query(ServerAggregateQueries.networkGeolocationCounts())).toHighChartsSeries()
+                graphs.special().worldMap(database.query(GeoInfoQueries.networkGeolocationCounts())).toHighChartsSeries()
         );
         Key<BarGraph> geolocationBarChart = new Key<>(BarGraph.class, "GEOLOCATION_BAR_GRAPH");
         putSupplier(geolocationBarChart, () -> graphs.bar().geolocationBarGraph(getUnsafe(NetworkKeys.PLAYERS_MUTATOR)));

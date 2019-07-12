@@ -30,20 +30,27 @@ public class GeolocationBarGraph extends BarGraph {
     }
 
     private GeolocationBarGraph(List<String> geolocations) {
-        super(turnToBars(geolocations));
+        super(turnToBars(toGeolocationCounts(geolocations)));
     }
 
-    private static List<Bar> turnToBars(List<String> geolocations) {
+    GeolocationBarGraph(Map<String, Integer> geolocationCounts) {
+        super(turnToBars(geolocationCounts));
+    }
+
+    private static List<Bar> turnToBars(Map<String, Integer> geolocationCounts) {
+        return geolocationCounts.entrySet().stream()
+                .map(entry -> new Bar(entry.getKey(), entry.getValue()))
+                .sorted()
+                .limit(20L)
+                .collect(Collectors.toList());
+    }
+
+    private static Map<String, Integer> toGeolocationCounts(List<String> geolocations) {
         Map<String, Integer> counts = new HashMap<>();
 
         for (String geolocation : geolocations) {
             counts.put(geolocation, counts.getOrDefault(geolocation, 0) + 1);
         }
-
-        return counts.entrySet().stream()
-                .map(entry -> new Bar(entry.getKey(), entry.getValue()))
-                .sorted()
-                .limit(20L)
-                .collect(Collectors.toList());
+        return counts;
     }
 }

@@ -72,6 +72,8 @@ public class GraphsJSONHandler implements PageHandler {
                 return new JSONResponse<>(graphJSON.serverWorldPieJSONAsMap(serverUUID));
             case "activity":
                 return new JSONResponse<>(graphJSON.activityGraphsJSONAsMap(serverUUID));
+            case "geolocation":
+                return new JSONResponse<>(graphJSON.geolocationGraphsJSONAsMap(serverUUID));
             default:
                 throw new BadRequestException("unknown 'type' parameter: " + type);
         }
