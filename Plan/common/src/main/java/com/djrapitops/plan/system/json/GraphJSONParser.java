@@ -25,6 +25,7 @@ import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.analysis.ActivityIndexQueries;
 import com.djrapitops.plan.db.access.queries.containers.ServerPlayerContainersQuery;
+import com.djrapitops.plan.db.access.queries.objects.GeoInfoQueries;
 import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
 import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
 import com.djrapitops.plan.db.access.queries.objects.WorldTimesQueries;
@@ -32,9 +33,11 @@ import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
+import com.djrapitops.plan.utilities.html.graphs.bar.BarGraph;
 import com.djrapitops.plan.utilities.html.graphs.line.LineGraphFactory;
 import com.djrapitops.plan.utilities.html.graphs.pie.Pie;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
+import com.djrapitops.plan.utilities.html.graphs.special.WorldMap;
 import com.djrapitops.plan.utilities.html.graphs.stack.StackGraph;
 import com.djrapitops.plugin.api.TimeAmount;
 
@@ -143,6 +146,19 @@ public class GraphJSONParser {
         dataMap.put("activity_series", activityStackGraph.getDataSets());
         dataMap.put("activity_labels", activityStackGraph.getLabels());
         dataMap.put("activity_pie_series", activityPie.getSlices());
+        return dataMap;
+    }
+
+    public Map<String, Object> geolocationGraphsJSONAsMap(UUID serverUUID) {
+        Database db = dbSystem.getDatabase();
+        Map<String, Integer> geolocationCounts = db.query(GeoInfoQueries.serverGeolocationCounts(serverUUID));
+
+        BarGraph geolocationBarGraph = graphs.bar().geolocationBarGraph(geolocationCounts);
+        WorldMap worldMap = graphs.special().worldMap(geolocationCounts);
+
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("geolocation_series", worldMap.getEntries());
+        dataMap.put("geolocation_bar_series", geolocationBarGraph.getBars());
         return dataMap;
     }
 }
