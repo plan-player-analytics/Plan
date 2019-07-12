@@ -17,7 +17,7 @@
 package com.djrapitops.plan.db;
 
 import com.djrapitops.plan.data.container.GeoInfo;
-import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
+import com.djrapitops.plan.db.access.queries.objects.GeoInfoQueries;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.db.access.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
@@ -136,7 +136,7 @@ public class SQLiteTest implements DatabaseTest {
         saveGeoInfo(fifthUuid, new GeoInfo("-", "Not Known", 0));
         saveGeoInfo(sixthUuid, new GeoInfo("-", "Local Machine", 0));
 
-        Map<String, Integer> got = database.query(ServerAggregateQueries.networkGeolocationCounts());
+        Map<String, Integer> got = database.query(GeoInfoQueries.networkGeolocationCounts());
 
         Map<String, Integer> expected = new HashMap<>();
         // first user has a more recent connection from Finland so their country should be counted as Finland.

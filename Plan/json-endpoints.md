@@ -88,3 +88,4 @@ Type | Description
 `calendar` | Calendar data points for each day there is data for. Last 2 years.
 `worldPie` | World Pie data of all sessions combined
 `activity` | Activity stack graph and pie graph data
+`geolocation` | World Map and bar graph data. World Map uses iso-a3 specification of Country codes and Bar graph uses country names.

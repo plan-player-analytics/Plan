@@ -23,6 +23,7 @@ import org.apache.commons.text.TextStringBuilder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * World Map that uses iso-a3 specification of Country codes.
@@ -98,5 +99,30 @@ public class WorldMap implements HighChart {
         );
 
         return dataBuilder.append("]").toString();
+    }
+
+    public List<Entry> getEntries() {
+        return geoCodeCounts.entrySet().stream()
+                .filter(entry -> entry.getValue() != 0)
+                .map(e -> new Entry(e.getKey(), e.getValue()))
+                .collect(Collectors.toList());
+    }
+
+    public static class Entry {
+        private String code;
+        private int value;
+
+        public Entry(String code, int value) {
+            this.code = code;
+            this.value = value;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public int getValue() {
+            return value;
+        }
     }
 }

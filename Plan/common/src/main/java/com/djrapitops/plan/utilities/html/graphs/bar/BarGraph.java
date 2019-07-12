@@ -29,6 +29,10 @@ public class BarGraph implements HighChart {
         this.bars = bars;
     }
 
+    public List<Bar> getBars() {
+        return bars;
+    }
+
     public String toHighChartsCategories() {
         TextStringBuilder categories = new TextStringBuilder("[");
         categories.appendWithSeparators(bars.stream().map(bar -> "'" + bar.getLabel() + "'").iterator(), ",");
