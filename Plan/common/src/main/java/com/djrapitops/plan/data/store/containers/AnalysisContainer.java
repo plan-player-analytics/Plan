@@ -255,8 +255,7 @@ public class AnalysisContainer extends DynamicDataContainer {
         putCachingSupplier(retentionDay, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).compareAndFindThoseLikelyToBeRetained(
                 getUnsafe(newDay).all(), getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO),
                 getUnsafe(AnalysisKeys.PLAYERS_ONLINE_RESOLVER),
-                config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD),
-                config.get(TimeSettings.ACTIVE_LOGIN_THRESHOLD)
+                config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD)
                 ).count()
         );
         putSupplier(AnalysisKeys.PLAYERS_RETAINED_DAY, () -> {

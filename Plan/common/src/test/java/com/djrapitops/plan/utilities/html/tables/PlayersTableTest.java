@@ -66,7 +66,6 @@ class PlayersTableTest {
                 players,
                 50, // maxPlayers
                 TimeUnit.MINUTES.toMillis(60), // activeMsThreshold
-                5, // activeLoginThreshold
                 false,
                 l -> "",
                 l -> "",

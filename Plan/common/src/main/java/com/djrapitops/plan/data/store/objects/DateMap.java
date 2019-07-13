@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.data.store.objects;
 
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -29,7 +30,7 @@ public class DateMap<T> extends TreeMap<Long, T> {
         super(Long::compareTo);
     }
 
-    public DateMap(TreeMap<Long, T> map) {
+    public DateMap(Map<Long, T> map) {
         putAll(map);
     }
 

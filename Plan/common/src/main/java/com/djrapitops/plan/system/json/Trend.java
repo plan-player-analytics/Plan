@@ -64,4 +64,15 @@ public class Trend {
         return null;
     }
 
+    public String getText() {
+        return text;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public boolean isReversed() {
+        return reversed;
+    }
 }

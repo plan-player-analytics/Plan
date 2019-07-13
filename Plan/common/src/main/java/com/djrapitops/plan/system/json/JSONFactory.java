@@ -66,7 +66,6 @@ public class JSONFactory {
 
     public String serverPlayersTableJSON(UUID serverUUID) {
         Integer xMostRecentPlayers = config.get(DisplaySettings.PLAYERS_PER_SERVER_PAGE);
-        Integer loginThreshold = config.get(TimeSettings.ACTIVE_LOGIN_THRESHOLD);
         Long playtimeThreshold = config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD);
         Boolean openPlayerLinksInNewTab = config.get(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB);
 
@@ -75,7 +74,7 @@ public class JSONFactory {
         return new PlayersTableJSONParser(
                 database.query(new ServerPlayersTableContainersQuery(serverUUID)),
                 database.query(new ExtensionServerPlayerDataTableQuery(serverUUID, xMostRecentPlayers)),
-                xMostRecentPlayers, playtimeThreshold, loginThreshold, openPlayerLinksInNewTab,
+                xMostRecentPlayers, playtimeThreshold, openPlayerLinksInNewTab,
                 formatters
         ).toJSONString();
     }
