@@ -16,25 +16,21 @@
  */
 package com.djrapitops.plan.system.json;
 
-import com.djrapitops.plan.data.store.mutators.MutatorFunctions;
-import com.djrapitops.plan.data.store.mutators.PlayersMutator;
-import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.data.store.mutators.TPSMutator;
+import com.djrapitops.plan.data.container.Ping;
+import com.djrapitops.plan.data.store.mutators.*;
 import com.djrapitops.plan.data.store.objects.DateMap;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.analysis.ActivityIndexQueries;
 import com.djrapitops.plan.db.access.queries.containers.ServerPlayerContainersQuery;
-import com.djrapitops.plan.db.access.queries.objects.GeoInfoQueries;
-import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
-import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
-import com.djrapitops.plan.db.access.queries.objects.WorldTimesQueries;
+import com.djrapitops.plan.db.access.queries.objects.*;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.bar.BarGraph;
 import com.djrapitops.plan.utilities.html.graphs.line.LineGraphFactory;
+import com.djrapitops.plan.utilities.html.graphs.line.PingGraph;
 import com.djrapitops.plan.utilities.html.graphs.pie.Pie;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.graphs.special.WorldMap;
@@ -160,5 +156,17 @@ public class GraphJSONParser {
         dataMap.put("geolocation_series", worldMap.getEntries());
         dataMap.put("geolocation_bar_series", geolocationBarGraph.getBars());
         return dataMap;
+    }
+
+    public String pingGraphsJSON(UUID serverUUID) {
+        Database db = dbSystem.getDatabase();
+        long now = System.currentTimeMillis();
+        List<Ping> pings = db.query(PingQueries.fetchPingDataOfServer(now - TimeUnit.DAYS.toMillis(180L), now, serverUUID));
+
+        PingGraph pingGraph = graphs.line().pingGraph(new PingMutator(pings).mutateToByMinutePings().all());// TODO Optimize in query
+
+        return "{\"min_ping_series\":" + pingGraph.getMinGraph().toHighChartsSeries() +
+                ",\"avg_ping_series\":" + pingGraph.getAvgGraph().toHighChartsSeries() +
+                ",\"max_ping_series\":" + pingGraph.getMaxGraph().toHighChartsSeries() + '}';
     }
 }

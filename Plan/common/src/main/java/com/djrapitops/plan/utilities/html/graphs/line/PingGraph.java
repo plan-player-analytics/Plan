@@ -63,4 +63,16 @@ public class PingGraph {
     public String toAvgSeries() {
         return avgGraph.toHighChartsSeries();
     }
+
+    public LineGraph getMaxGraph() {
+        return maxGraph;
+    }
+
+    public LineGraph getMinGraph() {
+        return minGraph;
+    }
+
+    public LineGraph getAvgGraph() {
+        return avgGraph;
+    }
 }

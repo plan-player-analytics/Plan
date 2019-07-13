@@ -1623,6 +1623,36 @@
             $('#diskGraph').text("Failed to load graph data: " + error);
         }
     });
+    jsonRequest("../v1/graph?type=ping&serverName=${serverName}", function (json, error) {
+        if (json) {
+            var series = {
+                avgPing: {
+                    name: s.name.avgPing,
+                    type: s.type.spline,
+                    tooltip: s.tooltip.twoDecimals,
+                    data: json.avg_ping_series,
+                    color: v.colors.avgPing
+                },
+                maxPing: {
+                    name: s.name.maxPing,
+                    type: s.type.spline,
+                    tooltip: s.tooltip.zeroDecimals,
+                    data: json.max_ping_series,
+                    color: v.colors.maxPing
+                },
+                minPing: {
+                    name: s.name.minPing,
+                    type: s.type.spline,
+                    tooltip: s.tooltip.zeroDecimals,
+                    data: json.min_ping_series,
+                    color: v.colors.minPing
+                }
+            };
+            lineChart('pingGraph', [series.avgPing, series.maxPing, series.minPing]);
+        } else if (error) {
+            $('#pingGraph').text("Failed to load graph data: " + error);
+        }
+    });
 
     jsonRequest("../v1/graph?type=worldPie&serverName=${serverName}", function (json, error) {
         if (data) {
