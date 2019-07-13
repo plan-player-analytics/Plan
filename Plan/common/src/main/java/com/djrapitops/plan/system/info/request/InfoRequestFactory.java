@@ -21,7 +21,6 @@ import com.djrapitops.plan.system.export.HtmlExport;
 import com.djrapitops.plan.system.export.JSONExport;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
-import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -48,7 +47,6 @@ public class InfoRequestFactory {
     private final Lazy<Processing> processing;
     private final Lazy<InfoSystem> infoSystem;
     private final Lazy<ConnectionSystem> connectionSystem;
-    private final Lazy<WebExceptionLogger> webExceptionLogger;
     private final Lazy<ServerInfo> serverInfo;
     private final Lazy<ResponseFactory> responseFactory;
     private final Lazy<PageFactory> pageFactory;
@@ -64,7 +62,6 @@ public class InfoRequestFactory {
             Lazy<Processing> processing,
             Lazy<InfoSystem> infoSystem,
             Lazy<ConnectionSystem> connectionSystem,
-            Lazy<WebExceptionLogger> webExceptionLogger,
             Lazy<ServerInfo> serverInfo,
             Lazy<ResponseFactory> responseFactory,
             Lazy<PageFactory> pageFactory,
@@ -78,7 +75,6 @@ public class InfoRequestFactory {
         this.processing = processing;
         this.infoSystem = infoSystem;
         this.connectionSystem = connectionSystem;
-        this.webExceptionLogger = webExceptionLogger;
         this.serverInfo = serverInfo;
         this.responseFactory = responseFactory;
         this.pageFactory = pageFactory;

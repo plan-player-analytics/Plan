@@ -86,7 +86,7 @@ public class PlayersMutator {
         );
     }
 
-    public PlayersMutator filterActive(long date, long msThreshold, int loginThreshold, double limit) {
+    public PlayersMutator filterActive(long date, long msThreshold, double limit) {
         return filterBy(player -> player.getActivityIndex(date, msThreshold).getValue() >= limit);
     }
 
@@ -199,8 +199,7 @@ public class PlayersMutator {
             Iterable<PlayerContainer> compareTo,
             long dateLimit,
             PlayersOnlineResolver onlineResolver,
-            long activityMsThreshold,
-            int activityLoginThreshold
+            long activityMsThreshold
     ) {
         Collection<PlayerContainer> retainedAfterMonth = new ArrayList<>();
         Collection<PlayerContainer> notRetainedAfterMonth = new ArrayList<>();

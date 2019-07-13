@@ -18,7 +18,6 @@ package com.djrapitops.plan.utilities.html.pages;
 
 import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.data.plugin.HookHandler;
-import com.djrapitops.plan.data.store.containers.AnalysisContainer;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.db.Database;
@@ -68,7 +67,6 @@ public class PageFactory {
     private final Lazy<HtmlTables> tables;
     private final Lazy<Accordions> accordions;
     private final Lazy<Formatters> formatters;
-    private final Lazy<AnalysisContainer.Factory> analysisContainerFactory;
     private final Lazy<AnalysisPluginsTabContentCreator> analysisPluginsTabContentCreator;
     private final Lazy<HookHandler> hookHandler;
     private final Lazy<DebugLogger> debugLogger;
@@ -88,7 +86,6 @@ public class PageFactory {
             Lazy<HtmlTables> tables,
             Lazy<Accordions> accordions,
             Lazy<Formatters> formatters,
-            Lazy<AnalysisContainer.Factory> analysisContainerFactory,
             Lazy<AnalysisPluginsTabContentCreator> analysisPluginsTabContentCreator,
             Lazy<HookHandler> hookHandler,
             Lazy<DebugLogger> debugLogger,
@@ -106,7 +103,6 @@ public class PageFactory {
         this.tables = tables;
         this.accordions = accordions;
         this.formatters = formatters;
-        this.analysisContainerFactory = analysisContainerFactory;
         this.analysisPluginsTabContentCreator = analysisPluginsTabContentCreator;
         this.hookHandler = hookHandler;
         this.debugLogger = debugLogger;

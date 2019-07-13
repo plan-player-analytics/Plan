@@ -42,7 +42,6 @@ class PlayersTable extends TableContainer {
     private final List<PlayerContainer> players;
     private final int maxPlayers;
     private final long activeMsThreshold;
-    private final int activeLoginThreshold;
     private final boolean openPlayerPageInNewTab;
 
     private final Formatter<Double> decimalFormatter;
@@ -51,7 +50,6 @@ class PlayersTable extends TableContainer {
             List<PlayerContainer> players,
             int maxPlayers,
             long activeMsThreshold,
-            int activeLoginThreshold,
             boolean openPlayerPageInNewTab,
             Formatter<Long> timeAmountFormatter,
             Formatter<Long> yearLongFormatter,
@@ -69,7 +67,6 @@ class PlayersTable extends TableContainer {
         this.players = players;
         this.maxPlayers = maxPlayers;
         this.activeMsThreshold = activeMsThreshold;
-        this.activeLoginThreshold = activeLoginThreshold;
         this.openPlayerPageInNewTab = openPlayerPageInNewTab;
         this.decimalFormatter = decimalFormatter;
         useJqueryDataTables("player-table");

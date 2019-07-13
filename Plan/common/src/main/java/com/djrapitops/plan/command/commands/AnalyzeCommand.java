@@ -66,7 +66,8 @@ public class AnalyzeCommand extends CommandNode {
             Processing processing,
             HtmlExport export,
             ServerInfo serverInfo,
-            ConnectionSystem connectionSystem, WebServer webServer,
+            ConnectionSystem connectionSystem,
+            WebServer webServer,
             DBSystem dbSystem,
             ErrorHandler errorHandler
     ) {
