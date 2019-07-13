@@ -109,11 +109,11 @@ public class ActivityIndex {
         long playtime2 = weekTwo.toActivePlaytime();
         long playtime3 = weekThree.toActivePlaytime();
 
-        double A1 = 1.0 / (Math.PI / 2.0 * (playtime1 * 1.0 / playtimeMsThreshold) + 1.0);
-        double A2 = 1.0 / (Math.PI / 2.0 * (playtime2 * 1.0 / playtimeMsThreshold) + 1.0);
-        double A3 = 1.0 / (Math.PI / 2.0 * (playtime3 * 1.0 / playtimeMsThreshold) + 1.0);
+        double indexW1 = 1.0 / (Math.PI / 2.0 * (playtime1 * 1.0 / playtimeMsThreshold) + 1.0);
+        double indexW2 = 1.0 / (Math.PI / 2.0 * (playtime2 * 1.0 / playtimeMsThreshold) + 1.0);
+        double indexW3 = 1.0 / (Math.PI / 2.0 * (playtime3 * 1.0 / playtimeMsThreshold) + 1.0);
 
-        double average = (A1 + A2 + A3) / 3.0;
+        double average = (indexW1 + indexW2 + indexW3) / 3.0;
 
         return 5.0 - (5.0 * average);
     }

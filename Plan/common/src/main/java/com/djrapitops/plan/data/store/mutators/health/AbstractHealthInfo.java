@@ -140,7 +140,7 @@ public abstract class AbstractHealthInfo {
     }
 
     protected void activePlayerPlaytimeChange(PlayersMutator playersMutator) {
-        PlayersMutator currentlyActive = playersMutator.filterActive(now, activeMsThreshold, activeLoginThreshold, 1.75);
+        PlayersMutator currentlyActive = playersMutator.filterActive(now, activeMsThreshold, 1.75);
         long twoWeeksAgo = now - ((now - monthAgo) / 2L);
 
         long totalFourToTwoWeeks = 0;

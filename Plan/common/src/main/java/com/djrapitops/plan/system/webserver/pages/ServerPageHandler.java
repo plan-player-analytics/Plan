@@ -22,10 +22,8 @@ import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.RequestTarget;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
@@ -47,25 +45,19 @@ import java.util.UUID;
 @Singleton
 public class ServerPageHandler implements PageHandler {
 
-    private final Processing processing;
     private final ResponseFactory responseFactory;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
-    private final InfoSystem infoSystem;
 
     @Inject
     public ServerPageHandler(
-            Processing processing,
             ResponseFactory responseFactory,
             DBSystem dbSystem,
-            ServerInfo serverInfo,
-            InfoSystem infoSystem
+            ServerInfo serverInfo
     ) {
-        this.processing = processing;
         this.responseFactory = responseFactory;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
-        this.infoSystem = infoSystem;
     }
 
     @Override

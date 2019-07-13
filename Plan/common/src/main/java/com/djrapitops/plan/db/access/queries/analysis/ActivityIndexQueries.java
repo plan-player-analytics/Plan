@@ -66,6 +66,10 @@ import static com.djrapitops.plan.db.sql.parsing.Sql.*;
  */
 public class ActivityIndexQueries {
 
+    private ActivityIndexQueries() {
+        // Static method class
+    }
+
     public static Query<Integer> fetchRegularPlayerCount(long date, UUID serverUUID, long playtimeThreshold) {
         return fetchActivityGroupCount(date, serverUUID, playtimeThreshold, ActivityIndex.REGULAR, 5.1);
     }

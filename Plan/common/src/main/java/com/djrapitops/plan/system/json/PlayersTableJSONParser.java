@@ -50,7 +50,6 @@ public class PlayersTableJSONParser {
 
     private final int maxPlayers;
     private final long activeMsThreshold;
-    private final int activeLoginThreshold;
     private final boolean openPlayerPageInNewTab;
 
     private Map<FormatType, Formatter<Long>> numberFormatters;
@@ -62,7 +61,7 @@ public class PlayersTableJSONParser {
             List<PlayerContainer> players,
             Map<UUID, ExtensionTabData> extensionData,
             // Settings
-            int maxPlayers, long activeMsThreshold, int activeLoginThreshold, boolean openPlayerPageInNewTab,
+            int maxPlayers, long activeMsThreshold, boolean openPlayerPageInNewTab,
             // Formatters
             Formatters formatters
     ) {
@@ -77,7 +76,6 @@ public class PlayersTableJSONParser {
         // Settings
         this.maxPlayers = maxPlayers;
         this.activeMsThreshold = activeMsThreshold;
-        this.activeLoginThreshold = activeLoginThreshold;
         this.openPlayerPageInNewTab = openPlayerPageInNewTab;
         // Formatters
         numberFormatters = new EnumMap<>(FormatType.class);

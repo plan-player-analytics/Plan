@@ -38,7 +38,15 @@ public class PlayerContainer {
         this.container = container;
     }
 
+    /**
+     * @deprecated loginThreshold no longer used for activity index.
+     */
+    @Deprecated
     public double getActivityIndex(long date, long playtimeMsThreshold, int loginThreshold) {
+        return getActivityIndex(date, playtimeMsThreshold);
+    }
+
+    public double getActivityIndex(long date, long playtimeMsThreshold) {
         return container.getActivityIndex(date, playtimeMsThreshold).getValue();
     }
 
