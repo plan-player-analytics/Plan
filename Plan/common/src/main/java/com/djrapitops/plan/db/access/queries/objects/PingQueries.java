@@ -143,4 +143,47 @@ public class PingQueries {
             }
         };
     }
+
+    public static Query<List<Ping>> fetchPingDataOfServer(long after, long before, UUID serverUUID) {
+        String sql = SELECT +
+                PingTable.DATE + ", " +
+                PingTable.MAX_PING + ", " +
+                PingTable.MIN_PING + ", " +
+                PingTable.AVG_PING + ", " +
+                PingTable.USER_UUID + ", " +
+                PingTable.SERVER_UUID +
+                FROM + PingTable.TABLE_NAME +
+                WHERE + PingTable.SERVER_UUID + "=?" +
+                AND + PingTable.DATE + ">=?" +
+                AND + PingTable.DATE + "<=?";
+        return new QueryStatement<List<Ping>>(sql, 1000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, after);
+                statement.setLong(3, before);
+            }
+
+            @Override
+            public List<Ping> processResults(ResultSet set) throws SQLException {
+                List<Ping> pings = new ArrayList<>();
+
+                while (set.next()) {
+                    UUID uuid = UUID.fromString(set.getString(PingTable.USER_UUID));
+                    UUID serverUUID = UUID.fromString(set.getString(PingTable.SERVER_UUID));
+                    long date = set.getLong(PingTable.DATE);
+                    double avgPing = set.getDouble(PingTable.AVG_PING);
+                    int minPing = set.getInt(PingTable.MIN_PING);
+                    int maxPing = set.getInt(PingTable.MAX_PING);
+
+                    pings.add(new Ping(date, serverUUID,
+                            minPing,
+                            maxPing,
+                            avgPing));
+                }
+
+                return pings;
+            }
+        };
+    }
 }
