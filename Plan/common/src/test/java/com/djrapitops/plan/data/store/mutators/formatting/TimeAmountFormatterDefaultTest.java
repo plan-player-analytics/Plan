@@ -114,7 +114,7 @@ class TimeAmountFormatterDefaultTest {
 
     @Test
     void exampleZero() {
-        String expected = "-";
+        String expected = "0s";
 
         long ms = 0L;
         String result = underTest.apply(ms);
