@@ -202,10 +202,10 @@ public class ActivityIndexQueries {
             public void prepare(PreparedStatement statement) throws SQLException {
                 setSelectActivityIndexSQLParameters(statement, 1, threshold, serverUUID, end);
                 setSelectActivityIndexSQLParameters(statement, 12, threshold, serverUUID, start);
-                statement.setDouble(22, ActivityIndex.REGULAR);
-                statement.setDouble(23, 5.1);
-                statement.setDouble(24, -0.1);
-                statement.setDouble(25, ActivityIndex.IRREGULAR);
+                statement.setDouble(23, ActivityIndex.REGULAR);
+                statement.setDouble(24, 5.1);
+                statement.setDouble(25, -0.1);
+                statement.setDouble(26, ActivityIndex.IRREGULAR);
             }
 
             @Override
