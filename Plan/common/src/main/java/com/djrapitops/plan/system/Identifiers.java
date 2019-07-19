@@ -21,10 +21,10 @@ import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.webserver.RequestTarget;
+import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -43,27 +43,16 @@ public class Identifiers {
     }
 
     public UUID getServerUUID(RequestTarget target) throws BadRequestException {
-        Optional<String> serverUUID = target.getParameter("serverUUID");
-        if (serverUUID.isPresent()) {
-            return getServerUUIDDirectly(serverUUID.get());
-        } else {
-            return getServerUUIDFromName(target); // Preferred
-        }
+        String serverIndentifier = target.getParameter("server")
+                .orElseThrow(() -> new BadRequestException("'server' parameter was not defined."));
+
+        return UUIDUtility.parseFromString(serverIndentifier)
+                .orElse(getServerUUIDFromName(serverIndentifier));
     }
 
-    private UUID getServerUUIDFromName(RequestTarget target) throws BadRequestException {
-        String serverName = target.getParameter("serverName")
-                .orElseThrow(() -> new BadRequestException("'serverName' parameter was not defined."));
+    private UUID getServerUUIDFromName(String serverName) throws BadRequestException {
         return dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverName))
                 .map(Server::getUuid)
-                .orElseThrow(() -> new BadRequestException("'serverName' was not found in the database.: '" + serverName + "'"));
-    }
-
-    private UUID getServerUUIDDirectly(String serverUUIDString) throws BadRequestException {
-        try {
-            return UUID.fromString(serverUUIDString);
-        } catch (IllegalArgumentException malformedUUIDException) {
-            throw new BadRequestException("'serverName' was not a valid UUID: " + malformedUUIDException.getMessage());
-        }
+                .orElseThrow(() -> new BadRequestException("Given 'server' was not found in the database: '" + serverName + "'"));
     }
 }

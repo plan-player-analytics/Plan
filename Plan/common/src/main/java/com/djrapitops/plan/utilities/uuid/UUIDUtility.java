@@ -50,6 +50,14 @@ public class UUIDUtility {
         this.errorHandler = errorHandler;
     }
 
+    public static Optional<UUID> parseFromString(String uuidString) {
+        try {
+            return Optional.of(UUID.fromString(uuidString));
+        } catch (IllegalArgumentException malformedUUIDException) {
+            return Optional.empty();
+        }
+    }
+
     /**
      * Get UUID of a player.
      *
