@@ -1416,12 +1416,12 @@
 
 <script>
     setLoadingText('Calculating values..');
-    jsonRequest("../v1/serverOverview?serverName=${serverName}", loadServerOverviewValues);
-    jsonRequest("../v1/onlineOverview?serverName=${serverName}", loadOnlineActivityOverviewValues);
-    jsonRequest("../v1/sessionsOverview?serverName=${serverName}", loadSessionValues);
-    jsonRequest("../v1/playerVersus?serverName=${serverName}", loadPvPPvEValues);
-    jsonRequest("../v1/playerbaseOverview?serverName=${serverName}", loadPlayerbaseOverviewValues);
-    jsonRequest("../v1/performanceOverview?serverName=${serverName}", loadPerformanceValues);
+    jsonRequest("../v1/serverOverview?server=${serverName}", loadServerOverviewValues);
+    jsonRequest("../v1/onlineOverview?server=${serverName}", loadOnlineActivityOverviewValues);
+    jsonRequest("../v1/sessionsOverview?server=${serverName}", loadSessionValues);
+    jsonRequest("../v1/playerVersus?server=${serverName}", loadPvPPvEValues);
+    jsonRequest("../v1/playerbaseOverview?server=${serverName}", loadPlayerbaseOverviewValues);
+    jsonRequest("../v1/performanceOverview?server=${serverName}", loadPerformanceValues);
     setLoadingText('Rendering graphs..');
 
     // TODO remove
@@ -1518,7 +1518,7 @@
         }
     };
 
-    jsonRequest("../v1/graph?type=performance&serverName=${serverName}", function (data, error) {
+    jsonRequest("../v1/graph?type=performance&server=${serverName}", function (data, error) {
         if (data) {
             var series = {
                 playersOnline: {
@@ -1582,7 +1582,7 @@
             $('#diskGraph').text("Failed to load graph data: " + error);
         }
     });
-    jsonRequest("../v1/graph?type=ping&serverName=${serverName}", function (json, error) {
+    jsonRequest("../v1/graph?type=ping&server=${serverName}", function (json, error) {
         if (json) {
             var series = {
                 avgPing: {
@@ -1613,7 +1613,7 @@
         }
     });
 
-    jsonRequest("../v1/graph?type=worldPie&serverName=${serverName}", function (json, error) {
+    jsonRequest("../v1/graph?type=worldPie&server=${serverName}", function (json, error) {
         if (data) {
             var worldSeries = {name: 'World Playtime', colorByPoint: true, data: json.world_series};
             var gmSeries = json.gm_series;
@@ -1623,7 +1623,7 @@
         }
     });
 
-    jsonRequest("../v1/graph?type=activity&serverName=${serverName}", function (json, error) {
+    jsonRequest("../v1/graph?type=activity&server=${serverName}", function (json, error) {
         if (json) {
             activityPie('activityPie', {
                 name: 'Players', colorByPoint: true, data: json.activity_pie_series
@@ -1635,7 +1635,7 @@
         }
     });
 
-    jsonRequest("../v1/graph?type=geolocation&serverName=${serverName}", function (json, error) {
+    jsonRequest("../v1/graph?type=geolocation&server=${serverName}", function (json, error) {
         if (json) {
             var geolocationSeries = {
                 name: 'Players',
@@ -1662,7 +1662,7 @@
         }
     });
 
-    jsonRequest("../v1/graph?type=uniqueAndNew&serverName=${serverName}", function (data, error) {
+    jsonRequest("../v1/graph?type=uniqueAndNew&server=${serverName}", function (data, error) {
         if (data) {
             var uniquePlayers = {
                 name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
@@ -1678,7 +1678,7 @@
         }
     });
 
-    jsonRequest("../v1/graph?type=serverCalendar&serverName=${serverName}", function (json, error) {
+    jsonRequest("../v1/graph?type=serverCalendar&server=${serverName}", function (json, error) {
         if (json) {
             $('#calendar').text('');
             onlineActivityCalendar('#calendar', json.data, json.firstDay);
@@ -1689,7 +1689,7 @@
 
     setLoadingText('Sorting players table..');
 
-    jsonRequest("../v1/players?serverName=${serverName}", function (playersTableJson, error) {
+    jsonRequest("../v1/players?server=${serverName}", function (playersTableJson, error) {
         if (playersTableJson) {
             $('.player-table').DataTable({
                 responsive: true,
@@ -1704,7 +1704,7 @@
             })
         }
     });
-    jsonRequest("../v1/kills?serverName=${serverName}", loadPlayerKills);
+    jsonRequest("../v1/kills?server=${serverName}", loadPlayerKills);
 
     setLoadingText('Almost done..');
     var navButtons = document.getElementsByClassName("nav-button");
@@ -1723,7 +1723,7 @@
     x.style.opacity = "1";
     openFunc(slideIndex)();
 
-    jsonRequest("../v1/sessions?serverName=${serverName}", loadSessionAccordion);
+    jsonRequest("../v1/sessions?server=${serverName}", loadSessionAccordion);
 
     setLoadingText('Done.');
     setTimeout(function () {

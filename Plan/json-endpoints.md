@@ -19,12 +19,11 @@ Obtain all data in the database for a player.
 
 Endpoints for tab specific number data, processed for display.
 
-Required parameters: `serverName` or `serverUUID`
+Required parameters: `server`
 
 Parameter|Expected value|Description
 --|--|--
-`serverName` | Name of a Plan server | Used for identifying Plan server that the data should be about
-`serverUUID` | UUID of a Plan server | Used for identifying Plan server that the data should be about
+`server` | Name or UUID of a Plan server | Used for identifying Plan server that the data should be about
 
 #### `GET /v1/serverOverview` - Server Overview tab
 
@@ -36,51 +35,47 @@ Parameter|Expected value|Description
 
 #### `GET /v1/playerbaseOverview` - Playerbase Overview tab.
 
-### `GET /v1/players`
+#### `GET /v1/performanceOverview`
 
-### `GET /v1/performanceOverview`
+### `GET /v1/players`
 
 Obtain data for `/server` player list.
 
-Required parameters: `serverName` or `serverUUID`
+Required parameters: `server`
 
 Parameter|Expected value|Description
 --|--|--
-`serverName` | Name of a Plan server | Used for identifying Plan server that the data should be about
-`serverUUID` | UUID of a Plan server | Used for identifying Plan server that the data should be about
+`server` | Name or UUID of a Plan server | Used for identifying Plan server that the data should be about
 
 ### `GET /v1/sessions`
 
 Obtain data for `/server` session accordion. Returns configurable amount of sessions.
 
-Required parameters: `serverName` or `serverUUID`
+Required parameters: `server`
 
 Parameter|Expected value|Description
 --|--|--
-`serverName` | Name of a Plan server | Used for identifying Plan server that the data should be about
-`serverUUID` | UUID of a Plan server | Used for identifying Plan server that the data should be about
+`server` | Name or UUID of a Plan server | Used for identifying Plan server that the data should be about
 
 ### `GET /v1/kills`
 
 Obtain data for `/server` kills table. Returns 100 most recent kills.
 
-Required parameters: `serverName` or `serverUUID`
+Required parameters: `server`
 
 Parameter|Expected value|Description
 --|--|--
-`serverName` | Name of a Plan server | Used for identifying Plan server that the data should be about
-`serverUUID` | UUID of a Plan server | Used for identifying Plan server that the data should be about
+`server` | Name or UUID of a Plan server | Used for identifying Plan server that the data should be about
 
 ### `GET /v1/graph`
 
 Obtain data for graphs.
 
-Required parameters: `serverName` or `serverUUID` and `type`
+Required parameters: `server` and `type`
 
 Parameter|Expected value|Description
 --|--|--
-`serverName` | Name of a Plan server | Used for identifying Plan server that the data should be about
-`serverUUID` | UUID of a Plan server | Used for identifying Plan server that the data should be about
+`server` | Name or UUID of a Plan server | Used for identifying Plan server that the data should be about
 `type` | `performance`, `uniqueAndNew` | What kind of graph data should be given
 
 Type | Description
