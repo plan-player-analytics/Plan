@@ -67,6 +67,25 @@ Parameter|Expected value|Description
 --|--|--
 `server` | Name or UUID of a Plan server | Used for identifying Plan server that the data should be about
 
+### `GET /v1/extensions`
+
+Obtain html for data extension tabs and navigation.
+
+Returns:
+```javascript
+{
+    navigation: String (html),
+    tabs: String (html)
+}
+```
+
+Required parameters: `server`
+
+Parameter|Expected value|Description
+--|--|--
+`server` | Name or UUID of a Plan server | Used for identifying Plan server that the data should be about
+
+
 ### `GET /v1/graph`
 
 Obtain data for graphs.

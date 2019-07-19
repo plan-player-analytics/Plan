@@ -45,6 +45,7 @@ public class RootJSONHandler extends TreePageHandler {
             GraphsJSONHandler graphsJSONHandler,
             SessionsJSONHandler sessionsJSONHandler,
             PlayersTableJSONHandler playersTableJSONHandler,
+            PluginTabJSONParser pluginTabJSONParser,
             ServerOverviewJSONParser serverOverviewJSONParser,
             OnlineActivityOverviewJSONParser onlineActivityOverviewJSONParser,
             SessionsOverviewJSONParser sessionsOverviewJSONParser,
@@ -61,6 +62,7 @@ public class RootJSONHandler extends TreePageHandler {
         registerPage("sessions", sessionsJSONHandler);
         registerPage("kills", playerKillsJSONHandler);
         registerPage("graph", graphsJSONHandler);
+        registerPage("extensions", pluginTabJSONParser);
 
         registerPage("serverOverview", serverOverviewJSONParser);
         registerPage("onlineOverview", onlineActivityOverviewJSONParser);

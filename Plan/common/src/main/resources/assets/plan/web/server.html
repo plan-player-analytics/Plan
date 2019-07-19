@@ -118,11 +118,7 @@
             Plugins
         </div>
 
-        <li class="nav-item nav-button">
-            <a class="nav-link" href="javascript:void(0)">
-                <i class="fas fa-fw fa-cubes"></i>
-                <span>Overview</span></a>
-        </li>
+        <li class="plugin-nav" style="display: none;"></li>
 
         <!-- Divider -->
         <hr class="sidebar-divider">
@@ -1133,61 +1129,7 @@
                 </div> <!-- /.container-fluid -->
             </div> <!-- End of Performance tab -->
             <!-- Begin Plugins Overview Tab -->
-            <div class="tab">
-                <div class="container-fluid mt-4">
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${serverDisplayName}
-                            &middot; Plugins Overview</h1>
-                        <a class="btn bg-plan btn-icon-split" href="network">
-                                <span class="icon text-white-50">
-                                    <i class="fas fa-fw fa-arrow-left"></i><i class="fas fa-fw fa-cloud"></i>
-                                </span>
-                            <span class="text">Network page</span>
-                        </a>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-4 mb-4 col-sm-12">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
-                                            class="fa fa-fw fa-star col-green"></i>
-                                        AdvancedAchievements</h6>
-                                </div>
-                                <div class="card-body">
-                                    <p><i class="far fa-fw fa-check-circle col-green"></i> Total Achievements<span
-                                            class="float-right"><b>9</b></p>
-                                    <p><i class="far fa-fw fa-check-circle col-green"></i> Average Achievements /
-                                        Player<span class="float-right"><b>9</b></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-4 col-sm-12">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
-                                            class="fa fa-fw fa-gamepad col-light-green"></i>
-                                        ViaVersion</h6>
-                                </div>
-                                <table class="table mb-0">
-                                    <thead class="bg-light-green">
-                                    <tr>
-                                        <th><i class=" fa fa-fw fa-signal"></i> Version</th>
-                                        <th><i class=" fa fa-fw fa-users"></i> Users</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>1.12.1</td>
-                                        <td>1</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div> <!-- /.container-fluid -->
-            </div> <!-- End of Plugins Overview tab -->
+            <div class="plugin-tabs"></div>
             <div class="tab"></div>
             <div class="tab"></div>
         </div> <!-- End of Main Content -->
@@ -1415,6 +1357,8 @@
 <script src="js/charts/sessionAccordion.js"></script>
 
 <script>
+    var x = document.getElementById("content");
+
     setLoadingText('Calculating values..');
     jsonRequest("../v1/serverOverview?server=${serverName}", loadServerOverviewValues);
     jsonRequest("../v1/onlineOverview?server=${serverName}", loadOnlineActivityOverviewValues);
@@ -1449,20 +1393,6 @@
             diskMed: ${diskMedium},
             diskHigh: ${diskHigh},
             firstDay: ${firstDay}
-        },
-        data: {
-            // activityPie: ${activityPieSeries},
-            // worldPie: ${worldSeries},
-            // worldPieDrillDown: ${gmSeries},
-            // geolocations: ${geoMapSeries},
-            // punchCard: ${punchCardSeries},
-            // activityStack: ${activityStackSeries},
-            // activityStackCategories: ${activityStackCategories},
-            // countryCategories: ${countryCategories},
-            // country: ${countrySeries},
-            // avgPing: ${avgPingSeries},
-            // maxPing: ${maxPingSeries},
-            // minPing: ${minPingSeries},
         }
     };
 
@@ -1706,22 +1636,19 @@
     });
     jsonRequest("../v1/kills?server=${serverName}", loadPlayerKills);
 
+    jsonRequest("../v1/extensions?server=${serverName}", function (json, error) {
+        if (json) {
+            $('.plugin-nav').replaceWith(json.navigation);
+            $('.plugin-tabs').replaceWith(json.content);
+            openPageFunc();
+        } else if (error) {
+            $('.plugin-nav').remove();
+            $('.plugin-tabs').remove();
+        }
+    });
+
     setLoadingText('Almost done..');
-    var navButtons = document.getElementsByClassName("nav-button");
-    var tabs = document.getElementsByClassName("tab");
-    var slideIndex = window.sessionStorage.getItem("server_slide_index");
-    if (slideIndex === null) {
-        slideIndex = 0;
-    }
-    var x = document.getElementById("content");
-    x.style.transform = "translate3d(0px,0px,0)";
-    x.style.width = "" + navButtons.length * 100 + "%";
-    for (var i = 0; i < navButtons.length; i++) {
-        navButtons[i].onclick = openFunc(i);
-        tabs[i].style.width = "" + 100 / navButtons.length + "%";
-    }
-    x.style.opacity = "1";
-    openFunc(slideIndex)();
+    openPageFunc();
 
     jsonRequest("../v1/sessions?server=${serverName}", loadSessionAccordion);
 
@@ -1730,8 +1657,26 @@
         $('.page-loader').fadeOut();
     }, 50);
 
+    function openPageFunc() {
+        var navButtons = document.getElementsByClassName("nav-button");
+        var tabs = document.getElementsByClassName("tab");
+        var slideIndex = window.sessionStorage.getItem("server_slide_index");
+        if (slideIndex === null) {
+            slideIndex = 0;
+        }
+        x.style.transform = "translate3d(0px,0px,0)";
+        x.style.width = "" + navButtons.length * 100 + "%";
+        for (var i = 0; i < navButtons.length; i++) {
+            navButtons[i].onclick = openFunc(i);
+            tabs[i].style.width = "" + 100 / navButtons.length + "%";
+        }
+        x.style.opacity = "1";
+        openFunc(slideIndex)();
+    }
+
     function openFunc(i) {
         return function () {
+            var navButtons = document.getElementsByClassName("nav-button");
             var max = navButtons.length;
             for (var j = 0; j < max; j++) {
                 if (navButtons[j].classList.contains('active')) {
