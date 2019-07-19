@@ -33,6 +33,7 @@ import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.queries.*;
+import com.djrapitops.plan.db.access.queries.analysis.ActivityIndexQueries;
 import com.djrapitops.plan.db.access.queries.containers.AllPlayerContainersQuery;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.db.access.queries.containers.ServerPlayerContainersQuery;
@@ -1390,6 +1391,15 @@ public interface DatabaseTest {
         expected.addRow("value", 3, 0.5, 400L);
 
         assertEquals(expected.parseHtml(), table.getHtmlTable().parseHtml());
+    }
+
+    @Test
+    public void activeTunredInactiveQueryHasAllParametersSet() {
+        Integer result = db.query(ActivityIndexQueries.countRegularPlayersTurnedInactive(
+                0, System.currentTimeMillis(), serverUUID,
+                TimeUnit.HOURS.toMillis(2L)
+        ));
+        assertNotNull(result);
     }
 
     @PluginInfo(name = "ConditionalExtension")
