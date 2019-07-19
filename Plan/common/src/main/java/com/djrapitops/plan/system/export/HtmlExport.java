@@ -224,24 +224,7 @@ public class HtmlExport extends SpecificExport {
                 "web/js/admin.js",
                 "web/js/helpers.js",
                 "web/js/script.js",
-                "web/js/charts/activityPie.js",
-                "web/js/charts/lineGraph.js",
-                "web/js/charts/horizontalBarGraph.js",
-                "web/js/charts/stackGraph.js",
-                "web/js/charts/performanceGraph.js",
-                "web/js/charts/playerGraph.js",
-                "web/js/charts/playerGraphNoNav.js",
-                "web/js/charts/resourceGraph.js",
-                "web/js/charts/diskGraph.js",
-                "web/js/charts/tpsGraph.js",
-                "web/js/charts/worldGraph.js",
-                "web/js/charts/worldMap.js",
-                "web/js/charts/punchCard.js",
-                "web/js/charts/serverPie.js",
-                "web/js/charts/worldPie.js",
-                "web/js/charts/healthGauge.js",
-                "web/js/charts/sessionCalendar.js",
-                "web/js/charts/onlineActivityCalendar.js"
+                "web/js/graphs.js"
         };
         copyFromJar(resources);
 
