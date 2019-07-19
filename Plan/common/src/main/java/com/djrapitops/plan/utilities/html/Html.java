@@ -73,7 +73,7 @@ public enum Html {
 
     ROW("<div class=\"row\">${0}</div>"),
     CARD("<div class=\"card\">${0}</div>"),
-    BODY("<div class=\"body\">${0}</div>"),
+    BODY("<div class=\"card-body\">${0}</div>"),
     PANEL("<div class=\"panel panel-default\">${0}</div>"),
     PANEL_BODY("<div class=\"panel-body\">${0}</div>"),
     HELP_BUBBLE("<div class=\"col-xs-6 col-sm-6 col-lg-6\"><a href=\"javascript:void(0)\" class=\"help material-icons pull-right\" data-trigger=\"focus\" data-toggle=\"popover\" data-placement=\"left\" data-container=\"body\" data-html=\"true\" data-original-title=\"${0}\" data-content=\"${1}\">help_outline</a></div>"),

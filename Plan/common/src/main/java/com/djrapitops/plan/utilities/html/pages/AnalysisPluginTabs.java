@@ -28,6 +28,7 @@ import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Icon;
+import com.djrapitops.plan.utilities.html.structure.NavLink;
 import com.djrapitops.plan.utilities.html.structure.TabsElement;
 
 import java.util.*;
@@ -89,12 +90,12 @@ public class AnalysisPluginTabs {
 
     private void generate() {
         if (serverData.isEmpty()) {
-            nav = "<li><a class=\"nav-button\" href=\"javascript:void(0)\">Extensions (No Data)</a></li>";
+            nav = new NavLink(Icon.called("cubes").build(), "Overview (No Data)").toHtml();
             tab = "<div class=\"tab\"><div class=\"row clearfix\">" +
-                    "<div class=\"col-md-12\">" + Html.CARD.parse("<div class=\"body\"><p>No Extension Data</p></div>") +
+                    "<div class=\"col-md-12\">" + Html.CARD.parse("<div class=\"card-body\"><p>No Extension Data</p></div>") +
                     "</div></div></div>";
         } else {
-            nav = "<li><a class=\"nav-button\" href=\"javascript:void(0)\">General</a></li>";
+            nav = new NavLink(Icon.called("cubes").build(), "Overview").toHtml();
             tab = generatePageTab();
         }
     }
@@ -126,7 +127,18 @@ public class AnalysisPluginTabs {
     }
 
     private String wrapInTab(String content) {
-        return "<div class=\"tab\"><div class=\"row clearfix\">" + content + "</div></div>";
+        return "<div class=\"tab\"><div class=\"container-fluid mt-4\">" +
+                // Page heading
+                "<div class=\"d-sm-flex align-items-center justify-content-between mb-4\">" +
+                "<h1 class=\"h3 mb-0 text-gray-800\"><i class=\"sidebar-toggler fa fa-fw fa-bars\"></i>Server name &middot; Plugins Overview</h1>" +
+                "<a href=\"network.html\" class=\"btn bg-plan btn-icon-split\">" +
+                "<span class=\"icon text-white-50\">" +
+                "<i class=\"fas fa-fw fa-arrow-left\"></i><i class=\"fas fa-fw fa-cloud\"></i>" +
+                "</span>" +
+                "<span class=\"text\">Network page</span>" +
+                "</a></div>" +
+                // End Page heading
+                "<div class=\"row clearfix\">" + content + "</div></div></div>";
     }
 
     private TabsElement.Tab wrapToTabElementTab(ExtensionTabData tabData) {
@@ -197,14 +209,14 @@ public class AnalysisPluginTabs {
             builder.append("<p>");
         }
         builder.append(Icon.fromExtensionIcon(descriptive.getIcon()))
-                .append(' ').append(descriptive.getText()).append(": ").append(formattedValue).append("</p>");
+                .append(' ').append(descriptive.getText()).append("<span class=\"float-right\"><b>").append(formattedValue).append("</b></span></p>");
     }
 
     private String wrapInContainer(ExtensionInformation information, String tabsElement) {
-        String colWidth = hasWideTable ? "col-md-8 col-lg-8" : "col-md-4 col-lg-4";
-        return "<div class=\"col-xs-12 col-sm-12 " + colWidth + "\"><div class=\"card\">" +
-                "<div class=\"header\">" +
-                "<h2>" + Icon.fromExtensionIcon(information.getIcon()) + ' ' + information.getPluginName() + "</h2>" +
+        String colWidth = hasWideTable ? "col-md-8 col-lg-8 col-sm-12" : "col-md-4 col-lg-4 col-sm-12";
+        return "<div class=\"col-xs-12 col-sm-12 " + colWidth + "\"><div class=\"card shadow mb-0\">" +
+                "<div class=\"card-header py-3\">" +
+                "<h6 class=\"m-0 font-weight-bold col-black\">" + Icon.fromExtensionIcon(information.getIcon()) + ' ' + information.getPluginName() + "</h6>" +
                 "</div>" +
                 tabsElement +
                 "</div></div>";
