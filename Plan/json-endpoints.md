@@ -38,6 +38,8 @@ Parameter|Expected value|Description
 
 ### `GET /v1/players`
 
+### `GET /v1/performanceOverview`
+
 Obtain data for `/server` player list.
 
 Required parameters: `serverName` or `serverUUID`
