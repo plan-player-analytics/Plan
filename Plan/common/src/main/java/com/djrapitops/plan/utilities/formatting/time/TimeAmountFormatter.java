@@ -45,7 +45,7 @@ public class TimeAmountFormatter implements Formatter<Long> {
 
     @Override
     public String apply(Long ms) {
-        if (ms <= 0) {
+        if (ms < 0) {
             return "-";
         }
         StringBuilder builder = new StringBuilder();
@@ -107,20 +107,18 @@ public class TimeAmountFormatter implements Formatter<Long> {
     }
 
     private void appendSeconds(StringBuilder builder, long seconds, long minutes, long hours, String fHours, String fMinutes, String fSeconds) {
-        if (seconds != 0 || fSeconds.contains(ZERO_PH)) {
-            String s = fSeconds.replace(SECONDS_PH, String.valueOf(seconds));
-            if (minutes == 0 && s.contains(MINUTES_PH)) {
-                if (hours == 0 && fMinutes.contains(HOURS_PH)) {
-                    builder.append(fHours.replace(ZERO_PH, "0").replace(HOURS_PH, "0"));
-                }
-                builder.append(fMinutes.replace(HOURS_PH, "").replace(ZERO_PH, "0").replace(MINUTES_PH, "0"));
+        String s = fSeconds.replace(SECONDS_PH, String.valueOf(seconds));
+        if (minutes == 0 && s.contains(MINUTES_PH)) {
+            if (hours == 0 && fMinutes.contains(HOURS_PH)) {
+                builder.append(fHours.replace(ZERO_PH, "0").replace(HOURS_PH, "0"));
             }
-            s = s.replace(MINUTES_PH, "");
-            if (s.contains(ZERO_PH) && String.valueOf(seconds).length() == 1) {
-                builder.append('0');
-            }
-            builder.append(s);
+            builder.append(fMinutes.replace(HOURS_PH, "").replace(ZERO_PH, "0").replace(MINUTES_PH, "0"));
         }
+        s = s.replace(MINUTES_PH, "");
+        if (s.contains(ZERO_PH) && String.valueOf(seconds).length() == 1) {
+            builder.append('0');
+        }
+        builder.append(s);
     }
 
     private void appendDays(StringBuilder builder, long days) {

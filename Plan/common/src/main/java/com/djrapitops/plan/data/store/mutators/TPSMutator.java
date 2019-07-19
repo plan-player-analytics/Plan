@@ -61,6 +61,10 @@ public class TPSMutator {
         return filterBy(tps -> tps.getDate() >= after && tps.getDate() <= before);
     }
 
+    public TPSMutator filterTPSBetween(int above, int below) {
+        return filterBy(tps -> tps.getTicksPerSecond() > above && tps.getTicksPerSecond() < below);
+    }
+
     public List<TPS> all() {
         return tpsData;
     }
@@ -240,5 +244,11 @@ public class TPSMutator {
                 .mapToLong(TPS::getFreeDiskSpace)
                 .filter(num -> num >= 0)
                 .min().orElse(-1);
+    }
+
+    public double averagePlayersOnline() {
+        return tpsData.stream()
+                .mapToDouble(TPS::getPlayers)
+                .average().orElse(-1);
     }
 }

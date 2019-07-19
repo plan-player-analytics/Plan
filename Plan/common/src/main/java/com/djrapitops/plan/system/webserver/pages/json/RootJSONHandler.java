@@ -50,7 +50,8 @@ public class RootJSONHandler extends TreePageHandler {
             SessionsOverviewJSONParser sessionsOverviewJSONParser,
             PlayerKillsJSONHandler playerKillsJSONHandler,
             PvPPvEJSONParser pvPPvEJSONParser,
-            PlayerBaseOverviewJSONParser playerBaseOverviewJSONParser
+            PlayerBaseOverviewJSONParser playerBaseOverviewJSONParser,
+            PerformanceJSONParser performanceJSONParser
     ) {
         super(responseFactory);
 
@@ -66,6 +67,7 @@ public class RootJSONHandler extends TreePageHandler {
         registerPage("sessionsOverview", sessionsOverviewJSONParser);
         registerPage("playerVersus", pvPPvEJSONParser);
         registerPage("playerbaseOverview", playerBaseOverviewJSONParser);
+        registerPage("performanceOverview", performanceJSONParser);
     }
 
     private <T> void registerPage(String identifier, TabJSONParser<T> tabJSONParser) {

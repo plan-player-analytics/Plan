@@ -1421,48 +1421,7 @@
     jsonRequest("../v1/sessionsOverview?serverName=${serverName}", loadSessionValues);
     jsonRequest("../v1/playerVersus?serverName=${serverName}", loadPvPPvEValues);
     jsonRequest("../v1/playerbaseOverview?serverName=${serverName}", loadPlayerbaseOverviewValues);
-    loadPerformanceValues(
-        {
-            numbers: {
-                low_tps_spikes_30d: 4532,
-                low_tps_spikes_7d: 1235,
-                low_tps_spikes_24h: 411,
-                server_downtime_30d: '5d 1h 43m',
-                server_downtime_7d: '3d 1h 43m',
-                server_downtime_24h: '1h 43m',
-                tps_30d: '19.91',
-                tps_7d: '19.94',
-                tps_24h: '19.94',
-                cpu_30d: '16.91%',
-                cpu_7d: '14.4%',
-                cpu_24h: '16.01%',
-                ram_30d: '320 MB',
-                ram_7d: '432 MB',
-                ram_24h: '432 MB',
-                entities_30d: 43,
-                entities_7d: 26,
-                entities_24h: 75,
-                chunks_30d: 246,
-                chunks_7d: 256,
-                chunks_24h: 256,
-                max_disk_30d: '135113 Mb',
-                max_disk_7d: '134795 Mb',
-                max_disk_24h: '126425 Mb',
-                min_disk_30d: '79872 Mb',
-                min_disk_7d: '126419 Mb',
-                min_disk_24h: '126419 Mb'
-            },
-            insights: {
-                low_tps_players: '32.54',
-                low_tps_entities: '432.54',
-                low_tps_disconnects: '6.43',
-                low_disk_space_dates: [
-                    '7 February 2019 12:34',
-                    '8 February 2019 1:43'
-                ]
-            }
-        }, null
-    );
+    jsonRequest("../v1/performanceOverview?serverName=${serverName}", loadPerformanceValues);
     setLoadingText('Rendering graphs..');
 
     // TODO remove
