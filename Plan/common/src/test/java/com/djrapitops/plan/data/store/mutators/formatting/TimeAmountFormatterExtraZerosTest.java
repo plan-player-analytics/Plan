@@ -112,7 +112,7 @@ class TimeAmountFormatterExtraZerosTest {
 
     @Test
     void exampleZero() {
-        String expected = "-";
+        String expected = "00:00:00";
 
         long ms = 0L;
         String result = underTest.apply(ms);
