@@ -1631,6 +1631,10 @@
             $('.plugin-nav').remove();
             $('.plugin-tabs').remove();
         }
+        $('.server-name').text('${serverName}');
+        $('.player-plugin-table').DataTable({
+            responsive: true
+        });
     });
 
     setLoadingText('Almost done..');
