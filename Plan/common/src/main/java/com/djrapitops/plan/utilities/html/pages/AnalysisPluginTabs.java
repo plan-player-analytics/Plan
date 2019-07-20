@@ -130,13 +130,8 @@ public class AnalysisPluginTabs {
         return "<div class=\"tab\"><div class=\"container-fluid mt-4\">" +
                 // Page heading
                 "<div class=\"d-sm-flex align-items-center justify-content-between mb-4\">" +
-                "<h1 class=\"h3 mb-0 text-gray-800\"><i class=\"sidebar-toggler fa fa-fw fa-bars\"></i>Server name &middot; Plugins Overview</h1>" +
-                "<a href=\"network.html\" class=\"btn bg-plan btn-icon-split\">" +
-                "<span class=\"icon text-white-50\">" +
-                "<i class=\"fas fa-fw fa-arrow-left\"></i><i class=\"fas fa-fw fa-cloud\"></i>" +
-                "</span>" +
-                "<span class=\"text\">Network page</span>" +
-                "</a></div>" +
+                "<h1 class=\"h3 mb-0 text-gray-800\"><i class=\"sidebar-toggler fa fa-fw fa-bars\"></i><span class=\"server-name\"></span> &middot; Plugins Overview</h1>" +
+                "</div>" +
                 // End Page heading
                 "<div class=\"row clearfix\">" + content + "</div></div></div>";
     }
