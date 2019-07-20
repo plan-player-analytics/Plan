@@ -30,6 +30,7 @@ import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -248,16 +249,35 @@ public class SessionsMutator {
                 .average().orElse(0.0);
     }
 
-    public List<Map<String, Object>> toPlayerJSONMaps(
+    public List<Map<String, Object>> toPlayerNameJSONMaps(
             Graphs graphs,
             WorldAliasSettings worldAliasSettings,
             Formatters formatters
     ) {
+        return toJSONMaps(graphs, worldAliasSettings, formatters,
+                sessionMap -> sessionMap.get("player_name"));
+    }
+
+    public List<Map<String, Object>> toServerNameJSONMaps(
+            Graphs graphs,
+            WorldAliasSettings worldAliasSettings,
+            Formatters formatters
+    ) {
+        return toJSONMaps(graphs, worldAliasSettings, formatters,
+                sessionMap -> sessionMap.get("server_name"));
+    }
+
+    private List<Map<String, Object>> toJSONMaps(
+            Graphs graphs,
+            WorldAliasSettings worldAliasSettings,
+            Formatters formatters,
+            Function<Map<String, Object>, Object> nameFunction
+    ) {
         return sessions.stream().map(session -> {
             Map<String, Object> sessionMap = new HashMap<>();
             sessionMap.put("player_name", session.getValue(SessionKeys.NAME).orElse(session.getUnsafe(SessionKeys.UUID).toString()));
-            sessionMap.put("name", sessionMap.get("player_name"));
             sessionMap.put("server_name", session.getValue(SessionKeys.SERVER_NAME).orElse(session.getUnsafe(SessionKeys.SERVER_UUID).toString()));
+            sessionMap.put("name", nameFunction.apply(sessionMap));
             sessionMap.put("start", session.getValue(SessionKeys.START).map(formatters.yearLong()).orElse("-") +
                     (session.supports(SessionKeys.END) ? "" : " (Online)"));
             sessionMap.put("end", session.getValue(SessionKeys.END).map(formatters.yearLong()).orElse("Online"));
