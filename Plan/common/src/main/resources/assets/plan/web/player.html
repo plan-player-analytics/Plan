@@ -25,7 +25,9 @@
 </head>
 
 <body id="page-top">
-
+<script>
+    var gmPieColors = [${gmPieColors}];
+</script>
 <div class="page-loader">
     <span class="loader"></span>
     <span class="loader-text">Please wait..</span>
@@ -1294,66 +1296,29 @@
 <script src="js/sb-admin-2.js"></script>
 <script src="js/xmlhttprequests.js"></script>
 <script src="js/color-selector.js"></script>
+<script src="js/graphs.js"></script>
 
 <!-- Page level plugins -->
+<script src="vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script src="vendor/highcharts/highstock.js"></script>
+<script src="vendor/highcharts/drilldown.js"></script>
+<script src="vendor/highcharts/highcharts-more.js"></script>
+<script src="vendor/highcharts/no-data-to-display.js"></script>
+<link href='vendor/fullcalendar/fullcalendar.min.css' rel='stylesheet'/>
+<script src='vendor/momentjs/moment.js'></script>
+<script src='vendor/fullcalendar/fullcalendar.min.js'></script>
 
 <!-- Page level custom scripts -->
+<script src="js/sessionAccordion.js"></script>
 <script src="js/player-values.js"></script>
 
 <script>
     setLoadingText('Loading player values..');
-    loadPlayerOverviewValues(
-        {
-            info: {
-                online: true,
-                operator: true,
-                banned: true,
-                kick_count: 5,
-                player_kill_count: 20,
-                mob_kill_count: 1234,
-                death_count: 8,
-                playtime: '5m',
-                active_playtime: '2m',
-                afk_time: '3m',
-                session_count: 3,
-                longest_session_lenght: '4m',
-                session_median: '30s',
-                activity_index: 1.32,
-                activity_index_group: 'Irregular',
-                favorite_server: 'Server 1',
-                average_ping: '6 ms',
-                best_ping: '3 ms',
-                worst_ping: '123 ms',
-                registered: '10 January 2018',
-                last_seen: '30 July 2019'
-            },
-            nicknames: [
-                {nickname: 'Rsl1122', server: 'Server 1', date: '30 July 2019'}
-            ],
-            connections: [
-                {geolocation: 'Local Machine', date: '30 July 2019'}
-            ],
-            online_activity: {
-                playtime_30d: '4s',
-                playtime_7d: '4s',
-                active_playtime_30d: '2s',
-                active_playtime_7d: '2s',
-                afk_time_30d: '2s',
-                afk_time_7d: '2s',
-                average_session_length_30d: '2s',
-                average_session_length_7d: '2s',
-                session_count_30d: 3,
-                session_count_7d: 3,
-                player_kill_count_30d: 32,
-                player_kill_count_7d: 32,
-                mob_kill_count_30d: 32,
-                mob_kill_count_7d: 32,
-                death_count_30d: 32,
-                death_count_7d: 32,
-            }
-        },
-        null
-    );
+    jsonRequest("../v1/player?player=${playerName}", function (json, error) {
+        loadPlayerOverviewValues(json, error);
+        loadSessionAccordion(json, error);
+    });
     setLoadingText('Rendering graphs..');
     setLoadingText('Sorting players table..');
     setLoadingText('Almost done..');

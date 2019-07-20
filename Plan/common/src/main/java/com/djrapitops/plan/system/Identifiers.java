@@ -18,6 +18,7 @@ package com.djrapitops.plan.system;
 
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.db.access.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.webserver.RequestTarget;
@@ -54,5 +55,19 @@ public class Identifiers {
         return dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverName))
                 .map(Server::getUuid)
                 .orElseThrow(() -> new BadRequestException("Given 'server' was not found in the database: '" + serverName + "'"));
+    }
+
+    public UUID getPlayerUUID(RequestTarget target) throws BadRequestException {
+        String playerIdentifier = target.getParameter("player")
+                .orElseThrow(() -> new BadRequestException("'player' parameter was not defined."));
+
+        return UUIDUtility.parseFromString(playerIdentifier)
+                .orElse(getPlayerUUIDFromName(playerIdentifier));
+    }
+
+    private UUID getPlayerUUIDFromName(String playerName) throws BadRequestException {
+        return dbSystem.getDatabase()
+                .query(UserIdentifierQueries.fetchPlayerUUIDOf(playerName))
+                .orElseThrow(() -> new BadRequestException("Given 'player' was not found in the database: '" + playerName + "'"));
     }
 }
