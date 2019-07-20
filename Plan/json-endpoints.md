@@ -106,3 +106,13 @@ Type | Description
 `activity` | Activity stack graph and pie graph data
 `geolocation` | World Map and bar graph data. World Map uses iso-a3 specification of Country codes and Bar graph uses country names.
 `ping` | Min, Avg, Max ping graph data.
+
+### `GET /v1/player`
+
+Fetch all data for a player page
+
+Required parameters: `player`
+
+Parameter|Expected value|Description
+--|--|--
+`player` | Name or UUID of a player | Used for identifying player the data should be about

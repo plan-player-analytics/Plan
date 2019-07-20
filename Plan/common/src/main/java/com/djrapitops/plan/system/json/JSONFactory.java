@@ -84,7 +84,7 @@ public class JSONFactory {
         List<Session> sessions = db.query(SessionQueries.fetchLatestSessionsOfServer(
                 serverUUID, config.get(DisplaySettings.SESSIONS_PER_PAGE)
         ));
-        return new SessionsMutator(sessions).toPlayerJSONMaps(graphs, config.getWorldAliasSettings(), formatters);
+        return new SessionsMutator(sessions).toPlayerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters);
     }
 
     public List<Map<String, Object>> serverPlayerKillsAsJSONMap(UUID serverUUID) {
