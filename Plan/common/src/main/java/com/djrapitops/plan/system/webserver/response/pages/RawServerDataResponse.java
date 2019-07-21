@@ -22,7 +22,9 @@ import com.djrapitops.plan.data.store.containers.ServerContainer;
  * Raw Data JSON response for a Server.
  *
  * @author Rsl1122
+ * @deprecated Marked for removal in 5.0.0
  */
+@Deprecated
 public class RawServerDataResponse extends RawDataResponse {
 
     public RawServerDataResponse(ServerContainer serverContainer) {
