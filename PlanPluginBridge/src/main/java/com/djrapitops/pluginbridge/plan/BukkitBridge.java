@@ -22,7 +22,6 @@ import com.djrapitops.pluginbridge.plan.aac.AdvancedAntiCheatHook;
 import com.djrapitops.pluginbridge.plan.buycraft.BuyCraftHook;
 import com.djrapitops.pluginbridge.plan.factions.FactionsHook;
 import com.djrapitops.pluginbridge.plan.jobs.JobsHook;
-import com.djrapitops.pluginbridge.plan.kingdoms.KingdomsHook;
 import com.djrapitops.pluginbridge.plan.litebans.LiteBansBukkitHook;
 import com.djrapitops.pluginbridge.plan.luckperms.LuckPermsHook;
 import com.djrapitops.pluginbridge.plan.protocolsupport.ProtocolSupportHook;
@@ -45,10 +44,9 @@ public class BukkitBridge extends AbstractBridge {
     private final BuyCraftHook buyCraftHook;
     private final FactionsHook factionsHook;
     private final JobsHook jobsHook;
-    private final KingdomsHook kingdomsHook;
     private final LiteBansBukkitHook liteBansHook;
     private final LuckPermsHook luckPermsHook;
-private final ProtocolSupportHook protocolSupportHook;
+    private final ProtocolSupportHook protocolSupportHook;
     private final SuperbVoteHook superbVoteHook;
     private final TownyHook townyHook;
     private final ViaVersionBukkitHook viaVersionHook;
@@ -62,7 +60,6 @@ private final ProtocolSupportHook protocolSupportHook;
             BuyCraftHook buyCraftHook,
             FactionsHook factionsHook,
             JobsHook jobsHook,
-            KingdomsHook kingdomsHook,
             LiteBansBukkitHook liteBansHook,
             LuckPermsHook luckPermsHook,
             ProtocolSupportHook protocolSupportHook,
@@ -75,7 +72,6 @@ private final ProtocolSupportHook protocolSupportHook;
         this.buyCraftHook = buyCraftHook;
         this.factionsHook = factionsHook;
         this.jobsHook = jobsHook;
-        this.kingdomsHook = kingdomsHook;
         this.liteBansHook = liteBansHook;
         this.luckPermsHook = luckPermsHook;
         this.protocolSupportHook = protocolSupportHook;
@@ -91,7 +87,6 @@ private final ProtocolSupportHook protocolSupportHook;
                 buyCraftHook,
                 factionsHook,
                 jobsHook,
-                kingdomsHook,
                 liteBansHook,
                 luckPermsHook,
                 protocolSupportHook,
