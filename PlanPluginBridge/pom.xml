@@ -191,12 +191,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>io.minimum</groupId>
-            <artifactId>minecraft.superbvote</artifactId>
-            <version>0.5.3</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.palmergames</groupId>
             <artifactId>towny</artifactId>
             <version>0.92.0.0</version>
