@@ -56,6 +56,7 @@ public class ExtensionRegister {
         new NucleusExtensionFactory().createExtension().ifPresent(extensionService::register);
         new RedProtectExtensionFactory().createExtension().ifPresent(extensionService::register);
         new SpongeEconomyExtensionFactory().createExtension().ifPresent(extensionService::register);
+        new SuperbVoteExtensionFactory().createExtension().ifPresent(extensionService::register);
         new VaultExtensionFactory().createExtension().ifPresent(extensionService::register);
     }
 
