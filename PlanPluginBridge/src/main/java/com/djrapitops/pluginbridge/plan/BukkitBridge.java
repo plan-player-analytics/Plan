@@ -25,7 +25,6 @@ import com.djrapitops.pluginbridge.plan.jobs.JobsHook;
 import com.djrapitops.pluginbridge.plan.litebans.LiteBansBukkitHook;
 import com.djrapitops.pluginbridge.plan.luckperms.LuckPermsHook;
 import com.djrapitops.pluginbridge.plan.protocolsupport.ProtocolSupportHook;
-import com.djrapitops.pluginbridge.plan.superbvote.SuperbVoteHook;
 import com.djrapitops.pluginbridge.plan.towny.TownyHook;
 import com.djrapitops.pluginbridge.plan.viaversion.ViaVersionBukkitHook;
 
@@ -47,7 +46,6 @@ public class BukkitBridge extends AbstractBridge {
     private final LiteBansBukkitHook liteBansHook;
     private final LuckPermsHook luckPermsHook;
     private final ProtocolSupportHook protocolSupportHook;
-    private final SuperbVoteHook superbVoteHook;
     private final TownyHook townyHook;
     private final ViaVersionBukkitHook viaVersionHook;
 
@@ -63,7 +61,6 @@ public class BukkitBridge extends AbstractBridge {
             LiteBansBukkitHook liteBansHook,
             LuckPermsHook luckPermsHook,
             ProtocolSupportHook protocolSupportHook,
-            SuperbVoteHook superbVoteHook,
             TownyHook townyHook,
             ViaVersionBukkitHook viaVersionHook
     ) {
@@ -75,7 +72,6 @@ public class BukkitBridge extends AbstractBridge {
         this.liteBansHook = liteBansHook;
         this.luckPermsHook = luckPermsHook;
         this.protocolSupportHook = protocolSupportHook;
-        this.superbVoteHook = superbVoteHook;
         this.townyHook = townyHook;
         this.viaVersionHook = viaVersionHook;
     }
@@ -90,7 +86,6 @@ public class BukkitBridge extends AbstractBridge {
                 liteBansHook,
                 luckPermsHook,
                 protocolSupportHook,
-                superbVoteHook,
                 townyHook,
                 viaVersionHook
         };
