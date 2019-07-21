@@ -20,7 +20,9 @@ package com.djrapitops.plan.data.plugin;
  * Enum class for PluginData to estimate the required width of the contained items.
  *
  * @author Rsl1122
+ * @deprecated PluginData API has been deprecated - see https://github.com/plan-player-analytics/Plan/wiki/APIv5---DataExtension-API for new API.
  */
+@Deprecated
 public enum ContainerSize {
     THIRD,
     TWO_THIRDS,

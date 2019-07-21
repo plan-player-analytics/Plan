@@ -25,6 +25,7 @@ import java.util.Comparator;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class PluginDataNameComparator implements Comparator<PluginData> {
 
     @Override

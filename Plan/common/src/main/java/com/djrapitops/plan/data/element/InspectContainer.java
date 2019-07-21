@@ -35,7 +35,9 @@ import java.util.TreeMap;
  *
  * @author Rsl1122
  * @see TableContainer
+ * @deprecated PluginData API has been deprecated - see https://github.com/plan-player-analytics/Plan/wiki/APIv5---DataExtension-API for new API.
  */
+@Deprecated
 public class InspectContainer {
 
     protected List<String> values;
