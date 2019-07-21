@@ -51,7 +51,8 @@ public class PlayerHackKickListener implements Listener {
         HackType hackType = event.getHackType();
         String hackTypeName = hackType.getName();
         long time = System.currentTimeMillis();
-        int violations = AACAPIProvider.getAPI().getViolationLevel(player, hackType);
+
+        int violations = new AACAPIProvider().getAPI().getViolationLevel(player, hackType);
 
         HackObject hackObject = new HackObject(uuid, time, hackTypeName, violations);
 
