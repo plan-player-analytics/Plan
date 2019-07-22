@@ -35,8 +35,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class PlayerCalendar {
 
-    private final Formatter<Long> timeAmountFormatter;
-    private final Formatter<Long> yearLongFormatter;
+    private final Formatter<Long> timeAmount;
+    private final Formatter<Long> year;
     private final Formatter<Long> iso8601Formatter;
     private final Theme theme;
     private final TimeZone timeZone;
@@ -46,8 +46,8 @@ public class PlayerCalendar {
 
     PlayerCalendar(
             PlayerContainer container,
-            Formatter<Long> timeAmountFormatter,
-            Formatter<Long> yearLongFormatter,
+            Formatter<Long> timeAmount,
+            Formatter<Long> year,
             Formatter<Long> iso8601Formatter,
             Theme theme,
             TimeZone timeZone
@@ -55,24 +55,22 @@ public class PlayerCalendar {
         this.allSessions = container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>());
         this.registered = container.getValue(PlayerKeys.REGISTERED).orElse(0L);
 
-        this.timeAmountFormatter = timeAmountFormatter;
-        this.yearLongFormatter = yearLongFormatter;
+        this.timeAmount = timeAmount;
+        this.year = year;
         this.iso8601Formatter = iso8601Formatter;
         this.theme = theme;
         this.timeZone = timeZone;
     }
 
-    public String toCalendarSeries() {
-        StringBuilder series = new StringBuilder("[");
+    public List<CalendarEntry> getEntries() {
+        List<CalendarEntry> entries = new ArrayList<>();
 
-        appendRegister(series);
-        appendDailyPlaytime(series);
-        appendSessionsAndKills(series);
+        entries.add(CalendarEntry
+                .of("Registered: " + year.apply(registered),
+                        registered
+                ).withColor(theme.getValue(ThemeVal.LIGHT_GREEN))
+        );
 
-        return series.append("]").toString();
-    }
-
-    private void appendDailyPlaytime(StringBuilder series) {
         Map<String, List<Session>> sessionsByDay = getSessionsByDay();
 
         for (Map.Entry<String, List<Session>> entry : sessionsByDay.entrySet()) {
@@ -82,15 +80,42 @@ public class PlayerCalendar {
             int sessionCount = sessions.size();
             long playtime = sessions.stream().mapToLong(Session::getLength).sum();
 
-            series.append(",{title: 'Playtime: ").append(timeAmountFormatter.apply(playtime))
-                    .append("',start:'").append(day)
-                    .append("',color: '").append(theme.getValue(ThemeVal.GREEN)).append("'")
-                    .append("}");
-
-            series.append(",{title: 'Sessions: ").append(sessionCount)
-                    .append("',start:'").append(day)
-                    .append("'}");
+            entries.add(CalendarEntry
+                    .of("Playtime: " + timeAmount.apply(playtime), day)
+                    .withColor(theme.getValue(ThemeVal.GREEN))
+            );
+            entries.add(CalendarEntry.of("Sessions: " + sessionCount, day));
         }
+
+        long fiveMinutes = TimeUnit.MINUTES.toMillis(5L);
+
+        for (Session session : allSessions) {
+            String length = timeAmount.apply(session.getLength());
+            Long start = session.getUnsafe(SessionKeys.START);
+            Long end = session.getValue(SessionKeys.END).orElse(System.currentTimeMillis());
+
+            entries.add(CalendarEntry
+                    .of("Session: " + length,
+                            start + timeZone.getOffset(start))
+                    .withEnd(end + timeZone.getOffset(end))
+            );
+
+            for (PlayerKill kill : session.getPlayerKills()) {
+                long time = kill.getDate();
+                String victim = kill.getVictimName().orElse(kill.getVictim().toString());
+                entries.add(CalendarEntry
+                        .of("Killed: " + victim, time)
+                        .withEnd(time + fiveMinutes)
+                        .withColor(theme.getValue(ThemeVal.RED))
+                );
+            }
+        }
+
+        return entries;
+    }
+
+    public String toCalendarSeries() {
+        return getEntries().toString();
     }
 
     private Map<String, List<Session>> getSessionsByDay() {
@@ -103,35 +128,5 @@ public class PlayerCalendar {
             sessionsByDay.put(day, sessionsOfDay);
         }
         return sessionsByDay;
-    }
-
-    private void appendSessionsAndKills(StringBuilder series) {
-        long fiveMinutes = TimeUnit.MINUTES.toMillis(5L);
-
-        for (Session session : allSessions) {
-            String length = timeAmountFormatter.apply(session.getLength());
-            Long start = session.getUnsafe(SessionKeys.START);
-            Long end = session.getValue(SessionKeys.END).orElse(System.currentTimeMillis());
-
-            series.append(",{title: 'Session: ").append(length)
-                    .append("',start:").append(start + timeZone.getOffset(start))
-                    .append(",end:").append(end + timeZone.getOffset(end))
-                    .append("}");
-
-            for (PlayerKill kill : session.getPlayerKills()) {
-                long time = kill.getDate();
-
-                series.append(",{title: 'Killed: ").append(kill.getVictimName().orElse(kill.getVictim().toString()))
-                        .append("',start:").append(time)
-                        .append(",end:").append(time + fiveMinutes)
-                        .append(",color: '").append(theme.getValue(ThemeVal.RED)).append("'")
-                        .append("}");
-            }
-        }
-    }
-
-    private void appendRegister(StringBuilder series) {
-        series.append("{title: 'Registered: ").append(yearLongFormatter.apply(registered)).append("'," +
-                "start: ").append(this.registered).append(",color: '").append(theme.getValue(ThemeVal.LIGHT_GREEN)).append("'}");
     }
 }

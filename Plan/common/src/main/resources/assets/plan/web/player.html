@@ -349,9 +349,7 @@
                                             class="far fa-fw fa-calendar-alt col-teal"></i>
                                         Session Calendar</h6>
                                 </div>
-                                <div class="chart-area">
-                                    <canvas id="myAreaChart2"></canvas>
-                                </div>
+                                <div class="chart-area" id="sessionCalendar"></div>
                             </div>
 
                             <!-- Most Recent Sessions -->
@@ -1333,7 +1331,8 @@
                 }
             };
             punchCard("punchCard", series.punchCard);
-            worldPie("worldPie", series.worldPie, series.worldPieGMs)
+            worldPie("worldPie", series.worldPie, series.worldPieGMs);
+            sessionCalendar("#sessionCalendar", json.calendar_series, json.first_day);
         } else if (error) {
             $('#punchCard').text("Failed to load graph data: " + error)
         }
