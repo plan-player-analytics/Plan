@@ -1319,15 +1319,24 @@
         loadPlayerOverviewValues(json, error);
         loadSessionAccordion(json, error);
         if (json) {
-            punchCard("punchCard", {
-                name: 'Relative Activity',
-                color: '#222',
-                data: json.punchcard_series
-            })
+            var series = {
+                worldPie: {
+                    name: 'World Playtime',
+                    colorByPoint: true,
+                    data: json.world_pie_series
+                },
+                worldPieGMs: json.gm_series,
+                punchCard: {
+                    name: 'Relative Activity',
+                    color: '#222',
+                    data: json.punchcard_series
+                }
+            };
+            punchCard("punchCard", series.punchCard);
+            worldPie("worldPie", series.worldPie, series.worldPieGMs)
         } else if (error) {
             $('#punchCard').text("Failed to load graph data: " + error)
         }
-
     });
     setLoadingText('Rendering graphs..');
     setLoadingText('Sorting players table..');
