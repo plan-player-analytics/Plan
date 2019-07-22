@@ -95,6 +95,8 @@ public class PlayerJSONParser {
         WorldPie worldPie = graphs.pie().worldPie(player.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes()));
         data.put("world_pie_series", worldPie.getSlices());
         data.put("gm_series", worldPie.toHighChartsDrillDownMaps());
+        data.put("calendar_series", graphs.calendar().playerCalendar(player).getEntries());
+        data.put("first_day", 1); // Monday
         return data;
     }
 
