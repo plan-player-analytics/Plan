@@ -105,7 +105,7 @@ subprojects {
 
         // Test Tooling Dependencies
         testCompile "org.junit.jupiter:junit-jupiter-engine:5.5.1"   // JUnit 5
-        testCompile "org.junit.platform:junit-platform-runner:1.5.0" // JUnit 4 runner for JUnit 5 tests
+        testCompile "org.junit.platform:junit-platform-runner:1.5.1" // JUnit 4 runner for JUnit 5 tests
         testCompile "org.junit.vintage:junit-vintage-engine:5.5.1"   // JUnit 4 compatibility for JUnit 5
         testCompile "org.junit.jupiter:junit-jupiter-params:5.5.0"   // JUnit 5, parameterized tests
         testCompile "org.mockito:mockito-core:3.0.0"                // Mockito Core
