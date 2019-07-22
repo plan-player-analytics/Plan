@@ -18,11 +18,12 @@ package com.djrapitops.plan.utilities.html.graphs.special;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
+import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.utilities.html.graphs.HighChart;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,7 +39,11 @@ public class SpecialGraphFactory {
         // Inject Constructor.
     }
 
-    public HighChart punchCard(Collection<Session> sessions) {
+    public PunchCard punchCard(List<Session> sessions) {
+        return punchCard(new SessionsMutator(sessions));
+    }
+
+    public PunchCard punchCard(SessionsMutator sessions) {
         return new PunchCard(sessions);
     }
 
