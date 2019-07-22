@@ -1,3 +1,19 @@
+/*
+ *  This file is part of Player Analytics (Plan).
+ *
+ *  Plan is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Plan is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.djrapitops.plan.system.json;
 
 import com.djrapitops.plan.data.container.GeoInfo;
@@ -7,6 +23,7 @@ import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 import com.djrapitops.plan.data.store.mutators.PerServerMutator;
 import com.djrapitops.plan.data.store.mutators.PingMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.containers.PlayerContainerQuery;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
@@ -17,6 +34,7 @@ import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
+import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -74,6 +92,9 @@ public class PlayerJSONParser {
         data.put("player_deaths", player.getValue(PlayerKeys.PLAYER_DEATHS).orElse(Collections.emptyList()));
         data.put("sessions", sessionsMutator.toServerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters));
         data.put("punchcard_series", graphs.special().punchCard(sessionsMutator).getDots());
+        WorldPie worldPie = graphs.pie().worldPie(player.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes()));
+        data.put("world_pie_series", worldPie.getSlices());
+        data.put("gm_series", worldPie.toHighChartsDrillDownMaps());
         return data;
     }
 
