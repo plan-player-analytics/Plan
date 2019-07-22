@@ -16,15 +16,13 @@
  */
 package com.djrapitops.plan.utilities.html.graphs.special;
 
-import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.store.keys.SessionKeys;
+import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.utilities.html.graphs.HighChart;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * Bubble Chart that represents login "punches" of players.
@@ -33,14 +31,14 @@ import java.util.stream.Collectors;
  */
 public class PunchCard implements HighChart {
 
-    private final Collection<Session> sessions;
+    private final SessionsMutator sessions;
 
     /**
      * Constructor for the graph.
      *
      * @param sessions All sessions of All users this PunchCard represents.
      */
-    PunchCard(Collection<Session> sessions) {
+    PunchCard(SessionsMutator sessions) {
         this.sessions = sessions;
     }
 
@@ -48,7 +46,7 @@ public class PunchCard implements HighChart {
      * First number signifies the Day of Week. (0 = Monday, 6 = Sunday)
      * Second number signifies the Hour of Day. (0 = 0 AM, 23 = 11 PM)
      */
-    private List<int[]> getDaysAndHours(Collection<Long> sessionStarts) {
+    private int[][] getDaysAndHours(Collection<Long> sessionStarts) {
         return sessionStarts.stream().map((Long start) -> {
             Calendar day = Calendar.getInstance();
             day.setTimeInMillis(start);
@@ -65,57 +63,48 @@ public class PunchCard implements HighChart {
                 dayOfWeek = 6;
             }
             return new int[]{dayOfWeek, hourOfDay};
-        }).collect(Collectors.toList());
+        }).toArray(int[][]::new);
     }
 
-    private int[][] turnIntoArray(Collection<Long> sessionStarts) {
-        List<int[]> daysAndHours = getDaysAndHours(sessionStarts);
-        int[][] dataArray = createEmptyArray();
-        for (int[] dAndH : daysAndHours) {
-            int d = dAndH[0];
-            int h = dAndH[1];
-            dataArray[d][h] = dataArray[d][h] + 1;
+    private int[][] turnIntoMatrix(Collection<Long> sessionStarts) {
+        int[][] daysAndHours = getDaysAndHours(sessionStarts);
+        int[][] matrix = createZeroMatrix();
+        for (int[] dayAndHour : daysAndHours) {
+            int day = dayAndHour[0];
+            int hour = dayAndHour[1];
+            matrix[day][hour] = matrix[day][hour] + 1;
         }
-        return dataArray;
+        return matrix;
     }
 
     @Override
     public String toHighChartsSeries() {
-        List<Long> sessionStarts = getSessionStarts(sessions);
-        int[][] dataArray = turnIntoArray(sessionStarts);
-        int big = findBiggestValue(dataArray);
-        int[][] scaled = scale(dataArray, big);
-        StringBuilder arrayBuilder = new StringBuilder("[");
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 24; j++) {
-                int value = scaled[i][j];
-                if (j == 0) {
-                    arrayBuilder.append("{x:").append(24 * 3600000);
-                } else {
-                    arrayBuilder.append("{x:").append(j * 3600000);
-                }
-                arrayBuilder.append(", y:").append(i)
-                        .append(", z:").append(value).
-                        append(", marker: { radius:").append(value)
-                        .append("}}");
-                if (i != 6 || j != 23) {
-                    arrayBuilder.append(",");
-                }
+        return getDots().toString();
+    }
+
+    public List<Dot> getDots() {
+        List<Dot> dots = new ArrayList<>();
+
+        List<Long> sessionStarts = sessions.toSessionStarts();
+
+        int[][] dayHourMatrix = turnIntoMatrix(sessionStarts);
+        int big = findBiggestValue(dayHourMatrix);
+        int[][] scaled = scale(dayHourMatrix, big);
+
+        for (int day = 0; day < 7; day++) {
+            for (int hour = 0; hour < 24; hour++) {
+                int value = scaled[day][hour];
+
+                int x = hour == 0 ? 24 * 3600000 : hour * 3600000;
+
+                dots.add(new Dot(x, day, value, value));
             }
         }
-        arrayBuilder.append("]");
-        return arrayBuilder.toString();
+
+        return dots;
     }
 
-    private List<Long> getSessionStarts(Collection<Session> data) {
-        return data.stream()
-                .filter(Objects::nonNull)
-                .map(session -> session.getUnsafe(SessionKeys.START))
-                .sorted()
-                .collect(Collectors.toList());
-    }
-
-    private int[][] createEmptyArray() {
+    private int[][] createZeroMatrix() {
         int[][] dataArray = new int[7][24];
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 24; j++) {
@@ -150,5 +139,44 @@ public class PunchCard implements HighChart {
             }
         }
         return scaled;
+    }
+
+    public static class Dot {
+        int x;
+        int y;
+        int z;
+        Marker marker;
+
+        public Dot(int x, int y, int z, int radius) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.marker = new Marker(radius);
+        }
+
+        @Override
+        public String toString() {
+            return "{" +
+                    "x:" + x +
+                    ", y:" + y +
+                    ", z:" + z +
+                    ", marker:" + marker +
+                    '}';
+        }
+
+        public static class Marker {
+            int radius;
+
+            Marker(int radius) {
+                this.radius = radius;
+            }
+
+            @Override
+            public String toString() {
+                return "{" +
+                        "radius:" + radius +
+                        '}';
+            }
+        }
     }
 }

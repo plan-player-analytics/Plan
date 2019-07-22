@@ -237,9 +237,10 @@ public class SessionsMutator {
     }
 
     public List<Long> toSessionStarts() {
-        List<Long> starts = new ArrayList<>();
-        sessions.forEach(session -> starts.add(session.getDate()));
-        return starts;
+        return sessions.stream()
+                .map(Session::getDate)
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     public double toAveragePlayersOnline(PlayersOnlineResolver playersOnlineResolver) {

@@ -259,7 +259,7 @@
                                     <h6 class="m-0 font-weight-bold col-black"><i class="fas fa-fw fa-braille"></i>
                                         Punchcard</h6>
                                 </div>
-                                <div class="chart-area" id="punchcard">
+                                <div class="chart-area" id="punchCard">
                                 </div>
                             </div>
                             <div class="card shadow mb-4">
@@ -1318,6 +1318,16 @@
     jsonRequest("../v1/player?player=${playerName}", function (json, error) {
         loadPlayerOverviewValues(json, error);
         loadSessionAccordion(json, error);
+        if (json) {
+            punchCard("punchCard", {
+                name: 'Relative Activity',
+                color: '#222',
+                data: json.punchcard_series
+            })
+        } else if (error) {
+            $('#punchCard').text("Failed to load graph data: " + error)
+        }
+
     });
     setLoadingText('Rendering graphs..');
     setLoadingText('Sorting players table..');
