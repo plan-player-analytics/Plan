@@ -35,6 +35,14 @@ function loadPlayerKills(json, error) {
     $('#playerKillTable').replaceWith(createKillsTable(json.player_kills));
 }
 
+function loadPlayerDeaths(json, error) {
+    if (error) {
+        $('#playerDeathTable').replaceWith('<p>Failed to load player deaths: ' + error + '</p>');
+        return;
+    }
+    $('#playerDeathTable').replaceWith(createKillsTable(json.player_deaths));
+}
+
 function createAccordionTitle(i, session) {
     return '<tr aria-controls="session_t_' + i + '" aria-expanded="false" class="clickable collapsed bg-teal" data-target="#session_t_' + i + '" data-toggle="collapse"><td>'
         + session.name + '</td>'
@@ -66,10 +74,10 @@ function createAccordionBody(i, session) {
 }
 
 function createKillsTable(player_kills) {
-    var table = '<table class="table table-striped scrollbar"><tbody>';
+    var table = '<table class="table scrollbar"><tbody>';
 
     if (player_kills.length === 0) {
-        table += '<tr><td>No Kills</td><td>-</td><td>-</td></tr>'
+        table += '<tr><td>None</td><td>-</td><td>-</td></tr>'
     }
 
     for (var i = 0; i < player_kills.length; i++) {

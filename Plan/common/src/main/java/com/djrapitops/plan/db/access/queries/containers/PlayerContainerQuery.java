@@ -84,8 +84,8 @@ public class PlayerContainerQuery implements Query<PlayerContainer> {
         });
 
         container.putSupplier(PlayerKeys.LAST_SEEN, () -> SessionsMutator.forContainer(container).toLastSeen());
-
-        container.putSupplier(PlayerKeys.PLAYER_KILLS, () -> SessionsMutator.forContainer(container).toPlayerKillList());
+        container.putSupplier(PlayerKeys.PLAYER_KILLS, () -> db.query(KillQueries.fetchPlayerKillsOfPlayer(uuid)));
+        container.putSupplier(PlayerKeys.PLAYER_DEATHS_KILLS, () -> db.query(KillQueries.fetchPlayerDeathsOfPlayer(uuid)));
         container.putSupplier(PlayerKeys.PLAYER_DEATHS, () -> SessionsMutator.forContainer(container).toPlayerDeathList());
         container.putSupplier(PlayerKeys.PLAYER_KILL_COUNT, () -> container.getValue(PlayerKeys.PLAYER_KILLS).map(Collection::size).orElse(0));
         container.putSupplier(PlayerKeys.MOB_KILL_COUNT, () -> SessionsMutator.forContainer(container).toMobKillCount());

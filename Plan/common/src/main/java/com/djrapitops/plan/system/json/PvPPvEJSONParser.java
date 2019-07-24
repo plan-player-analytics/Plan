@@ -110,7 +110,7 @@ public class PvPPvEJSONParser implements TabJSONParser<Map<String, Object>> {
 
         Map<String, Object> insights = new HashMap<>();
 
-        List<String> top3Weapons = db.query(KillQueries.topWeapons(monthAgo, now, serverUUID, 3));
+        List<String> top3Weapons = db.query(KillQueries.topWeaponsOfPlayer(monthAgo, now, serverUUID, 3));
         insights.put("weapon_1st", getWeapon(top3Weapons, 0).orElse("-"));
         insights.put("weapon_2nd", getWeapon(top3Weapons, 1).orElse("-"));
         insights.put("weapon_3rd", getWeapon(top3Weapons, 2).orElse("-"));

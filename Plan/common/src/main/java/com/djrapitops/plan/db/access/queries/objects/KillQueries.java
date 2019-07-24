@@ -44,7 +44,7 @@ public class KillQueries {
         // Static method class
     }
 
-    public static Query<List<PlayerKill>> fetchMostRecentPlayerKills(UUID serverUUID, int limit) {
+    public static Query<List<PlayerKill>> fetchPlayerKillsOnServer(UUID serverUUID, int limit) {
         String sql = SELECT + KillsTable.VICTIM_UUID + ", " +
                 "v." + UsersTable.USER_NAME + " as victim_name, " +
                 "k." + UsersTable.USER_NAME + " as killer_name," +
@@ -61,6 +61,64 @@ public class KillQueries {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
                 statement.setInt(2, limit);
+            }
+
+            @Override
+            public List<PlayerKill> processResults(ResultSet set) throws SQLException {
+                List<PlayerKill> kills = new ArrayList<>();
+                while (set.next()) {
+                    extractKillFromResults(set).ifPresent(kills::add);
+                }
+                return kills;
+            }
+        };
+    }
+
+    public static Query<List<PlayerKill>> fetchPlayerKillsOfPlayer(UUID playerUUID) {
+        String sql = SELECT + KillsTable.VICTIM_UUID + ", " +
+                "v." + UsersTable.USER_NAME + " as victim_name, " +
+                "k." + UsersTable.USER_NAME + " as killer_name," +
+                KillsTable.DATE + ", " +
+                KillsTable.WEAPON +
+                FROM + KillsTable.TABLE_NAME +
+                INNER_JOIN + UsersTable.TABLE_NAME + " v on v." + UsersTable.USER_UUID + "=" + KillsTable.VICTIM_UUID +
+                INNER_JOIN + UsersTable.TABLE_NAME + " k on k." + UsersTable.USER_UUID + "=" + KillsTable.KILLER_UUID +
+                WHERE + KillsTable.TABLE_NAME + '.' + KillsTable.KILLER_UUID + "=?" +
+                ORDER_BY + KillsTable.DATE + " DESC";
+
+        return new QueryStatement<List<PlayerKill>>(sql, 100) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+            }
+
+            @Override
+            public List<PlayerKill> processResults(ResultSet set) throws SQLException {
+                List<PlayerKill> kills = new ArrayList<>();
+                while (set.next()) {
+                    extractKillFromResults(set).ifPresent(kills::add);
+                }
+                return kills;
+            }
+        };
+    }
+
+    public static Query<List<PlayerKill>> fetchPlayerDeathsOfPlayer(UUID playerUUID) {
+        String sql = SELECT + KillsTable.VICTIM_UUID + ", " +
+                "v." + UsersTable.USER_NAME + " as victim_name, " +
+                "k." + UsersTable.USER_NAME + " as killer_name," +
+                KillsTable.DATE + ", " +
+                KillsTable.WEAPON +
+                FROM + KillsTable.TABLE_NAME +
+                INNER_JOIN + UsersTable.TABLE_NAME + " v on v." + UsersTable.USER_UUID + "=" + KillsTable.VICTIM_UUID +
+                INNER_JOIN + UsersTable.TABLE_NAME + " k on k." + UsersTable.USER_UUID + "=" + KillsTable.KILLER_UUID +
+                WHERE + KillsTable.TABLE_NAME + '.' + KillsTable.VICTIM_UUID + "=?" +
+                ORDER_BY + KillsTable.DATE + " DESC";
+
+        return new QueryStatement<List<PlayerKill>>(sql, 100) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
             }
 
             @Override
@@ -185,7 +243,7 @@ public class KillQueries {
         };
     }
 
-    public static Query<List<String>> topWeapons(long after, long before, UUID serverUUID, int limit) {
+    public static Query<List<String>> topWeaponsOfServer(long after, long before, UUID serverUUID, int limit) {
         String innerSQL = SELECT + KillsTable.WEAPON + ", COUNT(1) as kills" +
                 FROM + KillsTable.TABLE_NAME +
                 WHERE + KillsTable.SERVER_UUID + "=?" +
@@ -200,6 +258,35 @@ public class KillQueries {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
+                statement.setLong(2, after);
+                statement.setLong(3, before);
+                statement.setInt(4, limit);
+            }
+
+            @Override
+            public List<String> processResults(ResultSet set) throws SQLException {
+                List<String> weapons = new ArrayList<>();
+                while (set.next()) weapons.add(set.getString(KillsTable.WEAPON));
+                return weapons;
+            }
+        };
+    }
+
+    public static Query<List<String>> topWeaponsOfPlayer(long after, long before, UUID playerUUID, int limit) {
+        String innerSQL = SELECT + KillsTable.WEAPON + ", COUNT(1) as kills" +
+                FROM + KillsTable.TABLE_NAME +
+                WHERE + KillsTable.KILLER_UUID + "=?" +
+                AND + KillsTable.DATE + ">=?" +
+                AND + KillsTable.DATE + "<=?" +
+                GROUP_BY + KillsTable.WEAPON;
+        String sql = SELECT + KillsTable.WEAPON +
+                FROM + '(' + innerSQL + ')' +
+                ORDER_BY + "kills DESC LIMIT ?";
+
+        return new QueryStatement<List<String>>(sql, limit) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
                 statement.setLong(2, after);
                 statement.setLong(3, before);
                 statement.setInt(4, limit);
