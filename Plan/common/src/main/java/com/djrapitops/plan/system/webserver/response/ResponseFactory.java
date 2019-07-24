@@ -25,7 +25,10 @@ import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
-import com.djrapitops.plan.system.webserver.response.errors.*;
+import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
+import com.djrapitops.plan.system.webserver.response.errors.ForbiddenResponse;
+import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
+import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plan.system.webserver.response.pages.*;
 import com.djrapitops.plan.utilities.html.pages.PageFactory;
 import com.djrapitops.plugin.logging.L;
@@ -194,27 +197,21 @@ public class ResponseFactory {
         }
     }
 
-    public ErrorResponse unauthorizedServer(String message) {
-        try {
-            return new UnauthorizedServerResponse(message, versionCheckSystem, files);
-        } catch (IOException e) {
-            return internalErrorResponse(e, "Failed to parse UnauthorizedServerResponse");
-        }
-    }
-
-    public ErrorResponse gatewayError504(String message) {
-        try {
-            return new GatewayErrorResponse(message, versionCheckSystem, files);
-        } catch (IOException e) {
-            return internalErrorResponse(e, "Failed to parse GatewayErrorResponse");
-        }
-    }
-
     public ErrorResponse basicAuth() {
         try {
             return PromptAuthorizationResponse.getBasicAuthResponse(versionCheckSystem, files);
         } catch (IOException e) {
             return internalErrorResponse(e, "Failed to parse PromptAuthorizationResponse");
+        }
+    }
+
+    public Response playerPageResponse(UUID playerUUID) {
+        try {
+            return new PlayerPageResponse(playerUUID, pageFactory.playerPage(playerUUID).toHtml());
+        } catch (IllegalStateException e) {
+            return playerNotFound404();
+        } catch (ParseException e) {
+            return internalErrorResponse(e, "Failed to parse player page");
         }
     }
 }

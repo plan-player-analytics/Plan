@@ -16,101 +16,29 @@
  */
 package com.djrapitops.plan.system.info.connection;
 
-import com.djrapitops.plan.api.exceptions.connection.NoServersException;
-import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.info.InfoSystem;
-import com.djrapitops.plan.system.info.request.InfoRequest;
-import com.djrapitops.plan.system.info.request.InfoRequests;
-import com.djrapitops.plan.system.info.request.WideRequest;
-import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import dagger.Lazy;
-
-import java.util.*;
 
 /**
- * ConnectionSystem manages out- and inbound InfoRequest connections.
- * <p>
- * It decides what server to use for each request.
+ * ConnectionSystem manages proxy server status.
  *
  * @author Rsl1122
+ * @deprecated Usage should be replaced with Database query {@link ServerQueries#fetchProxyServerInformation()}
  */
-public abstract class ConnectionSystem implements SubSystem {
+@Deprecated
+public abstract class ConnectionSystem {
 
-    protected final ConnectionLog connectionLog;
-    protected final InfoRequests infoRequests;
-    protected final Lazy<InfoSystem> infoSystem;
     protected final ServerInfo serverInfo;
 
-    protected Map<UUID, Server> dataServers;
-    private boolean setupAllowed;
-
     public ConnectionSystem(
-            ConnectionLog connectionLog,
-            InfoRequests infoRequests,
-            Lazy<InfoSystem> infoSystem,
             ServerInfo serverInfo
     ) {
-        this.connectionLog = connectionLog;
-        this.infoSystem = infoSystem;
         this.serverInfo = serverInfo;
-        setupAllowed = false;
-        dataServers = new HashMap<>();
-        this.infoRequests = infoRequests;
     }
 
-    public InfoRequest getInfoRequest(String name) {
-        return infoRequests.get(name.toLowerCase());
-    }
-
-    public void setSetupAllowed(boolean setupAllowed) {
-        this.setupAllowed = setupAllowed;
-    }
-
-    protected abstract Server selectServerForRequest(InfoRequest infoRequest) throws NoServersException;
-
-    public boolean isSetupAllowed() {
-        return setupAllowed;
-    }
-
-    public void sendInfoRequest(InfoRequest infoRequest) throws WebException {
-        Server server = selectServerForRequest(infoRequest);
-        sendInfoRequest(infoRequest, server);
-    }
-
-    public void sendInfoRequest(InfoRequest infoRequest, Server toServer) throws WebException {
-        UUID serverUUID = serverInfo.getServerUUID();
-        if (serverUUID.equals(toServer.getUuid())) {
-            infoSystem.get().runLocally(infoRequest);
-        } else {
-            new ConnectionOut(toServer, serverUUID, infoRequest, connectionLog).sendRequest();
-        }
-    }
-
-    public ConnectionLog getConnectionLog() {
-        return connectionLog;
-    }
-
+    @Deprecated
     public abstract boolean isServerAvailable();
 
+    @Deprecated
     public abstract String getMainAddress();
-
-    public abstract void sendWideInfoRequest(WideRequest infoRequest) throws NoServersException;
-
-    public List<Server> getDataServers() {
-        return new ArrayList<>(dataServers.values());
-    }
-
-    @Override
-    public void enable() {
-        infoRequests.initializeRequests();
-    }
-
-    @Override
-    public void disable() {
-        setupAllowed = false;
-        dataServers.clear();
-        infoRequests.clear();
-    }
 }

@@ -35,9 +35,9 @@ import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.pages.NetworkPageResponse;
-import com.djrapitops.plan.utilities.html.pages.InspectPage;
 import com.djrapitops.plan.utilities.html.pages.NetworkPage;
 import com.djrapitops.plan.utilities.html.pages.PageFactory;
+import com.djrapitops.plan.utilities.html.pages.PlayerPage;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
@@ -114,7 +114,7 @@ public class HtmlExport extends SpecificExport {
     }
 
     public void exportPlayerPage(UUID playerUUID, String playerName) {
-        InspectPage playerPage = pageFactory.inspectPage(playerUUID);
+        PlayerPage playerPage = pageFactory.playerPage(playerUUID);
         try {
             exportPlayerPage(playerName, playerPage.toHtml());
         } catch (ParseException | IOException e) {

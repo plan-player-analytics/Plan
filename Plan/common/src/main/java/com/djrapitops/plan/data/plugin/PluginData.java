@@ -46,7 +46,7 @@ public abstract class PluginData {
 
     private String helpText;
 
-    protected com.djrapitops.plan.data.store.containers.AnalysisContainer analysisData;
+    protected com.djrapitops.plan.data.store.containers.AnalysisContainer analysisData = new com.djrapitops.plan.data.store.containers.AnalysisContainer();
 
     public PluginData(ContainerSize size, String sourcePlugin) {
         this.size = size;
