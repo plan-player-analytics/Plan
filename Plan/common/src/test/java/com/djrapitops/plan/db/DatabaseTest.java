@@ -20,11 +20,13 @@ import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.store.Key;
-import com.djrapitops.plan.data.store.containers.AnalysisContainer;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
-import com.djrapitops.plan.data.store.keys.*;
+import com.djrapitops.plan.data.store.keys.NetworkKeys;
+import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.data.store.keys.ServerKeys;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.data.store.objects.Nickname;
@@ -910,39 +912,6 @@ public interface DatabaseTest {
     }
 
     @Test
-    default void analysisContainerSupportsAllAnalysisKeys() throws IllegalAccessException, NoSuchAlgorithmException {
-        serverContainerSupportsAllServerKeys();
-        AnalysisContainer.Factory factory = constructAnalysisContainerFactory();
-        AnalysisContainer analysisContainer = factory.forServerContainer(
-                db().query(ContainerFetchQueries.fetchServerContainer(serverUUID()))
-        );
-        Collection<String> unsupported = new ArrayList<>();
-        List<Key> keys = FieldFetcher.getPublicStaticFields(AnalysisKeys.class, Key.class);
-        for (Key key : keys) {
-            if (!analysisContainer.supports(key)) {
-                unsupported.add(key.getKeyName());
-            }
-        }
-
-        assertTrue(unsupported.isEmpty(), () -> "Some keys are not supported by AnalysisContainer: AnalysisKeys." + unsupported.toString());
-    }
-
-    default AnalysisContainer.Factory constructAnalysisContainerFactory() {
-        return new AnalysisContainer.Factory(
-                "1.0.0",
-                system().getConfigSystem().getConfig(),
-                system().getLocaleSystem().getLocale(),
-                system().getConfigSystem().getTheme(),
-                system().getServerInfo().getServerProperties(),
-                system().getHtmlUtilities().getFormatters(),
-                system().getHtmlUtilities().getGraphs(),
-                system().getHtmlUtilities().getHtmlTables(),
-                system().getHtmlUtilities().getAccordions(),
-                system().getHtmlUtilities().getAnalysisPluginsTabContentCreator()
-        );
-    }
-
-    @Test
     default void networkContainerSupportsAllNetworkKeys() throws IllegalAccessException, NoSuchAlgorithmException {
         serverContainerSupportsAllServerKeys();
         NetworkContainer networkContainer = db().query(ContainerFetchQueries.fetchNetworkContainer());
@@ -1103,29 +1072,6 @@ public interface DatabaseTest {
                 .stream().map(player -> player.getUnsafe(PlayerKeys.UUID))
                 .sorted()
                 .collect(Collectors.toList());
-
-        assertEquals(expected, result);
-    }
-
-    // This test is against issue https://github.com/Rsl1122/Plan-PlayerAnalytics/issues/956
-    @Test
-    default void analysisContainerPlayerNamesAreCollectedFromBaseUsersCorrectly() {
-        db().executeTransaction(TestData.storeServers());
-        executeTransactions(TestData.storePlayerOneData());
-        executeTransactions(TestData.storePlayerTwoData());
-
-        BaseUser playerBaseUser = TestData.getPlayerBaseUser();
-        BaseUser player2BaseUser = TestData.getPlayer2BaseUser();
-
-        AnalysisContainer.Factory factory = constructAnalysisContainerFactory();
-        AnalysisContainer analysisContainer = factory.forServerContainer(
-                db().query(ContainerFetchQueries.fetchServerContainer(TestConstants.SERVER_UUID))
-        );
-
-        Map<UUID, String> expected = new HashMap<>();
-        expected.put(playerBaseUser.getUuid(), playerBaseUser.getName());
-        expected.put(player2BaseUser.getUuid(), player2BaseUser.getName());
-        Map<UUID, String> result = analysisContainer.getValue(AnalysisKeys.PLAYER_NAMES).orElseThrow(AssertionError::new);
 
         assertEquals(expected, result);
     }

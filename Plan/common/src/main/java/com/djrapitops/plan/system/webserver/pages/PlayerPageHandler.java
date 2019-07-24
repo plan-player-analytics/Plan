@@ -24,7 +24,6 @@ import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.RequestTarget;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
@@ -32,7 +31,6 @@ import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.ResponseFactory;
-import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 import javax.inject.Inject;
@@ -49,19 +47,16 @@ public class PlayerPageHandler implements PageHandler {
 
     private final ResponseFactory responseFactory;
     private final DBSystem dbSystem;
-    private final InfoSystem infoSystem;
     private final UUIDUtility uuidUtility;
 
     @Inject
     public PlayerPageHandler(
             ResponseFactory responseFactory,
             DBSystem dbSystem,
-            InfoSystem infoSystem,
             UUIDUtility uuidUtility
     ) {
         this.responseFactory = responseFactory;
         this.dbSystem = dbSystem;
-        this.infoSystem = infoSystem;
         this.uuidUtility = uuidUtility;
     }
 
@@ -99,12 +94,9 @@ public class PlayerPageHandler implements PageHandler {
         return responseFactory.serverNotFound404();
     }
 
-    private Response playerResponseOrNotFound(UUID uuid) throws WebException {
-        Response response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
-        if (!(response instanceof InspectPageResponse)) {
-            infoSystem.generateAndCachePlayerPage(uuid);
-            response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
-        }
+    private Response playerResponseOrNotFound(UUID playerUUID) throws WebException {
+        Response response = ResponseCache.loadResponse(PageId.PLAYER.of(playerUUID),
+                () -> responseFactory.playerPageResponse(playerUUID));
         return response != null ? response : responseFactory.playerNotFound404();
     }
 

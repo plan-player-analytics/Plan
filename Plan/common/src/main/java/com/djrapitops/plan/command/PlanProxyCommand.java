@@ -17,7 +17,6 @@
 package com.djrapitops.plan.command;
 
 import com.djrapitops.plan.command.commands.*;
-import com.djrapitops.plan.command.commands.manage.ManageConDebugCommand;
 import com.djrapitops.plan.command.commands.manage.ManageRawDataCommand;
 import com.djrapitops.plan.command.commands.manage.ManageUninstalledCommand;
 import com.djrapitops.plan.system.locale.Locale;
@@ -48,9 +47,7 @@ public class PlanProxyCommand extends TreeCmdNode {
     private final ListPlayersCommand listPlayersCommand;
     private final RegisterCommand registerCommand;
     private final Lazy<WebUserCommand> webUserCommand;
-    private final ManageConDebugCommand conDebugCommand;
     private final ManageRawDataCommand rawDataCommand;
-    private final BungeeSetupToggleCommand setupToggleCommand;
     private final ReloadCommand reloadCommand;
     private final DisableCommand disableCommand;
     private final ManageUninstalledCommand uninstalledCommand;
@@ -70,9 +67,7 @@ public class PlanProxyCommand extends TreeCmdNode {
             RegisterCommand registerCommand,
             Lazy<WebUserCommand> webUserCommand,
             // Group 3
-            ManageConDebugCommand conDebugCommand,
             ManageRawDataCommand rawDataCommand,
-            BungeeSetupToggleCommand setupToggleCommand,
             ManageUninstalledCommand uninstalledCommand,
             ReloadCommand reloadCommand,
             DisableCommand disableCommand
@@ -87,9 +82,7 @@ public class PlanProxyCommand extends TreeCmdNode {
         this.listPlayersCommand = listPlayersCommand;
         this.registerCommand = registerCommand;
         this.webUserCommand = webUserCommand;
-        this.conDebugCommand = conDebugCommand;
         this.rawDataCommand = rawDataCommand;
-        this.setupToggleCommand = setupToggleCommand;
         this.reloadCommand = reloadCommand;
         this.disableCommand = disableCommand;
 
@@ -113,9 +106,7 @@ public class PlanProxyCommand extends TreeCmdNode {
                 webUserCommand.get()
         };
         CommandNode[] manageGroup = {
-                conDebugCommand,
                 rawDataCommand,
-                setupToggleCommand,
                 uninstalledCommand,
                 reloadCommand,
                 disableCommand

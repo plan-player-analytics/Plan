@@ -48,8 +48,6 @@ public class ManageCommand extends TreeCmdNode {
                          ManageHotSwapCommand hotSwapCommand,
                          ManageClearCommand clearCommand,
                          // Group 2
-                         ManageSetupCommand setupCommand,
-                         ManageConDebugCommand conDebugCommand,
                          ManageImportCommand importCommand,
                          ManageExportCommand exportCommand,
                          ManageDisableCommand disableCommand,
@@ -70,8 +68,6 @@ public class ManageCommand extends TreeCmdNode {
                 clearCommand,
         };
         CommandNode[] pluginGroup = {
-                setupCommand,
-                conDebugCommand,
                 importCommand,
                 exportCommand,
                 disableCommand,

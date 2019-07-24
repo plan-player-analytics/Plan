@@ -96,6 +96,10 @@ public class SessionsMutator {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * @deprecated Incorrect results.
+     */
+    @Deprecated
     public List<PlayerDeath> toPlayerDeathList() {
         return sessions.stream()
                 .map(session -> session.getValue(SessionKeys.PLAYER_DEATHS).orElse(new ArrayList<>()))
@@ -232,6 +236,10 @@ public class SessionsMutator {
         return sorted;
     }
 
+    /**
+     * @deprecated Incorrect value, use PlayerVersusMutator instead.
+     */
+    @Deprecated
     public int toPlayerDeathCount() {
         return toPlayerDeathList().size();
     }

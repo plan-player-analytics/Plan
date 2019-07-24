@@ -117,7 +117,7 @@ public class InspectCommand extends CommandNode {
                 }
 
                 checkWebUserAndNotify(sender);
-                processing.submit(processorFactory.inspectCacheRequestProcessor(playerUUID, sender, playerName, this::sendInspectMsg));
+                this.sendInspectMsg(sender, playerName);
             } catch (DBOpException e) {
                 sender.sendMessage("§eDatabase exception occurred: " + e.getMessage());
                 errorHandler.log(L.ERROR, this.getClass(), e);

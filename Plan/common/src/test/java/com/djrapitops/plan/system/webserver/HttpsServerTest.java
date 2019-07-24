@@ -65,8 +65,6 @@ interface HttpsServerTest {
                 throw new ForbiddenException(url.toString() + " returned 403");
             case 404:
                 throw new NotFoundException(url.toString() + " returned a 404, ensure that your server is connected to an up to date Plan server.");
-            case 412:
-                throw new UnauthorizedServerException(url.toString() + " reported that it does not recognize this server. Make sure '/plan m setup' was successful.");
             case 500:
                 throw new InternalErrorException();
             default:

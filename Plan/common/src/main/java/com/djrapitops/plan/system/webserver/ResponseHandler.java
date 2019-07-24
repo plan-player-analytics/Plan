@@ -18,7 +18,6 @@ package com.djrapitops.plan.system.webserver;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.*;
-import com.djrapitops.plan.system.info.connection.InfoRequestPageHandler;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
@@ -47,7 +46,6 @@ public class ResponseHandler extends TreePageHandler {
     private final PlayersPageHandler playersPageHandler;
     private final PlayerPageHandler playerPageHandler;
     private final ServerPageHandler serverPageHandler;
-    private final InfoRequestPageHandler infoRequestPageHandler;
     private final RootJSONHandler rootJSONHandler;
     private final ErrorHandler errorHandler;
 
@@ -62,7 +60,6 @@ public class ResponseHandler extends TreePageHandler {
             PlayersPageHandler playersPageHandler,
             PlayerPageHandler playerPageHandler,
             ServerPageHandler serverPageHandler,
-            InfoRequestPageHandler infoRequestPageHandler,
             RootJSONHandler rootJSONHandler,
 
             ErrorHandler errorHandler
@@ -73,7 +70,6 @@ public class ResponseHandler extends TreePageHandler {
         this.playersPageHandler = playersPageHandler;
         this.playerPageHandler = playerPageHandler;
         this.serverPageHandler = serverPageHandler;
-        this.infoRequestPageHandler = infoRequestPageHandler;
         this.rootJSONHandler = rootJSONHandler;
         this.errorHandler = errorHandler;
     }
@@ -92,7 +88,6 @@ public class ResponseHandler extends TreePageHandler {
             registerPage("", responseFactory.redirectResponse("/server"), 5);
         }
 
-        registerPage("info", infoRequestPageHandler);
         registerPage("v1", rootJSONHandler);
     }
 
@@ -107,10 +102,6 @@ public class ResponseHandler extends TreePageHandler {
             return responseFactory.forbidden403(e.getMessage());
         } catch (BadRequestException e) {
             return new BadRequestResponse(e.getMessage() + " (when requesting '" + request.getTargetString() + "')");
-        } catch (UnauthorizedServerException e) {
-            return responseFactory.unauthorizedServer(e.getMessage());
-        } catch (GatewayException e) {
-            return responseFactory.gatewayError504(e.getMessage());
         } catch (InternalErrorException e) {
             if (e.getCause() != null) {
                 return responseFactory.internalErrorResponse(e.getCause(), request.getTargetString());
@@ -141,8 +132,7 @@ public class ResponseHandler extends TreePageHandler {
             return ResponseCache.loadResponse(PageId.FAVICON.id(), responseFactory::faviconResponse);
         }
 
-        boolean isNotInfoRequest = target.isEmpty() || !target.get(0).equals("info");
-        boolean isAuthRequired = webServer.get().isAuthRequired() && isNotInfoRequest;
+        boolean isAuthRequired = webServer.get().isAuthRequired();
         if (isAuthRequired && !authentication.isPresent()) {
             if (webServer.get().isUsingHTTPS()) {
                 return responseFactory.basicAuth();

@@ -16,13 +16,14 @@
  */
 package com.djrapitops.plan.utilities.html.tables;
 
-import com.djrapitops.plan.data.container.*;
+import com.djrapitops.plan.data.container.Ping;
+import com.djrapitops.plan.data.container.PlayerKill;
+import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
-import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DisplaySettings;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
@@ -66,26 +67,6 @@ public class HtmlTables {
     }
 
     /**
-     * Create a new Deaths table.
-     *
-     * @param deaths List of {@link PlayerDeath}s to be added to the table.
-     * @return a new {@link DeathsTable}.
-     */
-    public TableContainer deathsTable(List<PlayerDeath> deaths) {
-        return new DeathsTable(deaths, formatters.year());
-    }
-
-    /**
-     * Create a new GeoInfo table.
-     *
-     * @param geoInfo List of {@link GeoInfo} to be added to the table.
-     * @return a new {@link GeoInfoTable}.
-     */
-    public TableContainer geoInfoTable(List<GeoInfo> geoInfo) {
-        return new GeoInfoTable(geoInfo, config.isTrue(DisplaySettings.PLAYER_IPS), formatters.year());
-    }
-
-    /**
      * Create a new Kill table.
      *
      * @param kills List of {@link PlayerKill}s to be added to the table.
@@ -97,17 +78,6 @@ public class HtmlTables {
     }
 
     /**
-     * Create a new Nickname table.
-     *
-     * @param nicknames   List of {@link Nickname}s to be added to the table.
-     * @param serverNames Names of the servers, for the server column.
-     * @return a new {@link NicknameTable}.
-     */
-    public TableContainer nicknameTable(List<Nickname> nicknames, Map<UUID, String> serverNames) {
-        return new NicknameTable(nicknames, serverNames, formatters.year());
-    }
-
-    /**
      * Create a new Country - Ping table.
      *
      * @param pingPerCountry Map of {@link Ping}s sorted by country names.
@@ -115,20 +85,6 @@ public class HtmlTables {
      */
     public TableContainer pingTable(Map<String, List<Ping>> pingPerCountry) {
         return new PingTable(pingPerCountry, formatters.decimals());
-    }
-
-    /**
-     * Create a new Session table for a player.
-     *
-     * @param playerName Name of the player.
-     * @param sessions   List of {@link Session}s the player has.
-     * @return a new {@link PlayerSessionTable}.
-     */
-    public TableContainer playerSessionTable(String playerName, List<Session> sessions) {
-        return new PlayerSessionTable(
-                playerName, sessions,
-                config.get(DisplaySettings.SESSIONS_PER_PAGE), config.getWorldAliasSettings(), formatters.year(), formatters.timeAmount()
-        );
     }
 
     /**

@@ -29,8 +29,11 @@ public class DebugChannels {
     }
 
     public static final String ANALYSIS = "Analysis";
+    @Deprecated
     public static final String INFO_REQUESTS = "InfoRequests";
+    @Deprecated
     public static final String CONNECTIONS = "Connections";
+    @Deprecated
     public static final String WEB_REQUESTS = "Web Requests";
     public static final String IMPORTING = "Importing";
     public static final String SQL = "SQL";

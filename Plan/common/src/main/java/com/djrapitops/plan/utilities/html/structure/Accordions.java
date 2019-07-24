@@ -17,7 +17,6 @@
 package com.djrapitops.plan.utilities.html.structure;
 
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DisplaySettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
@@ -27,7 +26,6 @@ import com.djrapitops.plan.utilities.html.tables.HtmlTables;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -63,28 +61,6 @@ public class Accordions {
     }
 
     /**
-     * Create a new Session accordion for a Player.
-     *
-     * @param sessions            {@link Session}s of the Player.
-     * @param serverNamesSupplier Supplier that provides server name map.
-     * @return a new {@link SessionAccordion}.
-     */
-    public SessionAccordion playerSessionAccordion(
-            List<Session> sessions,
-            Supplier<Map<UUID, String>> serverNamesSupplier
-    ) {
-        boolean appendWorldPercentage = config.isTrue(DisplaySettings.SESSION_MOST_PLAYED_WORLD_IN_TITLE);
-        int maxSessions = config.get(DisplaySettings.SESSIONS_PER_PAGE);
-        return new SessionAccordion(
-                true, sessions,
-                serverNamesSupplier, HashMap::new,
-                appendWorldPercentage, maxSessions,
-                config.getWorldAliasSettings(), theme, graphs, tables,
-                formatters.year(), formatters.timeAmount()
-        );
-    }
-
-    /**
      * Create a new Session accordion for a server.
      *
      * @param sessions            Sessions that have occurred on a server.
@@ -105,21 +81,6 @@ public class Accordions {
                 appendWorldPercentage, maxSessions,
                 config.getWorldAliasSettings(), theme, graphs, tables,
                 formatters.year(), formatters.timeAmount()
-        );
-    }
-
-    /**
-     * Create a Server breakdown accordion for a player.
-     *
-     * @param player      PlayerContainer of the Player.
-     * @param serverNames Names of the servers.
-     * @return a new {@link ServerAccordion}
-     */
-    public ServerAccordion serverAccordion(PlayerContainer player, Map<UUID, String> serverNames) {
-        return new ServerAccordion(
-                player, serverNames,
-                theme, graphs,
-                formatters.yearLong(), formatters.timeAmount()
         );
     }
 }

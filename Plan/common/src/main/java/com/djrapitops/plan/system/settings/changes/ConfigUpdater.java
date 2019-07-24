@@ -126,7 +126,11 @@ public class ConfigUpdater {
                 new ConfigChange.Removed("Analysis"),
                 new ConfigChange.Removed("Data"),
                 new ConfigChange.Removed("Customization"),
-                new ConfigChange.Removed("Theme")
+                new ConfigChange.Removed("Theme"),
+
+                // 5.0.0
+                new ConfigChange.Removed("Display_options.Sessions.Replace_accordion_with_table"),
+                new ConfigChange.Removed("Display_options.Sessions.Show_most_played_world_in_title")
         };
     }
 
