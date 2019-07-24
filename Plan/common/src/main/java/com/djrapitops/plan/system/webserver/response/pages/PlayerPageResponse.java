@@ -14,26 +14,35 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.api.exceptions.connection;
+package com.djrapitops.plan.system.webserver.response.pages;
 
-import com.djrapitops.plan.system.webserver.response.ResponseCode;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
- * Thrown when Connection gets a 412 response due to ServerUUID not being in the database.
- *
  * @author Rsl1122
  */
-public class UnauthorizedServerException extends WebFailException {
+public class PlayerPageResponse extends PageResponse {
 
-    public UnauthorizedServerException(String message) {
-        super(message, ResponseCode.PRECONDITION_FAILED);
+    private final UUID uuid;
+
+    public PlayerPageResponse(UUID uuid, String html) {
+        super.setHeader("HTTP/1.1 200 OK");
+        super.setContent(html);
+        this.uuid = uuid;
     }
 
-    public UnauthorizedServerException(String message, Throwable cause) {
-        super(message, cause, ResponseCode.PRECONDITION_FAILED);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PlayerPageResponse)) return false;
+        if (!super.equals(o)) return false;
+        PlayerPageResponse that = (PlayerPageResponse) o;
+        return Objects.equals(uuid, that.uuid);
     }
 
-    public UnauthorizedServerException(Throwable cause) {
-        super(cause, ResponseCode.PRECONDITION_FAILED);
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), uuid);
     }
 }

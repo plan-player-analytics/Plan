@@ -30,8 +30,10 @@ import com.djrapitops.plan.system.settings.paths.key.StringSetting;
 public class DisplaySettings {
 
     public static final Setting<String> THEME = new StringSetting("Display_options.Theme");
+    @Deprecated // Removed in 5.0.0
     public static final Setting<Boolean> REPLACE_SESSION_ACCORDION_WITH_TABLE = new BooleanSetting("Display_options.Sessions.Replace_accordion_with_table");
     public static final Setting<Integer> SESSIONS_PER_PAGE = new IntegerSetting("Display_options.Sessions.Show_on_page");
+    @Deprecated // Removed in 5.0.0
     public static final Setting<Boolean> SESSION_MOST_PLAYED_WORLD_IN_TITLE = new BooleanSetting("Display_options.Sessions.Show_most_played_world_in_title");
     public static final Setting<Boolean> ORDER_WORLD_PIE_BY_PERC = new BooleanSetting("Display_options.Sessions.Order_world_pies_by_percentage");
     public static final Setting<Integer> PLAYERS_PER_SERVER_PAGE = new IntegerSetting("Display_options.Players_table.Show_on_server_page");

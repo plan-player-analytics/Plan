@@ -16,24 +16,12 @@
  */
 package com.djrapitops.plan.system.info.connection;
 
-import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
-import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.info.InfoSystem;
-import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.WebserverSettings;
-import com.djrapitops.plan.system.webserver.WebServer;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -50,13 +38,8 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class ServerConnectionSystem extends ConnectionSystem {
 
-    private final Locale locale;
-    private final PlanConfig config;
     private final Processing processing;
     private final DBSystem dbSystem;
-    private final Lazy<WebServer> webServer;
-    private final PluginLogger pluginLogger;
-    private final WebExceptionLogger webExceptionLogger;
 
     private long latestServerMapRefresh;
 
@@ -64,32 +47,20 @@ public class ServerConnectionSystem extends ConnectionSystem {
 
     @Inject
     public ServerConnectionSystem(
-            Locale locale,
-            PlanConfig config,
             Processing processing,
             DBSystem dbSystem,
-            Lazy<WebServer> webServer,
-            ConnectionLog connectionLog,
-            InfoRequests infoRequests,
-            Lazy<InfoSystem> infoSystem,
-            ServerInfo serverInfo,
-            PluginLogger pluginLogger,
-            WebExceptionLogger webExceptionLogger
+            ServerInfo serverInfo
     ) {
-        super(connectionLog, infoRequests, infoSystem, serverInfo);
-        this.locale = locale;
-        this.config = config;
+        super(serverInfo);
         this.processing = processing;
         this.dbSystem = dbSystem;
-        this.webServer = webServer;
-        this.pluginLogger = pluginLogger;
-        this.webExceptionLogger = webExceptionLogger;
         latestServerMapRefresh = 0;
     }
 
     private void refreshServerMap() {
         processing.submitNonCritical(() -> {
             if (latestServerMapRefresh < System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(15L)) {
+
                 Database database = dbSystem.getDatabase();
                 Map<UUID, Server> servers = database.query(ServerQueries.fetchPlanServerInformation());
                 Optional<Server> proxy = servers.values().stream()
@@ -98,73 +69,21 @@ public class ServerConnectionSystem extends ConnectionSystem {
                 mainServer = proxy.orElse(null);
 
                 proxy.ifPresent(proxyServer -> servers.remove(proxyServer.getUuid()));
-
-                dataServers = servers;
                 latestServerMapRefresh = System.currentTimeMillis();
             }
         });
     }
 
     @Override
-    protected Server selectServerForRequest(InfoRequest infoRequest) throws NoServersException {
-        refreshServerMap();
-
-        if (mainServer == null && dataServers.isEmpty()) {
-            throw new NoServersException("Zero servers available to process requests.");
-        }
-
-        Server server = null;
-        if (infoRequest instanceof CacheRequest ||
-                infoRequest instanceof GenerateInspectPageRequest) {
-            server = mainServer;
-        }
-        if (server == null) {
-            throw new NoServersException("Proper server is not available to process request: " + infoRequest.getClass().getSimpleName());
-        }
-        return server;
-    }
-
-    @Override
-    public void sendWideInfoRequest(WideRequest infoRequest) throws NoServersException {
-        if (dataServers.isEmpty()) {
-            throw new NoServersException("No Servers available to make wide-request: " + infoRequest.getClass().getSimpleName());
-        }
-        for (Server server : dataServers.values()) {
-            webExceptionLogger.logIfOccurs(this.getClass(), () -> {
-                try {
-                    sendInfoRequest(infoRequest, server);
-                } catch (ConnectionFailException ignored) {
-                    /* Wide Requests are used when at least one result is wanted. */
-                }
-            });
-        }
-    }
-
-    @Override
     public boolean isServerAvailable() {
+        refreshServerMap();
         return mainServer != null;
     }
 
     @Override
     public String getMainAddress() {
+        refreshServerMap();
         return isServerAvailable() ? mainServer.getWebAddress() : serverInfo.getServer().getWebAddress();
 
-    }
-
-    @Override
-    public void enable() {
-        super.enable();
-        refreshServerMap();
-
-        boolean usingBungeeWebServer = isServerAvailable();
-        boolean usingAlternativeIP = config.isTrue(WebserverSettings.SHOW_ALTERNATIVE_IP);
-
-        if (!usingAlternativeIP && serverInfo.getServerProperties().getIp().isEmpty()) {
-            pluginLogger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.ENABLE_NOTIFY_EMPTY_IP));
-        }
-        if (usingBungeeWebServer && usingAlternativeIP) {
-            String webServerAddress = webServer.get().getAccessAddress();
-            pluginLogger.info(locale.getString(PluginLang.ENABLE_NOTIFY_ADDRESS_CONFIRMATION, webServerAddress));
-        }
     }
 }

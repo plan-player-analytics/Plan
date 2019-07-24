@@ -20,6 +20,10 @@ import com.djrapitops.plan.data.store.objects.DateHolder;
 
 import java.util.UUID;
 
+/**
+ * @deprecated Use {@link PlayerKill} instead.
+ */
+@Deprecated
 public class PlayerDeath implements DateHolder {
 
     private final UUID killer;

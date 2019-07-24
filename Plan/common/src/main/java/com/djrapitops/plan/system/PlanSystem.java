@@ -28,7 +28,6 @@ import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.export.ExportSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.importing.ImportSystem;
-import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
 import com.djrapitops.plan.system.locale.LocaleSystem;
@@ -63,7 +62,6 @@ public class PlanSystem implements SubSystem {
     private final CacheSystem cacheSystem;
     private final ListenerSystem listenerSystem;
     private final TaskSystem taskSystem;
-    private final InfoSystem infoSystem;
     private final ServerInfo serverInfo;
     private final WebServerSystem webServerSystem;
 
@@ -88,7 +86,6 @@ public class PlanSystem implements SubSystem {
             CacheSystem cacheSystem,
             ListenerSystem listenerSystem,
             TaskSystem taskSystem,
-            InfoSystem infoSystem,
             ServerInfo serverInfo,
             WebServerSystem webServerSystem,
             Processing processing,
@@ -109,7 +106,6 @@ public class PlanSystem implements SubSystem {
         this.cacheSystem = cacheSystem;
         this.listenerSystem = listenerSystem;
         this.taskSystem = taskSystem;
-        this.infoSystem = infoSystem;
         this.serverInfo = serverInfo;
         this.webServerSystem = webServerSystem;
         this.processing = processing;
@@ -138,7 +134,6 @@ public class PlanSystem implements SubSystem {
                 serverInfo,
                 importSystem,
                 exportSystem,
-                infoSystem,
                 cacheSystem,
                 listenerSystem,
                 taskSystem,
@@ -168,7 +163,6 @@ public class PlanSystem implements SubSystem {
                 processing,
                 databaseSystem,
                 webServerSystem,
-                infoSystem,
                 serverInfo,
                 localeSystem,
                 configSystem,
@@ -233,10 +227,6 @@ public class PlanSystem implements SubSystem {
 
     public CacheSystem getCacheSystem() {
         return cacheSystem;
-    }
-
-    public InfoSystem getInfoSystem() {
-        return infoSystem;
     }
 
     public HookHandler getHookHandler() {

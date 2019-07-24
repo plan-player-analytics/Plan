@@ -30,7 +30,7 @@ public enum PluginLang implements Lang {
     ENABLE_NOTIFY_WEB_SERVER_DISABLED("Enable - Notify Webserver disabled", "WebServer was not initialized. (WebServer.DisableWebServer: true)"),
     ENABLE_NOTIFY_GEOLOCATIONS_INTERNET_REQUIRED("Enable - Notify Geolocations Internet Required", "Plan Requires internet access on first run to download GeoLite2 Geolocation database."),
     ENABLE_NOTIFY_GEOLOCATIONS_DISABLED("Enable - Notify Geolocations disabled", "Geolocation gathering is not active. (Data.Geolocations: false)"),
-    ENABLE_NOTIFY_ADDRESS_CONFIRMATION("Enable - Notify Address Confirmation", "Make sure that this address points to THIS Server: ${0}"),
+    @Deprecated ENABLE_NOTIFY_ADDRESS_CONFIRMATION("Enable - Notify Address Confirmation", "Make sure that this address points to THIS Server: ${0}"),
 
     ENABLE_FAIL_DB("Enable FAIL - Database", "${0}-Database Connection failed: ${1}"),
     ENABLE_FAIL_WRONG_DB("Enable FAIL - Wrong Database Type", "${0} is not a supported Database"),

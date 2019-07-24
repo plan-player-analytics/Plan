@@ -37,6 +37,7 @@ import java.util.UUID;
  * @author Rsl1122
  * @see com.djrapitops.plan.data.store.containers.AnalysisContainer for Suppliers for each Key.
  */
+@Deprecated
 public class AnalysisKeys {
 
     // Constants (Affected only by config settings)

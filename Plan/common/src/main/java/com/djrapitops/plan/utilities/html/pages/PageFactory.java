@@ -136,16 +136,14 @@ public class PageFactory {
                 )).orElseThrow(() -> new NotFoundException("Server not found in the database"));
     }
 
-    public InspectPage inspectPage(UUID playerUUID) {
+    public PlayerPage playerPage(UUID playerUUID) {
         Database db = dbSystem.get().getDatabase();
         PlayerContainer player = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
-        Map<UUID, String> serverNames = db.query(ServerQueries.fetchServerNames());
-        return new InspectPage(
-                player, serverNames,
+        return new PlayerPage(
+                player,
                 versionCheckSystem.get(),
                 fileSystem.get(), config.get(), this, theme.get(),
-                graphs.get(), tables.get(), accordions.get(), formatters.get(),
-                serverInfo.get(), timings.get()
+                formatters.get(), serverInfo.get()
         );
     }
 

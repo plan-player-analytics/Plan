@@ -106,8 +106,6 @@ Display_options:
   # https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Themes
   Theme: default
   Sessions:
-    Replace_accordion_with_table: false
-    Show_most_played_world_in_title: true
     Show_on_page: 50
     # By Default World playtime pie is ordered alphabetically.
     # Colors will be determined alphabetically in any case.

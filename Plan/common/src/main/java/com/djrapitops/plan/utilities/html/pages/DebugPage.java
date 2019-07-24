@@ -22,9 +22,7 @@ import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.file.FileResource;
-import com.djrapitops.plan.system.info.connection.ConnectionLog;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
-import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
@@ -167,52 +165,9 @@ public class DebugPage implements Page {
         StringBuilder content = new StringBuilder();
 
         appendServerInformation(content);
-        appendConnectionLog(content);
         appendBenchmarks(content);
 
         return content.toString();
-    }
-
-    private void appendConnectionLog(StringBuilder content) {
-        try {
-            Map<String, Map<String, ConnectionLog.Entry>> logEntries = connectionSystem.getConnectionLog().getLogEntries();
-
-            content.append("<pre>### Connection Log:<br><br>");
-            content.append("Server Address | Request Type | Response | Sent<br>")
-                    .append("-- | -- | -- | --<br>");
-
-            if (logEntries.isEmpty()) {
-                content.append("**No Connections Logged**<br>");
-            }
-            for (Map.Entry<String, Map<String, ConnectionLog.Entry>> entry : logEntries.entrySet()) {
-                String address = entry.getKey();
-                Map<String, ConnectionLog.Entry> requests = entry.getValue();
-                for (Map.Entry<String, ConnectionLog.Entry> requestEntry : requests.entrySet()) {
-                    String infoRequest = requestEntry.getKey();
-                    ConnectionLog.Entry logEntry = requestEntry.getValue();
-
-                    content.append(address).append(" | ")
-                            .append(infoRequest).append(" | ")
-                            .append(logEntry.getResponseCode()).append(" | ")
-                            .append(secondFormatter.apply(logEntry)).append("<br>");
-                }
-
-            }
-            content.append("</pre>");
-
-            content.append("<pre>### Servers:<br><br>");
-            List<Server> servers = connectionSystem.getDataServers();
-            content.append("Server Name | Address <br>")
-                    .append("-- | --<br>");
-            for (Server server : servers) {
-                content.append(server.getName()).append(" | ")
-                        .append(server.getWebAddress()).append("<br>");
-            }
-            content.append("</pre>");
-
-        } catch (Exception e) {
-            errorHandler.log(L.WARN, this.getClass(), e);
-        }
     }
 
     private void appendServerInformation(StringBuilder content) {
