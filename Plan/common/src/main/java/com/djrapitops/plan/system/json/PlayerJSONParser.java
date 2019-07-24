@@ -89,7 +89,7 @@ public class PlayerJSONParser {
                 .map(geoInfo -> ConnectionInfo.fromGeoInfo(geoInfo, year))
                 .orElse(Collections.emptyList()));
         data.put("player_kills", player.getValue(PlayerKeys.PLAYER_KILLS).orElse(Collections.emptyList()));
-        data.put("player_deaths", player.getValue(PlayerKeys.PLAYER_DEATHS).orElse(Collections.emptyList()));
+        data.put("player_deaths", player.getValue(PlayerKeys.PLAYER_DEATHS_KILLS).orElse(Collections.emptyList()));
         data.put("sessions", sessionsMutator.toServerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters));
         data.put("punchcard_series", graphs.special().punchCard(sessionsMutator).getDots());
         WorldPie worldPie = graphs.pie().worldPie(player.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes()));

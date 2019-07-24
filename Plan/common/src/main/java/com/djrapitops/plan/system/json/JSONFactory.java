@@ -89,7 +89,7 @@ public class JSONFactory {
 
     public List<Map<String, Object>> serverPlayerKillsAsJSONMap(UUID serverUUID) {
         Database db = dbSystem.getDatabase();
-        List<PlayerKill> kills = db.query(KillQueries.fetchMostRecentPlayerKills(serverUUID, 100));
+        List<PlayerKill> kills = db.query(KillQueries.fetchPlayerKillsOnServer(serverUUID, 100));
         return new PlayerKillMutator(kills).toJSONAsMap(formatters);
     }
 }
