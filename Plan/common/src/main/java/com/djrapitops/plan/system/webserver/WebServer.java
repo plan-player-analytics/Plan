@@ -152,7 +152,7 @@ public class WebServer implements SubSystem {
 
             logger.info(locale.getString(PluginLang.ENABLED_WEB_SERVER, server.getAddress().getPort(), getAccessAddress()));
             boolean usingAlternativeIP = config.isTrue(WebserverSettings.SHOW_ALTERNATIVE_IP);
-            if (!usingAlternativeIP && getIP().isEmpty()) {
+            if (!usingAlternativeIP && serverProperties.getIp().isEmpty()) {
                 logger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.ENABLE_NOTIFY_EMPTY_IP));
             }
         } catch (IllegalArgumentException | IllegalStateException | IOException e) {
