@@ -19,10 +19,7 @@ package com.djrapitops.plan.system.json;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
-import com.djrapitops.plan.data.store.mutators.ActivityIndex;
-import com.djrapitops.plan.data.store.mutators.PerServerMutator;
-import com.djrapitops.plan.data.store.mutators.PingMutator;
-import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+import com.djrapitops.plan.data.store.mutators.*;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.containers.PlayerContainerQuery;
@@ -81,6 +78,7 @@ public class PlayerJSONParser {
         Map<String, Object> data = new HashMap<>();
         data.put("info", createInfoJSONMap(player, serverNames));
         data.put("online_activity", createOnlineActivityJSONMap(sessionsMutator));
+        data.put("kill_data", createPvPPvEMap(player));
 
         data.put("nicknames", player.getValue(PlayerKeys.NICKNAMES)
                 .map(nicks -> Nickname.fromDataNicknames(nicks, serverNames, year))
@@ -104,28 +102,28 @@ public class PlayerJSONParser {
         long now = System.currentTimeMillis();
         long monthAgo = now - TimeUnit.DAYS.toMillis(30L);
         long weekAgo = now - TimeUnit.DAYS.toMillis(7L);
-        SessionsMutator sessionsMonth = sessionsMutator.filterSessionsBetween(monthAgo, now);
-        SessionsMutator sessionsWeek = sessionsMutator.filterSessionsBetween(weekAgo, now);
+        SessionsMutator sessions30d = sessionsMutator.filterSessionsBetween(monthAgo, now);
+        SessionsMutator sessions7d = sessions30d.filterSessionsBetween(weekAgo, now);
 
         Map<String, Object> onlineActivity = new HashMap<>();
 
-        onlineActivity.put("playtime_30d", timeAmount.apply(sessionsMonth.toPlaytime()));
-        onlineActivity.put("active_playtime_30d", timeAmount.apply(sessionsMonth.toActivePlaytime()));
-        onlineActivity.put("afk_time_30d", timeAmount.apply(sessionsMonth.toAfkTime()));
-        onlineActivity.put("average_session_length_30d", timeAmount.apply(sessionsMonth.toAverageSessionLength()));
-        onlineActivity.put("session_count_30d", sessionsMonth.count());
-        onlineActivity.put("player_kill_count_30d", sessionsMonth.toPlayerKillCount());
-        onlineActivity.put("mob_kill_count_30d", sessionsMonth.toMobKillCount());
-        onlineActivity.put("death_count_30d", sessionsMonth.toDeathCount());
+        onlineActivity.put("playtime_30d", timeAmount.apply(sessions30d.toPlaytime()));
+        onlineActivity.put("active_playtime_30d", timeAmount.apply(sessions30d.toActivePlaytime()));
+        onlineActivity.put("afk_time_30d", timeAmount.apply(sessions30d.toAfkTime()));
+        onlineActivity.put("average_session_length_30d", timeAmount.apply(sessions30d.toAverageSessionLength()));
+        onlineActivity.put("session_count_30d", sessions30d.count());
+        onlineActivity.put("player_kill_count_30d", sessions30d.toPlayerKillCount());
+        onlineActivity.put("mob_kill_count_30d", sessions30d.toMobKillCount());
+        onlineActivity.put("death_count_30d", sessions30d.toDeathCount());
 
-        onlineActivity.put("playtime_7d", timeAmount.apply(sessionsWeek.toPlaytime()));
-        onlineActivity.put("active_playtime_7d", timeAmount.apply(sessionsWeek.toActivePlaytime()));
-        onlineActivity.put("afk_time_7d", timeAmount.apply(sessionsWeek.toAfkTime()));
-        onlineActivity.put("average_session_length_7d", timeAmount.apply(sessionsWeek.toAverageSessionLength()));
-        onlineActivity.put("session_count_7d", sessionsWeek.count());
-        onlineActivity.put("player_kill_count_7d", sessionsWeek.toPlayerKillCount());
-        onlineActivity.put("mob_kill_count_7d", sessionsWeek.toMobKillCount());
-        onlineActivity.put("death_count_7d", sessionsWeek.toDeathCount());
+        onlineActivity.put("playtime_7d", timeAmount.apply(sessions7d.toPlaytime()));
+        onlineActivity.put("active_playtime_7d", timeAmount.apply(sessions7d.toActivePlaytime()));
+        onlineActivity.put("afk_time_7d", timeAmount.apply(sessions7d.toAfkTime()));
+        onlineActivity.put("average_session_length_7d", timeAmount.apply(sessions7d.toAverageSessionLength()));
+        onlineActivity.put("session_count_7d", sessions7d.count());
+        onlineActivity.put("player_kill_count_7d", sessions7d.toPlayerKillCount());
+        onlineActivity.put("mob_kill_count_7d", sessions7d.toMobKillCount());
+        onlineActivity.put("death_count_7d", sessions7d.toDeathCount());
 
         return onlineActivity;
     }
@@ -162,6 +160,78 @@ public class PlayerJSONParser {
         info.put("last_seen", player.getValue(PlayerKeys.LAST_SEEN).map(year).orElse("-"));
 
         return info;
+    }
+
+    private Map<String, Object> createPvPPvEMap(PlayerContainer playerContainer) {
+        long now = System.currentTimeMillis();
+        long weekAgo = now - TimeUnit.DAYS.toMillis(7L);
+        long monthAgo = now - TimeUnit.DAYS.toMillis(30L);
+
+        PlayerVersusMutator playerVersus = PlayerVersusMutator.forContainer(playerContainer);
+        PlayerVersusMutator playerVersus30d = playerVersus.filterBetween(monthAgo, now);
+        PlayerVersusMutator playerVersus7d = playerVersus30d.filterBetween(weekAgo, now);
+
+        Map<String, Object> killData = new HashMap<>();
+        int pks = playerVersus.toPlayerKillCount();
+        int pks7d = playerVersus7d.toPlayerKillCount();
+        int pks30d = playerVersus30d.toPlayerKillCount();
+        killData.put("player_kills_total", pks);
+        killData.put("player_kills_30d", pks30d);
+        killData.put("player_kills_7d", pks7d);
+
+        int playerDeaths = playerVersus.toPlayerDeathCount();
+        int playerDeaths30d = playerVersus30d.toPlayerDeathCount();
+        int playerDeaths7d = playerVersus7d.toPlayerDeathCount();
+        killData.put("player_deaths_total", playerDeaths);
+        killData.put("player_deaths_30d", playerDeaths30d);
+        killData.put("player_deaths_7d", playerDeaths7d);
+
+        double kdr = playerDeaths != 0 ? (double) pks / playerDeaths : pks;
+        double kdr30d = playerDeaths30d != 0 ? (double) pks30d / playerDeaths30d : pks30d;
+        double krd7d = playerDeaths7d != 0 ? (double) pks7d / playerDeaths7d : pks7d;
+        killData.put("player_kdr_total", decimals.apply(kdr));
+        killData.put("player_kdr_30d", decimals.apply(kdr30d));
+        killData.put("player_kdr_7d", decimals.apply(krd7d));
+
+        int mobKills = playerVersus.toMobKillCount();
+        int mobKills30d = playerVersus30d.toMobKillCount();
+        int mobKills7d = playerVersus7d.toMobKillCount();
+        killData.put("mob_kills_total", mobKills);
+        killData.put("mob_kills_30d", mobKills30d);
+        killData.put("mob_kills_7d", mobKills7d);
+
+        int deaths = playerVersus.toDeathCount();
+        int deaths30d = playerVersus30d.toDeathCount();
+        int deaths7d = playerVersus7d.toDeathCount();
+        killData.put("deaths_total", deaths);
+        killData.put("deaths_30d", deaths30d);
+        killData.put("deaths_7d", deaths7d);
+
+        long mobDeaths = deaths - playerDeaths;
+        long mobDeaths30d = deaths30d - playerDeaths30d;
+        long mobDeaths7d = deaths7d - playerDeaths7d;
+
+        killData.put("mob_deaths_total", mobDeaths);
+        killData.put("mob_deaths_30d", mobDeaths30d);
+        killData.put("mob_deaths_7d", mobDeaths7d);
+
+        double mobKdr = mobDeaths != 0 ? (double) mobKills / mobDeaths : mobKills;
+        double mobKdr30d = mobDeaths30d != 0 ? (double) mobKills30d / mobDeaths30d : mobKills30d;
+        double mobKdr7d = mobDeaths7d != 0 ? (double) mobKills7d / mobDeaths7d : mobKills7d;
+        killData.put("mob_kdr_total", decimals.apply(mobKdr));
+        killData.put("mob_kdr_30d", decimals.apply(mobKdr30d));
+        killData.put("mob_kdr_7d", decimals.apply(mobKdr7d));
+
+        List<String> topWeapons = playerVersus.toTopWeapons(3);
+        killData.put("weapon_1st", getWeapon(topWeapons, 0).orElse("-"));
+        killData.put("weapon_2nd", getWeapon(topWeapons, 1).orElse("-"));
+        killData.put("weapon_3rd", getWeapon(topWeapons, 2).orElse("-"));
+
+        return killData;
+    }
+
+    private <T> Optional<T> getWeapon(List<T> list, int index) {
+        return list.size() <= index ? Optional.empty() : Optional.of(list.get(index));
     }
 
     public static class Nickname {

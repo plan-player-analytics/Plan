@@ -387,7 +387,7 @@
                 </div> <!-- /.container-fluid -->
             </div> <!-- End of Sessions tab -->
             <!-- Begin PvP & PvE Tab -->
-            <div class="tab">
+            <div class="tab" id="pvp-pve">
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -411,59 +411,62 @@
                                             class="fa fa-fw fa-campground col-red"></i>
                                         PvP & PvE as Numbers</h6>
                                 </div>
-                                <table class="table mb-0">
+                                <table class="table mb-0" id="data_numbers">
                                     <thead>
-                                    <th></th>
-                                    <th>All Time</th>
-                                    <th>Last 30 days</th>
-                                    <th>Last 7 days</th>
+                                    <tr>
+                                        <th></th>
+                                        <th>All Time</th>
+                                        <th>Last 30 days</th>
+                                        <th>Last 7 days</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
                                     <tr>
-                                        <td><i class="col-red fa fa-fw fa-crosshairs"></i> <b>KDR</b></td>
-                                        <td>10.02</td>
-                                        <td>5.83</td>
-                                        <td>0.97</td>
+                                        <td><b><i class="col-red fa fa-fw fa-crosshairs"></i></b> Average KDR / Player
+                                        </td>
+                                        <td id="data_player_kdr_total"></td>
+                                        <td id="data_player_kdr_30d"></td>
+                                        <td id="data_player_kdr_7d"></td>
                                     </tr>
                                     <tr>
                                         <td><i class="col-red fa fa-fw fa-crosshairs"></i> Player Kills</td>
-                                        <td>342</td>
-                                        <td>234</td>
-                                        <td>34</td>
+                                        <td id="data_player_kills_total"></td>
+                                        <td id="data_player_kills_30d"></td>
+                                        <td id="data_player_kills_7d"></td>
                                     </tr>
                                     <tr>
                                         <td><i class="col-red fa fa-fw fa-skull"></i> Player Caused Deaths</td>
-                                        <td>34</td>
-                                        <td>40</td>
-                                        <td>35</td>
+                                        <td id="data_player_deaths_total"></td>
+                                        <td id="data_player_deaths_30d"></td>
+                                        <td id="data_player_deaths_7d"></td>
                                     </tr>
                                     </tbody>
                                     <tbody>
                                     <tr>
-                                        <td><i class="col-green fa fa-fw fa-crosshairs"></i> <b>Mob KDR</b></td>
-                                        <td>2.16</td>
-                                        <td>7.21</td>
-                                        <td>5.75</td>
+                                        <td><b><i class="col-green fa fa-fw fa-crosshairs"></i></b> Average Mob KDR</td>
+                                        <td id="data_mob_kdr_total"></td>
+                                        <td id="data_mob_kdr_30d"></td>
+                                        <td id="data_mob_kdr_7d"></td>
                                     </tr>
                                     <tr>
                                         <td><i class="col-green fa fa-fw fa-crosshairs"></i> Mob Kills</td>
-                                        <td>123</td>
-                                        <td>44</td>
-                                        <td>23</td>
+                                        <td id="data_mob_kills_total"></td>
+                                        <td id="data_mob_kills_30d"></td>
+                                        <td id="data_mob_kills_7d"></td>
                                     </tr>
                                     <tr>
                                         <td><i class="col-green fa fa-fw fa-skull"></i> Mob Caused Deaths</td>
-                                        <td>54</td>
-                                        <td>6</td>
-                                        <td>4</td>
+                                        <td id="data_mob_deaths_total"></td>
+                                        <td id="data_mob_deaths_30d"></td>
+                                        <td id="data_mob_deaths_7d"></td>
                                     </tr>
                                     </tbody>
                                     <tbody>
                                     <tr>
                                         <td><i class="col-black fa fa-fw fa-skull"></i> Deaths</td>
-                                        <td>352</td>
-                                        <td>123</td>
-                                        <td>64</td>
+                                        <td id="data_deaths_total"></td>
+                                        <td id="data_deaths_30d"></td>
+                                        <td id="data_deaths_7d"></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -477,15 +480,13 @@
                                             class="far fa-fw fa-life-ring col-red"></i>
                                         Insights</h6>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body" id="data_insights">
                                     <p><i class="col-amber fa fa-fw fa-khanda"></i> Deadliest PvP Weapon
-                                        <span class="float-right"><b>Diamond Sword (7 kills)</b></span></p>
+                                        <span class="float-right"><b id="data_weapon_1st"></b></span></p>
                                     <p><i class="col-grey fa fa-fw fa-khanda"></i> 2nd PvP Weapon
-                                        <span class="float-right"><b>Diamond Axe (4 kills)</b></span></p>
+                                        <span class="float-right"><b id="data_weapon_2nd"></b></span></p>
                                     <p><i class="col-brown fa fa-fw fa-khanda"></i> 3rd PvP Weapon
-                                        <span class="float-right"><b>Iron Sword (2 kills)</b></span></p>
-                                    <p><i class="col-red fa fa-fw fa-skull"></i> Rage Quits
-                                        <span class="float-right"><b>4</b></span></p>
+                                        <span class="float-right"><b id="data_weapon_3rd"></b></span></p>
                                 </div>
                             </div>
                         </div>
@@ -1302,6 +1303,7 @@
         loadSessionAccordion(json, error);
         loadPlayerKills(json, error);
         loadPlayerDeaths(json, error);
+        loadPvPPvEValues(json, error);
         if (json) {
             var series = {
                 worldPie: {
