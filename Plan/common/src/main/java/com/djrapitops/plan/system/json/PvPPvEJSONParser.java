@@ -37,7 +37,7 @@ public class PvPPvEJSONParser implements TabJSONParser<Map<String, Object>> {
 
     private DBSystem dbSystem;
 
-    private Formatter<Double> decimalFormatter;
+    private Formatter<Double> decimals;
 
     @Inject
     public PvPPvEJSONParser(
@@ -46,7 +46,7 @@ public class PvPPvEJSONParser implements TabJSONParser<Map<String, Object>> {
     ) {
         this.dbSystem = dbSystem;
 
-        decimalFormatter = formatters.decimals();
+        decimals = formatters.decimals();
     }
 
     public Map<String, Object> createJSONAsMap(UUID serverUUID) {
@@ -70,9 +70,9 @@ public class PvPPvEJSONParser implements TabJSONParser<Map<String, Object>> {
         numbers.put("player_kills_30d", pks30d);
         numbers.put("player_kills_7d", pks7d);
 
-        numbers.put("player_kdr_avg", decimalFormatter.apply(db.query(KillQueries.averageKDR(0L, now, serverUUID))));
-        numbers.put("player_kdr_avg_30d", decimalFormatter.apply(db.query(KillQueries.averageKDR(monthAgo, now, serverUUID))));
-        numbers.put("player_kdr_avg_7d", decimalFormatter.apply(db.query(KillQueries.averageKDR(weekAgo, now, serverUUID))));
+        numbers.put("player_kdr_avg", decimals.apply(db.query(KillQueries.averageKDR(0L, now, serverUUID))));
+        numbers.put("player_kdr_avg_30d", decimals.apply(db.query(KillQueries.averageKDR(monthAgo, now, serverUUID))));
+        numbers.put("player_kdr_avg_7d", decimals.apply(db.query(KillQueries.averageKDR(weekAgo, now, serverUUID))));
 
         Long mobKills = db.query(KillQueries.mobKillCount(0L, now, serverUUID));
         Long mobKills30d = db.query(KillQueries.mobKillCount(monthAgo, now, serverUUID));
@@ -96,9 +96,12 @@ public class PvPPvEJSONParser implements TabJSONParser<Map<String, Object>> {
         numbers.put("mob_deaths_30d", mobDeaths30d);
         numbers.put("mob_deaths_7d", mobDeaths7d);
 
-        numbers.put("mob_kdr_total", mobDeaths != 0 ? mobKills * 1.0 / mobDeaths : mobKills);
-        numbers.put("mob_kdr_30d", mobDeaths30d != 0 ? mobKills30d * 1.0 / mobDeaths30d : mobKills30d);
-        numbers.put("mob_kdr_7d", mobDeaths7d != 0 ? mobKills7d * 1.0 / mobDeaths7d : mobKills7d);
+        double mobKdr = mobDeaths != 0 ? (double) mobKills / mobDeaths : mobKills;
+        double mobKdr30d = mobDeaths30d != 0 ? (double) mobKills30d / mobDeaths30d : mobKills30d;
+        double mobKdr7d = mobDeaths7d != 0 ? (double) mobKills7d / mobDeaths7d : mobKills7d;
+        numbers.put("mob_kdr_total", decimals.apply(mobKdr));
+        numbers.put("mob_kdr_30d", decimals.apply(mobKdr30d));
+        numbers.put("mob_kdr_7d", decimals.apply(mobKdr7d));
 
         return numbers;
     }
