@@ -77,27 +77,33 @@ public class ManageMoveCommand extends CommandNode {
         Verify.isTrue(args.length >= 2,
                 () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, 2, Arrays.toString(this.getArguments()))));
 
-        String fromDB = args[0].toLowerCase();
-        boolean isCorrectDB = DBType.exists(fromDB);
-        Verify.isTrue(isCorrectDB,
-                () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, fromDB)));
+        DBType fromDB = DBType.getForName(args[0])
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, args[0])));
 
-        String toDB = args[1].toLowerCase();
-        isCorrectDB = DBType.exists(toDB);
-        Verify.isTrue(isCorrectDB,
-                () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, toDB)));
+        DBType toDB = DBType.getForName(args[1])
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, args[1])));
 
-        Verify.isFalse(fromDB.equalsIgnoreCase(toDB),
+        Verify.isFalse(fromDB == toDB,
                 () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_SAME_DB)));
 
         if (!Verify.contains("-a", args)) {
-            sender.sendMessage(locale.getString(ManageLang.CONFIRMATION, locale.getString(ManageLang.CONFIRM_OVERWRITE, toDB)));
+            sender.sendMessage(locale.getString(ManageLang.CONFIRMATION, locale.getString(ManageLang.CONFIRM_OVERWRITE, toDB.getConfigName())));
+            return;
+        }
+
+        // Temporarily disabled due to issues
+        boolean transferH2 = fromDB == DBType.H2 || toDB == DBType.H2;
+        boolean transferMySQL = fromDB == DBType.MYSQL || toDB == DBType.MYSQL;
+
+        if (transferH2 && transferMySQL) {
+            sender.sendMessage("§cDirect transfers between H2 and MySQL are temporarily disabled due to a bug: See the issue link for workaround");
+            sender.sendLink("Link to Github Issue", "https://github.com/plan-player-analytics/Plan/issues/1111");
             return;
         }
 
         try {
-            final Database fromDatabase = dbSystem.getActiveDatabaseByName(fromDB);
-            final Database toDatabase = dbSystem.getActiveDatabaseByName(toDB);
+            final Database fromDatabase = dbSystem.getActiveDatabaseByType(fromDB);
+            final Database toDatabase = dbSystem.getActiveDatabaseByType(toDB);
             fromDatabase.init();
             toDatabase.init();
 
