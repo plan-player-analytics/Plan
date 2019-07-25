@@ -22,7 +22,7 @@ import com.volmit.react.React;
 import com.volmit.react.api.GraphSampleLine;
 import com.volmit.react.api.SampledType;
 import com.volmit.react.util.M;
-import com.volmit.react.volume.lang.collections.GMap;
+import primal.lang.collection.GMap;
 
 import java.util.ArrayList;
 import java.util.EnumMap;

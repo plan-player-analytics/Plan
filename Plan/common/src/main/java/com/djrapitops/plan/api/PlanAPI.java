@@ -50,6 +50,10 @@ public interface PlanAPI {
         }
     }
 
+    /**
+     * @deprecated PluginData API has been deprecated - see https://github.com/plan-player-analytics/Plan/wiki/APIv5---DataExtension-API for new API.
+     */
+    @Deprecated
     void addPluginDataSource(PluginData pluginData);
 
     String getPlayerInspectPageLink(UUID uuid);

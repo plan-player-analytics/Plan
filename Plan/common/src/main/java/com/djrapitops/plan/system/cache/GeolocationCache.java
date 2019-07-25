@@ -162,8 +162,9 @@ public class GeolocationCache implements SubSystem {
 
                 CountryResponse response = reader.country(inetAddress);
                 Country country = response.getCountry();
+                String countryName = country.getName();
 
-                return country.getName();
+                return countryName != null ? countryName : "Not Known";
             }
 
         } catch (IOException | GeoIp2Exception e) {

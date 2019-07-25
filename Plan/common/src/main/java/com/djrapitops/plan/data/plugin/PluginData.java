@@ -34,7 +34,9 @@ import java.util.UUID;
  * to register objects extending this class.
  *
  * @author Rsl1122
+ * @deprecated PluginData API has been deprecated - see https://github.com/plan-player-analytics/Plan/wiki/APIv5---DataExtension-API for new API.
  */
+@Deprecated
 public abstract class PluginData {
 
     private final ContainerSize size;

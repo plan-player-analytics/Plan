@@ -106,6 +106,7 @@ public class InfoRequestFactory {
         );
     }
 
+    @Deprecated
     public CacheRequest cacheInspectPluginsTabRequest(UUID uuid, String nav, String html) {
         return new CacheInspectPluginsTabRequest(uuid, nav, html);
     }
@@ -118,6 +119,7 @@ public class InfoRequestFactory {
         return new GenerateInspectPageRequest(uuid, this, responseFactory.get(), pageFactory.get(), infoSystem.get());
     }
 
+    @Deprecated
     public GenerateInspectPluginsTabRequest generateInspectPluginsTabRequest(UUID uuid) {
         return new GenerateInspectPluginsTabRequest(uuid, infoSystem.get(), this, pageFactory.get());
     }

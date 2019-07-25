@@ -121,7 +121,7 @@ public class IPAnonPatch extends Patch {
                 ") SELECT " +
                 identifiers + ", ip, geolocation, MAX(last_used) FROM plan_ips_temp GROUP BY ip, " +
                 (hasUserIdColumn ? userIdColumn : "uuid") +
-                ", geolocation");
+                ", geolocation, id");
         dropTable(tempTableName);
     }
 

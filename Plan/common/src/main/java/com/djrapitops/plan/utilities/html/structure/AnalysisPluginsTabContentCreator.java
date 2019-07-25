@@ -37,8 +37,10 @@ import java.util.*;
  * Creates Plugin section contents for Analysis page.
  *
  * @author Rsl1122
+ * @deprecated PluginData API has been deprecated - see https://github.com/plan-player-analytics/Plan/wiki/APIv5---DataExtension-API for new API.
  */
 @Singleton
+@Deprecated
 public class AnalysisPluginsTabContentCreator {
 
     private final HookHandler hookHandler;

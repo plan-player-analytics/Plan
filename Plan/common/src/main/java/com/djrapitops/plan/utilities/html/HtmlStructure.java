@@ -50,6 +50,7 @@ public class HtmlStructure {
         return builder.toString();
     }
 
+    @Deprecated
     public static String[] createInspectPageTabContentCalculating() {
         String tab = "<div class=\"tab\">" +
                 "<div class=\"row clearfix\">" +
