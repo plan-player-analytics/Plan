@@ -34,6 +34,7 @@ import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
+import com.djrapitops.plan.utilities.html.structure.ServerAccordion;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -84,6 +85,7 @@ public class PlayerJSONParser {
         PlayerContainer player = db.query(new PlayerContainerQuery(playerUUID));
         SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);
         Map<UUID, WorldTimes> worldTimesPerServer = PerServerMutator.forContainer(player).worldTimesPerServer();
+        List<Map<String, Object>> serverAccordion = new ServerAccordion(player, serverNames, graphs, year, timeAmount).asMaps();
 
         Map<String, Object> data = new HashMap<>();
         data.put("info", createInfoJSONMap(player, serverNames));
@@ -99,6 +101,7 @@ public class PlayerJSONParser {
         data.put("player_kills", player.getValue(PlayerKeys.PLAYER_KILLS).orElse(Collections.emptyList()));
         data.put("player_deaths", player.getValue(PlayerKeys.PLAYER_DEATHS_KILLS).orElse(Collections.emptyList()));
         data.put("sessions", sessionsMutator.toServerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters));
+        data.put("servers", serverAccordion);
         data.put("punchcard_series", graphs.special().punchCard(sessionsMutator).getDots());
         WorldPie worldPie = graphs.pie().worldPie(player.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes()));
         data.put("world_pie_series", worldPie.getSlices());
