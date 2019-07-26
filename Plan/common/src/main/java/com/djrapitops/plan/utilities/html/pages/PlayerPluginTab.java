@@ -28,6 +28,7 @@ import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Icon;
+import com.djrapitops.plan.utilities.html.structure.NavLink;
 import com.djrapitops.plan.utilities.html.structure.TabsElement;
 
 import java.util.*;
@@ -37,7 +38,7 @@ import java.util.*;
  *
  * @author Rsl1122
  */
-public class InspectPluginTab implements Comparable<InspectPluginTab> {
+public class PlayerPluginTab implements Comparable<PlayerPluginTab> {
 
     private String serverName;
     private List<ExtensionPlayerData> playerData;
@@ -52,12 +53,12 @@ public class InspectPluginTab implements Comparable<InspectPluginTab> {
 
     private boolean hasWideTable;
 
-    public InspectPluginTab(String nav, String tab) {
+    public PlayerPluginTab(String nav, String tab) {
         this.nav = nav;
         this.tab = tab;
     }
 
-    public InspectPluginTab(
+    public PlayerPluginTab(
             String serverName,
             List<ExtensionPlayerData> playerData,
             Formatters formatters
@@ -89,12 +90,12 @@ public class InspectPluginTab implements Comparable<InspectPluginTab> {
 
     private void generate() {
         if (playerData.isEmpty()) {
-            nav = "<li><a class=\"nav-button\" href=\"javascript:void(0)\">" + serverName + " (No Data)</a></li>";
-            tab = "<div class=\"tab\"><div class=\"row clearfix\">" +
-                    "<div class=\"col-md-12\">" + Html.CARD.parse("<p>No Data (" + serverName + ")</p>") +
-                    "</div></div></div>";
+            nav = NavLink.collapsed(Icon.called("cubes").build(), serverName + " (No Data)").toHtml();
+            tab = wrapInTab(
+                    "<div class=\"col-md-12\">" + Html.CARD.parse("<div class=\"card-body\"><p>No Extension Data</p></div>") + "</div>"
+            );
         } else {
-            nav = "<li><a class=\"nav-button\" href=\"javascript:void(0)\">" + serverName + "</a></li>";
+            nav = NavLink.collapsed(Icon.called("cubes").build(), serverName).toHtml();
             tab = generatePageTab();
         }
     }
@@ -126,7 +127,13 @@ public class InspectPluginTab implements Comparable<InspectPluginTab> {
     }
 
     private String wrapInTab(String content) {
-        return "<div class=\"tab\"><div class=\"row clearfix\">" + content + "</div></div>";
+        return "<div class=\"tab\"><div class=\"container-fluid mt-4\">" +
+                // Page heading
+                "<div class=\"d-sm-flex align-items-center justify-content-between mb-4\">" +
+                "<h1 class=\"h3 mb-0 text-gray-800\"><i class=\"sidebar-toggler fa fa-fw fa-bars\"></i>${playerName} &middot; " + serverName + " Plugins</h1>" +
+                "</div>" +
+                // End Page heading
+                "<div class=\"row clearfix\">" + content + "</div></div></div>";
     }
 
     private TabsElement.Tab wrapToTabElementTab(ExtensionTabData tabData) {
@@ -202,9 +209,9 @@ public class InspectPluginTab implements Comparable<InspectPluginTab> {
 
     private String wrapInContainer(ExtensionInformation information, String tabsElement) {
         String colWidth = hasWideTable ? "col-md-8 col-lg-8" : "col-md-4 col-lg-4";
-        return "<div class=\"col-xs-12 col-sm-12 " + colWidth + "\"><div class=\"card\">" +
-                "<div class=\"header\">" +
-                "<h2>" + Icon.fromExtensionIcon(information.getIcon()) + ' ' + information.getPluginName() + "</h2>" +
+        return "<div class=\"col-xs-12 col-sm-12 " + colWidth + "\"><div class=\"card shadow mb-0\">" +
+                "<div class=\"card-header py-3\">" +
+                "<h6 class=\"m-0 font-weight-bold col-black\">" + Icon.fromExtensionIcon(information.getIcon()) + ' ' + information.getPluginName() + "</h6>" +
                 "</div>" +
                 tabsElement +
                 "</div></div>";
@@ -213,8 +220,8 @@ public class InspectPluginTab implements Comparable<InspectPluginTab> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof InspectPluginTab)) return false;
-        InspectPluginTab that = (InspectPluginTab) o;
+        if (!(o instanceof PlayerPluginTab)) return false;
+        PlayerPluginTab that = (PlayerPluginTab) o;
         return Objects.equals(serverName, that.serverName) &&
                 Objects.equals(nav, that.nav);
     }
@@ -225,7 +232,7 @@ public class InspectPluginTab implements Comparable<InspectPluginTab> {
     }
 
     @Override
-    public int compareTo(InspectPluginTab other) {
+    public int compareTo(PlayerPluginTab other) {
         return String.CASE_INSENSITIVE_ORDER.compare(this.serverName, other.serverName);
     }
 }
