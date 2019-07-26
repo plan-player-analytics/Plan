@@ -93,12 +93,7 @@
             </a>
             <div aria-labelledby="headingPages" class="collapse" data-parent="#accordionSidebar" id="pluginsPages">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item nav-button" href="javascript:void(0)"><i class="fas fa-fw fa-cubes"></i>
-                        Server 1</a>
-                    <a class="collapse-item nav-button" href="javascript:void(0)"><i class="fa fa-fw fa-cubes"></i>
-                        Server 2</a>
-                    <a class="collapse-item nav-button" href="javascript:void(0)"><i class="fa fa-fw fa-cubes"></i>
-                        Server 3</a>
+                    ${navPluginsTabs}
                 </div>
             </div>
         </li>
@@ -422,8 +417,7 @@
                                     </thead>
                                     <tbody>
                                     <tr>
-                                        <td><b><i class="col-red fa fa-fw fa-crosshairs"></i></b> Average KDR / Player
-                                        </td>
+                                        <td><b><i class="col-red fa fa-fw fa-crosshairs"></i> KDR</b></td>
                                         <td id="data_player_kdr_total"></td>
                                         <td id="data_player_kdr_30d"></td>
                                         <td id="data_player_kdr_7d"></td>
@@ -443,7 +437,7 @@
                                     </tbody>
                                     <tbody>
                                     <tr>
-                                        <td><b><i class="col-green fa fa-fw fa-crosshairs"></i></b> Average Mob KDR</td>
+                                        <td><b><i class="col-green fa fa-fw fa-crosshairs"></i> Mob KDR</b></td>
                                         <td id="data_mob_kdr_total"></td>
                                         <td id="data_mob_kdr_30d"></td>
                                         <td id="data_mob_kdr_7d"></td>
@@ -571,101 +565,7 @@
                     </div>
                 </div> <!-- /.container-fluid -->
             </div> <!-- End of Servers Overview Tab-->
-            <!-- Begin Server 1 Plugins Tab -->
-            <div class="tab">
-                <div class="container-fluid mt-4">
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i
-                                class="sidebar-toggler fa fa-fw fa-bars"></i>${playerName}
-                            &middot; Server 1 Plugins</h1>
-                        <a class="btn bg-plan btn-icon-split" href="network">
-                                <span class="icon text-white-50">
-                                    <i class="fas fa-fw fa-arrow-left"></i><i class="fas fa-fw fa-cloud"></i>
-                                </span>
-                            <span class="text">Network page</span>
-                        </a>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-4 mb-4 col-sm-12">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
-                                            class="fa fa-fw fa-star col-green"></i>
-                                        AdvancedAchievements</h6>
-                                </div>
-                                <div class="card-body">
-                                    <p><i class="far fa-fw fa-check-circle col-green"></i> Achievements<span
-                                            class="float-right"><b>9</b></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> <!-- /.container-fluid -->
-            </div> <!-- End of Server 1 Plugins tab -->
-            <!-- Begin Server 2 Plugins Tab -->
-            <div class="tab">
-                <div class="container-fluid mt-4">
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i
-                                class="sidebar-toggler fa fa-fw fa-bars"></i>${playerName}
-                            &middot; Server 2 Plugins</h1>
-                        <a class="btn bg-plan btn-icon-split" href="network">
-                                <span class="icon text-white-50">
-                                    <i class="fas fa-fw fa-arrow-left"></i><i class="fas fa-fw fa-cloud"></i>
-                                </span>
-                            <span class="text">Network page</span>
-                        </a>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-4 mb-4 col-sm-12">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
-                                            class="fa fa-fw fa-university col-brown"></i>
-                                        Towny</h6>
-                                </div>
-                                <div class="card-body">
-                                    <p><i class="fa fa-fw fa-university col-brown"></i> Town<span
-                                            class="float-right"><b>Cayon</b></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> <!-- /.container-fluid -->
-            </div> <!-- End of Server 2 Plugins tab -->
-            <!-- Begin Server 3 Plugins Tab -->
-            <div class="tab">
-                <div class="container-fluid mt-4">
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i
-                                class="sidebar-toggler fa fa-fw fa-bars"></i>${playerName}
-                            &middot; Server 3 Plugins</h1>
-                        <a class="btn bg-plan btn-icon-split" href="network">
-                                <span class="icon text-white-50">
-                                    <i class="fas fa-fw fa-arrow-left"></i><i class="fas fa-fw fa-cloud"></i>
-                                </span>
-                            <span class="text">Network page</span>
-                        </a>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-4 mb-4 col-sm-12">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
-                                            class="far fa-fw fa-grin-beam-sweat"></i>
-                                        No Plugins</h6>
-                                </div>
-                                <div class="card-body">
-                                    <p>Server 3 has no plugins with Plan support enabled.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> <!-- /.container-fluid -->
-            </div> <!-- End of Server 3 Plugins tab -->
+            ${pluginsTabs}
             <div class="tab"></div>
             <div class="tab"></div>
             <div class="tab"></div>

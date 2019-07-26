@@ -36,7 +36,7 @@ import java.util.*;
 /**
  * Responsible for generating /server page plugin tabs based on DataExtension API data.
  * <p>
- * Currently very similar to {@link InspectPluginTab}.
+ * Currently very similar to {@link PlayerPluginTab}.
  * This will become more complex once tables are added, since some big tables will be moved to their own tabs.
  *
  * @author Rsl1122
@@ -91,9 +91,9 @@ public class AnalysisPluginTabs {
     private void generate() {
         if (serverData.isEmpty()) {
             nav = new NavLink(Icon.called("cubes").build(), "Overview (No Data)").toHtml();
-            tab = "<div class=\"tab\"><div class=\"row clearfix\">" +
-                    "<div class=\"col-md-12\">" + Html.CARD.parse("<div class=\"card-body\"><p>No Extension Data</p></div>") +
-                    "</div></div></div>";
+            tab = wrapInTab(
+                    "<div class=\"col-md-12\">" + Html.CARD.parse("<div class=\"card-body\"><p>No Extension Data</p></div>") + "</div>"
+            );
         } else {
             nav = new NavLink(Icon.called("cubes").build(), "Overview").toHtml();
             tab = generatePageTab();
