@@ -23,141 +23,76 @@ import com.djrapitops.plan.data.store.keys.PerServerKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.system.settings.theme.Theme;
-import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
-import com.djrapitops.plan.utilities.html.icon.Color;
-import com.djrapitops.plan.utilities.html.icon.Icon;
-import com.djrapitops.plan.utilities.html.icon.Icons;
-import com.djrapitops.plugin.utilities.Format;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * HTML utility class for creating a Server Accordion.
  *
  * @author Rsl1122
  */
-public class ServerAccordion extends Accordion {
-
-    private final StringBuilder viewScript;
+public class ServerAccordion {
 
     private final Map<UUID, String> serverNames;
-    private PerServerContainer perServer;
+    private final PerServerContainer perServer;
 
-    private final Theme theme;
     private final Graphs graphs;
-    private final Formatter<Long> yearLongFormatter;
-    private final Formatter<Long> timeAmountFormatter;
+    private final Formatter<Long> year;
+    private final Formatter<Long> timeAmount;
 
     public ServerAccordion(
             PlayerContainer container, Map<UUID, String> serverNames,
-            Theme theme,
             Graphs graphs,
-            Formatter<Long> yearLongFormatter,
-            Formatter<Long> timeAmountFormatter
+            Formatter<Long> year,
+            Formatter<Long> timeAmount
     ) {
-        super("server_accordion");
-        this.theme = theme;
         this.graphs = graphs;
-        this.yearLongFormatter = yearLongFormatter;
-        this.timeAmountFormatter = timeAmountFormatter;
-
-        viewScript = new StringBuilder();
+        this.year = year;
+        this.timeAmount = timeAmount;
 
         this.serverNames = serverNames;
-        Optional<PerServerContainer> perServerData = container.getValue(PlayerKeys.PER_SERVER);
-        if (perServerData.isPresent()) {
-            perServer = perServerData.get();
-        } else {
-            return;
-        }
-
-        addElements();
+        perServer = container.getValue(PlayerKeys.PER_SERVER)
+                .orElse(new PerServerContainer());
     }
 
-    public String toViewScript() {
-        return viewScript.toString();
-    }
-
-    private void addElements() {
-        int i = 0;
+    public List<Map<String, Object>> asMaps() {
+        List<Map<String, Object>> servers = new ArrayList<>();
 
         for (Map.Entry<UUID, DataContainer> entry : perServer.entrySet()) {
             UUID serverUUID = entry.getKey();
-            DataContainer container = entry.getValue();
+            DataContainer perServer = entry.getValue();
+            Map<String, Object> server = new HashMap<>();
+
             String serverName = serverNames.getOrDefault(serverUUID, "Unknown");
-            WorldTimes worldTimes = container.getValue(PerServerKeys.WORLD_TIMES).orElse(new WorldTimes());
-            SessionsMutator sessionsMutator = SessionsMutator.forContainer(container);
+            WorldTimes worldTimes = perServer.getValue(PerServerKeys.WORLD_TIMES).orElse(new WorldTimes());
+            SessionsMutator sessionsMutator = SessionsMutator.forContainer(perServer);
 
-            boolean banned = container.getValue(PerServerKeys.BANNED).orElse(false);
-            boolean operator = container.getValue(PerServerKeys.OPERATOR).orElse(false);
-            long registered = container.getValue(PerServerKeys.REGISTERED).orElse(0L);
+            server.put("server_name", serverName);
 
-            long playtime = sessionsMutator.toPlaytime();
-            long afkTime = sessionsMutator.toAfkTime();
-            int sessionCount = sessionsMutator.count();
-            long sessionMedian = sessionsMutator.toMedianSessionLength();
-            long longestSession = sessionsMutator.toLongestSessionLength();
+            server.put("banned", perServer.getValue(PerServerKeys.BANNED).orElse(false));
+            server.put("operator", perServer.getValue(PerServerKeys.OPERATOR).orElse(false));
+            server.put("registered", year.apply(perServer.getValue(PerServerKeys.REGISTERED).orElse(0L)));
+            server.put("last_seen", year.apply(sessionsMutator.toLastSeen()));
 
-            long mobKills = sessionsMutator.toMobKillCount();
-            long playerKills = sessionsMutator.toPlayerKillCount();
-            long deaths = sessionsMutator.toDeathCount();
+            server.put("session_count", sessionsMutator.count());
+            server.put("playtime", timeAmount.apply(sessionsMutator.toPlaytime()));
+            server.put("afk_time", timeAmount.apply(sessionsMutator.toAfkTime()));
+            server.put("session_median", timeAmount.apply(sessionsMutator.toMedianSessionLength()));
+            server.put("longest_session_length", timeAmount.apply(sessionsMutator.toLongestSessionLength()));
 
-            String play = timeAmountFormatter.apply(playtime);
-            String afk = timeAmountFormatter.apply(afkTime);
-            String median = timeAmountFormatter.apply(sessionMedian);
-            String longest = timeAmountFormatter.apply(longestSession);
-
-            String sanitizedServerName = new Format(serverName)
-                    .removeSymbols()
-                    .removeWhitespace().toString() + i;
-            String htmlID = "server_" + sanitizedServerName;
-
-            String worldId = "worldPieServer" + sanitizedServerName;
+            server.put("mob_kills", sessionsMutator.toMobKillCount());
+            server.put("player_kills", sessionsMutator.toPlayerKillCount());
+            server.put("deaths", sessionsMutator.toDeathCount());
 
             WorldPie worldPie = graphs.pie().worldPie(worldTimes);
+            server.put("world_pie_series", worldPie.getSlices());
+            server.put("gm_series", worldPie.toHighChartsDrillDownMaps());
 
-            String title = serverName + "<span class=\"pull-right\">" + play + "</span>";
-
-            String leftSide = new AccordionElementContentBuilder()
-                    .addRowBold(Icons.OPERATOR, "Operator", operator ? "Yes" : "No")
-                    .addRowBold(Icons.BANNED, "Banned", banned ? "Yes" : "No")
-                    .addRowBold(Icon.called("user-plus").of(Color.LIGHT_GREEN), "Registered", yearLongFormatter.apply(registered))
-                    .addBreak()
-                    .addRowBold(Icons.SESSION_COUNT, "Sessions", sessionCount)
-                    .addRowBold(Icons.PLAYTIME, "Server Playtime", play)
-                    .addRowBold(Icons.AFK_LENGTH, "Time AFK", afk)
-                    .addRowBold(Icons.SESSION_LENGTH, "Longest Session", longest)
-                    .addRowBold(Icons.SESSION_LENGTH, "Session Median", median)
-                    .addBreak()
-                    .addRowBold(Icons.PLAYER_KILLS, "Player Kills", playerKills)
-                    .addRowBold(Icons.MOB_KILLS, "Mob Kills", mobKills)
-                    .addRowBold(Icons.DEATHS, "Deaths", deaths)
-                    .toHtml();
-
-            String rightSide = "<div id=\"" + worldId + "\" class=\"dashboard-donut-chart\"></div>" +
-                    "<script>" +
-                    "var " + worldId + "series = {name:'World Playtime',colorByPoint:true,data:" + worldPie.toHighChartsSeries() + "};" +
-                    "var " + worldId + "gmseries = " + worldPie.toHighChartsDrilldown() + ";" +
-                    "</script>";
-
-            addElement(new AccordionElement(htmlID, title)
-                    .setColor(theme.getValue(ThemeVal.PARSED_SERVER_ACCORDION))
-                    .setLeftSide(leftSide)
-                    .setRightSide(rightSide));
-
-            viewScript.append("worldPie(")
-                    .append(worldId).append(", ")
-                    .append(worldId).append("series, ")
-                    .append(worldId).append("gmseries")
-                    .append(");");
-
-            i++;
+            servers.add(server);
         }
+        return servers;
     }
 }
