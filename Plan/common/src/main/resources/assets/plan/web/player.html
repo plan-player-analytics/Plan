@@ -985,7 +985,7 @@
                                             class="fa fa-fw fa-network-wired col-teal"></i>
                                         Server Playtime</h6>
                                 </div>
-                                <div class="chart-pie"></div>
+                                <div class="chart-pie" id="serverPie"></div>
                             </div>
                         </div>
                     </div>
@@ -1316,14 +1316,22 @@
                     name: 'Relative Activity',
                     color: '#222',
                     data: json.punchcard_series
+                },
+                serverPie: {
+                    name: 'Server Playtime',
+                    colorByPoint: true,
+                    colors: json.server_pie_colors,
+                    data: json.server_pie_series
                 }
             };
             punchCard("punchCard", series.punchCard);
             worldPie("worldPie", series.worldPie, series.worldPieGMs);
+            serverPie('serverPie', series.serverPie);
             sessionCalendar("#sessionCalendar", json.calendar_series, json.first_day);
         } else if (error) {
             $('#punchCard').text("Failed to load graph data: " + error);
             $('#worldPie').text("Failed to load graph data: " + error);
+            $('#serverPie').text("Failed to load graph data: " + error);
             $('#sessionCalendar').text("Failed to load calendar data: " + error)
         }
     });
