@@ -12,18 +12,35 @@ function loadSessionAccordion(json, error) {
         sessionTable.append('<tr><td>No Sessions</td><td>-</td><td>-</td><td>-</td></tr>')
     }
 
+    var sessionsHtml = '';
     for (var i = 0; i < sessions.length; i++) {
         var session = sessions[i];
         var title = createAccordionTitle(i, session);
         var body = createAccordionBody(i, session);
+        sessionsHtml += title + body;
+    }
 
-        var worldSeries = {name: 'World Playtime', colorByPoint: true, data: session.world_series};
-        var gmSeries = session.gm_series;
+    sessionTable.append(sessionsHtml);
 
-        sessionTable.append(title);
-        sessionTable.append(body);
+    for (var i = 0; i < sessions.length; i++) {
+        $('#session_h_' + i).click(onOpenSession(i, sessions));
+    }
+}
 
-        worldPie("worldpie_" + i, worldSeries, gmSeries);
+function onOpenSession(i, sessions) {
+    var opened = false;
+    return function () {
+        if (opened) {
+            return;
+        }
+        setTimeout(function () {
+            var session = sessions[i];
+            var worldSeries = {name: 'World Playtime', colorByPoint: true, data: session.world_series};
+            var gmSeries = session.gm_series;
+
+            worldPie("worldpie_" + i, worldSeries, gmSeries);
+        }, 250);
+        opened = true;
     }
 }
 
@@ -44,7 +61,7 @@ function loadPlayerDeaths(json, error) {
 }
 
 function createAccordionTitle(i, session) {
-    return '<tr aria-controls="session_t_' + i + '" aria-expanded="false" class="clickable collapsed bg-teal" data-target="#session_t_' + i + '" data-toggle="collapse"><td>'
+    return '<tr id="session_h_' + i + '" aria-controls="session_t_' + i + '" aria-expanded="false" class="clickable collapsed bg-teal" data-target="#session_t_' + i + '" data-toggle="collapse"><td>'
         + session.name + '</td>'
         + '<td>' + session.start + '</td>'
         + '<td>' + session.length + '</td>'
@@ -77,7 +94,7 @@ function createKillsTable(player_kills) {
     var table = '<table class="table scrollbar"><tbody>';
 
     if (player_kills.length === 0) {
-        table += '<tr><td>None</td><td>-</td><td>-</td></tr>'
+        table += '<tr><td>No Kills</td><td>-</td><td>-</td></tr>'
     }
 
     for (var i = 0; i < player_kills.length; i++) {
