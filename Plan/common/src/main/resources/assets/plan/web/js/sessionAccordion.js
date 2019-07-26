@@ -60,7 +60,7 @@ function createAccordionBody(i, session) {
         '<div class="col-xs-12  col-sm-12 col-md-6 col-lg-6">' +
         '<p><i class="col-teal far fa-fw fa-clock"></i> Session Ended<span class="float-right"><b>' + session.end + '</b></span></p>' +
         '<p><i class="col-green far fa-fw fa-clock"></i> Session Length<span class="float-right"><b>' + session.length + '</b></span></p>' +
-        '<p><i class="col-grey far fa-fw fa-clock"></i> AFK<span class="float-right"><b>' + session.afk_time + '</b></span></p>' +
+        '<p><i class="col-grey far fa-fw fa-clock"></i> Time AFK<span class="float-right"><b>' + session.afk_time + '</b></span></p>' +
         '<p><i class="col-green fa fa-fw fa-server"></i> Server<span class="float-right"><b>' + session.server_name + '</b></span></p><br>' +
         '<p><i class="col-red fa fa-fw fa-crosshairs"></i> Player Kills<span class="float-right"><b>' + session.player_kills.length + '</b></span></p>' +
         '<p><i class="col-green fa fa-fw fa-crosshairs"></i> Mob Kills<span class="float-right"><b>' + session.mob_kills + '</b></span></p>' +
