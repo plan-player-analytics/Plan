@@ -21,7 +21,7 @@ function loadPlayerOverviewValues(json, error) {
     $(element).find("#data_active_playtime").text(data.active_playtime);
     $(element).find("#data_afk_time").text(data.afk_time);
     $(element).find("#data_session_count").text(data.session_count);
-    $(element).find("#data_longest_session_lenght").text(data.longest_session_lenght);
+    $(element).find("#data_longest_session_length").text(data.longest_session_length);
     $(element).find("#data_session_median").text(data.session_median);
 
     $(element).find("#data_activity_index").text(data.activity_index);
