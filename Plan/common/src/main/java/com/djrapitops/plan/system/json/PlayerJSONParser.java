@@ -28,6 +28,8 @@ import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
+import com.djrapitops.plan.system.settings.theme.Theme;
+import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
@@ -43,6 +45,7 @@ import java.util.stream.Collectors;
 public class PlayerJSONParser {
 
     private final PlanConfig config;
+    private final Theme theme;
     private final DBSystem dbSystem;
     private final Graphs graphs;
     private final Formatters formatters;
@@ -54,11 +57,13 @@ public class PlayerJSONParser {
     @Inject
     public PlayerJSONParser(
             PlanConfig config,
+            Theme theme,
             DBSystem dbSystem,
             Formatters formatters,
             Graphs graphs
     ) {
         this.config = config;
+        this.theme = theme;
         this.dbSystem = dbSystem;
 
         this.formatters = formatters;
@@ -72,8 +77,13 @@ public class PlayerJSONParser {
         Database db = dbSystem.getDatabase();
 
         Map<UUID, String> serverNames = db.query(ServerQueries.fetchServerNames());
+        String[] pieColors = Arrays.stream(theme.getValue(ThemeVal.GRAPH_WORLD_PIE).split(","))
+                .map(color -> color.trim().replace("\"", ""))
+                .toArray(String[]::new);
+
         PlayerContainer player = db.query(new PlayerContainerQuery(playerUUID));
         SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);
+        Map<UUID, WorldTimes> worldTimesPerServer = PerServerMutator.forContainer(player).worldTimesPerServer();
 
         Map<String, Object> data = new HashMap<>();
         data.put("info", createInfoJSONMap(player, serverNames));
@@ -94,6 +104,8 @@ public class PlayerJSONParser {
         data.put("world_pie_series", worldPie.getSlices());
         data.put("gm_series", worldPie.toHighChartsDrillDownMaps());
         data.put("calendar_series", graphs.calendar().playerCalendar(player).getEntries());
+        data.put("server_pie_series", graphs.pie().serverPreferencePie(serverNames, worldTimesPerServer).getSlices());
+        data.put("server_pie_colors", pieColors);
         data.put("first_day", 1); // Monday
         return data;
     }
@@ -207,9 +219,9 @@ public class PlayerJSONParser {
         killData.put("deaths_30d", deaths30d);
         killData.put("deaths_7d", deaths7d);
 
-        long mobDeaths = deaths - playerDeaths;
-        long mobDeaths30d = deaths30d - playerDeaths30d;
-        long mobDeaths7d = deaths7d - playerDeaths7d;
+        int mobDeaths = deaths - playerDeaths;
+        int mobDeaths30d = deaths30d - playerDeaths30d;
+        int mobDeaths7d = deaths7d - playerDeaths7d;
 
         killData.put("mob_deaths_total", mobDeaths);
         killData.put("mob_deaths_30d", mobDeaths30d);
