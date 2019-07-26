@@ -56,18 +56,13 @@ public class PlayerCountQueries {
     }
 
     public static Query<Integer> uniquePlayerCount(long after, long before, UUID serverUUID) {
-        String sql = SELECT + "COUNT(" + SessionsTable.USER_UUID + ") as player_count" +
+        String sql = SELECT + "COUNT(DISTINCT " + SessionsTable.USER_UUID + ") as player_count" +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_END + "<=?" +
                 AND + SessionsTable.SESSION_START + ">=?" +
-                AND + SessionsTable.SERVER_UUID + "=?" +
-                GROUP_BY + SessionsTable.USER_UUID;
+                AND + SessionsTable.SERVER_UUID + "=?";
 
         return queryPlayerCount(sql, after, before, serverUUID);
-    }
-
-    public static Query<Integer> uniquePlayerCountPerDay(long after, long before, UUID serverUUID) {
-        return db -> 0; // TODO
     }
 
     public static Query<Integer> newPlayerCount(long after, long before, UUID serverUUID) {
