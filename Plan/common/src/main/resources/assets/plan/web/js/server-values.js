@@ -84,6 +84,11 @@ function loadServerOverviewValues(json, error) {
     data = json.weeks;
     element = $(tab).find('#data_weeks');
 
+    $(element).find('#data_start').text(data.start);
+    $(element).find('#data_midpoint').text(data.midpoint);
+    $(element).find('#data_midpoint2').text(data.midpoint);
+    $(element).find('#data_end').text(data.end);
+
     $(element).find('#data_unique_before').text(data.unique_before);
     $(element).find('#data_unique_after').text(data.unique_after);
     $(element).find('#data_unique_trend').replaceWith(trend(data.unique_trend));
@@ -94,9 +99,9 @@ function loadServerOverviewValues(json, error) {
     $(element).find('#data_regular_after').text(data.regular_after);
     $(element).find('#data_regular_trend').replaceWith(trend(data.regular_trend));
 
-    $(element).find('#data_playtime_before').text(data.playtime_before);
-    $(element).find('#data_playtime_after').text(data.playtime_after);
-    $(element).find('#data_playtime_trend').replaceWith(trend(data.playtime_trend));
+    $(element).find('#data_average_playtime_before').text(data.average_playtime_before);
+    $(element).find('#data_average_playtime_after').text(data.average_playtime_after);
+    $(element).find('#data_average_playtime_trend').replaceWith(trend(data.average_playtime_trend));
     $(element).find('#data_sessions_before').text(data.sessions_before);
     $(element).find('#data_sessions_after').text(data.sessions_after);
     $(element).find('#data_sessions_trend').replaceWith(trend(data.sessions_trend));
