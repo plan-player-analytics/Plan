@@ -158,23 +158,41 @@ function loadServerAccordion(json, error) {
         serverTable.append('<tr><td>No Sessions</td><td>-</td><td>-</td><td>-</td></tr>')
     }
 
+    var serversHtml = '';
     for (var i = 0; i < servers.length; i++) {
         var server = servers[i];
         var title = createServerAccordionTitle(i, server);
         var body = createServerAccordionBody(i, server);
 
-        var worldSeries = {name: 'World Playtime', colorByPoint: true, data: server.world_pie_series};
-        var gmSeries = server.gm_series;
+        serversHtml += title + body;
+    }
 
-        serverTable.append(title);
-        serverTable.append(body);
+    serverTable.append(serversHtml);
 
-        worldPie("worldpie_server_" + i, worldSeries, gmSeries);
+    for (var i = 0; i < servers.length; i++) {
+        $('#server_h_' + i).click(onOpenServer(i, servers));
+    }
+}
+
+function onOpenServer(i, servers) {
+    var opened = false;
+    return function () {
+        if (opened) {
+            return;
+        }
+        setTimeout(function () {
+            var server = servers[i];
+            var worldSeries = {name: 'World Playtime', colorByPoint: true, data: server.world_pie_series};
+            var gmSeries = server.gm_series;
+
+            worldPie("worldpie_server_" + i, worldSeries, gmSeries);
+        }, 250);
+        opened = true;
     }
 }
 
 function createServerAccordionTitle(i, server) {
-    return '<tr aria-controls="server_t_' + i + '" aria-expanded="false" class="clickable collapsed bg-light-green" data-target="#server_t_' + i + '" data-toggle="collapse"><td>'
+    return '<tr id="server_h_' + i + '" aria-controls="server_t_' + i + '" aria-expanded="false" class="clickable collapsed bg-light-green" data-target="#server_t_' + i + '" data-toggle="collapse"><td>'
         + server.server_name +
         (server.operator ? ' <i class="col-blue fab fa-fw fa-superpowers"></i>' : '') +
         (server.banned ? ' <i class="col-red fas fa-fw fa-gavel"></i>' : '') +
