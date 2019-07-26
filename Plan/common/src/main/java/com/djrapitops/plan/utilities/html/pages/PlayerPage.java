@@ -113,7 +113,7 @@ public class PlayerPage implements Page {
             replacer.put("backButton", "<li><a title=\"to Server page\" href=\"/server\"><i class=\"material-icons\">arrow_back</i><i class=\"material-icons\">storage</i></a></li>");
         }
 
-        InspectPluginTab pluginTabs = pageFactory.inspectPluginTabs(playerUUID);
+        PlayerPluginTab pluginTabs = pageFactory.inspectPluginTabs(playerUUID);
 
         replacer.put("navPluginsTabs", pluginTabs.getNav());
         replacer.put("pluginsTabs", pluginTabs.getTab());

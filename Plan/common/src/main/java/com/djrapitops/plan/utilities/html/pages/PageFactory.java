@@ -147,16 +147,16 @@ public class PageFactory {
         );
     }
 
-    public InspectPluginTab inspectPluginTabs(UUID playerUUID) {
+    public PlayerPluginTab inspectPluginTabs(UUID playerUUID) {
         Database database = dbSystem.get().getDatabase();
 
         Map<UUID, List<ExtensionPlayerData>> extensionPlayerData = database.query(new ExtensionPlayerDataQuery(playerUUID));
 
         if (extensionPlayerData.isEmpty()) {
-            return new InspectPluginTab("No Extensions", Collections.emptyList(), formatters.get());
+            return new PlayerPluginTab("", Collections.emptyList(), formatters.get());
         }
 
-        List<InspectPluginTab> inspectPluginTabs = new ArrayList<>();
+        List<PlayerPluginTab> playerPluginTabs = new ArrayList<>();
         for (Map.Entry<UUID, Server> entry : database.query(ServerQueries.fetchPlanServerInformation()).entrySet()) {
             UUID serverUUID = entry.getKey();
             String serverName = entry.getValue().getIdentifiableName();
@@ -166,18 +166,18 @@ public class PageFactory {
                 continue;
             }
 
-            inspectPluginTabs.add(new InspectPluginTab(serverName, ofServer, formatters.get()));
+            playerPluginTabs.add(new PlayerPluginTab(serverName, ofServer, formatters.get()));
         }
 
         StringBuilder navs = new StringBuilder();
         StringBuilder tabs = new StringBuilder();
 
-        inspectPluginTabs.stream().sorted().forEach(tab -> {
+        playerPluginTabs.stream().sorted().forEach(tab -> {
             navs.append(tab.getNav());
             tabs.append(tab.getTab());
         });
 
-        return new InspectPluginTab(navs.toString(), tabs.toString());
+        return new PlayerPluginTab(navs.toString(), tabs.toString());
     }
 
     /**
