@@ -168,9 +168,13 @@ public class PlayerJSONParser {
         info.put("activity_index_group", activityIndex.getGroup());
         UUID favoriteServer = perServer.favoriteServer();
         info.put("favorite_server", serverNames.getOrDefault(favoriteServer, favoriteServer.toString()));
-        info.put("average_ping", decimals.apply(ping.average()) + " ms");
-        info.put("worst_ping", ping.max() + " ms");
-        info.put("best_ping", ping.min() + " ms");
+        double averagePing = ping.average();
+        int worstPing = ping.max();
+        int bestPing = ping.min();
+
+        info.put("average_ping", averagePing != -1.0 ? decimals.apply(averagePing) + " ms" : "Unavailable");
+        info.put("worst_ping", worstPing != -1.0 ? worstPing + " ms" : "Unavailable");
+        info.put("best_ping", bestPing != -1.0 ? bestPing + " ms" : "Unavailable");
         info.put("registered", player.getValue(PlayerKeys.REGISTERED).map(year).orElse("-"));
         info.put("last_seen", player.getValue(PlayerKeys.LAST_SEEN).map(year).orElse("-"));
 

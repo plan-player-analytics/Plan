@@ -79,9 +79,9 @@
                 '.card,.bg-white,.modal-content,.page-loader,hr {background-color:#44475a;border-color:#6272a4;}' +
                 '.bg-white.collapse-inner {border 1px solid;}' +
                 '.card-header {background-color:#44475a;border-color:#6272a4;}' +
-                '#content,.col-black,.text-gray-800,.collapse-item,.modal-title,.modal-body,.page-loader,.close,.fc-title {color:#eee8d5 !important;}' +
+                '#content,.col-black,.text-gray-800,.collapse-item,.modal-title,.modal-body,.page-loader,.close,.fc-title,.fc-time {color:#eee8d5 !important;}' +
                 '.collapse-item:hover,.nav-link.active {background-color: #606270 !important;}' +
-                '.fc-today {background:#6272a4 !important}' +
+                '.fc-today {background:#646e8c !important}' +
                 '</style>');
             // Turn bright tables to dark
             $('.table').addClass('table-dark');
