@@ -172,9 +172,10 @@ public class PlayerJSONParser {
         int worstPing = ping.max();
         int bestPing = ping.min();
 
-        info.put("average_ping", averagePing != -1.0 ? decimals.apply(averagePing) + " ms" : "Unavailable");
-        info.put("worst_ping", worstPing != -1.0 ? worstPing + " ms" : "Unavailable");
-        info.put("best_ping", bestPing != -1.0 ? bestPing + " ms" : "Unavailable");
+        String unavailable = "Unavailable";
+        info.put("average_ping", averagePing != -1.0 ? decimals.apply(averagePing) + " ms" : unavailable);
+        info.put("worst_ping", worstPing != -1.0 ? worstPing + " ms" : unavailable);
+        info.put("best_ping", bestPing != -1.0 ? bestPing + " ms" : unavailable);
         info.put("registered", player.getValue(PlayerKeys.REGISTERED).map(year).orElse("-"));
         info.put("last_seen", player.getValue(PlayerKeys.LAST_SEEN).map(year).orElse("-"));
 

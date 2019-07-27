@@ -23,7 +23,7 @@ import com.djrapitops.plan.system.webserver.response.ResponseCode;
  *
  * @author Rsl1122
  */
-public class NotFoundException extends WebFailException {
+public class NotFoundException extends WebException {
     public NotFoundException(String message) {
         super(message, ResponseCode.NOT_FOUND);
     }

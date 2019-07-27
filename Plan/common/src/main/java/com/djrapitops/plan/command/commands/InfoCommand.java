@@ -18,8 +18,8 @@ package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
@@ -42,7 +42,6 @@ public class InfoCommand extends CommandNode {
     private final PlanPlugin plugin;
     private final Locale locale;
     private final DBSystem dbSystem;
-    private final ConnectionSystem connectionSystem;
     private final VersionCheckSystem versionCheckSystem;
 
     @Inject
@@ -50,7 +49,6 @@ public class InfoCommand extends CommandNode {
             PlanPlugin plugin,
             Locale locale,
             DBSystem dbSystem,
-            ConnectionSystem connectionSystem,
             VersionCheckSystem versionCheckSystem
     ) {
         super("info", Permissions.INFO.getPermission(), CommandType.CONSOLE);
@@ -58,7 +56,6 @@ public class InfoCommand extends CommandNode {
         this.plugin = plugin;
         this.locale = locale;
         this.dbSystem = dbSystem;
-        this.connectionSystem = connectionSystem;
         this.versionCheckSystem = versionCheckSystem;
 
         setShortHelp(locale.get(CmdHelpLang.INFO).toString());
@@ -69,10 +66,11 @@ public class InfoCommand extends CommandNode {
         String yes = locale.getString(GenericLang.YES);
         String no = locale.getString(GenericLang.NO);
 
-        String updateAvailable = versionCheckSystem.isNewVersionAvailable() ? yes : no;
-        String connectedToBungee = connectionSystem.isServerAvailable() ? yes : no;
-
         Database database = dbSystem.getDatabase();
+
+        String updateAvailable = versionCheckSystem.isNewVersionAvailable() ? yes : no;
+        String proxyAvailable = database.query(ServerQueries.fetchProxyServerInformation()).isPresent() ? yes : no;
+
 
         String[] messages = {
                 locale.getString(CommandLang.HEADER_INFO),
@@ -80,7 +78,7 @@ public class InfoCommand extends CommandNode {
                 locale.getString(CommandLang.INFO_VERSION, plugin.getVersion()),
                 locale.getString(CommandLang.INFO_UPDATE, updateAvailable),
                 locale.getString(CommandLang.INFO_DATABASE, database.getType().getName() + " (" + database.getState().name() + ")"),
-                locale.getString(CommandLang.INFO_PROXY_CONNECTION, connectedToBungee),
+                locale.getString(CommandLang.INFO_PROXY_CONNECTION, proxyAvailable),
                 "",
                 ">"
         };

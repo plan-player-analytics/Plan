@@ -19,12 +19,12 @@ package com.djrapitops.plan.system.export;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.BaseUser;
+import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.objects.BaseUserQueries;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.db.access.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
-import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.json.JSONFactory;
@@ -63,7 +63,6 @@ public class HtmlExport extends SpecificExport {
     private final PlanFiles files;
     private final DBSystem dbSystem;
     private final PageFactory pageFactory;
-    private final ConnectionSystem connectionSystem;
     private final ErrorHandler errorHandler;
 
     @Inject
@@ -75,7 +74,6 @@ public class HtmlExport extends SpecificExport {
             PageFactory pageFactory,
             JSONFactory jsonFactory,
             ServerInfo serverInfo,
-            ConnectionSystem connectionSystem,
             ErrorHandler errorHandler
     ) {
         super(files, jsonFactory, serverInfo);
@@ -84,7 +82,6 @@ public class HtmlExport extends SpecificExport {
         this.files = files;
         this.dbSystem = dbSystem;
         this.pageFactory = pageFactory;
-        this.connectionSystem = connectionSystem;
         this.errorHandler = errorHandler;
     }
 
@@ -94,10 +91,12 @@ public class HtmlExport extends SpecificExport {
     }
 
     public void exportServer(UUID serverUUID) {
-        if (serverInfo.getServer().isNotProxy() && connectionSystem.isServerAvailable()) {
+        Database database = dbSystem.getDatabase();
+        boolean hasProxy = database.query(ServerQueries.fetchProxyServerInformation()).isPresent();
+        if (serverInfo.getServer().isNotProxy() && hasProxy) {
             return;
         }
-        dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
+        database.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
                 .map(Server::getName)
                 .ifPresent(serverName -> {
                     try {
@@ -123,11 +122,13 @@ public class HtmlExport extends SpecificExport {
     }
 
     public void exportCachedPlayerPage(UUID playerUUID) {
-        if (serverInfo.getServer().isNotProxy() && connectionSystem.isServerAvailable()) {
+        Database database = dbSystem.getDatabase();
+        boolean hasProxy = database.query(ServerQueries.fetchProxyServerInformation()).isPresent();
+        if (serverInfo.getServer().isNotProxy() && hasProxy) {
             return;
         }
 
-        dbSystem.getDatabase().query(UserIdentifierQueries.fetchPlayerNameOf(playerUUID))
+        database.query(UserIdentifierQueries.fetchPlayerNameOf(playerUUID))
                 .ifPresent(playerName -> {
                     try {
                         exportAvailablePlayerPage(playerUUID, playerName);

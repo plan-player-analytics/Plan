@@ -20,14 +20,13 @@ import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
 import com.djrapitops.plan.db.access.queries.objects.WebUserQueries;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.info.InfoProcessors;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -52,27 +51,21 @@ public class InspectCommand extends CommandNode {
     private final Locale locale;
     private final DBSystem dbSystem;
     private final WebServer webServer;
-    private final InfoProcessors processorFactory;
     private final Processing processing;
-    private final ConnectionSystem connectionSystem;
     private final UUIDUtility uuidUtility;
     private final ErrorHandler errorHandler;
 
     @Inject
     public InspectCommand(
             Locale locale,
-            InfoProcessors processorFactory,
             Processing processing,
             DBSystem dbSystem,
             WebServer webServer,
-            ConnectionSystem connectionSystem,
             UUIDUtility uuidUtility,
             ErrorHandler errorHandler
     ) {
         super("inspect", Permissions.INSPECT.getPermission(), CommandType.PLAYER_OR_ARGS);
-        this.processorFactory = processorFactory;
         this.processing = processing;
-        this.connectionSystem = connectionSystem;
         setArguments("<player>");
 
         this.locale = locale;
@@ -138,7 +131,8 @@ public class InspectCommand extends CommandNode {
     private void sendInspectMsg(Sender sender, String playerName) {
         sender.sendMessage(locale.getString(CommandLang.HEADER_INSPECT, playerName));
 
-        String url = connectionSystem.getMainAddress() + "/player/" + playerName;
+        String address = PlanSystem.getMainAddress(webServer, dbSystem);
+        String url = address + "/player/" + playerName;
         String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
 
         boolean console = !CommandUtils.isPlayer(sender);

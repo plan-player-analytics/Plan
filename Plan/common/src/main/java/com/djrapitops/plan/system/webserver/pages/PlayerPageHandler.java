@@ -18,11 +18,9 @@ package com.djrapitops.plan.system.webserver.pages;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.ForbiddenException;
-import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.RequestTarget;
@@ -67,37 +65,22 @@ public class PlayerPageHandler implements PageHandler {
         }
 
         String playerName = target.get(0);
-        UUID uuid = uuidUtility.getUUIDOf(playerName);
+        UUID playerUUID = uuidUtility.getUUIDOf(playerName);
 
         boolean raw = target.size() >= 2 && target.get(1).equalsIgnoreCase("raw");
 
-        if (uuid == null) {
+        if (playerUUID == null) {
             return responseFactory.uuidNotFound404();
         }
-        try {
-            Database.State dbState = dbSystem.getDatabase().getState();
-            if (dbState != Database.State.OPEN) {
-                throw new ForbiddenException("Database is " + dbState.name() + " - Please try again later. You can check database status with /plan info");
-            }
-            // TODO Move this Database dependency to PlayerPage generation in PageFactory instead.
-            if (dbSystem.getDatabase().query(PlayerFetchQueries.isPlayerRegistered(uuid))) {
-                if (raw) {
-                    return ResponseCache.loadResponse(PageId.RAW_PLAYER.of(uuid), () -> responseFactory.rawPlayerPageResponse(uuid));
-                }
-                return playerResponseOrNotFound(uuid);
-            } else {
-                return responseFactory.playerNotFound404();
-            }
-        } catch (NoServersException e) {
-            ResponseCache.loadResponse(PageId.PLAYER.of(uuid), () -> responseFactory.notFound404(e.getMessage()));
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState != Database.State.OPEN) {
+            throw new ForbiddenException("Database is " + dbState.name() + " - Please try again later. You can check database status with /plan info");
         }
-        return responseFactory.serverNotFound404();
-    }
-
-    private Response playerResponseOrNotFound(UUID playerUUID) throws WebException {
-        Response response = ResponseCache.loadResponse(PageId.PLAYER.of(playerUUID),
+        if (raw) {
+            return ResponseCache.loadResponse(PageId.RAW_PLAYER.of(playerUUID), () -> responseFactory.rawPlayerPageResponse(playerUUID));
+        }
+        return ResponseCache.loadResponse(PageId.PLAYER.of(playerUUID),
                 () -> responseFactory.playerPageResponse(playerUUID));
-        return response != null ? response : responseFactory.playerNotFound404();
     }
 
     @Override

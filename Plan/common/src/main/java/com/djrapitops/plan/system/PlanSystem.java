@@ -20,6 +20,7 @@ import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.capability.CapabilityServiceImplementation;
 import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.extension.ExtensionService;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.query.QueryServiceImplementation;
@@ -28,6 +29,7 @@ import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.export.ExportSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.importing.ImportSystem;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
 import com.djrapitops.plan.system.locale.LocaleSystem;
@@ -35,6 +37,7 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.ConfigSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
+import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -117,6 +120,16 @@ public class PlanSystem implements SubSystem {
         this.queryService = queryService;
         this.planAPI = planAPI;
         this.errorHandler = errorHandler;
+    }
+
+    public static String getMainAddress(WebServer webServer, DBSystem dbSystem) {
+        return dbSystem.getDatabase().query(ServerQueries.fetchProxyServerInformation())
+                .map(Server::getWebAddress)
+                .orElse(webServer.getAccessAddress());
+    }
+
+    public String getMainAddress() {
+        return PlanSystem.getMainAddress(webServerSystem.getWebServer(), databaseSystem);
     }
 
     @Override

@@ -21,14 +21,15 @@ import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.objects.WebUserQueries;
 import com.djrapitops.plan.db.access.transactions.commands.RegisterWebUserTransaction;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -61,7 +62,7 @@ public class RegisterCommand extends CommandNode {
     private final Locale locale;
     private final Processing processing;
     private final DBSystem dbSystem;
-    private final ConnectionSystem connectionSystem;
+    private final WebServer webServer;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
 
@@ -70,7 +71,7 @@ public class RegisterCommand extends CommandNode {
             Locale locale,
             Processing processing,
             DBSystem dbSystem,
-            ConnectionSystem connectionSystem,
+            WebServer webServer,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
@@ -79,7 +80,7 @@ public class RegisterCommand extends CommandNode {
 
         this.locale = locale;
         this.processing = processing;
-        this.connectionSystem = connectionSystem;
+        this.webServer = webServer;
         this.logger = logger;
         this.dbSystem = dbSystem;
         this.errorHandler = errorHandler;
@@ -181,7 +182,7 @@ public class RegisterCommand extends CommandNode {
     }
 
     private void sendLink(Sender sender) {
-        String url = connectionSystem.getMainAddress();
+        String url = PlanSystem.getMainAddress(webServer, dbSystem);
         String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
         // Link
         boolean console = !CommandUtils.isPlayer(sender);

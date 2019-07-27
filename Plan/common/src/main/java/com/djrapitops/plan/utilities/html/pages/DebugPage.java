@@ -22,7 +22,6 @@ import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.file.FileResource;
-import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
@@ -55,7 +54,6 @@ public class DebugPage implements Page {
 
     private final Database database;
     private final ServerInfo serverInfo;
-    private final ConnectionSystem connectionSystem;
     private final CombineDebugLogger debugLogger;
     private final Timings timings;
     private final ErrorHandler errorHandler;
@@ -66,7 +64,6 @@ public class DebugPage implements Page {
     DebugPage(
             Database database,
             ServerInfo serverInfo,
-            ConnectionSystem connectionSystem,
             Formatters formatters,
             DebugLogger debugLogger,
             Timings timings,
@@ -74,7 +71,6 @@ public class DebugPage implements Page {
     ) {
         this.database = database;
         this.serverInfo = serverInfo;
-        this.connectionSystem = connectionSystem;
         this.debugLogger = (CombineDebugLogger) debugLogger;
         this.timings = timings;
         this.errorHandler = errorHandler;

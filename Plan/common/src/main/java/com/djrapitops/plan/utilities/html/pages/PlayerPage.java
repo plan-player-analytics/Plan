@@ -76,11 +76,10 @@ public class PlayerPage implements Page {
 
     @Override
     public String toHtml() throws ParseException {
+        if (!player.getValue(PlayerKeys.REGISTERED).isPresent()) {
+            throw new IllegalStateException("Player is not registered");
+        }
         try {
-            if (!player.getValue(PlayerKeys.REGISTERED).isPresent()) {
-                throw new IllegalStateException("Player is not registered");
-            }
-
             return parse(player);
         } catch (Exception e) {
             throw new ParseException(e);

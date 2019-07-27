@@ -18,8 +18,6 @@ package com.djrapitops.plan.modules;
 
 import com.djrapitops.plan.api.CommonAPI;
 import com.djrapitops.plan.api.PlanAPI;
-import com.djrapitops.plan.system.info.connection.ConnectionSystem;
-import com.djrapitops.plan.system.info.connection.ServerConnectionSystem;
 import dagger.Binds;
 import dagger.Module;
 
@@ -33,8 +31,5 @@ public interface ServerSuperClassBindingModule {
 
     @Binds
     PlanAPI bindServerPlanAPI(CommonAPI serverAPI);
-
-    @Binds
-    ConnectionSystem bindServerConnectionSystem(ServerConnectionSystem connectionSystem);
 
 }

@@ -23,7 +23,7 @@ import com.djrapitops.plan.system.webserver.response.ResponseCode;
  *
  * @author Rsl1122
  */
-public class ForbiddenException extends WebFailException {
+public class ForbiddenException extends WebException {
     public ForbiddenException(String url) {
         super("Forbidden: " + url, ResponseCode.FORBIDDEN);
     }
