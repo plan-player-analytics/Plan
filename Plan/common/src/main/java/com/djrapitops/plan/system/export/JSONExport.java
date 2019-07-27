@@ -16,11 +16,9 @@
  */
 package com.djrapitops.plan.system.export;
 
-import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.db.access.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
-import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.json.JSONFactory;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -90,19 +88,6 @@ public class JSONExport extends SpecificExport {
     }
 
     public void exportServerJSON(UUID serverUUID) {
-        String json = responseFactory.rawServerPageResponse(serverUUID).getContent();
-        dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
-                .map(Server::getName)
-                .ifPresent(serverName -> {
-                    try {
-                        File htmlLocation = getServerFolder();
-                        htmlLocation.mkdirs();
-                        File exportFile = new File(htmlLocation, URLEncoder.encode(serverName, "UTF-8") + ".json");
-
-                        export(exportFile, Collections.singletonList(json));
-                    } catch (IOException e) {
-                        errorHandler.log(L.WARN, this.getClass(), e);
-                    }
-                });
+        // TODO Export JSON Parser results
     }
 }

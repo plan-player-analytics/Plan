@@ -64,12 +64,6 @@ public class ServerPageHandler implements PageHandler {
     public Response getResponse(Request request, RequestTarget target) throws WebException {
         UUID serverUUID = getServerUUID(target);
 
-        boolean raw = target.size() >= 2 && target.get(1).equalsIgnoreCase("raw");
-        if (raw) {
-            checkDBState();
-            return ResponseCache.loadResponse(PageId.RAW_SERVER.of(serverUUID), () -> responseFactory.rawServerPageResponse(serverUUID));
-        }
-
         Response response = ResponseCache.loadResponse(PageId.SERVER.of(serverUUID));
 
         if (response != null) {

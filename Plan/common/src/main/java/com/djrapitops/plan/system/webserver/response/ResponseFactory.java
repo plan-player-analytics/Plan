@@ -118,10 +118,6 @@ public class ResponseFactory {
         return new RawPlayerDataResponse(dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(uuid)));
     }
 
-    public RawDataResponse rawServerPageResponse(UUID serverUUID) {
-        return new RawServerDataResponse(dbSystem.getDatabase().query(ContainerFetchQueries.fetchServerContainer(serverUUID)));
-    }
-
     public Response javaScriptResponse(String fileName) {
         try {
             return new JavaScriptResponse(fileName, files);
