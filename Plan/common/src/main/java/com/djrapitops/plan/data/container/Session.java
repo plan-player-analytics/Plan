@@ -43,7 +43,7 @@ public class Session extends DynamicDataContainer implements DateHolder {
     private long afkTime;
 
     /**
-     * Creates a new session.
+     * Creates a new session based on a join event.
      *
      * @param uuid         UUID of the Player.
      * @param serverUUID   UUID of the server.
@@ -92,7 +92,11 @@ public class Session extends DynamicDataContainer implements DateHolder {
      * @param deaths       Death count during the session.
      * @param afkTime      Time spent AFK during the session.
      */
-    public Session(int id, UUID uuid, UUID serverUUID, long sessionStart, long sessionEnd, int mobKills, int deaths, long afkTime) {
+    public Session(
+            int id, UUID uuid, UUID serverUUID,
+            long sessionStart, long sessionEnd,
+            int mobKills, int deaths, long afkTime
+    ) {
         this.sessionStart = sessionStart;
         worldTimes = new WorldTimes();
         playerKills = new ArrayList<>();
@@ -236,7 +240,7 @@ public class Session extends DynamicDataContainer implements DateHolder {
     public String toString() {
         return "Session{" +
                 "sessionStart=" + getUnsafe(SessionKeys.START) +
-                ", sessionEnd=" + getUnsafe(SessionKeys.END) +
+                ", sessionEnd=" + getValue(SessionKeys.END).orElse(null) +
                 ", worldTimes=" + worldTimes +
                 ", playerKills=" + playerKills +
                 ", mobKills=" + mobKills +

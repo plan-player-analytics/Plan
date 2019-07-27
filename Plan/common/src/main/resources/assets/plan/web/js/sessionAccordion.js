@@ -12,8 +12,12 @@ function loadSessionAccordion(json, error) {
         sessionTable.append('<tr><td>No Sessions</td><td>-</td><td>-</td><td>-</td></tr>')
     }
 
+    // sessions_per_page can be undefined (-> NaN) or higher than amount of sessions.
+    var limit = json.sessions_per_page ? json.sessions_per_page : sessions.length;
+    limit = Math.min(limit, sessions.length);
+
     var sessionsHtml = '';
-    for (var i = 0; i < sessions.length; i++) {
+    for (var i = 0; i < limit; i++) {
         var session = sessions[i];
         var title = createAccordionTitle(i, session);
         var body = createAccordionBody(i, session);
@@ -22,7 +26,7 @@ function loadSessionAccordion(json, error) {
 
     sessionTable.append(sessionsHtml);
 
-    for (var i = 0; i < sessions.length; i++) {
+    for (var i = 0; i < limit; i++) {
         $('#session_h_' + i).click(onOpenSession(i, sessions));
     }
 }

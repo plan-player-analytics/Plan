@@ -31,7 +31,6 @@ import com.djrapitops.plan.system.webserver.response.errors.InternalErrorRespons
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plan.system.webserver.response.pages.*;
 import com.djrapitops.plan.utilities.html.pages.PageFactory;
-import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
@@ -89,7 +88,6 @@ public class ResponseFactory {
 
     public ErrorResponse internalErrorResponse(Throwable e, String s) {
         try {
-            errorHandler.log(L.WARN, this.getClass(), e);
             return new InternalErrorResponse(s, e, versionCheckSystem, files);
         } catch (IOException improperRestartException) {
             return new ErrorResponse(
