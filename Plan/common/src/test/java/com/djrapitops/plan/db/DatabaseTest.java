@@ -394,6 +394,20 @@ public interface DatabaseTest {
     }
 
     @Test
+    default void mostRecentSessionsCanBeQueried() {
+        sessionsAreStoredWithAllData();
+
+        Session session = new Session(playerUUID, serverUUID(), 12345L, worlds[0], "SURVIVAL");
+        session.endSession(22345L);
+        session.setWorldTimes(createWorldTimes());
+        session.setPlayerKills(createKills());
+
+        List<Session> expected = Collections.singletonList(session);
+        List<Session> result = db().query(SessionQueries.fetchLatestSessionsOfServer(serverUUID(), 1));
+        assertEquals(expected, result);
+    }
+
+    @Test
     default void userInfoTableStoresCorrectUserInformation() {
         saveUserOne();
 
@@ -1340,9 +1354,9 @@ public interface DatabaseTest {
     }
 
     @Test
-    public void activeTunredInactiveQueryHasAllParametersSet() {
-        Integer result = db.query(ActivityIndexQueries.countRegularPlayersTurnedInactive(
-                0, System.currentTimeMillis(), serverUUID,
+    default void activeTunredInactiveQueryHasAllParametersSet() {
+        Integer result = db().query(ActivityIndexQueries.countRegularPlayersTurnedInactive(
+                0, System.currentTimeMillis(), serverUUID(),
                 TimeUnit.HOURS.toMillis(2L)
         ));
         assertNotNull(result);
