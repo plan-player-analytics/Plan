@@ -27,6 +27,7 @@ import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DisplaySettings;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
@@ -101,6 +102,7 @@ public class PlayerJSONParser {
         data.put("player_kills", player.getValue(PlayerKeys.PLAYER_KILLS).orElse(Collections.emptyList()));
         data.put("player_deaths", player.getValue(PlayerKeys.PLAYER_DEATHS_KILLS).orElse(Collections.emptyList()));
         data.put("sessions", sessionsMutator.toServerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters));
+        data.put("sessions_per_page", config.get(DisplaySettings.SESSIONS_PER_PAGE));
         data.put("servers", serverAccordion);
         data.put("punchcard_series", graphs.special().punchCard(sessionsMutator).getDots());
         WorldPie worldPie = graphs.pie().worldPie(player.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes()));

@@ -49,9 +49,11 @@ public class SessionQueries {
     }
 
     private static final String SELECT_SESSIONS_STATEMENT = SELECT +
-            SessionsTable.TABLE_NAME + '.' + SessionsTable.ID + ',' +
-            SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_UUID + ',' +
-            SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_UUID + ',' +
+            "s." + SessionsTable.ID + ',' +
+            "s." + SessionsTable.USER_UUID + ',' +
+            "s." + SessionsTable.SERVER_UUID + ',' +
+            "u." + UsersTable.USER_NAME + " as name," +
+            "server." + ServerTable.NAME + " as server_name," +
             SessionsTable.SESSION_START + ',' +
             SessionsTable.SESSION_END + ',' +
             SessionsTable.MOB_KILLS + ',' +
@@ -63,14 +65,16 @@ public class SessionQueries {
             WorldTimesTable.SPECTATOR + ',' +
             WorldTable.NAME + ',' +
             KillsTable.VICTIM_UUID + ',' +
-            UsersTable.USER_NAME + " as victim_name, " +
+            "v." + UsersTable.USER_NAME + " as victim_name, " +
             KillsTable.DATE + ',' +
             KillsTable.WEAPON +
-            FROM + SessionsTable.TABLE_NAME +
-            LEFT_JOIN + KillsTable.TABLE_NAME + " ON " + SessionsTable.TABLE_NAME + '.' + SessionsTable.ID + "=" + KillsTable.TABLE_NAME + '.' + KillsTable.SESSION_ID +
-            LEFT_JOIN + UsersTable.TABLE_NAME + " on " + UsersTable.TABLE_NAME + '.' + UsersTable.USER_UUID + "=" + KillsTable.VICTIM_UUID +
-            INNER_JOIN + WorldTimesTable.TABLE_NAME + " ON " + SessionsTable.TABLE_NAME + '.' + SessionsTable.ID + "=" + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SESSION_ID +
-            INNER_JOIN + WorldTable.TABLE_NAME + " ON " + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.WORLD_ID + "=" + WorldTable.TABLE_NAME + '.' + WorldTable.ID;
+            FROM + SessionsTable.TABLE_NAME + " s" +
+            INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.USER_UUID + "=s." + SessionsTable.USER_UUID +
+            INNER_JOIN + ServerTable.TABLE_NAME + " server on server." + ServerTable.SERVER_UUID + "=s." + SessionsTable.SERVER_UUID +
+            LEFT_JOIN + KillsTable.TABLE_NAME + " ON " + "s." + SessionsTable.ID + '=' + KillsTable.TABLE_NAME + '.' + KillsTable.SESSION_ID +
+            LEFT_JOIN + UsersTable.TABLE_NAME + " v on v." + UsersTable.USER_UUID + '=' + KillsTable.VICTIM_UUID +
+            INNER_JOIN + WorldTimesTable.TABLE_NAME + " ON s." + SessionsTable.ID + '=' + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SESSION_ID +
+            INNER_JOIN + WorldTable.TABLE_NAME + " ON " + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.WORLD_ID + '=' + WorldTable.TABLE_NAME + '.' + WorldTable.ID;
 
     private static final String ORDER_BY_SESSION_START_DESC = ORDER_BY + SessionsTable.SESSION_START + " DESC";
 
@@ -149,7 +153,7 @@ public class SessionQueries {
 
     public static QueryStatement<List<Session>> fetchSessionsOfServerFlat(UUID serverUUID) {
         String sql = SELECT_SESSIONS_STATEMENT +
-                WHERE + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_UUID + "=?" +
+                WHERE + "s." + SessionsTable.SERVER_UUID + "=?" +
                 ORDER_BY_SESSION_START_DESC;
         return new QueryStatement<List<Session>>(sql, 50000) {
             @Override
@@ -172,7 +176,7 @@ public class SessionQueries {
      */
     public static Query<Map<UUID, List<Session>>> fetchSessionsOfPlayer(UUID playerUUID) {
         String sql = SELECT_SESSIONS_STATEMENT +
-                WHERE + SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_UUID + "=?" +
+                WHERE + "s." + SessionsTable.USER_UUID + "=?" +
                 ORDER_BY_SESSION_START_DESC;
         return new QueryStatement<Map<UUID, List<Session>>>(sql, 50000) {
             @Override
@@ -240,6 +244,9 @@ public class SessionQueries {
                 playerKills.sort(dateColderRecentComparator);
             }
 
+            session.putRawData(SessionKeys.NAME, set.getString("name"));
+            session.putRawData(SessionKeys.SERVER_NAME, set.getString("server_name"));
+
             playerSessions.put(sessionStart, session);
             serverSessions.put(playerUUID, playerSessions);
             tempSessionMap.put(serverUUID, serverSessions);
@@ -255,12 +262,12 @@ public class SessionQueries {
 
     public static Query<List<Session>> fetchServerSessionsWithoutKillOrWorldData(long after, long before, UUID serverUUID) {
         String sql = SELECT +
-                SessionsTable.ID + ", " +
-                SessionsTable.USER_UUID + ", " +
-                SessionsTable.SESSION_START + ", " +
-                SessionsTable.SESSION_END + ", " +
-                SessionsTable.DEATHS + ", " +
-                SessionsTable.MOB_KILLS + ", " +
+                SessionsTable.ID + ',' +
+                SessionsTable.USER_UUID + ',' +
+                SessionsTable.SESSION_START + ',' +
+                SessionsTable.SESSION_END + ',' +
+                SessionsTable.DEATHS + ',' +
+                SessionsTable.MOB_KILLS + ',' +
                 SessionsTable.AFK_TIME +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SERVER_UUID + "=?" +
@@ -296,28 +303,49 @@ public class SessionQueries {
         };
     }
 
-    public static Query<List<Session>> fetchLatestSessionsOfServer(UUID serverUUID, int limit) {
-        String selectLastDateToInclude = SELECT + SessionsTable.TABLE_NAME + '.' + SessionsTable.SESSION_START +
-                FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_UUID + "=?" +
-                ORDER_BY_SESSION_START_DESC + " LIMIT 1 OFFSET ?";
+    private static Query<Long> fetchLatestSessionStartLimitForServer(UUID serverUUID, int limit) {
+        String sql = SELECT + SessionsTable.SESSION_START + FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SERVER_UUID + "=?" +
+                ORDER_BY_SESSION_START_DESC + " LIMIT ?";
 
-        String sql = SELECT_SESSIONS_STATEMENT +
-                WHERE + SessionsTable.TABLE_NAME + '.' + SessionsTable.SESSION_START + ">=(" + selectLastDateToInclude + ')' +
-                AND + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_UUID + "=?";
-
-        return new QueryStatement<List<Session>>(sql, limit) {
+        return new QueryStatement<Long>(sql, limit) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
                 statement.setInt(2, limit);
-                statement.setString(3, serverUUID.toString());
             }
 
             @Override
-            public List<Session> processResults(ResultSet set) throws SQLException {
-                return extractDataFromSessionSelectStatement(set);
+            public Long processResults(ResultSet set) throws SQLException {
+                Long last = null;
+                while (set.next()) {
+                    last = set.getLong(SessionsTable.SESSION_START);
+                }
+                return last;
             }
+        };
+    }
+
+    public static Query<List<Session>> fetchLatestSessionsOfServer(UUID serverUUID, int limit) {
+        String sql = SELECT_SESSIONS_STATEMENT +
+                WHERE + "s." + SessionsTable.SERVER_UUID + "=?" +
+                AND + "s." + SessionsTable.SESSION_START + ">=?" +
+                ORDER_BY_SESSION_START_DESC;
+
+        return db -> {
+            Long start = db.query(fetchLatestSessionStartLimitForServer(serverUUID, limit));
+            return db.query(new QueryStatement<List<Session>>(sql) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setString(1, serverUUID.toString());
+                    statement.setLong(2, start != null ? start : 0L);
+                }
+
+                @Override
+                public List<Session> processResults(ResultSet set) throws SQLException {
+                    return extractDataFromSessionSelectStatement(set);
+                }
+            });
         };
     }
 
