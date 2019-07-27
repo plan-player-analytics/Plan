@@ -16,8 +16,10 @@
  */
 package com.djrapitops.plan.system.export;
 
+import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.info.connection.ConnectionSystem;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -35,31 +37,34 @@ import javax.inject.Singleton;
 public class ExportSystem implements SubSystem {
 
     private final PlanConfig config;
+    private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final Processing processing;
     private final HtmlExport htmlExport;
-    private final ConnectionSystem connectionSystem;
 
     @Inject
     public ExportSystem(
             PlanConfig config,
+            DBSystem dbSystem,
             ServerInfo serverInfo,
             Processing processing,
-            HtmlExport htmlExport,
-            ConnectionSystem connectionSystem
+            HtmlExport htmlExport
     ) {
         this.config = config;
+        this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.processing = processing;
         this.htmlExport = htmlExport;
-        this.connectionSystem = connectionSystem;
     }
 
     @Override
     public void enable() {
-        if (serverInfo.getServer().isNotProxy() && connectionSystem.isServerAvailable()) {
+        Database database = dbSystem.getDatabase();
+        boolean hasProxy = database.query(ServerQueries.fetchProxyServerInformation()).isPresent();
+        if (serverInfo.getServer().isNotProxy() && hasProxy) {
             return;
         }
+
         if (config.isTrue(ExportSettings.JS_AND_CSS)) {
             processing.submitNonCritical(htmlExport::exportJs);
             processing.submitNonCritical(htmlExport::exportCss);

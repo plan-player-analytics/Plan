@@ -16,12 +16,14 @@
  */
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.system.info.connection.ConnectionSystem;
+import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -41,14 +43,16 @@ import java.util.Arrays;
 public class ManageRawDataCommand extends CommandNode {
 
     private final Locale locale;
-    private final ConnectionSystem connectionSystem;
+    private final DBSystem dbSystem;
+    private final WebServer webServer;
 
     @Inject
-    public ManageRawDataCommand(Locale locale, ConnectionSystem connectionSystem) {
+    public ManageRawDataCommand(Locale locale, DBSystem dbSystem, WebServer webServer) {
         super("raw", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
 
         this.locale = locale;
-        this.connectionSystem = connectionSystem;
+        this.dbSystem = dbSystem;
+        this.webServer = webServer;
 
         setArguments("<player>");
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_RAW_DATA));
@@ -64,7 +68,8 @@ public class ManageRawDataCommand extends CommandNode {
 
         sender.sendMessage(locale.getString(CommandLang.HEADER_INSPECT, playerName));
         // Link
-        String url = connectionSystem.getMainAddress() + "/player/" + playerName + "/raw";
+        String address = PlanSystem.getMainAddress(webServer, dbSystem);
+        String url = address + "/player/" + playerName + "/raw";
         String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
         boolean console = !CommandUtils.isPlayer(sender);
         if (console) {
