@@ -26,7 +26,6 @@ import java.util.UUID;
 public enum PageId {
 
     SERVER("serverPage:"),
-    RAW_SERVER("rawServer:"),
     PLAYER("playerPage:"),
     RAW_PLAYER("rawPlayer:"),
     PLAYERS("playersPage"),
@@ -38,11 +37,7 @@ public enum PageId {
     JS("js:"),
     CSS("css:"),
 
-    FAVICON("Favicon"),
-
-    @Deprecated
-    PLAYER_PLUGINS_TAB("playerPluginsTab:"),
-    NETWORK_CONTENT("networkContent");
+    FAVICON("Favicon");
 
     private final String id;
 
