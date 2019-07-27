@@ -22,8 +22,6 @@ import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.ProxyDBSystem;
 import com.djrapitops.plan.system.importing.EmptyImportSystem;
 import com.djrapitops.plan.system.importing.ImportSystem;
-import com.djrapitops.plan.system.info.connection.ConnectionSystem;
-import com.djrapitops.plan.system.info.connection.ProxyConnectionSystem;
 import com.djrapitops.plan.system.settings.ConfigSystem;
 import com.djrapitops.plan.system.settings.ProxyConfigSystem;
 import dagger.Binds;
@@ -48,8 +46,5 @@ public interface ProxySuperClassBindingModule {
 
     @Binds
     ImportSystem bindImportSystem(EmptyImportSystem emptyImportSystem);
-
-    @Binds
-    ConnectionSystem bindServerConnectionSystem(ProxyConnectionSystem connectionSystem);
 
 }

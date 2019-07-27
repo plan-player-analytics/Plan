@@ -16,12 +16,14 @@
  */
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.system.info.connection.ConnectionSystem;
+import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
@@ -37,14 +39,20 @@ import javax.inject.Inject;
 public class ListPlayersCommand extends CommandNode {
 
     private final Locale locale;
-    private final ConnectionSystem connectionSystem;
+    private final DBSystem dbSystem;
+    private final WebServer webServer;
 
     @Inject
-    public ListPlayersCommand(Locale locale, ConnectionSystem connectionSystem) {
+    public ListPlayersCommand(
+            Locale locale,
+            DBSystem dbSystem,
+            WebServer webServer
+    ) {
         super("players|pl|playerlist|list", Permissions.INSPECT_OTHER.getPermission(), CommandType.CONSOLE);
 
         this.locale = locale;
-        this.connectionSystem = connectionSystem;
+        this.dbSystem = dbSystem;
+        this.webServer = webServer;
 
         setShortHelp(locale.getString(CmdHelpLang.PLAYERS));
         setInDepthHelp(locale.getArray(DeepHelpLang.PLAYERS));
@@ -59,7 +67,8 @@ public class ListPlayersCommand extends CommandNode {
         sender.sendMessage(locale.getString(CommandLang.HEADER_PLAYERS));
 
         // Link
-        String url = connectionSystem.getMainAddress() + "/players/";
+        String address = PlanSystem.getMainAddress(webServer, dbSystem);
+        String url = address + "/players/";
         String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
         boolean console = !CommandUtils.isPlayer(sender);
         if (console) {

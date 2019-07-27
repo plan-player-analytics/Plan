@@ -94,7 +94,7 @@ public class ResponseHandler extends TreePageHandler {
     public Response getResponse(Request request) {
         try {
             return tryToGetResponse(request);
-        } catch (NoServersException | NotFoundException e) {
+        } catch (NotFoundException e) {
             return responseFactory.notFound404(e.getMessage());
         } catch (WebUserAuthException e) {
             return responseFactory.basicAuthFail(e);

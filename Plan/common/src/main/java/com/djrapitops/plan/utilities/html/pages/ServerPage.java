@@ -21,7 +21,6 @@ import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.containers.RawDataContainer;
 import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.system.file.PlanFiles;
-import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DisplaySettings;
@@ -45,7 +44,6 @@ public class ServerPage implements Page {
     private final Server server;
     private PlanConfig config;
     private Theme theme;
-    private final ConnectionSystem connectionSystem;
     private final VersionCheckSystem versionCheckSystem;
     private final PlanFiles files;
     private Formatters formatters;
@@ -54,7 +52,6 @@ public class ServerPage implements Page {
             Server server,
             PlanConfig config,
             Theme theme,
-            ConnectionSystem connectionSystem,
             VersionCheckSystem versionCheckSystem,
             PlanFiles files,
             Formatters formatters
@@ -62,7 +59,6 @@ public class ServerPage implements Page {
         this.server = server;
         this.config = config;
         this.theme = theme;
-        this.connectionSystem = connectionSystem;
         this.versionCheckSystem = versionCheckSystem;
         this.files = files;
         this.formatters = formatters;
@@ -113,7 +109,7 @@ public class ServerPage implements Page {
                 AVG_PING_COLOR, MAX_PING_COLOR, MIN_PING_COLOR
         );
 
-        if (connectionSystem.isServerAvailable()) {
+        if (server.isProxy()) {
             placeholderReplacer.put("backButton", "<li><a title=\"to Network page\" href=\"/network\"><i class=\"material-icons\">arrow_back</i><i class=\"material-icons\">cloud</i></a></li>");
         } else {
             placeholderReplacer.put("backButton", "");

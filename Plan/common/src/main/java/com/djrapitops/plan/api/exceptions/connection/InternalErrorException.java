@@ -23,7 +23,7 @@ import com.djrapitops.plan.system.webserver.response.ResponseCode;
  *
  * @author Rsl1122
  */
-public class InternalErrorException extends WebFailException {
+public class InternalErrorException extends WebException {
     public InternalErrorException() {
         super("Internal Error occurred on receiving server", ResponseCode.INTERNAL_ERROR);
     }
