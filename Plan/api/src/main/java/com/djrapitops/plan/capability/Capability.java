@@ -50,7 +50,11 @@ enum Capability {
      * <p>
      * When the parameter is set to {@code true} the value from this Provider is shown on a table alongside players.
      */
-    DATA_EXTENSION_SHOW_IN_PLAYER_TABLE;
+    DATA_EXTENSION_SHOW_IN_PLAYER_TABLE,
+    /**
+     *
+     */
+    QUERY_API;
 
     static Optional<Capability> getByName(String name) {
         if (name == null) {
