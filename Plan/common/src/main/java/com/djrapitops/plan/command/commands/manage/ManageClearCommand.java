@@ -21,6 +21,7 @@ import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.transactions.commands.RemoveEverythingTransaction;
+import com.djrapitops.plan.query.QueryServiceImplementation;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -52,6 +53,7 @@ public class ManageClearCommand extends CommandNode {
     private final Locale locale;
     private final Processing processing;
     private final DBSystem dbSystem;
+    private final QueryServiceImplementation queryService;
     private final ErrorHandler errorHandler;
 
     @Inject
@@ -59,6 +61,7 @@ public class ManageClearCommand extends CommandNode {
             Locale locale,
             Processing processing,
             DBSystem dbSystem,
+            QueryServiceImplementation queryService,
             ErrorHandler errorHandler
     ) {
         super("clear", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
@@ -66,6 +69,7 @@ public class ManageClearCommand extends CommandNode {
         this.locale = locale;
         this.processing = processing;
         this.dbSystem = dbSystem;
+        this.queryService = queryService;
         this.errorHandler = errorHandler;
 
         setArguments("<DB>", "[-a]");
@@ -104,6 +108,7 @@ public class ManageClearCommand extends CommandNode {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
                 database.executeTransaction(new RemoveEverythingTransaction())
                         .get(); // Wait for completion
+                queryService.dataCleared();
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();

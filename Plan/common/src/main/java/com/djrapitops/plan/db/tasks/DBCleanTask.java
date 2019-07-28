@@ -26,6 +26,7 @@ import com.djrapitops.plan.db.access.transactions.init.RemoveOldSampledDataTrans
 import com.djrapitops.plan.db.sql.tables.SessionsTable;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalPlayerResultsTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalServerResultsTransaction;
+import com.djrapitops.plan.query.QueryServiceImplementation;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
@@ -58,6 +59,7 @@ public class DBCleanTask extends AbsRunnable {
     private final Locale locale;
     private final DBSystem dbSystem;
     private final PlanConfig config;
+    private final QueryServiceImplementation queryService;
     private final ServerInfo serverInfo;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
@@ -67,6 +69,7 @@ public class DBCleanTask extends AbsRunnable {
             PlanConfig config,
             Locale locale,
             DBSystem dbSystem,
+            QueryServiceImplementation queryService,
             ServerInfo serverInfo,
             PluginLogger logger,
             ErrorHandler errorHandler
@@ -75,6 +78,7 @@ public class DBCleanTask extends AbsRunnable {
 
         this.dbSystem = dbSystem;
         this.config = config;
+        this.queryService = queryService;
         this.serverInfo = serverInfo;
         this.logger = logger;
         this.errorHandler = errorHandler;
@@ -110,8 +114,9 @@ public class DBCleanTask extends AbsRunnable {
         long keepActiveAfter = now - config.get(TimeSettings.DELETE_INACTIVE_PLAYERS_AFTER);
 
         List<UUID> inactivePlayers = database.query(fetchInactivePlayerUUIDs(keepActiveAfter));
-        for (UUID uuid : inactivePlayers) {
-            database.executeTransaction(new RemovePlayerTransaction(uuid));
+        for (UUID playerUUID : inactivePlayers) {
+            database.executeTransaction(new RemovePlayerTransaction(playerUUID));
+            queryService.playerRemoved(playerUUID);
         }
         return inactivePlayers.size();
     }

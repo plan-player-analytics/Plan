@@ -80,7 +80,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
         ExtensionService.ExtensionServiceHolder.set(this);
     }
 
-    public void enable() {
+    public void register() {
         extensionRegister.registerBuiltInExtensions();
     }
 

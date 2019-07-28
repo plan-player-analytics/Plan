@@ -20,6 +20,7 @@ import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
 import com.djrapitops.plan.db.access.transactions.commands.RemovePlayerTransaction;
+import com.djrapitops.plan.query.QueryServiceImplementation;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -55,6 +56,7 @@ public class ManageRemoveCommand extends CommandNode {
     private final Locale locale;
     private final Processing processing;
     private final DBSystem dbSystem;
+    private final QueryServiceImplementation queryService;
     private final UUIDUtility uuidUtility;
     private final ErrorHandler errorHandler;
 
@@ -63,6 +65,7 @@ public class ManageRemoveCommand extends CommandNode {
             Locale locale,
             Processing processing,
             DBSystem dbSystem,
+            QueryServiceImplementation queryService,
             UUIDUtility uuidUtility,
             ErrorHandler errorHandler
     ) {
@@ -71,6 +74,7 @@ public class ManageRemoveCommand extends CommandNode {
         this.locale = locale;
         this.processing = processing;
         this.dbSystem = dbSystem;
+        this.queryService = queryService;
         this.uuidUtility = uuidUtility;
         this.errorHandler = errorHandler;
 
@@ -122,6 +126,7 @@ public class ManageRemoveCommand extends CommandNode {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
                 db.executeTransaction(new RemovePlayerTransaction(playerUUID))
                         .get(); // Wait for completion
+                queryService.playerRemoved(playerUUID);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
