@@ -60,6 +60,22 @@ public class ExtensionRegister {
         new VaultExtensionFactory().createExtension().ifPresent(extensionService::register);
     }
 
+    public void registerBukkitExtensions() {
+        // No need to catch exceptions here,
+        // registerBuiltInExtensions method will not be called unless Plan has enabled properly
+        ExtensionService extensionService = ExtensionService.getInstance();
+
+        new ViaVersionBukkitExtensionFactory().createExtension().ifPresent(extensionService::register);
+    }
+
+    public void registerBungeeExtensions() {
+        // No need to catch exceptions here,
+        // registerBuiltInExtensions method will not be called unless Plan has enabled properly
+        ExtensionService extensionService = ExtensionService.getInstance();
+
+        new ViaVersionBungeeExtensionFactory().createExtension().ifPresent(extensionService::register);
+    }
+
     private void registerEssentialsExtension(ExtensionService extensionService) {
         EssentialsExtensionFactory essentials = new EssentialsExtensionFactory();
         essentials.createExtension()

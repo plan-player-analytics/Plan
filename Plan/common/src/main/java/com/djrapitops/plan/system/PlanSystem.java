@@ -144,8 +144,8 @@ public class PlanSystem implements SubSystem {
                 taskSystem,
                 hookHandler
         );
-        extensionService.register();
         queryService.register();
+        extensionService.register();
         enabled = true;
     }
 
