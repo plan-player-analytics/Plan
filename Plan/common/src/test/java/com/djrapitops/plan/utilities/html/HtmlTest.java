@@ -53,4 +53,12 @@ class HtmlTest {
         String result = Html.swapColorCodesToSpan(testString);
         assertEquals(expected, result);
     }
+
+    @Test
+    void swapColorCodesDoesNotReplaceNonColors() {
+        String testString = "1test§2yes";
+        String expected = "1test" + Html.COLOR_2.parse() + "yes</span>";
+        String result = Html.swapColorCodesToSpan(testString);
+        assertEquals(expected, result);
+    }
 }

@@ -135,10 +135,17 @@ public enum Html {
 
         StringBuilder result = new StringBuilder(string.length());
         String[] split = string.split("§");
+        // Skip first part if it does not start with §
+        boolean skipFirst = !string.startsWith("§");
 
         int placedSpans = 0;
         for (String part : split) {
             if (part.isEmpty()) {
+                continue;
+            }
+            if (skipFirst) {
+                result.append(part);
+                skipFirst = false;
                 continue;
             }
 
