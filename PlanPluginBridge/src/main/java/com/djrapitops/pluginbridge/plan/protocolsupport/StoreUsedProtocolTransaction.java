@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.pluginbridge.plan.viaversion;
+package com.djrapitops.pluginbridge.plan.protocolsupport;
 
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.Executable;
@@ -25,7 +25,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 import static com.djrapitops.plan.db.sql.parsing.Sql.WHERE;
-import static com.djrapitops.pluginbridge.plan.viaversion.ProtocolTable.*;
+import static com.djrapitops.pluginbridge.plan.protocolsupport.ProtocolTable.*;
 
 /**
  * Transaction to store used version protocol.

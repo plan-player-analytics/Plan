@@ -17,7 +17,6 @@
 package com.djrapitops.pluginbridge.plan.protocolsupport;
 
 import com.djrapitops.plan.db.Database;
-import com.djrapitops.pluginbridge.plan.viaversion.StoreUsedProtocolTransaction;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

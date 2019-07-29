@@ -22,7 +22,6 @@ import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.pluginbridge.plan.Hook;
-import com.djrapitops.pluginbridge.plan.viaversion.ProtocolTable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

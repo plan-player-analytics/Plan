@@ -25,7 +25,6 @@ import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
-import com.djrapitops.pluginbridge.plan.viaversion.ProtocolTable;
 import protocolsupport.api.ProtocolVersion;
 
 import java.util.Collection;
