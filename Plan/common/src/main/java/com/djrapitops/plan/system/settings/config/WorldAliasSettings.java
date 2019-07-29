@@ -157,8 +157,9 @@ public class WorldAliasSettings {
         }
         WorldTimes worldTimes = session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes());
         if (!session.supports(SessionKeys.END)) {
-            String currentWorld = worldTimes.getCurrentWorld();
-            return "Current: " + (aliases.contains(currentWorld) ? aliases.getString(currentWorld) : currentWorld);
+            return worldTimes.getCurrentWorld()
+                    .map(currentWorld -> "Current: " + (aliases.contains(currentWorld) ? aliases.getString(currentWorld) : currentWorld))
+                    .orElse("Current: Unavailable");
         }
 
         Map<String, Long> playtimePerAlias = getPlaytimePerAlias(worldTimes);
