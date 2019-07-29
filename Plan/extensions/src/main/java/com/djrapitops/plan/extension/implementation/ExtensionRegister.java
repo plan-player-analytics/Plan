@@ -41,6 +41,7 @@ public class ExtensionRegister {
         // registerBuiltInExtensions method will not be called unless Plan has enabled properly
         ExtensionService extensionService = ExtensionService.getInstance();
 
+        new AACExtensionFactory().createExtension().ifPresent(extensionService::register);
         new AdvancedAchievementsExtensionFactory().createExtension().ifPresent(extensionService::register);
         new AdvancedBanExtensionFactory().createExtension().ifPresent(extensionService::register);
         new ASkyBlockExtensionFactory().createExtension().ifPresent(extensionService::register);
