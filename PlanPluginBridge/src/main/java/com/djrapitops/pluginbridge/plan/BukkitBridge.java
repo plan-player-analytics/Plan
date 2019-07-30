@@ -23,7 +23,6 @@ import com.djrapitops.pluginbridge.plan.factions.FactionsHook;
 import com.djrapitops.pluginbridge.plan.jobs.JobsHook;
 import com.djrapitops.pluginbridge.plan.litebans.LiteBansBukkitHook;
 import com.djrapitops.pluginbridge.plan.luckperms.LuckPermsHook;
-import com.djrapitops.pluginbridge.plan.protocolsupport.ProtocolSupportHook;
 import com.djrapitops.pluginbridge.plan.towny.TownyHook;
 
 import javax.inject.Inject;
@@ -42,7 +41,6 @@ public class BukkitBridge extends AbstractBridge {
     private final JobsHook jobsHook;
     private final LiteBansBukkitHook liteBansHook;
     private final LuckPermsHook luckPermsHook;
-    private final ProtocolSupportHook protocolSupportHook;
     private final TownyHook townyHook;
 
     @Inject
@@ -54,7 +52,6 @@ public class BukkitBridge extends AbstractBridge {
             JobsHook jobsHook,
             LiteBansBukkitHook liteBansHook,
             LuckPermsHook luckPermsHook,
-            ProtocolSupportHook protocolSupportHook,
             TownyHook townyHook
     ) {
         super(config, errorHandler);
@@ -63,7 +60,6 @@ public class BukkitBridge extends AbstractBridge {
         this.jobsHook = jobsHook;
         this.liteBansHook = liteBansHook;
         this.luckPermsHook = luckPermsHook;
-        this.protocolSupportHook = protocolSupportHook;
         this.townyHook = townyHook;
     }
 
@@ -75,7 +71,6 @@ public class BukkitBridge extends AbstractBridge {
                 jobsHook,
                 liteBansHook,
                 luckPermsHook,
-                protocolSupportHook,
                 townyHook,
         };
     }
