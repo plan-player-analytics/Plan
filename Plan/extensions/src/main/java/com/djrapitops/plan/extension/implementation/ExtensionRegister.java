@@ -55,6 +55,7 @@ public class ExtensionRegister {
         new McMMOExtensionFactory().createExtension().ifPresent(extensionService::register);
         registerMinigameLibExtensions(extensionService);
         new NucleusExtensionFactory().createExtension().ifPresent(extensionService::register);
+        new ProtocolSupportExtensionFactory().createExtension().ifPresent(extensionService::register);
         new RedProtectExtensionFactory().createExtension().ifPresent(extensionService::register);
         new SpongeEconomyExtensionFactory().createExtension().ifPresent(extensionService::register);
         new SuperbVoteExtensionFactory().createExtension().ifPresent(extensionService::register);
