@@ -124,9 +124,9 @@ public class ManageRemoveCommand extends CommandNode {
                 }
 
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
+                queryService.playerRemoved(playerUUID);
                 db.executeTransaction(new RemovePlayerTransaction(playerUUID))
                         .get(); // Wait for completion
-                queryService.playerRemoved(playerUUID);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();

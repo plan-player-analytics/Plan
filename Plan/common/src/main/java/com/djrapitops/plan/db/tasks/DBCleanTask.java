@@ -115,8 +115,8 @@ public class DBCleanTask extends AbsRunnable {
 
         List<UUID> inactivePlayers = database.query(fetchInactivePlayerUUIDs(keepActiveAfter));
         for (UUID playerUUID : inactivePlayers) {
-            database.executeTransaction(new RemovePlayerTransaction(playerUUID));
             queryService.playerRemoved(playerUUID);
+            database.executeTransaction(new RemovePlayerTransaction(playerUUID));
         }
         return inactivePlayers.size();
     }
