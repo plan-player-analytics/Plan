@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.DBType;
@@ -50,6 +51,7 @@ import java.util.concurrent.ExecutionException;
 @Singleton
 public class ManageClearCommand extends CommandNode {
 
+    private final PlanPlugin plugin;
     private final Locale locale;
     private final Processing processing;
     private final DBSystem dbSystem;
@@ -58,6 +60,7 @@ public class ManageClearCommand extends CommandNode {
 
     @Inject
     public ManageClearCommand(
+            PlanPlugin plugin,
             Locale locale,
             Processing processing,
             DBSystem dbSystem,
@@ -65,6 +68,7 @@ public class ManageClearCommand extends CommandNode {
             ErrorHandler errorHandler
     ) {
         super("clear", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
+        this.plugin = plugin;
 
         this.locale = locale;
         this.processing = processing;
@@ -110,6 +114,7 @@ public class ManageClearCommand extends CommandNode {
                         .get(); // Wait for completion
                 queryService.dataCleared();
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
+                reloadPlugin(sender);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             } catch (DBOpException | ExecutionException e) {
@@ -117,5 +122,15 @@ public class ManageClearCommand extends CommandNode {
                 errorHandler.log(L.ERROR, this.getClass(), e);
             }
         });
+    }
+
+    private void reloadPlugin(Sender sender) {
+        try {
+            plugin.reloadPlugin(true);
+        } catch (Exception e) {
+            errorHandler.log(L.CRITICAL, this.getClass(), e);
+            sender.sendMessage(locale.getString(CommandLang.RELOAD_FAILED));
+        }
+        sender.sendMessage(locale.getString(CommandLang.RELOAD_COMPLETE));
     }
 }
