@@ -73,7 +73,7 @@ public final class ExtensionExtractor {
     }
 
     private Method[] getMethods() {
-        return extension.getClass().getDeclaredMethods();
+        return extension.getClass().getMethods();
     }
 
     public void extractAnnotationInformation() {
@@ -92,7 +92,9 @@ public final class ExtensionExtractor {
         methodAnnotations = new MethodAnnotations();
 
         for (Method method : getMethods()) {
-            if (!Modifier.isPublic(method.getModifiers())) {
+            int modifiers = method.getModifiers();
+            if (!Modifier.isPublic(modifiers)
+                    || Modifier.isStatic(modifiers)) {
                 continue;
             }
 
