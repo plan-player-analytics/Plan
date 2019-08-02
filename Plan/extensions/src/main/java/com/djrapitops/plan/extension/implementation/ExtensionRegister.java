@@ -22,6 +22,7 @@ import com.djrapitops.plan.extension.ExtensionService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.function.Consumer;
 
 /**
  * In charge of registering built in {@link com.djrapitops.plan.extension.DataExtension} implementations.
@@ -41,23 +42,43 @@ public class ExtensionRegister {
         // registerBuiltInExtensions method will not be called unless Plan has enabled properly
         ExtensionService extensionService = ExtensionService.getInstance();
 
-        new AdvancedAchievementsExtensionFactory().createExtension().ifPresent(extensionService::register);
-        new AdvancedBanExtensionFactory().createExtension().ifPresent(extensionService::register);
-        new ASkyBlockExtensionFactory().createExtension().ifPresent(extensionService::register);
-        new BanManagerExtensionFactory().createExtension().ifPresent(extensionService::register);
-        new CoreProtectExtensionFactory().createExtension().ifPresent(extensionService::register);
-        new DiscordSRVExtensionFactory().createExtension().ifPresent(extensionService::register);
+        Consumer<DataExtension> register = extensionService::register;
+        new AACExtensionFactory().createExtension().ifPresent(register);
+        new AdvancedAchievementsExtensionFactory().createExtension().ifPresent(register);
+        new AdvancedBanExtensionFactory().createExtension().ifPresent(register);
+        new ASkyBlockExtensionFactory().createExtension().ifPresent(register);
+        new BanManagerExtensionFactory().createExtension().ifPresent(register);
+        new CoreProtectExtensionFactory().createExtension().ifPresent(register);
+        new DiscordSRVExtensionFactory().createExtension().ifPresent(register);
         registerEssentialsExtension(extensionService);
-        new GriefPreventionExtensionFactory().createExtension().ifPresent(extensionService::register);
-        new GriefPreventionSpongeExtensionFactory().createExtension().ifPresent(extensionService::register);
-        new GriefPreventionPlusExtensionFactory().createExtension().ifPresent(extensionService::register);
-        new McMMOExtensionFactory().createExtension().ifPresent(extensionService::register);
+        new GriefPreventionExtensionFactory().createExtension().ifPresent(register);
+        new GriefPreventionSpongeExtensionFactory().createExtension().ifPresent(register);
+        new GriefPreventionPlusExtensionFactory().createExtension().ifPresent(register);
+        new McMMOExtensionFactory().createExtension().ifPresent(register);
         registerMinigameLibExtensions(extensionService);
-        new NucleusExtensionFactory().createExtension().ifPresent(extensionService::register);
-        new RedProtectExtensionFactory().createExtension().ifPresent(extensionService::register);
-        new SpongeEconomyExtensionFactory().createExtension().ifPresent(extensionService::register);
-        new SuperbVoteExtensionFactory().createExtension().ifPresent(extensionService::register);
-        new VaultExtensionFactory().createExtension().ifPresent(extensionService::register);
+        new NucleusExtensionFactory().createExtension().ifPresent(register);
+        new NuVotifierExtensionFactory().createExtension().ifPresent(register);
+        new ProtocolSupportExtensionFactory().createExtension().ifPresent(register);
+        new RedProtectExtensionFactory().createExtension().ifPresent(register);
+        new SpongeEconomyExtensionFactory().createExtension().ifPresent(register);
+        new SuperbVoteExtensionFactory().createExtension().ifPresent(register);
+        new VaultExtensionFactory().createExtension().ifPresent(register);
+    }
+
+    public void registerBukkitExtensions() {
+        // No need to catch exceptions here,
+        // registerBuiltInExtensions method will not be called unless Plan has enabled properly
+        ExtensionService extensionService = ExtensionService.getInstance();
+
+        new ViaVersionBukkitExtensionFactory().createExtension().ifPresent(extensionService::register);
+    }
+
+    public void registerBungeeExtensions() {
+        // No need to catch exceptions here,
+        // registerBuiltInExtensions method will not be called unless Plan has enabled properly
+        ExtensionService extensionService = ExtensionService.getInstance();
+
+        new ViaVersionBungeeExtensionFactory().createExtension().ifPresent(extensionService::register);
     }
 
     private void registerEssentialsExtension(ExtensionService extensionService) {

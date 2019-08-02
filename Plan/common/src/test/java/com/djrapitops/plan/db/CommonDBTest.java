@@ -67,6 +67,7 @@ import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionSer
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalPlayerResultsTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalServerResultsTransaction;
 import com.djrapitops.plan.extension.table.Table;
+import com.djrapitops.plan.query.QueryServiceImplementation;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
@@ -629,6 +630,7 @@ public abstract class CommonDBTest {
                 system.getConfigSystem().getConfig(),
                 new Locale(),
                 system.getDatabaseSystem(),
+                new QueryServiceImplementation(system.getDatabaseSystem(), system.getServerInfo()),
                 system.getServerInfo(),
                 new TestPluginLogger(),
                 new ConsoleErrorLogger(new TestPluginLogger())

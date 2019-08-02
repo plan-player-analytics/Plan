@@ -27,6 +27,7 @@ import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -80,8 +81,10 @@ public class ExtensionServiceImplementation implements ExtensionService {
         ExtensionService.ExtensionServiceHolder.set(this);
     }
 
-    public void enable() {
+    public void register() {
         extensionRegister.registerBuiltInExtensions();
+        if (Check.isBukkitAvailable()) extensionRegister.registerBukkitExtensions();
+        if (Check.isBungeeAvailable()) extensionRegister.registerBungeeExtensions();
     }
 
     @Override
@@ -156,7 +159,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
             // Try again
             updatePlayerValues(gatherer, playerUUID, playerName, event);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
-            logger.warn(gatherer.getPluginName() + " ran into unexpected error (please report this)" + unexpectedError +
+            logger.warn("Encountered unexpected error with " + gatherer.getPluginName() + " Extension (please report this): " + unexpectedError +
                     " (but failed safely) when updating value for '" + playerName +
                     "', stack trace to follow:");
             errorHandler.log(L.WARN, gatherer.getClass(), unexpectedError);
@@ -166,8 +169,8 @@ public class ExtensionServiceImplementation implements ExtensionService {
     private void logFailure(String playerName, DataExtensionMethodCallException methodCallFailed) {
         Throwable cause = methodCallFailed.getCause();
         String causeName = cause.getClass().getSimpleName();
-        logger.warn(methodCallFailed.getPluginName() + " ran into " + causeName +
-                " (but failed safely) when updating value for '" + playerName +
+        logger.warn("Encountered " + causeName + " with " + methodCallFailed.getPluginName() + " Extension (please report this)" +
+                " (failed safely) when updating value for '" + playerName +
                 "', the method was disabled temporarily (won't be called until next Plan reload)" +
                 ", stack trace to follow:");
         errorHandler.log(L.WARN, getClass(), cause);
@@ -195,8 +198,8 @@ public class ExtensionServiceImplementation implements ExtensionService {
             // Try again
             updateServerValues(gatherer, event);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
-            logger.warn(gatherer.getPluginName() + " ran into unexpected error (please report this)" + unexpectedError +
-                    " (but failed safely) when updating value for server, stack trace to follow:");
+            logger.warn("Encountered unexpected error with " + gatherer.getPluginName() + " Extension (please report this): " + unexpectedError +
+                    " (failed safely) when updating value for server, stack trace to follow:");
             errorHandler.log(L.WARN, gatherer.getClass(), unexpectedError);
         }
     }

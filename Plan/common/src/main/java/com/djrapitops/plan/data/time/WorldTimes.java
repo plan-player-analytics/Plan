@@ -19,6 +19,7 @@ package com.djrapitops.plan.data.time;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Class that tracks the time spent in each World based on GMTimes.
@@ -171,8 +172,8 @@ public class WorldTimes {
         return b.toString();
     }
 
-    public String getCurrentWorld() {
-        return currentWorld;
+    public Optional<String> getCurrentWorld() {
+        return Optional.ofNullable(currentWorld);
     }
 
     public void add(WorldTimes toAdd) {

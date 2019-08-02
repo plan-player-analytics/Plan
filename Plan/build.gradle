@@ -12,7 +12,7 @@ allprojects {
     wrapper.gradleVersion = "5.0"
 
     group "com.djrapitops"
-    version "4.8.8"
+    version "4.9.0"
 
     test {
         useJUnitPlatform()
@@ -43,11 +43,11 @@ subprojects {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
-    ext.daggerVersion = "2.23.2"
-    ext.daggerCompilerVersion = "2.23.2"
+    ext.daggerVersion = "2.24"
+    ext.daggerCompilerVersion = "2.24"
 
     ext.abstractPluginFrameworkVersion = "3.4.1"
-    ext.planPluginBridgeVersion = "4.8.8-R0.2"
+    ext.planPluginBridgeVersion = "4.9.0-R0.3"
 
     ext.bukkitVersion = "1.12.2-R0.1-SNAPSHOT"
     ext.spigotVersion = "1.12.2-R0.1-SNAPSHOT"
