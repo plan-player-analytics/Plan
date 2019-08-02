@@ -82,9 +82,14 @@ public class ExtensionServiceImplementation implements ExtensionService {
     }
 
     public void register() {
-        extensionRegister.registerBuiltInExtensions();
-        if (Check.isBukkitAvailable()) extensionRegister.registerBukkitExtensions();
-        if (Check.isBungeeAvailable()) extensionRegister.registerBungeeExtensions();
+        try {
+            extensionRegister.registerBuiltInExtensions();
+            if (Check.isBukkitAvailable()) extensionRegister.registerBukkitExtensions();
+            if (Check.isBungeeAvailable()) extensionRegister.registerBungeeExtensions();
+        } catch (IllegalStateException failedToRegisterOne) {
+            logger.warn("One or more extensions failed to register:");
+            errorHandler.log(L.WARN, this.getClass(), failedToRegisterOne);
+        }
     }
 
     @Override
@@ -104,7 +109,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
 
         processing.submitNonCritical(() -> updateServerValues(gatherer, CallEvents.SERVER_EXTENSION_REGISTER));
 
-        logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, pluginName + " extension registered.");
+        logger.info("Registered extension: " + pluginName);
         return Optional.of(new CallerImplementation(gatherer, this, processing));
     }
 
