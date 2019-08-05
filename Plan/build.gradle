@@ -1,3 +1,11 @@
+// Aggregate Javadocs
+buildscript {
+    repositories { jcenter() }
+    dependencies {
+        classpath 'com.netflix.nebula:gradle-aggregate-javadocs-plugin:2.2.+'
+    }
+}
+
 plugins {
     id "java"
     id "jacoco"
@@ -7,6 +15,8 @@ plugins {
     id "net.ltgt.apt-idea" version "0.21"
     id "com.github.johnrengelman.shadow" version "5.1.0"
 }
+
+apply plugin: 'nebula-aggregate-javadocs'
 
 allprojects {
     wrapper.gradleVersion = "5.0"
