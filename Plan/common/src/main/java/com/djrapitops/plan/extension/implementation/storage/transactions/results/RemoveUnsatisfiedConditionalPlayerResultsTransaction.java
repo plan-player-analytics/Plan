@@ -35,7 +35,7 @@ import static com.djrapitops.plan.db.sql.parsing.Sql.*;
  * <p>
  * How it works:
  * - Select all fulfilled conditions for all players (conditionName when true and not_conditionName when false)
- * - Left join with player value & provider tables when uuids match, and when condition matches a condition in the query above.
+ * - Left join with player value and provider tables when uuids match, and when condition matches a condition in the query above.
  * - Filter the join query for values where the condition did not match any provided condition in the join (Is null)
  * - Delete all player values with IDs that are returned by the left join query after filtering
  *

@@ -21,7 +21,7 @@ package com.djrapitops.plan.extension;
  * <p>
  * This Exception will not cause Plan to "yell" about the exception.
  * <p>
- * Requires {@link com.djrapitops.plan.capability.Capability#DATA_EXTENSION_NOT_READY_EXCEPTION}.
+ * Requires Capability#DATA_EXTENSION_NOT_READY_EXCEPTION.
  *
  * @author Rsl1122
  */
