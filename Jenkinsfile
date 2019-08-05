@@ -15,5 +15,16 @@ pipeline {
                 }
             }
         }
+        stage('SonarQube analysis') {
+            steps {
+                dir("Plan") {
+                    script {
+                        withSonarQubeEnv() {
+                            sh './gradlew sonarqube'
+                        }
+                    }
+                }
+            }
+        }
     }
 }
