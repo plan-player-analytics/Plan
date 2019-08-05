@@ -91,7 +91,7 @@ public interface QueryService {
      * SQL for removing this player's data should be executed when this occurs.
      * <p>
      * Example usage:
-     * subscribeToPlayerRemoveEvent(playerUUID -> { do stuff })
+     * {@code subscribeToPlayerRemoveEvent(playerUUID -> { do stuff })}
      *
      * @param eventListener Functional interface that is called on the event.
      */
@@ -103,7 +103,7 @@ public interface QueryService {
      * SQL for removing all extra tables (and data) should be performed
      * <p>
      * Example usage:
-     * subscribeDataClearEvent(() -> { do stuff })
+     * {@code subscribeDataClearEvent(() -> { do stuff })}
      *
      * @param eventListener Functional interface that is called on the event.
      */
