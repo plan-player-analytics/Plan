@@ -20,7 +20,7 @@ pipeline {
                 dir("Plan") {
                     script {
                         withSonarQubeEnv() {
-                            sh './gradlew sonarqube'
+                            sh './gradlew sonarqube -Dsonar.organization=player-analytics-plan'
                         }
                     }
                 }
