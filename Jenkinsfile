@@ -15,6 +15,15 @@ pipeline {
                 }
             }
         }
+        stage('Checkstyle') {
+            steps {
+                dir("Plan") {
+                    script {
+                        sh './gradlew checkstyleMain checkstyleTest'
+                    }
+                }
+            }
+        }
         stage('SonarQube analysis') {
             steps {
                 dir("Plan") {
