@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class RawDataResponse extends JSONResponse<Map<String, Object>> {
+public class RawDataResponse extends JSONResponse {
 
     public RawDataResponse(DataContainer dataContainer) {
         super(mapToNormalMap(dataContainer));

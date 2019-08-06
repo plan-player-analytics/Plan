@@ -69,11 +69,11 @@ public class GraphsJSONHandler implements PageHandler {
             case "serverCalendar":
                 return new JSONResponse(graphJSON.serverCalendarJSON(serverUUID));
             case "worldPie":
-                return new JSONResponse<>(graphJSON.serverWorldPieJSONAsMap(serverUUID));
+                return new JSONResponse(graphJSON.serverWorldPieJSONAsMap(serverUUID));
             case "activity":
-                return new JSONResponse<>(graphJSON.activityGraphsJSONAsMap(serverUUID));
+                return new JSONResponse(graphJSON.activityGraphsJSONAsMap(serverUUID));
             case "geolocation":
-                return new JSONResponse<>(graphJSON.geolocationGraphsJSONAsMap(serverUUID));
+                return new JSONResponse(graphJSON.geolocationGraphsJSONAsMap(serverUUID));
             case "ping":
                 return new JSONResponse(graphJSON.pingGraphsJSON(serverUUID));
             default:

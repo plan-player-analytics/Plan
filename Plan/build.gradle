@@ -76,6 +76,7 @@ subprojects {
     ext.hikariVersion = "3.3.1"
     ext.slf4jVersion = "1.7.28"
     ext.geoIpVersion = "2.12.0"
+    ext.gsonVersion = "2.8.5"
     ext.guavaVersion = "28.0-jre"
     ext.bstatsVersion = "1.4"
 
