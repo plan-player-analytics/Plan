@@ -42,7 +42,7 @@ public class SessionCache {
     }
 
     public static Map<UUID, Session> getActiveSessions() {
-        return Collections.unmodifiableMap(ACTIVE_SESSIONS);
+        return Collections.unmodifiableMap(new HashMap<>(ACTIVE_SESSIONS));
     }
 
     public static void clear() {
