@@ -18,11 +18,11 @@ package com.djrapitops.plan.data.container;
 
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.store.objects.DateMap;
-import com.google.common.base.Objects;
 
 import java.io.Serializable;
 import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.util.Objects;
 
 /**
  * Data class that contains information about IP and Geolocation.
@@ -107,13 +107,13 @@ public class GeoInfo implements DateHolder, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GeoInfo geoInfo = (GeoInfo) o;
-        return Objects.equal(ip, geoInfo.ip) &&
-                Objects.equal(geolocation, geoInfo.geolocation);
+        return Objects.equals(ip, geoInfo.ip) &&
+                Objects.equals(geolocation, geoInfo.geolocation);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(ip, geolocation);
+        return Objects.hash(ip, geolocation);
     }
 
     @Override

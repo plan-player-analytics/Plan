@@ -21,9 +21,9 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
-import com.google.common.base.Objects;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -98,18 +98,18 @@ public abstract class PluginData {
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PluginData that = (PluginData) o;
         return size == that.size &&
-                Objects.equal(sourcePlugin, that.sourcePlugin) &&
-                Objects.equal(pluginIcon, that.pluginIcon);
+                Objects.equals(sourcePlugin, that.sourcePlugin) &&
+                Objects.equals(pluginIcon, that.pluginIcon);
     }
 
     @Override
-    public final int hashCode() {
-        return Objects.hashCode(size, sourcePlugin, pluginIcon);
+    public int hashCode() {
+        return Objects.hash(size, sourcePlugin, pluginIcon);
     }
 
     /**

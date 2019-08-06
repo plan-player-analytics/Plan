@@ -38,7 +38,7 @@ import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -89,7 +89,16 @@ public abstract class SQLDB extends AbstractDatabase {
 
         devMode = config.get(PluginSettings.DEV_MODE);
 
-        this.transactionExecutorServiceProvider = () -> Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat("Plan " + getClass().getSimpleName() + "-transaction-thread-%d").build());
+        this.transactionExecutorServiceProvider = () -> {
+            String nameFormat = "Plan " + getClass().getSimpleName() + "-transaction-thread-%d";
+            return Executors.newSingleThreadExecutor(new BasicThreadFactory.Builder()
+                    .namingPattern(nameFormat)
+                    .uncaughtExceptionHandler((thread, throwable) -> {
+                        if (config.get(PluginSettings.DEV_MODE)) {
+                            errorHandler.log(L.WARN, getClass(), throwable);
+                        }
+                    }).build());
+        };
     }
 
     @Override

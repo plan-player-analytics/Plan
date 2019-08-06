@@ -17,7 +17,8 @@
 package com.djrapitops.plan.system.update;
 
 import com.djrapitops.plugin.api.utility.Version;
-import com.google.common.base.Objects;
+
+import java.util.Objects;
 
 /**
  * Data class for reading version.txt in https://github.com/Rsl1122/Plan-PlayerAnalytics.
@@ -64,12 +65,12 @@ public class VersionInfo implements Comparable<VersionInfo> {
         if (o == null || getClass() != o.getClass()) return false;
         VersionInfo that = (VersionInfo) o;
         return release == that.release &&
-                Objects.equal(version, that.version);
+                Objects.equals(version, that.version);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(release, version);
+        return Objects.hash(release, version);
     }
 
     @Override

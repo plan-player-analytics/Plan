@@ -21,7 +21,6 @@ import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.db.access.queries.DataStoreQueries;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.utilities.analysis.Median;
-import com.google.common.annotations.VisibleForTesting;
 
 import java.util.List;
 import java.util.OptionalInt;
@@ -83,7 +82,7 @@ public class PingStoreTransaction extends Transaction {
                 .max();
     }
 
-    @VisibleForTesting
+    // VisibleForTesting
     int getMeanValue() {
         return (int) Median.forList(pingList.stream().map(DateObj::getValue).collect(Collectors.toList())).calculate();
     }
