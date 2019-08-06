@@ -47,7 +47,7 @@ public class PlayerJSONHandler implements PageHandler {
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
         UUID playerUUID = identifiers.getPlayerUUID(target); // Can throw BadRequestException
-        return new JSONResponse<>(jsonParser.createJSONAsMap(playerUUID));
+        return new JSONResponse(jsonParser.createJSONAsMap(playerUUID));
     }
 
     @Override
