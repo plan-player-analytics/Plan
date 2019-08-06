@@ -18,20 +18,27 @@ package com.djrapitops.plan.db;
 
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
-import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import utilities.CIProperties;
+import com.djrapitops.plan.system.PlanSystem;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import utilities.DBPreparer;
+import utilities.RandomData;
+import utilities.mocks.PluginMockComponent;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests for {@link MySQLDB}.
@@ -41,37 +48,40 @@ import static org.junit.Assume.assumeTrue;
  *
  * @author Rsl1122
  */
-public class MySQLTest extends CommonDBTest {
+@RunWith(JUnitPlatform.class)
+@ExtendWith(MockitoExtension.class)
+class MySQLTest implements DatabaseTest {
 
-    @BeforeClass
-    public static void setUpDatabase() throws Exception {
-        boolean isCI = Boolean.parseBoolean(System.getenv(CIProperties.IS_CI_SERVICE));
-        assumeTrue(isCI);
+    private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
-        PlanConfig config = component.getPlanSystem().getConfigSystem().getConfig();
-        config.set(DatabaseSettings.MYSQL_DATABASE, "Plan");
-        config.set(DatabaseSettings.MYSQL_USER, "travis");
-        config.set(DatabaseSettings.MYSQL_PASS, "");
-        config.set(DatabaseSettings.MYSQL_HOST, "127.0.0.1");
-        config.set(DatabaseSettings.TYPE, "MySQL");
+    private static PlanSystem system;
+    private static Database database;
 
-        handleSetup("MySQL");
-        clearDatabase();
+    @BeforeAll
+    static void setupDatabase(@TempDir Path temp) throws Exception {
+        system = new PluginMockComponent(temp).getPlanSystem();
+        Optional<Database> mysql = new DBPreparer(system, TEST_PORT_NUMBER).prepareMySQL();
+        Assumptions.assumeTrue(mysql.isPresent());
+        database = mysql.get();
     }
 
-    private static void clearDatabase() {
-        db.executeTransaction(new Transaction() {
-            @Override
-            protected void performOperations() {
-                execute("DROP DATABASE Plan");
-                execute("CREATE DATABASE Plan");
-                execute("USE Plan");
-            }
-        });
+    @Override
+    public Database db() {
+        return database;
+    }
+
+    @Override
+    public UUID serverUUID() {
+        return system.getServerInfo().getServerUUID();
+    }
+
+    @Override
+    public PlanSystem system() {
+        return system;
     }
 
     @Test
-    public void networkGeolocationsAreCountedAppropriately() {
+    void networkGeolocationsAreCountedAppropriately() {
         UUID firstUuid = UUID.randomUUID();
         UUID secondUuid = UUID.randomUUID();
         UUID thirdUuid = UUID.randomUUID();
@@ -79,9 +89,9 @@ public class MySQLTest extends CommonDBTest {
         UUID fifthUuid = UUID.randomUUID();
         UUID sixthUuid = UUID.randomUUID();
 
-        db.executeTransaction(new PlayerRegisterTransaction(firstUuid, () -> 0L, ""));
-        db.executeTransaction(new PlayerRegisterTransaction(secondUuid, () -> 0L, ""));
-        db.executeTransaction(new PlayerRegisterTransaction(thirdUuid, () -> 0L, ""));
+        database.executeTransaction(new PlayerRegisterTransaction(firstUuid, () -> 0L, ""));
+        database.executeTransaction(new PlayerRegisterTransaction(secondUuid, () -> 0L, ""));
+        database.executeTransaction(new PlayerRegisterTransaction(thirdUuid, () -> 0L, ""));
 
         saveGeoInfo(firstUuid, new GeoInfo("-", "Norway", 0));
         saveGeoInfo(firstUuid, new GeoInfo("-", "Finland", 5));
@@ -91,7 +101,7 @@ public class MySQLTest extends CommonDBTest {
         saveGeoInfo(fifthUuid, new GeoInfo("-", "Not Known", 0));
         saveGeoInfo(sixthUuid, new GeoInfo("-", "Local Machine", 0));
 
-        Map<String, Integer> got = db.query(ServerAggregateQueries.networkGeolocationCounts());
+        Map<String, Integer> got = database.query(ServerAggregateQueries.networkGeolocationCounts());
 
         Map<String, Integer> expected = new HashMap<>();
         // first user has a more recent connection from Finland so their country should be counted as Finland.
