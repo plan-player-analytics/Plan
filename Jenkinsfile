@@ -2,14 +2,23 @@ pipeline {
     agent any
 
     stages {
-        stage('Test') {
+        stage('Build') {
+            steps {
+                dir("Plan") {
+                    script {
+                        sh './gradlew shadowJar --parallel'
+                    }
+                }
+            }
+        }
+        stage('Tests') {
             steps {
                 dir("Plan") {
                     script {
                         try {
-                            sh './gradlew clean test --no-daemon' //run a gradle task
+                            sh './gradlew clean test --no-daemon'
                         } finally {
-                            junit '**/build/test-results/test/*.xml' //make the junit test results available in any case (success & failure)
+                            junit '**/build/test-results/test/*.xml'
                         }
                     }
                 }
@@ -19,7 +28,7 @@ pipeline {
             steps {
                 dir("Plan") {
                     script {
-                        sh './gradlew checkstyleMain checkstyleTest'
+                        sh './gradlew checkstyleMain checkstyleTest --parallel'
                     }
                 }
             }

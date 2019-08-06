@@ -1,1 +1,2 @@
-./gradlew checkstyleMain checkstyleTest
+cd Plan
+./gradlew checkstyleMain checkstyleTest --parallel
