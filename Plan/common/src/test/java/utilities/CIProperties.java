@@ -23,7 +23,13 @@ package utilities;
  */
 public class CIProperties {
 
+    @Deprecated
     public static final String IS_CI_SERVICE = "TRAVIS";
+    public static final String MYSQL_DATABASE = "MYSQL_DB";
+    // Notice to CI configurer: This user should only have local access.
+    // (To prevent outside connections with CI user)
+    public static final String MYSQL_USER = "MYSQL_USER";
+    public static final String MYSQL_PASS = "MYSQL_PASS";
     public static final String CHROME_DRIVER = "CHROMEDRIVER";
 
     private CIProperties() {
