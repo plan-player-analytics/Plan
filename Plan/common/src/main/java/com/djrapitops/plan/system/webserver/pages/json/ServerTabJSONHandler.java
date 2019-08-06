@@ -48,7 +48,7 @@ public class ServerTabJSONHandler<T> implements PageHandler {
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
         UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
-        return new JSONResponse<>(jsonParser.apply(serverUUID));
+        return new JSONResponse(jsonParser.apply(serverUUID));
     }
 
     @Override

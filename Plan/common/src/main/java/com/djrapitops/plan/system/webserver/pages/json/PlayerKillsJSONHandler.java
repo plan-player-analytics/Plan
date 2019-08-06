@@ -55,7 +55,7 @@ public class PlayerKillsJSONHandler implements PageHandler {
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
         UUID serverUUID = identifiers.getServerUUID(target);
-        return new JSONResponse<>(Collections.singletonMap("player_kills", jsonFactory.serverPlayerKillsAsJSONMap(serverUUID)));
+        return new JSONResponse(Collections.singletonMap("player_kills", jsonFactory.serverPlayerKillsAsJSONMap(serverUUID)));
     }
 
     @Override
