@@ -18,9 +18,9 @@ package com.djrapitops.plan.data.store.mutators;
 
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
-import com.google.common.base.Objects;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -91,12 +91,12 @@ public class RetentionData {
         if (o == null || getClass() != o.getClass()) return false;
         RetentionData that = (RetentionData) o;
         return Double.compare(that.activityIndex, activityIndex) == 0 &&
-                Objects.equal(onlineOnJoin, that.onlineOnJoin);
+                Double.compare(that.onlineOnJoin, onlineOnJoin) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(activityIndex, onlineOnJoin);
+        return Objects.hash(activityIndex, onlineOnJoin);
     }
 
     public double getOnlineOnJoin() {

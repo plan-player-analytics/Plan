@@ -24,16 +24,17 @@ import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
 import com.sun.net.httpserver.HttpsServer;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -143,7 +144,13 @@ public class WebServer implements SubSystem {
 
             ExecutorService executor = new ThreadPoolExecutor(
                     4, 8, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100),
-                    new ThreadFactoryBuilder().setNameFormat("Plan WebServer Thread-%d").build()
+                    new BasicThreadFactory.Builder()
+                            .namingPattern("Plan WebServer Thread-%d")
+                            .uncaughtExceptionHandler((thread, throwable) -> {
+                                if (config.get(PluginSettings.DEV_MODE)) {
+                                    errorHandler.log(L.WARN, WebServer.class, throwable);
+                                }
+                            }).build()
             );
             server.setExecutor(executor);
             server.start();

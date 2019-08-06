@@ -22,8 +22,8 @@ import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import dagger.Lazy;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -54,7 +54,12 @@ public class Processing implements SubSystem {
     }
 
     protected ExecutorService createExecutor(int i, String s) {
-        return Executors.newFixedThreadPool(i, new ThreadFactoryBuilder().setNameFormat(s).build());
+        return Executors.newFixedThreadPool(i,
+                new BasicThreadFactory.Builder()
+                        .namingPattern(s)
+                        .uncaughtExceptionHandler((thread, throwable) -> {
+                            errorHandler.log(L.WARN, Processing.class, throwable);
+                        }).build());
     }
 
     public void submit(Runnable runnable) {

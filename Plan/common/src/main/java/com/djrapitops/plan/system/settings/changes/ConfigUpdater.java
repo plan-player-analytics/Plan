@@ -20,7 +20,6 @@ import com.djrapitops.plan.system.settings.config.Config;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.google.common.annotations.VisibleForTesting;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -52,7 +51,7 @@ public class ConfigUpdater {
         config.save();
     }
 
-    @VisibleForTesting
+    // VisibleForTesting
     ConfigChange[] configEnhancementPatch() {
         return new ConfigChange[]{
                 new ConfigChange.Moved("Plugin.Locale", "Plugin.Logging.Locale"),
