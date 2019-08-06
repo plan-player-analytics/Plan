@@ -37,7 +37,6 @@ import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
-import com.google.common.annotations.VisibleForTesting;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -110,7 +109,7 @@ public class DBCleanTask extends AbsRunnable {
         }
     }
 
-    @VisibleForTesting
+    // VisibleForTesting
     public int cleanOldPlayers(Database database) {
         long now = System.currentTimeMillis();
         long keepActiveAfter = now - config.get(TimeSettings.DELETE_INACTIVE_PLAYERS_AFTER);
