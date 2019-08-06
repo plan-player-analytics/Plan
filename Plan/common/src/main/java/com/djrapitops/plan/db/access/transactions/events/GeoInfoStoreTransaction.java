@@ -21,7 +21,6 @@ import com.djrapitops.plan.db.access.queries.DataStoreQueries;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 
 import java.net.InetAddress;
-import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
 
@@ -31,8 +30,6 @@ import java.util.function.UnaryOperator;
  * @author Rsl1122
  */
 public class GeoInfoStoreTransaction extends Transaction {
-
-    private static boolean hasFailed = false;
 
     private final UUID playerUUID;
     private InetAddress ip;
@@ -58,29 +55,14 @@ public class GeoInfoStoreTransaction extends Transaction {
         this.geoInfo = geoInfo;
     }
 
-    @Override
-    protected boolean shouldBeExecuted() {
-        return !hasFailed;
-    }
-
-    public static void setAsFailed() {
-        hasFailed = true;
-    }
-
-    private GeoInfo createGeoInfo() throws NoSuchAlgorithmException {
+    private GeoInfo createGeoInfo() {
         String country = geolocationFunction.apply(ip.getHostAddress());
         return new GeoInfo(ip, country, time);
     }
 
     @Override
     protected void performOperations() {
-        try {
-            if (geoInfo == null) geoInfo = createGeoInfo();
-
-            execute(DataStoreQueries.storeGeoInfo(playerUUID, geoInfo));
-        } catch (NoSuchAlgorithmException noSHA256Available) {
-            // SHA256 not available.
-            setAsFailed();
-        }
+        if (geoInfo == null) geoInfo = createGeoInfo();
+        execute(DataStoreQueries.storeGeoInfo(playerUUID, geoInfo));
     }
 }

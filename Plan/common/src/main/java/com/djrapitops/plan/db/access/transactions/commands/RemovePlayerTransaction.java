@@ -25,6 +25,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Transaction for removing a player's data from the database.
  *
@@ -62,7 +64,7 @@ public class RemovePlayerTransaction extends Transaction {
     }
 
     private void deleteFromTable(String tableName) {
-        execute(new ExecStatement("DELETE FROM " + tableName + " WHERE uuid=?") {
+        execute(new ExecStatement(DELETE_FROM + tableName + WHERE + "uuid=?") {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
@@ -71,9 +73,9 @@ public class RemovePlayerTransaction extends Transaction {
     }
 
     private void deleteFromKillsTable() {
-        String sql = "DELETE FROM " + KillsTable.TABLE_NAME +
-                " WHERE " + KillsTable.KILLER_UUID + "=?" +
-                " OR " + KillsTable.VICTIM_UUID + "=?";
+        String sql = DELETE_FROM + KillsTable.TABLE_NAME +
+                WHERE + KillsTable.KILLER_UUID + "=?" +
+                OR + KillsTable.VICTIM_UUID + "=?";
         execute(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

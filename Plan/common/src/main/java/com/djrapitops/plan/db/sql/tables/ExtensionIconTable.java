@@ -44,7 +44,7 @@ public class ExtensionIconTable {
     public static final String FAMILY = "family";
     public static final String COLOR = "color";
 
-    public static final String STATEMENT_SELECT_ICON_ID = "(" + SELECT + ID +
+    public static final String STATEMENT_SELECT_ICON_ID = '(' + SELECT + ID +
             FROM + TABLE_NAME +
             WHERE + ICON_NAME + "=?" +
             AND + FAMILY + "=?" +

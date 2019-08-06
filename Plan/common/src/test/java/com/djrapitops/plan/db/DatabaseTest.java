@@ -204,7 +204,7 @@ public interface DatabaseTest {
     }
 
     @Test
-    default void testTPSSaving() throws Exception {
+    default void testTPSSaving() {
         Random r = new Random();
 
         List<TPS> expected = new ArrayList<>();
@@ -232,7 +232,7 @@ public interface DatabaseTest {
     }
 
     @Test
-    default void geoInformationIsStored() throws NoSuchAlgorithmException {
+    default void geoInformationIsStored() {
         saveUserOne();
 
         String expectedIP = "1.2.3.4";
@@ -503,7 +503,7 @@ public interface DatabaseTest {
         assertTrue(database.query(query).isEmpty());
     }
 
-    default void saveAllData() throws NoSuchAlgorithmException {
+    default void saveAllData() {
         saveUserOne();
         saveUserTwo();
 

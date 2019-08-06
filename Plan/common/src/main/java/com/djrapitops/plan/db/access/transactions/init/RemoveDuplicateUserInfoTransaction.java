@@ -34,7 +34,7 @@ public class RemoveDuplicateUserInfoTransaction extends Transaction {
     private static final String COLUMN_ID = UserInfoTable.TABLE_NAME + '.' + UserInfoTable.ID;
     private static final String STATEMENT_SELECT_DUPLICATE_IDS =
             SELECT + "MIN(" + COLUMN_ID + ") as id" + FROM + UserInfoTable.TABLE_NAME +
-                    GROUP_BY + UserInfoTable.USER_UUID + ", " + UserInfoTable.SERVER_UUID;
+                    GROUP_BY + UserInfoTable.USER_UUID + ',' + UserInfoTable.SERVER_UUID;
 
     @Override
     protected void performOperations() {

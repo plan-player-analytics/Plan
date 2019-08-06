@@ -51,7 +51,7 @@ public class PerServerAggregateQueries {
      * @return Map: Server UUID - Last seen epoch ms.
      */
     public static Query<Map<UUID, Long>> lastSeenOnServers(UUID playerUUID) {
-        String sql = "SELECT MAX(" + SessionsTable.SESSION_END + ") as last_seen, " +
+        String sql = SELECT + "MAX(" + SessionsTable.SESSION_END + ") as last_seen, " +
                 SessionsTable.SERVER_UUID +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.USER_UUID + "=?" +
@@ -82,26 +82,10 @@ public class PerServerAggregateQueries {
      * @return Map: Server UUID - Player kill count
      */
     public static Query<Map<UUID, Integer>> playerKillCountOnServers(UUID playerUUID) {
-        String sql = "SELECT COUNT(1) as kill_count, " + KillsTable.SERVER_UUID + FROM + KillsTable.TABLE_NAME +
+        String sql = SELECT + "COUNT(1) as kill_count, " + KillsTable.SERVER_UUID + FROM + KillsTable.TABLE_NAME +
                 WHERE + KillsTable.KILLER_UUID + "=?" +
                 GROUP_BY + KillsTable.SERVER_UUID;
-        return new QueryStatement<Map<UUID, Integer>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, playerUUID.toString());
-            }
-
-            @Override
-            public Map<UUID, Integer> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Integer> killCountMap = new HashMap<>();
-                while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(SessionsTable.SERVER_UUID));
-                    int lastSeen = set.getInt("kill_count");
-                    killCountMap.put(serverUUID, lastSeen);
-                }
-                return killCountMap;
-            }
-        };
+        return getQueryForCountOf(playerUUID, sql, "kill_count");
     }
 
     /**
@@ -111,27 +95,11 @@ public class PerServerAggregateQueries {
      * @return Map: Server UUID - Mob kill count
      */
     public static Query<Map<UUID, Integer>> mobKillCountOnServers(UUID playerUUID) {
-        String sql = "SELECT SUM(" + SessionsTable.MOB_KILLS + ") as kill_count, " +
+        String sql = SELECT + "SUM(" + SessionsTable.MOB_KILLS + ") as kill_count, " +
                 SessionsTable.SERVER_UUID + FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.USER_UUID + "=?" +
                 GROUP_BY + SessionsTable.SERVER_UUID;
-        return new QueryStatement<Map<UUID, Integer>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, playerUUID.toString());
-            }
-
-            @Override
-            public Map<UUID, Integer> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Integer> killCountMap = new HashMap<>();
-                while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(SessionsTable.SERVER_UUID));
-                    int lastSeen = set.getInt("kill_count");
-                    killCountMap.put(serverUUID, lastSeen);
-                }
-                return killCountMap;
-            }
-        };
+        return getQueryForCountOf(playerUUID, sql, "kill_count");
     }
 
     /**
@@ -141,33 +109,22 @@ public class PerServerAggregateQueries {
      * @return Map: Server UUID - Mob kill count
      */
     public static Query<Map<UUID, Integer>> playerDeathCountOnServers(UUID playerUUID) {
-        String sql = "SELECT COUNT(1) as death_count, " + KillsTable.SERVER_UUID + FROM + KillsTable.TABLE_NAME +
+        String sql = SELECT + "COUNT(1) as death_count, " + KillsTable.SERVER_UUID + FROM + KillsTable.TABLE_NAME +
                 WHERE + KillsTable.VICTIM_UUID + "=?" +
                 GROUP_BY + KillsTable.SERVER_UUID;
-        return new QueryStatement<Map<UUID, Integer>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, playerUUID.toString());
-            }
-
-            @Override
-            public Map<UUID, Integer> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Integer> killCountMap = new HashMap<>();
-                while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(SessionsTable.SERVER_UUID));
-                    int lastSeen = set.getInt("death_count");
-                    killCountMap.put(serverUUID, lastSeen);
-                }
-                return killCountMap;
-            }
-        };
+        return getQueryForCountOf(playerUUID, sql, "death_count");
     }
 
     public static Query<Map<UUID, Integer>> totalDeathCountOnServers(UUID playerUUID) {
-        String sql = "SELECT SUM(" + SessionsTable.DEATHS + ") as death_count, " +
+        String sql = SELECT + "SUM(" + SessionsTable.DEATHS + ") as death_count, " +
                 SessionsTable.SERVER_UUID + FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.USER_UUID + "=?" +
                 GROUP_BY + SessionsTable.SERVER_UUID;
+        return getQueryForCountOf(playerUUID, sql, "death_count");
+    }
+
+
+    private static QueryStatement<Map<UUID, Integer>> getQueryForCountOf(UUID playerUUID, String sql, String column) {
         return new QueryStatement<Map<UUID, Integer>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -179,12 +136,11 @@ public class PerServerAggregateQueries {
                 Map<UUID, Integer> killCountMap = new HashMap<>();
                 while (set.next()) {
                     UUID serverUUID = UUID.fromString(set.getString(SessionsTable.SERVER_UUID));
-                    int lastSeen = set.getInt("death_count");
-                    killCountMap.put(serverUUID, lastSeen);
+                    int count = set.getInt(column);
+                    killCountMap.put(serverUUID, count);
                 }
                 return killCountMap;
             }
         };
     }
-
 }

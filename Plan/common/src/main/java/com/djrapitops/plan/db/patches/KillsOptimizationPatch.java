@@ -19,6 +19,8 @@ package com.djrapitops.plan.db.patches;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.sql.tables.KillsTable;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.FROM;
+
 public class KillsOptimizationPatch extends Patch {
 
     private String tempTableName;
@@ -56,20 +58,20 @@ public class KillsOptimizationPatch extends Patch {
             execute(KillsTable.createTableSQL(dbType));
 
             execute("INSERT INTO " + tableName + " (" +
-                    KillsTable.VICTIM_UUID + ", " +
-                    KillsTable.KILLER_UUID + ", " +
-                    KillsTable.SERVER_UUID + ", " +
-                    KillsTable.DATE + ", " +
-                    KillsTable.WEAPON + ", " +
+                    KillsTable.VICTIM_UUID + ',' +
+                    KillsTable.KILLER_UUID + ',' +
+                    KillsTable.SERVER_UUID + ',' +
+                    KillsTable.DATE + ',' +
+                    KillsTable.WEAPON + ',' +
                     KillsTable.SESSION_ID +
                     ") SELECT " +
                     "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".victim_id LIMIT 1), " +
                     "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".killer_id LIMIT 1), " +
                     "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
-                    KillsTable.DATE + ", " +
-                    KillsTable.WEAPON + ", " +
+                    KillsTable.DATE + ',' +
+                    KillsTable.WEAPON + ',' +
                     KillsTable.SESSION_ID +
-                    " FROM " + tempTableName
+                    FROM + tempTableName
             );
 
             dropTable(tempTableName);

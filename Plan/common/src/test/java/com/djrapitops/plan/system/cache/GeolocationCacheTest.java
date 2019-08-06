@@ -64,7 +64,7 @@ class GeolocationCacheTest {
     private GeolocationCache underTest;
 
     @BeforeAll
-    static void setUpTestData(@TempDir Path tempDir) throws IOException {
+    static void setUpTestData(@TempDir Path tempDir) {
         GeolocationCacheTest.tempDir = tempDir;
         IP_STORE = GeolocationCacheTest.tempDir.resolve("GeoIP.dat").toFile();
 

@@ -33,6 +33,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.WHERE;
+
 /**
  * Static method class for single item store queries.
  *
@@ -211,7 +213,7 @@ public class DataStoreQueries {
      */
     public static Executable updatePlayerName(UUID playerUUID, String playerName) {
         String sql = "UPDATE " + UsersTable.TABLE_NAME + " SET " + UsersTable.USER_NAME + "=?" +
-                " WHERE " + UsersTable.USER_UUID + "=?";
+                WHERE + UsersTable.USER_UUID + "=?";
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

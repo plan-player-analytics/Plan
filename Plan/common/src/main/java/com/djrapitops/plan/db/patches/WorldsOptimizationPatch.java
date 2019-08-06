@@ -19,6 +19,8 @@ package com.djrapitops.plan.db.patches;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.sql.tables.WorldTable;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.FROM;
+
 public class WorldsOptimizationPatch extends Patch {
 
     private String tempTableName;
@@ -47,14 +49,14 @@ public class WorldsOptimizationPatch extends Patch {
             execute(WorldTable.createTableSQL(dbType));
 
             execute("INSERT INTO " + tableName + " (" +
-                    WorldTable.ID + ", " +
-                    WorldTable.SERVER_UUID + ", " +
+                    WorldTable.ID + ',' +
+                    WorldTable.SERVER_UUID + ',' +
                     WorldTable.NAME +
                     ") SELECT " +
-                    WorldTable.ID + ", " +
+                    WorldTable.ID + ',' +
                     "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
                     WorldTable.NAME +
-                    " FROM " + tempTableName
+                    FROM + tempTableName
             );
 
             dropTable(tempTableName);

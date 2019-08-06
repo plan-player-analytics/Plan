@@ -58,17 +58,17 @@ public class WorldTimesTable {
     public static final String SPECTATOR = "spectator_time";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + WorldTimesTable.TABLE_NAME + " (" +
-            WorldTimesTable.SESSION_ID + ", " +
-            WorldTimesTable.WORLD_ID + ", " +
-            WorldTimesTable.USER_UUID + ", " +
-            WorldTimesTable.SERVER_UUID + ", " +
-            WorldTimesTable.SURVIVAL + ", " +
-            WorldTimesTable.CREATIVE + ", " +
-            WorldTimesTable.ADVENTURE + ", " +
+            WorldTimesTable.SESSION_ID + ',' +
+            WorldTimesTable.WORLD_ID + ',' +
+            WorldTimesTable.USER_UUID + ',' +
+            WorldTimesTable.SERVER_UUID + ',' +
+            WorldTimesTable.SURVIVAL + ',' +
+            WorldTimesTable.CREATIVE + ',' +
+            WorldTimesTable.ADVENTURE + ',' +
             WorldTimesTable.SPECTATOR +
             ") VALUES ( " +
-            SessionsTable.SELECT_SESSION_ID_STATEMENT + ", " +
-            WorldTable.SELECT_WORLD_ID_STATEMENT + ", " +
+            SessionsTable.SELECT_SESSION_ID_STATEMENT + ',' +
+            WorldTable.SELECT_WORLD_ID_STATEMENT + ',' +
             "?, ?, ?, ?, ?, ?)";
 
     private WorldTimesTable() {

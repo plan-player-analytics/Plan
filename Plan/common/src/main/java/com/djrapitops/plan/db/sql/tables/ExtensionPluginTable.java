@@ -41,7 +41,7 @@ public class ExtensionPluginTable {
     public static final String SERVER_UUID = "server_uuid";
     public static final String ICON_ID = "icon_id";
 
-    public static final String STATEMENT_SELECT_PLUGIN_ID = "(" + SELECT + ID +
+    public static final String STATEMENT_SELECT_PLUGIN_ID = '(' + SELECT + ID +
             FROM + TABLE_NAME +
             WHERE + PLUGIN_NAME + "=?" +
             AND + SERVER_UUID + "=?)";

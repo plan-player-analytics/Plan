@@ -53,11 +53,11 @@ public class KillsTable {
     public static final String DATE = "date";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
-            + SESSION_ID + ", "
-            + KILLER_UUID + ", "
-            + VICTIM_UUID + ", "
-            + SERVER_UUID + ", "
-            + DATE + ", "
+            + SESSION_ID + ','
+            + KILLER_UUID + ','
+            + VICTIM_UUID + ','
+            + SERVER_UUID + ','
+            + DATE + ','
             + WEAPON
             + ") VALUES (" + SessionsTable.SELECT_SESSION_ID_STATEMENT + ", ?, ?, ?, ?, ?)";
 

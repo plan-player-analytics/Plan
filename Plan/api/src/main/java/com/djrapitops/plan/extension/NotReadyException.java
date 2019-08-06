@@ -33,5 +33,6 @@ public class NotReadyException extends IllegalStateException {
      * The Exception is not logged (Fails silently) so no message is available.
      */
     public NotReadyException() {
+        // Constructor is present for javadoc comment.
     }
 }

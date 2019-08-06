@@ -23,6 +23,9 @@ import com.djrapitops.plan.db.patches.Version10Patch;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.AND;
+import static com.djrapitops.plan.db.sql.parsing.Sql.WHERE;
+
 /**
  * Table information about 'plan_nicknames'.
  * <p>
@@ -44,16 +47,16 @@ public class NicknamesTable {
     public static final String LAST_USED = "last_used";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
-            USER_UUID + ", " +
-            SERVER_UUID + ", " +
-            NICKNAME + ", " +
+            USER_UUID + ',' +
+            SERVER_UUID + ',' +
+            NICKNAME + ',' +
             LAST_USED +
             ") VALUES (?, ?, ?, ?)";
 
     public static final String UPDATE_STATEMENT = "UPDATE " + TABLE_NAME + " SET " + LAST_USED + "=?" +
-            " WHERE " + NICKNAME + "=?" +
-            " AND " + USER_UUID + "=?" +
-            " AND " + SERVER_UUID + "=?";
+            WHERE + NICKNAME + "=?" +
+            AND + USER_UUID + "=?" +
+            AND + SERVER_UUID + "=?";
 
     private NicknamesTable() {
         /* Static information class */

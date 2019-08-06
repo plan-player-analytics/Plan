@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 public class IPAnonPatch extends Patch {
 
     private String tableName;
@@ -47,8 +49,8 @@ public class IPAnonPatch extends Patch {
     }
 
     private Boolean containsUnAnonymizedIPs() {
-        String sql = "SELECT * FROM " + tableName +
-                " WHERE " + GeoInfoTable.IP + " NOT LIKE ? LIMIT 1";
+        String sql = SELECT + '*' + FROM + tableName +
+                WHERE + GeoInfoTable.IP + " NOT LIKE ? LIMIT 1";
 
         return query(new QueryStatement<Boolean>(sql) {
             @Override
@@ -72,8 +74,8 @@ public class IPAnonPatch extends Patch {
 
     private void anonymizeIPs(Map<UUID, List<GeoInfo>> allGeoInfo) {
         String sql = "UPDATE " + GeoInfoTable.TABLE_NAME + " SET " +
-                GeoInfoTable.IP + "=? " +
-                "WHERE " + GeoInfoTable.IP + "=?";
+                GeoInfoTable.IP + "=?" +
+                WHERE + GeoInfoTable.IP + "=?";
 
         execute(new ExecBatchStatement(sql) {
             @Override

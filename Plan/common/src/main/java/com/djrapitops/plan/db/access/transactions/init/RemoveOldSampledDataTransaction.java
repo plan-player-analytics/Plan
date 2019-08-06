@@ -29,6 +29,8 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Transaction for cleaning up old data from the database.
  *
@@ -59,9 +61,9 @@ public class RemoveOldSampledDataTransaction extends Transaction {
     }
 
     private Executable cleanTPSTable(int allTimePlayerPeak) {
-        String sql = "DELETE FROM " + TPSTable.TABLE_NAME +
-                " WHERE (" + TPSTable.DATE + "<?)" +
-                " AND (" + TPSTable.PLAYERS_ONLINE + "!=?)";
+        String sql = DELETE_FROM + TPSTable.TABLE_NAME +
+                WHERE + '(' + TPSTable.DATE + "<?)" +
+                AND + '(' + TPSTable.PLAYERS_ONLINE + "!=?)";
 
         return new ExecStatement(sql) {
             @Override
@@ -73,9 +75,9 @@ public class RemoveOldSampledDataTransaction extends Transaction {
     }
 
     private Executable cleanPingTable() {
-        String sql = "DELETE FROM " + PingTable.TABLE_NAME +
-                " WHERE (" + PingTable.DATE + "<?)" +
-                " OR (" + PingTable.MIN_PING + "<0)";
+        String sql = DELETE_FROM + PingTable.TABLE_NAME +
+                WHERE + '(' + PingTable.DATE + "<?)" +
+                OR + '(' + PingTable.MIN_PING + "<0)";
 
         return new ExecStatement(sql) {
             @Override

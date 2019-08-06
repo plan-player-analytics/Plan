@@ -160,7 +160,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
             logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, "Gathering completed:  " + playerName);
         } catch (DataExtensionMethodCallException methodCallFailed) {
             logFailure(playerName, methodCallFailed);
-            gatherer.disableMethodFromUse(methodCallFailed.getMethod());
+            methodCallFailed.getMethod().ifPresent(gatherer::disableMethodFromUse);
             // Try again
             updatePlayerValues(gatherer, playerUUID, playerName, event);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
@@ -199,7 +199,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
             logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, "Gathering completed for server");
         } catch (DataExtensionMethodCallException methodCallFailed) {
             logFailure("server", methodCallFailed);
-            gatherer.disableMethodFromUse(methodCallFailed.getMethod());
+            methodCallFailed.getMethod().ifPresent(gatherer::disableMethodFromUse);
             // Try again
             updateServerValues(gatherer, event);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {

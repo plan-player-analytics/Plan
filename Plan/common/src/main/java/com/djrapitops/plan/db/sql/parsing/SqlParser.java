@@ -43,6 +43,11 @@ public class SqlParser {
         return this;
     }
 
+    public SqlParser append(char c) {
+        s.append(c);
+        return this;
+    }
+
     @Override
     public String toString() {
         return s.toString();

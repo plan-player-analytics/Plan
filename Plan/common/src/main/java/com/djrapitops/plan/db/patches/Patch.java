@@ -18,13 +18,19 @@ package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.DBType;
+import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.access.queries.schema.H2SchemaQueries;
 import com.djrapitops.plan.db.access.queries.schema.MySQLSchemaQueries;
 import com.djrapitops.plan.db.access.queries.schema.SQLiteSchemaQueries;
 import com.djrapitops.plan.db.access.transactions.init.OperationCriticalTransaction;
 import com.djrapitops.plugin.utilities.Verify;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
+
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
 
 public abstract class Patch extends OperationCriticalTransaction {
 
@@ -126,5 +132,20 @@ public abstract class Patch extends OperationCriticalTransaction {
         List<MySQLSchemaQueries.ForeignKeyConstraint> constraints = query(MySQLSchemaQueries.foreignKeyConstraintsOf(table));
 
         Verify.isTrue(constraints.isEmpty(), () -> new DBOpException("Table '" + table + "' has constraints '" + constraints + "'"));
+    }
+
+    protected boolean allValuesHaveValueZero(String tableName, String column) {
+        String sql = SELECT + '*' + FROM + tableName + WHERE + column + "=? LIMIT 1";
+        return query(new QueryStatement<Boolean>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setInt(1, 0);
+            }
+
+            @Override
+            public Boolean processResults(ResultSet set) throws SQLException {
+                return !set.next();
+            }
+        });
     }
 }

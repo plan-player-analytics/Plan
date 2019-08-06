@@ -71,10 +71,10 @@ public class UserIdentifierQueries {
      */
     public static Query<Set<UUID>> fetchPlayerUUIDsOfServer(UUID serverUUID) {
         String sql = SELECT +
-                UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID + ", " +
+                UsersTable.TABLE_NAME + '.' + UsersTable.USER_UUID + ',' +
                 FROM + UsersTable.TABLE_NAME +
                 INNER_JOIN + UserInfoTable.TABLE_NAME + " on " +
-                UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID + "=" + UserInfoTable.TABLE_NAME + "." + UserInfoTable.USER_UUID +
+                UsersTable.TABLE_NAME + '.' + UsersTable.USER_UUID + "=" + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_UUID +
                 WHERE + UserInfoTable.SERVER_UUID + "=?";
         return new QueryStatement<Set<UUID>>(sql, 1000) {
             @Override
@@ -178,7 +178,7 @@ public class UserIdentifierQueries {
                 SELECT + DISTINCT + UsersTable.USER_NAME +
                 FROM + UsersTable.TABLE_NAME +
                 INNER_JOIN + NicknamesTable.TABLE_NAME + " on " +
-                UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID + "=" + NicknamesTable.TABLE_NAME + "." + NicknamesTable.USER_UUID +
+                UsersTable.TABLE_NAME + '.' + UsersTable.USER_UUID + "=" + NicknamesTable.TABLE_NAME + '.' + NicknamesTable.USER_UUID +
                 WHERE + "LOWER(" + NicknamesTable.NICKNAME + ") LIKE LOWER(?)";
 
         return new QueryStatement<List<String>>(sql, 5000) {

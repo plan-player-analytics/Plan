@@ -52,9 +52,9 @@ public class ExtensionProviderTable {
     public static final String FORMAT_TYPE = "format_type"; // Can be null,  related to @NumberProvider
     public static final String IS_PLAYER_NAME = "player_name"; // default false, related to @StringProvider
 
-    public static final String STATEMENT_SELECT_PROVIDER_ID = "(" + SELECT + ID + FROM + TABLE_NAME +
+    public static final String STATEMENT_SELECT_PROVIDER_ID = '(' + SELECT + ID + FROM + TABLE_NAME +
             WHERE + PROVIDER_NAME + "=?" +
-            AND + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ")";
+            AND + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ')';
 
     public static void set3PluginValuesToStatement(PreparedStatement statement, int parameterIndex, String providerName, String pluginName, UUID serverUUID) throws SQLException {
         statement.setString(parameterIndex, providerName);

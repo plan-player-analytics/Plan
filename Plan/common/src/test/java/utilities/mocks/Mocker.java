@@ -20,7 +20,6 @@ import com.djrapitops.plan.PlanPlugin;
 import utilities.TestResources;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 
 import static org.mockito.Mockito.when;
@@ -41,7 +40,7 @@ abstract class Mocker {
         return file;
     }
 
-    private void withPluginFile(String fileName) throws IOException {
+    private void withPluginFile(String fileName) {
         if (planMock.getDataFolder() == null) {
             throw new IllegalStateException("withDataFolder needs to be called before setting files");
         }
@@ -53,7 +52,7 @@ abstract class Mocker {
         }
     }
 
-    void withPluginFiles() throws IOException {
+    void withPluginFiles() {
         for (String fileName : new String[]{
                 "bungeeconfig.yml",
                 "config.yml",

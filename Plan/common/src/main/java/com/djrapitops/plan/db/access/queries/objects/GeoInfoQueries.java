@@ -28,6 +28,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Queries for {@link com.djrapitops.plan.data.container.GeoInfo} objects.
  *
@@ -45,32 +47,36 @@ public class GeoInfoQueries {
      * @return Map: Player UUID - List of GeoInfo
      */
     public static Query<Map<UUID, List<GeoInfo>>> fetchAllGeoInformation() {
-        String sql = "SELECT " +
-                GeoInfoTable.IP + ", " +
-                GeoInfoTable.GEOLOCATION + ", " +
-                GeoInfoTable.LAST_USED + ", " +
+        String sql = SELECT +
+                GeoInfoTable.IP + ',' +
+                GeoInfoTable.GEOLOCATION + ',' +
+                GeoInfoTable.LAST_USED + ',' +
                 GeoInfoTable.USER_UUID +
-                " FROM " + GeoInfoTable.TABLE_NAME;
+                FROM + GeoInfoTable.TABLE_NAME;
 
         return new QueryAllStatement<Map<UUID, List<GeoInfo>>>(sql, 50000) {
             @Override
             public Map<UUID, List<GeoInfo>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, List<GeoInfo>> geoInformation = new HashMap<>();
-                while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(GeoInfoTable.USER_UUID));
-
-                    List<GeoInfo> userGeoInfo = geoInformation.getOrDefault(uuid, new ArrayList<>());
-
-                    String ip = set.getString(GeoInfoTable.IP);
-                    String geolocation = set.getString(GeoInfoTable.GEOLOCATION);
-                    long lastUsed = set.getLong(GeoInfoTable.LAST_USED);
-                    userGeoInfo.add(new GeoInfo(ip, geolocation, lastUsed));
-
-                    geoInformation.put(uuid, userGeoInfo);
-                }
-                return geoInformation;
+                return extractGeoInformation(set);
             }
         };
+    }
+
+    private static Map<UUID, List<GeoInfo>> extractGeoInformation(ResultSet set) throws SQLException {
+        Map<UUID, List<GeoInfo>> geoInformation = new HashMap<>();
+        while (set.next()) {
+            UUID uuid = UUID.fromString(set.getString(GeoInfoTable.USER_UUID));
+
+            List<GeoInfo> userGeoInfo = geoInformation.getOrDefault(uuid, new ArrayList<>());
+
+            String ip = set.getString(GeoInfoTable.IP);
+            String geolocation = set.getString(GeoInfoTable.GEOLOCATION);
+            long lastUsed = set.getLong(GeoInfoTable.LAST_USED);
+            userGeoInfo.add(new GeoInfo(ip, geolocation, lastUsed));
+
+            geoInformation.put(uuid, userGeoInfo);
+        }
+        return geoInformation;
     }
 
     /**
@@ -80,8 +86,8 @@ public class GeoInfoQueries {
      * @return List of {@link GeoInfo}, empty if none are found.
      */
     public static Query<List<GeoInfo>> fetchPlayerGeoInformation(UUID playerUUID) {
-        String sql = "SELECT DISTINCT * FROM " + GeoInfoTable.TABLE_NAME +
-                " WHERE " + GeoInfoTable.USER_UUID + "=?";
+        String sql = SELECT + DISTINCT + '*' + FROM + GeoInfoTable.TABLE_NAME +
+                WHERE + GeoInfoTable.USER_UUID + "=?";
 
         return new QueryStatement<List<GeoInfo>>(sql, 100) {
             @Override
@@ -104,14 +110,14 @@ public class GeoInfoQueries {
     }
 
     public static Query<Map<UUID, List<GeoInfo>>> fetchServerGeoInformation(UUID serverUUID) {
-        String sql = "SELECT " + GeoInfoTable.TABLE_NAME + "." + GeoInfoTable.USER_UUID + ", " +
-                GeoInfoTable.GEOLOCATION + ", " +
-                GeoInfoTable.LAST_USED + ", " +
+        String sql = SELECT + GeoInfoTable.TABLE_NAME + '.' + GeoInfoTable.USER_UUID + ',' +
+                GeoInfoTable.GEOLOCATION + ',' +
+                GeoInfoTable.LAST_USED + ',' +
                 GeoInfoTable.IP +
-                " FROM " + GeoInfoTable.TABLE_NAME +
-                " INNER JOIN " + UserInfoTable.TABLE_NAME + " on " +
-                GeoInfoTable.TABLE_NAME + "." + GeoInfoTable.USER_UUID + "=" + UserInfoTable.TABLE_NAME + "." + UserInfoTable.USER_UUID +
-                " WHERE " + UserInfoTable.SERVER_UUID + "=?";
+                FROM + GeoInfoTable.TABLE_NAME +
+                INNER_JOIN + UserInfoTable.TABLE_NAME + " on " +
+                GeoInfoTable.TABLE_NAME + '.' + GeoInfoTable.USER_UUID + "=" + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_UUID +
+                WHERE + UserInfoTable.SERVER_UUID + "=?";
         return new QueryStatement<Map<UUID, List<GeoInfo>>>(sql, 10000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -120,20 +126,7 @@ public class GeoInfoQueries {
 
             @Override
             public Map<UUID, List<GeoInfo>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, List<GeoInfo>> geoInformation = new HashMap<>();
-                while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(GeoInfoTable.USER_UUID));
-
-                    List<GeoInfo> userGeoInfo = geoInformation.getOrDefault(uuid, new ArrayList<>());
-
-                    String ip = set.getString(GeoInfoTable.IP);
-                    String geolocation = set.getString(GeoInfoTable.GEOLOCATION);
-                    long lastUsed = set.getLong(GeoInfoTable.LAST_USED);
-                    userGeoInfo.add(new GeoInfo(ip, geolocation, lastUsed));
-
-                    geoInformation.put(uuid, userGeoInfo);
-                }
-                return geoInformation;
+                return extractGeoInformation(set);
             }
         };
     }

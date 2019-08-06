@@ -20,6 +20,9 @@ import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.AND;
+import static com.djrapitops.plan.db.sql.parsing.Sql.WHERE;
+
 /**
  * Table information about 'plan_commandusages'.
  *
@@ -38,15 +41,15 @@ public class CommandUseTable {
     public static final String TIMES_USED = "times_used";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
-            + COMMAND + ", "
-            + TIMES_USED + ", "
+            + COMMAND + ','
+            + TIMES_USED + ','
             + SERVER_ID
-            + ") VALUES (?, ?, " + ServerTable.STATEMENT_SELECT_SERVER_ID + ")";
+            + ") VALUES (?, ?, " + ServerTable.STATEMENT_SELECT_SERVER_ID + ')';
 
     public static final String UPDATE_STATEMENT = "UPDATE " + CommandUseTable.TABLE_NAME + " SET "
             + CommandUseTable.TIMES_USED + "=" + CommandUseTable.TIMES_USED + "+ 1" +
-            " WHERE " + CommandUseTable.SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
-            " AND " + CommandUseTable.COMMAND + "=?";
+            WHERE + CommandUseTable.SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
+            AND + CommandUseTable.COMMAND + "=?";
 
     private CommandUseTable() {
         /* Static information class */

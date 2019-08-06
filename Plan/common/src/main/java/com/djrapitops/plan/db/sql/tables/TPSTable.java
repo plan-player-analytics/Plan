@@ -40,17 +40,17 @@ public class TPSTable {
     public static final String FREE_DISK = "free_disk_space";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
-            + SERVER_ID + ", "
-            + DATE + ", "
-            + TPS + ", "
-            + PLAYERS_ONLINE + ", "
-            + CPU_USAGE + ", "
-            + RAM_USAGE + ", "
-            + ENTITIES + ", "
-            + CHUNKS + ", "
+            + SERVER_ID + ','
+            + DATE + ','
+            + TPS + ','
+            + PLAYERS_ONLINE + ','
+            + CPU_USAGE + ','
+            + RAM_USAGE + ','
+            + ENTITIES + ','
+            + CHUNKS + ','
             + FREE_DISK
             + ") VALUES ("
-            + ServerTable.STATEMENT_SELECT_SERVER_ID + ", "
+            + ServerTable.STATEMENT_SELECT_SERVER_ID + ','
             + "?, ?, ?, ?, ?, ?, ?, ?)";
 
     private TPSTable() {

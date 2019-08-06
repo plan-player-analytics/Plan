@@ -26,6 +26,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Static method class for MySQL Schema related queries.
  *
@@ -38,7 +40,7 @@ public class MySQLSchemaQueries {
     }
 
     public static Query<Boolean> doesTableExist(String tableName) {
-        String sql = "SELECT COUNT(1) as c FROM information_schema.TABLES WHERE table_name=? AND TABLE_SCHEMA=DATABASE()";
+        String sql = SELECT + "COUNT(1) as c FROM information_schema.TABLES WHERE table_name=? AND TABLE_SCHEMA=DATABASE()";
         return new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -48,9 +50,10 @@ public class MySQLSchemaQueries {
     }
 
     public static Query<List<ForeignKeyConstraint>> foreignKeyConstraintsOf(String referencedTable) {
-        String keySQL = "SELECT TABLE_NAME,COLUMN_NAME,CONSTRAINT_NAME,REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE" +
-                " WHERE REFERENCED_TABLE_SCHEMA = DATABASE()" +
-                " AND REFERENCED_TABLE_NAME = ?";
+        String keySQL = SELECT + "TABLE_NAME,COLUMN_NAME,CONSTRAINT_NAME,REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME" +
+                FROM + "INFORMATION_SCHEMA.KEY_COLUMN_USAGE" +
+                WHERE + "REFERENCED_TABLE_SCHEMA = DATABASE()" +
+                AND + "REFERENCED_TABLE_NAME = ?";
         return new QueryStatement<List<ForeignKeyConstraint>>(keySQL) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -81,8 +84,9 @@ public class MySQLSchemaQueries {
     }
 
     public static Query<Boolean> doesIndexExist(String indexName, String tableName) {
-        String sql = "SELECT COUNT(1) as c FROM INFORMATION_SCHEMA.STATISTICS " +
-                "WHERE table_schema=DATABASE() AND table_name=? AND index_name=?";
+        String sql = SELECT + "COUNT(1) as c" +
+                FROM + "INFORMATION_SCHEMA.STATISTICS" +
+                WHERE + "table_schema=DATABASE()" + AND + "table_name=?" + AND + "index_name=?";
         return new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -93,8 +97,9 @@ public class MySQLSchemaQueries {
     }
 
     public static Query<Boolean> doesColumnExist(String tableName, String columnName) {
-        String sql = "SELECT COUNT(1) as c FROM information_schema.COLUMNS" +
-                " WHERE TABLE_NAME=? AND COLUMN_NAME=? AND TABLE_SCHEMA=DATABASE()";
+        String sql = SELECT + "COUNT(1) as c" +
+                FROM + "information_schema.COLUMNS" +
+                WHERE + "TABLE_NAME=? AND COLUMN_NAME=? AND TABLE_SCHEMA=DATABASE()";
         return new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -152,9 +157,9 @@ public class MySQLSchemaQueries {
         @Override
         public String toString() {
             return "FK '" + constraintName + "' " +
-                    table + "." + column +
+                    table + '.' + column +
                     " references " +
-                    referencedTable + "." + referencedColumn;
+                    referencedTable + '.' + referencedColumn;
         }
     }
 }
