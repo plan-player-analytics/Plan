@@ -6,7 +6,7 @@ pipeline {
             steps {
                 dir("Plan") {
                     script {
-                        sh './gradlew shadowJar --parallel'
+                        sh './gradlew clean shadowJar --parallel'
                     }
                 }
             }
@@ -16,7 +16,7 @@ pipeline {
                 dir("Plan") {
                     script {
                         try {
-                            sh './gradlew clean test'
+                            sh './gradlew test --parallel'
                         } finally {
                             junit '**/build/test-results/test/*.xml'
                         }
@@ -41,6 +41,15 @@ pipeline {
                             sh './gradlew sonarqube -Dsonar.organization=player-analytics-plan'
                         }
                     }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            dir("Plan") {
+                script {
+                    sh './gradlew clean --parallel'
                 }
             }
         }
