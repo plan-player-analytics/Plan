@@ -16,7 +16,7 @@ pipeline {
                 dir("Plan") {
                     script {
                         try {
-                            sh './gradlew clean test --no-daemon'
+                            sh './gradlew clean test'
                         } finally {
                             junit '**/build/test-results/test/*.xml'
                         }
