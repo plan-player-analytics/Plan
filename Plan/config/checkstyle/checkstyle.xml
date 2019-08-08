@@ -22,6 +22,10 @@
         <module name="AnonInnerLength">
             <property name="max" value="50"/>
         </module>
+        <module name="LineLength">
+            <!-- This value is very high. Notable: ExtensionExtractor: 254, DeepHelpLang 345, WorldMap 2964 -->
+            <property name="max" value="3000"/>
+        </module>
 
         <!-- Java Style -->
         <module name="ArrayTypeStyle"/>
