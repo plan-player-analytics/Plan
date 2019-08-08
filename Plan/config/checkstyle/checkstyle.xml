@@ -57,6 +57,7 @@
         </module>
         <module name="EmptyStatement"/>
         <module name="HideUtilityClassConstructor"/>
+        <module name="IllegalThrows"/>
 
         <!-- Performance-->
         <module name="IllegalInstantiation">
