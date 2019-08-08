@@ -25,6 +25,10 @@
         <module name="ArrayTypeStyle"/>
         <module name="AvoidNestedBlocks"/>
         <module name="CatchParameterName"/>
+        <module name="ClassFanOutComplexity">
+            <!-- This value is high. Notable: DatabaseTest: 84, SQLDB: 56 -->
+            <property name="max" value="85"/>
+        </module>
     </module>
 
 </module>
