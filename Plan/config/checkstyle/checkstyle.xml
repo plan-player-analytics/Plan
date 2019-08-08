@@ -13,29 +13,39 @@
 
     <module name="TreeWalker">
         <module name="EmptyStatement"/>
-        <module name="EqualsAvoidNull"/>
         <module name="FallThrough"/>
         <module name="InnerAssignment"/>
 
-        <!-- Start enforcing some style little by little -->
-
+        <!-- Classes -->
         <module name="AnonInnerLength">
             <property name="max" value="50"/>
         </module>
+
+        <!-- Java Style -->
         <module name="ArrayTypeStyle"/>
         <module name="AvoidNestedBlocks"/>
+        <module name="CommentsIndentation"/>
+        <module name="DefaultComesLast"> <!-- Switches -->
+            <property name="skipIfLastAndSharedWithCase" value="true"/>
+        </module>
+
+        <!-- Variable naming -->
         <module name="CatchParameterName"/>
+        <module name="ClassTypeParameterName"/>
+
+        <!-- Metrics -->
         <module name="ClassFanOutComplexity">
             <!-- This value is high. Notable: DatabaseTest: 84, SQLDB: 56 -->
             <property name="max" value="85"/>
         </module>
-        <module name="ClassTypeParameterName"/>
-        <module name="CommentsIndentation"/>
-        <module name="CovariantEquals"/>
         <module name="CyclomaticComplexity">
             <!-- This value is high. Notable: ActivityIndex: 18 -->
             <property name="max" value="18"/>
         </module>
+
+        <!-- Bugs -->
+        <module name="CovariantEquals"/>
+        <module name="EqualsAvoidNull"/>
     </module>
 
 </module>
