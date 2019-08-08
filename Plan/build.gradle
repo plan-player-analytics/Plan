@@ -19,7 +19,7 @@ plugins {
 apply plugin: 'nebula-aggregate-javadocs'
 
 allprojects {
-    wrapper.gradleVersion = "5.0"
+    wrapper.gradleVersion = "5.5.1"
 
     group "com.djrapitops"
     version "4.9.1"
@@ -127,7 +127,7 @@ subprojects {
         testCompile "org.xerial:sqlite-jdbc:3.28.0"     // SQLite
         testCompile "mysql:mysql-connector-java:$mysqlVersion" // MySQL
     }
-    
+
     configurations {
         testArtifacts.extendsFrom testRuntime
     }
@@ -143,11 +143,20 @@ subprojects {
     checkstyle {
         configFile rootProject.file('config/checkstyle/checkstyle.xml')
     }
+
+    jacocoTestReport {
+        reports {
+            xml.enabled true
+            xml.destination file("${buildDir}/reports/jacoco/report.xml")
+            csv.enabled false
+        }
+    }
 }
 
 sonarqube {
     properties {
         property "sonar.projectName", "Player Analytics"
         property "sonar.projectKey", "com.djrapitops:Plan"
+        property "sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/jacoco"
     }
 }
