@@ -28,6 +28,7 @@
         <module name="DefaultComesLast"> <!-- Switches -->
             <property name="skipIfLastAndSharedWithCase" value="true"/>
         </module>
+        <module name="EmptyForIteratorPad"/>
 
         <!-- Variable naming -->
         <module name="CatchParameterName"/>
