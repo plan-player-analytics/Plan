@@ -17,7 +17,6 @@
 
     <module name="TreeWalker">
         <module name="EmptyStatement"/>
-        <module name="InnerAssignment"/>
 
         <!-- Length restriction -->
         <module name="AnonInnerLength">
@@ -34,10 +33,12 @@
         <module name="FallThrough"/> <!-- Switches -->
         <module name="EmptyForIteratorPad"/>
         <module name="GenericWhitespace"/>
+        <module name="InnerAssignment"/>
 
         <!-- Variable naming -->
         <module name="CatchParameterName"/>
         <module name="ClassTypeParameterName"/>
+        <module name="LambdaParameterName"/>
 
         <!-- Metrics -->
         <module name="ClassFanOutComplexity">
