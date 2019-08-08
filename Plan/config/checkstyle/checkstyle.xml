@@ -33,6 +33,7 @@
         </module>
         <module name="FallThrough"/> <!-- Switches -->
         <module name="EmptyForIteratorPad"/>
+        <module name="GenericWhitespace"/>
 
         <!-- Variable naming -->
         <module name="CatchParameterName"/>
