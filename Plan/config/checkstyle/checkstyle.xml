@@ -30,6 +30,7 @@
             <property name="max" value="85"/>
         </module>
         <module name="ClassTypeParameterName"/>
+        <module name="CommentsIndentation"/>
     </module>
 
 </module>
