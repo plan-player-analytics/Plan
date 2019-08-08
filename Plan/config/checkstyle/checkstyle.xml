@@ -29,6 +29,7 @@
             <!-- This value is high. Notable: DatabaseTest: 84, SQLDB: 56 -->
             <property name="max" value="85"/>
         </module>
+        <module name="ClassTypeParameterName"/>
     </module>
 
 </module>
