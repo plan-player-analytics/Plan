@@ -102,10 +102,10 @@ public class DeathEventListener implements Listener {
         Material itemInHand;
         try {
             itemInHand = killer.getInventory().getItemInMainHand().getType();
-        } catch (NoSuchMethodError e) {
+        } catch (NoSuchMethodError oldVersion) {
             try {
                 itemInHand = killer.getInventory().getItemInHand().getType(); // Support for non dual wielding versions.
-            } catch (Exception | NoSuchMethodError | NoSuchFieldError e2) {
+            } catch (Exception | NoSuchMethodError | NoSuchFieldError unknownError) {
                 itemInHand = Material.AIR;
             }
         }

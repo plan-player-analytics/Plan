@@ -54,12 +54,12 @@ public class KeepAliveTask extends AbsRunnable {
                 statement = connection.createStatement();
                 resultSet = statement.executeQuery("/* ping */ SELECT 1");
             }
-        } catch (SQLException e) {
+        } catch (SQLException pingException) {
             logger.debug("Something went wrong during SQL Connection upkeep task.");
             try {
                 connection = iReconnect.reconnect();
-            } catch (SQLException e1) {
-                errorHandler.log(L.ERROR, this.getClass(), e1);
+            } catch (SQLException reconnectionError) {
+                errorHandler.log(L.ERROR, this.getClass(), reconnectionError);
                 logger.error("SQL connection maintaining task had to be closed due to exception.");
                 this.cancel();
             }

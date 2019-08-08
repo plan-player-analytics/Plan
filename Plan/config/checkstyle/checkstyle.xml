@@ -16,6 +16,15 @@
         <module name="EqualsAvoidNull"/>
         <module name="FallThrough"/>
         <module name="InnerAssignment"/>
+
+        <!-- Start enforcing some style little by little -->
+
+        <module name="AnonInnerLength">
+            <property name="max" value="50"/>
+        </module>
+        <module name="ArrayTypeStyle"/>
+        <module name="AvoidNestedBlocks"/>
+        <module name="CatchParameterName"/>
     </module>
 
 </module>
