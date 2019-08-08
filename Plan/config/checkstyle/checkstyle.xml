@@ -57,6 +57,11 @@
         </module>
         <module name="EmptyStatement"/>
         <module name="HideUtilityClassConstructor"/>
+
+        <!-- Performance-->
+        <module name="IllegalInstantiation">
+            <property name="classes" value="java.lang.Boolean"/>
+        </module>
     </module>
 
 </module>
