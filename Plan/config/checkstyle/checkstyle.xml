@@ -32,6 +32,10 @@
         <module name="ClassTypeParameterName"/>
         <module name="CommentsIndentation"/>
         <module name="CovariantEquals"/>
+        <module name="CyclomaticComplexity">
+            <!-- This value is high. Notable: ActivityIndex: 18 -->
+            <property name="max" value="18"/>
+        </module>
     </module>
 
 </module>
