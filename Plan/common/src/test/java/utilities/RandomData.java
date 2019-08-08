@@ -33,6 +33,10 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomData {
 
+    private RandomData() {
+        /* Static method class */
+    }
+
     private static final Random r = new Random();
 
     public static int randomInt(int rangeStart, int rangeEnd) {

@@ -56,7 +56,7 @@
             <property name="exceptionVariableName" value="expected|ignore"/>
         </module>
         <module name="EmptyStatement"/>
-
+        <module name="HideUtilityClassConstructor"/>
     </module>
 
 </module>
