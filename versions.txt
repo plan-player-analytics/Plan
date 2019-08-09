@@ -1,3 +1,4 @@
+REL|4.9.2|https://github.com/plan-player-analytics/Plan/releases/download/4.9.2/Plan-4.9.2.jar|https://github.com/plan-player-analytics/Plan/releases/tag/4.9.2
 DEV|4.9.1-b1|https://github.com/plan-player-analytics/Plan/releases/download/4.9.2-DEV1/Plan-4.9.1-b1.jar|https://github.com/plan-player-analytics/Plan/releases/tag/4.9.2-DEV1
 REL|4.9.1|https://github.com/plan-player-analytics/Plan/releases/download/4.9.1/Plan-4.9.1.jar|https://github.com/plan-player-analytics/Plan/releases/tag/4.9.1
 REL|4.9.0|https://github.com/plan-player-analytics/Plan/releases/download/4.9.0-REL/Plan-4.9.0.jar|https://github.com/plan-player-analytics/Plan/releases/tag/4.9.0-REL
