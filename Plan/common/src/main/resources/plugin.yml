@@ -19,6 +19,7 @@ softdepend:
   - LuckPerms
   - mcMMO
   - MinigamesLib
+  - nuVotifier
   - ProtocolSupport
   - RedProtect
   - SuperbVote

@@ -49,7 +49,8 @@ import java.io.InputStream;
                 @Dependency(id = "griefprevention", optional = true),
                 @Dependency(id = "luckperms", optional = true),
                 @Dependency(id = "nucleus", optional = true),
-                @Dependency(id = "redprotect", optional = true)
+                @Dependency(id = "redprotect", optional = true),
+                @Dependency(id = "nuvotifier", optional = true)
         }
 )
 public class PlanSponge extends SpongePlugin implements PlanPlugin {
