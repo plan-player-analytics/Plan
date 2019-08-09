@@ -38,6 +38,7 @@
         <module name="EmptyForIteratorPad"/>
         <module name="GenericWhitespace"/>
         <module name="InnerAssignment"/>
+        <module name="MissingOverride"/>
 
         <!-- Variable naming -->
         <module name="CatchParameterName"/>
