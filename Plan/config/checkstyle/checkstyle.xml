@@ -64,6 +64,7 @@
         <module name="EmptyStatement"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="IllegalThrows"/>
+        <module name="PackageAnnotation"/>
 
         <!-- Performance-->
         <module name="IllegalInstantiation">
