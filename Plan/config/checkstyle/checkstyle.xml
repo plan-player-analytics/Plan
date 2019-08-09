@@ -26,6 +26,10 @@
             <!-- This value is very high. Notable: ExtensionExtractor: 254, DeepHelpLang 345, WorldMap 2964 -->
             <property name="max" value="3000"/>
         </module>
+        <module name="MethodLength">
+            <!-- This value is high. Notable: InspectPage: 138 -->
+            <property name="max" value="150"/>
+        </module>
 
         <!-- Java Style -->
         <module name="ArrayTypeStyle"/>
@@ -47,6 +51,9 @@
         <!-- Variable naming -->
         <module name="CatchParameterName"/>
         <module name="ClassTypeParameterName"/>
+        <module name="InterfaceTypeParameterName"/>
+        <module name="LocalVariableName"/>
+        <module name="MethodTypeParameterName"/>
         <module name="LambdaParameterName"/>
 
         <!-- Metrics -->
