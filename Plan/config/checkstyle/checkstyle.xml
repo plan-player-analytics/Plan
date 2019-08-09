@@ -47,6 +47,7 @@
             <property name="max" value="1"/>
         </module>
         <module name="UnnecessaryParentheses"/>
+        <module name="NoWhitespaceAfter"/>
 
         <!-- Variable naming -->
         <module name="CatchParameterName"/>
