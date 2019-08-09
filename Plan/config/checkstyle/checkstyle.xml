@@ -39,6 +39,9 @@
         <module name="GenericWhitespace"/>
         <module name="InnerAssignment"/>
         <module name="MissingOverride"/>
+        <module name="NestedTryDepth">
+            <property name="max" value="1"/>
+        </module>
 
         <!-- Variable naming -->
         <module name="CatchParameterName"/>
