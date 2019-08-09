@@ -147,8 +147,7 @@ subprojects {
     jacocoTestReport {
         reports {
             xml.enabled true
-            xml.destination file("${buildDir}/reports/jacoco/report.xml")
-            csv.enabled false
+            xml.destination file("${buildDir}/jacoco/report.xml")
         }
     }
 }
@@ -157,6 +156,5 @@ sonarqube {
     properties {
         property "sonar.projectName", "Player Analytics"
         property "sonar.projectKey", "com.djrapitops:Plan"
-        property "sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/jacoco"
     }
 }
