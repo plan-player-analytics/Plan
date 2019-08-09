@@ -29,6 +29,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Static method class for queries that use large amount of memory.
  *
@@ -46,14 +48,14 @@ public class LargeFetchQueries {
      * @return Multi map: Server UUID - (Command name - Usage count)
      */
     public static Query<Map<UUID, Map<String, Integer>>> fetchAllCommandUsageData() {
-        String serverIDColumn = ServerTable.TABLE_NAME + "." + ServerTable.SERVER_ID;
-        String serverUUIDColumn = ServerTable.TABLE_NAME + "." + ServerTable.SERVER_UUID + " as s_uuid";
-        String sql = "SELECT " +
-                CommandUseTable.COMMAND + ", " +
-                CommandUseTable.TIMES_USED + ", " +
+        String serverIDColumn = ServerTable.TABLE_NAME + '.' + ServerTable.SERVER_ID;
+        String serverUUIDColumn = ServerTable.TABLE_NAME + '.' + ServerTable.SERVER_UUID + " as s_uuid";
+        String sql = SELECT +
+                CommandUseTable.COMMAND + ',' +
+                CommandUseTable.TIMES_USED + ',' +
                 serverUUIDColumn +
-                " FROM " + CommandUseTable.TABLE_NAME +
-                " INNER JOIN " + ServerTable.TABLE_NAME + " on " + serverIDColumn + "=" + CommandUseTable.SERVER_ID;
+                FROM + CommandUseTable.TABLE_NAME +
+                INNER_JOIN + ServerTable.TABLE_NAME + " on " + serverIDColumn + "=" + CommandUseTable.SERVER_ID;
 
         return new QueryAllStatement<Map<UUID, Map<String, Integer>>>(sql, 10000) {
             @Override
@@ -81,20 +83,20 @@ public class LargeFetchQueries {
      * @return Map: Server UUID - List of TPS data
      */
     public static Query<Map<UUID, List<TPS>>> fetchAllTPSData() {
-        String serverIDColumn = ServerTable.TABLE_NAME + "." + ServerTable.SERVER_ID;
-        String serverUUIDColumn = ServerTable.TABLE_NAME + "." + ServerTable.SERVER_UUID + " as s_uuid";
-        String sql = "SELECT " +
-                TPSTable.DATE + ", " +
-                TPSTable.TPS + ", " +
-                TPSTable.PLAYERS_ONLINE + ", " +
-                TPSTable.CPU_USAGE + ", " +
-                TPSTable.RAM_USAGE + ", " +
-                TPSTable.ENTITIES + ", " +
-                TPSTable.CHUNKS + ", " +
-                TPSTable.FREE_DISK + ", " +
+        String serverIDColumn = ServerTable.TABLE_NAME + '.' + ServerTable.SERVER_ID;
+        String serverUUIDColumn = ServerTable.TABLE_NAME + '.' + ServerTable.SERVER_UUID + " as s_uuid";
+        String sql = SELECT +
+                TPSTable.DATE + ',' +
+                TPSTable.TPS + ',' +
+                TPSTable.PLAYERS_ONLINE + ',' +
+                TPSTable.CPU_USAGE + ',' +
+                TPSTable.RAM_USAGE + ',' +
+                TPSTable.ENTITIES + ',' +
+                TPSTable.CHUNKS + ',' +
+                TPSTable.FREE_DISK + ',' +
                 serverUUIDColumn +
-                " FROM " + TPSTable.TABLE_NAME +
-                " INNER JOIN " + ServerTable.TABLE_NAME + " on " + serverIDColumn + "=" + TPSTable.SERVER_ID;
+                FROM + TPSTable.TABLE_NAME +
+                INNER_JOIN + ServerTable.TABLE_NAME + " on " + serverIDColumn + "=" + TPSTable.SERVER_ID;
 
         return new QueryAllStatement<Map<UUID, List<TPS>>>(sql, 50000) {
             @Override
@@ -130,7 +132,7 @@ public class LargeFetchQueries {
      * @return Map: Server UUID - List of world names
      */
     public static Query<Map<UUID, Collection<String>>> fetchAllWorldNames() {
-        String sql = "SELECT * FROM " + WorldTable.TABLE_NAME;
+        String sql = SELECT + '*' + FROM + WorldTable.TABLE_NAME;
 
         return new QueryAllStatement<Map<UUID, Collection<String>>>(sql, 1000) {
             @Override

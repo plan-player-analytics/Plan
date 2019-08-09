@@ -49,18 +49,18 @@ public class SessionsTable {
     public static final String AFK_TIME = "afk_time";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
-            + USER_UUID + ", "
-            + SESSION_START + ", "
-            + SESSION_END + ", "
-            + DEATHS + ", "
-            + MOB_KILLS + ", "
-            + AFK_TIME + ", "
+            + USER_UUID + ','
+            + SESSION_START + ','
+            + SESSION_END + ','
+            + DEATHS + ','
+            + MOB_KILLS + ','
+            + AFK_TIME + ','
             + SERVER_UUID
             + ") VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-    public static final String SELECT_SESSION_ID_STATEMENT = "(SELECT " + TABLE_NAME + "." + ID + FROM + TABLE_NAME +
-            WHERE + TABLE_NAME + "." + USER_UUID + "=?" +
-            AND + TABLE_NAME + "." + SERVER_UUID + "=?" +
+    public static final String SELECT_SESSION_ID_STATEMENT = "(SELECT " + TABLE_NAME + '.' + ID + FROM + TABLE_NAME +
+            WHERE + TABLE_NAME + '.' + USER_UUID + "=?" +
+            AND + TABLE_NAME + '.' + SERVER_UUID + "=?" +
             AND + SESSION_START + "=?" +
             AND + SESSION_END + "=? LIMIT 1)";
 

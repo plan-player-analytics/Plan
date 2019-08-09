@@ -155,6 +155,7 @@ public final class ExtensionExtractor {
         for (Class option : parameterOptions) {
             if (option.equals(methodParameter)) {
                 validParameter = true;
+                break;
             }
         }
 

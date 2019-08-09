@@ -21,7 +21,6 @@ import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.NotReadyException;
 import com.djrapitops.plan.extension.implementation.MethodType;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
@@ -32,7 +31,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class MethodWrapper<T> implements Serializable {
+public class MethodWrapper<T> {
 
     private final Method method;
     private final Class<T> resultType;
@@ -80,7 +79,7 @@ public class MethodWrapper<T> implements Serializable {
                     throw new IllegalArgumentException(method.getDeclaringClass() + " method " + method.getName() + " had invalid parameters.");
             }
         } catch (InvocationTargetException notReadyToBeCalled) {
-            if (notReadyToBeCalled.getCause() != null && notReadyToBeCalled.getCause() instanceof NotReadyException) {
+            if (notReadyToBeCalled.getCause() instanceof NotReadyException) {
                 return null; // Data or API not available to make the call.
             } else {
                 throw new IllegalArgumentException(method.getDeclaringClass() + " method " + method.getName() + " could not be called: " + notReadyToBeCalled.getMessage(), notReadyToBeCalled);

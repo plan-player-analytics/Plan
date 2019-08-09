@@ -49,9 +49,6 @@ public class TestDatabaseCreator {
 
         boolean oldDB = testDB.exists();
 
-//        db = new SQLiteDB(testDB, Locale::new);
-//        db.init();
-
         r = new Random();
 
         if (oldDB) {

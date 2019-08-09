@@ -178,8 +178,9 @@ public class WebServer implements SubSystem {
         String alias = config.get(WebserverSettings.CERTIFICATE_ALIAS);
 
         boolean startSuccessful = false;
+        String keyStoreKind = keyStorePath.endsWith(".p12") ? "PKCS12" : "JKS";
         try (FileInputStream fIn = new FileInputStream(keyStorePath)) {
-            KeyStore keystore = KeyStore.getInstance("JKS");
+            KeyStore keystore = KeyStore.getInstance(keyStoreKind);
 
             keystore.load(fIn, storepass);
             Certificate cert = keystore.getCertificate(alias);

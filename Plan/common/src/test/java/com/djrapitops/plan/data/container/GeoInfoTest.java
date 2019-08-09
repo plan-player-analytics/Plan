@@ -22,7 +22,6 @@ import org.junit.runner.RunWith;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.security.NoSuchAlgorithmException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -35,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class GeoInfoTest {
 
     @Test
-    void automaticallyHidesLast16Bits() throws NoSuchAlgorithmException, UnknownHostException {
+    void automaticallyHidesLast16Bits() throws UnknownHostException {
         InetAddress test = InetAddress.getByName("1.2.3.4");
         String expected = "1.2.xx.xx";
         String result = new GeoInfo(test, "Irrelevant", 3).getIp();

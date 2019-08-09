@@ -29,6 +29,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Queries for {@link com.djrapitops.plan.system.info.server.Server} objects.
  *
@@ -46,7 +48,7 @@ public class ServerQueries {
      * @return Map: Server UUID - Plan Server Information
      */
     public static Query<Map<UUID, Server>> fetchPlanServerInformation() {
-        String sql = "SELECT * FROM " + ServerTable.TABLE_NAME + " WHERE " + ServerTable.INSTALLED + "=?";
+        String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME + WHERE + ServerTable.INSTALLED + "=?";
 
         return new QueryStatement<Map<UUID, Server>>(sql, 100) {
             @Override
@@ -80,11 +82,11 @@ public class ServerQueries {
     }
 
     public static Query<Optional<Server>> fetchServerMatchingIdentifier(String identifier) {
-        String sql = "SELECT * FROM " + ServerTable.TABLE_NAME +
+        String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME +
                 " WHERE (LOWER(" + ServerTable.SERVER_UUID + ") LIKE LOWER(?)" +
-                " OR LOWER(" + ServerTable.NAME + ") LIKE LOWER(?)" +
-                " OR " + ServerTable.SERVER_ID + "=?)" +
-                " AND " + ServerTable.INSTALLED + "=?" +
+                OR + "LOWER(" + ServerTable.NAME + ") LIKE LOWER(?)" +
+                OR + ServerTable.SERVER_ID + "=?)" +
+                AND + ServerTable.INSTALLED + "=?" +
                 " LIMIT 1";
         return new QueryStatement<Optional<Server>>(sql) {
             @Override

@@ -44,22 +44,7 @@ public class WorldsServerIDPatch extends Patch {
         // WorldsOptimizationPatch makes this patch incompatible with newer patch versions.
         return hasColumn(tableName, "server_uuid")
                 || hasColumn(tableName, columnName)
-                && allValuesHaveServerID(tableName, columnName);
-    }
-
-    private Boolean allValuesHaveServerID(String tableName, String columnName) {
-        String sql = "SELECT *" + FROM + tableName + WHERE + columnName + "=? LIMIT 1";
-        return query(new QueryStatement<Boolean>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setInt(1, 0);
-            }
-
-            @Override
-            public Boolean processResults(ResultSet set) throws SQLException {
-                return !set.next();
-            }
-        });
+                && allValuesHaveValueZero(tableName, columnName);
     }
 
     @Override
@@ -74,20 +59,20 @@ public class WorldsServerIDPatch extends Patch {
         execute(LargeStoreQueries.storeAllWorldNames(worldsPerServer));
 
         updateWorldTimesTableWorldIDs();
-        executeSwallowingExceptions("DELETE FROM " + WorldTable.TABLE_NAME + " WHERE server_id=0");
+        executeSwallowingExceptions(DELETE_FROM + WorldTable.TABLE_NAME + WHERE + "server_id=0");
     }
 
     private Set<String> getWorldNamesOld(UUID serverUUID) {
-        String worldIDColumn = WorldTimesTable.TABLE_NAME + "." + WorldTimesTable.WORLD_ID;
-        String worldSessionIDColumn = WorldTimesTable.TABLE_NAME + "." + WorldTimesTable.SESSION_ID;
-        String sessionIDColumn = SessionsTable.TABLE_NAME + "." + SessionsTable.ID;
-        String sessionServerUUIDColumn = SessionsTable.TABLE_NAME + "." + SessionsTable.SERVER_UUID;
+        String worldIDColumn = WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.WORLD_ID;
+        String worldSessionIDColumn = WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SESSION_ID;
+        String sessionIDColumn = SessionsTable.TABLE_NAME + '.' + SessionsTable.ID;
+        String sessionServerUUIDColumn = SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_UUID;
 
-        String sql = "SELECT DISTINCT " +
+        String sql = SELECT + DISTINCT +
                 WorldTable.NAME + FROM +
                 WorldTable.TABLE_NAME +
-                " INNER JOIN " + WorldTimesTable.TABLE_NAME + " on " + worldIDColumn + "=" + WorldTable.TABLE_NAME + "." + WorldTable.ID +
-                " INNER JOIN " + SessionsTable.TABLE_NAME + " on " + worldSessionIDColumn + "=" + sessionIDColumn +
+                INNER_JOIN + WorldTimesTable.TABLE_NAME + " on " + worldIDColumn + "=" + WorldTable.TABLE_NAME + '.' + WorldTable.ID +
+                INNER_JOIN + SessionsTable.TABLE_NAME + " on " + worldSessionIDColumn + "=" + sessionIDColumn +
                 WHERE + sessionServerUUIDColumn + "=?";
 
         return query(new QueryStatement<Set<String>>(sql, 1000) {
@@ -141,7 +126,7 @@ public class WorldsServerIDPatch extends Patch {
     }
 
     public List<WorldObj> getWorldObjects() {
-        String sql = "SELECT * FROM " + WorldTable.TABLE_NAME;
+        String sql = SELECT + '*' + FROM + WorldTable.TABLE_NAME;
         return query(new QueryAllStatement<List<WorldObj>>(sql, 100) {
             @Override
             public List<WorldObj> processResults(ResultSet set) throws SQLException {

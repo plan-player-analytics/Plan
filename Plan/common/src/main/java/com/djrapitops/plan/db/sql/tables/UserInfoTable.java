@@ -43,10 +43,10 @@ public class UserInfoTable {
     public static final String BANNED = "banned";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
-            USER_UUID + ", " +
-            REGISTERED + ", " +
-            SERVER_UUID + ", " +
-            BANNED + ", " +
+            USER_UUID + ',' +
+            REGISTERED + ',' +
+            SERVER_UUID + ',' +
+            BANNED + ',' +
             OP +
             ") VALUES (?, ?, ?, ?, ?)";
 

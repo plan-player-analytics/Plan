@@ -23,6 +23,9 @@ import com.djrapitops.plan.db.sql.tables.SecurityTable;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.DELETE_FROM;
+import static com.djrapitops.plan.db.sql.parsing.Sql.WHERE;
+
 /**
  * Transaction to remove a Plan {@link com.djrapitops.plan.data.WebUser} from the database.
  *
@@ -38,7 +41,7 @@ public class RemoveWebUserTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
-        String sql = "DELETE FROM " + SecurityTable.TABLE_NAME + " WHERE " + SecurityTable.USERNAME + "=?";
+        String sql = DELETE_FROM + SecurityTable.TABLE_NAME + WHERE + SecurityTable.USERNAME + "=?";
 
         execute(new ExecStatement(sql) {
             @Override

@@ -19,10 +19,10 @@ plugins {
 apply plugin: 'nebula-aggregate-javadocs'
 
 allprojects {
-    wrapper.gradleVersion = "5.0"
+    wrapper.gradleVersion = "5.5.1"
 
     group "com.djrapitops"
-    version "4.9.1"
+    version "4.9.2"
 
     test {
         useJUnitPlatform()
@@ -56,25 +56,25 @@ subprojects {
     ext.daggerVersion = "2.24"
     ext.daggerCompilerVersion = "2.24"
 
-    ext.abstractPluginFrameworkVersion = "3.4.1"
+    ext.abstractPluginFrameworkVersion = "3.4.2"
     ext.planPluginBridgeVersion = "4.9.0-R0.3"
 
-    ext.bukkitVersion = "1.12.2-R0.1-SNAPSHOT"
-    ext.spigotVersion = "1.12.2-R0.1-SNAPSHOT"
-    ext.paperVersion = "1.12.2-R0.1-SNAPSHOT"
+    ext.bukkitVersion = "1.13.2-R0.1-SNAPSHOT"
+    ext.spigotVersion = "1.13.2-R0.1-SNAPSHOT"
+    ext.paperVersion = "1.13.2-R0.1-SNAPSHOT"
     ext.spongeVersion = "7.1.0"
-    ext.bungeeVersion = "1.12-SNAPSHOT"
+    ext.bungeeVersion = "1.13-SNAPSHOT"
     ext.velocityVersion = "1.0-SNAPSHOT"
     ext.redisBungeeVersion = "0.3.8-SNAPSHOT"
 
     ext.httpClientVersion = "4.5.9"
     ext.commonsTextVersion = "1.7"
     ext.htmlCompressorVersion = "1.5.2"
-    ext.caffeineVersion = "2.7.0"
+    ext.caffeineVersion = "2.8.0"
     ext.h2Version = "1.4.199"
     ext.mysqlVersion = "8.0.17"
     ext.hikariVersion = "3.3.1"
-    ext.slf4jVersion = "1.7.26"
+    ext.slf4jVersion = "1.7.27"
     ext.geoIpVersion = "2.12.0"
     ext.guavaVersion = "28.0-jre"
     ext.bstatsVersion = "1.4"
@@ -127,7 +127,7 @@ subprojects {
         testCompile "org.xerial:sqlite-jdbc:3.28.0"     // SQLite
         testCompile "mysql:mysql-connector-java:$mysqlVersion" // MySQL
     }
-    
+
     configurations {
         testArtifacts.extendsFrom testRuntime
     }
@@ -143,11 +143,20 @@ subprojects {
     checkstyle {
         configFile rootProject.file('config/checkstyle/checkstyle.xml')
     }
+
+    jacocoTestReport {
+        reports {
+            xml.enabled true
+            xml.destination file("${buildDir}/reports/jacoco/report.xml")
+            csv.enabled false
+        }
+    }
 }
 
 sonarqube {
     properties {
         property "sonar.projectName", "Player Analytics"
         property "sonar.projectKey", "com.djrapitops:Plan"
+        property "sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/jacoco"
     }
 }

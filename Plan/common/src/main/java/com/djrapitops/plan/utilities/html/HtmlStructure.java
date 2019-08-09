@@ -28,6 +28,10 @@ import org.apache.commons.text.TextStringBuilder;
  */
 public class HtmlStructure {
 
+    private HtmlStructure() {
+        /* Static method class */
+    }
+
     public static String separateWithDots(String... elements) {
         TextStringBuilder builder = new TextStringBuilder();
         builder.appendWithSeparators(elements, " &#x2022; ");

@@ -17,12 +17,10 @@
 package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.db.access.ExecBatchStatement;
-import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.access.queries.schema.SessionIDServerIDRelationQuery;
 import com.djrapitops.plan.db.sql.tables.KillsTable;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -35,22 +33,7 @@ public class KillsServerIDPatch extends Patch {
 
         // KillsOptimizationPatch makes this patch incompatible with newer patch versions.
         return hasColumn(tableName, KillsTable.SERVER_UUID)
-                || (hasColumn(tableName, columnName) && allValuesHaveServerID(tableName, columnName));
-    }
-
-    private Boolean allValuesHaveServerID(String tableName, String columnName) {
-        String sql = "SELECT * FROM " + tableName + " WHERE " + columnName + "=? LIMIT 1";
-        return query(new QueryStatement<Boolean>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setInt(1, 0);
-            }
-
-            @Override
-            public Boolean processResults(ResultSet set) throws SQLException {
-                return !set.next();
-            }
-        });
+                || (hasColumn(tableName, columnName) && allValuesHaveValueZero(tableName, columnName));
     }
 
     @Override

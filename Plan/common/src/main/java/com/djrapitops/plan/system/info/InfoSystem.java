@@ -119,7 +119,7 @@ public abstract class InfoSystem implements SubSystem {
             try {
                 logger.getDebugLogger().logOn(DebugChannels.INFO_REQUESTS, "Exception during request: " + original.toString() + ", running locally.");
                 runLocally(infoRequest);
-            } catch (NoServersException e2) {
+            } catch (NoServersException noServers) {
                 throw original;
             }
         }

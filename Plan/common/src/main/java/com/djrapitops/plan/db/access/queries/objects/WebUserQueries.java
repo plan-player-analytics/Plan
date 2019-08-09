@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Queries for {@link com.djrapitops.plan.data.WebUser} objects.
  *
@@ -46,7 +48,7 @@ public class WebUserQueries {
      * @return List of Plan WebUsers.
      */
     public static Query<List<WebUser>> fetchAllPlanWebUsers() {
-        String sql = "SELECT * FROM " + SecurityTable.TABLE_NAME + " ORDER BY " + SecurityTable.PERMISSION_LEVEL + " ASC";
+        String sql = SELECT + '*' + FROM + SecurityTable.TABLE_NAME + ORDER_BY + SecurityTable.PERMISSION_LEVEL + " ASC";
 
         return new QueryAllStatement<List<WebUser>>(sql, 5000) {
             @Override
@@ -65,8 +67,8 @@ public class WebUserQueries {
     }
 
     public static Query<Optional<WebUser>> fetchWebUser(String called) {
-        String sql = "SELECT * FROM " + SecurityTable.TABLE_NAME +
-                " WHERE " + SecurityTable.USERNAME + "=? LIMIT 1";
+        String sql = SELECT + '*' + FROM + SecurityTable.TABLE_NAME +
+                WHERE + SecurityTable.USERNAME + "=? LIMIT 1";
         return new QueryStatement<Optional<WebUser>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

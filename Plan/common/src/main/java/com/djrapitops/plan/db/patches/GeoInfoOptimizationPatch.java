@@ -18,6 +18,8 @@ package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.db.sql.tables.GeoInfoTable;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.FROM;
+
 public class GeoInfoOptimizationPatch extends Patch {
 
     private String tempTableName;
@@ -42,16 +44,16 @@ public class GeoInfoOptimizationPatch extends Patch {
         execute(GeoInfoTable.createTableSQL(dbType));
 
         execute("INSERT INTO " + tableName + " (" +
-                GeoInfoTable.USER_UUID + ", " +
-                GeoInfoTable.IP + ", " +
-                GeoInfoTable.LAST_USED + ", " +
+                GeoInfoTable.USER_UUID + ',' +
+                GeoInfoTable.IP + ',' +
+                GeoInfoTable.LAST_USED + ',' +
                 GeoInfoTable.GEOLOCATION +
                 ") SELECT " +
                 "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
-                GeoInfoTable.IP + ", " +
-                GeoInfoTable.LAST_USED + ", " +
+                GeoInfoTable.IP + ',' +
+                GeoInfoTable.LAST_USED + ',' +
                 GeoInfoTable.GEOLOCATION +
-                " FROM " + tempTableName
+                FROM + tempTableName
         );
 
         dropTable(tempTableName);

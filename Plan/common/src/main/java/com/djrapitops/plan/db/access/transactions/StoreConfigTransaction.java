@@ -30,6 +30,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Transaction to store a server's configuration file in the database.
  *
@@ -64,8 +66,9 @@ public class StoreConfigTransaction extends Transaction {
     }
 
     private Query<Boolean> isConfigStored() {
-        String sql = "SELECT COUNT(1) as c FROM " + SettingsTable.TABLE_NAME +
-                " WHERE " + SettingsTable.SERVER_UUID + "=? LIMIT 1";
+        String sql = SELECT + "COUNT(1) as c" +
+                FROM + SettingsTable.TABLE_NAME +
+                WHERE + SettingsTable.SERVER_UUID + "=? LIMIT 1";
         return new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

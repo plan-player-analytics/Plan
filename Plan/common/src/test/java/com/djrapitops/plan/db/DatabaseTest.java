@@ -69,84 +69,49 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.results
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.query.QueryServiceImplementation;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.Config;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
-import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import com.google.common.util.concurrent.MoreExecutors;
-import org.junit.*;
-import org.junit.rules.TemporaryFolder;
-import org.junit.rules.Timeout;
-import rules.ComponentMocker;
-import rules.PluginComponentMocker;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import utilities.*;
 
 import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
+import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Contains all common Database Tests for all Database Types
  *
  * @author Rsl1122 (Refactored into this class by Fuzzlemann)
  */
-public abstract class CommonDBTest {
+public interface DatabaseTest {
 
-    private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
+    String[] worlds = new String[]{"TestWorld", "TestWorld2"};
+    UUID playerUUID = TestConstants.PLAYER_ONE_UUID;
+    UUID player2UUID = TestConstants.PLAYER_TWO_UUID;
 
-    @ClassRule
-    public static TemporaryFolder temporaryFolder = new TemporaryFolder();
-    @ClassRule
-    public static ComponentMocker component = new PluginComponentMocker(temporaryFolder);
+    Database db();
 
-    public static UUID serverUUID;
+    UUID serverUUID();
 
-    public static DBSystem dbSystem;
-    public static SQLDB db;
-    public static PlanSystem system;
+    PlanSystem system();
 
-    public final String[] worlds = new String[]{"TestWorld", "TestWorld2"};
-    public final UUID playerUUID = TestConstants.PLAYER_ONE_UUID;
-    public final UUID player2UUID = TestConstants.PLAYER_TWO_UUID;
-
-    @Rule
-    public Timeout globalTimeout = Timeout.seconds(5);
-
-    static void handleSetup(String dbName) throws Exception {
-        system = component.getPlanSystem();
-        PlanConfig config = system.getConfigSystem().getConfig();
-        config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
-        config.set(DatabaseSettings.TYPE, dbName);
-        system.enable();
-
-        dbSystem = system.getDatabaseSystem();
-        db = (SQLDB) dbSystem.getActiveDatabaseByName(dbName);
-        db.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
-        db.init();
-
-        serverUUID = system.getServerInfo().getServerUUID();
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-        if (system != null) system.disable();
-    }
-
-    @Before
-    public void setUp() {
-        db.executeTransaction(new Patch() {
+    @BeforeEach
+    default void setUp() {
+        db().executeTransaction(new Patch() {
             @Override
             public boolean hasBeenApplied() {
                 return false;
@@ -161,21 +126,21 @@ public abstract class CommonDBTest {
                 dropTable("plan_users");
             }
         });
-        db.executeTransaction(new CreateTablesTransaction());
-        db.executeTransaction(new RemoveEverythingTransaction());
+        db().executeTransaction(new CreateTablesTransaction());
+        db().executeTransaction(new RemoveEverythingTransaction());
 
-        db.executeTransaction(new StoreServerInformationTransaction(new Server(-1, serverUUID, "ServerName", "", 20)));
-        assertEquals(serverUUID, db.getServerUUIDSupplier().get());
+        db().executeTransaction(new StoreServerInformationTransaction(new Server(-1, serverUUID(), "ServerName", "", 20)));
+        assertEquals(serverUUID(), ((SQLDB) db()).getServerUUIDSupplier().get());
 
-        ExtensionService extensionService = system.getExtensionService();
+        ExtensionService extensionService = system().getExtensionService();
         extensionService.unregister(new PlayerExtension());
         extensionService.unregister(new ServerExtension());
         extensionService.unregister(new ConditionalExtension());
         extensionService.unregister(new TableExtension());
     }
 
-    private void execute(Executable executable) {
-        db.executeTransaction(new Transaction() {
+    default void execute(Executable executable) {
+        db().executeTransaction(new Transaction() {
             @Override
             protected void performOperations() {
                 execute(executable);
@@ -183,13 +148,13 @@ public abstract class CommonDBTest {
         });
     }
 
-    public void commitTest() {
-        db.close();
-        db.init();
+    default void commitTest() {
+        db().close();
+        db().init();
     }
 
     @Test
-    public void testSaveCommandUse() {
+    default void testSaveCommandUse() {
         Map<String, Integer> expected = new HashMap<>();
 
         expected.put("plan", 1);
@@ -205,12 +170,12 @@ public abstract class CommonDBTest {
 
         commitTest();
 
-        Map<String, Integer> commandUse = db.query(ServerAggregateQueries.commandUsageCounts(serverUUID));
+        Map<String, Integer> commandUse = db().query(ServerAggregateQueries.commandUsageCounts(serverUUID()));
         assertEquals(expected, commandUse);
     }
 
     @Test
-    public void commandUsageSavingDoesNotCreateNewEntriesForOldCommands() {
+    default void commandUsageSavingDoesNotCreateNewEntriesForOldCommands() {
         Map<String, Integer> expected = new HashMap<>();
 
         expected.put("plan", 1);
@@ -224,22 +189,22 @@ public abstract class CommonDBTest {
         useCommand("test", 3);
         useCommand("tp", 2);
 
-        Map<String, Integer> commandUse = db.query(ServerAggregateQueries.commandUsageCounts(serverUUID));
+        Map<String, Integer> commandUse = db().query(ServerAggregateQueries.commandUsageCounts(serverUUID()));
         assertEquals(expected, commandUse);
     }
 
-    private void useCommand(String commandName) {
-        db.executeTransaction(new CommandStoreTransaction(serverUUID, commandName));
+    default void useCommand(String commandName) {
+        db().executeTransaction(new CommandStoreTransaction(serverUUID(), commandName));
     }
 
-    private void useCommand(String commandName, int times) {
+    default void useCommand(String commandName, int times) {
         for (int i = 0; i < times; i++) {
             useCommand(commandName);
         }
     }
 
     @Test
-    public void testTPSSaving() throws Exception {
+    default void testTPSSaving() {
         Random r = new Random();
 
         List<TPS> expected = new ArrayList<>();
@@ -249,25 +214,25 @@ public abstract class CommonDBTest {
         }
 
         for (TPS tps : expected) {
-            execute(DataStoreQueries.storeTPS(serverUUID, tps));
+            execute(DataStoreQueries.storeTPS(serverUUID(), tps));
         }
 
         commitTest();
 
-        assertEquals(expected, db.query(TPSQueries.fetchTPSDataOfServer(serverUUID)));
+        assertEquals(expected, db().query(TPSQueries.fetchTPSDataOfServer(serverUUID())));
     }
 
-    private void saveUserOne() {
+    default void saveUserOne() {
         playerIsRegisteredToBothTables();
-        db.executeTransaction(new KickStoreTransaction(playerUUID));
+        db().executeTransaction(new KickStoreTransaction(playerUUID));
     }
 
-    private void saveUserTwo() {
-        db.executeTransaction(new PlayerRegisterTransaction(player2UUID, () -> 123456789L, "Test"));
+    default void saveUserTwo() {
+        db().executeTransaction(new PlayerRegisterTransaction(player2UUID, () -> 123456789L, "Test"));
     }
 
     @Test
-    public void geoInformationIsStored() throws NoSuchAlgorithmException {
+    default void geoInformationIsStored() {
         saveUserOne();
 
         String expectedIP = "1.2.3.4";
@@ -277,7 +242,7 @@ public abstract class CommonDBTest {
         saveGeoInfo(playerUUID, new GeoInfo(expectedIP, expectedGeoLoc, time));
         commitTest();
 
-        List<GeoInfo> geolocations = db.query(GeoInfoQueries.fetchAllGeoInformation()).getOrDefault(playerUUID, new ArrayList<>());
+        List<GeoInfo> geolocations = db().query(GeoInfoQueries.fetchAllGeoInformation()).getOrDefault(playerUUID, new ArrayList<>());
         assertEquals(1, geolocations.size());
 
         GeoInfo expected = new GeoInfo("1.2.xx.xx", expectedGeoLoc, time);
@@ -285,69 +250,69 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testNicknamesTable() {
+    default void testNicknamesTable() {
         saveUserOne();
 
-        Nickname expected = new Nickname("TestNickname", System.currentTimeMillis(), serverUUID);
-        db.executeTransaction(new NicknameStoreTransaction(playerUUID, expected, (uuid, name) -> false /* Not cached */));
-        db.executeTransaction(new NicknameStoreTransaction(playerUUID, expected, (uuid, name) -> true /* Cached */));
+        Nickname expected = new Nickname("TestNickname", System.currentTimeMillis(), serverUUID());
+        db().executeTransaction(new NicknameStoreTransaction(playerUUID, expected, (uuid, name) -> false /* Not cached */));
+        db().executeTransaction(new NicknameStoreTransaction(playerUUID, expected, (uuid, name) -> true /* Cached */));
         commitTest();
 
-        List<Nickname> nicknames = db.query(NicknameQueries.fetchNicknameDataOfPlayer(playerUUID));
+        List<Nickname> nicknames = db().query(NicknameQueries.fetchNicknameDataOfPlayer(playerUUID));
         assertEquals(1, nicknames.size());
         assertEquals(expected, nicknames.get(0));
     }
 
     @Test
-    public void webUserIsRegistered() {
+    default void webUserIsRegistered() {
         WebUser expected = new WebUser(TestConstants.PLAYER_ONE_NAME, "RandomGarbageBlah", 0);
-        db.executeTransaction(new RegisterWebUserTransaction(expected));
+        db().executeTransaction(new RegisterWebUserTransaction(expected));
         commitTest();
 
-        Optional<WebUser> found = db.query(WebUserQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME));
+        Optional<WebUser> found = db().query(WebUserQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME));
         assertTrue(found.isPresent());
         assertEquals(expected, found.get());
     }
 
     @Test
-    public void multipleWebUsersAreFetchedAppropriately() {
+    default void multipleWebUsersAreFetchedAppropriately() {
         webUserIsRegistered();
-        assertEquals(1, db.query(WebUserQueries.fetchAllPlanWebUsers()).size());
+        assertEquals(1, db().query(WebUserQueries.fetchAllPlanWebUsers()).size());
     }
 
     @Test
-    public void webUserIsRemoved() {
+    default void webUserIsRemoved() {
         webUserIsRegistered();
-        db.executeTransaction(new RemoveWebUserTransaction(TestConstants.PLAYER_ONE_NAME));
-        assertFalse(db.query(WebUserQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME)).isPresent());
+        db().executeTransaction(new RemoveWebUserTransaction(TestConstants.PLAYER_ONE_NAME));
+        assertFalse(db().query(WebUserQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME)).isPresent());
     }
 
     @Test
-    public void worldNamesAreStored() {
+    default void worldNamesAreStored() {
         String[] expected = {"Test", "Test2", "Test3"};
         saveWorlds(expected);
 
         commitTest();
 
-        Collection<String> result = db.query(LargeFetchQueries.fetchAllWorldNames()).getOrDefault(serverUUID, new HashSet<>());
+        Collection<String> result = db().query(LargeFetchQueries.fetchAllWorldNames()).getOrDefault(serverUUID(), new HashSet<>());
         assertEquals(new HashSet<>(Arrays.asList(expected)), result);
     }
 
-    private void saveWorld(String worldName) {
-        db.executeTransaction(new WorldNameStoreTransaction(serverUUID, worldName));
+    default void saveWorld(String worldName) {
+        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worldName));
     }
 
-    private void saveWorlds(String... worldNames) {
+    default void saveWorlds(String... worldNames) {
         for (String worldName : worldNames) {
             saveWorld(worldName);
         }
     }
 
-    private void saveTwoWorlds() {
+    default void saveTwoWorlds() {
         saveWorlds(worlds);
     }
 
-    private WorldTimes createWorldTimes() {
+    default WorldTimes createWorldTimes() {
         Map<String, GMTimes> times = new HashMap<>();
         Map<String, Long> gm = new HashMap<>();
         String[] gms = GMTimes.getGMKeyArray();
@@ -358,12 +323,12 @@ public abstract class CommonDBTest {
 
         String worldName = worlds[0];
         times.put(worldName, new GMTimes(gm));
-        db.executeTransaction(new WorldNameStoreTransaction(serverUUID, worldName));
+        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worldName));
 
         return new WorldTimes(times);
     }
 
-    private List<PlayerKill> createKills() {
+    default List<PlayerKill> createKills() {
         List<PlayerKill> kills = new ArrayList<>();
         kills.add(new PlayerKill(TestConstants.PLAYER_TWO_UUID, "Iron Sword", 4321L));
         kills.add(new PlayerKill(TestConstants.PLAYER_TWO_UUID, "Gold Sword", 5321L));
@@ -372,11 +337,11 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testSessionPlaytimeSaving() {
+    default void testSessionPlaytimeSaving() {
         saveTwoWorlds();
         saveUserOne();
         saveUserTwo();
-        Session session = new Session(playerUUID, serverUUID, 12345L, worlds[0], "SURVIVAL");
+        Session session = new Session(playerUUID, serverUUID(), 12345L, worlds[0], "SURVIVAL");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
@@ -389,10 +354,10 @@ public abstract class CommonDBTest {
 
         commitTest();
 
-        Map<UUID, List<Session>> sessions = db.query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
-        assertTrue(sessions.containsKey(serverUUID));
+        Map<UUID, List<Session>> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
+        assertTrue(sessions.containsKey(serverUUID()));
 
-        SessionsMutator sessionsMutator = new SessionsMutator(sessions.get(serverUUID));
+        SessionsMutator sessionsMutator = new SessionsMutator(sessions.get(serverUUID()));
         SessionsMutator afterTimeSessionsMutator = sessionsMutator.filterSessionsBetween(30000, System.currentTimeMillis());
 
         assertEquals(expectedLength, sessionsMutator.toPlaytime());
@@ -403,11 +368,11 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void sessionsAreStoredWithAllData() {
+    default void sessionsAreStoredWithAllData() {
         saveUserOne();
         saveUserTwo();
 
-        Session session = new Session(playerUUID, serverUUID, 12345L, worlds[0], "SURVIVAL");
+        Session session = new Session(playerUUID, serverUUID(), 12345L, worlds[0], "SURVIVAL");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
@@ -416,8 +381,8 @@ public abstract class CommonDBTest {
 
         commitTest();
 
-        Map<UUID, List<Session>> sessions = db.query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
-        List<Session> savedSessions = sessions.get(serverUUID);
+        Map<UUID, List<Session>> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
+        List<Session> savedSessions = sessions.get(serverUUID());
 
         assertNotNull(savedSessions);
         assertEquals(1, savedSessions.size());
@@ -426,136 +391,136 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void userInfoTableStoresCorrectUserInformation() {
+    default void userInfoTableStoresCorrectUserInformation() {
         saveUserOne();
 
-        List<UserInfo> userInfo = db.query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
-        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 1000L, false, false));
+        List<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
+        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID(), 1000L, false, false));
 
         assertEquals(expected, userInfo);
     }
 
     @Test
-    public void userInfoTableUpdatesBanStatus() {
+    default void userInfoTableUpdatesBanStatus() {
         saveUserOne();
 
-        db.executeTransaction(new BanStatusTransaction(playerUUID, () -> true));
+        db().executeTransaction(new BanStatusTransaction(playerUUID, () -> true));
 
-        List<UserInfo> userInfo = db.query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
-        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 1000L, false, true));
+        List<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
+        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID(), 1000L, false, true));
 
         assertEquals(expected, userInfo);
     }
 
     @Test
-    public void userInfoTableUpdatesOperatorStatus() {
+    default void userInfoTableUpdatesOperatorStatus() {
         saveUserOne();
 
-        db.executeTransaction(new OperatorStatusTransaction(playerUUID, true));
+        db().executeTransaction(new OperatorStatusTransaction(playerUUID, true));
 
-        List<UserInfo> userInfo = db.query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
-        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID, 1000L, true, false));
+        List<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
+        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID(), 1000L, true, false));
 
         assertEquals(expected, userInfo);
     }
 
     @Test
-    public void playerNameIsUpdatedWhenPlayerLogsIn() {
+    default void playerNameIsUpdatedWhenPlayerLogsIn() {
         saveUserOne();
 
-        OptionalAssert.equals(playerUUID, db.query(UserIdentifierQueries.fetchPlayerUUIDOf(TestConstants.PLAYER_ONE_NAME)));
+        OptionalAssert.equals(playerUUID, db().query(UserIdentifierQueries.fetchPlayerUUIDOf(TestConstants.PLAYER_ONE_NAME)));
 
         // Updates the name
-        db.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 0, "NewName"));
+        db().executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 0, "NewName"));
         commitTest();
 
-        assertFalse(db.query(UserIdentifierQueries.fetchPlayerUUIDOf(TestConstants.PLAYER_ONE_NAME)).isPresent());
+        assertFalse(db().query(UserIdentifierQueries.fetchPlayerUUIDOf(TestConstants.PLAYER_ONE_NAME)).isPresent());
 
-        OptionalAssert.equals(playerUUID, db.query(UserIdentifierQueries.fetchPlayerUUIDOf("NewName")));
+        OptionalAssert.equals(playerUUID, db().query(UserIdentifierQueries.fetchPlayerUUIDOf("NewName")));
     }
 
     @Test
-    public void testUsersTableKickSaving() {
+    default void testUsersTableKickSaving() {
         saveUserOne();
-        OptionalAssert.equals(1, db.query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID)).map(BaseUser::getTimesKicked));
+        OptionalAssert.equals(1, db().query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID)).map(BaseUser::getTimesKicked));
 
         int random = new Random().nextInt(20);
 
         for (int i = 0; i < random + 1; i++) {
-            db.executeTransaction(new KickStoreTransaction(playerUUID));
+            db().executeTransaction(new KickStoreTransaction(playerUUID));
         }
         commitTest();
-        OptionalAssert.equals(random + 2, db.query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID)).map(BaseUser::getTimesKicked));
+        OptionalAssert.equals(random + 2, db().query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID)).map(BaseUser::getTimesKicked));
     }
 
     @Test
-    public void testRemovalSingleUser() {
+    default void testRemovalSingleUser() {
         saveUserTwo();
 
-        db.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> 223456789L, "Test_name", serverUUID));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> 223456789L, "Test_name", serverUUID()));
         saveTwoWorlds();
 
-        Session session = new Session(playerUUID, serverUUID, 12345L, worlds[0], "SURVIVAL");
+        Session session = new Session(playerUUID, serverUUID(), 12345L, worlds[0], "SURVIVAL");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
 
         execute(DataStoreQueries.storeSession(session));
-        db.executeTransaction(new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID), (uuid, name) -> false /* Not cached */));
+        db().executeTransaction(new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID()), (uuid, name) -> false /* Not cached */));
         saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L));
 
-        assertTrue(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
+        assertTrue(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
 
-        db.executeTransaction(new RemovePlayerTransaction(playerUUID));
+        db().executeTransaction(new RemovePlayerTransaction(playerUUID));
 
-        assertFalse(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
-        assertFalse(db.query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)));
-        assertTrue(db.query(NicknameQueries.fetchNicknameDataOfPlayer(playerUUID)).isEmpty());
-        assertTrue(db.query(GeoInfoQueries.fetchPlayerGeoInformation(playerUUID)).isEmpty());
-        assertQueryIsEmpty(db, SessionQueries.fetchSessionsOfPlayer(playerUUID));
+        assertFalse(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
+        assertFalse(db().query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID())));
+        assertTrue(db().query(NicknameQueries.fetchNicknameDataOfPlayer(playerUUID)).isEmpty());
+        assertTrue(db().query(GeoInfoQueries.fetchPlayerGeoInformation(playerUUID)).isEmpty());
+        assertQueryIsEmpty(db(), SessionQueries.fetchSessionsOfPlayer(playerUUID));
     }
 
     @Test
-    public void testRemovalEverything() throws NoSuchAlgorithmException {
+    default void testRemovalEverything() throws NoSuchAlgorithmException {
         saveAllData();
 
-        db.executeTransaction(new RemoveEverythingTransaction());
+        db().executeTransaction(new RemoveEverythingTransaction());
 
-        assertTrue(db.query(BaseUserQueries.fetchAllBaseUsers()).isEmpty());
-        assertQueryIsEmpty(db, UserInfoQueries.fetchAllUserInformation());
-        assertQueryIsEmpty(db, NicknameQueries.fetchAllNicknameData());
-        assertQueryIsEmpty(db, GeoInfoQueries.fetchAllGeoInformation());
-        assertTrue(db.query(SessionQueries.fetchAllSessions()).isEmpty());
-        assertQueryIsEmpty(db, LargeFetchQueries.fetchAllCommandUsageData());
-        assertQueryIsEmpty(db, LargeFetchQueries.fetchAllWorldNames());
-        assertQueryIsEmpty(db, LargeFetchQueries.fetchAllTPSData());
-        assertQueryIsEmpty(db, ServerQueries.fetchPlanServerInformation());
-        assertQueryIsEmpty(db, PingQueries.fetchAllPingData());
-        assertTrue(db.query(WebUserQueries.fetchAllPlanWebUsers()).isEmpty());
+        assertTrue(db().query(BaseUserQueries.fetchAllBaseUsers()).isEmpty());
+        assertQueryIsEmpty(db(), UserInfoQueries.fetchAllUserInformation());
+        assertQueryIsEmpty(db(), NicknameQueries.fetchAllNicknameData());
+        assertQueryIsEmpty(db(), GeoInfoQueries.fetchAllGeoInformation());
+        assertTrue(db().query(SessionQueries.fetchAllSessions()).isEmpty());
+        assertQueryIsEmpty(db(), LargeFetchQueries.fetchAllCommandUsageData());
+        assertQueryIsEmpty(db(), LargeFetchQueries.fetchAllWorldNames());
+        assertQueryIsEmpty(db(), LargeFetchQueries.fetchAllTPSData());
+        assertQueryIsEmpty(db(), ServerQueries.fetchPlanServerInformation());
+        assertQueryIsEmpty(db(), PingQueries.fetchAllPingData());
+        assertTrue(db().query(WebUserQueries.fetchAllPlanWebUsers()).isEmpty());
     }
 
-    private <T extends Map> void assertQueryIsEmpty(Database database, Query<T> query) {
+    default <T extends Map> void assertQueryIsEmpty(Database database, Query<T> query) {
         assertTrue(database.query(query).isEmpty());
     }
 
-    private void saveAllData() throws NoSuchAlgorithmException {
+    default void saveAllData() {
         saveUserOne();
         saveUserTwo();
 
         saveTwoWorlds();
 
-        Session session = new Session(playerUUID, serverUUID, 12345L, worlds[0], "SURVIVAL");
+        Session session = new Session(playerUUID, serverUUID(), 12345L, worlds[0], "SURVIVAL");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
 
         execute(DataStoreQueries.storeSession(session));
-        db.executeTransaction(
-                new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID), (uuid, name) -> false /* Not cached */)
+        db().executeTransaction(
+                new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID()), (uuid, name) -> false /* Not cached */)
         );
         saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L));
 
-        assertTrue(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
+        assertTrue(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
 
         useCommand("plan");
         useCommand("plan");
@@ -578,28 +543,28 @@ public abstract class CommonDBTest {
         expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded, freeDiskSpace));
         expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded, freeDiskSpace));
         for (TPS tps : expected) {
-            execute(DataStoreQueries.storeTPS(serverUUID, tps));
+            execute(DataStoreQueries.storeTPS(serverUUID(), tps));
         }
 
-        db.executeTransaction(new PingStoreTransaction(
-                playerUUID, serverUUID,
+        db().executeTransaction(new PingStoreTransaction(
+                playerUUID, serverUUID(),
                 Collections.singletonList(new DateObj<>(System.currentTimeMillis(), r.nextInt())))
         );
 
         WebUser webUser = new WebUser(TestConstants.PLAYER_ONE_NAME, "RandomGarbageBlah", 0);
-        db.executeTransaction(new RegisterWebUserTransaction(webUser));
+        db().executeTransaction(new RegisterWebUserTransaction(webUser));
     }
 
-    void saveGeoInfo(UUID uuid, GeoInfo geoInfo) {
-        db.executeTransaction(new GeoInfoStoreTransaction(uuid, geoInfo));
+    default void saveGeoInfo(UUID uuid, GeoInfo geoInfo) {
+        db().executeTransaction(new GeoInfoStoreTransaction(uuid, geoInfo));
     }
 
     @Test
-    public void testSessionTableGetInfoOfServer() {
+    default void testSessionTableGetInfoOfServer() {
         saveUserOne();
         saveUserTwo();
 
-        Session session = new Session(playerUUID, serverUUID, 12345L, worlds[0], "SURVIVAL");
+        Session session = new Session(playerUUID, serverUUID(), 12345L, worlds[0], "SURVIVAL");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
@@ -607,7 +572,7 @@ public abstract class CommonDBTest {
 
         commitTest();
 
-        Map<UUID, List<Session>> sessions = db.query(SessionQueries.fetchSessionsOfServer(serverUUID));
+        Map<UUID, List<Session>> sessions = db().query(SessionQueries.fetchSessionsOfServer(serverUUID()));
 
         List<Session> sSessions = sessions.get(playerUUID);
         assertFalse(sessions.isEmpty());
@@ -617,58 +582,58 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void cleanDoesNotCleanActivePlayers() {
+    default void cleanDoesNotCleanActivePlayers() {
         saveUserOne();
         saveTwoWorlds();
 
         long sessionStart = System.currentTimeMillis();
-        Session session = new Session(playerUUID, serverUUID, sessionStart, worlds[0], "SURVIVAL");
+        Session session = new Session(playerUUID, serverUUID(), sessionStart, worlds[0], "SURVIVAL");
         session.endSession(sessionStart + 22345L);
         execute(DataStoreQueries.storeSession(session));
 
         new DBCleanTask(
-                system.getConfigSystem().getConfig(),
+                system().getConfigSystem().getConfig(),
                 new Locale(),
-                system.getDatabaseSystem(),
-                new QueryServiceImplementation(system.getDatabaseSystem(), system.getServerInfo()),
-                system.getServerInfo(),
+                system().getDatabaseSystem(),
+                new QueryServiceImplementation(system().getDatabaseSystem(), system().getServerInfo()),
+                system().getServerInfo(),
                 new TestPluginLogger(),
                 new ConsoleErrorLogger(new TestPluginLogger())
-        ).cleanOldPlayers(db);
+        ).cleanOldPlayers(db());
 
-        Collection<BaseUser> found = db.query(BaseUserQueries.fetchServerBaseUsers(serverUUID));
-        assertFalse("All users were deleted!! D:", found.isEmpty());
+        Collection<BaseUser> found = db().query(BaseUserQueries.fetchServerBaseUsers(serverUUID()));
+        assertFalse(found.isEmpty(), "All users were deleted!! D:");
     }
 
     @Test
-    public void cleanRemovesOnlyDuplicatedUserInfo() {
+    default void cleanRemovesOnlyDuplicatedUserInfo() {
         // Store one duplicate
-        db.executeTransaction(new Transaction() {
+        db().executeTransaction(new Transaction() {
             @Override
             protected void performOperations() {
-                execute(DataStoreQueries.registerUserInfo(playerUUID, 0L, serverUUID));
-                execute(DataStoreQueries.registerUserInfo(playerUUID, 0L, serverUUID));
-                execute(DataStoreQueries.registerUserInfo(player2UUID, 0L, serverUUID));
+                execute(DataStoreQueries.registerUserInfo(playerUUID, 0L, serverUUID()));
+                execute(DataStoreQueries.registerUserInfo(playerUUID, 0L, serverUUID()));
+                execute(DataStoreQueries.registerUserInfo(player2UUID, 0L, serverUUID()));
             }
         });
 
-        db.executeTransaction(new RemoveDuplicateUserInfoTransaction());
+        db().executeTransaction(new RemoveDuplicateUserInfoTransaction());
 
-        List<UserInfo> found = db.query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
+        List<UserInfo> found = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
         assertEquals(
-                Collections.singletonList(new UserInfo(playerUUID, serverUUID, 0, false, false)),
+                Collections.singletonList(new UserInfo(playerUUID, serverUUID(), 0, false, false)),
                 found
         );
 
-        List<UserInfo> found2 = db.query(UserInfoQueries.fetchUserInformationOfUser(player2UUID));
+        List<UserInfo> found2 = db().query(UserInfoQueries.fetchUserInformationOfUser(player2UUID));
         assertEquals(
-                Collections.singletonList(new UserInfo(player2UUID, serverUUID, 0, false, false)),
+                Collections.singletonList(new UserInfo(player2UUID, serverUUID(), 0, false, false)),
                 found2
         );
     }
 
     @Test
-    public void testKillTableGetKillsOfServer() {
+    default void testKillTableGetKillsOfServer() {
         saveUserOne();
         saveUserTwo();
 
@@ -679,8 +644,8 @@ public abstract class CommonDBTest {
 
         commitTest();
 
-        Map<UUID, List<Session>> sessions = db.query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
-        List<Session> savedSessions = sessions.get(serverUUID);
+        Map<UUID, List<Session>> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
+        List<Session> savedSessions = sessions.get(serverUUID());
         assertNotNull(savedSessions);
         assertFalse(savedSessions.isEmpty());
 
@@ -693,56 +658,58 @@ public abstract class CommonDBTest {
         assertEquals(expected, kills);
     }
 
-    private Session createSession() {
+    default Session createSession() {
         Session session = new Session(
                 playerUUID,
-                serverUUID,
+                serverUUID(),
                 System.currentTimeMillis(),
                 "world",
                 GMTimes.getGMKeyArray()[0]
         );
-        db.executeTransaction(new WorldNameStoreTransaction(serverUUID, "world"));
+        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), "world"));
         session.endSession(System.currentTimeMillis() + 1L);
         return session;
     }
 
     @Test
-    public void testBackupAndRestore() throws Exception {
-        H2DB backup = dbSystem.getH2Factory().usingFile(temporaryFolder.newFile("backup.db"));
+    default void testBackupAndRestore() throws Exception {
+        File tempFile = Files.createTempFile(system().getPlanFiles().getDataFolder().toPath(), "backup-", ".db").toFile();
+        tempFile.deleteOnExit();
+        H2DB backup = system().getDatabaseSystem().getH2Factory().usingFile(tempFile);
         backup.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
         backup.init();
 
         saveAllData();
 
-        backup.executeTransaction(new BackupCopyTransaction(db, backup));
+        backup.executeTransaction(new BackupCopyTransaction(db(), backup));
 
-        assertQueryResultIsEqual(db, backup, BaseUserQueries.fetchAllBaseUsers());
-        assertQueryResultIsEqual(db, backup, UserInfoQueries.fetchAllUserInformation());
-        assertQueryResultIsEqual(db, backup, NicknameQueries.fetchAllNicknameData());
-        assertQueryResultIsEqual(db, backup, GeoInfoQueries.fetchAllGeoInformation());
-        assertQueryResultIsEqual(db, backup, SessionQueries.fetchAllSessions());
-        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllCommandUsageData());
-        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllWorldNames());
-        assertQueryResultIsEqual(db, backup, LargeFetchQueries.fetchAllTPSData());
-        assertQueryResultIsEqual(db, backup, ServerQueries.fetchPlanServerInformation());
-        assertQueryResultIsEqual(db, backup, WebUserQueries.fetchAllPlanWebUsers());
+        assertQueryResultIsEqual(db(), backup, BaseUserQueries.fetchAllBaseUsers());
+        assertQueryResultIsEqual(db(), backup, UserInfoQueries.fetchAllUserInformation());
+        assertQueryResultIsEqual(db(), backup, NicknameQueries.fetchAllNicknameData());
+        assertQueryResultIsEqual(db(), backup, GeoInfoQueries.fetchAllGeoInformation());
+        assertQueryResultIsEqual(db(), backup, SessionQueries.fetchAllSessions());
+        assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllCommandUsageData());
+        assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllWorldNames());
+        assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllTPSData());
+        assertQueryResultIsEqual(db(), backup, ServerQueries.fetchPlanServerInformation());
+        assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAllPlanWebUsers());
     }
 
-    private <T> void assertQueryResultIsEqual(Database one, Database two, Query<T> query) {
+    default <T> void assertQueryResultIsEqual(Database one, Database two, Query<T> query) {
         assertEquals(one.query(query), two.query(query));
     }
 
     @Test
-    public void sessionWorldTimesAreFetchedCorrectly() {
+    default void sessionWorldTimesAreFetchedCorrectly() {
         saveUserOne();
         WorldTimes worldTimes = createWorldTimes();
-        Session session = new Session(1, playerUUID, serverUUID, 12345L, 23456L, 0, 0, 0);
+        Session session = new Session(1, playerUUID, serverUUID(), 12345L, 23456L, 0, 0, 0);
         session.setWorldTimes(worldTimes);
         execute(DataStoreQueries.storeSession(session));
 
         // Fetch the session
-        Map<UUID, List<Session>> sessions = db.query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
-        List<Session> serverSessions = sessions.get(serverUUID);
+        Map<UUID, List<Session>> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
+        List<Session> serverSessions = sessions.get(serverUUID());
         assertNotNull(serverSessions);
         assertFalse(serverSessions.isEmpty());
 
@@ -751,7 +718,7 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void worldTimesAreSavedWithAllSessionSave() {
+    default void worldTimesAreSavedWithAllSessionSave() {
         saveTwoWorlds();
         saveUserOne();
 
@@ -761,20 +728,20 @@ public abstract class CommonDBTest {
         session.setWorldTimes(worldTimes);
         List<Session> sessions = new ArrayList<>();
         sessions.add(session);
-        db.executeTransaction(new Transaction() {
+        db().executeTransaction(new Transaction() {
             @Override
             protected void performOperations() {
                 execute(LargeStoreQueries.storeAllSessionsWithKillAndWorldData(sessions));
             }
         });
 
-        Map<UUID, WorldTimes> saved = db.query(WorldTimesQueries.fetchPlayerWorldTimesOnServers(playerUUID));
-        WorldTimes savedWorldTimes = saved.get(serverUUID);
+        Map<UUID, WorldTimes> saved = db().query(WorldTimesQueries.fetchPlayerWorldTimesOnServers(playerUUID));
+        WorldTimes savedWorldTimes = saved.get(serverUUID());
         assertEquals(worldTimes, savedWorldTimes);
     }
 
     @Test
-    public void worldTimesAreSavedWithSession() {
+    default void worldTimesAreSavedWithSession() {
         saveTwoWorlds();
         saveUserOne();
 
@@ -783,62 +750,62 @@ public abstract class CommonDBTest {
         session.setWorldTimes(worldTimes);
         List<Session> sessions = new ArrayList<>();
         sessions.add(session);
-        db.executeTransaction(new Transaction() {
+        db().executeTransaction(new Transaction() {
             @Override
             protected void performOperations() {
                 execute(LargeStoreQueries.storeAllSessionsWithKillAndWorldData(sessions));
             }
         });
 
-        List<Session> allSessions = db.query(SessionQueries.fetchAllSessions());
+        List<Session> allSessions = db().query(SessionQueries.fetchAllSessions());
 
         assertEquals(worldTimes, allSessions.get(0).getUnsafe(SessionKeys.WORLD_TIMES));
     }
 
     @Test
-    public void playersWorldTimesMatchTotal() {
+    default void playersWorldTimesMatchTotal() {
         worldTimesAreSavedWithSession();
-        WorldTimes worldTimesOfUser = db.query(WorldTimesQueries.fetchPlayerTotalWorldTimes(playerUUID));
+        WorldTimes worldTimesOfUser = db().query(WorldTimesQueries.fetchPlayerTotalWorldTimes(playerUUID));
         assertEquals(createWorldTimes(), worldTimesOfUser);
     }
 
     @Test
-    public void serverWorldTimesMatchTotal() {
+    default void serverWorldTimesMatchTotal() {
         worldTimesAreSavedWithSession();
-        WorldTimes worldTimesOfServer = db.query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID));
+        WorldTimes worldTimesOfServer = db().query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID()));
         assertEquals(createWorldTimes(), worldTimesOfServer);
     }
 
     @Test
-    public void emptyServerWorldTimesIsEmpty() {
-        WorldTimes worldTimesOfServer = db.query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID));
+    default void emptyServerWorldTimesIsEmpty() {
+        WorldTimes worldTimesOfServer = db().query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID()));
         assertEquals(new WorldTimes(), worldTimesOfServer);
     }
 
     @Test
-    public void playerIsRegisteredToUsersTable() {
-        assertFalse(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
-        db.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 1000L, TestConstants.PLAYER_ONE_NAME));
-        assertTrue(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
-        assertFalse(db.query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)));
+    default void playerIsRegisteredToUsersTable() {
+        assertFalse(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
+        db().executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 1000L, TestConstants.PLAYER_ONE_NAME));
+        assertTrue(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
+        assertFalse(db().query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID())));
     }
 
     @Test
-    public void playerIsRegisteredToBothTables() {
-        assertFalse(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
-        assertFalse(db.query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)));
-        db.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> 1000L, TestConstants.PLAYER_ONE_NAME, serverUUID));
-        assertTrue(db.query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
-        assertTrue(db.query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)));
+    default void playerIsRegisteredToBothTables() {
+        assertFalse(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
+        assertFalse(db().query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID())));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> 1000L, TestConstants.PLAYER_ONE_NAME, serverUUID()));
+        assertTrue(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
+        assertTrue(db().query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID())));
     }
 
     @Test
-    public void testNewContainerForPlayer() throws NoSuchAlgorithmException {
+    default void testNewContainerForPlayer() throws NoSuchAlgorithmException {
         saveAllData();
 
         long start = System.nanoTime();
 
-        PlayerContainer container = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
+        PlayerContainer container = db().query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
 
         assertTrue(container.supports(PlayerKeys.UUID));
         assertTrue(container.supports(PlayerKeys.REGISTERED));
@@ -862,12 +829,12 @@ public abstract class CommonDBTest {
         assertTrue(container.supports(PlayerKeys.PLAYER_KILL_COUNT));
 
         assertFalse(container.supports(PlayerKeys.ACTIVE_SESSION));
-        container.putRawData(PlayerKeys.ACTIVE_SESSION, new Session(playerUUID, serverUUID, System.currentTimeMillis(), "TestWorld", "SURVIVAL"));
+        container.putRawData(PlayerKeys.ACTIVE_SESSION, new Session(playerUUID, serverUUID(), System.currentTimeMillis(), "TestWorld", "SURVIVAL"));
         assertTrue(container.supports(PlayerKeys.ACTIVE_SESSION));
 
         long end = System.nanoTime();
 
-        assertFalse("Took too long: " + ((end - start) / 1000000.0) + "ms", end - start > TimeUnit.SECONDS.toNanos(1L));
+        assertFalse(end - start > TimeUnit.SECONDS.toNanos(1L), () -> "Took too long: " + ((end - start) / 1000000.0) + "ms");
 
         OptionalAssert.equals(playerUUID, container.getValue(PlayerKeys.UUID));
         OptionalAssert.equals(1000L, container.getValue(PlayerKeys.REGISTERED));
@@ -878,7 +845,7 @@ public abstract class CommonDBTest {
                 Collections.singletonList(new GeoInfo("1.2.3.4", "TestLoc", 223456789));
         OptionalAssert.equals(expectedGeoInfo, container.getValue(PlayerKeys.GEO_INFO));
 
-        List<Nickname> expectedNicknames = Collections.singletonList(new Nickname("TestNick", -1, serverUUID));
+        List<Nickname> expectedNicknames = Collections.singletonList(new Nickname("TestNick", -1, serverUUID()));
         OptionalAssert.equals(expectedNicknames, container.getValue(PlayerKeys.NICKNAMES));
 
         OptionalAssert.equals(false, container.getValue(PlayerKeys.OPERATOR));
@@ -888,10 +855,10 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void playerContainerSupportsAllPlayerKeys() throws NoSuchAlgorithmException, IllegalAccessException {
+    default void playerContainerSupportsAllPlayerKeys() throws NoSuchAlgorithmException, IllegalAccessException {
         saveAllData();
 
-        PlayerContainer playerContainer = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
+        PlayerContainer playerContainer = db().query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
         // Active sessions are added after fetching
         playerContainer.putRawData(PlayerKeys.ACTIVE_SESSION, RandomData.randomSession());
 
@@ -903,30 +870,30 @@ public abstract class CommonDBTest {
             }
         }
 
-        assertTrue("Some keys are not supported by PlayerContainer: PlayerKeys." + unsupported.toString(), unsupported.isEmpty());
+        assertTrue(unsupported.isEmpty(), () -> "Some keys are not supported by PlayerContainer: PlayerKeys." + unsupported.toString());
     }
 
     @Test
-    public void uninstallingServerStopsItFromBeingReturnedInServerQuery() {
-        db.executeTransaction(new SetServerAsUninstalledTransaction(serverUUID));
+    default void uninstallingServerStopsItFromBeingReturnedInServerQuery() {
+        db().executeTransaction(new SetServerAsUninstalledTransaction(serverUUID()));
 
-        Optional<Server> found = db.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID));
+        Optional<Server> found = db().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID()));
         assertFalse(found.isPresent());
     }
 
     @Test
-    public void uninstallingServerStopsItFromBeingReturnedInServersQuery() {
-        db.executeTransaction(new SetServerAsUninstalledTransaction(serverUUID));
+    default void uninstallingServerStopsItFromBeingReturnedInServersQuery() {
+        db().executeTransaction(new SetServerAsUninstalledTransaction(serverUUID()));
 
-        Collection<Server> found = db.query(ServerQueries.fetchPlanServerInformationCollection());
+        Collection<Server> found = db().query(ServerQueries.fetchPlanServerInformationCollection());
         assertTrue(found.isEmpty());
     }
 
     @Test
-    public void serverContainerSupportsAllServerKeys() throws NoSuchAlgorithmException, IllegalAccessException {
+    default void serverContainerSupportsAllServerKeys() throws NoSuchAlgorithmException, IllegalAccessException {
         saveAllData();
 
-        ServerContainer serverContainer = db.query(ContainerFetchQueries.fetchServerContainer(serverUUID));
+        ServerContainer serverContainer = db().query(ContainerFetchQueries.fetchServerContainer(serverUUID()));
 
         List<String> unsupported = new ArrayList<>();
         List<Key> keys = FieldFetcher.getPublicStaticFields(ServerKeys.class, Key.class);
@@ -936,15 +903,15 @@ public abstract class CommonDBTest {
             }
         }
 
-        assertTrue("Some keys are not supported by ServerContainer: ServerKeys." + unsupported.toString(), unsupported.isEmpty());
+        assertTrue(unsupported.isEmpty(), () -> "Some keys are not supported by ServerContainer: ServerKeys." + unsupported.toString());
     }
 
     @Test
-    public void analysisContainerSupportsAllAnalysisKeys() throws IllegalAccessException, NoSuchAlgorithmException {
+    default void analysisContainerSupportsAllAnalysisKeys() throws IllegalAccessException, NoSuchAlgorithmException {
         serverContainerSupportsAllServerKeys();
         AnalysisContainer.Factory factory = constructAnalysisContainerFactory();
         AnalysisContainer analysisContainer = factory.forServerContainer(
-                db.query(ContainerFetchQueries.fetchServerContainer(serverUUID))
+                db().query(ContainerFetchQueries.fetchServerContainer(serverUUID()))
         );
         Collection<String> unsupported = new ArrayList<>();
         List<Key> keys = FieldFetcher.getPublicStaticFields(AnalysisKeys.class, Key.class);
@@ -954,28 +921,28 @@ public abstract class CommonDBTest {
             }
         }
 
-        assertTrue("Some keys are not supported by AnalysisContainer: AnalysisKeys." + unsupported.toString(), unsupported.isEmpty());
+        assertTrue(unsupported.isEmpty(), () -> "Some keys are not supported by AnalysisContainer: AnalysisKeys." + unsupported.toString());
     }
 
-    private AnalysisContainer.Factory constructAnalysisContainerFactory() {
+    default AnalysisContainer.Factory constructAnalysisContainerFactory() {
         return new AnalysisContainer.Factory(
                 "1.0.0",
-                system.getConfigSystem().getConfig(),
-                system.getLocaleSystem().getLocale(),
-                system.getConfigSystem().getTheme(),
-                system.getServerInfo().getServerProperties(),
-                system.getHtmlUtilities().getFormatters(),
-                system.getHtmlUtilities().getGraphs(),
-                system.getHtmlUtilities().getHtmlTables(),
-                system.getHtmlUtilities().getAccordions(),
-                system.getHtmlUtilities().getAnalysisPluginsTabContentCreator()
+                system().getConfigSystem().getConfig(),
+                system().getLocaleSystem().getLocale(),
+                system().getConfigSystem().getTheme(),
+                system().getServerInfo().getServerProperties(),
+                system().getHtmlUtilities().getFormatters(),
+                system().getHtmlUtilities().getGraphs(),
+                system().getHtmlUtilities().getHtmlTables(),
+                system().getHtmlUtilities().getAccordions(),
+                system().getHtmlUtilities().getAnalysisPluginsTabContentCreator()
         );
     }
 
     @Test
-    public void networkContainerSupportsAllNetworkKeys() throws IllegalAccessException, NoSuchAlgorithmException {
+    default void networkContainerSupportsAllNetworkKeys() throws IllegalAccessException, NoSuchAlgorithmException {
         serverContainerSupportsAllServerKeys();
-        NetworkContainer networkContainer = db.query(ContainerFetchQueries.fetchNetworkContainer());
+        NetworkContainer networkContainer = db().query(ContainerFetchQueries.fetchNetworkContainer());
 
         List<String> unsupported = new ArrayList<>();
         List<Key> keys = FieldFetcher.getPublicStaticFields(NetworkKeys.class, Key.class);
@@ -985,21 +952,21 @@ public abstract class CommonDBTest {
             }
         }
 
-        assertTrue("Some keys are not supported by NetworkContainer: NetworkKeys." + unsupported.toString(), unsupported.isEmpty());
+        assertTrue(unsupported.isEmpty(), () -> "Some keys are not supported by NetworkContainer: NetworkKeys." + unsupported.toString());
     }
 
     @Test
-    public void testGetMatchingNames() {
+    default void testGetMatchingNames() {
         String exp1 = "TestName";
         String exp2 = "TestName2";
 
         UUID uuid1 = UUID.randomUUID();
-        db.executeTransaction(new PlayerRegisterTransaction(uuid1, () -> 0L, exp1));
-        db.executeTransaction(new PlayerRegisterTransaction(UUID.randomUUID(), () -> 0L, exp2));
+        db().executeTransaction(new PlayerRegisterTransaction(uuid1, () -> 0L, exp1));
+        db().executeTransaction(new PlayerRegisterTransaction(UUID.randomUUID(), () -> 0L, exp2));
 
         String searchFor = "testname";
 
-        List<String> result = db.query(UserIdentifierQueries.fetchMatchingPlayerNames(searchFor));
+        List<String> result = db().query(UserIdentifierQueries.fetchMatchingPlayerNames(searchFor));
 
         assertNotNull(result);
         assertEquals(2, result.size());
@@ -1008,20 +975,20 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testGetMatchingNickNames() {
+    default void testGetMatchingNickNames() {
         UUID uuid = UUID.randomUUID();
         String userName = RandomData.randomString(10);
 
-        db.executeTransaction(new PlayerRegisterTransaction(uuid, () -> 0L, userName));
-        db.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 1L, "Not random"));
+        db().executeTransaction(new PlayerRegisterTransaction(uuid, () -> 0L, userName));
+        db().executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 1L, "Not random"));
 
         String nickname = "2" + RandomData.randomString(10);
-        db.executeTransaction(new NicknameStoreTransaction(uuid, new Nickname(nickname, System.currentTimeMillis(), serverUUID), (u, name) -> false /* Not cached */));
-        db.executeTransaction(new NicknameStoreTransaction(playerUUID, new Nickname("No nick", System.currentTimeMillis(), serverUUID), (u, name) -> true /* Cached */));
+        db().executeTransaction(new NicknameStoreTransaction(uuid, new Nickname(nickname, System.currentTimeMillis(), serverUUID()), (u, name) -> false /* Not cached */));
+        db().executeTransaction(new NicknameStoreTransaction(playerUUID, new Nickname("No nick", System.currentTimeMillis(), serverUUID()), (u, name) -> true /* Cached */));
 
         String searchFor = "2";
 
-        List<String> result = db.query(UserIdentifierQueries.fetchMatchingPlayerNames(searchFor));
+        List<String> result = db().query(UserIdentifierQueries.fetchMatchingPlayerNames(searchFor));
 
         assertNotNull(result);
         assertEquals(1, result.size());
@@ -1029,90 +996,90 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void configIsStoredInTheDatabase() {
-        PlanConfig config = system.getConfigSystem().getConfig();
+    default void configIsStoredInTheDatabase() {
+        PlanConfig config = system().getConfigSystem().getConfig();
 
-        db.executeTransaction(new StoreConfigTransaction(serverUUID, config, System.currentTimeMillis()));
+        db().executeTransaction(new StoreConfigTransaction(serverUUID(), config, System.currentTimeMillis()));
 
-        Optional<Config> foundConfig = db.query(new NewerConfigQuery(serverUUID, 0));
+        Optional<Config> foundConfig = db().query(new NewerConfigQuery(serverUUID(), 0));
         assertTrue(foundConfig.isPresent());
         assertEquals(config, foundConfig.get());
     }
 
     @Test
-    public void unchangedConfigDoesNotUpdateInDatabase() {
+    default void unchangedConfigDoesNotUpdateInDatabase() {
         configIsStoredInTheDatabase();
         long savedMs = System.currentTimeMillis();
 
-        PlanConfig config = system.getConfigSystem().getConfig();
+        PlanConfig config = system().getConfigSystem().getConfig();
 
-        db.executeTransaction(new StoreConfigTransaction(serverUUID, config, System.currentTimeMillis()));
+        db().executeTransaction(new StoreConfigTransaction(serverUUID(), config, System.currentTimeMillis()));
 
-        assertFalse(db.query(new NewerConfigQuery(serverUUID, savedMs)).isPresent());
+        assertFalse(db().query(new NewerConfigQuery(serverUUID(), savedMs)).isPresent());
     }
 
     @Test
-    public void indexCreationWorksWithoutErrors() throws Exception {
+    default void indexCreationWorksWithoutErrors() throws Exception {
         Transaction transaction = new CreateIndexTransaction();
-        db.executeTransaction(transaction).get(); // get to ensure transaction is finished
+        db().executeTransaction(transaction).get(); // get to ensure transaction is finished
         assertTrue(transaction.wasSuccessful());
     }
 
     @Test
-    public void playerMaxPeakIsCorrect() {
+    default void playerMaxPeakIsCorrect() {
         List<TPS> tpsData = RandomData.randomTPS();
 
         for (TPS tps : tpsData) {
-            db.executeTransaction(new TPSStoreTransaction(serverUUID, Collections.singletonList(tps)));
+            db().executeTransaction(new TPSStoreTransaction(serverUUID(), Collections.singletonList(tps)));
         }
 
         tpsData.sort(Comparator.comparingInt(TPS::getPlayers));
         int expected = tpsData.get(tpsData.size() - 1).getPlayers();
-        int actual = db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID)).map(DateObj::getValue).orElse(-1);
-        assertEquals("Wrong return value. " + tpsData.stream().map(TPS::getPlayers).collect(Collectors.toList()).toString(), expected, actual);
+        int actual = db().query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID())).map(DateObj::getValue).orElse(-1);
+        assertEquals(expected, actual, () -> "Wrong return value. " + tpsData.stream().map(TPS::getPlayers).collect(Collectors.toList()).toString());
     }
 
     @Test
-    public void playerCountForServersIsCorrect() {
-        Map<UUID, Integer> expected = Collections.singletonMap(serverUUID, 1);
+    default void playerCountForServersIsCorrect() {
+        Map<UUID, Integer> expected = Collections.singletonMap(serverUUID(), 1);
         saveUserOne();
 
-        Map<UUID, Integer> result = db.query(ServerAggregateQueries.serverUserCounts());
+        Map<UUID, Integer> result = db().query(ServerAggregateQueries.serverUserCounts());
         assertEquals(expected, result);
     }
 
-    private void executeTransactions(Transaction... transactions) {
+    default void executeTransactions(Transaction... transactions) {
         for (Transaction transaction : transactions) {
-            db.executeTransaction(transaction);
+            db().executeTransaction(transaction);
         }
     }
 
     @Test
-    public void baseUsersQueryDoesNotReturnDuplicatePlayers() {
-        db.executeTransaction(TestData.storeServers());
+    default void baseUsersQueryDoesNotReturnDuplicatePlayers() {
+        db().executeTransaction(TestData.storeServers());
         executeTransactions(TestData.storePlayerOneData());
         executeTransactions(TestData.storePlayerTwoData());
 
         Collection<BaseUser> expected = new HashSet<>(Arrays.asList(TestData.getPlayerBaseUser(), TestData.getPlayer2BaseUser()));
-        Collection<BaseUser> result = db.query(BaseUserQueries.fetchServerBaseUsers(TestConstants.SERVER_UUID));
+        Collection<BaseUser> result = db().query(BaseUserQueries.fetchServerBaseUsers(TestConstants.SERVER_UUID));
 
         assertEquals(expected, result);
 
-        result = db.query(BaseUserQueries.fetchServerBaseUsers(TestConstants.SERVER_TWO_UUID));
+        result = db().query(BaseUserQueries.fetchServerBaseUsers(TestConstants.SERVER_TWO_UUID));
 
         assertEquals(expected, result);
     }
 
     @Test
-    public void serverPlayerContainersQueryDoesNotReturnDuplicatePlayers() {
-        db.executeTransaction(TestData.storeServers());
+    default void serverPlayerContainersQueryDoesNotReturnDuplicatePlayers() {
+        db().executeTransaction(TestData.storeServers());
         executeTransactions(TestData.storePlayerOneData());
         executeTransactions(TestData.storePlayerTwoData());
 
         List<UUID> expected = Arrays.asList(playerUUID, player2UUID);
         Collections.sort(expected);
 
-        Collection<UUID> result = db.query(new ServerPlayerContainersQuery(TestConstants.SERVER_UUID))
+        Collection<UUID> result = db().query(new ServerPlayerContainersQuery(TestConstants.SERVER_UUID))
                 .stream().map(player -> player.getUnsafe(PlayerKeys.UUID))
                 .sorted()
                 .collect(Collectors.toList());
@@ -1121,15 +1088,15 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void allPlayerContainersQueryDoesNotReturnDuplicatePlayers() {
-        db.executeTransaction(TestData.storeServers());
+    default void allPlayerContainersQueryDoesNotReturnDuplicatePlayers() {
+        db().executeTransaction(TestData.storeServers());
         executeTransactions(TestData.storePlayerOneData());
         executeTransactions(TestData.storePlayerTwoData());
 
         List<UUID> expected = Arrays.asList(playerUUID, player2UUID);
         Collections.sort(expected);
 
-        Collection<UUID> result = db.query(new AllPlayerContainersQuery())
+        Collection<UUID> result = db().query(new AllPlayerContainersQuery())
                 .stream().map(player -> player.getUnsafe(PlayerKeys.UUID))
                 .sorted()
                 .collect(Collectors.toList());
@@ -1139,8 +1106,8 @@ public abstract class CommonDBTest {
 
     // This test is against issue https://github.com/Rsl1122/Plan-PlayerAnalytics/issues/956
     @Test
-    public void analysisContainerPlayerNamesAreCollectedFromBaseUsersCorrectly() {
-        db.executeTransaction(TestData.storeServers());
+    default void analysisContainerPlayerNamesAreCollectedFromBaseUsersCorrectly() {
+        db().executeTransaction(TestData.storeServers());
         executeTransactions(TestData.storePlayerOneData());
         executeTransactions(TestData.storePlayerTwoData());
 
@@ -1149,7 +1116,7 @@ public abstract class CommonDBTest {
 
         AnalysisContainer.Factory factory = constructAnalysisContainerFactory();
         AnalysisContainer analysisContainer = factory.forServerContainer(
-                db.query(ContainerFetchQueries.fetchServerContainer(TestConstants.SERVER_UUID))
+                db().query(ContainerFetchQueries.fetchServerContainer(TestConstants.SERVER_UUID))
         );
 
         Map<UUID, String> expected = new HashMap<>();
@@ -1161,14 +1128,14 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void extensionPlayerValuesAreStored() {
-        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
+    default void extensionPlayerValuesAreStored() {
+        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system().getExtensionService();
 
         extensionService.register(new PlayerExtension());
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        Map<UUID, List<ExtensionPlayerData>> playerDataByServerUUID = db.query(new ExtensionPlayerDataQuery(playerUUID));
-        List<ExtensionPlayerData> ofServer = playerDataByServerUUID.get(serverUUID);
+        Map<UUID, List<ExtensionPlayerData>> playerDataByServerUUID = db().query(new ExtensionPlayerDataQuery(playerUUID));
+        List<ExtensionPlayerData> ofServer = playerDataByServerUUID.get(serverUUID());
         assertNotNull(ofServer);
         assertFalse(ofServer.isEmpty());
 
@@ -1185,19 +1152,19 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void extensionPlayerValuesCanBeQueriedAsTableData() {
+    default void extensionPlayerValuesCanBeQueriedAsTableData() {
         extensionPlayerValuesAreStored();
         sessionsAreStoredWithAllData(); // This query requires sessions for a last seen date
 
         // Store a second session to check against issue https://github.com/plan-player-analytics/Plan/issues/1039
-        Session session = new Session(playerUUID, serverUUID, 32345L, worlds[0], "SURVIVAL");
+        Session session = new Session(playerUUID, serverUUID(), 32345L, worlds[0], "SURVIVAL");
         session.endSession(42345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
 
         execute(DataStoreQueries.storeSession(session));
 
-        Map<UUID, ExtensionTabData> result = db.query(new ExtensionServerPlayerDataTableQuery(serverUUID, 50));
+        Map<UUID, ExtensionTabData> result = db().query(new ExtensionServerPlayerDataTableQuery(serverUUID(), 50));
         assertEquals(1, result.size());
         ExtensionTabData playerData = result.get(playerUUID);
         assertNotNull(playerData);
@@ -1210,13 +1177,13 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void extensionServerValuesAreStored() {
-        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
+    default void extensionServerValuesAreStored() {
+        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system().getExtensionService();
 
         extensionService.register(new ServerExtension());
         extensionService.updateServerValues(CallEvents.SERVER_EXTENSION_REGISTER);
 
-        List<ExtensionServerData> ofServer = db.query(new ExtensionServerDataQuery(serverUUID));
+        List<ExtensionServerData> ofServer = db().query(new ExtensionServerDataQuery(serverUUID()));
         assertFalse(ofServer.isEmpty());
 
         ExtensionServerData extensionServerData = ofServer.get(0);
@@ -1232,13 +1199,13 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void extensionServerAggregateQueriesWork() {
-        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
+    default void extensionServerAggregateQueriesWork() {
+        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system().getExtensionService();
 
         extensionService.register(new PlayerExtension());
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        List<ExtensionServerData> ofServer = db.query(new ExtensionServerDataQuery(serverUUID));
+        List<ExtensionServerData> ofServer = db().query(new ExtensionServerDataQuery(serverUUID()));
         assertFalse(ofServer.isEmpty());
 
         ExtensionServerData extensionServerData = ofServer.get(0);
@@ -1257,8 +1224,8 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void unsatisfiedPlayerConditionalResultsAreCleaned() {
-        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
+    default void unsatisfiedPlayerConditionalResultsAreCleaned() {
+        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system().getExtensionService();
 
         extensionService.register(new ConditionalExtension());
 
@@ -1272,7 +1239,7 @@ public abstract class CommonDBTest {
         ConditionalExtension.condition = false;
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        db.executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
+        db().executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
 
         // Check that the wanted data exists
         checkThatPlayerDataExists(ConditionalExtension.condition);
@@ -1281,36 +1248,36 @@ public abstract class CommonDBTest {
         ConditionalExtension.condition = false;
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        db.executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
+        db().executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
 
         // Check that the wanted data exists
         checkThatPlayerDataExists(ConditionalExtension.condition);
     }
 
-    private void checkThatPlayerDataExists(boolean condition) {
+    default void checkThatPlayerDataExists(boolean condition) {
         if (condition) { // Condition is true, conditional values exist
-            List<ExtensionPlayerData> ofServer = db.query(new ExtensionPlayerDataQuery(playerUUID)).get(serverUUID);
-            assertTrue("There was no data left", ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty());
+            List<ExtensionPlayerData> ofServer = db().query(new ExtensionPlayerDataQuery(playerUUID)).get(serverUUID());
+            assertTrue(ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty(), "There was no data left");
 
             ExtensionTabData tabData = ofServer.get(0).getTabs().get(0);
             OptionalAssert.equals("Yes", tabData.getBoolean("isCondition").map(ExtensionBooleanData::getFormattedValue));
             OptionalAssert.equals("Conditional", tabData.getString("conditionalValue").map(ExtensionStringData::getFormattedValue));
             OptionalAssert.equals("unconditional", tabData.getString("unconditional").map(ExtensionStringData::getFormattedValue)); // Was not removed
-            assertFalse("Value was not removed: reversedConditionalValue", tabData.getString("reversedConditionalValue").isPresent());
+            assertFalse(tabData.getString("reversedConditionalValue").isPresent(), "Value was not removed: reversedConditionalValue");
         } else { // Condition is false, reversed conditional values exist
-            List<ExtensionPlayerData> ofServer = db.query(new ExtensionPlayerDataQuery(playerUUID)).get(serverUUID);
-            assertTrue("There was no data left", ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty());
+            List<ExtensionPlayerData> ofServer = db().query(new ExtensionPlayerDataQuery(playerUUID)).get(serverUUID());
+            assertTrue(ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty(), "There was no data left");
             ExtensionTabData tabData = ofServer.get(0).getTabs().get(0);
             OptionalAssert.equals("No", tabData.getBoolean("isCondition").map(ExtensionBooleanData::getFormattedValue));
             OptionalAssert.equals("Reversed", tabData.getString("reversedConditionalValue").map(ExtensionStringData::getFormattedValue));
             OptionalAssert.equals("unconditional", tabData.getString("unconditional").map(ExtensionStringData::getFormattedValue)); // Was not removed
-            assertFalse("Value was not removed: conditionalValue", tabData.getString("conditionalValue").isPresent());
+            assertFalse(tabData.getString("conditionalValue").isPresent(), "Value was not removed: conditionalValue");
         }
     }
 
     @Test
-    public void unsatisfiedServerConditionalResultsAreCleaned() {
-        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
+    default void unsatisfiedServerConditionalResultsAreCleaned() {
+        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system().getExtensionService();
 
         ConditionalExtension.condition = true;
         extensionService.register(new ConditionalExtension());
@@ -1323,7 +1290,7 @@ public abstract class CommonDBTest {
         ConditionalExtension.condition = false;
         extensionService.updateServerValues(CallEvents.MANUAL);
 
-        db.executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
+        db().executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
 
         // Check that the wanted data exists
         checkThatServerDataExists(ConditionalExtension.condition);
@@ -1332,42 +1299,42 @@ public abstract class CommonDBTest {
         ConditionalExtension.condition = false;
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        db.executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
+        db().executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
 
         // Check that the wanted data exists
         checkThatServerDataExists(ConditionalExtension.condition);
     }
 
-    private void checkThatServerDataExists(boolean condition) {
+    default void checkThatServerDataExists(boolean condition) {
         if (condition) { // Condition is true, conditional values exist
-            List<ExtensionServerData> ofServer = db.query(new ExtensionServerDataQuery(serverUUID));
-            assertTrue("There was no data left", ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty());
+            List<ExtensionServerData> ofServer = db().query(new ExtensionServerDataQuery(serverUUID()));
+            assertTrue(ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty(), "There was no data left");
 
             ExtensionTabData tabData = ofServer.get(0).getTabs().get(0);
             OptionalAssert.equals("Yes", tabData.getBoolean("isCondition").map(ExtensionBooleanData::getFormattedValue));
             OptionalAssert.equals("Conditional", tabData.getString("conditionalValue").map(ExtensionStringData::getFormattedValue));
             OptionalAssert.equals("unconditional", tabData.getString("unconditional").map(ExtensionStringData::getFormattedValue)); // Was not removed
-            assertFalse("Value was not removed: reversedConditionalValue", tabData.getString("reversedConditionalValue").isPresent());
+            assertFalse(tabData.getString("reversedConditionalValue").isPresent(), "Value was not removed: reversedConditionalValue");
         } else { // Condition is false, reversed conditional values exist
-            List<ExtensionServerData> ofServer = db.query(new ExtensionServerDataQuery(serverUUID));
-            assertTrue("There was no data left", ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty());
+            List<ExtensionServerData> ofServer = db().query(new ExtensionServerDataQuery(serverUUID()));
+            assertTrue(ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty(), "There was no data left");
             ExtensionTabData tabData = ofServer.get(0).getTabs().get(0);
             OptionalAssert.equals("No", tabData.getBoolean("isCondition").map(ExtensionBooleanData::getFormattedValue));
             OptionalAssert.equals("Reversed", tabData.getString("reversedConditionalValue").map(ExtensionStringData::getFormattedValue));
             OptionalAssert.equals("unconditional", tabData.getString("unconditional").map(ExtensionStringData::getFormattedValue)); // Was not removed
-            assertFalse("Value was not removed: conditionalValue", tabData.getString("conditionalValue").isPresent());
+            assertFalse(tabData.getString("conditionalValue").isPresent(), "Value was not removed: conditionalValue");
         }
     }
 
     @Test
-    public void extensionServerTableValuesAreInserted() {
-        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
+    default void extensionServerTableValuesAreInserted() {
+        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system().getExtensionService();
 
         extensionService.register(new TableExtension());
         extensionService.updateServerValues(CallEvents.MANUAL);
         extensionService.updateServerValues(CallEvents.MANUAL);
 
-        List<ExtensionServerData> ofServer = db.query(new ExtensionServerDataQuery(serverUUID));
+        List<ExtensionServerData> ofServer = db().query(new ExtensionServerDataQuery(serverUUID()));
         assertFalse(ofServer.isEmpty());
 
         ExtensionServerData extensionServerData = ofServer.get(0);
@@ -1391,17 +1358,17 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void extensionPlayerTableValuesAreInserted() {
-        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system.getExtensionService();
+    default void extensionPlayerTableValuesAreInserted() {
+        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system().getExtensionService();
 
         extensionService.register(new TableExtension());
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        Map<UUID, List<ExtensionPlayerData>> ofPlayer = db.query(new ExtensionPlayerDataQuery(playerUUID));
+        Map<UUID, List<ExtensionPlayerData>> ofPlayer = db().query(new ExtensionPlayerDataQuery(playerUUID));
         assertFalse(ofPlayer.isEmpty());
 
-        List<ExtensionPlayerData> ofServer = ofPlayer.get(serverUUID);
+        List<ExtensionPlayerData> ofServer = ofPlayer.get(serverUUID());
         assertEquals(1, ofServer.size());
         ExtensionPlayerData extensionServerData = ofServer.get(0);
         List<ExtensionTabData> tabs = extensionServerData.getTabs();
@@ -1424,7 +1391,7 @@ public abstract class CommonDBTest {
     }
 
     @PluginInfo(name = "ConditionalExtension")
-    public static class ConditionalExtension implements DataExtension {
+    class ConditionalExtension implements DataExtension {
 
         static boolean condition = true;
 
@@ -1474,7 +1441,7 @@ public abstract class CommonDBTest {
     }
 
     @PluginInfo(name = "ServerExtension")
-    public class ServerExtension implements DataExtension {
+    class ServerExtension implements DataExtension {
         @NumberProvider(text = "a number")
         public long value() {
             return 5L;
@@ -1502,7 +1469,7 @@ public abstract class CommonDBTest {
     }
 
     @PluginInfo(name = "PlayerExtension")
-    public class PlayerExtension implements DataExtension {
+    class PlayerExtension implements DataExtension {
         @NumberProvider(text = "a number", showInPlayerTable = true)
         public long value(UUID playerUUD) {
             return 5L;
@@ -1530,7 +1497,7 @@ public abstract class CommonDBTest {
     }
 
     @PluginInfo(name = "TableExtension")
-    public class TableExtension implements DataExtension {
+    class TableExtension implements DataExtension {
         @TableProvider(tableColor = Color.AMBER)
         public Table table() {
             return createTestTable();

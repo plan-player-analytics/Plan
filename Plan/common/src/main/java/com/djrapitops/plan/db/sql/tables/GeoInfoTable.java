@@ -21,6 +21,9 @@ import com.djrapitops.plan.db.patches.*;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.AND;
+import static com.djrapitops.plan.db.sql.parsing.Sql.WHERE;
+
 /**
  * Table information about 'plan_ips'.
  * <p>
@@ -44,16 +47,16 @@ public class GeoInfoTable {
     public static final String LAST_USED = "last_used";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
-            + USER_UUID + ", "
-            + IP + ", "
-            + GEOLOCATION + ", "
+            + USER_UUID + ','
+            + IP + ','
+            + GEOLOCATION + ','
             + LAST_USED
             + ") VALUES (?, ?, ?, ?)";
 
     public static final String UPDATE_STATEMENT = "UPDATE " + TABLE_NAME + " SET "
             + LAST_USED + "=?" +
-            " WHERE " + USER_UUID + "=?" +
-            " AND " + GEOLOCATION + "=?";
+            WHERE + USER_UUID + "=?" +
+            AND + GEOLOCATION + "=?";
 
     private GeoInfoTable() {
         /* Static information class */

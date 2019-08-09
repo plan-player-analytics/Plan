@@ -42,11 +42,11 @@ public class PingTable {
     public static final String MIN_PING = "min_ping";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
-            USER_UUID + ", " +
-            SERVER_UUID + ", " +
-            DATE + ", " +
-            MIN_PING + ", " +
-            MAX_PING + ", " +
+            USER_UUID + ',' +
+            SERVER_UUID + ',' +
+            DATE + ',' +
+            MIN_PING + ',' +
+            MAX_PING + ',' +
             AVG_PING +
             ") VALUES (?, ?, ?, ?, ?, ?)";
 

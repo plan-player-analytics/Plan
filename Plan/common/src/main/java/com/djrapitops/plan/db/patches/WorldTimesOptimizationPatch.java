@@ -19,6 +19,8 @@ package com.djrapitops.plan.db.patches;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.sql.tables.WorldTimesTable;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.FROM;
+
 public class WorldTimesOptimizationPatch extends Patch {
 
     private String tempTableName;
@@ -46,24 +48,24 @@ public class WorldTimesOptimizationPatch extends Patch {
             execute(WorldTimesTable.createTableSQL(dbType));
 
             execute("INSERT INTO " + tableName + " (" +
-                    WorldTimesTable.USER_UUID + ", " +
-                    WorldTimesTable.SERVER_UUID + ", " +
-                    WorldTimesTable.ADVENTURE + ", " +
-                    WorldTimesTable.CREATIVE + ", " +
-                    WorldTimesTable.SURVIVAL + ", " +
-                    WorldTimesTable.SPECTATOR + ", " +
-                    WorldTimesTable.SESSION_ID + ", " +
+                    WorldTimesTable.USER_UUID + ',' +
+                    WorldTimesTable.SERVER_UUID + ',' +
+                    WorldTimesTable.ADVENTURE + ',' +
+                    WorldTimesTable.CREATIVE + ',' +
+                    WorldTimesTable.SURVIVAL + ',' +
+                    WorldTimesTable.SPECTATOR + ',' +
+                    WorldTimesTable.SESSION_ID + ',' +
                     WorldTimesTable.WORLD_ID +
                     ") SELECT " +
                     "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
                     "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
-                    WorldTimesTable.ADVENTURE + ", " +
-                    WorldTimesTable.CREATIVE + ", " +
-                    WorldTimesTable.SURVIVAL + ", " +
-                    WorldTimesTable.SPECTATOR + ", " +
-                    WorldTimesTable.SESSION_ID + ", " +
+                    WorldTimesTable.ADVENTURE + ',' +
+                    WorldTimesTable.CREATIVE + ',' +
+                    WorldTimesTable.SURVIVAL + ',' +
+                    WorldTimesTable.SPECTATOR + ',' +
+                    WorldTimesTable.SESSION_ID + ',' +
                     WorldTimesTable.WORLD_ID +
-                    " FROM " + tempTableName
+                    FROM + tempTableName
             );
 
             dropTable(tempTableName);

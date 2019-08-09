@@ -47,7 +47,7 @@ public class ServerAggregateQueries {
      * @return Count of base users, all users in a network after Plan installation.
      */
     public static Query<Integer> baseUserCount() {
-        String sql = "SELECT COUNT(1) as c FROM " + UsersTable.TABLE_NAME;
+        String sql = SELECT + "COUNT(1) as c FROM " + UsersTable.TABLE_NAME;
         return new QueryAllStatement<Integer>(sql) {
             @Override
             public Integer processResults(ResultSet set) throws SQLException {
@@ -63,7 +63,7 @@ public class ServerAggregateQueries {
      * @return Count of users registered to that server after Plan installation.
      */
     public static Query<Integer> serverUserCount(UUID serverUUID) {
-        String sql = "SELECT COUNT(1) as c FROM " + UserInfoTable.TABLE_NAME +
+        String sql = SELECT + "COUNT(1) as c FROM " + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.SERVER_UUID + "=?";
         return new QueryStatement<Integer>(sql) {
             @Override
@@ -87,7 +87,7 @@ public class ServerAggregateQueries {
      * @return Map: Server UUID - Count of users registered to that server
      */
     public static Query<Map<UUID, Integer>> serverUserCounts() {
-        String sql = "SELECT COUNT(1) as c, " + UserInfoTable.SERVER_UUID + FROM + UserInfoTable.TABLE_NAME +
+        String sql = SELECT + "COUNT(1) as c, " + UserInfoTable.SERVER_UUID + FROM + UserInfoTable.TABLE_NAME +
                 GROUP_BY + UserInfoTable.SERVER_UUID;
         return new QueryAllStatement<Map<UUID, Integer>>(sql, 100) {
             @Override
@@ -110,7 +110,7 @@ public class ServerAggregateQueries {
      * @return Map: Lowercase used command - Count of use times.
      */
     public static Query<Map<String, Integer>> commandUsageCounts(UUID serverUUID) {
-        String sql = SELECT + CommandUseTable.COMMAND + ", " + CommandUseTable.TIMES_USED + FROM + CommandUseTable.TABLE_NAME +
+        String sql = SELECT + CommandUseTable.COMMAND + ',' + CommandUseTable.TIMES_USED + FROM + CommandUseTable.TABLE_NAME +
                 WHERE + CommandUseTable.SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID;
 
         return new QueryStatement<Map<String, Integer>>(sql, 5000) {
@@ -134,17 +134,17 @@ public class ServerAggregateQueries {
 
     public static Query<Map<String, Integer>> networkGeolocationCounts() {
         String subQuery1 = SELECT +
-                GeoInfoTable.USER_UUID + ", " +
-                GeoInfoTable.GEOLOCATION + ", " +
+                GeoInfoTable.USER_UUID + ',' +
+                GeoInfoTable.GEOLOCATION + ',' +
                 GeoInfoTable.LAST_USED +
                 FROM + GeoInfoTable.TABLE_NAME;
         String subQuery2 = SELECT +
-                GeoInfoTable.USER_UUID + ", " +
+                GeoInfoTable.USER_UUID + ',' +
                 "MAX(" + GeoInfoTable.LAST_USED + ") as m" +
                 FROM + GeoInfoTable.TABLE_NAME +
                 GROUP_BY + GeoInfoTable.USER_UUID;
         String sql = SELECT + GeoInfoTable.GEOLOCATION + ", COUNT(1) as c FROM (" +
-                "(" + subQuery1 + ") AS q1" +
+                '(' + subQuery1 + ") AS q1" +
                 " INNER JOIN (" + subQuery2 + ") AS q2 ON q1.uuid = q2.uuid)" +
                 WHERE + GeoInfoTable.LAST_USED + "=m" +
                 GROUP_BY + GeoInfoTable.GEOLOCATION;

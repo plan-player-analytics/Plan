@@ -2,7 +2,6 @@
 <!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
         "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 <module name="Checker">
-
     <!-- Language Settings -->
     <property name="localeCountry" value="EN"/>
     <property name="localeLanguage" value="en"/>
@@ -10,12 +9,79 @@
     <module name="RegexpHeader">
         <property name="headerFile" value="config/checkstyle/java.header"/>
     </module>
+    <module name="FileLength">
+        <!-- This value is high. Notable: DatabaseTest 1521 -->
+        <property name="max" value="1750"/>
+        <property name="fileExtensions" value=".java"/>
+    </module>
 
     <module name="TreeWalker">
         <module name="EmptyStatement"/>
-        <module name="EqualsAvoidNull"/>
-        <module name="FallThrough"/>
+
+        <!-- Length restriction -->
+        <module name="AnonInnerLength">
+            <property name="max" value="50"/>
+        </module>
+        <module name="LineLength">
+            <!-- This value is very high. Notable: ExtensionExtractor: 254, DeepHelpLang 345, WorldMap 2964 -->
+            <property name="max" value="3000"/>
+        </module>
+        <module name="MethodLength">
+            <!-- This value is high. Notable: InspectPage: 138 -->
+            <property name="max" value="150"/>
+        </module>
+
+        <!-- Java Style -->
+        <module name="ArrayTypeStyle"/>
+        <module name="AvoidNestedBlocks"/>
+        <module name="CommentsIndentation"/>
+        <module name="DefaultComesLast"> <!-- Switches -->
+            <property name="skipIfLastAndSharedWithCase" value="true"/>
+        </module>
+        <module name="FallThrough"/> <!-- Switches -->
+        <module name="EmptyForIteratorPad"/>
+        <module name="GenericWhitespace"/>
         <module name="InnerAssignment"/>
+        <module name="MissingOverride"/>
+        <module name="NestedTryDepth">
+            <property name="max" value="1"/>
+        </module>
+        <module name="UnnecessaryParentheses"/>
+        <module name="NoWhitespaceAfter"/>
+
+        <!-- Variable naming -->
+        <module name="CatchParameterName"/>
+        <module name="ClassTypeParameterName"/>
+        <module name="InterfaceTypeParameterName"/>
+        <module name="LocalVariableName"/>
+        <module name="MethodTypeParameterName"/>
+        <module name="LambdaParameterName"/>
+
+        <!-- Metrics -->
+        <module name="ClassFanOutComplexity">
+            <!-- This value is high. Notable: DatabaseTest: 84, SQLDB: 56 -->
+            <property name="max" value="85"/>
+        </module>
+        <module name="CyclomaticComplexity">
+            <!-- This value is high. Notable: ActivityIndex: 18 -->
+            <property name="max" value="18"/>
+        </module>
+
+        <!-- Bugs -->
+        <module name="CovariantEquals"/>
+        <module name="EqualsAvoidNull"/>
+        <module name="EmptyCatchBlock">
+            <property name="exceptionVariableName" value="expected|ignore"/>
+        </module>
+        <module name="EmptyStatement"/>
+        <module name="HideUtilityClassConstructor"/>
+        <module name="IllegalThrows"/>
+        <module name="PackageAnnotation"/>
+
+        <!-- Performance-->
+        <module name="IllegalInstantiation">
+            <property name="classes" value="java.lang.Boolean"/>
+        </module>
     </module>
 
 </module>

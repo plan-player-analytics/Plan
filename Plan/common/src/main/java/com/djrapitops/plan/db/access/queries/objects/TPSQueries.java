@@ -87,14 +87,14 @@ public class TPSQueries {
         }
 
         TextStringBuilder sql = new TextStringBuilder(SELECT);
-        sql.append(SERVER_ID).append(", ")
-                .append(DATE).append(", ")
+        sql.append(SERVER_ID).append(',')
+                .append(DATE).append(',')
                 .append(PLAYERS_ONLINE)
                 .append(FROM).append(TABLE_NAME)
                 .append(WHERE).append(DATE).append(">").append(System.currentTimeMillis() - TimeAmount.WEEK.toMillis(2L))
-                .append(AND).append("(");
-        sql.appendWithSeparators(servers.stream().map(server -> SERVER_ID + "=" + server.getId()).iterator(), " OR ");
-        sql.append(")");
+                .append(AND).append('(');
+        sql.appendWithSeparators(servers.stream().map(server -> SERVER_ID + "=" + server.getId()).iterator(), OR);
+        sql.append(')');
 
         return new QueryAllStatement<Map<Integer, List<TPS>>>(sql.toString(), 10000) {
             @Override
@@ -120,10 +120,10 @@ public class TPSQueries {
     }
 
     public static Query<Optional<DateObj<Integer>>> fetchPeakPlayerCount(UUID serverUUID, long afterDate) {
-        String subQuery = "(" + SELECT + "MAX(" + PLAYERS_ONLINE + ")" + FROM + TABLE_NAME + WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
+        String subQuery = '(' + SELECT + "MAX(" + PLAYERS_ONLINE + ')' + FROM + TABLE_NAME + WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
                 AND + DATE + ">= ?)";
         String sql = SELECT +
-                DATE + ", " + PLAYERS_ONLINE +
+                DATE + ',' + PLAYERS_ONLINE +
                 FROM + TABLE_NAME +
                 WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
                 AND + DATE + ">= ?" +

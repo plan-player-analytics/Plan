@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.db.sql.parsing;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * @author Fuzzlemann
  */
@@ -32,12 +34,12 @@ public abstract class WhereParser extends SqlParser {
     }
 
     public WhereParser where(String... conditions) {
-        append(" WHERE ");
+        append(WHERE);
         for (String condition : conditions) {
             if (this.conditions > 0) {
-                append(" AND ");
+                append(AND);
             }
-            append("(").append(condition).append(")");
+            append('(').append(condition).append(')');
             this.conditions++;
         }
 
@@ -45,15 +47,15 @@ public abstract class WhereParser extends SqlParser {
     }
 
     public WhereParser and(String condition) {
-        append(" AND ");
-        append("(").append(condition).append(")");
+        append(AND);
+        append('(').append(condition).append(')');
         this.conditions++;
         return this;
     }
 
     public WhereParser or(String condition) {
-        append(" OR ");
-        append("(").append(condition).append(")");
+        append(OR);
+        append('(').append(condition).append(')');
         this.conditions++;
         return this;
     }

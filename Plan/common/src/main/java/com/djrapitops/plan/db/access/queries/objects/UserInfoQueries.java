@@ -49,10 +49,10 @@ public class UserInfoQueries {
      */
     public static Query<Map<UUID, List<UserInfo>>> fetchAllUserInformation() {
         String sql = SELECT +
-                UserInfoTable.REGISTERED + ", " +
-                UserInfoTable.BANNED + ", " +
-                UserInfoTable.OP + ", " +
-                UserInfoTable.USER_UUID + ", " +
+                UserInfoTable.REGISTERED + ',' +
+                UserInfoTable.BANNED + ',' +
+                UserInfoTable.OP + ',' +
+                UserInfoTable.USER_UUID + ',' +
                 UserInfoTable.SERVER_UUID +
                 FROM + UserInfoTable.TABLE_NAME;
 
@@ -86,12 +86,12 @@ public class UserInfoQueries {
      */
     public static Query<List<UserInfo>> fetchUserInformationOfUser(UUID playerUUID) {
         String sql = SELECT +
-                UserInfoTable.TABLE_NAME + "." + UserInfoTable.REGISTERED + ", " +
-                UserInfoTable.BANNED + ", " +
-                UserInfoTable.OP + ", " +
+                UserInfoTable.TABLE_NAME + '.' + UserInfoTable.REGISTERED + ',' +
+                UserInfoTable.BANNED + ',' +
+                UserInfoTable.OP + ',' +
                 UserInfoTable.SERVER_UUID +
                 FROM + UserInfoTable.TABLE_NAME +
-                WHERE + UserInfoTable.TABLE_NAME + "." + UserInfoTable.USER_UUID + "=?";
+                WHERE + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_UUID + "=?";
 
         return new QueryStatement<List<UserInfo>>(sql) {
             @Override
@@ -122,10 +122,10 @@ public class UserInfoQueries {
      */
     public static Query<Map<UUID, UserInfo>> fetchUserInformationOfServer(UUID serverUUID) {
         String sql = SELECT +
-                UserInfoTable.REGISTERED + ", " +
-                UserInfoTable.BANNED + ", " +
-                UserInfoTable.OP + ", " +
-                UserInfoTable.USER_UUID + ", " +
+                UserInfoTable.REGISTERED + ',' +
+                UserInfoTable.BANNED + ',' +
+                UserInfoTable.OP + ',' +
+                UserInfoTable.USER_UUID + ',' +
                 UserInfoTable.SERVER_UUID +
                 FROM + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.SERVER_UUID + "=?";

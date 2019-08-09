@@ -24,6 +24,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Static method class for SQLite Schema related queries.
  *
@@ -36,7 +38,8 @@ public class SQLiteSchemaQueries {
     }
 
     public static Query<Boolean> doesTableExist(String tableName) {
-        String sql = "SELECT COUNT(1) as c FROM sqlite_master WHERE tbl_name=?";
+        String sql = SELECT + "COUNT(1) as c" +
+                FROM + "sqlite_master" + WHERE + "tbl_name=?";
         return new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -46,7 +49,7 @@ public class SQLiteSchemaQueries {
     }
 
     public static Query<Boolean> doesColumnExist(String tableName, String columnName) {
-        return new QueryAllStatement<Boolean>("PRAGMA table_info(" + tableName + ")") {
+        return new QueryAllStatement<Boolean>("PRAGMA table_info(" + tableName + ')') {
             @Override
             public Boolean processResults(ResultSet set) throws SQLException {
                 while (set.next()) {

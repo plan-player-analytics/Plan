@@ -28,6 +28,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.AND;
+import static com.djrapitops.plan.db.sql.parsing.Sql.WHERE;
+
 public class NicknameLastSeenPatch extends Patch {
 
     @Override
@@ -108,9 +111,9 @@ public class NicknameLastSeenPatch extends Patch {
 
     private void updateLastUsed(Map<UUID, Integer> serverIDsByUUID, Map<Integer, Set<Nickname>> nicknames) {
         String updateSQL = "UPDATE " + NicknamesTable.TABLE_NAME + " SET " + NicknamesTable.LAST_USED + "=?" +
-                " WHERE " + NicknamesTable.NICKNAME + "=?" +
-                " AND user_id=?" +
-                " AND server_id=?";
+                WHERE + NicknamesTable.NICKNAME + "=?" +
+                AND + "user_id=?" +
+                AND + "server_id=?";
 
         execute(new ExecBatchStatement(updateSQL) {
             @Override

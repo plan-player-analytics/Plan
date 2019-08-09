@@ -88,7 +88,7 @@ public class CreateIndexTransaction extends Transaction {
 
         sql.append(" (");
         sql.appendWithSeparators(indexedColumns, ",");
-        sql.append(")");
+        sql.append(')');
 
         execute(sql.toString());
     }

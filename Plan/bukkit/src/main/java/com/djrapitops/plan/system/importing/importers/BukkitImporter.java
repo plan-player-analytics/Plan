@@ -70,11 +70,6 @@ public abstract class BukkitImporter implements Importer {
         this.plugin = plugin;
     }
 
-    @Deprecated
-    public List<String> getNames() {
-        return new ArrayList<>();
-    }
-
     @Override
     public String getName() {
         return name;

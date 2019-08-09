@@ -25,6 +25,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Transaction to store world name after an event.
  *
@@ -46,9 +48,10 @@ public class WorldNameStoreTransaction extends Transaction {
     }
 
     private boolean doesWorldNameNotExist() {
-        String sql = "SELECT COUNT(1) as c FROM " + WorldTable.TABLE_NAME +
-                " WHERE " + WorldTable.NAME + "=?" +
-                " AND " + WorldTable.SERVER_UUID + "=?";
+        String sql = SELECT + "COUNT(1) as c" +
+                FROM + WorldTable.TABLE_NAME +
+                WHERE + WorldTable.NAME + "=?" +
+                AND + WorldTable.SERVER_UUID + "=?";
         return !query(new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

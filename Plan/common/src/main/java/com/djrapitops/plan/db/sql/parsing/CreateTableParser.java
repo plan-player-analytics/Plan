@@ -48,7 +48,7 @@ public class CreateTableParser {
     private void finalizeColumn() {
         if (columnBuilder != null) {
             if (columnCount > 0) {
-                columns.append(", ");
+                columns.append(',');
             }
             columns.append(columnBuilder.toString());
             columnCount++;
@@ -97,15 +97,15 @@ public class CreateTableParser {
     public CreateTableParser foreignKey(String column, String referencedTable, String referencedColumn) {
         finalizeColumn();
         if (constraintCount > 0) {
-            keyConstraints.append(", ");
+            keyConstraints.append(',');
         }
         keyConstraints.append("FOREIGN KEY(")
                 .append(column)
                 .append(") REFERENCES ")
                 .append(referencedTable)
-                .append("(")
+                .append('(')
                 .append(referencedColumn)
-                .append(")");
+                .append(')');
         constraintCount++;
         return this;
     }
@@ -113,9 +113,9 @@ public class CreateTableParser {
     private void primaryKey(String column) {
         finalizeColumn();
         if (constraintCount > 0) {
-            keyConstraints.append(", ");
+            keyConstraints.append(',');
         }
-        keyConstraints.append("PRIMARY KEY (").append(column).append(")");
+        keyConstraints.append("PRIMARY KEY (").append(column).append(')');
         constraintCount++;
     }
 
@@ -129,7 +129,7 @@ public class CreateTableParser {
 
         Verify.isTrue(columnCount > 0, () -> new IllegalStateException("No columns specified for statement '" + columns.toString() + "..'"));
         if (constraintCount > 0) {
-            return columns.toString() + ", " + keyConstraints.toString() + ')';
+            return columns.toString() + ',' + keyConstraints.toString() + ')';
         } else {
             return columns.toString() + ')';
         }

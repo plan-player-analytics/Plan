@@ -17,14 +17,14 @@
 package com.djrapitops.plan.db.patches;
 
 import com.djrapitops.plan.db.access.ExecBatchStatement;
-import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.access.queries.schema.SessionIDServerIDRelationQuery;
 import com.djrapitops.plan.db.sql.tables.WorldTimesTable;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
+
+import static com.djrapitops.plan.db.sql.parsing.Sql.WHERE;
 
 public class WorldTimesSeverIDPatch extends Patch {
 
@@ -36,22 +36,7 @@ public class WorldTimesSeverIDPatch extends Patch {
         // WorldTimesOptimizationPatch makes this patch incompatible with newer patch versions.
         return hasColumn(tableName, "server_uuid")
                 || hasColumn(tableName, columnName)
-                && allValuesHaveServerID(tableName, columnName);
-    }
-
-    private Boolean allValuesHaveServerID(String tableName, String columnName) {
-        String sql = "SELECT * FROM " + tableName + " WHERE " + columnName + "=? LIMIT 1";
-        return query(new QueryStatement<Boolean>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setInt(1, 0);
-            }
-
-            @Override
-            public Boolean processResults(ResultSet set) throws SQLException {
-                return !set.next();
-            }
-        });
+                && allValuesHaveValueZero(tableName, columnName);
     }
 
     @Override
@@ -60,7 +45,7 @@ public class WorldTimesSeverIDPatch extends Patch {
 
         String sql = "UPDATE " + WorldTimesTable.TABLE_NAME + " SET " +
                 "server_id=?" +
-                " WHERE " + WorldTimesTable.SESSION_ID + "=?";
+                WHERE + WorldTimesTable.SESSION_ID + "=?";
 
         execute(new ExecBatchStatement(sql) {
             @Override

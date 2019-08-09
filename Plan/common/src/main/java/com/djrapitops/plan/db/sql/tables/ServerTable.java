@@ -56,9 +56,9 @@ public class ServerTable {
             .toString();
 
     public static final String STATEMENT_SELECT_SERVER_ID =
-            "(" + SELECT + TABLE_NAME + "." + SERVER_ID +
+            '(' + SELECT + TABLE_NAME + '.' + SERVER_ID +
                     FROM + TABLE_NAME +
-                    WHERE + TABLE_NAME + "." + SERVER_UUID + "=?" +
+                    WHERE + TABLE_NAME + '.' + SERVER_UUID + "=?" +
                     " LIMIT 1)";
 
     private ServerTable() {

@@ -48,7 +48,7 @@ public class PlayerFetchQueries {
      * @return Optional, Name if found.
      */
     public static Query<Optional<String>> playerUserName(UUID playerUUID) {
-        String sql = "SELECT " + UsersTable.USER_NAME +
+        String sql = SELECT + UsersTable.USER_NAME +
                 FROM + UsersTable.TABLE_NAME +
                 WHERE + UsersTable.USER_UUID + "=?";
         return new QueryStatement<Optional<String>>(sql) {
@@ -74,7 +74,8 @@ public class PlayerFetchQueries {
      * @return True if the player's BaseUser is found
      */
     public static Query<Boolean> isPlayerRegistered(UUID playerUUID) {
-        String sql = "SELECT COUNT(1) as c FROM " + UsersTable.TABLE_NAME +
+        String sql = SELECT + "COUNT(1) as c" +
+                FROM + UsersTable.TABLE_NAME +
                 WHERE + UsersTable.USER_UUID + "=?";
         return new HasMoreThanZeroQueryStatement(sql) {
             @Override
@@ -92,7 +93,8 @@ public class PlayerFetchQueries {
      * @return True if the player's UserInfo is found
      */
     public static Query<Boolean> isPlayerRegisteredOnServer(UUID playerUUID, UUID serverUUID) {
-        String sql = "SELECT COUNT(1) as c FROM " + UserInfoTable.TABLE_NAME +
+        String sql = SELECT + "COUNT(1) as c" +
+                FROM + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.USER_UUID + "=?" +
                 AND + UserInfoTable.SERVER_UUID + "=?";
         return new HasMoreThanZeroQueryStatement(sql) {
@@ -103,5 +105,4 @@ public class PlayerFetchQueries {
             }
         };
     }
-
 }

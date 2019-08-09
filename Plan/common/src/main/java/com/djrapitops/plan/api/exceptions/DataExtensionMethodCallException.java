@@ -18,6 +18,8 @@ package com.djrapitops.plan.api.exceptions;
 
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 
+import java.util.Optional;
+
 /**
  * Exception that is thrown when a call to a DataExtension method throws an exception.
  *
@@ -26,7 +28,8 @@ import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 public class DataExtensionMethodCallException extends IllegalStateException {
 
     private final String pluginName;
-    private final MethodWrapper method;
+    // Non serializable field due to Method not being serializable.
+    private transient final MethodWrapper method;
 
     public DataExtensionMethodCallException(Throwable cause, String pluginName, MethodWrapper method) {
         super(cause);
@@ -38,7 +41,8 @@ public class DataExtensionMethodCallException extends IllegalStateException {
         return pluginName;
     }
 
-    public MethodWrapper getMethod() {
-        return method;
+    public Optional<MethodWrapper> getMethod() {
+        // method is transient and might be lost if flushed to disk.
+        return Optional.ofNullable(method);
     }
 }

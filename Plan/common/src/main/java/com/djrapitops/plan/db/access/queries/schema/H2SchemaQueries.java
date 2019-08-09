@@ -22,6 +22,8 @@ import com.djrapitops.plan.db.access.Query;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.SELECT;
+
 /**
  * Static method class for H2 Schema related queries.
  *
@@ -34,7 +36,7 @@ public class H2SchemaQueries {
     }
 
     public static Query<Boolean> doesTableExist(String tableName) {
-        String sql = "SELECT COUNT(1) as c FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME=?";
+        String sql = SELECT + "COUNT(1) as c FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME=?";
         return new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -44,7 +46,7 @@ public class H2SchemaQueries {
     }
 
     public static Query<Boolean> doesColumnExist(String tableName, String columnName) {
-        String sql = "SELECT COUNT(1) as c FROM INFORMATION_SCHEMA.COLUMNS" +
+        String sql = SELECT + "COUNT(1) as c FROM INFORMATION_SCHEMA.COLUMNS" +
                 " WHERE TABLE_NAME=? AND COLUMN_NAME=?";
         return new HasMoreThanZeroQueryStatement(sql) {
             @Override

@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.UUID;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
 import static com.djrapitops.plan.db.sql.tables.SettingsTable.*;
 
 /**
@@ -36,9 +37,9 @@ import static com.djrapitops.plan.db.sql.tables.SettingsTable.*;
  */
 public class NewerConfigQuery extends QueryStatement<Optional<Config>> {
 
-    private static final String SELECT_STATEMENT = "SELECT " + CONFIG_CONTENT + " FROM " + TABLE_NAME +
-            " WHERE " + UPDATED + ">? AND " +
-            SERVER_UUID + "=? LIMIT 1";
+    private static final String SELECT_STATEMENT = SELECT + CONFIG_CONTENT + FROM + TABLE_NAME +
+            WHERE + UPDATED + ">?" +
+            AND + SERVER_UUID + "=? LIMIT 1";
 
     private final UUID serverUUID;
     private final long updatedAfter;

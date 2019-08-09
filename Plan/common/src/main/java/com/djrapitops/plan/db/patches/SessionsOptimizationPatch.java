@@ -19,6 +19,8 @@ package com.djrapitops.plan.db.patches;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.sql.tables.SessionsTable;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.FROM;
+
 public class SessionsOptimizationPatch extends Patch {
 
     private String tempTableName;
@@ -49,24 +51,24 @@ public class SessionsOptimizationPatch extends Patch {
             execute(SessionsTable.createTableSQL(dbType));
 
             execute("INSERT INTO " + tableName + " (" +
-                    SessionsTable.USER_UUID + ", " +
-                    SessionsTable.SERVER_UUID + ", " +
-                    SessionsTable.ID + ", " +
-                    SessionsTable.SESSION_START + ", " +
-                    SessionsTable.SESSION_END + ", " +
-                    SessionsTable.MOB_KILLS + ", " +
-                    SessionsTable.DEATHS + ", " +
+                    SessionsTable.USER_UUID + ',' +
+                    SessionsTable.SERVER_UUID + ',' +
+                    SessionsTable.ID + ',' +
+                    SessionsTable.SESSION_START + ',' +
+                    SessionsTable.SESSION_END + ',' +
+                    SessionsTable.MOB_KILLS + ',' +
+                    SessionsTable.DEATHS + ',' +
                     SessionsTable.AFK_TIME +
                     ") SELECT " +
                     "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
                     "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
-                    SessionsTable.ID + ", " +
-                    SessionsTable.SESSION_START + ", " +
-                    SessionsTable.SESSION_END + ", " +
-                    SessionsTable.MOB_KILLS + ", " +
-                    SessionsTable.DEATHS + ", " +
+                    SessionsTable.ID + ',' +
+                    SessionsTable.SESSION_START + ',' +
+                    SessionsTable.SESSION_END + ',' +
+                    SessionsTable.MOB_KILLS + ',' +
+                    SessionsTable.DEATHS + ',' +
                     SessionsTable.AFK_TIME +
-                    " FROM " + tempTableName
+                    FROM + tempTableName
             );
 
             dropTable(tempTableName);

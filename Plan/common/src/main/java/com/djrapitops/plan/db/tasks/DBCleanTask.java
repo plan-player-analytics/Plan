@@ -48,6 +48,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Task for cleaning the active database.
  *
@@ -122,11 +124,12 @@ public class DBCleanTask extends AbsRunnable {
     }
 
     private Query<List<UUID>> fetchInactivePlayerUUIDs(long keepActiveAfter) {
-        String sql = "SELECT uuid, last_seen FROM (SELECT" +
-                " MAX(" + SessionsTable.SESSION_END + ") as last_seen, " + SessionsTable.USER_UUID +
-                " FROM " + SessionsTable.TABLE_NAME +
-                " GROUP BY " + SessionsTable.USER_UUID + ") as q1" +
-                " WHERE last_seen < ?";
+        String sql = SELECT + "uuid, last_seen" + FROM +
+                '(' + SELECT + "MAX(" + SessionsTable.SESSION_END + ") as last_seen, " +
+                SessionsTable.USER_UUID +
+                FROM + SessionsTable.TABLE_NAME +
+                GROUP_BY + SessionsTable.USER_UUID + ") as q1" +
+                WHERE + "last_seen < ?";
         return new QueryStatement<List<UUID>>(sql, 20000) {
 
             @Override
