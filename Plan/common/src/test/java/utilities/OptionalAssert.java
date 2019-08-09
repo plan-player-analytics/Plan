@@ -28,6 +28,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class OptionalAssert {
 
+    private OptionalAssert() {
+        /* Static method class */
+    }
+
     public static <T> void equals(T expected, Optional<T> result) {
         assertTrue(result.isPresent(), () -> "No result present, expected: " + expected);
         assertEquals(expected, result.get(), () -> "Wrong result, expected: " + expected + ", got: " + result.get());

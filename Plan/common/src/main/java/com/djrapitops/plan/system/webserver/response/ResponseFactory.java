@@ -163,7 +163,7 @@ public class ResponseFactory {
     public ErrorResponse basicAuthFail(WebUserAuthException e) {
         try {
             return PromptAuthorizationResponse.getBasicAuthResponse(e, versionCheckSystem, files);
-        } catch (IOException e1) {
+        } catch (IOException jarReadFailed) {
             return internalErrorResponse(e, "Failed to parse PromptAuthorizationResponse");
         }
     }

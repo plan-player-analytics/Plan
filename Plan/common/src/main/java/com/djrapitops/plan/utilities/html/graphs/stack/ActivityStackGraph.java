@@ -45,7 +45,7 @@ class ActivityStackGraph extends StackGraph {
         StackDataSet[] dataSets = new StackDataSet[groups.length];
 
         for (int i = 0; i < groups.length; i++) {
-            dataSets[i] = new StackDataSet(new ArrayList<>(), groups[i], colors[(i) % maxCol]);
+            dataSets[i] = new StackDataSet(new ArrayList<>(), groups[i], colors[i % maxCol]);
         }
 
         for (Long date : activityData.navigableKeySet()) {
