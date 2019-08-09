@@ -59,11 +59,11 @@ subprojects {
     ext.abstractPluginFrameworkVersion = "3.4.2"
     ext.planPluginBridgeVersion = "4.9.0-R0.3"
 
-    ext.bukkitVersion = "1.12.2-R0.1-SNAPSHOT"
-    ext.spigotVersion = "1.12.2-R0.1-SNAPSHOT"
-    ext.paperVersion = "1.12.2-R0.1-SNAPSHOT"
+    ext.bukkitVersion = "1.13.2-R0.1-SNAPSHOT"
+    ext.spigotVersion = "1.13.2-R0.1-SNAPSHOT"
+    ext.paperVersion = "1.13.2-R0.1-SNAPSHOT"
     ext.spongeVersion = "7.1.0"
-    ext.bungeeVersion = "1.12-SNAPSHOT"
+    ext.bungeeVersion = "1.13-SNAPSHOT"
     ext.velocityVersion = "1.0-SNAPSHOT"
     ext.redisBungeeVersion = "0.3.8-SNAPSHOT"
 

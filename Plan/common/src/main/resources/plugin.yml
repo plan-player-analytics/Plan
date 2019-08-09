@@ -2,6 +2,7 @@ name: Plan
 author: Rsl1122
 main: com.djrapitops.plan.Plan
 version: 4.9.1
+api-version: 1.13
 softdepend:
   - ASkyBlock
   - AdvancedAchievements
