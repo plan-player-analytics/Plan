@@ -27,6 +27,10 @@ import java.util.function.Predicate;
  */
 public class Predicates {
 
+    private Predicates() {
+        /* static method class */
+    }
+
     public static Predicate<DateHolder> within(long after, long before) {
         return holder -> {
             long date = holder.getDate();
