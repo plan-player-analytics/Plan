@@ -107,8 +107,8 @@ public class UserIdentifierQueries {
             public Map<UUID, String> processResults(ResultSet set) throws SQLException {
                 Map<UUID, String> names = new HashMap<>();
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString((UsersTable.USER_UUID)));
-                    String name = set.getString((UsersTable.USER_NAME));
+                    UUID uuid = UUID.fromString(set.getString(UsersTable.USER_UUID));
+                    String name = set.getString(UsersTable.USER_NAME);
 
                     names.put(uuid, name);
                 }

@@ -42,6 +42,7 @@
         <module name="NestedTryDepth">
             <property name="max" value="1"/>
         </module>
+        <module name="UnnecessaryParentheses"/>
 
         <!-- Variable naming -->
         <module name="CatchParameterName"/>

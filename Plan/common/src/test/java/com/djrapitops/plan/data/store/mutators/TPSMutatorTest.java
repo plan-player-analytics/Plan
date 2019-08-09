@@ -95,7 +95,7 @@ class TPSMutatorTest {
         long expected = TimeAmount.MONTH.toMillis(2L) - periodLength;
 
         TPSMutator tpsMutator = new TPSMutator(testData.stream()
-                .filter(tps -> (tps.getDate() - time) % (periodLength) == 0)
+                .filter(tps -> (tps.getDate() - time) % periodLength == 0)
                 .collect(Collectors.toList()));
         assertFalse(tpsMutator.all().isEmpty());
         assertNotEquals(testData, tpsMutator.all());
@@ -111,7 +111,7 @@ class TPSMutatorTest {
 
         long monthAgo = time - TimeAmount.MONTH.toMillis(1L);
         TPSMutator tpsMutator = new TPSMutator(testData.stream()
-                .filter(tps -> (tps.getDate() - time) % (periodLength) == 0)
+                .filter(tps -> (tps.getDate() - time) % periodLength == 0)
                 .collect(Collectors.toList()))
                 .filterDataBetween(monthAgo, time);
 
@@ -131,7 +131,7 @@ class TPSMutatorTest {
         Collections.shuffle(randomOrder);
         long monthAgo = time - TimeAmount.MONTH.toMillis(1L);
         TPSMutator tpsMutator = new TPSMutator(randomOrder.stream()
-                .filter(tps -> (tps.getDate() - time) % (periodLength) == 0)
+                .filter(tps -> (tps.getDate() - time) % periodLength == 0)
                 .collect(Collectors.toList()))
                 .filterDataBetween(monthAgo, time);
 

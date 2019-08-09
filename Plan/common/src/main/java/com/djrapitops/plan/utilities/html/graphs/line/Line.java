@@ -65,7 +65,7 @@ public class Line {
         double x2 = end.getX();
         double y1 = start.getY();
         double y2 = end.getY();
-        return Math.sqrt(Math.pow((x2 - x1), 2) + (Math.pow((y2 - y1), 2)));
+        return Math.sqrt(Math.pow(x2 - x1, 2) + (Math.pow(y2 - y1, 2)));
     }
 
     public double getPerpendicularDistance(Point from) {

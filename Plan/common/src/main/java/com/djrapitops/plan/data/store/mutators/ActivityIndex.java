@@ -72,17 +72,17 @@ public class ActivityIndex {
         double max = 4.0;
 
         long playtimeWeek = weekOne.toActivePlaytime();
-        double weekPlay = (playtimeWeek * 1.0 / activePlayThreshold);
+        double weekPlay = playtimeWeek * 1.0 / activePlayThreshold;
         if (weekPlay > max) {
             weekPlay = max;
         }
         long playtimeWeek2 = weekTwo.toActivePlaytime();
-        double week2Play = (playtimeWeek2 * 1.0 / activePlayThreshold);
+        double week2Play = playtimeWeek2 * 1.0 / activePlayThreshold;
         if (week2Play > max) {
             week2Play = max;
         }
         long playtimeWeek3 = weekThree.toActivePlaytime();
-        double week3Play = (playtimeWeek3 * 1.0 / activePlayThreshold);
+        double week3Play = playtimeWeek3 * 1.0 / activePlayThreshold;
         if (week3Play > max) {
             week3Play = max;
         }
