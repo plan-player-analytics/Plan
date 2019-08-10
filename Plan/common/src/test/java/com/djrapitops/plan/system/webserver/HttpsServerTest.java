@@ -24,7 +24,7 @@ import utilities.HTTPConnector;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 interface HttpsServerTest {
 
@@ -36,7 +36,7 @@ interface HttpsServerTest {
 
     @Test
     default void webServerIsRunningHTTPS() {
-        assertTrue("WebServer is not using https", getWebServer().isUsingHTTPS());
+        assertTrue(getWebServer().isUsingHTTPS(), "WebServer is not using https");
     }
 
     /**

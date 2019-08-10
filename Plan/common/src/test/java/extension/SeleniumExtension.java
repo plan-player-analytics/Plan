@@ -17,7 +17,7 @@
 package extension;
 
 import org.apache.commons.lang3.SystemUtils;
-import org.junit.Assume;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.extension.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -60,8 +60,8 @@ public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, 
     @Override
     public void beforeAll(ExtensionContext context) {
         String driverLocation = getChromeDriverLocation();
-        Assume.assumeNotNull("rules.SeleniumDriver: Chrome driver location not specified for this OS type", driverLocation);
-        Assume.assumeTrue("rules.SeleniumDriver: Chrome driver not found at " + driverLocation, new File(driverLocation).exists());
+        Assumptions.assumeFalse(driverLocation == null, "rules.SeleniumDriver: Chrome driver location not specified for this OS type");
+        Assumptions.assumeTrue(new File(driverLocation).exists(), "rules.SeleniumDriver: Chrome driver not found at " + driverLocation);
 
         System.setProperty("webdriver.chrome.driver", driverLocation);
         driver = getChromeWebDriver();
