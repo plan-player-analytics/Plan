@@ -86,12 +86,12 @@ public class PlanSpongeMocker extends Mocker {
         return this;
     }
 
-    public PlanSpongeMocker withDataFolder(File tempFolder) {
+    PlanSpongeMocker withDataFolder(File tempFolder) {
         when(planMock.getDataFolder()).thenReturn(tempFolder);
         return this;
     }
 
-    public PlanSpongeMocker withGame() {
+    PlanSpongeMocker withGame() {
         Game game = Mockito.mock(Game.class);
 
         Platform platform = mockPlatform();
@@ -130,12 +130,12 @@ public class PlanSpongeMocker extends Mocker {
         return server;
     }
 
-    public PlanSpongeMocker withResourceFetchingFromJar() throws Exception {
+    PlanSpongeMocker withResourceFetchingFromJar() throws Exception {
         withPluginFiles();
         return this;
     }
 
-    public PlanSponge getPlanMock() {
+    PlanSponge getPlanMock() {
         return planMock;
     }
 }

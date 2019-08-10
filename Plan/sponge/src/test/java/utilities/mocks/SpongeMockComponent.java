@@ -14,44 +14,46 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package rules;
+package utilities.mocks;
 
 import com.djrapitops.plan.DaggerPlanSpongeComponent;
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.PlanSpongeComponent;
 import com.djrapitops.plan.system.PlanSystem;
-import org.junit.rules.ExternalResource;
-import org.junit.rules.TemporaryFolder;
-import utilities.mocks.PlanSpongeMocker;
 
-public class SpongeComponentMocker extends ExternalResource implements ComponentMocker {
+import java.nio.file.Path;
 
-    private final TemporaryFolder testFolder;
+/**
+ * Test utility for creating a dagger PlanComponent using a mocked PlanSponge.
+ *
+ * @author Rsl1122
+ */
+public class SpongeMockComponent {
+
+    private final Path tempDir;
 
     private PlanSponge planMock;
     private PlanSpongeComponent component;
 
-    public SpongeComponentMocker(TemporaryFolder testFolder) {
-        this.testFolder = testFolder;
+    public SpongeMockComponent(Path tempDir) {
+        this.tempDir = tempDir;
     }
 
-    @Override
-    protected void before() throws Throwable {
-        PlanSpongeMocker mocker = PlanSpongeMocker.setUp()
-                .withDataFolder(testFolder.newFolder())
-                .withResourceFetchingFromJar()
-                .withGame();
-        planMock = mocker.getPlanMock();
-        component = DaggerPlanSpongeComponent.builder().plan(planMock).build();
-    }
-
-    public PlanPlugin getPlanMock() {
+    public PlanSponge getPlanMock() throws Exception {
+        if (planMock == null) {
+            planMock = PlanSpongeMocker.setUp()
+                    .withDataFolder(tempDir.toFile())
+                    .withResourceFetchingFromJar()
+                    .withGame()
+                    .getPlanMock();
+        }
         return planMock;
     }
 
-    public PlanSystem getPlanSystem() {
+    public PlanSystem getPlanSystem() throws Exception {
+        if (component == null) {
+            component = DaggerPlanSpongeComponent.builder().plan(getPlanMock()).build();
+        }
         return component.system();
     }
-
 }
