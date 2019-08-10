@@ -84,17 +84,12 @@ public class PlanBukkitMocker extends Mocker {
         return this;
     }
 
-    public PlanBukkitMocker withDataFolder(File tempFolder) {
+    PlanBukkitMocker withDataFolder(File tempFolder) {
         doReturn(tempFolder).when(planMock).getDataFolder();
         return this;
     }
 
-    @Deprecated
-    public PlanBukkitMocker withLogging() {
-        return this;
-    }
-
-    public PlanBukkitMocker withPluginDescription() {
+    PlanBukkitMocker withPluginDescription() {
         try {
             File pluginYml = getFile("/plugin.yml");
             PluginDescriptionFile description = new PluginDescriptionFile(new FileInputStream(pluginYml));
@@ -105,12 +100,12 @@ public class PlanBukkitMocker extends Mocker {
         return this;
     }
 
-    public PlanBukkitMocker withResourceFetchingFromJar() throws IOException {
+    PlanBukkitMocker withResourceFetchingFromJar() throws IOException {
         withPluginFiles();
         return this;
     }
 
-    public PlanBukkitMocker withServer() {
+    PlanBukkitMocker withServer() {
         Server serverMock = Mockito.mock(Server.class);
         doReturn("").when(serverMock).getIp();
         doReturn("Bukkit").when(serverMock).getName();
@@ -129,7 +124,7 @@ public class PlanBukkitMocker extends Mocker {
         return this;
     }
 
-    public Plan getPlanMock() {
+    Plan getPlanMock() {
         return planMock;
     }
 }

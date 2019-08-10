@@ -14,44 +14,47 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package rules;
+package utilities.mocks;
 
 import com.djrapitops.plan.DaggerPlanBukkitComponent;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBukkitComponent;
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.PlanSystem;
-import org.junit.rules.ExternalResource;
-import org.junit.rules.TemporaryFolder;
-import utilities.mocks.PlanBukkitMocker;
 
-public class BukkitComponentMocker extends ExternalResource implements ComponentMocker {
+import java.nio.file.Path;
 
-    private final TemporaryFolder testFolder;
+/**
+ * Test utility for creating a dagger PlanComponent using a mocked Plan.
+ *
+ * @author Rsl1122
+ */
+public class BukkitMockComponent {
+
+    private final Path tempDir;
 
     private Plan planMock;
     private PlanBukkitComponent component;
 
-    public BukkitComponentMocker(TemporaryFolder testFolder) {
-        this.testFolder = testFolder;
+    public BukkitMockComponent(Path tempDir) {
+        this.tempDir = tempDir;
     }
 
-    @Override
-    protected void before() throws Throwable {
-        PlanBukkitMocker mocker = PlanBukkitMocker.setUp()
-                .withDataFolder(testFolder.newFolder())
-                .withPluginDescription()
-                .withResourceFetchingFromJar()
-                .withServer();
-        planMock = mocker.getPlanMock();
-        component = DaggerPlanBukkitComponent.builder().plan(planMock).build();
-    }
-
-    public PlanPlugin getPlanMock() {
+    public Plan getPlanMock() throws Exception {
+        if (planMock == null) {
+            planMock = PlanBukkitMocker.setUp()
+                    .withDataFolder(tempDir.toFile())
+                    .withPluginDescription()
+                    .withResourceFetchingFromJar()
+                    .withServer()
+                    .getPlanMock();
+        }
         return planMock;
     }
 
-    public PlanSystem getPlanSystem() {
+    public PlanSystem getPlanSystem() throws Exception {
+        if (component == null) {
+            component = DaggerPlanBukkitComponent.builder().plan(getPlanMock()).build();
+        }
         return component.system();
     }
 }
