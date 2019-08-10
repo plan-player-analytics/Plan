@@ -83,23 +83,18 @@ public class PlanBungeeMocker extends Mocker {
         return this;
     }
 
-    public PlanBungeeMocker withDataFolder(File tempFolder) {
+    PlanBungeeMocker withDataFolder(File tempFolder) {
         when(planMock.getDataFolder()).thenReturn(tempFolder);
         return this;
     }
 
-    public PlanBungeeMocker withResourceFetchingFromJar() throws Exception {
+    PlanBungeeMocker withResourceFetchingFromJar() throws Exception {
         withPluginFiles();
         return this;
     }
 
-    @Deprecated
-    public PlanBungeeMocker withLogging() {
-        return this;
-    }
-
     @SuppressWarnings("deprecation")
-    public PlanBungeeMocker withProxy() {
+    PlanBungeeMocker withProxy() {
         ProxyServer proxyMock = Mockito.mock(ProxyServer.class);
         doReturn("1.12.2").when(proxyMock).getVersion();
 
@@ -117,7 +112,7 @@ public class PlanBungeeMocker extends Mocker {
         return this;
     }
 
-    public PlanBungeeMocker withPluginDescription() {
+    PlanBungeeMocker withPluginDescription() {
         File pluginYml = getFile("/bungee.yml");
         HashSet<String> empty = new HashSet<>();
         PluginDescription pluginDescription = new PluginDescription("Plan", "", "9.9.9", "Rsl1122", empty, empty, pluginYml, "");
@@ -125,7 +120,7 @@ public class PlanBungeeMocker extends Mocker {
         return this;
     }
 
-    public PlanBungee getPlanMock() {
+    PlanBungee getPlanMock() {
         return planMock;
     }
 }

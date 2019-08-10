@@ -65,7 +65,7 @@ public class DBPreparer {
         return db;
     }
 
-    public Optional<Database> prepareMySQL() throws EnableException {
+    public Optional<String> setUpMySQLSettings(PlanConfig config) {
         String database = System.getenv(CIProperties.MYSQL_DATABASE);
         String user = System.getenv(CIProperties.MYSQL_USER);
         String pass = System.getenv(CIProperties.MYSQL_PASS);
@@ -80,22 +80,30 @@ public class DBPreparer {
 
         String dbName = DBType.MYSQL.getName();
 
-        PlanConfig config = system.getConfigSystem().getConfig();
         config.set(DatabaseSettings.MYSQL_DATABASE, formattedDatabase);
         config.set(DatabaseSettings.MYSQL_USER, user);
         config.set(DatabaseSettings.MYSQL_PASS, pass);
         config.set(DatabaseSettings.MYSQL_HOST, "127.0.0.1");
         config.set(DatabaseSettings.TYPE, dbName);
+        return Optional.of(formattedDatabase);
+    }
 
-        SQLDB mysql = prepareDBByName(dbName);
-        mysql.executeTransaction(new Transaction() {
-            @Override
-            protected void performOperations() {
-                execute("DROP DATABASE " + formattedDatabase);
-                execute("CREATE DATABASE " + formattedDatabase);
-                execute("USE " + formattedDatabase);
-            }
-        });
-        return Optional.of(mysql);
+    public Optional<Database> prepareMySQL() throws EnableException {
+        PlanConfig config = system.getConfigSystem().getConfig();
+        Optional<String> formattedDB = setUpMySQLSettings(config);
+        if (formattedDB.isPresent()) {
+            String formattedDatabase = formattedDB.get();
+            SQLDB mysql = prepareDBByName(DBType.MYSQL.getName());
+            mysql.executeTransaction(new Transaction() {
+                @Override
+                protected void performOperations() {
+                    execute("DROP DATABASE " + formattedDatabase);
+                    execute("CREATE DATABASE " + formattedDatabase);
+                    execute("USE " + formattedDatabase);
+                }
+            });
+            return Optional.of(mysql);
+        }
+        return Optional.empty();
     }
 }
