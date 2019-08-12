@@ -69,16 +69,9 @@ public class ExtensionRegister {
         register(new SpongeEconomyExtensionFactory()::createExtension, SpongeEconomyExtensionFactory.class);
         register(new SuperbVoteExtensionFactory()::createExtension, SuperbVoteExtensionFactory.class);
         register(new VaultExtensionFactory()::createExtension, VaultExtensionFactory.class);
+        register(new ViaVersionExtensionFactory()::createExtension, ViaVersionExtensionFactory.class);
 
         if (registerException != null) throw registerException;
-    }
-
-    public void registerBukkitExtensions() {
-        register(new ViaVersionBukkitExtensionFactory()::createExtension, ViaVersionBukkitExtensionFactory.class);
-    }
-
-    public void registerBungeeExtensions() {
-        register(new ViaVersionBungeeExtensionFactory()::createExtension, ViaVersionBungeeExtensionFactory.class);
     }
 
     private void registerEssentialsExtension(ExtensionService extensionService) {
