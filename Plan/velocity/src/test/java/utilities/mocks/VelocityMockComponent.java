@@ -14,42 +14,46 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package rules;
+package utilities.mocks;
 
 import com.djrapitops.plan.DaggerPlanVelocityComponent;
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanVelocity;
 import com.djrapitops.plan.PlanVelocityComponent;
 import com.djrapitops.plan.system.PlanSystem;
-import org.junit.rules.ExternalResource;
-import org.junit.rules.TemporaryFolder;
-import utilities.mocks.PlanVelocityMocker;
 
-public class VelocityComponentMocker extends ExternalResource implements ComponentMocker {
-    private final TemporaryFolder testFolder;
+import java.nio.file.Path;
+
+/**
+ * Test utility for creating a dagger PlanComponent using a mocked Plan.
+ *
+ * @author Rsl1122
+ */
+public class VelocityMockComponent {
+
+    private final Path tempDir;
 
     private PlanVelocity planMock;
     private PlanVelocityComponent component;
 
-    public VelocityComponentMocker(TemporaryFolder testFolder) {
-        this.testFolder = testFolder;
+    public VelocityMockComponent(Path tempDir) {
+        this.tempDir = tempDir;
     }
 
-    @Override
-    protected void before() throws Throwable {
-        PlanVelocityMocker mocker = PlanVelocityMocker.setUp()
-                .withDataFolder(testFolder.newFolder())
-                .withResourceFetchingFromJar()
-                .withProxy();
-        planMock = mocker.getPlanMock();
-        component = DaggerPlanVelocityComponent.builder().plan(planMock).build();
-    }
-
-    public PlanPlugin getPlanMock() {
+    public PlanVelocity getPlanMock() throws Exception {
+        if (planMock == null) {
+            planMock = PlanVelocityMocker.setUp()
+                    .withDataFolder(tempDir.toFile())
+                    .withResourceFetchingFromJar()
+                    .withProxy()
+                    .getPlanMock();
+        }
         return planMock;
     }
 
-    public PlanSystem getPlanSystem() {
+    public PlanSystem getPlanSystem() throws Exception {
+        if (component == null) {
+            component = DaggerPlanVelocityComponent.builder().plan(getPlanMock()).build();
+        }
         return component.system();
     }
 }

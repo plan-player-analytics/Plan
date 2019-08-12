@@ -22,7 +22,7 @@ allprojects {
     wrapper.gradleVersion = "5.5.1"
 
     group "com.djrapitops"
-    version "4.9.2"
+    version "4.9.3"
 
     test {
         useJUnitPlatform()
@@ -74,7 +74,7 @@ subprojects {
     ext.h2Version = "1.4.199"
     ext.mysqlVersion = "8.0.17"
     ext.hikariVersion = "3.3.1"
-    ext.slf4jVersion = "1.7.27"
+    ext.slf4jVersion = "1.7.28"
     ext.geoIpVersion = "2.12.0"
     ext.guavaVersion = "28.0-jre"
     ext.bstatsVersion = "1.4"
@@ -116,7 +116,6 @@ subprojects {
         // Test Tooling Dependencies
         testCompile "org.junit.jupiter:junit-jupiter-engine:5.5.1"   // JUnit 5
         testCompile "org.junit.platform:junit-platform-runner:1.5.1" // JUnit 4 runner for JUnit 5 tests
-        testCompile "org.junit.vintage:junit-vintage-engine:5.5.1"   // JUnit 4 compatibility for JUnit 5
         testCompile "org.junit.jupiter:junit-jupiter-params:5.5.1"   // JUnit 5, parameterized tests
         testCompile "org.mockito:mockito-core:3.0.0"                // Mockito Core
         testCompile "org.mockito:mockito-junit-jupiter:3.0.0"       // Mockito JUnit 5 Extension

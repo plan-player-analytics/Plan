@@ -22,48 +22,41 @@ import com.djrapitops.plan.system.settings.ConfigSettingKeyTest;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.system.settings.paths.key.Setting;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
-import rules.ComponentMocker;
-import rules.SpongeComponentMocker;
 import utilities.RandomData;
+import utilities.mocks.SpongeMockComponent;
 
+import java.nio.file.Path;
 import java.util.Collection;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 /**
  * Test for Sponge PlanSystem.
  *
  * @author Rsl1122
  */
-@RunWith(MockitoJUnitRunner.Silent.class)
+@RunWith(JUnitPlatform.class)
 public class SpongeSystemTest {
-
-    @ClassRule
-    public static TemporaryFolder temporaryFolder = new TemporaryFolder();
-
-    @Rule
-    public ComponentMocker component = new SpongeComponentMocker(temporaryFolder);
 
     private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
     private PlanSystem system;
 
-    @Before
-    public void prepareSpongeSystem() {
-        system = component.getPlanSystem();
+    @BeforeEach
+    void prepareSpongeSystem(@TempDir Path temp) throws Exception {
+        system = new SpongeMockComponent(temp).getPlanSystem();
         system.getConfigSystem().getConfig()
                 .set(WebserverSettings.PORT, TEST_PORT_NUMBER);
     }
 
     @Test
-    public void spongeSystemEnables() throws EnableException {
+    void spongeSystemEnables() throws EnableException {
         try {
             system.enable();
             assertTrue(system.isEnabled());
@@ -73,7 +66,7 @@ public class SpongeSystemTest {
     }
 
     @Test
-    public void spongeSystemHasDefaultConfigValuesAfterEnable() throws EnableException, IllegalAccessException {
+    void spongeSystemHasDefaultConfigValuesAfterEnable() throws EnableException, IllegalAccessException {
         try {
             system.enable();
             PlanConfig config = system.getConfigSystem().getConfig();

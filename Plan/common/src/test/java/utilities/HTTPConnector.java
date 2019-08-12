@@ -16,8 +16,6 @@
  */
 package utilities;
 
-import org.junit.rules.ExternalResource;
-
 import javax.net.ssl.*;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -25,7 +23,7 @@ import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
-public class HTTPConnector extends ExternalResource {
+public class HTTPConnector {
 
     private static final TrustManager[] trustAllCerts = new TrustManager[]{
             new X509TrustManager() {

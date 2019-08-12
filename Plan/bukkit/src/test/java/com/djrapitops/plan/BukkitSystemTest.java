@@ -25,49 +25,42 @@ import com.djrapitops.plan.system.settings.ConfigSettingKeyTest;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.system.settings.paths.key.Setting;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
-import rules.BukkitComponentMocker;
-import rules.ComponentMocker;
 import utilities.OptionalAssert;
 import utilities.RandomData;
+import utilities.mocks.BukkitMockComponent;
 
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Optional;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 /**
  * Test for Bukkit PlanSystem.
  *
  * @author Rsl1122
  */
-@RunWith(MockitoJUnitRunner.Silent.class)
+@RunWith(JUnitPlatform.class)
 public class BukkitSystemTest {
-
-    @ClassRule
-    public static TemporaryFolder temporaryFolder = new TemporaryFolder();
-
-    @Rule
-    public ComponentMocker component = new BukkitComponentMocker(temporaryFolder);
 
     private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
     private PlanSystem system;
 
-    @Before
-    public void prepareSystem() {
-        system = component.getPlanSystem();
+    @BeforeEach
+    void prepareSystem(@TempDir Path temp) throws Exception {
+        system = new BukkitMockComponent(temp).getPlanSystem();
         system.getConfigSystem().getConfig()
                 .set(WebserverSettings.PORT, TEST_PORT_NUMBER);
     }
 
     @Test
-    public void bukkitSystemEnables() throws EnableException {
+    void bukkitSystemEnables() throws EnableException {
         try {
             system.enable();
             assertTrue(system.isEnabled());
@@ -77,7 +70,7 @@ public class BukkitSystemTest {
     }
 
     @Test
-    public void correctWebAddressInDatabaseAfterEnable() throws EnableException {
+    void correctWebAddressInDatabaseAfterEnable() throws EnableException {
         try {
             system.enable();
             Database database = system.getDatabaseSystem().getDatabase();
@@ -92,7 +85,7 @@ public class BukkitSystemTest {
     }
 
     @Test
-    public void bukkitSystemHasDefaultConfigValuesAfterEnable() throws EnableException, IllegalAccessException {
+    void bukkitSystemHasDefaultConfigValuesAfterEnable() throws EnableException, IllegalAccessException {
         try {
             system.enable();
             PlanConfig config = system.getConfigSystem().getConfig();

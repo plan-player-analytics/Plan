@@ -23,35 +23,31 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.ProxySettings;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.google.common.util.concurrent.MoreExecutors;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
-import rules.ComponentMocker;
-import rules.VelocityComponentMocker;
 import utilities.RandomData;
+import utilities.mocks.VelocityMockComponent;
 
-import static org.junit.Assert.assertTrue;
+import java.nio.file.Path;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 /**
  * Test for Velocity PlanSystem.
  *
  * @author Rsl1122
  */
-@RunWith(MockitoJUnitRunner.Silent.class)
+@RunWith(JUnitPlatform.class)
 public class VelocitySystemTest {
-
-    @ClassRule
-    public static TemporaryFolder temporaryFolder = new TemporaryFolder();
-    @ClassRule
-    public static ComponentMocker component = new VelocityComponentMocker(temporaryFolder);
 
     private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
     @Test
-    public void velocityEnables() throws Exception {
-        PlanSystem velocitySystem = component.getPlanSystem();
+    void velocityEnables(@TempDir Path temp) throws Exception {
+        PlanSystem velocitySystem = new VelocityMockComponent(temp).getPlanSystem();
         try {
             PlanConfig config = velocitySystem.getConfigSystem().getConfig();
             config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);

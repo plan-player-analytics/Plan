@@ -27,7 +27,6 @@ import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -83,11 +82,9 @@ public class ExtensionServiceImplementation implements ExtensionService {
 
     public void register() {
         try {
-            extensionRegister.registerBuiltInExtensions();
-            if (Check.isBukkitAvailable()) extensionRegister.registerBukkitExtensions();
-            if (Check.isBungeeAvailable()) extensionRegister.registerBungeeExtensions();
+            extensionRegister.registerBuiltInExtensions(config.getPluginsConfigSection().getDisabled());
         } catch (IllegalStateException failedToRegisterOne) {
-            logger.warn("One or more extensions failed to register:");
+            logger.warn("One or more extensions failed to register, see suppressed exceptions.");
             errorHandler.log(L.WARN, this.getClass(), failedToRegisterOne);
         }
     }

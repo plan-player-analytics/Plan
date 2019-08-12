@@ -24,7 +24,7 @@ import utilities.TestConstants;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 abstract class DBPatchRegressionTest {
 
@@ -91,6 +91,6 @@ abstract class DBPatchRegressionTest {
                 failed.add(patch.getClass().getSimpleName());
             }
         }
-        assertTrue("Patches " + failed + " were not applied properly.", failed.isEmpty());
+        assertTrue(failed.isEmpty(), "Patches " + failed + " were not applied properly.");
     }
 }

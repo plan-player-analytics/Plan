@@ -6,9 +6,11 @@ pipeline {
             steps {
                 dir("Plan") {
                     script {
+                        sh 'rm -rf builds'
                         sh './gradlew clean shadowJar --parallel'
                     }
                 }
+                archiveArtifacts artifacts: 'Plan/builds/*.jar', fingerprint: false
             }
         }
         stage('Tests') {
@@ -50,6 +52,7 @@ pipeline {
             dir("Plan") {
                 script {
                     sh './gradlew clean --parallel'
+                    sh 'rm -rf builds'
                 }
             }
         }

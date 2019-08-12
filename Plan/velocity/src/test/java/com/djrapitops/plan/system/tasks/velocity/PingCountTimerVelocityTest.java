@@ -19,16 +19,18 @@ package com.djrapitops.plan.system.tasks.velocity;
 import com.djrapitops.plan.PlanVelocity;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import utilities.TestConstants;
 import utilities.mocks.PlanVelocityMocker;
 
 import java.util.Optional;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -36,13 +38,14 @@ import static org.mockito.Mockito.when;
  *
  * @author Rsl1122
  */
+@RunWith(JUnitPlatform.class)
 public class PingCountTimerVelocityTest {
 
     private PlanVelocity plugin;
     private Player player;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         PlanVelocityMocker mocker = PlanVelocityMocker.setUp()
                 .withProxy();
         plugin = mocker.getPlanMock();
@@ -56,7 +59,7 @@ public class PingCountTimerVelocityTest {
     }
 
     @Test
-    public void offlinePlayerIsRemovedFromPlayerHistory() {
+    void offlinePlayerIsRemovedFromPlayerHistory() {
         PingCountTimerVelocity counter = new PingCountTimerVelocity(plugin, null, null, null, null);
 
         assertTrue(counter.playerHistory.isEmpty());
