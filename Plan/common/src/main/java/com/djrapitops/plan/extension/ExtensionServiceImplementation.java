@@ -83,11 +83,11 @@ public class ExtensionServiceImplementation implements ExtensionService {
 
     public void register() {
         try {
-            extensionRegister.registerBuiltInExtensions();
+            extensionRegister.registerBuiltInExtensions(config.getPluginsConfigSection().getDisabled());
             if (Check.isBukkitAvailable()) extensionRegister.registerBukkitExtensions();
             if (Check.isBungeeAvailable()) extensionRegister.registerBungeeExtensions();
         } catch (IllegalStateException failedToRegisterOne) {
-            logger.warn("One or more extensions failed to register:");
+            logger.warn("One or more extensions failed to register, see suppressed exceptions.");
             errorHandler.log(L.WARN, this.getClass(), failedToRegisterOne);
         }
     }

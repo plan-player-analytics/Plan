@@ -349,6 +349,10 @@ public class ConfigNode {
         return nodeOrder;
     }
 
+    public Collection<ConfigNode> getChildren() {
+        return childNodes.values();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

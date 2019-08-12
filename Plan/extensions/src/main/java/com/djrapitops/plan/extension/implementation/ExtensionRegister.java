@@ -19,10 +19,12 @@ package com.djrapitops.plan.extension.implementation;
 import com.djrapitops.extension.*;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.ExtensionService;
+import com.djrapitops.plan.extension.extractor.ExtensionExtractor;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -34,47 +36,49 @@ import java.util.function.Supplier;
 public class ExtensionRegister {
 
     private IllegalStateException registerException;
-    
+    private Set<String> disabledExtensions;
+
     @Inject
     public ExtensionRegister() {
         /* Required for dagger injection */
     }
 
-    public void registerBuiltInExtensions() {
+    public void registerBuiltInExtensions(Set<String> disabledExtensions) {
+        this.disabledExtensions = disabledExtensions;
         // No need to catch exceptions here,
         // registerBuiltInExtensions method will not be called unless Plan has enabled properly
         ExtensionService extensionService = ExtensionService.getInstance();
 
-        register(new AACExtensionFactory()::createExtension);
-        register(new AdvancedAchievementsExtensionFactory()::createExtension);
-        register(new AdvancedBanExtensionFactory()::createExtension);
-        register(new ASkyBlockExtensionFactory()::createExtension);
-        register(new BanManagerExtensionFactory()::createExtension);
-        register(new CoreProtectExtensionFactory()::createExtension);
-        register(new DiscordSRVExtensionFactory()::createExtension);
+        register(new AACExtensionFactory()::createExtension, AACExtensionFactory.class);
+        register(new AdvancedAchievementsExtensionFactory()::createExtension, AdvancedAchievementsExtensionFactory.class);
+        register(new AdvancedBanExtensionFactory()::createExtension, AdvancedBanExtensionFactory.class);
+        register(new ASkyBlockExtensionFactory()::createExtension, ASkyBlockExtensionFactory.class);
+        register(new BanManagerExtensionFactory()::createExtension, BanManagerExtensionFactory.class);
+        register(new CoreProtectExtensionFactory()::createExtension, CoreProtectExtensionFactory.class);
+        register(new DiscordSRVExtensionFactory()::createExtension, DiscordSRVExtensionFactory.class);
         registerEssentialsExtension(extensionService);
-        register(new GriefPreventionExtensionFactory()::createExtension);
-        register(new GriefPreventionSpongeExtensionFactory()::createExtension);
-        register(new GriefPreventionPlusExtensionFactory()::createExtension);
-        register(new McMMOExtensionFactory()::createExtension);
+        register(new GriefPreventionExtensionFactory()::createExtension, GriefPreventionExtensionFactory.class);
+        register(new GriefPreventionSpongeExtensionFactory()::createExtension, GriefPreventionSpongeExtensionFactory.class);
+        register(new GriefPreventionPlusExtensionFactory()::createExtension, GriefPreventionPlusExtensionFactory.class);
+        register(new McMMOExtensionFactory()::createExtension, McMMOExtensionFactory.class);
         registerMinigameLibExtensions(extensionService);
-        register(new NucleusExtensionFactory()::createExtension);
-        register(new NuVotifierExtensionFactory()::createExtension);
-        register(new ProtocolSupportExtensionFactory()::createExtension);
-        register(new RedProtectExtensionFactory()::createExtension);
-        register(new SpongeEconomyExtensionFactory()::createExtension);
-        register(new SuperbVoteExtensionFactory()::createExtension);
-        register(new VaultExtensionFactory()::createExtension);
+        register(new NucleusExtensionFactory()::createExtension, NucleusExtensionFactory.class);
+        register(new NuVotifierExtensionFactory()::createExtension, NuVotifierExtensionFactory.class);
+        register(new ProtocolSupportExtensionFactory()::createExtension, ProtocolSupportExtensionFactory.class);
+        register(new RedProtectExtensionFactory()::createExtension, RedProtectExtensionFactory.class);
+        register(new SpongeEconomyExtensionFactory()::createExtension, SpongeEconomyExtensionFactory.class);
+        register(new SuperbVoteExtensionFactory()::createExtension, SuperbVoteExtensionFactory.class);
+        register(new VaultExtensionFactory()::createExtension, VaultExtensionFactory.class);
 
         if (registerException != null) throw registerException;
     }
 
     public void registerBukkitExtensions() {
-        register(new ViaVersionBukkitExtensionFactory()::createExtension);
+        register(new ViaVersionBukkitExtensionFactory()::createExtension, ViaVersionBukkitExtensionFactory.class);
     }
 
     public void registerBungeeExtensions() {
-        register(new ViaVersionBungeeExtensionFactory()::createExtension);
+        register(new ViaVersionBungeeExtensionFactory()::createExtension, ViaVersionBungeeExtensionFactory.class);
     }
 
     private void registerEssentialsExtension(ExtensionService extensionService) {
@@ -90,16 +94,26 @@ public class ExtensionRegister {
         }
     }
 
-    private void register(Supplier<Optional<DataExtension>> extension) {
+    private void register(Supplier<Optional<DataExtension>> extension, Class factory) {
         ExtensionService extensionService = ExtensionService.getInstance();
         try {
-            extension.get().ifPresent(extensionService::register);
-        } catch (IllegalStateException e) {
+            Optional<DataExtension> optional = extension.get();
+            if (!optional.isPresent()) return;
+            DataExtension dataExtension = optional.get();
+
+            String extensionName = ExtensionExtractor.getPluginName(dataExtension.getClass());
+            if (disabledExtensions.contains(extensionName)) return;
+
+            extensionService.register(dataExtension);
+        } catch (IllegalStateException | NoClassDefFoundError | IncompatibleClassChangeError e) {
+            // Places all exceptions to one exception with plugin information so that they can be reported.
             if (registerException == null) {
-                registerException = e;
-            } else {
-                registerException.addSuppressed(e);
+                registerException = new IllegalStateException("One or more extensions failed to register:");
+                registerException.setStackTrace(new StackTraceElement[0]);
             }
+            IllegalStateException info = new IllegalStateException(factory.getSimpleName() + " ran into exception when creating Extension", e);
+            info.setStackTrace(new StackTraceElement[0]);
+            registerException.addSuppressed(info);
         }
     }
 }
