@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.query;
 
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.QueryAPIExecutable;
 import com.djrapitops.plan.db.access.QueryAPIQuery;
@@ -23,6 +24,9 @@ import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -39,6 +43,8 @@ public class QueryServiceImplementation implements QueryService {
 
     private DBSystem dbSystem;
     private ServerInfo serverInfo;
+    private final PluginLogger logger;
+    private final ErrorHandler errorHandler;
 
     private Set<Consumer<UUID>> playerRemoveSubscribers;
     private Set<VoidFunction> clearSubscribers;
@@ -46,10 +52,14 @@ public class QueryServiceImplementation implements QueryService {
     @Inject
     public QueryServiceImplementation(
             DBSystem dbSystem,
-            ServerInfo serverInfo
+            ServerInfo serverInfo,
+            PluginLogger logger,
+            ErrorHandler errorHandler
     ) {
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
+        this.logger = logger;
+        this.errorHandler = errorHandler;
 
         playerRemoveSubscribers = new HashSet<>();
         clearSubscribers = new HashSet<>();
@@ -94,11 +104,25 @@ public class QueryServiceImplementation implements QueryService {
     }
 
     public void playerRemoved(UUID playerUUID) {
-        playerRemoveSubscribers.forEach(subscriber -> subscriber.accept(playerUUID));
+        playerRemoveSubscribers.forEach(subscriber -> {
+            try {
+                subscriber.accept(playerUUID);
+            } catch (DBOpException e) {
+                logger.warn("User of Query API (" + subscriber.getClass().getName() + ") ran into exception, failed safely:");
+                errorHandler.log(L.WARN, QueryService.class, e);
+            }
+        });
     }
 
     public void dataCleared() {
-        clearSubscribers.forEach(VoidFunction::apply);
+        clearSubscribers.forEach(function -> {
+            try {
+                function.apply();
+            } catch (DBOpException e) {
+                logger.warn("User of Query API (" + function.getClass().getName() + ") ran into exception, failed safely:");
+                errorHandler.log(L.WARN, QueryService.class, e);
+            }
+        });
     }
 
     @Override
