@@ -591,14 +591,16 @@ public interface DatabaseTest {
         session.endSession(sessionStart + 22345L);
         execute(DataStoreQueries.storeSession(session));
 
+        TestPluginLogger logger = new TestPluginLogger();
+        ConsoleErrorLogger errorHandler = new ConsoleErrorLogger(logger);
         new DBCleanTask(
                 system().getConfigSystem().getConfig(),
                 new Locale(),
                 system().getDatabaseSystem(),
-                new QueryServiceImplementation(system().getDatabaseSystem(), system().getServerInfo()),
+                new QueryServiceImplementation(system().getDatabaseSystem(), system().getServerInfo(), logger, errorHandler),
                 system().getServerInfo(),
-                new TestPluginLogger(),
-                new ConsoleErrorLogger(new TestPluginLogger())
+                logger,
+                errorHandler
         ).cleanOldPlayers(db());
 
         Collection<BaseUser> found = db().query(BaseUserQueries.fetchServerBaseUsers(serverUUID()));
