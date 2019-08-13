@@ -45,7 +45,7 @@ public class TimeAmountFormatter implements Formatter<Long> {
 
     @Override
     public String apply(Long ms) {
-        if (ms < 0) {
+        if (ms == null || ms < 0) {
             return "-";
         }
         StringBuilder builder = new StringBuilder();

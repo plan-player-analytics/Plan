@@ -17,7 +17,6 @@
 package com.djrapitops.plan.utilities.html.graphs.calendar;
 
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
-import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
@@ -59,12 +58,11 @@ public class CalendarFactory {
     }
 
     public ServerCalendar serverCalendar(
-            PlayersMutator mutator,
             SortedMap<Long, Integer> uniquePerDay,
             SortedMap<Long, Integer> newPerDay
     ) {
         return new ServerCalendar(
-                mutator, uniquePerDay, newPerDay,
+                uniquePerDay, newPerDay,
                 formatters.iso8601NoClockLong(), formatters.timeAmount(), theme,
                 config.get(TimeSettings.USE_SERVER_TIME) ? TimeZone.getDefault() : TimeZone.getTimeZone("GMT")
         );
