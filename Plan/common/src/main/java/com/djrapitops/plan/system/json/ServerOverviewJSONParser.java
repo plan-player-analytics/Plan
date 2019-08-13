@@ -89,16 +89,21 @@ public class ServerOverviewJSONParser implements TabJSONParser<Map<String, Objec
     private Map<String, Object> createLast7DaysMap(UUID serverUUID) {
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
-        long sevenDaysAgo = now - TimeUnit.DAYS.toMillis(7L);
+        long weekAgo = now - TimeUnit.DAYS.toMillis(7L);
 
         Map<String, Object> sevenDays = new HashMap<>();
 
-        sevenDays.put("unique_players", db.query(PlayerCountQueries.uniquePlayerCount(sevenDaysAgo, now, serverUUID)));
-        sevenDays.put("unique_players_day", db.query(PlayerCountQueries.averageUniquePlayerCount(sevenDaysAgo, now, timeZone.getOffset(now), serverUUID)));
-        sevenDays.put("new_players", db.query(PlayerCountQueries.newPlayerCount(sevenDaysAgo, now, serverUUID)));
-        sevenDays.put("new_players_retention", "!"); // TODO
-        sevenDays.put("new_players_retention_perc", "!"); // TODO
-        TPSMutator tpsMutator = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(sevenDaysAgo, now, serverUUID)));
+        sevenDays.put("unique_players", db.query(PlayerCountQueries.uniquePlayerCount(weekAgo, now, serverUUID)));
+        sevenDays.put("unique_players_day", db.query(PlayerCountQueries.averageUniquePlayerCount(weekAgo, now, timeZone.getOffset(now), serverUUID)));
+
+        int new7d = db.query(PlayerCountQueries.newPlayerCount(weekAgo, now, serverUUID));
+        int retained7d = db.query(PlayerCountQueries.retainedPlayerCount(weekAgo, now, serverUUID));
+        double retentionPerc7d = new7d != 0 ? (double) retained7d / new7d : -1;
+
+        sevenDays.put("new_players", new7d);
+        sevenDays.put("new_players_retention", retained7d);
+        sevenDays.put("new_players_retention_perc", percentage.apply(retentionPerc7d));
+        TPSMutator tpsMutator = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(weekAgo, now, serverUUID)));
         sevenDays.put("average_tps", decimals.apply(tpsMutator.averageTPS()));
         sevenDays.put("low_tps_spikes", tpsMutator.lowTpsSpikeCount(config.getNumber(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
         sevenDays.put("downtime", timeAmount.apply(tpsMutator.serverDownTime()));
