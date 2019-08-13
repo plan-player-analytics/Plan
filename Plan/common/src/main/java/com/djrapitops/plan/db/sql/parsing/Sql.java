@@ -19,32 +19,105 @@ package com.djrapitops.plan.db.sql.parsing;
 /**
  * Duplicate String reducing utility class for SQL language Strings.
  */
-public class Sql {
-    public static final String INT = "integer";
-    public static final String DOUBLE = "double";
-    public static final String LONG = "bigint";
-    public static final String BOOL = "boolean";
+public interface Sql {
+    String INT = "integer";
+    String DOUBLE = "double";
+    String LONG = "bigint";
+    String BOOL = "boolean";
 
-    public static final String SELECT = "SELECT ";
-    public static final String DISTINCT = "DISTINCT ";
-    public static final String FROM = " FROM ";
-    public static final String DELETE_FROM = "DELETE" + FROM;
-    public static final String WHERE = " WHERE ";
-    public static final String GROUP_BY = " GROUP BY ";
-    public static final String ORDER_BY = " ORDER BY ";
-    public static final String INNER_JOIN = " JOIN ";
-    public static final String LEFT_JOIN = " LEFT JOIN ";
-    public static final String UNION = " UNION ";
-    public static final String AND = " AND ";
-    public static final String OR = " OR ";
-    public static final String IS_NULL = " IS NULL";
-    public static final String IS_NOT_NULL = " IS NOT NULL";
+    String SELECT = "SELECT ";
+    String DISTINCT = "DISTINCT ";
+    String FROM = " FROM ";
+    String DELETE_FROM = "DELETE" + FROM;
+    String WHERE = " WHERE ";
+    String GROUP_BY = " GROUP BY ";
+    String ORDER_BY = " ORDER BY ";
+    String INNER_JOIN = " JOIN ";
+    String LEFT_JOIN = " LEFT JOIN ";
+    String UNION = " UNION ";
+    String AND = " AND ";
+    String OR = " OR ";
+    String IS_NULL = " IS NULL";
+    String IS_NOT_NULL = " IS NOT NULL";
 
-    private Sql() {
-        /* Variable class */
+    static String varchar(int length) {
+        return "varchar(" + length + ')';
     }
 
-    public static String varchar(int length) {
-        return "varchar(" + length + ')';
+    String dateFromEpochSecond(String sql);
+
+    String epochSecondFromDate(String sql);
+
+    String dayOfYear(String sql);
+
+    String year(String sql);
+
+    class MySQL implements Sql {
+
+        @Override
+        public String dateFromEpochSecond(String sql) {
+            return "FROM UNIXTIME(" + sql + ')';
+        }
+
+        @Override
+        public String epochSecondFromDate(String sql) {
+            return "UNIX TIMESTAMP(" + sql + ')';
+        }
+
+        @Override
+        public String dayOfYear(String sql) {
+            return "DAYOFYEAR(" + sql + ')';
+        }
+
+        @Override
+        public String year(String sql) {
+            return "YEAR(" + sql + ')';
+        }
+    }
+
+    class H2 extends MySQL {
+
+        @Override
+        public String dateFromEpochSecond(String sql) {
+            return "DATEADD('SECOND', " + sql + ", DATE '1970-01-01')";
+        }
+
+        @Override
+        public String epochSecondFromDate(String sql) {
+            return "DATEDIFF('SECOND', " + sql + ", DATE '1970-01-01')";
+        }
+
+        @Override
+        public String dayOfYear(String sql) {
+            return "DAY_OF_YEAR(" + sql + ')';
+        }
+
+        @Override
+        public String year(String sql) {
+            return "YEAR(" + sql + ')';
+        }
+    }
+
+    class SQLite implements Sql {
+
+        @Override
+        public String dateFromEpochSecond(String sql) {
+            return "datetime(" + sql + ", 'unixepoch')";
+        }
+
+        @Override
+        public String epochSecondFromDate(String sql) {
+            return "strftime('%s'," + sql + ")";
+        }
+
+        @Override
+        public String dayOfYear(String sql) {
+            return "strftime('%j'," + sql + ')';
+        }
+
+        @Override
+        public String year(String sql) {
+            return "strftime('%Y'" + sql + ')';
+        }
     }
 }

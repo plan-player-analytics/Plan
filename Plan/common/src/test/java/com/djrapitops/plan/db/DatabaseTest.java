@@ -34,6 +34,7 @@ import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.Query;
+import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.queries.*;
 import com.djrapitops.plan.db.access.queries.analysis.ActivityIndexQueries;
 import com.djrapitops.plan.db.access.queries.containers.AllPlayerContainersQuery;
@@ -50,6 +51,7 @@ import com.djrapitops.plan.db.access.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.db.access.transactions.init.RemoveDuplicateUserInfoTransaction;
 import com.djrapitops.plan.db.patches.Patch;
+import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.tasks.DBCleanTask;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
@@ -89,10 +91,13 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.SELECT;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -1087,6 +1092,24 @@ public interface DatabaseTest {
                 .sorted()
                 .collect(Collectors.toList());
 
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void sqlDateParsingSanityCheck() {
+        Database db = db();
+
+        long expected = System.currentTimeMillis() / 1000;
+
+        Sql sql = db.getType().getSql();
+        String testSQL = SELECT + sql.epochSecondFromDate(sql.dateFromEpochSecond(Long.toString(expected))) + " as ms";
+
+        long result = db.query(new QueryAllStatement<Long>(testSQL) {
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("ms") : -1L;
+            }
+        });
         assertEquals(expected, result);
     }
 
