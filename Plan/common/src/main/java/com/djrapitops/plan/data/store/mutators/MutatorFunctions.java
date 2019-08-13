@@ -17,11 +17,9 @@
 package com.djrapitops.plan.data.store.mutators;
 
 import com.djrapitops.plan.utilities.html.graphs.line.Point;
+import com.djrapitops.plugin.utilities.Verify;
 
-import java.util.List;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MutatorFunctions {
@@ -36,6 +34,32 @@ public class MutatorFunctions {
         return map.entrySet().stream()
                 .map(entry -> new Point(entry.getKey() - timeZone.getOffset(entry.getKey()), entry.getValue()))
                 .collect(Collectors.toList());
+    }
+
+    public static NavigableMap<Long, Integer> addMissing(NavigableMap<Long, Integer> points, long accuracy, Integer replacement) {
+        if (Verify.isEmpty(points)) return points;
+
+        NavigableMap<Long, Integer> filled = new TreeMap<>();
+        Long lastX = null;
+        for (Map.Entry<Long, Integer> point : points.entrySet()) {
+            long date = point.getKey();
+
+            if (lastX != null && date - lastX > accuracy) {
+                addMissing(lastX, date, filled, accuracy, replacement);
+            }
+            lastX = date;
+            filled.put(point.getKey(), point.getValue());
+        }
+
+        return filled;
+    }
+
+    private static void addMissing(long from, long to, NavigableMap<Long, Integer> points, long accuracy, Integer replacement) {
+        long iterate = from;
+        while (iterate < to) {
+            points.put(iterate, replacement);
+            iterate += accuracy;
+        }
     }
 
     public static int average(Map<Long, Integer> map) {

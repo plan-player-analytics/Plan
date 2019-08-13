@@ -18,12 +18,15 @@ package com.djrapitops.plan.db.access.queries.analysis;
 
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.sql.tables.SessionsTable;
 import com.djrapitops.plan.db.sql.tables.UserInfoTable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 import java.util.UUID;
 
 import static com.djrapitops.plan.db.sql.parsing.Sql.*;
@@ -63,6 +66,49 @@ public class PlayerCountQueries {
                 AND + SessionsTable.SERVER_UUID + "=?";
 
         return queryPlayerCount(sql, after, before, serverUUID);
+    }
+
+    /**
+     * Fetch a EpochMs - Count map of unique players on a server.
+     *
+     * @param after          After epoch ms
+     * @param before         Before epoch ms
+     * @param timeZoneOffset Offset from {@link java.util.TimeZone#getOffset(long)}, applied to the dates before grouping.
+     * @param serverUUID     UUID of the Plan server
+     * @return Map: Epoch ms (Accuracy of a day) - How many unique players played that day
+     */
+    public static Query<NavigableMap<Long, Integer>> uniquePlayerCounts(long after, long before, long timeZoneOffset, UUID serverUUID) {
+        return database -> {
+            Sql sql = database.getType().getSql();
+            String selectUniquePlayersPerDay = SELECT +
+                    sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
+                    "*1000 as date," +
+                    "COUNT(DISTINCT " + SessionsTable.USER_UUID + ") as player_count" +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + SessionsTable.SESSION_END + "<=?" +
+                    AND + SessionsTable.SESSION_START + ">=?" +
+                    AND + SessionsTable.SERVER_UUID + "=?" +
+                    GROUP_BY + "date";
+
+            return database.query(new QueryStatement<NavigableMap<Long, Integer>>(selectUniquePlayersPerDay, 100) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, timeZoneOffset);
+                    statement.setLong(2, before);
+                    statement.setLong(3, after);
+                    statement.setString(4, serverUUID.toString());
+                }
+
+                @Override
+                public NavigableMap<Long, Integer> processResults(ResultSet set) throws SQLException {
+                    NavigableMap<Long, Integer> uniquePerDay = new TreeMap<>();
+                    while (set.next()) {
+                        uniquePerDay.put(set.getLong("date"), set.getInt("player_count"));
+                    }
+                    return uniquePerDay;
+                }
+            });
+        };
     }
 
     public static Query<Integer> newPlayerCount(long after, long before, UUID serverUUID) {

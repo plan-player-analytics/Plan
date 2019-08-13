@@ -25,8 +25,8 @@ import com.djrapitops.plan.utilities.formatting.Formatters;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.SortedMap;
 import java.util.TimeZone;
-import java.util.TreeMap;
 
 /**
  * Factory class for different objects representing HTML calendars.
@@ -60,8 +60,8 @@ public class CalendarFactory {
 
     public ServerCalendar serverCalendar(
             PlayersMutator mutator,
-            TreeMap<Long, Integer> uniquePerDay,
-            TreeMap<Long, Integer> newPerDay
+            SortedMap<Long, Integer> uniquePerDay,
+            SortedMap<Long, Integer> newPerDay
     ) {
         return new ServerCalendar(
                 mutator, uniquePerDay, newPerDay,

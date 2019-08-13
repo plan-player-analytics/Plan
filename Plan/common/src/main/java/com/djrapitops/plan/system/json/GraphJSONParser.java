@@ -17,13 +17,20 @@
 package com.djrapitops.plan.system.json;
 
 import com.djrapitops.plan.data.container.Ping;
-import com.djrapitops.plan.data.store.mutators.*;
+import com.djrapitops.plan.data.store.mutators.MutatorFunctions;
+import com.djrapitops.plan.data.store.mutators.PingMutator;
+import com.djrapitops.plan.data.store.mutators.PlayersMutator;
+import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.objects.DateMap;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.analysis.ActivityIndexQueries;
+import com.djrapitops.plan.db.access.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.db.access.queries.containers.ServerPlayerContainersQuery;
-import com.djrapitops.plan.db.access.queries.objects.*;
+import com.djrapitops.plan.db.access.queries.objects.GeoInfoQueries;
+import com.djrapitops.plan.db.access.queries.objects.PingQueries;
+import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
+import com.djrapitops.plan.db.access.queries.objects.WorldTimesQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
@@ -86,13 +93,20 @@ public class GraphJSONParser {
     public String uniqueAndNewGraphJSON(UUID serverUUID) {
         Database db = dbSystem.getDatabase();
         LineGraphFactory lineGraphs = graphs.line();
-        SessionsMutator sessionsMutator = new SessionsMutator(db.query(SessionQueries.fetchSessionsOfServerFlat(serverUUID)))
-                .filterSessionsBetween(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(180L), System.currentTimeMillis());
+        long now = System.currentTimeMillis();
+        long halfYearAgo = now - TimeUnit.DAYS.toMillis(180L);
+        NavigableMap<Long, Integer> uniquePerDay = db.query(
+                PlayerCountQueries.uniquePlayerCounts(halfYearAgo, now, timeZone.getOffset(now), serverUUID)
+        );
         PlayersMutator playersMutator = new PlayersMutator(db.query(new ServerPlayerContainersQuery(serverUUID)))
-                .filterRegisteredBetween(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(180L), System.currentTimeMillis());
+                .filterRegisteredBetween(halfYearAgo, now);
 
         return "{\"uniquePlayers\":" +
-                lineGraphs.lineGraph(MutatorFunctions.toPointsWithRemovedOffset(sessionsMutator.uniqueJoinsPerDay(timeZone), timeZone)).toHighChartsSeries() +
+                lineGraphs.lineGraph(
+                        MutatorFunctions.toPointsWithRemovedOffset(
+                                MutatorFunctions.addMissing(uniquePerDay, TimeUnit.DAYS.toMillis(1L), 0),
+                                timeZone
+                        )).toHighChartsSeries() +
                 ",\"newPlayers\":" +
                 lineGraphs.lineGraph(MutatorFunctions.toPointsWithRemovedOffset(playersMutator.newPerDay(timeZone), timeZone)).toHighChartsSeries() +
                 '}';
@@ -100,14 +114,17 @@ public class GraphJSONParser {
 
     public String serverCalendarJSON(UUID serverUUID) {
         Database db = dbSystem.getDatabase();
-        SessionsMutator sessionsMutator = new SessionsMutator(db.query(SessionQueries.fetchSessionsOfServerFlat(serverUUID)))
-                .filterSessionsBetween(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(730L), System.currentTimeMillis());
+        long now = System.currentTimeMillis();
+        long twoYearsAgo = now - TimeUnit.DAYS.toMillis(730L);
+        NavigableMap<Long, Integer> uniquePerDay = db.query(
+                PlayerCountQueries.uniquePlayerCounts(twoYearsAgo, now, timeZone.getOffset(now), serverUUID)
+        );
         PlayersMutator playersMutator = new PlayersMutator(db.query(new ServerPlayerContainersQuery(serverUUID)));
 
         return "{\"data\":" +
                 graphs.calendar().serverCalendar(
                         playersMutator,
-                        sessionsMutator.uniqueJoinsPerDay(timeZone),
+                        uniquePerDay,
                         playersMutator.newPerDay(timeZone)
                 ).toCalendarSeries() +
                 ",\"firstDay\":" + 1 + '}';
