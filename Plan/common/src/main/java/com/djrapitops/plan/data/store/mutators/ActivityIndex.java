@@ -67,14 +67,18 @@ public class ActivityIndex {
 
     private long playtimeMsThreshold;
 
-    public ActivityIndex(
-            DataContainer container, long date,
-            long playtimeMsThreshold
-    ) {
+    public ActivityIndex(DataContainer container, long date, long playtimeMsThreshold) {
         this.playtimeMsThreshold = playtimeMsThreshold;
 
-        value = calculate(container, date);
         this.date = date;
+        value = calculate(container);
+    }
+
+    public ActivityIndex(List<Session> sessions, long date, long playtimeMsThreshold) {
+        this.playtimeMsThreshold = playtimeMsThreshold;
+
+        this.date = date;
+        value = calculate(new SessionsMutator(sessions));
     }
 
     public ActivityIndex(double value, long date) {
@@ -86,20 +90,22 @@ public class ActivityIndex {
         return new String[]{"Very Active", "Active", "Regular", "Irregular", "Inactive"};
     }
 
-    private double calculate(DataContainer container, long date) {
+    private double calculate(DataContainer container) {
+        Optional<List<Session>> sessionsValue = container.getValue(PlayerKeys.SESSIONS);
+        return sessionsValue
+                .map(sessions -> calculate(new SessionsMutator(sessions)))
+                .orElse(0.0);
+    }
+
+    private double calculate(SessionsMutator sessionsMutator) {
+        if (sessionsMutator.all().isEmpty()) {
+            return 0.0;
+        }
+
         long week = TimeAmount.WEEK.toMillis(1L);
         long weekAgo = date - week;
         long twoWeeksAgo = date - 2L * week;
         long threeWeeksAgo = date - 3L * week;
-
-        Optional<List<Session>> sessionsValue = container.getValue(PlayerKeys.SESSIONS);
-        if (!sessionsValue.isPresent()) {
-            return 0.0;
-        }
-        SessionsMutator sessionsMutator = new SessionsMutator(sessionsValue.get());
-        if (sessionsMutator.all().isEmpty()) {
-            return 0.0;
-        }
 
         SessionsMutator weekOne = sessionsMutator.filterSessionsBetween(weekAgo, date);
         SessionsMutator weekTwo = sessionsMutator.filterSessionsBetween(twoWeeksAgo, weekAgo);
