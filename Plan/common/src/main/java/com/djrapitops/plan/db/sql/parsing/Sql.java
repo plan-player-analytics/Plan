@@ -84,7 +84,7 @@ public interface Sql {
 
         @Override
         public String epochSecondFromDate(String sql) {
-            return "DATEDIFF('SECOND', " + sql + ", DATE '1970-01-01')";
+            return "DATEDIFF('SECOND', DATE '1970-01-01', " + sql + ')';
         }
 
         @Override
