@@ -56,12 +56,12 @@ public interface Sql {
 
         @Override
         public String dateFromEpochSecond(String sql) {
-            return "FROM UNIXTIME(" + sql + ')';
+            return "FROM_UNIXTIME(" + sql + ')';
         }
 
         @Override
         public String epochSecondFromDate(String sql) {
-            return "UNIX TIMESTAMP(" + sql + ')';
+            return "UNIX_TIMESTAMP(" + sql + ')';
         }
 
         @Override
