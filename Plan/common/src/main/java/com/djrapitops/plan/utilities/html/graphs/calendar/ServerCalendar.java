@@ -33,8 +33,8 @@ import java.util.*;
 public class ServerCalendar {
 
     private final PlayersMutator mutator;
-    private final TreeMap<Long, Integer> uniquePerDay;
-    private final TreeMap<Long, Integer> newPerDay;
+    private final SortedMap<Long, Integer> uniquePerDay;
+    private final SortedMap<Long, Integer> newPerDay;
 
     private final Formatter<Long> iso8601Formatter;
     private final Formatter<Long> timeAmountFormatter;
@@ -42,7 +42,7 @@ public class ServerCalendar {
     private final TimeZone timeZone;
 
     ServerCalendar(
-            PlayersMutator mutator, TreeMap<Long, Integer> uniquePerDay, TreeMap<Long, Integer> newPerDay,
+            PlayersMutator mutator, SortedMap<Long, Integer> uniquePerDay, SortedMap<Long, Integer> newPerDay,
             Formatter<Long> iso8601Formatter,
             Formatter<Long> timeAmountFormatter,
             Theme theme,
