@@ -74,8 +74,8 @@ Obtain html for data extension tabs and navigation.
 Returns:
 ```javascript
 {
-    navigation: String (html),
-    tabs: String (html)
+    String (html),
+    tabs;: String (html)
 }
 ```
 
@@ -106,6 +106,7 @@ Type | Description
 `activity` | Activity stack graph and pie graph data
 `geolocation` | World Map and bar graph data. World Map uses iso-a3 specification of Country codes and Bar graph uses country names.
 `ping` | Min, Avg, Max ping graph data.
+`punchCard` | PunchCard graph data. (Scatter plot)
 
 ### `GET /v1/player`
 
