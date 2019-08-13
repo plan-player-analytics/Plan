@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.db;
 
+import com.djrapitops.plan.db.sql.parsing.Sql;
+
 import java.util.Optional;
 
 /**
@@ -25,18 +27,20 @@ import java.util.Optional;
  */
 public enum DBType {
 
-    MYSQL("MySQL", true),
-    SQLITE("SQLite", false),
-    H2("H2", true);
+    MYSQL("MySQL", true, new Sql.MySQL()),
+    SQLITE("SQLite", false, new Sql.SQLite()),
+    H2("H2", true, new Sql.H2());
 
     private final String name;
     private final String configName;
     private final boolean supportingMySQLQueries;
+    private final Sql sql;
 
-    DBType(String name, boolean supportingMySQLQueries) {
+    DBType(String name, boolean supportingMySQLQueries, Sql sql) {
         this.name = name;
         this.configName = name.toLowerCase().trim();
         this.supportingMySQLQueries = supportingMySQLQueries;
+        this.sql = sql;
     }
 
     /**
@@ -100,5 +104,9 @@ public enum DBType {
         }
 
         return false;
+    }
+
+    public Sql getSql() {
+        return sql;
     }
 }
