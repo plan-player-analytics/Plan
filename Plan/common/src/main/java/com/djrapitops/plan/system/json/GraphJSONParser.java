@@ -19,14 +19,12 @@ package com.djrapitops.plan.system.json;
 import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.data.store.mutators.MutatorFunctions;
 import com.djrapitops.plan.data.store.mutators.PingMutator;
-import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.objects.DateMap;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.analysis.ActivityIndexQueries;
 import com.djrapitops.plan.db.access.queries.analysis.PlayerCountQueries;
-import com.djrapitops.plan.db.access.queries.containers.ServerPlayerContainersQuery;
 import com.djrapitops.plan.db.access.queries.objects.GeoInfoQueries;
 import com.djrapitops.plan.db.access.queries.objects.PingQueries;
 import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
@@ -98,17 +96,20 @@ public class GraphJSONParser {
         NavigableMap<Long, Integer> uniquePerDay = db.query(
                 PlayerCountQueries.uniquePlayerCounts(halfYearAgo, now, timeZone.getOffset(now), serverUUID)
         );
-        PlayersMutator playersMutator = new PlayersMutator(db.query(new ServerPlayerContainersQuery(serverUUID)))
-                .filterRegisteredBetween(halfYearAgo, now);
+        NavigableMap<Long, Integer> newPerDay = db.query(
+                PlayerCountQueries.newPlayerCounts(halfYearAgo, now, timeZone.getOffset(now), serverUUID)
+        );
 
         return "{\"uniquePlayers\":" +
-                lineGraphs.lineGraph(
-                        MutatorFunctions.toPointsWithRemovedOffset(
-                                MutatorFunctions.addMissing(uniquePerDay, TimeUnit.DAYS.toMillis(1L), 0),
-                                timeZone
-                        )).toHighChartsSeries() +
+                lineGraphs.lineGraph(MutatorFunctions.toPointsWithRemovedOffset(
+                        MutatorFunctions.addMissing(uniquePerDay, TimeUnit.DAYS.toMillis(1L), 0),
+                        timeZone
+                )).toHighChartsSeries() +
                 ",\"newPlayers\":" +
-                lineGraphs.lineGraph(MutatorFunctions.toPointsWithRemovedOffset(playersMutator.newPerDay(timeZone), timeZone)).toHighChartsSeries() +
+                lineGraphs.lineGraph(MutatorFunctions.toPointsWithRemovedOffset(
+                        MutatorFunctions.addMissing(newPerDay, TimeUnit.DAYS.toMillis(1L), 0),
+                        timeZone
+                )).toHighChartsSeries() +
                 '}';
     }
 
@@ -119,13 +120,13 @@ public class GraphJSONParser {
         NavigableMap<Long, Integer> uniquePerDay = db.query(
                 PlayerCountQueries.uniquePlayerCounts(twoYearsAgo, now, timeZone.getOffset(now), serverUUID)
         );
-        PlayersMutator playersMutator = new PlayersMutator(db.query(new ServerPlayerContainersQuery(serverUUID)));
-
+        NavigableMap<Long, Integer> newPerDay = db.query(
+                PlayerCountQueries.newPlayerCounts(twoYearsAgo, now, timeZone.getOffset(now), serverUUID)
+        );
         return "{\"data\":" +
                 graphs.calendar().serverCalendar(
-                        playersMutator,
                         uniquePerDay,
-                        playersMutator.newPerDay(timeZone)
+                        newPerDay
                 ).toCalendarSeries() +
                 ",\"firstDay\":" + 1 + '}';
     }
