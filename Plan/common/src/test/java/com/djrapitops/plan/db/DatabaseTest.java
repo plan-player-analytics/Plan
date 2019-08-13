@@ -1096,18 +1096,38 @@ public interface DatabaseTest {
     }
 
     @Test
-    default void sqlDateParsingSanityCheck() {
+    default void sqlDateConversionSanityCheck() {
         Database db = db();
 
         long expected = System.currentTimeMillis() / 1000;
 
         Sql sql = db.getType().getSql();
-        String testSQL = SELECT + sql.epochSecondFromDate(sql.dateFromEpochSecond(Long.toString(expected))) + " as ms";
+        String testSQL = SELECT + sql.dateToEpochSecond(sql.epochSecondToDate(Long.toString(expected))) + " as ms";
 
         long result = db.query(new QueryAllStatement<Long>(testSQL) {
             @Override
             public Long processResults(ResultSet set) throws SQLException {
                 return set.next() ? set.getLong("ms") : -1L;
+            }
+        });
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void sqlDateParsingSanityCheck() {
+        Database db = db();
+
+        long time = System.currentTimeMillis();
+
+        Sql sql = db.getType().getSql();
+        String testSQL = SELECT + sql.dateToDayStamp(sql.epochSecondToDate(Long.toString(time / 1000))) + " as date";
+
+        System.out.println(testSQL);
+        String expected = system().getHtmlUtilities().getFormatters().iso8601NoClockLong().apply(time);
+        String result = db.query(new QueryAllStatement<String>(testSQL) {
+            @Override
+            public String processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getString("date") : null;
             }
         });
         assertEquals(expected, result);
