@@ -105,13 +105,15 @@ public class OnlineActivityOverviewJSONParser implements TabJSONParser<Map<Strin
         numbers.put("unique_players_7d_avg", db.query(PlayerCountQueries.averageUniquePlayerCount(weekAgo, now, timeZoneOffset, serverUUID)));
         numbers.put("unique_players_24h_avg", db.query(PlayerCountQueries.averageUniquePlayerCount(dayAgo, now, timeZoneOffset, serverUUID)));
 
-        numbers.put("new_players_30d", db.query(PlayerCountQueries.newPlayerCount(monthAgo, now, serverUUID)));
+        Integer new30d = db.query(PlayerCountQueries.newPlayerCount(monthAgo, now, serverUUID));
+        Integer new7d = db.query(PlayerCountQueries.newPlayerCount(weekAgo, now, serverUUID));
+        numbers.put("new_players_30d", new30d);
         numbers.put("new_players_30d_trend", new Trend(
                 db.query(PlayerCountQueries.newPlayerCount(monthAgo, halfMonthAgo, serverUUID)),
                 db.query(PlayerCountQueries.newPlayerCount(halfMonthAgo, now, serverUUID)),
                 false
         ));
-        numbers.put("new_players_7d", db.query(PlayerCountQueries.newPlayerCount(weekAgo, now, serverUUID)));
+        numbers.put("new_players_7d", new7d);
         numbers.put("new_players_24h", db.query(PlayerCountQueries.newPlayerCount(dayAgo, now, serverUUID)));
 
         numbers.put("new_players_30d_avg", db.query(PlayerCountQueries.averageNewPlayerCount(monthAgo, now, timeZoneOffset, serverUUID)));
@@ -123,10 +125,14 @@ public class OnlineActivityOverviewJSONParser implements TabJSONParser<Map<Strin
         numbers.put("new_players_7d_avg", db.query(PlayerCountQueries.averageNewPlayerCount(weekAgo, now, timeZoneOffset, serverUUID)));
         numbers.put("new_players_24h_avg", db.query(PlayerCountQueries.averageNewPlayerCount(dayAgo, now, timeZoneOffset, serverUUID)));
 
-        numbers.put("new_players_retention_30d", 0); // TODO
-        numbers.put("new_players_retention_30d_perc", percentageFormatter.apply(-1.0)); // TODO
-        numbers.put("new_players_retention_7d", 0); // TODO
-        numbers.put("new_players_retention_7d_perc", percentageFormatter.apply(-1.0)); // TODO
+        int retained30d = db.query(PlayerCountQueries.retainedPlayerCount(monthAgo, now, serverUUID));
+        int retained7d = db.query(PlayerCountQueries.retainedPlayerCount(weekAgo, now, serverUUID));
+        double retentionPerc30d = new30d != 0 ? (double) retained30d / new30d : -1;
+        double retentionPerc7d = new7d != 0 ? (double) retained7d / new7d : -1;
+        numbers.put("new_players_retention_30d", retained30d);
+        numbers.put("new_players_retention_30d_perc", percentageFormatter.apply(retentionPerc30d));
+        numbers.put("new_players_retention_7d", retained7d);
+        numbers.put("new_players_retention_7d_perc", percentageFormatter.apply(retentionPerc7d));
         numbers.put("new_players_retention_24h", 0); // TODO
         numbers.put("new_players_retention_24h_perc", percentageFormatter.apply(-1.0)); // TODO
 
