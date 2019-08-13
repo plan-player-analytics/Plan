@@ -29,15 +29,13 @@ import com.djrapitops.plan.db.access.queries.objects.UserInfoQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DisplaySettings;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -54,6 +52,7 @@ public class OnlineActivityOverviewJSONParser implements TabJSONParser<Map<Strin
     private Formatter<Long> timeAmountFormatter;
     private Formatter<Double> decimalFormatter;
     private Formatter<Double> percentageFormatter;
+    private final TimeZone timeZone;
 
     @Inject
     public OnlineActivityOverviewJSONParser(
@@ -67,6 +66,7 @@ public class OnlineActivityOverviewJSONParser implements TabJSONParser<Map<Strin
         timeAmountFormatter = formatters.timeAmount();
         decimalFormatter = formatters.decimals();
         percentageFormatter = formatters.percentage();
+        this.timeZone = config.get(TimeSettings.USE_SERVER_TIME) ? TimeZone.getDefault() : TimeZone.getTimeZone("GMT");
     }
 
     public Map<String, Object> createJSONAsMap(UUID serverUUID) {
@@ -83,6 +83,7 @@ public class OnlineActivityOverviewJSONParser implements TabJSONParser<Map<Strin
         long weekAgo = now - TimeUnit.DAYS.toMillis(7L);
         long halfMonthAgo = now - TimeUnit.DAYS.toMillis(15L);
         long monthAgo = now - TimeUnit.DAYS.toMillis(30L);
+        int timeZoneOffset = timeZone.getOffset(now);
 
         Map<String, Object> numbers = new HashMap<>();
 
@@ -95,15 +96,14 @@ public class OnlineActivityOverviewJSONParser implements TabJSONParser<Map<Strin
         numbers.put("unique_players_7d", db.query(PlayerCountQueries.uniquePlayerCount(weekAgo, now, serverUUID)));
         numbers.put("unique_players_24h", db.query(PlayerCountQueries.uniquePlayerCount(dayAgo, now, serverUUID)));
 
-        // TODO
-        numbers.put("unique_players_30d_avg", -1);
+        numbers.put("unique_players_30d_avg", db.query(PlayerCountQueries.averageUniquePlayerCount(monthAgo, now, timeZoneOffset, serverUUID)));
         numbers.put("unique_players_30d_avg_trend", new Trend(
-                -1,
-                -1,
+                db.query(PlayerCountQueries.averageUniquePlayerCount(monthAgo, halfMonthAgo, timeZoneOffset, serverUUID)),
+                db.query(PlayerCountQueries.averageUniquePlayerCount(halfMonthAgo, now, timeZoneOffset, serverUUID)),
                 false
         ));
-        numbers.put("unique_players_7d_avg", -1);
-        numbers.put("unique_players_24h_avg", -1);
+        numbers.put("unique_players_7d_avg", db.query(PlayerCountQueries.averageUniquePlayerCount(weekAgo, now, timeZoneOffset, serverUUID)));
+        numbers.put("unique_players_24h_avg", db.query(PlayerCountQueries.averageUniquePlayerCount(dayAgo, now, timeZoneOffset, serverUUID)));
 
         numbers.put("new_players_30d", db.query(PlayerCountQueries.newPlayerCount(monthAgo, now, serverUUID)));
         numbers.put("new_players_30d_trend", new Trend(
@@ -114,15 +114,14 @@ public class OnlineActivityOverviewJSONParser implements TabJSONParser<Map<Strin
         numbers.put("new_players_7d", db.query(PlayerCountQueries.newPlayerCount(weekAgo, now, serverUUID)));
         numbers.put("new_players_24h", db.query(PlayerCountQueries.newPlayerCount(dayAgo, now, serverUUID)));
 
-        // TODO
-        numbers.put("new_players_30d_avg", -1);
+        numbers.put("new_players_30d_avg", db.query(PlayerCountQueries.averageNewPlayerCount(monthAgo, now, timeZoneOffset, serverUUID)));
         numbers.put("new_players_30d_avg_trend", new Trend(
-                -1,
-                -1,
+                db.query(PlayerCountQueries.averageNewPlayerCount(monthAgo, halfMonthAgo, timeZoneOffset, serverUUID)),
+                db.query(PlayerCountQueries.averageNewPlayerCount(halfMonthAgo, now, timeZoneOffset, serverUUID)),
                 false
         ));
-        numbers.put("new_players_7d_avg", -1);
-        numbers.put("new_players_24h_avg", -1);
+        numbers.put("new_players_7d_avg", db.query(PlayerCountQueries.averageNewPlayerCount(weekAgo, now, timeZoneOffset, serverUUID)));
+        numbers.put("new_players_24h_avg", db.query(PlayerCountQueries.averageNewPlayerCount(dayAgo, now, timeZoneOffset, serverUUID)));
 
         numbers.put("new_players_retention_30d", 0); // TODO
         numbers.put("new_players_retention_30d_perc", percentageFormatter.apply(-1.0)); // TODO

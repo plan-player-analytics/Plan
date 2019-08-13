@@ -37,10 +37,7 @@ import com.djrapitops.plan.utilities.formatting.Formatters;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -60,6 +57,7 @@ public class ServerOverviewJSONParser implements TabJSONParser<Map<String, Objec
     private Formatter<Double> decimals;
     private Formatter<Double> percentage;
     private Formatter<DateHolder> year;
+    private final TimeZone timeZone;
 
     @Inject
     public ServerOverviewJSONParser(
@@ -77,6 +75,7 @@ public class ServerOverviewJSONParser implements TabJSONParser<Map<String, Objec
         timeAmount = formatters.timeAmount();
         decimals = formatters.decimals();
         percentage = formatters.percentage();
+        this.timeZone = config.get(TimeSettings.USE_SERVER_TIME) ? TimeZone.getDefault() : TimeZone.getTimeZone("GMT");
     }
 
     public Map<String, Object> createJSONAsMap(UUID serverUUID) {
@@ -95,7 +94,7 @@ public class ServerOverviewJSONParser implements TabJSONParser<Map<String, Objec
         Map<String, Object> sevenDays = new HashMap<>();
 
         sevenDays.put("unique_players", db.query(PlayerCountQueries.uniquePlayerCount(sevenDaysAgo, now, serverUUID)));
-        sevenDays.put("unique_players_day", "!"); // TODO
+        sevenDays.put("unique_players_day", db.query(PlayerCountQueries.averageUniquePlayerCount(sevenDaysAgo, now, timeZone.getOffset(now), serverUUID)));
         sevenDays.put("new_players", db.query(PlayerCountQueries.newPlayerCount(sevenDaysAgo, now, serverUUID)));
         sevenDays.put("new_players_retention", "!"); // TODO
         sevenDays.put("new_players_retention_perc", "!"); // TODO
