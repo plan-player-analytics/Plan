@@ -17,6 +17,7 @@
 package com.djrapitops.plan.system.json;
 
 import com.djrapitops.plan.data.container.Ping;
+import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.mutators.MutatorFunctions;
 import com.djrapitops.plan.data.store.mutators.PingMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
@@ -25,10 +26,7 @@ import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.analysis.ActivityIndexQueries;
 import com.djrapitops.plan.db.access.queries.analysis.PlayerCountQueries;
-import com.djrapitops.plan.db.access.queries.objects.GeoInfoQueries;
-import com.djrapitops.plan.db.access.queries.objects.PingQueries;
-import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
-import com.djrapitops.plan.db.access.queries.objects.WorldTimesQueries;
+import com.djrapitops.plan.db.access.queries.objects.*;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
@@ -186,5 +184,14 @@ public class GraphJSONParser {
         return "{\"min_ping_series\":" + pingGraph.getMinGraph().toHighChartsSeries() +
                 ",\"avg_ping_series\":" + pingGraph.getAvgGraph().toHighChartsSeries() +
                 ",\"max_ping_series\":" + pingGraph.getMaxGraph().toHighChartsSeries() + '}';
+    }
+
+    public Map<String, Object> punchCardJSONAsMap(UUID serverUUID) {
+        long now = System.currentTimeMillis();
+        long monthAgo = now - TimeUnit.DAYS.toMillis(30L);
+        List<Session> sessions = dbSystem.getDatabase().query(
+                SessionQueries.fetchServerSessionsWithoutKillOrWorldData(monthAgo, now, serverUUID)
+        );
+        return Collections.singletonMap("punchCard", graphs.special().punchCard(sessions).getDots());
     }
 }

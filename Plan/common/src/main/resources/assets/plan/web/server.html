@@ -338,30 +338,50 @@
                     </div>
 
                     <div class="row">
-                        <!-- New & Unique Players Chart -->
-                        <div class="col-xl-6 col-lg-6 col-sm-12">
+                        <!-- Online Activity Charts -->
+                        <div class="col-xl-12 col-lg-12 col-sm-12">
                             <div class="card shadow mb-4">
-                                <div
-                                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
-                                            class="fas fa-fw fa-chart-area col-blue"></i>
-                                        New & Unique Players</h6>
-                                </div>
-                                <div class="chart-area" id="uniqueChart"><span class="loader"></span></div>
-                            </div>
-                        </div>
-
-                        <!-- Calendar -->
-                        <div class="col-xl-6 col-lg-6 col-sm-12">
-                            <div class="card shadow mb-4">
-                                <div
-                                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
-                                            class="far fa-fw fa-calendar-alt col-teal"></i>
-                                        Calendar</h6>
-                                </div>
-                                <div class="chart-area" id="calendar" style="height: 500px;">
-                                    <span class="loader"></span>
+                                <ul class="nav nav-tabs" id="onlineActivityTab" role="tablist">
+                                    <li class="nav-item">
+                                        <a aria-controls="home" aria-selected="true" class="nav-link active col-black"
+                                           data-toggle="tab" href="#unique-tab" id="online-unique-tab" role="tab"><i
+                                                class="fa fa-fw fa-chart-area col-blue"></i> Day by Day</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a aria-controls="profile" aria-selected="false" class="nav-link col-black"
+                                           data-toggle="tab"
+                                           href="#calendar-tab" id="online-calendar-tab" role="tab"><i
+                                                class="far fa-fw fa-calendar col-teal"></i> Server Calendar</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
+                                           data-toggle="tab" href="#punchcard-tab" id="online-punchcard-tab"
+                                           role="tab"><i class="fa fa-fw fa-braille col-black"></i> Punchcard
+                                            30d</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="onlineActivityTabContent">
+                                    <div aria-labelledby="online-unique-tab" class="tab-pane fade show active"
+                                         id="unique-tab"
+                                         role="tabpanel">
+                                        <div class="chart-area" id="uniqueChart"><span class="loader"></span></div>
+                                    </div>
+                                    <div aria-labelledby="online-calendar-tab" class="tab-pane fade" id="calendar-tab"
+                                         role="tabpanel">
+                                        <div class="row">
+                                            <div class="col-lg-2 col-sm" style="height: 0;"></div>
+                                            <div class="col-lg-8 col-sm-12" style="height: 550px;">
+                                                <div class="chart-area" id="calendar">
+                                                    <span class="loader"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 col-sm" style="height: 0;"></div>
+                                        </div>
+                                    </div>
+                                    <div aria-labelledby="online-punchcard-tab" class="tab-pane fade" id="punchcard-tab"
+                                         role="tabpanel">
+                                        <div class="chart-area" id="punchCard"><span class="loader"></span></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -961,7 +981,7 @@
                         <!-- Performance Charts -->
                         <div class="col-xl-12 col-lg-12 col-sm-12">
                             <div class="card shadow mb-4">
-                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <ul class="nav nav-tabs" id="performanceChartTab" role="tablist">
                                     <li class="nav-item">
                                         <a aria-controls="home" aria-selected="true" class="nav-link active col-black"
                                            data-toggle="tab" href="#all" id="performance-all-tab" role="tab"><i
@@ -998,7 +1018,7 @@
                                                 class="fa fa-fw fa-hdd col-blue-grey"></i> Disk Space</a>
                                     </li>
                                 </ul>
-                                <div class="tab-content" id="myTabContent">
+                                <div class="tab-content" id="performanceChartTabContent">
                                     <div aria-labelledby="performance-all-tab" class="tab-pane fade show active"
                                          id="all"
                                          role="tabpanel">
@@ -1603,10 +1623,29 @@
 
     jsonRequest("../v1/graph?type=serverCalendar&server=${serverName}", function (json, error) {
         if (json) {
+            var clicked = false;
+            $('#online-calendar-tab').click(function () {
+                if (!clicked) {
+                    onlineActivityCalendar('#calendar', json.data, json.firstDay);
+                    clicked = true;
+                }
+            });
             $('#calendar').text('');
-            onlineActivityCalendar('#calendar', json.data, json.firstDay);
         } else if (error) {
             $('#calendar').text("Failed to load calendar data: " + error)
+        }
+    });
+
+    jsonRequest("../v1/graph?type=punchCard&server=${serverName}", function (json, error) {
+        if (json) {
+            var punchCardSeries = {
+                name: 'Relative Join Activity',
+                color: v.colors.punchCard,
+                data: json.punchCard
+            };
+            punchCard('punchCard', punchCardSeries);
+        } else if (error) {
+            $('#punchCard').text("Failed to load graph data: " + error)
         }
     });
 

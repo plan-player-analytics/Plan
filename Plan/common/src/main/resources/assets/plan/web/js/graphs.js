@@ -143,7 +143,8 @@ function onlineActivityCalendar(id, events, firstDay) {
 
         events: events,
 
-        height: 'parent',
+        height: 490,
+        contentHeight: 485,
         header: {
             left: 'title',
             center: '',
@@ -151,9 +152,7 @@ function onlineActivityCalendar(id, events, firstDay) {
         }
     });
 
-    setTimeout(function () {
-        $(id).fullCalendar('render')
-    }, 1000);
+    $(id).fullCalendar('render')
 }
 
 function performanceChart(id, playersOnlineSeries, tpsSeries, cpuSeries, ramSeries, entitySeries, chunkSeries) {
