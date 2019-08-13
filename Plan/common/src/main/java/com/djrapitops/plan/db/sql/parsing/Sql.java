@@ -44,80 +44,69 @@ public interface Sql {
         return "varchar(" + length + ')';
     }
 
-    String dateFromEpochSecond(String sql);
+    String epochSecondToDate(String sql);
 
-    String epochSecondFromDate(String sql);
+    String dateToEpochSecond(String sql);
 
-    String dayOfYear(String sql);
+    String dateToDayStamp(String sql);
 
-    String year(String sql);
-
+    // https://dev.mysql.com/doc/refman/5.7/en/date-and-time-functions.html
     class MySQL implements Sql {
 
         @Override
-        public String dateFromEpochSecond(String sql) {
+        public String epochSecondToDate(String sql) {
             return "FROM_UNIXTIME(" + sql + ')';
         }
 
         @Override
-        public String epochSecondFromDate(String sql) {
+        public String dateToEpochSecond(String sql) {
             return "UNIX_TIMESTAMP(" + sql + ')';
         }
 
         @Override
-        public String dayOfYear(String sql) {
-            return "DAYOFYEAR(" + sql + ')';
+        public String dateToDayStamp(String sql) {
+            return "DATE(" + sql + ')';
         }
 
-        @Override
-        public String year(String sql) {
-            return "YEAR(" + sql + ')';
-        }
     }
 
+    // https://h2database.com/html/functions.html
     class H2 extends MySQL {
 
         @Override
-        public String dateFromEpochSecond(String sql) {
+        public String epochSecondToDate(String sql) {
             return "DATEADD('SECOND', " + sql + ", DATE '1970-01-01')";
         }
 
         @Override
-        public String epochSecondFromDate(String sql) {
+        public String dateToEpochSecond(String sql) {
             return "DATEDIFF('SECOND', DATE '1970-01-01', " + sql + ')';
         }
 
         @Override
-        public String dayOfYear(String sql) {
-            return "DAY_OF_YEAR(" + sql + ')';
+        public String dateToDayStamp(String sql) {
+            return "DATE(" + sql + ')';
         }
 
-        @Override
-        public String year(String sql) {
-            return "YEAR(" + sql + ')';
-        }
     }
 
+    // https://sqlite.org/lang_datefunc.html
     class SQLite implements Sql {
 
         @Override
-        public String dateFromEpochSecond(String sql) {
+        public String epochSecondToDate(String sql) {
             return "datetime(" + sql + ", 'unixepoch')";
         }
 
         @Override
-        public String epochSecondFromDate(String sql) {
+        public String dateToEpochSecond(String sql) {
             return "strftime('%s'," + sql + ")";
         }
 
         @Override
-        public String dayOfYear(String sql) {
-            return "strftime('%j'," + sql + ')';
+        public String dateToDayStamp(String sql) {
+            return "strftime('%Y-%m-%d'," + sql + ')';
         }
 
-        @Override
-        public String year(String sql) {
-            return "strftime('%Y'" + sql + ')';
-        }
     }
 }
