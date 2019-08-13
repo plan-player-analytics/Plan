@@ -69,7 +69,7 @@ public class DBPreparer {
         String database = System.getenv(CIProperties.MYSQL_DATABASE);
         String user = System.getenv(CIProperties.MYSQL_USER);
         String pass = System.getenv(CIProperties.MYSQL_PASS);
-        if (Verify.containsNull(database, user, pass)) {
+        if (Verify.containsNull(database, user)) {
             return Optional.empty();
         }
 
@@ -82,7 +82,7 @@ public class DBPreparer {
 
         config.set(DatabaseSettings.MYSQL_DATABASE, formattedDatabase);
         config.set(DatabaseSettings.MYSQL_USER, user);
-        config.set(DatabaseSettings.MYSQL_PASS, pass);
+        config.set(DatabaseSettings.MYSQL_PASS, pass != null ? pass : "");
         config.set(DatabaseSettings.MYSQL_HOST, "127.0.0.1");
         config.set(DatabaseSettings.TYPE, dbName);
         return Optional.of(formattedDatabase);
