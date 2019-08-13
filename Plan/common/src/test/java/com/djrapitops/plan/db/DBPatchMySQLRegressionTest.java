@@ -25,21 +25,15 @@ import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.db.patches.KillsOptimizationPatch;
 import com.djrapitops.plan.db.patches.Patch;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
-import com.djrapitops.plan.system.settings.paths.WebserverSettings;
-import com.google.common.util.concurrent.MoreExecutors;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import utilities.CIProperties;
-import utilities.OptionalAssert;
-import utilities.RandomData;
-import utilities.TestConstants;
+import utilities.*;
 import utilities.mocks.PluginMockComponent;
 
 import java.nio.file.Path;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -74,10 +68,8 @@ class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
     private MySQLDB underTest;
 
     @BeforeAll
-    static void ensureCIServiceInUse(@TempDir Path tempDir) {
-        boolean isCI = Boolean.parseBoolean(System.getenv(CIProperties.IS_CI_SERVICE));
-        assumeTrue(isCI);
-
+    static void ensureMySQLAvailable(@TempDir Path tempDir) {
+        assumeTrue(System.getenv(CIProperties.MYSQL_DATABASE) != null);
         component = new PluginMockComponent(tempDir);
     }
 
@@ -100,19 +92,10 @@ class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
     @BeforeEach
     void setUpDBWithOldSchema() throws Exception {
         PlanSystem system = component.getPlanSystem();
-        PlanConfig config = system.getConfigSystem().getConfig();
-        config.set(DatabaseSettings.MYSQL_DATABASE, "Plan");
-        config.set(DatabaseSettings.MYSQL_USER, "travis");
-        config.set(DatabaseSettings.MYSQL_PASS, "");
-        config.set(DatabaseSettings.MYSQL_HOST, "127.0.0.1");
-        config.set(DatabaseSettings.TYPE, "MySQL");
-        config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
+        Optional<Database> db = new DBPreparer(system, TEST_PORT_NUMBER).prepareMySQL();
+        assumeTrue(db.isPresent());
 
-        system.enable();
-
-        underTest = (MySQLDB) system.getDatabaseSystem().getActiveDatabaseByName(DBType.MYSQL.getName());
-        underTest.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
-        underTest.init();
+        underTest = (MySQLDB) db.get();
 
         dropAllTables();
 
