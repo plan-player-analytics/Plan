@@ -120,4 +120,47 @@ public class PlayerCountQueries {
 
         return queryPlayerCount(sql, after, before, serverUUID);
     }
+
+    /**
+     * Fetch a EpochMs - Count map of new players on a server.
+     *
+     * @param after          After epoch ms
+     * @param before         Before epoch ms
+     * @param timeZoneOffset Offset from {@link java.util.TimeZone#getOffset(long)}, applied to the dates before grouping.
+     * @param serverUUID     UUID of the Plan server
+     * @return Map: Epoch ms (Accuracy of a day) - How many new players joined that day
+     */
+    public static Query<NavigableMap<Long, Integer>> newPlayerCounts(long after, long before, long timeZoneOffset, UUID serverUUID) {
+        return database -> {
+            Sql sql = database.getType().getSql();
+            String selectNewPlayersQuery = SELECT +
+                    sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + UserInfoTable.REGISTERED + "+?)/1000"))) +
+                    "*1000 as date," +
+                    "COUNT(1) as player_count" +
+                    FROM + UserInfoTable.TABLE_NAME +
+                    WHERE + UserInfoTable.REGISTERED + "<=?" +
+                    AND + UserInfoTable.REGISTERED + ">=?" +
+                    AND + UserInfoTable.SERVER_UUID + "=?" +
+                    GROUP_BY + "date";
+
+            return database.query(new QueryStatement<NavigableMap<Long, Integer>>(selectNewPlayersQuery, 100) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, timeZoneOffset);
+                    statement.setLong(2, before);
+                    statement.setLong(3, after);
+                    statement.setString(4, serverUUID.toString());
+                }
+
+                @Override
+                public NavigableMap<Long, Integer> processResults(ResultSet set) throws SQLException {
+                    NavigableMap<Long, Integer> newPerDay = new TreeMap<>();
+                    while (set.next()) {
+                        newPerDay.put(set.getLong("date"), set.getInt("player_count"));
+                    }
+                    return newPerDay;
+                }
+            });
+        };
+    }
 }

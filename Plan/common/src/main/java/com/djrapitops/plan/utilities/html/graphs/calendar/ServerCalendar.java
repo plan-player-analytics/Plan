@@ -16,9 +16,6 @@
  */
 package com.djrapitops.plan.utilities.html.graphs.calendar;
 
-import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.store.mutators.PlayersMutator;
-import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.formatting.Formatter;
@@ -32,9 +29,10 @@ import java.util.*;
  */
 public class ServerCalendar {
 
-    private final PlayersMutator mutator;
     private final SortedMap<Long, Integer> uniquePerDay;
     private final SortedMap<Long, Integer> newPerDay;
+    private final SortedMap<Long, Integer> sessionsPerDay;
+    private final SortedMap<Long, Long> playtimePerDay;
 
     private final Formatter<Long> iso8601Formatter;
     private final Formatter<Long> timeAmountFormatter;
@@ -42,17 +40,18 @@ public class ServerCalendar {
     private final TimeZone timeZone;
 
     ServerCalendar(
-            PlayersMutator mutator, SortedMap<Long, Integer> uniquePerDay, SortedMap<Long, Integer> newPerDay,
+            SortedMap<Long, Integer> uniquePerDay, SortedMap<Long, Integer> newPerDay,
             Formatter<Long> iso8601Formatter,
             Formatter<Long> timeAmountFormatter,
             Theme theme,
             TimeZone timeZone
     ) {
-        this.mutator = mutator;
         this.uniquePerDay = uniquePerDay;
         this.newPerDay = newPerDay;
         this.iso8601Formatter = iso8601Formatter;
         this.timeAmountFormatter = timeAmountFormatter;
+        sessionsPerDay = new TreeMap<>(); // TODO
+        playtimePerDay = new TreeMap<>(); // TODO
         this.theme = theme;
         this.timeZone = timeZone;
     }
@@ -87,10 +86,6 @@ public class ServerCalendar {
     }
 
     private void appendSessionRelatedData(StringBuilder series) {
-        SessionsMutator sessionsMutator = new SessionsMutator(mutator.getSessions());
-        // Adds a timezone offset
-        SortedMap<Long, List<Session>> byStartOfDay = sessionsMutator.toDateHoldersMutator().groupByStartOfDay(timeZone);
-
         // Has a timezone offset
         for (Map.Entry<Long, Integer> entry : uniquePerDay.entrySet()) {
             if (entry.getValue() <= 0) {
@@ -99,26 +94,28 @@ public class ServerCalendar {
 
             Long key = entry.getKey();
             String day = iso8601Formatter.apply(key - timeZone.getOffset(entry.getKey()));// Remove the timezone offset since Calendar uses UTC
-            List<Session> sessions = byStartOfDay.getOrDefault(key, new ArrayList<>());
 
-            SessionsMutator dayMutator = new SessionsMutator(sessions);
-            long sessionCount = dayMutator.count();
-            long playtime = dayMutator.toPlaytime();
+            Integer sessionCount = sessionsPerDay.getOrDefault(key, 0);
+            Long playtime = playtimePerDay.getOrDefault(key, 0L);
             long uniquePlayers = entry.getValue();
 
-            series.append(",{\"title\": \"Playtime: ").append(timeAmountFormatter.apply(playtime))
-                    .append("\",\"start\":\"").append(day)
-                    .append("\",\"color\": \"").append(theme.getValue(ThemeVal.GREEN)).append('"')
-                    .append("}");
-
-            series.append(",{\"title\": \"Sessions: ").append(sessionCount)
-                    .append("\",\"start\":\"").append(day)
-                    .append("\",\"color\": \"").append(theme.getValue(ThemeVal.TEAL)).append('"')
-                    .append("}");
+            if (playtime > 0) {
+                series.append(",{\"title\": \"Playtime: ").append(timeAmountFormatter.apply(playtime))
+                        .append("\",\"start\":\"").append(day)
+                        .append("\",\"color\": \"").append(theme.getValue(ThemeVal.GREEN)).append('"')
+                        .append("}");
+            }
+            if (sessionCount > 0) {
+                series.append(",{\"title\": \"Sessions: ").append(sessionCount)
+                        .append("\",\"start\":\"").append(day)
+                        .append("\",\"color\": \"").append(theme.getValue(ThemeVal.TEAL)).append('"')
+                        .append("}");
+            }
 
             series.append(",{\"title\": \"Unique: ").append(uniquePlayers)
                     .append("\",\"start\":\"").append(day)
                     .append("\"}");
+
         }
     }
 
