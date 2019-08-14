@@ -111,19 +111,25 @@ public class ActivityIndexQueries {
     public static Query<Integer> fetchActivityGroupCount(long date, UUID serverUUID, long playtimeThreshold, double above, double below) {
         String selectActivityIndex = selectActivityIndexSQL();
 
-        // TODO Include users with 0 sessions in Inactive group
-        // TODO Take into account player's register date
+        String selectIndexes = SELECT + "COALESCE(activity_index, 0) as activity_index" +
+                FROM + UserInfoTable.TABLE_NAME + " u" +
+                LEFT_JOIN + '(' + selectActivityIndex + ") q2 on q2." + SessionsTable.USER_UUID + "=u." + UserInfoTable.USER_UUID +
+                WHERE + "u." + UserInfoTable.SERVER_UUID + "=?" +
+                AND + "u." + UserInfoTable.REGISTERED + "<=?";
+
         String selectActivePlayerCount = SELECT + "COUNT(1) as count" +
-                FROM + '(' + selectActivityIndex + ") q2" +
-                WHERE + "q2.activity_index>=?" +
-                AND + "q2.activity_index<?";
+                FROM + '(' + selectIndexes + ") i" +
+                WHERE + "i.activity_index>=?" +
+                AND + "i.activity_index<?";
 
         return new QueryStatement<Integer>(selectActivePlayerCount) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 setSelectActivityIndexSQLParameters(statement, 1, playtimeThreshold, serverUUID, date);
-                statement.setDouble(12, above);
-                statement.setDouble(13, below);
+                statement.setString(12, serverUUID.toString());
+                statement.setLong(13, date);
+                statement.setDouble(14, above);
+                statement.setDouble(15, below);
             }
 
             @Override
