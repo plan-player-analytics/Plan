@@ -19,9 +19,11 @@ package com.djrapitops.plan.system.json;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersOnlineResolver;
+import com.djrapitops.plan.data.store.mutators.RetentionData;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.db.Database;
+import com.djrapitops.plan.db.access.queries.analysis.ActivityIndexQueries;
 import com.djrapitops.plan.db.access.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
 import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
@@ -29,6 +31,7 @@ import com.djrapitops.plan.db.access.queries.objects.UserInfoQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DisplaySettings;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 
@@ -83,6 +86,7 @@ public class OnlineActivityOverviewJSONParser implements TabJSONParser<Map<Strin
         long halfMonthAgo = now - TimeUnit.DAYS.toMillis(15L);
         long monthAgo = now - TimeUnit.DAYS.toMillis(30L);
         int timeZoneOffset = timeZone.getOffset(now);
+        Long playThreshold = config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD);
 
         Map<String, Object> numbers = new HashMap<>();
 
@@ -106,6 +110,7 @@ public class OnlineActivityOverviewJSONParser implements TabJSONParser<Map<Strin
 
         Integer new30d = db.query(PlayerCountQueries.newPlayerCount(monthAgo, now, serverUUID));
         Integer new7d = db.query(PlayerCountQueries.newPlayerCount(weekAgo, now, serverUUID));
+        Integer new1d = db.query(PlayerCountQueries.newPlayerCount(dayAgo, now, serverUUID));
         numbers.put("new_players_30d", new30d);
         numbers.put("new_players_30d_trend", new Trend(
                 db.query(PlayerCountQueries.newPlayerCount(monthAgo, halfMonthAgo, serverUUID)),
@@ -113,7 +118,7 @@ public class OnlineActivityOverviewJSONParser implements TabJSONParser<Map<Strin
                 false
         ));
         numbers.put("new_players_7d", new7d);
-        numbers.put("new_players_24h", db.query(PlayerCountQueries.newPlayerCount(dayAgo, now, serverUUID)));
+        numbers.put("new_players_24h", new1d);
 
         numbers.put("new_players_30d_avg", db.query(PlayerCountQueries.averageNewPlayerCount(monthAgo, now, timeZoneOffset, serverUUID)));
         numbers.put("new_players_30d_avg_trend", new Trend(
@@ -132,8 +137,15 @@ public class OnlineActivityOverviewJSONParser implements TabJSONParser<Map<Strin
         numbers.put("new_players_retention_30d_perc", percentageFormatter.apply(retentionPerc30d));
         numbers.put("new_players_retention_7d", retained7d);
         numbers.put("new_players_retention_7d_perc", percentageFormatter.apply(retentionPerc7d));
-        numbers.put("new_players_retention_24h", 0); // TODO
-        numbers.put("new_players_retention_24h_perc", percentageFormatter.apply(-1.0)); // TODO
+
+        int prediction1d = RetentionData.countRetentionPrediction(
+                db.query(ActivityIndexQueries.activityIndexForNewPlayers(dayAgo, now, serverUUID, playThreshold)),
+                db.query(ActivityIndexQueries.averageActivityIndexForRetainedPlayers(monthAgo, now, serverUUID, playThreshold)),
+                db.query(ActivityIndexQueries.averageActivityIndexForNonRetainedPlayers(monthAgo, now, serverUUID, playThreshold))
+        );
+        double retentionPerc1d = new1d != 0 ? (double) prediction1d / new1d : -1;
+        numbers.put("new_players_retention_24h", prediction1d);
+        numbers.put("new_players_retention_24h_perc", percentageFormatter.apply(retentionPerc1d));
 
         Long playtimeMonth = db.query(SessionQueries.playtime(monthAgo, now, serverUUID));
         Long playtimeWeek = db.query(SessionQueries.playtime(weekAgo, now, serverUUID));
