@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * DataContainer for information about a player's play session.
@@ -41,6 +42,7 @@ public class Session extends DynamicDataContainer implements DateHolder {
     private int mobKills;
     private int deaths;
     private long afkTime;
+    private boolean firstSession;
 
     /**
      * Creates a new session based on a join event.
@@ -116,6 +118,7 @@ public class Session extends DynamicDataContainer implements DateHolder {
         putSupplier(SessionKeys.MOB_KILL_COUNT, this::getMobKills);
         putSupplier(SessionKeys.DEATH_COUNT, this::getDeaths);
         putSupplier(SessionKeys.AFK_TIME, this::getAfkTime);
+        putSupplier(SessionKeys.FIRST_SESSION, this::isFirstSession);
 
         putSupplier(SessionKeys.PLAYER_KILL_COUNT, () -> getUnsafe(SessionKeys.PLAYER_KILLS).size());
         putSupplier(SessionKeys.LENGTH, () ->
@@ -201,6 +204,16 @@ public class Session extends DynamicDataContainer implements DateHolder {
 
     public void setSessionID(int sessionID) {
         putRawData(SessionKeys.DB_ID, sessionID);
+    }
+
+    public void setAsFirstSessionIfMatches(Long registerDate) {
+        if (registerDate != null && Math.abs(sessionStart - registerDate) < TimeUnit.SECONDS.toMillis(5L)) {
+            this.firstSession = true;
+        }
+    }
+
+    public boolean isFirstSession() {
+        return firstSession;
     }
 
     public List<PlayerKill> getPlayerKills() {

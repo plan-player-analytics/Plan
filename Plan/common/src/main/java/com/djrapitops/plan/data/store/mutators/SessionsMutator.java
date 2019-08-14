@@ -305,6 +305,7 @@ public class SessionsMutator {
                         return killMap;
                     }
             ).collect(Collectors.toList()));
+            sessionMap.put("first_session", session.getValue(SessionKeys.FIRST_SESSION).orElse(false));
             WorldPie worldPie = graphs.pie().worldPie(session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes()));
             sessionMap.put("world_series", worldPie.getSlices());
             sessionMap.put("gm_series", worldPie.toHighChartsDrillDownMaps());

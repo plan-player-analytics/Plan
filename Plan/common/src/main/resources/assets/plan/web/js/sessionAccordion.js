@@ -66,15 +66,13 @@ function loadPlayerDeaths(json, error) {
 
 function createAccordionTitle(i, session) {
     return '<tr id="session_h_' + i + '" aria-controls="session_t_' + i + '" aria-expanded="false" class="clickable collapsed bg-teal" data-target="#session_t_' + i + '" data-toggle="collapse"><td>'
-        + session.name + '</td>'
+        + session.name + (session.first_session ? ' <i title="Registered (First session)" class="far fa-calendar-plus"></i>' : '') + '</td>'
         + '<td>' + session.start + '</td>'
         + '<td>' + session.length + '</td>'
         + '<td>' + session.most_used_world + '</td></tr>'
 }
 
 function createAccordionBody(i, session) {
-
-
     return '<tr class="collapse" data-parent="#tableAccordion" id="session_t_' + i + '">' +
         '<td colspan="4">' +
         '<div class="collapse row" data-parent="#tableAccordion" id="session_t_' + i + '">' +

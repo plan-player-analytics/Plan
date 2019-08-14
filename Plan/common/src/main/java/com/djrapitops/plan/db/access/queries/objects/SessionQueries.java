@@ -54,6 +54,7 @@ public class SessionQueries {
             "s." + SessionsTable.USER_UUID + ',' +
             "s." + SessionsTable.SERVER_UUID + ',' +
             "u." + UsersTable.USER_NAME + " as name," +
+            "u_info." + UsersTable.REGISTERED + " as registered," +
             "server." + ServerTable.NAME + " as server_name," +
             SessionsTable.SESSION_START + ',' +
             SessionsTable.SESSION_END + ',' +
@@ -72,6 +73,7 @@ public class SessionQueries {
             FROM + SessionsTable.TABLE_NAME + " s" +
             INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.USER_UUID + "=s." + SessionsTable.USER_UUID +
             INNER_JOIN + ServerTable.TABLE_NAME + " server on server." + ServerTable.SERVER_UUID + "=s." + SessionsTable.SERVER_UUID +
+            LEFT_JOIN + UserInfoTable.TABLE_NAME + " u_info on u_info." + UserInfoTable.USER_UUID + "=s." + SessionsTable.USER_UUID + AND + "u_info." + UserInfoTable.SERVER_UUID + "=s." + SessionsTable.SERVER_UUID +
             LEFT_JOIN + KillsTable.TABLE_NAME + " ON " + "s." + SessionsTable.ID + '=' + KillsTable.TABLE_NAME + '.' + KillsTable.SESSION_ID +
             LEFT_JOIN + UsersTable.TABLE_NAME + " v on v." + UsersTable.USER_UUID + '=' + KillsTable.VICTIM_UUID +
             INNER_JOIN + WorldTimesTable.TABLE_NAME + " ON s." + SessionsTable.ID + '=' + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SESSION_ID +
@@ -247,6 +249,8 @@ public class SessionQueries {
 
             session.putRawData(SessionKeys.NAME, set.getString("name"));
             session.putRawData(SessionKeys.SERVER_NAME, set.getString("server_name"));
+
+            session.setAsFirstSessionIfMatches(set.getLong("registered"));
 
             playerSessions.put(sessionStart, session);
             serverSessions.put(playerUUID, playerSessions);
