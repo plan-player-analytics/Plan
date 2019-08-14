@@ -25,9 +25,7 @@ import com.djrapitops.plan.db.sql.tables.UserInfoTable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static com.djrapitops.plan.db.sql.parsing.Sql.*;
@@ -211,6 +209,118 @@ public class ActivityIndexQueries {
             @Override
             public Integer processResults(ResultSet set) throws SQLException {
                 return set.next() ? set.getInt("count") : 0;
+            }
+        };
+    }
+
+    public static Query<Collection<ActivityIndex>> activityIndexForNewPlayers(long after, long before, UUID serverUUID, Long threshold) {
+        String selectNewUUIDs = SELECT + UserInfoTable.USER_UUID +
+                FROM + UserInfoTable.TABLE_NAME +
+                WHERE + UserInfoTable.REGISTERED + "<=?" +
+                AND + UserInfoTable.REGISTERED + ">=?" +
+                AND + UserInfoTable.SERVER_UUID + "=?";
+
+        String sql = SELECT + "activity_index" +
+                FROM + '(' + selectNewUUIDs + ") n" +
+                INNER_JOIN + '(' + selectActivityIndexSQL() + ") a on n." + SessionsTable.USER_UUID + "=a." + SessionsTable.USER_UUID;
+
+        return new QueryStatement<Collection<ActivityIndex>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, before);
+                statement.setLong(2, after);
+                statement.setString(3, serverUUID.toString());
+                setSelectActivityIndexSQLParameters(statement, 4, threshold, serverUUID, before);
+            }
+
+            @Override
+            public Collection<ActivityIndex> processResults(ResultSet set) throws SQLException {
+                Collection<ActivityIndex> indexes = new ArrayList<>();
+                while (set.next()) {
+                    indexes.add(new ActivityIndex(set.getDouble("activity_index"), before));
+                }
+                return indexes;
+            }
+        };
+    }
+
+    public static Query<ActivityIndex> averageActivityIndexForRetainedPlayers(long after, long before, UUID serverUUID, Long threshold) {
+        String selectNewUUIDs = SELECT + UserInfoTable.USER_UUID +
+                FROM + UserInfoTable.TABLE_NAME +
+                WHERE + UserInfoTable.REGISTERED + "<=?" +
+                AND + UserInfoTable.REGISTERED + ">=?" +
+                AND + UserInfoTable.SERVER_UUID + "=?";
+
+        String selectUniqueUUIDs = SELECT + "DISTINCT " + SessionsTable.USER_UUID +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SESSION_START + ">=?" +
+                AND + SessionsTable.SESSION_END + "<=?" +
+                AND + SessionsTable.SERVER_UUID + "=?";
+
+        String sql = SELECT + "AVG(activity_index) as average" +
+                FROM + '(' + selectNewUUIDs + ") n" +
+                INNER_JOIN + '(' + selectUniqueUUIDs + ") u on n." + SessionsTable.USER_UUID + "=u." + SessionsTable.USER_UUID +
+                INNER_JOIN + '(' + selectActivityIndexSQL() + ") a on n." + SessionsTable.USER_UUID + "=a." + SessionsTable.USER_UUID;
+
+        return new QueryStatement<ActivityIndex>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, before);
+                statement.setLong(2, after);
+                statement.setString(3, serverUUID.toString());
+
+                // Have played in the last half of the time frame
+                long half = before - (after - before) / 2;
+                statement.setLong(4, half);
+                statement.setLong(5, before);
+                statement.setString(6, serverUUID.toString());
+                setSelectActivityIndexSQLParameters(statement, 7, threshold, serverUUID, before);
+            }
+
+            @Override
+            public ActivityIndex processResults(ResultSet set) throws SQLException {
+                return set.next() ? new ActivityIndex(set.getDouble("average"), before) : new ActivityIndex(0.0, before);
+            }
+        };
+    }
+
+    public static Query<ActivityIndex> averageActivityIndexForNonRetainedPlayers(long after, long before, UUID serverUUID, Long threshold) {
+        String selectNewUUIDs = SELECT + UserInfoTable.USER_UUID +
+                FROM + UserInfoTable.TABLE_NAME +
+                WHERE + UserInfoTable.REGISTERED + "<=?" +
+                AND + UserInfoTable.REGISTERED + ">=?" +
+                AND + UserInfoTable.SERVER_UUID + "=?";
+
+        String selectUniqueUUIDs = SELECT + "DISTINCT " + SessionsTable.USER_UUID +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SESSION_START + ">=?" +
+                AND + SessionsTable.SESSION_END + "<=?" +
+                AND + SessionsTable.SERVER_UUID + "=?";
+
+        String sql = SELECT + "AVG(activity_index) as average" +
+                FROM + '(' + selectNewUUIDs + ") n" +
+                LEFT_JOIN + '(' + selectUniqueUUIDs + ") u on n." + SessionsTable.USER_UUID + "=u." + SessionsTable.USER_UUID +
+                INNER_JOIN + '(' + selectActivityIndexSQL() + ") a on n." + SessionsTable.USER_UUID + "=a." + SessionsTable.USER_UUID +
+                WHERE + "n." + SessionsTable.USER_UUID + IS_NULL;
+
+        return new QueryStatement<ActivityIndex>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, before);
+                statement.setLong(2, after);
+                statement.setString(3, serverUUID.toString());
+
+                // Have played in the last half of the time frame
+                long half = before - (after - before) / 2;
+                statement.setLong(4, half);
+                statement.setLong(5, before);
+                statement.setString(6, serverUUID.toString());
+                setSelectActivityIndexSQLParameters(statement, 7, threshold, serverUUID, before);
+            }
+
+            @Override
+            public ActivityIndex processResults(ResultSet set) throws SQLException {
+                return set.next() ? new ActivityIndex(set.getDouble("average"), before) : new ActivityIndex(0.0, before);
             }
         };
     }
