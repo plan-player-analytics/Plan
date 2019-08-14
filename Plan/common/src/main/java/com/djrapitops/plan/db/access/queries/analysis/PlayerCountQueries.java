@@ -79,7 +79,7 @@ public class PlayerCountQueries {
      */
     public static Query<NavigableMap<Long, Integer>> uniquePlayerCounts(long after, long before, long timeZoneOffset, UUID serverUUID) {
         return database -> {
-            Sql sql = database.getType().getSql();
+            Sql sql = database.getSql();
             String selectUniquePlayersPerDay = SELECT +
                     sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
                     "*1000 as date," +
@@ -113,7 +113,7 @@ public class PlayerCountQueries {
 
     public static Query<Integer> averageUniquePlayerCount(long after, long before, long timeZoneOffset, UUID serverUUID) {
         return database -> {
-            Sql sql = database.getType().getSql();
+            Sql sql = database.getSql();
             String selectUniquePlayersPerDay = SELECT +
                     sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
                     "*1000 as date," +
@@ -163,7 +163,7 @@ public class PlayerCountQueries {
      */
     public static Query<NavigableMap<Long, Integer>> newPlayerCounts(long after, long before, long timeZoneOffset, UUID serverUUID) {
         return database -> {
-            Sql sql = database.getType().getSql();
+            Sql sql = database.getSql();
             String selectNewPlayersQuery = SELECT +
                     sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + UserInfoTable.REGISTERED + "+?)/1000"))) +
                     "*1000 as date," +
@@ -197,7 +197,7 @@ public class PlayerCountQueries {
 
     public static Query<Integer> averageNewPlayerCount(long after, long before, long timeZoneOffset, UUID serverUUID) {
         return database -> {
-            Sql sql = database.getType().getSql();
+            Sql sql = database.getSql();
             String selectNewPlayersQuery = SELECT +
                     sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + UserInfoTable.REGISTERED + "+?)/1000"))) +
                     "*1000 as date," +

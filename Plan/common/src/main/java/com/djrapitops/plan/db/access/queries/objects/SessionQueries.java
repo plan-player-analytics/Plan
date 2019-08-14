@@ -26,6 +26,7 @@ import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.QueryAllStatement;
 import com.djrapitops.plan.db.access.QueryStatement;
+import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.sql.tables.*;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 
@@ -370,6 +371,40 @@ public class SessionQueries {
         };
     }
 
+    public static Query<NavigableMap<Long, Integer>> sessionCountPerDay(long after, long before, long timeZoneOffset, UUID serverUUID) {
+        return database -> {
+            Sql sql = database.getSql();
+            String selectSessionsPerDay = SELECT +
+                    sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
+                    "*1000 as date," +
+                    "COUNT(1) as session_count" +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + SessionsTable.SESSION_END + "<=?" +
+                    AND + SessionsTable.SESSION_START + ">=?" +
+                    AND + SessionsTable.SERVER_UUID + "=?" +
+                    GROUP_BY + "date";
+
+            return database.query(new QueryStatement<NavigableMap<Long, Integer>>(selectSessionsPerDay, 100) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, timeZoneOffset);
+                    statement.setLong(2, before);
+                    statement.setLong(3, after);
+                    statement.setString(4, serverUUID.toString());
+                }
+
+                @Override
+                public NavigableMap<Long, Integer> processResults(ResultSet set) throws SQLException {
+                    NavigableMap<Long, Integer> uniquePerDay = new TreeMap<>();
+                    while (set.next()) {
+                        uniquePerDay.put(set.getLong("date"), set.getInt("session_count"));
+                    }
+                    return uniquePerDay;
+                }
+            });
+        };
+    }
+
     public static Query<Long> playtime(long after, long before, UUID serverUUID) {
         String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
                 FROM + SessionsTable.TABLE_NAME +
@@ -388,6 +423,71 @@ public class SessionQueries {
             public Long processResults(ResultSet set) throws SQLException {
                 return set.next() ? set.getLong("playtime") : 0L;
             }
+        };
+    }
+
+    public static Query<NavigableMap<Long, Long>> playtimePerDay(long after, long before, long timeZoneOffset, UUID serverUUID) {
+        return database -> {
+            Sql sql = database.getSql();
+            String selectPlaytimePerDay = SELECT +
+                    sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
+                    "*1000 as date," +
+                    "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + SessionsTable.SESSION_END + "<=?" +
+                    AND + SessionsTable.SESSION_START + ">=?" +
+                    AND + SessionsTable.SERVER_UUID + "=?" +
+                    GROUP_BY + "date";
+
+            return database.query(new QueryStatement<NavigableMap<Long, Long>>(selectPlaytimePerDay, 100) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, timeZoneOffset);
+                    statement.setLong(2, before);
+                    statement.setLong(3, after);
+                    statement.setString(4, serverUUID.toString());
+                }
+
+                @Override
+                public NavigableMap<Long, Long> processResults(ResultSet set) throws SQLException {
+                    NavigableMap<Long, Long> uniquePerDay = new TreeMap<>();
+                    while (set.next()) {
+                        uniquePerDay.put(set.getLong("date"), set.getLong("playtime"));
+                    }
+                    return uniquePerDay;
+                }
+            });
+        };
+    }
+
+    public static Query<Long> averagePlaytimePerDay(long after, long before, long timeZoneOffset, UUID serverUUID) {
+        return database -> {
+            Sql sql = database.getSql();
+            String selectPlaytimePerDay = SELECT +
+                    sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
+                    "*1000 as date," +
+                    "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + SessionsTable.SESSION_END + "<=?" +
+                    AND + SessionsTable.SESSION_START + ">=?" +
+                    AND + SessionsTable.SERVER_UUID + "=?" +
+                    GROUP_BY + "date";
+            String selectAverage = SELECT + "AVG(playtime) as average" + FROM + '(' + selectPlaytimePerDay + ") q1";
+
+            return database.query(new QueryStatement<Long>(selectAverage, 100) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, timeZoneOffset);
+                    statement.setLong(2, before);
+                    statement.setLong(3, after);
+                    statement.setString(4, serverUUID.toString());
+                }
+
+                @Override
+                public Long processResults(ResultSet set) throws SQLException {
+                    return set.next() ? set.getLong("average") : 0;
+                }
+            });
         };
     }
 

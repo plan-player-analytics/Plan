@@ -18,14 +18,13 @@ package com.djrapitops.plan.utilities.html.graphs.calendar;
 
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.NavigableMap;
 import java.util.SortedMap;
-import java.util.TimeZone;
 
 /**
  * Factory class for different objects representing HTML calendars.
@@ -53,18 +52,20 @@ public class CalendarFactory {
         return new PlayerCalendar(
                 player,
                 formatters.timeAmount(), formatters.yearLong(), formatters.iso8601NoClockLong(), theme,
-                config.get(TimeSettings.USE_SERVER_TIME) ? TimeZone.getDefault() : TimeZone.getTimeZone("GMT")
+                config.getTimeZone()
         );
     }
 
     public ServerCalendar serverCalendar(
             SortedMap<Long, Integer> uniquePerDay,
-            SortedMap<Long, Integer> newPerDay
+            SortedMap<Long, Integer> newPerDay,
+            SortedMap<Long, Long> playtimePerDay,
+            NavigableMap<Long, Integer> sessionsPerDay
     ) {
         return new ServerCalendar(
-                uniquePerDay, newPerDay,
+                uniquePerDay, newPerDay, playtimePerDay, sessionsPerDay,
                 formatters.iso8601NoClockLong(), formatters.timeAmount(), theme,
-                config.get(TimeSettings.USE_SERVER_TIME) ? TimeZone.getDefault() : TimeZone.getTimeZone("GMT")
+                config.getTimeZone()
         );
     }
 }

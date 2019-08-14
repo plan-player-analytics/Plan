@@ -75,7 +75,7 @@ public class ServerOverviewJSONParser implements TabJSONParser<Map<String, Objec
         timeAmount = formatters.timeAmount();
         decimals = formatters.decimals();
         percentage = formatters.percentage();
-        this.timeZone = config.get(TimeSettings.USE_SERVER_TIME) ? TimeZone.getDefault() : TimeZone.getTimeZone("GMT");
+        this.timeZone = config.getTimeZone();
     }
 
     public Map<String, Object> createJSONAsMap(UUID serverUUID) {

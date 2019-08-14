@@ -67,7 +67,7 @@ public class GraphJSONParser {
         this.config = config;
         this.dbSystem = dbSystem;
         this.graphs = graphs;
-        this.timeZone = config.get(TimeSettings.USE_SERVER_TIME) ? TimeZone.getDefault() : TimeZone.getTimeZone("GMT");
+        this.timeZone = config.getTimeZone();
     }
 
     public String performanceGraphJSON(UUID serverUUID) {
@@ -121,10 +121,18 @@ public class GraphJSONParser {
         NavigableMap<Long, Integer> newPerDay = db.query(
                 PlayerCountQueries.newPlayerCounts(twoYearsAgo, now, timeZone.getOffset(now), serverUUID)
         );
+        NavigableMap<Long, Long> playtimePerDay = db.query(
+                SessionQueries.playtimePerDay(twoYearsAgo, now, timeZone.getOffset(now), serverUUID)
+        );
+        NavigableMap<Long, Integer> sessionsPerDay = db.query(
+                SessionQueries.sessionCountPerDay(twoYearsAgo, now, timeZone.getOffset(now), serverUUID)
+        );
         return "{\"data\":" +
                 graphs.calendar().serverCalendar(
                         uniquePerDay,
-                        newPerDay
+                        newPerDay,
+                        playtimePerDay,
+                        sessionsPerDay
                 ).toCalendarSeries() +
                 ",\"firstDay\":" + 1 + '}';
     }
