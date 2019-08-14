@@ -495,6 +495,62 @@ public class SessionQueries {
         };
     }
 
+    public static Query<Long> averagePlaytimePerPlayer(long after, long before, UUID serverUUID) {
+        return database -> {
+            String selectPlaytimePerPlayer = SELECT +
+                    SessionsTable.USER_UUID + "," +
+                    "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + SessionsTable.SESSION_END + "<=?" +
+                    AND + SessionsTable.SESSION_START + ">=?" +
+                    AND + SessionsTable.SERVER_UUID + "=?" +
+                    GROUP_BY + SessionsTable.USER_UUID;
+            String selectAverage = SELECT + "AVG(playtime) as average" + FROM + '(' + selectPlaytimePerPlayer + ") q1";
+
+            return database.query(new QueryStatement<Long>(selectAverage, 100) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, before);
+                    statement.setLong(2, after);
+                    statement.setString(3, serverUUID.toString());
+                }
+
+                @Override
+                public Long processResults(ResultSet set) throws SQLException {
+                    return set.next() ? set.getLong("average") : 0;
+                }
+            });
+        };
+    }
+
+    public static Query<Long> averageAfkPerPlayer(long after, long before, UUID serverUUID) {
+        return database -> {
+            String selectAfkPerPlayer = SELECT +
+                    SessionsTable.USER_UUID + "," +
+                    "SUM(" + SessionsTable.AFK_TIME + ") as afk" +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + SessionsTable.SESSION_END + "<=?" +
+                    AND + SessionsTable.SESSION_START + ">=?" +
+                    AND + SessionsTable.SERVER_UUID + "=?" +
+                    GROUP_BY + SessionsTable.USER_UUID;
+            String selectAverage = SELECT + "AVG(afk) as average" + FROM + '(' + selectAfkPerPlayer + ") q1";
+
+            return database.query(new QueryStatement<Long>(selectAverage, 100) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, before);
+                    statement.setLong(2, after);
+                    statement.setString(3, serverUUID.toString());
+                }
+
+                @Override
+                public Long processResults(ResultSet set) throws SQLException {
+                    return set.next() ? set.getLong("average") : 0;
+                }
+            });
+        };
+    }
+
     public static Query<Long> afkTime(long after, long before, UUID serverUUID) {
         String sql = SELECT + "SUM(" + SessionsTable.AFK_TIME + ") as afk_time" +
                 FROM + SessionsTable.TABLE_NAME +
