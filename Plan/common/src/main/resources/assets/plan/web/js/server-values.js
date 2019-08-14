@@ -277,9 +277,9 @@ function loadPlayerbaseOverviewValues(json, error) {
     $(element).find('#data_regular_session_avg_then').text(data.regular_session_avg_then);
     $(element).find('#data_regular_session_avg_now').text(data.regular_session_avg_now);
     $(element).find('#data_regular_session_avg_trend').replaceWith(trend(data.regular_session_avg_trend));
-    $(element).find('#data_regular_afk_then').text(data.regular_afk_then);
-    $(element).find('#data_regular_afk_now').text(data.regular_afk_now);
-    $(element).find('#data_regular_afk_trend').replaceWith(trend(data.regular_afk_trend));
+    $(element).find('#data_regular_afk_then').text(data.regular_afk_avg_then);
+    $(element).find('#data_regular_afk_now').text(data.regular_afk_avg_now);
+    $(element).find('#data_regular_afk_trend').replaceWith(trend(data.regular_afk_avg_trend));
 
     // Insights
     data = json.insights;

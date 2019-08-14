@@ -44,8 +44,8 @@ public class PlayerBaseOverviewJSONParser implements TabJSONParser<Map<String, O
     private PlanConfig config;
     private DBSystem dbSystem;
 
-    private Formatter<Long> timeAmountFormatter;
-    private Formatter<Double> percentageFormatter;
+    private Formatter<Long> timeAmount;
+    private Formatter<Double> percentage;
 
     @Inject
     public PlayerBaseOverviewJSONParser(
@@ -56,8 +56,8 @@ public class PlayerBaseOverviewJSONParser implements TabJSONParser<Map<String, O
         this.config = config;
         this.dbSystem = dbSystem;
 
-        timeAmountFormatter = formatters.timeAmount();
-        percentageFormatter = formatters.percentage();
+        timeAmount = formatters.timeAmount();
+        percentage = formatters.percentage();
     }
 
     public Map<String, Object> createJSONAsMap(UUID serverUUID) {
@@ -88,33 +88,32 @@ public class PlayerBaseOverviewJSONParser implements TabJSONParser<Map<String, O
         trends.put("regular_players_now", regularAfter);
         trends.put("regular_players_trend", new Trend(regularBefore, regularAfter, false));
 
-        // TODO
-        trends.put("playtime_avg_then", "Not implemented");
-        trends.put("playtime_avg_now", "Not implemented");
-        trends.put("playtime_avg_trend", new Trend(0, 0, false, timeAmountFormatter));
+        Long avgPlaytimeBefore = db.query(SessionQueries.averagePlaytimePerPlayer(twoMonthsAgo, monthAgo, serverUUID));
+        Long avgPlaytimeAfter = db.query(SessionQueries.averagePlaytimePerPlayer(monthAgo, now, serverUUID));
+        trends.put("playtime_avg_then", timeAmount.apply(avgPlaytimeBefore));
+        trends.put("playtime_avg_now", timeAmount.apply(avgPlaytimeAfter));
+        trends.put("playtime_avg_trend", new Trend(avgPlaytimeBefore, avgPlaytimeAfter, false, timeAmount));
 
-        Long playtimeBefore = db.query(SessionQueries.playtime(twoMonthsAgo, monthAgo, serverUUID));
-        Long playtimeAfter = db.query(SessionQueries.playtime(monthAgo, now, serverUUID));
-        Long afkBefore = db.query(SessionQueries.afkTime(twoMonthsAgo, monthAgo, serverUUID));
-        Long afkAfter = db.query(SessionQueries.afkTime(monthAgo, now, serverUUID));
-        double afkPercBefore = playersBefore != 0 ? (double) afkBefore / playtimeBefore : 0;
-        double afkPercAfter = playersBefore != 0 ? (double) afkAfter / playtimeAfter : 0;
-        trends.put("afk_then", percentageFormatter.apply(afkPercBefore));
-        trends.put("afk_now", percentageFormatter.apply(afkPercAfter));
-        trends.put("afk_trend", new Trend(afkPercBefore, afkPercAfter, Trend.REVERSED, percentageFormatter));
+        Long avgAfkBefore = db.query(SessionQueries.averageAfkPerPlayer(twoMonthsAgo, monthAgo, serverUUID));
+        Long avgAfkAfter = db.query(SessionQueries.averageAfkPerPlayer(monthAgo, now, serverUUID));
+        double afkPercBefore = avgPlaytimeBefore != 0 ? (double) avgAfkBefore / avgPlaytimeBefore : 0;
+        double afkPercAfter = avgPlaytimeAfter != 0 ? (double) avgAfkAfter / avgPlaytimeAfter : 0;
+        trends.put("afk_then", percentage.apply(afkPercBefore));
+        trends.put("afk_now", percentage.apply(afkPercAfter));
+        trends.put("afk_trend", new Trend(afkPercBefore, afkPercAfter, Trend.REVERSED, percentage));
 
         // TODO
         trends.put("regular_playtime_avg_then", "Not implemented");
         trends.put("regular_playtime_avg_now", "Not implemented");
-        trends.put("regular_playtime_avg_trend", new Trend(0, 0, false, timeAmountFormatter));
+        trends.put("regular_playtime_avg_trend", new Trend(0, 0, false, timeAmount));
         // TODO
         trends.put("regular_session_avg_then", "Not implemented");
         trends.put("regular_session_avg_now", "Not implemented");
-        trends.put("regular_session_avg_trend", new Trend(0, 0, false, timeAmountFormatter));
+        trends.put("regular_session_avg_trend", new Trend(0, 0, false, timeAmount));
         // TODO
         trends.put("regular_afk_avg_then", "Not implemented");
         trends.put("regular_afk_avg_now", "Not implemented");
-        trends.put("regular_afk_avg_trend", new Trend(0, 0, Trend.REVERSED, percentageFormatter));
+        trends.put("regular_afk_avg_trend", new Trend(0, 0, Trend.REVERSED, percentage));
 
         return trends;
     }
