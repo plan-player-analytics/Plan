@@ -19,6 +19,7 @@ package com.djrapitops.plan.db;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.transactions.Transaction;
+import com.djrapitops.plan.db.sql.parsing.Sql;
 
 import java.util.concurrent.Future;
 
@@ -66,6 +67,10 @@ public interface Database {
      * @see DBType
      */
     DBType getType();
+
+    default Sql getSql() {
+        return getType().getSql();
+    }
 
     State getState();
 

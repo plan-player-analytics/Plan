@@ -29,7 +29,6 @@ import com.djrapitops.plan.db.access.queries.objects.UserInfoQueries;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DisplaySettings;
-import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 
@@ -66,7 +65,7 @@ public class OnlineActivityOverviewJSONParser implements TabJSONParser<Map<Strin
         timeAmountFormatter = formatters.timeAmount();
         decimalFormatter = formatters.decimals();
         percentageFormatter = formatters.percentage();
-        this.timeZone = config.get(TimeSettings.USE_SERVER_TIME) ? TimeZone.getDefault() : TimeZone.getTimeZone("GMT");
+        this.timeZone = config.getTimeZone();
     }
 
     public Map<String, Object> createJSONAsMap(UUID serverUUID) {
@@ -146,16 +145,15 @@ public class OnlineActivityOverviewJSONParser implements TabJSONParser<Map<Strin
         numbers.put("playtime_7d", timeAmountFormatter.apply(playtimeWeek));
         numbers.put("playtime_24h", timeAmountFormatter.apply(playtimeDay));
 
-        // TODO
-        numbers.put("playtime_30d_avg", timeAmountFormatter.apply(-1L));
+        numbers.put("playtime_30d_avg", timeAmountFormatter.apply(db.query(SessionQueries.averagePlaytimePerDay(monthAgo, now, timeZoneOffset, serverUUID))));
         numbers.put("playtime_30d_avg_trend", new Trend(
-                -1,
-                -1,
+                db.query(SessionQueries.averagePlaytimePerDay(monthAgo, halfMonthAgo, timeZoneOffset, serverUUID)),
+                db.query(SessionQueries.averagePlaytimePerDay(halfMonthAgo, now, timeZoneOffset, serverUUID)),
                 false,
                 timeAmountFormatter
         ));
-        numbers.put("playtime_7d_avg", timeAmountFormatter.apply(-1L));
-        numbers.put("playtime_24h_avg", timeAmountFormatter.apply(-1L));
+        numbers.put("playtime_7d_avg", timeAmountFormatter.apply(db.query(SessionQueries.averagePlaytimePerDay(weekAgo, now, timeZoneOffset, serverUUID))));
+        numbers.put("playtime_24h_avg", timeAmountFormatter.apply(db.query(SessionQueries.playtime(dayAgo, now, serverUUID))));
 
         Long sessionsMonth = db.query(SessionQueries.sessionCount(monthAgo, now, serverUUID));
         Long sessionsWeek = db.query(SessionQueries.sessionCount(weekAgo, now, serverUUID));

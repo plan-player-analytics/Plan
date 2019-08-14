@@ -121,6 +121,10 @@ public class PlanConfig extends Config {
         set(setting.getPath(), value);
     }
 
+    public TimeZone getTimeZone() {
+        return get(TimeSettings.USE_SERVER_TIME) ? TimeZone.getDefault() : TimeZone.getTimeZone("GMT");
+    }
+
     public PluginsConfigSection getPluginsConfigSection() {
         return pluginsConfigSection;
     }
