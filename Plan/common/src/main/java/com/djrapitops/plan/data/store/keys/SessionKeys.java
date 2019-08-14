@@ -48,6 +48,7 @@ public class SessionKeys {
     public static final Key<Integer> PLAYER_KILL_COUNT = CommonKeys.PLAYER_KILL_COUNT;
     public static final Key<Integer> MOB_KILL_COUNT = CommonKeys.MOB_KILL_COUNT;
     public static final Key<Integer> DEATH_COUNT = CommonKeys.DEATH_COUNT;
+    public static final Key<Boolean> FIRST_SESSION = new Key<>(Boolean.class, "first_session");
     @Deprecated
     public static final Key<List<PlayerDeath>> PLAYER_DEATHS = CommonKeys.PLAYER_DEATHS;
 
