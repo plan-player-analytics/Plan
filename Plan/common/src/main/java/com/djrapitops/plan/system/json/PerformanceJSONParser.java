@@ -28,7 +28,10 @@ import com.djrapitops.plan.utilities.formatting.Formatters;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -68,7 +71,7 @@ public class PerformanceJSONParser implements TabJSONParser<Map<String, Object>>
         List<TPS> tpsData = db.query(TPSQueries.fetchTPSDataOfServer(monthAgo, now, serverUUID));
 
         serverOverview.put("numbers", createNumbersMap(tpsData));
-        serverOverview.put("insights", createInsightsMap(tpsData, serverUUID));
+        serverOverview.put("insights", createInsightsMap(tpsData));
         return serverOverview;
     }
 
@@ -122,24 +125,21 @@ public class PerformanceJSONParser implements TabJSONParser<Map<String, Object>>
         return decimalFormatter.apply(value);
     }
 
-    private Map<String, Object> createInsightsMap(List<TPS> tpsData, UUID serverUUID) {
-        Database db = dbSystem.getDatabase();
-        long now = System.currentTimeMillis();
-        long monthAgo = now - TimeUnit.DAYS.toMillis(30L);
-
+    private Map<String, Object> createInsightsMap(List<TPS> tpsData) {
         TPSMutator tpsMutator = new TPSMutator(tpsData);
         Integer tpsThreshold = config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED);
         TPSMutator lowTPS = tpsMutator.filterTPSBetween(-1, tpsThreshold);
 
         Map<String, Object> insights = new HashMap<>();
 
-        insights.put("low_tps_players", decimalFormatter.apply(lowTPS.averagePlayersOnline()));
-        insights.put("low_tps_cpu", decimalFormatter.apply(lowTPS.averageCPU()));
-        insights.put("low_tps_entities", decimalFormatter.apply(lowTPS.averageEntities()));
-        insights.put("low_tps_chunks", decimalFormatter.apply(lowTPS.averageChunks()));
-
-        insights.put("low_tps_disconnects", "Not implemented");
-        insights.put("low_disk_space_dates", Collections.emptyList());
+        double avgPlayersOnline = lowTPS.averagePlayersOnline();
+        double averageCPU = lowTPS.averageCPU();
+        double averageEntities = lowTPS.averageEntities();
+        double averageChunks = lowTPS.averageChunks();
+        insights.put("low_tps_players", avgPlayersOnline != -1 ? decimalFormatter.apply(avgPlayersOnline) : "No low tps spikes");
+        insights.put("low_tps_cpu", averageCPU != -1 ? decimalFormatter.apply(averageCPU) : "-");
+        insights.put("low_tps_entities", averageEntities != -1 ? decimalFormatter.apply(averageEntities) : "-");
+        insights.put("low_tps_chunks", averageChunks != -1 ? decimalFormatter.apply(averageChunks) : "-");
 
         return insights;
     }
