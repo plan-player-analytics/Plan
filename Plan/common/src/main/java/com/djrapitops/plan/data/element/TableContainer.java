@@ -67,7 +67,7 @@ public class TableContainer {
         return getTableHeader() +
                 parseHeader() +
                 parseBody() +
-                "</table>" + (jqueryDatatable != null ? "</div>" : "");
+                "</table></div>";
     }
 
     public final String parseBody() {

@@ -535,18 +535,20 @@
                                                 class="far fa-fw fa-hand-pointer"></i>
                                                 <small>Click to expand</small></span></h6>
                                 </div>
-                                <table class="table mb-0" id="tableAccordion">
-                                    <thead>
-                                    <tr>
-                                        <th><i class="fa fa-fw fa-user"></i> Player</th>
-                                        <th><i class="far fa-fw fa-clock"></i> Session Started</th>
-                                        <th><i class="far fa-fw fa-clock"></i> Length</th>
-                                        <th><i class="far fa-fw fa-map"></i> Most played World</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
+                                <div class="scrollbar" style="height: 80vh">
+                                    <table class="table mb-0" id="tableAccordion">
+                                        <thead>
+                                        <tr>
+                                            <th><i class="fa fa-fw fa-user"></i> Player</th>
+                                            <th><i class="far fa-fw fa-clock"></i> Session Started</th>
+                                            <th><i class="far fa-fw fa-clock"></i> Length</th>
+                                            <th><i class="far fa-fw fa-map"></i> Most played World</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div> <!-- End of Most recent sessions -->
                         <div class="col-lg-4 mb-4 col-sm-12">
@@ -699,8 +701,10 @@
                                             class="fas fa-fw fa-crosshairs col-red"></i>
                                         Recent Kills</h6>
                                 </div>
-                                <table class="table" id="playerKillTable">
-                                </table>
+                                <div class="scrollbar">
+                                    <table class="table" id="playerKillTable">
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -940,24 +944,26 @@
                                             class="fas fa-fw fa-wifi col-green"></i>
                                         Connection Information</h6>
                                 </div>
-                                <table class="table mb-0">
-                                    <thead class="bg-amber">
-                                    <tr>
-                                        <th><i class=" fa fa-fw fa-globe"></i> Country</th>
-                                        <th><i class=" fa fa-fw fa-signal"></i> Average Ping</th>
-                                        <th><i class=" fa fa-fw fa-signal"></i> Worst Ping</th>
-                                        <th><i class=" fa fa-fw fa-signal"></i> Best Ping</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>Local Machine</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                                <div class="scrollbar">
+                                    <table class="table mb-0">
+                                        <thead class="bg-amber">
+                                        <tr>
+                                            <th><i class=" fa fa-fw fa-globe"></i> Country</th>
+                                            <th><i class=" fa fa-fw fa-signal"></i> Average Ping</th>
+                                            <th><i class=" fa fa-fw fa-signal"></i> Worst Ping</th>
+                                            <th><i class=" fa fa-fw fa-signal"></i> Best Ping</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>Local Machine</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
