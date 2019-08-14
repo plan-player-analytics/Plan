@@ -336,7 +336,8 @@ function loadPerformanceValues(json, error) {
 
     $(element).find('#data_low_tps_players').text(data.low_tps_players);
     $(element).find('#data_low_tps_entities').text(data.low_tps_entities);
-    $(element).find('#data_low_tps_disconnects').text(data.low_tps_disconnects);
+    $(element).find('#data_low_tps_chunks').text(data.low_tps_chunks);
+    $(element).find('#data_low_tps_cpu').text(data.low_tps_cpu);
 
     dates = data.low_disk_space_dates;
     dateString = '';
