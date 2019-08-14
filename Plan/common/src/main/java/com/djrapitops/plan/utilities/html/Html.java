@@ -80,7 +80,7 @@ public enum Html {
 
     TABLE_END("</tbody></table>"),
     TABLE("<table class=\"table table-striped\">"),
-    TABLE_SCROLL("<table class=\"table table-striped scrollbar\">"),
+    TABLE_SCROLL("<div class=\"scrollbar\"><table class=\"table table-striped\">"),
     TABLE_JQUERY("<table class=\"table table-bordered table-striped table-hover ${0} dataTable\">"),
     TABLE_COLORED("<table class=\"bg-${0} table table-striped\">"),
     TABLE_HEAD("<thead>${0}</thead>"),

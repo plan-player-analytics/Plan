@@ -47,6 +47,12 @@
     }
 }
 
+div.scrollbar {
+    overflow: hidden;
+    overflow-y: auto;
+    max-height: 60vh;
+}
+
 .clickable {
     cursor: pointer;
 }
