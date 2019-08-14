@@ -102,18 +102,25 @@ public class PlayerBaseOverviewJSONParser implements TabJSONParser<Map<String, O
         trends.put("afk_now", percentage.apply(afkPercAfter));
         trends.put("afk_trend", new Trend(afkPercBefore, afkPercAfter, Trend.REVERSED, percentage));
 
-        // TODO
-        trends.put("regular_playtime_avg_then", "Not implemented");
-        trends.put("regular_playtime_avg_now", "Not implemented");
-        trends.put("regular_playtime_avg_trend", new Trend(0, 0, false, timeAmount));
-        // TODO
-        trends.put("regular_session_avg_then", "Not implemented");
-        trends.put("regular_session_avg_now", "Not implemented");
-        trends.put("regular_session_avg_trend", new Trend(0, 0, false, timeAmount));
-        // TODO
-        trends.put("regular_afk_avg_then", "Not implemented");
-        trends.put("regular_afk_avg_now", "Not implemented");
-        trends.put("regular_afk_avg_trend", new Trend(0, 0, Trend.REVERSED, percentage));
+        Long avgRegularPlaytimeBefore = db.query(ActivityIndexQueries.averagePlaytimePerRegularPlayer(twoMonthsAgo, monthAgo, serverUUID, playThreshold));
+        Long avgRegularPlaytimeAfter = db.query(ActivityIndexQueries.averagePlaytimePerRegularPlayer(monthAgo, now, serverUUID, playThreshold));
+        trends.put("regular_playtime_avg_then", timeAmount.apply(avgRegularPlaytimeBefore));
+        trends.put("regular_playtime_avg_now", timeAmount.apply(avgRegularPlaytimeAfter));
+        trends.put("regular_playtime_avg_trend", new Trend(avgRegularPlaytimeBefore, avgRegularPlaytimeAfter, false, timeAmount));
+
+        Long avgRegularSessionLengthBefore = db.query(ActivityIndexQueries.averageSessionLengthPerRegularPlayer(twoMonthsAgo, monthAgo, serverUUID, playThreshold));
+        Long avgRegularSessionLengthAfter = db.query(ActivityIndexQueries.averageSessionLengthPerRegularPlayer(monthAgo, now, serverUUID, playThreshold));
+        trends.put("regular_session_avg_then", timeAmount.apply(avgRegularSessionLengthBefore));
+        trends.put("regular_session_avg_now", timeAmount.apply(avgRegularSessionLengthAfter));
+        trends.put("regular_session_avg_trend", new Trend(avgRegularSessionLengthBefore, avgRegularSessionLengthAfter, false, timeAmount));
+
+        Long avgRegularAfkBefore = db.query(ActivityIndexQueries.averageAFKPerRegularPlayer(twoMonthsAgo, monthAgo, serverUUID, playThreshold));
+        Long avgRegularAfkAfter = db.query(ActivityIndexQueries.averageAFKPerRegularPlayer(monthAgo, now, serverUUID, playThreshold));
+        double afkRegularPercBefore = avgRegularPlaytimeBefore != 0 ? (double) avgRegularAfkBefore / avgRegularPlaytimeBefore : 0;
+        double afkRegularPercAfter = avgRegularPlaytimeAfter != 0 ? (double) avgRegularAfkAfter / avgRegularPlaytimeAfter : 0;
+        trends.put("regular_afk_avg_then", percentage.apply(afkRegularPercBefore));
+        trends.put("regular_afk_avg_now", percentage.apply(afkRegularPercAfter));
+        trends.put("regular_afk_avg_trend", new Trend(afkRegularPercBefore, afkRegularPercAfter, Trend.REVERSED, percentage));
 
         return trends;
     }
