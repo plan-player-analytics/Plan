@@ -19,7 +19,6 @@ package com.djrapitops.plan.system;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.structure.Accordions;
-import com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
 import com.djrapitops.plan.utilities.html.tables.HtmlTables;
 import dagger.Lazy;
 
@@ -33,21 +32,18 @@ public class HtmlUtilities {
     private final Lazy<HtmlTables> htmlTables;
     private final Lazy<Graphs> graphs;
     private final Lazy<Accordions> accordions;
-    private final Lazy<AnalysisPluginsTabContentCreator> analysisPluginsTabContentCreator;
 
     @Inject
     public HtmlUtilities(
             Lazy<Formatters> formatters,
             Lazy<HtmlTables> htmlTables,
             Lazy<Graphs> graphs,
-            Lazy<Accordions> accordions,
-            Lazy<AnalysisPluginsTabContentCreator> analysisPluginsTabContentCreator
+            Lazy<Accordions> accordions
     ) {
         this.formatters = formatters;
         this.htmlTables = htmlTables;
         this.graphs = graphs;
         this.accordions = accordions;
-        this.analysisPluginsTabContentCreator = analysisPluginsTabContentCreator;
     }
 
     public Formatters getFormatters() {
@@ -66,7 +62,4 @@ public class HtmlUtilities {
         return accordions.get();
     }
 
-    public AnalysisPluginsTabContentCreator getAnalysisPluginsTabContentCreator() {
-        return analysisPluginsTabContentCreator.get();
-    }
 }

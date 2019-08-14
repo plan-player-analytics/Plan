@@ -17,7 +17,6 @@
 package com.djrapitops.plan.utilities.html.tables;
 
 import com.djrapitops.plan.api.CommonAPI;
-import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -51,7 +50,6 @@ class PlayersTableTest {
         new CommonAPI(
                 Mockito.mock(DBSystem.class),
                 Mockito.mock(UUIDUtility.class),
-                Mockito.mock(HookHandler.class),
                 new TestPluginLogger(),
                 new ConsoleErrorLogger(new TestPluginLogger())
         );

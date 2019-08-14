@@ -39,11 +39,6 @@ public class PluginsConfigSection {
         this.config = config;
     }
 
-    @Deprecated
-    public boolean hasSection(PluginData dataSource) {
-        return hasSection(dataSource.getSourcePlugin());
-    }
-
     public boolean hasSection(String pluginName) {
         ConfigNode section = getPluginsSection();
         return section.getNode(pluginName + ".Enabled").isPresent();
@@ -54,22 +49,12 @@ public class PluginsConfigSection {
                 .orElse(config.addNode("Plugins"));
     }
 
-    @Deprecated
-    public void createSection(PluginData dataSource) throws IOException {
-        createSection(dataSource.getSourcePlugin());
-    }
-
     public void createSection(String pluginName) throws IOException {
         ConfigNode section = getPluginsSection();
 
         section.set(pluginName + ".Enabled", true);
         section.sort();
         section.save();
-    }
-
-    @Deprecated
-    public boolean isEnabled(PluginData dataSource) {
-        return isEnabled(dataSource.getSourcePlugin());
     }
 
     public boolean isEnabled(String pluginName) {

@@ -17,7 +17,6 @@
 package com.djrapitops.plan.utilities.html.pages;
 
 import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
-import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.db.Database;
@@ -32,9 +31,7 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
-import com.djrapitops.plan.system.webserver.response.pages.parts.InspectPagePluginsContent;
 import com.djrapitops.plan.utilities.formatting.Formatters;
-import com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
 import com.djrapitops.plan.utilities.html.tables.HtmlTables;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.debug.DebugLogger;
@@ -61,8 +58,6 @@ public class PageFactory {
     private final Lazy<ServerInfo> serverInfo;
     private final Lazy<HtmlTables> tables;
     private final Lazy<Formatters> formatters;
-    private final Lazy<AnalysisPluginsTabContentCreator> analysisPluginsTabContentCreator;
-    private final Lazy<HookHandler> hookHandler;
     private final Lazy<DebugLogger> debugLogger;
     private final Lazy<Timings> timings;
     private final Lazy<ErrorHandler> errorHandler;
@@ -77,8 +72,6 @@ public class PageFactory {
             Lazy<ServerInfo> serverInfo,
             Lazy<HtmlTables> tables,
             Lazy<Formatters> formatters,
-            Lazy<AnalysisPluginsTabContentCreator> analysisPluginsTabContentCreator,
-            Lazy<HookHandler> hookHandler,
             Lazy<DebugLogger> debugLogger,
             Lazy<Timings> timings,
             Lazy<ErrorHandler> errorHandler
@@ -91,8 +84,6 @@ public class PageFactory {
         this.serverInfo = serverInfo;
         this.tables = tables;
         this.formatters = formatters;
-        this.analysisPluginsTabContentCreator = analysisPluginsTabContentCreator;
-        this.hookHandler = hookHandler;
         this.debugLogger = debugLogger;
         this.timings = timings;
         this.errorHandler = errorHandler;
@@ -167,19 +158,10 @@ public class PageFactory {
         return new PlayerPluginTab(navs.toString(), tabs.toString());
     }
 
-    /**
-     * @deprecated Marked for removal when the connection system will be removed.
-     */
-    @Deprecated
-    public InspectPagePluginsContent inspectPagePluginsContent(UUID playerUUID) {
-        return InspectPagePluginsContent.generateForThisServer(playerUUID, serverInfo.get(), hookHandler.get());
-    }
-
     public NetworkPage networkPage() {
         NetworkContainer networkContainer = dbSystem.get().getDatabase()
                 .query(ContainerFetchQueries.fetchNetworkContainer()); // Not cached, big.
         return new NetworkPage(networkContainer,
-                analysisPluginsTabContentCreator.get(),
                 versionCheckSystem.get(), fileSystem.get(), serverInfo.get().getServerProperties(), formatters.get());
     }
 }
