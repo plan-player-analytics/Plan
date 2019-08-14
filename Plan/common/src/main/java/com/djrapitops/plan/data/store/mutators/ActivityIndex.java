@@ -136,6 +136,12 @@ public class ActivityIndex {
         return formatter.apply(value);
     }
 
+    public double distance(ActivityIndex other) {
+        // Logarithm makes the distance function more skewed towards active players
+        // https://www.wolframalpha.com/input/?i=plot+y+%3D+log(5+-+5+*+(1+%2F+(pi%2F2+*+x%2B1)))+and+5+-+5+*+(1+%2F+(pi%2F2+*+x%2B1))+and+y+%3D1+and+y+%3D+2+and+y+%3D+3+and+y+%3D+3.75+from+-0.5+to+3
+        return Math.abs(Math.log(other.value) - Math.log(value));
+    }
+
     public String getGroup() {
         if (value >= VERY_ACTIVE) {
             return "Very Active";

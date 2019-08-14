@@ -75,6 +75,18 @@ public class RetentionData {
                 .orElse(0);
     }
 
+    public static int countRetentionPrediction(
+            Collection<ActivityIndex> newPlayers,
+            ActivityIndex retained,
+            ActivityIndex nonRetained
+    ) {
+        int count = 0;
+        for (ActivityIndex player : newPlayers) {
+            if (player.distance(retained) < player.distance(nonRetained)) count++;
+        }
+        return count;
+    }
+
     public double distance(RetentionData data) {
         double num = 0;
         num += Math.abs(data.activityIndex - activityIndex) * 2.0;
