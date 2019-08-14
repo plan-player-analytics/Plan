@@ -20,7 +20,10 @@ import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 
-import java.util.*;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.SortedMap;
+import java.util.TimeZone;
 
 /**
  * Utility for creating FullCalendar calendar event array on Player page.
@@ -40,7 +43,10 @@ public class ServerCalendar {
     private final TimeZone timeZone;
 
     ServerCalendar(
-            SortedMap<Long, Integer> uniquePerDay, SortedMap<Long, Integer> newPerDay,
+            SortedMap<Long, Integer> uniquePerDay,
+            SortedMap<Long, Integer> newPerDay,
+            SortedMap<Long, Long> playtimePerDay,
+            NavigableMap<Long, Integer> sessionsPerDay,
             Formatter<Long> iso8601Formatter,
             Formatter<Long> timeAmountFormatter,
             Theme theme,
@@ -50,8 +56,8 @@ public class ServerCalendar {
         this.newPerDay = newPerDay;
         this.iso8601Formatter = iso8601Formatter;
         this.timeAmountFormatter = timeAmountFormatter;
-        sessionsPerDay = new TreeMap<>(); // TODO
-        playtimePerDay = new TreeMap<>(); // TODO
+        this.sessionsPerDay = sessionsPerDay;
+        this.playtimePerDay = playtimePerDay;
         this.theme = theme;
         this.timeZone = timeZone;
     }
@@ -60,57 +66,45 @@ public class ServerCalendar {
         StringBuilder series = new StringBuilder("[");
 
         series.append("{\"title\": \"badcode\",\"start\":0}");
-        appendSessionRelatedData(series);
-        appendRegistered(series);
+        appendTimeZoneOffsetData(series);
 
         return series.append("]").toString();
     }
 
-    private void appendRegistered(StringBuilder series) {
-        Map<String, Integer> registeredByDay = getRegisteredByDay();
+    private void appendTimeZoneOffsetData(StringBuilder series) {
+        // Has a timezone offset
+        appendUniquePlayers(series);
+        appendNewPlayers(series);
+        appendSessionCounts(series);
+        appendPlaytime(series);
+    }
 
-        for (Map.Entry<String, Integer> entry : registeredByDay.entrySet()) {
-            Integer newPlayers = entry.getValue();
+    private void appendNewPlayers(StringBuilder series) {
+        for (Map.Entry<Long, Integer> entry : newPerDay.entrySet()) {
+            int newPlayers = entry.getValue();
             if (newPlayers <= 0) {
                 continue;
             }
 
-            String day = entry.getKey();
+            Long key = entry.getKey();
+            String day = iso8601Formatter.apply(key - timeZone.getOffset(key));// Remove the timezone offset since Calendar uses UTC
 
             series.append(",{\"title\": \"New: ").append(newPlayers)
                     .append("\",\"start\":\"").append(day)
                     .append("\",\"color\": \"").append(theme.getValue(ThemeVal.LIGHT_GREEN)).append('"')
                     .append("}");
         }
-
     }
 
-    private void appendSessionRelatedData(StringBuilder series) {
-        // Has a timezone offset
+    private void appendUniquePlayers(StringBuilder series) {
         for (Map.Entry<Long, Integer> entry : uniquePerDay.entrySet()) {
-            if (entry.getValue() <= 0) {
+            long uniquePlayers = entry.getValue();
+            if (uniquePlayers <= 0) {
                 continue;
             }
 
             Long key = entry.getKey();
-            String day = iso8601Formatter.apply(key - timeZone.getOffset(entry.getKey()));// Remove the timezone offset since Calendar uses UTC
-
-            Integer sessionCount = sessionsPerDay.getOrDefault(key, 0);
-            Long playtime = playtimePerDay.getOrDefault(key, 0L);
-            long uniquePlayers = entry.getValue();
-
-            if (playtime > 0) {
-                series.append(",{\"title\": \"Playtime: ").append(timeAmountFormatter.apply(playtime))
-                        .append("\",\"start\":\"").append(day)
-                        .append("\",\"color\": \"").append(theme.getValue(ThemeVal.GREEN)).append('"')
-                        .append("}");
-            }
-            if (sessionCount > 0) {
-                series.append(",{\"title\": \"Sessions: ").append(sessionCount)
-                        .append("\",\"start\":\"").append(day)
-                        .append("\",\"color\": \"").append(theme.getValue(ThemeVal.TEAL)).append('"')
-                        .append("}");
-            }
+            String day = iso8601Formatter.apply(key - timeZone.getOffset(key));// Remove the timezone offset since Calendar uses UTC
 
             series.append(",{\"title\": \"Unique: ").append(uniquePlayers)
                     .append("\",\"start\":\"").append(day)
@@ -119,12 +113,35 @@ public class ServerCalendar {
         }
     }
 
-    private Map<String, Integer> getRegisteredByDay() {
-        Map<String, Integer> registeredByDay = new HashMap<>();
-        for (Map.Entry<Long, Integer> entry : newPerDay.entrySet()) {
-            String day = iso8601Formatter.apply(entry.getKey());
-            registeredByDay.put(day, entry.getValue());
+    private void appendPlaytime(StringBuilder series) {
+        for (Map.Entry<Long, Long> entry : playtimePerDay.entrySet()) {
+            long playtime = entry.getValue();
+            if (playtime <= 0) {
+                continue;
+            }
+            Long key = entry.getKey();
+            String day = iso8601Formatter.apply(key - timeZone.getOffset(key));// Remove the timezone offset since Calendar uses UTC
+
+            series.append(",{\"title\": \"Playtime: ").append(timeAmountFormatter.apply(playtime))
+                    .append("\",\"start\":\"").append(day)
+                    .append("\",\"color\": \"").append(theme.getValue(ThemeVal.GREEN)).append('"')
+                    .append("}");
         }
-        return registeredByDay;
+    }
+
+    private void appendSessionCounts(StringBuilder series) {
+        for (Map.Entry<Long, Integer> entry : sessionsPerDay.entrySet()) {
+            int sessionCount = entry.getValue();
+            if (sessionCount <= 0) {
+                continue;
+            }
+            Long key = entry.getKey();
+            String day = iso8601Formatter.apply(key - timeZone.getOffset(key));// Remove the timezone offset since Calendar uses UTC
+
+            series.append(",{\"title\": \"Sessions: ").append(sessionCount)
+                    .append("\",\"start\":\"").append(day)
+                    .append("\",\"color\": \"").append(theme.getValue(ThemeVal.TEAL)).append('"')
+                    .append("}");
+        }
     }
 }
