@@ -25,7 +25,6 @@ import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
-import com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
 
 import java.util.ArrayList;
 
@@ -39,7 +38,6 @@ import static com.djrapitops.plan.data.store.keys.NetworkKeys.*;
 public class NetworkPage implements Page {
 
     private final NetworkContainer networkContainer;
-    private final AnalysisPluginsTabContentCreator analysisPluginsTabContentCreator;
 
     private final VersionCheckSystem versionCheckSystem;
     private final PlanFiles files;
@@ -48,14 +46,12 @@ public class NetworkPage implements Page {
 
     NetworkPage(
             NetworkContainer networkContainer,
-            AnalysisPluginsTabContentCreator analysisPluginsTabContentCreator,
             VersionCheckSystem versionCheckSystem,
             PlanFiles files,
             ServerProperties serverProperties,
             Formatters formatters
     ) {
         this.networkContainer = networkContainer;
-        this.analysisPluginsTabContentCreator = analysisPluginsTabContentCreator;
         this.versionCheckSystem = versionCheckSystem;
         this.files = files;
         this.serverProperties = serverProperties;
@@ -83,11 +79,10 @@ public class NetworkPage implements Page {
             );
             placeholderReplacer.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
 
-            AnalysisPluginTabs analysisPluginTabs = new AnalysisPluginTabs(networkContainer.getBungeeContainer().getValue(ServerKeys.EXTENSION_DATA).orElse(new ArrayList<>()), formatters);
+            ServerPluginTabs serverPluginTabs = new ServerPluginTabs(networkContainer.getBungeeContainer().getValue(ServerKeys.EXTENSION_DATA).orElse(new ArrayList<>()), formatters);
 
-            String[] content = analysisPluginsTabContentCreator.createContent(null, networkContainer.getUnsafe(NetworkKeys.PLAYERS_MUTATOR));
-            String nav = analysisPluginTabs.getNav() + content[0];
-            String tabs = analysisPluginTabs.getTabs() + content[1];
+            String nav = serverPluginTabs.getNav();
+            String tabs = serverPluginTabs.getTabs();
 
             placeholderReplacer.put("navPluginsTabs", nav);
             placeholderReplacer.put("tabsPlugins", tabs);

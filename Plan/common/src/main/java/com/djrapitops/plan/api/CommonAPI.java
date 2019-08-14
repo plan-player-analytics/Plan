@@ -19,7 +19,6 @@ package com.djrapitops.plan.api;
 import com.djrapitops.plan.api.data.PlayerContainer;
 import com.djrapitops.plan.api.data.ServerContainer;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
@@ -50,7 +49,6 @@ public class CommonAPI implements PlanAPI {
 
     private final DBSystem dbSystem;
     private final UUIDUtility uuidUtility;
-    private final HookHandler hookHandler;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
 
@@ -58,13 +56,11 @@ public class CommonAPI implements PlanAPI {
     public CommonAPI(
             DBSystem dbSystem,
             UUIDUtility uuidUtility,
-            HookHandler hookHandler,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
         this.dbSystem = dbSystem;
         this.uuidUtility = uuidUtility;
-        this.hookHandler = hookHandler;
         this.logger = logger;
         this.errorHandler = errorHandler;
         PlanAPIHolder.set(this);
@@ -72,7 +68,9 @@ public class CommonAPI implements PlanAPI {
 
     @Override
     public void addPluginDataSource(PluginData pluginData) {
-        hookHandler.addPluginDataSource(pluginData);
+        logger.warn(pluginData.getClass().getName() + " was attempted to be registered." +
+                " PluginData API has been decommissioned, so this is a no-op." +
+                " Please move to using DataExtension API. https://github.com/plan-player-analytics/Plan/wiki/APIv5");
     }
 
     @Override

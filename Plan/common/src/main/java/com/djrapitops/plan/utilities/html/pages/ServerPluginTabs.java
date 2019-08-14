@@ -41,7 +41,7 @@ import java.util.*;
  *
  * @author Rsl1122
  */
-public class AnalysisPluginTabs {
+public class ServerPluginTabs {
 
     private List<ExtensionServerData> serverData;
 
@@ -55,12 +55,12 @@ public class AnalysisPluginTabs {
 
     private boolean hasWideTable;
 
-    public AnalysisPluginTabs(String nav, String tab) {
+    public ServerPluginTabs(String nav, String tab) {
         this.nav = nav;
         this.tab = tab;
     }
 
-    public AnalysisPluginTabs(
+    public ServerPluginTabs(
             List<ExtensionServerData> serverData,
             Formatters formatters
     ) {
@@ -133,7 +133,7 @@ public class AnalysisPluginTabs {
                 "<h1 class=\"h3 mb-0 text-gray-800\"><i class=\"sidebar-toggler fa fa-fw fa-bars\"></i><span class=\"server-name\"></span> &middot; Plugins Overview</h1>" +
                 "</div>" +
                 // End Page heading
-                "<div class=\"row clearfix\">" + content + "</div></div></div>";
+                "<div class=\"card-columns\">" + content + "</div></div></div>";
     }
 
     private TabsElement.Tab wrapToTabElementTab(ExtensionTabData tabData) {
@@ -209,11 +209,12 @@ public class AnalysisPluginTabs {
 
     private String wrapInContainer(ExtensionInformation information, String tabsElement) {
         String colWidth = hasWideTable ? "col-md-8 col-lg-8 col-sm-12" : "col-md-4 col-lg-4 col-sm-12";
-        return "<div class=\"col-xs-12 col-sm-12 " + colWidth + "\"><div class=\"card shadow mb-0\">" +
+        // TODO move large tables to their own tabs
+        return "<div class=\"card shadow mb-4\">" +
                 "<div class=\"card-header py-3\">" +
                 "<h6 class=\"m-0 font-weight-bold col-black\">" + Icon.fromExtensionIcon(information.getIcon()) + ' ' + information.getPluginName() + "</h6>" +
                 "</div>" +
                 tabsElement +
-                "</div></div>";
+                "</div>";
     }
 }
