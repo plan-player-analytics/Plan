@@ -213,6 +213,110 @@ public class ActivityIndexQueries {
         };
     }
 
+    public static Query<Long> averagePlaytimePerRegularPlayer(long after, long before, UUID serverUUID, Long threshold) {
+        return database -> {
+            // INNER JOIN limits the users to only those that are regular
+            String selectPlaytimePerPlayer = SELECT +
+                    "p." + SessionsTable.USER_UUID + "," +
+                    "SUM(p." + SessionsTable.SESSION_END + "-p." + SessionsTable.SESSION_START + ") as playtime" +
+                    FROM + SessionsTable.TABLE_NAME + " p" +
+                    INNER_JOIN + '(' + selectActivityIndexSQL() + ") q2 on q2." + SessionsTable.USER_UUID + "=p." + SessionsTable.USER_UUID +
+                    WHERE + "p." + SessionsTable.SESSION_END + "<=?" +
+                    AND + "p." + SessionsTable.SESSION_START + ">=?" +
+                    AND + "p." + SessionsTable.SERVER_UUID + "=?" +
+                    AND + "q2.activity_index>=?" +
+                    AND + "q2.activity_index<?" +
+                    GROUP_BY + "p." + SessionsTable.USER_UUID;
+            String selectAverage = SELECT + "AVG(playtime) as average" + FROM + '(' + selectPlaytimePerPlayer + ") q1";
+
+            return database.query(new QueryStatement<Long>(selectAverage, 100) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    setSelectActivityIndexSQLParameters(statement, 1, threshold, serverUUID, before);
+                    statement.setLong(12, before);
+                    statement.setLong(13, after);
+                    statement.setString(14, serverUUID.toString());
+                    statement.setDouble(15, ActivityIndex.REGULAR);
+                    statement.setDouble(16, 5.1);
+                }
+
+                @Override
+                public Long processResults(ResultSet set) throws SQLException {
+                    return set.next() ? set.getLong("average") : 0;
+                }
+            });
+        };
+    }
+
+    public static Query<Long> averageSessionLengthPerRegularPlayer(long after, long before, UUID serverUUID, Long threshold) {
+        return database -> {
+            // INNER JOIN limits the users to only those that are regular
+            String selectSessionLengthPerPlayer = SELECT +
+                    "p." + SessionsTable.USER_UUID + "," +
+                    "p." + SessionsTable.SESSION_END + "-p." + SessionsTable.SESSION_START + " as length" +
+                    FROM + SessionsTable.TABLE_NAME + " p" +
+                    INNER_JOIN + '(' + selectActivityIndexSQL() + ") q2 on q2." + SessionsTable.USER_UUID + "=p." + SessionsTable.USER_UUID +
+                    WHERE + "p." + SessionsTable.SESSION_END + "<=?" +
+                    AND + "p." + SessionsTable.SESSION_START + ">=?" +
+                    AND + "p." + SessionsTable.SERVER_UUID + "=?" +
+                    AND + "q2.activity_index>=?" +
+                    AND + "q2.activity_index<?";
+            String selectAverage = SELECT + "AVG(length) as average" + FROM + '(' + selectSessionLengthPerPlayer + ") q1";
+
+            return database.query(new QueryStatement<Long>(selectAverage, 100) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    setSelectActivityIndexSQLParameters(statement, 1, threshold, serverUUID, before);
+                    statement.setLong(12, before);
+                    statement.setLong(13, after);
+                    statement.setString(14, serverUUID.toString());
+                    statement.setDouble(15, ActivityIndex.REGULAR);
+                    statement.setDouble(16, 5.1);
+                }
+
+                @Override
+                public Long processResults(ResultSet set) throws SQLException {
+                    return set.next() ? set.getLong("average") : 0;
+                }
+            });
+        };
+    }
+
+    public static Query<Long> averageAFKPerRegularPlayer(long after, long before, UUID serverUUID, Long threshold) {
+        return database -> {
+            // INNER JOIN limits the users to only those that are regular
+            String selectPlaytimePerPlayer = SELECT +
+                    "p." + SessionsTable.USER_UUID + "," +
+                    "SUM(p." + SessionsTable.AFK_TIME + ") as afk" +
+                    FROM + SessionsTable.TABLE_NAME + " p" +
+                    INNER_JOIN + '(' + selectActivityIndexSQL() + ") q2 on q2." + SessionsTable.USER_UUID + "=p." + SessionsTable.USER_UUID +
+                    WHERE + "p." + SessionsTable.SESSION_END + "<=?" +
+                    AND + "p." + SessionsTable.SESSION_START + ">=?" +
+                    AND + "p." + SessionsTable.SERVER_UUID + "=?" +
+                    AND + "q2.activity_index>=?" +
+                    AND + "q2.activity_index<?" +
+                    GROUP_BY + "p." + SessionsTable.USER_UUID;
+            String selectAverage = SELECT + "AVG(afk) as average" + FROM + '(' + selectPlaytimePerPlayer + ") q1";
+
+            return database.query(new QueryStatement<Long>(selectAverage, 100) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    setSelectActivityIndexSQLParameters(statement, 1, threshold, serverUUID, before);
+                    statement.setLong(12, before);
+                    statement.setLong(13, after);
+                    statement.setString(14, serverUUID.toString());
+                    statement.setDouble(15, ActivityIndex.REGULAR);
+                    statement.setDouble(16, 5.1);
+                }
+
+                @Override
+                public Long processResults(ResultSet set) throws SQLException {
+                    return set.next() ? set.getLong("average") : 0;
+                }
+            });
+        };
+    }
+
     public static Query<Collection<ActivityIndex>> activityIndexForNewPlayers(long after, long before, UUID serverUUID, Long threshold) {
         String selectNewUUIDs = SELECT + UserInfoTable.USER_UUID +
                 FROM + UserInfoTable.TABLE_NAME +
