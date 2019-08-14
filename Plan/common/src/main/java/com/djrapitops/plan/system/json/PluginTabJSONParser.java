@@ -25,7 +25,7 @@ import com.djrapitops.plan.system.webserver.RequestTarget;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.pages.json.ServerTabJSONHandler;
 import com.djrapitops.plan.utilities.formatting.Formatters;
-import com.djrapitops.plan.utilities.html.pages.AnalysisPluginTabs;
+import com.djrapitops.plan.utilities.html.pages.ServerPluginTabs;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -47,7 +47,7 @@ public class PluginTabJSONParser extends ServerTabJSONHandler<Object> {
             List<ExtensionServerData> extensionData = dbSystem.getDatabase()
                     .query(new ExtensionServerDataQuery(serverUUID));
 
-            AnalysisPluginTabs pluginTabs = new AnalysisPluginTabs(extensionData, formatters);
+            ServerPluginTabs pluginTabs = new ServerPluginTabs(extensionData, formatters);
             return new ExtensionTabs(pluginTabs.getNav(), pluginTabs.getTabs());
         });
     }

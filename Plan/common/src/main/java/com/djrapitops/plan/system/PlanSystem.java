@@ -19,7 +19,6 @@ package com.djrapitops.plan.system;
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.capability.CapabilityServiceImplementation;
-import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.extension.ExtensionService;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
@@ -73,7 +72,6 @@ public class PlanSystem implements SubSystem {
     private final ImportSystem importSystem;
     private final ExportSystem exportSystem;
     private final HtmlUtilities htmlUtilities;
-    private final HookHandler hookHandler;
     private final ExtensionServiceImplementation extensionService;
     private final QueryServiceImplementation queryService;
     private final PlanAPI planAPI;
@@ -95,7 +93,6 @@ public class PlanSystem implements SubSystem {
             ImportSystem importSystem,
             ExportSystem exportSystem,
             HtmlUtilities htmlUtilities,
-            HookHandler hookHandler,
             ExtensionServiceImplementation extensionService,
             QueryServiceImplementation queryService,
             PlanAPI planAPI,
@@ -115,7 +112,6 @@ public class PlanSystem implements SubSystem {
         this.importSystem = importSystem;
         this.exportSystem = exportSystem;
         this.htmlUtilities = htmlUtilities;
-        this.hookHandler = hookHandler;
         this.extensionService = extensionService;
         this.queryService = queryService;
         this.planAPI = planAPI;
@@ -149,8 +145,7 @@ public class PlanSystem implements SubSystem {
                 exportSystem,
                 cacheSystem,
                 listenerSystem,
-                taskSystem,
-                hookHandler
+                taskSystem
         );
         queryService.register();
         extensionService.register();
@@ -168,7 +163,6 @@ public class PlanSystem implements SubSystem {
         enabled = false;
         disableSystems(
                 taskSystem,
-                hookHandler,
                 cacheSystem,
                 listenerSystem,
                 importSystem,
@@ -240,10 +234,6 @@ public class PlanSystem implements SubSystem {
 
     public CacheSystem getCacheSystem() {
         return cacheSystem;
-    }
-
-    public HookHandler getHookHandler() {
-        return hookHandler;
     }
 
     public PlanAPI getPlanAPI() {
