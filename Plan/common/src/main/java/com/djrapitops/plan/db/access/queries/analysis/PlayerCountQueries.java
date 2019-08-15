@@ -21,6 +21,7 @@ import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.sql.tables.SessionsTable;
 import com.djrapitops.plan.db.sql.tables.UserInfoTable;
+import com.djrapitops.plan.db.sql.tables.UsersTable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -174,13 +175,22 @@ public class PlayerCountQueries {
     }
 
     public static Query<Integer> newPlayerCount(long after, long before, UUID serverUUID) {
-        String sql = SELECT + "COUNT(" + UserInfoTable.USER_UUID + ") as player_count" +
+        String sql = SELECT + "COUNT(1) as player_count" +
                 FROM + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.REGISTERED + "<=?" +
                 AND + UserInfoTable.REGISTERED + ">=?" +
                 AND + UserInfoTable.SERVER_UUID + "=?";
 
         return queryPlayerCount(sql, after, before, serverUUID);
+    }
+
+    public static Query<Integer> newPlayerCount(long after, long before) {
+        String sql = SELECT + "COUNT(1) as player_count" +
+                FROM + UsersTable.TABLE_NAME +
+                WHERE + UsersTable.REGISTERED + "<=?" +
+                AND + UsersTable.REGISTERED + ">=?";
+
+        return queryPlayerCount(sql, after, before);
     }
 
     /**
