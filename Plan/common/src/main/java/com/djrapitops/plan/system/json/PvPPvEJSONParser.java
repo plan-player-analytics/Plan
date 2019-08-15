@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
  * @author Rsl1122
  */
 @Singleton
-public class PvPPvEJSONParser implements TabJSONParser<Map<String, Object>> {
+public class PvPPvEJSONParser implements ServerTabJSONParser<Map<String, Object>> {
 
     private DBSystem dbSystem;
 

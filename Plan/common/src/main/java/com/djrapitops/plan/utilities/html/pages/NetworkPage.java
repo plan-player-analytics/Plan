@@ -17,18 +17,20 @@
 package com.djrapitops.plan.utilities.html.pages;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
-import com.djrapitops.plan.data.store.containers.NetworkContainer;
-import com.djrapitops.plan.data.store.keys.NetworkKeys;
-import com.djrapitops.plan.data.store.keys.ServerKeys;
+import com.djrapitops.plan.extension.implementation.results.server.ExtensionServerData;
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
-import com.djrapitops.plan.system.info.server.properties.ServerProperties;
+import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.ProxySettings;
+import com.djrapitops.plan.system.settings.theme.Theme;
+import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 
-import java.util.ArrayList;
-
-import static com.djrapitops.plan.data.store.keys.NetworkKeys.*;
+import java.util.List;
 
 /**
  * Html String parser for /network page.
@@ -37,57 +39,57 @@ import static com.djrapitops.plan.data.store.keys.NetworkKeys.*;
  */
 public class NetworkPage implements Page {
 
-    private final NetworkContainer networkContainer;
+    private final DBSystem dbSystem;
 
     private final VersionCheckSystem versionCheckSystem;
     private final PlanFiles files;
-    private final ServerProperties serverProperties;
+    private final PlanConfig config;
+    private final Theme theme;
+    private final ServerInfo serverInfo;
     private final Formatters formatters;
 
     NetworkPage(
-            NetworkContainer networkContainer,
+            DBSystem dbSystem,
             VersionCheckSystem versionCheckSystem,
             PlanFiles files,
-            ServerProperties serverProperties,
+            PlanConfig config,
+            Theme theme,
+            ServerInfo serverInfo,
             Formatters formatters
     ) {
-        this.networkContainer = networkContainer;
+        this.dbSystem = dbSystem;
         this.versionCheckSystem = versionCheckSystem;
         this.files = files;
-        this.serverProperties = serverProperties;
+        this.config = config;
+        this.theme = theme;
+        this.serverInfo = serverInfo;
         this.formatters = formatters;
     }
 
     @Override
     public String toHtml() throws ParseException {
         try {
-            networkContainer.putSupplier(NetworkKeys.PLAYERS_ONLINE, serverProperties::getOnlinePlayers);
+            PlaceholderReplacer placeholders = new PlaceholderReplacer();
 
-            PlaceholderReplacer placeholderReplacer = new PlaceholderReplacer();
-            placeholderReplacer.addAllPlaceholdersFrom(networkContainer,
-                    VERSION, NETWORK_NAME, TIME_ZONE,
-                    PLAYERS_ONLINE, PLAYERS_ONLINE_SERIES, PLAYERS_TOTAL, PLAYERS_GRAPH_COLOR,
-                    REFRESH_TIME_F, RECENT_PEAK_TIME_F, ALL_TIME_PEAK_TIME_F,
-                    PLAYERS_ALL_TIME_PEAK, PLAYERS_RECENT_PEAK,
-                    PLAYERS_DAY, PLAYERS_WEEK, PLAYERS_MONTH,
-                    PLAYERS_NEW_DAY, PLAYERS_NEW_WEEK, PLAYERS_NEW_MONTH,
-                    WORLD_MAP_SERIES, WORLD_MAP_HIGH_COLOR, WORLD_MAP_LOW_COLOR,
-                    COUNTRY_CATEGORIES, COUNTRY_SERIES,
-                    HEALTH_INDEX, HEALTH_NOTES,
-                    ACTIVITY_PIE_SERIES, ACTIVITY_STACK_SERIES, ACTIVITY_STACK_CATEGORIES,
-                    SERVERS_TAB
-            );
-            placeholderReplacer.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
+            placeholders.put("networkDisplayName", config.get(ProxySettings.NETWORK_NAME));
 
-            ServerPluginTabs serverPluginTabs = new ServerPluginTabs(networkContainer.getBungeeContainer().getValue(ServerKeys.EXTENSION_DATA).orElse(new ArrayList<>()), formatters);
+            placeholders.put("gmPieColors", theme.getValue(ThemeVal.GRAPH_GM_PIE));
+            placeholders.put("playersGraphColor", theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));
+            placeholders.put("timeZone", config.getTimeZoneOffsetHours());
 
-            String nav = serverPluginTabs.getNav();
-            String tabs = serverPluginTabs.getTabs();
+            placeholders.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
 
-            placeholderReplacer.put("navPluginsTabs", nav);
-            placeholderReplacer.put("tabsPlugins", tabs);
+            List<ExtensionServerData> extensionData = dbSystem.getDatabase()
+                    .query(new ExtensionServerDataQuery(serverInfo.getServerUUID()));
+            ServerPluginTabs pluginTabs = new ServerPluginTabs(extensionData, formatters);
 
-            return placeholderReplacer.apply(files.getCustomizableResourceOrDefault("web/network.html").asString());
+            String nav = pluginTabs.getNav();
+            String tabs = pluginTabs.getTabs();
+
+            placeholders.put("navPluginsTabs", nav);
+            placeholders.put("tabsPlugins", tabs);
+
+            return placeholders.apply(files.getCustomizableResourceOrDefault("web/network.html").asString());
         } catch (Exception e) {
             throw new ParseException(e);
         }

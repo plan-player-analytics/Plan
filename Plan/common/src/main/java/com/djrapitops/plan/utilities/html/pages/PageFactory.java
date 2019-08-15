@@ -110,6 +110,7 @@ public class PageFactory {
                         theme.get(),
                         versionCheckSystem.get(),
                         fileSystem.get(),
+                        dbSystem.get(),
                         formatters.get()
                 )).orElseThrow(() -> new NotFoundException("Server not found in the database"));
     }
@@ -161,7 +162,7 @@ public class PageFactory {
     public NetworkPage networkPage() {
         NetworkContainer networkContainer = dbSystem.get().getDatabase()
                 .query(ContainerFetchQueries.fetchNetworkContainer()); // Not cached, big.
-        return new NetworkPage(networkContainer,
-                versionCheckSystem.get(), fileSystem.get(), serverInfo.get().getServerProperties(), formatters.get());
+        return new NetworkPage(dbSystem.get(),
+                versionCheckSystem.get(), fileSystem.get(), config.get(), theme.get(), serverInfo.get(), formatters.get());
     }
 }

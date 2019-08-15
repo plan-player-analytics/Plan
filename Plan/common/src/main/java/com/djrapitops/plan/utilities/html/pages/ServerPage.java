@@ -20,6 +20,9 @@ import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.containers.RawDataContainer;
 import com.djrapitops.plan.data.store.keys.AnalysisKeys;
+import com.djrapitops.plan.extension.implementation.results.server.ExtensionServerData;
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -31,6 +34,7 @@ import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.djrapitops.plan.data.store.keys.AnalysisKeys.*;
 
@@ -46,6 +50,7 @@ public class ServerPage implements Page {
     private Theme theme;
     private final VersionCheckSystem versionCheckSystem;
     private final PlanFiles files;
+    private final DBSystem dbSystem;
     private Formatters formatters;
 
     ServerPage(
@@ -54,6 +59,7 @@ public class ServerPage implements Page {
             Theme theme,
             VersionCheckSystem versionCheckSystem,
             PlanFiles files,
+            DBSystem dbSystem,
             Formatters formatters
     ) {
         this.server = server;
@@ -61,20 +67,18 @@ public class ServerPage implements Page {
         this.theme = theme;
         this.versionCheckSystem = versionCheckSystem;
         this.files = files;
+        this.dbSystem = dbSystem;
         this.formatters = formatters;
     }
 
     @Override
     public String toHtml() throws ParseException {
-        PlaceholderReplacer placeholderReplacer = new PlaceholderReplacer();
+        PlaceholderReplacer placeholders = new PlaceholderReplacer();
 
-        placeholderReplacer.put("serverName", server.getIdentifiableName());
-        placeholderReplacer.put("serverDisplayName", server.getName());
+        placeholders.put("serverName", server.getIdentifiableName());
+        placeholders.put("serverDisplayName", server.getName());
 
-        long now = System.currentTimeMillis();
         DataContainer constants = new RawDataContainer();
-        constants.putRawData(AnalysisKeys.REFRESH_TIME_F, formatters.clockLong().apply(now));
-        constants.putRawData(AnalysisKeys.REFRESH_TIME_FULL_F, formatters.secondLong().apply(now));
         constants.putRawData(AnalysisKeys.VERSION, versionCheckSystem.getCurrentVersion());
         constants.putRawData(AnalysisKeys.TIME_ZONE, config.getTimeZoneOffsetHours());
 
@@ -97,7 +101,7 @@ public class ServerPage implements Page {
         constants.putRawData(AnalysisKeys.MAX_PING_COLOR, theme.getValue(ThemeVal.GRAPH_MAX_PING));
         constants.putRawData(AnalysisKeys.MIN_PING_COLOR, theme.getValue(ThemeVal.GRAPH_MIN_PING));
 
-        placeholderReplacer.addAllPlaceholdersFrom(constants,
+        placeholders.addAllPlaceholdersFrom(constants,
                 VERSION, TIME_ZONE,
                 FIRST_DAY, TPS_MEDIUM, TPS_HIGH,
                 DISK_MEDIUM, DISK_HIGH,
@@ -110,14 +114,24 @@ public class ServerPage implements Page {
         );
 
         if (server.isProxy()) {
-            placeholderReplacer.put("backButton", "<li><a title=\"to Network page\" href=\"/network\"><i class=\"material-icons\">arrow_back</i><i class=\"material-icons\">cloud</i></a></li>");
+            placeholders.put("backButton", "<li><a title=\"to Network page\" href=\"/network\"><i class=\"material-icons\">arrow_back</i><i class=\"material-icons\">cloud</i></a></li>");
         } else {
-            placeholderReplacer.put("backButton", "");
+            placeholders.put("backButton", "");
         }
-        placeholderReplacer.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
+        placeholders.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
+
+        List<ExtensionServerData> extensionData = dbSystem.getDatabase()
+                .query(new ExtensionServerDataQuery(server.getUuid()));
+        ServerPluginTabs pluginTabs = new ServerPluginTabs(extensionData, formatters);
+
+        String nav = pluginTabs.getNav();
+        String tabs = pluginTabs.getTabs();
+
+        placeholders.put("navPluginsTabs", nav);
+        placeholders.put("tabsPlugins", tabs);
 
         try {
-            return placeholderReplacer.apply(files.getCustomizableResourceOrDefault("web/server.html").asString());
+            return placeholders.apply(files.getCustomizableResourceOrDefault("web/server.html").asString());
         } catch (IOException e) {
             throw new ParseException(e);
         }
