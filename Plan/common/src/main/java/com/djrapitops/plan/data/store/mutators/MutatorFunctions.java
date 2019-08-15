@@ -51,6 +51,11 @@ public class MutatorFunctions {
             filled.put(point.getKey(), point.getValue());
         }
 
+        long now = System.currentTimeMillis();
+        if (lastX != null && now - lastX > accuracy) {
+            addMissing(lastX, now, filled, accuracy, replacement);
+        }
+
         return filled;
     }
 
@@ -58,6 +63,32 @@ public class MutatorFunctions {
         long iterate = from;
         while (iterate < to) {
             points.put(iterate, replacement);
+            iterate += accuracy;
+        }
+    }
+
+    public static List<Point> addMissing(List<Point> points, long accuracy, Integer replacement) {
+        if (Verify.isEmpty(points)) return points;
+
+        List<Point> filled = new ArrayList<>();
+        Long lastX = null;
+        for (Point point : points) {
+            long date = (long) point.getX();
+
+            if (lastX != null && date - lastX > accuracy) {
+                addMissing(lastX, date, filled, accuracy, replacement);
+            }
+            lastX = date;
+            filled.add(point);
+        }
+
+        return filled;
+    }
+
+    private static void addMissing(long from, long to, List<Point> points, long accuracy, Integer replacement) {
+        long iterate = from;
+        while (iterate < to) {
+            points.add(new Point(iterate, replacement));
             iterate += accuracy;
         }
     }

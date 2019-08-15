@@ -143,6 +143,46 @@ public class PlayerCountQueries {
         };
     }
 
+    /**
+     * Fetch a EpochMs - Count map of unique players on ALL servers.
+     *
+     * @param after          After epoch ms
+     * @param before         Before epoch ms
+     * @param timeZoneOffset Offset from {@link java.util.TimeZone#getOffset(long)}, applied to the dates before grouping.
+     * @return Map: Epoch ms (Accuracy of a day) - How many unique players played that day
+     */
+    public static Query<NavigableMap<Long, Integer>> uniquePlayerCounts(long after, long before, long timeZoneOffset) {
+        return database -> {
+            Sql sql = database.getSql();
+            String selectUniquePlayersPerDay = SELECT +
+                    sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
+                    "*1000 as date," +
+                    "COUNT(DISTINCT " + SessionsTable.USER_UUID + ") as player_count" +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + SessionsTable.SESSION_END + "<=?" +
+                    AND + SessionsTable.SESSION_START + ">=?" +
+                    GROUP_BY + "date";
+
+            return database.query(new QueryStatement<NavigableMap<Long, Integer>>(selectUniquePlayersPerDay, 100) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, timeZoneOffset);
+                    statement.setLong(2, before);
+                    statement.setLong(3, after);
+                }
+
+                @Override
+                public NavigableMap<Long, Integer> processResults(ResultSet set) throws SQLException {
+                    NavigableMap<Long, Integer> uniquePerDay = new TreeMap<>();
+                    while (set.next()) {
+                        uniquePerDay.put(set.getLong("date"), set.getInt("player_count"));
+                    }
+                    return uniquePerDay;
+                }
+            });
+        };
+    }
+
     public static Query<Integer> averageUniquePlayerCount(long after, long before, long timeZoneOffset, UUID serverUUID) {
         return database -> {
             Sql sql = database.getSql();
@@ -222,6 +262,38 @@ public class PlayerCountQueries {
                     statement.setLong(2, before);
                     statement.setLong(3, after);
                     statement.setString(4, serverUUID.toString());
+                }
+
+                @Override
+                public NavigableMap<Long, Integer> processResults(ResultSet set) throws SQLException {
+                    NavigableMap<Long, Integer> newPerDay = new TreeMap<>();
+                    while (set.next()) {
+                        newPerDay.put(set.getLong("date"), set.getInt("player_count"));
+                    }
+                    return newPerDay;
+                }
+            });
+        };
+    }
+
+    public static Query<NavigableMap<Long, Integer>> newPlayerCounts(long after, long before, long timeZoneOffset) {
+        return database -> {
+            Sql sql = database.getSql();
+            String selectNewPlayersQuery = SELECT +
+                    sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + UserInfoTable.REGISTERED + "+?)/1000"))) +
+                    "*1000 as date," +
+                    "COUNT(1) as player_count" +
+                    FROM + UsersTable.TABLE_NAME +
+                    WHERE + UsersTable.REGISTERED + "<=?" +
+                    AND + UsersTable.REGISTERED + ">=?" +
+                    GROUP_BY + "date";
+
+            return database.query(new QueryStatement<NavigableMap<Long, Integer>>(selectNewPlayersQuery, 100) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, timeZoneOffset);
+                    statement.setLong(2, before);
+                    statement.setLong(3, after);
                 }
 
                 @Override
