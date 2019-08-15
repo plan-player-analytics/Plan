@@ -25,6 +25,7 @@ import com.djrapitops.plan.data.store.objects.DateMap;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.analysis.ActivityIndexQueries;
+import com.djrapitops.plan.db.access.queries.analysis.NetworkActivityIndexQueries;
 import com.djrapitops.plan.db.access.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.db.access.queries.objects.*;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -156,6 +157,27 @@ public class GraphJSONParser {
         DateMap<Map<String, Integer>> activityData = new DateMap<>();
         for (long time = date; time >= date - TimeAmount.MONTH.toMillis(2L); time -= TimeAmount.WEEK.toMillis(1L)) {
             activityData.put(time, db.query(ActivityIndexQueries.fetchActivityIndexGroupingsOn(time, serverUUID, threshold)));
+        }
+
+        Map.Entry<Long, Map<String, Integer>> lastActivityEntry = activityData.lastEntry();
+        Pie activityPie = graphs.pie().activityPie(lastActivityEntry != null ? lastActivityEntry.getValue() : Collections.emptyMap());
+        StackGraph activityStackGraph = graphs.stack().activityStackGraph(activityData);
+
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("activity_series", activityStackGraph.getDataSets());
+        dataMap.put("activity_labels", activityStackGraph.getLabels());
+        dataMap.put("activity_pie_series", activityPie.getSlices());
+        return dataMap;
+    }
+
+    public Map<String, Object> activityGraphsJSONAsMap() {
+        Database db = dbSystem.getDatabase();
+        long date = System.currentTimeMillis();
+        Long threshold = config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD);
+
+        DateMap<Map<String, Integer>> activityData = new DateMap<>();
+        for (long time = date; time >= date - TimeAmount.MONTH.toMillis(2L); time -= TimeAmount.WEEK.toMillis(1L)) {
+            activityData.put(time, db.query(NetworkActivityIndexQueries.fetchActivityIndexGroupingsOn(time, threshold)));
         }
 
         Map.Entry<Long, Map<String, Integer>> lastActivityEntry = activityData.lastEntry();

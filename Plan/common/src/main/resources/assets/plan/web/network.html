@@ -1288,6 +1288,19 @@
     setLoadingText('Calculating values..');
     jsonRequest("../v1/network/playerbaseOverview", loadPlayerbaseOverviewValues);
     setLoadingText('Rendering graphs..');
+
+    jsonRequest("../v1/graph?type=activity", function (json, error) {
+        if (json) {
+            activityPie('activityPie', {
+                name: 'Players', colorByPoint: true, data: json.activity_pie_series
+            });
+            stackChart('activityStackGraph', json.activity_labels, json.activity_series, 'Players');
+        } else if (error) {
+            $('#activityPie').text("Failed to load graph data: " + error);
+            $('#activityStackGraph').text("Failed to load graph data: " + error);
+        }
+    });
+
     setLoadingText('Sorting players table..');
     setLoadingText('Almost done..');
     var navButtons = document.getElementsByClassName("nav-button");
