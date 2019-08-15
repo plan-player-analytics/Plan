@@ -25,7 +25,9 @@
 </head>
 
 <body id="page-top">
-
+<script>
+    var gmPieColors = [${gmPieColors}];
+</script>
 <div class="page-loader">
     <span class="loader"></span>
     <p class="loader-text">Please wait..</span>
@@ -796,16 +798,16 @@
                 </div> <!-- /.container-fluid -->
             </div> <!-- End of Sessions tab -->
             <!-- Begin Playerbase Overview Tab -->
-            <div class="tab">
+            <div class="tab" id="playerbase-overview">
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>Network Name
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkDisplayName}
                             &middot; Playerbase Overview</h1>
                     </div>
 
                     <div class="row">
-                        <!-- New & Unique Players Chart -->
+                        <!-- Playerbase Chart -->
                         <div class="col-xl-8 col-lg-8 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div
@@ -814,13 +816,11 @@
                                             class="fas fa-fw fa-chart-line col-amber"></i>
                                         Playerbase development</h6>
                                 </div>
-                                <div class="chart-area">
-                                    <canvas id="myAreaChart2"></canvas>
-                                </div>
+                                <div class="chart-area" id="activityStackGraph"></div>
                             </div>
                         </div>
 
-                        <!-- Calendar -->
+                        <!-- Current Playerbase -->
                         <div class="col-xl-4 col-lg-4 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div
@@ -829,15 +829,13 @@
                                             class="fa fa-fw fa-users col-amber"></i>
                                         Current Playerbase</h6>
                                 </div>
-                                <div class="chart-area">
-                                    <canvas id="myAreaChart2"></canvas>
-                                </div>
+                                <div class="chart-area" id="activityPie"></div>
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
-                        <!-- Online Activity as Numbers -->
+                        <!-- Trends for 30 days -->
                         <div class="col-lg-8 mb-8 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
@@ -845,71 +843,78 @@
                                             class="fa fa-fw fa-exchange-alt col-amber"></i>
                                         Trends for 30 days</h6>
                                 </div>
-                                <table class="table">
+                                <table class="table" id="data_trends">
                                     <thead>
-                                    <th><i class="text-success fa fa-caret-up"></i><i
-                                            class="text-danger fa fa-caret-down"></i>
-                                        <small>Comparing 15 days</small>
-                                    </th>
-                                    <th>30 days ago</th>
-                                    <th>Now</th>
-                                    <th>Trend</th>
+                                    <tr>
+                                        <th><i class="text-success fa fa-caret-up"></i><i
+                                                class="text-danger fa fa-caret-down"></i>
+                                            <small>Comparing 30d ago to Now</small>
+                                        </th>
+                                        <th>30 days ago</th>
+                                        <th>Now</th>
+                                        <th>Trend</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
                                     <tr>
                                         <td><i class="fa fa-fw fa-users col-black"></i> Total Players</td>
-                                        <td>4532</td>
-                                        <td>5043</td>
-                                        <td><span class="badge badge-success"><i class="fa fa-caret-up"></i>
-                                                        511</span></td>
+                                        <td id="data_total_players_then"></td>
+                                        <td id="data_total_players_now"></td>
+                                        <td><span id="data_total_players_trend"></span></td>
                                     </tr>
                                     <tr>
                                         <td><i class="fa fa-fw fa-users col-amber"></i> Regular Players</td>
-                                        <td>467</td>
-                                        <td>483</td>
-                                        <td><span class="badge badge-success"><i class="fa fa-caret-up"></i>
-                                                        16</span></td>
+                                        <td id="data_regular_players_then"></td>
+                                        <td id="data_regular_players_now"></td>
+                                        <td><span id="data_regular_players_trend"></span></td>
                                     </tr>
                                     <tr>
-                                        <td><i class="col-teal far fa-fw fa-clock"></i> Average Playtime / Player</td>
-                                        <td>8h 5m 56s</td>
-                                        <td>8h 53m 24s</td>
-                                        <td><span class="badge badge-success"><i class="fa fa-caret-up"></i> 47m
-                                                        32s</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="col-teal far fa-fw fa-clock"></i> Average Playtime / Regular
+                                        <td><i class="col-green far fa-fw fa-clock"></i> Average Playtime /
                                             Player
                                         </td>
-                                        <td>8h 5m 56s</td>
-                                        <td>8h 53m 24s</td>
-                                        <td><span class="badge badge-success"><i class="fa fa-caret-up"></i> 47m
-                                                        32s</span></td>
+                                        <td id="data_playtime_avg_then"></td>
+                                        <td id="data_playtime_avg_now"></td>
+                                        <td><span id="data_playtime_avg_trend"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="col-grey far fa-fw fa-clock"></i> AFK /
+                                            Player
+                                        </td>
+                                        <td id="data_afk_then"></td>
+                                        <td id="data_afk_now"></td>
+                                        <td><span id="data_afk_trend"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="col-green far fa-fw fa-clock"></i> Average Playtime /
+                                            Regular
+                                            Player
+                                        </td>
+                                        <td id="data_regular_playtime_avg_then"></td>
+                                        <td id="data_regular_playtime_avg_now"></td>
+                                        <td><span id="data_regular_playtime_avg_trend"></span></td>
                                     </tr>
                                     <tr>
                                         <td><i class="col-teal far fa-fw fa-clock"></i> Average Session Length /
                                             Regular
                                             Player
                                         </td>
-                                        <td>8h 5m 56s</td>
-                                        <td>8h 53m 24s</td>
-                                        <td><span class="badge badge-success"><i class="fa fa-caret-up"></i> 47m
-                                                        32s</span></td>
+                                        <td id="data_regular_session_avg_then"></td>
+                                        <td id="data_regular_session_avg_now"></td>
+                                        <td><span id="data_regular_session_avg_trend"></span></td>
                                     </tr>
                                     <tr>
                                         <td><i class="col-grey far fa-fw fa-clock"></i> AFK /
                                             Regular
                                             Player
                                         </td>
-                                        <td>34.5%</td>
-                                        <td>42.4%</td>
-                                        <td><span class="badge badge-danger"><i class="fa fa-caret-up"></i>
-                                                        7.9%</span></td>
+                                        <td id="data_regular_afk_then"></td>
+                                        <td id="data_regular_afk_now"></td>
+                                        <td><span id="data_regular_afk_trend"></span></td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
-                        </div> <!-- End of Online Activity as numbers-->
+                        </div> <!-- Trends for 30 days-->
                         <!-- Insights -->
                         <div class="col-lg-4 mb-4 col-sm-12">
                             <div class="card shadow mb-4">
@@ -918,17 +923,17 @@
                                             class="far fa-fw fa-life-ring col-red"></i>
                                         Insights for 30 Days</h6>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body" id="data_insights">
                                     <p><i class="fa fa-fw fa-user col-light-green"></i> New <i
                                             class="fa fa-fw fa-long-arrow-alt-right"></i> <i
                                             class="fa fa-fw fa-user col-amber"></i> Regular<span
-                                            class="float-right"><b>32</b> <i
-                                            class="text-success fa fa-caret-up"></i></span></p>
+                                            class="float-right"><b><span
+                                            id="data_new_to_regular"></span></b></span></p>
                                     <p><i class="fa fa-fw fa-user col-amber"></i> Regular <i
                                             class="fa fa-fw fa-long-arrow-alt-right"></i> <i
                                             class="fa fa-fw fa-user col-blue-grey"></i> Inactive<span
-                                            class="float-right"><b>45</b> <i
-                                            class="text-danger fa fa-caret-up"></i></span></p>
+                                            class="float-right"><b><span
+                                            id="data_regular_to_inactive"></span></b></span></p>
                                     <p class="float-right"><i class="text-success fa fa-caret-up"></i><i
                                             class="text-danger fa fa-caret-down"></i>
                                         <small>Comparing 30d ago to Now</small>
@@ -1265,10 +1270,23 @@
 <script src="js/color-selector.js"></script>
 
 <!-- Page level plugins -->
+<script src="vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script src="vendor/highcharts/highstock.js"></script>
+<script src="vendor/highcharts/map.js"></script>
+<script src="vendor/highcharts/world.js"></script>
+<script src="vendor/highcharts/drilldown.js"></script>
+<script src="vendor/highcharts/highcharts-more.js"></script>
+<script src="vendor/highcharts/no-data-to-display.js"></script>
 
 <!-- Page level custom scripts -->
+<script src="js/network-values.js"></script>
+<script src="js/graphs.js"></script>
+<script src="js/sessionAccordion.js"></script>
 
 <script>
+    setLoadingText('Calculating values..');
+    jsonRequest("../v1/network/playerbaseOverview", loadPlayerbaseOverviewValues);
     setLoadingText('Rendering graphs..');
     setLoadingText('Sorting players table..');
     setLoadingText('Almost done..');

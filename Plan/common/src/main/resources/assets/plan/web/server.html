@@ -115,7 +115,7 @@
             Plugins
         </div>
 
-        <li class="plugin-nav" style="display: none;"></li>
+        ${navPluginsTabs}
 
         <!-- Divider -->
         <hr class="sidebar-divider">
@@ -723,7 +723,7 @@
                     </div>
 
                     <div class="row">
-                        <!-- New & Unique Players Chart -->
+                        <!-- Playerbase Chart -->
                         <div class="col-xl-8 col-lg-8 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div
@@ -736,7 +736,7 @@
                             </div>
                         </div>
 
-                        <!-- Calendar -->
+                        <!-- Current Playerbase -->
                         <div class="col-xl-4 col-lg-4 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div
@@ -751,7 +751,7 @@
                     </div>
 
                     <div class="row">
-                        <!-- Online Activity as Numbers -->
+                        <!-- Trends for 30 days -->
                         <div class="col-lg-8 mb-8 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
@@ -761,13 +761,15 @@
                                 </div>
                                 <table class="table" id="data_trends">
                                     <thead>
-                                    <th><i class="text-success fa fa-caret-up"></i><i
-                                            class="text-danger fa fa-caret-down"></i>
-                                        <small>Comparing 30d ago to Now</small>
-                                    </th>
-                                    <th>30 days ago</th>
-                                    <th>Now</th>
-                                    <th>Trend</th>
+                                    <tr>
+                                        <th><i class="text-success fa fa-caret-up"></i><i
+                                                class="text-danger fa fa-caret-down"></i>
+                                            <small>Comparing 30d ago to Now</small>
+                                        </th>
+                                        <th>30 days ago</th>
+                                        <th>Now</th>
+                                        <th>Trend</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
                                     <tr>
@@ -828,7 +830,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                        </div> <!-- End of Online Activity as numbers-->
+                        </div> <!-- Trends for 30 days-->
                         <!-- Insights -->
                         <div class="col-lg-4 mb-4 col-sm-12">
                             <div class="card shadow mb-4">
@@ -842,7 +844,7 @@
                                             class="fa fa-fw fa-long-arrow-alt-right"></i> <i
                                             class="fa fa-fw fa-user col-amber"></i> Regular<span
                                             class="float-right"><b><span
-                                            id="data_new_to_regular"></span></b></i></span></p>
+                                            id="data_new_to_regular"></span></b></span></p>
                                     <p><i class="fa fa-fw fa-user col-amber"></i> Regular <i
                                             class="fa fa-fw fa-long-arrow-alt-right"></i> <i
                                             class="fa fa-fw fa-user col-blue-grey"></i> Inactive<span
@@ -1158,7 +1160,7 @@
                 </div> <!-- /.container-fluid -->
             </div> <!-- End of Performance tab -->
             <!-- Begin Plugins Overview Tab -->
-            <div class="plugin-tabs"></div>
+            ${tabsPlugins}
             <div class="tab"></div>
             <div class="tab"></div>
         </div> <!-- End of Main Content -->
@@ -1671,19 +1673,8 @@
     });
     jsonRequest("../v1/kills?server=${serverName}", loadPlayerKills);
 
-    jsonRequest("../v1/extensions?server=${serverName}", function (json, error) {
-        if (json) {
-            $('.plugin-nav').replaceWith(json.navigation);
-            $('.plugin-tabs').replaceWith(json.content);
-            openPageFunc();
-        } else if (error) {
-            $('.plugin-nav').remove();
-            $('.plugin-tabs').remove();
-        }
-        $('.server-name').text('${serverName}');
-        $('.player-plugin-table').DataTable({
-            responsive: true
-        });
+    $('.player-plugin-table').DataTable({
+        responsive: true
     });
 
     setLoadingText('Almost done..');

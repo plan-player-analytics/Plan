@@ -58,6 +58,21 @@ public class PlayerCountQueries {
         };
     }
 
+    private static QueryStatement<Integer> queryPlayerCount(String sql, long after, long before) {
+        return new QueryStatement<Integer>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, before);
+                statement.setLong(2, after);
+            }
+
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getInt("player_count") : 0;
+            }
+        };
+    }
+
     public static Query<Integer> uniquePlayerCount(long after, long before, UUID serverUUID) {
         String sql = SELECT + "COUNT(DISTINCT " + SessionsTable.USER_UUID + ") as player_count" +
                 FROM + SessionsTable.TABLE_NAME +
@@ -66,6 +81,22 @@ public class PlayerCountQueries {
                 AND + SessionsTable.SERVER_UUID + "=?";
 
         return queryPlayerCount(sql, after, before, serverUUID);
+    }
+
+    /**
+     * Fetch uniquePlayer count for ALL servers.
+     *
+     * @param after  After epoch ms
+     * @param before Before epoch ms
+     * @return Unique player count (players who played within time frame)
+     */
+    public static Query<Integer> uniquePlayerCount(long after, long before) {
+        String sql = SELECT + "COUNT(DISTINCT " + SessionsTable.USER_UUID + ") as player_count" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SESSION_END + "<=?" +
+                AND + SessionsTable.SESSION_START + ">=?";
+
+        return queryPlayerCount(sql, after, before);
     }
 
     /**
