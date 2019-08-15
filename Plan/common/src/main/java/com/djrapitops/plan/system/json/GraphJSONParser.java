@@ -30,11 +30,9 @@ import com.djrapitops.plan.db.access.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.db.access.queries.objects.*;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.DisplaySettings;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.bar.BarGraph;
-import com.djrapitops.plan.utilities.html.graphs.line.LineGraph;
 import com.djrapitops.plan.utilities.html.graphs.line.LineGraphFactory;
 import com.djrapitops.plan.utilities.html.graphs.line.PingGraph;
 import com.djrapitops.plan.utilities.html.graphs.line.Point;
@@ -97,12 +95,11 @@ public class GraphJSONParser {
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
         long halfYearAgo = now - TimeUnit.DAYS.toMillis(180L);
-        Boolean displayGaps = config.get(DisplaySettings.GAPS_IN_GRAPH_DATA);
 
         List<Point> points = db.query(TPSQueries.fetchPlayersOnlineOfServer(halfYearAgo, now, serverUUID)).stream()
                 .map(point -> new Point(point.getDate(), point.getValue()))
                 .collect(Collectors.toList());
-        return "{\"playersOnline\":" + new LineGraph(points, displayGaps).toHighChartsSeries() + '}';
+        return "{\"playersOnline\":" + graphs.line().lineGraph(points).toHighChartsSeries() + '}';
     }
 
     public String uniqueAndNewGraphJSON(UUID serverUUID) {
