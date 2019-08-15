@@ -54,10 +54,15 @@ public class GraphsJSONHandler implements PageHandler {
 
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
-        UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
         String type = target.getParameter("type")
                 .orElseThrow(() -> new BadRequestException("'type' parameter was not defined."));
-        return generateGraphDataJSONOfType(type, serverUUID);
+
+        if (target.getParameter("server").isPresent()) {
+            UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
+            return generateGraphDataJSONOfType(type, serverUUID);
+        }
+        // Assume network
+        return generateGraphDataJSONOfType(type);
     }
 
     private JSONResponse generateGraphDataJSONOfType(String type, UUID serverUUID) throws BadRequestException {
@@ -78,6 +83,15 @@ public class GraphsJSONHandler implements PageHandler {
                 return new JSONResponse(graphJSON.pingGraphsJSON(serverUUID));
             case "punchCard":
                 return new JSONResponse(graphJSON.punchCardJSONAsMap(serverUUID));
+            default:
+                throw new BadRequestException("unknown 'type' parameter: " + type);
+        }
+    }
+
+    private JSONResponse generateGraphDataJSONOfType(String type) throws BadRequestException {
+        switch (type) {
+            case "activity":
+                return new JSONResponse(graphJSON.activityGraphsJSONAsMap());
             default:
                 throw new BadRequestException("unknown 'type' parameter: " + type);
         }
