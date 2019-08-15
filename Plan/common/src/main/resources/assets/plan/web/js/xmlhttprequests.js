@@ -9,7 +9,7 @@ function jsonRequest(address, callback) {
         xhttp.onreadystatechange = function () {
             if (this.readyState === 4) {
                 try {
-                    if (this.status === 200) {
+                    if (this.status === 200 || (this.status === 0 && this.responseText)) {
                         var json = JSON.parse(this.responseText);
                         setTimeout(function () {
                             callback(json, null)
@@ -18,11 +18,17 @@ function jsonRequest(address, callback) {
                         callback(null, this.status)
                     } else if (this.status === 400) {
                         callback(null, this.responseText)
+                    } else if (this.status === 0) {
+                        callback(null, "Request was blocked. (Adblocker maybe?)")
                     }
                 } catch (e) {
                     callback(null, e.message)
                 }
             }
+        };
+        xhttp.timeout = 20000;
+        xhttp.ontimeout = function () {
+            callback(null, "Timed out after 20 seconds.")
         };
         xhttp.open("GET", address, true);
         xhttp.send();

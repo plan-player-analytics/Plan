@@ -93,7 +93,7 @@ function createAccordionBody(i, session) {
 }
 
 function createKillsTable(player_kills) {
-    var table = '<table class="table scrollbar"><tbody>';
+    var table = '<table class="table mb-0"><tbody>';
 
     if (player_kills.length === 0) {
         table += '<tr><td>No Kills</td><td>-</td><td>-</td></tr>'

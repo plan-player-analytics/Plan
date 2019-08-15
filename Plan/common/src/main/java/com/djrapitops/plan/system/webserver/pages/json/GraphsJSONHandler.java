@@ -74,7 +74,7 @@ public class GraphsJSONHandler implements PageHandler {
                 return new JSONResponse(graphJSON.activityGraphsJSONAsMap(serverUUID));
             case "geolocation":
                 return new JSONResponse(graphJSON.geolocationGraphsJSONAsMap(serverUUID));
-            case "ping":
+            case "aggregatedPing":
                 return new JSONResponse(graphJSON.pingGraphsJSON(serverUUID));
             case "punchCard":
                 return new JSONResponse(graphJSON.punchCardJSONAsMap(serverUUID));

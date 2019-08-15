@@ -14,7 +14,7 @@
     <!-- Custom fonts for this template-->
     <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
           integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,600,700,800,900"
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,700,800,900&display=swap&subset=latin-ext"
           rel="stylesheet">
 
     <!-- Custom styles for this template-->
@@ -189,11 +189,11 @@
                                         <span class="float-right"><span id="data_retention"></span>&nbsp<b
                                                 id="data_retention_perc"></b></span></p>
                                     <hr>
-                                    <p><i class="col-orange fa fa-fw fa-tachometer-alt"></i> Average TPS <span
+                                    <p><i class="col-orange fa fa-fw fa-tachometer-alt"></i> Average TPS<span
                                             class="float-right"><b id="data_avg_tps"></b></span></p>
-                                    <p><i class="col-red fa fa-fw fa-exclamation-circle"></i> Low TPS Spikes <span
+                                    <p><i class="col-red fa fa-fw fa-exclamation-circle"></i> Low TPS Spikes<span
                                             class="float-right"><b id="data_low_tps_spikes"></b></span></p>
-                                    <p><i class="col-red fa fa-fw fa-power-off"></i> Server downtime <span
+                                    <p><i class="col-red fa fa-fw fa-power-off"></i> Downtime<span
                                             class="float-right" id="data_downtime"></span></p>
                                 </div>
                             </div>
@@ -250,18 +250,15 @@
                                             class="fa fa-fw fa-exchange-alt"></i>
                                         Week Comparison</h6>
                                 </div>
-                                <table class="table mb-0" id="data_weeks">
+                                <table class="table" id="data_weeks">
                                     <thead>
                                     <tr>
                                         <th><i class="text-success fa fa-caret-up"></i><i
                                                 class="text-danger fa fa-caret-down"></i>
                                             <small>Comparing 7 days</small>
                                         </th>
-                                        <th>7 days before (<span id="data_start"></span> - <span
-                                                id="data_midpoint"></span>)
-                                        </th>
-                                        <th>Last 7 days (<span id="data_midpoint2"></span> - <span id="data_end"></span>)
-                                        </th>
+                                        <th><span id="data_start"></span> - <span id="data_midpoint"></span></th>
+                                        <th><span id="data_midpoint2"></span> - <span id="data_end"></span></th>
                                         <th>Trend</th>
                                     </tr>
                                     </thead>
@@ -358,7 +355,7 @@
                                         <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
                                            data-toggle="tab" href="#punchcard-tab" id="online-punchcard-tab"
                                            role="tab"><i class="fa fa-fw fa-braille col-black"></i> Punchcard
-                                            30d</a>
+                                            for 30 Days</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content" id="onlineActivityTabContent">
@@ -535,8 +532,8 @@
                                                 class="far fa-fw fa-hand-pointer"></i>
                                                 <small>Click to expand</small></span></h6>
                                 </div>
-                                <div class="scrollbar" style="height: 80vh">
-                                    <table class="table mb-0" id="tableAccordion">
+                                <div class="scrollbar" style="max-height: 80vh">
+                                    <table class="table" id="tableAccordion">
                                         <thead>
                                         <tr>
                                             <th><i class="fa fa-fw fa-user"></i> Player</th>
@@ -945,7 +942,7 @@
                                         Connection Information</h6>
                                 </div>
                                 <div class="scrollbar">
-                                    <table class="table mb-0">
+                                    <table class="table">
                                         <thead class="bg-amber">
                                         <tr>
                                             <th><i class=" fa fa-fw fa-globe"></i> Country</th>
@@ -998,31 +995,31 @@
                                         <a aria-controls="profile" aria-selected="false" class="nav-link col-black"
                                            data-toggle="tab"
                                            href="#tps" id="performance-tps-tab" role="tab"><i
-                                                class="fa fa-fw fa-tachometer-alt col-blue-grey"></i> TPS</a>
+                                                class="fa fa-fw fa-tachometer-alt col-deep-orange"></i> TPS</a>
                                     </li>
                                     <li class="nav-item">
                                         <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
                                            data-toggle="tab" href="#cpuram" id="performance-hardware-tab"
                                            role="tab"><i
-                                                class="fa fa-fw fa-microchip col-blue-grey"></i> CPU
+                                                class="fa fa-fw fa-microchip col-light-green"></i> CPU
                                             & RAM</a>
                                     </li>
                                     <li class="nav-item">
                                         <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
                                            data-toggle="tab" href="#worldload" id="performance-minecraft-tab"
-                                           role="tab"><i class="fa fa-fw fa-map col-blue-grey"></i>
+                                           role="tab"><i class="fa fa-fw fa-map col-purple"></i>
                                             World
                                             Load</a>
                                     </li>
                                     <li class="nav-item">
                                         <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
                                            data-toggle="tab" href="#ping" id="performance-ping-tab" role="tab"><i
-                                                class="fa fa-fw fa-signal col-blue-grey"></i> Ping</a>
+                                                class="fa fa-fw fa-signal col-amber"></i> Ping</a>
                                     </li>
                                     <li class="nav-item">
                                         <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
                                            data-toggle="tab" href="#disk" id="performance-disk-tab" role="tab"><i
-                                                class="fa fa-fw fa-hdd col-blue-grey"></i> Disk Space</a>
+                                                class="fa fa-fw fa-hdd col-green"></i> Disk Space</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content" id="performanceChartTabContent">
@@ -1150,9 +1147,9 @@
                                             class="float-right"><b id="data_low_tps_players"></b></span></p>
                                     <p><i class="fa fa-fw fa-dragon col-red"></i> Average Entities<span
                                             class="float-right"><b id="data_low_tps_entities"></b></span></p>
-                                    <p><i class="fa fa-fw fa-dragon col-red"></i> Average Chunks<span
+                                    <p><i class="fa fa-fw fa-map col-red"></i> Average Chunks<span
                                             class="float-right"><b id="data_low_tps_chunks"></b></span></p>
-                                    <p><i class="fa fa-fw fa-dragon col-red"></i> Average CPU<span
+                                    <p><i class="fa fa-fw fa-tachometer-alt col-red"></i> Average CPU<span
                                             class="float-right"><b id="data_low_tps_cpu"></b></span></p>
                                 </div>
                             </div>
@@ -1530,7 +1527,8 @@
             $('#diskGraph').text("Failed to load graph data: " + error);
         }
     });
-    jsonRequest("../v1/graph?type=ping&server=${serverName}", function (json, error) {
+
+    jsonRequest("../v1/graph?type=aggregatedPing&server=${serverName}", function (json, error) {
         if (json) {
             var series = {
                 avgPing: {
