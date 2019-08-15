@@ -193,7 +193,7 @@ public class WorldTimesQueries {
 
             @Override
             public GMTimes processResults(ResultSet set) throws SQLException {
-                return extractGMTimes(set, GMTimes.getGMKeyArray());
+                return set.next() ? extractGMTimes(set, GMTimes.getGMKeyArray()) : new GMTimes();
             }
         };
     }
