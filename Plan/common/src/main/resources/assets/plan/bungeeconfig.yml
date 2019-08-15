@@ -117,6 +117,12 @@ Display_options:
   Show_player_IPs: true
   Graphs:
     Show_gaps_in_data: false
+    TPS:
+      High_threshold: 18
+      Medium_threshold: 10
+    Disk_space:
+      High_threshold: 500
+      Medium_threshold: 100
   Command_colors:
     Main: '&2'
     Secondary: '&7'

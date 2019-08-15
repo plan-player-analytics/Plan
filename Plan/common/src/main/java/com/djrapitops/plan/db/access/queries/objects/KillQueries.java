@@ -178,7 +178,7 @@ public class KillQueries {
                 AND + KillsTable.DATE + ">=?" +
                 AND + KillsTable.DATE + "<=?" +
                 GROUP_BY + KillsTable.VICTIM_UUID;
-        String sql = SELECT + "AVG(CAST(kills AS FLOAT)/CAST(deaths AS FLOAT)) as kdr" +
+        String sql = SELECT + "AVG(CAST(kills AS double)/CAST(deaths AS double)) as kdr" +
                 FROM + '(' + selectKillCounts + ") q1" +
                 INNER_JOIN + '(' + selectDeathCounts + ") q2 on q1." + KillsTable.KILLER_UUID + "=q2." + KillsTable.VICTIM_UUID +
                 WHERE + "deaths!=0";
@@ -251,7 +251,7 @@ public class KillQueries {
                 AND + KillsTable.DATE + "<=?" +
                 GROUP_BY + KillsTable.WEAPON;
         String sql = SELECT + KillsTable.WEAPON +
-                FROM + '(' + innerSQL + ')' +
+                FROM + '(' + innerSQL + ") q1" +
                 ORDER_BY + "kills DESC LIMIT ?";
 
         return new QueryStatement<List<String>>(sql, limit) {
@@ -280,7 +280,7 @@ public class KillQueries {
                 AND + KillsTable.DATE + "<=?" +
                 GROUP_BY + KillsTable.WEAPON;
         String sql = SELECT + KillsTable.WEAPON +
-                FROM + '(' + innerSQL + ')' +
+                FROM + '(' + innerSQL + ") q1" +
                 ORDER_BY + "kills DESC LIMIT ?";
 
         return new QueryStatement<List<String>>(sql, limit) {
