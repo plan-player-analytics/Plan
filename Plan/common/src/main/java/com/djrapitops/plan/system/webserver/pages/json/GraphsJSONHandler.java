@@ -69,6 +69,8 @@ public class GraphsJSONHandler implements PageHandler {
         switch (type) {
             case "performance":
                 return new JSONResponse(graphJSON.performanceGraphJSON(serverUUID));
+            case "playersOnline":
+                return new JSONResponse(graphJSON.playersOnlineGraph(serverUUID));
             case "uniqueAndNew":
                 return new JSONResponse(graphJSON.uniqueAndNewGraphJSON(serverUUID));
             case "serverCalendar":
@@ -92,6 +94,8 @@ public class GraphsJSONHandler implements PageHandler {
         switch (type) {
             case "activity":
                 return new JSONResponse(graphJSON.activityGraphsJSONAsMap());
+            case "uniqueAndNew":
+                return new JSONResponse(graphJSON.uniqueAndNewGraphJSON());
             default:
                 throw new BadRequestException("unknown 'type' parameter: " + type);
         }

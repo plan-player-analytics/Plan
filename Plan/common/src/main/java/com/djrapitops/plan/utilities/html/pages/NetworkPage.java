@@ -31,6 +31,7 @@ import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Html String parser for /network page.
@@ -71,16 +72,23 @@ public class NetworkPage implements Page {
         try {
             PlaceholderReplacer placeholders = new PlaceholderReplacer();
 
+            UUID serverUUID = serverInfo.getServerUUID();
             placeholders.put("networkDisplayName", config.get(ProxySettings.NETWORK_NAME));
+            placeholders.put("serverUUID", serverUUID.toString());
 
             placeholders.put("gmPieColors", theme.getValue(ThemeVal.GRAPH_GM_PIE));
             placeholders.put("playersGraphColor", theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));
+            placeholders.put("worldMapColLow", theme.getValue(ThemeVal.WORLD_MAP_LOW));
+            placeholders.put("worldMapColHigh", theme.getValue(ThemeVal.WORLD_MAP_HIGH));
+            placeholders.put("maxPingColor", theme.getValue(ThemeVal.GRAPH_MAX_PING));
+            placeholders.put("minPingColor", theme.getValue(ThemeVal.GRAPH_MIN_PING));
+            placeholders.put("avgPingColor", theme.getValue(ThemeVal.GRAPH_AVG_PING));
             placeholders.put("timeZone", config.getTimeZoneOffsetHours());
 
             placeholders.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
 
             List<ExtensionServerData> extensionData = dbSystem.getDatabase()
-                    .query(new ExtensionServerDataQuery(serverInfo.getServerUUID()));
+                    .query(new ExtensionServerDataQuery(serverUUID));
             ServerPluginTabs pluginTabs = new ServerPluginTabs(extensionData, formatters);
 
             String nav = pluginTabs.getNav();

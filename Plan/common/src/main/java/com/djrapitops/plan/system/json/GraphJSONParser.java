@@ -30,11 +30,14 @@ import com.djrapitops.plan.db.access.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.db.access.queries.objects.*;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DisplaySettings;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.bar.BarGraph;
+import com.djrapitops.plan.utilities.html.graphs.line.LineGraph;
 import com.djrapitops.plan.utilities.html.graphs.line.LineGraphFactory;
 import com.djrapitops.plan.utilities.html.graphs.line.PingGraph;
+import com.djrapitops.plan.utilities.html.graphs.line.Point;
 import com.djrapitops.plan.utilities.html.graphs.pie.Pie;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.graphs.special.WorldMap;
@@ -45,6 +48,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * Perses Graph related Data JSON.
@@ -74,8 +78,10 @@ public class GraphJSONParser {
     public String performanceGraphJSON(UUID serverUUID) {
         Database db = dbSystem.getDatabase();
         LineGraphFactory lineGraphs = graphs.line();
+        long now = System.currentTimeMillis();
+        long halfYearAgo = now - TimeUnit.DAYS.toMillis(180L);
         TPSMutator tpsMutator = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(serverUUID)))
-                .filterDataBetween(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(180L), System.currentTimeMillis());
+                .filterDataBetween(halfYearAgo, now);
         return '{' +
                 "\"playersOnline\":" + lineGraphs.playersOnlineGraph(tpsMutator).toHighChartsSeries() +
                 ",\"tps\":" + lineGraphs.tpsGraph(tpsMutator).toHighChartsSeries() +
@@ -85,6 +91,18 @@ public class GraphJSONParser {
                 ",\"chunks\":" + lineGraphs.chunkGraph(tpsMutator).toHighChartsSeries() +
                 ",\"disk\":" + lineGraphs.diskGraph(tpsMutator).toHighChartsSeries() +
                 '}';
+    }
+
+    public String playersOnlineGraph(UUID serverUUID) {
+        Database db = dbSystem.getDatabase();
+        long now = System.currentTimeMillis();
+        long halfYearAgo = now - TimeUnit.DAYS.toMillis(180L);
+        Boolean displayGaps = config.get(DisplaySettings.GAPS_IN_GRAPH_DATA);
+
+        List<Point> points = db.query(TPSQueries.fetchPlayersOnlineOfServer(halfYearAgo, now, serverUUID)).stream()
+                .map(point -> new Point(point.getDate(), point.getValue()))
+                .collect(Collectors.toList());
+        return "{\"playersOnline\":" + new LineGraph(points, displayGaps).toHighChartsSeries() + '}';
     }
 
     public String uniqueAndNewGraphJSON(UUID serverUUID) {
@@ -97,6 +115,31 @@ public class GraphJSONParser {
         );
         NavigableMap<Long, Integer> newPerDay = db.query(
                 PlayerCountQueries.newPlayerCounts(halfYearAgo, now, timeZone.getOffset(now), serverUUID)
+        );
+
+        return "{\"uniquePlayers\":" +
+                lineGraphs.lineGraph(MutatorFunctions.toPointsWithRemovedOffset(
+                        MutatorFunctions.addMissing(uniquePerDay, TimeUnit.DAYS.toMillis(1L), 0),
+                        timeZone
+                )).toHighChartsSeries() +
+                ",\"newPlayers\":" +
+                lineGraphs.lineGraph(MutatorFunctions.toPointsWithRemovedOffset(
+                        MutatorFunctions.addMissing(newPerDay, TimeUnit.DAYS.toMillis(1L), 0),
+                        timeZone
+                )).toHighChartsSeries() +
+                '}';
+    }
+
+    public String uniqueAndNewGraphJSON() {
+        Database db = dbSystem.getDatabase();
+        LineGraphFactory lineGraphs = graphs.line();
+        long now = System.currentTimeMillis();
+        long halfYearAgo = now - TimeUnit.DAYS.toMillis(180L);
+        NavigableMap<Long, Integer> uniquePerDay = db.query(
+                PlayerCountQueries.uniquePlayerCounts(halfYearAgo, now, timeZone.getOffset(now))
+        );
+        NavigableMap<Long, Integer> newPerDay = db.query(
+                PlayerCountQueries.newPlayerCounts(halfYearAgo, now, timeZone.getOffset(now))
         );
 
         return "{\"uniquePlayers\":" +

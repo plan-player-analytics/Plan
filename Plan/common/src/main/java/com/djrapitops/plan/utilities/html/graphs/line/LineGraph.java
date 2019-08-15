@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.utilities.html.graphs.line;
 
+import com.djrapitops.plan.data.store.mutators.MutatorFunctions;
 import com.djrapitops.plan.utilities.html.graphs.HighChart;
 
 import java.util.List;
@@ -60,6 +61,13 @@ public class LineGraph implements HighChart {
 
         arrayBuilder.append("]");
         return arrayBuilder.toString();
+    }
+
+    public List<Point> getPoints() {
+        if (displayGaps) {
+            return MutatorFunctions.addMissing(points, TimeUnit.MINUTES.toMillis(1L), null);
+        }
+        return points;
     }
 
     private void addMissingPoints(StringBuilder arrayBuilder, Long lastX, long date) {
