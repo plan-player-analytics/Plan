@@ -46,7 +46,7 @@ import java.util.concurrent.TimeUnit;
  * @author Rsl1122
  */
 @Singleton
-public class OnlineActivityOverviewJSONParser implements TabJSONParser<Map<String, Object>> {
+public class OnlineActivityOverviewJSONParser implements ServerTabJSONParser<Map<String, Object>> {
 
     private PlanConfig config;
     private DBSystem dbSystem;

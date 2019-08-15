@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
  * @author Rsl1122
  */
 @Singleton
-public class PerformanceJSONParser implements TabJSONParser<Map<String, Object>> {
+public class PerformanceJSONParser implements ServerTabJSONParser<Map<String, Object>> {
 
     private final PlanConfig config;
     private final DBSystem dbSystem;

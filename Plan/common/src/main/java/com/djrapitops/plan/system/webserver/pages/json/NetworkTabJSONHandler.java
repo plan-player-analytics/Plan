@@ -18,8 +18,7 @@ package com.djrapitops.plan.system.webserver.pages.json;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.Identifiers;
-import com.djrapitops.plan.system.json.ServerTabJSONParser;
+import com.djrapitops.plan.system.json.network.NetworkTabJSONParser;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.RequestTarget;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
@@ -27,28 +26,24 @@ import com.djrapitops.plan.system.webserver.pages.PageHandler;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.data.JSONResponse;
 
-import java.util.UUID;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Generic Tab JSON handler for any tab's data.
  *
  * @author Rsl1122
  */
-public class ServerTabJSONHandler<T> implements PageHandler {
+public class NetworkTabJSONHandler<T> implements PageHandler {
 
-    private final Identifiers identifiers;
-    private final Function<UUID, T> jsonParser;
+    private final Supplier<T> jsonParser;
 
-    public ServerTabJSONHandler(Identifiers identifiers, ServerTabJSONParser<T> jsonParser) {
-        this.identifiers = identifiers;
+    public NetworkTabJSONHandler(NetworkTabJSONParser<T> jsonParser) {
         this.jsonParser = jsonParser;
     }
 
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
-        UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
-        return new JSONResponse(jsonParser.apply(serverUUID));
+        return new JSONResponse(jsonParser.get());
     }
 
     @Override

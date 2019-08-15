@@ -24,7 +24,7 @@ import java.util.function.Function;
  *
  * @author Rsl1122
  */
-public interface TabJSONParser<T> extends Function<UUID, T> {
+public interface ServerTabJSONParser<T> extends Function<UUID, T> {
 
     T createJSONAsMap(UUID serverUUID);
 
