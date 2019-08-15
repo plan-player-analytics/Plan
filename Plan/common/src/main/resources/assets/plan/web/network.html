@@ -154,17 +154,36 @@
                         <!-- Online Activity Chart -->
                         <div class="col-xl-9 col-lg-9 col-sm-12">
                             <div class="card shadow mb-4">
-                                <div
-                                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
-                                            class="fas fa-fw fa-chart-area col-blue"></i>
-                                        Network Online Activity</h6>
-                                </div>
-                                <div class="chart-area">
-                                    <canvas id="myAreaChart"></canvas>
+                                <ul class="nav nav-tabs" id="onlineActivityTab" role="tablist">
+                                    <li class="nav-item">
+                                        <a aria-controls="profile" aria-selected="false"
+                                           class="nav-link active col-black"
+                                           data-toggle="tab"
+                                           href="#online-tab" id="online-online-tab" role="tab">
+                                            <i class="fas fa-fw fa-chart-area col-blue"></i> Network Online Activity</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a aria-controls="home" aria-selected="true" class="nav-link col-black"
+                                           data-toggle="tab" href="#unique-tab" id="online-unique-tab" role="tab"><i
+                                                class="fa fa-fw fa-chart-area col-blue"></i> Day by Day</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="onlineActivityTabContent">
+                                    <div aria-labelledby="online-online-tab" class="tab-pane fade show active"
+                                         id="online-tab"
+                                         role="tabpanel">
+                                        <div class="chart-area" id="playersOnlineChart"><span class="loader"></span>
+                                        </div>
+                                    </div>
+                                    <div aria-labelledby="online-unique-tab" class="tab-pane fade"
+                                         id="unique-tab"
+                                         role="tabpanel">
+                                        <div class="chart-area" id="uniqueChart"><span class="loader"></span></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
 
                         <!-- Players -->
                         <div class="col-xl-3 col-lg-3 col-sm-12">
@@ -1288,6 +1307,72 @@
     setLoadingText('Calculating values..');
     jsonRequest("../v1/network/playerbaseOverview", loadPlayerbaseOverviewValues);
     setLoadingText('Rendering graphs..');
+
+    var v = {
+        colors: {
+            playersOnline: '${playersGraphColor}',
+            newPlayers: '#8BC34A',
+            geolocationsLow: '${worldMapColLow}',
+            geolocationsHigh: '${worldMapColHigh}',
+            maxPing: '${maxPingColor}',
+            minPing: '${minPingColor}',
+            avgPing: '${avgPingColor}'
+        }
+    };
+
+    // HighCharts Series
+    var s = {
+        name: {
+            playersOnline: 'Players Online',
+            uniquePlayers: 'Unique Players',
+            newPlayers: 'New Players',
+            maxPing: 'Worst Ping',
+            minPing: 'Best Ping',
+            avgPing: 'Average Ping'
+        },
+        tooltip: {
+            twoDecimals: {
+                valueDecimals: 2
+            },
+            zeroDecimals: {
+                valueDecimals: 0
+            }
+        },
+        type: {
+            areaSpline: 'areaspline',
+            spline: 'spline'
+        }
+    };
+
+    jsonRequest("../v1/graph?type=playersOnline&server=${serverUUID}", function (data, error) {
+        if (data) {
+            var series = {
+                playersOnline: {
+                    name: s.name.playersOnline, type: s.type.areaSpline, tooltip: s.tooltip.zeroDecimals,
+                    data: data.playersOnline, color: v.colors.playersOnline, yAxis: 0
+                }
+            };
+            playersChart('playersOnlineChart', series.playersOnline, 2);
+        } else if (error) {
+            $('#playersOnlineChart').text("Failed to load graph data: " + error);
+        }
+    });
+
+    jsonRequest("../v1/graph?type=uniqueAndNew", function (data, error) {
+        if (data) {
+            var uniquePlayers = {
+                name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                data: data.uniquePlayers, color: v.colors.playersOnline
+            };
+            var newPlayers = {
+                name: s.name.newPlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                data: data.newPlayers, color: v.colors.newPlayers
+            };
+            lineChart('uniqueChart', [uniquePlayers, newPlayers]);
+        } else if (error) {
+            $('#uniqueChart').text("Failed to load graph data: " + error)
+        }
+    });
 
     jsonRequest("../v1/graph?type=activity", function (json, error) {
         if (json) {

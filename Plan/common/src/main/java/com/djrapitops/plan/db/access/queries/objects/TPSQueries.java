@@ -118,6 +118,67 @@ public class TPSQueries {
         };
     }
 
+    public static Query<List<DateObj<Integer>>> fetchPlayersOnlineOfServer(long after, long before, UUID serverUUID) {
+        String sql = SELECT + ServerTable.SERVER_UUID + ',' + DATE + ',' + PLAYERS_ONLINE +
+                FROM + TABLE_NAME +
+                INNER_JOIN + ServerTable.TABLE_NAME + " on " + ServerTable.TABLE_NAME + '.' + ServerTable.SERVER_ID + '=' + SERVER_ID +
+                WHERE + ServerTable.SERVER_UUID + "=?" +
+                AND + DATE + "<?" +
+                AND + DATE + ">?";
+        return new QueryStatement<List<DateObj<Integer>>>(sql, 1000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, before);
+                statement.setLong(3, after);
+            }
+
+            @Override
+            public List<DateObj<Integer>> processResults(ResultSet set) throws SQLException {
+                List<DateObj<Integer>> ofServer = new ArrayList<>();
+
+                while (set.next()) {
+                    ofServer.add(new DateObj<>(set.getLong(DATE), set.getInt(PLAYERS_ONLINE)));
+                }
+
+                return ofServer;
+            }
+        };
+    }
+
+    public static Query<Map<UUID, List<DateObj<Integer>>>> fetchPlayersOnlineOfAllServersBut(long after, long before, UUID leaveOut) {
+        String sql = SELECT + ServerTable.SERVER_UUID + ',' + DATE + ',' + PLAYERS_ONLINE +
+                FROM + TABLE_NAME +
+                INNER_JOIN + ServerTable.TABLE_NAME + " on " + ServerTable.TABLE_NAME + '.' + ServerTable.SERVER_ID + '=' + SERVER_ID +
+                WHERE + ServerTable.SERVER_UUID + "!=?" +
+                AND + ServerTable.INSTALLED + "=?" +
+                AND + DATE + "<?" +
+                AND + DATE + ">?";
+        return new QueryStatement<Map<UUID, List<DateObj<Integer>>>>(sql, 1000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, leaveOut.toString());
+                statement.setBoolean(2, true);
+                statement.setLong(3, before);
+                statement.setLong(4, after);
+            }
+
+            @Override
+            public Map<UUID, List<DateObj<Integer>>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, List<DateObj<Integer>>> byServer = new HashMap<>();
+
+                while (set.next()) {
+                    UUID serverUUID = UUID.fromString(set.getString(ServerTable.SERVER_UUID));
+                    List<DateObj<Integer>> ofServer = byServer.getOrDefault(serverUUID, new ArrayList<>());
+                    ofServer.add(new DateObj<>(set.getLong(DATE), set.getInt(PLAYERS_ONLINE)));
+                    byServer.put(serverUUID, ofServer);
+                }
+
+                return byServer;
+            }
+        };
+    }
+
     public static Query<Map<Integer, List<TPS>>> fetchPlayerOnlineDataOfServers(Collection<Server> servers) {
         if (servers.isEmpty()) {
             return db -> new HashMap<>();
