@@ -101,7 +101,179 @@
         }
     }
 
+    function changeHighChartsNightMode() {
+        try {
+            console.log(Highcharts.getOptions());
+            Highcharts.theme = nightMode ? {
+                chart: {
+                    backgroundColor: '#44475a',
+                    plotBorderColor: '#606063'
+                },
+                title: {
+                    style: {
+                        color: '#eee8d5'
+                    }
+                },
+                subtitle: {
+                    style: {
+                        color: '#eee8d5'
+                    }
+                },
+                xAxis: {
+                    gridLineColor: '#707073',
+                    labels: {
+                        style: {
+                            color: '#eee8d5'
+                        }
+                    },
+                    lineColor: '#707073',
+                    minorGridLineColor: '#505053',
+                    tickColor: '#707073',
+                    title: {
+                        style: {
+                            color: '#eee8d5'
+                        }
+                    }
+                },
+                yAxis: {
+                    gridLineColor: '#707073',
+                    labels: {
+                        style: {
+                            color: '#eee8d5'
+                        }
+                    },
+                    lineColor: '#707073',
+                    minorGridLineColor: '#505053',
+                    tickColor: '#707073',
+                    tickWidth: 1,
+                    title: {
+                        style: {
+                            color: '#eee8d5'
+                        }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: '#44475a',
+                    style: {
+                        color: '#eee8d5'
+                    }
+                },
+                plotOptions: {
+                    series: {
+                        dataLabels: {
+                            color: '#B0B0B3'
+                        },
+                        marker: {
+                            lineColor: '#333'
+                        }
+                    }
+                },
+                legend: {
+                    itemStyle: {
+                        color: '#eee8d5'
+                    },
+                    itemHoverStyle: {
+                        color: '#eee8d5'
+                    },
+                    itemHiddenStyle: {
+                        color: '#606063'
+                    }
+                },
+                labels: {
+                    style: {
+                        color: '#eee8d5'
+                    }
+                },
+                drilldown: {
+                    activeAxisLabelStyle: {
+                        color: '#eee8d5'
+                    },
+                    activeDataLabelStyle: {
+                        color: '#eee8d5'
+                    }
+                },
+                navigation: {
+                    buttonOptions: {
+                        symbolStroke: '#eee8d5',
+                        theme: {
+                            fill: '#44475a'
+                        }
+                    }
+                },
+                // scroll charts
+                rangeSelector: {
+                    buttonTheme: {
+                        fill: '#505053',
+                        stroke: '#646e8c',
+                        style: {
+                            color: '#CCC'
+                        },
+                        states: {
+                            hover: {
+                                fill: '#707073',
+                                stroke: '#000000',
+                                style: {
+                                    color: 'white'
+                                }
+                            },
+                            select: {
+                                fill: '#646e9d',
+                                stroke: '#646e8c',
+                                style: {
+                                    color: 'white'
+                                }
+                            }
+                        }
+                    },
+                    inputBoxBorderColor: '#505053',
+                    inputStyle: {
+                        backgroundColor: '#333',
+                        color: 'silver'
+                    },
+                    labelStyle: {
+                        color: 'silver'
+                    }
+                },
+
+                navigator: {
+                    handles: {
+                        backgroundColor: '#666',
+                        borderColor: '#AAA'
+                    },
+                    outlineColor: '#CCC',
+                    maskFill: 'rgba(255,255,255,0.1)',
+                    series: {
+                        color: '#7798BF',
+                        lineColor: '#A6C7ED'
+                    },
+                    xAxis: {
+                        gridLineColor: '#505053'
+                    }
+                },
+
+                scrollbar: {
+                    barBackgroundColor: '#808083',
+                    barBorderColor: '#808083',
+                    buttonArrowColor: '#CCC',
+                    buttonBackgroundColor: '#606063',
+                    buttonBorderColor: '#606063',
+                    rifleColor: '#FFF',
+                    trackBackgroundColor: '#404043',
+                    trackBorderColor: '#404043'
+                }
+            } : {
+                chart: {
+                    backgroundColor: '#fff'
+                } // TODO Get the defaults from print above
+            };
+            Highcharts.setOptions(Highcharts.theme);
+            updateGraphs();
+        } catch (e) {
+        }
+    }
+
     changeNightModeCSS();
+    changeHighChartsNightMode();
 
     function toggleNightMode() {
         if (nightMode) {
@@ -111,6 +283,7 @@
         }
         window.localStorage.setItem('nightMode', nightMode);
         changeNightModeCSS();
+        changeHighChartsNightMode();
     }
 
     $('#night-mode-toggle').on('click', toggleNightMode);

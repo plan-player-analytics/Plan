@@ -19,8 +19,10 @@ var linegraphButtons = [{
     text: 'All'
 }];
 
+var graphs = [];
+
 function activityPie(id, activitySeries) {
-    Highcharts.chart(id, {
+    graphs.push(Highcharts.chart(id, {
         chart: {
             plotBackgroundColor: null,
             plotBorderWidth: null,
@@ -42,11 +44,11 @@ function activityPie(id, activitySeries) {
             }
         },
         series: [activitySeries]
-    });
+    }));
 }
 
 function diskChart(id, series) {
-    Highcharts.stockChart(id, {
+    graphs.push(Highcharts.stockChart(id, {
         rangeSelector: {
             selected: 2,
             buttons: linegraphButtons
@@ -65,11 +67,11 @@ function diskChart(id, series) {
             enabled: true
         },
         series: series
-    });
+    }));
 }
 
 function horizontalBarChart(id, categories, series, text) {
-    Highcharts.chart(id, {
+    graphs.push(Highcharts.chart(id, {
         chart: {
             type: 'bar'
         },
@@ -106,11 +108,11 @@ function horizontalBarChart(id, categories, series, text) {
             enabled: true
         },
         series: series
-    });
+    }));
 }
 
 function lineChart(id, series) {
-    Highcharts.stockChart(id, {
+    graphs.push(Highcharts.stockChart(id, {
         rangeSelector: {
             selected: 2,
             buttons: linegraphButtons
@@ -124,7 +126,7 @@ function lineChart(id, series) {
             enabled: true
         },
         series: series
-    });
+    }));
 }
 
 function onlineActivityCalendar(id, events, firstDay) {
@@ -156,7 +158,7 @@ function onlineActivityCalendar(id, events, firstDay) {
 }
 
 function performanceChart(id, playersOnlineSeries, tpsSeries, cpuSeries, ramSeries, entitySeries, chunkSeries) {
-    Highcharts.stockChart(id, {
+    graphs.push(Highcharts.stockChart(id, {
         rangeSelector: {
             selected: 2,
             buttons: linegraphButtons
@@ -206,11 +208,11 @@ function performanceChart(id, playersOnlineSeries, tpsSeries, cpuSeries, ramSeri
             enabled: true
         },
         series: [playersOnlineSeries, tpsSeries, cpuSeries, ramSeries, entitySeries, chunkSeries]
-    });
+    }));
 }
 
 function playersChart(id, playersOnlineSeries, sel) {
-    Highcharts.stockChart(id, {
+    graphs.push(Highcharts.stockChart(id, {
         rangeSelector: {
             selected: sel,
             buttons: linegraphButtons
@@ -226,11 +228,11 @@ function playersChart(id, playersOnlineSeries, sel) {
             }
         },
         series: [playersOnlineSeries]
-    });
+    }));
 }
 
 function playersChartNoNav(id, playersOnlineSeries) {
-    Highcharts.stockChart(id, {
+    graphs.push(Highcharts.stockChart(id, {
         rangeSelector: {
             selected: 3,
             buttons: linegraphButtons
@@ -249,11 +251,11 @@ function playersChartNoNav(id, playersOnlineSeries) {
             }
         },
         series: [playersOnlineSeries]
-    });
+    }));
 }
 
 function punchCard(id, punchcardSeries) {
-    Highcharts.chart(id, {
+    graphs.push(Highcharts.chart(id, {
         chart: {
             defaultSeriesType: 'scatter'
         },
@@ -280,11 +282,11 @@ function punchCard(id, punchcardSeries) {
             pointFormat: 'Activity: {point.z}'
         },
         series: [punchcardSeries]
-    });
+    }));
 }
 
 function resourceChart(id, cpuSeries, ramSeries, playersOnlineSeries) {
-    Highcharts.stockChart(id, {
+    graphs.push(Highcharts.stockChart(id, {
         rangeSelector: {
             selected: 1,
             buttons: linegraphButtons
@@ -322,11 +324,11 @@ function resourceChart(id, cpuSeries, ramSeries, playersOnlineSeries) {
             enabled: true
         },
         series: [cpuSeries, ramSeries, playersOnlineSeries]
-    });
+    }));
 }
 
 function serverPie(id, serverSeries) {
-    Highcharts.chart(id, {
+    graphs.push(Highcharts.chart(id, {
         chart: {
             plotBackgroundColor: null,
             plotBorderWidth: null,
@@ -350,7 +352,7 @@ function serverPie(id, serverSeries) {
             }
         },
         series: [serverSeries]
-    });
+    }));
 }
 
 function formatTimeAmount(ms) {
@@ -411,7 +413,7 @@ function sessionCalendar(id, events, firstDay) {
 }
 
 function stackChart(id, categories, series, label) {
-    Highcharts.chart(id, {
+    graphs.push(Highcharts.chart(id, {
         chart: {
             type: 'area'
         },
@@ -448,11 +450,11 @@ function stackChart(id, categories, series, label) {
             }
         },
         series: series
-    });
+    }));
 }
 
 function tpsChart(id, tpsSeries, playersOnlineSeries) {
-    Highcharts.stockChart(id, {
+    graphs.push(Highcharts.stockChart(id, {
         rangeSelector: {
             selected: 1,
             buttons: linegraphButtons
@@ -484,11 +486,11 @@ function tpsChart(id, tpsSeries, playersOnlineSeries) {
             enabled: true
         },
         series: [tpsSeries, playersOnlineSeries]
-    });
+    }));
 }
 
 function worldChart(id, entitySeries, chunkSeries, playersOnlineSeries) {
-    Highcharts.stockChart(id, {
+    graphs.push(Highcharts.stockChart(id, {
         rangeSelector: {
             selected: 1,
             buttons: linegraphButtons
@@ -526,11 +528,11 @@ function worldChart(id, entitySeries, chunkSeries, playersOnlineSeries) {
             enabled: true
         },
         series: [entitySeries, chunkSeries, playersOnlineSeries]
-    });
+    }));
 }
 
 function worldMap(id, colorMin, colorMax, mapSeries) {
-    Highcharts.mapChart(id, {
+    graphs.push(Highcharts.mapChart(id, {
         chart: {
             animation: true
         },
@@ -548,14 +550,14 @@ function worldMap(id, colorMin, colorMax, mapSeries) {
             maxColor: colorMax
         },
         series: [mapSeries]
-    });
+    }));
 }
 
 function worldPie(id, worldSeries, gmSeries) {
     var defaultTitle = '';
     var defaultSubtitle = 'Click the slices to view used GameMode';
 
-    var chart = Highcharts.chart(id, {
+    graphs.push(Highcharts.chart(id, {
         chart: {
             plotBackgroundColor: null,
             plotBorderWidth: null,
@@ -595,5 +597,11 @@ function worldPie(id, worldSeries, gmSeries) {
                 return {name: d.name, id: d.id, colors: gmPieColors, data: d.data}
             })
         }
-    });
+    }));
+}
+
+function updateGraphs() {
+    for (var i = 0; i < graphs.length; i++) {
+        graphs[i].update(Highcharts.theme)
+    }
 }

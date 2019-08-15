@@ -20,6 +20,7 @@ import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DisplaySettings;
+import com.djrapitops.plan.utilities.comparators.PointComparator;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -43,6 +44,7 @@ public class LineGraphFactory {
     }
 
     public LineGraph lineGraph(List<Point> points) {
+        points.sort(new PointComparator());
         return new LineGraph(points, shouldDisplayGapsInData());
     }
 
