@@ -76,8 +76,8 @@ public class NetworkPlayerBaseOverviewJSONParser implements NetworkTabJSONParser
 
         Map<String, Object> trends = new HashMap<>();
 
-        Integer playersBefore = db.query(PlayerCountQueries.uniquePlayerCount(0L, monthAgo));
-        Integer playersAfter = db.query(PlayerCountQueries.uniquePlayerCount(0L, now));
+        Integer playersBefore = db.query(PlayerCountQueries.newPlayerCount(0L, monthAgo));
+        Integer playersAfter = db.query(PlayerCountQueries.newPlayerCount(0L, now));
         trends.put("total_players_then", playersBefore);
         trends.put("total_players_now", playersAfter);
         trends.put("total_players_trend", new Trend(playersBefore, playersAfter, false));

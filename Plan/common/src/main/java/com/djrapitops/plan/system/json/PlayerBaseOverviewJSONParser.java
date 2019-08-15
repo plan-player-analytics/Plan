@@ -76,8 +76,8 @@ public class PlayerBaseOverviewJSONParser implements ServerTabJSONParser<Map<Str
 
         Map<String, Object> trends = new HashMap<>();
 
-        Integer playersBefore = db.query(PlayerCountQueries.uniquePlayerCount(0L, monthAgo, serverUUID));
-        Integer playersAfter = db.query(PlayerCountQueries.uniquePlayerCount(0L, now, serverUUID));
+        Integer playersBefore = db.query(PlayerCountQueries.newPlayerCount(0L, monthAgo, serverUUID));
+        Integer playersAfter = db.query(PlayerCountQueries.newPlayerCount(0L, now, serverUUID));
         trends.put("total_players_then", playersBefore);
         trends.put("total_players_now", playersAfter);
         trends.put("total_players_trend", new Trend(playersBefore, playersAfter, false));
