@@ -105,7 +105,7 @@ Type | Description
 `worldPie` | World Pie data of all sessions combined
 `activity` | Activity stack graph and pie graph data
 `geolocation` | World Map and bar graph data. World Map uses iso-a3 specification of Country codes and Bar graph uses country names.
-`ping` | Min, Avg, Max ping graph data.
+`aggregatedPing` | Min, Avg, Max ping graph data.
 `punchCard` | PunchCard graph data. (Scatter plot)
 
 ### `GET /v1/player`

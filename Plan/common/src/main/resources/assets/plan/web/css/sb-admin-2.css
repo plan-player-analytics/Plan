@@ -1826,7 +1826,6 @@ pre code {
 
 .table {
     width: 100%;
-    margin-bottom: 1rem;
     background-color: transparent;
 }
 
@@ -5118,6 +5117,14 @@ p.collapsing {
     -ms-flex: 1 1 auto;
     flex: 1 1 auto;
     padding: 1.25rem;
+}
+
+.card-body p + p {
+    margin-top: 1rem;
+}
+
+.card-body p {
+    margin: 0;
 }
 
 .card-title {
