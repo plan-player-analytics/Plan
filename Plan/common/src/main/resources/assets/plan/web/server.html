@@ -114,7 +114,6 @@
         <div class="sidebar-heading">
             Plugins
         </div>
-
         ${navPluginsTabs}
 
         <!-- Divider -->
@@ -1674,6 +1673,7 @@
     });
     jsonRequest("../v1/kills?server=${serverName}", loadPlayerKills);
 
+    $('.server-name').text('${serverName}');
     $('.player-plugin-table').DataTable({
         responsive: true
     });
