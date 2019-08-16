@@ -20,6 +20,7 @@ var linegraphButtons = [{
 }];
 
 var graphs = [];
+var specialColors = {};
 
 function activityPie(id, activitySeries) {
     graphs.push(Highcharts.chart(id, {
@@ -553,12 +554,13 @@ function worldMap(id, colorMin, colorMax, mapSeries) {
     }));
 }
 
-function worldPie(id, worldSeries, gmSeries) {
+function worldPie(id, worldSeries, gmSeries, bgColor) {
     var defaultTitle = '';
     var defaultSubtitle = 'Click the slices to view used GameMode';
 
-    graphs.push(Highcharts.chart(id, {
+    var chart = Highcharts.chart(id, {
         chart: {
+            backgroundColor: bgColor ? bgColor : '#44475a',
             plotBackgroundColor: null,
             plotBorderWidth: null,
             plotShadow: false,
@@ -597,11 +599,23 @@ function worldPie(id, worldSeries, gmSeries) {
                 return {name: d.name, id: d.id, colors: gmPieColors, data: d.data}
             })
         }
-    }));
+    });
+    if (bgColor) {
+        specialColors[graphs.length] = bgColor;
+    }
+    graphs.push(chart);
 }
 
 function updateGraphs() {
+    var nightMode = window.localStorage.getItem('nightMode') == 'true';
     for (var i = 0; i < graphs.length; i++) {
-        graphs[i].update(Highcharts.theme)
+        graphs[i].update(Highcharts.theme);
+        if (nightMode && specialColors[i]) {
+            graphs[i].update({
+                chart: {
+                    backgroundColor: specialColors[i]
+                }
+            });
+        }
     }
 }
