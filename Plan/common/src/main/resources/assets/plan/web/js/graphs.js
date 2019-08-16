@@ -400,7 +400,8 @@ function sessionCalendar(id, events, firstDay) {
         events: events,
 
         navLinks: true,
-        height: 'parent',
+        height: 450,
+        contentHeight: 445,
         header: {
             left: 'title',
             center: '',
@@ -557,10 +558,10 @@ function worldMap(id, colorMin, colorMax, mapSeries) {
 function worldPie(id, worldSeries, gmSeries, bgColor) {
     var defaultTitle = '';
     var defaultSubtitle = 'Click the slices to view used GameMode';
-
+    var nightMode = window.localStorage.getItem('nightMode') == 'true';
     var chart = Highcharts.chart(id, {
         chart: {
-            backgroundColor: bgColor ? bgColor : '#44475a',
+            backgroundColor: nightMode ? (bgColor ? bgColor : '#44475a') : '#fff',
             plotBackgroundColor: null,
             plotBorderWidth: null,
             plotShadow: false,
