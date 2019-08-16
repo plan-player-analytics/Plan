@@ -71,6 +71,42 @@
 
     var nightMode = window.localStorage.getItem('nightMode') == 'true';
 
+    function nightModeColors() {
+        return '.bg-red {background-color: #D73B30;color: #eee8d5;}' +
+            '.bg-pink {background-color: #CD1A57;color: #eee8d5;}' +
+            '.bg-purple {background-color: #89229B;color: #eee8d5;}' +
+            '.bg-deep-purple {background-color: #5B33A1;color: #eee8d5;}' +
+            '.bg-indigo {background-color: #37479F;color: #eee8d5;}' +
+            '.bg-blue {background-color: #1D84D6;color: #eee8d5;}' +
+            '.bg-light-blue {background-color: #0395D7;color: #eee8d5;}' +
+            '.bg-cyan {background-color: #00A5BB;color: #eee8d5;}' +
+            '.bg-teal {background-color: #008478;color: #eee8d5;}' +
+            '.bg-green {background-color: #439A46;color: #eee8d5;}' +
+            '.bg-light-green {background-color: #7AAC41;color: #eee8d5;}' +
+            '.bg-lime {background-color: #B4C232;color: #eee8d5;}' +
+            '.bg-yellow {background-color: #E0CF34;color: #eee8d5;}' +
+            '.bg-amber {background-color: #E0AA06;color: #eee8d5;}' +
+            '.bg-orange {background-color: #E08600;color: #eee8d5;}' +
+            '.bg-deep-orange {background-color: #E04D1E;color: #eee8d5;}' +
+            '.bg-brown {background-color: #795548;color: #eee8d5;}' +
+            '.bg-grey {background-color: #9E9E9E;color: #eee8d5;}' +
+            '.bg-blue-grey {background-color: #546E7A;color: #eee8d5;}' +
+            '.bg-black {background-color: #555555;color: #eee8d5;}' +
+            '.bg-plan {background-color: #307E14;color: #eee8d5;}' +
+            '.bg-night {background-color: #44475a;color: #eee8d5;}' +
+            '.col-red {color: #D73B30;}.col-pink {color: #CD1A57;}' +
+            '.col-purple {color: #89229B;}.col-deep-purple {color: #5B33A1;}' +
+            '.col-indigo {color: #37479F;}.col-blue {color: #1D84D6;}' +
+            '.col-light-blue {color: #0395D7;}.col-cyan {color: #00A5BB;}' +
+            '.col-teal {color: #008478;}.col-green {color: #439A46;}' +
+            '.col-light-green {color: #7AAC41;}.col-lime {color: #B4C232;}' +
+            '.col-yellow {color: #E0CF34;}.col-amber {color: #E0AA06;}' +
+            '.col-orange {color: #E08600;}.col-deep-orange {color: #E04D1E;}' +
+            '.col-brown {color: #795548;}.col-grey {color: #9E9E9E;}' +
+            '.col-blue-grey {color: #546E7A;}' +
+            '.col-plan {color: #307E14;}'
+    }
+
     function changeNightModeCSS() {
         if (nightMode) {
             // Background colors from dracula theme
@@ -83,6 +119,7 @@
                 '.collapse-item:hover,.nav-link.active {background-color: #606270 !important;}' +
                 '.nav-tabs .nav-link.active {background-color: #44475a !important;border-color:#6272a4 #6272a4 #44475a !important;}' +
                 '.fc-today {background:#646e8c !important}' +
+                nightModeColors() +
                 '</style>');
             // Turn bright tables to dark
             $('.table').addClass('table-dark');
@@ -338,11 +375,7 @@
     changeHighChartsNightMode();
 
     function toggleNightMode() {
-        if (nightMode) {
-            nightMode = false;
-        } else {
-            nightMode = true;
-        }
+        nightMode = !nightMode;
         setTimeout(function () {
             window.localStorage.setItem('nightMode', nightMode);
             changeNightModeCSS();
