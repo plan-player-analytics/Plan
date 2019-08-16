@@ -760,18 +760,8 @@ div.scrollbar {
     color: #fff;
 }
 
-.bg-red .content .text,
-.bg-red .content .number {
-    color: #fff;
-}
-
 .bg-pink {
     background-color: #E91E63;
-    color: #fff;
-}
-
-.bg-pink .content .text,
-.bg-pink .content .number {
     color: #fff;
 }
 
@@ -780,18 +770,8 @@ div.scrollbar {
     color: #fff;
 }
 
-.bg-purple .content .text,
-.bg-purple .content .number {
-    color: #fff;
-}
-
 .bg-deep-purple {
     background-color: #673AB7;
-    color: #fff;
-}
-
-.bg-deep-purple .content .text,
-.bg-deep-purple .content .number {
     color: #fff;
 }
 
@@ -800,18 +780,8 @@ div.scrollbar {
     color: #fff;
 }
 
-.bg-indigo .content .text,
-.bg-indigo .content .number {
-    color: #fff;
-}
-
 .bg-blue {
     background-color: #2196F3;
-    color: #fff;
-}
-
-.bg-blue .content .text,
-.bg-blue .content .number {
     color: #fff;
 }
 
@@ -820,18 +790,8 @@ div.scrollbar {
     color: #fff;
 }
 
-.bg-light-blue .content .text,
-.bg-light-blue .content .number {
-    color: #fff;
-}
-
 .bg-cyan {
     background-color: #00BCD4;
-    color: #fff;
-}
-
-.bg-cyan .content .text,
-.bg-cyan .content .number {
     color: #fff;
 }
 
@@ -840,18 +800,8 @@ div.scrollbar {
     color: #fff;
 }
 
-.bg-teal .content .text,
-.bg-teal .content .number {
-    color: #fff;
-}
-
 .bg-green {
     background-color: #4CAF50;
-    color: #fff;
-}
-
-.bg-green .content .text,
-.bg-green .content .number {
     color: #fff;
 }
 
@@ -860,18 +810,8 @@ div.scrollbar {
     color: #fff;
 }
 
-.bg-light-green .content .text,
-.bg-light-green .content .number {
-    color: #fff;
-}
-
 .bg-lime {
     background-color: #CDDC39;
-    color: #fff;
-}
-
-.bg-lime .content .text,
-.bg-lime .content .number {
     color: #fff;
 }
 
@@ -880,18 +820,8 @@ div.scrollbar {
     color: #fff;
 }
 
-.bg-yellow .content .text,
-.bg-yellow .content .number {
-    color: #fff;
-}
-
 .bg-amber {
     background-color: #FFC107;
-    color: #fff;
-}
-
-.bg-amber .content .text,
-.bg-amber .content .number {
     color: #fff;
 }
 
@@ -900,18 +830,8 @@ div.scrollbar {
     color: #fff;
 }
 
-.bg-orange .content .text,
-.bg-orange .content .number {
-    color: #fff;
-}
-
 .bg-deep-orange {
     background-color: #FF5722;
-    color: #fff;
-}
-
-.bg-deep-orange .content .text,
-.bg-deep-orange .content .number {
     color: #fff;
 }
 
@@ -920,18 +840,8 @@ div.scrollbar {
     color: #fff;
 }
 
-.bg-brown .content .text,
-.bg-brown .content .number {
-    color: #fff;
-}
-
 .bg-grey {
     background-color: #9E9E9E;
-    color: #fff;
-}
-
-.bg-grey .content .text,
-.bg-grey .content .number {
     color: #fff;
 }
 
@@ -940,29 +850,14 @@ div.scrollbar {
     color: #fff;
 }
 
-.bg-blue-grey .content .text,
-.bg-blue-grey .content .number {
-    color: #fff;
-}
-
 .bg-black {
     background-color: #555555;
     color: #fff;
 }
 
-.bg-black .content .text,
-.bg-black .content .number {
-    color: #fff;
-}
-
 .bg-white {
     background-color: #ffffff;
-    color: #fff;
-}
-
-.bg-white .content .text,
-.bg-white .content .number {
-    color: #fff;
+    color: #333;
 }
 
 .bg-plan {
