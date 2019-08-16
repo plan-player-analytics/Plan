@@ -17,6 +17,7 @@
 package com.djrapitops.plan.system.webserver.pages.json;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
+import com.djrapitops.plan.system.json.network.NetworkOverviewJSONParser;
 import com.djrapitops.plan.system.json.network.NetworkPlayerBaseOverviewJSONParser;
 import com.djrapitops.plan.system.json.network.NetworkTabJSONParser;
 import com.djrapitops.plan.system.webserver.RequestTarget;
@@ -38,10 +39,12 @@ public class NeworkJSONHandler extends TreePageHandler {
     @Inject
     public NeworkJSONHandler(
             ResponseFactory responseFactory,
+            NetworkOverviewJSONParser networkOverviewJSONParser,
             NetworkPlayerBaseOverviewJSONParser playerBaseOverviewJSONParser
     ) {
         super(responseFactory);
 
+        registerPage("overview", networkOverviewJSONParser);
         registerPage("playerbaseOverview", playerBaseOverviewJSONParser);
     }
 

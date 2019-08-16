@@ -36,28 +36,25 @@ function smallTrend(trend) {
     }
 }
 
-/* This function loads Server Overview tab */
-function loadServerOverviewValues(json, error) {
+/* This function loads Network Overview tab */
+function loadNetworkOverviewValues(json, error) {
     if (error) {
-        $('#server-overview').addClass('forbidden'); // TODO Figure out 403
+        $('#network-overview').addClass('forbidden'); // TODO Figure out 403
         return;
     }
 
-    tab = $('#server-overview');
+    tab = $('#network-overview');
 
     // Last 7 Days
-    data = json.last_7_days;
-    element = $(tab).find('#data_7_days');
+    data = json.players;
+    element = $(tab).find('#data_players');
 
-    $(element).find('#data_unique').text(data.unique_players);
-    $(element).find('#data_unique_day').text(data.unique_players_day);
-    $(element).find('#data_new').text(data.new_players);
-    $(element).find('#data_retention').text('(' + data.new_players_retention + '/' + data.new_players + ')');
-    $(element).find('#data_retention_perc').text(data.new_players_retention_perc);
-
-    $(element).find('#data_avg_tps').text(data.average_tps);
-    $(element).find('#data_low_tps_spikes').text(data.low_tps_spikes);
-    $(element).find('#data_downtime').text(data.downtime);
+    $(element).find('#data_unique_players_1d').text(data.unique_players_1d);
+    $(element).find('#data_unique_players_7d').text(data.unique_players_7d);
+    $(element).find('#data_unique_players_30d').text(data.unique_players_30d);
+    $(element).find('#data_new_players_1d').text(data.new_players_1d);
+    $(element).find('#data_new_players_7d').text(data.new_players_7d);
+    $(element).find('#data_new_players_30d').text(data.new_players_30d);
 
     // Server As Numbers
     data = json.numbers;
@@ -74,11 +71,8 @@ function loadServerOverviewValues(json, error) {
 
     $(element).find('#data_playtime').text(data.playtime);
     $(element).find('#data_player_playtime').text(data.player_playtime);
+    $(element).find('#data_session_length_avg').text(data.session_length_avg);
     $(element).find('#data_sessions').text(data.sessions);
-
-    $(element).find('#data_player_kills').text(data.player_kills);
-    $(element).find('#data_mob_kills').text(data.mob_kills);
-    $(element).find('#data_deaths').text(data.deaths);
 
     // Week Comparison
     data = json.weeks;
@@ -94,22 +88,16 @@ function loadServerOverviewValues(json, error) {
     $(element).find('#data_regular_after').text(data.regular_after);
     $(element).find('#data_regular_trend').replaceWith(trend(data.regular_trend));
 
-    $(element).find('#data_playtime_before').text(data.playtime_before);
-    $(element).find('#data_playtime_after').text(data.playtime_after);
-    $(element).find('#data_playtime_trend').replaceWith(trend(data.playtime_trend));
+    $(element).find('#data_average_playtime_before').text(data.average_playtime_before);
+    $(element).find('#data_average_playtime_after').text(data.average_playtime_after);
+    $(element).find('#data_average_playtime_trend').replaceWith(trend(data.average_playtime_trend));
     $(element).find('#data_sessions_before').text(data.sessions_before);
     $(element).find('#data_sessions_after').text(data.sessions_after);
     $(element).find('#data_sessions_trend').replaceWith(trend(data.sessions_trend));
+    $(element).find('#data_session_length_average_before').text(data.session_length_average_before);
+    $(element).find('#data_session_length_average_after').text(data.session_length_average_after);
+    $(element).find('#data_session_length_average_trend').replaceWith(trend(data.session_length_average_trend));
 
-    $(element).find('#data_player_kills_before').text(data.player_kills_before);
-    $(element).find('#data_player_kills_after').text(data.player_kills_after);
-    $(element).find('#data_player_kills_trend').replaceWith(trend(data.player_kills_trend));
-    $(element).find('#data_mob_kills_before').text(data.mob_kills_before);
-    $(element).find('#data_mob_kills_after').text(data.mob_kills_after);
-    $(element).find('#data_mob_kills_trend').replaceWith(trend(data.mob_kills_trend));
-    $(element).find('#data_deaths_before').text(data.deaths_before);
-    $(element).find('#data_deaths_after').text(data.deaths_after);
-    $(element).find('#data_deaths_trend').replaceWith(trend(data.deaths_trend))
 }
 
 /* This function loads Online Activity Overview tab */
