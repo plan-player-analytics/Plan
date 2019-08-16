@@ -9,13 +9,16 @@
             return;
         }
 
-        if ($(window).width() < 978) {
-            if (!$('.sidebar').hasClass('hidden')) {
-                $('.sidebar').addClass('hidden')
-            }
+        var $sidebar = $('.sidebar');
+        var closeModal = $('.sidebar-close-modal');
+        if ($(window).width() < 1350) {
+            if (!$sidebar.hasClass('hidden')) $sidebar.addClass('hidden');
+            if (!closeModal.hasClass('hidden')) closeModal.addClass('hidden');
+
             $('.sidebar .collapse').collapse('hide');
-        } else if ($(window).width() > 1200 && $('.sidebar').hasClass('hidden')) {
-            $('.sidebar').removeClass('hidden')
+        } else if ($(window).width() > 1400 && $sidebar.hasClass('hidden')) {
+            $sidebar.removeClass('hidden');
+            if (!closeModal.hasClass('hidden')) closeModal.addClass('hidden');
         }
         oldWidth = newWidth;
     }
@@ -25,9 +28,16 @@
     function toggleSidebar() {
         $('.sidebar').toggleClass('hidden');
         $('.sidebar .collapse').collapse('hide');
+
+        var closeModal = $('.sidebar-close-modal');
+        if ($(window).width() < 900) {
+            closeModal.toggleClass('hidden');
+        } else {
+            if (!closeModal.hasClass('hidden')) closeModal.addClass('hidden');
+        }
     }
 
-    $('.sidebar-toggler').on('click', toggleSidebar);
+    $('.sidebar-toggler,.sidebar-close-modal').on('click', toggleSidebar);
 
     // Close any open menu accordions when window is resized below 924px
     $(window).resize(reduceSidebar);
