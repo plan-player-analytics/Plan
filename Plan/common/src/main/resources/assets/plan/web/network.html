@@ -140,7 +140,7 @@
         <!-- Main Content -->
         <div id="content" style="display: flex;">
             <!-- Begin Network Overview Tab -->
-            <div class="tab">
+            <div class="tab" id="network-overview">
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -190,22 +190,22 @@
                                         class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold col-black">Players</h6>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body" id="data_players">
                                     <p>Last 24 Hours</p>
                                     <p><i class="col-blue fa fa-fw fa-users"></i> Unique Players<span
-                                            class="float-right"><b>0</b></span></p>
+                                            class="float-right"><b id="data_unique_players_1d"></b></span></p>
                                     <p><i class="col-light-green fa fa-fw fa-user-plus"></i> New Players<span
-                                            class="float-right"><b>0</b></span></p>
+                                            class="float-right"><b id="data_new_players_1d"></b></span></p>
                                     <p>Last 7 Days</p>
                                     <p><i class="col-blue fa fa-fw fa-users"></i> Unique Players<span
-                                            class="float-right"><b>0</b></span></p>
+                                            class="float-right"><b id="data_unique_players_7d"></b></span></p>
                                     <p><i class="col-light-green fa fa-fw fa-user-plus"></i> New Players<span
-                                            class="float-right"><b>0</b></span></p>
+                                            class="float-right"><b id="data_new_players_7d"></b></span></p>
                                     <p>Last 30 Days</p>
                                     <p><i class="col-blue fa fa-fw fa-users"></i> Unique Players<span
-                                            class="float-right"><b>0</b></span></p>
+                                            class="float-right"><b id="data_unique_players_30d"></b></span></p>
                                     <p><i class="col-light-green fa fa-fw fa-user-plus"></i> New Players<span
-                                            class="float-right"><b>0</b></span></p>
+                                            class="float-right"><b id="data_new_players_30d"></b></span></p>
                                 </div>
                             </div>
                         </div>
@@ -244,18 +244,6 @@
                                             class="float-right" id="data_session_length_avg"></span></p>
                                     <p><i class="col-teal far fa-fw fa-calendar-check"></i> Sessions<span
                                             class="float-right"><b id="data_sessions"></b></span></p>
-                                    <hr>
-                                    <p><i class="col-teal far fa-fw fa-clock"></i> Total Playtime<span
-                                            class="float-right">
-                                                8h 5m 56s </span></p>
-                                    <p><i class="col-teal far fa-fw fa-clock"></i> Average Playtime / Player<span
-                                            class="float-right">
-                                                0s </span></p>
-                                    <p><i class="col-teal far fa-fw fa-clock"></i> Average Session Length<span
-                                            class="float-right">
-                                                0s </span></p>
-                                    <p><i class="col-teal far fa-fw fa-calendar-check"></i> Sessions<span
-                                            class="float-right"><b>98</b></span></p>
                                 </div>
                             </div>
                         </div>
@@ -269,13 +257,15 @@
                                 </div>
                                 <table class="table">
                                     <thead>
-                                    <th><i class="text-success fa fa-caret-up"></i><i
-                                            class="text-danger fa fa-caret-down"></i>
-                                        <small>Comparing 7 days</small>
-                                    </th>
-                                    <th>7 days before (22.1. - 29.1.)</th>
-                                    <th>Last 7 days (29.1. - 5.2.)</th>
-                                    <th>Trend</th>
+                                    <tr>
+                                        <th><i class="text-success fa fa-caret-up"></i><i
+                                                class="text-danger fa fa-caret-down"></i>
+                                            <small>Comparing 7 days</small>
+                                        </th>
+                                        <th>7 days before (22.1. - 29.1.)</th>
+                                        <th>Last 7 days (29.1. - 5.2.)</th>
+                                        <th>Trend</th>
+                                    </tr>
                                     </thead>
                                     <tbody id="data_weeks">
                                     <tr>
@@ -300,15 +290,15 @@
                                         <td><i class="col-green far fa-fw fa-clock"></i> Average Playtime /
                                             Player
                                         </td>
-                                        <td id="data_playtime_before"></td>
-                                        <td id="data_playtime_after"></td>
-                                        <td><span id="data_playtime_trend"></span></td>
+                                        <td id="data_average_playtime_before"></td>
+                                        <td id="data_average_playtime_after"></td>
+                                        <td><span id="data_average_playtime_trend"></span></td>
                                     </tr>
                                     <tr>
-                                        <td><i class="col-teal far fa-fw fa-clock"></i> Sessions</td>
-                                        <td id="data_session_length_before"></td>
-                                        <td id="data_session_length_after"></td>
-                                        <td><span id="data_session_length_trend"></span></td>
+                                        <td><i class="col-teal far fa-fw fa-clock"></i> Average Session Length</td>
+                                        <td id="data_session_length_average_before"></td>
+                                        <td id="data_session_length_average_after"></td>
+                                        <td><span id="data_session_length_average_trend"></span></td>
                                     </tr>
                                     <tr>
                                         <td><i class="col-teal far fa-fw fa-calendar-check"></i> Sessions</td>
@@ -1303,6 +1293,7 @@
 
 <script>
     setLoadingText('Calculating values..');
+    jsonRequest("../v1/network/overview", loadNetworkOverviewValues);
     jsonRequest("../v1/network/playerbaseOverview", loadPlayerbaseOverviewValues);
     setLoadingText('Rendering graphs..');
 
