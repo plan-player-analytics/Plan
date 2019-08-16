@@ -108,13 +108,7 @@
         <div class="sidebar-heading">
             Plugins
         </div>
-
-        <!-- Nav Item - Tables -->
-        <li class="nav-item nav-button">
-            <a class="nav-link" href="javascript:void(0)">
-                <i class="fas fa-fw fa-cubes"></i>
-                <span>Overview</span></a>
-        </li>
+        ${navPluginsTabs}
 
         <!-- Divider -->
         <hr class="sidebar-divider">
@@ -144,7 +138,7 @@
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>Network Name
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkDisplayName}
                             &middot; Network Overview</h1>
                     </div>
 
@@ -318,7 +312,7 @@
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>Network Name
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkDisplayName}
                             &middot; Servers</h1>
                     </div>
 
@@ -505,7 +499,7 @@
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>Network Name
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkDisplayName}
                             &middot; Sessions</h1>
                     </div>
 
@@ -956,7 +950,7 @@
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>Network Name
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkDisplayName}
                             &middot; Player List</h1>
                     </div>
 
@@ -984,7 +978,7 @@
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>Network Name
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkDisplayName}
                             &middot; Geolocations</h1>
                     </div>
 
@@ -1036,55 +1030,7 @@
                 </div> <!-- /.container-fluid -->
             </div> <!-- End of Geolocations tab -->
             <!-- Begin Plugins Overview Tab -->
-            <div class="tab">
-                <div class="container-fluid mt-4">
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>Network Name
-                            &middot; Plugins Overview</h1>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-4 mb-4 col-sm-12">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
-                                            class="fa fa-fw fa-star col-green"></i>
-                                        AdvancedAchievements</h6>
-                                </div>
-                                <div class="card-body">
-                                    <p><i class="far fa-fw fa-check-circle col-green"></i> Total Achievements<span
-                                            class="float-right"><b>9</b></p>
-                                    <p><i class="far fa-fw fa-check-circle col-green"></i> Average Achievements /
-                                        Player<span class="float-right"><b>9</b></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-4 col-sm-12">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
-                                            class="fa fa-fw fa-gamepad col-light-green"></i>
-                                        ViaVersion</h6>
-                                </div>
-                                <table class="table mb-0">
-                                    <thead class="bg-light-green">
-                                    <tr>
-                                        <th><i class=" fa fa-fw fa-signal"></i> Version</th>
-                                        <th><i class=" fa fa-fw fa-users"></i> Users</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>1.12.1</td>
-                                        <td>1</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div> <!-- /.container-fluid -->
-            </div> <!-- End of Plugins Overview tab -->
+            ${tabsPlugins}
             <div class="tab"></div>
             <div class="tab"></div>
         </div> <!-- End of Main Content -->
@@ -1375,7 +1321,13 @@
         }
     });
 
-    setLoadingText('Sorting players table..');
+    setLoadingText('Sorting out plugin tables..');
+
+    $('.server-name').text('${networkDisplayName}');
+    $('.player-plugin-table').DataTable({
+        responsive: true
+    });
+
     setLoadingText('Almost done..');
     var navButtons = document.getElementsByClassName("nav-button");
     var tabs = document.getElementsByClassName("tab");
