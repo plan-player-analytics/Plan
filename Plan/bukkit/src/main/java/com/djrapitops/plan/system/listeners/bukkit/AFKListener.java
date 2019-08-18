@@ -25,10 +25,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.*;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -107,6 +104,11 @@ public class AFKListener implements Listener {
             UUID uuid = event.getPlayer().getUniqueId();
             AFK_TRACKER.usedAfkCommand(uuid, System.currentTimeMillis());
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onLeave(PlayerQuitEvent event) {
+        ignorePermissionInfo.remove(event.getPlayer().getUniqueId());
     }
 
 }

@@ -30,6 +30,7 @@ import org.spongepowered.api.event.entity.living.humanoid.player.PlayerChangeCli
 import org.spongepowered.api.event.entity.living.humanoid.player.TargetPlayerEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.message.MessageChannelEvent;
+import org.spongepowered.api.event.network.ClientConnectionEvent;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -118,4 +119,8 @@ public class SpongeAFKListener {
         event(event);
     }
 
+    @Listener(order = Order.POST)
+    public void onLeave(ClientConnectionEvent.Disconnect event) {
+        ignorePermissionInfo.remove(event.getTargetEntity().getUniqueId());
+    }
 }
