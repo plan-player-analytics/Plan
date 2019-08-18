@@ -32,6 +32,8 @@ import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.message.MessageChannelEvent;
 
 import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -47,11 +49,13 @@ public class SpongeAFKListener {
     // Static so that /reload does not cause afk tracking to fail.
     static AFKTracker AFK_TRACKER;
 
+    private final Map<UUID, Boolean> ignorePermissionInfo;
     private final ErrorHandler errorHandler;
 
     @Inject
     public SpongeAFKListener(PlanConfig config, ErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
+        this.ignorePermissionInfo = new HashMap<>();
 
         SpongeAFKListener.assignAFKTracker(config);
     }
@@ -84,8 +88,16 @@ public class SpongeAFKListener {
         UUID uuid = player.getUniqueId();
         long time = System.currentTimeMillis();
 
-        if (player.hasPermission(Permissions.IGNORE_AFK.getPermission())) {
+        Boolean ignored = ignorePermissionInfo.get(uuid);
+        if (ignored == null) {
+            ignored = player.hasPermission(Permissions.IGNORE_AFK.getPermission());
+        }
+        if (ignored) {
             AFK_TRACKER.hasIgnorePermission(uuid);
+            ignorePermissionInfo.put(uuid, true);
+            return;
+        } else {
+            ignorePermissionInfo.put(uuid, false);
         }
 
         AFK_TRACKER.performedAction(uuid, time);

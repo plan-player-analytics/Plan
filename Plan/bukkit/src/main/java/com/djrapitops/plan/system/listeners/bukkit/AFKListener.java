@@ -78,6 +78,7 @@ public class AFKListener implements Listener {
             if (ignored) {
                 AFK_TRACKER.hasIgnorePermission(uuid);
                 ignorePermissionInfo.put(uuid, true);
+                return;
             } else {
                 ignorePermissionInfo.put(uuid, false);
             }
