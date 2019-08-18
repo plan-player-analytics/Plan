@@ -20,6 +20,7 @@ import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
 import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.system.PlanSystem;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -63,6 +64,12 @@ class MySQLTest implements DatabaseTest {
         Optional<Database> mysql = new DBPreparer(system, TEST_PORT_NUMBER).prepareMySQL();
         Assumptions.assumeTrue(mysql.isPresent());
         database = mysql.get();
+    }
+
+    @AfterAll
+    static void disableSystem() {
+        if (database != null) database.close();
+        system.disable();
     }
 
     @Override
