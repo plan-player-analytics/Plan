@@ -183,49 +183,6 @@ function loadSessionValues(json, error) {
     $(element).find('#data_afk_time_perc').text(data.afk_time_perc)
 }
 
-/* This function loads PvP & PvE tab */
-function loadPvPPvEValues(json, error) {
-    if (error) {
-        $('#pvp-pve').addClass('forbidden'); // TODO Figure out 403
-        return;
-    }
-
-    tab = $('#pvp-pve');
-
-    // as Numbers
-    data = json.numbers;
-    element = $(tab).find('#data_numbers');
-
-    $(element).find('#data_player_kills_total').text(data.player_kills_total);
-    $(element).find('#data_player_kills_30d').text(data.player_kills_30d);
-    $(element).find('#data_player_kills_7d').text(data.player_kills_7d);
-
-    $(element).find('#data_player_deaths_total').text(data.player_deaths_total);
-    $(element).find('#data_player_deaths_30d').text(data.player_deaths_30d);
-    $(element).find('#data_player_deaths_7d').text(data.player_deaths_7d);
-
-    $(element).find('#data_mob_kills_total').text(data.mob_kills_total);
-    $(element).find('#data_mob_kills_30d').text(data.mob_kills_30d);
-    $(element).find('#data_mob_kills_7d').text(data.mob_kills_7d);
-
-    $(element).find('#data_mob_deaths_total').text(data.mob_deaths_total);
-    $(element).find('#data_mob_deaths_30d').text(data.mob_deaths_30d);
-    $(element).find('#data_mob_deaths_7d').text(data.mob_deaths_7d);
-
-    $(element).find('#data_deaths_total').text(data.deaths_total);
-    $(element).find('#data_deaths_30d').text(data.deaths_30d);
-    $(element).find('#data_deaths_7d').text(data.deaths_7d);
-
-    // Insights
-    data = json.insights;
-    element = $(tab).find('#data_insights');
-
-    $(element).find('#data_weapon_1st').text(data.weapon_1st);
-    $(element).find('#data_weapon_2nd').text(data.weapon_2nd);
-    $(element).find('#data_weapon_3rd').text(data.weapon_3rd);
-    $(element).find('#data_rage_quits').text(data.rage_quits)
-}
-
 /* This function loads Playerbase Overview tab */
 function loadPlayerbaseOverviewValues(json, error) {
     if (error) {
@@ -269,62 +226,77 @@ function loadPlayerbaseOverviewValues(json, error) {
     $(element).find('#data_regular_to_inactive').replaceWith(data.regular_to_inactive + smallTrend(data.regular_to_inactive_trend))
 }
 
-/* This function loads Performance tab */
-function loadPerformanceValues(json, error) {
+function loadServerBoxes(servers, error) {
     if (error) {
-        $('#performance').addClass('forbidden'); // TODO Figure out 403
+        $('#data_servers').addClass('forbidden'); // TODO Figure out 403
         return;
     }
 
-    tab = $('#performance');
-
-    // as Numbers
-    data = json.numbers;
-    element = $(tab).find('#data_numbers');
-
-    $(element).find('#data_low_tps_spikes_30d').text(data.low_tps_spikes_30d);
-    $(element).find('#data_low_tps_spikes_7d').text(data.low_tps_spikes_7d);
-    $(element).find('#data_low_tps_spikes_24h').text(data.low_tps_spikes_24h);
-    $(element).find('#data_server_downtime_30d').text(data.server_downtime_30d);
-    $(element).find('#data_server_downtime_7d').text(data.server_downtime_7d);
-    $(element).find('#data_server_downtime_24h').text(data.server_downtime_24h);
-    $(element).find('#data_tps_30d').text(data.tps_30d);
-    $(element).find('#data_tps_7d').text(data.tps_7d);
-    $(element).find('#data_tps_24h').text(data.tps_24h);
-    $(element).find('#data_cpu_30d').text(data.cpu_30d);
-    $(element).find('#data_cpu_7d').text(data.cpu_7d);
-    $(element).find('#data_cpu_24h').text(data.cpu_24h);
-    $(element).find('#data_ram_30d').text(data.ram_30d);
-    $(element).find('#data_ram_7d').text(data.ram_7d);
-    $(element).find('#data_ram_24h').text(data.ram_24h);
-    $(element).find('#data_entities_30d').text(data.entities_30d);
-    $(element).find('#data_entities_7d').text(data.entities_7d);
-    $(element).find('#data_entities_24h').text(data.entities_24h);
-    $(element).find('#data_chunks_30d').text(data.chunks_30d);
-    $(element).find('#data_chunks_7d').text(data.chunks_7d);
-    $(element).find('#data_chunks_24h').text(data.chunks_24h);
-    $(element).find('#data_max_disk_30d').text(data.max_disk_30d);
-    $(element).find('#data_max_disk_7d').text(data.max_disk_7d);
-    $(element).find('#data_max_disk_24h').text(data.max_disk_24h);
-    $(element).find('#data_min_disk_30d').text(data.min_disk_30d);
-    $(element).find('#data_min_disk_7d').text(data.min_disk_7d);
-    $(element).find('#data_min_disk_24h').text(data.min_disk_24h);
-
-    // Insights
-    data = json.insights;
-    element = $(tab).find('#data_insights');
-
-    $(element).find('#data_low_tps_players').text(data.low_tps_players);
-    $(element).find('#data_low_tps_entities').text(data.low_tps_entities);
-    $(element).find('#data_low_tps_disconnects').text(data.low_tps_disconnects);
-
-    dates = data.low_disk_space_dates;
-    dateString = '';
-    for (i in dates) {
-        dateString += (dates[i] + '<br>')
+    if (!servers || !servers.length) {
+        $('#data_server_list').replaceWith(
+            '<div class="card shadow mb-4"><div class="card-body"><p>No servers found in the database.</p></div></div>'
+        );
+        $('#quick_view_players_online').text('No server to display online activity for.');
+        return;
     }
 
-    $(element).find('#data_low_disk_space_dates').replaceWith(
-        dateString
-    )
+    var serversHtml = '';
+    for (var i = 0; i < servers.length; i++) {
+        serversHtml += createNetworkServerBox(i, servers[i]);
+    }
+    $("#data_server_list").replaceWith(serversHtml);
+
+    for (var i = 0; i < servers.length; i++) {
+        $('#server_quick_view_' + i).click(onViewServer(i, servers));
+    }
+    onViewServer(0, servers)(); // Open first server.
+}
+
+function createNetworkServerBox(i, server) {
+    return '<div class="card shadow mb-4">' +
+        '<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">' +
+        '<h6 class="m-0 font-weight-bold col-black"><i class="fas fa-fw fa-server col-light-green"></i> ' + server.name + '</h6>' +
+        '<div class="mb-0 col-lg-6">' +
+        '<p class="mb-1"><i class="fa fa-fw fa-users col-black"></i> Registered Players' +
+        '<span class="float-right"><b>' + server.players + '</b></span></p>' +
+        '<p class="mb-0"><i class="fa fa-fw fa-user col-blue"></i> Players Online' +
+        '<span class="float-right"><b>' + server.online + '</b></span></p>' +
+        '</div>' + // /column
+        '</div>' + // /header
+        '<div class="d-flex align-items-center justify-content-between">' +
+        '<a class="btn bg-light-green ml-2" href="server/' + server.name + '"><i class="fa fa-fw fa-chart-line"></i> Server Analysis</a>' +
+        '<button class="btn col-blue my-2 mr-2" id="server_quick_view_' + i + '">Quick view <i class="fa fa-fw fa-caret-square-right"></i></button>' +
+        '</div>' + // /buttons
+        '</div>' // /card
+}
+
+function onViewServer(i, servers) {
+    return function () {
+        setTimeout(function () {
+            var server = servers[i];
+            var playersOnlineSeries = {
+                name: s.name.playersOnline,
+                type: s.type.areaSpline,
+                tooltip: s.tooltip.zeroDecimals,
+                data: server.playersOnline,
+                color: v.colors.playersOnline,
+                yAxis: 0
+            };
+            $('.data_server_name').text(server.name);
+            playersChart('quick_view_players_online', playersOnlineSeries, 2);
+
+            var quickView = $('#data_quick_view');
+
+            quickView.find('#data_last_peak_date').text(server.last_peak_date);
+            quickView.find('#data_last_peak_players').text(server.last_peak_players);
+            quickView.find('#data_best_peak_date').text(server.best_peak_date);
+            quickView.find('#data_best_peak_players').text(server.best_peak_players);
+
+            quickView.find('#data_unique').text(server.unique_players);
+            quickView.find('#data_new').text(server.new_players);
+            quickView.find('#data_avg_tps').text(server.avg_tps);
+            quickView.find('#data_low_tps_spikes').text(server.low_tps_spikes);
+            quickView.find('#data_downtime').text(server.downtime);
+        }, 0);
+    }
 }

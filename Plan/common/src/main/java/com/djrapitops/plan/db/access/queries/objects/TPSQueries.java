@@ -260,7 +260,7 @@ public class TPSQueries {
                 WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
                 ORDER_BY + DATE + " DESC LIMIT 1";
 
-        return new QueryStatement<Optional<TPS>>(sql, 50000) {
+        return new QueryStatement<Optional<TPS>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
