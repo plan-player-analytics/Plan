@@ -104,7 +104,8 @@ public class ServerOverviewJSONParser implements ServerTabJSONParser<Map<String,
         sevenDays.put("new_players_retention", retained7d);
         sevenDays.put("new_players_retention_perc", percentage.apply(retentionPerc7d));
         TPSMutator tpsMutator = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(weekAgo, now, serverUUID)));
-        sevenDays.put("average_tps", decimals.apply(tpsMutator.averageTPS()));
+        double averageTPS = tpsMutator.averageTPS();
+        sevenDays.put("average_tps", averageTPS != -1 ? decimals.apply(averageTPS) : "Unavailable");
         sevenDays.put("low_tps_spikes", tpsMutator.lowTpsSpikeCount(config.getNumber(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
         sevenDays.put("downtime", timeAmount.apply(tpsMutator.serverDownTime()));
 
