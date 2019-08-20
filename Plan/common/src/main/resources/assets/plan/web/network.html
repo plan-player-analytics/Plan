@@ -316,178 +316,48 @@
                             &middot; Servers</h1>
                     </div>
 
-                    <div class="row">
-                        <div class="col-xl-6 col-lg-6 col-sm-12">
-                            <!-- Server 1 -->
-                            <div class="card shadow mb-4">
-                                <div
-                                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
-                                            class="fas fa-fw fa-server col-light-green"></i>
-                                        Server 1</h6>
-                                    <div class="mb-0 col-lg-6">
-                                        <p class="mb-1"><i class="fa fa-fw fa-users col-black"></i> Registered
-                                            Players<span class="float-right"><b>321</b></span></p>
-                                        <p class="mb-0"><i class="fa fa-fw fa-user col-blue"></i> Players Online<span
-                                                class="float-right"><b>43</b></span></p>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <button aria-controls="server_1_online" aria-expanded="true"
-                                            class="btn bg-blue ml-2 collapsed" data-target=".server_1_online"
-                                            data-toggle="collapse"><i class="fa fa-fw fa-chart-area"></i></button>
-                                    <p class="my-3 col-lg-5"><i class="fa fa-fw fa-chart-pie"></i> Analysis Cached<span
-                                            class="float-right"><b>no</b></span></p>
-                                    <button class="btn bg-grey mr-2"><i class="fa fa-fw fa-chart-line"></i> Server
-                                        Analysis
-                                    </button>
-                                </div>
-                            </div>
-                            <!-- Server 2 -->
-                            <div class="card shadow mb-4">
-                                <div
-                                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
-                                            class="fas fa-fw fa-server col-light-green"></i>
-                                        Server 2</h6>
-                                    <div class="mb-0 col-lg-6">
-                                        <p class="mb-1"><i class="fa fa-fw fa-users col-black"></i> Registered
-                                            Players<span class="float-right"><b>234</b></span></p>
-                                        <p class="mb-0"><i class="fa fa-fw fa-user col-blue"></i> Players Online<span
-                                                class="float-right"><b>2</b></span></p>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <button aria-controls="server_2_online" aria-expanded="true"
-                                            class="btn bg-blue ml-2 collapsed" data-target=".server_2_online"
-                                            data-toggle="collapse"><i class="fa fa-fw fa-chart-area"></i></button>
-                                    <p class="my-3 col-lg-5"><i class="fa fa-fw fa-chart-pie"></i> Analysis Cached<span
-                                            class="float-right"><b>yes</b></span></p>
-                                    <a class="btn bg-light-green mr-2" href="server"><i
-                                            class="fa fa-fw fa-chart-line"></i> Server
-                                        Analysis</a>
-                                </div>
-                            </div>
-                            <!-- Server 3 -->
-                            <div class="card shadow mb-4">
-                                <div
-                                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
-                                            class="fas fa-fw fa-server col-light-green"></i>
-                                        Server 3</h6>
-                                    <div class="mb-0 col-lg-6">
-                                        <p class="mb-1"><i class="fa fa-fw fa-users col-black"></i> Registered
-                                            Players<span class="float-right"><b>500</b></span></p>
-                                        <p class="mb-0"><i class="fa fa-fw fa-user col-blue"></i> Players Online<span
-                                                class="float-right"><b>32</b></span></p>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <button aria-controls="server_3_online" aria-expanded="true"
-                                            class="btn bg-blue ml-2 collapsed" data-target=".server_3_online"
-                                            data-toggle="collapse"><i class="fa fa-fw fa-chart-area"></i></button>
-                                    <p class="my-3 col-lg-5"><i class="fa fa-fw fa-chart-pie"></i> Analysis Cached<span
-                                            class="float-right"><b>no</b></span></p>
-                                    <button class="btn bg-grey mr-2"><i class="fa fa-fw fa-chart-line"></i> Server
-                                        Analysis
-                                    </button>
-                                </div>
-                            </div>
+                    <div class="row" id="data_servers">
+                        <div class="col-xl-6 col-lg-6 col-sm-12 scrollbar">
+                            <div id="data_server_list"></div>
                         </div>
-                        <div class="col-xl-6 col-lg-6 col-sm-12" id="server_online">
+                        <div class="col-xl-6 col-lg-6 col-sm-12">
                             <div class="card shadow mb-4">
-                                <div
-                                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold col-black"><i
-                                            class="fas fa-fw fa-chart-area col-blue"></i>
-                                        <span class="server_1_online collapse show"
-                                              data-parent="#server_online">Server 1</span><span
-                                                class="server_2_online collapse" data-parent="#server_online">Server
-                                                2</span><span class="server_3_online collapse"
-                                                              data-parent="#server_online">Server
-                                                3</span> Online Activity</h6>
+                                            class="fas fa-fw fa-chart-area col-blue"></i>&nbsp;
+                                        <span class="data_server_name"></span> Online Activity (30 Days)</h6>
                                 </div>
-                                <div class="server_1_online collapse show" data-parent="#server_online">
-                                    <div class="chart-area bg-blue"></div>
-                                </div>
-                                <div class="server_2_online collapse" data-parent="#server_online">
-                                    <div class="chart-area bg-red"></div>
-                                </div>
-                                <div class="server_3_online collapse" data-parent="#server_online">
-                                    <div class="chart-area bg-green"></div>
-                                </div>
+                                <div class="chart-area" id="quick_view_players_online"></div>
                             </div>
                             <!-- Servers as numbers -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold col-black"><i
-                                            class="fa fa-fw fa-book-open col-light-green"></i>
-                                        <span class="server_1_online collapse show"
-                                              data-parent="#server_online">Server 1</span><span
-                                                class="server_2_online collapse" data-parent="#server_online">Server
-                                                2</span><span class="server_3_online collapse"
-                                                              data-parent="#server_online">Server
-                                                3</span> as Numbers</h6>
+                                            class="fa fa-fw fa-book-open col-light-green"></i>&nbsp;
+                                        <span class="data_server_name"></span> as Numbers</h6>
                                 </div>
-                                <div class="card-body">
-                                    <div class="server_1_online collapse show" data-parent="#server_online">
-                                        <p><i class="col-blue fa fa-fw fa-chart-line"></i> Last Peak: Today,
-                                            3:28<span class="float-right"><b>23</b>
-                                                    Players</span></p>
-                                        <p><i class="col-green fa fa-fw fa-chart-line"></i> All Time Peak: Sep 5 2017,
-                                            12:43<span class="float-right"><b>32</b>
-                                                    Players</span></p>
-                                        <hr>
-                                        <p>Last 7 Days</p>
-                                        <p><i class="col-blue fa fa-fw fa-users"></i> Unique Players<span
-                                                class="float-right"><b>0</b></span></p>
-                                        <p><i class="col-light-green fa fa-fw fa-users"></i> New Players<span
-                                                class="float-right"><b>0</b></span></p>
-                                        <p><i class="col-red fa fa-fw fa-exclamation-circle"></i> Low TPS Spikes <span
-                                                class="float-right"><b>0</b></span></p>
-                                        <p><i class="col-red fa fa-fw fa-power-off"></i> Server downtime <span
-                                                class="float-right">5d
-                                                    3h 33m 46s</span></p>
-
-                                    </div>
-                                    <div class="server_2_online collapse" data-parent="#server_online">
-                                        <p><i class="col-blue fa fa-fw fa-chart-line"></i> Last Peak: Yesterday,
-                                            16:28<span class="float-right"><b>43</b>
-                                                    Players</span></p>
-                                        <p><i class="col-green fa fa-fw fa-chart-line"></i> All Time Peak: Sep 5 2017,
-                                            12:43<span class="float-right"><b>52</b>
-                                                    Players</span></p>
-                                        <hr>
-                                        <p>Last 7 Days</p>
-                                        <p><i class="col-blue fa fa-fw fa-users"></i> Unique Players<span
-                                                class="float-right"><b>0</b></span></p>
-                                        <p><i class="col-light-green fa fa-fw fa-users"></i> New Players<span
-                                                class="float-right"><b>0</b></span></p>
-                                        <p><i class="col-red fa fa-fw fa-exclamation-circle"></i> Low TPS Spikes <span
-                                                class="float-right"><b>0</b></span></p>
-                                        <p><i class="col-red fa fa-fw fa-power-off"></i> Server downtime <span
-                                                class="float-right">5d
-                                                    3h 33m 46s</span></p>
-                                    </div>
-                                    <div class="server_3_online collapse" data-parent="#server_online">
-                                        <p><i class="col-blue fa fa-fw fa-chart-line"></i> Last Peak: Today,
-                                            7:28<span class="float-right"><b>4</b>
-                                                    Players</span></p>
-                                        <p><i class="col-green fa fa-fw fa-chart-line"></i> All Time Peak: Today,
-                                            7:28<span class="float-right"><b>4</b>
-                                                    Players</span></p>
-                                        <hr>
-                                        <p>Last 7 Days</p>
-                                        <p><i class="col-blue fa fa-fw fa-users"></i> Unique Players<span
-                                                class="float-right"><b>0</b></span></p>
-                                        <p><i class="col-light-green fa fa-fw fa-users"></i> New Players<span
-                                                class="float-right"><b>0</b></span></p>
-                                        <p><i class="col-red fa fa-fw fa-exclamation-circle"></i> Low TPS Spikes <span
-                                                class="float-right"><b>0</b></span></p>
-                                        <p><i class="col-red fa fa-fw fa-power-off"></i> Server downtime <span
-                                                class="float-right">5d
-                                                    3h 33m 46s</span></p>
-                                    </div>
+                                <div class="card-body" id="data_quick_view">
+                                    <p><i class="col-blue fa fa-fw fa-chart-line"></i> Last Peak: <span
+                                            id="data_last_peak_date"></span><span class="float-right"><b
+                                            id="data_last_peak_players"></b> Players</span>
+                                    </p>
+                                    <p><i class="col-green fa fa-fw fa-chart-line"></i> Best Peak: <span
+                                            id="data_best_peak_date"></span><span class="float-right"><b
+                                            id="data_best_peak_players"></b> Players</span>
+                                    </p>
+                                    <hr>
+                                    <p><b>Last 7 Days</b></p>
+                                    <p><i class="col-blue fa fa-fw fa-users"></i> Unique Players<span
+                                            class="float-right"><b id="data_unique"></b></span></p>
+                                    <p><i class="col-light-green fa fa-fw fa-users"></i> New Players<span
+                                            class="float-right"><b id="data_new"></b></span></p>
+                                    <hr>
+                                    <p><i class="col-orange fa fa-fw fa-tachometer-alt"></i> Average TPS<span
+                                            class="float-right"><b id="data_avg_tps"></b></span></p>
+                                    <p><i class="col-red fa fa-fw fa-exclamation-circle"></i> Low TPS Spikes<span
+                                            class="float-right"><b id="data_low_tps_spikes"></b></span></p>
+                                    <p><i class="col-red fa fa-fw fa-power-off"></i> Downtime<span
+                                            class="float-right" id="data_downtime"></span></p>
                                 </div>
                             </div>
                         </div>
@@ -516,10 +386,12 @@
                                 </div>
                                 <table class="table mb-0" id="tableAccordion">
                                     <thead>
-                                    <th><i class="fa fa-fw fa-user"></i> Player</th>
-                                    <th><i class="far fa-fw fa-clock"></i> Session Started</th>
-                                    <th><i class="far fa-fw fa-clock"></i> Length</th>
-                                    <th><i class="fa fa-fw fa-server"></i> Server</th>
+                                    <tr>
+                                        <th><i class="fa fa-fw fa-user"></i> Player</th>
+                                        <th><i class="far fa-fw fa-clock"></i> Session Started</th>
+                                        <th><i class="far fa-fw fa-clock"></i> Length</th>
+                                        <th><i class="fa fa-fw fa-server"></i> Server</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
                                     <tr aria-controls="session_t_1" aria-expanded="true"
@@ -1240,6 +1112,7 @@
 <script>
     setLoadingText('Calculating values..');
     jsonRequest("../v1/network/overview", loadNetworkOverviewValues);
+    jsonRequest("../v1/network/servers", loadServerBoxes);
     jsonRequest("../v1/network/playerbaseOverview", loadPlayerbaseOverviewValues);
     setLoadingText('Rendering graphs..');
 
