@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.system.afk;
 
-import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
@@ -33,11 +32,19 @@ public class AFKTracker {
     private final Set<UUID> usedAFKCommand;
     private final Map<UUID, Long> lastMovement;
     private final PlanConfig config;
+    private Long afkThresholdMs;
 
     public AFKTracker(PlanConfig config) {
         this.config = config;
         usedAFKCommand = new HashSet<>();
         lastMovement = new HashMap<>();
+    }
+
+    public long getAfkThreshold() {
+        if (afkThresholdMs == null) {
+            afkThresholdMs = config.get(TimeSettings.AFK_THRESHOLD);
+        }
+        return afkThresholdMs;
     }
 
     public void hasIgnorePermission(UUID uuid) {
@@ -46,31 +53,28 @@ public class AFKTracker {
 
     public void usedAfkCommand(UUID uuid, long time) {
         usedAFKCommand.add(uuid);
-        lastMovement.put(uuid, time - config.get(TimeSettings.AFK_THRESHOLD));
+        lastMovement.put(uuid, time - getAfkThreshold());
     }
 
     public void performedAction(UUID uuid, long time) {
         Long lastMoved = lastMovement.getOrDefault(uuid, time);
+        // Ignore afk permission
         if (lastMoved == -1) {
             return;
         }
         lastMovement.put(uuid, time);
 
         try {
-            if (time - lastMoved < config.get(TimeSettings.AFK_THRESHOLD)) {
+            if (time - lastMoved < getAfkThreshold()) {
                 // Threshold not crossed, no action required.
                 return;
             }
 
-            long removeAfkCommandEffect = usedAFKCommand.contains(uuid) ? config.get(TimeSettings.AFK_THRESHOLD) : 0;
+            long removeAfkCommandEffect = usedAFKCommand.contains(uuid) ? getAfkThreshold() : 0;
             long timeAFK = time - lastMoved - removeAfkCommandEffect;
 
-            Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
-            if (!cachedSession.isPresent()) {
-                return;
-            }
-            Session session = cachedSession.get();
-            session.addAFKTime(timeAFK);
+            SessionCache.getCachedSession(uuid)
+                    .ifPresent(session -> session.addAFKTime(timeAFK));
         } finally {
             usedAFKCommand.remove(uuid);
         }
@@ -89,6 +93,6 @@ public class AFKTracker {
         if (lastMoved == null || lastMoved == -1) {
             return false;
         }
-        return time - lastMoved > config.get(TimeSettings.AFK_THRESHOLD);
+        return time - lastMoved > getAfkThreshold();
     }
 }

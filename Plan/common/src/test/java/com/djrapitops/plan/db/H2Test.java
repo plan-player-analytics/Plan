@@ -17,6 +17,7 @@
 package com.djrapitops.plan.db;
 
 import com.djrapitops.plan.system.PlanSystem;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
@@ -50,6 +51,12 @@ public class H2Test implements DatabaseTest {
         system = new PluginMockComponent(temp).getPlanSystem();
         database = new DBPreparer(system, TEST_PORT_NUMBER).prepareH2()
                 .orElseThrow(IllegalStateException::new);
+    }
+
+    @AfterAll
+    static void disableSystem() {
+        if (database != null) database.close();
+        system.disable();
     }
 
     @Override
