@@ -109,24 +109,6 @@ Enable FAIL - Database Patch                    || データベースのパッ�
 Enable FAIL - GeoDB Write                       || ダウンロードした「GeoLite2」の位置情報データベースを保存中に何らかのエラーが発生しました
 Enable FAIL - WebServer (Bungee)                || ウェブサーバーの初期化に失敗しました!
 Enable FAIL - Wrong Database Type               || ${0}はサポートされていないデータベースです
-Health - Active Playtime Comparison Decrease    ||  よくログインしているプレイヤーのやることが少なくなっている可能性があります (直近2週間のアクティブ時間が${0}に対し、1ヶ月～2週間のアクティブ時間が${1}です)
-Health - Active Playtime Comparison Increase    ||  よくログインしているプレイヤーのやるべきことがある可能性があります (直近2週間のアクティブ時間が${0}に対し、1ヶ月～2週間のアクティブ時間が${1}です)
-Health - Downtime                               || サーバーの合計停止時間(データが存在しない)が${0}です
-Health - New Player Join Players, No            ||  新規プレイヤーが参加時、一緒にプレイするプレイヤーがいないかもしれません。(平均${0}人のプレイヤーがオンラインです)
-Health - New Player Join Players, Yes           ||  新規プレイヤーが参加時、一緒にプレイするプレイヤーがいます。(平均${0}人のプレイヤーがオンラインです)
-Health - New Player Stickiness                  ||  ${0}人の新規プレイヤーが行き詰詰まっています。(${1}/${2})
-Health - No Servers Inaccuracy                  ||  セッションデータを収集するBukkit/Spongeサーバーが接続されていません - 不正確なデータが表示されます
-Health - Player Play on Network                 ||  人のプレイヤーがネットワーク上でプレイしています:
-Health - Player Register Server                 ||  人のプレイヤーが1日あたり登録されています。以下サーバーごとの1日の登録数:
-Health - Player Visit Server                    ||  人のプレイヤーが1日あたりこのサーバーに接続しています。以下サーバーごとの1日の接続数:
-Health - Regular Activity Change                ||  しばしばログインしているプレイヤー数は
-Health - Regular Activity Change Decrease       || ${0}人減少しました (-${0}人)
-Health - Regular Activity Change Increase       || ${0}人増加しました (+${0}人)
-Health - Regular Activity Change Zero           || 変化していません (+${0}人)
-Health - Regular Activity Remain                ||  ${0}人のしばしばログインしているプレイヤーはよくログインするようになりました(${1}/${2})
-Health - Single Servers Inaccuracy              ||  セッションデータを収集するためのBukkit/Spongeサーバーが1つしか存在しません
-Health - TPS Above Low Threshold                ||  平均TPSの${0}が平均TPSの下限しきい値より高い値を示しています
-Health - TPS Low Dips                           ||  平均TPSの下限しきい値を下回った回数:${1}回(以前の値:${0}回)
 HTML - ACTIVITY_INDEX                           || 活動指数
 HTML - ALL                                      || 全て
 HTML - ALL_TIME_PEAK                            || 全体のピークタイム

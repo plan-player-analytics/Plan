@@ -315,23 +315,5 @@ WebServer FAIL - SSL Context                    || 网页服务器：SSL 环境�
 WebServer FAIL - Store Load                     || 网页服务器：SSL 证书载入失败。
 Yesterday                                       || '昨天'
 Today                                           || '今天'
-Health - Active Playtime Comparison Decrease    ||  玩家可能闲得没事干了 (活跃玩家数 ${0} vs ${1}, 最近2周 vs 2-4周)
-Health - Active Playtime Comparison Increase    ||  玩家可能有很多事要做 (活跃玩家数 ${0} vs ${1}, 最近2周 vs 2-4周)
-Health - Downtime                               ||  服务器停机时间为 (无数据传输的时间) ${0}
-Health - New Player Join Players, No            ||  新玩家里也许很少有人继续玩下去 (平均为 ${0} )
-Health - New Player Join Players, Yes           ||  新玩家里有人玩了下去 (平均为 ${0} )
-Health - New Player Stickiness                  ||  ${0} 的新玩家留了下来 (${1}/${2})
-Health - No Servers Inaccuracy                  ||  没有可收集数据的 Bukkit/Sponge 服务器 - 这些数据不准确.
-Health - Player Play on Network                 ||  在这个服务器网络内游玩的玩家:
-Health - Player Register Server                 ||  平均每日每服务器注册玩家数.
-Health - Player Visit Server                    ||  平均每日每服务器登录服务器玩家数.
-Health - Regular Activity Change                ||  普通玩家数
-Health - Regular Activity Change Decrease       || 减少了 (${0})
-Health - Regular Activity Change Increase       || 增加了 (+${0})
-Health - Regular Activity Change Zero           || 保持不变 (+${0})
-Health - Regular Activity Remain                ||  ${0} 普通玩家仍保持活跃 (${1}/${2})
-Health - Single Servers Inaccuracy              ||  收集单个 Bukkit/Sponge 服务器的时域数据.
-Health - TPS Above Low Threshold                ||  ${0} 的平均TPS超过了最低门槛
-Health - TPS Low Dips                           ||  平均TPS低于最低门槛 (${0}) ${1} 此
 HTML - FREE_DISK_SPACE                          || 剩余磁盘空间
 HTML - DISK_SPACE                               || 磁盘空间
