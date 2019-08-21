@@ -25,8 +25,6 @@ import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.db.access.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
-import com.djrapitops.plan.system.database.databases.sql.operation.SQLFetchOps;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -116,15 +114,6 @@ public class CommonAPI implements PlanAPI {
     @Override
     public String getPlayerName(UUID playerUUID) {
         return queryDB(UserIdentifierQueries.fetchPlayerNameOf(playerUUID)).orElse(null);
-    }
-
-    @Override
-    public FetchOperations fetchFromPlanDB() {
-        logger.warn("PlanAPI#fetchFromPlanDB has been deprecated and will be removed in the future. Stack trace to follow");
-        for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
-            logger.warn(element.toString());
-        }
-        return new SQLFetchOps(dbSystem.getDatabase());
     }
 
     private <T> T queryDB(Query<T> query) {

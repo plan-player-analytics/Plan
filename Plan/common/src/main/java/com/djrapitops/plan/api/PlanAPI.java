@@ -19,7 +19,6 @@ package com.djrapitops.plan.api;
 import com.djrapitops.plan.api.data.PlayerContainer;
 import com.djrapitops.plan.api.data.ServerContainer;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 
 import java.util.Collection;
 import java.util.Map;
@@ -65,15 +64,6 @@ public interface PlanAPI {
     UUID playerNameToUUID(String playerName);
 
     Map<UUID, String> getKnownPlayerNames();
-
-    /**
-     * Fetch things from the database.
-     *
-     * @return FetchOperations object.
-     * @deprecated FetchOperations interface is going to removed since it is too rigid.
-     */
-    @Deprecated
-    FetchOperations fetchFromPlanDB();
 
     /**
      * Fetch PlayerContainer from the database.
