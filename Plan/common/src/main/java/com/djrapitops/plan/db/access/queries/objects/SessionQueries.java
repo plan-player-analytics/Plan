@@ -331,6 +331,27 @@ public class SessionQueries {
         };
     }
 
+    private static Query<Long> fetchLatestSessionStartLimit(int limit) {
+        String sql = SELECT + SessionsTable.SESSION_START + FROM + SessionsTable.TABLE_NAME +
+                ORDER_BY_SESSION_START_DESC + " LIMIT ?";
+
+        return new QueryStatement<Long>(sql, limit) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setInt(1, limit);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                Long last = null;
+                while (set.next()) {
+                    last = set.getLong(SessionsTable.SESSION_START);
+                }
+                return last;
+            }
+        };
+    }
+
     public static Query<List<Session>> fetchLatestSessionsOfServer(UUID serverUUID, int limit) {
         String sql = SELECT_SESSIONS_STATEMENT +
                 WHERE + "s." + SessionsTable.SERVER_UUID + "=?" +
@@ -344,6 +365,27 @@ public class SessionQueries {
                 public void prepare(PreparedStatement statement) throws SQLException {
                     statement.setString(1, serverUUID.toString());
                     statement.setLong(2, start != null ? start : 0L);
+                }
+
+                @Override
+                public List<Session> processResults(ResultSet set) throws SQLException {
+                    return extractDataFromSessionSelectStatement(set);
+                }
+            });
+        };
+    }
+
+    public static Query<List<Session>> fetchLatestSessions(int limit) {
+        String sql = SELECT_SESSIONS_STATEMENT +
+                WHERE + "s." + SessionsTable.SESSION_START + ">=?" +
+                ORDER_BY_SESSION_START_DESC;
+
+        return db -> {
+            Long start = db.query(fetchLatestSessionStartLimit(limit));
+            return db.query(new QueryStatement<List<Session>>(sql) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, start != null ? start : 0L);
                 }
 
                 @Override

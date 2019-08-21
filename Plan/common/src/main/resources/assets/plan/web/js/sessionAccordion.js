@@ -69,7 +69,7 @@ function createAccordionTitle(i, session) {
         + session.name + (session.first_session ? ' <i title="Registered (First session)" class="far fa-calendar-plus"></i>' : '') + '</td>'
         + '<td>' + session.start + '</td>'
         + '<td>' + session.length + '</td>'
-        + '<td>' + session.most_used_world + '</td></tr>'
+        + '<td>' + (session.network_server ? session.network_server : session.most_used_world) + '</td></tr>'
 }
 
 function createAccordionBody(i, session) {
@@ -87,7 +87,8 @@ function createAccordionBody(i, session) {
         createKillsTable(session.player_kills) +
         '</div><div class="col-xs-12  col-sm-12 col-md-6 col-lg-6">' +
         '<div id="worldpie_' + i + '" class="chart-pie"></div>' +
-        '<a target="_blank" href="/player/' + session.player_name + '"><button type="button" class="float-right btn bg-blue waves-effect\"><i class="fa fa-user"></i><span> Player Page</span></button></a>' +
+        '<a href="/player/' + session.player_name + '" class="float-right btn bg-blue"><i class="fa fa-user"></i><span> Player Page</span></a>' +
+        (session.network_server ? '<a href="/server/' + session.server_name + '" class="float-right btn bg-light-green mr-2"><i class="fa fa-server"></i><span> Server Page</span></a>' : '') +
         '</div>' +
         '</div></td></tr>'
 }

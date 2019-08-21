@@ -54,8 +54,12 @@ public class SessionsJSONHandler implements PageHandler {
 
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
-        UUID serverUUID = identifiers.getServerUUID(target);
-        return new JSONResponse(Collections.singletonMap("sessions", jsonFactory.serverSessionsAsJSONMap(serverUUID)));
+        if (target.getParameter("server").isPresent()) {
+            UUID serverUUID = identifiers.getServerUUID(target);
+            return new JSONResponse(Collections.singletonMap("sessions", jsonFactory.serverSessionsAsJSONMap(serverUUID)));
+        }
+        // Assume network
+        return new JSONResponse(Collections.singletonMap("sessions", jsonFactory.serverSessionsAsJSONMap()));
     }
 
     @Override
