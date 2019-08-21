@@ -313,23 +313,5 @@ WebServer FAIL - SSL Context                    || Web Palvelin: SSL Kontekstin 
 WebServer FAIL - Store Load                     || Web Palvelin: SSL Sertifikaatin lataus ei onnistunut.
 Yesterday                                       || 'Eilen'
 Today                                           || 'Tänään'
-Health - Active Playtime Comparison Decrease    ||  Aktiivisilta pelaajilta voi olla loppumassa tekeminen (Pelasivat ${0} vs ${1}, viimeisen kahden viikon vs viikot 2-4)
-Health - Active Playtime Comparison Increase    ||  Aktiivisilta pelaajilta vaikuttaa olevan tekemistä (Pelasivat ${0} vs ${1}, viimeisen kahden viikon vs viikot 2-4)
-Health - Downtime                               ||  Palvelimen downtime (Ei Dataa) oli ${0}
-Health - New Player Join Players, No            ||  Uusilla pelaajilla voi olla yksinäistä (${0} paikalla keskimäärin)
-Health - New Player Join Players, Yes           ||  Uusilla pelaajilla on kavereita liittyessä (${0} paikalla keskimäärin)
-Health - New Player Stickiness                  ||  ${0} uusista pelaajista jäi pelaamaan (${1}/${2})
-Health - No Servers Inaccuracy                  ||  Ei Bukkit/Sponge palvelimia sessio tietojen keräykseen - Nämä arviot ovat epätarkkoja.
-Health - Player Play on Network                 ||  pelaajaa pelasi verkossa:
-Health - Player Register Server                 ||  pelaajaa rekisteröityi palvelimille per päivä/palvelin keskimäärin.
-Health - Player Visit Server                    ||  pelaajaa käy palvelimilla per päivä/palvelin keskimäärin.
-Health - Regular Activity Change                ||  Kestopelaajien määrä on
-Health - Regular Activity Change Decrease       || pienentynyt (${0})
-Health - Regular Activity Change Increase       || kasvanut (+${0})
-Health - Regular Activity Change Zero           || pysynyt samana (+${0})
-Health - Regular Activity Remain                ||  ${0} kestopelaajista on pysynyt aktiivisena (${1}/${2})
-Health - Single Servers Inaccuracy              ||  Yksi Bukkit/Sponge palvelin sessio tietojen keräykseen.
-Health - TPS Above Low Threshold                ||  Keskimääräinen TPS oli alarajan yläpuolella ${0} ajasta
-Health - TPS Low Dips                           ||  Keskimääräinen TPS putosi alarajan alapuolelle (${0}) ${1} kertaa
 HTML - FREE_DISK_SPACE                          || Vapaa Levytila
 HTML - DISK_SPACE                               || LEVYTILA

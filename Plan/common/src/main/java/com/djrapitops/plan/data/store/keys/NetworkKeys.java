@@ -31,6 +31,7 @@ import java.util.*;
  * @author Rsl1122
  * @see com.djrapitops.plan.data.store.containers.NetworkContainer for DataContainer.
  */
+@Deprecated
 public class NetworkKeys {
 
     public static final PlaceholderKey<String> VERSION = CommonPlaceholderKeys.VERSION;

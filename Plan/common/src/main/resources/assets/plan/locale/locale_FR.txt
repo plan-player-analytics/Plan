@@ -314,23 +314,5 @@ WebServer FAIL - SSL Context                    || Serveur Web : Échec d'initia
 WebServer FAIL - Store Load                     || Serveur Web : Échec du chargement du certificat SSL.
 Yesterday                                       || 'Hier'
 Today                                           || 'Aujourd''hui'
-Health - Active Playtime Comparison Decrease    ||  Les joueurs actifs risquent de manquer de choses à faire (Joué ${0} contre ${1}, les deux dernières semaines par rapport aux semaines 2 à 4).
-Health - Active Playtime Comparison Increase    ||  Les joueurs actifs semblent avoir des choses à faire (Joué ${0} contre ${1}, les deux dernières semaines par rapport aux semaines 2 à 4).
-Health - Downtime                               ||  Le temps total d'arrêt du serveur (absence de données) était de ${0}.
-Health - New Player Join Players, No            ||  Les nouveaux joueurs peuvent ne pas avoir de joueurs avec lesquels jouer (${0} en moyenne).
-Health - New Player Join Players, Yes           ||  Les nouveaux joueurs ont des joueurs avec lesquels jouer (${0} en moyenne).
-Health - New Player Stickiness                  ||  ${0} des nouveaux joueurs sont restés (${1}/${2}).
-Health - No Servers Inaccuracy                  ||  Aucun serveur Bukkit/Sponge pour collecter des données de session - Ces mesures sont inexactes.
-Health - Player Play on Network                 ||  joueurs jouent sur le réseau :
-Health - Player Register Server                 ||  joueurs s'enregistrent surle serveur par jour/serveur en moyenne.
-Health - Player Visit Server                    ||  joueurs visitent le serveur par jour/serveur en moyenne.
-Health - Regular Activity Change                ||  Le nombre de joueurs réguliers a 
-Health - Regular Activity Change Decrease       || diminué (${0}).
-Health - Regular Activity Change Increase       || augmenté (+${0}).
-Health - Regular Activity Change Zero           || stagné (+/-${0}).
-Health - Regular Activity Remain                ||  ${0} des joueurs réguliers sont restés actifs (${1}/${2}).
-Health - Single Servers Inaccuracy              ||  Un seul serveur Bukkit/Sponge pour collecter les données de session.
-Health - TPS Above Low Threshold                ||  Les TPS moyens étaient supérieurs au seuil bas ${0} du temps.
-Health - TPS Low Dips                           ||  Les TPS moyens sont descendus sous le seuil bas (${0}) ${1} fois.
 HTML - FREE_DISK_SPACE                          || Espace disque disponible
 HTML - DISK_SPACE                               || ESPACE DISQUE
