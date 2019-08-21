@@ -17,7 +17,6 @@
 package com.djrapitops.plan.db;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.db.tasks.KeepAliveTask;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -57,12 +56,11 @@ public class H2DB extends SQLDB {
             Locale locale,
             PlanConfig config,
             Lazy<ServerInfo> serverInfo,
-            NetworkContainer.Factory networkContainerFactory,
             RunnableFactory runnableFactory,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        super(() -> serverInfo.get().getServerUUID(), locale, config, networkContainerFactory, runnableFactory, logger, errorHandler);
+        super(() -> serverInfo.get().getServerUUID(), locale, config, runnableFactory, logger, errorHandler);
         dbName = databaseFile.getName();
         this.databaseFile = databaseFile;
     }
@@ -173,7 +171,6 @@ public class H2DB extends SQLDB {
         private final Locale locale;
         private final PlanConfig config;
         private final Lazy<ServerInfo> serverInfo;
-        private final NetworkContainer.Factory networkContainerFactory;
         private final RunnableFactory runnableFactory;
         private final PluginLogger logger;
         private final ErrorHandler errorHandler;
@@ -185,7 +182,6 @@ public class H2DB extends SQLDB {
                 PlanConfig config,
                 PlanFiles files,
                 Lazy<ServerInfo> serverInfo,
-                NetworkContainer.Factory networkContainerFactory,
                 RunnableFactory runnableFactory,
                 PluginLogger logger,
                 ErrorHandler errorHandler
@@ -194,7 +190,6 @@ public class H2DB extends SQLDB {
             this.config = config;
             this.files = files;
             this.serverInfo = serverInfo;
-            this.networkContainerFactory = networkContainerFactory;
             this.runnableFactory = runnableFactory;
             this.logger = logger;
             this.errorHandler = errorHandler;
@@ -211,7 +206,6 @@ public class H2DB extends SQLDB {
         public H2DB usingFile(File databaseFile) {
             return new H2DB(databaseFile,
                     locale, config, serverInfo,
-                    networkContainerFactory,
                     runnableFactory, logger, errorHandler
             );
         }

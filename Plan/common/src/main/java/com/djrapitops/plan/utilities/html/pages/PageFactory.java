@@ -17,7 +17,6 @@
 package com.djrapitops.plan.utilities.html.pages;
 
 import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
-import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
@@ -160,8 +159,6 @@ public class PageFactory {
     }
 
     public NetworkPage networkPage() {
-        NetworkContainer networkContainer = dbSystem.get().getDatabase()
-                .query(ContainerFetchQueries.fetchNetworkContainer()); // Not cached, big.
         return new NetworkPage(dbSystem.get(),
                 versionCheckSystem.get(), fileSystem.get(), config.get(), theme.get(), serverInfo.get(), formatters.get());
     }

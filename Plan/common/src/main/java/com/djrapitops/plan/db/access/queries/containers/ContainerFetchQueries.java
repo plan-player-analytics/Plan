@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.db.access.queries.containers;
 
-import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.db.access.Query;
@@ -33,16 +32,6 @@ public class ContainerFetchQueries {
 
     private ContainerFetchQueries() {
         /* Static method class */
-    }
-
-    /**
-     * Used to get a NetworkContainer, some limitations apply to values returned by DataContainer keys.
-     *
-     * @return a new NetworkContainer.
-     * @see NetworkContainerQuery
-     */
-    public static Query<NetworkContainer> fetchNetworkContainer() {
-        return new NetworkContainerQuery();
     }
 
     /**
