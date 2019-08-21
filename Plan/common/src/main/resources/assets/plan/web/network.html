@@ -404,7 +404,7 @@
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold col-black"><i
                                             class="fa fa-fw fa-network-wired col-teal"></i>
-                                        Server Playtime</h6>
+                                        Server Playtime for 30 Days</h6>
                                 </div>
                                 <div class="chart-pie" id="serverPie"></div>
                             </div>
@@ -941,6 +941,20 @@
             lineChart('uniqueChart', [uniquePlayers, newPlayers]);
         } else if (error) {
             $('#uniqueChart').text("Failed to load graph data: " + error)
+        }
+    });
+
+    jsonRequest("../v1/graph?type=serverPie", function (json, error) {
+        if (data) {
+            serverPieSeries = {
+                name: 'Server Playtime',
+                colorByPoint: true,
+                colors: json.server_pie_colors,
+                data: json.server_pie_series_30d
+            };
+            serverPie('serverPie', serverPieSeries);
+        } else if (error) {
+            $('#serverPie').text("Failed to load graph data: " + error)
         }
     });
 

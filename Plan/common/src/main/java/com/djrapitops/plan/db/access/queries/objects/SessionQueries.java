@@ -717,4 +717,31 @@ public class SessionQueries {
             }
         };
     }
+
+    public static Query<Map<String, Long>> playtimePerServer(long after, long before) {
+        String sql = SELECT +
+                "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime," +
+                ServerTable.NAME +
+                FROM + SessionsTable.TABLE_NAME +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.SERVER_UUID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_UUID +
+                WHERE + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?" +
+                GROUP_BY + ServerTable.NAME;
+        return new QueryStatement<Map<String, Long>>(sql, 100) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, after);
+                statement.setLong(2, before);
+            }
+
+            @Override
+            public Map<String, Long> processResults(ResultSet set) throws SQLException {
+                Map<String, Long> playtimePerServer = new HashMap<>();
+                while (set.next()) {
+                    playtimePerServer.put(set.getString(ServerTable.NAME), set.getLong("playtime"));
+                }
+                return playtimePerServer;
+            }
+        };
+    }
 }

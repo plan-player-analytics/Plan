@@ -65,9 +65,12 @@ public class PieGraphFactory {
         return new ActivityPie(activityData, colors);
     }
 
-
     public Pie serverPreferencePie(Map<UUID, String> serverNames, Map<UUID, WorldTimes> serverWorldTimes) {
         return new ServerPreferencePie(serverNames, serverWorldTimes);
+    }
+
+    public Pie serverPreferencePie(Map<String, Long> serverPlaytimes) {
+        return new ServerPreferencePie(serverPlaytimes);
     }
 
     public WorldPie worldPie(WorldTimes worldTimes) {
