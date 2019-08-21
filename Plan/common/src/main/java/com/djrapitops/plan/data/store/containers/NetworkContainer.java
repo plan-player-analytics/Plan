@@ -22,7 +22,6 @@ import com.djrapitops.plan.data.store.keys.NetworkKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
-import com.djrapitops.plan.data.store.mutators.health.NetworkHealthInformation;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
 import com.djrapitops.plan.db.access.queries.objects.GeoInfoQueries;
@@ -97,7 +96,6 @@ public class NetworkContainer extends DynamicDataContainer {
         addConstants();
         addServerBoxes();
         addPlayerInformation();
-        addNetworkHealth();
     }
 
     private void addServerBoxes() {
@@ -131,20 +129,6 @@ public class NetworkContainer extends DynamicDataContainer {
             }
             return serverBoxes.toString();
         });
-    }
-
-    private void addNetworkHealth() {
-        Key<NetworkHealthInformation> healthInformation = new Key<>(NetworkHealthInformation.class, "HEALTH_INFORMATION");
-        putCachingSupplier(healthInformation, () -> new NetworkHealthInformation(
-                this,
-                locale,
-                config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD),
-                config.get(TimeSettings.ACTIVE_LOGIN_THRESHOLD),
-                formatters.timeAmount(), formatters.decimals(), formatters.percentage(),
-                config.getTimeZone()
-        ));
-        putCachingSupplier(NetworkKeys.HEALTH_INDEX, () -> getUnsafe(healthInformation).getServerHealth());
-        putCachingSupplier(NetworkKeys.HEALTH_NOTES, () -> getUnsafe(healthInformation).toHtml());
     }
 
     private void addConstants() {
