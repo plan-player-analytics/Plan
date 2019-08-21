@@ -94,6 +94,17 @@ public class JSONFactory {
         return new SessionsMutator(sessions).toPlayerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters);
     }
 
+    public List<Map<String, Object>> serverSessionsAsJSONMap() {
+        Database db = dbSystem.getDatabase();
+        List<Session> sessions = db.query(SessionQueries.fetchLatestSessions(
+                config.get(DisplaySettings.SESSIONS_PER_PAGE)
+        ));
+        List<Map<String, Object>> sessionMaps = new SessionsMutator(sessions).toPlayerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters);
+        //
+        sessionMaps.forEach(map -> map.put("network_server", map.get("server_name")));
+        return sessionMaps;
+    }
+
     public List<Map<String, Object>> serverPlayerKillsAsJSONMap(UUID serverUUID) {
         Database db = dbSystem.getDatabase();
         List<PlayerKill> kills = db.query(KillQueries.fetchPlayerKillsOnServer(serverUUID, 100));
