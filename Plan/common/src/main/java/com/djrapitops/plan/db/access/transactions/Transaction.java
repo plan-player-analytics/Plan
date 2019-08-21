@@ -24,11 +24,9 @@ import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plugin.utilities.Verify;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Savepoint;
+import java.sql.*;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Represents a database transaction.
@@ -36,6 +34,9 @@ import java.util.UUID;
  * @author Rsl1122
  */
 public abstract class Transaction {
+
+    // SQLite version on 1.8.8 does not support savepoints, see createSavePoint() method
+    private static final AtomicBoolean SUPPORTS_SAVE_POINTS = new AtomicBoolean(true);
 
     private SQLDB db;
     protected DBType dbType;
@@ -75,6 +76,9 @@ public abstract class Transaction {
 
     private void manageFailure(Exception statementFail) {
         String failMsg = getClass().getSimpleName() + " failed: " + statementFail.getMessage();
+        if (!SUPPORTS_SAVE_POINTS.get()) {
+            throw new DBOpException(failMsg + ", additionally rollbacks are not supported on this server version.", statementFail);
+        }
         try {
             if (Verify.notNull(connection, savepoint)) {
                 connection.rollback(savepoint);
@@ -105,9 +109,28 @@ public abstract class Transaction {
     private void initializeTransaction(SQLDB db) {
         try {
             this.connection = db.getConnection();
-            this.savepoint = connection.setSavepoint();
+            createSavePoint();
         } catch (SQLException e) {
             throw new DBOpException(getClass().getSimpleName() + " initialization failed: " + e.getMessage(), e);
+        }
+    }
+
+    private void createSavePoint() throws SQLException {
+        try {
+            this.savepoint = connection.setSavepoint();
+        } catch (SQLFeatureNotSupportedException noSavePoints) {
+            SUPPORTS_SAVE_POINTS.set(false);
+        } catch (SQLException sqlException) {
+            handleUnsupportedSQLiteSavePoints(sqlException);
+        }
+    }
+
+    private void handleUnsupportedSQLiteSavePoints(SQLException sqlException) throws SQLException {
+        String errorMsg = sqlException.getMessage();
+        if (errorMsg.contains("unsupported") && errorMsg.contains("savepoints")) {
+            SUPPORTS_SAVE_POINTS.set(false);
+        } else {
+            throw sqlException;
         }
     }
 
