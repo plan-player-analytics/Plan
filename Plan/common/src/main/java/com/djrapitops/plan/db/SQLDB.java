@@ -19,7 +19,6 @@ package com.djrapitops.plan.db;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.api.exceptions.database.FatalDBException;
-import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.access.transactions.init.CreateIndexTransaction;
@@ -61,7 +60,6 @@ public abstract class SQLDB extends AbstractDatabase {
 
     protected final Locale locale;
     protected final PlanConfig config;
-    protected final NetworkContainer.Factory networkContainerFactory;
     protected final RunnableFactory runnableFactory;
     protected final PluginLogger logger;
     protected final ErrorHandler errorHandler;
@@ -75,14 +73,13 @@ public abstract class SQLDB extends AbstractDatabase {
             Supplier<UUID> serverUUIDSupplier,
             Locale locale,
             PlanConfig config,
-            NetworkContainer.Factory networkContainerFactory, RunnableFactory runnableFactory,
+            RunnableFactory runnableFactory,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
         this.serverUUIDSupplier = serverUUIDSupplier;
         this.locale = locale;
         this.config = config;
-        this.networkContainerFactory = networkContainerFactory;
         this.runnableFactory = runnableFactory;
         this.logger = logger;
         this.errorHandler = errorHandler;
@@ -284,10 +281,6 @@ public abstract class SQLDB extends AbstractDatabase {
 
     public Supplier<UUID> getServerUUIDSupplier() {
         return serverUUIDSupplier;
-    }
-
-    public NetworkContainer.Factory getNetworkContainerFactory() {
-        return networkContainerFactory;
     }
 
     public void setTransactionExecutorServiceProvider(Supplier<ExecutorService> transactionExecutorServiceProvider) {
