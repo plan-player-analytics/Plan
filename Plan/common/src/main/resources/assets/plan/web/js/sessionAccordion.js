@@ -77,8 +77,8 @@ function createAccordionBody(i, session) {
         '<td colspan="4">' +
         '<div class="collapse row" data-parent="#tableAccordion" id="session_t_' + i + '">' +
         '<div class="col-xs-12  col-sm-12 col-md-6 col-lg-6">' +
-        '<p><i class="col-teal far fa-fw fa-clock"></i> Session Ended<span class="float-right"><b>' + session.end + '</b></span></p>' +
-        '<p><i class="col-green far fa-fw fa-clock"></i> Session Length<span class="float-right"><b>' + session.length + '</b></span></p>' +
+        '<p><i class="col-teal far fa-fw fa-clock"></i> Ended<span class="float-right"><b>' + session.end + '</b></span></p>' +
+        '<p><i class="col-green far fa-fw fa-clock"></i> Length<span class="float-right"><b>' + session.length + '</b></span></p>' +
         '<p><i class="col-grey far fa-fw fa-clock"></i> Time AFK<span class="float-right"><b>' + session.afk_time + '</b></span></p>' +
         '<p><i class="col-green fa fa-fw fa-server"></i> Server<span class="float-right"><b>' + session.server_name + '</b></span></p><br>' +
         '<p><i class="col-red fa fa-fw fa-crosshairs"></i> Player Kills<span class="float-right"><b>' + session.player_kills.length + '</b></span></p>' +
@@ -97,7 +97,7 @@ function createKillsTable(player_kills) {
     var table = '<table class="table mb-0"><tbody>';
 
     if (player_kills.length === 0) {
-        table += '<tr><td>No Kills</td><td>-</td><td>-</td></tr>'
+        table += '<tr><td>None</td><td>-</td><td>-</td></tr>'
     }
 
     for (var i = 0; i < player_kills.length; i++) {

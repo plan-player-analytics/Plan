@@ -264,8 +264,8 @@ function createNetworkServerBox(i, server) {
         '</div>' + // /column
         '</div>' + // /header
         '<div class="d-flex align-items-center justify-content-between">' +
-        '<a class="btn bg-light-green ml-2" href="server/' + server.name + '"><i class="fa fa-fw fa-chart-line"></i> Server Analysis</a>' +
-        '<button class="btn col-blue my-2 mr-2" id="server_quick_view_' + i + '">Quick view <i class="fa fa-fw fa-caret-square-right"></i></button>' +
+        '<a class="btn col-light-green ml-2" href="server/' + server.name + '"><i class="fa fa-fw fa-chart-line"></i> Server Analysis</a>' +
+        '<button class="btn bg-blue my-2 mr-2" id="server_quick_view_' + i + '">Quick view <i class="fa fa-fw fa-caret-square-right"></i></button>' +
         '</div>' + // /buttons
         '</div>' // /card
 }
