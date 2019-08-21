@@ -249,6 +249,19 @@ public class GraphJSONParser {
         return dataMap;
     }
 
+    public Map<String, Object> geolocationGraphsJSONAsMap() {
+        Database db = dbSystem.getDatabase();
+        Map<String, Integer> geolocationCounts = db.query(GeoInfoQueries.networkGeolocationCounts());
+
+        BarGraph geolocationBarGraph = graphs.bar().geolocationBarGraph(geolocationCounts);
+        WorldMap worldMap = graphs.special().worldMap(geolocationCounts);
+
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("geolocation_series", worldMap.getEntries());
+        dataMap.put("geolocation_bar_series", geolocationBarGraph.getBars());
+        return dataMap;
+    }
+
     public String pingGraphsJSON(UUID serverUUID) {
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
