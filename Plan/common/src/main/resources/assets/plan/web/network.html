@@ -619,13 +619,19 @@
                         <!-- Geolocations -->
                         <div class="col-xl-12 col-lg-12 col-sm-12">
                             <div class="card shadow mb-4">
-                                <div
-                                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold col-black"><i
                                             class="fas fa-fw fa-globe col-green"></i>
                                         Geolocations</h6>
                                 </div>
-                                <div class="chart-area"></div>
+                                <div class="chart-area row" style="height: 100%;">
+                                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                        <div id="countryBarChart"><span class="loader"></span></div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                                        <div id="worldMap"><span class="loader"></span></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -633,30 +639,31 @@
                         <!-- Connection information -->
                         <div class="col-xl-12 col-lg-12 col-sm-12">
                             <div class="card shadow mb-4">
-                                <div
-                                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold col-black"><i
                                             class="fas fa-fw fa-wifi col-green"></i>
                                         Connection Information</h6>
                                 </div>
-                                <table class="table mb-0">
-                                    <thead class="bg-amber">
-                                    <tr>
-                                        <th><i class=" fa fa-fw fa-globe"></i> Country</th>
-                                        <th><i class=" fa fa-fw fa-signal"></i> Average Ping</th>
-                                        <th><i class=" fa fa-fw fa-signal"></i> Worst Ping</th>
-                                        <th><i class=" fa fa-fw fa-signal"></i> Best Ping</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>Local Machine</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                                <div class="scrollbar">
+                                    <table class="table">
+                                        <thead class="bg-amber">
+                                        <tr>
+                                            <th><i class=" fa fa-fw fa-globe"></i> Country</th>
+                                            <th><i class=" fa fa-fw fa-signal"></i> Average Ping</th>
+                                            <th><i class=" fa fa-fw fa-signal"></i> Worst Ping</th>
+                                            <th><i class=" fa fa-fw fa-signal"></i> Best Ping</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>Local Machine</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -967,6 +974,33 @@
         } else if (error) {
             $('#activityPie').text("Failed to load graph data: " + error);
             $('#activityStackGraph').text("Failed to load graph data: " + error);
+        }
+    });
+
+    jsonRequest("../v1/graph?type=geolocation", function (json, error) {
+        if (json) {
+            var geolocationSeries = {
+                name: 'Players',
+                type: 'map',
+                mapData: Highcharts.maps['custom/world'],
+                data: json.geolocation_series,
+                joinBy: ['iso-a3', 'code']
+            };
+            var geolocationBarSeries = {
+                color: '#4CAF50',
+                name: 'Players',
+                data: json.geolocation_bar_series.map(function (bar) {
+                    return bar.value
+                })
+            };
+            var geolocationBarCategories = json.geolocation_bar_series.map(function (bar) {
+                return bar.label
+            });
+            worldMap('worldMap', v.colors.geolocationsLow, v.colors.geolocationsHigh, geolocationSeries);
+            horizontalBarChart('countryBarChart', geolocationBarCategories, [geolocationBarSeries], 'Players');
+        } else if (error) {
+            $('#worldMap').text("Failed to load graph data: " + error);
+            $('#countryBarChart').text("Failed to load graph data: " + error);
         }
     });
 
