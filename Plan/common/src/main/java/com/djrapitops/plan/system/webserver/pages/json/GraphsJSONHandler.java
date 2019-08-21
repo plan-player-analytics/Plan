@@ -98,6 +98,8 @@ public class GraphsJSONHandler implements PageHandler {
                 return new JSONResponse(graphJSON.uniqueAndNewGraphJSON());
             case "serverPie":
                 return new JSONResponse(graphJSON.serverPreferencePieJSONAsMap());
+            case "geolocation":
+                return new JSONResponse(graphJSON.geolocationGraphsJSONAsMap());
             default:
                 throw new BadRequestException("unknown 'type' parameter: " + type);
         }
