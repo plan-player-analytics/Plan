@@ -29,6 +29,10 @@ public class ServerPreferencePie extends Pie {
         super(turnToSlices(serverNames, serverWorldTimes));
     }
 
+    ServerPreferencePie(Map<String, Long> serverPlaytimes) {
+        super(turnToSlices(serverPlaytimes));
+    }
+
     private static List<PieSlice> turnToSlices(Map<UUID, String> serverNames, Map<UUID, WorldTimes> serverWorldTimes) {
         List<PieSlice> slices = new ArrayList<>();
 
@@ -40,6 +44,18 @@ public class ServerPreferencePie extends Pie {
             long num = worldTimes.getTotal();
 
             slices.add(new PieSlice(serverName, num));
+        }
+
+        return slices;
+    }
+
+    private static List<PieSlice> turnToSlices(Map<String, Long> serverPlaytimes) {
+        List<PieSlice> slices = new ArrayList<>();
+
+        for (Map.Entry<String, Long> server : serverPlaytimes.entrySet()) {
+            String serverName = server.getKey();
+            long playtime = server.getValue();
+            slices.add(new PieSlice(serverName, playtime));
         }
 
         return slices;

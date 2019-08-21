@@ -96,6 +96,8 @@ public class GraphsJSONHandler implements PageHandler {
                 return new JSONResponse(graphJSON.activityGraphsJSONAsMap());
             case "uniqueAndNew":
                 return new JSONResponse(graphJSON.uniqueAndNewGraphJSON());
+            case "serverPie":
+                return new JSONResponse(graphJSON.serverPreferencePieJSONAsMap());
             default:
                 throw new BadRequestException("unknown 'type' parameter: " + type);
         }

@@ -31,6 +31,8 @@ import com.djrapitops.plan.db.access.queries.objects.*;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
+import com.djrapitops.plan.system.settings.theme.Theme;
+import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.bar.BarGraph;
 import com.djrapitops.plan.utilities.html.graphs.line.LineGraphFactory;
@@ -57,6 +59,7 @@ import java.util.stream.Collectors;
 public class GraphJSONParser {
 
     private final PlanConfig config;
+    private final Theme theme;
     private final DBSystem dbSystem;
     private final Graphs graphs;
     private final TimeZone timeZone;
@@ -64,10 +67,12 @@ public class GraphJSONParser {
     @Inject
     public GraphJSONParser(
             PlanConfig config,
+            Theme theme,
             DBSystem dbSystem,
             Graphs graphs
     ) {
         this.config = config;
+        this.theme = theme;
         this.dbSystem = dbSystem;
         this.graphs = graphs;
         this.timeZone = config.getTimeZone();
@@ -263,5 +268,19 @@ public class GraphJSONParser {
                 SessionQueries.fetchServerSessionsWithoutKillOrWorldData(monthAgo, now, serverUUID)
         );
         return Collections.singletonMap("punchCard", graphs.special().punchCard(sessions).getDots());
+    }
+
+    public Map<String, Object> serverPreferencePieJSONAsMap() {
+        long now = System.currentTimeMillis();
+        long monthAgo = now - TimeUnit.DAYS.toMillis(30L);
+        String[] pieColors = Arrays.stream(theme.getValue(ThemeVal.GRAPH_WORLD_PIE).split(","))
+                .map(color -> color.trim().replace("\"", ""))
+                .toArray(String[]::new);
+        Map<String, Object> data = new HashMap<>();
+        data.put("server_pie_colors", pieColors);
+
+        Map<String, Long> serverPlaytimes = dbSystem.getDatabase().query(SessionQueries.playtimePerServer(now, monthAgo));
+        data.put("server_pie_series_30d", graphs.pie().serverPreferencePie(serverPlaytimes).getSlices());
+        return data;
     }
 }
