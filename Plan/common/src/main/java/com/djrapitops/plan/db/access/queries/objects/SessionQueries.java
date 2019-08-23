@@ -29,7 +29,6 @@ import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.sql.tables.*;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
-import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -377,14 +376,12 @@ public class SessionQueries {
     }
 
     public static Query<List<Session>> fetchLatestSessions(int limit) {
-        String modifiedSQL = SELECT_SESSIONS_STATEMENT +
+        String sql = SELECT_SESSIONS_STATEMENT
+                // Fix for "First Session" icons in the Most recent sessions on network page
+                .replace(LEFT_JOIN + UserInfoTable.TABLE_NAME + " u_info on (u_info." + UserInfoTable.USER_UUID + "=s." + SessionsTable.USER_UUID + AND + "u_info." + UserInfoTable.SERVER_UUID + "=s." + SessionsTable.SERVER_UUID + ')', "")
+                .replace("u_info", "u") +
                 WHERE + "s." + SessionsTable.SESSION_START + ">=?" +
                 ORDER_BY_SESSION_START_DESC;
-        // Fix for "First Session" icons in the Most recent sessions on network page
-        modifiedSQL = StringUtils.remove(modifiedSQL, LEFT_JOIN + UserInfoTable.TABLE_NAME + " u_info on u_info." + UserInfoTable.USER_UUID + "=s." + SessionsTable.USER_UUID + AND + "u_info." + UserInfoTable.SERVER_UUID + "=s." + SessionsTable.SERVER_UUID);
-        modifiedSQL = StringUtils.replace(modifiedSQL, "u_info", "u");
-
-        String sql = modifiedSQL; // Make effectively final for lambda
         return db -> {
             Long start = db.query(fetchLatestSessionStartLimit(limit));
             return db.query(new QueryStatement<List<Session>>(sql) {
