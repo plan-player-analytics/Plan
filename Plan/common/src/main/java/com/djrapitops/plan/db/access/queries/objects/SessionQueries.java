@@ -29,6 +29,7 @@ import com.djrapitops.plan.db.access.QueryStatement;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.sql.tables.*;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -54,7 +55,7 @@ public class SessionQueries {
             "s." + SessionsTable.USER_UUID + ',' +
             "s." + SessionsTable.SERVER_UUID + ',' +
             "u." + UsersTable.USER_NAME + " as name," +
-            "u_info." + UsersTable.REGISTERED + " as registered," +
+            "u_info." + UserInfoTable.REGISTERED + " as registered," +
             "server." + ServerTable.NAME + " as server_name," +
             SessionsTable.SESSION_START + ',' +
             SessionsTable.SESSION_END + ',' +
@@ -73,7 +74,7 @@ public class SessionQueries {
             FROM + SessionsTable.TABLE_NAME + " s" +
             INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.USER_UUID + "=s." + SessionsTable.USER_UUID +
             INNER_JOIN + ServerTable.TABLE_NAME + " server on server." + ServerTable.SERVER_UUID + "=s." + SessionsTable.SERVER_UUID +
-            LEFT_JOIN + UserInfoTable.TABLE_NAME + " u_info on u_info." + UserInfoTable.USER_UUID + "=s." + SessionsTable.USER_UUID + AND + "u_info." + UserInfoTable.SERVER_UUID + "=s." + SessionsTable.SERVER_UUID +
+            LEFT_JOIN + UserInfoTable.TABLE_NAME + " u_info on (u_info." + UserInfoTable.USER_UUID + "=s." + SessionsTable.USER_UUID + AND + "u_info." + UserInfoTable.SERVER_UUID + "=s." + SessionsTable.SERVER_UUID + ')' +
             LEFT_JOIN + KillsTable.TABLE_NAME + " ON " + "s." + SessionsTable.ID + '=' + KillsTable.TABLE_NAME + '.' + KillsTable.SESSION_ID +
             LEFT_JOIN + UsersTable.TABLE_NAME + " v on v." + UsersTable.USER_UUID + '=' + KillsTable.VICTIM_UUID +
             INNER_JOIN + WorldTimesTable.TABLE_NAME + " ON s." + SessionsTable.ID + '=' + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SESSION_ID +
@@ -376,10 +377,14 @@ public class SessionQueries {
     }
 
     public static Query<List<Session>> fetchLatestSessions(int limit) {
-        String sql = SELECT_SESSIONS_STATEMENT +
+        String modifiedSQL = SELECT_SESSIONS_STATEMENT +
                 WHERE + "s." + SessionsTable.SESSION_START + ">=?" +
                 ORDER_BY_SESSION_START_DESC;
+        // Fix for "First Session" icons in the Most recent sessions on network page
+        modifiedSQL = StringUtils.remove(modifiedSQL, LEFT_JOIN + UserInfoTable.TABLE_NAME + " u_info on u_info." + UserInfoTable.USER_UUID + "=s." + SessionsTable.USER_UUID + AND + "u_info." + UserInfoTable.SERVER_UUID + "=s." + SessionsTable.SERVER_UUID);
+        modifiedSQL = StringUtils.replace(modifiedSQL, "u_info", "u");
 
+        String sql = modifiedSQL; // Make effectively final for lambda
         return db -> {
             Long start = db.query(fetchLatestSessionStartLimit(limit));
             return db.query(new QueryStatement<List<Session>>(sql) {

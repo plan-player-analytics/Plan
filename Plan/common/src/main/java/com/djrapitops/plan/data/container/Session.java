@@ -207,7 +207,7 @@ public class Session extends DynamicDataContainer implements DateHolder {
     }
 
     public void setAsFirstSessionIfMatches(Long registerDate) {
-        if (registerDate != null && Math.abs(sessionStart - registerDate) < TimeUnit.SECONDS.toMillis(5L)) {
+        if (registerDate != null && Math.abs(sessionStart - registerDate) < TimeUnit.SECONDS.toMillis(15L)) {
             this.firstSession = true;
         }
     }
