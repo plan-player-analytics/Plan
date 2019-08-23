@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.system.json;
 
+import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.TPS;
@@ -26,10 +27,7 @@ import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.db.access.queries.containers.ServerPlayersTableContainersQuery;
-import com.djrapitops.plan.db.access.queries.objects.KillQueries;
-import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
-import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
-import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
+import com.djrapitops.plan.db.access.queries.objects.*;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerPlayerDataTableQuery;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
@@ -158,5 +156,22 @@ public class JSONFactory {
                     servers.add(server);
                 });
         return servers;
+    }
+
+    public List<Map<String, Object>> pingPerGeolocation(UUID serverUUID) {
+        Map<String, Ping> pingByGeolocation = dbSystem.getDatabase().query(PingQueries.fetchPingDataOfServerByGeolocation(serverUUID));
+        List<Map<String, Object>> tableEntries = new ArrayList<>();
+        for (Map.Entry<String, Ping> entry : pingByGeolocation.entrySet()) {
+            String geolocation = entry.getKey();
+            Ping ping = entry.getValue();
+
+            Map<String, Object> tableEntry = new HashMap<>();
+            tableEntry.put("country", geolocation);
+            tableEntry.put("avg_ping", ping.getAverage());
+            tableEntry.put("min_ping", ping.getMin());
+            tableEntry.put("max_ping", ping.getMax());
+            tableEntries.add(tableEntry);
+        }
+        return tableEntries;
     }
 }
