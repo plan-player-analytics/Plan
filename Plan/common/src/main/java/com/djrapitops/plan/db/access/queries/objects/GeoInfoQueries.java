@@ -161,19 +161,19 @@ public class GeoInfoQueries {
     }
 
     public static Query<Map<String, Integer>> serverGeolocationCounts(UUID serverUUID) {
-        String subQuery1 = SELECT +
+        String selectGeolocations = SELECT +
                 GeoInfoTable.USER_UUID + ", " +
                 GeoInfoTable.GEOLOCATION + ", " +
                 GeoInfoTable.LAST_USED +
                 FROM + GeoInfoTable.TABLE_NAME;
-        String subQuery2 = SELECT +
+        String selectLatestGeolocationDate = SELECT +
                 GeoInfoTable.USER_UUID + ", " +
                 "MAX(" + GeoInfoTable.LAST_USED + ") as m" +
                 FROM + GeoInfoTable.TABLE_NAME +
                 GROUP_BY + GeoInfoTable.USER_UUID;
         String sql = SELECT + GeoInfoTable.GEOLOCATION + ", COUNT(1) as c FROM (" +
-                "(" + subQuery1 + ") AS q1" +
-                INNER_JOIN + "(" + subQuery2 + ") AS q2 ON q1.uuid = q2.uuid" +
+                "(" + selectGeolocations + ") AS q1" +
+                INNER_JOIN + "(" + selectLatestGeolocationDate + ") AS q2 ON q1.uuid = q2.uuid" +
                 INNER_JOIN + UserInfoTable.TABLE_NAME + " u on u." + UserInfoTable.USER_UUID + "=q1.uuid)" +
                 WHERE + GeoInfoTable.LAST_USED + "=m" +
                 AND + "u." + UserInfoTable.SERVER_UUID + "=?" +

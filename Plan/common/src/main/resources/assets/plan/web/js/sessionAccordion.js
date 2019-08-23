@@ -1,15 +1,16 @@
 function loadSessionAccordion(json, error) {
+    sessionTable = $("#sessions-overview").find("#tableAccordion").find("tbody");
+
     if (error) {
-        $('#sessions-overview').addClass('forbidden'); // TODO Figure out 403
+        sessionTable.append('<tr><td>Error: ' + error + '</td><td>-</td><td>-</td><td>-</td></tr>');
         return;
     }
-
-    sessionTable = $("#sessions-overview").find("#tableAccordion").find("tbody");
 
     var sessions = json.sessions;
 
     if (!sessions.length) {
-        sessionTable.append('<tr><td>No Sessions</td><td>-</td><td>-</td><td>-</td></tr>')
+        sessionTable.append('<tr><td>No Sessions</td><td>-</td><td>-</td><td>-</td></tr>');
+        return;
     }
 
     // sessions_per_page can be undefined (-> NaN) or higher than amount of sessions.
