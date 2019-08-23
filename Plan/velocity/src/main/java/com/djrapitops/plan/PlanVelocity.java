@@ -46,7 +46,7 @@ import java.nio.file.Path;
 @Plugin(
         id = "plan",
         name = "Plan",
-        version = "4.9.4",
+        version = "5.0 ALPHA build %buildNumber%",
         description = "Player Analytics Plugin by Rsl1122",
         authors = {"Rsl1122"}
 )
