@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Parses JSON payload for /server-page Playerbase Overview tab.
+ * Parses JSON payload for /network-page Playerbase Overview tab.
  *
  * @author Rsl1122
  */

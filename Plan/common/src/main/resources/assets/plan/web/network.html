@@ -871,6 +871,7 @@
     setLoadingText('Calculating values..');
     jsonRequest("../v1/network/overview", loadNetworkOverviewValues);
     jsonRequest("../v1/network/servers", loadServerBoxes);
+    jsonRequest("../v1/network/sessionsOverview", loadSessionValues);
     jsonRequest("../v1/network/playerbaseOverview", loadPlayerbaseOverviewValues);
     jsonRequest("../v1/sessions", loadSessionAccordion);
     setLoadingText('Rendering graphs..');

@@ -37,7 +37,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Parses JSON payload for /server-page Server Overview tab.
+ * Parses JSON payload for /network-page Network Overview tab.
  *
  * @author Rsl1122
  */

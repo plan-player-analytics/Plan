@@ -720,6 +720,25 @@ public class SessionQueries {
         };
     }
 
+    public static Query<Long> afkTime(long after, long before) {
+        String sql = SELECT + "SUM(" + SessionsTable.AFK_TIME + ") as afk_time" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?";
+        return new QueryStatement<Long>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, after);
+                statement.setLong(2, before);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("afk_time") : 0L;
+            }
+        };
+    }
+
     public static Query<Map<String, Long>> playtimePerServer(long after, long before) {
         String sql = SELECT +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime," +
