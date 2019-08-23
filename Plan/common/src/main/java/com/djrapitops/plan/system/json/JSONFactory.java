@@ -160,6 +160,15 @@ public class JSONFactory {
 
     public List<Map<String, Object>> pingPerGeolocation(UUID serverUUID) {
         Map<String, Ping> pingByGeolocation = dbSystem.getDatabase().query(PingQueries.fetchPingDataOfServerByGeolocation(serverUUID));
+        return turnToTableEntries(pingByGeolocation);
+    }
+
+    public List<Map<String, Object>> pingPerGeolocation() {
+        Map<String, Ping> pingByGeolocation = dbSystem.getDatabase().query(PingQueries.fetchPingDataOfNetworkByGeolocation());
+        return turnToTableEntries(pingByGeolocation);
+    }
+
+    private List<Map<String, Object>> turnToTableEntries(Map<String, Ping> pingByGeolocation) {
         List<Map<String, Object>> tableEntries = new ArrayList<>();
         for (Map.Entry<String, Ping> entry : pingByGeolocation.entrySet()) {
             String geolocation = entry.getKey();
@@ -174,4 +183,5 @@ public class JSONFactory {
         }
         return tableEntries;
     }
+
 }
