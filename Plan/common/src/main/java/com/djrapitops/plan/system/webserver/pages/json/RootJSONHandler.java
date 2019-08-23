@@ -54,7 +54,7 @@ public class RootJSONHandler extends TreePageHandler {
             PlayerBaseOverviewJSONParser playerBaseOverviewJSONParser,
             PerformanceJSONParser performanceJSONParser,
             PlayerJSONHandler playerJSONHandler,
-            NeworkJSONHandler neworkJSONHandler
+            NetworkJSONHandler networkJSONHandler
     ) {
         super(responseFactory);
 
@@ -75,7 +75,7 @@ public class RootJSONHandler extends TreePageHandler {
         registerPage("performanceOverview", performanceJSONParser);
 
         registerPage("player", playerJSONHandler);
-        registerPage("network", neworkJSONHandler);
+        registerPage("network", networkJSONHandler);
     }
 
     private <T> void registerPage(String identifier, ServerTabJSONParser<T> tabJSONParser) {

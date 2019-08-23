@@ -244,4 +244,55 @@ public class PingQueries {
             }
         };
     }
+
+    public static Query<Map<String, Ping>> fetchPingDataOfNetworkByGeolocation() {
+        String selectPingOfServer = SELECT +
+                PingTable.MAX_PING + ", " +
+                PingTable.MIN_PING + ", " +
+                PingTable.AVG_PING + ", " +
+                PingTable.USER_UUID + ", " +
+                PingTable.SERVER_UUID +
+                FROM + PingTable.TABLE_NAME;
+
+        String selectGeolocations = SELECT +
+                GeoInfoTable.USER_UUID + ", " +
+                GeoInfoTable.GEOLOCATION + ", " +
+                GeoInfoTable.LAST_USED +
+                FROM + GeoInfoTable.TABLE_NAME;
+        String selectLatestGeolocationDate = SELECT +
+                GeoInfoTable.USER_UUID + ", " +
+                "MAX(" + GeoInfoTable.LAST_USED + ") as m" +
+                FROM + GeoInfoTable.TABLE_NAME +
+                GROUP_BY + GeoInfoTable.USER_UUID;
+
+        String selectPingByGeolocation = SELECT + GeoInfoTable.GEOLOCATION +
+                ", MIN(" + PingTable.MIN_PING + ") as minPing" +
+                ", MAX(" + PingTable.MAX_PING + ") as maxPing" +
+                ", AVG(" + PingTable.AVG_PING + ") as avgPing" +
+                FROM + "(" +
+                "(" + selectGeolocations + ") AS q1" +
+                INNER_JOIN + "(" + selectLatestGeolocationDate + ") AS q2 ON q1.uuid = q2.uuid" +
+                INNER_JOIN + '(' + selectPingOfServer + ") sp on sp." + PingTable.USER_UUID + "=q1.uuid)" +
+                WHERE + GeoInfoTable.LAST_USED + "=m" +
+                GROUP_BY + GeoInfoTable.GEOLOCATION;
+
+        return new QueryAllStatement<Map<String, Ping>>(selectPingByGeolocation) {
+            @Override
+            public Map<String, Ping> processResults(ResultSet set) throws SQLException {
+                // TreeMap to sort alphabetically
+                Map<String, Ping> pingByGeolocation = new TreeMap<>();
+                while (set.next()) {
+                    Ping ping = new Ping(
+                            0L,
+                            null,
+                            set.getInt("minPing"),
+                            set.getInt("maxPing"),
+                            set.getInt("avgPing")
+                    );
+                    pingByGeolocation.put(set.getString(GeoInfoTable.GEOLOCATION), ping);
+                }
+                return pingByGeolocation;
+            }
+        };
+    }
 }
