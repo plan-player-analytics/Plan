@@ -172,8 +172,6 @@ function loadSessionValues(json, error) {
     data = json.insights;
     element = $(tab).find('#data_insights');
 
-    $(element).find('#data_most_active_time').text(data.most_active_time);
-    $(element).find('#data_least_active_time').text(data.least_active_time);
     $(element).find('#data_most_active_gamemode').text(data.most_active_gamemode);
     $(element).find('#data_most_active_gamemode_perc').text(data.most_active_gamemode_perc);
     $(element).find('#data_server_occupied').text(data.server_occupied);
