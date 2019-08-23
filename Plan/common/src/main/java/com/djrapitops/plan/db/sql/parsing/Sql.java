@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.db.sql.parsing;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Duplicate String reducing utility class for SQL language Strings.
  */
@@ -44,11 +46,27 @@ public interface Sql {
         return "varchar(" + length + ')';
     }
 
+    /**
+     * Parse day of week to epoch ms.
+     * <p>
+     * 1st of January 1970 (Epoch) is Thursday (-2).
+     *
+     * @param day 1 = Sunday, 2 = Monday etc.. 7 = Saturday
+     * @return Milliseconds since epoch for this day to be given by {@link java.text.SimpleDateFormat} "EEEE"
+     */
+    static long getDayEpochMs(int day) {
+        return TimeUnit.DAYS.toMillis(day + 2);
+    }
+
     String epochSecondToDate(String sql);
 
     String dateToEpochSecond(String sql);
 
     String dateToDayStamp(String sql);
+
+    String dateToDayOfWeek(String sql);
+
+    String dateToHour(String sql);
 
     // https://dev.mysql.com/doc/refman/5.7/en/date-and-time-functions.html
     class MySQL implements Sql {
@@ -68,6 +86,15 @@ public interface Sql {
             return "DATE(" + sql + ')';
         }
 
+        @Override
+        public String dateToDayOfWeek(String sql) {
+            return "DAYOFWEEK(" + sql + ')';
+        }
+
+        @Override
+        public String dateToHour(String sql) {
+            return "HOUR(" + sql + ") % 24";
+        }
     }
 
     // https://h2database.com/html/functions.html
@@ -84,10 +111,14 @@ public interface Sql {
         }
 
         @Override
-        public String dateToDayStamp(String sql) {
-            return "DATE(" + sql + ')';
+        public String dateToDayOfWeek(String sql) {
+            return "DAY_OF_WEEK(" + sql + ')';
         }
 
+        @Override
+        public String dateToHour(String sql) {
+            return "HOUR(" + sql + ')';
+        }
     }
 
     // https://sqlite.org/lang_datefunc.html
@@ -108,5 +139,14 @@ public interface Sql {
             return "strftime('%Y-%m-%d'," + sql + ')';
         }
 
+        @Override
+        public String dateToDayOfWeek(String sql) {
+            return "strftime('%w'," + sql + ")+1";
+        }
+
+        @Override
+        public String dateToHour(String sql) {
+            return "strftime('%H'," + sql + ')';
+        }
     }
 }
