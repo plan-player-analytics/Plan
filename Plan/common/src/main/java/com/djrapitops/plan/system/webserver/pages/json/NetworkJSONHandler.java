@@ -20,6 +20,7 @@ import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.system.json.JSONFactory;
 import com.djrapitops.plan.system.json.network.NetworkOverviewJSONParser;
 import com.djrapitops.plan.system.json.network.NetworkPlayerBaseOverviewJSONParser;
+import com.djrapitops.plan.system.json.network.NetworkSessionsOverviewJSONParser;
 import com.djrapitops.plan.system.json.network.NetworkTabJSONParser;
 import com.djrapitops.plan.system.webserver.RequestTarget;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
@@ -42,12 +43,14 @@ public class NetworkJSONHandler extends TreePageHandler {
             ResponseFactory responseFactory,
             JSONFactory jsonFactory,
             NetworkOverviewJSONParser networkOverviewJSONParser,
-            NetworkPlayerBaseOverviewJSONParser playerBaseOverviewJSONParser
+            NetworkPlayerBaseOverviewJSONParser playerBaseOverviewJSONParser,
+            NetworkSessionsOverviewJSONParser sessionsOverviewJSONParser
     ) {
         super(responseFactory);
 
         registerPage("overview", networkOverviewJSONParser);
         registerPage("playerbaseOverview", playerBaseOverviewJSONParser);
+        registerPage("sessionsOverview", sessionsOverviewJSONParser);
         registerPage("servers", jsonFactory::serversAsJSONMaps);
         registerPage("pingTable", jsonFactory::pingPerGeolocation);
     }
