@@ -41,6 +41,7 @@ public class RootJSONHandler extends TreePageHandler {
     public RootJSONHandler(
             ResponseFactory responseFactory,
             Identifiers identifiers,
+            JSONFactory jsonFactory,
             GraphsJSONHandler graphsJSONHandler,
             SessionsJSONHandler sessionsJSONHandler,
             PlayersTableJSONHandler playersTableJSONHandler,
@@ -62,6 +63,7 @@ public class RootJSONHandler extends TreePageHandler {
         registerPage("players", playersTableJSONHandler);
         registerPage("sessions", sessionsJSONHandler);
         registerPage("kills", playerKillsJSONHandler);
+        registerPage("pingTable", jsonFactory::pingPerGeolocation);
         registerPage("graph", graphsJSONHandler);
         registerPage("extensions", pluginTabJSONParser);
 
