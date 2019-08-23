@@ -607,7 +607,7 @@
                 </div> <!-- /.container-fluid -->
             </div> <!-- End of Player List tab -->
             <!-- Begin Geolocations Tab -->
-            <div class="tab">
+            <div class="tab" id="geolocations">
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -645,7 +645,7 @@
                                         Connection Information</h6>
                                 </div>
                                 <div class="scrollbar">
-                                    <table class="table">
+                                    <table class="table" id="data_ping_table">
                                         <thead class="bg-amber">
                                         <tr>
                                             <th><i class=" fa fa-fw fa-globe"></i> Country</th>
@@ -654,14 +654,7 @@
                                             <th><i class=" fa fa-fw fa-signal"></i> Best Ping</th>
                                         </tr>
                                         </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>Local Machine</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                        </tr>
-                                        </tbody>
+                                        <tbody></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -874,6 +867,7 @@
 
 <!-- Page level custom scripts -->
 <script src="js/sessionAccordion.js"></script>
+<script src="js/pingTable.js"></script>
 <script src="js/graphs.js"></script>
 <script src="js/network-values.js"></script>
 
@@ -1005,6 +999,8 @@
     });
 
     setLoadingText('Sorting out plugin tables..');
+
+    jsonRequest("../v1/network/pingTable", loadPingTable);
 
     $('.server-name').text('${networkDisplayName}');
     $('.player-plugin-table').DataTable({

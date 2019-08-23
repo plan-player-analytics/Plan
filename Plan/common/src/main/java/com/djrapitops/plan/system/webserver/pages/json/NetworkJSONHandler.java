@@ -35,10 +35,10 @@ import javax.inject.Singleton;
  * @author Rsl1122
  */
 @Singleton
-public class NeworkJSONHandler extends TreePageHandler {
+public class NetworkJSONHandler extends TreePageHandler {
 
     @Inject
-    public NeworkJSONHandler(
+    public NetworkJSONHandler(
             ResponseFactory responseFactory,
             JSONFactory jsonFactory,
             NetworkOverviewJSONParser networkOverviewJSONParser,
@@ -49,6 +49,7 @@ public class NeworkJSONHandler extends TreePageHandler {
         registerPage("overview", networkOverviewJSONParser);
         registerPage("playerbaseOverview", playerBaseOverviewJSONParser);
         registerPage("servers", jsonFactory::serversAsJSONMaps);
+        registerPage("pingTable", jsonFactory::pingPerGeolocation);
     }
 
     private <T> void registerPage(String identifier, NetworkTabJSONParser<T> tabJSONParser) {
