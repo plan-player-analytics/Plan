@@ -86,11 +86,7 @@ public class ResponseHandler extends TreePageHandler {
         registerPage("network", serverPageHandler);
         registerPage("server", serverPageHandler);
 
-        if (webServer.get().isAuthRequired()) {
-            registerPage("", new RootPageHandler(responseFactory, serverInfo));
-        } else {
-            registerPage("", responseFactory.redirectResponse(serverInfo.getServer().isProxy() ? "/network" : "/server"), 5);
-        }
+        registerPage("", new RootPageHandler(responseFactory, webServer.get(), serverInfo));
 
         registerPage("v1", rootJSONHandler);
     }
