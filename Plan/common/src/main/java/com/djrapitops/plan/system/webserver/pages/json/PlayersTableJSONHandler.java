@@ -55,8 +55,12 @@ public class PlayersTableJSONHandler implements PageHandler {
 
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
-        UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
-        return new JSONResponse(jsonFactory.serverPlayersTableJSON(serverUUID));
+        if (target.getParameter("server").isPresent()) {
+            UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
+            return new JSONResponse(jsonFactory.serverPlayersTableJSON(serverUUID));
+        }
+        // Assume network
+        return new JSONResponse(jsonFactory.networkPlayersTableJSON());
     }
 
     @Override

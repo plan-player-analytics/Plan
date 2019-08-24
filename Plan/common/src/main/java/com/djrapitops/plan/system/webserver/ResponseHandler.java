@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.webserver;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.*;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
@@ -49,12 +50,14 @@ public class ResponseHandler extends TreePageHandler {
     private final RootJSONHandler rootJSONHandler;
     private final ErrorHandler errorHandler;
 
+    private final ServerInfo serverInfo;
     private Lazy<WebServer> webServer;
 
     @Inject
     public ResponseHandler(
             ResponseFactory responseFactory,
             Lazy<WebServer> webServer,
+            ServerInfo serverInfo,
 
             DebugPageHandler debugPageHandler,
             PlayersPageHandler playersPageHandler,
@@ -66,6 +69,7 @@ public class ResponseHandler extends TreePageHandler {
     ) {
         super(responseFactory);
         this.webServer = webServer;
+        this.serverInfo = serverInfo;
         this.debugPageHandler = debugPageHandler;
         this.playersPageHandler = playersPageHandler;
         this.playerPageHandler = playerPageHandler;
@@ -83,9 +87,9 @@ public class ResponseHandler extends TreePageHandler {
         registerPage("server", serverPageHandler);
 
         if (webServer.get().isAuthRequired()) {
-            registerPage("", new RootPageHandler(responseFactory));
+            registerPage("", new RootPageHandler(responseFactory, serverInfo));
         } else {
-            registerPage("", responseFactory.redirectResponse("/server"), 5);
+            registerPage("", responseFactory.redirectResponse(serverInfo.getServer().isProxy() ? "/network" : "/server"), 5);
         }
 
         registerPage("v1", rootJSONHandler);
