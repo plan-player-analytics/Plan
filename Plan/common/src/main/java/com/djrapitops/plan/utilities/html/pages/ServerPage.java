@@ -25,6 +25,7 @@ import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionSer
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DisplaySettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
@@ -32,6 +33,7 @@ import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
+import com.djrapitops.plan.utilities.html.Html;
 
 import java.io.IOException;
 import java.util.List;
@@ -51,6 +53,7 @@ public class ServerPage implements Page {
     private final VersionCheckSystem versionCheckSystem;
     private final PlanFiles files;
     private final DBSystem dbSystem;
+    private final ServerInfo serverInfo;
     private Formatters formatters;
 
     ServerPage(
@@ -60,6 +63,7 @@ public class ServerPage implements Page {
             VersionCheckSystem versionCheckSystem,
             PlanFiles files,
             DBSystem dbSystem,
+            ServerInfo serverInfo,
             Formatters formatters
     ) {
         this.server = server;
@@ -68,6 +72,7 @@ public class ServerPage implements Page {
         this.versionCheckSystem = versionCheckSystem;
         this.files = files;
         this.dbSystem = dbSystem;
+        this.serverInfo = serverInfo;
         this.formatters = formatters;
     }
 
@@ -113,11 +118,7 @@ public class ServerPage implements Page {
                 AVG_PING_COLOR, MAX_PING_COLOR, MIN_PING_COLOR
         );
 
-        if (server.isProxy()) {
-            placeholders.put("backButton", "<li><a title=\"to Network page\" href=\"/network\"><i class=\"material-icons\">arrow_back</i><i class=\"material-icons\">cloud</i></a></li>");
-        } else {
-            placeholders.put("backButton", "");
-        }
+        placeholders.put("backButton", serverInfo.getServer().isProxy() ? Html.BACK_BUTTON_NETWORK.parse() : "");
         placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
         placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
 
