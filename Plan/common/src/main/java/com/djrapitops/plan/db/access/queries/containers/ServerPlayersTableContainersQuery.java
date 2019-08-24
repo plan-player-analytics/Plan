@@ -52,6 +52,7 @@ public class ServerPlayersTableContainersQuery implements Query<List<PlayerConta
         Collection<BaseUser> baseUsers = db.query(BaseUserQueries.fetchServerBaseUsers(serverUUID));
 
         Map<UUID, List<GeoInfo>> geoInformation = db.query(GeoInfoQueries.fetchServerGeoInformation(serverUUID));
+        // TODO Optimize the heck out of this
         Map<UUID, List<Session>> sessions = db.query(SessionQueries.fetchSessionsOfServer(serverUUID));
         Set<UUID> bannedUsers = db.query(UserInfoQueries.fetchBannedUUIDsOfServer(serverUUID));
 

@@ -26,6 +26,7 @@ import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.analysis.PlayerCountQueries;
+import com.djrapitops.plan.db.access.queries.containers.AllPlayerContainersQuery;
 import com.djrapitops.plan.db.access.queries.containers.ServerPlayersTableContainersQuery;
 import com.djrapitops.plan.db.access.queries.objects.*;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerPlayerDataTableQuery;
@@ -79,6 +80,21 @@ public class JSONFactory {
         return new PlayersTableJSONParser(
                 database.query(new ServerPlayersTableContainersQuery(serverUUID)),
                 database.query(new ExtensionServerPlayerDataTableQuery(serverUUID, xMostRecentPlayers)),
+                xMostRecentPlayers, playtimeThreshold, openPlayerLinksInNewTab,
+                formatters
+        ).toJSONString();
+    }
+
+    public String networkPlayersTableJSON() {
+        Integer xMostRecentPlayers = config.get(DisplaySettings.PLAYERS_PER_PLAYERS_PAGE);
+        Long playtimeThreshold = config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD);
+        Boolean openPlayerLinksInNewTab = config.get(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB);
+
+        Database database = dbSystem.getDatabase();
+
+        return new PlayersTableJSONParser(
+                database.query(new AllPlayerContainersQuery()), // TODO Optimize the heck out of this
+                Collections.emptyMap(),
                 xMostRecentPlayers, playtimeThreshold, openPlayerLinksInNewTab,
                 formatters
         ).toJSONString();
