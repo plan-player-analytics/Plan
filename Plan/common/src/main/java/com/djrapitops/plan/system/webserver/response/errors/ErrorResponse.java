@@ -48,15 +48,15 @@ public class ErrorResponse extends PageResponse {
     }
 
     public void replacePlaceholders() {
-        Map<String, String> placeHolders = new HashMap<>();
-        placeHolders.put("title", title);
+        Map<String, String> placeholders = new HashMap<>();
+        placeholders.put("title", title);
         String[] split = title.split(">", 3);
-        placeHolders.put("titleText", split.length == 3 ? split[2] : title);
-        placeHolders.put("paragraph", paragraph);
-        placeHolders.put("version", versionCheckSystem.getCurrentVersion());
-        placeHolders.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
+        placeholders.put("titleText", split.length == 3 ? split[2] : title);
+        placeholders.put("paragraph", paragraph);
+        placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
+        placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
 
-        setContent(StringSubstitutor.replace(getContent(), placeHolders));
+        setContent(StringSubstitutor.replace(getContent(), placeholders));
     }
 
     public void setTitle(String title) {

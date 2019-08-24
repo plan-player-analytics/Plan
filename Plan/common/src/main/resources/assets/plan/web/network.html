@@ -120,9 +120,9 @@
             <button class="btn bg-plan" data-target="#informationModal" data-toggle="modal" type="button">
                 <i class="fa fa-fw fa-question-circle"></i>
             </button>
-            <button class="btn bg-white col-plan" data-target="#updateModal" data-toggle="modal" type="button">
-                <b><i class="fa fa-fw fa-download"></i> v4.6.2</b>
-            </button>
+        </div>
+        <div class="ml-3 align-items-center justify-content-between">
+            ${version}
         </div>
     </ul>
     <!-- End of Sidebar -->
@@ -801,29 +801,7 @@
          tabindex="-1">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="updateModalLabel"><i class="fa fa-fw fa-download"></i> Version 4.6.2 is
-                        Available!
-                    </h5>
-                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>A new version has been released and is now available for download.</p>
-                    <a class="btn col-plan"
-                       href="https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.6.2-REL"
-                       rel="noopener noreferrer"
-                       target="_blank">
-                        <i class="fa fa-fw fa-list"></i> View Changelog
-                    </a>
-                    <a class="btn col-plan"
-                       href="https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.6.2-REL/Plan-4.6.2.jar"
-                       rel="noopener noreferrer"
-                       target="_blank">
-                        <i class="fa fa-fw fa-download"></i> Download Plan-4.6.2.jar
-                    </a>
-                </div>
+                ${updateModal}
                 <div class="modal-footer">
                     <button class="btn bg-plan" data-dismiss="modal" type="button">OK</button>
                 </div>

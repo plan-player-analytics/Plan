@@ -70,22 +70,22 @@ public class PlayersPage implements Page {
     @Override
     public String toHtml() throws ParseException {
         try {
-            PlaceholderReplacer placeholderReplacer = new PlaceholderReplacer();
+            PlaceholderReplacer placeholders = new PlaceholderReplacer();
 
-            placeholderReplacer.put("version", versionCheckSystem.getCurrentVersion());
-            placeholderReplacer.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
+            placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
+            placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
             if (serverInfo.getServer().isProxy()) {
-                placeholderReplacer.put("networkName", config.get(ProxySettings.NETWORK_NAME));
+                placeholders.put("networkName", config.get(ProxySettings.NETWORK_NAME));
             } else {
-                placeholderReplacer.put("networkName", config.get(PluginSettings.SERVER_NAME));
+                placeholders.put("networkName", config.get(PluginSettings.SERVER_NAME));
             }
 
             timings.start("Players page players table parsing");
             List<PlayerContainer> playerContainers = database.query(ContainerFetchQueries.fetchAllPlayerContainers());
-            placeholderReplacer.put("playersTable", tables.playerTableForPlayersPage(playerContainers).parseHtml());
+            placeholders.put("playersTable", tables.playerTableForPlayersPage(playerContainers).parseHtml());
             timings.end("Pages", "Players page players table parsing");
 
-            return placeholderReplacer.apply(files.getCustomizableResourceOrDefault("web/players.html").asString());
+            return placeholders.apply(files.getCustomizableResourceOrDefault("web/players.html").asString());
         } catch (Exception e) {
             throw new ParseException(e);
         }
