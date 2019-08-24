@@ -21,6 +21,7 @@ import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.RequestTarget;
+import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.response.RedirectResponse;
 import com.djrapitops.plan.system.webserver.response.Response;
@@ -38,15 +39,21 @@ import java.util.Optional;
 public class RootPageHandler implements PageHandler {
 
     private final ResponseFactory responseFactory;
+    private final WebServer webServer;
     private final ServerInfo serverInfo;
 
-    public RootPageHandler(ResponseFactory responseFactory, ServerInfo serverInfo) {
+    public RootPageHandler(ResponseFactory responseFactory, WebServer webServer, ServerInfo serverInfo) {
         this.responseFactory = responseFactory;
+        this.webServer = webServer;
         this.serverInfo = serverInfo;
     }
 
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
+        if (!webServer.isAuthRequired()) {
+            return responseFactory.redirectResponse(serverInfo.getServer().isProxy() ? "/network" : "/server");
+        }
+
         Optional<Authentication> auth = request.getAuth();
         if (!auth.isPresent()) {
             return responseFactory.basicAuth();
