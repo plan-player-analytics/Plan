@@ -90,7 +90,7 @@ public class PageFactory {
 
     public DebugPage debugPage() {
         return new DebugPage(
-                dbSystem.get().getDatabase(), serverInfo.get(), formatters.get(),
+                dbSystem.get().getDatabase(), serverInfo.get(), formatters.get(), versionCheckSystem.get(),
                 debugLogger.get(), timings.get(), errorHandler.get()
         );
     }
