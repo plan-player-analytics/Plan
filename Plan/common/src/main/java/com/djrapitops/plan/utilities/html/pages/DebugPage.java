@@ -24,6 +24,7 @@ import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.file.FileResource;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
@@ -53,6 +54,7 @@ public class DebugPage implements Page {
 
     private final Database database;
     private final ServerInfo serverInfo;
+    private final VersionCheckSystem versionCheckSystem;
     private final CombineDebugLogger debugLogger;
     private final Timings timings;
     private final ErrorHandler errorHandler;
@@ -64,12 +66,14 @@ public class DebugPage implements Page {
             Database database,
             ServerInfo serverInfo,
             Formatters formatters,
+            VersionCheckSystem versionCheckSystem,
             DebugLogger debugLogger,
             Timings timings,
             ErrorHandler errorHandler
     ) {
         this.database = database;
         this.serverInfo = serverInfo;
+        this.versionCheckSystem = versionCheckSystem;
         this.debugLogger = (CombineDebugLogger) debugLogger;
         this.timings = timings;
         this.errorHandler = errorHandler;
@@ -169,7 +173,9 @@ public class DebugPage implements Page {
         ServerProperties serverProperties = serverInfo.getServerProperties();
 
         content.append("<pre>### Server Information<br>")
-                .append("**Plan Version:** ${version}<br>");
+                .append("**Plan Version:** ")
+                .append(versionCheckSystem.getCurrentVersion())
+                .append("<br>");
 
         content.append("**Server:** ");
         content.append(serverProperties.getName())
