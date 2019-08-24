@@ -28,6 +28,7 @@ import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
+import com.djrapitops.plan.utilities.html.Html;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -106,11 +107,7 @@ public class PlayerPage implements Page {
         placeholders.put("serverPieColors", theme.getValue(ThemeVal.GRAPH_SERVER_PREF_PIE));
         placeholders.put("firstDay", 1);
 
-        if (serverInfo.getServer().isProxy()) {
-            placeholders.put("backButton", "<li><a title=\"to Network page\" href=\"/network\"><i class=\"material-icons\">arrow_back</i><i class=\"material-icons\">cloud</i></a></li>");
-        } else {
-            placeholders.put("backButton", "<li><a title=\"to Server page\" href=\"/server\"><i class=\"material-icons\">arrow_back</i><i class=\"material-icons\">storage</i></a></li>");
-        }
+        placeholders.put("backButton", (serverInfo.getServer().isProxy() ? Html.BACK_BUTTON_NETWORK : Html.BACK_BUTTON_SERVER).parse());
 
         PlayerPluginTab pluginTabs = pageFactory.inspectPluginTabs(playerUUID);
 

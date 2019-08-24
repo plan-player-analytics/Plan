@@ -110,6 +110,7 @@ public class PageFactory {
                         versionCheckSystem.get(),
                         fileSystem.get(),
                         dbSystem.get(),
+                        serverInfo.get(),
                         formatters.get()
                 )).orElseThrow(() -> new NotFoundException("Server not found in the database"));
     }

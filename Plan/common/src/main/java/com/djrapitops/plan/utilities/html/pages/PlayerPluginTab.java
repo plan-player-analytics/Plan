@@ -129,7 +129,7 @@ public class PlayerPluginTab implements Comparable<PlayerPluginTab> {
         return "<div class=\"tab\"><div class=\"container-fluid mt-4\">" +
                 // Page heading
                 "<div class=\"d-sm-flex align-items-center justify-content-between mb-4\">" +
-                "<h1 class=\"h3 mb-0 text-gray-800\"><i class=\"sidebar-toggler fa fa-fw fa-bars\"></i>${playerName} &middot; " + serverName + " Plugins</h1>" +
+                "<h1 class=\"h3 mb-0 text-gray-800\"><i class=\"sidebar-toggler fa fa-fw fa-bars\"></i>${playerName} &middot; " + serverName + " Plugins</h1>${backButton}" +
                 "</div>" +
                 // End Page heading
                 "<div class=\"card-columns\">" + content + "</div></div></div>";
