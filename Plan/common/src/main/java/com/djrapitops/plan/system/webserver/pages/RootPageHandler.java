@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.webserver.pages;
 
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.RequestTarget;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
@@ -37,9 +38,11 @@ import java.util.Optional;
 public class RootPageHandler implements PageHandler {
 
     private final ResponseFactory responseFactory;
+    private final ServerInfo serverInfo;
 
-    public RootPageHandler(ResponseFactory responseFactory) {
+    public RootPageHandler(ResponseFactory responseFactory, ServerInfo serverInfo) {
         this.responseFactory = responseFactory;
+        this.serverInfo = serverInfo;
     }
 
     @Override
@@ -54,7 +57,7 @@ public class RootPageHandler implements PageHandler {
         int permLevel = webUser.getPermLevel();
         switch (permLevel) {
             case 0:
-                return new RedirectResponse("/server");
+                return new RedirectResponse(serverInfo.getServer().isProxy() ? "/network" : "/server");
             case 1:
                 return new RedirectResponse("/players");
             case 2:
