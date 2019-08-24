@@ -90,33 +90,33 @@ public class PlayerPage implements Page {
         long now = System.currentTimeMillis();
         UUID playerUUID = player.getUnsafe(PlayerKeys.UUID);
 
-        PlaceholderReplacer replacer = new PlaceholderReplacer();
+        PlaceholderReplacer placeholders = new PlaceholderReplacer();
 
-        replacer.put("refresh", clockLongFormatter.apply(now));
-        replacer.put("refreshFull", secondLongFormatter.apply(now));
-        replacer.put("version", versionCheckSystem.getCurrentVersion());
-        replacer.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
-        replacer.put("timeZone", config.getTimeZoneOffsetHours());
+        placeholders.put("refresh", clockLongFormatter.apply(now));
+        placeholders.put("refreshFull", secondLongFormatter.apply(now));
+        placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
+        placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
+        placeholders.put("timeZone", config.getTimeZoneOffsetHours());
 
         String playerName = player.getValue(PlayerKeys.NAME).orElse(playerUUID.toString());
-        replacer.put("playerName", playerName);
+        placeholders.put("playerName", playerName);
 
-        replacer.put("worldPieColors", theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
-        replacer.put("gmPieColors", theme.getValue(ThemeVal.GRAPH_GM_PIE));
-        replacer.put("serverPieColors", theme.getValue(ThemeVal.GRAPH_SERVER_PREF_PIE));
-        replacer.put("firstDay", 1);
+        placeholders.put("worldPieColors", theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
+        placeholders.put("gmPieColors", theme.getValue(ThemeVal.GRAPH_GM_PIE));
+        placeholders.put("serverPieColors", theme.getValue(ThemeVal.GRAPH_SERVER_PREF_PIE));
+        placeholders.put("firstDay", 1);
 
         if (serverInfo.getServer().isProxy()) {
-            replacer.put("backButton", "<li><a title=\"to Network page\" href=\"/network\"><i class=\"material-icons\">arrow_back</i><i class=\"material-icons\">cloud</i></a></li>");
+            placeholders.put("backButton", "<li><a title=\"to Network page\" href=\"/network\"><i class=\"material-icons\">arrow_back</i><i class=\"material-icons\">cloud</i></a></li>");
         } else {
-            replacer.put("backButton", "<li><a title=\"to Server page\" href=\"/server\"><i class=\"material-icons\">arrow_back</i><i class=\"material-icons\">storage</i></a></li>");
+            placeholders.put("backButton", "<li><a title=\"to Server page\" href=\"/server\"><i class=\"material-icons\">arrow_back</i><i class=\"material-icons\">storage</i></a></li>");
         }
 
         PlayerPluginTab pluginTabs = pageFactory.inspectPluginTabs(playerUUID);
 
-        replacer.put("navPluginsTabs", pluginTabs.getNav());
-        replacer.put("pluginsTabs", pluginTabs.getTab());
+        placeholders.put("navPluginsTabs", pluginTabs.getNav());
+        placeholders.put("pluginsTabs", pluginTabs.getTab());
 
-        return replacer.apply(files.getCustomizableResourceOrDefault("web/player.html").asString());
+        return placeholders.apply(files.getCustomizableResourceOrDefault("web/player.html").asString());
     }
 }

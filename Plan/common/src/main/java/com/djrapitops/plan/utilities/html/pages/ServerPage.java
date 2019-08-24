@@ -118,7 +118,8 @@ public class ServerPage implements Page {
         } else {
             placeholders.put("backButton", "");
         }
-        placeholders.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
+        placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
+        placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
 
         List<ExtensionServerData> extensionData = dbSystem.getDatabase()
                 .query(new ExtensionServerDataQuery(server.getUuid()));
