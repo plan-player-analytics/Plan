@@ -47,7 +47,7 @@ public class APFModule {
     @Named("currentVersion")
     @Singleton
     String provideCurrentVersion(IPlugin plugin) {
-        return plugin.getVersion();
+        return plugin.getVersion().replace("%buildNumber%", "?");
     }
 
     @Provides

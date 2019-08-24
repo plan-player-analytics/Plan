@@ -103,10 +103,45 @@ public class VersionCheckSystem implements SubSystem {
         return Optional.ofNullable(newVersionAvailable);
     }
 
-    public Optional<String> getUpdateHtml() {
+    public Optional<String> getUpdateButton() {
         return getNewVersionAvailable()
-                .map(v -> v.isTrusted() ? "<a href=\"" + v.getChangeLogUrl() + "\" target=\"_blank\">" +
-                        "<h4 class=\"col-green\"><i class=\"" + (v.isRelease() ? "fa fa-download" : "fab fa-dev") + "\"></i> v" + v.getVersion().getVersionString() + " available!</h4></a>" : "");
+                .filter(VersionInfo::isTrusted)
+                .map(v -> "<button class=\"btn bg-white col-plan\" data-target=\"#updateModal\" data-toggle=\"modal\" type=\"button\">" +
+                        "<i class=\"fa fa-fw fa-download\"></i> v." + v.getVersion().getVersionString() +
+                        "</button>"
+                );
+    }
+
+    public String getCurrentVersionButton() {
+        return "<button class=\"btn bg-plan\" data-target=\"#updateModal\" data-toggle=\"modal\" type=\"button\">" +
+                "v." + getCurrentVersion() +
+                "</button>";
+    }
+
+    public String getUpdateModal() {
+        return getNewVersionAvailable()
+                .filter(VersionInfo::isTrusted)
+                .map(v -> "<div class=\"modal-header\">" +
+                        "<h5 class=\"modal-title\" id=\"updateModalLabel\">" +
+                        "<i class=\"fa fa-fw fa-download\"></i> Version " + v.getVersion().getVersionString() + " is Available!" +
+                        "</h5><button aria-label=\"Close\" class=\"close\" data-dismiss=\"modal\" type=\"button\"><span aria-hidden=\"true\">&times;</span></button>" +
+                        "</div>" + // Close modal-header
+                        "<div class=\"modal-body\">" +
+                        "<p>A new version has been released and is now available for download." +
+                        (v.isRelease() ? "" : "<br>This version is a DEV release.") + "</p>" +
+                        "<a class=\"btn col-plan\" href=\"" + v.getChangeLogUrl() + "\" rel=\"noopener noreferrer\" target=\"_blank\">" +
+                        "<i class=\"fa fa-fw fa-list\"></i> View Changelog</a>" +
+                        "<a class=\"btn col-plan\" href=\"" + v.getDownloadUrl() + "\" rel=\"noopener noreferrer\" target=\"_blank\">" +
+                        "<i class=\"fa fa-fw fa-download\"></i> Download Plan-4.6.2.jar</a>" +
+                        "</div>") // Close modal-body
+                .orElse("<div class=\"modal-header\">" +
+                        "<h5 class=\"modal-title\" id=\"updateModalLabel\">" +
+                        "<i class=\"far fa-fw fa-check-circle\"></i> You have version " + getCurrentVersion() + "" +
+                        "</h5><button aria-label=\"Close\" class=\"close\" data-dismiss=\"modal\" type=\"button\"><span aria-hidden=\"true\">&times;</span></button>" +
+                        "</div>" + // Close modal-header
+                        "<div class=\"modal-body\">" +
+                        "<p>You are running the latest version.</p>" +
+                        "</div>"); // Close modal-body
     }
 
     public String getCurrentVersion() {

@@ -85,7 +85,8 @@ public class NetworkPage implements Page {
             placeholders.put("avgPingColor", theme.getValue(ThemeVal.GRAPH_AVG_PING));
             placeholders.put("timeZone", config.getTimeZoneOffsetHours());
 
-            placeholders.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
+            placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
+            placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
 
             List<ExtensionServerData> extensionData = dbSystem.getDatabase()
                     .query(new ExtensionServerDataQuery(serverUUID));
