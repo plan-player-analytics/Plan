@@ -28,7 +28,6 @@ import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.Html;
-import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plan.utilities.html.structure.TabsElement;
 import com.djrapitops.plugin.benchmarking.Benchmark;
@@ -87,7 +86,7 @@ public class DebugPage implements Page {
         String hastebinLink = Html.LINK_EXTERNAL.parse("https://hastebin.com/", "Create a new hastebin paste");
 
         preContent.append("<p>")
-                .append(HtmlStructure.separateWithDots(issueLink, hastebinLink)).append("<br><br>")
+                .append(Html.separateWithDots(issueLink, hastebinLink)).append("<br><br>")
                 .append("This page contains debug information for an issue ticket. You can copy it directly into the issue, the info is pre-formatted.")
                 .append("</p>");
 

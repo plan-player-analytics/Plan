@@ -26,7 +26,6 @@ import com.djrapitops.plan.extension.implementation.results.ExtensionTableData;
 import com.djrapitops.plan.extension.implementation.results.server.ExtensionServerData;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
-import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plan.utilities.html.structure.NavLink;
 import com.djrapitops.plan.utilities.html.structure.TabsElement;
@@ -92,7 +91,7 @@ public class ServerPluginTabs {
         if (serverData.isEmpty()) {
             nav = new NavLink(Icon.called("cubes").build(), "Overview (No Data)").toHtml();
             tab = wrapInTab(
-                    "<div class=\"col-md-12\">" + Html.CARD.parse("<div class=\"card-body\"><p>No Extension Data</p></div>") + "</div>"
+                    "<div class=\"col-md-12\"><div class=\"card\"><div class=\"card-body\"><p>No Extension Data</p></div></div></div>"
             );
         } else {
             nav = new NavLink(Icon.called("cubes").build(), "Overview").toHtml();
@@ -152,7 +151,7 @@ public class ServerPluginTabs {
 
         ElementOrder[] order = tabInformation.getTabElementOrder().orElse(ElementOrder.values());
         String values = parseValuesHtml(tabData);
-        String valuesHtml = values.isEmpty() ? "" : Html.BODY.parse(values);
+        String valuesHtml = values.isEmpty() ? "" : "<div class=\"card-body\">" + values + "</div>";
         String tablesHtml = parseTablesHtml(tabData);
 
         StringBuilder builder = new StringBuilder();

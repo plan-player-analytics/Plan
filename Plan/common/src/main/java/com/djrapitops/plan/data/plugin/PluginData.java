@@ -18,7 +18,6 @@ package com.djrapitops.plan.data.plugin;
 
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
-import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 
@@ -94,7 +93,7 @@ public abstract class PluginData {
     }
 
     protected final void setHelpText(String html) {
-        helpText = Html.HELP_BUBBLE.parse(sourcePlugin, html);
+        // no-op
     }
 
     @Override
