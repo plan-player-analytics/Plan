@@ -98,8 +98,10 @@ public final class ExtensionExtractor {
 
         for (Method method : getMethods()) {
             int modifiers = method.getModifiers();
-            if (!Modifier.isPublic(modifiers)
-                    || Modifier.isStatic(modifiers)) {
+            if (Modifier.isPrivate(modifiers)
+                    || Modifier.isProtected(modifiers)
+                    || Modifier.isStatic(modifiers)
+                    || Modifier.isNative(modifiers)) {
                 continue;
             }
 
@@ -113,17 +115,30 @@ public final class ExtensionExtractor {
             MethodAnnotations.get(method, Tab.class).ifPresent(annotation -> methodAnnotations.put(method, Tab.class, annotation));
 
             MethodAnnotations.get(method, TableProvider.class).ifPresent(annotation -> methodAnnotations.put(method, TableProvider.class, annotation));
+            MethodAnnotations.get(method, GroupProvider.class).ifPresent(annotation -> methodAnnotations.put(method, GroupProvider.class, annotation));
         }
 
         if (methodAnnotations.isEmpty()) {
             throw new IllegalArgumentException(extensionName + " class had no methods annotated with a Provider annotation");
+        }
+
+        try {
+            methodAnnotations.makeMethodsAccessible();
+        } catch (SecurityException failedToMakeAccessible) {
+            throw new IllegalArgumentException(extensionName + " has non accessible Provider method that could not be made accessible: " +
+                    failedToMakeAccessible.getMessage(), failedToMakeAccessible);
         }
     }
 
     private <T> void validateReturnType(Method method, Class<T> expectedType) {
         Class<?> returnType = method.getReturnType();
         if (!expectedType.isAssignableFrom(returnType)) {
-            throw new IllegalArgumentException(extensionName + "." + method.getName() + " has invalid return type. was: " + returnType.getName() + ", expected: " + expectedType.getName());
+            String expectedName = expectedType.getName();
+            throw new IllegalArgumentException(extensionName + "." + method.getName() +
+                    " has invalid return type. was: " +
+                    returnType.getName() +
+                    ", expected: " +
+                    (expectedName.startsWith("[L") ? expectedName + " (an array)" : expectedName));
         }
     }
 
@@ -178,6 +193,7 @@ public final class ExtensionExtractor {
         validatePercentageProviderAnnotations();
         validateStringProviderAnnotations();
         validateTableProviderAnnotations();
+        validateGroupProviderAnnotations();
     }
 
     private void validateBooleanProviderAnnotations() {
@@ -215,9 +231,9 @@ public final class ExtensionExtractor {
     }
 
     private void validateDoubleProviderAnnotations() {
-        for (Map.Entry<Method, DoubleProvider> numberProvider : methodAnnotations.getMethodAnnotations(DoubleProvider.class).entrySet()) {
-            Method method = numberProvider.getKey();
-            DoubleProvider annotation = numberProvider.getValue();
+        for (Map.Entry<Method, DoubleProvider> doubleProvider : methodAnnotations.getMethodAnnotations(DoubleProvider.class).entrySet()) {
+            Method method = doubleProvider.getKey();
+            DoubleProvider annotation = doubleProvider.getValue();
 
             validateReturnType(method, double.class);
             validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
@@ -227,9 +243,9 @@ public final class ExtensionExtractor {
     }
 
     private void validatePercentageProviderAnnotations() {
-        for (Map.Entry<Method, PercentageProvider> numberProvider : methodAnnotations.getMethodAnnotations(PercentageProvider.class).entrySet()) {
-            Method method = numberProvider.getKey();
-            PercentageProvider annotation = numberProvider.getValue();
+        for (Map.Entry<Method, PercentageProvider> percentageProvider : methodAnnotations.getMethodAnnotations(PercentageProvider.class).entrySet()) {
+            Method method = percentageProvider.getKey();
+            PercentageProvider annotation = percentageProvider.getValue();
 
             validateReturnType(method, double.class);
             validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
@@ -239,9 +255,9 @@ public final class ExtensionExtractor {
     }
 
     private void validateStringProviderAnnotations() {
-        for (Map.Entry<Method, StringProvider> numberProvider : methodAnnotations.getMethodAnnotations(StringProvider.class).entrySet()) {
-            Method method = numberProvider.getKey();
-            StringProvider annotation = numberProvider.getValue();
+        for (Map.Entry<Method, StringProvider> stringProvider : methodAnnotations.getMethodAnnotations(StringProvider.class).entrySet()) {
+            Method method = stringProvider.getKey();
+            StringProvider annotation = stringProvider.getValue();
 
             validateReturnType(method, String.class);
             validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
@@ -254,6 +270,17 @@ public final class ExtensionExtractor {
         for (Method method : methodAnnotations.getMethodAnnotations(TableProvider.class).keySet()) {
             validateReturnType(method, Table.class);
             validateMethodArguments(method, false, UUID.class, String.class, Group.class);
+        }
+    }
+
+    private void validateGroupProviderAnnotations() {
+        for (Map.Entry<Method, GroupProvider> groupProvider : methodAnnotations.getMethodAnnotations(GroupProvider.class).entrySet()) {
+            Method method = groupProvider.getKey();
+            GroupProvider annotation = groupProvider.getValue();
+
+            validateReturnType(method, Group[].class);
+            validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
+            validateMethodArguments(method, true, UUID.class, String.class);
         }
     }
 
@@ -280,7 +307,8 @@ public final class ExtensionExtractor {
         for (Method conditionalMethod : conditionalMethods) {
             if (!MethodAnnotations.hasAnyOf(conditionalMethod,
                     BooleanProvider.class, DoubleProvider.class, NumberProvider.class,
-                    PercentageProvider.class, StringProvider.class
+                    PercentageProvider.class, StringProvider.class, TableProvider.class,
+                    GroupProvider.class
             )) {
                 throw new IllegalArgumentException(extensionName + "." + conditionalMethod.getName() + " did not have any associated Provider for Conditional.");
             }
