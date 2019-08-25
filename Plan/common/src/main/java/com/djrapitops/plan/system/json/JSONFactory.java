@@ -192,9 +192,9 @@ public class JSONFactory {
 
             Map<String, Object> tableEntry = new HashMap<>();
             tableEntry.put("country", geolocation);
-            tableEntry.put("avg_ping", ping.getAverage());
-            tableEntry.put("min_ping", ping.getMin());
-            tableEntry.put("max_ping", ping.getMax());
+            tableEntry.put("avg_ping", formatters.decimals().apply(ping.getAverage()) + " ms");
+            tableEntry.put("min_ping", ping.getMin() + " ms");
+            tableEntry.put("max_ping", ping.getMax() + " ms");
             tableEntries.add(tableEntry);
         }
         return tableEntries;
