@@ -18,6 +18,7 @@ package com.djrapitops.plan.extension.implementation.results.server;
 
 import com.djrapitops.plan.extension.implementation.results.ExtensionInformation;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
+import com.djrapitops.plan.extension.implementation.results.ExtensionTableData;
 
 import java.util.*;
 
@@ -50,6 +51,15 @@ public class ExtensionServerData implements Comparable<ExtensionServerData> {
 
     public boolean hasOnlyGenericTab() {
         return tabs.size() == 1 && tabs.containsKey("");
+    }
+
+    public boolean doesNeedWiderSpace() {
+        for (ExtensionTabData tab : tabs.values()) {
+            for (ExtensionTableData table : tab.getTableData()) {
+                if (table.isWideTable()) return true;
+            }
+        }
+        return false;
     }
 
     public List<ExtensionTabData> getTabs() {
