@@ -694,27 +694,59 @@ public interface DatabaseTest {
     }
 
     @Test
-    default void testBackupAndRestore() throws Exception {
+    default void testBackupAndRestoreSQLite() throws Exception {
+        File tempFile = Files.createTempFile(system().getPlanFiles().getDataFolder().toPath(), "backup-", ".db").toFile();
+        tempFile.deleteOnExit();
+        SQLiteDB backup = system().getDatabaseSystem().getSqLiteFactory().usingFile(tempFile);
+        backup.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
+        try {
+            backup.init();
+
+            saveAllData();
+
+            backup.executeTransaction(new BackupCopyTransaction(db(), backup));
+
+            assertQueryResultIsEqual(db(), backup, BaseUserQueries.fetchAllBaseUsers());
+            assertQueryResultIsEqual(db(), backup, UserInfoQueries.fetchAllUserInformation());
+            assertQueryResultIsEqual(db(), backup, NicknameQueries.fetchAllNicknameData());
+            assertQueryResultIsEqual(db(), backup, GeoInfoQueries.fetchAllGeoInformation());
+            assertQueryResultIsEqual(db(), backup, SessionQueries.fetchAllSessions());
+            assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllCommandUsageData());
+            assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllWorldNames());
+            assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllTPSData());
+            assertQueryResultIsEqual(db(), backup, ServerQueries.fetchPlanServerInformation());
+            assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAllPlanWebUsers());
+        } finally {
+            backup.close();
+        }
+    }
+
+    @Test
+    default void testBackupAndRestoreH2() throws Exception {
         File tempFile = Files.createTempFile(system().getPlanFiles().getDataFolder().toPath(), "backup-", ".db").toFile();
         tempFile.deleteOnExit();
         H2DB backup = system().getDatabaseSystem().getH2Factory().usingFile(tempFile);
         backup.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
-        backup.init();
+        try {
+            backup.init();
 
-        saveAllData();
+            saveAllData();
 
-        backup.executeTransaction(new BackupCopyTransaction(db(), backup));
+            backup.executeTransaction(new BackupCopyTransaction(db(), backup));
 
-        assertQueryResultIsEqual(db(), backup, BaseUserQueries.fetchAllBaseUsers());
-        assertQueryResultIsEqual(db(), backup, UserInfoQueries.fetchAllUserInformation());
-        assertQueryResultIsEqual(db(), backup, NicknameQueries.fetchAllNicknameData());
-        assertQueryResultIsEqual(db(), backup, GeoInfoQueries.fetchAllGeoInformation());
-        assertQueryResultIsEqual(db(), backup, SessionQueries.fetchAllSessions());
-        assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllCommandUsageData());
-        assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllWorldNames());
-        assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllTPSData());
-        assertQueryResultIsEqual(db(), backup, ServerQueries.fetchPlanServerInformation());
-        assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAllPlanWebUsers());
+            assertQueryResultIsEqual(db(), backup, BaseUserQueries.fetchAllBaseUsers());
+            assertQueryResultIsEqual(db(), backup, UserInfoQueries.fetchAllUserInformation());
+            assertQueryResultIsEqual(db(), backup, NicknameQueries.fetchAllNicknameData());
+            assertQueryResultIsEqual(db(), backup, GeoInfoQueries.fetchAllGeoInformation());
+            assertQueryResultIsEqual(db(), backup, SessionQueries.fetchAllSessions());
+            assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllCommandUsageData());
+            assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllWorldNames());
+            assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllTPSData());
+            assertQueryResultIsEqual(db(), backup, ServerQueries.fetchPlanServerInformation());
+            assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAllPlanWebUsers());
+        } finally {
+            backup.close();
+        }
     }
 
     default <T> void assertQueryResultIsEqual(Database one, Database two, Query<T> query) {

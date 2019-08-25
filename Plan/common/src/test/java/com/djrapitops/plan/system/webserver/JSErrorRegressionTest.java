@@ -25,9 +25,6 @@ import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
-import com.djrapitops.plan.system.webserver.cache.PageId;
-import com.djrapitops.plan.system.webserver.cache.ResponseCache;
-import com.jayway.awaitility.Awaitility;
 import extension.SeleniumExtension;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -44,7 +41,6 @@ import utilities.mocks.PluginMockComponent;
 
 import java.nio.file.Path;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -124,17 +120,6 @@ class JSErrorRegressionTest {
     @Test
     void serverPageDoesNotHaveJavascriptErrors(WebDriver driver) {
         System.out.println("Testing Server Page");
-        // Open the page that has refreshing info
-        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/server");
-        assertNo500Error(driver);
-
-        // Wait until Plan caches analysis results
-        Awaitility.await()
-                .atMost(10, TimeUnit.SECONDS)
-                .until(() -> ResponseCache.loadResponse(PageId.SERVER.of(serverUUID)) != null);
-
-        // Open the page with analysis stuff
-        SeleniumExtension.newTab(driver);
         driver.get("http://localhost:" + TEST_PORT_NUMBER + "/server");
         assertNo500Error(driver);
     }
