@@ -67,6 +67,8 @@ public class PlayersTableJSONParser {
     ) {
         // Data
         this.players = players;
+        this.players.sort(new PlayerContainerLastPlayedComparator());
+
         this.extensionData = extensionData;
 
         extensionDescriptives = new ArrayList<>();

@@ -31,7 +31,6 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.utilities.formatting.Formatters;
-import com.djrapitops.plan.utilities.html.tables.HtmlTables;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.debug.DebugLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -55,7 +54,6 @@ public class PageFactory {
     private final Lazy<Theme> theme;
     private final Lazy<DBSystem> dbSystem;
     private final Lazy<ServerInfo> serverInfo;
-    private final Lazy<HtmlTables> tables;
     private final Lazy<Formatters> formatters;
     private final Lazy<DebugLogger> debugLogger;
     private final Lazy<Timings> timings;
@@ -69,7 +67,6 @@ public class PageFactory {
             Lazy<Theme> theme,
             Lazy<DBSystem> dbSystem,
             Lazy<ServerInfo> serverInfo,
-            Lazy<HtmlTables> tables,
             Lazy<Formatters> formatters,
             Lazy<DebugLogger> debugLogger,
             Lazy<Timings> timings,
@@ -81,7 +78,6 @@ public class PageFactory {
         this.theme = theme;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
-        this.tables = tables;
         this.formatters = formatters;
         this.debugLogger = debugLogger;
         this.timings = timings;
@@ -96,9 +92,7 @@ public class PageFactory {
     }
 
     public PlayersPage playersPage() {
-        return new PlayersPage(versionCheckSystem.get(), fileSystem.get(), config.get(),
-                dbSystem.get().getDatabase(), serverInfo.get(), tables.get(),
-                timings.get());
+        return new PlayersPage(versionCheckSystem.get(), fileSystem.get(), config.get(), serverInfo.get());
     }
 
     public ServerPage serverPage(UUID serverUUID) throws NotFoundException {

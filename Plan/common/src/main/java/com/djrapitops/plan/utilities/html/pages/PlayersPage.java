@@ -17,9 +17,6 @@
 package com.djrapitops.plan.utilities.html.pages;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
-import com.djrapitops.plan.data.store.containers.PlayerContainer;
-import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -27,10 +24,6 @@ import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plan.system.settings.paths.ProxySettings;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
-import com.djrapitops.plan.utilities.html.tables.HtmlTables;
-import com.djrapitops.plugin.benchmarking.Timings;
-
-import java.util.List;
 
 /**
  * Html String parser for /players page.
@@ -42,29 +35,18 @@ public class PlayersPage implements Page {
     private final VersionCheckSystem versionCheckSystem;
     private final PlanFiles files;
     private final PlanConfig config;
-    private final Database database;
     private final ServerInfo serverInfo;
-
-    private final HtmlTables tables;
-
-    private final Timings timings;
 
     PlayersPage(
             VersionCheckSystem versionCheckSystem,
             PlanFiles files,
             PlanConfig config,
-            Database database,
-            ServerInfo serverInfo,
-            HtmlTables tables,
-            Timings timings
+            ServerInfo serverInfo
     ) {
         this.versionCheckSystem = versionCheckSystem;
         this.files = files;
         this.config = config;
-        this.database = database;
         this.serverInfo = serverInfo;
-        this.tables = tables;
-        this.timings = timings;
     }
 
     @Override
@@ -79,11 +61,6 @@ public class PlayersPage implements Page {
             } else {
                 placeholders.put("networkName", config.get(PluginSettings.SERVER_NAME));
             }
-
-            timings.start("Players page players table parsing");
-            List<PlayerContainer> playerContainers = database.query(ContainerFetchQueries.fetchAllPlayerContainers());
-            placeholders.put("playersTable", tables.playerTableForPlayersPage(playerContainers).parseHtml());
-            timings.end("Pages", "Players page players table parsing");
 
             return placeholders.apply(files.getCustomizableResourceOrDefault("web/players.html").asString());
         } catch (Exception e) {
