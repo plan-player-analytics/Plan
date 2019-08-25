@@ -104,7 +104,9 @@ function createKillsTable(player_kills) {
     for (var i = 0; i < player_kills.length; i++) {
         var kill = player_kills[i];
         table += '<tr><td>' + kill.date + '</td>' +
-            '<td>' + kill.killer + '<i class="fa fa-fw fa-angle-right col-red"></i>' + kill.victim + '</td>' +
+            '<td>' + kill.killer +
+            (kill.killer === kill.victim ? '<i class="fa fa-fw fa-skull-crossbones col-red"></i>' : '<i class="fa fa-fw fa-angle-right col-red"></i>') +
+            kill.victim + '</td>' +
             '<td>' + kill.weapon + '</td></tr>'
     }
 
