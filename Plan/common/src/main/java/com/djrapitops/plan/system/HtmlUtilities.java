@@ -18,7 +18,6 @@ package com.djrapitops.plan.system;
 
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
-import com.djrapitops.plan.utilities.html.tables.HtmlTables;
 import dagger.Lazy;
 
 import javax.inject.Inject;
@@ -28,26 +27,19 @@ import javax.inject.Singleton;
 public class HtmlUtilities {
 
     private final Lazy<Formatters> formatters;
-    private final Lazy<HtmlTables> htmlTables;
     private final Lazy<Graphs> graphs;
 
     @Inject
     public HtmlUtilities(
             Lazy<Formatters> formatters,
-            Lazy<HtmlTables> htmlTables,
             Lazy<Graphs> graphs
     ) {
         this.formatters = formatters;
-        this.htmlTables = htmlTables;
         this.graphs = graphs;
     }
 
     public Formatters getFormatters() {
         return formatters.get();
-    }
-
-    public HtmlTables getHtmlTables() {
-        return htmlTables.get();
     }
 
     public Graphs getGraphs() {
