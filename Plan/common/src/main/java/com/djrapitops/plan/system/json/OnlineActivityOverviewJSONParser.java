@@ -201,7 +201,7 @@ public class OnlineActivityOverviewJSONParser implements ServerTabJSONParser<Map
     private Map<String, Object> createInsightsMap(UUID serverUUID) {
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
-        long halfMonthAgo = now - TimeUnit.DAYS.toMillis(30L);
+        long halfMonthAgo = now - TimeUnit.DAYS.toMillis(15L);
         long monthAgo = now - TimeUnit.DAYS.toMillis(30L);
 
         Map<String, Object> insights = new HashMap<>();
