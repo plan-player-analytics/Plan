@@ -864,7 +864,7 @@ public interface DatabaseTest {
         OptionalAssert.equals(1, container.getValue(PlayerKeys.KICK_COUNT));
 
         List<GeoInfo> expectedGeoInfo =
-                Collections.singletonList(new GeoInfo("1.2.3.4", "TestLoc", 223456789));
+                Collections.singletonList(new GeoInfo("", "TestLoc", 223456789));
         OptionalAssert.equals(expectedGeoInfo, container.getValue(PlayerKeys.GEO_INFO));
 
         List<Nickname> expectedNicknames = Collections.singletonList(new Nickname("TestNick", -1, serverUUID()));
