@@ -25,7 +25,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Method annotation to provide a double (Percentage) about a Player.
+ * Method annotation to provide a double (Percentage).
  * <p>
  * Usage: {@code @PercentageProvider double method(UUID playerUUID)}
  * <p>
