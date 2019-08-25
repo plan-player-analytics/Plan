@@ -27,12 +27,12 @@ function smallTrend(trend) {
     switch (trend.direction) {
         case '+':
             trend_color = trend.reversed ? 'text-danger' : 'text-success';
-            return ' <i class="' + trend_color + ' fa fa-caret-up"></i>';
+            return ' <i class="' + trend_color + ' fa fa-caret-up" title="' + trend.text + '"></i>';
         case '-':
             trend_color = trend.reversed ? 'text-success' : 'text-danger';
-            return ' <i class="' + trend_color + ' fa fa-caret-down"></i>';
+            return ' <i class="' + trend_color + ' fa fa-caret-down" title="' + trend.text + '"></i>';
         default:
-            return ' <i class="text-warning fa fa-caret-right"></i>';
+            return ' <i class="text-warning fa fa-caret-right" title="' + trend.text + '"></i>';
     }
 }
 
