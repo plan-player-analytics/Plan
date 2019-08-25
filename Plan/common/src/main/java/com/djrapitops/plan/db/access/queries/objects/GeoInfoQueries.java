@@ -86,8 +86,12 @@ public class GeoInfoQueries {
      * @return List of {@link GeoInfo}, empty if none are found.
      */
     public static Query<List<GeoInfo>> fetchPlayerGeoInformation(UUID playerUUID) {
-        String sql = SELECT + DISTINCT + '*' + FROM + GeoInfoTable.TABLE_NAME +
-                WHERE + GeoInfoTable.USER_UUID + "=?";
+        String sql = SELECT +
+                GeoInfoTable.GEOLOCATION +
+                ",MAX(" + GeoInfoTable.LAST_USED + ") as " + GeoInfoTable.LAST_USED +
+                FROM + GeoInfoTable.TABLE_NAME +
+                WHERE + GeoInfoTable.USER_UUID + "=?" +
+                GROUP_BY + GeoInfoTable.GEOLOCATION;
 
         return new QueryStatement<List<GeoInfo>>(sql, 100) {
             @Override
@@ -99,10 +103,9 @@ public class GeoInfoQueries {
             public List<GeoInfo> processResults(ResultSet set) throws SQLException {
                 List<GeoInfo> geoInfo = new ArrayList<>();
                 while (set.next()) {
-                    String ip = set.getString(GeoInfoTable.IP);
                     String geolocation = set.getString(GeoInfoTable.GEOLOCATION);
                     long lastUsed = set.getLong(GeoInfoTable.LAST_USED);
-                    geoInfo.add(new GeoInfo(ip, geolocation, lastUsed));
+                    geoInfo.add(new GeoInfo("", geolocation, lastUsed));
                 }
                 return geoInfo;
             }

@@ -89,6 +89,7 @@ public class GeoInfo implements DateHolder, Serializable {
         }
     }
 
+    @Deprecated
     public String getIp() {
         return ip;
     }
