@@ -140,14 +140,15 @@ public class TPSMutator {
         tpsData.sort(new TPSComparator());
         for (TPS tps : tpsData) {
             long date = tps.getDate();
-            int players = tps.getPlayers();
             if (lastDate == -1) {
                 lastDate = date;
                 continue;
             }
 
-            if (players > 0) {
-                activeTime += date - lastDate;
+            int players = tps.getPlayers();
+            long diff = date - lastDate;
+            if (players > 0 && diff <= TimeUnit.MINUTES.toMillis(3L)) {
+                activeTime += diff;
             }
 
             lastDate = date;
