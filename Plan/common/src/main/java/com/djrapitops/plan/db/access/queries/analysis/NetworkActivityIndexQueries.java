@@ -363,7 +363,7 @@ public class NetworkActivityIndexQueries {
                 statement.setLong(2, after);
 
                 // Have played in the last half of the time frame
-                long half = before - (after - before) / 2;
+                long half = before + (before - after) / 2;
                 statement.setLong(3, half);
                 statement.setLong(4, before);
                 setSelectActivityIndexSQLParameters(statement, 5, threshold, before);
@@ -400,7 +400,7 @@ public class NetworkActivityIndexQueries {
                 statement.setLong(2, after);
 
                 // Have played in the last half of the time frame
-                long half = before - (after - before) / 2;
+                long half = before + (before - after) / 2;
                 statement.setLong(3, half);
                 statement.setLong(4, before);
                 setSelectActivityIndexSQLParameters(statement, 5, threshold, before);

@@ -342,11 +342,11 @@ public class PlayerCountQueries {
     public static Query<Integer> retainedPlayerCount(long after, long before, UUID serverUUID) {
         String selectNewUUIDs = SELECT + UserInfoTable.USER_UUID +
                 FROM + UserInfoTable.TABLE_NAME +
-                WHERE + UserInfoTable.REGISTERED + "<=?" +
-                AND + UserInfoTable.REGISTERED + ">=?" +
+                WHERE + UserInfoTable.REGISTERED + ">=?" +
+                AND + UserInfoTable.REGISTERED + "<=?" +
                 AND + UserInfoTable.SERVER_UUID + "=?";
 
-        String selectUniqueUUIDs = SELECT + "DISTINCT " + SessionsTable.USER_UUID +
+        String selectUniqueUUIDs = SELECT + DISTINCT + SessionsTable.USER_UUID +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_START + ">=?" +
                 AND + SessionsTable.SESSION_END + "<=?" +
@@ -354,17 +354,17 @@ public class PlayerCountQueries {
 
         String sql = SELECT + "COUNT(1) as player_count" +
                 FROM + '(' + selectNewUUIDs + ") q1" +
-                INNER_JOIN + '(' + selectUniqueUUIDs + ") q2 on q1." + SessionsTable.USER_UUID + "=q2." + SessionsTable.USER_UUID;
+                INNER_JOIN + '(' + selectUniqueUUIDs + ") q2 on q1." + UserInfoTable.USER_UUID + "=q2." + SessionsTable.USER_UUID;
 
         return new QueryStatement<Integer>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, before);
-                statement.setLong(2, after);
+                statement.setLong(1, after);
+                statement.setLong(2, before);
                 statement.setString(3, serverUUID.toString());
 
                 // Have played in the last half of the time frame
-                long half = before - (after - before) / 2;
+                long half = before + (before - after) / 2;
                 statement.setLong(4, half);
                 statement.setLong(5, before);
                 statement.setString(6, serverUUID.toString());
