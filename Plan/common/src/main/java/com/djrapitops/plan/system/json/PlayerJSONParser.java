@@ -17,6 +17,7 @@
 package com.djrapitops.plan.system.json;
 
 import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.*;
@@ -89,6 +90,8 @@ public class PlayerJSONParser {
         SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);
         Map<UUID, WorldTimes> worldTimesPerServer = PerServerMutator.forContainer(player).worldTimesPerServer();
         List<Map<String, Object>> serverAccordion = new ServerAccordion(player, serverNames, graphs, year, timeAmount).asMaps();
+        List<PlayerKill> kills = player.getValue(PlayerKeys.PLAYER_KILLS).orElse(Collections.emptyList());
+        List<PlayerKill> deaths = player.getValue(PlayerKeys.PLAYER_DEATHS_KILLS).orElse(Collections.emptyList());
 
         Map<String, Object> data = new HashMap<>();
         data.put("info", createInfoJSONMap(player, serverNames));
@@ -101,8 +104,8 @@ public class PlayerJSONParser {
         data.put("connections", player.getValue(PlayerKeys.GEO_INFO)
                 .map(geoInfo -> ConnectionInfo.fromGeoInfo(geoInfo, year))
                 .orElse(Collections.emptyList()));
-        data.put("player_kills", player.getValue(PlayerKeys.PLAYER_KILLS).orElse(Collections.emptyList()));
-        data.put("player_deaths", player.getValue(PlayerKeys.PLAYER_DEATHS_KILLS).orElse(Collections.emptyList()));
+        data.put("player_kills", new PlayerKillMutator(kills).filterNonSelfKills().toJSONAsMap(formatters));
+        data.put("player_deaths", new PlayerKillMutator(deaths).toJSONAsMap(formatters));
         data.put("sessions", sessionsMutator.toServerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters));
         data.put("sessions_per_page", config.get(DisplaySettings.SESSIONS_PER_PAGE));
         data.put("servers", serverAccordion);

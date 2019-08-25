@@ -37,6 +37,10 @@ public class PlayerKillMutator {
         this.kills = kills;
     }
 
+    public PlayerKillMutator filterNonSelfKills() {
+        return new PlayerKillMutator(kills.stream().filter(PlayerKill::isSelfKill).collect(Collectors.toList()));
+    }
+
     public List<Map<String, Object>> toJSONAsMap(Formatters formatters) {
         return kills.stream().map(
                 kill -> {
