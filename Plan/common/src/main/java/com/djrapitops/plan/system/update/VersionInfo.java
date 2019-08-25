@@ -55,10 +55,6 @@ public class VersionInfo implements Comparable<VersionInfo> {
         return changeLogUrl;
     }
 
-    public boolean isTrusted() {
-        return downloadUrl.startsWith("https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/");
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

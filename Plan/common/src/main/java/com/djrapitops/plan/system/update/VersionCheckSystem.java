@@ -105,7 +105,6 @@ public class VersionCheckSystem implements SubSystem {
 
     public Optional<String> getUpdateButton() {
         return getNewVersionAvailable()
-                .filter(VersionInfo::isTrusted)
                 .map(v -> "<button class=\"btn bg-white col-plan\" data-target=\"#updateModal\" data-toggle=\"modal\" type=\"button\">" +
                         "<i class=\"fa fa-fw fa-download\"></i> v." + v.getVersion().getVersionString() +
                         "</button>"
@@ -120,7 +119,6 @@ public class VersionCheckSystem implements SubSystem {
 
     public String getUpdateModal() {
         return getNewVersionAvailable()
-                .filter(VersionInfo::isTrusted)
                 .map(v -> "<div class=\"modal-header\">" +
                         "<h5 class=\"modal-title\" id=\"updateModalLabel\">" +
                         "<i class=\"fa fa-fw fa-download\"></i> Version " + v.getVersion().getVersionString() + " is Available!" +
