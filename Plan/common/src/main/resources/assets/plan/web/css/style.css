@@ -957,3 +957,70 @@ div.scrollbar {
 .col-plan {
     color: #368F17;
 }
+
+/* Minecraft color codes */
+.black {
+    color: #000000;
+}
+
+.darkblue {
+    color: #0000AA;
+}
+
+.darkgreen {
+    color: #00AA00;
+}
+
+.darkaqua {
+    color: #00AAAA;
+}
+
+.darkred {
+    color: #AA0000;
+}
+
+.darkpurple {
+    color: #AA00AA;
+}
+
+.gold {
+    color: #FFAA00;
+}
+
+.gray {
+    color: #AAAAAA;
+}
+
+.darkgray {
+    color: #555555;
+}
+
+.blue {
+    color: #5555FF;
+}
+
+.green {
+    color: #55FF55;
+}
+
+.aqua {
+    color: #55FFFF;
+}
+
+.red {
+    color: #FF5555;
+}
+
+.pink {
+    color: #FF55FF;
+}
+
+.yellow {
+    color: #FFFF55;
+    text-shadow: 0 0 6px #000;
+}
+
+.white {
+    color: #FFFFFF;
+    text-shadow: 0 0 8px #000;
+}

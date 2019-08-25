@@ -33,9 +33,11 @@ import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
+import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.structure.ServerAccordion;
+import org.apache.commons.text.StringEscapeUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -275,7 +277,7 @@ public class PlayerJSONParser {
             List<Nickname> mapped = new ArrayList<>();
             for (com.djrapitops.plan.data.store.objects.Nickname nickname : nicknames) {
                 mapped.add(new Nickname(
-                        nickname.getName(),
+                        Html.swapColorCodesToSpan(StringEscapeUtils.escapeHtml4(nickname.getName())),
                         serverNames.getOrDefault(nickname.getServerUUID(), nickname.getServerUUID().toString()),
                         dateFormatter.apply(nickname.getDate())
                 ));
