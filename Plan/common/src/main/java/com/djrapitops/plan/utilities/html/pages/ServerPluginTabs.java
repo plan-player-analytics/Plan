@@ -31,6 +31,7 @@ import com.djrapitops.plan.utilities.html.structure.NavLink;
 import com.djrapitops.plan.utilities.html.structure.TabsElement;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Responsible for generating /server page plugin tabs based on DataExtension API data.
@@ -43,19 +44,18 @@ import java.util.*;
 public class ServerPluginTabs {
 
     private List<ExtensionServerData> serverData;
+    private List<ExtensionServerData> extraTabServerData;
 
     private Map<FormatType, Formatter<Long>> numberFormatters;
 
     private Formatter<Double> decimalFormatter;
     private Formatter<Double> percentageFormatter;
 
-    private String nav;
+    private StringBuilder nav;
     private String tab;
 
-    private boolean hasWideTable;
-
     public ServerPluginTabs(String nav, String tab) {
-        this.nav = nav;
+        this.nav = new StringBuilder(nav);
         this.tab = tab;
     }
 
@@ -64,6 +64,10 @@ public class ServerPluginTabs {
             Formatters formatters
     ) {
         this.serverData = serverData;
+        this.extraTabServerData = serverData.stream()
+                .filter(ExtensionServerData::doesNeedWiderSpace)
+                .collect(Collectors.toList());
+        this.serverData.removeAll(extraTabServerData);
 
         numberFormatters = new EnumMap<>(FormatType.class);
         numberFormatters.put(FormatType.DATE_SECOND, formatters.secondLong());
@@ -74,13 +78,11 @@ public class ServerPluginTabs {
         this.decimalFormatter = formatters.decimals();
         this.percentageFormatter = formatters.percentage();
 
-        hasWideTable = false;
-
         generate();
     }
 
     public String getNav() {
-        return nav;
+        return nav.toString();
     }
 
     public String getTabs() {
@@ -89,19 +91,50 @@ public class ServerPluginTabs {
 
     private void generate() {
         if (serverData.isEmpty()) {
-            nav = new NavLink(Icon.called("cubes").build(), "Overview (No Data)").toHtml();
+            nav = new StringBuilder(new NavLink(Icon.called("cubes").build(), "Overview (No Data)").toHtml());
             tab = wrapInTab(
                     "<div class=\"col-md-12\"><div class=\"card\"><div class=\"card-body\"><p>No Extension Data</p></div></div></div>"
             );
         } else {
-            nav = new NavLink(Icon.called("cubes").build(), "Overview").toHtml();
-            tab = generatePageTab();
+            nav = new StringBuilder(new NavLink(Icon.called("cubes").build(), "Overview").toHtml());
+            tab = generatePageTabs();
         }
     }
 
-    private String generatePageTab() {
+    private String generatePageTabs() {
         Collections.sort(serverData);
 
+        String overviewTab = generateOverviewTab();
+        String extraTabs = generateExtraTabs();
+
+        return overviewTab + extraTabs;
+    }
+
+    private String generateExtraTabs() {
+        StringBuilder tabBuilder = new StringBuilder();
+
+        for (ExtensionServerData datum : extraTabServerData) {
+            ExtensionInformation extensionInformation = datum.getExtensionInformation();
+
+            boolean onlyGeneric = datum.hasOnlyGenericTab();
+
+            String tabsElement;
+            if (onlyGeneric) {
+                ExtensionTabData genericTabData = datum.getTabs().get(0);
+                tabsElement = parseContentHtml(genericTabData);
+            } else {
+                tabsElement = new TabsElement(
+                        datum.getTabs().stream().map(this::wrapToTabElementTab).toArray(TabsElement.Tab[]::new)
+                ).toHtmlFull();
+            }
+
+            tabBuilder.append(wrapInTab(extensionInformation, wrapInContainer(extensionInformation, tabsElement)));
+            nav.append(new NavLink(Icon.fromExtensionIcon(extensionInformation.getIcon()), extensionInformation.getPluginName()).toHtml());
+        }
+        return tabBuilder.toString();
+    }
+
+    private String generateOverviewTab() {
         StringBuilder tabBuilder = new StringBuilder();
 
         for (ExtensionServerData datum : serverData) {
@@ -133,6 +166,16 @@ public class ServerPluginTabs {
                 "</div>" +
                 // End Page heading
                 "<div class=\"card-columns\">" + content + "</div></div></div>";
+    }
+
+    private String wrapInTab(ExtensionInformation info, String content) {
+        return "<div class=\"tab\"><div class=\"container-fluid mt-4\">" +
+                // Page heading
+                "<div class=\"d-sm-flex align-items-center justify-content-between mb-4\">" +
+                "<h1 class=\"h3 mb-0 text-gray-800\"><i class=\"sidebar-toggler fa fa-fw fa-bars\"></i><span class=\"server-name\"></span> &middot; " + info.getPluginName() + "</h1>${backButton}" +
+                "</div>" +
+                // End Page heading
+                "<div class=\"row\"><div class=\"col-xl-12 col-sm-12\">" + content + "</div></div></div></div>";
     }
 
     private TabsElement.Tab wrapToTabElementTab(ExtensionTabData tabData) {
@@ -175,9 +218,6 @@ public class ServerPluginTabs {
     private String parseTablesHtml(ExtensionTabData tabData) {
         StringBuilder builder = new StringBuilder();
         for (ExtensionTableData tableData : tabData.getTableData()) {
-            if (tableData.isWideTable()) {
-                hasWideTable = true;
-            }
             builder.append(tableData.getHtmlTable().parseHtml());
         }
         return builder.toString();
@@ -207,8 +247,6 @@ public class ServerPluginTabs {
     }
 
     private String wrapInContainer(ExtensionInformation information, String tabsElement) {
-        String colWidth = hasWideTable ? "col-md-8 col-lg-8 col-sm-12" : "col-md-4 col-lg-4 col-sm-12";
-        // TODO move large tables to their own tabs
         return "<div class=\"card shadow mb-4\">" +
                 "<div class=\"card-header py-3\">" +
                 "<h6 class=\"m-0 font-weight-bold col-black\">" + Icon.fromExtensionIcon(information.getIcon()) + ' ' + information.getPluginName() + "</h6>" +
