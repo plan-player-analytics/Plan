@@ -16,12 +16,10 @@
  */
 package com.djrapitops.plan.query;
 
-import com.djrapitops.plan.data.store.containers.PlayerContainer;
-import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
 import com.djrapitops.plan.db.access.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.db.access.queries.schema.H2SchemaQueries;
 import com.djrapitops.plan.db.access.queries.schema.MySQLSchemaQueries;
@@ -41,21 +39,12 @@ public class CommonQueriesImplementation implements CommonQueries {
 
     @Override
     public long fetchPlaytime(UUID playerUUID, UUID serverUUID, long after, long before) {
-        // TODO Replace with single query later
-        PlayerContainer player = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
-        return SessionsMutator.forContainer(player)
-                .filterSessionsBetween(after, before)
-                .filterPlayedOnServer(serverUUID)
-                .toPlaytime();
+        return db.query(SessionQueries.playtimeOfPlayer(after, before, playerUUID)).getOrDefault(serverUUID, 0L);
     }
 
     @Override
     public long fetchLastSeen(UUID playerUUID, UUID serverUUID) {
-        // TODO Replace with single query later
-        PlayerContainer player = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
-        return SessionsMutator.forContainer(player)
-                .filterPlayedOnServer(serverUUID)
-                .toLastSeen();
+        return db.query(SessionQueries.lastSeen(playerUUID, serverUUID));
     }
 
     @Override
