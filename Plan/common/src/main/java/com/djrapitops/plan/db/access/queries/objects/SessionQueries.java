@@ -493,6 +493,32 @@ public class SessionQueries {
         };
     }
 
+    public static Query<Map<UUID, Long>> playtimeOfPlayer(long after, long before, UUID playerUUID) {
+        String sql = SELECT + SessionsTable.SERVER_UUID + ",SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.USER_UUID + "=?" +
+                AND + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?" +
+                GROUP_BY + SessionsTable.SERVER_UUID;
+        return new QueryStatement<Map<UUID, Long>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+                statement.setLong(2, after);
+                statement.setLong(3, before);
+            }
+
+            @Override
+            public Map<UUID, Long> processResults(ResultSet set) throws SQLException {
+                Map<UUID, Long> playtimeOfPlayer = new HashMap<>();
+                while (set.next()) {
+                    playtimeOfPlayer.put(UUID.fromString(set.getString(SessionsTable.SERVER_UUID)), set.getLong("playtime"));
+                }
+                return playtimeOfPlayer;
+            }
+        };
+    }
+
     public static Query<Long> playtime(long after, long before) {
         String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
                 FROM + SessionsTable.TABLE_NAME +
@@ -762,6 +788,25 @@ public class SessionQueries {
                     playtimePerServer.put(set.getString(ServerTable.NAME), set.getLong("playtime"));
                 }
                 return playtimePerServer;
+            }
+        };
+    }
+
+    public static Query<Long> lastSeen(UUID playerUUID, UUID serverUUID) {
+        String sql = SELECT + "MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.USER_UUID + "=?" +
+                AND + SessionsTable.SERVER_UUID + "=?";
+        return new QueryStatement<Long>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+                statement.setString(2, serverUUID.toString());
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("last_seen") : 0;
             }
         };
     }
