@@ -57,6 +57,10 @@ public class RemovePlayerTransaction extends Transaction {
         deleteFromTable(PingTable.TABLE_NAME);
         deleteFromTable(UserInfoTable.TABLE_NAME);
         deleteFromTable(UsersTable.TABLE_NAME);
+
+        deleteFromTable(ExtensionPlayerTableValueTable.TABLE_NAME);
+        deleteFromTable(ExtensionPlayerValueTable.TABLE_NAME);
+        deleteFromTable(ExtensionPlayerGroupsTable.TABLE_NAME);
     }
 
     private void deleteWebUser(String username) {
