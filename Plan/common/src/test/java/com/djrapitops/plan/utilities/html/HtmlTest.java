@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.utilities.html;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -51,6 +52,14 @@ class HtmlTest {
         String testString = "§fHello, §aPerson§r - How Are you?";
         String expected = Html.COLOR_F.parse() + "Hello, " + Html.COLOR_A.parse() + "Person</span></span> - How Are you?";
         String result = Html.swapColorCodesToSpan(testString);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void colorsToSpanSwapsEscapedHtmlColors() {
+        String testString = "§fHello, §aPerson§r - How Are you?";
+        String expected = Html.COLOR_F.parse() + "Hello, " + Html.COLOR_A.parse() + "Person</span></span> - How Are you?";
+        String result = Html.swapColorCodesToSpan(StringEscapeUtils.escapeHtml4(testString));
         assertEquals(expected, result);
     }
 
