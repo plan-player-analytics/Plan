@@ -60,7 +60,7 @@ public class RemovePlayerTransaction extends Transaction {
 
         deleteFromTable(ExtensionPlayerTableValueTable.TABLE_NAME);
         deleteFromTable(ExtensionPlayerValueTable.TABLE_NAME);
-        deleteFromTable(ExtensionPlayerGroupsTable.TABLE_NAME);
+        deleteFromTable(ExtensionGroupsTable.TABLE_NAME);
     }
 
     private void deleteWebUser(String username) {

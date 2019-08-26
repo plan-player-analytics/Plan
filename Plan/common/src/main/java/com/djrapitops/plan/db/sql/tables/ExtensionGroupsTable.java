@@ -31,6 +31,7 @@ public class ExtensionGroupsTable {
 
     public static final String ID = "id";
     public static final String PROVIDER_ID = "provider_id";
+    public static final String USER_UUID = "uuid";
     public static final String GROUP_NAME = "group_name";
 
     private ExtensionGroupsTable() {
@@ -40,6 +41,7 @@ public class ExtensionGroupsTable {
     public static String createTableSQL(DBType dbType) {
         return CreateTableParser.create(TABLE_NAME, dbType)
                 .column(ID, Sql.INT).primaryKey()
+                .column(USER_UUID, Sql.varchar(36)).notNull()
                 .column(GROUP_NAME, Sql.varchar(50))
                 .column(PROVIDER_ID, Sql.INT).notNull()
                 .foreignKey(PROVIDER_ID, ExtensionProviderTable.TABLE_NAME, ExtensionProviderTable.ID)
