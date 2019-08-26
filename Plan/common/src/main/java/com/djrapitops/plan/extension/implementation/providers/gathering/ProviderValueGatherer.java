@@ -51,6 +51,7 @@ public class ProviderValueGatherer {
     private DoubleAndPercentageProviderValueGatherer doubleAndPercentageGatherer;
     private StringProviderValueGatherer stringGatherer;
     private TableProviderValueGatherer tableGatherer;
+    private GroupProviderValueGatherer groupGatherer;
 
 
     public ProviderValueGatherer(
@@ -81,6 +82,9 @@ public class ProviderValueGatherer {
                 pluginName, extension, serverUUID, database, dataProviders
         );
         tableGatherer = new TableProviderValueGatherer(
+                pluginName, extension, serverUUID, database, dataProviders
+        );
+        groupGatherer = new GroupProviderValueGatherer(
                 pluginName, extension, serverUUID, database, dataProviders
         );
     }
@@ -129,6 +133,7 @@ public class ProviderValueGatherer {
         doubleAndPercentageGatherer.gatherDoubleDataOfPlayer(playerUUID, playerName, conditions);
         stringGatherer.gatherStringDataOfPlayer(playerUUID, playerName, conditions);
         tableGatherer.gatherTableDataOfPlayer(playerUUID, playerName, conditions);
+        groupGatherer.gatherGroupDataOfPlayer(playerUUID, playerName, conditions);
     }
 
     public void updateValues() {

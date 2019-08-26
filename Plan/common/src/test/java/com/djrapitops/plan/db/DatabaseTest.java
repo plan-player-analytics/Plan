@@ -1238,6 +1238,7 @@ public interface DatabaseTest {
         OptionalAssert.equals("0.5", tabData.getDouble("doubleVal_total").map(data -> data.getFormattedValue(Objects::toString)));
         OptionalAssert.equals("5", tabData.getNumber("value_avg").map(data -> data.getFormattedValue(Objects::toString)));
         OptionalAssert.equals("5", tabData.getNumber("value_total").map(data -> data.getFormattedValue(Objects::toString)));
+        // TODO Add test that group exists
     }
 
     @Test
@@ -1526,6 +1527,11 @@ public interface DatabaseTest {
         @StringProvider(text = "a string", showInPlayerTable = true)
         public String stringVal(UUID playerUUID) {
             return "Something";
+        }
+
+        @GroupProvider(text = "a group")
+        public Group[] group(UUID playerUUID) {
+            return new Group[]{() -> "group"};
         }
     }
 

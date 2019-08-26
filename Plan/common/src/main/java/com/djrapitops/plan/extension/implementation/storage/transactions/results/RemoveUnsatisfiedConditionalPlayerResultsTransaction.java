@@ -45,14 +45,12 @@ public class RemoveUnsatisfiedConditionalPlayerResultsTransaction extends Transa
     private final String playerTableValueTable;
     private final String tableTable;
     private final String groupTable;
-    private final String playerGroupTable;
 
     public RemoveUnsatisfiedConditionalPlayerResultsTransaction() {
         providerTable = ExtensionProviderTable.TABLE_NAME;
         playerValueTable = ExtensionPlayerValueTable.TABLE_NAME;
         tableTable = ExtensionTableProviderTable.TABLE_NAME;
         groupTable = ExtensionGroupsTable.TABLE_NAME;
-        playerGroupTable = ExtensionPlayerGroupsTable.TABLE_NAME;
         playerTableValueTable = ExtensionPlayerTableValueTable.TABLE_NAME;
     }
 
@@ -162,13 +160,12 @@ public class RemoveUnsatisfiedConditionalPlayerResultsTransaction extends Transa
         // -
         // Conditions are in plan_extensions_providers
         // selectSatisfiedConditions lists 'provided_condition' Strings
-        String selectUnsatisfiedIDs = SELECT + playerGroupTable + '.' + ID +
-                FROM + playerGroupTable +
-                INNER_JOIN + groupTable + " on " + groupTable + '.' + ID + '=' + playerGroupTable + '.' + ExtensionPlayerGroupsTable.GROUP_ID +
+        String selectUnsatisfiedIDs = SELECT + groupTable + '.' + ID +
+                FROM + groupTable +
                 INNER_JOIN + providerTable + " on " + providerTable + '.' + ID + '=' + groupTable + '.' + ExtensionGroupsTable.PROVIDER_ID +
                 LEFT_JOIN + selectSatisfiedConditions + // Left join to preserve values that don't have their condition fulfilled
                 " on (" + // Join when uuid and plugin_id match and condition for the group provider is satisfied
-                playerGroupTable + '.' + P_UUID +
+                groupTable + '.' + P_UUID +
                 "=q1." + P_UUID +
                 AND + ExtensionProviderTable.CONDITION +
                 "=q1." + ExtensionProviderTable.PROVIDED_CONDITION +
@@ -181,7 +178,7 @@ public class RemoveUnsatisfiedConditionalPlayerResultsTransaction extends Transa
         // Nested query here is required because MySQL limits update statements with nested queries:
         // The nested query creates a temporary table that bypasses the same table query-update limit.
         // Note: MySQL versions 5.6.7+ might optimize this nested query away leading to an exception.
-        String deleteValuesSQL = "DELETE FROM " + playerGroupTable +
+        String deleteValuesSQL = "DELETE FROM " + groupTable +
                 WHERE + ID + " IN (" + SELECT + ID + FROM + '(' + selectUnsatisfiedIDs + ") as ids)";
 
         return new ExecStatement(deleteValuesSQL) {
