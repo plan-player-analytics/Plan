@@ -130,7 +130,7 @@ public class VersionCheckSystem implements SubSystem {
                         "<a class=\"btn col-plan\" href=\"" + v.getChangeLogUrl() + "\" rel=\"noopener noreferrer\" target=\"_blank\">" +
                         "<i class=\"fa fa-fw fa-list\"></i> View Changelog</a>" +
                         "<a class=\"btn col-plan\" href=\"" + v.getDownloadUrl() + "\" rel=\"noopener noreferrer\" target=\"_blank\">" +
-                        "<i class=\"fa fa-fw fa-download\"></i> Download Plan-4.6.2.jar</a>" +
+                        "<i class=\"fa fa-fw fa-download\"></i> Download Plan-" + v.getVersion().getVersionString() + ".jar</a>" +
                         "</div>") // Close modal-body
                 .orElse("<div class=\"modal-header\">" +
                         "<h5 class=\"modal-title\" id=\"updateModalLabel\">" +
