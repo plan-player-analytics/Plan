@@ -28,7 +28,7 @@ public class ExtensionStringData implements ExtensionData {
 
     private final ExtensionDescriptive descriptive;
     private final boolean playerName;
-    private final String value;
+    private String value;
 
     public ExtensionStringData(ExtensionDescriptive descriptive, boolean playerName, String value) {
         this.descriptive = descriptive;
@@ -43,5 +43,10 @@ public class ExtensionStringData implements ExtensionData {
     public String getFormattedValue() {
         String withColors = Html.swapColorCodesToSpan(value);
         return !playerName ? withColors : Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(value), withColors);
+    }
+
+    ExtensionStringData concatenate(ExtensionStringData other) {
+        value += ", " + other.value;
+        return this;
     }
 }

@@ -55,10 +55,10 @@ public class ExtensionServerPlayerDataTableQuery implements Query<Map<UUID, Exte
 
     @Override
     public Map<UUID, ExtensionTabData> executeQuery(SQLDB db) {
-        return db.query(fetchIncompletePlayerDataByPluginID());
+        return db.query(fetchPlayerData());
     }
 
-    private Query<Map<UUID, ExtensionTabData>> fetchIncompletePlayerDataByPluginID() {
+    private Query<Map<UUID, ExtensionTabData>> fetchPlayerData() {
         String selectLimitedNumberOfPlayerUUIDsByLastSeenDate = SELECT +
                 SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_UUID +
                 ",MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
