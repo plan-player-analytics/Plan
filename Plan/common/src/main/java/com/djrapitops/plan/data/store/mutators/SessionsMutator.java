@@ -57,6 +57,11 @@ public class SessionsMutator {
         return sessions;
     }
 
+    public SessionsMutator sort(Comparator<Session> sessionComparator) {
+        sessions.sort(sessionComparator);
+        return this;
+    }
+
     public SessionsMutator filterBy(Predicate<Session> predicate) {
         return new SessionsMutator(sessions.stream()
                 .filter(predicate)
