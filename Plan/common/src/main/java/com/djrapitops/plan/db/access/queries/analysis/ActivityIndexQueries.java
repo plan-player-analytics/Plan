@@ -423,7 +423,7 @@ public class ActivityIndexQueries {
                 statement.setString(3, serverUUID.toString());
 
                 // Have played in the last half of the time frame
-                long half = before + (before - after) / 2;
+                long half = before - (before - after) / 2;
                 statement.setLong(4, half);
                 statement.setLong(5, before);
                 statement.setString(6, serverUUID.toString());
@@ -464,7 +464,7 @@ public class ActivityIndexQueries {
                 statement.setString(3, serverUUID.toString());
 
                 // Have played in the last half of the time frame
-                long half = before + (before - after) / 2;
+                long half = before - (before - after) / 2;
                 statement.setLong(4, half);
                 statement.setLong(5, before);
                 statement.setString(6, serverUUID.toString());
