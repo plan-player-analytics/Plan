@@ -17,6 +17,7 @@
 package com.djrapitops.plan.system.listeners.bungee;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.transactions.events.GeoInfoStoreTransaction;
 import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
@@ -95,7 +96,9 @@ public class PlayerOnlineListener implements Listener {
             InetAddress address = player.getAddress().getAddress();
             long time = System.currentTimeMillis();
 
-            sessionCache.cacheSession(playerUUID, new Session(playerUUID, serverInfo.getServerUUID(), time, null, null));
+            Session session = new Session(playerUUID, serverInfo.getServerUUID(), time, null, null);
+            session.putRawData(SessionKeys.SERVER_NAME, "Proxy Server");
+            sessionCache.cacheSession(playerUUID, session);
             Database database = dbSystem.getDatabase();
 
             boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
@@ -144,7 +147,9 @@ public class PlayerOnlineListener implements Listener {
 
             long time = System.currentTimeMillis();
             // Replaces the current session in the cache.
-            sessionCache.cacheSession(playerUUID, new Session(playerUUID, serverInfo.getServerUUID(), time, null, null));
+            Session session = new Session(playerUUID, serverInfo.getServerUUID(), time, null, null);
+            session.putRawData(SessionKeys.SERVER_NAME, "Proxy Server");
+            sessionCache.cacheSession(playerUUID, session);
             processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
