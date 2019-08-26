@@ -737,67 +737,75 @@
 <script src="js/player-values.js"></script>
 
 <script>
-    setLoadingText('Loading player values..');
-    jsonRequest("../v1/player?player=${playerName}", function (json, error) {
-        loadPlayerOverviewValues(json, error);
-        loadSessionAccordion(json, error);
-        loadServerAccordion(json, error);
-        loadPlayerKills(json, error);
-        loadPlayerDeaths(json, error);
-        loadPvPPvEValues(json, error);
-        if (json) {
-            var series = {
-                worldPie: {
-                    name: 'World Playtime',
-                    colorByPoint: true,
-                    data: json.world_pie_series
-                },
-                worldPieGMs: json.gm_series,
-                punchCard: {
-                    name: 'Relative Activity',
-                    color: '#222',
-                    data: json.punchcard_series
-                },
-                serverPie: {
-                    name: 'Server Playtime',
-                    colorByPoint: true,
-                    colors: json.server_pie_colors,
-                    data: json.server_pie_series
-                }
-            };
-            punchCard("punchCard", series.punchCard);
-            worldPie("worldPie", series.worldPie, series.worldPieGMs);
-            serverPie('serverPie', series.serverPie);
-            sessionCalendar("#sessionCalendar", json.calendar_series, json.first_day);
-        } else if (error) {
-            $('#punchCard').text("Failed to load graph data: " + error);
-            $('#worldPie').text("Failed to load graph data: " + error);
-            $('#serverPie').text("Failed to load graph data: " + error);
-            $('#sessionCalendar').text("Failed to load calendar data: " + error)
+    try {
+        setLoadingText('Loading player values..');
+        jsonRequest("../v1/player?player=${playerName}", function (json, error) {
+            loadPlayerOverviewValues(json, error);
+            loadSessionAccordion(json, error);
+            loadServerAccordion(json, error);
+            loadPlayerKills(json, error);
+            loadPlayerDeaths(json, error);
+            loadPvPPvEValues(json, error);
+            if (json) {
+                var series = {
+                    worldPie: {
+                        name: 'World Playtime',
+                        colorByPoint: true,
+                        data: json.world_pie_series
+                    },
+                    worldPieGMs: json.gm_series,
+                    punchCard: {
+                        name: 'Relative Activity',
+                        color: '#222',
+                        data: json.punchcard_series
+                    },
+                    serverPie: {
+                        name: 'Server Playtime',
+                        colorByPoint: true,
+                        colors: json.server_pie_colors,
+                        data: json.server_pie_series
+                    }
+                };
+                punchCard("punchCard", series.punchCard);
+                worldPie("worldPie", series.worldPie, series.worldPieGMs);
+                serverPie('serverPie', series.serverPie);
+                sessionCalendar("#sessionCalendar", json.calendar_series, json.first_day);
+            } else if (error) {
+                $('#punchCard').text("Failed to load graph data: " + error);
+                $('#worldPie').text("Failed to load graph data: " + error);
+                $('#serverPie').text("Failed to load graph data: " + error);
+                $('#sessionCalendar').text("Failed to load calendar data: " + error)
+            }
+        });
+        setLoadingText('Rendering graphs..');
+        setLoadingText('Sorting players table..');
+        setLoadingText('Almost done..');
+        var navButtons = document.getElementsByClassName("nav-button");
+        var tabs = document.getElementsByClassName("tab");
+        var slideIndex = window.sessionStorage.getItem("player_slide_index");
+        if (slideIndex === null) {
+            slideIndex = 0;
         }
-    });
-    setLoadingText('Rendering graphs..');
-    setLoadingText('Sorting players table..');
-    setLoadingText('Almost done..');
-    var navButtons = document.getElementsByClassName("nav-button");
-    var tabs = document.getElementsByClassName("tab");
-    var slideIndex = window.sessionStorage.getItem("player_slide_index");
-    if (slideIndex === null) {
-        slideIndex = 0;
+        var x = document.getElementById("content");
+        x.style.transform = "translate3d(0px,0px,0)";
+        x.style.width = "" + navButtons.length * 100 + "%";
+        for (var i = 0; i < navButtons.length; i++) {
+            navButtons[i].onclick = openFunc(i);
+            tabs[i].style.width = "" + 100 / navButtons.length + "%";
+        }
+        x.style.opacity = "1";
+        openFunc(slideIndex)();
+        setLoadingText('Done.');
+        setTimeout(function () {
+            $('.page-loader').fadeOut();
+        }, 50);
+    } catch (loadingError) {
+        setLoadingText("Error occurred, see Developer Console (Ctrl+Shift+I) - Please report this: " + loadingError);
+        setTimeout(function () {
+            $('.page-loader').fadeOut();
+        }, 10000);
+        throw loadingError;
     }
-    var x = document.getElementById("content");
-    x.style.transform = "translate3d(0px,0px,0)";
-    x.style.width = "" + navButtons.length * 100 + "%";
-    for (var i = 0; i < navButtons.length; i++) {
-        navButtons[i].onclick = openFunc(i);
-        tabs[i].style.width = "" + 100 / navButtons.length + "%";
-    }
-    x.style.opacity = "1";
-    openFunc(slideIndex)();
-    setLoadingText('Done.');
-    setTimeout(function () {
-        $('.page-loader').fadeOut();
-    }, 50);
 
     function openFunc(i) {
         return function () {

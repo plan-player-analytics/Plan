@@ -815,162 +815,170 @@
 <script src="js/network-values.js"></script>
 
 <script>
-    setLoadingText('Calculating values..');
-    jsonRequest("../v1/network/overview", loadNetworkOverviewValues);
-    jsonRequest("../v1/network/servers", loadServerBoxes);
-    jsonRequest("../v1/network/sessionsOverview", loadSessionValues);
-    jsonRequest("../v1/network/playerbaseOverview", loadPlayerbaseOverviewValues);
-    jsonRequest("../v1/sessions", loadSessionAccordion);
-    setLoadingText('Rendering graphs..');
+    try {
+        setLoadingText('Calculating values..');
+        jsonRequest("../v1/network/overview", loadNetworkOverviewValues);
+        jsonRequest("../v1/network/servers", loadServerBoxes);
+        jsonRequest("../v1/network/sessionsOverview", loadSessionValues);
+        jsonRequest("../v1/network/playerbaseOverview", loadPlayerbaseOverviewValues);
+        jsonRequest("../v1/sessions", loadSessionAccordion);
+        setLoadingText('Rendering graphs..');
 
-    var v = {
-        colors: {
-            playersOnline: '${playersGraphColor}',
-            newPlayers: '#8BC34A',
-            geolocationsLow: '${worldMapColLow}',
-            geolocationsHigh: '${worldMapColHigh}',
-            maxPing: '${maxPingColor}',
-            minPing: '${minPingColor}',
-            avgPing: '${avgPingColor}'
-        }
-    };
-
-    // HighCharts Series
-    var s = {
-        name: {
-            playersOnline: 'Players Online',
-            uniquePlayers: 'Unique Players',
-            newPlayers: 'New Players',
-            maxPing: 'Worst Ping',
-            minPing: 'Best Ping',
-            avgPing: 'Average Ping'
-        },
-        tooltip: {
-            twoDecimals: {
-                valueDecimals: 2
-            },
-            zeroDecimals: {
-                valueDecimals: 0
+        var v = {
+            colors: {
+                playersOnline: '${playersGraphColor}',
+                newPlayers: '#8BC34A',
+                geolocationsLow: '${worldMapColLow}',
+                geolocationsHigh: '${worldMapColHigh}',
+                maxPing: '${maxPingColor}',
+                minPing: '${minPingColor}',
+                avgPing: '${avgPingColor}'
             }
-        },
-        type: {
-            areaSpline: 'areaspline',
-            spline: 'spline'
-        }
-    };
+        };
 
-    jsonRequest("../v1/graph?type=playersOnline&server=${serverUUID}", function (data, error) {
-        if (data) {
-            var series = {
-                playersOnline: {
-                    name: s.name.playersOnline, type: s.type.areaSpline, tooltip: s.tooltip.zeroDecimals,
-                    data: data.playersOnline, color: v.colors.playersOnline, yAxis: 0
+        // HighCharts Series
+        var s = {
+            name: {
+                playersOnline: 'Players Online',
+                uniquePlayers: 'Unique Players',
+                newPlayers: 'New Players',
+                maxPing: 'Worst Ping',
+                minPing: 'Best Ping',
+                avgPing: 'Average Ping'
+            },
+            tooltip: {
+                twoDecimals: {
+                    valueDecimals: 2
+                },
+                zeroDecimals: {
+                    valueDecimals: 0
                 }
-            };
-            playersChart('playersOnlineChart', series.playersOnline, 2);
-        } else if (error) {
-            $('#playersOnlineChart').text("Failed to load graph data: " + error);
+            },
+            type: {
+                areaSpline: 'areaspline',
+                spline: 'spline'
+            }
+        };
+
+        jsonRequest("../v1/graph?type=playersOnline&server=${serverUUID}", function (data, error) {
+            if (data) {
+                var series = {
+                    playersOnline: {
+                        name: s.name.playersOnline, type: s.type.areaSpline, tooltip: s.tooltip.zeroDecimals,
+                        data: data.playersOnline, color: v.colors.playersOnline, yAxis: 0
+                    }
+                };
+                playersChart('playersOnlineChart', series.playersOnline, 2);
+            } else if (error) {
+                $('#playersOnlineChart').text("Failed to load graph data: " + error);
+            }
+        });
+
+        jsonRequest("../v1/graph?type=uniqueAndNew", function (data, error) {
+            if (data) {
+                var uniquePlayers = {
+                    name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                    data: data.uniquePlayers, color: v.colors.playersOnline
+                };
+                var newPlayers = {
+                    name: s.name.newPlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                    data: data.newPlayers, color: v.colors.newPlayers
+                };
+                lineChart('uniqueChart', [uniquePlayers, newPlayers]);
+            } else if (error) {
+                $('#uniqueChart').text("Failed to load graph data: " + error)
+            }
+        });
+
+        jsonRequest("../v1/graph?type=serverPie", function (json, error) {
+            if (data) {
+                serverPieSeries = {
+                    name: 'Server Playtime',
+                    colorByPoint: true,
+                    colors: json.server_pie_colors,
+                    data: json.server_pie_series_30d
+                };
+                serverPie('serverPie', serverPieSeries);
+            } else if (error) {
+                $('#serverPie').text("Failed to load graph data: " + error)
+            }
+        });
+
+        jsonRequest("../v1/graph?type=activity", function (json, error) {
+            if (json) {
+                activityPie('activityPie', {
+                    name: 'Players', colorByPoint: true, data: json.activity_pie_series
+                });
+                stackChart('activityStackGraph', json.activity_labels, json.activity_series, 'Players');
+            } else if (error) {
+                $('#activityPie').text("Failed to load graph data: " + error);
+                $('#activityStackGraph').text("Failed to load graph data: " + error);
+            }
+        });
+
+        jsonRequest("../v1/graph?type=geolocation", function (json, error) {
+            if (json) {
+                var geolocationSeries = {
+                    name: 'Players',
+                    type: 'map',
+                    mapData: Highcharts.maps['custom/world'],
+                    data: json.geolocation_series,
+                    joinBy: ['iso-a3', 'code']
+                };
+                var geolocationBarSeries = {
+                    color: '#4CAF50',
+                    name: 'Players',
+                    data: json.geolocation_bar_series.map(function (bar) {
+                        return bar.value
+                    })
+                };
+                var geolocationBarCategories = json.geolocation_bar_series.map(function (bar) {
+                    return bar.label
+                });
+                worldMap('worldMap', v.colors.geolocationsLow, v.colors.geolocationsHigh, geolocationSeries);
+                horizontalBarChart('countryBarChart', geolocationBarCategories, [geolocationBarSeries], 'Players');
+            } else if (error) {
+                $('#worldMap').text("Failed to load graph data: " + error);
+                $('#countryBarChart').text("Failed to load graph data: " + error);
+            }
+        });
+
+        setLoadingText('Sorting out plugin tables..');
+
+        jsonRequest("../v1/network/pingTable", loadPingTable);
+
+        $('.server-name').text('${networkDisplayName}');
+        $('.player-plugin-table').DataTable({
+            responsive: true
+        });
+
+        setLoadingText('Almost done..');
+        var navButtons = document.getElementsByClassName("nav-button");
+        var tabs = document.getElementsByClassName("tab");
+        var slideIndex = window.sessionStorage.getItem("network_slide_index");
+        if (slideIndex === null) {
+            slideIndex = 0;
         }
-    });
-
-    jsonRequest("../v1/graph?type=uniqueAndNew", function (data, error) {
-        if (data) {
-            var uniquePlayers = {
-                name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                data: data.uniquePlayers, color: v.colors.playersOnline
-            };
-            var newPlayers = {
-                name: s.name.newPlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                data: data.newPlayers, color: v.colors.newPlayers
-            };
-            lineChart('uniqueChart', [uniquePlayers, newPlayers]);
-        } else if (error) {
-            $('#uniqueChart').text("Failed to load graph data: " + error)
+        var x = document.getElementById("content");
+        x.style.transform = "translate3d(0px,0px,0)";
+        x.style.width = "" + navButtons.length * 100 + "%";
+        for (var i = 0; i < navButtons.length; i++) {
+            navButtons[i].onclick = openFunc(i);
+            tabs[i].style.width = "" + 100 / navButtons.length + "%";
         }
-    });
-
-    jsonRequest("../v1/graph?type=serverPie", function (json, error) {
-        if (data) {
-            serverPieSeries = {
-                name: 'Server Playtime',
-                colorByPoint: true,
-                colors: json.server_pie_colors,
-                data: json.server_pie_series_30d
-            };
-            serverPie('serverPie', serverPieSeries);
-        } else if (error) {
-            $('#serverPie').text("Failed to load graph data: " + error)
-        }
-    });
-
-    jsonRequest("../v1/graph?type=activity", function (json, error) {
-        if (json) {
-            activityPie('activityPie', {
-                name: 'Players', colorByPoint: true, data: json.activity_pie_series
-            });
-            stackChart('activityStackGraph', json.activity_labels, json.activity_series, 'Players');
-        } else if (error) {
-            $('#activityPie').text("Failed to load graph data: " + error);
-            $('#activityStackGraph').text("Failed to load graph data: " + error);
-        }
-    });
-
-    jsonRequest("../v1/graph?type=geolocation", function (json, error) {
-        if (json) {
-            var geolocationSeries = {
-                name: 'Players',
-                type: 'map',
-                mapData: Highcharts.maps['custom/world'],
-                data: json.geolocation_series,
-                joinBy: ['iso-a3', 'code']
-            };
-            var geolocationBarSeries = {
-                color: '#4CAF50',
-                name: 'Players',
-                data: json.geolocation_bar_series.map(function (bar) {
-                    return bar.value
-                })
-            };
-            var geolocationBarCategories = json.geolocation_bar_series.map(function (bar) {
-                return bar.label
-            });
-            worldMap('worldMap', v.colors.geolocationsLow, v.colors.geolocationsHigh, geolocationSeries);
-            horizontalBarChart('countryBarChart', geolocationBarCategories, [geolocationBarSeries], 'Players');
-        } else if (error) {
-            $('#worldMap').text("Failed to load graph data: " + error);
-            $('#countryBarChart').text("Failed to load graph data: " + error);
-        }
-    });
-
-    setLoadingText('Sorting out plugin tables..');
-
-    jsonRequest("../v1/network/pingTable", loadPingTable);
-
-    $('.server-name').text('${networkDisplayName}');
-    $('.player-plugin-table').DataTable({
-        responsive: true
-    });
-
-    setLoadingText('Almost done..');
-    var navButtons = document.getElementsByClassName("nav-button");
-    var tabs = document.getElementsByClassName("tab");
-    var slideIndex = window.sessionStorage.getItem("network_slide_index");
-    if (slideIndex === null) {
-        slideIndex = 0;
+        x.style.opacity = "1";
+        openFunc(slideIndex)();
+        setLoadingText('Done.');
+        setTimeout(function () {
+            $('.page-loader').fadeOut();
+        }, 50);
+    } catch (loadingError) {
+        setLoadingText("Error occurred, see Developer Console (Ctrl+Shift+I) - Please report this: " + loadingError);
+        setTimeout(function () {
+            $('.page-loader').fadeOut();
+        }, 10000);
+        throw loadingError;
     }
-    var x = document.getElementById("content");
-    x.style.transform = "translate3d(0px,0px,0)";
-    x.style.width = "" + navButtons.length * 100 + "%";
-    for (var i = 0; i < navButtons.length; i++) {
-        navButtons[i].onclick = openFunc(i);
-        tabs[i].style.width = "" + 100 / navButtons.length + "%";
-    }
-    x.style.opacity = "1";
-    openFunc(slideIndex)();
-    setLoadingText('Done.');
-    setTimeout(function () {
-        $('.page-loader').fadeOut();
-    }, 50);
 
     function openFunc(i) {
         return function () {

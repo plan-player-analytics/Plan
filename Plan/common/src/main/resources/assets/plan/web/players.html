@@ -271,21 +271,29 @@
 <script src="js/color-selector.js"></script>
 
 <script>
-    jsonRequest("../v1/players", function (playersTableJson, error) {
-        if (playersTableJson) {
-            $('.player-table').DataTable({
-                responsive: true,
-                columns: playersTableJson.columns,
-                data: playersTableJson.data,
-                order: [[5, "desc"]]
-            })
-        } else if (error) {
-            $('.player-table').DataTable({
-                columns: [{title: "Error"}],
-                data: [["Failed to load Players table data: " + error]]
-            })
-        }
-    });
+    try {
+        jsonRequest("../v1/players", function (playersTableJson, error) {
+            if (playersTableJson) {
+                $('.player-table').DataTable({
+                    responsive: true,
+                    columns: playersTableJson.columns,
+                    data: playersTableJson.data,
+                    order: [[5, "desc"]]
+                })
+            } else if (error) {
+                $('.player-table').DataTable({
+                    columns: [{title: "Error"}],
+                    data: [["Failed to load Players table data: " + error]]
+                })
+            }
+        });
+    } catch (loadingError) {
+        window.alert("Error occurred, see Developer Console (Ctrl+Shift+I) - Please report this: " + loadingError);
+        setTimeout(function () {
+            $('.page-loader').fadeOut();
+        }, 10000);
+        throw loadingError;
+    }
 </script>
 
 </body>
