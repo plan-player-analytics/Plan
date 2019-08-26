@@ -51,10 +51,7 @@ import com.djrapitops.plan.db.access.transactions.init.RemoveDuplicateUserInfoTr
 import com.djrapitops.plan.db.patches.Patch;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.tasks.DBCleanTask;
-import com.djrapitops.plan.extension.CallEvents;
-import com.djrapitops.plan.extension.DataExtension;
-import com.djrapitops.plan.extension.ExtensionService;
-import com.djrapitops.plan.extension.ExtensionServiceImplementation;
+import com.djrapitops.plan.extension.*;
 import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
@@ -1275,6 +1272,7 @@ public interface DatabaseTest {
     }
 
     default void checkThatPlayerDataExists(boolean condition) {
+        // TODO Add Group data to this test
         if (condition) { // Condition is true, conditional values exist
             List<ExtensionPlayerData> ofServer = db().query(new ExtensionPlayerDataQuery(playerUUID)).get(serverUUID());
             assertTrue(ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty(), "There was no data left");
@@ -1461,6 +1459,12 @@ public interface DatabaseTest {
         @Conditional(value = "condition", negated = true)
         public String reversedConditionalValue() {
             return "Reversed";
+        }
+
+        @GroupProvider(text = "Conditional Group")
+        @Conditional("condition")
+        public Group[] conditionalGroups(UUID playerUUID) {
+            return new Group[]{() -> "Group"};
         }
 
         @StringProvider(text = "Unconditional")

@@ -20,10 +20,7 @@ import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.access.ExecStatement;
 import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.db.sql.tables.ExtensionPlayerTableValueTable;
-import com.djrapitops.plan.db.sql.tables.ExtensionPlayerValueTable;
-import com.djrapitops.plan.db.sql.tables.ExtensionProviderTable;
-import com.djrapitops.plan.db.sql.tables.ExtensionTableProviderTable;
+import com.djrapitops.plan.db.sql.tables.*;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -47,11 +44,15 @@ public class RemoveUnsatisfiedConditionalPlayerResultsTransaction extends Transa
     private final String playerValueTable;
     private final String playerTableValueTable;
     private final String tableTable;
+    private final String groupTable;
+    private final String playerGroupTable;
 
     public RemoveUnsatisfiedConditionalPlayerResultsTransaction() {
         providerTable = ExtensionProviderTable.TABLE_NAME;
         playerValueTable = ExtensionPlayerValueTable.TABLE_NAME;
         tableTable = ExtensionTableProviderTable.TABLE_NAME;
+        groupTable = ExtensionGroupsTable.TABLE_NAME;
+        playerGroupTable = ExtensionPlayerGroupsTable.TABLE_NAME;
         playerTableValueTable = ExtensionPlayerTableValueTable.TABLE_NAME;
     }
 
@@ -60,6 +61,7 @@ public class RemoveUnsatisfiedConditionalPlayerResultsTransaction extends Transa
         String selectSatisfiedConditions = getSatisfiedConditionsSQL();
 
         execute(deleteUnsatisfiedValues(selectSatisfiedConditions));
+        execute(deleteUnsatisfiedGroupValues(selectSatisfiedConditions));
         execute(deleteUnsatisfiedTableValues(selectSatisfiedConditions));
     }
 
@@ -100,7 +102,7 @@ public class RemoveUnsatisfiedConditionalPlayerResultsTransaction extends Transa
                 FROM + providerTable +
                 INNER_JOIN + playerValueTable + " on " + providerTable + '.' + ExtensionProviderTable.ID + "=" + ExtensionPlayerValueTable.PROVIDER_ID +
                 LEFT_JOIN + selectSatisfiedConditions + // Left join to preserve values that don't have their condition fulfilled
-                " on (" +
+                " on (" + // Join when uuid and plugin_id match and condition for the group provider is satisfied
                 playerValueTable + '.' + ExtensionPlayerValueTable.USER_UUID +
                 "=q1." + ExtensionPlayerValueTable.USER_UUID +
                 AND + ExtensionProviderTable.CONDITION +
@@ -130,7 +132,7 @@ public class RemoveUnsatisfiedConditionalPlayerResultsTransaction extends Transa
         String selectUnsatisfiedValueIDs = SELECT + ExtensionTableProviderTable.ID +
                 FROM + tableTable +
                 LEFT_JOIN + selectSatisfiedConditions + // Left join to preserve values that don't have their condition fulfilled
-                " on (" +
+                " on (" + // Join when plugin_id matches and condition for the group provider is satisfied
                 tableTable + '.' + ExtensionTableProviderTable.CONDITION +
                 "=q1." + ExtensionProviderTable.PROVIDED_CONDITION +
                 AND + tableTable + '.' + ExtensionTableProviderTable.PLUGIN_ID +
@@ -144,6 +146,43 @@ public class RemoveUnsatisfiedConditionalPlayerResultsTransaction extends Transa
         // Note: MySQL versions 5.6.7+ might optimize this nested query away leading to an exception.
         String deleteValuesSQL = "DELETE FROM " + playerTableValueTable +
                 WHERE + ExtensionPlayerTableValueTable.TABLE_ID + " IN (" + SELECT + ExtensionTableProviderTable.ID + FROM + '(' + selectUnsatisfiedValueIDs + ") as ids)";
+
+        return new ExecStatement(deleteValuesSQL) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setBoolean(1, true);  // Select provided conditions with 'true' value
+                statement.setBoolean(2, false); // Select negated conditions with 'false' value
+            }
+        };
+    }
+
+    private Executable deleteUnsatisfiedGroupValues(String selectSatisfiedConditions) {
+        // plan_extensions_player_groups.id is needed for removal of the correct row.
+        // The id is known if group_id & uuid are known
+        // -
+        // Conditions are in plan_extensions_providers
+        // selectSatisfiedConditions lists 'provided_condition' Strings
+        String selectUnsatisfiedIDs = SELECT + playerGroupTable + '.' + ID +
+                FROM + playerGroupTable +
+                INNER_JOIN + groupTable + " on " + groupTable + '.' + ID + '=' + playerGroupTable + '.' + ExtensionPlayerGroupsTable.GROUP_ID +
+                INNER_JOIN + providerTable + " on " + providerTable + '.' + ID + '=' + groupTable + '.' + ExtensionGroupsTable.PROVIDER_ID +
+                LEFT_JOIN + selectSatisfiedConditions + // Left join to preserve values that don't have their condition fulfilled
+                " on (" + // Join when uuid and plugin_id match and condition for the group provider is satisfied
+                playerGroupTable + '.' + P_UUID +
+                "=q1." + P_UUID +
+                AND + ExtensionProviderTable.CONDITION +
+                "=q1." + ExtensionProviderTable.PROVIDED_CONDITION +
+                AND + providerTable + '.' + ExtensionProviderTable.PLUGIN_ID +
+                "=q1." + ExtensionProviderTable.PLUGIN_ID +
+                ')' +
+                WHERE + "q1." + ExtensionProviderTable.PROVIDED_CONDITION + IS_NULL + // Conditions that were not in the satisfied condition query
+                AND + ExtensionProviderTable.CONDITION + IS_NOT_NULL; // Ignore values that don't need condition
+
+        // Nested query here is required because MySQL limits update statements with nested queries:
+        // The nested query creates a temporary table that bypasses the same table query-update limit.
+        // Note: MySQL versions 5.6.7+ might optimize this nested query away leading to an exception.
+        String deleteValuesSQL = "DELETE FROM " + playerGroupTable +
+                WHERE + ID + " IN (" + SELECT + ID + FROM + '(' + selectUnsatisfiedIDs + ") as ids)";
 
         return new ExecStatement(deleteValuesSQL) {
             @Override

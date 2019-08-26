@@ -22,6 +22,9 @@ import java.util.concurrent.TimeUnit;
  * Duplicate String reducing utility class for SQL language Strings.
  */
 public interface Sql {
+    String ID = "id";
+    String P_UUID = "uuid";
+
     String INT = "integer";
     String DOUBLE = "double";
     String LONG = "bigint";
