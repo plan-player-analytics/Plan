@@ -30,11 +30,14 @@ import com.djrapitops.plan.db.access.queries.containers.AllPlayerContainersQuery
 import com.djrapitops.plan.db.access.queries.containers.ServerPlayersTableContainersQuery;
 import com.djrapitops.plan.db.access.queries.objects.*;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerPlayerDataTableQuery;
+import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DisplaySettings;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
+import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
@@ -54,6 +57,7 @@ public class JSONFactory {
 
     private final PlanConfig config;
     private final DBSystem dbSystem;
+    private final ServerInfo serverInfo;
     private final Graphs graphs;
     private final Formatters formatters;
 
@@ -61,11 +65,13 @@ public class JSONFactory {
     public JSONFactory(
             PlanConfig config,
             DBSystem dbSystem,
+            ServerInfo serverInfo,
             Graphs graphs,
             Formatters formatters
     ) {
         this.config = config;
         this.dbSystem = dbSystem;
+        this.serverInfo = serverInfo;
         this.graphs = graphs;
         this.formatters = formatters;
     }
@@ -100,21 +106,43 @@ public class JSONFactory {
         ).toJSONString();
     }
 
-    public List<Map<String, Object>> serverSessionsAsJSONMap(UUID serverUUID) {
+    public List<Map<String, Object>> networkSessionsAsJSONMap(UUID serverUUID) {
         Database db = dbSystem.getDatabase();
-        List<Session> sessions = db.query(SessionQueries.fetchLatestSessionsOfServer(
-                serverUUID, config.get(DisplaySettings.SESSIONS_PER_PAGE)
-        ));
+
+        Integer perPageLimit = config.get(DisplaySettings.SESSIONS_PER_PAGE);
+        List<Session> sessions = db.query(SessionQueries.fetchLatestSessionsOfServer(serverUUID, perPageLimit));
+        // Add online sessions
+        if (serverUUID.equals(serverInfo.getServerUUID())) {
+            sessions.addAll(SessionCache.getActiveSessions().values());
+            sessions.sort(new SessionStartComparator());
+            while (true) {
+                int size = sessions.size();
+                if (size <= perPageLimit) break;
+                sessions.remove(size - 1); // Remove last until it fits.
+            }
+        }
+
         return new SessionsMutator(sessions).toPlayerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters);
     }
 
-    public List<Map<String, Object>> serverSessionsAsJSONMap() {
+    public List<Map<String, Object>> networkSessionsAsJSONMap() {
         Database db = dbSystem.getDatabase();
-        List<Session> sessions = db.query(SessionQueries.fetchLatestSessions(
-                config.get(DisplaySettings.SESSIONS_PER_PAGE)
-        ));
+        Integer perPageLimit = config.get(DisplaySettings.SESSIONS_PER_PAGE);
+
+        List<Session> sessions = db.query(SessionQueries.fetchLatestSessions(perPageLimit));
+        // Add online sessions
+        if (serverInfo.getServer().isProxy()) {
+            sessions.addAll(SessionCache.getActiveSessions().values());
+            sessions.sort(new SessionStartComparator());
+            while (true) {
+                int size = sessions.size();
+                if (size <= perPageLimit) break;
+                sessions.remove(size - 1); // Remove last until it fits.
+            }
+        }
+
         List<Map<String, Object>> sessionMaps = new SessionsMutator(sessions).toPlayerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters);
-        //
+        // Add network_server property so that sessions have a server page link
         sessionMaps.forEach(map -> map.put("network_server", map.get("server_name")));
         return sessionMaps;
     }

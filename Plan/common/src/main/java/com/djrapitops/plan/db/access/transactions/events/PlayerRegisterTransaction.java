@@ -19,6 +19,7 @@ package com.djrapitops.plan.db.access.transactions.events;
 import com.djrapitops.plan.db.access.queries.DataStoreQueries;
 import com.djrapitops.plan.db.access.queries.PlayerFetchQueries;
 import com.djrapitops.plan.db.access.transactions.Transaction;
+import com.djrapitops.plan.system.cache.SessionCache;
 
 import java.util.UUID;
 import java.util.function.LongSupplier;
@@ -48,7 +49,9 @@ public class PlayerRegisterTransaction extends Transaction {
     @Override
     protected void performOperations() {
         if (!query(PlayerFetchQueries.isPlayerRegistered(playerUUID))) {
-            execute(DataStoreQueries.registerBaseUser(playerUUID, registered.getAsLong(), playerName));
+            long registerDate = registered.getAsLong();
+            execute(DataStoreQueries.registerBaseUser(playerUUID, registerDate, playerName));
+            SessionCache.getCachedSession(playerUUID).ifPresent(session -> session.setAsFirstSessionIfMatches(registerDate));
         }
         execute(DataStoreQueries.updatePlayerName(playerUUID, playerName));
     }
