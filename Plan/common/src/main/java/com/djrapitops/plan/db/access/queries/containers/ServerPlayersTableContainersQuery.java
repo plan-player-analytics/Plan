@@ -21,6 +21,7 @@ import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.db.SQLDB;
 import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.queries.objects.BaseUserQueries;
@@ -75,6 +76,7 @@ public class ServerPlayersTableContainersQuery implements Query<List<PlayerConta
                         return playerSessions;
                     }
             );
+            container.putCachingSupplier(PlayerKeys.LAST_SEEN, () -> SessionsMutator.forContainer(container).toLastSeen());
 
             containers.add(container);
         }
