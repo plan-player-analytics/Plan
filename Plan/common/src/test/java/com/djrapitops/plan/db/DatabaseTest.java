@@ -1166,6 +1166,7 @@ public interface DatabaseTest {
         OptionalAssert.equals("0.5", tabData.getDouble("doubleVal").map(data -> data.getFormattedValue(Object::toString)));
         OptionalAssert.equals("0.5", tabData.getPercentage("percentageVal").map(data -> data.getFormattedValue(Object::toString)));
         OptionalAssert.equals("Something", tabData.getString("stringVal").map(ExtensionStringData::getFormattedValue));
+        OptionalAssert.equals("Group", tabData.getString("groupVal").map(ExtensionStringData::getFormattedValue));
     }
 
     @Test
@@ -1238,7 +1239,6 @@ public interface DatabaseTest {
         OptionalAssert.equals("0.5", tabData.getDouble("doubleVal_total").map(data -> data.getFormattedValue(Objects::toString)));
         OptionalAssert.equals("5", tabData.getNumber("value_avg").map(data -> data.getFormattedValue(Objects::toString)));
         OptionalAssert.equals("5", tabData.getNumber("value_total").map(data -> data.getFormattedValue(Objects::toString)));
-        // TODO Add test that group exists
     }
 
     @Test
@@ -1530,8 +1530,8 @@ public interface DatabaseTest {
         }
 
         @GroupProvider(text = "a group")
-        public Group[] group(UUID playerUUID) {
-            return new Group[]{() -> "group"};
+        public Group[] groupVal(UUID playerUUID) {
+            return new Group[]{() -> "Group"};
         }
     }
 

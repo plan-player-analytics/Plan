@@ -176,6 +176,13 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
             return this;
         }
 
+        public Factory putGroupData(ExtensionStringData extensionStringData) {
+            String name = extensionStringData.getDescriptive().getName();
+            ExtensionStringData previous = data.stringData.get(name);
+            data.stringData.put(name, previous != null ? previous.concatenate(extensionStringData) : extensionStringData);
+            return this;
+        }
+
         public Factory putTableData(ExtensionTableData extensionTableData) {
             data.tableData.add(extensionTableData);
             return this;
