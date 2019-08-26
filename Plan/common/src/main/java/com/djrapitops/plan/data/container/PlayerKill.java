@@ -117,4 +117,8 @@ public class PlayerKill implements DateHolder {
     public boolean isSelfKill() {
         return getVictimName().map(v -> v.equals(killerName)).orElse(false);
     }
+
+    public boolean isNotSelfKill() {
+        return !isSelfKill();
+    }
 }
