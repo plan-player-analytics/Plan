@@ -96,6 +96,8 @@ public enum Html {
         };
         Map<Character, String> colorMap = new HashMap<>();
 
+        String splitWith = string.contains("&sect;") ? "&sect;" : "§";
+
         for (Html html : replacer) {
             colorMap.put(Character.toLowerCase(html.name().charAt(6)), html.parse());
             colorMap.put('k', "");
@@ -106,9 +108,9 @@ public enum Html {
         }
 
         StringBuilder result = new StringBuilder(string.length());
-        String[] split = string.split("§");
+        String[] split = string.split(splitWith);
         // Skip first part if it does not start with §
-        boolean skipFirst = !string.startsWith("§");
+        boolean skipFirst = !string.startsWith(splitWith);
 
         int placedSpans = 0;
         for (String part : split) {
