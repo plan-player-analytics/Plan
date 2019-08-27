@@ -19,11 +19,7 @@ package com.djrapitops.plan.utilities.html.pages;
 import com.djrapitops.plan.extension.ElementOrder;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.implementation.TabInformation;
-import com.djrapitops.plan.extension.implementation.results.ExtensionDescriptive;
-import com.djrapitops.plan.extension.implementation.results.ExtensionInformation;
-import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
-import com.djrapitops.plan.extension.implementation.results.ExtensionTableData;
-import com.djrapitops.plan.extension.implementation.results.server.ExtensionServerData;
+import com.djrapitops.plan.extension.implementation.results.*;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.icon.Icon;
@@ -43,8 +39,8 @@ import java.util.stream.Collectors;
  */
 public class ServerPluginTabs {
 
-    private List<ExtensionServerData> serverData;
-    private List<ExtensionServerData> extraTabServerData;
+    private List<ExtensionData> serverData;
+    private List<ExtensionData> extraTabServerData;
 
     private Map<FormatType, Formatter<Long>> numberFormatters;
 
@@ -60,12 +56,12 @@ public class ServerPluginTabs {
     }
 
     public ServerPluginTabs(
-            List<ExtensionServerData> serverData,
+            List<ExtensionData> serverData,
             Formatters formatters
     ) {
         this.serverData = serverData;
         this.extraTabServerData = serverData.stream()
-                .filter(ExtensionServerData::doesNeedWiderSpace)
+                .filter(ExtensionData::doesNeedWiderSpace)
                 .collect(Collectors.toList());
         this.serverData.removeAll(extraTabServerData);
 
@@ -113,7 +109,7 @@ public class ServerPluginTabs {
     private String generateExtraTabs() {
         StringBuilder tabBuilder = new StringBuilder();
 
-        for (ExtensionServerData datum : extraTabServerData) {
+        for (ExtensionData datum : extraTabServerData) {
             ExtensionInformation extensionInformation = datum.getExtensionInformation();
 
             boolean onlyGeneric = datum.hasOnlyGenericTab();
@@ -137,7 +133,7 @@ public class ServerPluginTabs {
     private String generateOverviewTab() {
         StringBuilder tabBuilder = new StringBuilder();
 
-        for (ExtensionServerData datum : serverData) {
+        for (ExtensionData datum : serverData) {
             ExtensionInformation extensionInformation = datum.getExtensionInformation();
 
             boolean onlyGeneric = datum.hasOnlyGenericTab();

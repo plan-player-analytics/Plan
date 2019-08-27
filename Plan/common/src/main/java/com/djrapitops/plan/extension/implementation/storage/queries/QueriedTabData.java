@@ -17,9 +17,8 @@
 package com.djrapitops.plan.extension.implementation.storage.queries;
 
 import com.djrapitops.plan.extension.implementation.TabInformation;
+import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
-import com.djrapitops.plan.extension.implementation.results.player.ExtensionPlayerData;
-import com.djrapitops.plan.extension.implementation.results.server.ExtensionServerData;
 import com.djrapitops.plan.utilities.java.ThrowingSupplier;
 
 import java.util.HashMap;
@@ -51,32 +50,14 @@ public class QueriedTabData {
         return tab;
     }
 
-    public Map<Integer, ExtensionServerData.Factory> toServerDataByPluginID() {
-        Map<Integer, ExtensionServerData.Factory> dataByPluginID = new HashMap<>();
+    public Map<Integer, ExtensionData.Factory> toExtensionDataByPluginID() {
+        Map<Integer, ExtensionData.Factory> dataByPluginID = new HashMap<>();
         for (Map.Entry<Integer, Map<String, ExtensionTabData.Factory>> entry : byPluginID.entrySet()) {
             Integer pluginID = entry.getKey();
 
-            ExtensionServerData.Factory data = dataByPluginID.get(pluginID);
+            ExtensionData.Factory data = dataByPluginID.get(pluginID);
             if (data == null) {
-                data = new ExtensionServerData.Factory(pluginID);
-            }
-
-            for (ExtensionTabData.Factory tabData : entry.getValue().values()) {
-                data.addTab(tabData.build());
-            }
-            dataByPluginID.put(pluginID, data);
-        }
-        return dataByPluginID;
-    }
-
-    public Map<Integer, ExtensionPlayerData.Factory> toPlayerDataByPluginID() {
-        Map<Integer, ExtensionPlayerData.Factory> dataByPluginID = new HashMap<>();
-        for (Map.Entry<Integer, Map<String, ExtensionTabData.Factory>> entry : byPluginID.entrySet()) {
-            Integer pluginID = entry.getKey();
-
-            ExtensionPlayerData.Factory data = dataByPluginID.get(pluginID);
-            if (data == null) {
-                data = new ExtensionPlayerData.Factory(pluginID);
+                data = new ExtensionData.Factory(pluginID);
             }
 
             for (ExtensionTabData.Factory tabData : entry.getValue().values()) {

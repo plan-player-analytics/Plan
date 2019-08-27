@@ -25,10 +25,10 @@ import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.TabInformation;
+import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionDescriptive;
 import com.djrapitops.plan.extension.implementation.results.ExtensionStringData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
-import com.djrapitops.plan.extension.implementation.results.player.ExtensionPlayerData;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,7 +40,7 @@ import java.util.UUID;
 import static com.djrapitops.plan.db.sql.parsing.Sql.*;
 
 /**
- * Query player's Groups by Plugin ID inside ExtensionPlayerData objects.
+ * Query player's Groups by Plugin ID inside ExtensionData objects.
  * <p>
  * - Group names are represented as a String value, concatenated to a single one.
  * - String values are placed into Tabs they belong to
@@ -49,7 +49,7 @@ import static com.djrapitops.plan.db.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class ExtensionPlayerGroupsQuery implements Query<Map<Integer, ExtensionPlayerData.Factory>> {
+public class ExtensionPlayerGroupsQuery implements Query<Map<Integer, ExtensionData.Factory>> {
 
     private final UUID playerUUID;
 
@@ -58,11 +58,11 @@ public class ExtensionPlayerGroupsQuery implements Query<Map<Integer, ExtensionP
     }
 
     @Override
-    public Map<Integer, ExtensionPlayerData.Factory> executeQuery(SQLDB db) {
+    public Map<Integer, ExtensionData.Factory> executeQuery(SQLDB db) {
         return db.query(fetchGroupsByPluginID());
     }
 
-    private Query<Map<Integer, ExtensionPlayerData.Factory>> fetchGroupsByPluginID() {
+    private Query<Map<Integer, ExtensionData.Factory>> fetchGroupsByPluginID() {
         String sql = SELECT +
                 "v1." + ExtensionGroupsTable.GROUP_NAME + " as group_name," +
                 "p1." + ExtensionProviderTable.PLUGIN_ID + " as plugin_id," +
@@ -86,7 +86,7 @@ public class ExtensionPlayerGroupsQuery implements Query<Map<Integer, ExtensionP
                 AND + "p1." + ExtensionProviderTable.HIDDEN + "=?" +
                 ORDER_BY + ExtensionGroupsTable.GROUP_NAME + " ASC";
 
-        return new QueryStatement<Map<Integer, ExtensionPlayerData.Factory>>(sql, 1000) {
+        return new QueryStatement<Map<Integer, ExtensionData.Factory>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
@@ -94,8 +94,8 @@ public class ExtensionPlayerGroupsQuery implements Query<Map<Integer, ExtensionP
             }
 
             @Override
-            public Map<Integer, ExtensionPlayerData.Factory> processResults(ResultSet set) throws SQLException {
-                return extractTabDataByPluginID(set).toPlayerDataByPluginID();
+            public Map<Integer, ExtensionData.Factory> processResults(ResultSet set) throws SQLException {
+                return extractTabDataByPluginID(set).toExtensionDataByPluginID();
             }
         };
     }

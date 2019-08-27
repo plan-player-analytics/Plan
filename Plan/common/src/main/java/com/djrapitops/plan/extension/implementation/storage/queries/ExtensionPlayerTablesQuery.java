@@ -27,7 +27,7 @@ import com.djrapitops.plan.extension.ElementOrder;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
-import com.djrapitops.plan.extension.implementation.results.player.ExtensionPlayerData;
+import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.extension.table.TableAccessor;
 
@@ -41,20 +41,20 @@ import static com.djrapitops.plan.db.sql.parsing.Sql.*;
 /**
  * Query player tables from tableprovider table.
  * <p>
- * Returns Map: PluginID - ExtensionPlayerData.Factory.
+ * Returns Map: PluginID - ExtensionData.Factory.
  * <p>
  * How it is done:
  * - TableProviders are queried and formed into Table.Factory objects sorted into a multi-map: PluginID - TableID - Table.Factory
  * - Table values are queried and merged into the above multimap
  * - Data query is sorted into a multi-map: PluginID - Tab Name - Tab Data
  * - (Tab Name can be empty.)
- * - Multi-map is sorted into ExtensionPlayerData objects by PluginID, one per ID
+ * - Multi-map is sorted into ExtensionData objects by PluginID, one per ID
  * <p>
  * There are multiple data extraction methods to make extracting the value query easier.
  *
  * @author Rsl1122
  */
-public class ExtensionPlayerTablesQuery implements Query<Map<Integer, ExtensionPlayerData.Factory>> {
+public class ExtensionPlayerTablesQuery implements Query<Map<Integer, ExtensionData.Factory>> {
 
     private final UUID playerUUID;
 
@@ -63,9 +63,9 @@ public class ExtensionPlayerTablesQuery implements Query<Map<Integer, ExtensionP
     }
 
     @Override
-    public Map<Integer, ExtensionPlayerData.Factory> executeQuery(SQLDB db) {
+    public Map<Integer, ExtensionData.Factory> executeQuery(SQLDB db) {
         QueriedTables tablesWithValues = db.query(placeValuesToTables(db.query(queryTableProviders())));
-        return tablesWithValues.toQueriedTabs().toPlayerDataByPluginID();
+        return tablesWithValues.toQueriedTabs().toExtensionDataByPluginID();
     }
 
     private Query<QueriedTables> placeValuesToTables(QueriedTables tables) {

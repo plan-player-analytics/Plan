@@ -27,7 +27,6 @@ import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.results.*;
-import com.djrapitops.plan.extension.implementation.results.server.ExtensionServerData;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -53,7 +52,7 @@ import static com.djrapitops.plan.db.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class ExtensionServerDataQuery implements Query<List<ExtensionServerData>> {
+public class ExtensionServerDataQuery implements Query<List<ExtensionData>> {
 
     private final UUID serverUUID;
 
@@ -62,9 +61,9 @@ public class ExtensionServerDataQuery implements Query<List<ExtensionServerData>
     }
 
     @Override
-    public List<ExtensionServerData> executeQuery(SQLDB db) {
+    public List<ExtensionData> executeQuery(SQLDB db) {
         List<ExtensionInformation> extensionsOfServer = db.query(ExtensionInformationQueries.extensionsOfServer(serverUUID));
-        Map<Integer, ExtensionServerData.Factory> extensionDataByPluginID = db.query(fetchIncompleteServerDataByPluginID());
+        Map<Integer, ExtensionData.Factory> extensionDataByPluginID = db.query(fetchIncompleteServerDataByPluginID());
 
         combine(extensionDataByPluginID, db.query(new ExtensionAggregateBooleansQuery(serverUUID)));
         combine(extensionDataByPluginID, db.query(new ExtensionAggregateDoublesQuery(serverUUID)));
@@ -76,14 +75,14 @@ public class ExtensionServerDataQuery implements Query<List<ExtensionServerData>
     }
 
     private void combine(
-            Map<Integer, ExtensionServerData.Factory> extensionDataByPluginID,
-            Map<Integer, ExtensionServerData.Factory> aggregates
+            Map<Integer, ExtensionData.Factory> extensionDataByPluginID,
+            Map<Integer, ExtensionData.Factory> aggregates
     ) {
-        for (Map.Entry<Integer, ExtensionServerData.Factory> entry : aggregates.entrySet()) {
+        for (Map.Entry<Integer, ExtensionData.Factory> entry : aggregates.entrySet()) {
             Integer pluginID = entry.getKey();
-            ExtensionServerData.Factory data = entry.getValue();
+            ExtensionData.Factory data = entry.getValue();
 
-            ExtensionServerData.Factory found = extensionDataByPluginID.get(pluginID);
+            ExtensionData.Factory found = extensionDataByPluginID.get(pluginID);
             if (found == null) {
                 extensionDataByPluginID.put(pluginID, data);
             } else {
@@ -92,23 +91,23 @@ public class ExtensionServerDataQuery implements Query<List<ExtensionServerData>
         }
     }
 
-    private List<ExtensionServerData> combineWithExtensionInfo(
+    private List<ExtensionData> combineWithExtensionInfo(
             List<ExtensionInformation> extensionsOfServer,
-            Map<Integer, ExtensionServerData.Factory> extensionDataByPluginID
+            Map<Integer, ExtensionData.Factory> extensionDataByPluginID
     ) {
-        List<ExtensionServerData> extensionServerData = new ArrayList<>();
+        List<ExtensionData> extensionData = new ArrayList<>();
 
         for (ExtensionInformation extensionInformation : extensionsOfServer) {
-            ExtensionServerData.Factory data = extensionDataByPluginID.get(extensionInformation.getId());
+            ExtensionData.Factory data = extensionDataByPluginID.get(extensionInformation.getId());
             if (data == null) {
                 continue;
             }
-            extensionServerData.add(data.setInformation(extensionInformation).build());
+            extensionData.add(data.setInformation(extensionInformation).build());
         }
-        return extensionServerData;
+        return extensionData;
     }
 
-    private Query<Map<Integer, ExtensionServerData.Factory>> fetchIncompleteServerDataByPluginID() {
+    private Query<Map<Integer, ExtensionData.Factory>> fetchIncompleteServerDataByPluginID() {
         String sql = SELECT +
                 "v1." + ExtensionServerValueTable.BOOLEAN_VALUE + " as boolean_value," +
                 "v1." + ExtensionServerValueTable.DOUBLE_VALUE + " as double_value," +
@@ -140,7 +139,7 @@ public class ExtensionServerDataQuery implements Query<List<ExtensionServerData>
                 WHERE + ExtensionPluginTable.SERVER_UUID + "=?" +
                 AND + "p1." + ExtensionProviderTable.HIDDEN + "=?";
 
-        return new QueryStatement<Map<Integer, ExtensionServerData.Factory>>(sql, 1000) {
+        return new QueryStatement<Map<Integer, ExtensionData.Factory>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -148,8 +147,8 @@ public class ExtensionServerDataQuery implements Query<List<ExtensionServerData>
             }
 
             @Override
-            public Map<Integer, ExtensionServerData.Factory> processResults(ResultSet set) throws SQLException {
-                return extractTabDataByPluginID(set).toServerDataByPluginID();
+            public Map<Integer, ExtensionData.Factory> processResults(ResultSet set) throws SQLException {
+                return extractTabDataByPluginID(set).toExtensionDataByPluginID();
             }
         };
     }

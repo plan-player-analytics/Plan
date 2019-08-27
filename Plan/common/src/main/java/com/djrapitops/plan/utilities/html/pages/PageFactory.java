@@ -21,7 +21,7 @@ import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
-import com.djrapitops.plan.extension.implementation.results.player.ExtensionPlayerData;
+import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
@@ -123,7 +123,7 @@ public class PageFactory {
     public PlayerPluginTab inspectPluginTabs(UUID playerUUID) {
         Database database = dbSystem.get().getDatabase();
 
-        Map<UUID, List<ExtensionPlayerData>> extensionPlayerData = database.query(new ExtensionPlayerDataQuery(playerUUID));
+        Map<UUID, List<ExtensionData>> extensionPlayerData = database.query(new ExtensionPlayerDataQuery(playerUUID));
 
         if (extensionPlayerData.isEmpty()) {
             return new PlayerPluginTab("", Collections.emptyList(), formatters.get());
@@ -134,7 +134,7 @@ public class PageFactory {
             UUID serverUUID = entry.getKey();
             String serverName = entry.getValue().getIdentifiableName();
 
-            List<ExtensionPlayerData> ofServer = extensionPlayerData.get(serverUUID);
+            List<ExtensionData> ofServer = extensionPlayerData.get(serverUUID);
             if (ofServer == null) {
                 continue;
             }

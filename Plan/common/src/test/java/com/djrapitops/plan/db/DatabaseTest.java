@@ -55,12 +55,7 @@ import com.djrapitops.plan.extension.*;
 import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
-import com.djrapitops.plan.extension.implementation.results.ExtensionBooleanData;
-import com.djrapitops.plan.extension.implementation.results.ExtensionStringData;
-import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
-import com.djrapitops.plan.extension.implementation.results.ExtensionTableData;
-import com.djrapitops.plan.extension.implementation.results.player.ExtensionPlayerData;
-import com.djrapitops.plan.extension.implementation.results.server.ExtensionServerData;
+import com.djrapitops.plan.extension.implementation.results.*;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerPlayerDataTableQuery;
@@ -1151,12 +1146,12 @@ public interface DatabaseTest {
         extensionService.register(new PlayerExtension());
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        Map<UUID, List<ExtensionPlayerData>> playerDataByServerUUID = db().query(new ExtensionPlayerDataQuery(playerUUID));
-        List<ExtensionPlayerData> ofServer = playerDataByServerUUID.get(serverUUID());
+        Map<UUID, List<ExtensionData>> playerDataByServerUUID = db().query(new ExtensionPlayerDataQuery(playerUUID));
+        List<ExtensionData> ofServer = playerDataByServerUUID.get(serverUUID());
         assertNotNull(ofServer);
         assertFalse(ofServer.isEmpty());
 
-        ExtensionPlayerData extensionPlayerData = ofServer.get(0);
+        ExtensionData extensionPlayerData = ofServer.get(0);
         List<ExtensionTabData> tabs = extensionPlayerData.getTabs();
         assertEquals(1, tabs.size()); // No tab defined, should contain 1 tab
         ExtensionTabData tabData = tabs.get(0);
@@ -1201,11 +1196,11 @@ public interface DatabaseTest {
         extensionService.register(new ServerExtension());
         extensionService.updateServerValues(CallEvents.SERVER_EXTENSION_REGISTER);
 
-        List<ExtensionServerData> ofServer = db().query(new ExtensionServerDataQuery(serverUUID()));
+        List<ExtensionData> ofServer = db().query(new ExtensionServerDataQuery(serverUUID()));
         assertFalse(ofServer.isEmpty());
 
-        ExtensionServerData extensionServerData = ofServer.get(0);
-        List<ExtensionTabData> tabs = extensionServerData.getTabs();
+        ExtensionData extensionData = ofServer.get(0);
+        List<ExtensionTabData> tabs = extensionData.getTabs();
         assertEquals(1, tabs.size()); // No tab defined, should contain 1 tab
         ExtensionTabData tabData = tabs.get(0);
 
@@ -1223,11 +1218,11 @@ public interface DatabaseTest {
         extensionService.register(new PlayerExtension());
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        List<ExtensionServerData> ofServer = db().query(new ExtensionServerDataQuery(serverUUID()));
+        List<ExtensionData> ofServer = db().query(new ExtensionServerDataQuery(serverUUID()));
         assertFalse(ofServer.isEmpty());
 
-        ExtensionServerData extensionServerData = ofServer.get(0);
-        List<ExtensionTabData> tabs = extensionServerData.getTabs();
+        ExtensionData extensionData = ofServer.get(0);
+        List<ExtensionTabData> tabs = extensionData.getTabs();
         assertEquals(1, tabs.size()); // No tab defined, should contain 1 tab
         ExtensionTabData tabData = tabs.get(0);
 
@@ -1275,7 +1270,7 @@ public interface DatabaseTest {
     default void checkThatPlayerDataExists(boolean condition) {
         // TODO Add Group data to this test
         if (condition) { // Condition is true, conditional values exist
-            List<ExtensionPlayerData> ofServer = db().query(new ExtensionPlayerDataQuery(playerUUID)).get(serverUUID());
+            List<ExtensionData> ofServer = db().query(new ExtensionPlayerDataQuery(playerUUID)).get(serverUUID());
             assertTrue(ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty(), "There was no data left");
 
             ExtensionTabData tabData = ofServer.get(0).getTabs().get(0);
@@ -1284,7 +1279,7 @@ public interface DatabaseTest {
             OptionalAssert.equals("unconditional", tabData.getString("unconditional").map(ExtensionStringData::getFormattedValue)); // Was not removed
             assertFalse(tabData.getString("reversedConditionalValue").isPresent(), "Value was not removed: reversedConditionalValue");
         } else { // Condition is false, reversed conditional values exist
-            List<ExtensionPlayerData> ofServer = db().query(new ExtensionPlayerDataQuery(playerUUID)).get(serverUUID());
+            List<ExtensionData> ofServer = db().query(new ExtensionPlayerDataQuery(playerUUID)).get(serverUUID());
             assertTrue(ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty(), "There was no data left");
             ExtensionTabData tabData = ofServer.get(0).getTabs().get(0);
             OptionalAssert.equals("No", tabData.getBoolean("isCondition").map(ExtensionBooleanData::getFormattedValue));
@@ -1326,7 +1321,7 @@ public interface DatabaseTest {
 
     default void checkThatServerDataExists(boolean condition) {
         if (condition) { // Condition is true, conditional values exist
-            List<ExtensionServerData> ofServer = db().query(new ExtensionServerDataQuery(serverUUID()));
+            List<ExtensionData> ofServer = db().query(new ExtensionServerDataQuery(serverUUID()));
             assertTrue(ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty(), "There was no data left");
 
             ExtensionTabData tabData = ofServer.get(0).getTabs().get(0);
@@ -1335,7 +1330,7 @@ public interface DatabaseTest {
             OptionalAssert.equals("unconditional", tabData.getString("unconditional").map(ExtensionStringData::getFormattedValue)); // Was not removed
             assertFalse(tabData.getString("reversedConditionalValue").isPresent(), "Value was not removed: reversedConditionalValue");
         } else { // Condition is false, reversed conditional values exist
-            List<ExtensionServerData> ofServer = db().query(new ExtensionServerDataQuery(serverUUID()));
+            List<ExtensionData> ofServer = db().query(new ExtensionServerDataQuery(serverUUID()));
             assertTrue(ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty(), "There was no data left");
             ExtensionTabData tabData = ofServer.get(0).getTabs().get(0);
             OptionalAssert.equals("No", tabData.getBoolean("isCondition").map(ExtensionBooleanData::getFormattedValue));
@@ -1353,11 +1348,11 @@ public interface DatabaseTest {
         extensionService.updateServerValues(CallEvents.MANUAL);
         extensionService.updateServerValues(CallEvents.MANUAL);
 
-        List<ExtensionServerData> ofServer = db().query(new ExtensionServerDataQuery(serverUUID()));
+        List<ExtensionData> ofServer = db().query(new ExtensionServerDataQuery(serverUUID()));
         assertFalse(ofServer.isEmpty());
 
-        ExtensionServerData extensionServerData = ofServer.get(0);
-        List<ExtensionTabData> tabs = extensionServerData.getTabs();
+        ExtensionData extensionData = ofServer.get(0);
+        List<ExtensionTabData> tabs = extensionData.getTabs();
         assertEquals(1, tabs.size()); // No tab defined, should contain 1 tab
         ExtensionTabData tabData = tabs.get(0);
 
@@ -1384,12 +1379,12 @@ public interface DatabaseTest {
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        Map<UUID, List<ExtensionPlayerData>> ofPlayer = db().query(new ExtensionPlayerDataQuery(playerUUID));
+        Map<UUID, List<ExtensionData>> ofPlayer = db().query(new ExtensionPlayerDataQuery(playerUUID));
         assertFalse(ofPlayer.isEmpty());
 
-        List<ExtensionPlayerData> ofServer = ofPlayer.get(serverUUID());
+        List<ExtensionData> ofServer = ofPlayer.get(serverUUID());
         assertEquals(1, ofServer.size());
-        ExtensionPlayerData extensionServerData = ofServer.get(0);
+        ExtensionData extensionServerData = ofServer.get(0);
         List<ExtensionTabData> tabs = extensionServerData.getTabs();
         assertEquals(1, tabs.size()); // No tab defined, should contain 1 tab
         ExtensionTabData tabData = tabs.get(0);

@@ -19,11 +19,7 @@ package com.djrapitops.plan.utilities.html.pages;
 import com.djrapitops.plan.extension.ElementOrder;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.implementation.TabInformation;
-import com.djrapitops.plan.extension.implementation.results.ExtensionDescriptive;
-import com.djrapitops.plan.extension.implementation.results.ExtensionInformation;
-import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
-import com.djrapitops.plan.extension.implementation.results.ExtensionTableData;
-import com.djrapitops.plan.extension.implementation.results.player.ExtensionPlayerData;
+import com.djrapitops.plan.extension.implementation.results.*;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.icon.Icon;
@@ -40,7 +36,7 @@ import java.util.*;
 public class PlayerPluginTab implements Comparable<PlayerPluginTab> {
 
     private String serverName;
-    private List<ExtensionPlayerData> playerData;
+    private List<ExtensionData> playerData;
 
     private Map<FormatType, Formatter<Long>> numberFormatters;
 
@@ -59,7 +55,7 @@ public class PlayerPluginTab implements Comparable<PlayerPluginTab> {
 
     public PlayerPluginTab(
             String serverName,
-            List<ExtensionPlayerData> playerData,
+            List<ExtensionData> playerData,
             Formatters formatters
     ) {
         this.serverName = serverName;
@@ -104,7 +100,7 @@ public class PlayerPluginTab implements Comparable<PlayerPluginTab> {
 
         StringBuilder tabBuilder = new StringBuilder();
 
-        for (ExtensionPlayerData datum : playerData) {
+        for (ExtensionData datum : playerData) {
             ExtensionInformation extensionInformation = datum.getExtensionInformation();
 
             boolean onlyGeneric = datum.hasOnlyGenericTab();
