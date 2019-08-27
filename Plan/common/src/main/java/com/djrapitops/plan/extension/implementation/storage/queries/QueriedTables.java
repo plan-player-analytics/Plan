@@ -42,13 +42,18 @@ public class QueriedTables {
         byPluginID = new HashMap<>();
     }
 
+    public boolean contains(int pluginID, int tableID) {
+        Map<Integer, Table.Factory> byTableID = byPluginID.get(pluginID);
+        return byTableID != null && byTableID.containsKey(tableID);
+    }
+
     public void put(int pluginID, int tableID, Table.Factory table) {
         Map<Integer, Table.Factory> byTableID = byPluginID.getOrDefault(pluginID, new HashMap<>());
         byTableID.put(tableID, table);
         byPluginID.put(pluginID, byTableID);
     }
 
-    public void addRow(int pluginID, int tableID, Object[] row) {
+    public void addRow(int pluginID, int tableID, Object... row) {
         if (row.length <= 0) return;
 
         Map<Integer, Table.Factory> byTableID = byPluginID.get(pluginID);
