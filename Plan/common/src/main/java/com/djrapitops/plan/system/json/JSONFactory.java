@@ -155,26 +155,37 @@ public class JSONFactory {
 
     public List<Map<String, Object>> serversAsJSONMaps() {
         Database db = dbSystem.getDatabase();
-        Map<UUID, Server> serverInformation = db.query(ServerQueries.fetchPlanServerInformation());
         long now = System.currentTimeMillis();
         long weekAgo = now - TimeUnit.DAYS.toMillis(7L);
+        long monthAgo = now - TimeUnit.DAYS.toMillis(30L);
 
         Formatter<Long> year = formatters.yearLong();
         Formatter<Double> decimals = formatters.decimals();
         Formatter<Long> timeAmount = formatters.timeAmount();
 
+        Map<UUID, Server> serverInformation = db.query(ServerQueries.fetchPlanServerInformation());
+        UUID proxyUUID = serverInformation.values().stream()
+                .filter(Server::isProxy)
+                .findFirst()
+                .map(Server::getUuid).orElse(null);
+
+        Map<UUID, List<TPS>> tpsData = db.query(
+                TPSQueries.fetchTPSDataOfAllServersBut(monthAgo, now, proxyUUID)
+        );
+        Map<UUID, Integer> totalPlayerCounts = db.query(PlayerCountQueries.newPlayerCounts(0, now));
+        Map<UUID, Integer> newPlayerCounts = db.query(PlayerCountQueries.newPlayerCounts(monthAgo, now));
+        Map<UUID, Integer> uniquePlayerCounts = db.query(PlayerCountQueries.uniquePlayerCounts(monthAgo, now));
+
         List<Map<String, Object>> servers = new ArrayList<>();
         serverInformation.entrySet()
                 .stream() // Sort alphabetically
                 .sorted(Comparator.comparing(entry -> entry.getValue().getIdentifiableName().toLowerCase()))
+                .filter(entry -> entry.getValue().isNotProxy())
                 .forEach(entry -> {
-                    if (entry.getValue().isProxy()) return;
-
                     UUID serverUUID = entry.getKey();
                     Map<String, Object> server = new HashMap<>();
                     server.put("name", entry.getValue().getIdentifiableName());
 
-                    // TODO Optimize these queries
                     Optional<DateObj<Integer>> recentPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, now - TimeUnit.DAYS.toMillis(2L)));
                     Optional<DateObj<Integer>> allTimePeak = db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID));
                     server.put("last_peak_date", recentPeak.map(DateObj::getDate).map(year).orElse("-"));
@@ -182,17 +193,20 @@ public class JSONFactory {
                     server.put("last_peak_players", recentPeak.map(DateObj::getValue).orElse(0));
                     server.put("best_peak_players", allTimePeak.map(DateObj::getValue).orElse(0));
 
-                    TPSMutator tpsMonth = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(now - TimeUnit.DAYS.toMillis(30L), now, serverUUID)));
-                    server.put("playersOnline", tpsMonth.all().stream().map(tps -> new double[]{tps.getDate(), tps.getPlayers()}).toArray(double[][]::new));
-                    server.put("players", db.query(PlayerCountQueries.newPlayerCount(0, now, serverUUID)));
-                    server.put("new_players", db.query(PlayerCountQueries.newPlayerCount(weekAgo, now, serverUUID)));
-                    server.put("unique_players", db.query(PlayerCountQueries.uniquePlayerCount(weekAgo, now, serverUUID)));
+                    TPSMutator tpsMonth = new TPSMutator(tpsData.getOrDefault(serverUUID, Collections.emptyList()));
+                    server.put("playersOnline", tpsMonth.all().stream()
+                            .map(tps -> new double[]{tps.getDate(), tps.getPlayers()})
+                            .toArray(double[][]::new));
+                    server.put("players", totalPlayerCounts.getOrDefault(serverUUID, 0));
+                    server.put("new_players", newPlayerCounts.getOrDefault(serverUUID, 0));
+                    server.put("unique_players", uniquePlayerCounts.getOrDefault(serverUUID, 0));
                     TPSMutator tpsWeek = tpsMonth.filterDataBetween(weekAgo, now);
                     double averageTPS = tpsWeek.averageTPS();
                     server.put("avg_tps", averageTPS != -1 ? decimals.apply(averageTPS) : "No data");
                     server.put("low_tps_spikes", tpsWeek.lowTpsSpikeCount(config.getNumber(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
                     server.put("downtime", timeAmount.apply(tpsWeek.serverDownTime()));
-                    Optional<TPS> online = db.query(TPSQueries.fetchLatestTPSEntryForServer(serverUUID));
+
+                    Optional<TPS> online = tpsWeek.getLast();
                     server.put("online", online.isPresent() ?
                             online.get().getDate() >= now - TimeUnit.MINUTES.toMillis(3L) ?
                                     online.get().getPlayers() : "Possibly offline"
