@@ -1234,6 +1234,11 @@ public interface DatabaseTest {
         OptionalAssert.equals("0.5", tabData.getDouble("doubleVal_total").map(data -> data.getFormattedValue(Objects::toString)));
         OptionalAssert.equals("5", tabData.getNumber("value_avg").map(data -> data.getFormattedValue(Objects::toString)));
         OptionalAssert.equals("5", tabData.getNumber("value_total").map(data -> data.getFormattedValue(Objects::toString)));
+
+        List<ExtensionTableData> tableData = tabData.getTableData();
+        assertEquals(1, tableData.size());
+        TableContainer table = tableData.get(0).getHtmlTable();
+        assertEquals("<tbody><tr><td>Group</td><td>1</td></tr></tbody>", table.parseBody());
     }
 
     @Test
@@ -1268,7 +1273,6 @@ public interface DatabaseTest {
     }
 
     default void checkThatPlayerDataExists(boolean condition) {
-        // TODO Add Group data to this test
         if (condition) { // Condition is true, conditional values exist
             List<ExtensionData> ofServer = db().query(new ExtensionPlayerDataQuery(playerUUID)).get(serverUUID());
             assertTrue(ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty(), "There was no data left");
@@ -1277,6 +1281,7 @@ public interface DatabaseTest {
             OptionalAssert.equals("Yes", tabData.getBoolean("isCondition").map(ExtensionBooleanData::getFormattedValue));
             OptionalAssert.equals("Conditional", tabData.getString("conditionalValue").map(ExtensionStringData::getFormattedValue));
             OptionalAssert.equals("unconditional", tabData.getString("unconditional").map(ExtensionStringData::getFormattedValue)); // Was not removed
+            OptionalAssert.equals("Group", tabData.getString("conditionalGroups").map(ExtensionStringData::getFormattedValue)); // Was not removed
             assertFalse(tabData.getString("reversedConditionalValue").isPresent(), "Value was not removed: reversedConditionalValue");
         } else { // Condition is false, reversed conditional values exist
             List<ExtensionData> ofServer = db().query(new ExtensionPlayerDataQuery(playerUUID)).get(serverUUID());
@@ -1286,6 +1291,7 @@ public interface DatabaseTest {
             OptionalAssert.equals("Reversed", tabData.getString("reversedConditionalValue").map(ExtensionStringData::getFormattedValue));
             OptionalAssert.equals("unconditional", tabData.getString("unconditional").map(ExtensionStringData::getFormattedValue)); // Was not removed
             assertFalse(tabData.getString("conditionalValue").isPresent(), "Value was not removed: conditionalValue");
+            assertFalse(tabData.getString("conditionalGroups").isPresent(), "Value was not removed: conditionalGroups");
         }
     }
 
