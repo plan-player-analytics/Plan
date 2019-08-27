@@ -21,7 +21,6 @@ import com.djrapitops.plan.db.access.Executable;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.sql.tables.ExtensionGroupsTable;
 import com.djrapitops.plan.db.sql.tables.ExtensionProviderTable;
-import com.djrapitops.plan.extension.Group;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
@@ -43,9 +42,9 @@ public class StorePlayerGroupsResultTransaction extends Transaction {
     private final String providerName;
     private final UUID playerUUID;
 
-    private final Group[] value;
+    private final String[] value;
 
-    public StorePlayerGroupsResultTransaction(String pluginName, UUID serverUUID, String providerName, UUID playerUUID, Group[] value) {
+    public StorePlayerGroupsResultTransaction(String pluginName, UUID serverUUID, String providerName, UUID playerUUID, String[] value) {
         this.pluginName = pluginName;
         this.serverUUID = serverUUID;
         this.providerName = providerName;
@@ -56,8 +55,8 @@ public class StorePlayerGroupsResultTransaction extends Transaction {
     @Override
     protected void performOperations() {
         execute(deleteOldValues());
-        for (Group group : value) {
-            String groupName = StringUtils.truncate(group.getGroupName(), 50);
+        for (String group : value) {
+            String groupName = StringUtils.truncate(group, 50);
             execute(insertGroup(groupName));
         }
     }

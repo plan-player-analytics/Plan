@@ -19,7 +19,6 @@ package com.djrapitops.plan.extension.implementation.providers.gathering;
 import com.djrapitops.plan.api.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.extension.DataExtension;
-import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProviders;
@@ -58,7 +57,7 @@ class GroupProviderValueGatherer {
     }
 
     void gatherGroupDataOfPlayer(UUID playerUUID, String playerName, Conditions conditions) {
-        for (DataProvider<Group[]> groupProvider : dataProviders.getPlayerMethodsByType(Group[].class)) {
+        for (DataProvider<String[]> groupProvider : dataProviders.getPlayerMethodsByType(String[].class)) {
             gatherGroupDataOfProvider(playerUUID, playerName, conditions, groupProvider);
         }
     }
@@ -66,7 +65,7 @@ class GroupProviderValueGatherer {
     private void gatherGroupDataOfProvider(
             UUID playerUUID, String playerName,
             Conditions conditions,
-            DataProvider<Group[]> groupProvider
+            DataProvider<String[]> groupProvider
     ) {
         ProviderInformation providerInformation = groupProvider.getProviderInformation();
         Optional<String> condition = providerInformation.getCondition();
@@ -74,9 +73,9 @@ class GroupProviderValueGatherer {
             return;
         }
 
-        MethodWrapper<Group[]> method = groupProvider.getMethod();
+        MethodWrapper<String[]> method = groupProvider.getMethod();
         try {
-            Group[] result = method.callMethod(extension, playerUUID, playerName);
+            String[] result = method.callMethod(extension, playerUUID, playerName);
             if (result == null) {
                 return; // Error during call
             }

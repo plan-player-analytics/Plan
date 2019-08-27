@@ -192,7 +192,7 @@ class ExtensionExtractorTest {
         }
 
         ExtensionExtractor underTest = new ExtensionExtractor(new Extension());
-        assertEquals("Extension.method has invalid return type. was: java.lang.Double, expected: [Lcom.djrapitops.plan.extension.Group; (an array)", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
+        assertEquals("Extension.method has invalid return type. was: java.lang.Double, expected: [Ljava.lang.String; (an array)", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
     }
 
     @Test
@@ -206,7 +206,7 @@ class ExtensionExtractorTest {
         }
 
         ExtensionExtractor underTest = new ExtensionExtractor(new Extension());
-        assertEquals("Extension.method has invalid return type. was: com.djrapitops.plan.extension.Group, expected: [Lcom.djrapitops.plan.extension.Group; (an array)", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
+        assertEquals("Extension.method has invalid return type. was: com.djrapitops.plan.extension.Group, expected: [Ljava.lang.String; (an array)", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
     }
 
     @Test

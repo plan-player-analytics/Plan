@@ -22,7 +22,6 @@ import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.sql.tables.ExtensionIconTable;
 import com.djrapitops.plan.db.sql.tables.ExtensionPluginTable;
 import com.djrapitops.plan.db.sql.tables.ExtensionTabTable;
-import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 
@@ -46,7 +45,7 @@ public class StoreGroupProviderTransaction extends Transaction {
     private final UUID serverUUID;
     private ProviderInformation providerInformation;
 
-    public StoreGroupProviderTransaction(DataProvider<Group[]> provider, UUID serverUUID) {
+    public StoreGroupProviderTransaction(DataProvider<String[]> provider, UUID serverUUID) {
         this.serverUUID = serverUUID;
         providerInformation = provider.getProviderInformation();
     }

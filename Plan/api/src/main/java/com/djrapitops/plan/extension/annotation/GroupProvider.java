@@ -25,12 +25,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Method annotation to provide {@code Group[]} array about a Player.
+ * Method annotation to provide {@code String[]} array of Group names about a Player.
  * <p>
  * This method annotation only works when used with {@code UUID} or {@code String} as a method parameter (for Players).
  * <p>
  * For example:
- * {@code @GroupProvider public Group[] getJobs(UUID playerUUID) {}}
+ * {@code @GroupProvider public String[] getJobs(UUID playerUUID) {}}
  * <p>
  * Group data is parsed as Table for /server & /network page and similar to {@link StringProvider} for /player page.
  * <p>
