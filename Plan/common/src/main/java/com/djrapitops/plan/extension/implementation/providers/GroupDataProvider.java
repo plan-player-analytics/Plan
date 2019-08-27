@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.extension.implementation.providers;
 
-import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.annotation.Conditional;
 import com.djrapitops.plan.extension.annotation.GroupProvider;
 import com.djrapitops.plan.extension.annotation.StringProvider;
@@ -32,9 +31,9 @@ import java.lang.reflect.Method;
  *
  * @author Rsl1122
  */
-public class GroupDataProvider extends DataProvider<Group[]> {
+public class GroupDataProvider extends DataProvider<String[]> {
 
-    private GroupDataProvider(ProviderInformation providerInformation, MethodWrapper<Group[]> methodWrapper) {
+    private GroupDataProvider(ProviderInformation providerInformation, MethodWrapper<String[]> methodWrapper) {
         super(providerInformation, methodWrapper);
     }
 
@@ -42,7 +41,7 @@ public class GroupDataProvider extends DataProvider<Group[]> {
             DataProviders dataProviders, Method method, GroupProvider annotation,
             Conditional condition, String tab, String pluginName
     ) {
-        MethodWrapper<Group[]> methodWrapper = new MethodWrapper<>(method, Group[].class);
+        MethodWrapper<String[]> methodWrapper = new MethodWrapper<>(method, String[].class);
         Icon providerIcon = new Icon(annotation.iconFamily(), annotation.iconName(), annotation.groupColor());
 
         ProviderInformation providerInformation = new ProviderInformation(

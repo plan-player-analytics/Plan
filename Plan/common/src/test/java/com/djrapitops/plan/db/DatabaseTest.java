@@ -51,7 +51,10 @@ import com.djrapitops.plan.db.access.transactions.init.RemoveDuplicateUserInfoTr
 import com.djrapitops.plan.db.patches.Patch;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 import com.djrapitops.plan.db.tasks.DBCleanTask;
-import com.djrapitops.plan.extension.*;
+import com.djrapitops.plan.extension.CallEvents;
+import com.djrapitops.plan.extension.DataExtension;
+import com.djrapitops.plan.extension.ExtensionService;
+import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
@@ -1465,8 +1468,8 @@ public interface DatabaseTest {
 
         @GroupProvider(text = "Conditional Group")
         @Conditional("condition")
-        public Group[] conditionalGroups(UUID playerUUID) {
-            return new Group[]{() -> "Group"};
+        public String[] conditionalGroups(UUID playerUUID) {
+            return new String[]{"Group"};
         }
 
         @StringProvider(text = "Unconditional")
@@ -1531,8 +1534,8 @@ public interface DatabaseTest {
         }
 
         @GroupProvider(text = "a group")
-        public Group[] groupVal(UUID playerUUID) {
-            return new Group[]{() -> "Group"};
+        public String[] groupVal(UUID playerUUID) {
+            return new String[]{"Group"};
         }
     }
 

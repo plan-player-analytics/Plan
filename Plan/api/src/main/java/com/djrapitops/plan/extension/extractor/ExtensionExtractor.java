@@ -278,7 +278,7 @@ public final class ExtensionExtractor {
             Method method = groupProvider.getKey();
             GroupProvider annotation = groupProvider.getValue();
 
-            validateReturnType(method, Group[].class);
+            validateReturnType(method, String[].class);
             validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
             validateMethodArguments(method, true, UUID.class, String.class);
         }
