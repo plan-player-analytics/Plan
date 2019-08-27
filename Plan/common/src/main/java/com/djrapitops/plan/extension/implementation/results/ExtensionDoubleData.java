@@ -23,7 +23,7 @@ import com.djrapitops.plan.utilities.formatting.Formatter;
  *
  * @author Rsl1122
  */
-public class ExtensionDoubleData implements ExtensionData {
+public class ExtensionDoubleData implements DescribedExtensionData {
 
     private ExtensionDescriptive descriptive;
     private double value;

@@ -24,7 +24,7 @@ import com.djrapitops.plan.utilities.formatting.Formatter;
  *
  * @author Rsl1122
  */
-public class ExtensionNumberData implements ExtensionData {
+public class ExtensionNumberData implements DescribedExtensionData {
 
     private final ExtensionDescriptive descriptive;
     private final FormatType formatType;

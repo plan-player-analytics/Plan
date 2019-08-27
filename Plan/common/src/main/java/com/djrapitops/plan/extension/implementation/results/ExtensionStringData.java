@@ -24,7 +24,7 @@ import com.djrapitops.plan.utilities.html.Html;
  *
  * @author Rsl1122
  */
-public class ExtensionStringData implements ExtensionData {
+public class ExtensionStringData implements DescribedExtensionData {
 
     private final ExtensionDescriptive descriptive;
     private final boolean playerName;

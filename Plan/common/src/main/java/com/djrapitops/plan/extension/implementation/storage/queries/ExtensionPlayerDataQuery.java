@@ -149,43 +149,40 @@ public class ExtensionPlayerDataQuery implements Query<Map<UUID, List<ExtensionP
 
             @Override
             public Map<Integer, ExtensionPlayerData.Factory> processResults(ResultSet set) throws SQLException {
-                Map<Integer, Map<String, ExtensionTabData.Factory>> tabDataByPluginID = extractTabDataByPluginID(set);
-                return flatMapToPlayerData(tabDataByPluginID);
+                return extractTabDataByPluginID(set).toPlayerDataByPluginID();
             }
         };
     }
 
-    private Map<Integer, ExtensionPlayerData.Factory> flatMapToPlayerData(Map<Integer, Map<String, ExtensionTabData.Factory>> tabDataByPluginID) {
-        Map<Integer, ExtensionPlayerData.Factory> dataByPluginID = new HashMap<>();
-        for (Map.Entry<Integer, Map<String, ExtensionTabData.Factory>> entry : tabDataByPluginID.entrySet()) {
-            Integer pluginID = entry.getKey();
-            ExtensionPlayerData.Factory data = dataByPluginID.getOrDefault(pluginID, new ExtensionPlayerData.Factory(pluginID));
-            for (ExtensionTabData.Factory tabData : entry.getValue().values()) {
-                data.addTab(tabData.build());
-            }
-            dataByPluginID.put(pluginID, data);
-        }
-        return dataByPluginID;
-    }
-
-    private Map<Integer, Map<String, ExtensionTabData.Factory>> extractTabDataByPluginID(ResultSet set) throws SQLException {
-        Map<Integer, Map<String, ExtensionTabData.Factory>> tabDataByPluginID = new HashMap<>();
+    private QueriedTabData extractTabDataByPluginID(ResultSet set) throws SQLException {
+        QueriedTabData tabData = new QueriedTabData();
 
         while (set.next()) {
             int pluginID = set.getInt("plugin_id");
-            Map<String, ExtensionTabData.Factory> tabData = tabDataByPluginID.getOrDefault(pluginID, new HashMap<>());
-
             String tabName = Optional.ofNullable(set.getString("tab_name")).orElse("");
-            ExtensionTabData.Factory inMap = tabData.get(tabName);
-            ExtensionTabData.Factory extensionTab = inMap != null ? inMap : extractTab(tabName, set, tabData);
+            ExtensionTabData.Factory extensionTab = tabData.getTab(pluginID, tabName, () -> extractTabInformation(tabName, set));
 
             ExtensionDescriptive extensionDescriptive = extractDescriptive(set);
             extractAndPutDataTo(extensionTab, extensionDescriptive, set);
-
-            tabData.put(tabName, extensionTab);
-            tabDataByPluginID.put(pluginID, tabData);
         }
-        return tabDataByPluginID;
+        return tabData;
+    }
+
+    private TabInformation extractTabInformation(String tabName, ResultSet set) throws SQLException {
+        Optional<Integer> tabPriority = Optional.of(set.getInt("tab_priority"));
+        if (set.wasNull()) {
+            tabPriority = Optional.empty();
+        }
+        Optional<ElementOrder[]> elementOrder = Optional.ofNullable(set.getString(ExtensionTabTable.ELEMENT_ORDER)).map(ElementOrder::deserialize);
+
+        Icon tabIcon = extractTabIcon(set);
+
+        return new TabInformation(
+                tabName,
+                tabIcon,
+                elementOrder.orElse(ElementOrder.values()),
+                tabPriority.orElse(100)
+        );
     }
 
     private void extractAndPutDataTo(ExtensionTabData.Factory extensionTab, ExtensionDescriptive descriptive, ResultSet set) throws SQLException {
@@ -233,23 +230,6 @@ public class ExtensionPlayerDataQuery implements Query<Map<UUID, List<ExtensionP
         Icon icon = new Icon(family, iconName, color);
 
         return new ExtensionDescriptive(name, text, description, icon, priority);
-    }
-
-    private ExtensionTabData.Factory extractTab(String tabName, ResultSet set, Map<String, ExtensionTabData.Factory> tabData) throws SQLException {
-        Optional<Integer> tabPriority = Optional.of(set.getInt("tab_priority"));
-        if (set.wasNull()) {
-            tabPriority = Optional.empty();
-        }
-        Optional<ElementOrder[]> elementOrder = Optional.ofNullable(set.getString(ExtensionTabTable.ELEMENT_ORDER)).map(ElementOrder::deserialize);
-
-        Icon tabIcon = extractTabIcon(set);
-
-        return tabData.getOrDefault(tabName, new ExtensionTabData.Factory(new TabInformation(
-                tabName,
-                tabIcon,
-                elementOrder.orElse(ElementOrder.values()),
-                tabPriority.orElse(100)
-        )));
     }
 
     private Icon extractTabIcon(ResultSet set) throws SQLException {

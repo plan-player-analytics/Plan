@@ -131,11 +131,11 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
     }
 
     private void createOrderingList() {
-        booleanData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
-        doubleData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
-        percentageData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
-        numberData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
-        stringData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
+        booleanData.values().stream().map(DescribedExtensionData::getDescriptive).forEach(descriptives::add);
+        doubleData.values().stream().map(DescribedExtensionData::getDescriptive).forEach(descriptives::add);
+        percentageData.values().stream().map(DescribedExtensionData::getDescriptive).forEach(descriptives::add);
+        numberData.values().stream().map(DescribedExtensionData::getDescriptive).forEach(descriptives::add);
+        stringData.values().stream().map(DescribedExtensionData::getDescriptive).forEach(descriptives::add);
 
         order = descriptives.stream().sorted()
                 .map(ExtensionDescriptive::getName)

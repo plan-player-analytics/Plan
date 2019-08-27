@@ -14,28 +14,17 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.extension.implementation.results;
+package com.djrapitops.plan.utilities.java;
 
 /**
- * Represents boolean data returned by a BooleanProvider method.
+ * Functional interface that performs an operation that might throw an exception.
+ * <p>
+ * Follows naming scheme of Java 8 functional interfaces.
  *
  * @author Rsl1122
  */
-public class ExtensionBooleanData implements DescribedExtensionData {
+public interface ThrowingSupplier<T, K extends Throwable> {
 
-    private ExtensionDescriptive descriptive;
-    private boolean value;
+    T get() throws K;
 
-    public ExtensionBooleanData(ExtensionDescriptive descriptive, boolean value) {
-        this.descriptive = descriptive;
-        this.value = value;
-    }
-
-    public ExtensionDescriptive getDescriptive() {
-        return descriptive;
-    }
-
-    public String getFormattedValue() {
-        return value ? "Yes" : "No";
-    }
 }
