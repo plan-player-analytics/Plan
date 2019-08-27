@@ -26,9 +26,7 @@ import com.djrapitops.plan.db.sql.tables.UsersTable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.NavigableMap;
-import java.util.TreeMap;
-import java.util.UUID;
+import java.util.*;
 
 import static com.djrapitops.plan.db.sql.parsing.Sql.*;
 
@@ -98,6 +96,31 @@ public class PlayerCountQueries {
                 AND + SessionsTable.SESSION_START + ">=?";
 
         return queryPlayerCount(sql, after, before);
+    }
+
+    public static Query<Map<UUID, Integer>> uniquePlayerCounts(long after, long before) {
+        String sql = SELECT + SessionsTable.SERVER_UUID + ",COUNT(DISTINCT " + SessionsTable.USER_UUID + ") as player_count" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SESSION_END + "<=?" +
+                AND + SessionsTable.SESSION_START + ">=?" +
+                GROUP_BY + UserInfoTable.SERVER_UUID;
+
+        return new QueryStatement<Map<UUID, Integer>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, before);
+                statement.setLong(2, after);
+            }
+
+            @Override
+            public Map<UUID, Integer> processResults(ResultSet set) throws SQLException {
+                Map<UUID, Integer> byServer = new HashMap<>();
+                while (set.next()) {
+                    byServer.put(UUID.fromString(set.getString(UserInfoTable.SERVER_UUID)), set.getInt("player_count"));
+                }
+                return byServer;
+            }
+        };
     }
 
     /**
@@ -231,6 +254,31 @@ public class PlayerCountQueries {
                 AND + UsersTable.REGISTERED + ">=?";
 
         return queryPlayerCount(sql, after, before);
+    }
+
+    public static Query<Map<UUID, Integer>> newPlayerCounts(long after, long before) {
+        String sql = SELECT + UserInfoTable.SERVER_UUID + ",COUNT(1) as player_count" +
+                FROM + UserInfoTable.TABLE_NAME +
+                WHERE + UserInfoTable.REGISTERED + "<=?" +
+                AND + UserInfoTable.REGISTERED + ">=?" +
+                GROUP_BY + UserInfoTable.SERVER_UUID;
+
+        return new QueryStatement<Map<UUID, Integer>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, before);
+                statement.setLong(2, after);
+            }
+
+            @Override
+            public Map<UUID, Integer> processResults(ResultSet set) throws SQLException {
+                Map<UUID, Integer> byServer = new HashMap<>();
+                while (set.next()) {
+                    byServer.put(UUID.fromString(set.getString(UserInfoTable.SERVER_UUID)), set.getInt("player_count"));
+                }
+                return byServer;
+            }
+        };
     }
 
     /**

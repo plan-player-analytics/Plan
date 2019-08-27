@@ -63,22 +63,26 @@ public class TPSQueries {
                 List<TPS> data = new ArrayList<>();
                 while (set.next()) {
 
-                    TPS tps = TPSBuilder.get()
-                            .date(set.getLong(DATE))
-                            .tps(set.getDouble(TPS))
-                            .playersOnline(set.getInt(PLAYERS_ONLINE))
-                            .usedCPU(set.getDouble(CPU_USAGE))
-                            .usedMemory(set.getLong(RAM_USAGE))
-                            .entities(set.getInt(ENTITIES))
-                            .chunksLoaded(set.getInt(CHUNKS))
-                            .freeDiskSpace(set.getLong(FREE_DISK))
-                            .toTPS();
+                    com.djrapitops.plan.data.container.TPS tps = extractTPS(set);
 
                     data.add(tps);
                 }
                 return data;
             }
         };
+    }
+
+    public static TPS extractTPS(ResultSet set) throws SQLException {
+        return TPSBuilder.get()
+                .date(set.getLong(DATE))
+                .tps(set.getDouble(TPS))
+                .playersOnline(set.getInt(PLAYERS_ONLINE))
+                .usedCPU(set.getDouble(CPU_USAGE))
+                .usedMemory(set.getLong(RAM_USAGE))
+                .entities(set.getInt(ENTITIES))
+                .chunksLoaded(set.getInt(CHUNKS))
+                .freeDiskSpace(set.getLong(FREE_DISK))
+                .toTPS();
     }
 
     public static Query<List<TPS>> fetchTPSDataOfServer(long after, long before, UUID serverUUID) {
@@ -99,18 +103,7 @@ public class TPSQueries {
             public List<TPS> processResults(ResultSet set) throws SQLException {
                 List<TPS> data = new ArrayList<>();
                 while (set.next()) {
-
-                    TPS tps = TPSBuilder.get()
-                            .date(set.getLong(DATE))
-                            .tps(set.getDouble(TPS))
-                            .playersOnline(set.getInt(PLAYERS_ONLINE))
-                            .usedCPU(set.getDouble(CPU_USAGE))
-                            .usedMemory(set.getLong(RAM_USAGE))
-                            .entities(set.getInt(ENTITIES))
-                            .chunksLoaded(set.getInt(CHUNKS))
-                            .freeDiskSpace(set.getLong(FREE_DISK))
-                            .toTPS();
-
+                    TPS tps = extractTPS(set);
                     data.add(tps);
                 }
                 return data;
@@ -146,15 +139,15 @@ public class TPSQueries {
         };
     }
 
-    public static Query<Map<UUID, List<DateObj<Integer>>>> fetchPlayersOnlineOfAllServersBut(long after, long before, UUID leaveOut) {
-        String sql = SELECT + ServerTable.SERVER_UUID + ',' + DATE + ',' + PLAYERS_ONLINE +
+    public static Query<Map<UUID, List<TPS>>> fetchTPSDataOfAllServersBut(long after, long before, UUID leaveOut) {
+        String sql = SELECT + '*' +
                 FROM + TABLE_NAME +
                 INNER_JOIN + ServerTable.TABLE_NAME + " on " + ServerTable.TABLE_NAME + '.' + ServerTable.SERVER_ID + '=' + SERVER_ID +
                 WHERE + ServerTable.SERVER_UUID + "!=?" +
                 AND + ServerTable.INSTALLED + "=?" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
-        return new QueryStatement<Map<UUID, List<DateObj<Integer>>>>(sql, 1000) {
+        return new QueryStatement<Map<UUID, List<TPS>>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, leaveOut.toString());
@@ -164,16 +157,16 @@ public class TPSQueries {
             }
 
             @Override
-            public Map<UUID, List<DateObj<Integer>>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, List<DateObj<Integer>>> byServer = new HashMap<>();
-
+            public Map<UUID, List<TPS>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, List<TPS>> byServer = new HashMap<>();
                 while (set.next()) {
                     UUID serverUUID = UUID.fromString(set.getString(ServerTable.SERVER_UUID));
-                    List<DateObj<Integer>> ofServer = byServer.getOrDefault(serverUUID, new ArrayList<>());
-                    ofServer.add(new DateObj<>(set.getLong(DATE), set.getInt(PLAYERS_ONLINE)));
+                    List<TPS> ofServer = byServer.getOrDefault(serverUUID, new ArrayList<>());
+
+                    ofServer.add(extractTPS(set));
+
                     byServer.put(serverUUID, ofServer);
                 }
-
                 return byServer;
             }
         };

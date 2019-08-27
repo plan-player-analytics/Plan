@@ -24,6 +24,7 @@ import com.djrapitops.plan.utilities.html.graphs.line.Point;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -251,5 +252,12 @@ public class TPSMutator {
         return tpsData.stream()
                 .mapToDouble(TPS::getPlayers)
                 .average().orElse(-1);
+    }
+
+    public Optional<TPS> getLast() {
+        if (tpsData.isEmpty()) return Optional.empty();
+        // else
+        tpsData.sort(new TPSComparator());
+        return Optional.of(tpsData.get(tpsData.size() - 1));
     }
 }
