@@ -25,10 +25,10 @@ import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.TabInformation;
+import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionDescriptive;
 import com.djrapitops.plan.extension.implementation.results.ExtensionDoubleData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
-import com.djrapitops.plan.extension.implementation.results.server.ExtensionServerData;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -54,7 +54,7 @@ import static com.djrapitops.plan.db.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, ExtensionServerData.Factory>> {
+public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, ExtensionData.Factory>> {
 
     private final UUID serverUUID;
 
@@ -63,7 +63,7 @@ public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, Exten
     }
 
     @Override
-    public Map<Integer, ExtensionServerData.Factory> executeQuery(SQLDB db) {
+    public Map<Integer, ExtensionData.Factory> executeQuery(SQLDB db) {
         String selectTrueBooleans = SELECT +
                 ExtensionPlayerValueTable.PROVIDER_ID +
                 ",COUNT(1) as positive" +
@@ -106,7 +106,7 @@ public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, Exten
                 WHERE + ExtensionPluginTable.SERVER_UUID + "=?" +
                 AND + "p1." + ExtensionProviderTable.HIDDEN + "=?";
 
-        return db.query(new QueryStatement<Map<Integer, ExtensionServerData.Factory>>(sql, 1000) {
+        return db.query(new QueryStatement<Map<Integer, ExtensionData.Factory>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setBoolean(1, true); // selectTrueBooleans parameter
@@ -115,8 +115,8 @@ public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, Exten
             }
 
             @Override
-            public Map<Integer, ExtensionServerData.Factory> processResults(ResultSet set) throws SQLException {
-                return extractTabDataByPluginID(set).toServerDataByPluginID();
+            public Map<Integer, ExtensionData.Factory> processResults(ResultSet set) throws SQLException {
+                return extractTabDataByPluginID(set).toExtensionDataByPluginID();
             }
         });
     }

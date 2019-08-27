@@ -17,7 +17,7 @@
 package com.djrapitops.plan.utilities.html.pages;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
-import com.djrapitops.plan.extension.implementation.results.server.ExtensionServerData;
+import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
@@ -88,7 +88,7 @@ public class NetworkPage implements Page {
             placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
             placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
 
-            List<ExtensionServerData> extensionData = dbSystem.getDatabase()
+            List<ExtensionData> extensionData = dbSystem.getDatabase()
                     .query(new ExtensionServerDataQuery(serverUUID));
             ServerPluginTabs pluginTabs = new ServerPluginTabs(extensionData, formatters);
 

@@ -26,10 +26,10 @@ import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.TabInformation;
+import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionDescriptive;
 import com.djrapitops.plan.extension.implementation.results.ExtensionNumberData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
-import com.djrapitops.plan.extension.implementation.results.server.ExtensionServerData;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -55,7 +55,7 @@ import static com.djrapitops.plan.db.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, ExtensionServerData.Factory>> {
+public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, ExtensionData.Factory>> {
 
     private final UUID serverUUID;
 
@@ -64,7 +64,7 @@ public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, Extens
     }
 
     @Override
-    public Map<Integer, ExtensionServerData.Factory> executeQuery(SQLDB db) {
+    public Map<Integer, ExtensionData.Factory> executeQuery(SQLDB db) {
         String selectNumberAverage = SELECT +
                 ExtensionPlayerValueTable.PROVIDER_ID +
                 ",AVG(" + ExtensionPlayerValueTable.LONG_VALUE + ") as average" +
@@ -110,7 +110,7 @@ public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, Extens
                 AND + "p1." + ExtensionProviderTable.FORMAT_TYPE + "!=?" +
                 AND + "p1." + ExtensionProviderTable.FORMAT_TYPE + "!=?";
 
-        return db.query(new QueryStatement<Map<Integer, ExtensionServerData.Factory>>(sql, 1000) {
+        return db.query(new QueryStatement<Map<Integer, ExtensionData.Factory>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -120,8 +120,8 @@ public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, Extens
             }
 
             @Override
-            public Map<Integer, ExtensionServerData.Factory> processResults(ResultSet set) throws SQLException {
-                return extractTabDataByPluginID(set).toServerDataByPluginID();
+            public Map<Integer, ExtensionData.Factory> processResults(ResultSet set) throws SQLException {
+                return extractTabDataByPluginID(set).toExtensionDataByPluginID();
             }
         });
     }

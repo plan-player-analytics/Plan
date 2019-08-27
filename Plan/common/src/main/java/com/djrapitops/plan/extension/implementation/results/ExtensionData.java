@@ -14,11 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.extension.implementation.results.server;
-
-import com.djrapitops.plan.extension.implementation.results.ExtensionInformation;
-import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
-import com.djrapitops.plan.extension.implementation.results.ExtensionTableData;
+package com.djrapitops.plan.extension.implementation.results;
 
 import java.util.*;
 
@@ -27,7 +23,7 @@ import java.util.*;
  *
  * @author Rsl1122
  */
-public class ExtensionServerData implements Comparable<ExtensionServerData> {
+public class ExtensionData implements Comparable<ExtensionData> {
 
     private final int pluginID;
 
@@ -35,7 +31,7 @@ public class ExtensionServerData implements Comparable<ExtensionServerData> {
 
     private Map<String, ExtensionTabData> tabs;
 
-    private ExtensionServerData(int pluginID) {
+    private ExtensionData(int pluginID) {
         this.pluginID = pluginID;
 
         tabs = new HashMap<>();
@@ -69,15 +65,15 @@ public class ExtensionServerData implements Comparable<ExtensionServerData> {
     }
 
     @Override
-    public int compareTo(ExtensionServerData o) {
+    public int compareTo(ExtensionData o) {
         return String.CASE_INSENSITIVE_ORDER.compare(this.extensionInformation.getPluginName(), o.extensionInformation.getPluginName());
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ExtensionServerData)) return false;
-        ExtensionServerData that = (ExtensionServerData) o;
+        if (!(o instanceof ExtensionData)) return false;
+        ExtensionData that = (ExtensionData) o;
         return pluginID == that.pluginID &&
                 Objects.equals(extensionInformation, that.extensionInformation) &&
                 Objects.equals(tabs, that.tabs);
@@ -90,10 +86,10 @@ public class ExtensionServerData implements Comparable<ExtensionServerData> {
 
     public static class Factory {
 
-        private final ExtensionServerData data;
+        private final ExtensionData data;
 
         public Factory(int pluginId) {
-            data = new ExtensionServerData(pluginId);
+            data = new ExtensionData(pluginId);
         }
 
         public Factory combine(Factory with) {
@@ -127,7 +123,7 @@ public class ExtensionServerData implements Comparable<ExtensionServerData> {
             return Optional.ofNullable(data.tabs.get(tabName));
         }
 
-        public ExtensionServerData build() {
+        public ExtensionData build() {
             return data;
         }
     }

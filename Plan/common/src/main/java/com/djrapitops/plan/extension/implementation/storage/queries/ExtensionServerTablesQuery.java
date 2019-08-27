@@ -24,7 +24,7 @@ import com.djrapitops.plan.extension.ElementOrder;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
-import com.djrapitops.plan.extension.implementation.results.server.ExtensionServerData;
+import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.extension.table.TableAccessor;
 
@@ -51,7 +51,7 @@ import static com.djrapitops.plan.db.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionServerData.Factory>> {
+public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionData.Factory>> {
 
     private final UUID serverUUID;
 
@@ -60,9 +60,9 @@ public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionS
     }
 
     @Override
-    public Map<Integer, ExtensionServerData.Factory> executeQuery(SQLDB db) {
+    public Map<Integer, ExtensionData.Factory> executeQuery(SQLDB db) {
         QueriedTables tablesWithValues = db.query(queryTableValues(db.query(queryTableProviders())));
-        return tablesWithValues.toQueriedTabs().toServerDataByPluginID();
+        return tablesWithValues.toQueriedTabs().toExtensionDataByPluginID();
     }
 
     private Query<QueriedTables> queryTableValues(QueriedTables tables) {
