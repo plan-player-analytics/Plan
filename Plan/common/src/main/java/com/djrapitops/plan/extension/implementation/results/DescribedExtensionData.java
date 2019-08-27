@@ -21,7 +21,7 @@ package com.djrapitops.plan.extension.implementation.results;
  *
  * @author Rsl1122
  */
-public interface ExtensionData {
+public interface DescribedExtensionData {
 
     /**
      * Get Descriptive information about the data point.

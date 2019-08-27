@@ -61,19 +61,6 @@ public class ExtensionServerDataQuery implements Query<List<ExtensionServerData>
         this.serverUUID = serverUUID;
     }
 
-    static Map<Integer, ExtensionServerData.Factory> flatMapToServerData(Map<Integer, Map<String, ExtensionTabData.Factory>> tabDataByPluginID) {
-        Map<Integer, ExtensionServerData.Factory> dataByPluginID = new HashMap<>();
-        for (Map.Entry<Integer, Map<String, ExtensionTabData.Factory>> entry : tabDataByPluginID.entrySet()) {
-            Integer pluginID = entry.getKey();
-            ExtensionServerData.Factory data = dataByPluginID.getOrDefault(pluginID, new ExtensionServerData.Factory(pluginID));
-            for (ExtensionTabData.Factory tabData : entry.getValue().values()) {
-                data.addTab(tabData.build());
-            }
-            dataByPluginID.put(pluginID, data);
-        }
-        return dataByPluginID;
-    }
-
     @Override
     public List<ExtensionServerData> executeQuery(SQLDB db) {
         List<ExtensionInformation> extensionsOfServer = db.query(ExtensionInformationQueries.extensionsOfServer(serverUUID));
@@ -162,30 +149,40 @@ public class ExtensionServerDataQuery implements Query<List<ExtensionServerData>
 
             @Override
             public Map<Integer, ExtensionServerData.Factory> processResults(ResultSet set) throws SQLException {
-                Map<Integer, Map<String, ExtensionTabData.Factory>> tabDataByPluginID = extractTabDataByPluginID(set);
-                return flatMapToServerData(tabDataByPluginID);
+                return extractTabDataByPluginID(set).toServerDataByPluginID();
             }
         };
     }
 
-    private Map<Integer, Map<String, ExtensionTabData.Factory>> extractTabDataByPluginID(ResultSet set) throws SQLException {
-        Map<Integer, Map<String, ExtensionTabData.Factory>> tabDataByPluginID = new HashMap<>();
+    private QueriedTabData extractTabDataByPluginID(ResultSet set) throws SQLException {
+        QueriedTabData tabData = new QueriedTabData();
 
         while (set.next()) {
             int pluginID = set.getInt("plugin_id");
-            Map<String, ExtensionTabData.Factory> tabData = tabDataByPluginID.getOrDefault(pluginID, new HashMap<>());
-
             String tabName = Optional.ofNullable(set.getString("tab_name")).orElse("");
-            ExtensionTabData.Factory inMap = tabData.get(tabName);
-            ExtensionTabData.Factory extensionTab = inMap != null ? inMap : extractTab(tabName, set, tabData);
+            ExtensionTabData.Factory extensionTab = tabData.getTab(pluginID, tabName, () -> extractTabInformation(tabName, set));
 
             ExtensionDescriptive extensionDescriptive = extractDescriptive(set);
             extractAndPutDataTo(extensionTab, extensionDescriptive, set);
-
-            tabData.put(tabName, extensionTab);
-            tabDataByPluginID.put(pluginID, tabData);
         }
-        return tabDataByPluginID;
+        return tabData;
+    }
+
+    private TabInformation extractTabInformation(String tabName, ResultSet set) throws SQLException {
+        Optional<Integer> tabPriority = Optional.of(set.getInt("tab_priority"));
+        if (set.wasNull()) {
+            tabPriority = Optional.empty();
+        }
+        Optional<ElementOrder[]> elementOrder = Optional.ofNullable(set.getString(ExtensionTabTable.ELEMENT_ORDER)).map(ElementOrder::deserialize);
+
+        Icon tabIcon = extractTabIcon(set);
+
+        return new TabInformation(
+                tabName,
+                tabIcon,
+                elementOrder.orElse(ElementOrder.values()),
+                tabPriority.orElse(100)
+        );
     }
 
     private void extractAndPutDataTo(ExtensionTabData.Factory extensionTab, ExtensionDescriptive descriptive, ResultSet set) throws SQLException {
