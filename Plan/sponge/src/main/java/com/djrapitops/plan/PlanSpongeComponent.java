@@ -25,7 +25,6 @@ import com.djrapitops.plan.modules.sponge.SpongePlanModule;
 import com.djrapitops.plan.modules.sponge.SpongeServerPropertiesModule;
 import com.djrapitops.plan.modules.sponge.SpongeSuperClassBindingModule;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.pluginbridge.plan.PluginBridgeModule;
 import dagger.BindsInstance;
 import dagger.Component;
 
@@ -44,8 +43,7 @@ import javax.inject.Singleton;
         FilesModule.class,
         ServerSuperClassBindingModule.class,
         SpongeSuperClassBindingModule.class,
-        SpongeServerPropertiesModule.class,
-        PluginBridgeModule.Sponge.class
+        SpongeServerPropertiesModule.class
 })
 public interface PlanSpongeComponent {
 
