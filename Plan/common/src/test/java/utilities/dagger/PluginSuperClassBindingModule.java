@@ -32,10 +32,8 @@ import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.RunnableFactory;
-import com.djrapitops.pluginbridge.plan.Bridge;
 import dagger.Module;
 import dagger.Provides;
-import org.mockito.Mockito;
 import utilities.mocks.TestProcessing;
 
 import javax.inject.Singleton;
@@ -99,12 +97,6 @@ public class PluginSuperClassBindingModule {
             public void callEnableEvent(PlanPlugin plugin) {
             }
         };
-    }
-
-    @Provides
-    @Singleton
-    Bridge providePluginBridge() {
-        return Mockito.mock(Bridge.class);
     }
 
     @Provides
