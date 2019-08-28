@@ -57,7 +57,6 @@ subprojects {
     ext.daggerCompilerVersion = "2.24"
 
     ext.abstractPluginFrameworkVersion = "3.4.2"
-    ext.planPluginBridgeVersion = "4.9.0-R0.3"
 
     ext.bukkitVersion = "1.13.2-R0.1-SNAPSHOT"
     ext.spigotVersion = "1.13.2-R0.1-SNAPSHOT"
@@ -103,7 +102,7 @@ subprojects {
         maven { // bStats Repository
             url = "https://repo.codemc.org/repository/maven-public"
         }
-        maven { // PlanPluginBridge Repository
+        maven { // Plan Repository
             url = "https://dl.bintray.com/rsl1122/Plan-repository"
         }
     }
