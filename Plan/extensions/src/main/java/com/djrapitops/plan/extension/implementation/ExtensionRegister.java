@@ -20,6 +20,7 @@ import com.djrapitops.extension.*;
 import com.djrapitops.plan.extension.Caller;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.ExtensionService;
+import com.djrapitops.plan.extension.NotReadyException;
 import com.djrapitops.plan.extension.extractor.ExtensionExtractor;
 
 import javax.inject.Inject;
@@ -99,7 +100,9 @@ public class ExtensionRegister {
         try {
             // Creates the extension with factory and registers it
             createExtension.apply(factory).flatMap(this::register);
-        } catch (IllegalStateException | NoClassDefFoundError | IncompatibleClassChangeError e) {
+        } catch (NotReadyException ignore) {
+            // This exception signals that the extension can not be registered right now (Intended fail).
+        } catch (Exception | NoClassDefFoundError | IncompatibleClassChangeError e) {
             // Places all exceptions to one exception with plugin information so that they can be reported.
             suppressException(factory.getClass(), e);
         }
@@ -115,7 +118,9 @@ public class ExtensionRegister {
             createExtension.apply(factory)
                     .flatMap(this::register)
                     .ifPresent(caller -> registerListener.accept(factory, caller));
-        } catch (IllegalStateException | NoClassDefFoundError | IncompatibleClassChangeError e) {
+        } catch (NotReadyException ignore) {
+            // This exception signals that the extension can not be registered right now (Intended fail).
+        } catch (Exception | NoClassDefFoundError | IncompatibleClassChangeError e) {
             // Places all exceptions to one exception with plugin information so that they can be reported.
             suppressException(factory.getClass(), e);
         }
