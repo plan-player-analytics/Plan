@@ -27,14 +27,16 @@ import java.io.IOException;
  */
 public class RedirectResponse extends Response {
 
+    private String direct;
+
     public RedirectResponse(String direct) {
         super.setHeader("HTTP/1.1 302 Found");
-        super.setContent(direct);
+        this.direct = direct;
     }
 
     @Override
     public void send(HttpExchange exchange, Locale locale, Theme theme) throws IOException {
-        responseHeaders.set("Location", getContent());
+        responseHeaders.set("Location", direct);
         super.send(exchange, locale, theme);
     }
 }
