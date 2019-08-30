@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.info.server;
+package com.djrapitops.plan.system.identification;
 
 import com.djrapitops.plan.system.settings.config.Config;
 import com.djrapitops.plan.system.settings.config.ConfigReader;

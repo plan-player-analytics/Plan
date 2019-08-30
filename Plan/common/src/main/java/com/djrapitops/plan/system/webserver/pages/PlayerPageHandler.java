@@ -20,6 +20,7 @@ import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.ForbiddenException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.system.identification.UUIDUtility;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.Database;
 import com.djrapitops.plan.system.webserver.Request;
@@ -29,7 +30,6 @@ import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.ResponseFactory;
-import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

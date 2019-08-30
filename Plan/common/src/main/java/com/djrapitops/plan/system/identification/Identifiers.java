@@ -14,15 +14,13 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system;
+package com.djrapitops.plan.system.identification;
 
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
-import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.system.webserver.RequestTarget;
-import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

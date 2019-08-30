@@ -14,11 +14,11 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.info.server;
+package com.djrapitops.plan.system.identification;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.info.server.properties.ServerProperties;
+import com.djrapitops.plan.system.identification.properties.ServerProperties;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.UUID;

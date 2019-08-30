@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.webserver;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.*;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;

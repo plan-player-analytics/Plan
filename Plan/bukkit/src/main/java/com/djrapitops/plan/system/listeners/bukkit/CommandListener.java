@@ -17,7 +17,7 @@
 package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.DataGatheringSettings;

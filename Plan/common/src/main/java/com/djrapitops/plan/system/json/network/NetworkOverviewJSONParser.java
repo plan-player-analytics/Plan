@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.json.network;
 
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.store.objects.DateObj;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.json.Trend;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;

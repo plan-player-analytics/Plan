@@ -24,6 +24,7 @@ import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 import com.djrapitops.plan.data.store.mutators.GeoInfoMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.system.identification.UUIDUtility;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -39,7 +40,6 @@ import com.djrapitops.plan.system.storage.database.queries.containers.ContainerF
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
-import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;

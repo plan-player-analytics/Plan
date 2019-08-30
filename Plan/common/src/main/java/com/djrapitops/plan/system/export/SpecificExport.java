@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.export;
 
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.json.JSONFactory;
 import com.djrapitops.plan.system.storage.file.PlanFiles;
 import com.djrapitops.plan.system.webserver.cache.PageId;

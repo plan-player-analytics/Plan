@@ -23,7 +23,7 @@ import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
 import com.djrapitops.plan.system.cache.SessionCache;
-import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.identification.Server;
 import com.djrapitops.plan.system.storage.database.SQLDB;
 import com.djrapitops.plan.system.storage.database.queries.Query;
 import com.djrapitops.plan.system.storage.database.queries.ServerAggregateQueries;

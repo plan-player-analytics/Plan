@@ -19,7 +19,7 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.system.cache.SessionCache;
-import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.identification.Server;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.Database;

@@ -18,8 +18,8 @@ package com.djrapitops.plan.system.webserver;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.info.server.properties.ServerProperties;
+import com.djrapitops.plan.system.identification.ServerInfo;
+import com.djrapitops.plan.system.identification.properties.ServerProperties;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.system.settings.config.paths.WebserverSettings;

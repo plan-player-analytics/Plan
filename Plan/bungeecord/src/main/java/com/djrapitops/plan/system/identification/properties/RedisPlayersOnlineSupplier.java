@@ -14,23 +14,21 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.info.server.properties;
+package com.djrapitops.plan.system.identification.properties;
 
-import com.djrapitops.plugin.api.Check;
+import com.imaginarycode.minecraft.redisbungee.RedisBungee;
+
+import java.util.function.IntSupplier;
 
 /**
- * Utility class for checking if RedisBungee API is available.
+ * Players online supplier when using RedisBungee.
  *
  * @author Rsl1122
  */
-public class RedisCheck {
+public class RedisPlayersOnlineSupplier implements IntSupplier {
 
-    private RedisCheck() {
-        /* Static method class */
+    @Override
+    public int getAsInt() {
+        return RedisBungee.getApi().getPlayerCount();
     }
-
-    public static boolean isClassAvailable() {
-        return Check.isAvailable("com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI");
-    }
-
 }

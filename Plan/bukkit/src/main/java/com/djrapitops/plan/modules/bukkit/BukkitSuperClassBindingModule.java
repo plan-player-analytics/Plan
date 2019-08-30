@@ -18,10 +18,10 @@ package com.djrapitops.plan.modules.bukkit;
 
 import com.djrapitops.plan.BukkitServerShutdownSave;
 import com.djrapitops.plan.ServerShutdownSave;
+import com.djrapitops.plan.system.identification.ServerInfo;
+import com.djrapitops.plan.system.identification.ServerServerInfo;
 import com.djrapitops.plan.system.importing.BukkitImportSystem;
 import com.djrapitops.plan.system.importing.ImportSystem;
-import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.info.server.ServerServerInfo;
 import com.djrapitops.plan.system.listeners.BukkitListenerSystem;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
 import com.djrapitops.plan.system.settings.BukkitConfigSystem;

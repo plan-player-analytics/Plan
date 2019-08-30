@@ -17,7 +17,7 @@
 package com.djrapitops.plan.system.storage.database;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.DatabaseSettings;
 import com.djrapitops.plan.system.settings.locale.Locale;

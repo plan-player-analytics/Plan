@@ -19,7 +19,7 @@ package com.djrapitops.plan.system.storage.database.queries.objects;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
 import com.djrapitops.plan.data.store.objects.DateObj;
-import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.identification.Server;
 import com.djrapitops.plan.system.storage.database.queries.Query;
 import com.djrapitops.plan.system.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.system.storage.database.queries.QueryStatement;

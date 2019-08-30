@@ -17,7 +17,7 @@
 package com.djrapitops.plan.system.export;
 
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.ExportSettings;

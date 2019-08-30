@@ -19,7 +19,7 @@ package com.djrapitops.plan.system.webserver.pages.json;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.Identifiers;
+import com.djrapitops.plan.system.identification.Identifiers;
 import com.djrapitops.plan.system.json.GraphJSONParser;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.RequestTarget;

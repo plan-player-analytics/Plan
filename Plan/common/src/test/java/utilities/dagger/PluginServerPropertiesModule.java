@@ -16,7 +16,7 @@
  */
 package utilities.dagger;
 
-import com.djrapitops.plan.system.info.server.properties.ServerProperties;
+import com.djrapitops.plan.system.identification.properties.ServerProperties;
 import dagger.Module;
 import dagger.Provides;
 

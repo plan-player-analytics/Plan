@@ -19,7 +19,7 @@ package com.djrapitops.plan.system.cache;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.queries.objects.NicknameQueries;
 import com.djrapitops.plugin.logging.L;

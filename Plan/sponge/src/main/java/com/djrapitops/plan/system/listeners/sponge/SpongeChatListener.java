@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.listeners.sponge;
 
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.cache.NicknameCache;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.transactions.events.NicknameStoreTransaction;
 import com.djrapitops.plugin.logging.L;

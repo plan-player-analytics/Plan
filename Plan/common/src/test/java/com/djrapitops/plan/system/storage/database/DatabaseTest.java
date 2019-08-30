@@ -46,7 +46,7 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.results
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.query.QueryServiceImplementation;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.identification.Server;
 import com.djrapitops.plan.system.settings.config.Config;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.locale.Locale;

@@ -19,7 +19,7 @@ package com.djrapitops.plan.utilities.html.pages;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.system.settings.theme.Theme;

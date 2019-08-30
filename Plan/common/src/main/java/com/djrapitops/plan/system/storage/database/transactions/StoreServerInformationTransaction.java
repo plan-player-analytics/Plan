@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.database.transactions;
 
-import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.identification.Server;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

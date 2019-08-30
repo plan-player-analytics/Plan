@@ -14,11 +14,11 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.info.server;
+package com.djrapitops.plan.system.identification;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.info.server.properties.ServerProperties;
+import com.djrapitops.plan.system.identification.properties.ServerProperties;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.Database;
 import com.djrapitops.plan.system.storage.database.queries.objects.ServerQueries;

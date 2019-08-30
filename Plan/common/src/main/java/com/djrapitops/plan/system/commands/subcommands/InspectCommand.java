@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.commands.subcommands;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.identification.UUIDUtility;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
@@ -30,7 +31,6 @@ import com.djrapitops.plan.system.storage.database.queries.PlayerFetchQueries;
 import com.djrapitops.plan.system.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
