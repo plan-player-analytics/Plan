@@ -17,7 +17,7 @@
 package com.djrapitops.plan.system.storage.database.patches;
 
 import com.djrapitops.plan.system.storage.database.operation.ExecStatement;
-import com.djrapitops.plan.system.storage.database.operation.HasMoreThanZeroQueryStatement;
+import com.djrapitops.plan.system.storage.database.queries.HasMoreThanZeroQueryStatement;
 import com.djrapitops.plan.system.storage.database.sql.tables.GeoInfoTable;
 
 import java.sql.PreparedStatement;

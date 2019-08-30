@@ -14,31 +14,31 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.storage.database.operation;
+package com.djrapitops.plan.system.storage.database.queries;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * SQL query of a COUNT statement that closes proper elements.
+ * SQL query that doesn't require preparing that closes proper elements.
  *
  * @author Rsl1122
  */
-public abstract class HasMoreThanZeroQueryStatement extends QueryStatement<Boolean> {
-
-    private String countColumnName = "c";
-
-    public HasMoreThanZeroQueryStatement(String sql) {
+public abstract class QueryAllStatement<T> extends QueryStatement<T> {
+    public QueryAllStatement(String sql) {
         super(sql);
     }
 
-    public HasMoreThanZeroQueryStatement(String sql, String countColumnName) {
-        super(sql);
-        this.countColumnName = countColumnName;
+    public QueryAllStatement(String sql, int fetchSize) {
+        super(sql, fetchSize);
     }
 
     @Override
-    public Boolean processResults(ResultSet set) throws SQLException {
-        return set.next() && set.getInt(countColumnName) > 0;
+    public void prepare(PreparedStatement statement) throws SQLException {
+        /* None Required */
     }
+
+    @Override
+    public abstract T processResults(ResultSet set) throws SQLException;
 }

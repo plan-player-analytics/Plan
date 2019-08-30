@@ -17,9 +17,9 @@
 package com.djrapitops.plan.system.storage.database.queries.objects;
 
 import com.djrapitops.plan.data.container.UserInfo;
-import com.djrapitops.plan.system.storage.database.operation.Query;
-import com.djrapitops.plan.system.storage.database.operation.QueryAllStatement;
-import com.djrapitops.plan.system.storage.database.operation.QueryStatement;
+import com.djrapitops.plan.system.storage.database.queries.Query;
+import com.djrapitops.plan.system.storage.database.queries.QueryAllStatement;
+import com.djrapitops.plan.system.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.system.storage.database.sql.tables.UserInfoTable;
 
 import java.sql.PreparedStatement;

@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.schema;
 
-import com.djrapitops.plan.system.storage.database.operation.HasMoreThanZeroQueryStatement;
-import com.djrapitops.plan.system.storage.database.operation.Query;
+import com.djrapitops.plan.system.storage.database.queries.HasMoreThanZeroQueryStatement;
+import com.djrapitops.plan.system.storage.database.queries.Query;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

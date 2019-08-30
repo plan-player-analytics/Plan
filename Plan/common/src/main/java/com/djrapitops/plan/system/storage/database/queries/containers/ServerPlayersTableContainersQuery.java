@@ -24,7 +24,7 @@ import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.system.json.PlayersTableJSONParser;
 import com.djrapitops.plan.system.storage.database.SQLDB;
-import com.djrapitops.plan.system.storage.database.operation.Query;
+import com.djrapitops.plan.system.storage.database.queries.Query;
 import com.djrapitops.plan.system.storage.database.queries.objects.BaseUserQueries;
 import com.djrapitops.plan.system.storage.database.queries.objects.GeoInfoQueries;
 import com.djrapitops.plan.system.storage.database.queries.objects.SessionQueries;

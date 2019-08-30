@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.storage.database.queries.objects;
 
 import com.djrapitops.plan.system.settings.config.Config;
 import com.djrapitops.plan.system.settings.config.ConfigReader;
-import com.djrapitops.plan.system.storage.database.operation.QueryStatement;
+import com.djrapitops.plan.system.storage.database.queries.QueryStatement;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

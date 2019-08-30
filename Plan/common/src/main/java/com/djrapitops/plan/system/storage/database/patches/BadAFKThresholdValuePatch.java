@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.database.patches;
 
-import com.djrapitops.plan.system.storage.database.operation.HasMoreThanZeroQueryStatement;
+import com.djrapitops.plan.system.storage.database.queries.HasMoreThanZeroQueryStatement;
 import com.djrapitops.plan.system.storage.database.sql.tables.SessionsTable;
 
 import java.sql.PreparedStatement;

@@ -21,7 +21,7 @@ import com.djrapitops.plan.system.storage.database.DBType;
 import com.djrapitops.plan.system.storage.database.SQLDB;
 import com.djrapitops.plan.system.storage.database.operation.ExecStatement;
 import com.djrapitops.plan.system.storage.database.operation.Executable;
-import com.djrapitops.plan.system.storage.database.operation.Query;
+import com.djrapitops.plan.system.storage.database.queries.Query;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.*;

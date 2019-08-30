@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.analysis;
 
-import com.djrapitops.plan.system.storage.database.operation.Query;
-import com.djrapitops.plan.system.storage.database.operation.QueryStatement;
+import com.djrapitops.plan.system.storage.database.queries.Query;
+import com.djrapitops.plan.system.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.system.storage.database.sql.parsing.Sql;
 import com.djrapitops.plan.system.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.UserInfoTable;

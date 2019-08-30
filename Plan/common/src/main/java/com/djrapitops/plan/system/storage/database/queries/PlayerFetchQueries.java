@@ -16,9 +16,6 @@
  */
 package com.djrapitops.plan.system.storage.database.queries;
 
-import com.djrapitops.plan.system.storage.database.operation.HasMoreThanZeroQueryStatement;
-import com.djrapitops.plan.system.storage.database.operation.Query;
-import com.djrapitops.plan.system.storage.database.operation.QueryStatement;
 import com.djrapitops.plan.system.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.UsersTable;
 

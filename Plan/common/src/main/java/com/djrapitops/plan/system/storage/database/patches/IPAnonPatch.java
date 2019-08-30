@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.storage.database.patches;
 
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.system.storage.database.operation.ExecBatchStatement;
-import com.djrapitops.plan.system.storage.database.operation.QueryStatement;
+import com.djrapitops.plan.system.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.system.storage.database.queries.objects.GeoInfoQueries;
 import com.djrapitops.plan.system.storage.database.sql.tables.GeoInfoTable;
 
