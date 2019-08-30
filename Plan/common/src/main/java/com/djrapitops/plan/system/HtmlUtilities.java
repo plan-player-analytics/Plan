@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system;
 
+import com.djrapitops.plan.system.delivery.rendering.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.formatting.Formatters;
-import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import dagger.Lazy;
 
 import javax.inject.Inject;

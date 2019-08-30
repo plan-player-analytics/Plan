@@ -19,6 +19,10 @@ package com.djrapitops.plan.system.delivery.rendering.json;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.*;
+import com.djrapitops.plan.system.delivery.rendering.html.Html;
+import com.djrapitops.plan.system.delivery.rendering.html.graphs.Graphs;
+import com.djrapitops.plan.system.delivery.rendering.html.graphs.pie.WorldPie;
+import com.djrapitops.plan.system.delivery.rendering.html.structure.ServerAccordion;
 import com.djrapitops.plan.system.gathering.cache.SessionCache;
 import com.djrapitops.plan.system.gathering.domain.GeoInfo;
 import com.djrapitops.plan.system.gathering.domain.PlayerKill;
@@ -34,10 +38,6 @@ import com.djrapitops.plan.system.storage.database.queries.containers.PlayerCont
 import com.djrapitops.plan.system.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
-import com.djrapitops.plan.utilities.html.Html;
-import com.djrapitops.plan.utilities.html.graphs.Graphs;
-import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
-import com.djrapitops.plan.utilities.html.structure.ServerAccordion;
 import org.apache.commons.text.StringEscapeUtils;
 
 import javax.inject.Inject;

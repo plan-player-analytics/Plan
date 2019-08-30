@@ -18,6 +18,7 @@ package com.djrapitops.plan.utilities.comparators;
 
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
+import com.djrapitops.plan.system.delivery.rendering.html.graphs.line.Point;
 import com.djrapitops.plan.system.gathering.domain.GeoInfo;
 import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.gathering.domain.TPS;
@@ -25,7 +26,6 @@ import com.djrapitops.plan.system.settings.locale.Message;
 import com.djrapitops.plan.system.settings.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.settings.locale.lang.Lang;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
-import com.djrapitops.plan.utilities.html.graphs.line.Point;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;

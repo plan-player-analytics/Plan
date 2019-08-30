@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.data.store.mutators;
 
-import com.djrapitops.plan.utilities.html.graphs.line.Point;
+import com.djrapitops.plan.system.delivery.rendering.html.graphs.line.Point;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.*;

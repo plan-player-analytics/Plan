@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.utilities.comparators;
 
-import com.djrapitops.plan.utilities.html.graphs.line.Point;
+import com.djrapitops.plan.system.delivery.rendering.html.graphs.line.Point;
 
 import java.util.Comparator;
 

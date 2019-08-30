@@ -17,12 +17,12 @@
 package utilities;
 
 import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.system.delivery.rendering.html.graphs.line.Point;
 import com.djrapitops.plan.system.gathering.domain.GeoInfo;
 import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.gathering.domain.TPS;
 import com.djrapitops.plan.system.gathering.domain.UserInfo;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
-import com.djrapitops.plan.utilities.html.graphs.line.Point;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;

@@ -17,7 +17,7 @@
 package com.djrapitops.plan.extension.implementation.results;
 
 import com.djrapitops.plan.api.PlanAPI;
-import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.system.delivery.rendering.html.Html;
 
 /**
  * Represents double data returned by a DoubleProvider or PercentageProvider method.

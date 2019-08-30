@@ -25,13 +25,13 @@ import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.implementation.results.*;
+import com.djrapitops.plan.system.delivery.rendering.html.Html;
+import com.djrapitops.plan.system.delivery.rendering.html.icon.Family;
+import com.djrapitops.plan.system.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.system.gathering.domain.GeoInfo;
 import com.djrapitops.plan.utilities.comparators.PlayerContainerLastPlayedComparator;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
-import com.djrapitops.plan.utilities.html.Html;
-import com.djrapitops.plan.utilities.html.icon.Family;
-import com.djrapitops.plan.utilities.html.icon.Icon;
 
 import java.util.*;
 

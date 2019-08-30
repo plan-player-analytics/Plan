@@ -17,7 +17,7 @@
 package com.djrapitops.plan.system.delivery.webserver.response.pages;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
-import com.djrapitops.plan.utilities.html.pages.NetworkPage;
+import com.djrapitops.plan.system.delivery.rendering.html.pages.NetworkPage;
 
 /**
  * Response for /network page.

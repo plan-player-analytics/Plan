@@ -19,6 +19,7 @@ package com.djrapitops.plan.system.delivery.webserver.response;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
+import com.djrapitops.plan.system.delivery.rendering.html.pages.PageFactory;
 import com.djrapitops.plan.system.delivery.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.system.delivery.webserver.response.errors.ForbiddenResponse;
 import com.djrapitops.plan.system.delivery.webserver.response.errors.InternalErrorResponse;
@@ -30,7 +31,6 @@ import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.system.storage.file.PlanFiles;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
-import com.djrapitops.plan.utilities.html.pages.PageFactory;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;

@@ -16,10 +16,10 @@
  */
 package com.djrapitops.plan.system.delivery.webserver.response.errors;
 
+import com.djrapitops.plan.system.delivery.rendering.html.icon.Family;
+import com.djrapitops.plan.system.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.system.storage.file.PlanFiles;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
-import com.djrapitops.plan.utilities.html.icon.Family;
-import com.djrapitops.plan.utilities.html.icon.Icon;
 
 import java.io.IOException;
 
