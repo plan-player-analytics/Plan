@@ -28,7 +28,7 @@ import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.identification.properties.ServerProperties;
 import com.djrapitops.plan.system.storage.database.Database;
 import com.djrapitops.plan.system.storage.file.FileResource;
-import com.djrapitops.plan.system.update.VersionCheckSystem;
+import com.djrapitops.plan.system.version.VersionCheckSystem;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plugin.benchmarking.Benchmark;

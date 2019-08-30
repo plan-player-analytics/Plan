@@ -29,7 +29,7 @@ import com.djrapitops.plan.system.storage.database.Database;
 import com.djrapitops.plan.system.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.system.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.storage.file.PlanFiles;
-import com.djrapitops.plan.system.update.VersionCheckSystem;
+import com.djrapitops.plan.system.version.VersionCheckSystem;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.debug.DebugLogger;

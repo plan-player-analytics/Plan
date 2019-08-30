@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.delivery.webserver.response.errors;
 
 import com.djrapitops.plan.system.delivery.webserver.response.pages.PageResponse;
 import com.djrapitops.plan.system.storage.file.PlanFiles;
-import com.djrapitops.plan.system.update.VersionCheckSystem;
+import com.djrapitops.plan.system.version.VersionCheckSystem;
 import org.apache.commons.text.StringSubstitutor;
 
 import java.io.IOException;

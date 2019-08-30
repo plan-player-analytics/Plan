@@ -37,7 +37,7 @@ import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.storage.file.PlanFiles;
 import com.djrapitops.plan.system.tasks.TaskSystem;
-import com.djrapitops.plan.system.update.VersionCheckSystem;
+import com.djrapitops.plan.system.version.VersionCheckSystem;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
