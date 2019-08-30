@@ -14,9 +14,8 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.data;
+package com.djrapitops.plan.system.gathering.domain;
 
-import com.djrapitops.plan.system.gathering.domain.PlayerKill;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;

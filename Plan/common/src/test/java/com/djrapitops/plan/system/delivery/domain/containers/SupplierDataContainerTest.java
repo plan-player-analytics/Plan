@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.data.store.containers;
+package com.djrapitops.plan.system.delivery.domain.containers;
 
 import com.djrapitops.plan.system.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.system.delivery.domain.container.SupplierDataContainer;

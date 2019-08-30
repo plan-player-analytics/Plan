@@ -14,13 +14,10 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.data.container;
+package com.djrapitops.plan.system.gathering.domain;
 
 import com.djrapitops.plan.system.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.system.delivery.domain.keys.SessionKeys;
-import com.djrapitops.plan.system.gathering.domain.PlayerKill;
-import com.djrapitops.plan.system.gathering.domain.Session;
-import com.djrapitops.plan.system.gathering.domain.WorldTimes;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;

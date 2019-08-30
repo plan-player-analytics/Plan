@@ -14,10 +14,8 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan;
+package com.djrapitops.plan.system.gathering;
 
-import com.djrapitops.plan.system.gathering.ServerShutdownSave;
-import com.djrapitops.plan.system.gathering.ShutdownHook;
 import com.djrapitops.plan.system.gathering.cache.SessionCache;
 import com.djrapitops.plan.system.gathering.domain.GMTimes;
 import com.djrapitops.plan.system.gathering.domain.Session;

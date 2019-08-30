@@ -74,7 +74,7 @@ public class PluginSuperClassBindingModule {
     @Provides
     @Singleton
     TaskSystem provideTaskSystem(RunnableFactory runnableFactory) {
-        return new TaskSystem(runnableFactory, null) {
+        return new TaskSystem(runnableFactory) {
             @Override
             public void enable() {
             }
