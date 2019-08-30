@@ -17,10 +17,10 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanSponge;
-import com.djrapitops.plan.ShutdownHook;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.system.delivery.upkeep.PeriodicAnalysisTask;
 import com.djrapitops.plan.system.delivery.upkeep.PlayersPageRefreshTask;
+import com.djrapitops.plan.system.gathering.ShutdownHook;
 import com.djrapitops.plan.system.gathering.timed.SpongePingCounter;
 import com.djrapitops.plan.system.gathering.timed.SpongeTPSCounter;
 import com.djrapitops.plan.system.settings.config.PlanConfig;

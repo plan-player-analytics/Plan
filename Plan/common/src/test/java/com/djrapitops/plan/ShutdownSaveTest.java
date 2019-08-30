@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan;
 
+import com.djrapitops.plan.system.gathering.ServerShutdownSave;
+import com.djrapitops.plan.system.gathering.ShutdownHook;
 import com.djrapitops.plan.system.gathering.cache.SessionCache;
 import com.djrapitops.plan.system.gathering.domain.GMTimes;
 import com.djrapitops.plan.system.gathering.domain.Session;

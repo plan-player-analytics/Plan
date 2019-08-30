@@ -17,7 +17,7 @@
 package com.djrapitops.plan.modules.bukkit;
 
 import com.djrapitops.plan.BukkitServerShutdownSave;
-import com.djrapitops.plan.ServerShutdownSave;
+import com.djrapitops.plan.system.gathering.ServerShutdownSave;
 import com.djrapitops.plan.system.gathering.importing.BukkitImportSystem;
 import com.djrapitops.plan.system.gathering.importing.ImportSystem;
 import com.djrapitops.plan.system.gathering.listeners.BukkitListenerSystem;

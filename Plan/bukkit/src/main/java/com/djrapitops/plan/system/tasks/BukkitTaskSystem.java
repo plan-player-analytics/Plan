@@ -17,10 +17,10 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.ShutdownHook;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.system.delivery.upkeep.PeriodicAnalysisTask;
 import com.djrapitops.plan.system.delivery.upkeep.PlayersPageRefreshTask;
+import com.djrapitops.plan.system.gathering.ShutdownHook;
 import com.djrapitops.plan.system.gathering.timed.BukkitPingCounter;
 import com.djrapitops.plan.system.gathering.timed.BukkitTPSCounter;
 import com.djrapitops.plan.system.gathering.timed.PaperTPSCounter;

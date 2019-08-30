@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.modules.sponge;
 
-import com.djrapitops.plan.ServerShutdownSave;
 import com.djrapitops.plan.SpongeServerShutdownSave;
+import com.djrapitops.plan.system.gathering.ServerShutdownSave;
 import com.djrapitops.plan.system.gathering.importing.EmptyImportSystem;
 import com.djrapitops.plan.system.gathering.importing.ImportSystem;
 import com.djrapitops.plan.system.gathering.listeners.ListenerSystem;
