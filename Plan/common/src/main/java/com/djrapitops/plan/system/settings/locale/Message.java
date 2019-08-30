@@ -17,6 +17,7 @@
 package com.djrapitops.plan.system.settings.locale;
 
 import com.djrapitops.plugin.utilities.Verify;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringSubstitutor;
 
 import java.io.Serializable;
@@ -51,11 +52,11 @@ public class Message {
     }
 
     public String[] toArray() {
-        return content.split("\\\\");
+        return StringUtils.split(content, '\\');
     }
 
     public String[] toArray(Serializable... p) {
-        return parse(p).split("\\\\");
+        return parse(p).split(content, '\\');
     }
 
     @Override

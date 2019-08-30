@@ -19,16 +19,12 @@ package com.djrapitops.plan.system.settings.locale;
 import com.djrapitops.plan.system.settings.locale.lang.*;
 import com.djrapitops.plan.system.storage.file.FileResource;
 import com.djrapitops.plan.system.storage.file.PlanFiles;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * Represents loaded language information.
@@ -73,6 +69,15 @@ public class Locale extends HashMap<Lang, Message> {
         }
     }
 
+    public Optional<Message> getNonDefault(Object key) {
+        Message storedValue = super.get(key);
+        if (key instanceof Lang && storedValue == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(storedValue);
+        }
+    }
+
     public String getString(Lang key) {
         return get(key).toString();
     }
@@ -99,8 +104,6 @@ public class Locale extends HashMap<Lang, Message> {
             return from;
         }
 
-        String replaced = from;
-
         Lang[][] langs = new Lang[][]{
                 NetworkPageLang.values(),
                 PlayerPageLang.values(),
@@ -108,23 +111,21 @@ public class Locale extends HashMap<Lang, Message> {
                 CommonHtmlLang.values()
         };
 
-        List<Entry<Lang, Message>> entries = Arrays.stream(langs)
-                .flatMap(Arrays::stream)
-                .collect(Collectors.toMap(Function.identity(), this::get))
-                .entrySet().stream()
+        List<String> replace = new ArrayList<>();
+        List<String> with = new ArrayList<>();
+
+        Arrays.stream(langs).flatMap(Arrays::stream)
                 // Longest first so that entries that contain each other don't partially replace.
                 .sorted((one, two) -> Integer.compare(
-                        two.getKey().getIdentifier().length(),
-                        one.getKey().getIdentifier().length()
-                )).collect(Collectors.toList());
+                        two.getIdentifier().length(),
+                        one.getIdentifier().length()
+                ))
+                .forEach(lang -> getNonDefault(lang).ifPresent(replacement -> {
+                    replace.add(lang.getDefault());
+                    with.add(replacement.toString());
+                }));
 
-        for (Entry<Lang, Message> entry : entries) {
-            String defaultValue = entry.getKey().getDefault();
-            String replacement = entry.getValue().toString();
-
-            replaced = replaced.replace(defaultValue, replacement);
-        }
-        return replaced;
+        return StringUtils.replaceEach(from, replace.toArray(new String[0]), with.toArray(new String[0]));
     }
 
     @Override
