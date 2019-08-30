@@ -20,12 +20,12 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.system.storage.database.DBType;
-import com.djrapitops.plan.system.storage.database.patches.Version10Patch;
-import com.djrapitops.plan.system.storage.database.patches.WorldTimesOptimizationPatch;
-import com.djrapitops.plan.system.storage.database.patches.WorldTimesSeverIDPatch;
-import com.djrapitops.plan.system.storage.database.patches.WorldsServerIDPatch;
 import com.djrapitops.plan.system.storage.database.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.system.storage.database.sql.parsing.Sql;
+import com.djrapitops.plan.system.storage.database.transactions.patches.Version10Patch;
+import com.djrapitops.plan.system.storage.database.transactions.patches.WorldTimesOptimizationPatch;
+import com.djrapitops.plan.system.storage.database.transactions.patches.WorldTimesSeverIDPatch;
+import com.djrapitops.plan.system.storage.database.transactions.patches.WorldsServerIDPatch;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

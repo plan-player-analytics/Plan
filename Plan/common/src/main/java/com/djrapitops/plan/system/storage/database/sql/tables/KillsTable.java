@@ -20,11 +20,11 @@ import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.system.storage.database.DBType;
-import com.djrapitops.plan.system.storage.database.patches.KillsOptimizationPatch;
-import com.djrapitops.plan.system.storage.database.patches.KillsServerIDPatch;
-import com.djrapitops.plan.system.storage.database.patches.Version10Patch;
 import com.djrapitops.plan.system.storage.database.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.system.storage.database.sql.parsing.Sql;
+import com.djrapitops.plan.system.storage.database.transactions.patches.KillsOptimizationPatch;
+import com.djrapitops.plan.system.storage.database.transactions.patches.KillsServerIDPatch;
+import com.djrapitops.plan.system.storage.database.transactions.patches.Version10Patch;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

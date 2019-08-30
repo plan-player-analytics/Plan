@@ -14,21 +14,25 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.storage.database.patches;
+package com.djrapitops.plan.system.storage.database.transactions.patches;
 
-import com.djrapitops.plan.system.storage.database.sql.tables.GeoInfoTable;
+import com.djrapitops.plan.system.storage.database.sql.parsing.Sql;
+import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionProviderTable;
 
-public class GeoInfoLastUsedPatch extends Patch {
+/**
+ * Patch to add 'show_in_players_table' to 'plan_extension_providers'
+ *
+ * @author Rsl1122
+ */
+public class ExtensionShowInPlayersTablePatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(GeoInfoTable.TABLE_NAME, GeoInfoTable.LAST_USED);
+        return hasColumn(ExtensionProviderTable.TABLE_NAME, ExtensionProviderTable.SHOW_IN_PLAYERS_TABLE);
     }
 
     @Override
     protected void applyPatch() {
-        addColumn(GeoInfoTable.TABLE_NAME,
-                GeoInfoTable.LAST_USED + " bigint NOT NULL DEFAULT 0"
-        );
+        addColumn(ExtensionProviderTable.TABLE_NAME, ExtensionProviderTable.SHOW_IN_PLAYERS_TABLE + ' ' + Sql.BOOL + " NOT NULL DEFAULT 0");
     }
 }

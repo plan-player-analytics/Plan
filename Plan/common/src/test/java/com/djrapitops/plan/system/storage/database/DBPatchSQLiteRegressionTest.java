@@ -18,11 +18,11 @@ package com.djrapitops.plan.system.storage.database;
 
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
-import com.djrapitops.plan.system.storage.database.patches.Patch;
 import com.djrapitops.plan.system.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 import com.djrapitops.plan.system.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.system.storage.database.transactions.init.CreateTablesTransaction;
+import com.djrapitops.plan.system.storage.database.transactions.patches.Patch;
 import com.google.common.util.concurrent.MoreExecutors;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

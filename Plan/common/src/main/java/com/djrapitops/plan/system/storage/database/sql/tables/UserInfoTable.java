@@ -17,10 +17,10 @@
 package com.djrapitops.plan.system.storage.database.sql.tables;
 
 import com.djrapitops.plan.system.storage.database.DBType;
-import com.djrapitops.plan.system.storage.database.patches.UserInfoOptimizationPatch;
-import com.djrapitops.plan.system.storage.database.patches.Version10Patch;
 import com.djrapitops.plan.system.storage.database.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.system.storage.database.sql.parsing.Sql;
+import com.djrapitops.plan.system.storage.database.transactions.patches.UserInfoOptimizationPatch;
+import com.djrapitops.plan.system.storage.database.transactions.patches.Version10Patch;
 
 /**
  * Table information about 'plan_user_info'.

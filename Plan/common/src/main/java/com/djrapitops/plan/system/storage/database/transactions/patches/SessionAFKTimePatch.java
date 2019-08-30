@@ -14,21 +14,21 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.storage.database.patches;
+package com.djrapitops.plan.system.storage.database.transactions.patches;
 
-import com.djrapitops.plan.system.storage.database.sql.tables.TPSTable;
+import com.djrapitops.plan.system.storage.database.sql.tables.SessionsTable;
 
-public class DiskUsagePatch extends Patch {
+public class SessionAFKTimePatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(TPSTable.TABLE_NAME, TPSTable.FREE_DISK);
+        return hasColumn(SessionsTable.TABLE_NAME, SessionsTable.AFK_TIME);
     }
 
     @Override
     protected void applyPatch() {
-        addColumn(TPSTable.TABLE_NAME,
-                TPSTable.FREE_DISK + " bigint NOT NULL DEFAULT -1"
+        addColumn(SessionsTable.TABLE_NAME,
+                SessionsTable.AFK_TIME + " bigint NOT NULL DEFAULT 0"
         );
     }
 }

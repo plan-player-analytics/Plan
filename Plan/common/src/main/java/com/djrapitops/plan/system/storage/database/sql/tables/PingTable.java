@@ -17,9 +17,9 @@
 package com.djrapitops.plan.system.storage.database.sql.tables;
 
 import com.djrapitops.plan.system.storage.database.DBType;
-import com.djrapitops.plan.system.storage.database.patches.PingOptimizationPatch;
 import com.djrapitops.plan.system.storage.database.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.system.storage.database.sql.parsing.Sql;
+import com.djrapitops.plan.system.storage.database.transactions.patches.PingOptimizationPatch;
 
 /**
  * Table information about 'plan_ping'.

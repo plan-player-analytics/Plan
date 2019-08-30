@@ -27,7 +27,7 @@ import com.djrapitops.plan.system.storage.database.sql.parsing.Sql;
  * This table is used to store Player information that applies to all servers.
  *
  * Patches that apply to this table:
- * {@link com.djrapitops.plan.system.storage.database.patches.Version10Patch}
+ * {@link com.djrapitops.plan.system.storage.database.transactions.patches.Version10Patch}
  *
  * @author Rsl1122
  */

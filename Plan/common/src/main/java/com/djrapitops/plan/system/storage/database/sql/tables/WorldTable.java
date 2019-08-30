@@ -17,11 +17,11 @@
 package com.djrapitops.plan.system.storage.database.sql.tables;
 
 import com.djrapitops.plan.system.storage.database.DBType;
-import com.djrapitops.plan.system.storage.database.patches.Version10Patch;
-import com.djrapitops.plan.system.storage.database.patches.WorldsOptimizationPatch;
-import com.djrapitops.plan.system.storage.database.patches.WorldsServerIDPatch;
 import com.djrapitops.plan.system.storage.database.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.system.storage.database.sql.parsing.Sql;
+import com.djrapitops.plan.system.storage.database.transactions.patches.Version10Patch;
+import com.djrapitops.plan.system.storage.database.transactions.patches.WorldsOptimizationPatch;
+import com.djrapitops.plan.system.storage.database.transactions.patches.WorldsServerIDPatch;
 
 import static com.djrapitops.plan.system.storage.database.sql.parsing.Sql.*;
 

@@ -14,27 +14,27 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.storage.database.patches;
+package com.djrapitops.plan.system.storage.database.transactions.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.storage.database.sql.tables.SessionsTable;
+import com.djrapitops.plan.system.storage.database.sql.tables.PingTable;
 
 import static com.djrapitops.plan.system.storage.database.sql.parsing.Sql.FROM;
 
-public class SessionsOptimizationPatch extends Patch {
+public class PingOptimizationPatch extends Patch {
 
     private String tempTableName;
     private String tableName;
 
-    public SessionsOptimizationPatch() {
-        tableName = SessionsTable.TABLE_NAME;
-        tempTableName = "temp_sessions";
+    public PingOptimizationPatch() {
+        tableName = PingTable.TABLE_NAME;
+        tempTableName = "temp_ping";
     }
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(tableName, SessionsTable.USER_UUID)
-                && hasColumn(tableName, SessionsTable.SERVER_UUID)
+        return hasColumn(tableName, PingTable.USER_UUID)
+                && hasColumn(tableName, PingTable.SERVER_UUID)
                 && !hasColumn(tableName, "user_id")
                 && !hasColumn(tableName, "server_id")
                 && !hasTable(tempTableName); // If this table exists the patch has failed to finish.
@@ -43,37 +43,31 @@ public class SessionsOptimizationPatch extends Patch {
     @Override
     protected void applyPatch() {
         try {
-            dropForeignKeys(tableName);
-            ensureNoForeignKeyConstraints(tableName);
-
             tempOldTable();
-
-            execute(SessionsTable.createTableSQL(dbType));
+            execute(PingTable.createTableSQL(dbType));
 
             execute("INSERT INTO " + tableName + " (" +
-                    SessionsTable.USER_UUID + ',' +
-                    SessionsTable.SERVER_UUID + ',' +
-                    SessionsTable.ID + ',' +
-                    SessionsTable.SESSION_START + ',' +
-                    SessionsTable.SESSION_END + ',' +
-                    SessionsTable.MOB_KILLS + ',' +
-                    SessionsTable.DEATHS + ',' +
-                    SessionsTable.AFK_TIME +
+                    PingTable.USER_UUID + ',' +
+                    PingTable.SERVER_UUID + ',' +
+                    PingTable.ID + ',' +
+                    PingTable.MIN_PING + ',' +
+                    PingTable.MAX_PING + ',' +
+                    PingTable.AVG_PING + ',' +
+                    PingTable.DATE +
                     ") SELECT " +
                     "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
                     "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
-                    SessionsTable.ID + ',' +
-                    SessionsTable.SESSION_START + ',' +
-                    SessionsTable.SESSION_END + ',' +
-                    SessionsTable.MOB_KILLS + ',' +
-                    SessionsTable.DEATHS + ',' +
-                    SessionsTable.AFK_TIME +
+                    PingTable.ID + ',' +
+                    PingTable.MIN_PING + ',' +
+                    PingTable.MAX_PING + ',' +
+                    PingTable.AVG_PING + ',' +
+                    PingTable.DATE +
                     FROM + tempTableName
             );
 
             dropTable(tempTableName);
         } catch (Exception e) {
-            throw new DBOpException(SessionsOptimizationPatch.class.getSimpleName() + " failed.", e);
+            throw new DBOpException(PingOptimizationPatch.class.getSimpleName() + " failed.", e);
         }
     }
 

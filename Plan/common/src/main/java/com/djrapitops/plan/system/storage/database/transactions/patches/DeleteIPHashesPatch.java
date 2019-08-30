@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.storage.database.patches;
+package com.djrapitops.plan.system.storage.database.transactions.patches;
 
 import com.djrapitops.plan.system.storage.database.queries.HasMoreThanZeroQueryStatement;
 import com.djrapitops.plan.system.storage.database.sql.tables.GeoInfoTable;

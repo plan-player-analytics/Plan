@@ -14,27 +14,29 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.storage.database.patches;
+package com.djrapitops.plan.system.storage.database.transactions.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.storage.database.sql.tables.WorldTable;
+import com.djrapitops.plan.system.storage.database.sql.tables.WorldTimesTable;
 
 import static com.djrapitops.plan.system.storage.database.sql.parsing.Sql.FROM;
 
-public class WorldsOptimizationPatch extends Patch {
+public class WorldTimesOptimizationPatch extends Patch {
 
     private String tempTableName;
     private String tableName;
 
-    public WorldsOptimizationPatch() {
-        tableName = WorldTable.TABLE_NAME;
-        tempTableName = "temp_worlds";
+    public WorldTimesOptimizationPatch() {
+        tableName = WorldTimesTable.TABLE_NAME;
+        tempTableName = "temp_world_times";
     }
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(tableName, WorldTable.ID)
-                && hasColumn(tableName, WorldTable.SERVER_UUID)
+        return hasColumn(tableName, WorldTimesTable.ID)
+                && hasColumn(tableName, WorldTimesTable.USER_UUID)
+                && hasColumn(tableName, WorldTimesTable.SERVER_UUID)
+                && !hasColumn(tableName, "user_id")
                 && !hasColumn(tableName, "server_id")
                 && !hasTable(tempTableName); // If this table exists the patch has failed to finish.
     }
@@ -42,26 +44,33 @@ public class WorldsOptimizationPatch extends Patch {
     @Override
     protected void applyPatch() {
         try {
-            dropForeignKeys(tableName);
-            ensureNoForeignKeyConstraints(tableName);
-
             tempOldTable();
-            execute(WorldTable.createTableSQL(dbType));
+            execute(WorldTimesTable.createTableSQL(dbType));
 
             execute("INSERT INTO " + tableName + " (" +
-                    WorldTable.ID + ',' +
-                    WorldTable.SERVER_UUID + ',' +
-                    WorldTable.NAME +
+                    WorldTimesTable.USER_UUID + ',' +
+                    WorldTimesTable.SERVER_UUID + ',' +
+                    WorldTimesTable.ADVENTURE + ',' +
+                    WorldTimesTable.CREATIVE + ',' +
+                    WorldTimesTable.SURVIVAL + ',' +
+                    WorldTimesTable.SPECTATOR + ',' +
+                    WorldTimesTable.SESSION_ID + ',' +
+                    WorldTimesTable.WORLD_ID +
                     ") SELECT " +
-                    WorldTable.ID + ',' +
+                    "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
                     "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
-                    WorldTable.NAME +
+                    WorldTimesTable.ADVENTURE + ',' +
+                    WorldTimesTable.CREATIVE + ',' +
+                    WorldTimesTable.SURVIVAL + ',' +
+                    WorldTimesTable.SPECTATOR + ',' +
+                    WorldTimesTable.SESSION_ID + ',' +
+                    WorldTimesTable.WORLD_ID +
                     FROM + tempTableName
             );
 
             dropTable(tempTableName);
         } catch (Exception e) {
-            throw new DBOpException(WorldsOptimizationPatch.class.getSimpleName() + " failed.", e);
+            throw new DBOpException(WorldTimesOptimizationPatch.class.getSimpleName() + " failed.", e);
         }
     }
 

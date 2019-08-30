@@ -31,8 +31,8 @@ import static com.djrapitops.plan.system.storage.database.sql.parsing.Sql.SELECT
  * Query to fetch server id for each session, used by 2 patches.
  *
  * @author Rsl1122
- * @see com.djrapitops.plan.system.storage.database.patches.KillsServerIDPatch
- * @see com.djrapitops.plan.system.storage.database.patches.WorldTimesSeverIDPatch
+ * @see com.djrapitops.plan.system.storage.database.transactions.patches.KillsServerIDPatch
+ * @see com.djrapitops.plan.system.storage.database.transactions.patches.WorldTimesSeverIDPatch
  */
 public class SessionIDServerIDRelationQuery extends QueryAllStatement<Map<Integer, Integer>> {
 

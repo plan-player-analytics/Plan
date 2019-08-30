@@ -14,28 +14,27 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.storage.database.patches;
+package com.djrapitops.plan.system.storage.database.transactions.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.storage.database.sql.tables.UserInfoTable;
+import com.djrapitops.plan.system.storage.database.sql.tables.WorldTable;
 
 import static com.djrapitops.plan.system.storage.database.sql.parsing.Sql.FROM;
 
-public class UserInfoOptimizationPatch extends Patch {
+public class WorldsOptimizationPatch extends Patch {
 
     private String tempTableName;
     private String tableName;
 
-    public UserInfoOptimizationPatch() {
-        tableName = UserInfoTable.TABLE_NAME;
-        tempTableName = "temp_user_info";
+    public WorldsOptimizationPatch() {
+        tableName = WorldTable.TABLE_NAME;
+        tempTableName = "temp_worlds";
     }
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(tableName, UserInfoTable.USER_UUID)
-                && hasColumn(tableName, UserInfoTable.SERVER_UUID)
-                && !hasColumn(tableName, "user_id")
+        return hasColumn(tableName, WorldTable.ID)
+                && hasColumn(tableName, WorldTable.SERVER_UUID)
                 && !hasColumn(tableName, "server_id")
                 && !hasTable(tempTableName); // If this table exists the patch has failed to finish.
     }
@@ -43,27 +42,26 @@ public class UserInfoOptimizationPatch extends Patch {
     @Override
     protected void applyPatch() {
         try {
+            dropForeignKeys(tableName);
+            ensureNoForeignKeyConstraints(tableName);
+
             tempOldTable();
-            execute(UserInfoTable.createTableSQL(dbType));
+            execute(WorldTable.createTableSQL(dbType));
 
             execute("INSERT INTO " + tableName + " (" +
-                    UserInfoTable.USER_UUID + ',' +
-                    UserInfoTable.SERVER_UUID + ',' +
-                    UserInfoTable.REGISTERED + ',' +
-                    UserInfoTable.BANNED + ',' +
-                    UserInfoTable.OP +
+                    WorldTable.ID + ',' +
+                    WorldTable.SERVER_UUID + ',' +
+                    WorldTable.NAME +
                     ") SELECT " +
-                    "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
+                    WorldTable.ID + ',' +
                     "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
-                    UserInfoTable.REGISTERED + ',' +
-                    UserInfoTable.BANNED + ',' +
-                    UserInfoTable.OP +
+                    WorldTable.NAME +
                     FROM + tempTableName
             );
 
             dropTable(tempTableName);
         } catch (Exception e) {
-            throw new DBOpException(UserInfoOptimizationPatch.class.getSimpleName() + " failed.", e);
+            throw new DBOpException(WorldsOptimizationPatch.class.getSimpleName() + " failed.", e);
         }
     }
 

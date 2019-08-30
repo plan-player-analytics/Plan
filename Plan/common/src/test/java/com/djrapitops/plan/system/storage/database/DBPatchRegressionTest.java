@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.storage.database;
 
-import com.djrapitops.plan.system.storage.database.patches.Patch;
 import com.djrapitops.plan.system.storage.database.sql.tables.*;
 import com.djrapitops.plan.system.storage.database.transactions.Transaction;
+import com.djrapitops.plan.system.storage.database.transactions.patches.Patch;
 import utilities.TestConstants;
 
 import java.util.ArrayList;

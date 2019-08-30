@@ -27,7 +27,7 @@ import static com.djrapitops.plan.system.storage.database.sql.parsing.Sql.WHERE;
  * Table information about 'plan_commandusages'.
  *
  * Patches affecting this table:
- * {@link com.djrapitops.plan.system.storage.database.patches.Version10Patch}
+ * {@link com.djrapitops.plan.system.storage.database.transactions.patches.Version10Patch}
  *
  * @author Rsl1122
  */

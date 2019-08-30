@@ -14,25 +14,17 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.storage.database.patches;
+package com.djrapitops.plan.system.storage.database.transactions.patches;
 
-import com.djrapitops.plan.system.storage.database.sql.parsing.Sql;
-import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionProviderTable;
-
-/**
- * Patch to add 'show_in_players_table' to 'plan_extension_providers'
- *
- * @author Rsl1122
- */
-public class ExtensionShowInPlayersTablePatch extends Patch {
+public class TransferTableRemovalPatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(ExtensionProviderTable.TABLE_NAME, ExtensionProviderTable.SHOW_IN_PLAYERS_TABLE);
+        return !hasTable("plan_transfer");
     }
 
     @Override
     protected void applyPatch() {
-        addColumn(ExtensionProviderTable.TABLE_NAME, ExtensionProviderTable.SHOW_IN_PLAYERS_TABLE + ' ' + Sql.BOOL + " NOT NULL DEFAULT 0");
+        dropTable("plan_transfer");
     }
 }
