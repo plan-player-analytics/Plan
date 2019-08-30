@@ -17,7 +17,7 @@
 package com.djrapitops.plan.system.gathering.importing.importers;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.system.cache.GeolocationCache;
+import com.djrapitops.plan.system.gathering.cache.GeolocationCache;
 import com.djrapitops.plan.system.gathering.importing.data.ServerImportData;
 import com.djrapitops.plan.system.gathering.importing.data.UserImportData;
 import com.djrapitops.plan.system.identification.ServerInfo;

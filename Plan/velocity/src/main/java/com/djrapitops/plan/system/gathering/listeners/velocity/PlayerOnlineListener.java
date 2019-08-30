@@ -18,8 +18,8 @@ package com.djrapitops.plan.system.gathering.listeners.velocity;
 
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
-import com.djrapitops.plan.system.cache.GeolocationCache;
-import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.gathering.cache.GeolocationCache;
+import com.djrapitops.plan.system.gathering.cache.SessionCache;
 import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.gathering.listeners.sponge;
 
-import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.gathering.cache.SessionCache;
 import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.settings.config.WorldAliasSettings;

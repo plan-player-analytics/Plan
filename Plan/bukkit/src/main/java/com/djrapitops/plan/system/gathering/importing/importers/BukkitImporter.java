@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.gathering.importing.importers;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.store.objects.Nickname;
-import com.djrapitops.plan.system.cache.GeolocationCache;
+import com.djrapitops.plan.system.gathering.cache.GeolocationCache;
 import com.djrapitops.plan.system.gathering.domain.*;
 import com.djrapitops.plan.system.gathering.importing.data.BukkitUserImportRefiner;
 import com.djrapitops.plan.system.gathering.importing.data.ServerImportData;
