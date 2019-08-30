@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.gathering.domain;
 
 import com.djrapitops.plan.system.delivery.domain.DateHolder;
 import com.djrapitops.plan.system.delivery.domain.DateMap;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.net.Inet6Address;
@@ -61,7 +62,7 @@ public class GeoInfo implements DateHolder, Serializable {
         if (address instanceof Inet6Address) {
             StringBuilder b = new StringBuilder();
             int i = 0;
-            for (String part : ip.split(":")) {
+            for (String part : StringUtils.split(ip, ':')) {
                 if (i >= 3) {
                     break;
                 }
@@ -75,7 +76,7 @@ public class GeoInfo implements DateHolder, Serializable {
         } else {
             StringBuilder b = new StringBuilder();
             int i = 0;
-            for (String part : ip.split("\\.")) {
+            for (String part : StringUtils.split(ip, '.')) {
                 if (i >= 2) {
                     break;
                 }

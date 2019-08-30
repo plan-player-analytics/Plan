@@ -82,9 +82,7 @@ public class PlayerJSONParser {
         Database db = dbSystem.getDatabase();
 
         Map<UUID, String> serverNames = db.query(ServerQueries.fetchServerNames());
-        String[] pieColors = Arrays.stream(theme.getValue(ThemeVal.GRAPH_WORLD_PIE).split(","))
-                .map(color -> color.trim().replace("\"", ""))
-                .toArray(String[]::new);
+        String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
 
         PlayerContainer player = db.query(new PlayerContainerQuery(playerUUID));
         SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);

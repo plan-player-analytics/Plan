@@ -17,6 +17,7 @@
 package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plugin.utilities.Verify;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.ArrayList;
@@ -161,7 +162,7 @@ public interface ConfigValueParser<T> {
         @Override
         public List<String> compose(String fromValue) {
             List<String> values = new ArrayList<>();
-            for (String line : fromValue.split("\\n")) {
+            for (String line : StringUtils.split(fromValue, "\\n")) {
                 if (line.trim().isEmpty()) {
                     continue;
                 }

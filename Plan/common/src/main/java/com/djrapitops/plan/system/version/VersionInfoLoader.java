@@ -17,6 +17,7 @@
 package com.djrapitops.plan.system.version;
 
 import com.djrapitops.plugin.api.utility.Version;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -70,7 +71,7 @@ public class VersionInfoLoader {
         if (!line.startsWith("REL") && !line.startsWith("DEV")) {
             return Optional.empty();
         }
-        String[] parts = line.split("\\|");
+        String[] parts = StringUtils.split(line, '|');
         if (parts.length < 4) {
             return Optional.empty();
         }

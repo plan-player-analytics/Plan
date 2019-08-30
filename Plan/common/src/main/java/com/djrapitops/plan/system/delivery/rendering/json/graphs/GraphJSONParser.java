@@ -285,9 +285,7 @@ public class GraphJSONParser {
     public Map<String, Object> serverPreferencePieJSONAsMap() {
         long now = System.currentTimeMillis();
         long monthAgo = now - TimeUnit.DAYS.toMillis(30L);
-        String[] pieColors = Arrays.stream(theme.getValue(ThemeVal.GRAPH_WORLD_PIE).split(","))
-                .map(color -> color.trim().replace("\"", ""))
-                .toArray(String[]::new);
+        String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
         Map<String, Object> data = new HashMap<>();
         data.put("server_pie_colors", pieColors);
 
