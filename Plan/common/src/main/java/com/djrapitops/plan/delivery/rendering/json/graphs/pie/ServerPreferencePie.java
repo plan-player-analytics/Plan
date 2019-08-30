@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.rendering.json.graphs.pie;
 
-import com.djrapitops.plan.system.gathering.domain.WorldTimes;
+import com.djrapitops.plan.gathering.domain.WorldTimes;
 
 import java.util.ArrayList;
 import java.util.List;

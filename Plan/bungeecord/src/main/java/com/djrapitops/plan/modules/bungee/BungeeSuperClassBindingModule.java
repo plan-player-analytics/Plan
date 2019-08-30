@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.modules.bungee;
 
+import com.djrapitops.plan.gathering.listeners.BungeeListenerSystem;
+import com.djrapitops.plan.gathering.listeners.ListenerSystem;
 import com.djrapitops.plan.system.TaskSystem;
-import com.djrapitops.plan.system.gathering.listeners.BungeeListenerSystem;
-import com.djrapitops.plan.system.gathering.listeners.ListenerSystem;
 import com.djrapitops.plan.system.identification.BungeeServerInfo;
 import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.tasks.BungeeTaskSystem;

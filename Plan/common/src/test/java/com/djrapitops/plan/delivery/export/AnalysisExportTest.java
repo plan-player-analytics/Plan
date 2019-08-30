@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.delivery.export;
 
+import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.system.storage.database.Database;

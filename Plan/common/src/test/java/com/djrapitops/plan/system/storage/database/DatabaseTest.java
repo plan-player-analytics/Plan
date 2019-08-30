@@ -41,9 +41,9 @@ import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionSer
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalPlayerResultsTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalServerResultsTransaction;
 import com.djrapitops.plan.extension.table.Table;
+import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.query.QueryServiceImplementation;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.gathering.domain.*;
 import com.djrapitops.plan.system.identification.Server;
 import com.djrapitops.plan.system.settings.config.Config;
 import com.djrapitops.plan.system.settings.config.PlanConfig;

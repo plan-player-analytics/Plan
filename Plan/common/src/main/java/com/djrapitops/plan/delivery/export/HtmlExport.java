@@ -25,7 +25,7 @@ import com.djrapitops.plan.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.delivery.webserver.response.pages.NetworkPageResponse;
 import com.djrapitops.plan.exceptions.ParseException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.gathering.domain.BaseUser;
+import com.djrapitops.plan.gathering.domain.BaseUser;
 import com.djrapitops.plan.system.identification.Server;
 import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;

@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.rendering.json.graphs.line;
 
 import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
-import com.djrapitops.plan.system.gathering.timed.TPSCounter;
+import com.djrapitops.plan.gathering.timed.TPSCounter;
 
 /**
  * Graph about RAM Usage gathered by TPSCountTimer.

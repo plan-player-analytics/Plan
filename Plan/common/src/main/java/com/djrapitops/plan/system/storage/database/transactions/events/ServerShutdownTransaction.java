@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.database.transactions.events;
 
-import com.djrapitops.plan.system.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.system.storage.database.queries.LargeStoreQueries;
 import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 

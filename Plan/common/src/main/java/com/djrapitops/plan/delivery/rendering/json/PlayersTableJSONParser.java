@@ -27,7 +27,7 @@ import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.implementation.results.*;
-import com.djrapitops.plan.system.gathering.domain.GeoInfo;
+import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.utilities.comparators.PlayerContainerLastPlayedComparator;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;

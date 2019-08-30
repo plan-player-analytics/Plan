@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.domain.mutators;
 import com.djrapitops.plan.delivery.domain.DateHolder;
 import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
-import com.djrapitops.plan.system.gathering.domain.PlayerKill;
+import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.utilities.Predicates;
 
 import java.util.Collections;

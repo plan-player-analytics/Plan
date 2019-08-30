@@ -18,7 +18,7 @@ package com.djrapitops.plan.delivery.domain.mutators;
 
 import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
-import com.djrapitops.plan.system.gathering.domain.GeoInfo;
+import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
 
 import java.util.ArrayList;

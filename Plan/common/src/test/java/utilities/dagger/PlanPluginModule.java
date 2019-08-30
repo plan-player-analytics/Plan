@@ -17,8 +17,8 @@
 package utilities.dagger;
 
 import com.djrapitops.plan.commands.PlanCommand;
-import com.djrapitops.plan.system.gathering.importing.EmptyImportSystem;
-import com.djrapitops.plan.system.gathering.importing.ImportSystem;
+import com.djrapitops.plan.gathering.importing.EmptyImportSystem;
+import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.identification.ServerServerInfo;
 import com.djrapitops.plan.system.settings.BukkitConfigSystem;

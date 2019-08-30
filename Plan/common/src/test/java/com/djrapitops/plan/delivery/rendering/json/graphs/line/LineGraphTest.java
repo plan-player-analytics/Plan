@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.rendering.json.graphs.line;
 
 import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
-import com.djrapitops.plan.system.gathering.domain.TPS;
+import com.djrapitops.plan.gathering.domain.TPS;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;

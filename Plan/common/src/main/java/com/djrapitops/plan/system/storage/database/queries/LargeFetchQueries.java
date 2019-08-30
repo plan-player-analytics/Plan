@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.storage.database.queries;
 
-import com.djrapitops.plan.system.gathering.domain.TPS;
-import com.djrapitops.plan.system.gathering.domain.builders.TPSBuilder;
+import com.djrapitops.plan.gathering.domain.TPS;
+import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.system.storage.database.sql.tables.CommandUseTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.TPSTable;

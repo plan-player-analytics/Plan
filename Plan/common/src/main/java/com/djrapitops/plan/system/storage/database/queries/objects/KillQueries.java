@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.objects;
 
-import com.djrapitops.plan.system.gathering.domain.PlayerDeath;
-import com.djrapitops.plan.system.gathering.domain.PlayerKill;
+import com.djrapitops.plan.gathering.domain.PlayerDeath;
+import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.system.storage.database.queries.Query;
 import com.djrapitops.plan.system.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.system.storage.database.sql.tables.KillsTable;

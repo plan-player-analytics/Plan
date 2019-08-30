@@ -21,7 +21,7 @@ import com.djrapitops.plan.delivery.domain.mutators.PlayersOnlineResolver;
 import com.djrapitops.plan.delivery.domain.mutators.RetentionData;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
-import com.djrapitops.plan.system.gathering.domain.TPS;
+import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;

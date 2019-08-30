@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.domain.mutators;
 
 import com.djrapitops.plan.delivery.domain.container.DataContainer;
-import com.djrapitops.plan.system.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.Session;
 
 import java.util.List;
 

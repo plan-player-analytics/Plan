@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.storage.database.transactions.events;
 
-import com.djrapitops.plan.system.gathering.domain.TPS;
-import com.djrapitops.plan.system.gathering.domain.builders.TPSBuilder;
+import com.djrapitops.plan.gathering.domain.TPS;
+import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.system.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 

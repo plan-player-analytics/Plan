@@ -18,7 +18,7 @@ package com.djrapitops.plan.delivery.domain.mutators;
 
 import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.keys.CommonKeys;
-import com.djrapitops.plan.system.gathering.domain.Ping;
+import com.djrapitops.plan.gathering.domain.Ping;
 
 import java.util.ArrayList;
 import java.util.List;

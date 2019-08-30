@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.domain.mutators;
 import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.keys.ServerKeys;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
-import com.djrapitops.plan.system.gathering.domain.TPS;
+import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.utilities.comparators.TPSComparator;
 
 import java.util.ArrayList;

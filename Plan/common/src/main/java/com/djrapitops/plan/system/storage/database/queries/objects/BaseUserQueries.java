@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.objects;
 
-import com.djrapitops.plan.system.gathering.domain.BaseUser;
-import com.djrapitops.plan.system.gathering.domain.UserInfo;
+import com.djrapitops.plan.gathering.domain.BaseUser;
+import com.djrapitops.plan.gathering.domain.UserInfo;
 import com.djrapitops.plan.system.storage.database.queries.Query;
 import com.djrapitops.plan.system.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.system.storage.database.queries.QueryStatement;

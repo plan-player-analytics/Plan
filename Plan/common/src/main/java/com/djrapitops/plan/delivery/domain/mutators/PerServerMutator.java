@@ -20,8 +20,8 @@ import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.container.PerServerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PerServerKeys;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
-import com.djrapitops.plan.system.gathering.domain.Session;
-import com.djrapitops.plan.system.gathering.domain.WorldTimes;
+import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.WorldTimes;
 
 import java.util.*;
 import java.util.stream.Collectors;

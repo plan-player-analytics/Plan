@@ -17,7 +17,7 @@
 package com.djrapitops.plan.system.storage.database.queries.objects;
 
 import com.djrapitops.plan.delivery.domain.WebUser;
-import com.djrapitops.plan.system.gathering.domain.Ping;
+import com.djrapitops.plan.gathering.domain.Ping;
 import com.djrapitops.plan.system.storage.database.queries.Query;
 import com.djrapitops.plan.system.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.system.storage.database.queries.QueryStatement;

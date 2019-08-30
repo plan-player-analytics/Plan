@@ -23,7 +23,7 @@ import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.domain.mutators.PerServerMutator;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
-import com.djrapitops.plan.system.gathering.domain.*;
+import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.system.storage.database.SQLDB;
 import com.djrapitops.plan.system.storage.database.queries.Query;
 import com.djrapitops.plan.system.storage.database.queries.objects.*;

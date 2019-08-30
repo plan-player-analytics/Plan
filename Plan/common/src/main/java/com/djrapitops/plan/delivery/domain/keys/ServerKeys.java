@@ -20,7 +20,7 @@ import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.container.ServerContainer;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
-import com.djrapitops.plan.system.gathering.domain.*;
+import com.djrapitops.plan.gathering.domain.*;
 
 import java.util.List;
 import java.util.Map;

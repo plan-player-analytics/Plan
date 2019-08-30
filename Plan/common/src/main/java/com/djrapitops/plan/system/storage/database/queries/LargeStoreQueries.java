@@ -19,7 +19,7 @@ package com.djrapitops.plan.system.storage.database.queries;
 import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.delivery.domain.WebUser;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
-import com.djrapitops.plan.system.gathering.domain.*;
+import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.system.identification.Server;
 import com.djrapitops.plan.system.storage.database.sql.tables.*;
 import com.djrapitops.plan.system.storage.database.transactions.ExecBatchStatement;

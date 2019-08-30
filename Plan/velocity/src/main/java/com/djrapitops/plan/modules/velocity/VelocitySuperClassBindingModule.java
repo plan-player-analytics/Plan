@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.modules.velocity;
 
+import com.djrapitops.plan.gathering.listeners.ListenerSystem;
+import com.djrapitops.plan.gathering.listeners.VelocityListenerSystem;
 import com.djrapitops.plan.system.TaskSystem;
-import com.djrapitops.plan.system.gathering.listeners.ListenerSystem;
-import com.djrapitops.plan.system.gathering.listeners.VelocityListenerSystem;
 import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.identification.VelocityServerInfo;
 import com.djrapitops.plan.system.tasks.VelocityTaskSystem;

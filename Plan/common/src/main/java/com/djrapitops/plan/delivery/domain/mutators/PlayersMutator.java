@@ -22,9 +22,9 @@ import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.domain.keys.ServerKeys;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
-import com.djrapitops.plan.system.gathering.domain.GeoInfo;
-import com.djrapitops.plan.system.gathering.domain.Ping;
-import com.djrapitops.plan.system.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.GeoInfo;
+import com.djrapitops.plan.gathering.domain.Ping;
+import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;

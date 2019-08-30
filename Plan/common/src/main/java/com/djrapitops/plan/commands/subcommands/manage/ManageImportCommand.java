@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.commands.subcommands.manage;
 
-import com.djrapitops.plan.system.gathering.importing.ImportSystem;
-import com.djrapitops.plan.system.gathering.importing.importers.Importer;
+import com.djrapitops.plan.gathering.importing.ImportSystem;
+import com.djrapitops.plan.gathering.importing.importers.Importer;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;

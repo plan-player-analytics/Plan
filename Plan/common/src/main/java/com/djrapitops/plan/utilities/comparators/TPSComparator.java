@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.utilities.comparators;
 
-import com.djrapitops.plan.system.gathering.domain.TPS;
+import com.djrapitops.plan.gathering.domain.TPS;
 
 import java.util.Comparator;
 

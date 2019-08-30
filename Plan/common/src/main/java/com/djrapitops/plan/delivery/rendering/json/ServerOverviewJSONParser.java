@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.rendering.json;
 import com.djrapitops.plan.delivery.domain.DateHolder;
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
-import com.djrapitops.plan.system.gathering.domain.TPS;
+import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.DisplaySettings;

@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.rendering.json.graphs.special;
 import com.djrapitops.plan.delivery.domain.mutators.PlayersMutator;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.delivery.rendering.json.graphs.HighChart;
-import com.djrapitops.plan.system.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.Session;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

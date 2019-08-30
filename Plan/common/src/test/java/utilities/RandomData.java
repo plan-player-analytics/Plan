@@ -18,10 +18,10 @@ package utilities;
 
 import com.djrapitops.plan.delivery.domain.WebUser;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
-import com.djrapitops.plan.system.gathering.domain.GeoInfo;
-import com.djrapitops.plan.system.gathering.domain.Session;
-import com.djrapitops.plan.system.gathering.domain.TPS;
-import com.djrapitops.plan.system.gathering.domain.UserInfo;
+import com.djrapitops.plan.gathering.domain.GeoInfo;
+import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.TPS;
+import com.djrapitops.plan.gathering.domain.UserInfo;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 

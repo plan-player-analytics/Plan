@@ -17,8 +17,8 @@
 package com.djrapitops.plan.delivery.rendering.json;
 
 import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
-import com.djrapitops.plan.system.gathering.domain.GMTimes;
-import com.djrapitops.plan.system.gathering.domain.TPS;
+import com.djrapitops.plan.gathering.domain.GMTimes;
+import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.Database;
 import com.djrapitops.plan.system.storage.database.queries.objects.SessionQueries;

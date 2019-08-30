@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.delivery.rendering.json.graphs.pie;
 
-import com.djrapitops.plan.system.gathering.domain.GMTimes;
-import com.djrapitops.plan.system.gathering.domain.WorldTimes;
+import com.djrapitops.plan.gathering.domain.GMTimes;
+import com.djrapitops.plan.gathering.domain.WorldTimes;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.system.settings.config.paths.DisplaySettings;

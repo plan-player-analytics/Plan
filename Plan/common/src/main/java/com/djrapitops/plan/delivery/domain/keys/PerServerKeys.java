@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.domain.keys;
 
 import com.djrapitops.plan.delivery.domain.container.PerServerContainer;
-import com.djrapitops.plan.system.gathering.domain.*;
+import com.djrapitops.plan.gathering.domain.*;
 
 import java.util.List;
 

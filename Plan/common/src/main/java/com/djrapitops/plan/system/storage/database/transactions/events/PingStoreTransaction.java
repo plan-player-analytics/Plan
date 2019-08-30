@@ -17,7 +17,7 @@
 package com.djrapitops.plan.system.storage.database.transactions.events;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
-import com.djrapitops.plan.system.gathering.domain.Ping;
+import com.djrapitops.plan.gathering.domain.Ping;
 import com.djrapitops.plan.system.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 import com.djrapitops.plan.utilities.analysis.Median;

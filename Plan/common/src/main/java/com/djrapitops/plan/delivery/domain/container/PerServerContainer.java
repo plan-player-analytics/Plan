@@ -20,9 +20,9 @@ import com.djrapitops.plan.delivery.domain.keys.Key;
 import com.djrapitops.plan.delivery.domain.keys.PerServerKeys;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
-import com.djrapitops.plan.system.gathering.domain.Ping;
-import com.djrapitops.plan.system.gathering.domain.Session;
-import com.djrapitops.plan.system.gathering.domain.UserInfo;
+import com.djrapitops.plan.gathering.domain.Ping;
+import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.UserInfo;
 
 import java.util.*;
 
