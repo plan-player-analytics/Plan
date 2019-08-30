@@ -14,12 +14,11 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.processing.processors.player;
+package com.djrapitops.plan.processing.processors.player;
 
 import com.djrapitops.plan.gathering.cache.SessionCache;
-import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.gathering.domain.Session;
-import com.djrapitops.plan.system.processing.CriticalRunnable;
+import com.djrapitops.plan.processing.CriticalRunnable;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -32,36 +31,27 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class PlayerKillProcessor implements CriticalRunnable {
+public class MobKillProcessor implements CriticalRunnable {
 
-    private final UUID killer;
-    private final UUID victim;
-    private final String weaponName;
-    private final long time;
+    private final UUID uuid;
 
     /**
      * Constructor.
      *
-     * @param killer       UUID of the killer.
-     * @param time       Epoch ms the event occurred.
-     * @param victim       Dead entity (Mob or Player)
-     * @param weaponName Weapon used.
+     * @param uuid       UUID of the killer.
      */
-    public PlayerKillProcessor(UUID killer, long time, UUID victim, String weaponName) {
-        this.killer = killer;
-        this.time = time;
-        this.victim = victim;
-        this.weaponName = weaponName;
+    public MobKillProcessor(UUID uuid) {
+        this.uuid = uuid;
     }
 
     @Override
     public void run() {
-        Optional<Session> cachedSession = SessionCache.getCachedSession(killer);
+        Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
         if (!cachedSession.isPresent()) {
             return;
         }
         Session session = cachedSession.get();
 
-        session.playerKilled(new PlayerKill(victim, weaponName, time));
+        session.mobKilled();
     }
 }

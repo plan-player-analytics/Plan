@@ -16,7 +16,7 @@
  */
 package utilities.mocks;
 
-import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;

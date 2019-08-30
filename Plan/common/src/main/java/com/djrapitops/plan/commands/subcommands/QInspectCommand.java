@@ -25,7 +25,7 @@ import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.identification.UUIDUtility;
-import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;

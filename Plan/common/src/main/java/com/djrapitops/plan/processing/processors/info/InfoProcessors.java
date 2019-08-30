@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.processing.processors.info;
+package com.djrapitops.plan.processing.processors.info;
 
 import com.djrapitops.plan.delivery.export.HtmlExport;
 import com.djrapitops.plan.delivery.export.JSONExport;
@@ -26,7 +26,7 @@ import javax.inject.Singleton;
 import java.util.UUID;
 
 /**
- * Factory for creating Runnables related to ... to run with {@link com.djrapitops.plan.system.processing.Processing}.
+ * Factory for creating Runnables related to ... to run with {@link com.djrapitops.plan.processing.Processing}.
  *
  * @author Rsl1122
  */

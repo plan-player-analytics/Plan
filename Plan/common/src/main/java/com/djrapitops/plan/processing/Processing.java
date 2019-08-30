@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.processing;
+package com.djrapitops.plan.processing;
 
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.settings.locale.Locale;
