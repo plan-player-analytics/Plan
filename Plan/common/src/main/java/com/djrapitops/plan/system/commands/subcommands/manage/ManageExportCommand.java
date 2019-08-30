@@ -18,7 +18,6 @@ package com.djrapitops.plan.system.commands.subcommands.manage;
 
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.objects.UserIdentifierQueries;
-import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.export.HtmlExport;
 import com.djrapitops.plan.system.export.JSONExport;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -31,6 +30,7 @@ import com.djrapitops.plan.system.settings.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.system.settings.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.locale.lang.ManageLang;
+import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;

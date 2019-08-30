@@ -20,9 +20,9 @@ import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
-import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.DisplaySettings;
+import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 

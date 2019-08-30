@@ -14,11 +14,14 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.database;
+package com.djrapitops.plan.system.storage.database;
 
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.db.H2DB;
 import com.djrapitops.plan.db.MySQLDB;
 import com.djrapitops.plan.db.SQLiteDB;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.config.paths.DatabaseSettings;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -28,25 +31,38 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Bungee Database system that initializes MySQL object.
+ * Bukkit Database system that initializes SQLite and MySQL database objects.
  *
  * @author Rsl1122
  */
 @Singleton
-public class ProxyDBSystem extends DBSystem {
+public class BukkitDBSystem extends DBSystem {
+
+    private final PlanConfig config;
 
     @Inject
-    public ProxyDBSystem(
+    public BukkitDBSystem(
             Locale locale,
             MySQLDB mySQLDB,
             SQLiteDB.Factory sqLiteDB,
             H2DB.Factory h2DB,
+            PlanConfig config,
             PluginLogger logger,
             Timings timings,
             ErrorHandler errorHandler
     ) {
         super(locale, sqLiteDB, h2DB, logger, timings, errorHandler);
+        this.config = config;
+
         databases.add(mySQLDB);
-        db = mySQLDB;
+        databases.add(h2DB.usingDefaultFile());
+        databases.add(sqLiteDB.usingDefaultFile());
+    }
+
+    @Override
+    public void enable() throws EnableException {
+        String dbType = config.get(DatabaseSettings.TYPE).toLowerCase().trim();
+        db = getActiveDatabaseByName(dbType);
+        super.enable();
     }
 }

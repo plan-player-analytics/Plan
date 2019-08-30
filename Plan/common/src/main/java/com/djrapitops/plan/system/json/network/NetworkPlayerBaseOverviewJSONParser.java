@@ -20,10 +20,10 @@ import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.analysis.NetworkActivityIndexQueries;
 import com.djrapitops.plan.db.access.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
-import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.json.Trend;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
+import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 

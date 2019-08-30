@@ -24,7 +24,7 @@ import com.djrapitops.plan.db.access.Query;
 import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.db.access.queries.objects.UserIdentifierQueries;
-import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;

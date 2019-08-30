@@ -23,7 +23,7 @@ import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.queries.objects.SessionQueries;
 import com.djrapitops.plan.db.access.queries.objects.TPSQueries;
 import com.djrapitops.plan.db.access.queries.objects.WorldTimesQueries;
-import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import org.apache.commons.text.WordUtils;

@@ -31,7 +31,7 @@ import java.util.UUID;
  * Class that holds Key objects for PlayerContainer.
  *
  * @author Rsl1122
- * @see com.djrapitops.plan.system.database.databases.sql.operation.SQLFetchOps For Suppliers for each key
+ * @see com.djrapitops.plan.system.storage.database.databases.sql.operation.SQLFetchOps For Suppliers for each key
  * @see com.djrapitops.plan.data.store.containers.PlayerContainer For DataContainer.
  */
 public class PlayerKeys {

@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.database;
+package com.djrapitops.plan.system.storage.database;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.db.H2DB;
@@ -31,17 +31,17 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Bukkit Database system that initializes SQLite and MySQL database objects.
+ * DBSystem for Sponge.
  *
  * @author Rsl1122
  */
 @Singleton
-public class BukkitDBSystem extends DBSystem {
+public class SpongeDBSystem extends DBSystem {
 
     private final PlanConfig config;
 
     @Inject
-    public BukkitDBSystem(
+    public SpongeDBSystem(
             Locale locale,
             MySQLDB mySQLDB,
             SQLiteDB.Factory sqLiteDB,
@@ -55,8 +55,8 @@ public class BukkitDBSystem extends DBSystem {
         this.config = config;
 
         databases.add(mySQLDB);
-        databases.add(h2DB.usingDefaultFile());
         databases.add(sqLiteDB.usingDefaultFile());
+        databases.add(h2DB.usingDefaultFile());
     }
 
     @Override

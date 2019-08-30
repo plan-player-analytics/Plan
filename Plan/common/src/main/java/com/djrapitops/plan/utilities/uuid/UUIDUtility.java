@@ -18,7 +18,7 @@ package com.djrapitops.plan.utilities.uuid;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.access.queries.objects.UserIdentifierQueries;
-import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plugin.api.utility.UUIDFetcher;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;

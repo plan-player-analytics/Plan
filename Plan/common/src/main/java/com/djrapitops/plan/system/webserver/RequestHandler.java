@@ -17,11 +17,11 @@
 package com.djrapitops.plan.system.webserver;
 
 import com.djrapitops.plan.system.DebugChannels;
-import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.theme.Theme;
+import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.auth.BasicAuthentication;
 import com.djrapitops.plan.system.webserver.response.PromptAuthorizationResponse;

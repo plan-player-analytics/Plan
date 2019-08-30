@@ -19,8 +19,8 @@ package com.djrapitops.plan.system;
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.db.access.queries.objects.UserIdentifierQueries;
-import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.webserver.RequestTarget;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 

@@ -28,11 +28,11 @@ import com.djrapitops.plan.db.access.queries.LargeStoreQueries;
 import com.djrapitops.plan.db.access.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.system.cache.GeolocationCache;
-import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.importing.data.BukkitUserImportRefiner;
 import com.djrapitops.plan.system.importing.data.ServerImportData;
 import com.djrapitops.plan.system.importing.data.UserImportData;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.*;

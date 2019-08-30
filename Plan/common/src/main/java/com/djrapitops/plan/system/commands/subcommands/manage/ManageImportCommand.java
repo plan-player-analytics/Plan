@@ -17,7 +17,6 @@
 package com.djrapitops.plan.system.commands.subcommands.manage;
 
 import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.importing.ImportSystem;
 import com.djrapitops.plan.system.importing.importers.Importer;
 import com.djrapitops.plan.system.processing.Processing;
@@ -27,6 +26,7 @@ import com.djrapitops.plan.system.settings.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.system.settings.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.locale.lang.ManageLang;
+import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;

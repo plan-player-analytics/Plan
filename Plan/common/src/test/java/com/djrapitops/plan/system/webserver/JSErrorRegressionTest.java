@@ -22,9 +22,9 @@ import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransacti
 import com.djrapitops.plan.db.access.transactions.events.SessionEndTransaction;
 import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.system.storage.database.DBSystem;
 import extension.SeleniumExtension;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;

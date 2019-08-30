@@ -35,7 +35,7 @@ import java.util.UUID;
  * Keys for the ServerContainer.
  *
  * @author Rsl1122
- * @see com.djrapitops.plan.system.database.databases.sql.operation.SQLFetchOps For Suppliers for each key
+ * @see com.djrapitops.plan.system.storage.database.databases.sql.operation.SQLFetchOps For Suppliers for each key
  * @see com.djrapitops.plan.data.store.containers.ServerContainer For DataContainer.
  */
 public class ServerKeys {

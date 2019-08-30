@@ -17,11 +17,11 @@
 package com.djrapitops.plan.system.listeners.sponge;
 
 import com.djrapitops.plan.db.access.transactions.events.CommandStoreTransaction;
-import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.DataGatheringSettings;
+import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.Sponge;

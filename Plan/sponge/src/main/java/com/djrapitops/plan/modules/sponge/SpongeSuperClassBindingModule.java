@@ -18,8 +18,6 @@ package com.djrapitops.plan.modules.sponge;
 
 import com.djrapitops.plan.ServerShutdownSave;
 import com.djrapitops.plan.SpongeServerShutdownSave;
-import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.SpongeDBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.file.SpongePlanFiles;
 import com.djrapitops.plan.system.importing.EmptyImportSystem;
@@ -30,6 +28,8 @@ import com.djrapitops.plan.system.listeners.ListenerSystem;
 import com.djrapitops.plan.system.listeners.SpongeListenerSystem;
 import com.djrapitops.plan.system.settings.ConfigSystem;
 import com.djrapitops.plan.system.settings.SpongeConfigSystem;
+import com.djrapitops.plan.system.storage.database.DBSystem;
+import com.djrapitops.plan.system.storage.database.SpongeDBSystem;
 import com.djrapitops.plan.system.tasks.SpongeTaskSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import dagger.Binds;
