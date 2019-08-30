@@ -79,7 +79,7 @@ public class ConfigNode {
     }
 
     private String[] splitPathInTwo(String path) {
-        String[] split = StringUtils.split(path, "\\.", 2);
+        String[] split = StringUtils.split(path, ".", 2);
         if (split.length <= 1) {
             return new String[]{split[0], ""};
         }

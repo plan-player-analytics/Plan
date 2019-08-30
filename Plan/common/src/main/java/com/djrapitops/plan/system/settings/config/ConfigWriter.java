@@ -114,7 +114,7 @@ public class ConfigWriter {
         } else if (StringUtils.contains(value, "\n")) {
             // List values include newline characters,
             // see ConfigValueParser.StringListParser
-            addListValue(key, StringUtils.split(value, "\\n"), lines);
+            addListValue(key, StringUtils.split(value, "\n"), lines);
         } else {
             addNormalValue(key, value, lines);
         }
