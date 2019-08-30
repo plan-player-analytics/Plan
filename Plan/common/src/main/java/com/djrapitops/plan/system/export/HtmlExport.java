@@ -29,7 +29,7 @@ import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.json.JSONFactory;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.ExportSettings;
+import com.djrapitops.plan.system.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.system.webserver.cache.PageId;

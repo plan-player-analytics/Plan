@@ -21,7 +21,7 @@ import com.djrapitops.plan.db.access.transactions.commands.RegisterWebUserTransa
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.changes.ConfigUpdater;
-import com.djrapitops.plan.system.settings.paths.WebserverSettings;
+import com.djrapitops.plan.system.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;

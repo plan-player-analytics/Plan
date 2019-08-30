@@ -21,7 +21,7 @@ import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.settings.paths.DisplaySettings;
+import com.djrapitops.plan.system.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plugin.logging.L;

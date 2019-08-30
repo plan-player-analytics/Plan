@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.listeners;
 
 import com.djrapitops.plan.system.listeners.bukkit.AFKListener;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.TimeSettings;
+import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import org.bukkit.entity.Player;

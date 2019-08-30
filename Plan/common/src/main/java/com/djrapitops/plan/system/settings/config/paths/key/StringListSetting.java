@@ -14,26 +14,31 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.settings.paths;
+package com.djrapitops.plan.system.settings.config.paths.key;
 
-import com.djrapitops.plan.system.settings.paths.key.Setting;
-import com.djrapitops.plan.system.settings.paths.key.StringListSetting;
-import com.djrapitops.plan.system.settings.paths.key.StringSetting;
+import com.djrapitops.plan.data.store.Type;
+import com.djrapitops.plan.system.settings.config.ConfigNode;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
- * {@link Setting} values that are in "Plugins" section.
+ * Setting implementation for String value settings.
  *
  * @author Rsl1122
  */
-public class PluginDataSettings {
+public class StringListSetting extends Setting<List<String>> {
 
-    public static final Setting<String> PLUGIN_BUYCRAFT_SECRET = new StringSetting("Plugins.BuyCraft.Secret");
-    public static final Setting<List<String>> HIDE_FACTIONS = new StringListSetting("Plugins.Factions.HideFactions");
-    public static final Setting<List<String>> HIDE_TOWNS = new StringListSetting("Plugins.Towny.HideTowns");
+    public StringListSetting(String path) {
+        super(path, new Type<List<String>>() {});
+    }
 
-    private PluginDataSettings() {
-        /* static variable class */
+    public StringListSetting(String path, Predicate<List<String>> validator) {
+        super(path, new Type<List<String>>() {}, validator);
+    }
+
+    @Override
+    public List<String> getValueFrom(ConfigNode node) {
+        return node.getStringList(path);
     }
 }

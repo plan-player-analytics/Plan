@@ -14,31 +14,22 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.settings.paths.key;
+package com.djrapitops.plan.system.settings.config.paths;
 
-import com.djrapitops.plan.data.store.Type;
-import com.djrapitops.plan.system.settings.config.ConfigNode;
-
-import java.util.List;
-import java.util.function.Predicate;
+import com.djrapitops.plan.system.settings.config.paths.key.Setting;
+import com.djrapitops.plan.system.settings.config.paths.key.StringSetting;
 
 /**
- * Setting implementation for String value settings.
+ * {@link Setting} values that are in "Database" section.
  *
  * @author Rsl1122
  */
-public class StringListSetting extends Setting<List<String>> {
+public class ProxySettings {
 
-    public StringListSetting(String path) {
-        super(path, new Type<List<String>>() {});
-    }
+    public static final Setting<String> IP = new StringSetting("Server.IP");
+    public static final Setting<String> NETWORK_NAME = new StringSetting("Network.Name");
 
-    public StringListSetting(String path, Predicate<List<String>> validator) {
-        super(path, new Type<List<String>>() {}, validator);
-    }
-
-    @Override
-    public List<String> getValueFrom(ConfigNode node) {
-        return node.getStringList(path);
+    private ProxySettings() {
+        /* static variable class */
     }
 }

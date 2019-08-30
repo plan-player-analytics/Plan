@@ -30,7 +30,7 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.DataGatheringSettings;
+import com.djrapitops.plan.system.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.system.status.Status;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;

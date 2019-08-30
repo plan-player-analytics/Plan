@@ -22,7 +22,7 @@ import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.json.JSONFactory;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.ExportSettings;
+import com.djrapitops.plan.system.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;

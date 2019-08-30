@@ -25,7 +25,7 @@ import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.PluginSettings;
+import com.djrapitops.plan.system.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;

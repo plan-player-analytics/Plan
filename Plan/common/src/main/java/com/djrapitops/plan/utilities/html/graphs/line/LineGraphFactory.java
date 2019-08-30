@@ -19,7 +19,7 @@ package com.djrapitops.plan.utilities.html.graphs.line;
 import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.DisplaySettings;
+import com.djrapitops.plan.system.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.utilities.comparators.PointComparator;
 
 import javax.inject.Inject;

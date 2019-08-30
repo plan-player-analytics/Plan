@@ -27,7 +27,7 @@ import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.DisplaySettings;
+import com.djrapitops.plan.system.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.system.update.VersionCheckSystem;

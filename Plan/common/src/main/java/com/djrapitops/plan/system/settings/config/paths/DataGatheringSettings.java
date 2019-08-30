@@ -14,10 +14,10 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.settings.paths;
+package com.djrapitops.plan.system.settings.config.paths;
 
-import com.djrapitops.plan.system.settings.paths.key.BooleanSetting;
-import com.djrapitops.plan.system.settings.paths.key.Setting;
+import com.djrapitops.plan.system.settings.config.paths.key.BooleanSetting;
+import com.djrapitops.plan.system.settings.config.paths.key.Setting;
 
 /**
  * {@link Setting} values that are in "Data_gathering" section.

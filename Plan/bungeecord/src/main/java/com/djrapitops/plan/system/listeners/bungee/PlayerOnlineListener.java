@@ -30,7 +30,7 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.DataGatheringSettings;
+import com.djrapitops.plan.system.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plugin.logging.L;

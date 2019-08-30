@@ -18,9 +18,9 @@ package com.djrapitops.plan.system.update;
 
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.lang.PluginLang;
-import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plugin.api.utility.Version;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;

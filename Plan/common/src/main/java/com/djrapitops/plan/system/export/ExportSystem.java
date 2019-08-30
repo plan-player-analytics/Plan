@@ -23,7 +23,7 @@ import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.ExportSettings;
+import com.djrapitops.plan.system.settings.config.paths.ExportSettings;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

@@ -20,8 +20,8 @@ import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.PluginSettings;
-import com.djrapitops.plan.system.settings.paths.ProxySettings;
+import com.djrapitops.plan.system.settings.config.paths.PluginSettings;
+import com.djrapitops.plan.system.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 

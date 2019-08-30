@@ -27,9 +27,9 @@ import com.djrapitops.plan.db.access.transactions.init.OperationCriticalTransact
 import com.djrapitops.plan.db.patches.*;
 import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.config.paths.PluginSettings;
+import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.paths.PluginSettings;
-import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.L;

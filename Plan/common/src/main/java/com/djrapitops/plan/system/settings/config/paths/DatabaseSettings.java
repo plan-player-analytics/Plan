@@ -14,11 +14,11 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.settings.paths;
+package com.djrapitops.plan.system.settings.config.paths;
 
 import com.djrapitops.plan.db.DBType;
-import com.djrapitops.plan.system.settings.paths.key.Setting;
-import com.djrapitops.plan.system.settings.paths.key.StringSetting;
+import com.djrapitops.plan.system.settings.config.paths.key.Setting;
+import com.djrapitops.plan.system.settings.config.paths.key.StringSetting;
 import org.apache.commons.lang3.math.NumberUtils;
 
 /**

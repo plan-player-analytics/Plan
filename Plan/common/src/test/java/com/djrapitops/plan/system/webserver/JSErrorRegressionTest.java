@@ -24,7 +24,7 @@ import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransacti
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.WebserverSettings;
+import com.djrapitops.plan.system.settings.config.paths.WebserverSettings;
 import extension.SeleniumExtension;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;

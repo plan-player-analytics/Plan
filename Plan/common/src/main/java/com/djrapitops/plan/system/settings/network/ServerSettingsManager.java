@@ -27,7 +27,7 @@ import com.djrapitops.plan.system.settings.config.Config;
 import com.djrapitops.plan.system.settings.config.ConfigReader;
 import com.djrapitops.plan.system.settings.config.ConfigWriter;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.TimeSettings;
+import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.utilities.file.FileWatcher;
 import com.djrapitops.plan.utilities.file.WatchedFile;

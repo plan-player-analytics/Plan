@@ -14,22 +14,26 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.settings.paths;
+package com.djrapitops.plan.system.settings.config.paths;
 
-import com.djrapitops.plan.system.settings.paths.key.Setting;
-import com.djrapitops.plan.system.settings.paths.key.StringSetting;
+import com.djrapitops.plan.system.settings.config.paths.key.Setting;
+import com.djrapitops.plan.system.settings.config.paths.key.StringListSetting;
+import com.djrapitops.plan.system.settings.config.paths.key.StringSetting;
+
+import java.util.List;
 
 /**
- * {@link Setting} values that are in "Database" section.
+ * {@link Setting} values that are in "Plugins" section.
  *
  * @author Rsl1122
  */
-public class ProxySettings {
+public class PluginDataSettings {
 
-    public static final Setting<String> IP = new StringSetting("Server.IP");
-    public static final Setting<String> NETWORK_NAME = new StringSetting("Network.Name");
+    public static final Setting<String> PLUGIN_BUYCRAFT_SECRET = new StringSetting("Plugins.BuyCraft.Secret");
+    public static final Setting<List<String>> HIDE_FACTIONS = new StringListSetting("Plugins.Factions.HideFactions");
+    public static final Setting<List<String>> HIDE_TOWNS = new StringListSetting("Plugins.Towny.HideTowns");
 
-    private ProxySettings() {
+    private PluginDataSettings() {
         /* static variable class */
     }
 }

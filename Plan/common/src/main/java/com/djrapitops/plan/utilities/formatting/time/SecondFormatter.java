@@ -17,8 +17,8 @@
 package com.djrapitops.plan.utilities.formatting.time;
 
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.config.paths.FormatSettings;
 import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.paths.FormatSettings;
 
 /**
  * Formatter for timestamp which includes seconds as the smallest entry.

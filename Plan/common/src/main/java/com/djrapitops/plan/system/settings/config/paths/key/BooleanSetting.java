@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.settings.paths.key;
+package com.djrapitops.plan.system.settings.config.paths.key;
 
 import com.djrapitops.plan.system.settings.config.ConfigNode;
 
@@ -25,18 +25,18 @@ import java.util.function.Predicate;
  *
  * @author Rsl1122
  */
-public class StringSetting extends Setting<String> {
+public class BooleanSetting extends Setting<Boolean> {
 
-    public StringSetting(String path) {
-        super(path, String.class);
+    public BooleanSetting(String path) {
+        super(path, Boolean.class);
     }
 
-    public StringSetting(String path, Predicate<String> validator) {
-        super(path, String.class, validator);
+    public BooleanSetting(String path, Predicate<Boolean> validator) {
+        super(path, Boolean.class, validator);
     }
 
     @Override
-    public String getValueFrom(ConfigNode node) {
-        return node.getString(path);
+    public Boolean getValueFrom(ConfigNode node) {
+        return node.getNode(path).map(ConfigNode::getBoolean).orElse(false);
     }
 }

@@ -17,8 +17,8 @@
 package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plan.data.plugin.PluginsConfigSection;
-import com.djrapitops.plan.system.settings.paths.TimeSettings;
-import com.djrapitops.plan.system.settings.paths.key.Setting;
+import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
+import com.djrapitops.plan.system.settings.config.paths.key.Setting;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.utilities.Verify;
 

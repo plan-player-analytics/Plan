@@ -23,7 +23,7 @@ import com.djrapitops.plan.db.access.transactions.events.SessionEndTransaction;
 import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.ExportSettings;
+import com.djrapitops.plan.system.settings.config.paths.ExportSettings;
 import com.jayway.awaitility.Awaitility;
 import org.junit.Assume;
 import org.junit.jupiter.api.AfterEach;

@@ -24,7 +24,7 @@ import com.djrapitops.plan.db.access.transactions.commands.RemoveEverythingTrans
 import com.djrapitops.plan.db.access.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.db.patches.Patch;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
+import com.djrapitops.plan.system.settings.config.paths.DatabaseSettings;
 import com.google.common.util.concurrent.MoreExecutors;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;

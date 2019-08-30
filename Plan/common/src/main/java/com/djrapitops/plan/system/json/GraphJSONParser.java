@@ -30,7 +30,7 @@ import com.djrapitops.plan.db.access.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.db.access.queries.objects.*;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.TimeSettings;
+import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
