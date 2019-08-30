@@ -17,10 +17,10 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.delivery.upkeep.NetworkPageRefreshTask;
+import com.djrapitops.plan.delivery.upkeep.PlayersPageRefreshTask;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.system.TaskSystem;
-import com.djrapitops.plan.system.delivery.upkeep.NetworkPageRefreshTask;
-import com.djrapitops.plan.system.delivery.upkeep.PlayersPageRefreshTask;
 import com.djrapitops.plan.system.gathering.timed.BungeePingCounter;
 import com.djrapitops.plan.system.gathering.timed.BungeeTPSCounter;
 import com.djrapitops.plan.system.settings.config.PlanConfig;

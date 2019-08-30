@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.settings.locale;
 
+import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.system.settings.locale.lang.*;

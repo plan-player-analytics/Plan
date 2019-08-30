@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.objects;
 
-import com.djrapitops.plan.system.delivery.domain.Nickname;
+import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.system.storage.database.queries.Query;
 import com.djrapitops.plan.system.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.system.storage.database.queries.QueryStatement;

@@ -16,8 +16,8 @@
  */
 package utilities;
 
-import com.djrapitops.plan.system.delivery.domain.WebUser;
-import com.djrapitops.plan.system.delivery.rendering.json.graphs.line.Point;
+import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
 import com.djrapitops.plan.system.gathering.domain.GeoInfo;
 import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.gathering.domain.TPS;

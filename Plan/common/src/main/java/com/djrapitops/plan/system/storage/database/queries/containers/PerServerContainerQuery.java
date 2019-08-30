@@ -16,12 +16,12 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.containers;
 
-import com.djrapitops.plan.system.delivery.domain.container.DataContainer;
-import com.djrapitops.plan.system.delivery.domain.container.PerServerContainer;
-import com.djrapitops.plan.system.delivery.domain.container.SupplierDataContainer;
-import com.djrapitops.plan.system.delivery.domain.keys.Key;
-import com.djrapitops.plan.system.delivery.domain.keys.PerServerKeys;
-import com.djrapitops.plan.system.delivery.domain.mutators.SessionsMutator;
+import com.djrapitops.plan.delivery.domain.container.DataContainer;
+import com.djrapitops.plan.delivery.domain.container.PerServerContainer;
+import com.djrapitops.plan.delivery.domain.container.SupplierDataContainer;
+import com.djrapitops.plan.delivery.domain.keys.Key;
+import com.djrapitops.plan.delivery.domain.keys.PerServerKeys;
+import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.gathering.domain.UserInfo;
 import com.djrapitops.plan.system.storage.database.SQLDB;

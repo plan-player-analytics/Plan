@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.gathering;
 
+import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.exceptions.database.DBInitException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.system.gathering.cache.SessionCache;
 import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.settings.locale.Locale;

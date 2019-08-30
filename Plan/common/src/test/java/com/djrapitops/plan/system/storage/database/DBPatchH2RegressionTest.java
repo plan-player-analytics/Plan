@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.storage.database;
 
-import com.djrapitops.plan.system.delivery.domain.container.ServerContainer;
-import com.djrapitops.plan.system.delivery.domain.keys.ServerKeys;
+import com.djrapitops.plan.delivery.domain.container.ServerContainer;
+import com.djrapitops.plan.delivery.domain.keys.ServerKeys;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.DatabaseSettings;
 import com.djrapitops.plan.system.storage.database.queries.containers.ContainerFetchQueries;

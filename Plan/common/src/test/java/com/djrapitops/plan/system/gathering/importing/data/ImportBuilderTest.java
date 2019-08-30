@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.gathering.importing.data;
 
-import com.djrapitops.plan.system.delivery.domain.Nickname;
+import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.system.gathering.domain.GMTimes;
 import com.djrapitops.plan.system.gathering.domain.PlayerKill;
 import com.djrapitops.plan.system.gathering.domain.TPS;

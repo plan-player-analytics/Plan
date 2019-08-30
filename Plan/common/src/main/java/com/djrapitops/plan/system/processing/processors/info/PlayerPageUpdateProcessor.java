@@ -16,10 +16,10 @@
  */
 package com.djrapitops.plan.system.processing.processors.info;
 
-import com.djrapitops.plan.system.delivery.export.HtmlExport;
-import com.djrapitops.plan.system.delivery.export.JSONExport;
-import com.djrapitops.plan.system.delivery.webserver.cache.PageId;
-import com.djrapitops.plan.system.delivery.webserver.cache.ResponseCache;
+import com.djrapitops.plan.delivery.export.HtmlExport;
+import com.djrapitops.plan.delivery.export.JSONExport;
+import com.djrapitops.plan.delivery.webserver.cache.PageId;
+import com.djrapitops.plan.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.ExportSettings;
 

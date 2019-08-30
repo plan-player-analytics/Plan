@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.data.element;
 
-import com.djrapitops.plan.system.delivery.rendering.html.icon.Icon;
+import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plugin.utilities.ArrayUtil;
 

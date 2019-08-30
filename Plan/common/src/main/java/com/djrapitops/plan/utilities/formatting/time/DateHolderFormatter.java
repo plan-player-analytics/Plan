@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.utilities.formatting.time;
 
-import com.djrapitops.plan.system.delivery.domain.DateHolder;
+import com.djrapitops.plan.delivery.domain.DateHolder;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 
 /**

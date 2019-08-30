@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.identification;
 
+import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.delivery.webserver.WebServer;
 import com.djrapitops.plan.system.identification.properties.ServerProperties;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.Database;

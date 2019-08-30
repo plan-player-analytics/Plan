@@ -17,10 +17,10 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanVelocity;
+import com.djrapitops.plan.delivery.upkeep.NetworkPageRefreshTask;
+import com.djrapitops.plan.delivery.upkeep.PlayersPageRefreshTask;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.system.TaskSystem;
-import com.djrapitops.plan.system.delivery.upkeep.NetworkPageRefreshTask;
-import com.djrapitops.plan.system.delivery.upkeep.PlayersPageRefreshTask;
 import com.djrapitops.plan.system.gathering.timed.VelocityPingCounter;
 import com.djrapitops.plan.system.gathering.timed.VelocityTPSCounter;
 import com.djrapitops.plan.system.settings.config.PlanConfig;

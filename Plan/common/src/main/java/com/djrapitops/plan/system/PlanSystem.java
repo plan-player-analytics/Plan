@@ -17,14 +17,14 @@
 package com.djrapitops.plan.system;
 
 import com.djrapitops.plan.capability.CapabilityServiceImplementation;
+import com.djrapitops.plan.delivery.DeliveryUtilities;
+import com.djrapitops.plan.delivery.export.ExportSystem;
+import com.djrapitops.plan.delivery.webserver.WebServer;
+import com.djrapitops.plan.delivery.webserver.WebServerSystem;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.extension.ExtensionService;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.query.QueryServiceImplementation;
-import com.djrapitops.plan.system.delivery.DeliveryUtilities;
-import com.djrapitops.plan.system.delivery.export.ExportSystem;
-import com.djrapitops.plan.system.delivery.webserver.WebServer;
-import com.djrapitops.plan.system.delivery.webserver.WebServerSystem;
 import com.djrapitops.plan.system.gathering.cache.CacheSystem;
 import com.djrapitops.plan.system.gathering.importing.ImportSystem;
 import com.djrapitops.plan.system.gathering.listeners.ListenerSystem;

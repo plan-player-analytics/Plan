@@ -16,10 +16,10 @@
  */
 package com.djrapitops.plan.system.gathering.listeners.velocity;
 
+import com.djrapitops.plan.delivery.webserver.cache.PageId;
+import com.djrapitops.plan.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
-import com.djrapitops.plan.system.delivery.webserver.cache.PageId;
-import com.djrapitops.plan.system.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.gathering.cache.GeolocationCache;
 import com.djrapitops.plan.system.gathering.cache.SessionCache;
 import com.djrapitops.plan.system.gathering.domain.Session;

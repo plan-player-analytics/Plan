@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.objects;
 
-import com.djrapitops.plan.system.delivery.domain.DateObj;
+import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.system.gathering.domain.TPS;
 import com.djrapitops.plan.system.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.system.identification.Server;

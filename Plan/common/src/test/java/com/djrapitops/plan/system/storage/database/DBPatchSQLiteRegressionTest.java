@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.storage.database;
 
-import com.djrapitops.plan.system.delivery.domain.container.ServerContainer;
-import com.djrapitops.plan.system.delivery.domain.keys.ServerKeys;
+import com.djrapitops.plan.delivery.domain.container.ServerContainer;
+import com.djrapitops.plan.delivery.domain.keys.ServerKeys;
 import com.djrapitops.plan.system.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 import com.djrapitops.plan.system.storage.database.transactions.commands.RemoveEverythingTransaction;

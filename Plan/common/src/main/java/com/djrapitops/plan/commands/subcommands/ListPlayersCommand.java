@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.commands.subcommands;
 
+import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.delivery.webserver.WebServer;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.lang.CmdHelpLang;

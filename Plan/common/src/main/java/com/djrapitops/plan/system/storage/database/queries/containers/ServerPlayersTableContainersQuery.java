@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.containers;
 
-import com.djrapitops.plan.system.delivery.domain.container.PlayerContainer;
-import com.djrapitops.plan.system.delivery.domain.keys.PlayerKeys;
-import com.djrapitops.plan.system.delivery.domain.mutators.SessionsMutator;
+import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
+import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.system.gathering.domain.BaseUser;
 import com.djrapitops.plan.system.gathering.domain.GeoInfo;
 import com.djrapitops.plan.system.gathering.domain.Session;
@@ -35,7 +35,7 @@ import java.util.*;
  * Optimized version of {@link ServerPlayerContainersQuery} for /server page Players table.
  *
  * @author Rsl1122
- * @see com.djrapitops.plan.system.delivery.rendering.json.PlayersTableJSONParser For what needs to be included.
+ * @see com.djrapitops.plan.delivery.rendering.json.PlayersTableJSONParser For what needs to be included.
  */
 public class ServerPlayersTableContainersQuery implements Query<List<PlayerContainer>> {
 

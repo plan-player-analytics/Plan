@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.settings.config.paths.key;
 
-import com.djrapitops.plan.system.delivery.domain.keys.Type;
+import com.djrapitops.plan.delivery.domain.keys.Type;
 import com.djrapitops.plan.system.settings.config.ConfigNode;
 
 import java.util.function.Predicate;

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.gathering.cache;
 
-import com.djrapitops.plan.system.delivery.domain.keys.SessionKeys;
+import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.system.gathering.domain.Session;
 
 import javax.inject.Inject;

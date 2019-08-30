@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.identification;
 
+import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.exceptions.connection.BadRequestException;
-import com.djrapitops.plan.system.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.storage.database.queries.objects.UserIdentifierQueries;

@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.gathering.listeners.sponge;
 
+import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
-import com.djrapitops.plan.system.delivery.domain.Nickname;
 import com.djrapitops.plan.system.gathering.cache.GeolocationCache;
 import com.djrapitops.plan.system.gathering.cache.NicknameCache;
 import com.djrapitops.plan.system.gathering.cache.SessionCache;

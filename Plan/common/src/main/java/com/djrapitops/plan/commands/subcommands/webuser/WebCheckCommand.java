@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.commands.subcommands.webuser;
 
-import com.djrapitops.plan.system.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.WebUser;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;

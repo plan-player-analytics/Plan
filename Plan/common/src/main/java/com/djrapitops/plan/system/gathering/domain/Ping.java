@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.gathering.domain;
 
-import com.djrapitops.plan.system.delivery.domain.DateObj;
+import com.djrapitops.plan.delivery.domain.DateObj;
 
 import java.util.UUID;
 

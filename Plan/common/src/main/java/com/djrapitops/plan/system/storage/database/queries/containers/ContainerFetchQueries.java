@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.containers;
 
-import com.djrapitops.plan.system.delivery.domain.container.DataContainer;
-import com.djrapitops.plan.system.delivery.domain.container.PlayerContainer;
-import com.djrapitops.plan.system.delivery.domain.container.ServerContainer;
+import com.djrapitops.plan.delivery.domain.container.DataContainer;
+import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.delivery.domain.container.ServerContainer;
 import com.djrapitops.plan.system.storage.database.queries.Query;
 
 import java.util.List;

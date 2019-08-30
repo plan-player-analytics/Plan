@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.gathering.cache;
 
+import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.delivery.domain.Nickname;
 import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.queries.objects.NicknameQueries;

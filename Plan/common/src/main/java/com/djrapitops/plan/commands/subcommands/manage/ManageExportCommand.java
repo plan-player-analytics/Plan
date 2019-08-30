@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.commands.subcommands.manage;
 
-import com.djrapitops.plan.system.delivery.export.HtmlExport;
-import com.djrapitops.plan.system.delivery.export.JSONExport;
+import com.djrapitops.plan.delivery.export.HtmlExport;
+import com.djrapitops.plan.delivery.export.JSONExport;
 import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;

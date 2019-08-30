@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.api.data;
 
-import com.djrapitops.plan.system.delivery.domain.keys.Key;
+import com.djrapitops.plan.delivery.domain.keys.Key;
 
 import java.util.Optional;
 
@@ -24,7 +24,7 @@ import java.util.Optional;
  * Wrapper for a ServerContainer.
  * <p>
  * The actual object is wrapped to avoid exposing too much API that might change.
- * See {@link com.djrapitops.plan.system.delivery.domain.keys.ServerKeys} for Key objects.
+ * See {@link com.djrapitops.plan.delivery.domain.keys.ServerKeys} for Key objects.
  * <p>
  * The Keys might change in the future, but the Optional API should help dealing with those cases.
  *
@@ -33,9 +33,9 @@ import java.util.Optional;
 @Deprecated
 public class ServerContainer {
 
-    private final com.djrapitops.plan.system.delivery.domain.container.ServerContainer container;
+    private final com.djrapitops.plan.delivery.domain.container.ServerContainer container;
 
-    public ServerContainer(com.djrapitops.plan.system.delivery.domain.container.ServerContainer container) {
+    public ServerContainer(com.djrapitops.plan.delivery.domain.container.ServerContainer container) {
         this.container = container;
     }
 

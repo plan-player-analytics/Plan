@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.gathering.domain;
 
-import com.djrapitops.plan.system.delivery.domain.DateHolder;
-import com.djrapitops.plan.system.delivery.domain.container.DynamicDataContainer;
-import com.djrapitops.plan.system.delivery.domain.keys.SessionKeys;
+import com.djrapitops.plan.delivery.domain.DateHolder;
+import com.djrapitops.plan.delivery.domain.container.DynamicDataContainer;
+import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 
 import java.util.ArrayList;
 import java.util.List;

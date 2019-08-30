@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.settings.config;
 
-import com.djrapitops.plan.system.delivery.domain.keys.SessionKeys;
+import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.system.gathering.domain.GMTimes;
 import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.gathering.domain.WorldTimes;

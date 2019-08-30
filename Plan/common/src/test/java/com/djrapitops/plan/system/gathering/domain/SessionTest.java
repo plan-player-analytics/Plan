@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.gathering.domain;
 
-import com.djrapitops.plan.system.delivery.domain.container.DataContainer;
-import com.djrapitops.plan.system.delivery.domain.keys.SessionKeys;
+import com.djrapitops.plan.delivery.domain.container.DataContainer;
+import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;

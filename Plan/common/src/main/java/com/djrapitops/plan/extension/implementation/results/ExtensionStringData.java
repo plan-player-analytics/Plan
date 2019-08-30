@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.extension.implementation.results;
 
-import com.djrapitops.plan.system.delivery.rendering.html.Html;
+import com.djrapitops.plan.delivery.rendering.html.Html;
 
 /**
  * Represents double data returned by a DoubleProvider or PercentageProvider method.

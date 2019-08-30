@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.database.transactions.init;
 
-import com.djrapitops.plan.system.delivery.domain.DateObj;
+import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.system.storage.database.queries.objects.TPSQueries;
 import com.djrapitops.plan.system.storage.database.sql.tables.PingTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.TPSTable;
