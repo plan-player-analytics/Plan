@@ -18,10 +18,10 @@ package com.djrapitops.plan.modules.sponge;
 
 import com.djrapitops.plan.ServerShutdownSave;
 import com.djrapitops.plan.SpongeServerShutdownSave;
+import com.djrapitops.plan.system.gathering.importing.EmptyImportSystem;
+import com.djrapitops.plan.system.gathering.importing.ImportSystem;
 import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.identification.ServerServerInfo;
-import com.djrapitops.plan.system.importing.EmptyImportSystem;
-import com.djrapitops.plan.system.importing.ImportSystem;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
 import com.djrapitops.plan.system.listeners.SpongeListenerSystem;
 import com.djrapitops.plan.system.settings.ConfigSystem;

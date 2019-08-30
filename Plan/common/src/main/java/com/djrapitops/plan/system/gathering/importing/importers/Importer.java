@@ -14,26 +14,10 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.importing;
+package com.djrapitops.plan.system.gathering.importing.importers;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+public interface Importer {
+    void processImport();
 
-/**
- * Placeholder for a ImportSystem.
- *
- * @author Rsl1122
- */
-@Singleton
-public class EmptyImportSystem extends ImportSystem {
-
-    @Inject
-    public EmptyImportSystem() {
-        // Inject constructor required for dagger
-    }
-
-    @Override
-    void registerImporters() {
-        // No importers to register.
-    }
+    String getName();
 }

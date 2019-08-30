@@ -14,10 +14,32 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.importing.importers;
+package com.djrapitops.plan.system.gathering.importing;
 
-public interface Importer {
-    void processImport();
+import com.djrapitops.plan.system.gathering.importing.importers.OfflinePlayerImporter;
 
-    String getName();
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+/**
+ * ImportSystem implementation for Bukkit.
+ *
+ * @author Rsl1122
+ */
+@Singleton
+public class BukkitImportSystem extends ImportSystem {
+
+    private final OfflinePlayerImporter offlinePlayerImporter;
+
+    @Inject
+    public BukkitImportSystem(
+            OfflinePlayerImporter offlinePlayerImporter
+    ) {
+        this.offlinePlayerImporter = offlinePlayerImporter;
+    }
+
+    @Override
+    void registerImporters() {
+        registerImporter(offlinePlayerImporter);
+    }
 }

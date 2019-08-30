@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.importing.data;
+package com.djrapitops.plan.system.gathering.importing.data;
 
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.TPS;
@@ -35,7 +35,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Tests for various {@link com.djrapitops.plan.system.importing.importers.Importer}s.
+ * Tests for various {@link com.djrapitops.plan.system.gathering.importing.importers.Importer}s.
  *
  * @author Fuzzlemann
  */

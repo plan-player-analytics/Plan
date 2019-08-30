@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.importing.data;
+package com.djrapitops.plan.system.gathering.importing.data;
 
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.store.objects.Nickname;

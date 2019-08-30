@@ -14,10 +14,10 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.importing;
+package com.djrapitops.plan.system.gathering.importing;
 
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.importing.importers.Importer;
+import com.djrapitops.plan.system.gathering.importing.importers.Importer;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.*;

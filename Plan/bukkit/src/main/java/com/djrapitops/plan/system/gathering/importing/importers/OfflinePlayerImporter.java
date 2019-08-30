@@ -14,13 +14,13 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.importing.importers;
+package com.djrapitops.plan.system.gathering.importing.importers;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.system.cache.GeolocationCache;
+import com.djrapitops.plan.system.gathering.importing.data.ServerImportData;
+import com.djrapitops.plan.system.gathering.importing.data.UserImportData;
 import com.djrapitops.plan.system.identification.ServerInfo;
-import com.djrapitops.plan.system.importing.data.ServerImportData;
-import com.djrapitops.plan.system.importing.data.UserImportData;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
