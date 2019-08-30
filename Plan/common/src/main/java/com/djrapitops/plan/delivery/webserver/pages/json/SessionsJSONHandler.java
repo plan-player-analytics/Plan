@@ -20,6 +20,8 @@ import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
+import com.djrapitops.plan.delivery.webserver.cache.DataID;
+import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.delivery.webserver.pages.PageHandler;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
@@ -42,24 +44,31 @@ public class SessionsJSONHandler implements PageHandler {
 
     private final Identifiers identifiers;
     private final JSONFactory jsonFactory;
+    private final JSONCache cache;
 
     @Inject
     public SessionsJSONHandler(
             Identifiers identifiers,
-            JSONFactory jsonFactory
+            JSONFactory jsonFactory,
+            JSONCache cache
     ) {
         this.identifiers = identifiers;
         this.jsonFactory = jsonFactory;
+        this.cache = cache;
     }
 
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
         if (target.getParameter("server").isPresent()) {
             UUID serverUUID = identifiers.getServerUUID(target);
-            return new JSONResponse(Collections.singletonMap("sessions", jsonFactory.networkSessionsAsJSONMap(serverUUID)));
+            return cache.getOrCache(DataID.SESSIONS, serverUUID, () ->
+                    new JSONResponse(Collections.singletonMap("sessions", jsonFactory.serverSessionsAsJSONMap(serverUUID)))
+            );
         }
         // Assume network
-        return new JSONResponse(Collections.singletonMap("sessions", jsonFactory.networkSessionsAsJSONMap()));
+        return cache.getOrCache(DataID.SESSIONS, () ->
+                new JSONResponse(Collections.singletonMap("sessions", jsonFactory.networkSessionsAsJSONMap()))
+        );
     }
 
     @Override

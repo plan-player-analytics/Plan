@@ -47,6 +47,19 @@ public abstract class TreePageHandler implements PageHandler {
         pages.put(targetPage, handler);
     }
 
+    public void registerPage(String targetPage, PageHandler handler, int requiredPerm) {
+        pages.put(targetPage, new PageHandler() {
+            @Override
+            public Response getResponse(Request request, RequestTarget target) throws WebException {
+                return handler.getResponse(request, target);
+            }
+
+            @Override
+            public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
+                return auth.getWebUser().getPermLevel() <= requiredPerm;
+            }
+        });
+    }
     public void registerPage(String targetPage, Response response, int requiredPerm) {
         pages.put(targetPage, new PageHandler() {
             @Override

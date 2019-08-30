@@ -20,11 +20,12 @@ import com.djrapitops.plan.delivery.rendering.json.network.NetworkTabJSONParser;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
+import com.djrapitops.plan.delivery.webserver.cache.DataID;
+import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.delivery.webserver.pages.PageHandler;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
-import com.djrapitops.plan.exceptions.connection.WebException;
 
 import java.util.function.Supplier;
 
@@ -35,15 +36,19 @@ import java.util.function.Supplier;
  */
 public class NetworkTabJSONHandler<T> implements PageHandler {
 
+    private final DataID dataID;
+    private final JSONCache cache;
     private final Supplier<T> jsonParser;
 
-    public NetworkTabJSONHandler(NetworkTabJSONParser<T> jsonParser) {
+    public NetworkTabJSONHandler(DataID dataID, JSONCache cache, NetworkTabJSONParser<T> jsonParser) {
+        this.dataID = dataID;
+        this.cache = cache;
         this.jsonParser = jsonParser;
     }
 
     @Override
-    public Response getResponse(Request request, RequestTarget target) throws WebException {
-        return new JSONResponse(jsonParser.get());
+    public Response getResponse(Request request, RequestTarget target) {
+        return cache.getOrCache(dataID, () -> new JSONResponse(jsonParser.get()));
     }
 
     @Override

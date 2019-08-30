@@ -106,7 +106,7 @@ public class JSONFactory {
         ).toJSONString();
     }
 
-    public List<Map<String, Object>> networkSessionsAsJSONMap(UUID serverUUID) {
+    public List<Map<String, Object>> serverSessionsAsJSONMap(UUID serverUUID) {
         Database db = dbSystem.getDatabase();
 
         Integer perPageLimit = config.get(DisplaySettings.SESSIONS_PER_PAGE);

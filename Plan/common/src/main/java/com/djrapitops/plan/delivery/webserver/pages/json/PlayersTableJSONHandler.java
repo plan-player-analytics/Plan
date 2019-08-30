@@ -21,6 +21,8 @@ import com.djrapitops.plan.delivery.rendering.json.PlayersTableJSONParser;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
+import com.djrapitops.plan.delivery.webserver.cache.DataID;
+import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.delivery.webserver.pages.PageHandler;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
@@ -43,24 +45,27 @@ public class PlayersTableJSONHandler implements PageHandler {
 
     private final Identifiers identifiers;
     private final JSONFactory jsonFactory;
+    private final JSONCache cache;
 
     @Inject
     public PlayersTableJSONHandler(
             Identifiers identifiers,
-            JSONFactory jsonFactory
+            JSONFactory jsonFactory,
+            JSONCache cache
     ) {
         this.identifiers = identifiers;
         this.jsonFactory = jsonFactory;
+        this.cache = cache;
     }
 
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
         if (target.getParameter("server").isPresent()) {
             UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
-            return new JSONResponse(jsonFactory.serverPlayersTableJSON(serverUUID));
+            return cache.getOrCache(DataID.PLAYERS, serverUUID, () -> new JSONResponse(jsonFactory.serverPlayersTableJSON(serverUUID)));
         }
         // Assume network
-        return new JSONResponse(jsonFactory.networkPlayersTableJSON());
+        return cache.getOrCache(DataID.PLAYERS, () -> new JSONResponse(jsonFactory.networkPlayersTableJSON()));
     }
 
     @Override

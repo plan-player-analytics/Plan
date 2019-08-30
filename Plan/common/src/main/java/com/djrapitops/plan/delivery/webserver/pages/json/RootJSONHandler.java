@@ -19,6 +19,8 @@ package com.djrapitops.plan.delivery.webserver.pages.json;
 import com.djrapitops.plan.delivery.rendering.json.*;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
+import com.djrapitops.plan.delivery.webserver.cache.DataID;
+import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.delivery.webserver.pages.TreePageHandler;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
@@ -35,11 +37,13 @@ import javax.inject.Singleton;
 @Singleton
 public class RootJSONHandler extends TreePageHandler {
 
+    private final JSONCache cache;
     private Identifiers identifiers;
 
     @Inject
     public RootJSONHandler(
             ResponseFactory responseFactory,
+            JSONCache cache,
             Identifiers identifiers,
             JSONFactory jsonFactory,
             GraphsJSONHandler graphsJSONHandler,
@@ -56,29 +60,28 @@ public class RootJSONHandler extends TreePageHandler {
             NetworkJSONHandler networkJSONHandler
     ) {
         super(responseFactory);
-
+        this.cache = cache;
         this.identifiers = identifiers;
 
-        registerPage("players", playersTableJSONHandler);
-        registerPage("sessions", sessionsJSONHandler);
-        registerPage("kills", playerKillsJSONHandler);
-        registerPage("pingTable", jsonFactory::pingPerGeolocation);
-        registerPage("graph", graphsJSONHandler);
+        registerPage("players", playersTableJSONHandler, 1);
+        registerPage("sessions", sessionsJSONHandler, 0);
+        registerPage("kills", playerKillsJSONHandler, 0);
+        registerPage("pingTable", DataID.PING_TABLE, jsonFactory::pingPerGeolocation);
+        registerPage("graph", graphsJSONHandler, 0);
 
-        registerPage("serverOverview", serverOverviewJSONParser);
-        registerPage("onlineOverview", onlineActivityOverviewJSONParser);
-        registerPage("sessionsOverview", sessionsOverviewJSONParser);
-        registerPage("playerVersus", pvPPvEJSONParser);
-        registerPage("playerbaseOverview", playerBaseOverviewJSONParser);
-        registerPage("performanceOverview", performanceJSONParser);
+        registerPage("serverOverview", DataID.SERVER_OVERVIEW, serverOverviewJSONParser);
+        registerPage("onlineOverview", DataID.ONLINE_OVERVIEW, onlineActivityOverviewJSONParser);
+        registerPage("sessionsOverview", DataID.SESSIONS_OVERVIEW, sessionsOverviewJSONParser);
+        registerPage("playerVersus", DataID.PVP_PVE, pvPPvEJSONParser);
+        registerPage("playerbaseOverview", DataID.PLAYERBASE_OVERVIEW, playerBaseOverviewJSONParser);
+        registerPage("performanceOverview", DataID.PERFORMANCE_OVERVIEW, performanceJSONParser);
 
-        registerPage("player", playerJSONHandler);
-        registerPage("network", networkJSONHandler);
+        registerPage("player", playerJSONHandler, 2);
+        registerPage("network", networkJSONHandler, 0);
     }
 
-    private <T> void registerPage(String identifier, ServerTabJSONParser<T> tabJSONParser) {
-        registerPage(identifier, new ServerTabJSONHandler<>(identifiers, tabJSONParser));
-
+    private <T> void registerPage(String identifier, DataID dataID, ServerTabJSONParser<T> tabJSONParser) {
+        registerPage(identifier, new ServerTabJSONHandler<>(dataID, cache, identifiers, tabJSONParser), 0);
     }
 
     @Override

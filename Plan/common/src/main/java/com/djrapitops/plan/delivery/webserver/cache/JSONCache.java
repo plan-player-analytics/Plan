@@ -39,6 +39,9 @@ public class JSONCache {
         return new JSONResponse(found);
     }
 
+    public Response getOrCache(DataID dataID, Supplier<JSONResponse> jsonResponseSupplier) {
+        return getOrCache(dataID.name(), jsonResponseSupplier);
+    }
     public Response getOrCache(DataID dataID, UUID serverUUID, Supplier<JSONResponse> jsonResponseSupplier) {
         return getOrCache(dataID.of(serverUUID), jsonResponseSupplier);
     }
