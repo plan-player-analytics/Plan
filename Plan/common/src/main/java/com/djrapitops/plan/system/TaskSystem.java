@@ -14,10 +14,8 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.tasks;
+package com.djrapitops.plan.system;
 
-import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.gathering.timed.TPSCounter;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.PluginRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
@@ -31,11 +29,9 @@ import com.djrapitops.plugin.task.RunnableFactory;
  */
 public abstract class TaskSystem implements SubSystem {
 
-    protected final TPSCounter tpsCounter;
     protected final RunnableFactory runnableFactory;
 
-    public TaskSystem(RunnableFactory runnableFactory, TPSCounter tpsCounter) {
-        this.tpsCounter = tpsCounter;
+    public TaskSystem(RunnableFactory runnableFactory) {
         this.runnableFactory = runnableFactory;
     }
 

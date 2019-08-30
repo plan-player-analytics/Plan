@@ -17,6 +17,7 @@
 package com.djrapitops.plan.modules.bukkit;
 
 import com.djrapitops.plan.BukkitServerShutdownSave;
+import com.djrapitops.plan.system.TaskSystem;
 import com.djrapitops.plan.system.gathering.ServerShutdownSave;
 import com.djrapitops.plan.system.gathering.importing.BukkitImportSystem;
 import com.djrapitops.plan.system.gathering.importing.ImportSystem;
@@ -29,7 +30,6 @@ import com.djrapitops.plan.system.settings.ConfigSystem;
 import com.djrapitops.plan.system.storage.database.BukkitDBSystem;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.tasks.BukkitTaskSystem;
-import com.djrapitops.plan.system.tasks.TaskSystem;
 import dagger.Binds;
 import dagger.Module;
 

@@ -18,6 +18,7 @@ package utilities.dagger;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.exceptions.EnableException;
+import com.djrapitops.plan.system.TaskSystem;
 import com.djrapitops.plan.system.gathering.listeners.ListenerSystem;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -27,7 +28,6 @@ import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.H2DB;
 import com.djrapitops.plan.system.storage.database.MySQLDB;
 import com.djrapitops.plan.system.storage.database.SQLiteDB;
-import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;

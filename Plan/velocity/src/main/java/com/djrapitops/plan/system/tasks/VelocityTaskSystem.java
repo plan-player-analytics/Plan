@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanVelocity;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
+import com.djrapitops.plan.system.TaskSystem;
 import com.djrapitops.plan.system.delivery.upkeep.NetworkPageRefreshTask;
 import com.djrapitops.plan.system.delivery.upkeep.PlayersPageRefreshTask;
 import com.djrapitops.plan.system.gathering.timed.VelocityPingCounter;
@@ -45,8 +46,9 @@ public class VelocityTaskSystem extends TaskSystem {
 
     private final PlanVelocity plugin;
     private final PlanConfig config;
+    private final VelocityTPSCounter tpsCounter;
     private final NetworkPageRefreshTask networkPageRefreshTask;
-    private final VelocityPingCounter pingCountTimer;
+    private final VelocityPingCounter pingCounter;
     private final LogsFolderCleanTask logsFolderCleanTask;
     private final PlayersPageRefreshTask playersPageRefreshTask;
     private final NetworkConfigStoreTask networkConfigStoreTask;
@@ -58,21 +60,21 @@ public class VelocityTaskSystem extends TaskSystem {
             PlanVelocity plugin,
             PlanConfig config,
             RunnableFactory runnableFactory,
-            VelocityTPSCounter velocityTPSCountTimer,
+            VelocityTPSCounter tpsCounter,
             NetworkPageRefreshTask networkPageRefreshTask,
-            VelocityPingCounter pingCountTimer,
+            VelocityPingCounter pingCounter,
             LogsFolderCleanTask logsFolderCleanTask,
             PlayersPageRefreshTask playersPageRefreshTask,
             NetworkConfigStoreTask networkConfigStoreTask,
             DBCleanTask dbCleanTask,
             ExtensionServerMethodCallerTask extensionServerMethodCallerTask
     ) {
-        super(runnableFactory, velocityTPSCountTimer);
+        super(runnableFactory);
         this.plugin = plugin;
         this.config = config;
-
+        this.tpsCounter = tpsCounter;
+        this.pingCounter = pingCounter;
         this.networkPageRefreshTask = networkPageRefreshTask;
-        this.pingCountTimer = pingCountTimer;
         this.logsFolderCleanTask = logsFolderCleanTask;
         this.playersPageRefreshTask = playersPageRefreshTask;
         this.networkConfigStoreTask = networkConfigStoreTask;
@@ -92,9 +94,9 @@ public class VelocityTaskSystem extends TaskSystem {
 
         Long pingDelay = config.get(TimeSettings.PING_SERVER_ENABLE_DELAY);
         if (pingDelay < TimeUnit.HOURS.toMillis(1L) && config.get(DataGatheringSettings.PING)) {
-            plugin.registerListener(pingCountTimer);
+            plugin.registerListener(pingCounter);
             long startDelay = TimeAmount.toTicks(pingDelay, TimeUnit.MILLISECONDS);
-            registerTask(pingCountTimer).runTaskTimer(startDelay, 40L);
+            registerTask(pingCounter).runTaskTimer(startDelay, 40L);
         }
 
         registerTask(playersPageRefreshTask).runTaskTimerAsynchronously(TimeAmount.toTicks(5L, TimeUnit.MINUTES), TimeAmount.toTicks(5L, TimeUnit.MINUTES));
