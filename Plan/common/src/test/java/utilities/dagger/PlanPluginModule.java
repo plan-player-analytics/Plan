@@ -16,7 +16,7 @@
  */
 package utilities.dagger;
 
-import com.djrapitops.plan.command.PlanCommand;
+import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.system.importing.EmptyImportSystem;
 import com.djrapitops.plan.system.importing.ImportSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.command.PlanProxyCommand;
+import com.djrapitops.plan.commands.PlanProxyCommand;
 import com.djrapitops.plan.modules.APFModule;
 import com.djrapitops.plan.modules.FilesModule;
 import com.djrapitops.plan.modules.ProxySuperClassBindingModule;

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.command.PlanCommand;
+import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.modules.APFModule;
 import com.djrapitops.plan.modules.FilesModule;
 import com.djrapitops.plan.modules.ServerSuperClassBindingModule;

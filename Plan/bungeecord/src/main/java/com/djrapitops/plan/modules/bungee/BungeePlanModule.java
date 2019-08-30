@@ -18,7 +18,7 @@ package com.djrapitops.plan.modules.bungee;
 
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.command.PlanProxyCommand;
+import com.djrapitops.plan.commands.PlanProxyCommand;
 import com.djrapitops.plugin.command.CommandNode;
 import dagger.Binds;
 import dagger.Module;
