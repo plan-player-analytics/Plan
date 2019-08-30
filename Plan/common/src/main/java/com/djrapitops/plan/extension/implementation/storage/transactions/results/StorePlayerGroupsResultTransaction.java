@@ -18,9 +18,9 @@ package com.djrapitops.plan.extension.implementation.storage.transactions.result
 
 import com.djrapitops.plan.system.storage.database.access.ExecStatement;
 import com.djrapitops.plan.system.storage.database.access.Executable;
-import com.djrapitops.plan.system.storage.database.access.transactions.Transaction;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionGroupsTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionProviderTable;
+import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;

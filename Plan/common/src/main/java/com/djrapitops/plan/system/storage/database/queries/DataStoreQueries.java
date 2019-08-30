@@ -51,7 +51,7 @@ public class DataStoreQueries {
      *
      * @param serverUUID  UUID of the Plan server.
      * @param commandName Name of the command that was used.
-     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.access.transactions.Transaction}
+     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.transactions.Transaction}
      */
     public static Executable storeUsedCommandInformation(UUID serverUUID, String commandName) {
         return connection -> {
@@ -87,7 +87,7 @@ public class DataStoreQueries {
      * Store a finished session in the database.
      *
      * @param session Session, of which {@link Session#endSession(long)} has been called.
-     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.access.transactions.Transaction}
+     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.transactions.Transaction}
      * @throws IllegalArgumentException If {@link Session#endSession(long)} has not yet been called.
      */
     public static Executable storeSession(Session session) {
@@ -150,7 +150,7 @@ public class DataStoreQueries {
      *
      * @param playerUUID UUID of the player.
      * @param geoInfo    GeoInfo of the player.
-     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.access.transactions.Transaction}
+     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.transactions.Transaction}
      */
     public static Executable storeGeoInfo(UUID playerUUID, GeoInfo geoInfo) {
         return connection -> {
@@ -190,7 +190,7 @@ public class DataStoreQueries {
      * @param playerUUID UUID of the player.
      * @param registered Time the player registered on the server for the first time.
      * @param playerName Name of the player.
-     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.access.transactions.Transaction}
+     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.transactions.Transaction}
      */
     public static Executable registerBaseUser(UUID playerUUID, long registered, String playerName) {
         return new ExecStatement(UsersTable.INSERT_STATEMENT) {
@@ -209,7 +209,7 @@ public class DataStoreQueries {
      *
      * @param playerUUID UUID of the player.
      * @param playerName Name of the player.
-     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.access.transactions.Transaction}
+     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.transactions.Transaction}
      */
     public static Executable updatePlayerName(UUID playerUUID, String playerName) {
         String sql = "UPDATE " + UsersTable.TABLE_NAME + " SET " + UsersTable.USER_NAME + "=?" +
@@ -229,7 +229,7 @@ public class DataStoreQueries {
      * @param playerUUID UUID of the player.
      * @param registered Time the player registered on the server.
      * @param serverUUID UUID of the Plan server.
-     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.access.transactions.Transaction}
+     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.transactions.Transaction}
      */
     public static Executable registerUserInfo(UUID playerUUID, long registered, UUID serverUUID) {
         return new ExecStatement(UserInfoTable.INSERT_STATEMENT) {
@@ -250,7 +250,7 @@ public class DataStoreQueries {
      * @param playerUUID UUID of the player.
      * @param serverUUID UUID of the Plan server.
      * @param ping       Ping data entry
-     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.access.transactions.Transaction}
+     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.transactions.Transaction}
      */
     public static Executable storePing(UUID playerUUID, UUID serverUUID, Ping ping) {
         return new ExecStatement(PingTable.INSERT_STATEMENT) {
@@ -271,7 +271,7 @@ public class DataStoreQueries {
      *
      * @param serverUUID UUID of the Plan server.
      * @param tps        TPS data entry
-     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.access.transactions.Transaction}
+     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.transactions.Transaction}
      */
     public static Executable storeTPS(UUID serverUUID, TPS tps) {
         return new ExecStatement(TPSTable.INSERT_STATEMENT) {
@@ -295,7 +295,7 @@ public class DataStoreQueries {
      *
      * @param playerUUID UUID of the player.
      * @param nickname   Nickname information.
-     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.access.transactions.Transaction}
+     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.transactions.Transaction}
      */
     public static Executable storePlayerNickname(UUID playerUUID, Nickname nickname) {
         return connection -> {

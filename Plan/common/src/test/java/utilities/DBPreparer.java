@@ -25,7 +25,7 @@ import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.DBType;
 import com.djrapitops.plan.system.storage.database.Database;
 import com.djrapitops.plan.system.storage.database.SQLDB;
-import com.djrapitops.plan.system.storage.database.access.transactions.Transaction;
+import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 import com.djrapitops.plugin.utilities.Format;
 import com.djrapitops.plugin.utilities.Verify;
 import com.google.common.util.concurrent.MoreExecutors;

@@ -21,7 +21,7 @@ import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.system.storage.database.DBSystem;
-import com.djrapitops.plan.system.storage.database.access.transactions.events.WorldNameStoreTransaction;
+import com.djrapitops.plan.system.storage.database.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.bukkit.entity.Player;

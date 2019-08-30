@@ -23,7 +23,7 @@ import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.Database;
 import com.djrapitops.plan.system.storage.database.access.QueryAPIExecutable;
 import com.djrapitops.plan.system.storage.database.access.QueryAPIQuery;
-import com.djrapitops.plan.system.storage.database.access.transactions.Transaction;
+import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;

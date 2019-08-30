@@ -31,7 +31,7 @@ import com.djrapitops.plan.system.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.system.status.Status;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.access.transactions.events.*;
+import com.djrapitops.plan.system.storage.database.transactions.events.*;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.bukkit.entity.Player;

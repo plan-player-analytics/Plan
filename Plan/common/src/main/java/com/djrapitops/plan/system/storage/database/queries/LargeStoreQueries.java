@@ -49,7 +49,7 @@ public class LargeStoreQueries {
      * Execute a big batch of command use insert statements.
      *
      * @param ofServers Multi map: Server UUID - (Command name - Usage count)
-     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.access.transactions.Transaction}
+     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.transactions.Transaction}
      */
     public static Executable storeAllCommandUsageData(Map<UUID, Map<String, Integer>> ofServers) {
         if (ofServers.isEmpty()) {
@@ -81,7 +81,7 @@ public class LargeStoreQueries {
      * Execute a big batch of GeoInfo insert statements.
      *
      * @param ofUsers Map: Player UUID - List of GeoInfo
-     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.access.transactions.Transaction}
+     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.transactions.Transaction}
      */
     public static Executable storeAllGeoInformation(Map<UUID, List<GeoInfo>> ofUsers) {
         if (Verify.isEmpty(ofUsers)) {
@@ -116,7 +116,7 @@ public class LargeStoreQueries {
      * Execute a big batch of nickname insert statements.
      *
      * @param ofServersAndUsers Multimap: Server UUID - (Player UUID - List of nicknames)
-     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.access.transactions.Transaction}
+     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.transactions.Transaction}
      */
     public static Executable storeAllNicknameData(Map<UUID, Map<UUID, List<Nickname>>> ofServersAndUsers) {
         if (Verify.isEmpty(ofServersAndUsers)) {
@@ -151,7 +151,7 @@ public class LargeStoreQueries {
      * Execute a big batch of web user insert statements.
      *
      * @param users Collection of Plan WebUsers.
-     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.access.transactions.Transaction}
+     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.transactions.Transaction}
      */
     public static Executable storeAllPlanWebUsers(Collection<WebUser> users) {
         if (Verify.isEmpty(users)) {
@@ -179,7 +179,7 @@ public class LargeStoreQueries {
      * Execute a big batch of server infromation insert statements.
      *
      * @param servers Collection of Plan Servers.
-     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.access.transactions.Transaction}
+     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.transactions.Transaction}
      */
     public static Executable storeAllPlanServerInformation(Collection<Server> servers) {
         if (Verify.isEmpty(servers)) {
@@ -213,7 +213,7 @@ public class LargeStoreQueries {
      * Execute a big batch of TPS insert statements.
      *
      * @param ofServers Map: Server UUID - List of TPS data
-     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.access.transactions.Transaction}
+     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.transactions.Transaction}
      */
     public static Executable storeAllTPSData(Map<UUID, List<TPS>> ofServers) {
         if (Verify.isEmpty(ofServers)) {
@@ -249,7 +249,7 @@ public class LargeStoreQueries {
      * Execute a big batch of Per server UserInfo insert statements.
      *
      * @param ofServers Map: Server UUID - List of user information
-     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.access.transactions.Transaction}
+     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.transactions.Transaction}
      */
     public static Executable storePerServerUserInformation(Map<UUID, List<UserInfo>> ofServers) {
         if (Verify.isEmpty(ofServers)) {
@@ -280,7 +280,7 @@ public class LargeStoreQueries {
      * Execute a big batch of world name insert statements.
      *
      * @param ofServers Map: Server UUID - Collection of world names
-     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.access.transactions.Transaction}
+     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.transactions.Transaction}
      */
     public static Executable storeAllWorldNames(Map<UUID, Collection<String>> ofServers) {
         if (Verify.isEmpty(ofServers)) {
@@ -306,7 +306,7 @@ public class LargeStoreQueries {
      * Execute a big batch of user information insert statements.
      *
      * @param ofUsers Collection of BaseUsers
-     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.access.transactions.Transaction}
+     * @return Executable, use inside a {@link com.djrapitops.plan.system.storage.database.transactions.Transaction}
      */
     public static Executable storeAllCommonUserInformation(Collection<BaseUser> ofUsers) {
         if (Verify.isEmpty(ofUsers)) {

@@ -28,7 +28,7 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.system.storage.database.DBSystem;
-import com.djrapitops.plan.system.storage.database.access.transactions.events.PingStoreTransaction;
+import com.djrapitops.plan.system.storage.database.transactions.events.PingStoreTransaction;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;

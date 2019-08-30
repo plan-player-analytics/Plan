@@ -19,9 +19,9 @@ package com.djrapitops.plan.extension.implementation.storage.transactions;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.system.storage.database.access.ExecStatement;
 import com.djrapitops.plan.system.storage.database.access.Executable;
-import com.djrapitops.plan.system.storage.database.access.transactions.Transaction;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionIconTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionPluginTable;
+import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

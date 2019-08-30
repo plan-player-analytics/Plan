@@ -19,10 +19,10 @@ package com.djrapitops.plan.system.storage.database.patches;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.storage.database.DBType;
 import com.djrapitops.plan.system.storage.database.access.QueryStatement;
-import com.djrapitops.plan.system.storage.database.access.transactions.init.OperationCriticalTransaction;
 import com.djrapitops.plan.system.storage.database.queries.schema.H2SchemaQueries;
 import com.djrapitops.plan.system.storage.database.queries.schema.MySQLSchemaQueries;
 import com.djrapitops.plan.system.storage.database.queries.schema.SQLiteSchemaQueries;
+import com.djrapitops.plan.system.storage.database.transactions.init.OperationCriticalTransaction;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;

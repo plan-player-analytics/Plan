@@ -21,8 +21,8 @@ import com.djrapitops.plan.system.storage.database.access.ExecStatement;
 import com.djrapitops.plan.system.storage.database.access.Executable;
 import com.djrapitops.plan.system.storage.database.access.HasMoreThanZeroQueryStatement;
 import com.djrapitops.plan.system.storage.database.access.Query;
-import com.djrapitops.plan.system.storage.database.access.transactions.Transaction;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionIconTable;
+import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

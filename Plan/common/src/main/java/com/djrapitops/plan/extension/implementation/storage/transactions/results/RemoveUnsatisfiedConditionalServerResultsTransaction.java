@@ -19,11 +19,11 @@ package com.djrapitops.plan.extension.implementation.storage.transactions.result
 import com.djrapitops.plan.system.storage.database.DBType;
 import com.djrapitops.plan.system.storage.database.access.ExecStatement;
 import com.djrapitops.plan.system.storage.database.access.Executable;
-import com.djrapitops.plan.system.storage.database.access.transactions.Transaction;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionProviderTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionServerTableValueTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionServerValueTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionTableProviderTable;
+import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

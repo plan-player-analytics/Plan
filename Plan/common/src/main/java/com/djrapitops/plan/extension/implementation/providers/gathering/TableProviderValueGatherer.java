@@ -30,7 +30,7 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.results
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerTableResultTransaction;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.access.transactions.Transaction;
+import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 
 import java.util.Optional;
 import java.util.UUID;

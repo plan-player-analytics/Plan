@@ -17,8 +17,8 @@
 package com.djrapitops.plan.system.storage.database;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.storage.database.access.transactions.Transaction;
-import com.djrapitops.plan.system.storage.database.access.transactions.init.OperationCriticalTransaction;
+import com.djrapitops.plan.system.storage.database.transactions.Transaction;
+import com.djrapitops.plan.system.storage.database.transactions.init.OperationCriticalTransaction;
 
 /**
  * Database Lock that prevents queries and transactions from taking place before database schema is ready.
