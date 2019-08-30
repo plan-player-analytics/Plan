@@ -14,21 +14,28 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.utilities.comparators;
+package com.djrapitops.plan.system.delivery.rendering.json.graphs.bar;
 
-import com.djrapitops.plan.system.delivery.rendering.json.graphs.pie.PieSlice;
+public class Bar implements Comparable<Bar> {
 
-import java.util.Comparator;
+    private final String label;
+    private final long value;
 
-/**
- * Comparator for PieSlices to descending Percentage order.
- *
- * @author Rsl1122
- */
-public class PieSliceComparator implements Comparator<PieSlice> {
+    public Bar(String label, long value) {
+        this.label = label;
+        this.value = value;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public long getValue() {
+        return value;
+    }
 
     @Override
-    public int compare(PieSlice o1, PieSlice o2) {
-        return -Long.compare(o1.getY(), o2.getY());
+    public int compareTo(Bar bar) {
+        return Long.compare(bar.value, this.value);
     }
 }

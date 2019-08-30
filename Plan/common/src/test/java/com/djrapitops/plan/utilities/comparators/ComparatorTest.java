@@ -18,7 +18,7 @@ package com.djrapitops.plan.utilities.comparators;
 
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.system.delivery.rendering.html.graphs.line.Point;
+import com.djrapitops.plan.system.delivery.rendering.json.graphs.line.Point;
 import com.djrapitops.plan.system.gathering.domain.GeoInfo;
 import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.gathering.domain.TPS;

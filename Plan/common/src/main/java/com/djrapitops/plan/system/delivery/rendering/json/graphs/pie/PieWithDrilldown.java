@@ -14,21 +14,21 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.utilities.comparators;
+package com.djrapitops.plan.system.delivery.rendering.json.graphs.pie;
 
-import com.djrapitops.plan.system.delivery.rendering.json.graphs.pie.PieSlice;
-
-import java.util.Comparator;
+import java.util.List;
 
 /**
- * Comparator for PieSlices to descending Percentage order.
+ * PieChart with a Pie about each slice as well.
  *
  * @author Rsl1122
  */
-public class PieSliceComparator implements Comparator<PieSlice> {
+public abstract class PieWithDrilldown extends Pie {
 
-    @Override
-    public int compare(PieSlice o1, PieSlice o2) {
-        return -Long.compare(o1.getY(), o2.getY());
+    public PieWithDrilldown(List<PieSlice> slices) {
+        super(slices);
     }
+
+    public abstract String toHighChartsDrilldown();
+
 }

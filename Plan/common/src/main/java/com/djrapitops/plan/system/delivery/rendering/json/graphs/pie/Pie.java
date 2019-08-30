@@ -14,21 +14,34 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.utilities.comparators;
+package com.djrapitops.plan.system.delivery.rendering.json.graphs.pie;
 
-import com.djrapitops.plan.system.delivery.rendering.json.graphs.pie.PieSlice;
+import com.djrapitops.plan.system.delivery.rendering.json.graphs.HighChart;
+import org.apache.commons.text.TextStringBuilder;
 
-import java.util.Comparator;
+import java.util.List;
 
 /**
- * Comparator for PieSlices to descending Percentage order.
+ * This is a PieChart for any set of PieSlices, thus it is Abstract.
  *
  * @author Rsl1122
  */
-public class PieSliceComparator implements Comparator<PieSlice> {
+public class Pie implements HighChart {
+
+    protected final List<PieSlice> slices;
+
+    public Pie(List<PieSlice> slices) {
+        this.slices = slices;
+    }
 
     @Override
-    public int compare(PieSlice o1, PieSlice o2) {
-        return -Long.compare(o1.getY(), o2.getY());
+    public String toHighChartsSeries() {
+        TextStringBuilder series = new TextStringBuilder("[");
+        series.appendWithSeparators(slices, ",");
+        return series.append("]").toString();
+    }
+
+    public List<PieSlice> getSlices() {
+        return slices;
     }
 }

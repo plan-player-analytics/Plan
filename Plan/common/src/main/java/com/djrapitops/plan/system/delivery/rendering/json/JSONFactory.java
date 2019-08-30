@@ -21,7 +21,7 @@ import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerPlayerDataTableQuery;
-import com.djrapitops.plan.system.delivery.rendering.html.graphs.Graphs;
+import com.djrapitops.plan.system.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.system.gathering.cache.SessionCache;
 import com.djrapitops.plan.system.gathering.domain.Ping;
 import com.djrapitops.plan.system.gathering.domain.PlayerKill;

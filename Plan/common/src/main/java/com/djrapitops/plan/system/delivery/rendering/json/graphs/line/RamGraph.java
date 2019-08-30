@@ -14,21 +14,20 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.utilities.comparators;
+package com.djrapitops.plan.system.delivery.rendering.json.graphs.line;
 
-import com.djrapitops.plan.system.delivery.rendering.json.graphs.pie.PieSlice;
-
-import java.util.Comparator;
+import com.djrapitops.plan.data.store.mutators.TPSMutator;
+import com.djrapitops.plan.system.gathering.timed.TPSCounter;
 
 /**
- * Comparator for PieSlices to descending Percentage order.
+ * Graph about RAM Usage gathered by TPSCountTimer.
  *
  * @author Rsl1122
+ * @see TPSCounter
  */
-public class PieSliceComparator implements Comparator<PieSlice> {
+class RamGraph extends LineGraph {
 
-    @Override
-    public int compare(PieSlice o1, PieSlice o2) {
-        return -Long.compare(o1.getY(), o2.getY());
+    RamGraph(TPSMutator mutator, boolean displayGaps) {
+        super(mutator.ramUsagePoints(), displayGaps);
     }
 }

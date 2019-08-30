@@ -22,8 +22,8 @@ import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PerServerKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.system.delivery.rendering.html.graphs.Graphs;
-import com.djrapitops.plan.system.delivery.rendering.html.graphs.pie.WorldPie;
+import com.djrapitops.plan.system.delivery.rendering.json.graphs.Graphs;
+import com.djrapitops.plan.system.delivery.rendering.json.graphs.pie.WorldPie;
 import com.djrapitops.plan.system.gathering.domain.WorldTimes;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 

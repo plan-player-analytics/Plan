@@ -14,21 +14,31 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.utilities.comparators;
+package com.djrapitops.plan.system.delivery.rendering.json.graphs.bar;
 
-import com.djrapitops.plan.system.delivery.rendering.json.graphs.pie.PieSlice;
+import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 
-import java.util.Comparator;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.Map;
 
 /**
- * Comparator for PieSlices to descending Percentage order.
+ * Factory class for Bar Graphs.
  *
  * @author Rsl1122
  */
-public class PieSliceComparator implements Comparator<PieSlice> {
+@Singleton
+public class BarGraphFactory {
+    @Inject
+    public BarGraphFactory() {
+        // Inject Constructor.
+    }
 
-    @Override
-    public int compare(PieSlice o1, PieSlice o2) {
-        return -Long.compare(o1.getY(), o2.getY());
+    public BarGraph geolocationBarGraph(PlayersMutator playersMutator) {
+        return new GeolocationBarGraph(playersMutator);
+    }
+
+    public BarGraph geolocationBarGraph(Map<String, Integer> geolocationCounts) {
+        return new GeolocationBarGraph(geolocationCounts);
     }
 }

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system;
 
-import com.djrapitops.plan.system.delivery.rendering.html.graphs.Graphs;
+import com.djrapitops.plan.system.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import dagger.Lazy;
 
