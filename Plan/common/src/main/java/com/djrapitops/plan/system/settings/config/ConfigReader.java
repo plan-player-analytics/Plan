@@ -17,13 +17,13 @@
 package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plugin.utilities.Verify;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -145,7 +145,9 @@ public class ConfigReader implements Closeable {
 
     private ConfigNode parseNode(String line) {
         // Parse a node "Key: value"
-        String[] keyAndValue = StringUtils.split(line, ":", 2);
+        // Can not use StringUtils.split(line, ":", 2) - Relies on 2nd empty String for parent node parsing
+        String[] keyAndValue = line.split(":", 2);
+        System.out.println(Arrays.toString(keyAndValue));
         if (keyAndValue.length <= 1) {
             return handleMultiline(line);
         }

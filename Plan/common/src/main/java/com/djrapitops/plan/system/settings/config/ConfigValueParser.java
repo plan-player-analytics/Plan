@@ -162,7 +162,7 @@ public interface ConfigValueParser<T> {
         @Override
         public List<String> compose(String fromValue) {
             List<String> values = new ArrayList<>();
-            for (String line : StringUtils.split(fromValue, "\\n")) {
+            for (String line : StringUtils.split(fromValue, "\n")) {
                 if (line.trim().isEmpty()) {
                     continue;
                 }
