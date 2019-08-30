@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.delivery.rendering.json.graphs.calendar;
 
-import com.djrapitops.plan.data.store.containers.PlayerContainer;
-import com.djrapitops.plan.data.store.keys.PlayerKeys;
-import com.djrapitops.plan.data.store.keys.SessionKeys;
+import com.djrapitops.plan.system.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.system.delivery.domain.keys.PlayerKeys;
+import com.djrapitops.plan.system.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.system.gathering.domain.PlayerKill;
 import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.settings.theme.Theme;

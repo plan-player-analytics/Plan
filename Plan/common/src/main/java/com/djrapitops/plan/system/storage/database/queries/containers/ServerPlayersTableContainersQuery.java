@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.containers;
 
-import com.djrapitops.plan.data.store.containers.PlayerContainer;
-import com.djrapitops.plan.data.store.keys.PlayerKeys;
-import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+import com.djrapitops.plan.system.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.system.delivery.domain.keys.PlayerKeys;
+import com.djrapitops.plan.system.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.system.gathering.domain.BaseUser;
 import com.djrapitops.plan.system.gathering.domain.GeoInfo;
 import com.djrapitops.plan.system.gathering.domain.Session;

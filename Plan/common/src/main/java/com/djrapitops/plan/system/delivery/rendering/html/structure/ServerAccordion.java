@@ -16,12 +16,12 @@
  */
 package com.djrapitops.plan.system.delivery.rendering.html.structure;
 
-import com.djrapitops.plan.data.store.containers.DataContainer;
-import com.djrapitops.plan.data.store.containers.PerServerContainer;
-import com.djrapitops.plan.data.store.containers.PlayerContainer;
-import com.djrapitops.plan.data.store.keys.PerServerKeys;
-import com.djrapitops.plan.data.store.keys.PlayerKeys;
-import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+import com.djrapitops.plan.system.delivery.domain.container.DataContainer;
+import com.djrapitops.plan.system.delivery.domain.container.PerServerContainer;
+import com.djrapitops.plan.system.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.system.delivery.domain.keys.PerServerKeys;
+import com.djrapitops.plan.system.delivery.domain.keys.PlayerKeys;
+import com.djrapitops.plan.system.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.system.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.system.delivery.rendering.json.graphs.pie.WorldPie;
 import com.djrapitops.plan.system.gathering.domain.WorldTimes;

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.delivery.rendering.json;
 
-import com.djrapitops.plan.data.store.mutators.TPSMutator;
+import com.djrapitops.plan.system.delivery.domain.mutators.TPSMutator;
 import com.djrapitops.plan.system.gathering.domain.TPS;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.DisplaySettings;

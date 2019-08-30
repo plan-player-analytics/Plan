@@ -17,7 +17,7 @@
 package com.djrapitops.plan.system.delivery.webserver.pages;
 
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.system.delivery.domain.WebUser;
 import com.djrapitops.plan.system.delivery.webserver.Request;
 import com.djrapitops.plan.system.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.system.delivery.webserver.WebServer;

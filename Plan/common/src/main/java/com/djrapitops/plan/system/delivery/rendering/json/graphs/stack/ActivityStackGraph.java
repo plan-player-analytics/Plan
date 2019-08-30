@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.delivery.rendering.json.graphs.stack;
 
-import com.djrapitops.plan.data.store.mutators.ActivityIndex;
-import com.djrapitops.plan.data.store.objects.DateMap;
+import com.djrapitops.plan.system.delivery.domain.DateMap;
+import com.djrapitops.plan.system.delivery.domain.mutators.ActivityIndex;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 
 import java.util.*;

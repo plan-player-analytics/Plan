@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.gathering.listeners.bungee;
 
-import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
+import com.djrapitops.plan.system.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.system.delivery.webserver.cache.PageId;
 import com.djrapitops.plan.system.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.gathering.cache.GeolocationCache;

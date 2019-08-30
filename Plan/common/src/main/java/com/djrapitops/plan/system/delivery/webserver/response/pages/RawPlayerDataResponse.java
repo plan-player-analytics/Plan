@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.delivery.webserver.response.pages;
 
-import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.system.delivery.domain.container.PlayerContainer;
 
 /**
  * Raw Data JSON response for a Player.

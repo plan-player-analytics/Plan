@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.database.transactions.events;
 
-import com.djrapitops.plan.data.store.objects.Nickname;
+import com.djrapitops.plan.system.delivery.domain.Nickname;
 import com.djrapitops.plan.system.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 

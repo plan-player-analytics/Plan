@@ -16,15 +16,16 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.containers;
 
-import com.djrapitops.plan.data.store.containers.PlayerContainer;
-import com.djrapitops.plan.data.store.containers.ServerContainer;
+import com.djrapitops.plan.system.delivery.domain.container.DataContainer;
+import com.djrapitops.plan.system.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.system.delivery.domain.container.ServerContainer;
 import com.djrapitops.plan.system.storage.database.queries.Query;
 
 import java.util.List;
 import java.util.UUID;
 
 /**
- * Static method class for queries that return some kind of {@link com.djrapitops.plan.data.store.containers.DataContainer}.
+ * Static method class for queries that return some kind of {@link DataContainer}.
  *
  * @author Rsl1122
  */

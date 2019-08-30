@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.gathering.domain;
 
-import com.djrapitops.plan.data.store.objects.DateHolder;
-import com.djrapitops.plan.data.store.objects.DateMap;
+import com.djrapitops.plan.system.delivery.domain.DateHolder;
+import com.djrapitops.plan.system.delivery.domain.DateMap;
 
 import java.io.Serializable;
 import java.net.Inet6Address;

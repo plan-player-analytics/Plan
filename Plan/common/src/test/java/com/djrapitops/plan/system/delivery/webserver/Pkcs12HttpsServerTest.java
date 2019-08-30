@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.delivery.webserver;
 
-import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.delivery.domain.WebUser;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.changes.ConfigUpdater;
 import com.djrapitops.plan.system.settings.config.paths.WebserverSettings;

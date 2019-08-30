@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.delivery.rendering.json;
 
-import com.djrapitops.plan.data.store.containers.PlayerContainer;
-import com.djrapitops.plan.data.store.keys.PlayerKeys;
-import com.djrapitops.plan.data.store.mutators.*;
+import com.djrapitops.plan.system.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.system.delivery.domain.keys.PlayerKeys;
+import com.djrapitops.plan.system.delivery.domain.mutators.*;
 import com.djrapitops.plan.system.delivery.rendering.html.Html;
 import com.djrapitops.plan.system.delivery.rendering.html.structure.ServerAccordion;
 import com.djrapitops.plan.system.delivery.rendering.json.graphs.Graphs;
@@ -273,12 +273,12 @@ public class PlayerJSONParser {
         }
 
         public static List<Nickname> fromDataNicknames(
-                List<com.djrapitops.plan.data.store.objects.Nickname> nicknames,
+                List<com.djrapitops.plan.system.delivery.domain.Nickname> nicknames,
                 Map<UUID, String> serverNames,
                 Formatter<Long> dateFormatter
         ) {
             List<Nickname> mapped = new ArrayList<>();
-            for (com.djrapitops.plan.data.store.objects.Nickname nickname : nicknames) {
+            for (com.djrapitops.plan.system.delivery.domain.Nickname nickname : nicknames) {
                 mapped.add(new Nickname(
                         Html.swapColorCodesToSpan(StringEscapeUtils.escapeHtml4(nickname.getName())),
                         serverNames.getOrDefault(nickname.getServerUUID(), nickname.getServerUUID().toString()),

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.delivery.rendering.json.graphs.special;
 
-import com.djrapitops.plan.data.store.mutators.PlayersMutator;
+import com.djrapitops.plan.system.delivery.domain.mutators.PlayersMutator;
 import com.djrapitops.plan.system.delivery.rendering.json.graphs.HighChart;
 import org.apache.commons.text.TextStringBuilder;
 

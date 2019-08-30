@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.delivery.rendering.json.graphs.special;
 
-import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+import com.djrapitops.plan.system.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.system.delivery.rendering.json.graphs.HighChart;
 
 import java.util.ArrayList;

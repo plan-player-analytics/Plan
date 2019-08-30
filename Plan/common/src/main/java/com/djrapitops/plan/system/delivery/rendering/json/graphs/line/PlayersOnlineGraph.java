@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.delivery.rendering.json.graphs.line;
 
-import com.djrapitops.plan.data.store.mutators.TPSMutator;
+import com.djrapitops.plan.system.delivery.domain.mutators.TPSMutator;
 import com.djrapitops.plan.system.gathering.timed.TPSCounter;
 
 /**

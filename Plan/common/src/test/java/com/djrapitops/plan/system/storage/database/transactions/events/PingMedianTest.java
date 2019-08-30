@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.database.transactions.events;
 
-import com.djrapitops.plan.data.store.objects.DateObj;
+import com.djrapitops.plan.system.delivery.domain.DateObj;
 import com.djrapitops.plan.utilities.analysis.Median;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

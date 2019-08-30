@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.delivery.rendering.json.graphs.line;
 
-import com.djrapitops.plan.data.store.mutators.MutatorFunctions;
+import com.djrapitops.plan.system.delivery.domain.mutators.MutatorFunctions;
 import com.djrapitops.plan.system.delivery.rendering.json.graphs.HighChart;
 
 import java.util.List;

@@ -16,7 +16,8 @@
  */
 package com.djrapitops.plan.data.container;
 
-import com.djrapitops.plan.data.store.keys.SessionKeys;
+import com.djrapitops.plan.system.delivery.domain.container.DataContainer;
+import com.djrapitops.plan.system.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.system.gathering.domain.PlayerKill;
 import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.gathering.domain.WorldTimes;
@@ -33,7 +34,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test for {@link Session} {@link com.djrapitops.plan.data.store.containers.DataContainer}.
+ * Test for {@link Session} {@link DataContainer}.
  *
  * @author Rsl1122
  */

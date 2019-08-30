@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.delivery.rendering.json.graphs.bar;
 
-import com.djrapitops.plan.data.store.mutators.PlayersMutator;
+import com.djrapitops.plan.system.delivery.domain.mutators.PlayersMutator;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

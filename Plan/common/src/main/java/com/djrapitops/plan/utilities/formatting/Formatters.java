@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.utilities.formatting;
 
-import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.system.delivery.domain.DateHolder;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.utilities.formatting.time.*;

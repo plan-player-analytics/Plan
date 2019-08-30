@@ -16,17 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.database;
 
-import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.element.TableContainer;
-import com.djrapitops.plan.data.store.Key;
-import com.djrapitops.plan.data.store.containers.PlayerContainer;
-import com.djrapitops.plan.data.store.containers.ServerContainer;
-import com.djrapitops.plan.data.store.keys.PlayerKeys;
-import com.djrapitops.plan.data.store.keys.ServerKeys;
-import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.data.store.objects.DateObj;
-import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.ExtensionService;
@@ -43,6 +33,16 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.results
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.query.QueryServiceImplementation;
 import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.delivery.domain.DateObj;
+import com.djrapitops.plan.system.delivery.domain.Nickname;
+import com.djrapitops.plan.system.delivery.domain.WebUser;
+import com.djrapitops.plan.system.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.system.delivery.domain.container.ServerContainer;
+import com.djrapitops.plan.system.delivery.domain.keys.Key;
+import com.djrapitops.plan.system.delivery.domain.keys.PlayerKeys;
+import com.djrapitops.plan.system.delivery.domain.keys.ServerKeys;
+import com.djrapitops.plan.system.delivery.domain.keys.SessionKeys;
+import com.djrapitops.plan.system.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.system.gathering.domain.*;
 import com.djrapitops.plan.system.identification.Server;
 import com.djrapitops.plan.system.settings.config.Config;

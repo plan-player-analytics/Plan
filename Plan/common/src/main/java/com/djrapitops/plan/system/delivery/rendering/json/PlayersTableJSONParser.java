@@ -17,14 +17,14 @@
 package com.djrapitops.plan.system.delivery.rendering.json;
 
 import com.djrapitops.plan.api.PlanAPI;
-import com.djrapitops.plan.data.store.containers.PlayerContainer;
-import com.djrapitops.plan.data.store.keys.PlayerKeys;
-import com.djrapitops.plan.data.store.mutators.ActivityIndex;
-import com.djrapitops.plan.data.store.mutators.GeoInfoMutator;
-import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.implementation.results.*;
+import com.djrapitops.plan.system.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.system.delivery.domain.keys.PlayerKeys;
+import com.djrapitops.plan.system.delivery.domain.mutators.ActivityIndex;
+import com.djrapitops.plan.system.delivery.domain.mutators.GeoInfoMutator;
+import com.djrapitops.plan.system.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.system.delivery.rendering.html.Html;
 import com.djrapitops.plan.system.delivery.rendering.html.icon.Family;
 import com.djrapitops.plan.system.delivery.rendering.html.icon.Icon;

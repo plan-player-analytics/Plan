@@ -17,11 +17,11 @@
 package com.djrapitops.plan.system.delivery.rendering.pages;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
-import com.djrapitops.plan.data.store.containers.DataContainer;
-import com.djrapitops.plan.data.store.containers.RawDataContainer;
-import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
+import com.djrapitops.plan.system.delivery.domain.container.DataContainer;
+import com.djrapitops.plan.system.delivery.domain.container.RawDataContainer;
+import com.djrapitops.plan.system.delivery.domain.keys.AnalysisKeys;
 import com.djrapitops.plan.system.delivery.rendering.html.Html;
 import com.djrapitops.plan.system.identification.Server;
 import com.djrapitops.plan.system.identification.ServerInfo;
@@ -38,7 +38,7 @@ import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 import java.io.IOException;
 import java.util.List;
 
-import static com.djrapitops.plan.data.store.keys.AnalysisKeys.*;
+import static com.djrapitops.plan.system.delivery.domain.keys.AnalysisKeys.*;
 
 /**
  * Used for parsing a Html String out of server.html.

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.gathering.listeners.sponge;
 
-import com.djrapitops.plan.data.store.objects.Nickname;
+import com.djrapitops.plan.system.delivery.domain.Nickname;
 import com.djrapitops.plan.system.gathering.cache.NicknameCache;
 import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.storage.database.DBSystem;

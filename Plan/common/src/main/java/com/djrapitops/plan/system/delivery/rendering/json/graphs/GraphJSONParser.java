@@ -16,10 +16,10 @@
  */
 package com.djrapitops.plan.system.delivery.rendering.json.graphs;
 
-import com.djrapitops.plan.data.store.mutators.MutatorFunctions;
-import com.djrapitops.plan.data.store.mutators.PingMutator;
-import com.djrapitops.plan.data.store.mutators.TPSMutator;
-import com.djrapitops.plan.data.store.objects.DateMap;
+import com.djrapitops.plan.system.delivery.domain.DateMap;
+import com.djrapitops.plan.system.delivery.domain.mutators.MutatorFunctions;
+import com.djrapitops.plan.system.delivery.domain.mutators.PingMutator;
+import com.djrapitops.plan.system.delivery.domain.mutators.TPSMutator;
 import com.djrapitops.plan.system.delivery.rendering.json.graphs.bar.BarGraph;
 import com.djrapitops.plan.system.delivery.rendering.json.graphs.line.LineGraphFactory;
 import com.djrapitops.plan.system.delivery.rendering.json.graphs.line.PingGraph;

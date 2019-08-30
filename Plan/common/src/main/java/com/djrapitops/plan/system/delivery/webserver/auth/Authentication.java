@@ -17,7 +17,7 @@
 package com.djrapitops.plan.system.delivery.webserver.auth;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
-import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.system.delivery.domain.WebUser;
 
 /**
  * Interface for different WebUser authentication methods used by Requests.

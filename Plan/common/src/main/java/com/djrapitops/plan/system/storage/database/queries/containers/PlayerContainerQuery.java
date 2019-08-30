@@ -16,13 +16,13 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.containers;
 
-import com.djrapitops.plan.data.store.Key;
-import com.djrapitops.plan.data.store.containers.PerServerContainer;
-import com.djrapitops.plan.data.store.containers.PlayerContainer;
-import com.djrapitops.plan.data.store.keys.PlayerKeys;
-import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.data.store.mutators.PerServerMutator;
-import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+import com.djrapitops.plan.system.delivery.domain.container.PerServerContainer;
+import com.djrapitops.plan.system.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.system.delivery.domain.keys.Key;
+import com.djrapitops.plan.system.delivery.domain.keys.PlayerKeys;
+import com.djrapitops.plan.system.delivery.domain.keys.SessionKeys;
+import com.djrapitops.plan.system.delivery.domain.mutators.PerServerMutator;
+import com.djrapitops.plan.system.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.system.gathering.domain.BaseUser;
 import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.gathering.domain.WorldTimes;

@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.objects;
 
-import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.system.delivery.domain.DateHolder;
+import com.djrapitops.plan.system.delivery.domain.keys.SessionKeys;
+import com.djrapitops.plan.system.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.system.gathering.domain.GMTimes;
 import com.djrapitops.plan.system.gathering.domain.PlayerKill;
 import com.djrapitops.plan.system.gathering.domain.Session;

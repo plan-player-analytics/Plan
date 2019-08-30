@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.analysis;
 
-import com.djrapitops.plan.data.store.mutators.ActivityIndex;
+import com.djrapitops.plan.system.delivery.domain.mutators.ActivityIndex;
 import com.djrapitops.plan.system.storage.database.queries.Query;
 import com.djrapitops.plan.system.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.system.storage.database.sql.tables.SessionsTable;

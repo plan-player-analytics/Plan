@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.delivery.rendering.json.graphs.pie;
 
-import com.djrapitops.plan.data.store.mutators.ActivityIndex;
+import com.djrapitops.plan.system.delivery.domain.mutators.ActivityIndex;
 
 import java.util.ArrayList;
 import java.util.List;

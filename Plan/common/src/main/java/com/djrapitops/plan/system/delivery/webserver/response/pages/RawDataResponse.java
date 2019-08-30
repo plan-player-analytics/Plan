@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.delivery.webserver.response.pages;
 
-import com.djrapitops.plan.data.store.containers.DataContainer;
+import com.djrapitops.plan.system.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.system.delivery.webserver.response.data.JSONResponse;
 
 import java.util.HashMap;

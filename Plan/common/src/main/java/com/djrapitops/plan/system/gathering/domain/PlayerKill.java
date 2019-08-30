@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.gathering.domain;
 
-import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.system.delivery.domain.DateHolder;
 
 import java.util.Objects;
 import java.util.Optional;

@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.delivery.rendering.pages;
 
-import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.system.delivery.domain.DateHolder;
+import com.djrapitops.plan.system.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.system.delivery.rendering.html.Html;
 import com.djrapitops.plan.system.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.system.delivery.rendering.html.structure.TabsElement;

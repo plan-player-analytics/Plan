@@ -16,7 +16,9 @@
  */
 package com.djrapitops.plan.data.store.containers;
 
-import com.djrapitops.plan.data.store.Key;
+import com.djrapitops.plan.system.delivery.domain.container.DataContainer;
+import com.djrapitops.plan.system.delivery.domain.container.SupplierDataContainer;
+import com.djrapitops.plan.system.delivery.domain.keys.Key;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;

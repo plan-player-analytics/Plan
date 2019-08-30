@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.database.transactions.patches;
 
-import com.djrapitops.plan.data.store.objects.Nickname;
+import com.djrapitops.plan.system.delivery.domain.Nickname;
 import com.djrapitops.plan.system.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.system.storage.database.sql.parsing.Select;
 import com.djrapitops.plan.system.storage.database.sql.tables.NicknamesTable;
