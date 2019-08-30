@@ -43,6 +43,7 @@ import java.util.UUID;
  * @author Rsl1122
  */
 @Singleton
+@Deprecated
 public class CommonAPI implements PlanAPI {
 
     private final DBSystem dbSystem;

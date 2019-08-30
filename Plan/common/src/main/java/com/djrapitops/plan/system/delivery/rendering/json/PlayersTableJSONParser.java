@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.system.delivery.rendering.json;
 
-import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.implementation.results.*;
@@ -108,7 +107,6 @@ public class PlayersTableJSONParser {
     private String parseData() {
         StringBuilder dataJSON = new StringBuilder("[");
 
-        PlanAPI planAPI = PlanAPI.getInstance();
         long now = System.currentTimeMillis();
         players.sort(new PlayerContainerLastPlayedComparator());
 
@@ -127,7 +125,7 @@ public class PlayersTableJSONParser {
             }
             dataJSON.append('{');           // Start new item
 
-            appendPlayerData(dataJSON, planAPI, now, player);
+            appendPlayerData(dataJSON, now, player);
             appendExtensionData(dataJSON, extensionData.getOrDefault(playerUUID, new ExtensionTabData.Factory(null).build()));
 
             dataJSON.append('}');           // Close new item
@@ -137,9 +135,9 @@ public class PlayersTableJSONParser {
         return dataJSON.append(']').toString();
     }
 
-    private void appendPlayerData(StringBuilder dataJSON, PlanAPI planAPI, long now, PlayerContainer player) {
+    private void appendPlayerData(StringBuilder dataJSON, long now, PlayerContainer player) {
         String name = player.getValue(PlayerKeys.NAME).orElse("Unknown");
-        String url = planAPI.getPlayerInspectPageLink(name);
+        String url = "../player/" + name;
 
         SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);
         int loginTimes = sessionsMutator.count();

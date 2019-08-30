@@ -30,6 +30,7 @@ import java.util.Optional;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class PlayerContainer {
 
     private final com.djrapitops.plan.system.delivery.domain.container.PlayerContainer container;

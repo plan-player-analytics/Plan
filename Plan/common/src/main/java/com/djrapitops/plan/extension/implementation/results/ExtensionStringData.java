@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.extension.implementation.results;
 
-import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.system.delivery.rendering.html.Html;
 
 /**
@@ -42,7 +41,7 @@ public class ExtensionStringData implements DescribedExtensionData {
 
     public String getFormattedValue() {
         String withColors = Html.swapColorCodesToSpan(value);
-        return !playerName ? withColors : Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(value), withColors);
+        return !playerName ? withColors : Html.LINK.parse("../player/" + value, withColors);
     }
 
     ExtensionStringData concatenate(ExtensionStringData other) {

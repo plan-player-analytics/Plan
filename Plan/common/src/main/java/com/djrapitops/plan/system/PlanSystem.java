@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.system;
 
-import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.capability.CapabilityServiceImplementation;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.extension.ExtensionService;
@@ -75,7 +74,6 @@ public class PlanSystem implements SubSystem {
     private final DeliveryUtilities deliveryUtilities;
     private final ExtensionServiceImplementation extensionService;
     private final QueryServiceImplementation queryService;
-    private final PlanAPI planAPI;
     private final ErrorHandler errorHandler;
 
     @Inject
@@ -96,7 +94,6 @@ public class PlanSystem implements SubSystem {
             DeliveryUtilities deliveryUtilities,
             ExtensionServiceImplementation extensionService,
             QueryServiceImplementation queryService,
-            PlanAPI planAPI,
             ErrorHandler errorHandler
     ) {
         this.files = files;
@@ -115,7 +112,6 @@ public class PlanSystem implements SubSystem {
         this.deliveryUtilities = deliveryUtilities;
         this.extensionService = extensionService;
         this.queryService = queryService;
-        this.planAPI = planAPI;
         this.errorHandler = errorHandler;
     }
 
@@ -235,10 +231,6 @@ public class PlanSystem implements SubSystem {
 
     public CacheSystem getCacheSystem() {
         return cacheSystem;
-    }
-
-    public PlanAPI getPlanAPI() {
-        return planAPI;
     }
 
     public Processing getProcessing() {
