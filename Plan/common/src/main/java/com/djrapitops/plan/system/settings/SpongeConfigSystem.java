@@ -18,8 +18,8 @@ package com.djrapitops.plan.system.settings;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.file.PlanFiles;
-import com.djrapitops.plan.system.settings.changes.ConfigUpdater;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.config.changes.ConfigUpdater;
 import com.djrapitops.plan.system.settings.network.ServerSettingsManager;
 import com.djrapitops.plan.system.settings.paths.DataGatheringSettings;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
