@@ -14,30 +14,30 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.identification.properties;
+package com.djrapitops.plan.identification.properties;
 
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.ProxySettings;
-import com.velocitypowered.api.proxy.ProxyServer;
+import net.md_5.bungee.api.ProxyServer;
 
 /**
- * ServerProperties for Velocity.
+ * ServerProperties for Bungee.
  * <p>
  * Supports RedisBungee for Players online getting.
  *
  * @author Rsl1122
  */
-public class VelocityServerProperties extends ServerProperties {
+public class BungeeServerProperties extends ServerProperties {
 
-    public VelocityServerProperties(ProxyServer server, PlanConfig config) {
+    public BungeeServerProperties(ProxyServer server, PlanConfig config) {
         super(
-                "Velocity",
-                server.getBoundAddress().getPort(),
-                server.getClass().getPackage().getImplementationVersion(),
-                server.getClass().getPackage().getImplementationVersion(),
-                () -> config.get(ProxySettings.IP),
+                "BungeeCord",
                 -1,
-                server::getPlayerCount
+                server.getVersion(),
+                server.getVersion(),
+                () -> config.get(ProxySettings.IP),
+                server.getConfig().getPlayerLimit(),
+                RedisCheck.isClassAvailable() ? new RedisPlayersOnlineSupplier() : server::getOnlineCount
         );
     }
 }

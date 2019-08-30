@@ -17,7 +17,7 @@
 package com.djrapitops.plan.commands.subcommands;
 
 import com.djrapitops.plan.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.identification.Server;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.lang.CmdHelpLang;

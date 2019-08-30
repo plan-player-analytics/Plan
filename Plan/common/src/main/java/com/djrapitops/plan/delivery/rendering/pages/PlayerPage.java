@@ -20,7 +20,7 @@ import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.exceptions.ParseException;
-import com.djrapitops.plan.system.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;

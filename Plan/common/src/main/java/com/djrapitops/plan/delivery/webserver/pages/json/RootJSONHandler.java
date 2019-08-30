@@ -22,7 +22,7 @@ import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.pages.TreePageHandler;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
-import com.djrapitops.plan.system.identification.Identifiers;
+import com.djrapitops.plan.identification.Identifiers;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

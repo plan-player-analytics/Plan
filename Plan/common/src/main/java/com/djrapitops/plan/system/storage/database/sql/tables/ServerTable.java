@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.database.sql.tables;
 
-import com.djrapitops.plan.system.identification.Server;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.system.storage.database.DBType;
 import com.djrapitops.plan.system.storage.database.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.system.storage.database.sql.parsing.Insert;

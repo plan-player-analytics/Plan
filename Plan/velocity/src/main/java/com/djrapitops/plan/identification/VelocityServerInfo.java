@@ -14,12 +14,12 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.identification;
+package com.djrapitops.plan.identification;
 
 import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.identification.properties.ServerProperties;
+import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.Database;
 import com.djrapitops.plan.system.storage.database.queries.objects.ServerQueries;
@@ -39,14 +39,14 @@ import java.util.concurrent.ExecutionException;
  * @author Rsl1122
  */
 @Singleton
-public class BungeeServerInfo extends ServerInfo {
+public class VelocityServerInfo extends ServerInfo {
 
     private final DBSystem dbSystem;
     private final Lazy<WebServer> webServer;
     private final PluginLogger logger;
 
     @Inject
-    public BungeeServerInfo(
+    public VelocityServerInfo(
             ServerProperties serverProperties,
             DBSystem dbSystem,
             Lazy<WebServer> webServer,
@@ -69,7 +69,7 @@ public class BungeeServerInfo extends ServerInfo {
                 server = proxyInfo.get();
                 updateServerInfo(database);
             } else {
-                server = registerBungeeInfo(database);
+                server = registerVelocityInfo(database);
             }
         } catch (DBOpException | ExecutionException e) {
             throw new EnableException("Failed to read Server information from Database.");
@@ -95,10 +95,11 @@ public class BungeeServerInfo extends ServerInfo {
         }
     }
 
-    private Server registerBungeeInfo(Database db) throws EnableException, ExecutionException, InterruptedException {
+    private Server registerVelocityInfo(Database db) throws EnableException, ExecutionException, InterruptedException {
         UUID serverUUID = generateNewUUID();
         String accessAddress = webServer.get().getAccessAddress();
 
+        // TODO Rework to allow Velocity as name.
         Server proxy = new Server(-1, serverUUID, "BungeeCord", accessAddress, serverProperties.getMaxPlayers());
         db.executeTransaction(new StoreServerInformationTransaction(proxy))
                 .get();
@@ -107,6 +108,6 @@ public class BungeeServerInfo extends ServerInfo {
         if (proxyInfo.isPresent()) {
             return proxyInfo.get();
         }
-        throw new EnableException("BungeeCord registration failed (DB)");
+        throw new EnableException("Velocity registration failed (DB)");
     }
 }

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.gathering.listeners.sponge;
 
-import com.djrapitops.plan.system.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.DataGatheringSettings;

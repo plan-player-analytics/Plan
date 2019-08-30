@@ -17,8 +17,8 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.exceptions.EnableException;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.identification.Server;
 import com.djrapitops.plan.system.settings.ConfigSettingKeyTest;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.WebserverSettings;

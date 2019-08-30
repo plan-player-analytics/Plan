@@ -14,27 +14,23 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.identification.properties;
+package com.djrapitops.plan.identification.properties;
 
-import org.bukkit.Server;
+import com.djrapitops.plugin.api.Check;
 
 /**
- * ServerProperties for Bukkit.
+ * Utility class for checking if RedisBungee API is available.
  *
  * @author Rsl1122
  */
-public class BukkitServerProperties extends ServerProperties {
+public class RedisCheck {
 
-    public BukkitServerProperties(Server server) {
-        super(
-                server.getName(),
-                server.getPort(),
-                server.getVersion(),
-                server.getBukkitVersion(),
-                server::getIp,
-                server.getMaxPlayers(),
-                () -> server.getOnlinePlayers().size()
-        );
+    private RedisCheck() {
+        /* Static method class */
+    }
+
+    public static boolean isClassAvailable() {
+        return Check.isAvailable("com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI");
     }
 
 }

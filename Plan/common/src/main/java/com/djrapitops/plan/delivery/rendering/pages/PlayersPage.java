@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.rendering.pages;
 
 import com.djrapitops.plan.exceptions.ParseException;
-import com.djrapitops.plan.system.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.system.settings.config.paths.ProxySettings;

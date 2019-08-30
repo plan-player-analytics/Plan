@@ -14,21 +14,27 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.identification.properties;
+package com.djrapitops.plan.identification.properties;
 
-import com.imaginarycode.minecraft.redisbungee.RedisBungee;
-
-import java.util.function.IntSupplier;
+import org.bukkit.Server;
 
 /**
- * Players online supplier when using RedisBungee.
+ * ServerProperties for Bukkit.
  *
  * @author Rsl1122
  */
-public class RedisPlayersOnlineSupplier implements IntSupplier {
+public class BukkitServerProperties extends ServerProperties {
 
-    @Override
-    public int getAsInt() {
-        return RedisBungee.getApi().getPlayerCount();
+    public BukkitServerProperties(Server server) {
+        super(
+                server.getName(),
+                server.getPort(),
+                server.getVersion(),
+                server.getBukkitVersion(),
+                server::getIp,
+                server.getMaxPlayers(),
+                () -> server.getOnlinePlayers().size()
+        );
     }
+
 }

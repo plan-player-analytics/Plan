@@ -23,7 +23,7 @@ import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.gathering.importing.data.BukkitUserImportRefiner;
 import com.djrapitops.plan.gathering.importing.data.ServerImportData;
 import com.djrapitops.plan.gathering.importing.data.UserImportData;
-import com.djrapitops.plan.system.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.Database;
 import com.djrapitops.plan.system.storage.database.queries.LargeStoreQueries;

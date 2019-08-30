@@ -20,7 +20,7 @@ import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.webserver.cache.PageId;
 import com.djrapitops.plan.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.delivery.webserver.response.Response;
-import com.djrapitops.plan.system.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.system.storage.file.PlanFiles;
 
 import java.io.File;

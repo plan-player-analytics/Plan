@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.identification;
+package com.djrapitops.plan.identification;
 
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.exceptions.connection.BadRequestException;

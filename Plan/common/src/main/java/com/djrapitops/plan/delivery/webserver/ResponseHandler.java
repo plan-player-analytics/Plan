@@ -26,7 +26,7 @@ import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.delivery.webserver.response.errors.BadRequestResponse;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.*;
-import com.djrapitops.plan.system.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import dagger.Lazy;

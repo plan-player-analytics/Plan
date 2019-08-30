@@ -25,7 +25,7 @@ import com.djrapitops.plan.delivery.webserver.response.RedirectResponse;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.exceptions.connection.WebException;
-import com.djrapitops.plan.system.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerInfo;
 
 import java.util.Optional;
 

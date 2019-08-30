@@ -17,8 +17,8 @@
 package com.djrapitops.plan.system.storage.database;
 
 import com.djrapitops.plan.gathering.domain.GeoInfo;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.identification.Server;
 import com.djrapitops.plan.system.storage.database.queries.objects.GeoInfoQueries;
 import com.djrapitops.plan.system.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.storage.database.transactions.StoreServerInformationTransaction;

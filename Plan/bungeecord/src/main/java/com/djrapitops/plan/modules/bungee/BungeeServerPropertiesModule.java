@@ -17,8 +17,8 @@
 package com.djrapitops.plan.modules.bungee;
 
 import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plan.system.identification.properties.BungeeServerProperties;
-import com.djrapitops.plan.system.identification.properties.ServerProperties;
+import com.djrapitops.plan.identification.properties.BungeeServerProperties;
+import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import dagger.Module;
 import dagger.Provides;

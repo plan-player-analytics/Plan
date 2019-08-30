@@ -24,7 +24,7 @@ import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.gathering.cache.GeolocationCache;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.Session;
-import com.djrapitops.plan.system.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.settings.config.PlanConfig;

@@ -20,7 +20,7 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.gathering.cache.GeolocationCache;
 import com.djrapitops.plan.gathering.importing.data.ServerImportData;
 import com.djrapitops.plan.gathering.importing.data.UserImportData;
-import com.djrapitops.plan.system.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

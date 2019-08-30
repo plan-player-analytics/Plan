@@ -25,7 +25,7 @@ package com.djrapitops.plan.gathering.timed;
 
 import com.djrapitops.plan.PlanVelocity;
 import com.djrapitops.plan.delivery.domain.DateObj;
-import com.djrapitops.plan.system.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.system.storage.database.DBSystem;

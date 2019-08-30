@@ -17,8 +17,8 @@
 package com.djrapitops.plan.query;
 
 import com.djrapitops.plan.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.identification.Server;
-import com.djrapitops.plan.system.identification.ServerInfo;
+import com.djrapitops.plan.identification.Server;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.Database;
 import com.djrapitops.plan.system.storage.database.queries.QueryAPIExecutable;

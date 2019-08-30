@@ -18,7 +18,7 @@ package com.djrapitops.plan.delivery.upkeep;
 
 import com.djrapitops.plan.delivery.webserver.cache.PageId;
 import com.djrapitops.plan.delivery.webserver.cache.ResponseCache;
-import com.djrapitops.plan.system.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plugin.task.AbsRunnable;
 
 import javax.inject.Inject;
