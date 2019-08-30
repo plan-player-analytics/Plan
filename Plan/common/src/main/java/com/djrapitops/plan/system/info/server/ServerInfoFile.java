@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.info.server;
 
-import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.settings.config.Config;
 import com.djrapitops.plan.system.settings.config.ConfigReader;
+import com.djrapitops.plan.system.storage.file.PlanFiles;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;

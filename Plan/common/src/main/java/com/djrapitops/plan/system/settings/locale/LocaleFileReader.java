@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.settings.locale;
 
-import com.djrapitops.plan.system.file.Resource;
 import com.djrapitops.plan.system.settings.locale.lang.Lang;
+import com.djrapitops.plan.system.storage.file.Resource;
 
 import java.io.IOException;
 import java.util.List;

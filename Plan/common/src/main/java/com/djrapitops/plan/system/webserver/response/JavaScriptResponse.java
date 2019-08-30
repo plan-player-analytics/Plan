@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.webserver.response;
 
-import com.djrapitops.plan.system.file.PlanFiles;
+import com.djrapitops.plan.system.storage.file.PlanFiles;
 
 import java.io.IOException;
 

@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.system.commands.subcommands.manage;
 
-import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
@@ -29,6 +28,7 @@ import com.djrapitops.plan.system.storage.database.DBType;
 import com.djrapitops.plan.system.storage.database.Database;
 import com.djrapitops.plan.system.storage.database.SQLiteDB;
 import com.djrapitops.plan.system.storage.database.transactions.BackupCopyTransaction;
+import com.djrapitops.plan.system.storage.file.PlanFiles;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;

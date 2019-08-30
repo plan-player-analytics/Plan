@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.modules;
 
-import com.djrapitops.plan.system.file.PlanFiles;
+import com.djrapitops.plan.system.storage.file.PlanFiles;
 import dagger.Module;
 import dagger.Provides;
 

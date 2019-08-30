@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.settings.locale;
 
-import com.djrapitops.plan.system.file.FileResource;
+import com.djrapitops.plan.system.storage.file.FileResource;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.runner.JUnitPlatform;

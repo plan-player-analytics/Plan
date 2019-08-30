@@ -17,10 +17,10 @@
 package com.djrapitops.plan.system.settings.locale;
 
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.system.settings.locale.lang.*;
+import com.djrapitops.plan.system.storage.file.PlanFiles;
 import com.djrapitops.plan.system.webserver.auth.FailReason;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;

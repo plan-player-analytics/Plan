@@ -17,7 +17,6 @@
 package com.djrapitops.plan.system.settings.network;
 
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.Config;
 import com.djrapitops.plan.system.settings.config.ConfigReader;
@@ -28,6 +27,7 @@ import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.Database;
 import com.djrapitops.plan.system.storage.database.queries.objects.NewerConfigQuery;
 import com.djrapitops.plan.system.storage.database.transactions.StoreConfigTransaction;
+import com.djrapitops.plan.system.storage.file.PlanFiles;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.utilities.file.FileWatcher;
 import com.djrapitops.plan.utilities.file.WatchedFile;
