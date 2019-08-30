@@ -17,8 +17,8 @@
 package com.djrapitops.plan.system.storage.database.transactions;
 
 import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.access.Executable;
-import com.djrapitops.plan.system.storage.database.access.Query;
+import com.djrapitops.plan.system.storage.database.operation.Executable;
+import com.djrapitops.plan.system.storage.database.operation.Query;
 import com.djrapitops.plan.system.storage.database.queries.LargeFetchQueries;
 import com.djrapitops.plan.system.storage.database.queries.LargeStoreQueries;
 import com.djrapitops.plan.system.storage.database.queries.objects.*;

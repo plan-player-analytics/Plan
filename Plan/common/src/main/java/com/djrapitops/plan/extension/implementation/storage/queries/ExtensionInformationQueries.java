@@ -20,9 +20,9 @@ import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.ExtensionInformation;
-import com.djrapitops.plan.system.storage.database.access.Query;
-import com.djrapitops.plan.system.storage.database.access.QueryAllStatement;
-import com.djrapitops.plan.system.storage.database.access.QueryStatement;
+import com.djrapitops.plan.system.storage.database.operation.Query;
+import com.djrapitops.plan.system.storage.database.operation.QueryAllStatement;
+import com.djrapitops.plan.system.storage.database.operation.QueryStatement;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionIconTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionPluginTable;
 

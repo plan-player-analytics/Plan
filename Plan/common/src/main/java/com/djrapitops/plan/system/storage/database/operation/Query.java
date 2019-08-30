@@ -14,24 +14,18 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.storage.database.access;
+package com.djrapitops.plan.system.storage.database.operation;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import com.djrapitops.plan.system.storage.database.SQLDB;
 
 /**
- * SQL executing batch statement that closes appropriate elements.
+ * Interface for everything that returns results from the database.
  *
+ * @param <T> Type of the result.
  * @author Rsl1122
  */
-public abstract class ExecBatchStatement extends ExecStatement {
+public interface Query<T> {
 
-    public ExecBatchStatement(String sql) {
-        super(sql);
-    }
+    T executeQuery(SQLDB db);
 
-    @Override
-    protected boolean callExecute(PreparedStatement statement) throws SQLException {
-        return statement.executeBatch().length > 0;
-    }
 }

@@ -17,10 +17,10 @@
 package com.djrapitops.plan.extension.implementation.storage.transactions;
 
 import com.djrapitops.plan.extension.icon.Icon;
-import com.djrapitops.plan.system.storage.database.access.ExecStatement;
-import com.djrapitops.plan.system.storage.database.access.Executable;
-import com.djrapitops.plan.system.storage.database.access.HasMoreThanZeroQueryStatement;
-import com.djrapitops.plan.system.storage.database.access.Query;
+import com.djrapitops.plan.system.storage.database.operation.ExecStatement;
+import com.djrapitops.plan.system.storage.database.operation.Executable;
+import com.djrapitops.plan.system.storage.database.operation.HasMoreThanZeroQueryStatement;
+import com.djrapitops.plan.system.storage.database.operation.Query;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionIconTable;
 import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 

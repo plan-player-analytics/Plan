@@ -18,7 +18,7 @@ package com.djrapitops.plan.extension.implementation.storage.transactions.result
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.extension.table.Table;
-import com.djrapitops.plan.system.storage.database.access.*;
+import com.djrapitops.plan.system.storage.database.operation.*;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionPluginTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionTableProviderTable;
 import com.djrapitops.plan.system.storage.database.transactions.Transaction;

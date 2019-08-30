@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.database.transactions.commands;
 
-import com.djrapitops.plan.system.storage.database.access.ExecStatement;
+import com.djrapitops.plan.system.storage.database.operation.ExecStatement;
 import com.djrapitops.plan.system.storage.database.queries.PlayerFetchQueries;
 import com.djrapitops.plan.system.storage.database.sql.tables.*;
 import com.djrapitops.plan.system.storage.database.transactions.Transaction;

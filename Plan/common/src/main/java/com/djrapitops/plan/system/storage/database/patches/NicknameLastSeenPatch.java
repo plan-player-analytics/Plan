@@ -17,8 +17,8 @@
 package com.djrapitops.plan.system.storage.database.patches;
 
 import com.djrapitops.plan.data.store.objects.Nickname;
-import com.djrapitops.plan.system.storage.database.access.ExecBatchStatement;
-import com.djrapitops.plan.system.storage.database.access.QueryAllStatement;
+import com.djrapitops.plan.system.storage.database.operation.ExecBatchStatement;
+import com.djrapitops.plan.system.storage.database.operation.QueryAllStatement;
 import com.djrapitops.plan.system.storage.database.sql.parsing.Select;
 import com.djrapitops.plan.system.storage.database.sql.tables.NicknamesTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.ServerTable;

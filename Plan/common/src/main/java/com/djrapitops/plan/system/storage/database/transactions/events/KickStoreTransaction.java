@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.database.transactions.events;
 
-import com.djrapitops.plan.system.storage.database.access.ExecStatement;
+import com.djrapitops.plan.system.storage.database.operation.ExecStatement;
 import com.djrapitops.plan.system.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 

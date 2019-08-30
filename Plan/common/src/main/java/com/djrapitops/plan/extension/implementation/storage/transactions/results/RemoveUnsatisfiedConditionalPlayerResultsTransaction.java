@@ -17,8 +17,8 @@
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
 import com.djrapitops.plan.system.storage.database.DBType;
-import com.djrapitops.plan.system.storage.database.access.ExecStatement;
-import com.djrapitops.plan.system.storage.database.access.Executable;
+import com.djrapitops.plan.system.storage.database.operation.ExecStatement;
+import com.djrapitops.plan.system.storage.database.operation.Executable;
 import com.djrapitops.plan.system.storage.database.sql.tables.*;
 import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 

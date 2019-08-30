@@ -14,18 +14,31 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.storage.database.access;
+package com.djrapitops.plan.system.storage.database.operation;
 
-import com.djrapitops.plan.system.storage.database.SQLDB;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- * Interface for everything that returns results from the database.
+ * SQL query that doesn't require preparing that closes proper elements.
  *
- * @param <T> Type of the result.
  * @author Rsl1122
  */
-public interface Query<T> {
+public abstract class QueryAllStatement<T> extends QueryStatement<T> {
+    public QueryAllStatement(String sql) {
+        super(sql);
+    }
 
-    T executeQuery(SQLDB db);
+    public QueryAllStatement(String sql, int fetchSize) {
+        super(sql, fetchSize);
+    }
 
+    @Override
+    public void prepare(PreparedStatement statement) throws SQLException {
+        /* None Required */
+    }
+
+    @Override
+    public abstract T processResults(ResultSet set) throws SQLException;
 }

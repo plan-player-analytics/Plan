@@ -18,8 +18,8 @@ package com.djrapitops.plan.extension.implementation.storage.transactions;
 
 import com.djrapitops.plan.extension.ElementOrder;
 import com.djrapitops.plan.extension.implementation.TabInformation;
-import com.djrapitops.plan.system.storage.database.access.ExecStatement;
-import com.djrapitops.plan.system.storage.database.access.Executable;
+import com.djrapitops.plan.system.storage.database.operation.ExecStatement;
+import com.djrapitops.plan.system.storage.database.operation.Executable;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionIconTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionPluginTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionTabTable;

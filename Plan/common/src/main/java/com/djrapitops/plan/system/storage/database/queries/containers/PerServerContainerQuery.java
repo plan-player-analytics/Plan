@@ -25,7 +25,7 @@ import com.djrapitops.plan.data.store.containers.SupplierDataContainer;
 import com.djrapitops.plan.data.store.keys.PerServerKeys;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.system.storage.database.SQLDB;
-import com.djrapitops.plan.system.storage.database.access.Query;
+import com.djrapitops.plan.system.storage.database.operation.Query;
 import com.djrapitops.plan.system.storage.database.queries.PerServerAggregateQueries;
 import com.djrapitops.plan.system.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.system.storage.database.queries.objects.UserInfoQueries;

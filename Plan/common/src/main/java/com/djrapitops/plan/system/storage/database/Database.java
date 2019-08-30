@@ -17,7 +17,7 @@
 package com.djrapitops.plan.system.storage.database;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.system.storage.database.access.Query;
+import com.djrapitops.plan.system.storage.database.operation.Query;
 import com.djrapitops.plan.system.storage.database.sql.parsing.Sql;
 import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 

@@ -24,7 +24,7 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.storage.database.access.Query;
+import com.djrapitops.plan.system.storage.database.operation.Query;
 import com.djrapitops.plan.system.storage.database.patches.*;
 import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 import com.djrapitops.plan.system.storage.database.transactions.init.CreateIndexTransaction;

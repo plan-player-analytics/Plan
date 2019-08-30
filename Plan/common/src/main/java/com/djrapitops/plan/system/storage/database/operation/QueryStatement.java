@@ -14,59 +14,72 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.storage.database.access;
+package com.djrapitops.plan.system.storage.database.operation;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.system.storage.database.SQLDB;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * SQL executing statement that closes appropriate elements.
+ * SQL query that closes proper elements.
  *
  * @author Rsl1122
  */
-public abstract class ExecStatement implements Executable {
+public abstract class QueryStatement<T> implements Query<T> {
 
     private final String sql;
+    private final int fetchSize;
 
-    public ExecStatement(String sql) {
+    public QueryStatement(String sql) {
+        this(sql, 10);
+    }
+
+    public QueryStatement(String sql, int fetchSize) {
         this.sql = sql;
+        this.fetchSize = fetchSize;
     }
 
     @Override
-    public boolean execute(Connection connection) {
+    public T executeQuery(SQLDB db) {
+        Connection connection = null;
         try {
+            connection = db.getConnection();
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                return execute(preparedStatement);
+                return executeQuery(preparedStatement);
             }
         } catch (SQLException e) {
             throw DBOpException.forCause(sql, e);
+        } finally {
+            db.returnToPool(connection);
         }
     }
 
-    public boolean execute(PreparedStatement statement) throws SQLException {
+    public T executeQuery(PreparedStatement statement) throws SQLException {
         try {
+            statement.setFetchSize(fetchSize);
             prepare(statement);
-            return callExecute(statement);
+            try (ResultSet set = statement.executeQuery()) {
+                return processResults(set);
+            }
         } finally {
             statement.close();
         }
     }
 
-    protected boolean callExecute(PreparedStatement statement) throws SQLException {
-        if (sql.startsWith("UPDATE") || sql.startsWith("INSERT") || sql.startsWith("DELETE") || sql.startsWith("REPLACE")) {
-            return statement.executeUpdate() > 0;
-        } else {
-            statement.execute();
-            return false;
-        }
-    }
-
     public abstract void prepare(PreparedStatement statement) throws SQLException;
+
+    public abstract T processResults(ResultSet set) throws SQLException;
 
     public String getSql() {
         return sql;
+    }
+
+    @Override
+    public String toString() {
+        return "Query (" + sql + ')';
     }
 }

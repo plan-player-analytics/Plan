@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.database.patches;
 
-import com.djrapitops.plan.system.storage.database.access.ExecBatchStatement;
+import com.djrapitops.plan.system.storage.database.operation.ExecBatchStatement;
 import com.djrapitops.plan.system.storage.database.queries.schema.SessionIDServerIDRelationQuery;
 import com.djrapitops.plan.system.storage.database.sql.tables.KillsTable;
 

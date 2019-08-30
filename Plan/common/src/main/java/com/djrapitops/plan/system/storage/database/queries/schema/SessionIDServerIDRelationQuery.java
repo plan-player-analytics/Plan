@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.schema;
 
-import com.djrapitops.plan.system.storage.database.access.QueryAllStatement;
+import com.djrapitops.plan.system.storage.database.operation.QueryAllStatement;
 import com.djrapitops.plan.system.storage.database.sql.tables.SessionsTable;
 
 import java.sql.ResultSet;

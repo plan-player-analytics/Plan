@@ -17,8 +17,8 @@
 package com.djrapitops.plan.system.storage.database.transactions;
 
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.storage.database.access.ExecStatement;
-import com.djrapitops.plan.system.storage.database.access.Executable;
+import com.djrapitops.plan.system.storage.database.operation.ExecStatement;
+import com.djrapitops.plan.system.storage.database.operation.Executable;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

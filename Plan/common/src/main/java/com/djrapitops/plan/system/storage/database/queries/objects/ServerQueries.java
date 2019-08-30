@@ -17,9 +17,9 @@
 package com.djrapitops.plan.system.storage.database.queries.objects;
 
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.storage.database.access.Query;
-import com.djrapitops.plan.system.storage.database.access.QueryAllStatement;
-import com.djrapitops.plan.system.storage.database.access.QueryStatement;
+import com.djrapitops.plan.system.storage.database.operation.Query;
+import com.djrapitops.plan.system.storage.database.operation.QueryAllStatement;
+import com.djrapitops.plan.system.storage.database.operation.QueryStatement;
 import com.djrapitops.plan.system.storage.database.sql.parsing.Select;
 import com.djrapitops.plan.system.storage.database.sql.tables.ServerTable;
 import org.apache.commons.lang3.math.NumberUtils;

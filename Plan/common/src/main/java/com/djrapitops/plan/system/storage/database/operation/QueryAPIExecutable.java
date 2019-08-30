@@ -14,41 +14,37 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.storage.database.access;
+package com.djrapitops.plan.system.storage.database.operation;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.query.QueryService;
-import com.djrapitops.plan.system.storage.database.SQLDB;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class QueryAPIQuery<T> implements Query<T> {
+public class QueryAPIExecutable implements Executable {
 
-    private final QueryService.ThrowingFunction<PreparedStatement, T> performQuery;
-    private String sql;
+    private final String sql;
+    private final QueryService.ThrowingConsumer<PreparedStatement> statement;
 
-    public QueryAPIQuery(
+    public QueryAPIExecutable(
             String sql,
-            QueryService.ThrowingFunction<PreparedStatement, T> performQuery
+            QueryService.ThrowingConsumer<PreparedStatement> statement
     ) {
         this.sql = sql;
-        this.performQuery = performQuery;
+        this.statement = statement;
     }
 
     @Override
-    public T executeQuery(SQLDB db) {
-        Connection connection = null;
+    public boolean execute(Connection connection) {
         try {
-            connection = db.getConnection();
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                return performQuery.apply(preparedStatement);
+                statement.accept(preparedStatement);
+                return true;
             }
         } catch (SQLException e) {
             throw DBOpException.forCause(sql, e);
-        } finally {
-            db.returnToPool(connection);
         }
     }
 }

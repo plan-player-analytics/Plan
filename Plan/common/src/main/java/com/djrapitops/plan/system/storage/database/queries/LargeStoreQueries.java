@@ -22,8 +22,8 @@ import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.storage.database.access.ExecBatchStatement;
-import com.djrapitops.plan.system.storage.database.access.Executable;
+import com.djrapitops.plan.system.storage.database.operation.ExecBatchStatement;
+import com.djrapitops.plan.system.storage.database.operation.Executable;
 import com.djrapitops.plan.system.storage.database.sql.tables.*;
 import com.djrapitops.plugin.utilities.Verify;
 

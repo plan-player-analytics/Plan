@@ -17,7 +17,7 @@
 package com.djrapitops.plan.system.storage.database.transactions.commands;
 
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.system.storage.database.access.ExecStatement;
+import com.djrapitops.plan.system.storage.database.operation.ExecStatement;
 import com.djrapitops.plan.system.storage.database.sql.tables.SecurityTable;
 import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 

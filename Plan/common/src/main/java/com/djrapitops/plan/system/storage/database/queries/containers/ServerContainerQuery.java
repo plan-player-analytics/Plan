@@ -25,7 +25,7 @@ import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionSer
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.storage.database.SQLDB;
-import com.djrapitops.plan.system.storage.database.access.Query;
+import com.djrapitops.plan.system.storage.database.operation.Query;
 import com.djrapitops.plan.system.storage.database.queries.ServerAggregateQueries;
 import com.djrapitops.plan.system.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.storage.database.queries.objects.TPSQueries;

@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.storage.database.queries;
 
-import com.djrapitops.plan.system.storage.database.access.Query;
-import com.djrapitops.plan.system.storage.database.access.QueryAllStatement;
-import com.djrapitops.plan.system.storage.database.access.QueryStatement;
+import com.djrapitops.plan.system.storage.database.operation.Query;
+import com.djrapitops.plan.system.storage.database.operation.QueryAllStatement;
+import com.djrapitops.plan.system.storage.database.operation.QueryStatement;
 import com.djrapitops.plan.system.storage.database.sql.tables.CommandUseTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.UserInfoTable;

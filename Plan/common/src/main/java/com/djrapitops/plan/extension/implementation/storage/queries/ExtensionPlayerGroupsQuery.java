@@ -26,8 +26,8 @@ import com.djrapitops.plan.extension.implementation.results.ExtensionDescriptive
 import com.djrapitops.plan.extension.implementation.results.ExtensionStringData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
 import com.djrapitops.plan.system.storage.database.SQLDB;
-import com.djrapitops.plan.system.storage.database.access.Query;
-import com.djrapitops.plan.system.storage.database.access.QueryStatement;
+import com.djrapitops.plan.system.storage.database.operation.Query;
+import com.djrapitops.plan.system.storage.database.operation.QueryStatement;
 import com.djrapitops.plan.system.storage.database.sql.tables.*;
 
 import java.sql.PreparedStatement;

@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.storage.database.queries.containers;
 
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
-import com.djrapitops.plan.system.storage.database.access.Query;
+import com.djrapitops.plan.system.storage.database.operation.Query;
 
 import java.util.List;
 import java.util.UUID;
