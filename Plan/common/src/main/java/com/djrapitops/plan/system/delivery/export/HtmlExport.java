@@ -18,10 +18,10 @@ package com.djrapitops.plan.system.delivery.export;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.delivery.rendering.html.pages.NetworkPage;
-import com.djrapitops.plan.system.delivery.rendering.html.pages.PageFactory;
-import com.djrapitops.plan.system.delivery.rendering.html.pages.PlayerPage;
 import com.djrapitops.plan.system.delivery.rendering.json.JSONFactory;
+import com.djrapitops.plan.system.delivery.rendering.pages.NetworkPage;
+import com.djrapitops.plan.system.delivery.rendering.pages.PageFactory;
+import com.djrapitops.plan.system.delivery.rendering.pages.PlayerPage;
 import com.djrapitops.plan.system.delivery.webserver.cache.PageId;
 import com.djrapitops.plan.system.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.delivery.webserver.response.pages.NetworkPageResponse;

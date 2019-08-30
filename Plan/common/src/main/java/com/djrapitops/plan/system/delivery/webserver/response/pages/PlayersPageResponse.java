@@ -17,7 +17,7 @@
 package com.djrapitops.plan.system.delivery.webserver.response.pages;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
-import com.djrapitops.plan.system.delivery.rendering.html.pages.PlayersPage;
+import com.djrapitops.plan.system.delivery.rendering.pages.PlayersPage;
 
 /**
  * @author Rsl1122

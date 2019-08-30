@@ -19,7 +19,7 @@ package com.djrapitops.plan.system.delivery.webserver.response;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
-import com.djrapitops.plan.system.delivery.rendering.html.pages.PageFactory;
+import com.djrapitops.plan.system.delivery.rendering.pages.PageFactory;
 import com.djrapitops.plan.system.delivery.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.system.delivery.webserver.response.errors.ForbiddenResponse;
 import com.djrapitops.plan.system.delivery.webserver.response.errors.InternalErrorResponse;

@@ -17,7 +17,7 @@
 package com.djrapitops.plan.system.delivery.webserver.response.pages;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
-import com.djrapitops.plan.system.delivery.rendering.html.pages.Page;
+import com.djrapitops.plan.system.delivery.rendering.pages.Page;
 import com.djrapitops.plan.system.delivery.webserver.response.Response;
 import com.djrapitops.plan.system.delivery.webserver.response.ResponseType;
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
