@@ -17,10 +17,10 @@
 package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.data.store.objects.Nickname;
-import com.djrapitops.plan.db.access.transactions.events.NicknameStoreTransaction;
 import com.djrapitops.plan.system.cache.NicknameCache;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.storage.database.DBSystem;
+import com.djrapitops.plan.system.storage.database.access.transactions.events.NicknameStoreTransaction;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.bukkit.entity.Player;

@@ -17,11 +17,11 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanVelocity;
-import com.djrapitops.plan.db.tasks.DBCleanTask;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
+import com.djrapitops.plan.system.storage.database.tasks.DBCleanTask;
 import com.djrapitops.plan.system.tasks.proxy.NetworkConfigStoreTask;
 import com.djrapitops.plan.system.tasks.proxy.NetworkPageRefreshTask;
 import com.djrapitops.plan.system.tasks.velocity.PingCountTimerVelocity;

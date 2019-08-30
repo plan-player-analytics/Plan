@@ -30,7 +30,7 @@ import java.util.List;
  * Key objects for PerServerContainer container.
  *
  * @author Rsl1122
- * @see com.djrapitops.plan.db.access.queries.containers.PerServerContainerQuery For Suppliers for each key
+ * @see com.djrapitops.plan.system.storage.database.access.queries.containers.PerServerContainerQuery For Suppliers for each key
  * @see PerServerContainer For the DataContainer.
  */
 public class PerServerKeys {

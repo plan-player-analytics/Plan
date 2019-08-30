@@ -17,9 +17,6 @@
 package com.djrapitops.plan.system.listeners.velocity;
 
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.transactions.events.GeoInfoStoreTransaction;
-import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.system.cache.GeolocationCache;
@@ -30,6 +27,9 @@ import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.system.storage.database.DBSystem;
+import com.djrapitops.plan.system.storage.database.Database;
+import com.djrapitops.plan.system.storage.database.access.transactions.events.GeoInfoStoreTransaction;
+import com.djrapitops.plan.system.storage.database.access.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plugin.logging.L;

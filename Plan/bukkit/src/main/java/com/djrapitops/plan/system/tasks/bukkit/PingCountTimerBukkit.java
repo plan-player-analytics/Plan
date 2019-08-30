@@ -24,11 +24,11 @@
 package com.djrapitops.plan.system.tasks.bukkit;
 
 import com.djrapitops.plan.data.store.objects.DateObj;
-import com.djrapitops.plan.db.access.transactions.events.PingStoreTransaction;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.system.storage.database.DBSystem;
+import com.djrapitops.plan.system.storage.database.access.transactions.events.PingStoreTransaction;
 import com.djrapitops.plan.utilities.java.Reflection;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.AbsRunnable;

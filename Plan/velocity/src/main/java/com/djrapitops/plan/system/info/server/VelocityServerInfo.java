@@ -18,11 +18,11 @@ package com.djrapitops.plan.system.info.server;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
-import com.djrapitops.plan.db.access.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.storage.database.DBSystem;
+import com.djrapitops.plan.system.storage.database.Database;
+import com.djrapitops.plan.system.storage.database.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.system.storage.database.access.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import dagger.Lazy;

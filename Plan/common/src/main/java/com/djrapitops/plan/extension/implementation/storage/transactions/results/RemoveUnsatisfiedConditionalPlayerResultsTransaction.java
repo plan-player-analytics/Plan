@@ -16,16 +16,16 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
-import com.djrapitops.plan.db.DBType;
-import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.Executable;
-import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.db.sql.tables.*;
+import com.djrapitops.plan.system.storage.database.DBType;
+import com.djrapitops.plan.system.storage.database.access.ExecStatement;
+import com.djrapitops.plan.system.storage.database.access.Executable;
+import com.djrapitops.plan.system.storage.database.access.transactions.Transaction;
+import com.djrapitops.plan.system.storage.database.sql.tables.*;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+import static com.djrapitops.plan.system.storage.database.sql.parsing.Sql.*;
 
 /**
  * Transaction to remove older results that violate an updated condition value.

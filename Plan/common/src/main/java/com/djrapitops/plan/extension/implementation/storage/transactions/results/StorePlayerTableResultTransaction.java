@@ -17,11 +17,11 @@
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.db.access.*;
-import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.db.sql.tables.ExtensionPluginTable;
-import com.djrapitops.plan.db.sql.tables.ExtensionTableProviderTable;
 import com.djrapitops.plan.extension.table.Table;
+import com.djrapitops.plan.system.storage.database.access.*;
+import com.djrapitops.plan.system.storage.database.access.transactions.Transaction;
+import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionPluginTable;
+import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionTableProviderTable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,8 +29,8 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.UUID;
 
-import static com.djrapitops.plan.db.sql.parsing.Sql.*;
-import static com.djrapitops.plan.db.sql.tables.ExtensionPlayerTableValueTable.*;
+import static com.djrapitops.plan.system.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.system.storage.database.sql.tables.ExtensionPlayerTableValueTable.*;
 
 /**
  * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.TableDataProvider}.

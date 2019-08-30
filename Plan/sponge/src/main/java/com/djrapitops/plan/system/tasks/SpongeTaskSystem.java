@@ -18,11 +18,11 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.ShutdownHook;
-import com.djrapitops.plan.db.tasks.DBCleanTask;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
+import com.djrapitops.plan.system.storage.database.tasks.DBCleanTask;
 import com.djrapitops.plan.system.tasks.server.ConfigStoreTask;
 import com.djrapitops.plan.system.tasks.server.PeriodicAnalysisTask;
 import com.djrapitops.plan.system.tasks.sponge.PingCountTimerSponge;

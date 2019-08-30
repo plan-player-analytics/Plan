@@ -16,17 +16,17 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
-import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.Executable;
-import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.db.sql.tables.ExtensionProviderTable;
+import com.djrapitops.plan.system.storage.database.access.ExecStatement;
+import com.djrapitops.plan.system.storage.database.access.Executable;
+import com.djrapitops.plan.system.storage.database.access.transactions.Transaction;
+import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionProviderTable;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import static com.djrapitops.plan.db.sql.parsing.Sql.WHERE;
-import static com.djrapitops.plan.db.sql.tables.ExtensionServerValueTable.*;
+import static com.djrapitops.plan.system.storage.database.sql.parsing.Sql.WHERE;
+import static com.djrapitops.plan.system.storage.database.sql.tables.ExtensionServerValueTable.*;
 
 /**
  * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.DoubleDataProvider}.

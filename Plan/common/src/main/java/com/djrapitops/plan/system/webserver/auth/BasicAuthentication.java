@@ -20,8 +20,8 @@ import com.djrapitops.plan.api.exceptions.PassEncryptException;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.queries.objects.WebUserQueries;
+import com.djrapitops.plan.system.storage.database.Database;
+import com.djrapitops.plan.system.storage.database.access.queries.objects.WebUserQueries;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 

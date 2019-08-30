@@ -17,9 +17,9 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.db.access.transactions.events.TPSStoreTransaction;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.storage.database.DBSystem;
+import com.djrapitops.plan.system.storage.database.access.transactions.events.TPSStoreTransaction;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;

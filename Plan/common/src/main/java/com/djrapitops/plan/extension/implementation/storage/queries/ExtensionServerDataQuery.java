@@ -16,10 +16,6 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.queries;
 
-import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.db.sql.tables.*;
 import com.djrapitops.plan.extension.ElementOrder;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.icon.Color;
@@ -27,13 +23,17 @@ import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.results.*;
+import com.djrapitops.plan.system.storage.database.SQLDB;
+import com.djrapitops.plan.system.storage.database.access.Query;
+import com.djrapitops.plan.system.storage.database.access.QueryStatement;
+import com.djrapitops.plan.system.storage.database.sql.tables.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+import static com.djrapitops.plan.system.storage.database.sql.parsing.Sql.*;
 
 /**
  * Query ExtensionServerData of a server.

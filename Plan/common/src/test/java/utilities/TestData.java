@@ -21,10 +21,10 @@ import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.time.GMTimes;
-import com.djrapitops.plan.db.access.transactions.StoreServerInformationTransaction;
-import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.db.access.transactions.events.*;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.storage.database.access.transactions.StoreServerInformationTransaction;
+import com.djrapitops.plan.system.storage.database.access.transactions.Transaction;
+import com.djrapitops.plan.system.storage.database.access.transactions.events.*;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

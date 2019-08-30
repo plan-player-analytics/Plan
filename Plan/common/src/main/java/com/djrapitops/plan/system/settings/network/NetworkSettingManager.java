@@ -17,10 +17,6 @@
 package com.djrapitops.plan.system.settings.network;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.queries.objects.NewerConfigQuery;
-import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
-import com.djrapitops.plan.db.access.transactions.StoreConfigTransaction;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -28,6 +24,10 @@ import com.djrapitops.plan.system.settings.config.*;
 import com.djrapitops.plan.system.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.system.storage.database.DBSystem;
+import com.djrapitops.plan.system.storage.database.Database;
+import com.djrapitops.plan.system.storage.database.access.queries.objects.NewerConfigQuery;
+import com.djrapitops.plan.system.storage.database.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.system.storage.database.access.transactions.StoreConfigTransaction;
 import com.djrapitops.plan.utilities.file.FileWatcher;
 import com.djrapitops.plan.utilities.file.WatchedFile;
 import com.djrapitops.plugin.api.TimeAmount;

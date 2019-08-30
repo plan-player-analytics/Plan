@@ -17,13 +17,13 @@
 package com.djrapitops.plan.system.info.request;
 
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
-import com.djrapitops.plan.db.access.transactions.events.SessionEndTransaction;
-import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.ExportSettings;
+import com.djrapitops.plan.system.storage.database.Database;
+import com.djrapitops.plan.system.storage.database.access.transactions.events.PlayerRegisterTransaction;
+import com.djrapitops.plan.system.storage.database.access.transactions.events.SessionEndTransaction;
+import com.djrapitops.plan.system.storage.database.access.transactions.events.WorldNameStoreTransaction;
 import com.jayway.awaitility.Awaitility;
 import org.junit.Assume;
 import org.junit.jupiter.api.AfterEach;
