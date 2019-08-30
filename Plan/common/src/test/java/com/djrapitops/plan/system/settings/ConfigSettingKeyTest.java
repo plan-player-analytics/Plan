@@ -17,8 +17,8 @@
 package com.djrapitops.plan.system.settings;
 
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.*;
-import com.djrapitops.plan.system.settings.paths.key.Setting;
+import com.djrapitops.plan.system.settings.config.paths.*;
+import com.djrapitops.plan.system.settings.config.paths.key.Setting;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;

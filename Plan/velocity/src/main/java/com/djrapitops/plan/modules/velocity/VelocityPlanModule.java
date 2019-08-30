@@ -18,7 +18,7 @@ package com.djrapitops.plan.modules.velocity;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanVelocity;
-import com.djrapitops.plan.command.PlanProxyCommand;
+import com.djrapitops.plan.system.commands.PlanProxyCommand;
 import com.djrapitops.plugin.command.CommandNode;
 import dagger.Binds;
 import dagger.Module;

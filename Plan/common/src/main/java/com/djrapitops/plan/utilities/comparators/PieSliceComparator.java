@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.utilities.comparators;
 
-import com.djrapitops.plan.utilities.html.graphs.pie.PieSlice;
+import com.djrapitops.plan.system.delivery.rendering.json.graphs.pie.PieSlice;
 
 import java.util.Comparator;
 

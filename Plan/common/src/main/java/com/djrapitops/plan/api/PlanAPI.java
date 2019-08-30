@@ -30,6 +30,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Deprecated
 public interface PlanAPI {
 
     static PlanAPI getInstance() {

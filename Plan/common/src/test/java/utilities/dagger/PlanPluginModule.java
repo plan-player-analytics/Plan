@@ -16,11 +16,11 @@
  */
 package utilities.dagger;
 
-import com.djrapitops.plan.command.PlanCommand;
-import com.djrapitops.plan.system.importing.EmptyImportSystem;
-import com.djrapitops.plan.system.importing.ImportSystem;
-import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.info.server.ServerServerInfo;
+import com.djrapitops.plan.system.commands.PlanCommand;
+import com.djrapitops.plan.system.gathering.importing.EmptyImportSystem;
+import com.djrapitops.plan.system.gathering.importing.ImportSystem;
+import com.djrapitops.plan.system.identification.ServerInfo;
+import com.djrapitops.plan.system.identification.ServerServerInfo;
 import com.djrapitops.plan.system.settings.BukkitConfigSystem;
 import com.djrapitops.plan.system.settings.ConfigSystem;
 import com.djrapitops.plugin.command.CommandNode;

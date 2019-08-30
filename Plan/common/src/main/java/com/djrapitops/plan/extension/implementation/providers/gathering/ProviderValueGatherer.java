@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.extension.implementation.providers.gathering;
 
-import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.icon.Icon;
@@ -28,8 +27,9 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIc
 import com.djrapitops.plan.extension.implementation.storage.transactions.StorePluginTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreTabInformationTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveInvalidResultsTransaction;
-import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.identification.ServerInfo;
+import com.djrapitops.plan.system.storage.database.DBSystem;
+import com.djrapitops.plan.system.storage.database.Database;
 
 import java.util.UUID;
 

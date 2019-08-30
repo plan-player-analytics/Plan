@@ -17,8 +17,8 @@
 package com.djrapitops.plan.modules.sponge;
 
 import com.djrapitops.plan.PlanSponge;
-import com.djrapitops.plan.system.info.server.properties.ServerProperties;
-import com.djrapitops.plan.system.info.server.properties.SpongeServerProperties;
+import com.djrapitops.plan.system.identification.properties.ServerProperties;
+import com.djrapitops.plan.system.identification.properties.SpongeServerProperties;
 import dagger.Module;
 import dagger.Provides;
 

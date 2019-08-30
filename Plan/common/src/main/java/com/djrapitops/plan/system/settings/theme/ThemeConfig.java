@@ -16,12 +16,12 @@
  */
 package com.djrapitops.plan.system.settings.theme;
 
-import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.settings.config.Config;
 import com.djrapitops.plan.system.settings.config.ConfigNode;
 import com.djrapitops.plan.system.settings.config.ConfigReader;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.DisplaySettings;
+import com.djrapitops.plan.system.settings.config.paths.DisplaySettings;
+import com.djrapitops.plan.system.storage.file.PlanFiles;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import java.io.File;

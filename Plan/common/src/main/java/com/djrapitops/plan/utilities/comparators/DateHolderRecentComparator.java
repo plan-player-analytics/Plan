@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.utilities.comparators;
 
-import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.system.delivery.domain.DateHolder;
 
 import java.util.Comparator;
 

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.api.data;
 
-import com.djrapitops.plan.data.store.Key;
+import com.djrapitops.plan.system.delivery.domain.keys.Key;
 
 import java.util.Optional;
 
@@ -24,17 +24,18 @@ import java.util.Optional;
  * Wrapper for a PlayerContainer.
  * <p>
  * The actual object is wrapped to avoid exposing too much API that might change.
- * See {@link com.djrapitops.plan.data.store.keys.PlayerKeys} for Key objects.
+ * See {@link com.djrapitops.plan.system.delivery.domain.keys.PlayerKeys} for Key objects.
  * <p>
  * The Keys might change in the future, but the Optional API should help dealing with those cases.
  *
  * @author Rsl1122
  */
+@Deprecated
 public class PlayerContainer {
 
-    private final com.djrapitops.plan.data.store.containers.PlayerContainer container;
+    private final com.djrapitops.plan.system.delivery.domain.container.PlayerContainer container;
 
-    public PlayerContainer(com.djrapitops.plan.data.store.containers.PlayerContainer container) {
+    public PlayerContainer(com.djrapitops.plan.system.delivery.domain.container.PlayerContainer container) {
         this.container = container;
     }
 

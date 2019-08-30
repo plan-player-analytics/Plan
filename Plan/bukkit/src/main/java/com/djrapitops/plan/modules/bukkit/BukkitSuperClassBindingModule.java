@@ -17,19 +17,19 @@
 package com.djrapitops.plan.modules.bukkit;
 
 import com.djrapitops.plan.BukkitServerShutdownSave;
-import com.djrapitops.plan.ServerShutdownSave;
-import com.djrapitops.plan.system.database.BukkitDBSystem;
-import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.importing.BukkitImportSystem;
-import com.djrapitops.plan.system.importing.ImportSystem;
-import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.info.server.ServerServerInfo;
-import com.djrapitops.plan.system.listeners.BukkitListenerSystem;
-import com.djrapitops.plan.system.listeners.ListenerSystem;
+import com.djrapitops.plan.system.TaskSystem;
+import com.djrapitops.plan.system.gathering.ServerShutdownSave;
+import com.djrapitops.plan.system.gathering.importing.BukkitImportSystem;
+import com.djrapitops.plan.system.gathering.importing.ImportSystem;
+import com.djrapitops.plan.system.gathering.listeners.BukkitListenerSystem;
+import com.djrapitops.plan.system.gathering.listeners.ListenerSystem;
+import com.djrapitops.plan.system.identification.ServerInfo;
+import com.djrapitops.plan.system.identification.ServerServerInfo;
 import com.djrapitops.plan.system.settings.BukkitConfigSystem;
 import com.djrapitops.plan.system.settings.ConfigSystem;
+import com.djrapitops.plan.system.storage.database.BukkitDBSystem;
+import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.tasks.BukkitTaskSystem;
-import com.djrapitops.plan.system.tasks.TaskSystem;
 import dagger.Binds;
 import dagger.Module;
 

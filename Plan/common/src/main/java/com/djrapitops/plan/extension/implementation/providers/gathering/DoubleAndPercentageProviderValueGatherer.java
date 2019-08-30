@@ -16,9 +16,7 @@
  */
 package com.djrapitops.plan.extension.implementation.providers.gathering;
 
-import com.djrapitops.plan.api.exceptions.DataExtensionMethodCallException;
-import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.transactions.Transaction;
+import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
@@ -31,6 +29,8 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.results
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerPercentageResultTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerDoubleResultTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerPercentageResultTransaction;
+import com.djrapitops.plan.system.storage.database.Database;
+import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 
 import java.util.Optional;
 import java.util.UUID;

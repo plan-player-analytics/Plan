@@ -16,14 +16,14 @@
  */
 package com.djrapitops.plan.system.settings;
 
-import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.system.file.PlanFiles;
-import com.djrapitops.plan.system.settings.changes.ConfigUpdater;
+import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.system.settings.config.ConfigReader;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.config.changes.ConfigUpdater;
+import com.djrapitops.plan.system.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.system.settings.network.ServerSettingsManager;
-import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
+import com.djrapitops.plan.system.storage.file.PlanFiles;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 

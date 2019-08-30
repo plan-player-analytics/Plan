@@ -16,28 +16,27 @@
  */
 package com.djrapitops.plan.system;
 
-import com.djrapitops.plan.api.PlanAPI;
-import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.capability.CapabilityServiceImplementation;
-import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.extension.ExtensionService;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.query.QueryServiceImplementation;
-import com.djrapitops.plan.system.cache.CacheSystem;
-import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.export.ExportSystem;
-import com.djrapitops.plan.system.file.PlanFiles;
-import com.djrapitops.plan.system.importing.ImportSystem;
-import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.listeners.ListenerSystem;
-import com.djrapitops.plan.system.locale.LocaleSystem;
+import com.djrapitops.plan.system.delivery.DeliveryUtilities;
+import com.djrapitops.plan.system.delivery.export.ExportSystem;
+import com.djrapitops.plan.system.delivery.webserver.WebServer;
+import com.djrapitops.plan.system.delivery.webserver.WebServerSystem;
+import com.djrapitops.plan.system.gathering.cache.CacheSystem;
+import com.djrapitops.plan.system.gathering.importing.ImportSystem;
+import com.djrapitops.plan.system.gathering.listeners.ListenerSystem;
+import com.djrapitops.plan.system.identification.Server;
+import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.ConfigSystem;
-import com.djrapitops.plan.system.tasks.TaskSystem;
-import com.djrapitops.plan.system.update.VersionCheckSystem;
-import com.djrapitops.plan.system.webserver.WebServer;
-import com.djrapitops.plan.system.webserver.WebServerSystem;
+import com.djrapitops.plan.system.settings.locale.LocaleSystem;
+import com.djrapitops.plan.system.storage.database.DBSystem;
+import com.djrapitops.plan.system.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.system.storage.file.PlanFiles;
+import com.djrapitops.plan.system.version.VersionCheckSystem;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
@@ -71,10 +70,9 @@ public class PlanSystem implements SubSystem {
 
     private final ImportSystem importSystem;
     private final ExportSystem exportSystem;
-    private final HtmlUtilities htmlUtilities;
+    private final DeliveryUtilities deliveryUtilities;
     private final ExtensionServiceImplementation extensionService;
     private final QueryServiceImplementation queryService;
-    private final PlanAPI planAPI;
     private final ErrorHandler errorHandler;
 
     @Inject
@@ -92,10 +90,9 @@ public class PlanSystem implements SubSystem {
             Processing processing,
             ImportSystem importSystem,
             ExportSystem exportSystem,
-            HtmlUtilities htmlUtilities,
+            DeliveryUtilities deliveryUtilities,
             ExtensionServiceImplementation extensionService,
             QueryServiceImplementation queryService,
-            PlanAPI planAPI,
             ErrorHandler errorHandler
     ) {
         this.files = files;
@@ -111,10 +108,9 @@ public class PlanSystem implements SubSystem {
         this.processing = processing;
         this.importSystem = importSystem;
         this.exportSystem = exportSystem;
-        this.htmlUtilities = htmlUtilities;
+        this.deliveryUtilities = deliveryUtilities;
         this.extensionService = extensionService;
         this.queryService = queryService;
-        this.planAPI = planAPI;
         this.errorHandler = errorHandler;
     }
 
@@ -236,10 +232,6 @@ public class PlanSystem implements SubSystem {
         return cacheSystem;
     }
 
-    public PlanAPI getPlanAPI() {
-        return planAPI;
-    }
-
     public Processing getProcessing() {
         return processing;
     }
@@ -248,8 +240,8 @@ public class PlanSystem implements SubSystem {
         return localeSystem;
     }
 
-    public HtmlUtilities getHtmlUtilities() {
-        return htmlUtilities;
+    public DeliveryUtilities getDeliveryUtilities() {
+        return deliveryUtilities;
     }
 
     public boolean isEnabled() {

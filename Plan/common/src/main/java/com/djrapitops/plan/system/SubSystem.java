@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system;
 
-import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.exceptions.EnableException;
 
 /**
  * Represents a system that can be enabled and disabled.
