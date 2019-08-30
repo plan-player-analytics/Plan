@@ -17,9 +17,9 @@
 package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.SubSystem;
+import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.exceptions.EnableException;
-import com.djrapitops.plugin.benchmarking.Timings;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -32,26 +32,29 @@ import javax.inject.Singleton;
 @Singleton
 public class WebServerSystem implements SubSystem {
 
+    private final JSONCache jsonCache;
     private final WebServer webServer;
-    private Timings timings;
 
     @Inject
-    public WebServerSystem(WebServer webServer, Timings timings) {
+    public WebServerSystem(
+            JSONCache jsonCache,
+            WebServer webServer
+    ) {
+        this.jsonCache = jsonCache;
         this.webServer = webServer;
-        this.timings = timings;
     }
 
     @Override
     public void enable() throws EnableException {
-        timings.start("WebServer Initialization");
         webServer.enable();
-        timings.end("WebServer Initialization");
     }
 
     @Override
     public void disable() {
-        ResponseCache.clearCache();
         webServer.disable();
+        ResponseCache.clearCache();
+        jsonCache.invalidateAll();
+        jsonCache.cleanUp();
     }
 
     public WebServer getWebServer() {
