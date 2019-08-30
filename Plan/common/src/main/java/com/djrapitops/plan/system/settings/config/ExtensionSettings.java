@@ -14,26 +14,22 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.data.plugin;
-
-import com.djrapitops.plan.system.settings.config.ConfigNode;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
+package com.djrapitops.plan.system.settings.config;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Class responsible for generating and generating settings for PluginData
- * objects to the config.
+ * Class responsible for generating and generating settings for DataExtensions to the config.
  *
  * @author Rsl1122
  */
-public class PluginsConfigSection {
+public class ExtensionSettings {
 
     private final PlanConfig config;
 
-    public PluginsConfigSection(
+    public ExtensionSettings(
             PlanConfig config
     ) {
         this.config = config;

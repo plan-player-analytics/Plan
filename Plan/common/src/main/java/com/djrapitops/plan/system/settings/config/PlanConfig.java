@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.system.settings.config;
 
-import com.djrapitops.plan.data.plugin.PluginsConfigSection;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.system.settings.config.paths.key.Setting;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -39,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class PlanConfig extends Config {
 
-    private final PluginsConfigSection pluginsConfigSection;
+    private final ExtensionSettings extensionSettings;
     private final WorldAliasSettings worldAliasSettings;
     private final PluginLogger logger;
 
@@ -54,7 +53,7 @@ public class PlanConfig extends Config {
         this.worldAliasSettings = worldAliasSettings;
         this.logger = logger;
 
-        pluginsConfigSection = new PluginsConfigSection(this);
+        extensionSettings = new ExtensionSettings(this);
     }
 
     public int getTimeZoneOffsetHours() {
@@ -125,8 +124,8 @@ public class PlanConfig extends Config {
         return get(TimeSettings.USE_SERVER_TIME) ? TimeZone.getDefault() : TimeZone.getTimeZone("GMT");
     }
 
-    public PluginsConfigSection getPluginsConfigSection() {
-        return pluginsConfigSection;
+    public ExtensionSettings getExtensionSettings() {
+        return extensionSettings;
     }
 
     public WorldAliasSettings getWorldAliasSettings() {
