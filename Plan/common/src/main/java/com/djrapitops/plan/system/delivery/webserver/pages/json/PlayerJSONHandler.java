@@ -19,6 +19,7 @@ package com.djrapitops.plan.system.delivery.webserver.pages.json;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.system.delivery.rendering.json.PlayerJSONParser;
 import com.djrapitops.plan.system.delivery.webserver.Request;
 import com.djrapitops.plan.system.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.system.delivery.webserver.auth.Authentication;
@@ -26,7 +27,6 @@ import com.djrapitops.plan.system.delivery.webserver.pages.PageHandler;
 import com.djrapitops.plan.system.delivery.webserver.response.Response;
 import com.djrapitops.plan.system.delivery.webserver.response.data.JSONResponse;
 import com.djrapitops.plan.system.identification.Identifiers;
-import com.djrapitops.plan.system.json.PlayerJSONParser;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

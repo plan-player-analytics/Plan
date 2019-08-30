@@ -17,15 +17,15 @@
 package com.djrapitops.plan.system.delivery.webserver.pages.json;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
+import com.djrapitops.plan.system.delivery.rendering.json.JSONFactory;
+import com.djrapitops.plan.system.delivery.rendering.json.network.NetworkOverviewJSONParser;
+import com.djrapitops.plan.system.delivery.rendering.json.network.NetworkPlayerBaseOverviewJSONParser;
+import com.djrapitops.plan.system.delivery.rendering.json.network.NetworkSessionsOverviewJSONParser;
+import com.djrapitops.plan.system.delivery.rendering.json.network.NetworkTabJSONParser;
 import com.djrapitops.plan.system.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.system.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.system.delivery.webserver.pages.TreePageHandler;
 import com.djrapitops.plan.system.delivery.webserver.response.ResponseFactory;
-import com.djrapitops.plan.system.json.JSONFactory;
-import com.djrapitops.plan.system.json.network.NetworkOverviewJSONParser;
-import com.djrapitops.plan.system.json.network.NetworkPlayerBaseOverviewJSONParser;
-import com.djrapitops.plan.system.json.network.NetworkSessionsOverviewJSONParser;
-import com.djrapitops.plan.system.json.network.NetworkTabJSONParser;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

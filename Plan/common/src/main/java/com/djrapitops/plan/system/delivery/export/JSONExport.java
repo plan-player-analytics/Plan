@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.delivery.export;
 
+import com.djrapitops.plan.system.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.system.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.system.identification.ServerInfo;
-import com.djrapitops.plan.system.json.JSONFactory;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.system.storage.database.DBSystem;

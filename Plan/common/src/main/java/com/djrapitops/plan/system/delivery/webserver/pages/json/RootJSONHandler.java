@@ -17,12 +17,12 @@
 package com.djrapitops.plan.system.delivery.webserver.pages.json;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
+import com.djrapitops.plan.system.delivery.rendering.json.*;
 import com.djrapitops.plan.system.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.system.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.system.delivery.webserver.pages.TreePageHandler;
 import com.djrapitops.plan.system.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.system.identification.Identifiers;
-import com.djrapitops.plan.system.json.*;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

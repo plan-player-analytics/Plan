@@ -22,7 +22,6 @@ import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.system.gathering.domain.BaseUser;
 import com.djrapitops.plan.system.gathering.domain.GeoInfo;
 import com.djrapitops.plan.system.gathering.domain.Session;
-import com.djrapitops.plan.system.json.PlayersTableJSONParser;
 import com.djrapitops.plan.system.storage.database.SQLDB;
 import com.djrapitops.plan.system.storage.database.queries.Query;
 import com.djrapitops.plan.system.storage.database.queries.objects.BaseUserQueries;
@@ -36,7 +35,7 @@ import java.util.*;
  * Optimized version of {@link ServerPlayerContainersQuery} for /server page Players table.
  *
  * @author Rsl1122
- * @see PlayersTableJSONParser For what needs to be included.
+ * @see com.djrapitops.plan.system.delivery.rendering.json.PlayersTableJSONParser For what needs to be included.
  */
 public class ServerPlayersTableContainersQuery implements Query<List<PlayerContainer>> {
 
