@@ -17,7 +17,7 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.commands.PlanProxyCommand;
+import com.djrapitops.plan.system.commands.PlanProxyCommand;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
