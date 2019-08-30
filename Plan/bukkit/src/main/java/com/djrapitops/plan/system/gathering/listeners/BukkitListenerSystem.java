@@ -21,7 +21,6 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.events.PlanBukkitEnableEvent;
 import com.djrapitops.plan.capability.CapabilityServiceImplementation;
 import com.djrapitops.plan.system.gathering.listeners.bukkit.*;
-import com.djrapitops.plan.system.status.Status;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 

@@ -16,12 +16,12 @@
  */
 package com.djrapitops.plan.system.commands.subcommands.manage;
 
+import com.djrapitops.plan.system.gathering.listeners.Status;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.system.settings.locale.lang.DeepHelpLang;
-import com.djrapitops.plan.system.status.Status;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;
