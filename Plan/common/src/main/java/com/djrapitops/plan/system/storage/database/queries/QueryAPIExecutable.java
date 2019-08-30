@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.storage.database.queries;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.query.QueryService;
-import com.djrapitops.plan.system.storage.database.operation.Executable;
+import com.djrapitops.plan.system.storage.database.transactions.Executable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

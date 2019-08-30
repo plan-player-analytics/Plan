@@ -18,11 +18,11 @@ package com.djrapitops.plan.extension.implementation.storage.transactions.provid
 
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
-import com.djrapitops.plan.system.storage.database.operation.ExecStatement;
-import com.djrapitops.plan.system.storage.database.operation.Executable;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionIconTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionPluginTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionTabTable;
+import com.djrapitops.plan.system.storage.database.transactions.ExecStatement;
+import com.djrapitops.plan.system.storage.database.transactions.Executable;
 import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 
 import java.sql.PreparedStatement;

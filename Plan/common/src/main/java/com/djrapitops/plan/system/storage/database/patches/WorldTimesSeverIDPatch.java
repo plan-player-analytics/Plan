@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.storage.database.patches;
 
-import com.djrapitops.plan.system.storage.database.operation.ExecBatchStatement;
 import com.djrapitops.plan.system.storage.database.queries.schema.SessionIDServerIDRelationQuery;
 import com.djrapitops.plan.system.storage.database.sql.tables.WorldTimesTable;
+import com.djrapitops.plan.system.storage.database.transactions.ExecBatchStatement;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

@@ -17,11 +17,11 @@
 package com.djrapitops.plan.system.storage.database.transactions.init;
 
 import com.djrapitops.plan.data.store.objects.DateObj;
-import com.djrapitops.plan.system.storage.database.operation.ExecStatement;
-import com.djrapitops.plan.system.storage.database.operation.Executable;
 import com.djrapitops.plan.system.storage.database.queries.objects.TPSQueries;
 import com.djrapitops.plan.system.storage.database.sql.tables.PingTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.TPSTable;
+import com.djrapitops.plan.system.storage.database.transactions.ExecStatement;
+import com.djrapitops.plan.system.storage.database.transactions.Executable;
 import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 
 import java.sql.PreparedStatement;

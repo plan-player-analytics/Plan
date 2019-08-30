@@ -16,10 +16,10 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
-import com.djrapitops.plan.system.storage.database.operation.ExecStatement;
-import com.djrapitops.plan.system.storage.database.operation.Executable;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionGroupsTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionProviderTable;
+import com.djrapitops.plan.system.storage.database.transactions.ExecStatement;
+import com.djrapitops.plan.system.storage.database.transactions.Executable;
 import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 import org.apache.commons.lang3.StringUtils;
 

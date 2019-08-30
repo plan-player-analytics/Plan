@@ -16,10 +16,10 @@
  */
 package com.djrapitops.plan.system.storage.database.transactions.events;
 
-import com.djrapitops.plan.system.storage.database.operation.ExecStatement;
-import com.djrapitops.plan.system.storage.database.operation.Executable;
 import com.djrapitops.plan.system.storage.database.sql.parsing.Update;
 import com.djrapitops.plan.system.storage.database.sql.tables.UserInfoTable;
+import com.djrapitops.plan.system.storage.database.transactions.ExecStatement;
+import com.djrapitops.plan.system.storage.database.transactions.Executable;
 import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 
 import java.sql.PreparedStatement;

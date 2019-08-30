@@ -18,8 +18,6 @@ package com.djrapitops.plan.system.storage.database.transactions;
 
 import com.djrapitops.plan.system.settings.config.Config;
 import com.djrapitops.plan.system.settings.config.ConfigWriter;
-import com.djrapitops.plan.system.storage.database.operation.ExecStatement;
-import com.djrapitops.plan.system.storage.database.operation.Executable;
 import com.djrapitops.plan.system.storage.database.queries.HasMoreThanZeroQueryStatement;
 import com.djrapitops.plan.system.storage.database.queries.Query;
 import com.djrapitops.plan.system.storage.database.sql.tables.SettingsTable;

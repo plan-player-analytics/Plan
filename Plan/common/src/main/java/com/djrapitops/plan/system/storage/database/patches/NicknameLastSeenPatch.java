@@ -17,11 +17,11 @@
 package com.djrapitops.plan.system.storage.database.patches;
 
 import com.djrapitops.plan.data.store.objects.Nickname;
-import com.djrapitops.plan.system.storage.database.operation.ExecBatchStatement;
 import com.djrapitops.plan.system.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.system.storage.database.sql.parsing.Select;
 import com.djrapitops.plan.system.storage.database.sql.tables.NicknamesTable;
 import com.djrapitops.plan.system.storage.database.sql.tables.ServerTable;
+import com.djrapitops.plan.system.storage.database.transactions.ExecBatchStatement;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

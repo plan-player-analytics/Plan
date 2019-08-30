@@ -23,10 +23,10 @@ import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
-import com.djrapitops.plan.system.storage.database.operation.ExecBatchStatement;
-import com.djrapitops.plan.system.storage.database.operation.ExecStatement;
-import com.djrapitops.plan.system.storage.database.operation.Executable;
 import com.djrapitops.plan.system.storage.database.sql.tables.*;
+import com.djrapitops.plan.system.storage.database.transactions.ExecBatchStatement;
+import com.djrapitops.plan.system.storage.database.transactions.ExecStatement;
+import com.djrapitops.plan.system.storage.database.transactions.Executable;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
