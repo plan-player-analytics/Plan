@@ -57,7 +57,6 @@ import com.djrapitops.plan.system.storage.database.queries.containers.ContainerF
 import com.djrapitops.plan.system.storage.database.queries.containers.ServerPlayerContainersQuery;
 import com.djrapitops.plan.system.storage.database.queries.objects.*;
 import com.djrapitops.plan.system.storage.database.sql.parsing.Sql;
-import com.djrapitops.plan.system.storage.database.tasks.DBCleanTask;
 import com.djrapitops.plan.system.storage.database.transactions.*;
 import com.djrapitops.plan.system.storage.database.transactions.commands.*;
 import com.djrapitops.plan.system.storage.database.transactions.events.*;
@@ -65,6 +64,7 @@ import com.djrapitops.plan.system.storage.database.transactions.init.CreateIndex
 import com.djrapitops.plan.system.storage.database.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.system.storage.database.transactions.init.RemoveDuplicateUserInfoTransaction;
 import com.djrapitops.plan.system.storage.database.transactions.patches.Patch;
+import com.djrapitops.plan.system.storage.upkeep.DBCleanTask;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;

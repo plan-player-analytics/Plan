@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
+import com.djrapitops.plan.system.storage.upkeep.LogsFolderCleanTask;
 import com.djrapitops.plan.system.tasks.server.PeriodicAnalysisTask;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.RunnableFactory;

@@ -21,8 +21,8 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.DatabaseSettings;
 import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.storage.database.tasks.KeepAliveTask;
 import com.djrapitops.plan.system.storage.file.PlanFiles;
+import com.djrapitops.plan.system.storage.upkeep.DBKeepAliveTask;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -102,7 +102,7 @@ public class H2DB extends SQLDB {
         try {
             // Maintains Connection.
             connectionPingTask = runnableFactory.create("DBConnectionPingTask " + getType().getName(),
-                    new KeepAliveTask(connection, () -> getNewConnection(databaseFile), logger, errorHandler)
+                    new DBKeepAliveTask(connection, () -> getNewConnection(databaseFile), logger, errorHandler)
             ).runTaskTimerAsynchronously(60L * 20L, 60L * 20L);
         } catch (Exception ignored) {
             // Task failed to register because plugin is being disabled
