@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.command;
 
-import com.djrapitops.plan.command.commands.*;
+import com.djrapitops.plan.command.subcommands.*;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
