@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.objects;
 
-import com.djrapitops.plan.data.time.GMTimes;
-import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.system.gathering.domain.GMTimes;
+import com.djrapitops.plan.system.gathering.domain.WorldTimes;
 import com.djrapitops.plan.system.storage.database.queries.Query;
 import com.djrapitops.plan.system.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.system.storage.database.sql.tables.SessionsTable;
@@ -34,7 +34,7 @@ import java.util.UUID;
 import static com.djrapitops.plan.system.storage.database.sql.parsing.Sql.*;
 
 /**
- * Queries for {@link com.djrapitops.plan.data.time.WorldTimes} objects.
+ * Queries for {@link WorldTimes} objects.
  *
  * @author Rsl1122
  */

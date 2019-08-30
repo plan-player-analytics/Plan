@@ -17,7 +17,7 @@
 package com.djrapitops.plan.system.storage.database.sql.tables;
 
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.data.time.GMTimes;
+import com.djrapitops.plan.system.gathering.domain.GMTimes;
 import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.storage.database.DBType;
 import com.djrapitops.plan.system.storage.database.sql.parsing.CreateTableParser;

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.utilities.html.graphs.pie;
 
-import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.system.gathering.domain.WorldTimes;
 
 import java.util.ArrayList;
 import java.util.List;

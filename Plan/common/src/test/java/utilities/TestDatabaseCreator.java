@@ -16,7 +16,7 @@
  */
 package utilities;
 
-import com.djrapitops.plan.data.time.GMTimes;
+import com.djrapitops.plan.system.gathering.domain.GMTimes;
 import com.djrapitops.plan.system.storage.database.SQLDB;
 
 import java.io.File;

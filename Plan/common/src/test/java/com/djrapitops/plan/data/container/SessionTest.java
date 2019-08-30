@@ -17,9 +17,9 @@
 package com.djrapitops.plan.data.container;
 
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.gathering.domain.PlayerKill;
 import com.djrapitops.plan.system.gathering.domain.Session;
+import com.djrapitops.plan.system.gathering.domain.WorldTimes;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;

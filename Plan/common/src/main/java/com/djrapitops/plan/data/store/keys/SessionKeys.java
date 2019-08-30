@@ -17,10 +17,10 @@
 package com.djrapitops.plan.data.store.keys;
 
 import com.djrapitops.plan.data.store.Key;
-import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.gathering.domain.PlayerDeath;
 import com.djrapitops.plan.system.gathering.domain.PlayerKill;
 import com.djrapitops.plan.system.gathering.domain.Session;
+import com.djrapitops.plan.system.gathering.domain.WorldTimes;
 
 import java.util.List;
 import java.util.UUID;
