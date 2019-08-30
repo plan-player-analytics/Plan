@@ -30,7 +30,7 @@ import com.djrapitops.plan.settings.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plan.system.version.VersionCheckSystem;
+import com.djrapitops.plan.version.VersionCheckSystem;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;

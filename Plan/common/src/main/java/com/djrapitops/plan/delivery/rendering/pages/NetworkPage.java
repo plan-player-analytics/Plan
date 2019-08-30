@@ -26,9 +26,9 @@ import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plan.system.version.VersionCheckSystem;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
+import com.djrapitops.plan.version.VersionCheckSystem;
 
 import java.util.List;
 import java.util.UUID;

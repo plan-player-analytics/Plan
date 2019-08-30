@@ -22,8 +22,8 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plan.system.version.VersionCheckSystem;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
+import com.djrapitops.plan.version.VersionCheckSystem;
 
 /**
  * Html String parser for /players page.

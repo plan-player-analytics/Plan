@@ -21,7 +21,7 @@ import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.delivery.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plan.system.version.VersionCheckSystem;
+import com.djrapitops.plan.version.VersionCheckSystem;
 
 import java.io.IOException;
 import java.util.ArrayList;
