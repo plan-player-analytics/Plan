@@ -14,28 +14,25 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.tasks.proxy;
+package com.djrapitops.plan.system.delivery.upkeep;
 
 import com.djrapitops.plan.system.delivery.webserver.cache.PageId;
 import com.djrapitops.plan.system.delivery.webserver.cache.ResponseCache;
-import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plugin.task.AbsRunnable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class NetworkPageRefreshTask extends AbsRunnable {
-
-    private final ServerInfo serverInfo;
+public class PlayersPageRefreshTask extends AbsRunnable {
 
     @Inject
-    public NetworkPageRefreshTask(ServerInfo serverInfo) {
-        this.serverInfo = serverInfo;
+    public PlayersPageRefreshTask() {
+        // Inject constructor required for dagger
     }
 
     @Override
     public void run() {
-        ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
+        ResponseCache.clearResponse(PageId.PLAYERS.id());
     }
 }
