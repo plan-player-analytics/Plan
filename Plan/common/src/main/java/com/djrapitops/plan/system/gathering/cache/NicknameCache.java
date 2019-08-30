@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.gathering.cache;
 
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.delivery.domain.Nickname;
 import com.djrapitops.plan.system.identification.ServerInfo;

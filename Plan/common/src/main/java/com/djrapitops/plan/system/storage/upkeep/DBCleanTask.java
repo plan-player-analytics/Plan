@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.upkeep;
 
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalPlayerResultsTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalServerResultsTransaction;
 import com.djrapitops.plan.query.QueryServiceImplementation;

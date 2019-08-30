@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.storage.database;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.api.exceptions.database.FatalDBException;
+import com.djrapitops.plan.exceptions.database.DBInitException;
+import com.djrapitops.plan.exceptions.database.DBOpException;
+import com.djrapitops.plan.exceptions.database.FatalDBException;
 import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.PluginSettings;

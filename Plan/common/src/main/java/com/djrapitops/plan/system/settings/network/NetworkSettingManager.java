@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.settings.network;
 
-import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.settings.config.*;

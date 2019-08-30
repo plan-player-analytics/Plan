@@ -17,7 +17,7 @@
 package utilities.dagger;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.system.gathering.listeners.ListenerSystem;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;

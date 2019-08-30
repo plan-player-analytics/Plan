@@ -22,7 +22,7 @@ import com.djrapitops.plan.system.settings.locale.lang.Lang;
  * Reason for WebUserAuthException.
  *
  * @author Rsl1122
- * @see com.djrapitops.plan.api.exceptions.WebUserAuthException
+ * @see com.djrapitops.plan.exceptions.WebUserAuthException
  */
 public enum FailReason implements Lang {
     USER_AND_PASS_NOT_SPECIFIED("User and Password not specified"),

@@ -14,11 +14,17 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.api.exceptions.database;
+package com.djrapitops.plan.exceptions.connection;
 
-public class FatalDBException extends DBOpException {
+import com.djrapitops.plan.system.delivery.webserver.response.ResponseCode;
 
-    public FatalDBException(String message) {
-        super(message);
+/**
+ * Thrown when Connection returns 404, when page is not found.
+ *
+ * @author Rsl1122
+ */
+public class NotFoundException extends WebException {
+    public NotFoundException(String message) {
+        super(message, ResponseCode.NOT_FOUND);
     }
 }

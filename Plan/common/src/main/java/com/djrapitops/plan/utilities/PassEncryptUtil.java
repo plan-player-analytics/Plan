@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.utilities;
 
-import com.djrapitops.plan.api.exceptions.PassEncryptException;
+import com.djrapitops.plan.exceptions.PassEncryptException;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;

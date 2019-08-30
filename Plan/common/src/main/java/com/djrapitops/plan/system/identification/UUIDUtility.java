@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.identification;
 
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plugin.api.utility.UUIDFetcher;

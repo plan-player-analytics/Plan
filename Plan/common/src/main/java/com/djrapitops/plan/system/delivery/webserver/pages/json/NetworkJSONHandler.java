@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.delivery.webserver.pages.json;
 
-import com.djrapitops.plan.api.exceptions.WebUserAuthException;
+import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.system.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.system.delivery.rendering.json.network.NetworkOverviewJSONParser;
 import com.djrapitops.plan.system.delivery.rendering.json.network.NetworkPlayerBaseOverviewJSONParser;

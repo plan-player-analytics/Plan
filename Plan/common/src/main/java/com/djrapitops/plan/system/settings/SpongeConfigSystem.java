@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.settings;
 
-import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.changes.ConfigUpdater;
 import com.djrapitops.plan.system.settings.config.paths.DataGatheringSettings;

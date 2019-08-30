@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.delivery.webserver.pages.json;
 
-import com.djrapitops.plan.api.exceptions.WebUserAuthException;
-import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
-import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.exceptions.WebUserAuthException;
+import com.djrapitops.plan.exceptions.connection.BadRequestException;
+import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.system.delivery.rendering.json.graphs.GraphJSONParser;
 import com.djrapitops.plan.system.delivery.webserver.Request;
 import com.djrapitops.plan.system.delivery.webserver.RequestTarget;

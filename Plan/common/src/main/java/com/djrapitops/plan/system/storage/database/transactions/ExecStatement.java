@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.database.transactions;
 
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.exceptions.database.DBOpException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.delivery.rendering.pages;
 
-import com.djrapitops.plan.api.exceptions.ParseException;
+import com.djrapitops.plan.exceptions.ParseException;
 import com.djrapitops.plan.system.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.system.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.system.delivery.rendering.html.Html;

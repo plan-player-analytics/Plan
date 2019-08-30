@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.extension;
 
-import com.djrapitops.plan.api.exceptions.DataExtensionMethodCallException;
+import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.implementation.CallerImplementation;
 import com.djrapitops.plan.extension.implementation.DataProviderExtractor;
 import com.djrapitops.plan.extension.implementation.ExtensionRegister;

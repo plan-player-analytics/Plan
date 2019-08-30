@@ -14,20 +14,21 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.api.exceptions.database;
+package com.djrapitops.plan.exceptions.connection;
+
+import com.djrapitops.plan.system.delivery.webserver.response.ResponseCode;
 
 /**
- * Thrown when something goes wrong with {@code Database#init}.
+ * Thrown when Connection returns 500.
  *
  * @author Rsl1122
  */
-public class DBInitException extends DBOpException {
-
-    public DBInitException(String message, Throwable cause) {
-        super(message, cause);
+public class InternalErrorException extends WebException {
+    public InternalErrorException() {
+        super("Internal Error occurred on receiving server", ResponseCode.INTERNAL_ERROR);
     }
 
-    public DBInitException(String message) {
-        super(message);
+    public InternalErrorException(String message, Throwable cause) {
+        super(message, cause, ResponseCode.INTERNAL_ERROR);
     }
 }

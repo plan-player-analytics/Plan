@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.delivery.rendering.pages;
 
-import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
+import com.djrapitops.plan.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
 import com.djrapitops.plan.system.delivery.domain.container.PlayerContainer;

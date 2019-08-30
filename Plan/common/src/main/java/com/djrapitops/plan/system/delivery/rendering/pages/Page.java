@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.delivery.rendering.pages;
 
-import com.djrapitops.plan.api.exceptions.ParseException;
+import com.djrapitops.plan.exceptions.ParseException;
 
 /**
  * Interface for parsing page HTML.

@@ -17,8 +17,8 @@
 package com.djrapitops.plan.system;
 
 import com.djrapitops.plan.api.PlanAPI;
-import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.capability.CapabilityServiceImplementation;
+import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.extension.ExtensionService;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.query.QueryServiceImplementation;

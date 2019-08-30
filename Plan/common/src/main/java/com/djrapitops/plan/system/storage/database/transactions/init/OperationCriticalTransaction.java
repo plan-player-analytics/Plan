@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.database.transactions.init;
 
-import com.djrapitops.plan.api.exceptions.database.FatalDBException;
+import com.djrapitops.plan.exceptions.database.FatalDBException;
 import com.djrapitops.plan.system.storage.database.SQLDB;
 import com.djrapitops.plan.system.storage.database.transactions.Transaction;
 

@@ -14,16 +14,20 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.api.exceptions;
+package com.djrapitops.plan.exceptions;
 
 /**
- * Exception thrown when Page encounters an Exception.
+ * Thrown when something goes wrong with Plan initialization.
  *
  * @author Rsl1122
  */
-public class ParseException extends Exception {
+public class EnableException extends Exception {
 
-    public ParseException(Throwable cause) {
-        super(cause);
+    public EnableException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public EnableException(String message) {
+        super(message);
     }
 }

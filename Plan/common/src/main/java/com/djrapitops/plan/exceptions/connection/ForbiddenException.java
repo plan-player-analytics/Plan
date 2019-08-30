@@ -14,16 +14,17 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.api.exceptions;
+package com.djrapitops.plan.exceptions.connection;
 
-public class PassEncryptException extends Exception {
+import com.djrapitops.plan.system.delivery.webserver.response.ResponseCode;
 
-    public PassEncryptException(String s) {
-        super(s);
+/**
+ * Thrown when Connection gets a 403 response.
+ *
+ * @author Rsl1122
+ */
+public class ForbiddenException extends WebException {
+    public ForbiddenException(String url) {
+        super("Forbidden: " + url, ResponseCode.FORBIDDEN);
     }
-
-    public PassEncryptException(String s, Throwable throwable) {
-        super(s, throwable);
-    }
-
 }

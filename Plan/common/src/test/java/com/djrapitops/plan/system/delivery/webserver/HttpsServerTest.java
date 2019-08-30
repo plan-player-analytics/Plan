@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.delivery.webserver;
 
-import com.djrapitops.plan.api.exceptions.connection.*;
+import com.djrapitops.plan.exceptions.connection.*;
 import com.djrapitops.plan.utilities.Base64Util;
 import org.junit.jupiter.api.Test;
 import utilities.HTTPConnector;

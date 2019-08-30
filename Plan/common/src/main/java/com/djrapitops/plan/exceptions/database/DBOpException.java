@@ -14,17 +14,27 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.api.exceptions.connection;
+package com.djrapitops.plan.exceptions.database;
 
-import com.djrapitops.plan.system.delivery.webserver.response.ResponseCode;
+import java.sql.SQLException;
 
 /**
- * Thrown when Connection returns 404, when page is not found.
+ * Runtime exception for wrapping database errors.
  *
  * @author Rsl1122
  */
-public class NotFoundException extends WebException {
-    public NotFoundException(String message) {
-        super(message, ResponseCode.NOT_FOUND);
+public class DBOpException extends IllegalStateException {
+
+    public DBOpException(String message) {
+        super(message);
     }
+
+    public DBOpException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public static DBOpException forCause(String sql, SQLException e) {
+        return new DBOpException("SQL Failed: " + sql + "; " + e.getMessage(), e);
+    }
+
 }

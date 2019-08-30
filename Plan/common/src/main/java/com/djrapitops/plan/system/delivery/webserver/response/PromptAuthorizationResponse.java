@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.delivery.webserver.response;
 
-import com.djrapitops.plan.api.exceptions.WebUserAuthException;
+import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.system.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.system.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.system.delivery.webserver.response.errors.ErrorResponse;

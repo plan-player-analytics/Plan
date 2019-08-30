@@ -14,27 +14,16 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.api.exceptions.database;
-
-import java.sql.SQLException;
+package com.djrapitops.plan.exceptions;
 
 /**
- * Runtime exception for wrapping database errors.
+ * Exception thrown when Page encounters an Exception.
  *
  * @author Rsl1122
  */
-public class DBOpException extends IllegalStateException {
+public class ParseException extends Exception {
 
-    public DBOpException(String message) {
-        super(message);
+    public ParseException(Throwable cause) {
+        super(cause);
     }
-
-    public DBOpException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public static DBOpException forCause(String sql, SQLException e) {
-        return new DBOpException("SQL Failed: " + sql + "; " + e.getMessage(), e);
-    }
-
 }

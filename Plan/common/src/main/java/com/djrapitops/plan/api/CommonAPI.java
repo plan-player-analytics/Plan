@@ -18,8 +18,8 @@ package com.djrapitops.plan.api;
 
 import com.djrapitops.plan.api.data.PlayerContainer;
 import com.djrapitops.plan.api.data.ServerContainer;
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.identification.UUIDUtility;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.queries.Query;

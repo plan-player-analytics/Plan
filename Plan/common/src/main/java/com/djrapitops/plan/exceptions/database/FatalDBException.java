@@ -14,20 +14,11 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.api.exceptions;
+package com.djrapitops.plan.exceptions.database;
 
-/**
- * Thrown when something goes wrong with Plan initialization.
- *
- * @author Rsl1122
- */
-public class EnableException extends Exception {
+public class FatalDBException extends DBOpException {
 
-    public EnableException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public EnableException(String message) {
+    public FatalDBException(String message) {
         super(message);
     }
 }

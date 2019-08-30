@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.delivery.webserver.auth;
 
-import com.djrapitops.plan.api.exceptions.PassEncryptException;
-import com.djrapitops.plan.api.exceptions.WebUserAuthException;
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.exceptions.PassEncryptException;
+import com.djrapitops.plan.exceptions.WebUserAuthException;
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.delivery.domain.WebUser;
 import com.djrapitops.plan.system.storage.database.Database;
 import com.djrapitops.plan.system.storage.database.queries.objects.WebUserQueries;

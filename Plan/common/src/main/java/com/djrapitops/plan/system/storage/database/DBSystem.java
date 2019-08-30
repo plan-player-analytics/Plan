@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.storage.database;
 
-import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.exceptions.EnableException;
+import com.djrapitops.plan.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.lang.PluginLang;

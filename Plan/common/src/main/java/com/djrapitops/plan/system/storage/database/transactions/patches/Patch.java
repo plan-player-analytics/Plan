@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.database.transactions.patches;
 
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.storage.database.DBType;
 import com.djrapitops.plan.system.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.system.storage.database.queries.schema.H2SchemaQueries;

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.commands.subcommands;
 
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.delivery.webserver.WebServer;
 import com.djrapitops.plan.system.identification.UUIDUtility;

@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.api.exceptions;
+package com.djrapitops.plan.exceptions;
 
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 

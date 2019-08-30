@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.delivery.webserver.pages;
 
-import com.djrapitops.plan.api.exceptions.WebUserAuthException;
-import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.exceptions.WebUserAuthException;
+import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.system.delivery.webserver.Request;
 import com.djrapitops.plan.system.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.system.delivery.webserver.auth.Authentication;
