@@ -25,8 +25,8 @@ package com.djrapitops.plan.gathering.timed;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.transactions.events.PingStoreTransaction;
 import com.djrapitops.plugin.api.TimeAmount;

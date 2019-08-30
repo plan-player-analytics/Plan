@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.identification;
 
-import com.djrapitops.plan.system.settings.config.Config;
-import com.djrapitops.plan.system.settings.config.ConfigReader;
+import com.djrapitops.plan.settings.config.Config;
+import com.djrapitops.plan.settings.config.ConfigReader;
 import com.djrapitops.plan.system.storage.file.PlanFiles;
 import com.djrapitops.plugin.utilities.Verify;
 

@@ -16,10 +16,10 @@
  */
 package com.djrapitops.plan.commands.subcommands.webuser;
 
-import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.lang.CmdHelpLang;
-import com.djrapitops.plan.system.settings.locale.lang.CommandLang;
+import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;

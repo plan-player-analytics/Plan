@@ -18,7 +18,7 @@ package com.djrapitops.plan.processing.processors.info;
 
 import com.djrapitops.plan.delivery.export.HtmlExport;
 import com.djrapitops.plan.delivery.export.JSONExport;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.PlanConfig;
 import dagger.Lazy;
 
 import javax.inject.Inject;

@@ -17,7 +17,7 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.gathering.ServerShutdownSave;
-import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.utilities.java.Reflection;
 import com.djrapitops.plugin.logging.console.PluginLogger;

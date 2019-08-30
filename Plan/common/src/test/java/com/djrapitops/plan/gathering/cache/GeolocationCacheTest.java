@@ -17,9 +17,9 @@
 package com.djrapitops.plan.gathering.cache;
 
 import com.djrapitops.plan.exceptions.EnableException;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.config.paths.DataGatheringSettings;
-import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.system.storage.file.PlanFiles;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import org.junit.jupiter.api.AfterEach;

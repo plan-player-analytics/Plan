@@ -17,10 +17,10 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.exceptions.EnableException;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.ProxySettings;
+import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.config.paths.ProxySettings;
-import com.djrapitops.plan.system.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.SQLiteDB;
 import com.google.common.util.concurrent.MoreExecutors;

@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.delivery.rendering.json.graphs.calendar;
 
-import com.djrapitops.plan.system.settings.theme.Theme;
-import com.djrapitops.plan.system.settings.theme.ThemeVal;
+import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 
 import java.util.Map;

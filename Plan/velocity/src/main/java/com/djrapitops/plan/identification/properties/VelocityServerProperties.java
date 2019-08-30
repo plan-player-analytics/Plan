@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.identification.properties;
 
-import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.config.paths.ProxySettings;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.ProxySettings;
 import com.velocitypowered.api.proxy.ProxyServer;
 
 /**

@@ -18,10 +18,10 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.commands.PlanProxyCommand;
 import com.djrapitops.plan.exceptions.EnableException;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
+import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.lang.PluginLang;
-import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plugin.VelocityPlugin;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.logging.L;

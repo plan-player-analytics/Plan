@@ -18,12 +18,12 @@ package com.djrapitops.plan.commands.subcommands;
 
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.processing.Processing;
-import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.lang.CmdHelpLang;
-import com.djrapitops.plan.system.settings.locale.lang.CommandLang;
-import com.djrapitops.plan.system.settings.locale.lang.DeepHelpLang;
-import com.djrapitops.plan.system.settings.locale.lang.ManageLang;
+import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.settings.locale.lang.CommandLang;
+import com.djrapitops.plan.settings.locale.lang.DeepHelpLang;
+import com.djrapitops.plan.settings.locale.lang.ManageLang;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.Database;
 import com.djrapitops.plan.system.storage.database.queries.objects.UserIdentifierQueries;

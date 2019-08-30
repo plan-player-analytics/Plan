@@ -18,8 +18,8 @@ package com.djrapitops.plan.delivery.rendering.json.graphs.line;
 
 import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
 import com.djrapitops.plan.gathering.domain.Ping;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.config.paths.DisplaySettings;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.utilities.comparators.PointComparator;
 
 import javax.inject.Inject;

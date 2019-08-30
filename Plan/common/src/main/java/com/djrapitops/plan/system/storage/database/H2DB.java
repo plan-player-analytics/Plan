@@ -18,9 +18,9 @@ package com.djrapitops.plan.system.storage.database;
 
 import com.djrapitops.plan.exceptions.database.DBInitException;
 import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.config.paths.DatabaseSettings;
-import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.system.storage.file.PlanFiles;
 import com.djrapitops.plan.system.storage.upkeep.DBKeepAliveTask;
 import com.djrapitops.plan.utilities.MiscUtils;

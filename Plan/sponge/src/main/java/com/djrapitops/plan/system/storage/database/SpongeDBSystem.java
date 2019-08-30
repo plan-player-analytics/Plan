@@ -17,9 +17,9 @@
 package com.djrapitops.plan.system.storage.database;
 
 import com.djrapitops.plan.exceptions.EnableException;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.config.paths.DatabaseSettings;
-import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;

@@ -17,8 +17,8 @@
 package com.djrapitops.plan.gathering.listeners.sponge;
 
 import com.djrapitops.plan.gathering.afk.AFKTracker;
-import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.entity.living.player.Player;

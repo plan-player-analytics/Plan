@@ -25,7 +25,7 @@ import com.djrapitops.plan.gathering.domain.PlayerDeath;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
-import com.djrapitops.plan.system.settings.config.WorldAliasSettings;
+import com.djrapitops.plan.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.utilities.analysis.Median;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 

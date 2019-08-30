@@ -17,12 +17,12 @@
 package com.djrapitops.plan.commands.subcommands;
 
 import com.djrapitops.plan.delivery.webserver.WebServer;
+import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.settings.locale.lang.CommandLang;
+import com.djrapitops.plan.settings.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.lang.CmdHelpLang;
-import com.djrapitops.plan.system.settings.locale.lang.CommandLang;
-import com.djrapitops.plan.system.settings.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;

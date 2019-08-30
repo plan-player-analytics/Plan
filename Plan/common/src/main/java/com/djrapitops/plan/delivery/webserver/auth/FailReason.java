@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.auth;
 
-import com.djrapitops.plan.system.settings.locale.lang.Lang;
+import com.djrapitops.plan.settings.locale.lang.Lang;
 
 /**
  * Reason for WebUserAuthException.

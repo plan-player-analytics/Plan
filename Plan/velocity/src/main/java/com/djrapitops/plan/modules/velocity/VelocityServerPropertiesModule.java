@@ -19,7 +19,7 @@ package com.djrapitops.plan.modules.velocity;
 import com.djrapitops.plan.PlanVelocity;
 import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.identification.properties.VelocityServerProperties;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.PlanConfig;
 import dagger.Module;
 import dagger.Provides;
 

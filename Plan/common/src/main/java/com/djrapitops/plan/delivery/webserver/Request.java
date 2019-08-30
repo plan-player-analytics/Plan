@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
-import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.InputStream;

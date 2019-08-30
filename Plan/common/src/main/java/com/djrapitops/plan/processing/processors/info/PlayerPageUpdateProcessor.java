@@ -20,8 +20,8 @@ import com.djrapitops.plan.delivery.export.HtmlExport;
 import com.djrapitops.plan.delivery.export.JSONExport;
 import com.djrapitops.plan.delivery.webserver.cache.PageId;
 import com.djrapitops.plan.delivery.webserver.cache.ResponseCache;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.config.paths.ExportSettings;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.ExportSettings;
 
 import java.util.UUID;
 

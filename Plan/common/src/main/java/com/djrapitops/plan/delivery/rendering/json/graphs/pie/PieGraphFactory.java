@@ -18,11 +18,11 @@ package com.djrapitops.plan.delivery.rendering.json.graphs.pie;
 
 import com.djrapitops.plan.gathering.domain.GMTimes;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.config.WorldAliasSettings;
-import com.djrapitops.plan.system.settings.config.paths.DisplaySettings;
-import com.djrapitops.plan.system.settings.theme.Theme;
-import com.djrapitops.plan.system.settings.theme.ThemeVal;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.WorldAliasSettings;
+import com.djrapitops.plan.settings.config.paths.DisplaySettings;
+import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.settings.theme.ThemeVal;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

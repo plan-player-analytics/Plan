@@ -17,10 +17,10 @@
 package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
+import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.config.changes.ConfigUpdater;
-import com.djrapitops.plan.system.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.system.storage.database.transactions.commands.RegisterWebUserTransaction;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.junit.jupiter.api.AfterAll;

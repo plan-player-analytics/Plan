@@ -20,7 +20,7 @@ import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.GMTimes;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.identification.Server;
-import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.Database;
 import com.djrapitops.plan.system.storage.database.queries.objects.SessionQueries;

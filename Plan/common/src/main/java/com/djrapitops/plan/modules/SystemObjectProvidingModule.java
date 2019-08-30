@@ -16,10 +16,10 @@
  */
 package com.djrapitops.plan.modules;
 
-import com.djrapitops.plan.system.settings.config.ExtensionSettings;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.LocaleSystem;
+import com.djrapitops.plan.settings.config.ExtensionSettings;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.LocaleSystem;
 import dagger.Module;
 import dagger.Provides;
 
