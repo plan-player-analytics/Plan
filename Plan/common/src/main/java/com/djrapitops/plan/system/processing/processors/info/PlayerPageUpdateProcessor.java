@@ -18,10 +18,10 @@ package com.djrapitops.plan.system.processing.processors.info;
 
 import com.djrapitops.plan.system.delivery.export.HtmlExport;
 import com.djrapitops.plan.system.delivery.export.JSONExport;
+import com.djrapitops.plan.system.delivery.webserver.cache.PageId;
+import com.djrapitops.plan.system.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.ExportSettings;
-import com.djrapitops.plan.system.webserver.cache.PageId;
-import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 
 import java.util.UUID;
 

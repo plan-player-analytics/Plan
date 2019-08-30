@@ -23,6 +23,8 @@ import com.djrapitops.plan.extension.ExtensionService;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.query.QueryServiceImplementation;
 import com.djrapitops.plan.system.delivery.export.ExportSystem;
+import com.djrapitops.plan.system.delivery.webserver.WebServer;
+import com.djrapitops.plan.system.delivery.webserver.WebServerSystem;
 import com.djrapitops.plan.system.gathering.cache.CacheSystem;
 import com.djrapitops.plan.system.gathering.importing.ImportSystem;
 import com.djrapitops.plan.system.gathering.listeners.ListenerSystem;
@@ -36,8 +38,6 @@ import com.djrapitops.plan.system.storage.database.queries.objects.ServerQueries
 import com.djrapitops.plan.system.storage.file.PlanFiles;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
-import com.djrapitops.plan.system.webserver.WebServer;
-import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 

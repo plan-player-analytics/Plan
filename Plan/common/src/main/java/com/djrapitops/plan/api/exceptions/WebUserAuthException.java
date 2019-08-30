@@ -17,7 +17,7 @@
 package com.djrapitops.plan.api.exceptions;
 
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.webserver.auth.FailReason;
+import com.djrapitops.plan.system.delivery.webserver.auth.FailReason;
 
 /**
  * Thrown when WebUser can not be authorized (WebServer).

@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.data.cache;
 
-import com.djrapitops.plan.system.webserver.cache.ResponseCache;
-import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.delivery.webserver.cache.ResponseCache;
+import com.djrapitops.plan.system.delivery.webserver.response.Response;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;

@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.tasks.proxy;
 
+import com.djrapitops.plan.system.delivery.webserver.cache.PageId;
+import com.djrapitops.plan.system.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.identification.ServerInfo;
-import com.djrapitops.plan.system.webserver.cache.PageId;
-import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plugin.task.AbsRunnable;
 
 import javax.inject.Inject;

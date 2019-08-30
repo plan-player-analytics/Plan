@@ -18,6 +18,8 @@ package com.djrapitops.plan.system.gathering.listeners.velocity;
 
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
+import com.djrapitops.plan.system.delivery.webserver.cache.PageId;
+import com.djrapitops.plan.system.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.gathering.cache.GeolocationCache;
 import com.djrapitops.plan.system.gathering.cache.SessionCache;
 import com.djrapitops.plan.system.gathering.domain.Session;
@@ -30,8 +32,6 @@ import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.Database;
 import com.djrapitops.plan.system.storage.database.transactions.events.GeoInfoStoreTransaction;
 import com.djrapitops.plan.system.storage.database.transactions.events.PlayerRegisterTransaction;
-import com.djrapitops.plan.system.webserver.cache.PageId;
-import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.velocitypowered.api.event.PostOrder;

@@ -18,6 +18,7 @@ package com.djrapitops.plan.utilities.html.pages;
 
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.system.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.gathering.cache.SessionCache;
 import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.identification.ServerInfo;
@@ -25,7 +26,6 @@ import com.djrapitops.plan.system.identification.properties.ServerProperties;
 import com.djrapitops.plan.system.storage.database.Database;
 import com.djrapitops.plan.system.storage.file.FileResource;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
-import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.Html;

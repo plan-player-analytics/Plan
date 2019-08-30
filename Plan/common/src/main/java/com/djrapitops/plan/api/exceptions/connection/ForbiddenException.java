@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.api.exceptions.connection;
 
-import com.djrapitops.plan.system.webserver.response.ResponseCode;
+import com.djrapitops.plan.system.delivery.webserver.response.ResponseCode;
 
 /**
  * Thrown when Connection gets a 403 response.
