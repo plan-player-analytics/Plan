@@ -17,7 +17,7 @@
 package utilities.dagger;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.system.commands.PlanCommand;
+import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.modules.APFModule;
 import com.djrapitops.plan.modules.FilesModule;
 import com.djrapitops.plan.modules.ServerSuperClassBindingModule;
