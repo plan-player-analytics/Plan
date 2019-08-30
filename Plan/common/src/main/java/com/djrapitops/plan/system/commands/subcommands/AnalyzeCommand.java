@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.commands.subcommands;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.export.HtmlExport;
+import com.djrapitops.plan.system.delivery.export.HtmlExport;
 import com.djrapitops.plan.system.identification.Server;
 import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;

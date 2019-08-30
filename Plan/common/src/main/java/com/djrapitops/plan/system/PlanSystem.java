@@ -22,7 +22,7 @@ import com.djrapitops.plan.capability.CapabilityServiceImplementation;
 import com.djrapitops.plan.extension.ExtensionService;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.query.QueryServiceImplementation;
-import com.djrapitops.plan.system.export.ExportSystem;
+import com.djrapitops.plan.system.delivery.export.ExportSystem;
 import com.djrapitops.plan.system.gathering.cache.CacheSystem;
 import com.djrapitops.plan.system.gathering.importing.ImportSystem;
 import com.djrapitops.plan.system.gathering.listeners.ListenerSystem;
