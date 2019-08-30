@@ -14,19 +14,36 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.locale;
+package com.djrapitops.plan.system.settings.locale;
 
+import com.djrapitops.plan.system.file.FileResource;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+/**
+ * Test class for {@link LocaleFileWriter}.
+ *
+ * @author Rsl1122
+ */
 @RunWith(JUnitPlatform.class)
-class LocaleSystemTest {
+class LocaleFileWriterTest {
 
     @Test
-    void noIdentifierCollisions() {
-        assertDoesNotThrow(LocaleSystem::getIdentifiers);
+    void writesAllIdentifiers(@TempDir Path tempDir) throws IOException {
+        File file = tempDir.resolve("localeFile.txt").toFile();
+        new LocaleFileWriter(new Locale()).writeToFile(file);
+
+        long expected = LocaleSystem.getIdentifiers().size();
+        int result = FileResource.lines(file).size();
+        assertEquals(expected, result);
     }
+
 }

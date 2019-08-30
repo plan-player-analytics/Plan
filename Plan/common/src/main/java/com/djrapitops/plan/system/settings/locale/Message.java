@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.locale;
+package com.djrapitops.plan.system.settings.locale;
 
 import com.djrapitops.plugin.utilities.Verify;
 import org.apache.commons.text.StringSubstitutor;

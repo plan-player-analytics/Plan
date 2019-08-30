@@ -14,12 +14,12 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.locale;
+package com.djrapitops.plan.system.settings.locale;
 
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
-import com.djrapitops.plan.system.locale.lang.*;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.locale.lang.*;
 import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plan.system.webserver.auth.FailReason;
 import com.djrapitops.plugin.logging.L;

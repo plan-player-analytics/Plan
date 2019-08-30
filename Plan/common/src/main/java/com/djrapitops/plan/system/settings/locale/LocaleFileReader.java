@@ -14,10 +14,10 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.locale;
+package com.djrapitops.plan.system.settings.locale;
 
 import com.djrapitops.plan.system.file.Resource;
-import com.djrapitops.plan.system.locale.lang.Lang;
+import com.djrapitops.plan.system.settings.locale.lang.Lang;
 
 import java.io.IOException;
 import java.util.List;

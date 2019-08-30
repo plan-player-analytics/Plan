@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.utilities.formatting.time;
 
-import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.lang.GenericLang;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.system.settings.paths.FormatSettings;
 import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;

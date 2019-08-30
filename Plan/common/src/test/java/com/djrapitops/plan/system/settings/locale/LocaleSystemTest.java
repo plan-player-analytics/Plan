@@ -14,35 +14,19 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.locale.lang;
+package com.djrapitops.plan.system.settings.locale;
 
-/**
- * {@link Lang} implementation for single words.
- *
- * @author Rsl1122
- */
-public enum GenericLang implements Lang {
-    YES("Positive", "Yes"),
-    NO("Negative", "No"),
-    UNKNOWN("Unknown", "Unknown"),
-    TODAY("Today", "'Today'"),
-    YESTERDAY("Yesterday", "'Yesterday'");
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
-    private final String identifier;
-    private final String defaultValue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-    GenericLang(String identifier, String defaultValue) {
-        this.identifier = identifier;
-        this.defaultValue = defaultValue;
-    }
+@RunWith(JUnitPlatform.class)
+class LocaleSystemTest {
 
-    @Override
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    @Override
-    public String getDefault() {
-        return defaultValue;
+    @Test
+    void noIdentifierCollisions() {
+        assertDoesNotThrow(LocaleSystem::getIdentifiers);
     }
 }

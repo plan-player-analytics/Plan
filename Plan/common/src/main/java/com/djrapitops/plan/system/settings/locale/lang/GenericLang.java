@@ -14,27 +14,35 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.webserver.response;
-
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.theme.Theme;
-import com.sun.net.httpserver.HttpExchange;
-
-import java.io.IOException;
+package com.djrapitops.plan.system.settings.locale.lang;
 
 /**
+ * {@link Lang} implementation for single words.
+ *
  * @author Rsl1122
  */
-public class RedirectResponse extends Response {
+public enum GenericLang implements Lang {
+    YES("Positive", "Yes"),
+    NO("Negative", "No"),
+    UNKNOWN("Unknown", "Unknown"),
+    TODAY("Today", "'Today'"),
+    YESTERDAY("Yesterday", "'Yesterday'");
 
-    public RedirectResponse(String direct) {
-        super.setHeader("HTTP/1.1 302 Found");
-        super.setContent(direct);
+    private final String identifier;
+    private final String defaultValue;
+
+    GenericLang(String identifier, String defaultValue) {
+        this.identifier = identifier;
+        this.defaultValue = defaultValue;
     }
 
     @Override
-    public void send(HttpExchange exchange, Locale locale, Theme theme) throws IOException {
-        responseHeaders.set("Location", getContent());
-        super.send(exchange, locale, theme);
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    @Override
+    public String getDefault() {
+        return defaultValue;
     }
 }

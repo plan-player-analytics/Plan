@@ -17,10 +17,10 @@
 package com.djrapitops.plan.system.commands;
 
 import com.djrapitops.plan.system.commands.subcommands.*;
-import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.command.CommandNode;

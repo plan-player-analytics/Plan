@@ -19,7 +19,7 @@ package com.djrapitops.plan.system.database;
 import com.djrapitops.plan.db.H2DB;
 import com.djrapitops.plan.db.MySQLDB;
 import com.djrapitops.plan.db.SQLiteDB;
-import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.webserver.response;
 
-import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;

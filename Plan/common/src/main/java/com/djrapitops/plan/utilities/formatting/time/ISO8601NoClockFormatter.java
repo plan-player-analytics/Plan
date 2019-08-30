@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.utilities.formatting.time;
 
-import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.locale.Locale;
 
 /**
  * Formatter for a timestamp in ISO-8601 format without the clock.
