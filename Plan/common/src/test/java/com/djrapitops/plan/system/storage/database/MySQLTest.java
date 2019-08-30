@@ -18,8 +18,8 @@ package com.djrapitops.plan.system.storage.database;
 
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.storage.database.access.queries.objects.GeoInfoQueries;
 import com.djrapitops.plan.system.storage.database.access.transactions.events.PlayerRegisterTransaction;
+import com.djrapitops.plan.system.storage.database.queries.objects.GeoInfoQueries;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;

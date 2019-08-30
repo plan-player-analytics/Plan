@@ -18,8 +18,8 @@ package com.djrapitops.plan.system.storage.database.access.transactions.events;
 
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
-import com.djrapitops.plan.system.storage.database.access.queries.DataStoreQueries;
 import com.djrapitops.plan.system.storage.database.access.transactions.Transaction;
+import com.djrapitops.plan.system.storage.database.queries.DataStoreQueries;
 
 import java.util.List;
 import java.util.UUID;

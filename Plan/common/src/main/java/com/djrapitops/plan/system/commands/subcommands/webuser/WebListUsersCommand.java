@@ -25,7 +25,7 @@ import com.djrapitops.plan.system.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.system.settings.locale.lang.ManageLang;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.access.queries.objects.WebUserQueries;
+import com.djrapitops.plan.system.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;

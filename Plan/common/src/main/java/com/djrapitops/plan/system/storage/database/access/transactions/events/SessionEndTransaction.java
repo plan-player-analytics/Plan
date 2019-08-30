@@ -17,8 +17,8 @@
 package com.djrapitops.plan.system.storage.database.access.transactions.events;
 
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.system.storage.database.access.queries.DataStoreQueries;
 import com.djrapitops.plan.system.storage.database.access.transactions.Transaction;
+import com.djrapitops.plan.system.storage.database.queries.DataStoreQueries;
 
 /**
  * Transaction for storing a session after a session has ended.

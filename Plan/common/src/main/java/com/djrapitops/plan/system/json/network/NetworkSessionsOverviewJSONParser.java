@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.json.network;
 
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.access.queries.objects.SessionQueries;
+import com.djrapitops.plan.system.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 

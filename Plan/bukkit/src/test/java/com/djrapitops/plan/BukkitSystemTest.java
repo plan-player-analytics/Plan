@@ -24,7 +24,7 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.system.settings.config.paths.key.Setting;
 import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.system.storage.database.queries.objects.ServerQueries;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

@@ -33,7 +33,7 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.ConfigSystem;
 import com.djrapitops.plan.system.settings.locale.LocaleSystem;
 import com.djrapitops.plan.system.storage.database.DBSystem;
-import com.djrapitops.plan.system.storage.database.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.system.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.WebServer;

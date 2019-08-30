@@ -23,7 +23,7 @@ import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.system.storage.database.DBSystem;
-import com.djrapitops.plan.system.storage.database.access.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.system.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.system.webserver.response.errors.ForbiddenResponse;

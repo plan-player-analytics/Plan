@@ -35,7 +35,7 @@ import com.djrapitops.plan.system.settings.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.access.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.system.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;

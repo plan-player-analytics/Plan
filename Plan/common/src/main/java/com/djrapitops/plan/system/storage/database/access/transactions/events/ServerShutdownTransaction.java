@@ -17,8 +17,8 @@
 package com.djrapitops.plan.system.storage.database.access.transactions.events;
 
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.system.storage.database.access.queries.LargeStoreQueries;
 import com.djrapitops.plan.system.storage.database.access.transactions.Transaction;
+import com.djrapitops.plan.system.storage.database.queries.LargeStoreQueries;
 
 import java.util.Collection;
 

@@ -30,7 +30,7 @@ import com.djrapitops.plan.system.settings.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.locale.lang.ManageLang;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.access.queries.objects.UserIdentifierQueries;
+import com.djrapitops.plan.system.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;

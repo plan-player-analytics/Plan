@@ -17,7 +17,7 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.system.storage.database.queries.objects.ServerQueries;
 import org.bstats.bungeecord.Metrics;
 
 import java.util.function.Supplier;

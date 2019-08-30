@@ -17,8 +17,8 @@
 package com.djrapitops.plan.system.storage.database.access.transactions.init;
 
 import com.djrapitops.plan.system.storage.database.DBType;
-import com.djrapitops.plan.system.storage.database.access.queries.schema.MySQLSchemaQueries;
 import com.djrapitops.plan.system.storage.database.access.transactions.Transaction;
+import com.djrapitops.plan.system.storage.database.queries.schema.MySQLSchemaQueries;
 import com.djrapitops.plan.system.storage.database.sql.tables.*;
 import org.apache.commons.text.TextStringBuilder;
 

@@ -17,8 +17,8 @@
 package com.djrapitops.plan.system.storage.database.access.transactions.events;
 
 import com.djrapitops.plan.system.storage.database.access.HasMoreThanZeroQueryStatement;
-import com.djrapitops.plan.system.storage.database.access.queries.DataStoreQueries;
 import com.djrapitops.plan.system.storage.database.access.transactions.Transaction;
+import com.djrapitops.plan.system.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.system.storage.database.sql.tables.WorldTable;
 
 import java.sql.PreparedStatement;

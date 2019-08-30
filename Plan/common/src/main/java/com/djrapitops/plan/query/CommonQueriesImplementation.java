@@ -18,12 +18,12 @@ package com.djrapitops.plan.query;
 
 import com.djrapitops.plan.system.storage.database.DBType;
 import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.access.queries.objects.ServerQueries;
-import com.djrapitops.plan.system.storage.database.access.queries.objects.SessionQueries;
-import com.djrapitops.plan.system.storage.database.access.queries.objects.UserIdentifierQueries;
-import com.djrapitops.plan.system.storage.database.access.queries.schema.H2SchemaQueries;
-import com.djrapitops.plan.system.storage.database.access.queries.schema.MySQLSchemaQueries;
-import com.djrapitops.plan.system.storage.database.access.queries.schema.SQLiteSchemaQueries;
+import com.djrapitops.plan.system.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.system.storage.database.queries.objects.SessionQueries;
+import com.djrapitops.plan.system.storage.database.queries.objects.UserIdentifierQueries;
+import com.djrapitops.plan.system.storage.database.queries.schema.H2SchemaQueries;
+import com.djrapitops.plan.system.storage.database.queries.schema.MySQLSchemaQueries;
+import com.djrapitops.plan.system.storage.database.queries.schema.SQLiteSchemaQueries;
 
 import java.util.Optional;
 import java.util.Set;

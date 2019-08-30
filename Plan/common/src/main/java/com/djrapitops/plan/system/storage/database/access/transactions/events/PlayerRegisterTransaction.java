@@ -17,9 +17,9 @@
 package com.djrapitops.plan.system.storage.database.access.transactions.events;
 
 import com.djrapitops.plan.system.cache.SessionCache;
-import com.djrapitops.plan.system.storage.database.access.queries.DataStoreQueries;
-import com.djrapitops.plan.system.storage.database.access.queries.PlayerFetchQueries;
 import com.djrapitops.plan.system.storage.database.access.transactions.Transaction;
+import com.djrapitops.plan.system.storage.database.queries.DataStoreQueries;
+import com.djrapitops.plan.system.storage.database.queries.PlayerFetchQueries;
 
 import java.util.UUID;
 import java.util.function.LongSupplier;

@@ -26,12 +26,12 @@ import com.djrapitops.plan.system.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.access.queries.ServerAggregateQueries;
-import com.djrapitops.plan.system.storage.database.access.queries.analysis.ActivityIndexQueries;
-import com.djrapitops.plan.system.storage.database.access.queries.analysis.PlayerCountQueries;
-import com.djrapitops.plan.system.storage.database.access.queries.objects.KillQueries;
-import com.djrapitops.plan.system.storage.database.access.queries.objects.SessionQueries;
-import com.djrapitops.plan.system.storage.database.access.queries.objects.TPSQueries;
+import com.djrapitops.plan.system.storage.database.queries.ServerAggregateQueries;
+import com.djrapitops.plan.system.storage.database.queries.analysis.ActivityIndexQueries;
+import com.djrapitops.plan.system.storage.database.queries.analysis.PlayerCountQueries;
+import com.djrapitops.plan.system.storage.database.queries.objects.KillQueries;
+import com.djrapitops.plan.system.storage.database.queries.objects.SessionQueries;
+import com.djrapitops.plan.system.storage.database.queries.objects.TPSQueries;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 

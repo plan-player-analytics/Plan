@@ -18,8 +18,8 @@ package com.djrapitops.plan.system.storage.database.access.transactions.events;
 
 import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.data.store.objects.DateObj;
-import com.djrapitops.plan.system.storage.database.access.queries.DataStoreQueries;
 import com.djrapitops.plan.system.storage.database.access.transactions.Transaction;
+import com.djrapitops.plan.system.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.utilities.analysis.Median;
 
 import java.util.List;

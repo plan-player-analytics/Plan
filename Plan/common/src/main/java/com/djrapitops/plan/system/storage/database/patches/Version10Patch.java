@@ -17,7 +17,7 @@
 package com.djrapitops.plan.system.storage.database.patches;
 
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.storage.database.access.queries.objects.ServerQueries;
+import com.djrapitops.plan.system.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.system.storage.database.sql.tables.*;
 
 import java.util.Optional;

@@ -21,7 +21,7 @@ import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.storage.database.DBSystem;
-import com.djrapitops.plan.system.storage.database.access.queries.objects.NicknameQueries;
+import com.djrapitops.plan.system.storage.database.queries.objects.NicknameQueries;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 

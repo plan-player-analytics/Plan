@@ -17,8 +17,8 @@
 package com.djrapitops.plan.system.storage.database.access.transactions.commands;
 
 import com.djrapitops.plan.system.storage.database.access.ExecStatement;
-import com.djrapitops.plan.system.storage.database.access.queries.PlayerFetchQueries;
 import com.djrapitops.plan.system.storage.database.access.transactions.Transaction;
+import com.djrapitops.plan.system.storage.database.queries.PlayerFetchQueries;
 import com.djrapitops.plan.system.storage.database.sql.tables.*;
 
 import java.sql.PreparedStatement;
