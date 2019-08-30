@@ -16,22 +16,22 @@
  */
 package com.djrapitops.plan.modules.sponge;
 
-import com.djrapitops.plan.ServerShutdownSave;
 import com.djrapitops.plan.SpongeServerShutdownSave;
-import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.SpongeDBSystem;
-import com.djrapitops.plan.system.file.PlanFiles;
-import com.djrapitops.plan.system.file.SpongePlanFiles;
-import com.djrapitops.plan.system.importing.EmptyImportSystem;
-import com.djrapitops.plan.system.importing.ImportSystem;
-import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.info.server.ServerServerInfo;
-import com.djrapitops.plan.system.listeners.ListenerSystem;
-import com.djrapitops.plan.system.listeners.SpongeListenerSystem;
+import com.djrapitops.plan.system.TaskSystem;
+import com.djrapitops.plan.system.gathering.ServerShutdownSave;
+import com.djrapitops.plan.system.gathering.importing.EmptyImportSystem;
+import com.djrapitops.plan.system.gathering.importing.ImportSystem;
+import com.djrapitops.plan.system.gathering.listeners.ListenerSystem;
+import com.djrapitops.plan.system.gathering.listeners.SpongeListenerSystem;
+import com.djrapitops.plan.system.identification.ServerInfo;
+import com.djrapitops.plan.system.identification.ServerServerInfo;
 import com.djrapitops.plan.system.settings.ConfigSystem;
 import com.djrapitops.plan.system.settings.SpongeConfigSystem;
+import com.djrapitops.plan.system.storage.database.DBSystem;
+import com.djrapitops.plan.system.storage.database.SpongeDBSystem;
+import com.djrapitops.plan.system.storage.file.PlanFiles;
+import com.djrapitops.plan.system.storage.file.SpongePlanFiles;
 import com.djrapitops.plan.system.tasks.SpongeTaskSystem;
-import com.djrapitops.plan.system.tasks.TaskSystem;
 import dagger.Binds;
 import dagger.Module;
 

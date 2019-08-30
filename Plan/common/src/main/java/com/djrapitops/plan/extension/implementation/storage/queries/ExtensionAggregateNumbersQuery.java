@@ -16,10 +16,6 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.queries;
 
-import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.db.sql.tables.*;
 import com.djrapitops.plan.extension.ElementOrder;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.icon.Color;
@@ -30,6 +26,10 @@ import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionDescriptive;
 import com.djrapitops.plan.extension.implementation.results.ExtensionNumberData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
+import com.djrapitops.plan.system.storage.database.SQLDB;
+import com.djrapitops.plan.system.storage.database.queries.Query;
+import com.djrapitops.plan.system.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.system.storage.database.sql.tables.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,7 +38,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+import static com.djrapitops.plan.system.storage.database.sql.parsing.Sql.*;
 
 /**
  * Query aggregated boolean values from player value table.

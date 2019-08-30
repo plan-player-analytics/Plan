@@ -16,8 +16,7 @@
  */
 package com.djrapitops.plan.extension.implementation.results;
 
-import com.djrapitops.plan.api.PlanAPI;
-import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.system.delivery.rendering.html.Html;
 
 /**
  * Represents double data returned by a DoubleProvider or PercentageProvider method.
@@ -42,7 +41,7 @@ public class ExtensionStringData implements DescribedExtensionData {
 
     public String getFormattedValue() {
         String withColors = Html.swapColorCodesToSpan(value);
-        return !playerName ? withColors : Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(value), withColors);
+        return !playerName ? withColors : Html.LINK.parse("../player/" + value, withColors);
     }
 
     ExtensionStringData concatenate(ExtensionStringData other) {

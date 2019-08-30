@@ -16,13 +16,6 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.queries;
 
-import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.db.sql.tables.ExtensionIconTable;
-import com.djrapitops.plan.db.sql.tables.ExtensionPlayerTableValueTable;
-import com.djrapitops.plan.db.sql.tables.ExtensionTabTable;
-import com.djrapitops.plan.db.sql.tables.ExtensionTableProviderTable;
 import com.djrapitops.plan.extension.ElementOrder;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
@@ -30,13 +23,20 @@ import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.extension.table.TableAccessor;
+import com.djrapitops.plan.system.storage.database.SQLDB;
+import com.djrapitops.plan.system.storage.database.queries.Query;
+import com.djrapitops.plan.system.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionIconTable;
+import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionPlayerTableValueTable;
+import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionTabTable;
+import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionTableProviderTable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+import static com.djrapitops.plan.system.storage.database.sql.parsing.Sql.*;
 
 /**
  * Query player tables from tableprovider table.

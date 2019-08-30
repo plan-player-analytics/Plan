@@ -18,14 +18,14 @@ package com.djrapitops.plan.api;
 
 import com.djrapitops.plan.api.data.PlayerContainer;
 import com.djrapitops.plan.api.data.ServerContainer;
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
-import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
-import com.djrapitops.plan.db.access.queries.objects.UserIdentifierQueries;
-import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.utilities.uuid.UUIDUtility;
+import com.djrapitops.plan.exceptions.database.DBOpException;
+import com.djrapitops.plan.system.identification.UUIDUtility;
+import com.djrapitops.plan.system.storage.database.DBSystem;
+import com.djrapitops.plan.system.storage.database.queries.Query;
+import com.djrapitops.plan.system.storage.database.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.system.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.system.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -43,6 +43,7 @@ import java.util.UUID;
  * @author Rsl1122
  */
 @Singleton
+@Deprecated
 public class CommonAPI implements PlanAPI {
 
     private final DBSystem dbSystem;

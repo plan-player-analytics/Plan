@@ -17,17 +17,17 @@
 package utilities.dagger;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.db.H2DB;
-import com.djrapitops.plan.db.MySQLDB;
-import com.djrapitops.plan.db.SQLiteDB;
-import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.listeners.ListenerSystem;
-import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.exceptions.EnableException;
+import com.djrapitops.plan.system.TaskSystem;
+import com.djrapitops.plan.system.gathering.listeners.ListenerSystem;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
-import com.djrapitops.plan.system.tasks.TaskSystem;
+import com.djrapitops.plan.system.settings.config.paths.DatabaseSettings;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.storage.database.DBSystem;
+import com.djrapitops.plan.system.storage.database.H2DB;
+import com.djrapitops.plan.system.storage.database.MySQLDB;
+import com.djrapitops.plan.system.storage.database.SQLiteDB;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -74,7 +74,7 @@ public class PluginSuperClassBindingModule {
     @Provides
     @Singleton
     TaskSystem provideTaskSystem(RunnableFactory runnableFactory) {
-        return new TaskSystem(runnableFactory, null) {
+        return new TaskSystem(runnableFactory) {
             @Override
             public void enable() {
             }

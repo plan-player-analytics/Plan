@@ -16,17 +16,17 @@
  */
 package com.djrapitops.plan.extension;
 
-import com.djrapitops.plan.api.exceptions.DataExtensionMethodCallException;
-import com.djrapitops.plan.data.plugin.PluginsConfigSection;
+import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.implementation.CallerImplementation;
 import com.djrapitops.plan.extension.implementation.DataProviderExtractor;
 import com.djrapitops.plan.extension.implementation.ExtensionRegister;
 import com.djrapitops.plan.extension.implementation.providers.gathering.ProviderValueGatherer;
 import com.djrapitops.plan.system.DebugChannels;
-import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.system.settings.config.ExtensionSettings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -82,7 +82,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
 
     public void register() {
         try {
-            extensionRegister.registerBuiltInExtensions(config.getPluginsConfigSection().getDisabled());
+            extensionRegister.registerBuiltInExtensions(config.getExtensionSettings().getDisabled());
         } catch (IllegalStateException failedToRegisterOne) {
             logger.warn("One or more extensions failed to register, see suppressed exceptions.");
             errorHandler.log(L.WARN, this.getClass(), failedToRegisterOne);
@@ -120,7 +120,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
     }
 
     private boolean shouldNotAllowRegistration(String pluginName) {
-        PluginsConfigSection pluginsConfig = config.getPluginsConfigSection();
+        ExtensionSettings pluginsConfig = config.getExtensionSettings();
 
         if (!pluginsConfig.hasSection(pluginName)) {
             try {
