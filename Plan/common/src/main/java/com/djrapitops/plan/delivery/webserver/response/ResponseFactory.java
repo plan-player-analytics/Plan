@@ -27,9 +27,9 @@ import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.ErrorPageLang;
-import com.djrapitops.plan.system.storage.database.DBSystem;
-import com.djrapitops.plan.system.storage.database.queries.containers.ContainerFetchQueries;
-import com.djrapitops.plan.system.storage.file.PlanFiles;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.system.version.VersionCheckSystem;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 

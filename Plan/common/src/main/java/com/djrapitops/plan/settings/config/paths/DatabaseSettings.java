@@ -18,7 +18,7 @@ package com.djrapitops.plan.settings.config.paths;
 
 import com.djrapitops.plan.settings.config.paths.key.Setting;
 import com.djrapitops.plan.settings.config.paths.key.StringSetting;
-import com.djrapitops.plan.system.storage.database.DBType;
+import com.djrapitops.plan.storage.database.DBType;
 import org.apache.commons.lang3.math.NumberUtils;
 
 /**

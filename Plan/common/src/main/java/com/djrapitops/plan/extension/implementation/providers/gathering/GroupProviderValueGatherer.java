@@ -25,7 +25,7 @@ import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreGroupProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerGroupsResultTransaction;
-import com.djrapitops.plan.system.storage.database.Database;
+import com.djrapitops.plan.storage.database.Database;
 
 import java.util.Optional;
 import java.util.UUID;

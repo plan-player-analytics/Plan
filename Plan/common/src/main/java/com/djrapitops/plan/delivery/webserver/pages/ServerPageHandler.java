@@ -28,9 +28,9 @@ import com.djrapitops.plan.exceptions.connection.ForbiddenException;
 import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.system.storage.database.DBSystem;
-import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

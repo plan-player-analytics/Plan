@@ -19,11 +19,11 @@ package com.djrapitops.plan.delivery.rendering.json.network;
 import com.djrapitops.plan.delivery.rendering.json.Trend;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
-import com.djrapitops.plan.system.storage.database.DBSystem;
-import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.queries.analysis.NetworkActivityIndexQueries;
-import com.djrapitops.plan.system.storage.database.queries.analysis.PlayerCountQueries;
-import com.djrapitops.plan.system.storage.database.queries.objects.SessionQueries;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.analysis.NetworkActivityIndexQueries;
+import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
+import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 

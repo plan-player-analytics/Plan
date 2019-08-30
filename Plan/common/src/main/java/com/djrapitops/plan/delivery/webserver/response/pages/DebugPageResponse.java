@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.webserver.response.pages;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.delivery.rendering.pages.DebugPage;
 import com.djrapitops.plan.delivery.webserver.response.errors.ErrorResponse;
-import com.djrapitops.plan.system.storage.file.PlanFiles;
+import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.system.version.VersionCheckSystem;
 
 import java.io.IOException;

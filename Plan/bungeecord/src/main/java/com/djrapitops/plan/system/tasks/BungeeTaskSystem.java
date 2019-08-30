@@ -26,9 +26,9 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.upkeep.NetworkConfigStoreTask;
+import com.djrapitops.plan.storage.upkeep.DBCleanTask;
+import com.djrapitops.plan.storage.upkeep.LogsFolderCleanTask;
 import com.djrapitops.plan.system.TaskSystem;
-import com.djrapitops.plan.system.storage.upkeep.DBCleanTask;
-import com.djrapitops.plan.system.storage.upkeep.LogsFolderCleanTask;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.RunnableFactory;
 

@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.delivery.rendering.json;
 
-import com.djrapitops.plan.system.storage.database.DBSystem;
-import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.queries.objects.KillQueries;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.objects.KillQueries;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 

@@ -26,8 +26,8 @@ import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
 import com.djrapitops.plan.exceptions.connection.WebException;
-import com.djrapitops.plan.system.storage.database.DBSystem;
-import com.djrapitops.plan.system.storage.database.Database;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.Database;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

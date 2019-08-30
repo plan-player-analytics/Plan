@@ -29,8 +29,8 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.results
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerPercentageResultTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerDoubleResultTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerPercentageResultTransaction;
-import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.transactions.Transaction;
 
 import java.util.Optional;
 import java.util.UUID;

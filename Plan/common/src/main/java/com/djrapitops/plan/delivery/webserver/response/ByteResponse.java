@@ -18,7 +18,7 @@ package com.djrapitops.plan.delivery.webserver.response;
 
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
-import com.djrapitops.plan.system.storage.file.PlanFiles;
+import com.djrapitops.plan.storage.file.PlanFiles;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;

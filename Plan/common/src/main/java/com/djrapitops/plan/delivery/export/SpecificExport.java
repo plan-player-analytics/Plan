@@ -21,7 +21,7 @@ import com.djrapitops.plan.delivery.webserver.cache.PageId;
 import com.djrapitops.plan.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.system.storage.file.PlanFiles;
+import com.djrapitops.plan.storage.file.PlanFiles;
 
 import java.io.File;
 import java.io.IOException;

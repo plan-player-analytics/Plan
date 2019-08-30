@@ -16,17 +16,17 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
-import com.djrapitops.plan.system.storage.database.sql.tables.*;
-import com.djrapitops.plan.system.storage.database.transactions.ExecStatement;
-import com.djrapitops.plan.system.storage.database.transactions.Executable;
-import com.djrapitops.plan.system.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.transactions.ExecStatement;
+import com.djrapitops.plan.storage.database.transactions.Executable;
+import com.djrapitops.plan.storage.database.transactions.Transaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.UUID;
 
-import static com.djrapitops.plan.system.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
 
 /**
  * Transaction to remove method results that correspond to {@link com.djrapitops.plan.extension.annotation.InvalidateMethod} annotations.

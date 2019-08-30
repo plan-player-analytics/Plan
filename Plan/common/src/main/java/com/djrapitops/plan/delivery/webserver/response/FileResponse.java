@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.response;
 
-import com.djrapitops.plan.system.storage.file.PlanFiles;
+import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plugin.utilities.Verify;
 import org.apache.commons.lang3.StringUtils;
 

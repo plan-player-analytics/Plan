@@ -16,19 +16,19 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
-import com.djrapitops.plan.system.storage.database.DBType;
-import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionProviderTable;
-import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionServerTableValueTable;
-import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionServerValueTable;
-import com.djrapitops.plan.system.storage.database.sql.tables.ExtensionTableProviderTable;
-import com.djrapitops.plan.system.storage.database.transactions.ExecStatement;
-import com.djrapitops.plan.system.storage.database.transactions.Executable;
-import com.djrapitops.plan.system.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.DBType;
+import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
+import com.djrapitops.plan.storage.database.sql.tables.ExtensionServerTableValueTable;
+import com.djrapitops.plan.storage.database.sql.tables.ExtensionServerValueTable;
+import com.djrapitops.plan.storage.database.sql.tables.ExtensionTableProviderTable;
+import com.djrapitops.plan.storage.database.transactions.ExecStatement;
+import com.djrapitops.plan.storage.database.transactions.Executable;
+import com.djrapitops.plan.storage.database.transactions.Transaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static com.djrapitops.plan.system.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
 
 /**
  * Transaction to remove older results that violate an updated condition value.

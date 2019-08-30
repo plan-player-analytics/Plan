@@ -18,9 +18,9 @@ package com.djrapitops.plan.settings.upkeep;
 
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.system.storage.database.DBSystem;
-import com.djrapitops.plan.system.storage.database.transactions.StoreConfigTransaction;
-import com.djrapitops.plan.system.storage.file.PlanFiles;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.transactions.StoreConfigTransaction;
+import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.task.AbsRunnable;
 

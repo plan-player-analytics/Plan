@@ -27,8 +27,8 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIc
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreBooleanProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerBooleanResultTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerBooleanResultTransaction;
-import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.transactions.Transaction;
 
 import java.util.*;
 import java.util.concurrent.Callable;

@@ -24,11 +24,11 @@ import com.djrapitops.plan.gathering.importing.data.BukkitUserImportRefiner;
 import com.djrapitops.plan.gathering.importing.data.ServerImportData;
 import com.djrapitops.plan.gathering.importing.data.UserImportData;
 import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.system.storage.database.DBSystem;
-import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.queries.LargeStoreQueries;
-import com.djrapitops.plan.system.storage.database.queries.objects.UserIdentifierQueries;
-import com.djrapitops.plan.system.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.LargeStoreQueries;
+import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
+import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.*;

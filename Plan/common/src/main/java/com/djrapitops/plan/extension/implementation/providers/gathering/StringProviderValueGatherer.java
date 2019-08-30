@@ -27,8 +27,8 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIc
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreStringProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerStringResultTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerStringResultTransaction;
-import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.transactions.Transaction;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;

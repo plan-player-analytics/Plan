@@ -21,10 +21,10 @@ import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.*;
-import com.djrapitops.plan.system.storage.database.SQLDB;
-import com.djrapitops.plan.system.storage.database.queries.Query;
-import com.djrapitops.plan.system.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.system.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.SQLDB;
+import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.sql.tables.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.djrapitops.plan.system.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
 
 /**
  * Query Extension data of x most recent players on a server.

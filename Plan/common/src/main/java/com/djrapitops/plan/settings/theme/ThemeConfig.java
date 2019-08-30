@@ -21,7 +21,7 @@ import com.djrapitops.plan.settings.config.ConfigNode;
 import com.djrapitops.plan.settings.config.ConfigReader;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
-import com.djrapitops.plan.system.storage.file.PlanFiles;
+import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import java.io.File;

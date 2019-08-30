@@ -17,8 +17,8 @@
 package com.djrapitops.plan.settings.locale;
 
 import com.djrapitops.plan.settings.locale.lang.*;
-import com.djrapitops.plan.system.storage.file.FileResource;
-import com.djrapitops.plan.system.storage.file.PlanFiles;
+import com.djrapitops.plan.storage.file.FileResource;
+import com.djrapitops.plan.storage.file.PlanFiles;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;

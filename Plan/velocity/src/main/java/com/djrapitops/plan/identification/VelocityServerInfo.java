@@ -20,10 +20,10 @@ import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.properties.ServerProperties;
-import com.djrapitops.plan.system.storage.database.DBSystem;
-import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.queries.objects.ServerQueries;
-import com.djrapitops.plan.system.storage.database.transactions.StoreServerInformationTransaction;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import dagger.Lazy;
 

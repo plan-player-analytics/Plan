@@ -18,9 +18,9 @@ package utilities;
 
 import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.identification.Server;
-import com.djrapitops.plan.system.storage.database.transactions.StoreServerInformationTransaction;
-import com.djrapitops.plan.system.storage.database.transactions.Transaction;
-import com.djrapitops.plan.system.storage.database.transactions.events.*;
+import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
+import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.transactions.events.*;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

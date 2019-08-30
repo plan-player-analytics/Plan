@@ -20,7 +20,7 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.system.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.bukkit.World;

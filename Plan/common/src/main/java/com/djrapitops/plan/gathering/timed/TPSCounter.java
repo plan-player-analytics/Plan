@@ -18,8 +18,8 @@ package com.djrapitops.plan.gathering.timed;
 
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.system.storage.database.DBSystem;
-import com.djrapitops.plan.system.storage.database.transactions.events.TPSStoreTransaction;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
