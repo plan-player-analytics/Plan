@@ -16,13 +16,12 @@
  */
 package com.djrapitops.plan;
 
+import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.exceptions.EnableException;
-import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.commands.PlanCommand;
-import com.djrapitops.plan.system.gathering.ServerShutdownSave;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.lang.PluginLang;
-import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
+import com.djrapitops.plan.gathering.ServerShutdownSave;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
+import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import com.djrapitops.plugin.SpongePlugin;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.logging.L;

@@ -18,12 +18,12 @@ package com.djrapitops.plan.modules;
 
 import com.djrapitops.plan.api.CommonAPI;
 import com.djrapitops.plan.api.PlanAPI;
-import com.djrapitops.plan.system.gathering.importing.EmptyImportSystem;
-import com.djrapitops.plan.system.gathering.importing.ImportSystem;
-import com.djrapitops.plan.system.settings.ConfigSystem;
-import com.djrapitops.plan.system.settings.ProxyConfigSystem;
-import com.djrapitops.plan.system.storage.database.DBSystem;
-import com.djrapitops.plan.system.storage.database.ProxyDBSystem;
+import com.djrapitops.plan.gathering.importing.EmptyImportSystem;
+import com.djrapitops.plan.gathering.importing.ImportSystem;
+import com.djrapitops.plan.settings.ConfigSystem;
+import com.djrapitops.plan.settings.ProxyConfigSystem;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.ProxyDBSystem;
 import dagger.Binds;
 import dagger.Module;
 

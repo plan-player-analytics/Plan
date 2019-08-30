@@ -17,14 +17,13 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.exceptions.EnableException;
-import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.identification.Server;
-import com.djrapitops.plan.system.settings.ConfigSettingKeyTest;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.config.paths.WebserverSettings;
-import com.djrapitops.plan.system.settings.config.paths.key.Setting;
-import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.identification.Server;
+import com.djrapitops.plan.settings.ConfigSettingKeyTest;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.settings.config.paths.key.Setting;
+import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

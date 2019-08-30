@@ -18,7 +18,7 @@ package com.djrapitops.plan.modules.sponge;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSponge;
-import com.djrapitops.plan.system.commands.PlanCommand;
+import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plugin.command.CommandNode;
 import dagger.Binds;
 import dagger.Module;

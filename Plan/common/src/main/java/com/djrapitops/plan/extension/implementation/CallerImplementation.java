@@ -20,7 +20,7 @@ import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.Caller;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.extension.implementation.providers.gathering.ProviderValueGatherer;
-import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.UUID;

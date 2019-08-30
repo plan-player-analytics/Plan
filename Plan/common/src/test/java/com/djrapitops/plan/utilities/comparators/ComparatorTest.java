@@ -16,15 +16,15 @@
  */
 package com.djrapitops.plan.utilities.comparators;
 
-import com.djrapitops.plan.system.delivery.domain.WebUser;
-import com.djrapitops.plan.system.delivery.domain.keys.SessionKeys;
-import com.djrapitops.plan.system.delivery.rendering.json.graphs.line.Point;
-import com.djrapitops.plan.system.gathering.domain.GeoInfo;
-import com.djrapitops.plan.system.gathering.domain.Session;
-import com.djrapitops.plan.system.gathering.domain.TPS;
-import com.djrapitops.plan.system.settings.locale.Message;
-import com.djrapitops.plan.system.settings.locale.lang.CmdHelpLang;
-import com.djrapitops.plan.system.settings.locale.lang.Lang;
+import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
+import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
+import com.djrapitops.plan.gathering.domain.GeoInfo;
+import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.TPS;
+import com.djrapitops.plan.settings.locale.Message;
+import com.djrapitops.plan.settings.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.settings.locale.lang.Lang;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;

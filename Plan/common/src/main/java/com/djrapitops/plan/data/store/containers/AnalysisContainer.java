@@ -16,14 +16,14 @@
  */
 package com.djrapitops.plan.data.store.containers;
 
-import com.djrapitops.plan.system.delivery.domain.container.DynamicDataContainer;
-import com.djrapitops.plan.system.delivery.domain.keys.PlaceholderKey;
+import com.djrapitops.plan.delivery.domain.container.DynamicDataContainer;
+import com.djrapitops.plan.delivery.domain.keys.PlaceholderKey;
 
 /**
  * Container used for analysis.
  *
  * @author Rsl1122
- * @see com.djrapitops.plan.system.delivery.domain.keys.AnalysisKeys for Key objects
+ * @see com.djrapitops.plan.delivery.domain.keys.AnalysisKeys for Key objects
  * @see PlaceholderKey for placeholder information
  * @deprecated AnalysisContainer is no longer used.
  */

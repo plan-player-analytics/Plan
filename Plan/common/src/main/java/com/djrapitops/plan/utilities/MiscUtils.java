@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.utilities;
 
-import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.Sender;
 

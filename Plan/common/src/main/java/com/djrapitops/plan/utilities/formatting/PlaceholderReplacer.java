@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.utilities.formatting;
 
-import com.djrapitops.plan.system.delivery.domain.container.DataContainer;
-import com.djrapitops.plan.system.delivery.domain.keys.PlaceholderKey;
+import com.djrapitops.plan.delivery.domain.container.DataContainer;
+import com.djrapitops.plan.delivery.domain.keys.PlaceholderKey;
 import org.apache.commons.text.StringSubstitutor;
 
 import java.io.Serializable;

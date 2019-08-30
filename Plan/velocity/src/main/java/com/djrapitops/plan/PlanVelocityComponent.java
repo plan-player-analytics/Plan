@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.system.commands.PlanProxyCommand;
+import com.djrapitops.plan.commands.PlanProxyCommand;
 import com.djrapitops.plan.modules.APFModule;
 import com.djrapitops.plan.modules.FilesModule;
 import com.djrapitops.plan.modules.ProxySuperClassBindingModule;
@@ -25,7 +25,6 @@ import com.djrapitops.plan.modules.velocity.VelocityCommandModule;
 import com.djrapitops.plan.modules.velocity.VelocityPlanModule;
 import com.djrapitops.plan.modules.velocity.VelocityServerPropertiesModule;
 import com.djrapitops.plan.modules.velocity.VelocitySuperClassBindingModule;
-import com.djrapitops.plan.system.PlanSystem;
 import dagger.BindsInstance;
 import dagger.Component;
 

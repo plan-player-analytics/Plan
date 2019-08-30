@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.exceptions.connection;
 
-import com.djrapitops.plan.system.delivery.webserver.response.ResponseCode;
+import com.djrapitops.plan.delivery.webserver.response.ResponseCode;
 
 /**
  * Thrown when Connection POST-request fails, general Exception.

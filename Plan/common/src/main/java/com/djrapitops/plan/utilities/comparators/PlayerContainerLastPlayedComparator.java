@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.utilities.comparators;
 
-import com.djrapitops.plan.system.delivery.domain.container.PlayerContainer;
-import com.djrapitops.plan.system.delivery.domain.keys.PlayerKeys;
+import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 
 import java.util.Comparator;
 

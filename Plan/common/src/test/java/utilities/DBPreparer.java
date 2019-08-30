@@ -16,16 +16,16 @@
  */
 package utilities;
 
+import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.exceptions.EnableException;
-import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.config.paths.DatabaseSettings;
-import com.djrapitops.plan.system.settings.config.paths.WebserverSettings;
-import com.djrapitops.plan.system.storage.database.DBSystem;
-import com.djrapitops.plan.system.storage.database.DBType;
-import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.SQLDB;
-import com.djrapitops.plan.system.storage.database.transactions.Transaction;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
+import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.DBType;
+import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.SQLDB;
+import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plugin.utilities.Format;
 import com.djrapitops.plugin.utilities.Verify;
 import com.google.common.util.concurrent.MoreExecutors;

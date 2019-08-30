@@ -17,13 +17,13 @@
 package com.djrapitops.plan.query;
 
 import com.djrapitops.plan.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.identification.Server;
-import com.djrapitops.plan.system.identification.ServerInfo;
-import com.djrapitops.plan.system.storage.database.DBSystem;
-import com.djrapitops.plan.system.storage.database.Database;
-import com.djrapitops.plan.system.storage.database.queries.QueryAPIExecutable;
-import com.djrapitops.plan.system.storage.database.queries.QueryAPIQuery;
-import com.djrapitops.plan.system.storage.database.transactions.Transaction;
+import com.djrapitops.plan.identification.Server;
+import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.QueryAPIExecutable;
+import com.djrapitops.plan.storage.database.queries.QueryAPIQuery;
+import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
