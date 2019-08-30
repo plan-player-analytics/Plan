@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.tasks;
 
-import com.djrapitops.plan.system.delivery.upkeep.PeriodicAnalysisTask;
+import com.djrapitops.plan.system.delivery.upkeep.PeriodicServerExportTask;
 import com.djrapitops.plan.system.delivery.upkeep.PlayersPageRefreshTask;
 import com.djrapitops.plan.system.gathering.timed.TPSCounter;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 public abstract class ServerTaskSystem extends TaskSystem {
 
     protected final PlanConfig config;
-    private final PeriodicAnalysisTask periodicAnalysisTask;
+    private final PeriodicServerExportTask periodicServerExportTask;
     private final LogsFolderCleanTask logsFolderCleanTask;
     private final PlayersPageRefreshTask playersPageRefreshTask;
 
@@ -43,12 +43,12 @@ public abstract class ServerTaskSystem extends TaskSystem {
             RunnableFactory runnableFactory,
             TPSCounter tpsCounter,
             PlanConfig config,
-            PeriodicAnalysisTask periodicAnalysisTask,
+            PeriodicServerExportTask periodicServerExportTask,
             LogsFolderCleanTask logsFolderCleanTask,
             PlayersPageRefreshTask playersPageRefreshTask) {
         super(runnableFactory, tpsCounter);
         this.config = config;
-        this.periodicAnalysisTask = periodicAnalysisTask;
+        this.periodicServerExportTask = periodicServerExportTask;
         this.logsFolderCleanTask = logsFolderCleanTask;
         this.playersPageRefreshTask = playersPageRefreshTask;
     }
@@ -67,7 +67,7 @@ public abstract class ServerTaskSystem extends TaskSystem {
         registerTask(tpsCounter).runTaskTimer(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
 
         if (analysisRefreshTaskIsEnabled) {
-            registerTask(periodicAnalysisTask).runTaskTimerAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS), analysisPeriod);
+            registerTask(periodicServerExportTask).runTaskTimerAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS), analysisPeriod);
         }
 
         registerTask(logsFolderCleanTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));

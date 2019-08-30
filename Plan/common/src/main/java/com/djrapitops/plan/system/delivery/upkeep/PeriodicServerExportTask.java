@@ -26,14 +26,14 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class PeriodicAnalysisTask extends AbsRunnable {
+public class PeriodicServerExportTask extends AbsRunnable {
 
     private final HtmlExport htmlExport;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public PeriodicAnalysisTask(
+    public PeriodicServerExportTask(
             HtmlExport htmlExport,
             PluginLogger logger,
             ErrorHandler errorHandler

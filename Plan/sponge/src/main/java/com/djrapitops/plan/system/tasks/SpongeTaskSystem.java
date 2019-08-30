@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
-import com.djrapitops.plan.system.delivery.upkeep.PeriodicAnalysisTask;
+import com.djrapitops.plan.system.delivery.upkeep.PeriodicServerExportTask;
 import com.djrapitops.plan.system.delivery.upkeep.PlayersPageRefreshTask;
 import com.djrapitops.plan.system.gathering.ShutdownHook;
 import com.djrapitops.plan.system.gathering.timed.SpongePingCounter;
@@ -55,7 +55,7 @@ public class SpongeTaskSystem extends ServerTaskSystem {
             ShutdownHook shutdownHook,
             RunnableFactory runnableFactory,
             SpongeTPSCounter spongeTPSCountTimer,
-            PeriodicAnalysisTask periodicAnalysisTask,
+            PeriodicServerExportTask periodicServerExportTask,
             SpongePingCounter pingCountTimer,
             LogsFolderCleanTask logsFolderCleanTask,
             PlayersPageRefreshTask playersPageRefreshTask,
@@ -67,7 +67,7 @@ public class SpongeTaskSystem extends ServerTaskSystem {
                 runnableFactory,
                 spongeTPSCountTimer,
                 config,
-                periodicAnalysisTask,
+                periodicServerExportTask,
                 logsFolderCleanTask,
                 playersPageRefreshTask);
         this.plugin = plugin;

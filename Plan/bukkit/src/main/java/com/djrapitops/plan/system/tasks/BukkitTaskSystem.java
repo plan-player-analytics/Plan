@@ -18,7 +18,7 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
-import com.djrapitops.plan.system.delivery.upkeep.PeriodicAnalysisTask;
+import com.djrapitops.plan.system.delivery.upkeep.PeriodicServerExportTask;
 import com.djrapitops.plan.system.delivery.upkeep.PlayersPageRefreshTask;
 import com.djrapitops.plan.system.gathering.ShutdownHook;
 import com.djrapitops.plan.system.gathering.timed.BukkitPingCounter;
@@ -63,7 +63,7 @@ public class BukkitTaskSystem extends ServerTaskSystem {
             RunnableFactory runnableFactory,
             PaperTPSCounter paperTPSCountTimer,
             BukkitTPSCounter bukkitTPSCountTimer,
-            PeriodicAnalysisTask periodicAnalysisTask,
+            PeriodicServerExportTask periodicServerExportTask,
             BukkitPingCounter pingCountTimer,
             LogsFolderCleanTask logsFolderCleanTask,
             PlayersPageRefreshTask playersPageRefreshTask,
@@ -75,7 +75,7 @@ public class BukkitTaskSystem extends ServerTaskSystem {
                 runnableFactory,
                 Check.isPaperAvailable() ? paperTPSCountTimer : bukkitTPSCountTimer,
                 config,
-                periodicAnalysisTask,
+                periodicServerExportTask,
                 logsFolderCleanTask,
                 playersPageRefreshTask);
         this.plugin = plugin;
