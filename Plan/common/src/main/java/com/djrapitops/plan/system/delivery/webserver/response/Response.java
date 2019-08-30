@@ -20,6 +20,7 @@ import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -55,9 +56,14 @@ public abstract class Response {
     }
 
     public Optional<String> getHeader(String called) {
-        for (String header : header.split("\r\n")) {
-            if (header.startsWith(called)) {
-                return Optional.of(header.split(": ")[1]);
+        if (header != null) {
+            for (String header : StringUtils.split(header, "\r\n")) {
+                if (called == null) {
+                    return Optional.of(header);
+                }
+                if (StringUtils.startsWith(header, called)) {
+                    return Optional.of(StringUtils.split(header, ':')[1].trim());
+                }
             }
         }
         return Optional.empty();
@@ -84,7 +90,7 @@ public abstract class Response {
     }
 
     public int getCode() {
-        return header == null ? 500 : Integer.parseInt(header.split(" ")[1]);
+        return getHeader(null).map(h -> Integer.parseInt(StringUtils.split(h, ' ')[1])).orElse(500);
     }
 
     @Override

@@ -17,6 +17,7 @@
 package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plugin.utilities.Verify;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -144,7 +145,7 @@ public class ConfigReader implements Closeable {
 
     private ConfigNode parseNode(String line) {
         // Parse a node "Key: value"
-        String[] keyAndValue = line.split(":", 2);
+        String[] keyAndValue = StringUtils.split(line, ":", 2);
         if (keyAndValue.length <= 1) {
             return handleMultiline(line);
         }

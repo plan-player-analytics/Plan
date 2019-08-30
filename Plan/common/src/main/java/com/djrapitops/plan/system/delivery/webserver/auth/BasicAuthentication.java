@@ -24,6 +24,7 @@ import com.djrapitops.plan.system.storage.database.Database;
 import com.djrapitops.plan.system.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Authentication handling for Basic Auth.
@@ -47,7 +48,7 @@ public class BasicAuthentication implements Authentication {
     public WebUser getWebUser() throws WebUserAuthException {
         String decoded = Base64Util.decode(authenticationString);
 
-        String[] userInfo = decoded.split(":");
+        String[] userInfo = StringUtils.split(decoded, ':');
         if (userInfo.length != 2) {
             throw new WebUserAuthException(FailReason.USER_AND_PASS_NOT_SPECIFIED);
         }

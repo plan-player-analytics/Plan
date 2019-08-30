@@ -19,6 +19,7 @@ package com.djrapitops.plan.system.delivery.webserver.response.errors;
 import com.djrapitops.plan.system.delivery.webserver.response.pages.PageResponse;
 import com.djrapitops.plan.system.storage.file.PlanFiles;
 import com.djrapitops.plan.system.version.VersionCheckSystem;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringSubstitutor;
 
 import java.io.IOException;
@@ -50,7 +51,7 @@ public class ErrorResponse extends PageResponse {
     public void replacePlaceholders() {
         Map<String, String> placeholders = new HashMap<>();
         placeholders.put("title", title);
-        String[] split = title.split(">", 3);
+        String[] split = StringUtils.split(title, ">", 3);
         placeholders.put("titleText", split.length == 3 ? split[2] : title);
         placeholders.put("paragraph", paragraph);
         placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));

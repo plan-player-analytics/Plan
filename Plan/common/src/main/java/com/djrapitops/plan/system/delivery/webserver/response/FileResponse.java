@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.delivery.webserver.response;
 
 import com.djrapitops.plan.system.storage.file.PlanFiles;
 import com.djrapitops.plugin.utilities.Verify;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 
@@ -36,7 +37,7 @@ public class FileResponse extends Response {
     }
 
     public static String format(String fileName) {
-        String[] split = fileName.split("/");
+        String[] split = StringUtils.split(fileName, '/');
         int i;
         for (i = 0; i < split.length; i++) {
             String s = split[i];
@@ -47,7 +48,7 @@ public class FileResponse extends Response {
         StringBuilder b = new StringBuilder("web");
         for (int j = i; j < split.length; j++) {
             String s = split[j];
-            b.append("/").append(s);
+            b.append('/').append(s);
         }
         return b.toString();
     }

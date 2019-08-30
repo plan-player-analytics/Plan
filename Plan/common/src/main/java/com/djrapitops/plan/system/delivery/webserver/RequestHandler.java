@@ -37,6 +37,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -176,8 +177,8 @@ public class RequestHandler implements HttpHandler {
         }
 
         String authLine = authorization.get(0);
-        if (authLine.contains("Basic ")) {
-            return new BasicAuthentication(authLine.split(" ")[1], dbSystem.getDatabase());
+        if (StringUtils.contains(authLine, "Basic ")) {
+            return new BasicAuthentication(StringUtils.split(authLine, ' ')[1], dbSystem.getDatabase());
         }
         return null;
     }

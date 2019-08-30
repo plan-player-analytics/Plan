@@ -24,7 +24,7 @@ import com.djrapitops.plan.utilities.formatting.Formatters;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.Map;
 
 /**
  * Factory class for different objects representing HTML stack graphs.
@@ -46,15 +46,8 @@ public class StackGraphFactory {
         this.dayFormatter = formatters.dayLong();
     }
 
-    public StackGraph activityStackGraph(TreeMap<Long, Map<String, Set<UUID>>> activityData) {
-        String[] colors = theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE).split(", ");
-        return new ActivityStackGraph(activityData, colors, dayFormatter);
-    }
-
     public StackGraph activityStackGraph(DateMap<Map<String, Integer>> activityData) {
-        String[] colors = Arrays.stream(theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE).split(","))
-                .map(color -> color.trim().replace("\"", ""))
-                .toArray(String[]::new);
+        String[] colors = theme.getPieColors(ThemeVal.GRAPH_ACTIVITY_PIE);
         return new ActivityStackGraph(activityData, colors, dayFormatter);
     }
 }

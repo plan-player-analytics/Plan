@@ -24,6 +24,7 @@
 package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plugin.utilities.Verify;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -78,7 +79,7 @@ public class ConfigNode {
     }
 
     private String[] splitPathInTwo(String path) {
-        String[] split = path.split("\\.", 2);
+        String[] split = StringUtils.split(path, "\\.", 2);
         if (split.length <= 1) {
             return new String[]{split[0], ""};
         }

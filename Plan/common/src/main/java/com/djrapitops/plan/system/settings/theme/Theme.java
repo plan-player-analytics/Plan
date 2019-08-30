@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.djrapitops.plan.system.settings.theme.ThemeVal.*;
@@ -60,6 +61,12 @@ public class Theme implements SubSystem {
         } catch (NullPointerException | IllegalStateException e) {
             return variable.getDefaultValue();
         }
+    }
+
+    public String[] getPieColors(ThemeVal variable) {
+        return Arrays.stream(StringUtils.split(getValue(variable), ','))
+                .map(color -> StringUtils.remove(StringUtils.trim(color), '"'))
+                .toArray(String[]::new);
     }
 
     @Override

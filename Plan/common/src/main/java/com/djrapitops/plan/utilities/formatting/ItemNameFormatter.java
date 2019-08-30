@@ -17,6 +17,7 @@
 package com.djrapitops.plan.utilities.formatting;
 
 import com.djrapitops.plugin.utilities.Format;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.TextStringBuilder;
 
 import java.util.Arrays;
@@ -30,7 +31,7 @@ public class ItemNameFormatter implements Formatter<String> {
 
     @Override
     public String apply(String name) {
-        String[] parts = name.split("_");
+        String[] parts = StringUtils.split(name, '_');
         TextStringBuilder builder = new TextStringBuilder();
         builder.appendWithSeparators(Arrays.stream(parts).map(part -> new Format(part).capitalize()).iterator(), " ");
         return builder.toString();

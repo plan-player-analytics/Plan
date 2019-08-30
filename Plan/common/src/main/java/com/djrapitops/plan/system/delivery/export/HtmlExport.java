@@ -41,6 +41,7 @@ import com.djrapitops.plan.system.storage.file.PlanFiles;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -145,7 +146,7 @@ public class HtmlExport extends SpecificExport {
                     .replace("href=\"css/", "href=\"../css/")
                     .replace("src=\"plugins/", "src=\"../plugins/")
                     .replace("src=\"js/", "src=\"../js/");
-            List<String> lines = Arrays.asList(html.split("\n"));
+            List<String> lines = Arrays.asList(StringUtils.split(html, "\n"));
 
             File htmlLocation = new File(getFolder(), "players");
             Verify.isTrue(htmlLocation.exists() && htmlLocation.isDirectory() || htmlLocation.mkdirs(),

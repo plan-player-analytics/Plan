@@ -20,6 +20,7 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plugin.utilities.Verify;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -120,7 +121,7 @@ public class PlanFiles implements SubSystem {
     private Optional<File> attemptToFind(String resourceName) {
         if (dataFolder.exists() && dataFolder.isDirectory()) {
 
-            String[] path = resourceName.split("/");
+            String[] path = StringUtils.split(resourceName, '/');
 
             Path toFile = dataFolder.getAbsoluteFile().toPath().toAbsolutePath();
             for (String next : path) {

@@ -17,6 +17,7 @@
 package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.exceptions.PassEncryptException;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -82,7 +83,7 @@ public class PassEncryptUtil {
 
     private static boolean verifyPassword(char[] password, String correctHash) throws CannotPerformOperationException, InvalidHashException {
         // Decode the hash into its parameters
-        String[] params = correctHash.split(":");
+        String[] params = StringUtils.split(correctHash, ':');
         if (params.length != HASH_SECTIONS) {
             throw new InvalidHashException(
                     "Fields are missing from the password hash."

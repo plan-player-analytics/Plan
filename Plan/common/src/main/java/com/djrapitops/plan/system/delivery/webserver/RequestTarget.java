@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.system.delivery.webserver;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,7 +35,8 @@ public class RequestTarget {
 
     public RequestTarget(URI targetURI) {
         resourceString = targetURI.getPath();
-        resource = Arrays.stream(resourceString.split("/")).filter(part -> !part.isEmpty()).collect(Collectors.toList());
+        resource = Arrays.stream(StringUtils.split(resourceString, '/'))
+                .filter(part -> !part.isEmpty()).collect(Collectors.toList());
 
         parameters = new TreeMap<>();
         parseParameters(targetURI.getQuery());
@@ -44,12 +47,12 @@ public class RequestTarget {
             return;
         }
 
-        String[] keysAndValues = parameterString.split("&");
+        String[] keysAndValues = StringUtils.split(parameterString, '&');
         for (String kv : keysAndValues) {
             if (kv.isEmpty()) {
                 continue;
             }
-            String[] keyAndValue = kv.split("=", 2);
+            String[] keyAndValue = StringUtils.split(kv, "=", 2);
             if (keyAndValue.length >= 2) {
                 parameters.put(keyAndValue[0], keyAndValue[1]);
             }
