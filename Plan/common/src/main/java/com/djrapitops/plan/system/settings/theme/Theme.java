@@ -87,13 +87,7 @@ public class Theme implements SubSystem {
     private String getColor(ThemeVal variable) {
         String path = variable.getThemePath();
         try {
-            String value = themeConfig.getString(path);
-
-            if (value.contains(".")) {
-                return "url(\"" + value + "\")";
-            } else {
-                return value;
-            }
+            return themeConfig.getString(path);
         } catch (Exception | NoSuchFieldError e) {
             logger.error("Something went wrong with getting variable " + variable.name() + " for: " + path);
         }
