@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.djrapitops.plan.system.tasks.bukkit;
+package com.djrapitops.plan.system.gathering.timed;
 
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.system.identification.ServerInfo;
@@ -60,7 +60,7 @@ import java.util.logging.Logger;
  * @author games647
  */
 @Singleton
-public class PingCountTimerBukkit extends AbsRunnable implements Listener {
+public class BukkitPingCounter extends AbsRunnable implements Listener {
 
     //the server is pinging the client every 40 Ticks (2 sec) - so check it then
     //https://github.com/bergerkiller/CraftSource/blob/master/net.minecraft.server/PlayerConnection.java#L178
@@ -112,7 +112,7 @@ public class PingCountTimerBukkit extends AbsRunnable implements Listener {
     private final RunnableFactory runnableFactory;
 
     @Inject
-    public PingCountTimerBukkit(
+    public BukkitPingCounter(
             PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,

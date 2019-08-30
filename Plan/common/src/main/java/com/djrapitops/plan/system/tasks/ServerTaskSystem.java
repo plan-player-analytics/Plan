@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.system.tasks;
 
+import com.djrapitops.plan.system.gathering.timed.TPSCounter;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.system.storage.upkeep.LogsFolderCleanTask;
@@ -39,12 +40,12 @@ public abstract class ServerTaskSystem extends TaskSystem {
 
     public ServerTaskSystem(
             RunnableFactory runnableFactory,
-            TPSCountTimer tpsCountTimer,
+            TPSCounter tpsCounter,
             PlanConfig config,
             PeriodicAnalysisTask periodicAnalysisTask,
             LogsFolderCleanTask logsFolderCleanTask,
             PlayersPageRefreshTask playersPageRefreshTask) {
-        super(runnableFactory, tpsCountTimer);
+        super(runnableFactory, tpsCounter);
         this.config = config;
         this.periodicAnalysisTask = periodicAnalysisTask;
         this.logsFolderCleanTask = logsFolderCleanTask;
@@ -62,7 +63,7 @@ public abstract class ServerTaskSystem extends TaskSystem {
         boolean analysisRefreshTaskIsEnabled = analysisRefreshMs > 0;
         long analysisPeriod = TimeAmount.toTicks(analysisRefreshMs, TimeUnit.MILLISECONDS);
 
-        registerTask(tpsCountTimer).runTaskTimer(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
+        registerTask(tpsCounter).runTaskTimer(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
 
         if (analysisRefreshTaskIsEnabled) {
             registerTask(periodicAnalysisTask).runTaskTimerAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS), analysisPeriod);

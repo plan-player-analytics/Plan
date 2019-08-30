@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.tasks;
+package com.djrapitops.plan.system.gathering.timed;
 
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.system.identification.ServerInfo;
@@ -36,7 +36,7 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public abstract class TPSCountTimer extends AbsRunnable {
+public abstract class TPSCounter extends AbsRunnable {
 
     protected final List<TPS> history;
 
@@ -49,7 +49,7 @@ public abstract class TPSCountTimer extends AbsRunnable {
 
     protected int latestPlayersOnline = 0;
 
-    public TPSCountTimer(
+    public TPSCounter(
             DBSystem dbSystem,
             ServerInfo serverInfo,
             PluginLogger logger,

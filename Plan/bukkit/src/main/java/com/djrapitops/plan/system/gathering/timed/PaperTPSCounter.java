@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.tasks.bukkit;
+package com.djrapitops.plan.system.gathering.timed;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.TPS;
@@ -27,10 +27,10 @@ import org.bukkit.World;
 
 import javax.inject.Inject;
 
-public class PaperTPSCountTimer extends BukkitTPSCountTimer {
+public class PaperTPSCounter extends BukkitTPSCounter {
 
     @Inject
-    public PaperTPSCountTimer(
+    public PaperTPSCounter(
             Plan plugin,
             DBSystem dbSystem,
             ServerInfo serverInfo,

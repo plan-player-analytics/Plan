@@ -17,6 +17,7 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.system.SubSystem;
+import com.djrapitops.plan.system.gathering.timed.TPSCounter;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.PluginRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
@@ -30,11 +31,11 @@ import com.djrapitops.plugin.task.RunnableFactory;
  */
 public abstract class TaskSystem implements SubSystem {
 
-    protected final TPSCountTimer tpsCountTimer;
+    protected final TPSCounter tpsCounter;
     protected final RunnableFactory runnableFactory;
 
-    public TaskSystem(RunnableFactory runnableFactory, TPSCountTimer tpsCountTimer) {
-        this.tpsCountTimer = tpsCountTimer;
+    public TaskSystem(RunnableFactory runnableFactory, TPSCounter tpsCounter) {
+        this.tpsCounter = tpsCounter;
         this.runnableFactory = runnableFactory;
     }
 

@@ -19,15 +19,15 @@ package com.djrapitops.plan.system.tasks;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.ShutdownHook;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
+import com.djrapitops.plan.system.gathering.timed.BukkitPingCounter;
+import com.djrapitops.plan.system.gathering.timed.BukkitTPSCounter;
+import com.djrapitops.plan.system.gathering.timed.PaperTPSCounter;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.system.settings.upkeep.ConfigStoreTask;
 import com.djrapitops.plan.system.storage.upkeep.DBCleanTask;
 import com.djrapitops.plan.system.storage.upkeep.LogsFolderCleanTask;
-import com.djrapitops.plan.system.tasks.bukkit.BukkitTPSCountTimer;
-import com.djrapitops.plan.system.tasks.bukkit.PaperTPSCountTimer;
-import com.djrapitops.plan.system.tasks.bukkit.PingCountTimerBukkit;
 import com.djrapitops.plan.system.tasks.server.PeriodicAnalysisTask;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
@@ -49,7 +49,7 @@ public class BukkitTaskSystem extends ServerTaskSystem {
 
     private final Plan plugin;
     private final ShutdownHook shutdownHook;
-    private final PingCountTimerBukkit pingCountTimer;
+    private final BukkitPingCounter pingCountTimer;
     private final ConfigStoreTask configStoreTask;
     private final DBCleanTask dbCleanTask;
     private final ExtensionServerMethodCallerTask extensionServerMethodCallerTask;
@@ -60,10 +60,10 @@ public class BukkitTaskSystem extends ServerTaskSystem {
             PlanConfig config,
             ShutdownHook shutdownHook,
             RunnableFactory runnableFactory,
-            PaperTPSCountTimer paperTPSCountTimer,
-            BukkitTPSCountTimer bukkitTPSCountTimer,
+            PaperTPSCounter paperTPSCountTimer,
+            BukkitTPSCounter bukkitTPSCountTimer,
             PeriodicAnalysisTask periodicAnalysisTask,
-            PingCountTimerBukkit pingCountTimer,
+            BukkitPingCounter pingCountTimer,
             LogsFolderCleanTask logsFolderCleanTask,
             PlayersPageRefreshTask playersPageRefreshTask,
             ConfigStoreTask configStoreTask,

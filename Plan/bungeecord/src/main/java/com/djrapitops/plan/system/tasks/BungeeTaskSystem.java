@@ -18,14 +18,14 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
+import com.djrapitops.plan.system.gathering.timed.BungeePingCounter;
+import com.djrapitops.plan.system.gathering.timed.BungeeTPSCounter;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.system.settings.upkeep.NetworkConfigStoreTask;
 import com.djrapitops.plan.system.storage.upkeep.DBCleanTask;
 import com.djrapitops.plan.system.storage.upkeep.LogsFolderCleanTask;
-import com.djrapitops.plan.system.tasks.bungee.BungeeTPSCountTimer;
-import com.djrapitops.plan.system.tasks.bungee.PingCountTimerBungee;
 import com.djrapitops.plan.system.tasks.proxy.NetworkPageRefreshTask;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.RunnableFactory;
@@ -45,7 +45,7 @@ public class BungeeTaskSystem extends TaskSystem {
     private final PlanBungee plugin;
     private final PlanConfig config;
     private final NetworkPageRefreshTask networkPageRefreshTask;
-    private final PingCountTimerBungee pingCountTimer;
+    private final BungeePingCounter pingCountTimer;
     private final LogsFolderCleanTask logsFolderCleanTask;
     private final PlayersPageRefreshTask playersPageRefreshTask;
     private final NetworkConfigStoreTask networkConfigStoreTask;
@@ -57,9 +57,9 @@ public class BungeeTaskSystem extends TaskSystem {
             PlanBungee plugin,
             PlanConfig config,
             RunnableFactory runnableFactory,
-            BungeeTPSCountTimer bungeeTPSCountTimer,
+            BungeeTPSCounter bungeeTPSCountTimer,
             NetworkPageRefreshTask networkPageRefreshTask,
-            PingCountTimerBungee pingCountTimer,
+            BungeePingCounter pingCountTimer,
             LogsFolderCleanTask logsFolderCleanTask,
             PlayersPageRefreshTask playersPageRefreshTask,
             NetworkConfigStoreTask networkConfigStoreTask,
@@ -85,7 +85,7 @@ public class BungeeTaskSystem extends TaskSystem {
     }
 
     private void registerTasks() {
-        registerTask(tpsCountTimer).runTaskTimerAsynchronously(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
+        registerTask(tpsCounter).runTaskTimerAsynchronously(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
         registerTask(networkPageRefreshTask).runTaskTimerAsynchronously(1500, TimeAmount.toTicks(5L, TimeUnit.MINUTES));
         registerTask(logsFolderCleanTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
 

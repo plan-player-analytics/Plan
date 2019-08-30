@@ -19,6 +19,8 @@ package com.djrapitops.plan.system.tasks;
 import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.ShutdownHook;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
+import com.djrapitops.plan.system.gathering.timed.SpongePingCounter;
+import com.djrapitops.plan.system.gathering.timed.SpongeTPSCounter;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
@@ -26,8 +28,6 @@ import com.djrapitops.plan.system.settings.upkeep.ConfigStoreTask;
 import com.djrapitops.plan.system.storage.upkeep.DBCleanTask;
 import com.djrapitops.plan.system.storage.upkeep.LogsFolderCleanTask;
 import com.djrapitops.plan.system.tasks.server.PeriodicAnalysisTask;
-import com.djrapitops.plan.system.tasks.sponge.PingCountTimerSponge;
-import com.djrapitops.plan.system.tasks.sponge.SpongeTPSCountTimer;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.RunnableFactory;
 import org.spongepowered.api.Sponge;
@@ -42,7 +42,7 @@ public class SpongeTaskSystem extends ServerTaskSystem {
 
     private final PlanSponge plugin;
     private final ShutdownHook shutdownHook;
-    private final PingCountTimerSponge pingCountTimer;
+    private final SpongePingCounter pingCountTimer;
     private final ConfigStoreTask configStoreTask;
     private final DBCleanTask dbCleanTask;
     private final ExtensionServerMethodCallerTask extensionServerMethodCallerTask;
@@ -53,9 +53,9 @@ public class SpongeTaskSystem extends ServerTaskSystem {
             PlanConfig config,
             ShutdownHook shutdownHook,
             RunnableFactory runnableFactory,
-            SpongeTPSCountTimer spongeTPSCountTimer,
+            SpongeTPSCounter spongeTPSCountTimer,
             PeriodicAnalysisTask periodicAnalysisTask,
-            PingCountTimerSponge pingCountTimer,
+            SpongePingCounter pingCountTimer,
             LogsFolderCleanTask logsFolderCleanTask,
             PlayersPageRefreshTask playersPageRefreshTask,
             ConfigStoreTask configStoreTask,

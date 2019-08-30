@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.tasks.velocity;
+package com.djrapitops.plan.system.gathering.timed;
 
 import com.djrapitops.plan.PlanVelocity;
 import com.velocitypowered.api.proxy.Player;
@@ -34,12 +34,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
- * Tests for {@link PingCountTimerVelocity}.
+ * Tests for {@link VelocityPingCounter}.
  *
  * @author Rsl1122
  */
 @RunWith(JUnitPlatform.class)
-public class PingCountTimerVelocityTest {
+public class VelocityPingCounterTest {
 
     private PlanVelocity plugin;
     private Player player;
@@ -60,7 +60,7 @@ public class PingCountTimerVelocityTest {
 
     @Test
     void offlinePlayerIsRemovedFromPlayerHistory() {
-        PingCountTimerVelocity counter = new PingCountTimerVelocity(plugin, null, null, null, null);
+        VelocityPingCounter counter = new VelocityPingCounter(plugin, null, null, null, null);
 
         assertTrue(counter.playerHistory.isEmpty());
         counter.addPlayer(player);

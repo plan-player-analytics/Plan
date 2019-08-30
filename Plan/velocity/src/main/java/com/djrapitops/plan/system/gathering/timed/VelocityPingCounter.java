@@ -21,8 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.djrapitops.plan.system.tasks.bungee;
+package com.djrapitops.plan.system.gathering.timed;
 
+import com.djrapitops.plan.PlanVelocity;
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -32,12 +33,10 @@ import com.djrapitops.plan.system.storage.database.transactions.events.PingStore
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.ServerConnectedEvent;
-import net.md_5.bungee.api.event.ServerDisconnectEvent;
-import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.event.EventHandler;
+import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.connection.DisconnectEvent;
+import com.velocitypowered.api.event.player.ServerConnectedEvent;
+import com.velocitypowered.api.proxy.Player;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -45,27 +44,32 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Task that handles player ping calculation on Bungee based servers.
+ * Task that handles player ping calculation on Velocity based servers.
+ * <p>
+ * Based on PingCountTimerBungee
  *
- * @author BrainStone
+ * @author MicleBrick
  */
 @Singleton
-public class PingCountTimerBungee extends AbsRunnable implements Listener {
+public class VelocityPingCounter extends AbsRunnable {
 
-    private final Map<UUID, List<DateObj<Integer>>> playerHistory;
+    final Map<UUID, List<DateObj<Integer>>> playerHistory;
 
+    private final PlanVelocity plugin;
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final RunnableFactory runnableFactory;
 
     @Inject
-    public PingCountTimerBungee(
+    public VelocityPingCounter(
+            PlanVelocity plugin,
             PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             RunnableFactory runnableFactory
     ) {
+        this.plugin = plugin;
         this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
@@ -82,7 +86,7 @@ public class PingCountTimerBungee extends AbsRunnable implements Listener {
             Map.Entry<UUID, List<DateObj<Integer>>> entry = iterator.next();
             UUID uuid = entry.getKey();
             List<DateObj<Integer>> history = entry.getValue();
-            ProxiedPlayer player = ProxyServer.getInstance().getPlayer(uuid);
+            Player player = plugin.getProxy().getPlayer(uuid).orElse(null);
             if (player != null) {
                 int ping = getPing(player);
                 if (ping < -1 || ping > TimeUnit.SECONDS.toMillis(8L)) {
@@ -102,21 +106,21 @@ public class PingCountTimerBungee extends AbsRunnable implements Listener {
         }
     }
 
-    public void addPlayer(ProxiedPlayer player) {
+    void addPlayer(Player player) {
         playerHistory.put(player.getUniqueId(), new ArrayList<>());
     }
 
-    public void removePlayer(ProxiedPlayer player) {
+    public void removePlayer(Player player) {
         playerHistory.remove(player.getUniqueId());
     }
 
-    private int getPing(ProxiedPlayer player) {
-        return player.getPing();
+    private int getPing(Player player) {
+        return (int) player.getPing();
     }
 
-    @EventHandler
+    @Subscribe
     public void onPlayerJoin(ServerConnectedEvent joinEvent) {
-        ProxiedPlayer player = joinEvent.getPlayer();
+        Player player = joinEvent.getPlayer();
         Long pingDelay = config.get(TimeSettings.PING_PLAYER_LOGIN_DELAY);
         if (pingDelay >= TimeUnit.HOURS.toMillis(2L)) {
             return;
@@ -124,15 +128,15 @@ public class PingCountTimerBungee extends AbsRunnable implements Listener {
         runnableFactory.create("Add Player to Ping list", new AbsRunnable() {
             @Override
             public void run() {
-                if (player.isConnected()) {
+                if (player.isActive()) {
                     addPlayer(player);
                 }
             }
         }).runTaskLater(TimeAmount.toTicks(pingDelay, TimeUnit.MILLISECONDS));
     }
 
-    @EventHandler
-    public void onPlayerQuit(ServerDisconnectEvent quitEvent) {
+    @Subscribe
+    public void onPlayerQuit(DisconnectEvent quitEvent) {
         removePlayer(quitEvent.getPlayer());
     }
 

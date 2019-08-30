@@ -17,12 +17,13 @@
 package com.djrapitops.plan.utilities.html.graphs.line;
 
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
+import com.djrapitops.plan.system.gathering.timed.TPSCounter;
 
 /**
  * Graph about Chunk Counts gathered by TPSCountTimer.
  *
  * @author Rsl1122
- * @see com.djrapitops.plan.system.tasks.TPSCountTimer
+ * @see TPSCounter
  */
 class ChunkGraph extends LineGraph {
 

@@ -18,6 +18,8 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanVelocity;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
+import com.djrapitops.plan.system.gathering.timed.VelocityPingCounter;
+import com.djrapitops.plan.system.gathering.timed.VelocityTPSCounter;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
@@ -25,8 +27,6 @@ import com.djrapitops.plan.system.settings.upkeep.NetworkConfigStoreTask;
 import com.djrapitops.plan.system.storage.upkeep.DBCleanTask;
 import com.djrapitops.plan.system.storage.upkeep.LogsFolderCleanTask;
 import com.djrapitops.plan.system.tasks.proxy.NetworkPageRefreshTask;
-import com.djrapitops.plan.system.tasks.velocity.PingCountTimerVelocity;
-import com.djrapitops.plan.system.tasks.velocity.VelocityTPSCountTimer;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.RunnableFactory;
 
@@ -45,7 +45,7 @@ public class VelocityTaskSystem extends TaskSystem {
     private final PlanVelocity plugin;
     private final PlanConfig config;
     private final NetworkPageRefreshTask networkPageRefreshTask;
-    private final PingCountTimerVelocity pingCountTimer;
+    private final VelocityPingCounter pingCountTimer;
     private final LogsFolderCleanTask logsFolderCleanTask;
     private final PlayersPageRefreshTask playersPageRefreshTask;
     private final NetworkConfigStoreTask networkConfigStoreTask;
@@ -57,9 +57,9 @@ public class VelocityTaskSystem extends TaskSystem {
             PlanVelocity plugin,
             PlanConfig config,
             RunnableFactory runnableFactory,
-            VelocityTPSCountTimer velocityTPSCountTimer,
+            VelocityTPSCounter velocityTPSCountTimer,
             NetworkPageRefreshTask networkPageRefreshTask,
-            PingCountTimerVelocity pingCountTimer,
+            VelocityPingCounter pingCountTimer,
             LogsFolderCleanTask logsFolderCleanTask,
             PlayersPageRefreshTask playersPageRefreshTask,
             NetworkConfigStoreTask networkConfigStoreTask,
@@ -85,7 +85,7 @@ public class VelocityTaskSystem extends TaskSystem {
     }
 
     private void registerTasks() {
-        registerTask(tpsCountTimer).runTaskTimerAsynchronously(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
+        registerTask(tpsCounter).runTaskTimerAsynchronously(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
         registerTask(networkPageRefreshTask).runTaskTimerAsynchronously(1500, TimeAmount.toTicks(5L, TimeUnit.MINUTES));
         registerTask(logsFolderCleanTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
 

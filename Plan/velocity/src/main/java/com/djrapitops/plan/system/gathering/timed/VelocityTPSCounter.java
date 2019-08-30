@@ -14,14 +14,13 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.tasks.velocity;
+package com.djrapitops.plan.system.gathering.timed;
 
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
 import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.identification.properties.ServerProperties;
 import com.djrapitops.plan.system.storage.database.DBSystem;
-import com.djrapitops.plan.system.tasks.TPSCountTimer;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
@@ -29,12 +28,12 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class VelocityTPSCountTimer extends TPSCountTimer {
+public class VelocityTPSCounter extends TPSCounter {
 
     private final ServerProperties serverProperties;
 
     @Inject
-    public VelocityTPSCountTimer(
+    public VelocityTPSCounter(
             DBSystem dbSystem,
             ServerInfo serverInfo,
             ServerProperties serverProperties,

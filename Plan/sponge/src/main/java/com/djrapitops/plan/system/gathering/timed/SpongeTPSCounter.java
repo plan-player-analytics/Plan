@@ -14,33 +14,31 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.tasks.bukkit;
+package com.djrapitops.plan.system.gathering.timed;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
 import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.identification.properties.ServerProperties;
 import com.djrapitops.plan.system.storage.database.DBSystem;
-import com.djrapitops.plan.system.tasks.TPSCountTimer;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import org.bukkit.World;
+import org.spongepowered.api.world.World;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.concurrent.TimeUnit;
 
 @Singleton
-public class BukkitTPSCountTimer extends TPSCountTimer {
+public class SpongeTPSCounter extends TPSCounter {
 
-    protected final Plan plugin;
-    private ServerProperties serverProperties;
     private long lastCheckNano;
+    private final PlanSponge plugin;
+    private ServerProperties serverProperties;
 
     @Inject
-    public BukkitTPSCountTimer(
-            Plan plugin,
+    public SpongeTPSCounter(
+            PlanSponge plugin,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             ServerProperties serverProperties,
@@ -64,64 +62,35 @@ public class BukkitTPSCountTimer extends TPSCountTimer {
             return;
         }
 
-        history.add(calculateTPS(diff, now));
+        history.add(calculateTPS(now));
     }
 
     /**
      * Calculates the TPS
      *
-     * @param diff The time difference between the last run and the new run
-     * @param now  The time right now
+     * @param now The time right now
      * @return the TPS
      */
-    private TPS calculateTPS(long diff, long now) {
+    private TPS calculateTPS(long now) {
         double averageCPUUsage = getCPUUsage();
-        long usedMemory = getUsedMemory();
-        long freeDiskSpace = getFreeDiskSpace();
 
+        long usedMemory = getUsedMemory();
+
+        double tps = plugin.getGame().getServer().getTicksPerSecond();
         int playersOnline = serverProperties.getOnlinePlayers();
         latestPlayersOnline = playersOnline;
-        int loadedChunks = getLoadedChunks();
+        int loadedChunks = -1; // getLoadedChunks();
         int entityCount = getEntityCount();
-
-        return getTPS(diff, now, averageCPUUsage, usedMemory, entityCount, loadedChunks, playersOnline, freeDiskSpace);
-    }
-
-    protected TPS getTPS(long diff, long now,
-                         double cpuUsage, long usedMemory,
-                         int entityCount, int chunksLoaded,
-                         int playersOnline, long freeDiskSpace) {
-        long difference = diff;
-        if (difference < TimeUnit.SECONDS.toNanos(1L)) { // No tick count above 20
-            difference = TimeUnit.SECONDS.toNanos(1L);
-        }
-
-        long twentySeconds = TimeUnit.SECONDS.toNanos(20L);
-        while (difference > twentySeconds) {
-            // Add 0 TPS since more than 20 ticks has passed.
-            history.add(TPSBuilder.get()
-                    .date(now)
-                    .tps(0)
-                    .playersOnline(playersOnline)
-                    .usedCPU(cpuUsage)
-                    .usedMemory(usedMemory)
-                    .entities(entityCount)
-                    .chunksLoaded(chunksLoaded)
-                    .freeDiskSpace(freeDiskSpace)
-                    .toTPS());
-            difference -= twentySeconds;
-        }
-
-        double tpsN = twentySeconds * 1.0 / difference;
+        long freeDiskSpace = getFreeDiskSpace();
 
         return TPSBuilder.get()
                 .date(now)
-                .tps(tpsN)
+                .tps(tps)
                 .playersOnline(playersOnline)
-                .usedCPU(cpuUsage)
+                .usedCPU(averageCPUUsage)
                 .usedMemory(usedMemory)
                 .entities(entityCount)
-                .chunksLoaded(chunksLoaded)
+                .chunksLoaded(loadedChunks)
                 .freeDiskSpace(freeDiskSpace)
                 .toTPS();
     }
@@ -132,23 +101,20 @@ public class BukkitTPSCountTimer extends TPSCountTimer {
      * @return amount of loaded chunks
      */
     private int getLoadedChunks() {
-        int sum = 0;
-        for (World world : plugin.getServer().getWorlds()) {
-            sum += world.getLoadedChunks().length;
+        // DISABLED
+        int loaded = 0;
+        for (World world : plugin.getGame().getServer().getWorlds()) {
+            loaded += world.getLoadedChunks().spliterator().estimateSize();
         }
-        return sum;
+        return loaded;
     }
 
     /**
-     * Gets the amount of entities on the server for Bukkit / Spigot
+     * Gets the amount of entities on the server
      *
      * @return amount of entities
      */
-    protected int getEntityCount() {
-        int sum = 0;
-        for (World world : plugin.getServer().getWorlds()) {
-            sum += world.getEntities().size();
-        }
-        return sum;
+    private int getEntityCount() {
+        return plugin.getGame().getServer().getWorlds().stream().mapToInt(world -> world.getEntities().size()).sum();
     }
 }
