@@ -25,7 +25,6 @@ import com.djrapitops.plan.modules.velocity.VelocityCommandModule;
 import com.djrapitops.plan.modules.velocity.VelocityPlanModule;
 import com.djrapitops.plan.modules.velocity.VelocityServerPropertiesModule;
 import com.djrapitops.plan.modules.velocity.VelocitySuperClassBindingModule;
-import com.djrapitops.plan.system.PlanSystem;
 import dagger.BindsInstance;
 import dagger.Component;
 

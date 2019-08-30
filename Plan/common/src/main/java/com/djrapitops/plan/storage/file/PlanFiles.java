@@ -17,8 +17,8 @@
 package com.djrapitops.plan.storage.file;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.exceptions.EnableException;
-import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plugin.utilities.Verify;
 import org.apache.commons.lang3.StringUtils;
 

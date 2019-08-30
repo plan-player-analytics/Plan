@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database;
 
+import com.djrapitops.plan.DebugChannels;
 import com.djrapitops.plan.exceptions.database.DBInitException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.exceptions.database.FatalDBException;
@@ -29,7 +30,6 @@ import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransac
 import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.OperationCriticalTransaction;
 import com.djrapitops.plan.storage.database.transactions.patches.*;
-import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.L;

@@ -17,12 +17,12 @@
 package utilities.dagger;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.modules.APFModule;
 import com.djrapitops.plan.modules.FilesModule;
 import com.djrapitops.plan.modules.ServerSuperClassBindingModule;
 import com.djrapitops.plan.modules.SystemObjectProvidingModule;
-import com.djrapitops.plan.system.PlanSystem;
 import dagger.BindsInstance;
 import dagger.Component;
 

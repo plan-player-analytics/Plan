@@ -14,21 +14,19 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.tasks;
+package com.djrapitops.plan;
 
-import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.delivery.upkeep.NetworkPageRefreshTask;
 import com.djrapitops.plan.delivery.upkeep.PlayersPageRefreshTask;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
-import com.djrapitops.plan.gathering.timed.BungeePingCounter;
-import com.djrapitops.plan.gathering.timed.BungeeTPSCounter;
+import com.djrapitops.plan.gathering.timed.VelocityPingCounter;
+import com.djrapitops.plan.gathering.timed.VelocityTPSCounter;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.upkeep.NetworkConfigStoreTask;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
 import com.djrapitops.plan.storage.upkeep.LogsFolderCleanTask;
-import com.djrapitops.plan.system.TaskSystem;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.RunnableFactory;
 
@@ -37,18 +35,18 @@ import javax.inject.Singleton;
 import java.util.concurrent.TimeUnit;
 
 /**
- * TaskSystem responsible for registering tasks for Bungee.
+ * TaskSystem responsible for registering tasks for Velocity.
  *
  * @author Rsl1122
  */
 @Singleton
-public class BungeeTaskSystem extends TaskSystem {
+public class VelocityTaskSystem extends TaskSystem {
 
-    private final PlanBungee plugin;
+    private final PlanVelocity plugin;
     private final PlanConfig config;
-    private final BungeeTPSCounter tpsCounter;
+    private final VelocityTPSCounter tpsCounter;
     private final NetworkPageRefreshTask networkPageRefreshTask;
-    private final BungeePingCounter pingCounter;
+    private final VelocityPingCounter pingCounter;
     private final LogsFolderCleanTask logsFolderCleanTask;
     private final PlayersPageRefreshTask playersPageRefreshTask;
     private final NetworkConfigStoreTask networkConfigStoreTask;
@@ -56,13 +54,13 @@ public class BungeeTaskSystem extends TaskSystem {
     private final ExtensionServerMethodCallerTask extensionServerMethodCallerTask;
 
     @Inject
-    public BungeeTaskSystem(
-            PlanBungee plugin,
+    public VelocityTaskSystem(
+            PlanVelocity plugin,
             PlanConfig config,
             RunnableFactory runnableFactory,
-            BungeeTPSCounter tpsCounter,
+            VelocityTPSCounter tpsCounter,
             NetworkPageRefreshTask networkPageRefreshTask,
-            BungeePingCounter pingCounter,
+            VelocityPingCounter pingCounter,
             LogsFolderCleanTask logsFolderCleanTask,
             PlayersPageRefreshTask playersPageRefreshTask,
             NetworkConfigStoreTask networkConfigStoreTask,
@@ -73,9 +71,8 @@ public class BungeeTaskSystem extends TaskSystem {
         this.plugin = plugin;
         this.config = config;
         this.tpsCounter = tpsCounter;
-
-        this.networkPageRefreshTask = networkPageRefreshTask;
         this.pingCounter = pingCounter;
+        this.networkPageRefreshTask = networkPageRefreshTask;
         this.logsFolderCleanTask = logsFolderCleanTask;
         this.playersPageRefreshTask = playersPageRefreshTask;
         this.networkConfigStoreTask = networkConfigStoreTask;
@@ -100,8 +97,7 @@ public class BungeeTaskSystem extends TaskSystem {
             registerTask(pingCounter).runTaskTimer(startDelay, 40L);
         }
 
-        registerTask(playersPageRefreshTask)
-                .runTaskTimerAsynchronously(TimeAmount.toTicks(5L, TimeUnit.MINUTES), TimeAmount.toTicks(5L, TimeUnit.MINUTES));
+        registerTask(playersPageRefreshTask).runTaskTimerAsynchronously(TimeAmount.toTicks(5L, TimeUnit.MINUTES), TimeAmount.toTicks(5L, TimeUnit.MINUTES));
 
         // +40 ticks / 2 seconds so that update check task runs first.
         long storeDelay = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS) + 40;

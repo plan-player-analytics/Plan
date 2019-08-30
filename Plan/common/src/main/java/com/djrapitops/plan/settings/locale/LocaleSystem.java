@@ -16,12 +16,12 @@
  */
 package com.djrapitops.plan.settings.locale;
 
+import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.locale.lang.*;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;

@@ -17,6 +17,8 @@
 package com.djrapitops.plan.modules.sponge;
 
 import com.djrapitops.plan.SpongeServerShutdownSave;
+import com.djrapitops.plan.SpongeTaskSystem;
+import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.gathering.importing.EmptyImportSystem;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
@@ -30,8 +32,6 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.SpongeDBSystem;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.SpongePlanFiles;
-import com.djrapitops.plan.system.TaskSystem;
-import com.djrapitops.plan.system.tasks.SpongeTaskSystem;
 import dagger.Binds;
 import dagger.Module;
 

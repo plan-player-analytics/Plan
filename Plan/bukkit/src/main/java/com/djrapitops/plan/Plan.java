@@ -22,7 +22,6 @@ import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
-import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plugin.BukkitPlugin;
 import com.djrapitops.plugin.benchmarking.Benchmark;
 import com.djrapitops.plugin.command.ColorScheme;

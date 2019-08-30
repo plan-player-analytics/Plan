@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database;
 
+import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.domain.Nickname;
@@ -62,7 +63,6 @@ import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransa
 import com.djrapitops.plan.storage.database.transactions.init.RemoveDuplicateUserInfoTransaction;
 import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
-import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;

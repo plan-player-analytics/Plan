@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.gathering.importing.data;
 
+import com.djrapitops.plan.DebugChannels;
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plugin.api.utility.UUIDFetcher;
 import com.djrapitops.plugin.benchmarking.Timings;
 import org.bukkit.OfflinePlayer;

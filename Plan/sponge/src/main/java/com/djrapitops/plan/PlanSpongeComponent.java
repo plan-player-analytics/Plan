@@ -25,7 +25,6 @@ import com.djrapitops.plan.modules.SystemObjectProvidingModule;
 import com.djrapitops.plan.modules.sponge.SpongePlanModule;
 import com.djrapitops.plan.modules.sponge.SpongeServerPropertiesModule;
 import com.djrapitops.plan.modules.sponge.SpongeSuperClassBindingModule;
-import com.djrapitops.plan.system.PlanSystem;
 import dagger.BindsInstance;
 import dagger.Component;
 

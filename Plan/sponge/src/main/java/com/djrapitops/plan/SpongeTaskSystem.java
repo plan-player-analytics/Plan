@@ -14,9 +14,8 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.tasks;
+package com.djrapitops.plan;
 
-import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.delivery.upkeep.PeriodicServerExportTask;
 import com.djrapitops.plan.delivery.upkeep.PlayersPageRefreshTask;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
@@ -30,7 +29,6 @@ import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.upkeep.ConfigStoreTask;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
 import com.djrapitops.plan.storage.upkeep.LogsFolderCleanTask;
-import com.djrapitops.plan.system.TaskSystem;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.RunnableFactory;
 import org.spongepowered.api.Sponge;

@@ -14,27 +14,29 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system;
-
-import com.djrapitops.plan.exceptions.EnableException;
+package com.djrapitops.plan;
 
 /**
- * Represents a system that can be enabled and disabled.
+ * Identifiers for different Debug channels.
  *
  * @author Rsl1122
  */
-public interface SubSystem {
+public class DebugChannels {
 
-    /**
-     * Performs enable actions for the subsystem.
-     *
-     * @throws EnableException If an error occurred during enable and it is fatal to the subsystem.
-     */
-    void enable() throws EnableException;
 
-    /**
-     * Performs disable actions for the subsystem
-     */
-    void disable();
+    private DebugChannels() {
+        /* Static variable class */
+    }
+
+    public static final String ANALYSIS = "Analysis";
+    @Deprecated
+    public static final String INFO_REQUESTS = "InfoRequests";
+    @Deprecated
+    public static final String CONNECTIONS = "Connections";
+    @Deprecated
+    public static final String WEB_REQUESTS = "Web Requests";
+    public static final String IMPORTING = "Importing";
+    public static final String SQL = "SQL";
+    public static final String DATA_EXTENSIONS = "DataExtensions";
 
 }

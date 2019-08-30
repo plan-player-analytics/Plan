@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.settings.network;
 
+import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.*;
@@ -29,7 +30,6 @@ import com.djrapitops.plan.storage.database.queries.objects.NewerConfigQuery;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.transactions.StoreConfigTransaction;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;

@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension;
 
+import com.djrapitops.plan.DebugChannels;
 import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.implementation.CallerImplementation;
 import com.djrapitops.plan.extension.implementation.DataProviderExtractor;
@@ -26,7 +27,6 @@ import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.ExtensionSettings;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;

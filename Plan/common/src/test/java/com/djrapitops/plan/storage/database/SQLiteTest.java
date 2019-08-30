@@ -16,13 +16,13 @@
  */
 package com.djrapitops.plan.storage.database;
 
+import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.storage.database.queries.objects.GeoInfoQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
-import com.djrapitops.plan.system.PlanSystem;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

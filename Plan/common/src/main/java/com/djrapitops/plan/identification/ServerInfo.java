@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.identification;
 
+import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.identification.properties.ServerProperties;
-import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.UUID;

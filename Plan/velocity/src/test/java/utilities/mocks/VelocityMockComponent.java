@@ -17,9 +17,9 @@
 package utilities.mocks;
 
 import com.djrapitops.plan.DaggerPlanVelocityComponent;
+import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.PlanVelocity;
 import com.djrapitops.plan.PlanVelocityComponent;
-import com.djrapitops.plan.system.PlanSystem;
 
 import java.nio.file.Path;
 

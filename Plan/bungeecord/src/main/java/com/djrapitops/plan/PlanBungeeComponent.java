@@ -25,7 +25,6 @@ import com.djrapitops.plan.modules.bungee.BungeeCommandModule;
 import com.djrapitops.plan.modules.bungee.BungeePlanModule;
 import com.djrapitops.plan.modules.bungee.BungeeServerPropertiesModule;
 import com.djrapitops.plan.modules.bungee.BungeeSuperClassBindingModule;
-import com.djrapitops.plan.system.PlanSystem;
 import dagger.BindsInstance;
 import dagger.Component;
 

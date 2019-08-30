@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver;
 
+import com.djrapitops.plan.DebugChannels;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.auth.BasicAuthentication;
 import com.djrapitops.plan.delivery.webserver.response.PromptAuthorizationResponse;
@@ -27,7 +28,6 @@ import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;

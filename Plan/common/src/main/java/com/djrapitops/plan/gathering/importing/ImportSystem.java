@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.gathering.importing;
 
+import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.gathering.importing.importers.Importer;
-import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.*;

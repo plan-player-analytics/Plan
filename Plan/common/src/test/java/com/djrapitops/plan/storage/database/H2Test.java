@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database;
 
-import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.PlanSystem;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;

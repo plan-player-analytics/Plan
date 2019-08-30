@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver;
 
+import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.properties.ServerProperties;
@@ -25,7 +26,6 @@ import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;

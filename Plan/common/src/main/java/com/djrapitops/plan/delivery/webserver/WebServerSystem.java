@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.delivery.webserver;
 
+import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.exceptions.EnableException;
-import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plugin.benchmarking.Timings;
 
 import javax.inject.Inject;

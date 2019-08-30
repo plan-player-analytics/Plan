@@ -21,7 +21,6 @@ import com.djrapitops.plan.settings.ConfigSettingKeyTest;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.config.paths.key.Setting;
-import com.djrapitops.plan.system.PlanSystem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

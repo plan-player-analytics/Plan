@@ -16,13 +16,13 @@
  */
 package com.djrapitops.plan.gathering.cache;
 
+import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.maxmind.geoip2.DatabaseReader;

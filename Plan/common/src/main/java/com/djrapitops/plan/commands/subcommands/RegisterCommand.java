@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.commands.subcommands;
 
+import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.WebUser;
 import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.exceptions.database.DBOpException;
@@ -29,7 +30,6 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.database.transactions.commands.RegisterWebUserTransaction;
-import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;

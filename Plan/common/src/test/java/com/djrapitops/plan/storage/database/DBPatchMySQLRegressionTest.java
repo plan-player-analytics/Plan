@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database;
 
+import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.container.ServerContainer;
 import com.djrapitops.plan.delivery.domain.keys.ServerKeys;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
@@ -24,7 +25,6 @@ import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythi
 import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.storage.database.transactions.patches.KillsOptimizationPatch;
 import com.djrapitops.plan.storage.database.transactions.patches.Patch;
-import com.djrapitops.plan.system.PlanSystem;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.runner.JUnitPlatform;

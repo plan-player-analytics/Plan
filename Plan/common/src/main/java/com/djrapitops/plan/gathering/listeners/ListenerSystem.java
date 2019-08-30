@@ -17,7 +17,7 @@
 package com.djrapitops.plan.gathering.listeners;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.system.SubSystem;
+import com.djrapitops.plan.SubSystem;
 
 public abstract class ListenerSystem implements SubSystem {
 

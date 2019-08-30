@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plugin.IPlugin;
 import com.djrapitops.plugin.command.ColorScheme;
 

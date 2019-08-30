@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.export;
 
+import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -23,7 +24,6 @@ import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
-import com.djrapitops.plan.system.SubSystem;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

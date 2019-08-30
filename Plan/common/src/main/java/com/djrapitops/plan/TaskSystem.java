@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system;
+package com.djrapitops.plan;
 
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.PluginRunnable;

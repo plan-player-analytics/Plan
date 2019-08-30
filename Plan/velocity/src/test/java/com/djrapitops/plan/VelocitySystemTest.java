@@ -21,7 +21,6 @@ import com.djrapitops.plan.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.SQLiteDB;
-import com.djrapitops.plan.system.PlanSystem;
 import com.google.common.util.concurrent.MoreExecutors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

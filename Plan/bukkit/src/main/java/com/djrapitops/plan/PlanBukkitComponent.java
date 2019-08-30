@@ -25,7 +25,6 @@ import com.djrapitops.plan.modules.SystemObjectProvidingModule;
 import com.djrapitops.plan.modules.bukkit.BukkitPlanModule;
 import com.djrapitops.plan.modules.bukkit.BukkitServerPropertiesModule;
 import com.djrapitops.plan.modules.bukkit.BukkitSuperClassBindingModule;
-import com.djrapitops.plan.system.PlanSystem;
 import dagger.BindsInstance;
 import dagger.Component;
 
