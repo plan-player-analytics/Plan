@@ -16,16 +16,16 @@
  */
 package com.djrapitops.plan.data.store.keys;
 
-import com.djrapitops.plan.data.container.Ping;
-import com.djrapitops.plan.data.container.PlayerKill;
-import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.Type;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
+import com.djrapitops.plan.system.gathering.domain.Ping;
+import com.djrapitops.plan.system.gathering.domain.PlayerKill;
+import com.djrapitops.plan.system.gathering.domain.Session;
+import com.djrapitops.plan.system.gathering.domain.TPS;
 
 import java.util.List;
 import java.util.Map;

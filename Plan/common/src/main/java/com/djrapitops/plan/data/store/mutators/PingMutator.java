@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.data.store.mutators;
 
-import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.CommonKeys;
+import com.djrapitops.plan.system.gathering.domain.Ping;
 
 import java.util.ArrayList;
 import java.util.List;

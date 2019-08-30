@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.cache;
 
-import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
+import com.djrapitops.plan.system.gathering.domain.Session;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

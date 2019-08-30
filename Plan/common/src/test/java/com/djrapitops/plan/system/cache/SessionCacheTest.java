@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.cache;
 
-import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.system.gathering.domain.Session;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

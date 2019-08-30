@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.objects;
 
-import com.djrapitops.plan.data.container.UserInfo;
+import com.djrapitops.plan.system.gathering.domain.UserInfo;
 import com.djrapitops.plan.system.storage.database.queries.Query;
 import com.djrapitops.plan.system.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.system.storage.database.queries.QueryStatement;
@@ -30,7 +30,7 @@ import java.util.*;
 import static com.djrapitops.plan.system.storage.database.sql.parsing.Sql.*;
 
 /**
- * Queries for {@link com.djrapitops.plan.data.container.UserInfo} objects.
+ * Queries for {@link UserInfo} objects.
  *
  * @author Rsl1122
  */

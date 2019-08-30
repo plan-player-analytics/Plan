@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.gathering.importing.data;
 
-import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
+import com.djrapitops.plan.system.gathering.domain.PlayerKill;
 
 import java.util.*;
 

@@ -16,7 +16,8 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.objects;
 
-import com.djrapitops.plan.data.container.PlayerKill;
+import com.djrapitops.plan.system.gathering.domain.PlayerDeath;
+import com.djrapitops.plan.system.gathering.domain.PlayerKill;
 import com.djrapitops.plan.system.storage.database.queries.Query;
 import com.djrapitops.plan.system.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.system.storage.database.sql.tables.KillsTable;
@@ -34,7 +35,7 @@ import java.util.UUID;
 import static com.djrapitops.plan.system.storage.database.sql.parsing.Sql.*;
 
 /**
- * Queries for {@link com.djrapitops.plan.data.container.PlayerKill} and {@link com.djrapitops.plan.data.container.PlayerDeath} objects.
+ * Queries for {@link PlayerKill} and {@link PlayerDeath} objects.
  *
  * @author Rsl1122
  */

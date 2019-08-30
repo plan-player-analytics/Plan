@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.data.store.mutators;
 
-import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.data.container.builders.TPSBuilder;
+import com.djrapitops.plan.system.gathering.domain.TPS;
+import com.djrapitops.plan.system.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plugin.api.TimeAmount;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

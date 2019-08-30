@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.data.store.mutators;
 
-import com.djrapitops.plan.data.container.PlayerKill;
+import com.djrapitops.plan.system.gathering.domain.PlayerKill;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 
 import java.util.HashMap;
@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Mutator functions for {@link com.djrapitops.plan.data.container.PlayerKill} objects.
+ * Mutator functions for {@link PlayerKill} objects.
  *
  * @author Rsl1122
  */

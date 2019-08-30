@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.json;
 
-import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.time.GMTimes;
+import com.djrapitops.plan.system.gathering.domain.TPS;
 import com.djrapitops.plan.system.storage.database.DBSystem;
 import com.djrapitops.plan.system.storage.database.Database;
 import com.djrapitops.plan.system.storage.database.queries.objects.SessionQueries;

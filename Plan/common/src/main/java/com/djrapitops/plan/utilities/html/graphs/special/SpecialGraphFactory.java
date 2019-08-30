@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.utilities.html.graphs.special;
 
-import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.utilities.html.graphs.HighChart;
 
 import javax.inject.Inject;

@@ -16,13 +16,13 @@
  */
 package com.djrapitops.plan.data.store.mutators;
 
-import com.djrapitops.plan.data.container.PlayerDeath;
-import com.djrapitops.plan.data.container.PlayerKill;
-import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.CommonKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.system.gathering.domain.PlayerDeath;
+import com.djrapitops.plan.system.gathering.domain.PlayerKill;
+import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.utilities.analysis.Median;
 import com.djrapitops.plan.utilities.formatting.Formatters;

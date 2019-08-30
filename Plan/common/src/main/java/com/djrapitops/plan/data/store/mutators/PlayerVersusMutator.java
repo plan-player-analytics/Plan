@@ -16,10 +16,10 @@
  */
 package com.djrapitops.plan.data.store.mutators;
 
-import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.system.gathering.domain.PlayerKill;
 import com.djrapitops.plan.utilities.Predicates;
 
 import java.util.Collections;

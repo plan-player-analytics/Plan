@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.objects;
 
-import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.data.container.builders.TPSBuilder;
 import com.djrapitops.plan.data.store.objects.DateObj;
+import com.djrapitops.plan.system.gathering.domain.TPS;
+import com.djrapitops.plan.system.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.system.identification.Server;
 import com.djrapitops.plan.system.storage.database.queries.Query;
 import com.djrapitops.plan.system.storage.database.queries.QueryAllStatement;
@@ -37,7 +37,7 @@ import static com.djrapitops.plan.system.storage.database.sql.parsing.Sql.*;
 import static com.djrapitops.plan.system.storage.database.sql.tables.TPSTable.*;
 
 /**
- * Queries for {@link com.djrapitops.plan.data.container.TPS} objects.
+ * Queries for {@link com.djrapitops.plan.system.gathering.domain.TPS} objects.
  *
  * @author Rsl1122
  */
@@ -63,7 +63,7 @@ public class TPSQueries {
                 List<TPS> data = new ArrayList<>();
                 while (set.next()) {
 
-                    com.djrapitops.plan.data.container.TPS tps = extractTPS(set);
+                    com.djrapitops.plan.system.gathering.domain.TPS tps = extractTPS(set);
 
                     data.add(tps);
                 }

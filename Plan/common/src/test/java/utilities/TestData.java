@@ -16,11 +16,11 @@
  */
 package utilities;
 
-import com.djrapitops.plan.data.container.BaseUser;
-import com.djrapitops.plan.data.container.GeoInfo;
-import com.djrapitops.plan.data.container.PlayerKill;
-import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.time.GMTimes;
+import com.djrapitops.plan.system.gathering.domain.BaseUser;
+import com.djrapitops.plan.system.gathering.domain.GeoInfo;
+import com.djrapitops.plan.system.gathering.domain.PlayerKill;
+import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.identification.Server;
 import com.djrapitops.plan.system.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.system.storage.database.transactions.Transaction;

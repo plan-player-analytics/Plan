@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.system.storage.database.sql.tables;
 
-import com.djrapitops.plan.data.container.PlayerKill;
-import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
+import com.djrapitops.plan.system.gathering.domain.PlayerKill;
+import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.storage.database.DBType;
 import com.djrapitops.plan.system.storage.database.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.system.storage.database.sql.parsing.Sql;

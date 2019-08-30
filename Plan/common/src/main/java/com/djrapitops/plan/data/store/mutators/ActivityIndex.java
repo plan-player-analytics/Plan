@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.data.store.mutators;
 
-import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plugin.api.TimeAmount;
 

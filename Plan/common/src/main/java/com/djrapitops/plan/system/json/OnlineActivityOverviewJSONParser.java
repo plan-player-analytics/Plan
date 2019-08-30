@@ -16,12 +16,12 @@
  */
 package com.djrapitops.plan.system.json;
 
-import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersOnlineResolver;
 import com.djrapitops.plan.data.store.mutators.RetentionData;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
+import com.djrapitops.plan.system.gathering.domain.TPS;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;

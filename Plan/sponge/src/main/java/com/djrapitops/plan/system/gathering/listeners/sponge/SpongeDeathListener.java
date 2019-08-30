@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.gathering.listeners.sponge;
 
-import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.player.MobKillProcessor;
 import com.djrapitops.plan.system.processing.processors.player.PlayerKillProcessor;

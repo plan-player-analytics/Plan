@@ -16,10 +16,10 @@
  */
 package com.djrapitops.plan.system.settings.config;
 
-import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.utilities.formatting.Formatter;

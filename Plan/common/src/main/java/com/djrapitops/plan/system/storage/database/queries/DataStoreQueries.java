@@ -16,13 +16,13 @@
  */
 package com.djrapitops.plan.system.storage.database.queries;
 
-import com.djrapitops.plan.data.container.GeoInfo;
-import com.djrapitops.plan.data.container.Ping;
-import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
+import com.djrapitops.plan.system.gathering.domain.GeoInfo;
+import com.djrapitops.plan.system.gathering.domain.Ping;
+import com.djrapitops.plan.system.gathering.domain.Session;
+import com.djrapitops.plan.system.gathering.domain.TPS;
 import com.djrapitops.plan.system.storage.database.sql.tables.*;
 import com.djrapitops.plan.system.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.system.storage.database.transactions.ExecStatement;

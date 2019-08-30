@@ -16,13 +16,13 @@
  */
 package com.djrapitops.plan.data.store.containers;
 
-import com.djrapitops.plan.data.container.Ping;
-import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.keys.PerServerKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+import com.djrapitops.plan.system.gathering.domain.Ping;
+import com.djrapitops.plan.system.gathering.domain.Session;
+import com.djrapitops.plan.system.gathering.domain.UserInfo;
 
 import java.util.*;
 

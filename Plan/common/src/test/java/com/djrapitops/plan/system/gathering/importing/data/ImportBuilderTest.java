@@ -16,10 +16,10 @@
  */
 package com.djrapitops.plan.system.gathering.importing.data;
 
-import com.djrapitops.plan.data.container.PlayerKill;
-import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
+import com.djrapitops.plan.system.gathering.domain.PlayerKill;
+import com.djrapitops.plan.system.gathering.domain.TPS;
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.objects;
 
-import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.system.gathering.domain.GeoInfo;
 import com.djrapitops.plan.system.storage.database.queries.Query;
 import com.djrapitops.plan.system.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.system.storage.database.queries.QueryStatement;
@@ -31,7 +31,7 @@ import java.util.*;
 import static com.djrapitops.plan.system.storage.database.sql.parsing.Sql.*;
 
 /**
- * Queries for {@link com.djrapitops.plan.data.container.GeoInfo} objects.
+ * Queries for {@link GeoInfo} objects.
  *
  * @author Rsl1122
  */

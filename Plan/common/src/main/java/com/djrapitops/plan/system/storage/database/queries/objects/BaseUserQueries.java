@@ -16,7 +16,8 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.objects;
 
-import com.djrapitops.plan.data.container.BaseUser;
+import com.djrapitops.plan.system.gathering.domain.BaseUser;
+import com.djrapitops.plan.system.gathering.domain.UserInfo;
 import com.djrapitops.plan.system.storage.database.queries.Query;
 import com.djrapitops.plan.system.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.system.storage.database.queries.QueryStatement;
@@ -48,7 +49,7 @@ public class BaseUserQueries {
     /**
      * Query database for common user information.
      * <p>
-     * Only one {@link BaseUser} per player exists unlike {@link com.djrapitops.plan.data.container.UserInfo} which is available per server.
+     * Only one {@link BaseUser} per player exists unlike {@link UserInfo} which is available per server.
      *
      * @return Map: Player UUID - BaseUser
      */
@@ -79,7 +80,7 @@ public class BaseUserQueries {
     /**
      * Query database for common user information of a player.
      * <p>
-     * Only one {@link BaseUser} per player exists unlike {@link com.djrapitops.plan.data.container.UserInfo} which is available per server.
+     * Only one {@link BaseUser} per player exists unlike {@link UserInfo} which is available per server.
      *
      * @param playerUUID UUID of the Player.
      * @return Optional: BaseUser if found, empty if not.
@@ -111,7 +112,7 @@ public class BaseUserQueries {
     /**
      * Query database for common user information for players that have played on a specific server.
      * <p>
-     * Only one {@link BaseUser} per player exists unlike {@link com.djrapitops.plan.data.container.UserInfo} which is available per server.
+     * Only one {@link BaseUser} per player exists unlike {@link UserInfo} which is available per server.
      * <p>
      * This will fetch BaseUsers for which UserInfo object also exists on the server.
      *

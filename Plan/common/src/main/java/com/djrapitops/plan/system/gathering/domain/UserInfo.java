@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.data.container;
+package com.djrapitops.plan.system.gathering.domain;
 
 import java.util.Objects;
 import java.util.UUID;

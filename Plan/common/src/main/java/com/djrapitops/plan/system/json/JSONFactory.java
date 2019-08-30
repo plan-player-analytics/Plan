@@ -16,16 +16,16 @@
  */
 package com.djrapitops.plan.system.json;
 
-import com.djrapitops.plan.data.container.Ping;
-import com.djrapitops.plan.data.container.PlayerKill;
-import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.mutators.PlayerKillMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerPlayerDataTableQuery;
 import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.gathering.domain.Ping;
+import com.djrapitops.plan.system.gathering.domain.PlayerKill;
+import com.djrapitops.plan.system.gathering.domain.Session;
+import com.djrapitops.plan.system.gathering.domain.TPS;
 import com.djrapitops.plan.system.identification.Server;
 import com.djrapitops.plan.system.identification.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;

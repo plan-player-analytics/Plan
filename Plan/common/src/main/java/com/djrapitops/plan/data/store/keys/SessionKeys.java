@@ -16,10 +16,11 @@
  */
 package com.djrapitops.plan.data.store.keys;
 
-import com.djrapitops.plan.data.container.PlayerDeath;
-import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.system.gathering.domain.PlayerDeath;
+import com.djrapitops.plan.system.gathering.domain.PlayerKill;
+import com.djrapitops.plan.system.gathering.domain.Session;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,7 +29,7 @@ import java.util.UUID;
  * Class holding Key objects for Session (DataContainer).
  *
  * @author Rsl1122
- * @see com.djrapitops.plan.data.container.Session for DataContainer.
+ * @see Session for DataContainer.
  */
 public class SessionKeys {
 

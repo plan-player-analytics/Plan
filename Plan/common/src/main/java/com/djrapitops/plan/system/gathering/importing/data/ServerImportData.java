@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.gathering.importing.data;
 
-import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.data.container.builders.TPSBuilder;
+import com.djrapitops.plan.system.gathering.domain.TPS;
+import com.djrapitops.plan.system.gathering.domain.builders.TPSBuilder;
 
 import java.util.*;
 

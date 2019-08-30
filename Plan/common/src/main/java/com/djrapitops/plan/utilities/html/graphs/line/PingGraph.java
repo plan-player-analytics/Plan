@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.utilities.html.graphs.line;
 
-import com.djrapitops.plan.data.container.Ping;
+import com.djrapitops.plan.system.gathering.domain.Ping;
 
 import java.util.ArrayList;
 import java.util.List;

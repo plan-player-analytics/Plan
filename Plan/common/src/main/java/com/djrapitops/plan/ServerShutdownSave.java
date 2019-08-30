@@ -18,9 +18,9 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.system.storage.database.DBSystem;

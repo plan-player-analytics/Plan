@@ -17,7 +17,6 @@
 package com.djrapitops.plan.system.json;
 
 import com.djrapitops.plan.api.PlanAPI;
-import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.ActivityIndex;
@@ -26,6 +25,7 @@ import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.implementation.results.*;
+import com.djrapitops.plan.system.gathering.domain.GeoInfo;
 import com.djrapitops.plan.utilities.comparators.PlayerContainerLastPlayedComparator;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;

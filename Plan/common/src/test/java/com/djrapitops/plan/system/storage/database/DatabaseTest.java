@@ -17,7 +17,6 @@
 package com.djrapitops.plan.system.storage.database;
 
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
@@ -46,6 +45,7 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.results
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.query.QueryServiceImplementation;
 import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.gathering.domain.*;
 import com.djrapitops.plan.system.identification.Server;
 import com.djrapitops.plan.system.settings.config.Config;
 import com.djrapitops.plan.system.settings.config.PlanConfig;

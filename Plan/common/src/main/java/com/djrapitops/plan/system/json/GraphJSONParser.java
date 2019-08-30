@@ -16,13 +16,13 @@
  */
 package com.djrapitops.plan.system.json;
 
-import com.djrapitops.plan.data.container.Ping;
-import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.mutators.MutatorFunctions;
 import com.djrapitops.plan.data.store.mutators.PingMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.objects.DateMap;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.system.gathering.domain.Ping;
+import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;

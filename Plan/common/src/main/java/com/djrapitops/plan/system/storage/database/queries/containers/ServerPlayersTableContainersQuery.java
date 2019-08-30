@@ -16,12 +16,12 @@
  */
 package com.djrapitops.plan.system.storage.database.queries.containers;
 
-import com.djrapitops.plan.data.container.BaseUser;
-import com.djrapitops.plan.data.container.GeoInfo;
-import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+import com.djrapitops.plan.system.gathering.domain.BaseUser;
+import com.djrapitops.plan.system.gathering.domain.GeoInfo;
+import com.djrapitops.plan.system.gathering.domain.Session;
 import com.djrapitops.plan.system.json.PlayersTableJSONParser;
 import com.djrapitops.plan.system.storage.database.SQLDB;
 import com.djrapitops.plan.system.storage.database.queries.Query;

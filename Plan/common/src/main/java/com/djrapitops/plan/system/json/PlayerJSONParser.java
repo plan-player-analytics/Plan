@@ -16,13 +16,13 @@
  */
 package com.djrapitops.plan.system.json;
 
-import com.djrapitops.plan.data.container.GeoInfo;
-import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.*;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.gathering.domain.GeoInfo;
+import com.djrapitops.plan.system.gathering.domain.PlayerKill;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
