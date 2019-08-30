@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.gathering.listeners;
 
-import com.djrapitops.plan.system.gathering.listeners.bukkit.AFKListener;
+import com.djrapitops.plan.system.gathering.listeners.bukkit.BukkitAFKListener;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.paths.TimeSettings;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
@@ -37,21 +37,21 @@ import java.util.concurrent.TimeUnit;
 import static org.mockito.Mockito.*;
 
 /**
- * Test for {@link AFKListener}
+ * Test for {@link BukkitAFKListener}
  *
  * @author Rsl1122
  */
 @RunWith(JUnitPlatform.class)
 @ExtendWith(MockitoExtension.class)
-public class AFKListenerTest {
+public class BukkitAFKListenerTest {
 
-    private static AFKListener underTest;
+    private static BukkitAFKListener underTest;
 
     @BeforeAll
     static void setUp() {
         PlanConfig config = Mockito.mock(PlanConfig.class);
         when(config.get(TimeSettings.AFK_THRESHOLD)).thenReturn(TimeUnit.MINUTES.toMillis(3));
-        underTest = new AFKListener(config, new ConsoleErrorLogger(new TestPluginLogger()));
+        underTest = new BukkitAFKListener(config, new ConsoleErrorLogger(new TestPluginLogger()));
     }
 
     @Test

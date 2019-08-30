@@ -38,7 +38,7 @@ public class BukkitListenerSystem extends ListenerSystem {
     private final WorldChangeListener worldChangeListener;
     private final CommandListener commandListener;
     private final DeathEventListener deathEventListener;
-    private final AFKListener afkListener;
+    private final BukkitAFKListener afkListener;
 
     @Inject
     public BukkitListenerSystem(Plan plugin,
@@ -49,7 +49,7 @@ public class BukkitListenerSystem extends ListenerSystem {
                                 WorldChangeListener worldChangeListener,
                                 CommandListener commandListener,
                                 DeathEventListener deathEventListener,
-                                AFKListener afkListener
+                                BukkitAFKListener afkListener
     ) {
         this.plugin = plugin;
         this.status = status;

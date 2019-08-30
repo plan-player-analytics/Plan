@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.gathering.listeners.sponge;
 
-import com.djrapitops.plan.system.afk.AFKTracker;
+import com.djrapitops.plan.system.gathering.afk.AFKTracker;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.logging.L;

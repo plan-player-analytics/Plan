@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.gathering.listeners.bukkit;
 
-import com.djrapitops.plan.system.afk.AFKTracker;
+import com.djrapitops.plan.system.gathering.afk.AFKTracker;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.logging.L;
@@ -40,7 +40,7 @@ import java.util.UUID;
  * @author Rsl1122
  * @see PlayerOnlineListener
  */
-public class AFKListener implements Listener {
+public class BukkitAFKListener implements Listener {
 
     // Static so that /reload does not cause afk tracking to fail.
     static AFKTracker AFK_TRACKER;
@@ -49,11 +49,11 @@ public class AFKListener implements Listener {
     private final ErrorHandler errorHandler;
 
     @Inject
-    public AFKListener(PlanConfig config, ErrorHandler errorHandler) {
+    public BukkitAFKListener(PlanConfig config, ErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
         this.ignorePermissionInfo = new HashMap<>();
 
-        AFKListener.assignAFKTracker(config);
+        BukkitAFKListener.assignAFKTracker(config);
     }
 
     private static void assignAFKTracker(PlanConfig config) {
