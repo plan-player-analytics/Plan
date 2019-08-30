@@ -22,6 +22,7 @@ import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.extension.ExtensionService;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.query.QueryServiceImplementation;
+import com.djrapitops.plan.system.delivery.DeliveryUtilities;
 import com.djrapitops.plan.system.delivery.export.ExportSystem;
 import com.djrapitops.plan.system.delivery.webserver.WebServer;
 import com.djrapitops.plan.system.delivery.webserver.WebServerSystem;
@@ -71,7 +72,7 @@ public class PlanSystem implements SubSystem {
 
     private final ImportSystem importSystem;
     private final ExportSystem exportSystem;
-    private final HtmlUtilities htmlUtilities;
+    private final DeliveryUtilities deliveryUtilities;
     private final ExtensionServiceImplementation extensionService;
     private final QueryServiceImplementation queryService;
     private final PlanAPI planAPI;
@@ -92,7 +93,7 @@ public class PlanSystem implements SubSystem {
             Processing processing,
             ImportSystem importSystem,
             ExportSystem exportSystem,
-            HtmlUtilities htmlUtilities,
+            DeliveryUtilities deliveryUtilities,
             ExtensionServiceImplementation extensionService,
             QueryServiceImplementation queryService,
             PlanAPI planAPI,
@@ -111,7 +112,7 @@ public class PlanSystem implements SubSystem {
         this.processing = processing;
         this.importSystem = importSystem;
         this.exportSystem = exportSystem;
-        this.htmlUtilities = htmlUtilities;
+        this.deliveryUtilities = deliveryUtilities;
         this.extensionService = extensionService;
         this.queryService = queryService;
         this.planAPI = planAPI;
@@ -248,8 +249,8 @@ public class PlanSystem implements SubSystem {
         return localeSystem;
     }
 
-    public HtmlUtilities getHtmlUtilities() {
-        return htmlUtilities;
+    public DeliveryUtilities getDeliveryUtilities() {
+        return deliveryUtilities;
     }
 
     public boolean isEnabled() {

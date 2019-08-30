@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system;
+package com.djrapitops.plan.system.delivery;
 
 import com.djrapitops.plan.system.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.utilities.formatting.Formatters;
@@ -24,13 +24,13 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class HtmlUtilities {
+public class DeliveryUtilities {
 
     private final Lazy<Formatters> formatters;
     private final Lazy<Graphs> graphs;
 
     @Inject
-    public HtmlUtilities(
+    public DeliveryUtilities(
             Lazy<Formatters> formatters,
             Lazy<Graphs> graphs
     ) {
