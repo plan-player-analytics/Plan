@@ -23,10 +23,10 @@ package com.djrapitops.plan.system.settings.theme;
  */
 public enum ThemeVal {
 
-    THEME_DEFAULT("DefaultColor", "light-green"),
+    THEME_DEFAULT("DefaultColor", "plan"),
 
-    FONT_STYLESHEET("Font.FontStyleSheet", "https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext"),
-    FONT_FAMILY("Font.FontFamily", "\"Roboto\", sans-serif"),
+    FONT_STYLESHEET("Font.FontStyleSheet", "https://fonts.googleapis.com/css?family=Nunito:400,700,800,900&display=swap&subset=latin-ext"),
+    FONT_FAMILY("Font.FontFamily", "\"Nunito\""),
 
     RED("Colors.red", "#E91E63"),
     PINK("Colors.pink", "#F44336"),
