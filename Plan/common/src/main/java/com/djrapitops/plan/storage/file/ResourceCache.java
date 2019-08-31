@@ -19,6 +19,9 @@ package com.djrapitops.plan.storage.file;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -47,5 +50,19 @@ public class ResourceCache {
 
     public static void cache(String resourceName, String got) {
         cache.put(resourceName, got);
+    }
+
+    public static void invalidateAll() {
+        cache.invalidateAll();
+    }
+
+    public static void cleanUp() {
+        cache.cleanUp();
+    }
+
+    public static List<String> getCachedResourceNames() {
+        List<String> resourceNames = new ArrayList<>(cache.asMap().keySet());
+        Collections.sort(resourceNames);
+        return resourceNames;
     }
 }

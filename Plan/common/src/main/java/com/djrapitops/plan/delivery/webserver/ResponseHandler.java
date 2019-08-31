@@ -17,8 +17,6 @@
 package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
-import com.djrapitops.plan.delivery.webserver.cache.PageId;
-import com.djrapitops.plan.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.delivery.webserver.pages.*;
 import com.djrapitops.plan.delivery.webserver.pages.json.RootJSONHandler;
 import com.djrapitops.plan.delivery.webserver.response.Response;
@@ -120,16 +118,16 @@ public class ResponseHandler extends TreePageHandler {
         String resource = target.getResourceString();
 
         if (target.endsWith(".css")) {
-            return ResponseCache.loadResponse(PageId.CSS.of(resource), () -> responseFactory.cssResponse(resource));
+            return responseFactory.cssResponse(resource);
         }
         if (target.endsWith(".js")) {
-            return ResponseCache.loadResponse(PageId.JS.of(resource), () -> responseFactory.javaScriptResponse(resource));
+            return responseFactory.javaScriptResponse(resource);
         }
         if (target.endsWith(".png")) {
             return responseFactory.imageResponse(resource);
         }
         if (target.endsWith("favicon.ico")) {
-            return ResponseCache.loadResponse(PageId.FAVICON.id(), responseFactory::faviconResponse);
+            return responseFactory.faviconResponse();
         }
 
         boolean isAuthRequired = webServer.get().isAuthRequired();

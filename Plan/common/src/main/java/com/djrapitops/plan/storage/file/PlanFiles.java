@@ -73,6 +73,8 @@ public class PlanFiles implements SubSystem {
 
     @Override
     public void enable() throws EnableException {
+        ResourceCache.invalidateAll();
+        ResourceCache.cleanUp();
         Verify.isTrue((dataFolder.exists() && dataFolder.isDirectory()) || dataFolder.mkdirs(),
                 () -> new EnableException("Could not create data folder at " + dataFolder.getAbsolutePath()));
         try {

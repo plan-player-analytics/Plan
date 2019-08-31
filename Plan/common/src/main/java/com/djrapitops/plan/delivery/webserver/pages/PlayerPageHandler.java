@@ -20,8 +20,6 @@ import com.djrapitops.plan.delivery.domain.WebUser;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
-import com.djrapitops.plan.delivery.webserver.cache.PageId;
-import com.djrapitops.plan.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
@@ -77,10 +75,9 @@ public class PlayerPageHandler implements PageHandler {
             throw new ForbiddenException("Database is " + dbState.name() + " - Please try again later. You can check database status with /plan info");
         }
         if (raw) {
-            return ResponseCache.loadResponse(PageId.RAW_PLAYER.of(playerUUID), () -> responseFactory.rawPlayerPageResponse(playerUUID));
+            return responseFactory.rawPlayerPageResponse(playerUUID);
         }
-        return ResponseCache.loadResponse(PageId.PLAYER.of(playerUUID),
-                () -> responseFactory.playerPageResponse(playerUUID));
+        return responseFactory.playerPageResponse(playerUUID);
     }
 
     @Override

@@ -19,8 +19,6 @@ package com.djrapitops.plan.delivery.webserver.pages;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
-import com.djrapitops.plan.delivery.webserver.cache.PageId;
-import com.djrapitops.plan.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
@@ -64,19 +62,11 @@ public class ServerPageHandler implements PageHandler {
     public Response getResponse(Request request, RequestTarget target) throws WebException {
         UUID serverUUID = getServerUUID(target);
 
-        Response response = ResponseCache.loadResponse(PageId.SERVER.of(serverUUID));
-
-        if (response != null) {
-            return response;
-        } else {
-            checkDBState();
-            if (serverInfo.getServer().isProxy() && serverInfo.getServerUUID().equals(serverUUID)) {
-                return ResponseCache.loadResponse(PageId.SERVER.of(serverUUID), responseFactory::networkPageResponse);
-            }
-            Response serverPageResponse = responseFactory.serverPageResponse(serverUUID);
-            ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), serverPageResponse);
-            return serverPageResponse;
+        checkDBState();
+        if (serverInfo.getServer().isProxy() && serverInfo.getServerUUID().equals(serverUUID)) {
+            return responseFactory.networkPageResponse();
         }
+        return responseFactory.serverPageResponse(serverUUID);
     }
 
     private void checkDBState() throws ForbiddenException {

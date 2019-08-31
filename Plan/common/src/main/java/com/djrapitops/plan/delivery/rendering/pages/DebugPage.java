@@ -23,13 +23,13 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.delivery.rendering.html.structure.TabsElement;
-import com.djrapitops.plan.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.file.FileResource;
+import com.djrapitops.plan.storage.file.ResourceCache;
 import com.djrapitops.plan.version.VersionCheckSystem;
 import com.djrapitops.plugin.benchmarking.Benchmark;
 import com.djrapitops.plugin.benchmarking.Timings;
@@ -113,12 +113,11 @@ public class DebugPage implements Page {
 
     private void appendResponseCache(StringBuilder content) {
         try {
-            content.append("<pre>### Cached Responses:<br><br>");
-            List<String> cacheKeys = new ArrayList<>(ResponseCache.getCacheKeys());
+            content.append("<pre>### Cached Resources (from File or Jar):<br><br>");
+            List<String> cacheKeys = ResourceCache.getCachedResourceNames();
             if (cacheKeys.isEmpty()) {
                 content.append("Empty");
             }
-            Collections.sort(cacheKeys);
             for (String cacheKey : cacheKeys) {
                 content.append("- ").append(cacheKey).append("<br>");
             }

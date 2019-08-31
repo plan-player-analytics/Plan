@@ -19,8 +19,6 @@ package com.djrapitops.plan.delivery.webserver.pages;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
-import com.djrapitops.plan.delivery.webserver.cache.PageId;
-import com.djrapitops.plan.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
@@ -58,7 +56,7 @@ public class PlayersPageHandler implements PageHandler {
         if (dbState != Database.State.OPEN) {
             throw new ForbiddenException("Database is " + dbState.name() + " - Please try again later. You can check database status with /plan info");
         }
-        return ResponseCache.loadResponse(PageId.PLAYERS.id(), responseFactory::playersPageResponse);
+        return responseFactory.playersPageResponse();
     }
 
     @Override

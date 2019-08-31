@@ -17,8 +17,6 @@
 package com.djrapitops.plan.delivery.export;
 
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
-import com.djrapitops.plan.delivery.webserver.cache.PageId;
-import com.djrapitops.plan.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.file.PlanFiles;
@@ -104,7 +102,7 @@ public abstract class SpecificExport {
     }
 
     void exportAvailablePlayerPage(UUID playerUUID, String name) throws IOException {
-        Response response = ResponseCache.loadResponse(PageId.PLAYER.of(playerUUID));
+        Response response = null; // TODO
         if (response == null) {
             return;
         }
@@ -115,7 +113,7 @@ public abstract class SpecificExport {
 
     void exportAvailableServerPage(UUID serverUUID, String serverName) throws IOException {
         // TODO Force export in the future
-        Response response = ResponseCache.loadResponse(PageId.SERVER.of(serverUUID));
+        Response response = null;
         if (response == null) {
             return;
         }

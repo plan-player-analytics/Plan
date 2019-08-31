@@ -18,7 +18,6 @@ package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
-import com.djrapitops.plan.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.exceptions.EnableException;
 
 import javax.inject.Inject;
@@ -49,7 +48,6 @@ public class WebServerSystem implements SubSystem {
     @Override
     public void disable() {
         webServer.disable();
-        ResponseCache.clearCache();
         JSONCache.invalidateAll();
         JSONCache.cleanUp();
     }
