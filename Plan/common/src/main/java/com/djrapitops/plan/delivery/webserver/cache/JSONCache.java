@@ -40,6 +40,10 @@ public class JSONCache {
             .expireAfterAccess(2, TimeUnit.MINUTES)
             .build();
 
+    private JSONCache() {
+        // Static class
+    }
+
     public static Response getOrCache(String identifier, Supplier<JSONResponse> jsonResponseSupplier) {
         String found = cache.getIfPresent(identifier);
         if (found == null) {

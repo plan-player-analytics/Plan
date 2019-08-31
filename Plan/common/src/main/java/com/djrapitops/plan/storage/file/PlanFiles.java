@@ -115,7 +115,10 @@ public class PlanFiles implements SubSystem {
      * @return a {@link Resource} for accessing the resource, either from the plugin folder or jar.
      */
     public Resource getCustomizableResourceOrDefault(String resourceName) {
-        return attemptToFind(resourceName).map(file -> (Resource) new FileResource(resourceName, file)).orElse(getResourceFromJar(resourceName));
+        return ResourceCache.getOrCache(resourceName, () ->
+                attemptToFind(resourceName).map(file -> (Resource) new FileResource(resourceName, file))
+                        .orElse(getResourceFromJar(resourceName))
+        );
     }
 
     private Optional<File> attemptToFind(String resourceName) {
