@@ -17,6 +17,8 @@
 package com.djrapitops.plan.gathering.listeners.bungee;
 
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
+import com.djrapitops.plan.delivery.webserver.cache.DataID;
+import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.delivery.webserver.cache.PageId;
 import com.djrapitops.plan.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.extension.CallEvents;
@@ -90,31 +92,39 @@ public class PlayerOnlineListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPostLogin(PostLoginEvent event) {
         try {
-            ProxiedPlayer player = event.getPlayer();
-            UUID playerUUID = player.getUniqueId();
-            String playerName = player.getName();
-            InetAddress address = player.getAddress().getAddress();
-            long time = System.currentTimeMillis();
-
-            Session session = new Session(playerUUID, serverInfo.getServerUUID(), time, null, null);
-            session.putRawData(SessionKeys.SERVER_NAME, "Proxy Server");
-            sessionCache.cacheSession(playerUUID, session);
-            Database database = dbSystem.getDatabase();
-
-            boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
-            if (gatheringGeolocations) {
-                database.executeTransaction(
-                        new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
-                );
-            }
-
-            database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> time, playerName));
-            processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
-            processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
-            ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID())); // TODO Swap to clearing data after creating JSON cache.
+            actOnLogin(event);
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
         }
+    }
+
+    private void actOnLogin(PostLoginEvent event) {
+        ProxiedPlayer player = event.getPlayer();
+        UUID playerUUID = player.getUniqueId();
+        String playerName = player.getName();
+        InetAddress address = player.getAddress().getAddress();
+        long time = System.currentTimeMillis();
+
+        Session session = new Session(playerUUID, serverInfo.getServerUUID(), time, null, null);
+        session.putRawData(SessionKeys.SERVER_NAME, "Proxy Server");
+        sessionCache.cacheSession(playerUUID, session);
+        Database database = dbSystem.getDatabase();
+
+        boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
+        if (gatheringGeolocations) {
+            database.executeTransaction(
+                    new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
+            );
+        }
+
+        database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> time, playerName));
+        processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
+        processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
+
+        UUID serverUUID = serverInfo.getServerUUID();
+        JSONCache.invalidateMatching(DataID.SERVER_OVERVIEW);
+        JSONCache.invalidate(DataID.GRAPH_ONLINE, serverUUID);
+        JSONCache.invalidate(DataID.SERVERS);
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -128,31 +138,59 @@ public class PlayerOnlineListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLogout(PlayerDisconnectEvent event) {
         try {
-            ProxiedPlayer player = event.getPlayer();
-            UUID playerUUID = player.getUniqueId();
-
-            sessionCache.endSession(playerUUID, System.currentTimeMillis());
-            processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
-            ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID())); // TODO Swap to clearing data after creating JSON cache.
+            actOnLogout(event);
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 
+    private void actOnLogout(PlayerDisconnectEvent event) {
+        ProxiedPlayer player = event.getPlayer();
+        UUID playerUUID = player.getUniqueId();
+
+        sessionCache.endSession(playerUUID, System.currentTimeMillis());
+        processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
+        ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID())); // TODO Swap to clearing data after creating JSON cache.
+
+        processing.submit(() -> {
+            JSONCache.invalidateMatching(
+                    DataID.SERVER_OVERVIEW,
+                    DataID.SESSIONS,
+                    DataID.GRAPH_WORLD_PIE,
+                    DataID.GRAPH_PUNCHCARD,
+                    DataID.KILLS,
+                    DataID.ONLINE_OVERVIEW,
+                    DataID.SESSIONS_OVERVIEW,
+                    DataID.PVP_PVE,
+                    DataID.GRAPH_UNIQUE_NEW,
+                    DataID.GRAPH_CALENDAR
+            );
+            UUID serverUUID = serverInfo.getServerUUID();
+            JSONCache.invalidate(DataID.GRAPH_ONLINE, serverUUID);
+            JSONCache.invalidate(DataID.SERVERS);
+        });
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onServerSwitch(ServerSwitchEvent event) {
         try {
-            ProxiedPlayer player = event.getPlayer();
-            UUID playerUUID = player.getUniqueId();
-
-            long time = System.currentTimeMillis();
-            // Replaces the current session in the cache.
-            Session session = new Session(playerUUID, serverInfo.getServerUUID(), time, null, null);
-            session.putRawData(SessionKeys.SERVER_NAME, "Proxy Server");
-            sessionCache.cacheSession(playerUUID, session);
-            processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
+            actOnServerSwitch(event);
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
         }
+    }
+
+    private void actOnServerSwitch(ServerSwitchEvent event) {
+        ProxiedPlayer player = event.getPlayer();
+        UUID playerUUID = player.getUniqueId();
+
+        long time = System.currentTimeMillis();
+        // Replaces the current session in the cache.
+        Session session = new Session(playerUUID, serverInfo.getServerUUID(), time, null, null);
+        session.putRawData(SessionKeys.SERVER_NAME, "Proxy Server");
+        sessionCache.cacheSession(playerUUID, session);
+        processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
+
+        JSONCache.invalidate(DataID.SERVERS);
     }
 }

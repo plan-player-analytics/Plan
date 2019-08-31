@@ -22,9 +22,12 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Cache for any JSON data sent via {@link com.djrapitops.plan.delivery.webserver.pages.json.RootJSONHandler}.
@@ -59,8 +62,31 @@ public class JSONCache {
         cache.invalidate(identifier);
     }
 
+    public static void invalidate(DataID dataID) {
+        invalidate(dataID.name());
+    }
+
+    public static void invalidate(UUID serverUUID, DataID... dataIDs) {
+        for (DataID dataID : dataIDs) {
+            invalidate(dataID.of(serverUUID));
+        }
+    }
+
     public static void invalidate(DataID dataID, UUID serverUUID) {
-        cache.invalidate(dataID.of(serverUUID));
+        invalidate(dataID.of(serverUUID));
+    }
+
+    public static void invalidateMatching(DataID... dataIDs) {
+        Set<String> toInvalidate = Arrays.stream(dataIDs)
+                .map(DataID::name)
+                .collect(Collectors.toSet());
+        for (String identifier : cache.asMap().keySet()) {
+            for (String identifierToInvalidate : toInvalidate) {
+                if (StringUtils.startsWith(identifier, identifierToInvalidate)) {
+                    invalidate(identifier);
+                }
+            }
+        }
     }
 
     public static void invalidateMatching(DataID dataID) {

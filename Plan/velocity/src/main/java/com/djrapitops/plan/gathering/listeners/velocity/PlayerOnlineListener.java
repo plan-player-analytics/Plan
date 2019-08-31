@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.gathering.listeners.velocity;
 
+import com.djrapitops.plan.delivery.webserver.cache.DataID;
+import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.delivery.webserver.cache.PageId;
 import com.djrapitops.plan.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.extension.CallEvents;
@@ -92,30 +94,39 @@ public class PlayerOnlineListener {
     @Subscribe(order = PostOrder.LAST)
     public void onPostLogin(PostLoginEvent event) {
         try {
-            Player player = event.getPlayer();
-            UUID playerUUID = player.getUniqueId();
-            String playerName = player.getUsername();
-            InetAddress address = player.getRemoteAddress().getAddress();
-            long time = System.currentTimeMillis();
-
-            sessionCache.cacheSession(playerUUID, new Session(playerUUID, serverInfo.getServerUUID(), time, null, null));
-
-            Database database = dbSystem.getDatabase();
-
-            boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
-            if (gatheringGeolocations) {
-                database.executeTransaction(
-                        new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
-                );
-            }
-
-            database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> time, playerName));
-            processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
-            processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
-            ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
+            actOnLogin(event);
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
         }
+    }
+
+    public void actOnLogin(PostLoginEvent event) {
+        Player player = event.getPlayer();
+        UUID playerUUID = player.getUniqueId();
+        String playerName = player.getUsername();
+        InetAddress address = player.getRemoteAddress().getAddress();
+        long time = System.currentTimeMillis();
+
+        sessionCache.cacheSession(playerUUID, new Session(playerUUID, serverInfo.getServerUUID(), time, null, null));
+
+        Database database = dbSystem.getDatabase();
+
+        boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
+        if (gatheringGeolocations) {
+            database.executeTransaction(
+                    new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
+            );
+        }
+
+        database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> time, playerName));
+        processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
+        processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
+        ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
+
+        UUID serverUUID = serverInfo.getServerUUID();
+        JSONCache.invalidateMatching(DataID.SERVER_OVERVIEW);
+        JSONCache.invalidate(DataID.GRAPH_ONLINE, serverUUID);
+        JSONCache.invalidate(DataID.SERVERS);
     }
 
     @Subscribe(order = PostOrder.NORMAL)
@@ -129,30 +140,58 @@ public class PlayerOnlineListener {
     @Subscribe(order = PostOrder.LAST)
     public void onLogout(DisconnectEvent event) {
         try {
-            Player player = event.getPlayer();
-            UUID playerUUID = player.getUniqueId();
-
-            sessionCache.endSession(playerUUID, System.currentTimeMillis());
-            processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
-            ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
+            actOnLogout(event);
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 
+    public void actOnLogout(DisconnectEvent event) {
+        Player player = event.getPlayer();
+        UUID playerUUID = player.getUniqueId();
+
+        sessionCache.endSession(playerUUID, System.currentTimeMillis());
+        processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
+        ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
+
+        processing.submit(() -> {
+            JSONCache.invalidateMatching(
+                    DataID.SERVER_OVERVIEW,
+                    DataID.SESSIONS,
+                    DataID.GRAPH_WORLD_PIE,
+                    DataID.GRAPH_PUNCHCARD,
+                    DataID.KILLS,
+                    DataID.ONLINE_OVERVIEW,
+                    DataID.SESSIONS_OVERVIEW,
+                    DataID.PVP_PVE,
+                    DataID.GRAPH_UNIQUE_NEW,
+                    DataID.GRAPH_CALENDAR
+            );
+            UUID serverUUID = serverInfo.getServerUUID();
+            JSONCache.invalidate(DataID.GRAPH_ONLINE, serverUUID);
+            JSONCache.invalidate(DataID.SERVERS);
+        });
+    }
+
     @Subscribe(order = PostOrder.LAST)
     public void onServerSwitch(ServerConnectedEvent event) {
         try {
-            Player player = event.getPlayer();
-            UUID playerUUID = player.getUniqueId();
-            long time = System.currentTimeMillis();
-
-            // Replaces the current session in the cache.
-            sessionCache.cacheSession(playerUUID, new Session(playerUUID, serverInfo.getServerUUID(), time, null, null));
-
-            processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
+            actOnServerSwitch(event);
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
         }
+    }
+
+    public void actOnServerSwitch(ServerConnectedEvent event) {
+        Player player = event.getPlayer();
+        UUID playerUUID = player.getUniqueId();
+        long time = System.currentTimeMillis();
+
+        // Replaces the current session in the cache.
+        sessionCache.cacheSession(playerUUID, new Session(playerUUID, serverInfo.getServerUUID(), time, null, null));
+
+        processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
+
+        JSONCache.invalidate(DataID.SERVERS);
     }
 }
