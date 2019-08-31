@@ -22,9 +22,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -108,5 +106,11 @@ public class JSONCache {
 
     public static void cleanUp() {
         cache.cleanUp();
+    }
+
+    public static List<String> getCachedIDs() {
+        List<String> identifiers = new ArrayList<>(cache.asMap().keySet());
+        Collections.sort(identifiers);
+        return identifiers;
     }
 }

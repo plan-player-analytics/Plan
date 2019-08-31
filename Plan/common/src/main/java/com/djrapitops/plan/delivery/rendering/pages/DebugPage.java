@@ -23,6 +23,7 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.delivery.rendering.html.structure.TabsElement;
+import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -106,15 +107,32 @@ public class DebugPage implements Page {
 
     private String createCacheContent() {
         StringBuilder content = new StringBuilder();
-        appendResponseCache(content);
+        appendResourceCache(content);
+        appendJSONCache(content);
         appendSessionCache(content);
         return content.toString();
     }
 
-    private void appendResponseCache(StringBuilder content) {
+    private void appendResourceCache(StringBuilder content) {
         try {
             content.append("<pre>### Cached Resources (from File or Jar):<br><br>");
             List<String> cacheKeys = ResourceCache.getCachedResourceNames();
+            if (cacheKeys.isEmpty()) {
+                content.append("Empty");
+            }
+            for (String cacheKey : cacheKeys) {
+                content.append("- ").append(cacheKey).append("<br>");
+            }
+            content.append("</pre>");
+        } catch (Exception e) {
+            errorHandler.log(L.WARN, this.getClass(), e);
+        }
+    }
+
+    private void appendJSONCache(StringBuilder content) {
+        try {
+            content.append("<pre>### Cached JSON:<br><br>");
+            List<String> cacheKeys = JSONCache.getCachedIDs();
             if (cacheKeys.isEmpty()) {
                 content.append("Empty");
             }
