@@ -32,15 +32,12 @@ import javax.inject.Singleton;
 @Singleton
 public class WebServerSystem implements SubSystem {
 
-    private final JSONCache jsonCache;
     private final WebServer webServer;
 
     @Inject
     public WebServerSystem(
-            JSONCache jsonCache,
             WebServer webServer
     ) {
-        this.jsonCache = jsonCache;
         this.webServer = webServer;
     }
 
@@ -53,8 +50,8 @@ public class WebServerSystem implements SubSystem {
     public void disable() {
         webServer.disable();
         ResponseCache.clearCache();
-        jsonCache.invalidateAll();
-        jsonCache.cleanUp();
+        JSONCache.invalidateAll();
+        JSONCache.cleanUp();
     }
 
     public WebServer getWebServer() {

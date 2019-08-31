@@ -37,18 +37,16 @@ import java.util.function.Supplier;
 public class NetworkTabJSONHandler<T> implements PageHandler {
 
     private final DataID dataID;
-    private final JSONCache cache;
     private final Supplier<T> jsonParser;
 
-    public NetworkTabJSONHandler(DataID dataID, JSONCache cache, NetworkTabJSONParser<T> jsonParser) {
+    public NetworkTabJSONHandler(DataID dataID, NetworkTabJSONParser<T> jsonParser) {
         this.dataID = dataID;
-        this.cache = cache;
         this.jsonParser = jsonParser;
     }
 
     @Override
     public Response getResponse(Request request, RequestTarget target) {
-        return cache.getOrCache(dataID, () -> new JSONResponse(jsonParser.get()));
+        return JSONCache.getOrCache(dataID, () -> new JSONResponse(jsonParser.get()));
     }
 
     @Override

@@ -44,29 +44,26 @@ public class SessionsJSONHandler implements PageHandler {
 
     private final Identifiers identifiers;
     private final JSONFactory jsonFactory;
-    private final JSONCache cache;
 
     @Inject
     public SessionsJSONHandler(
             Identifiers identifiers,
-            JSONFactory jsonFactory,
-            JSONCache cache
+            JSONFactory jsonFactory
     ) {
         this.identifiers = identifiers;
         this.jsonFactory = jsonFactory;
-        this.cache = cache;
     }
 
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
         if (target.getParameter("server").isPresent()) {
             UUID serverUUID = identifiers.getServerUUID(target);
-            return cache.getOrCache(DataID.SESSIONS, serverUUID, () ->
+            return JSONCache.getOrCache(DataID.SESSIONS, serverUUID, () ->
                     new JSONResponse(Collections.singletonMap("sessions", jsonFactory.serverSessionsAsJSONMap(serverUUID)))
             );
         }
         // Assume network
-        return cache.getOrCache(DataID.SESSIONS, () ->
+        return JSONCache.getOrCache(DataID.SESSIONS, () ->
                 new JSONResponse(Collections.singletonMap("sessions", jsonFactory.networkSessionsAsJSONMap()))
         );
     }

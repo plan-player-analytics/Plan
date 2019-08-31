@@ -20,7 +20,6 @@ import com.djrapitops.plan.delivery.rendering.json.*;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
-import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.delivery.webserver.pages.TreePageHandler;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
@@ -37,15 +36,14 @@ import javax.inject.Singleton;
 @Singleton
 public class RootJSONHandler extends TreePageHandler {
 
-    private final JSONCache cache;
     private Identifiers identifiers;
 
     @Inject
     public RootJSONHandler(
             ResponseFactory responseFactory,
-            JSONCache cache,
             Identifiers identifiers,
             JSONFactory jsonFactory,
+
             GraphsJSONHandler graphsJSONHandler,
             SessionsJSONHandler sessionsJSONHandler,
             PlayersTableJSONHandler playersTableJSONHandler,
@@ -56,11 +54,11 @@ public class RootJSONHandler extends TreePageHandler {
             PvPPvEJSONParser pvPPvEJSONParser,
             PlayerBaseOverviewJSONParser playerBaseOverviewJSONParser,
             PerformanceJSONParser performanceJSONParser,
+
             PlayerJSONHandler playerJSONHandler,
             NetworkJSONHandler networkJSONHandler
     ) {
         super(responseFactory);
-        this.cache = cache;
         this.identifiers = identifiers;
 
         registerPage("players", playersTableJSONHandler, 1);
@@ -81,7 +79,7 @@ public class RootJSONHandler extends TreePageHandler {
     }
 
     private <T> void registerPage(String identifier, DataID dataID, ServerTabJSONParser<T> tabJSONParser) {
-        registerPage(identifier, new ServerTabJSONHandler<>(dataID, cache, identifiers, tabJSONParser), 0);
+        registerPage(identifier, new ServerTabJSONHandler<>(dataID, identifiers, tabJSONParser), 0);
     }
 
     @Override

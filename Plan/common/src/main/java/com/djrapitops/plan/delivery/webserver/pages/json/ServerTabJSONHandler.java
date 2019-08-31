@@ -40,18 +40,15 @@ import java.util.function.Function;
 public class ServerTabJSONHandler<T> implements PageHandler {
 
     private final DataID dataID;
-    private final JSONCache cache;
     private final Identifiers identifiers;
     private final Function<UUID, T> jsonParser;
 
     public ServerTabJSONHandler(
             DataID dataID,
-            JSONCache cache,
             Identifiers identifiers,
             ServerTabJSONParser<T> jsonParser
     ) {
         this.dataID = dataID;
-        this.cache = cache;
         this.identifiers = identifiers;
         this.jsonParser = jsonParser;
     }
@@ -59,7 +56,7 @@ public class ServerTabJSONHandler<T> implements PageHandler {
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
         UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
-        return cache.getOrCache(dataID, serverUUID, () -> new JSONResponse(jsonParser.apply(serverUUID)));
+        return JSONCache.getOrCache(dataID, serverUUID, () -> new JSONResponse(jsonParser.apply(serverUUID)));
     }
 
     @Override

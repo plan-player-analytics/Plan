@@ -44,23 +44,20 @@ public class PlayerKillsJSONHandler implements PageHandler {
 
     private final Identifiers identifiers;
     private final JSONFactory jsonFactory;
-    private final JSONCache cache;
 
     @Inject
     public PlayerKillsJSONHandler(
             Identifiers identifiers,
-            JSONFactory jsonFactory,
-            JSONCache cache
+            JSONFactory jsonFactory
     ) {
         this.identifiers = identifiers;
         this.jsonFactory = jsonFactory;
-        this.cache = cache;
     }
 
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
         UUID serverUUID = identifiers.getServerUUID(target);
-        return cache.getOrCache(DataID.KILLS, serverUUID, () ->
+        return JSONCache.getOrCache(DataID.KILLS, serverUUID, () ->
                 new JSONResponse(Collections.singletonMap("player_kills", jsonFactory.serverPlayerKillsAsJSONMap(serverUUID)))
         );
     }

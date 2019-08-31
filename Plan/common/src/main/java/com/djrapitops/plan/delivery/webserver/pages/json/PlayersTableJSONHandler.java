@@ -45,27 +45,24 @@ public class PlayersTableJSONHandler implements PageHandler {
 
     private final Identifiers identifiers;
     private final JSONFactory jsonFactory;
-    private final JSONCache cache;
 
     @Inject
     public PlayersTableJSONHandler(
             Identifiers identifiers,
-            JSONFactory jsonFactory,
-            JSONCache cache
+            JSONFactory jsonFactory
     ) {
         this.identifiers = identifiers;
         this.jsonFactory = jsonFactory;
-        this.cache = cache;
     }
 
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
         if (target.getParameter("server").isPresent()) {
             UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
-            return cache.getOrCache(DataID.PLAYERS, serverUUID, () -> new JSONResponse(jsonFactory.serverPlayersTableJSON(serverUUID)));
+            return JSONCache.getOrCache(DataID.PLAYERS, serverUUID, () -> new JSONResponse(jsonFactory.serverPlayersTableJSON(serverUUID)));
         }
         // Assume network
-        return cache.getOrCache(DataID.PLAYERS, () -> new JSONResponse(jsonFactory.networkPlayersTableJSON()));
+        return JSONCache.getOrCache(DataID.PLAYERS, () -> new JSONResponse(jsonFactory.networkPlayersTableJSON()));
     }
 
     @Override

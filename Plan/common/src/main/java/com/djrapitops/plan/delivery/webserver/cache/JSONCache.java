@@ -1,3 +1,19 @@
+/*
+ *  This file is part of Player Analytics (Plan).
+ *
+ *  Plan is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Plan is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.djrapitops.plan.delivery.webserver.cache;
 
 import com.djrapitops.plan.delivery.webserver.response.Response;
@@ -6,8 +22,6 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -17,19 +31,13 @@ import java.util.function.Supplier;
  *
  * @author Rsl1122
  */
-@Singleton
 public class JSONCache {
 
-    private final Cache<String, String> cache;
+    private static final Cache<String, String> cache = Caffeine.newBuilder()
+            .expireAfterAccess(2, TimeUnit.MINUTES)
+            .build();
 
-    @Inject
-    public JSONCache() {
-        cache = Caffeine.newBuilder()
-                .expireAfterWrite(2, TimeUnit.MINUTES)
-                .build();
-    }
-
-    public Response getOrCache(String identifier, Supplier<JSONResponse> jsonResponseSupplier) {
+    public static Response getOrCache(String identifier, Supplier<JSONResponse> jsonResponseSupplier) {
         String found = cache.getIfPresent(identifier);
         if (found == null) {
             JSONResponse response = jsonResponseSupplier.get();
@@ -39,22 +47,23 @@ public class JSONCache {
         return new JSONResponse(found);
     }
 
-    public Response getOrCache(DataID dataID, Supplier<JSONResponse> jsonResponseSupplier) {
+    public static Response getOrCache(DataID dataID, Supplier<JSONResponse> jsonResponseSupplier) {
         return getOrCache(dataID.name(), jsonResponseSupplier);
     }
-    public Response getOrCache(DataID dataID, UUID serverUUID, Supplier<JSONResponse> jsonResponseSupplier) {
+
+    public static Response getOrCache(DataID dataID, UUID serverUUID, Supplier<JSONResponse> jsonResponseSupplier) {
         return getOrCache(dataID.of(serverUUID), jsonResponseSupplier);
     }
 
-    public void invalidate(String identifier) {
+    public static void invalidate(String identifier) {
         cache.invalidate(identifier);
     }
 
-    public void invalidate(DataID dataID, UUID serverUUID) {
+    public static void invalidate(DataID dataID, UUID serverUUID) {
         cache.invalidate(dataID.of(serverUUID));
     }
 
-    public void invalidateMatching(DataID dataID) {
+    public static void invalidateMatching(DataID dataID) {
         String toInvalidate = dataID.name();
         for (String identifier : cache.asMap().keySet()) {
             if (StringUtils.startsWith(identifier, toInvalidate)) {
@@ -63,11 +72,11 @@ public class JSONCache {
         }
     }
 
-    public void invalidateAll() {
+    public static void invalidateAll() {
         cache.invalidateAll();
     }
 
-    public void cleanUp() {
+    public static void cleanUp() {
         cache.cleanUp();
     }
 }

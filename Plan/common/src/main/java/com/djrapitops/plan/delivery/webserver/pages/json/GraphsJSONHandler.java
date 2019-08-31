@@ -45,17 +45,14 @@ public class GraphsJSONHandler implements PageHandler {
 
     private final Identifiers identifiers;
     private final GraphJSONParser graphJSON;
-    private final JSONCache cache;
 
     @Inject
     public GraphsJSONHandler(
             Identifiers identifiers,
-            GraphJSONParser graphJSON,
-            JSONCache cache
+            GraphJSONParser graphJSON
     ) {
         this.identifiers = identifiers;
         this.graphJSON = graphJSON;
-        this.cache = cache;
     }
 
     @Override
@@ -67,10 +64,10 @@ public class GraphsJSONHandler implements PageHandler {
 
         if (target.getParameter("server").isPresent()) {
             UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
-            return cache.getOrCache(dataID, serverUUID, () -> generateGraphDataJSONOfType(dataID, serverUUID));
+            return JSONCache.getOrCache(dataID, serverUUID, () -> generateGraphDataJSONOfType(dataID, serverUUID));
         }
         // Assume network
-        return cache.getOrCache(dataID, () -> generateGraphDataJSONOfType(dataID));
+        return JSONCache.getOrCache(dataID, () -> generateGraphDataJSONOfType(dataID));
     }
 
     private DataID getDataID(String type) throws BadRequestException {

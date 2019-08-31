@@ -24,7 +24,6 @@ import com.djrapitops.plan.delivery.rendering.json.network.NetworkTabJSONParser;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
-import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.delivery.webserver.pages.TreePageHandler;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
@@ -40,19 +39,15 @@ import javax.inject.Singleton;
 @Singleton
 public class NetworkJSONHandler extends TreePageHandler {
 
-    private final JSONCache cache;
-
     @Inject
     public NetworkJSONHandler(
             ResponseFactory responseFactory,
             JSONFactory jsonFactory,
-            JSONCache cache,
             NetworkOverviewJSONParser networkOverviewJSONParser,
             NetworkPlayerBaseOverviewJSONParser playerBaseOverviewJSONParser,
             NetworkSessionsOverviewJSONParser sessionsOverviewJSONParser
     ) {
         super(responseFactory);
-        this.cache = cache;
 
         registerPage("overview", DataID.SERVER_OVERVIEW, networkOverviewJSONParser);
         registerPage("playerbaseOverview", DataID.PLAYERBASE_OVERVIEW, playerBaseOverviewJSONParser);
@@ -62,7 +57,7 @@ public class NetworkJSONHandler extends TreePageHandler {
     }
 
     private <T> void registerPage(String identifier, DataID dataID, NetworkTabJSONParser<T> tabJSONParser) {
-        registerPage(identifier, new NetworkTabJSONHandler<>(dataID, cache, tabJSONParser));
+        registerPage(identifier, new NetworkTabJSONHandler<>(dataID, tabJSONParser));
     }
 
     @Override
