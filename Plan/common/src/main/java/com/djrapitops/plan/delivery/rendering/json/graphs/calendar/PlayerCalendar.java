@@ -19,11 +19,11 @@ package com.djrapitops.plan.delivery.rendering.json.graphs.calendar;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
+import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.formatting.Formatter;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;

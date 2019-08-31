@@ -14,31 +14,26 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.utilities.formatting.time;
+package com.djrapitops.plan.delivery.formatting;
 
-import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.FormatSettings;
-import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plugin.utilities.Format;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.TextStringBuilder;
+
+import java.util.Arrays;
 
 /**
- * Formatter for a timestamp that only includes a clock.
+ * Formatter for Item names, that capitalizes each part and separates them with spaces instead of underscores.
  *
  * @author Rsl1122
  */
-public class ClockFormatter extends DateFormatter {
-
-    public ClockFormatter(PlanConfig config, Locale locale) {
-        super(config, locale);
-    }
+public class ItemNameFormatter implements Formatter<String> {
 
     @Override
-    public String apply(Long date) {
-        return date > 0 ? format(date) : "-";
-    }
-
-    private String format(Long date) {
-        String format = config.get(FormatSettings.DATE_CLOCK);
-
-        return format(date, format);
+    public String apply(String name) {
+        String[] parts = StringUtils.split(name, '_');
+        TextStringBuilder builder = new TextStringBuilder();
+        builder.appendWithSeparators(Arrays.stream(parts).map(part -> new Format(part).capitalize()).iterator(), " ");
+        return builder.toString();
     }
 }

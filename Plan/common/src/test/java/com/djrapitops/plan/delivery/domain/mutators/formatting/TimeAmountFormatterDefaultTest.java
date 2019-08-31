@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.delivery.domain.mutators.formatting;
 
+import com.djrapitops.plan.delivery.formatting.time.TimeAmountFormatter;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.FormatSettings;
-import com.djrapitops.plan.utilities.formatting.time.TimeAmountFormatter;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;

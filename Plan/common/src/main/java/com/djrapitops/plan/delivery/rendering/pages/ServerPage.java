@@ -19,6 +19,8 @@ package com.djrapitops.plan.delivery.rendering.pages;
 import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.container.RawDataContainer;
 import com.djrapitops.plan.delivery.domain.keys.AnalysisKeys;
+import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.exceptions.ParseException;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
@@ -31,8 +33,6 @@ import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plan.utilities.formatting.Formatters;
-import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.version.VersionCheckSystem;
 
 import java.io.IOException;

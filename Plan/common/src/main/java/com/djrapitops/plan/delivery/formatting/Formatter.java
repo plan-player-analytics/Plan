@@ -14,23 +14,15 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.utilities.formatting;
+package com.djrapitops.plan.delivery.formatting;
+
+import java.util.function.Function;
 
 /**
- * Formatter for percentages.
+ * Interface for formatting a value into a String.
  *
  * @author Rsl1122
  */
-public class PercentageFormatter implements Formatter<Double> {
+public interface Formatter<T> extends Function<T, String> {
 
-    private final Formatter<Double> formatter;
-
-    public PercentageFormatter(Formatter<Double> formatter) {
-        this.formatter = formatter;
-    }
-
-    @Override
-    public String apply(Double value) {
-        return value >= 0 ? formatter.apply(value * 100.0) + "%" : "-";
-    }
 }

@@ -18,8 +18,8 @@ package com.djrapitops.plan.delivery.domain.mutators;
 
 import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
+import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.gathering.domain.Session;
-import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.List;

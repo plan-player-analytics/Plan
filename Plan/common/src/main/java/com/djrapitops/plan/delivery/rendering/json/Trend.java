@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.rendering.json;
 
-import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.delivery.formatting.Formatter;
 
 /**
  * Represents a trend in the data - used for JSON format.

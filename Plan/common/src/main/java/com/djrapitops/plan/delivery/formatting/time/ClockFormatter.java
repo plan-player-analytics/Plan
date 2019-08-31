@@ -14,20 +14,20 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.utilities.formatting.time;
+package com.djrapitops.plan.delivery.formatting.time;
 
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.FormatSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 
 /**
- * Formatter for a timestamp which includes days as the smallest entry.
+ * Formatter for a timestamp that only includes a clock.
  *
  * @author Rsl1122
  */
-public class DayFormatter extends DateFormatter {
+public class ClockFormatter extends DateFormatter {
 
-    public DayFormatter(PlanConfig config, Locale locale) {
+    public ClockFormatter(PlanConfig config, Locale locale) {
         super(config, locale);
     }
 
@@ -37,11 +37,7 @@ public class DayFormatter extends DateFormatter {
     }
 
     private String format(Long date) {
-        String format = "MMMMM d";
-
-        if (config.isTrue(FormatSettings.DATE_RECENT_DAYS)) {
-            format = replaceRecentDays(date, format, "MMMMM");
-        }
+        String format = config.get(FormatSettings.DATE_CLOCK);
 
         return format(date, format);
     }

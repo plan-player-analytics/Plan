@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.domain.mutators;
 import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.keys.CommonKeys;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
+import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.WorldPie;
 import com.djrapitops.plan.gathering.domain.PlayerDeath;
@@ -27,7 +28,6 @@ import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
 import com.djrapitops.plan.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.utilities.analysis.Median;
-import com.djrapitops.plan.utilities.formatting.Formatters;
 
 import java.util.*;
 import java.util.function.Function;

@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.delivery.domain.mutators.formatting;
 
+import com.djrapitops.plan.delivery.formatting.DecimalFormatter;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.FormatSettings;
-import com.djrapitops.plan.utilities.formatting.DecimalFormatter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;

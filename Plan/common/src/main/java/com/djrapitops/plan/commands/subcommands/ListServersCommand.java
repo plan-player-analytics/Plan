@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.commands.subcommands;
 
+import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.settings.Permissions;
@@ -26,7 +27,6 @@ import com.djrapitops.plan.settings.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
-import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;

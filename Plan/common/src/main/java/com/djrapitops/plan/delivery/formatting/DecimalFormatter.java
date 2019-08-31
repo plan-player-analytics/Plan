@@ -14,19 +14,29 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.utilities.formatting;
+package com.djrapitops.plan.delivery.formatting;
 
-import com.djrapitops.plugin.utilities.Format;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.FormatSettings;
+
+import java.text.DecimalFormat;
 
 /**
- * Formatter for entity names, that capitalizes the first word and removes symbols and numbers.
+ * Formatter for decimal points that depends on settings.
  *
  * @author Rsl1122
  */
-public class EntityNameFormatter implements Formatter<String> {
+public class DecimalFormatter implements Formatter<Double> {
+
+    private final PlanConfig config;
+
+    public DecimalFormatter(PlanConfig config) {
+        this.config = config;
+    }
 
     @Override
-    public String apply(String name) {
-        return new Format(name).removeNumbers().removeSymbols().capitalize().toString();
+    public String apply(Double value) {
+        // DecimalFormat is initialized here because config is not fully enabled in the constructor
+        return new DecimalFormat(config.get(FormatSettings.DECIMALS)).format(value);
     }
 }

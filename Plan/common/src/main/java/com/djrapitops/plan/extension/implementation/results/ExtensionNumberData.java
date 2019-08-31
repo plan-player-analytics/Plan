@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.extension.implementation.results;
 
+import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.extension.FormatType;
-import com.djrapitops.plan.utilities.formatting.Formatter;
 
 /**
  * Represents double data returned by a DoubleProvider or PercentageProvider method.

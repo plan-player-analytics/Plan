@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.domain.container;
 
 import com.djrapitops.plan.delivery.domain.keys.Key;
-import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.delivery.formatting.Formatter;
 
 import java.util.Map;
 import java.util.Optional;

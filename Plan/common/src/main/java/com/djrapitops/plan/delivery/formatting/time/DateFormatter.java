@@ -14,15 +14,15 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.utilities.formatting.time;
+package com.djrapitops.plan.delivery.formatting.time;
 
+import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.FormatSettings;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
-import com.djrapitops.plan.utilities.formatting.Formatter;
 
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;

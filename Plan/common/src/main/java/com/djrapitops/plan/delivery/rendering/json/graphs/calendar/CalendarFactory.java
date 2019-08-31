@@ -17,9 +17,9 @@
 package com.djrapitops.plan.delivery.rendering.json.graphs.calendar;
 
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.theme.Theme;
-import com.djrapitops.plan.utilities.formatting.Formatters;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

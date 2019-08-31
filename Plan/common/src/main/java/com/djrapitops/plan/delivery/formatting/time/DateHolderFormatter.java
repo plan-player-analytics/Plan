@@ -14,10 +14,10 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.utilities.formatting.time;
+package com.djrapitops.plan.delivery.formatting.time;
 
 import com.djrapitops.plan.delivery.domain.DateHolder;
-import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.delivery.formatting.Formatter;
 
 /**
  * Formatter for a DateHolder object that uses a different formatter.

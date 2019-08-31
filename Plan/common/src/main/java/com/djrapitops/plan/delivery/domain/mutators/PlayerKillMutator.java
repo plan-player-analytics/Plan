@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.delivery.domain.mutators;
 
+import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
-import com.djrapitops.plan.utilities.formatting.Formatters;
 
 import java.util.HashMap;
 import java.util.List;

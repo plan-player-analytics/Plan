@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.rendering.json.graphs;
 
-import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.delivery.formatting.Formatter;
 
 /**
  * Utility for creating Progress bars.
