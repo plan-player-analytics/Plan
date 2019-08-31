@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.delivery.upkeep.NetworkPageRefreshTask;
-import com.djrapitops.plan.delivery.upkeep.PlayersPageRefreshTask;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.gathering.timed.BungeePingCounter;
 import com.djrapitops.plan.gathering.timed.BungeeTPSCounter;
@@ -45,10 +43,8 @@ public class BungeeTaskSystem extends TaskSystem {
     private final PlanBungee plugin;
     private final PlanConfig config;
     private final BungeeTPSCounter tpsCounter;
-    private final NetworkPageRefreshTask networkPageRefreshTask;
     private final BungeePingCounter pingCounter;
     private final LogsFolderCleanTask logsFolderCleanTask;
-    private final PlayersPageRefreshTask playersPageRefreshTask;
     private final NetworkConfigStoreTask networkConfigStoreTask;
     private final DBCleanTask dbCleanTask;
     private final ExtensionServerMethodCallerTask extensionServerMethodCallerTask;
@@ -59,10 +55,8 @@ public class BungeeTaskSystem extends TaskSystem {
             PlanConfig config,
             RunnableFactory runnableFactory,
             BungeeTPSCounter tpsCounter,
-            NetworkPageRefreshTask networkPageRefreshTask,
             BungeePingCounter pingCounter,
             LogsFolderCleanTask logsFolderCleanTask,
-            PlayersPageRefreshTask playersPageRefreshTask,
             NetworkConfigStoreTask networkConfigStoreTask,
             DBCleanTask dbCleanTask,
             ExtensionServerMethodCallerTask extensionServerMethodCallerTask
@@ -72,10 +66,8 @@ public class BungeeTaskSystem extends TaskSystem {
         this.config = config;
         this.tpsCounter = tpsCounter;
 
-        this.networkPageRefreshTask = networkPageRefreshTask;
         this.pingCounter = pingCounter;
         this.logsFolderCleanTask = logsFolderCleanTask;
-        this.playersPageRefreshTask = playersPageRefreshTask;
         this.networkConfigStoreTask = networkConfigStoreTask;
         this.dbCleanTask = dbCleanTask;
         this.extensionServerMethodCallerTask = extensionServerMethodCallerTask;
@@ -88,7 +80,6 @@ public class BungeeTaskSystem extends TaskSystem {
 
     private void registerTasks() {
         registerTask(tpsCounter).runTaskTimerAsynchronously(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
-        registerTask(networkPageRefreshTask).runTaskTimerAsynchronously(1500, TimeAmount.toTicks(5L, TimeUnit.MINUTES));
         registerTask(logsFolderCleanTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
 
         Long pingDelay = config.get(TimeSettings.PING_SERVER_ENABLE_DELAY);
@@ -97,9 +88,6 @@ public class BungeeTaskSystem extends TaskSystem {
             long startDelay = TimeAmount.toTicks(pingDelay, TimeUnit.MILLISECONDS);
             registerTask(pingCounter).runTaskTimer(startDelay, 40L);
         }
-
-        registerTask(playersPageRefreshTask)
-                .runTaskTimerAsynchronously(TimeAmount.toTicks(5L, TimeUnit.MINUTES), TimeAmount.toTicks(5L, TimeUnit.MINUTES));
 
         // +40 ticks / 2 seconds so that update check task runs first.
         long storeDelay = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS) + 40;

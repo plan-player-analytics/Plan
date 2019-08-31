@@ -18,14 +18,12 @@ package com.djrapitops.plan.processing.processors.info;
 
 import com.djrapitops.plan.delivery.export.HtmlExport;
 import com.djrapitops.plan.delivery.export.JSONExport;
-import com.djrapitops.plan.delivery.webserver.cache.PageId;
-import com.djrapitops.plan.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
 
 import java.util.UUID;
 
-public class PlayerPageUpdateProcessor implements Runnable {
+public class PlayerPageExportProcessor implements Runnable {
 
     private final UUID playerUUID;
 
@@ -33,7 +31,7 @@ public class PlayerPageUpdateProcessor implements Runnable {
     private final HtmlExport htmlExport;
     private final JSONExport jsonExport;
 
-    PlayerPageUpdateProcessor(
+    PlayerPageExportProcessor(
             UUID playerUUID,
             PlanConfig config,
             HtmlExport htmlExport,
@@ -47,8 +45,6 @@ public class PlayerPageUpdateProcessor implements Runnable {
 
     @Override
     public void run() {
-        ResponseCache.clearResponse(PageId.PLAYER.of(playerUUID));
-
         if (config.get(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
             if (config.get(ExportSettings.PLAYER_JSON)) {
                 jsonExport.exportPlayerJSON(playerUUID);

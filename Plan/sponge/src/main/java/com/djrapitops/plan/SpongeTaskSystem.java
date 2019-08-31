@@ -17,7 +17,6 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.delivery.upkeep.PeriodicServerExportTask;
-import com.djrapitops.plan.delivery.upkeep.PlayersPageRefreshTask;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.gathering.ShutdownHook;
 import com.djrapitops.plan.gathering.timed.SpongePingCounter;
@@ -48,7 +47,6 @@ public class SpongeTaskSystem extends TaskSystem {
     private final PeriodicServerExportTask periodicServerExportTask;
     private final SpongePingCounter pingCounter;
     private final LogsFolderCleanTask logsFolderCleanTask;
-    private final PlayersPageRefreshTask playersPageRefreshTask;
     private final ConfigStoreTask configStoreTask;
     private final DBCleanTask dbCleanTask;
     private final ExtensionServerMethodCallerTask extensionServerMethodCallerTask;
@@ -68,8 +66,7 @@ public class SpongeTaskSystem extends TaskSystem {
             ConfigStoreTask configStoreTask,
             DBCleanTask dbCleanTask,
 
-            PeriodicServerExportTask periodicServerExportTask,
-            PlayersPageRefreshTask playersPageRefreshTask
+            PeriodicServerExportTask periodicServerExportTask
     ) {
         super(runnableFactory);
         this.plugin = plugin;
@@ -85,7 +82,6 @@ public class SpongeTaskSystem extends TaskSystem {
         this.dbCleanTask = dbCleanTask;
 
         this.periodicServerExportTask = periodicServerExportTask;
-        this.playersPageRefreshTask = playersPageRefreshTask;
     }
 
     @Override
@@ -111,8 +107,6 @@ public class SpongeTaskSystem extends TaskSystem {
         if (config.get(ExportSettings.SERVER_PAGE)) {
             registerTask(periodicServerExportTask).runTaskTimerAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS), TimeAmount.toTicks(20L, TimeUnit.MINUTES));
         }
-        registerTask(playersPageRefreshTask)
-                .runTaskTimerAsynchronously(TimeAmount.toTicks(5L, TimeUnit.MINUTES), TimeAmount.toTicks(5L, TimeUnit.MINUTES));
     }
 
     private void registerTPSCounter() {

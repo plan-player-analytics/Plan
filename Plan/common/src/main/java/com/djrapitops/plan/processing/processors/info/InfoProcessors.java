@@ -48,8 +48,8 @@ public class InfoProcessors {
         this.jsonExport = jsonExport;
     }
 
-    // TODO Move
-    public PlayerPageUpdateProcessor playerPageUpdateProcessor(UUID uuid) {
-        return new PlayerPageUpdateProcessor(uuid, config.get(), htmlExport.get(), jsonExport.get());
+    // TODO Remove after Export has been rewritten to have update methods
+    public PlayerPageExportProcessor playerPageExportProcessor(UUID uuid) {
+        return new PlayerPageExportProcessor(uuid, config.get(), htmlExport.get(), jsonExport.get());
     }
 }

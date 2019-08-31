@@ -185,7 +185,7 @@ public class PlayerOnlineListener {
                 (uuid, name) -> name.equals(nicknameCache.getDisplayName(uuid))
         ));
 
-        processing.submitNonCritical(processors.info().playerPageUpdateProcessor(playerUUID));
+        processing.submitNonCritical(processors.info().playerPageExportProcessor(playerUUID));
         processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
     }
 
@@ -224,6 +224,6 @@ public class PlayerOnlineListener {
         sessionCache.endSession(playerUUID, time)
                 .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new SessionEndTransaction(endedSession)));
 
-        processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
+        processing.submit(processors.info().playerPageExportProcessor(playerUUID));
     }
 }

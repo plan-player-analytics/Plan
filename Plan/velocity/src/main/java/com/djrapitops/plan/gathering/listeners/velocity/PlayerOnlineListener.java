@@ -18,8 +18,6 @@ package com.djrapitops.plan.gathering.listeners.velocity;
 
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
-import com.djrapitops.plan.delivery.webserver.cache.PageId;
-import com.djrapitops.plan.delivery.webserver.cache.ResponseCache;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.gathering.cache.GeolocationCache;
@@ -119,9 +117,8 @@ public class PlayerOnlineListener {
         }
 
         database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> time, playerName));
-        processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
+        processing.submit(processors.info().playerPageExportProcessor(playerUUID));
         processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
-        ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
 
         UUID serverUUID = serverInfo.getServerUUID();
         JSONCache.invalidateMatching(DataID.SERVER_OVERVIEW);
@@ -151,8 +148,7 @@ public class PlayerOnlineListener {
         UUID playerUUID = player.getUniqueId();
 
         sessionCache.endSession(playerUUID, System.currentTimeMillis());
-        processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
-        ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
+        processing.submit(processors.info().playerPageExportProcessor(playerUUID));
 
         processing.submit(() -> {
             JSONCache.invalidateMatching(
@@ -190,7 +186,7 @@ public class PlayerOnlineListener {
         // Replaces the current session in the cache.
         sessionCache.cacheSession(playerUUID, new Session(playerUUID, serverInfo.getServerUUID(), time, null, null));
 
-        processing.submit(processors.info().playerPageUpdateProcessor(playerUUID));
+        processing.submit(processors.info().playerPageExportProcessor(playerUUID));
 
         JSONCache.invalidate(DataID.SERVERS);
     }
