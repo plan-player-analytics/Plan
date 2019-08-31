@@ -40,7 +40,8 @@ public class PageResponse extends Response {
     }
 
     public PageResponse(Page page) throws ParseException {
-        super(ResponseType.HTML);
+        this(ResponseType.HTML);
+        super.setHeader("HTTP/1.1 200 OK");
         setContent(page.toHtml());
     }
 

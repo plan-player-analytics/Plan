@@ -100,7 +100,7 @@ public class ResponseFactory {
 
     public Response networkPageResponse() {
         try {
-            return new NetworkPageResponse(pageFactory.networkPage());
+            return new PageResponse(pageFactory.networkPage());
         } catch (ParseException e) {
             return internalErrorResponse(e, "Failed to parse network page");
         }
@@ -201,7 +201,7 @@ public class ResponseFactory {
 
     public Response playerPageResponse(UUID playerUUID) {
         try {
-            return new PlayerPageResponse(playerUUID, pageFactory.playerPage(playerUUID).toHtml());
+            return new PageResponse(pageFactory.playerPage(playerUUID));
         } catch (IllegalStateException e) {
             return playerNotFound404();
         } catch (ParseException e) {
