@@ -18,10 +18,14 @@ package com.djrapitops.plan.delivery.webserver.cache;
 
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
+import com.djrapitops.plan.storage.file.ResourceCache;
+import com.djrapitops.plugin.task.AbsRunnable;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -112,5 +116,19 @@ public class JSONCache {
         List<String> identifiers = new ArrayList<>(cache.asMap().keySet());
         Collections.sort(identifiers);
         return identifiers;
+    }
+
+    @Singleton
+    public static class CleanTask extends AbsRunnable {
+
+        @Inject
+        public CleanTask() {
+        }
+
+        @Override
+        public void run() {
+            cleanUp();
+            ResourceCache.cleanUp();
+        }
     }
 }

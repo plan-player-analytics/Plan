@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.delivery.webserver;
 
-import com.djrapitops.plan.DebugChannels;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.auth.BasicAuthentication;
 import com.djrapitops.plan.delivery.webserver.response.PromptAuthorizationResponse;
@@ -102,7 +101,6 @@ public class RequestHandler implements HttpHandler {
             // Increase attempt count and block if too high
             Optional<Response> forbid = handlePasswordBruteForceAttempts(request, response);
             if (forbid.isPresent()) {
-                logger.getDebugLogger().logOn(DebugChannels.WEB_REQUESTS, "Blocked: " + request.getTargetString() + " -> " + request.getRemoteAddress());
                 response = forbid.get();
             }
 
@@ -111,7 +109,6 @@ public class RequestHandler implements HttpHandler {
                 responseHeaders.set("WWW-Authenticate", response.getHeader("WWW-Authenticate").orElse("Basic realm=\"Plan WebUser (/plan register)\""));
             }
 
-            logger.getDebugLogger().logOn(DebugChannels.WEB_REQUESTS, "Sending: " + request.getTargetString() + " -> " + request.getRemoteAddress());
             response.setResponseHeaders(responseHeaders);
             response.send(exchange, locale, theme);
         } catch (Exception e) {

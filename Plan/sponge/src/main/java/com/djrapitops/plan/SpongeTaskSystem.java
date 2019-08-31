@@ -17,6 +17,7 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.delivery.upkeep.PeriodicServerExportTask;
+import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.gathering.ShutdownHook;
 import com.djrapitops.plan.gathering.timed.SpongePingCounter;
@@ -44,6 +45,7 @@ public class SpongeTaskSystem extends TaskSystem {
     private final PlanConfig config;
     private final ShutdownHook shutdownHook;
     private final SpongeTPSCounter tpsCounter;
+    private final JSONCache.CleanTask jsonCacheCleanTask;
     private final PeriodicServerExportTask periodicServerExportTask;
     private final SpongePingCounter pingCounter;
     private final LogsFolderCleanTask logsFolderCleanTask;
@@ -65,6 +67,7 @@ public class SpongeTaskSystem extends TaskSystem {
             LogsFolderCleanTask logsFolderCleanTask,
             ConfigStoreTask configStoreTask,
             DBCleanTask dbCleanTask,
+            JSONCache.CleanTask jsonCacheCleanTask,
 
             PeriodicServerExportTask periodicServerExportTask
     ) {
@@ -80,6 +83,7 @@ public class SpongeTaskSystem extends TaskSystem {
         this.logsFolderCleanTask = logsFolderCleanTask;
         this.configStoreTask = configStoreTask;
         this.dbCleanTask = dbCleanTask;
+        this.jsonCacheCleanTask = jsonCacheCleanTask;
 
         this.periodicServerExportTask = periodicServerExportTask;
     }
@@ -103,6 +107,8 @@ public class SpongeTaskSystem extends TaskSystem {
                 TimeAmount.toTicks(20, TimeUnit.SECONDS),
                 TimeAmount.toTicks(config.get(TimeSettings.CLEAN_DATABASE_PERIOD), TimeUnit.MILLISECONDS)
         );
+        long minute = TimeAmount.toTicks(1, TimeUnit.MINUTES);
+        registerTask(jsonCacheCleanTask).runTaskTimerAsynchronously(minute, minute);
 
         if (config.get(ExportSettings.SERVER_PAGE)) {
             registerTask(periodicServerExportTask).runTaskTimerAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS), TimeAmount.toTicks(20L, TimeUnit.MINUTES));

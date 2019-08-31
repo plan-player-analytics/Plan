@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan;
 
+import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.gathering.timed.BungeePingCounter;
 import com.djrapitops.plan.gathering.timed.BungeeTPSCounter;
@@ -47,6 +48,7 @@ public class BungeeTaskSystem extends TaskSystem {
     private final LogsFolderCleanTask logsFolderCleanTask;
     private final NetworkConfigStoreTask networkConfigStoreTask;
     private final DBCleanTask dbCleanTask;
+    private final JSONCache.CleanTask jsonCacheCleanTask;
     private final ExtensionServerMethodCallerTask extensionServerMethodCallerTask;
 
     @Inject
@@ -59,6 +61,7 @@ public class BungeeTaskSystem extends TaskSystem {
             LogsFolderCleanTask logsFolderCleanTask,
             NetworkConfigStoreTask networkConfigStoreTask,
             DBCleanTask dbCleanTask,
+            JSONCache.CleanTask jsonCacheCleanTask,
             ExtensionServerMethodCallerTask extensionServerMethodCallerTask
     ) {
         super(runnableFactory);
@@ -70,6 +73,7 @@ public class BungeeTaskSystem extends TaskSystem {
         this.logsFolderCleanTask = logsFolderCleanTask;
         this.networkConfigStoreTask = networkConfigStoreTask;
         this.dbCleanTask = dbCleanTask;
+        this.jsonCacheCleanTask = jsonCacheCleanTask;
         this.extensionServerMethodCallerTask = extensionServerMethodCallerTask;
     }
 
@@ -97,6 +101,8 @@ public class BungeeTaskSystem extends TaskSystem {
                 TimeAmount.toTicks(20, TimeUnit.SECONDS),
                 TimeAmount.toTicks(config.get(TimeSettings.CLEAN_DATABASE_PERIOD), TimeUnit.MILLISECONDS)
         );
+        long minute = TimeAmount.toTicks(1, TimeUnit.MINUTES);
+        registerTask(jsonCacheCleanTask).runTaskTimerAsynchronously(minute, minute);
 
         long extensionRefreshPeriod = TimeAmount.toTicks(config.get(TimeSettings.EXTENSION_DATA_REFRESH_PERIOD), TimeUnit.MILLISECONDS);
         registerTask(extensionServerMethodCallerTask).runTaskTimerAsynchronously(
