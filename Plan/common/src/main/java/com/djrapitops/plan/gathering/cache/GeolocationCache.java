@@ -25,6 +25,8 @@ import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CountryResponse;
@@ -43,8 +45,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -61,7 +62,7 @@ public class GeolocationCache implements SubSystem {
     private final PlanFiles files;
     private final PlanConfig config;
     private final PluginLogger logger;
-    private final Map<String, String> cached;
+    private final Cache<String, String> cache;
 
     private File geolocationDB;
 
@@ -77,7 +78,9 @@ public class GeolocationCache implements SubSystem {
         this.config = config;
         this.logger = logger;
 
-        this.cached = new HashMap<>();
+        this.cache = Caffeine.newBuilder()
+                .expireAfterAccess(1, TimeUnit.MINUTES)
+                .build();
     }
 
     @Override
@@ -109,16 +112,7 @@ public class GeolocationCache implements SubSystem {
      * @see #getUnCachedCountry(String)
      */
     public String getCountry(String ipAddress) {
-        String country = getCachedCountry(ipAddress);
-
-        if (country != null) {
-            return country;
-        } else {
-            country = getUnCachedCountry(ipAddress);
-            cached.put(ipAddress, country);
-
-            return country;
-        }
+        return cache.get(ipAddress, this::getUnCachedCountry);
     }
 
     /**
@@ -128,7 +122,7 @@ public class GeolocationCache implements SubSystem {
      * @return The cached country, {@code null} if the country is not cached
      */
     private String getCachedCountry(String ipAddress) {
-        return cached.get(ipAddress);
+        return cache.getIfPresent(ipAddress);
     }
 
     /**
@@ -200,18 +194,19 @@ public class GeolocationCache implements SubSystem {
      * @return true if the IP Address is cached
      */
     boolean isCached(String ipAddress) {
-        return cached.containsKey(ipAddress);
+        return cache.getIfPresent(ipAddress) != null;
     }
 
     @Override
     public void disable() {
-        cached.clear();
+        clearCache();
     }
 
     /**
      * Clears the cache
      */
     public void clearCache() {
-        cached.clear();
+        cache.invalidateAll();
+        cache.cleanUp();
     }
 }
