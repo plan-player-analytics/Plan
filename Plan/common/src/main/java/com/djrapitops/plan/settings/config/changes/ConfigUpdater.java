@@ -129,7 +129,10 @@ public class ConfigUpdater {
 
                 // 5.0.0
                 new ConfigChange.Removed("Display_options.Sessions.Replace_accordion_with_table"),
-                new ConfigChange.Removed("Display_options.Sessions.Show_most_played_world_in_title")
+                new ConfigChange.Removed("Display_options.Sessions.Show_most_played_world_in_title"),
+                new ConfigChange.Removed("Time.Thresholds.Activity_index.Login_threshold"),
+                new ConfigChange.Removed("Time.Periodic_tasks.Clean_caches_every"),
+                new ConfigChange.Removed("Display_options.Show_player_IPs")
         };
     }
 

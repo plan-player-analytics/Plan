@@ -39,7 +39,6 @@ public class DisplaySettings {
     public static final Setting<Integer> PLAYERS_PER_SERVER_PAGE = new IntegerSetting("Display_options.Players_table.Show_on_server_page");
     public static final Setting<Integer> PLAYERS_PER_PLAYERS_PAGE = new IntegerSetting("Display_options.Players_table.Show_on_players_page");
     public static final Setting<Boolean> OPEN_PLAYER_LINKS_IN_NEW_TAB = new BooleanSetting("Display_options.Open_player_links_in_new_tab");
-    public static final Setting<Boolean> PLAYER_IPS = new BooleanSetting("Display_options.Show_player_IPs");
     public static final Setting<Boolean> GAPS_IN_GRAPH_DATA = new BooleanSetting("Display_options.Graphs.Show_gaps_in_data");
     public static final Setting<Integer> GRAPH_TPS_THRESHOLD_HIGH = new IntegerSetting("Display_options.Graphs.TPS.High_threshold");
     public static final Setting<Integer> GRAPH_TPS_THRESHOLD_MED = new IntegerSetting("Display_options.Graphs.TPS.Medium_threshold");

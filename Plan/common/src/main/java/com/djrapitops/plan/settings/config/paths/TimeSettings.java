@@ -17,7 +17,6 @@
 package com.djrapitops.plan.settings.config.paths;
 
 import com.djrapitops.plan.settings.config.paths.key.BooleanSetting;
-import com.djrapitops.plan.settings.config.paths.key.IntegerSetting;
 import com.djrapitops.plan.settings.config.paths.key.Setting;
 import com.djrapitops.plan.settings.config.paths.key.TimeSetting;
 
@@ -33,14 +32,12 @@ public class TimeSettings {
     public static final Setting<Long> PING_PLAYER_LOGIN_DELAY = new TimeSetting("Time.Delays.Ping_player_join_delay");
     public static final Setting<Long> DB_TRANSACTION_FINISH_WAIT_DELAY = new TimeSetting("Time.Delays.Wait_for_DB_Transactions_on_disable");
     public static final Setting<Long> AFK_THRESHOLD = new TimeSetting("Time.Thresholds.AFK_threshold");
-    public static final Setting<Integer> ACTIVE_LOGIN_THRESHOLD = new IntegerSetting("Time.Thresholds.Activity_index.Login_threshold", Setting::timeValidator);
     public static final Setting<Long> ACTIVE_PLAY_THRESHOLD = new TimeSetting("Time.Thresholds.Activity_index.Playtime_threshold");
     public static final Setting<Long> DELETE_INACTIVE_PLAYERS_AFTER = new TimeSetting("Time.Thresholds.Remove_inactive_player_data_after");
     public static final Setting<Long> DELETE_TPS_DATA_AFTER = new TimeSetting("Time.Thresholds.Remove_time_series_data_after");
     public static final Setting<Long> DELETE_PING_DATA_AFTER = new TimeSetting("Time.Thresholds.Remove_ping_data_after");
     public static final Setting<Long> ANALYSIS_REFRESH_PERIOD = new TimeSetting("Time.Periodic_tasks.Analysis_refresh_every");
     public static final Setting<Long> EXTENSION_DATA_REFRESH_PERIOD = new TimeSetting("Time.Periodic_tasks.Extension_data_refresh_every");
-    public static final Setting<Long> CLEAN_CACHE_PERIOD = new TimeSetting("Time.Periodic_tasks.Clean_caches_every");
     public static final Setting<Long> CLEAN_DATABASE_PERIOD = new TimeSetting("Time.Periodic_tasks.Clean_Database_every");
     public static final Setting<Long> CONFIG_UPDATE_INTERVAL = new TimeSetting("Time.Periodic_tasks.Check_DB_for_server_config_files_every");
 
