@@ -107,7 +107,7 @@ public class Exporter {
             return true;
         } catch (IOException | NotFoundException | ParseException e) {
             failedServers.add(serverUUID);
-            throw new ExportException("Failed to export server: " + server.getIdentifiableName() + " (Attempts disabled until next reload), " + e.getMessage(), e);
+            throw new ExportException("Failed to export server: " + server.getIdentifiableName() + " (Attempts disabled until next reload), " + e.toString(), e);
         }
     }
 
@@ -127,7 +127,7 @@ public class Exporter {
             playerPageExporter.export(toDirectory, playerUUID, playerName);
             return true;
         } catch (IOException | NotFoundException | ParseException e) {
-            throw new ExportException("Failed to export player: " + playerName + ", " + e.getMessage(), e);
+            throw new ExportException("Failed to export player: " + playerName + ", " + e.toString(), e);
         }
     }
 
@@ -139,7 +139,7 @@ public class Exporter {
             playersPageExporter.export(toDirectory);
             return true;
         } catch (IOException | NotFoundException | ParseException e) {
-            throw new ExportException("Failed to export players page, " + e.getMessage(), e);
+            throw new ExportException("Failed to export players page, " + e.toString(), e);
         }
     }
 
@@ -159,7 +159,7 @@ public class Exporter {
             playerJSONExporter.export(toDirectory, playerUUID, playerName);
             return true;
         } catch (IOException e) {
-            throw new ExportException("Failed to export player: " + playerName + ", " + e.getMessage(), e);
+            throw new ExportException("Failed to export player: " + playerName + ", " + e.toString(), e);
         }
     }
 }

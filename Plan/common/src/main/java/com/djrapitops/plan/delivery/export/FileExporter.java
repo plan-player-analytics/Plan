@@ -59,11 +59,10 @@ abstract class FileExporter {
 
     void export(Path to, Resource resource) throws IOException {
         Files.createDirectories(to.getParent());
-        if (Files.exists(to)) Files.delete(to);
-        Files.createFile(to);
+
         try (
                 InputStream in = resource.asInputStream();
-                OutputStream out = Files.newOutputStream(to)
+                OutputStream out = Files.newOutputStream(to, StandardOpenOption.CREATE)
         ) {
             copy(in, out);
         }

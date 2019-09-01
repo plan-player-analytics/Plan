@@ -14,9 +14,8 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.upkeep;
+package com.djrapitops.plan.delivery.export;
 
-import com.djrapitops.plan.delivery.export.Exporter;
 import com.djrapitops.plan.exceptions.ExportException;
 import com.djrapitops.plan.utilities.java.ThrowingConsumer;
 import com.djrapitops.plugin.logging.L;

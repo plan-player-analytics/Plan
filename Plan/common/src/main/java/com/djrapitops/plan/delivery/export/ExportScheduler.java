@@ -17,7 +17,6 @@
 package com.djrapitops.plan.delivery.export;
 
 import com.djrapitops.plan.TaskSystem;
-import com.djrapitops.plan.delivery.upkeep.ExportTask;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
@@ -68,9 +67,17 @@ public class ExportScheduler {
 
     public void scheduleExport() {
         scheduleServerPageExport();
+        schedulePlayersPageExport();
     }
 
-    public void scheduleServerPageExport() {
+    private void schedulePlayersPageExport() {
+        long period = TimeAmount.toTicks(config.get(ExportSettings.EXPORT_PERIOD), TimeUnit.MILLISECONDS);
+        taskSystem.registerTask("Players page export",
+                new ExportTask(exporter, Exporter::exportPlayersPage, logger, errorHandler)
+        ).runTaskTimerAsynchronously(0L, period);
+    }
+
+    private void scheduleServerPageExport() {
         if (!config.get(ExportSettings.SERVER_PAGE)) return;
 
         Collection<Server> servers = dbSystem.getDatabase().query(ServerQueries.fetchPlanServerInformationCollection());
@@ -81,14 +88,10 @@ public class ExportScheduler {
         long offset = period / serverCount;
 
         Optional<Server> proxy = servers.stream().filter(Server::isProxy).findFirst();
-        proxy.ifPresent(server -> taskSystem.registerTask("Server export",
-                new ExportTask(exporter, exporter -> exporter.exportServerPage(server), logger, errorHandler))
+        proxy.ifPresent(mainServer -> taskSystem.registerTask("Network export",
+                new ExportTask(exporter, exporter -> exporter.exportServerPage(mainServer), logger, errorHandler))
                 .runTaskTimerAsynchronously(0L, period)
         );
-
-        taskSystem.registerTask("Players page export",
-                new ExportTask(exporter, Exporter::exportPlayersPage, logger, errorHandler)
-        ).runTaskTimerAsynchronously(0L, period);
 
         int offsetMultiplier = proxy.isPresent() ? 1 : 0; // Delay first server export if on a network.
         for (Server server : servers) {
