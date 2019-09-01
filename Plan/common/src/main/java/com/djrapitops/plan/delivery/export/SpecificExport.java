@@ -17,20 +17,16 @@
 package com.djrapitops.plan.delivery.export;
 
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
-import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.file.PlanFiles;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Abstract Html Export Task.
@@ -79,35 +75,10 @@ public abstract class SpecificExport {
         Files.write(to.toPath(), lines, StandardCharsets.UTF_8, StandardOpenOption.CREATE);
     }
 
-    File getServerFolder() {
-        File server = new File(getFolder(), "server");
-        server.mkdirs();
-        return server;
-    }
-
     File getPlayerFolder() {
         File player = new File(getFolder(), "player");
         player.mkdirs();
         return player;
     }
 
-    void exportPlayerPage(String playerName, String html) throws IOException {
-        List<String> lines = Arrays.asList(html.replace("../", "../../").split("\n"));
-
-        File htmlLocation = new File(getPlayerFolder(), URLEncoder.encode(playerName, "UTF-8").replace(".", "%2E"));
-        htmlLocation.mkdirs();
-        File exportFile = new File(htmlLocation, "index.html");
-
-        export(exportFile, lines);
-    }
-
-    void exportAvailablePlayerPage(UUID playerUUID, String name) throws IOException {
-        Response response = null; // TODO
-        if (response == null) {
-            return;
-        }
-
-        String html = response.getContent();
-        exportPlayerPage(name, html);
-    }
 }

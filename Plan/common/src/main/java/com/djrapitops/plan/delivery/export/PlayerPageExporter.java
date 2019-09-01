@@ -25,8 +25,6 @@ import com.djrapitops.plan.delivery.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.exceptions.ParseException;
 import com.djrapitops.plan.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.exceptions.connection.WebException;
-import com.djrapitops.plan.identification.Server;
-import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.file.PlanFiles;
@@ -41,86 +39,59 @@ import java.nio.file.Path;
 import java.util.UUID;
 
 /**
- * Handles exporting of /server page html, data and resources.
+ * Handles exporting of /player page html, data and resources.
  *
  * @author Rsl1122
  */
 @Singleton
-public class ServerPageExporter extends FileExporter {
+public class PlayerPageExporter extends FileExporter {
 
     private final PlanFiles files;
     private final PageFactory pageFactory;
     private final RootJSONHandler jsonHandler;
     private final Locale locale;
     private final Theme theme;
-    private final ServerInfo serverInfo;
 
     private final ExportPaths exportPaths;
 
     @Inject
-    public ServerPageExporter(
+    public PlayerPageExporter(
             PlanFiles files,
             PageFactory pageFactory,
             RootJSONHandler jsonHandler,
             Locale locale,
-            Theme theme,
-            ServerInfo serverInfo // To know if current server is a Proxy
+            Theme theme
     ) {
         this.files = files;
         this.pageFactory = pageFactory;
         this.jsonHandler = jsonHandler;
         this.locale = locale;
         this.theme = theme;
-        this.serverInfo = serverInfo;
 
         exportPaths = new ExportPaths();
     }
 
-    public void export(Path toDirectory, Server server) throws IOException, NotFoundException, ParseException {
+    public void export(Path toDirectory, UUID playerUUID, String playerName) throws IOException, NotFoundException, ParseException {
         exportRequiredResources(toDirectory);
-        exportJSON(toDirectory, server);
-        exportHtml(toDirectory, server);
+
+        Path playerDirectory = toDirectory.resolve("player/" + toFileName(playerName));
+        exportJSON(playerDirectory, playerUUID);
+        exportHtml(playerDirectory, playerUUID);
     }
 
-    private void exportHtml(Path toDirectory, Server server) throws IOException, NotFoundException, ParseException {
-        UUID serverUUID = server.getUuid();
-        Path to = toDirectory
-                .resolve(serverInfo.getServer().isProxy() ? "server/" + toFileName(server.getName()) : "server")
-                .resolve("index.html");
+    private void exportHtml(Path playerDirectory, UUID playerUUID) throws IOException, ParseException, NotFoundException {
+        Path to = playerDirectory.resolve("index.html");
 
-        Page page = pageFactory.serverPage(serverUUID);
-        export(to, exportPaths.resolveExportPaths(locale.replaceMatchingLanguage(page.toHtml())));
-    }
-
-    private void exportJSON(Path toDirectory, Server server) throws IOException, NotFoundException {
-        String serverName = server.getName();
-
-        exportJSON(toDirectory,
-                "serverOverview?server=" + serverName,
-                "onlineOverview?server=" + serverName,
-                "sessionsOverview?server=" + serverName,
-                "playerVersus?server=" + serverName,
-                "playerbaseOverview?server=" + serverName,
-                "performanceOverview?server=" + serverName,
-                "graph?type=performance&server=" + serverName,
-                "graph?type=aggregatedPing&server=" + serverName,
-                "graph?type=worldPie&server=" + serverName,
-                "graph?type=activity&server=" + serverName,
-                "graph?type=geolocation&server=" + serverName,
-                "graph?type=uniqueAndNew&server=" + serverName,
-                "graph?type=serverCalendar&server=" + serverName,
-                "graph?type=punchCard&server=" + serverName,
-                "players?server=" + serverName,
-                "kills?server=" + serverName,
-                "pingTable?server=" + serverName,
-                "sessions?server=" + serverName
-        );
-    }
-
-    private void exportJSON(Path toDirectory, String... resources) throws NotFoundException, IOException {
-        for (String resource : resources) {
-            exportJSON(toDirectory, resource);
+        try {
+            Page page = pageFactory.playerPage(playerUUID);
+            export(to, exportPaths.resolveExportPaths(locale.replaceMatchingLanguage(page.toHtml())));
+        } catch (IllegalStateException notFound) {
+            throw new NotFoundException(notFound.getMessage());
         }
+    }
+
+    private void exportJSON(Path toDirectory, UUID playerUUID) throws IOException, NotFoundException {
+        exportJSON(toDirectory, "player?player=" + playerUUID);
     }
 
     private void exportJSON(Path toDirectory, String resource) throws NotFoundException, IOException {
@@ -131,8 +102,8 @@ public class ServerPageExporter extends FileExporter {
 
         String jsonResourceName = toFileName(toJSONResourceName(resource)) + ".json";
 
-        export(toDirectory.resolve("data").resolve(jsonResourceName), found.getContent());
-        exportPaths.put("../v1/" + resource, toRelativePathFromRoot("data/" + jsonResourceName));
+        export(toDirectory.resolve(jsonResourceName), found.getContent());
+        exportPaths.put("../v1/" + resource, "./" + jsonResourceName);
     }
 
     private String toJSONResourceName(String resource) {
@@ -173,9 +144,8 @@ public class ServerPageExporter extends FileExporter {
                 "js/xmlhttprequests.js",
                 "js/color-selector.js",
                 "js/sessionAccordion.js",
-                "js/pingTable.js",
                 "js/graphs.js",
-                "js/server-values.js"
+                "js/player-values.js"
         );
     }
 
@@ -207,8 +177,8 @@ public class ServerPageExporter extends FileExporter {
     }
 
     private String toRelativePathFromRoot(String resourceName) {
-        // Server html is exported at /server/<name>/index.html or /server/index.html
-        return (serverInfo.getServer().isProxy() ? "../../" : "../") + toNonRelativePath(resourceName);
+        // Player html is exported at /player/<name>/index.html
+        return "../../" + toNonRelativePath(resourceName);
     }
 
     private String toNonRelativePath(String resourceName) {

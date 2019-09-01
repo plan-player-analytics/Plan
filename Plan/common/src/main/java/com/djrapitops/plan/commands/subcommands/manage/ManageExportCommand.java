@@ -16,8 +16,10 @@
  */
 package com.djrapitops.plan.commands.subcommands.manage;
 
+import com.djrapitops.plan.delivery.export.Exporter;
 import com.djrapitops.plan.delivery.export.HtmlExport;
 import com.djrapitops.plan.delivery.export.JSONExport;
+import com.djrapitops.plan.exceptions.ExportException;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.Permissions;
@@ -57,6 +59,7 @@ public class ManageExportCommand extends CommandNode {
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
+    private final Exporter exporter;
     private final HtmlExport htmlExport;
     private final JSONExport jsonExport;
     private final Processing processing;
@@ -68,6 +71,7 @@ public class ManageExportCommand extends CommandNode {
             PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
+            Exporter exporter,
             Processing processing,
             HtmlExport htmlExport,
             JSONExport jsonExport
@@ -79,6 +83,7 @@ public class ManageExportCommand extends CommandNode {
         this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
+        this.exporter = exporter;
         this.htmlExport = htmlExport;
         this.jsonExport = jsonExport;
         this.processing = processing;
@@ -138,13 +143,15 @@ public class ManageExportCommand extends CommandNode {
         processing.submitNonCritical(() -> {
             Map<UUID, String> players = dbSystem.getDatabase().query(UserIdentifierQueries.fetchAllPlayerNames());
             int size = players.size();
+            int failed = 0;
+
             int i = 1;
             for (Map.Entry<UUID, String> entry : players.entrySet()) {
-                if (exportPlayerJSON) {
-                    jsonExport.exportPlayerJSON(entry.getKey());
-                }
-                if (exportPlayerHTML) {
-                    htmlExport.exportPlayerPage(entry.getKey(), entry.getValue());
+                try {
+                    if (exportPlayerJSON) jsonExport.exportPlayerJSON(entry.getKey());
+                    if (exportPlayerHTML) exporter.exportPlayerPage(entry.getKey(), entry.getValue());
+                } catch (ExportException e) {
+                    failed++;
                 }
                 i++;
                 if (i % 1000 == 0) {
@@ -152,6 +159,11 @@ public class ManageExportCommand extends CommandNode {
                 }
             }
             sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
+            if (failed != 0) {
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL));
+                sender.sendMessage(" §2✔: §f" + (i - failed));
+                sender.sendMessage(" §c✕: §f" + failed);
+            }
         });
     }
 }

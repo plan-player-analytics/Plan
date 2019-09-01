@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.gathering.listeners.velocity;
 
+import com.djrapitops.plan.delivery.export.Exporter;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.extension.CallEvents;
@@ -25,9 +26,9 @@ import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
-import com.djrapitops.plan.processing.processors.Processors;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
+import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.events.GeoInfoStoreTransaction;
@@ -57,10 +58,10 @@ import java.util.UUID;
 public class PlayerOnlineListener {
 
     private final PlanConfig config;
-    private final Processors processors;
     private final Processing processing;
     private final DBSystem dbSystem;
     private final ExtensionServiceImplementation extensionService;
+    private final Exporter exporter;
     private final GeolocationCache geolocationCache;
     private final SessionCache sessionCache;
     private final ServerInfo serverInfo;
@@ -70,19 +71,18 @@ public class PlayerOnlineListener {
     public PlayerOnlineListener(
             PlanConfig config,
             Processing processing,
-            Processors processors,
             DBSystem dbSystem,
             ExtensionServiceImplementation extensionService,
-            GeolocationCache geolocationCache,
+            Exporter exporter, GeolocationCache geolocationCache,
             SessionCache sessionCache,
             ServerInfo serverInfo,
             ErrorHandler errorHandler
     ) {
         this.config = config;
         this.processing = processing;
-        this.processors = processors;
         this.dbSystem = dbSystem;
         this.extensionService = extensionService;
+        this.exporter = exporter;
         this.geolocationCache = geolocationCache;
         this.sessionCache = sessionCache;
         this.serverInfo = serverInfo;
@@ -117,8 +117,10 @@ public class PlayerOnlineListener {
         }
 
         database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> time, playerName));
-        processing.submit(processors.info().playerPageExportProcessor(playerUUID));
         processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
+        if (config.get(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
+            processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
+        }
 
         UUID serverUUID = serverInfo.getServerUUID();
         JSONCache.invalidateMatching(DataID.SERVER_OVERVIEW);
@@ -145,10 +147,13 @@ public class PlayerOnlineListener {
 
     public void actOnLogout(DisconnectEvent event) {
         Player player = event.getPlayer();
+        String playerName = player.getUsername();
         UUID playerUUID = player.getUniqueId();
 
         sessionCache.endSession(playerUUID, System.currentTimeMillis());
-        processing.submit(processors.info().playerPageExportProcessor(playerUUID));
+        if (config.get(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
+            processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
+        }
 
         processing.submit(() -> {
             JSONCache.invalidateMatching(
@@ -180,13 +185,16 @@ public class PlayerOnlineListener {
 
     public void actOnServerSwitch(ServerConnectedEvent event) {
         Player player = event.getPlayer();
+        String playerName = player.getUsername();
         UUID playerUUID = player.getUniqueId();
         long time = System.currentTimeMillis();
 
         // Replaces the current session in the cache.
         sessionCache.cacheSession(playerUUID, new Session(playerUUID, serverInfo.getServerUUID(), time, null, null));
 
-        processing.submit(processors.info().playerPageExportProcessor(playerUUID));
+        if (config.get(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
+            processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
+        }
 
         JSONCache.invalidate(DataID.SERVERS);
     }

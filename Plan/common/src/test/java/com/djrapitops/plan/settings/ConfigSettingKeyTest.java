@@ -115,7 +115,6 @@ public class ConfigSettingKeyTest {
         settings.remove(PluginSettings.BUNGEE_COPY_CONFIG);
         settings.remove(DatabaseSettings.TYPE);
         settings.remove(DisplaySettings.WORLD_ALIASES);
-        settings.remove(TimeSettings.ANALYSIS_REFRESH_PERIOD);
         return settings;
     }
 

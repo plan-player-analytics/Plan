@@ -17,23 +17,14 @@
 package com.djrapitops.plan.delivery.export;
 
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
-import com.djrapitops.plan.delivery.rendering.pages.NetworkPage;
 import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
-import com.djrapitops.plan.delivery.rendering.pages.PlayerPage;
-import com.djrapitops.plan.exceptions.ExportException;
 import com.djrapitops.plan.exceptions.ParseException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
-import com.djrapitops.plan.gathering.domain.BaseUser;
-import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
-import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
-import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -45,8 +36,8 @@ import javax.inject.Singleton;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Class responsible for Html Export task.
@@ -92,50 +83,6 @@ public class HtmlExport extends SpecificExport {
         return config.get(ExportSettings.HTML_EXPORT_PATH);
     }
 
-    public void exportServer(Server server) {
-        Database database = dbSystem.getDatabase();
-//        boolean hasProxy = database.query(ServerQueries.fetchProxyServerInformation()).isPresent();
-//        if (serverInfo.getServer().isNotProxy() && hasProxy) {
-//            return;
-//        }
-        try {
-            exporter.exportServerPage(server);
-        } catch (ExportException e) {
-            errorHandler.log(L.WARN, this.getClass(), e);
-        }
-    }
-
-    public void exportPlayerPage(UUID playerUUID) {
-        Optional<String> name = dbSystem.getDatabase().query(UserIdentifierQueries.fetchPlayerNameOf(playerUUID));
-        exportPlayerPage(playerUUID, name.orElse("Unknown"));
-    }
-
-    public void exportPlayerPage(UUID playerUUID, String playerName) {
-        PlayerPage playerPage = pageFactory.playerPage(playerUUID);
-        try {
-            exportPlayerPage(playerName, playerPage.toHtml());
-        } catch (ParseException | IOException e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
-        }
-    }
-
-    public void exportCachedPlayerPage(UUID playerUUID) {
-        Database database = dbSystem.getDatabase();
-        boolean hasProxy = database.query(ServerQueries.fetchProxyServerInformation()).isPresent();
-        if (serverInfo.getServer().isNotProxy() && hasProxy) {
-            return;
-        }
-
-        database.query(UserIdentifierQueries.fetchPlayerNameOf(playerUUID))
-                .ifPresent(playerName -> {
-                    try {
-                        exportAvailablePlayerPage(playerUUID, playerName);
-                    } catch (IOException e) {
-                        errorHandler.log(L.WARN, this.getClass(), e);
-                    }
-                });
-    }
-
     public void exportPlayersPage() {
         try {
             String html = pageFactory.playersPage().toHtml()
@@ -155,58 +102,4 @@ public class HtmlExport extends SpecificExport {
         }
     }
 
-    public void exportAvailablePlayers() {
-        try {
-            Collection<BaseUser> users = dbSystem.getDatabase().query(BaseUserQueries.fetchAllBaseUsers());
-            for (BaseUser user : users) {
-                exportAvailablePlayerPage(user.getUuid(), user.getName());
-            }
-        } catch (IOException | DBOpException e) {
-            errorHandler.log(L.WARN, this.getClass(), e);
-        }
-    }
-
-    public void exportNetworkPage() {
-        if (serverInfo.getServer().isNotProxy()) {
-            return;
-        }
-
-        NetworkPage networkPage = pageFactory.networkPage();
-        // TODO
-    }
-
-    private void copyFromJar(String[] resources) {
-        for (String resource : resources) {
-            try {
-                copyFromJar(resource);
-            } catch (IOException e) {
-                errorHandler.log(L.WARN, this.getClass(), e);
-            }
-        }
-    }
-
-    private void copyFromJar(String resource) throws IOException {
-        List<String> lines = files.getCustomizableResourceOrDefault(resource).asLines();
-
-        File to = new File(getFolder(), resource.replace("web/", "").replace("/", File.separator));
-        File locationFolder = to.getParentFile();
-
-        Verify.isTrue(locationFolder.exists() && locationFolder.isDirectory() || locationFolder.mkdirs(),
-                () -> new FileNotFoundException("Output folder could not be created at" + locationFolder.getAbsolutePath()));
-
-        if (to.exists()) {
-            Files.delete(to.toPath());
-            if (!to.createNewFile()) {
-                return;
-            }
-        }
-
-        export(to, lines);
-    }
-
-    public void exportAvailableServerPages() {
-        for (Server server : dbSystem.getDatabase().query(ServerQueries.fetchPlanServerInformationCollection())) {
-            exportServer(server);
-        }
-    }
 }

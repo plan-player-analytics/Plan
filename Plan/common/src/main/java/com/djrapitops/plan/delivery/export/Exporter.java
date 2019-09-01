@@ -43,6 +43,7 @@ public class Exporter {
 
     private final PlanFiles files;
     private final PlanConfig config;
+    private final PlayerPageExporter playerPageExporter;
     private final ServerPageExporter serverPageExporter;
     private final NetworkPageExporter networkPageExporter;
 
@@ -52,11 +53,13 @@ public class Exporter {
     public Exporter(
             PlanFiles files,
             PlanConfig config,
+            PlayerPageExporter playerPageExporter,
             ServerPageExporter serverPageExporter,
             NetworkPageExporter networkPageExporter
     ) {
         this.files = files;
         this.config = config;
+        this.playerPageExporter = playerPageExporter;
         this.serverPageExporter = serverPageExporter;
         this.networkPageExporter = networkPageExporter;
 
@@ -74,12 +77,12 @@ public class Exporter {
      * Export a page of a server.
      *
      * @param server Server which page is going to be exported
-     * @return false if the page was not exported due to previous failure.
-     * @throws ExportException If the export failed
+     * @return false if the page was not exported due to previous failure or is disabled in config.
+     * @throws ExportException If the export failed due to IO, NotFound or ParseException.
      */
     public boolean exportServerPage(Server server) throws ExportException {
         UUID serverUUID = server.getUuid();
-        if (failedServers.contains(serverUUID)) return false;
+        if (failedServers.contains(serverUUID) || !config.get(ExportSettings.SERVER_PAGE)) return false;
 
         try {
             Path toDirectory = getPageExportDirectory();
@@ -92,6 +95,26 @@ public class Exporter {
         } catch (IOException | NotFoundException | ParseException e) {
             failedServers.add(serverUUID);
             throw new ExportException("Failed to export server: " + server.getIdentifiableName() + " (Attempts disabled until next reload), " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Export page of a player.
+     *
+     * @param playerUUID UUID of the player.
+     * @param playerName Name of the player.
+     * @return false if the page was not exported due to config settings.
+     * @throws ExportException If the export failed due to IO, NotFound or ParseException.
+     */
+    public boolean exportPlayerPage(UUID playerUUID, String playerName) throws ExportException {
+        Path toDirectory = getPageExportDirectory();
+        if (!config.get(ExportSettings.PLAYER_PAGES)) return false;
+
+        try {
+            playerPageExporter.export(toDirectory, playerUUID, playerName);
+            return true;
+        } catch (IOException | NotFoundException | ParseException e) {
+            throw new ExportException("Failed to export player: " + playerName + ", " + e.getMessage(), e);
         }
     }
 }

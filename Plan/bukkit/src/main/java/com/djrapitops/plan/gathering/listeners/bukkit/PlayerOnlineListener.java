@@ -17,6 +17,7 @@
 package com.djrapitops.plan.gathering.listeners.bukkit;
 
 import com.djrapitops.plan.delivery.domain.Nickname;
+import com.djrapitops.plan.delivery.export.Exporter;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.extension.CallEvents;
@@ -28,9 +29,9 @@ import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.listeners.Status;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
-import com.djrapitops.plan.processing.processors.Processors;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
+import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.events.*;
@@ -57,11 +58,11 @@ import java.util.UUID;
 public class PlayerOnlineListener implements Listener {
 
     private final PlanConfig config;
-    private final Processors processors;
     private final Processing processing;
     private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
     private final ExtensionServiceImplementation extensionService;
+    private final Exporter exporter;
     private final GeolocationCache geolocationCache;
     private final NicknameCache nicknameCache;
     private final SessionCache sessionCache;
@@ -71,11 +72,11 @@ public class PlayerOnlineListener implements Listener {
     @Inject
     public PlayerOnlineListener(
             PlanConfig config,
-            Processors processors,
             Processing processing,
             ServerInfo serverInfo,
             DBSystem dbSystem,
             ExtensionServiceImplementation extensionService,
+            Exporter exporter,
             GeolocationCache geolocationCache,
             NicknameCache nicknameCache,
             SessionCache sessionCache,
@@ -83,11 +84,11 @@ public class PlayerOnlineListener implements Listener {
             ErrorHandler errorHandler
     ) {
         this.config = config;
-        this.processors = processors;
         this.processing = processing;
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
         this.extensionService = extensionService;
+        this.exporter = exporter;
         this.geolocationCache = geolocationCache;
         this.nicknameCache = nicknameCache;
         this.sessionCache = sessionCache;
@@ -151,7 +152,7 @@ public class PlayerOnlineListener implements Listener {
         long time = System.currentTimeMillis();
         JSONCache.invalidate(DataID.SERVER_OVERVIEW, serverUUID);
         JSONCache.invalidate(DataID.GRAPH_PERFORMANCE, serverUUID);
-        
+
         BukkitAFKListener.AFK_TRACKER.performedAction(playerUUID, time);
 
         String world = player.getWorld().getName();
@@ -181,8 +182,10 @@ public class PlayerOnlineListener implements Listener {
                 (uuid, name) -> name.equals(nicknameCache.getDisplayName(uuid))
         ));
 
-        processing.submitNonCritical(processors.info().playerPageExportProcessor(playerUUID));
         processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
+        if (config.get(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
+            processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
+        }
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -205,6 +208,7 @@ public class PlayerOnlineListener implements Listener {
     private void actOnQuitEvent(PlayerQuitEvent event) {
         long time = System.currentTimeMillis();
         Player player = event.getPlayer();
+        String playerName = player.getName();
         UUID playerUUID = player.getUniqueId();
         UUID serverUUID = serverInfo.getServerUUID();
         JSONCache.invalidate(DataID.SERVER_OVERVIEW, serverUUID);
@@ -219,6 +223,8 @@ public class PlayerOnlineListener implements Listener {
         sessionCache.endSession(playerUUID, time)
                 .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new SessionEndTransaction(endedSession)));
 
-        processing.submit(processors.info().playerPageExportProcessor(playerUUID));
+        if (config.get(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
+            processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
+        }
     }
 }

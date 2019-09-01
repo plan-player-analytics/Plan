@@ -17,8 +17,9 @@
 package com.djrapitops.plan.commands.subcommands;
 
 import com.djrapitops.plan.PlanSystem;
-import com.djrapitops.plan.delivery.export.HtmlExport;
+import com.djrapitops.plan.delivery.export.Exporter;
 import com.djrapitops.plan.delivery.webserver.WebServer;
+import com.djrapitops.plan.exceptions.ExportException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -53,7 +54,7 @@ public class AnalyzeCommand extends CommandNode {
 
     private final Locale locale;
     private final Processing processing;
-    private final HtmlExport export;
+    private final Exporter exporter;
     private final ServerInfo serverInfo;
     private final WebServer webServer;
     private final DBSystem dbSystem;
@@ -63,7 +64,7 @@ public class AnalyzeCommand extends CommandNode {
     public AnalyzeCommand(
             Locale locale,
             Processing processing,
-            HtmlExport export,
+            Exporter exporter,
             ServerInfo serverInfo,
             WebServer webServer,
             DBSystem dbSystem,
@@ -73,7 +74,7 @@ public class AnalyzeCommand extends CommandNode {
 
         this.locale = locale;
         this.processing = processing;
-        this.export = export;
+        this.exporter = exporter;
         this.serverInfo = serverInfo;
         this.webServer = webServer;
         this.dbSystem = dbSystem;
@@ -97,9 +98,9 @@ public class AnalyzeCommand extends CommandNode {
             try {
                 Server server = getServer(args);
                 sendWebUserNotificationIfNecessary(sender);
-                export.exportServer(server);  // TODO
+                exporter.exportServerPage(server);
                 sendLink(server, sender);
-            } catch (DBOpException e) {
+            } catch (DBOpException | ExportException e) {
                 sender.sendMessage("§cError occurred: " + e.toString());
                 errorHandler.log(L.ERROR, this.getClass(), e);
             }
