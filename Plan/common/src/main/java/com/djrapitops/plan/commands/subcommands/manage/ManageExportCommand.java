@@ -18,6 +18,7 @@ package com.djrapitops.plan.commands.subcommands.manage;
 
 import com.djrapitops.plan.delivery.export.Exporter;
 import com.djrapitops.plan.exceptions.ExportException;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -55,6 +56,7 @@ public class ManageExportCommand extends CommandNode {
     private final ColorScheme colorScheme;
     private final PlanConfig config;
     private final DBSystem dbSystem;
+    private final ServerInfo serverInfo;
     private final Exporter exporter;
     private final Processing processing;
 
@@ -64,6 +66,7 @@ public class ManageExportCommand extends CommandNode {
             ColorScheme colorScheme,
             PlanConfig config,
             DBSystem dbSystem,
+            ServerInfo serverInfo,
             Exporter exporter,
             Processing processing
     ) {
@@ -73,6 +76,7 @@ public class ManageExportCommand extends CommandNode {
         this.colorScheme = colorScheme;
         this.config = config;
         this.dbSystem = dbSystem;
+        this.serverInfo = serverInfo;
         this.exporter = exporter;
         this.processing = processing;
 
@@ -89,7 +93,7 @@ public class ManageExportCommand extends CommandNode {
         String exportArg = args[0];
 
         if ("list".equals(exportArg)) {
-            sender.sendMessage("> " + colorScheme.getMainColor() + "players");
+            sender.sendMessage("> " + colorScheme.getMainColor() + "players, server_json");
             return;
         }
 
@@ -105,15 +109,30 @@ public class ManageExportCommand extends CommandNode {
     private Consumer<Sender> getExportFunction(String exportArg) {
         if ("players".equals(exportArg)) {
             return this::exportPlayers;
+        } else if ("server_json".endsWith(exportArg)) {
+            return this::exportServerJSON;
         }
         return sender -> sender.sendMessage(locale.getString(ManageLang.FAIL_EXPORTER_NOT_FOUND, exportArg));
     }
 
-    private void exportPlayers(Sender sender) {
-        sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
-        if (config.get(ExportSettings.PLAYERS_PAGE)) {
-            processing.submitNonCritical(exporter::exportPlayersPage);
+    private void exportServerJSON(Sender sender) {
+        if (!config.get(ExportSettings.SERVER_JSON)) {
+            sender.sendMessage("§c'" + ExportSettings.SERVER_JSON.getPath() + "': false");
+            return;
         }
+        processing.submitNonCritical(() -> {
+            try {
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
+                exporter.exportServerJSON(serverInfo.getServer());
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
+            } catch (ExportException e) {
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL));
+                sender.sendMessage("§c" + e.toString());
+            }
+        });
+    }
+
+    private void exportPlayers(Sender sender) {
         Boolean exportPlayerJSON = config.get(ExportSettings.PLAYER_JSON);
         Boolean exportPlayerHTML = config.get(ExportSettings.PLAYER_PAGES);
         if (!exportPlayerJSON && !exportPlayerHTML) {
@@ -123,6 +142,11 @@ public class ManageExportCommand extends CommandNode {
         }
 
         processing.submitNonCritical(() -> {
+            sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
+            if (config.get(ExportSettings.PLAYERS_PAGE)) {
+                processing.submitNonCritical(exporter::exportPlayersPage);
+            }
+
             Map<UUID, String> players = dbSystem.getDatabase().query(UserIdentifierQueries.fetchAllPlayerNames());
             int size = players.size();
             int failed = 0;

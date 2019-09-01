@@ -96,7 +96,10 @@ public class ExportScheduler {
         int offsetMultiplier = proxy.isPresent() ? 1 : 0; // Delay first server export if on a network.
         for (Server server : servers) {
             taskSystem.registerTask("Server export",
-                    new ExportTask(exporter, exporter -> exporter.exportServerPage(server), logger, errorHandler))
+                    new ExportTask(exporter, exporter -> {
+                        exporter.exportServerPage(server);
+                        exporter.exportServerJSON(server);
+                    }, logger, errorHandler))
                     .runTaskTimerAsynchronously(offset * offsetMultiplier, period);
             offsetMultiplier++;
         }

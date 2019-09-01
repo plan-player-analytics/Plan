@@ -92,7 +92,7 @@ public class ServerPageExporter extends FileExporter {
         export(to, exportPaths.resolveExportPaths(locale.replaceMatchingLanguage(page.toHtml())));
     }
 
-    private void exportJSON(Path toDirectory, Server server) throws IOException, NotFoundException {
+    public void exportJSON(Path toDirectory, Server server) throws IOException, NotFoundException {
         String serverName = server.getName();
 
         exportJSON(toDirectory,

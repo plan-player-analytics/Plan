@@ -39,7 +39,7 @@ import java.util.UUID;
  * @author Rsl1122
  */
 @Singleton
-public class Exporter {
+public class Exporter extends FileExporter {
 
     private final PlanFiles files;
     private final PlanConfig config;
@@ -106,6 +106,24 @@ public class Exporter {
             }
             return true;
         } catch (IOException | NotFoundException | ParseException e) {
+            failedServers.add(serverUUID);
+            throw new ExportException("Failed to export server: " + server.getIdentifiableName() + " (Attempts disabled until next reload), " + e.toString(), e);
+        }
+    }
+
+    public boolean exportServerJSON(Server server) throws ExportException {
+        UUID serverUUID = server.getUuid();
+        if (failedServers.contains(serverUUID) || !config.get(ExportSettings.SERVER_JSON)) return false;
+
+        try {
+            Path toDirectory = getJSONExportDirectory().resolve(toFileName(server.getName()));
+            if (server.isProxy()) {
+                networkPageExporter.exportJSON(toDirectory, server);
+            } else {
+                serverPageExporter.exportJSON(toDirectory, server);
+            }
+            return true;
+        } catch (IOException | NotFoundException e) {
             failedServers.add(serverUUID);
             throw new ExportException("Failed to export server: " + server.getIdentifiableName() + " (Attempts disabled until next reload), " + e.toString(), e);
         }
