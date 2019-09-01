@@ -19,6 +19,7 @@ package com.djrapitops.plan.settings.config.paths;
 import com.djrapitops.plan.settings.config.paths.key.BooleanSetting;
 import com.djrapitops.plan.settings.config.paths.key.Setting;
 import com.djrapitops.plan.settings.config.paths.key.StringSetting;
+import com.djrapitops.plan.settings.config.paths.key.TimeSetting;
 
 /**
  * {@link Setting} values that are in "Export" section.
@@ -29,13 +30,13 @@ public class ExportSettings {
 
     public static final Setting<String> HTML_EXPORT_PATH = new StringSetting("Export.HTML_Export_path");
     public static final Setting<String> JSON_EXPORT_PATH = new StringSetting("Export.JSON_Export_path");
-    public static final Setting<Boolean> JS_AND_CSS = new BooleanSetting("Export.Parts.JavaScript_and_CSS");
     public static final Setting<Boolean> PLAYER_PAGES = new BooleanSetting("Export.Parts.Player_pages");
     public static final Setting<Boolean> PLAYER_JSON = new BooleanSetting("Export.Parts.Player_JSON");
     public static final Setting<Boolean> PLAYERS_PAGE = new BooleanSetting("Export.Parts.Players_page");
     public static final Setting<Boolean> SERVER_PAGE = new BooleanSetting("Export.Parts.Server_page");
     public static final Setting<Boolean> SERVER_JSON = new BooleanSetting("Export.Parts.Server_JSON");
     public static final Setting<Boolean> EXPORT_ON_ONLINE_STATUS_CHANGE = new BooleanSetting("Export.Export_player_on_login_and_logout");
+    public static final Setting<Long> EXPORT_PERIOD = new TimeSetting("Export.Server_refresh_period");
 
     private ExportSettings() {
         /* static variable class */

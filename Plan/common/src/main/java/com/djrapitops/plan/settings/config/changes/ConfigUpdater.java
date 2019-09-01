@@ -132,7 +132,9 @@ public class ConfigUpdater {
                 new ConfigChange.Removed("Display_options.Sessions.Show_most_played_world_in_title"),
                 new ConfigChange.Removed("Time.Thresholds.Activity_index.Login_threshold"),
                 new ConfigChange.Removed("Time.Periodic_tasks.Clean_caches_every"),
-                new ConfigChange.Removed("Display_options.Show_player_IPs")
+                new ConfigChange.Removed("Time.Periodic_tasks.Analysis_refresh_every"),
+                new ConfigChange.Removed("Display_options.Show_player_IPs"),
+                new ConfigChange.Removed("Export.Parts.JavaScript_and_CSS")
         };
     }
 

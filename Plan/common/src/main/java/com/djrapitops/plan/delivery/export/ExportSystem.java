@@ -40,6 +40,7 @@ public class ExportSystem implements SubSystem {
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final Processing processing;
+    private final ExportScheduler exportScheduler;
     private final HtmlExport htmlExport;
 
     @Inject
@@ -48,12 +49,14 @@ public class ExportSystem implements SubSystem {
             DBSystem dbSystem,
             ServerInfo serverInfo,
             Processing processing,
+            ExportScheduler exportScheduler,
             HtmlExport htmlExport
     ) {
         this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.processing = processing;
+        this.exportScheduler = exportScheduler;
         this.htmlExport = htmlExport;
     }
 
@@ -65,19 +68,10 @@ public class ExportSystem implements SubSystem {
             return;
         }
 
-        if (config.isTrue(ExportSettings.JS_AND_CSS)) {
-//            processing.submitNonCritical(htmlExport::exportJs);
-//            processing.submitNonCritical(htmlExport::exportCss);
-//            processing.submitNonCritical(htmlExport::exportPlugins);
-        }
+        exportScheduler.scheduleExport();
+
         if (config.isTrue(ExportSettings.PLAYERS_PAGE)) {
             processing.submitNonCritical(htmlExport::exportPlayersPage);
-        }
-        if (config.isTrue(ExportSettings.PLAYER_PAGES)) {
-            processing.submitNonCritical(htmlExport::exportAvailablePlayers);
-        }
-        if (config.isTrue(ExportSettings.SERVER_PAGE)) {
-            processing.submitNonCritical(htmlExport::exportAvailableServerPages);
         }
     }
 
