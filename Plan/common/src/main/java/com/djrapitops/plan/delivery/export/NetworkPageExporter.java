@@ -26,7 +26,6 @@ import com.djrapitops.plan.exceptions.ParseException;
 import com.djrapitops.plan.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.Server;
-import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.file.PlanFiles;
@@ -38,40 +37,36 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
-import java.util.UUID;
 
 /**
- * Handles exporting of /server page html, data and resources.
+ * Handles exporting of /network page html, data and resources.
  *
  * @author Rsl1122
  */
 @Singleton
-public class ServerPageExporter extends FileExporter {
+public class NetworkPageExporter extends FileExporter {
 
     private final PlanFiles files;
     private final PageFactory pageFactory;
     private final RootJSONHandler jsonHandler;
     private final Locale locale;
     private final Theme theme;
-    private final ServerInfo serverInfo;
 
     private final ExportPaths exportPaths;
 
     @Inject
-    public ServerPageExporter(
+    public NetworkPageExporter(
             PlanFiles files,
             PageFactory pageFactory,
             RootJSONHandler jsonHandler,
             Locale locale,
-            Theme theme,
-            ServerInfo serverInfo // To know if current server is a Proxy
+            Theme theme
     ) {
         this.files = files;
         this.pageFactory = pageFactory;
         this.jsonHandler = jsonHandler;
         this.locale = locale;
         this.theme = theme;
-        this.serverInfo = serverInfo;
 
         exportPaths = new ExportPaths();
     }
@@ -79,41 +74,34 @@ public class ServerPageExporter extends FileExporter {
     public void export(Path toDirectory, Server server) throws IOException, NotFoundException, ParseException {
         exportRequiredResources(toDirectory);
         exportJSON(toDirectory, server);
-        exportHtml(toDirectory, server);
+        exportHtml(toDirectory);
     }
 
-    private void exportHtml(Path toDirectory, Server server) throws IOException, NotFoundException, ParseException {
-        UUID serverUUID = server.getUuid();
+    private void exportHtml(Path toDirectory) throws IOException, ParseException {
         Path to = toDirectory
-                .resolve(serverInfo.getServer().isProxy() ? "server/" + server.getName() : "server")
+                .resolve("network")
                 .resolve("index.html");
 
-        Page page = pageFactory.serverPage(serverUUID);
+        Page page = pageFactory.networkPage();
         export(to, exportPaths.resolveExportPaths(locale.replaceMatchingLanguage(page.toHtml())));
     }
 
     private void exportJSON(Path toDirectory, Server server) throws IOException, NotFoundException {
-        String serverName = server.getName();
+        String serverUUID = server.getUuid().toString();
 
         exportJSON(toDirectory,
-                "serverOverview?server=" + serverName,
-                "onlineOverview?server=" + serverName,
-                "sessionsOverview?server=" + serverName,
-                "playerVersus?server=" + serverName,
-                "playerbaseOverview?server=" + serverName,
-                "performanceOverview?server=" + serverName,
-                "graph?type=performance&server=" + serverName,
-                "graph?type=aggregatedPing&server=" + serverName,
-                "graph?type=worldPie&server=" + serverName,
-                "graph?type=activity&server=" + serverName,
-                "graph?type=geolocation&server=" + serverName,
-                "graph?type=uniqueAndNew&server=" + serverName,
-                "graph?type=serverCalendar&server=" + serverName,
-                "graph?type=punchCard&server=" + serverName,
-                "players?server=" + serverName,
-                "kills?server=" + serverName,
-                "pingTable?server=" + serverName,
-                "sessions?server=" + serverName
+                "network/overview",
+                "network/servers",
+                "network/sessionsOverview",
+                "network/playerbaseOverview",
+                "graph?type=playersOnline&server=" + serverUUID,
+                "graph?type=uniqueAndNew",
+                "graph?type=serverPie",
+                "graph?type=activity",
+                "graph?type=geolocation",
+                "graph?type=uniqueAndNew",
+                "network/pingTable",
+                "sessions"
         );
     }
 
@@ -151,7 +139,6 @@ public class ServerPageExporter extends FileExporter {
     private void exportRequiredResources(Path toDirectory) throws IOException {
         exportImage(toDirectory, "img/Flaticon_circle.png");
 
-        // Style
         exportResources(toDirectory,
                 "css/sb-admin-2.css",
                 "css/style.css",
@@ -166,16 +153,13 @@ public class ServerPageExporter extends FileExporter {
                 "vendor/highcharts/drilldown.js",
                 "vendor/highcharts/highcharts-more.js",
                 "vendor/highcharts/no-data-to-display.js",
-                "vendor/fullcalendar/fullcalendar.min.css",
-                "vendor/momentjs/moment.js",
-                "vendor/fullcalendar/fullcalendar.min.js",
                 "js/sb-admin-2.js",
                 "js/xmlhttprequests.js",
                 "js/color-selector.js",
                 "js/sessionAccordion.js",
                 "js/pingTable.js",
                 "js/graphs.js",
-                "js/server-values.js"
+                "js/network-values.js"
         );
     }
 
@@ -188,7 +172,6 @@ public class ServerPageExporter extends FileExporter {
     private void exportResource(Path toDirectory, String resourceName) throws IOException {
         Resource resource = files.getCustomizableResourceOrDefault("web/" + resourceName);
         Path to = toDirectory.resolve(resourceName);
-
         if (resourceName.endsWith(".css")) {
             export(to, theme.replaceThemeColors(resource.asString()));
         } else {
@@ -207,8 +190,8 @@ public class ServerPageExporter extends FileExporter {
     }
 
     private String toRelativePathFromRoot(String resourceName) {
-        // Server html is exported at /server/<name>/index.html or /server/index.html
-        return (serverInfo.getServer().isProxy() ? "../../" : "../") + toNonRelativePath(resourceName);
+        // Network html is exported at /network//index.html or /server/index.html
+        return "../" + toNonRelativePath(resourceName);
     }
 
     private String toNonRelativePath(String resourceName) {

@@ -16,29 +16,29 @@
  */
 package com.djrapitops.plan.delivery.upkeep;
 
-import com.djrapitops.plan.delivery.export.HtmlExport;
+import com.djrapitops.plan.delivery.export.Exporter;
+import com.djrapitops.plan.exceptions.ExportException;
+import com.djrapitops.plan.utilities.java.ThrowingConsumer;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+public class ExportTask extends AbsRunnable {
 
-@Singleton
-public class PeriodicServerExportTask extends AbsRunnable {
-
-    private final HtmlExport htmlExport;
+    private final Exporter exporter;
+    private final ThrowingConsumer<Exporter, ExportException> exportAction;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
 
-    @Inject
-    public PeriodicServerExportTask(
-            HtmlExport htmlExport,
+    public ExportTask(
+            Exporter exporter,
+            ThrowingConsumer<Exporter, ExportException> exportAction,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        this.htmlExport = htmlExport;
+        this.exporter = exporter;
+        this.exportAction = exportAction;
         this.logger = logger;
         this.errorHandler = errorHandler;
     }
@@ -46,11 +46,11 @@ public class PeriodicServerExportTask extends AbsRunnable {
     @Override
     public void run() {
         try {
-            htmlExport.exportAvailableServerPages();
-        } catch (IllegalStateException ignore) {
-            /* Plugin was reloading */
+            exportAction.accept(exporter);
+        } catch (ExportException e) {
+            errorHandler.log(L.WARN, this.getClass(), e);
         } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
-            logger.error("Periodic Analysis Task Disabled due to error, reload Plan to re-enable.");
+            logger.error("Export Task Disabled due to error, reload Plan to re-enable.");
             errorHandler.log(L.ERROR, this.getClass(), e);
             cancel();
         }

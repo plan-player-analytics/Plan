@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.delivery.upkeep.PeriodicServerExportTask;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.gathering.ShutdownHook;
@@ -24,7 +23,6 @@ import com.djrapitops.plan.gathering.timed.SpongePingCounter;
 import com.djrapitops.plan.gathering.timed.SpongeTPSCounter;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
-import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.upkeep.ConfigStoreTask;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
@@ -46,7 +44,6 @@ public class SpongeTaskSystem extends TaskSystem {
     private final ShutdownHook shutdownHook;
     private final SpongeTPSCounter tpsCounter;
     private final JSONCache.CleanTask jsonCacheCleanTask;
-    private final PeriodicServerExportTask periodicServerExportTask;
     private final SpongePingCounter pingCounter;
     private final LogsFolderCleanTask logsFolderCleanTask;
     private final ConfigStoreTask configStoreTask;
@@ -67,9 +64,7 @@ public class SpongeTaskSystem extends TaskSystem {
             LogsFolderCleanTask logsFolderCleanTask,
             ConfigStoreTask configStoreTask,
             DBCleanTask dbCleanTask,
-            JSONCache.CleanTask jsonCacheCleanTask,
-
-            PeriodicServerExportTask periodicServerExportTask
+            JSONCache.CleanTask jsonCacheCleanTask
     ) {
         super(runnableFactory);
         this.plugin = plugin;
@@ -85,7 +80,6 @@ public class SpongeTaskSystem extends TaskSystem {
         this.dbCleanTask = dbCleanTask;
         this.jsonCacheCleanTask = jsonCacheCleanTask;
 
-        this.periodicServerExportTask = periodicServerExportTask;
     }
 
     @Override
@@ -109,10 +103,6 @@ public class SpongeTaskSystem extends TaskSystem {
         );
         long minute = TimeAmount.toTicks(1, TimeUnit.MINUTES);
         registerTask(jsonCacheCleanTask).runTaskTimerAsynchronously(minute, minute);
-
-        if (config.get(ExportSettings.SERVER_PAGE)) {
-            registerTask(periodicServerExportTask).runTaskTimerAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS), TimeAmount.toTicks(20L, TimeUnit.MINUTES));
-        }
     }
 
     private void registerTPSCounter() {

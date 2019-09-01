@@ -16,20 +16,22 @@
  */
 package com.djrapitops.plan.delivery.export;
 
+import com.djrapitops.plan.exceptions.ExportException;
 import com.djrapitops.plan.exceptions.ParseException;
 import com.djrapitops.plan.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Handles export for different pages.
@@ -42,33 +44,54 @@ public class Exporter {
     private final PlanFiles files;
     private final PlanConfig config;
     private final ServerPageExporter serverPageExporter;
-    private final ErrorHandler errorHandler;
+    private final NetworkPageExporter networkPageExporter;
+
+    private final Set<UUID> failedServers;
 
     @Inject
     public Exporter(
             PlanFiles files,
             PlanConfig config,
             ServerPageExporter serverPageExporter,
-            ErrorHandler errorHandler
+            NetworkPageExporter networkPageExporter
     ) {
         this.files = files;
         this.config = config;
         this.serverPageExporter = serverPageExporter;
-        this.errorHandler = errorHandler;
+        this.networkPageExporter = networkPageExporter;
+
+        failedServers = new HashSet<>();
     }
 
-    public Path getPageExportDirectory() {
+    private Path getPageExportDirectory() {
         Path exportDirectory = Paths.get(config.get(ExportSettings.HTML_EXPORT_PATH));
         return exportDirectory.isAbsolute()
                 ? exportDirectory
                 : files.getDataDirectory().resolve(exportDirectory);
     }
 
-    public void exportServerPage(Server server) {
+    /**
+     * Export a page of a server.
+     *
+     * @param server Server which page is going to be exported
+     * @return false if the page was not exported due to previous failure.
+     * @throws ExportException If the export failed
+     */
+    public boolean exportServerPage(Server server) throws ExportException {
+        UUID serverUUID = server.getUuid();
+        if (failedServers.contains(serverUUID)) return false;
+
         try {
-            serverPageExporter.export(getPageExportDirectory(), server);
+            Path toDirectory = getPageExportDirectory();
+            if (server.isProxy()) {
+                networkPageExporter.export(toDirectory, server);
+            } else {
+                serverPageExporter.export(toDirectory, server);
+            }
+            return true;
         } catch (IOException | NotFoundException | ParseException e) {
-            errorHandler.log(L.WARN, this.getClass(), e);
+            failedServers.add(serverUUID);
+            throw new ExportException("Failed to export server: " + server.getIdentifiableName() + " (Attempts disabled until next reload), " + e.getMessage(), e);
         }
     }
 }

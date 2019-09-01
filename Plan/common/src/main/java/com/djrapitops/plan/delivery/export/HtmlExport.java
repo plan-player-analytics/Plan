@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.rendering.pages.NetworkPage;
 import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
 import com.djrapitops.plan.delivery.rendering.pages.PlayerPage;
+import com.djrapitops.plan.exceptions.ExportException;
 import com.djrapitops.plan.exceptions.ParseException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.gathering.domain.BaseUser;
@@ -97,7 +98,11 @@ public class HtmlExport extends SpecificExport {
 //        if (serverInfo.getServer().isNotProxy() && hasProxy) {
 //            return;
 //        }
-        exporter.exportServerPage(server);
+        try {
+            exporter.exportServerPage(server);
+        } catch (ExportException e) {
+            errorHandler.log(L.WARN, this.getClass(), e);
+        }
     }
 
     public void exportPlayerPage(UUID playerUUID) {
