@@ -53,6 +53,10 @@ public class PlanFiles implements SubSystem {
         return dataFolder;
     }
 
+    public Path getDataDirectory() {
+        return dataFolder.toPath();
+    }
+
     public File getLogsFolder() {
         File folder = getFileFromPluginFolder("logs");
         folder.mkdirs();

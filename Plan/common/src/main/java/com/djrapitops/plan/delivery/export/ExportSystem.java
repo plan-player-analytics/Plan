@@ -66,9 +66,9 @@ public class ExportSystem implements SubSystem {
         }
 
         if (config.isTrue(ExportSettings.JS_AND_CSS)) {
-            processing.submitNonCritical(htmlExport::exportJs);
-            processing.submitNonCritical(htmlExport::exportCss);
-            processing.submitNonCritical(htmlExport::exportPlugins);
+//            processing.submitNonCritical(htmlExport::exportJs);
+//            processing.submitNonCritical(htmlExport::exportCss);
+//            processing.submitNonCritical(htmlExport::exportPlugins);
         }
         if (config.isTrue(ExportSettings.PLAYERS_PAGE)) {
             processing.submitNonCritical(htmlExport::exportPlayersPage);

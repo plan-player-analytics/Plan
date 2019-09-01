@@ -41,6 +41,7 @@ import java.util.UUID;
  * @author Rsl1122
  */
 @Singleton
+@Deprecated
 public class JSONExport extends SpecificExport {
 
     private final PlanConfig config;

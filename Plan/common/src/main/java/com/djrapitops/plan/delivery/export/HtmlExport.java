@@ -28,7 +28,6 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.settings.theme.Theme;
-import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
@@ -54,12 +53,14 @@ import java.util.*;
  * @author Rsl1122
  */
 @Singleton
+@Deprecated
 public class HtmlExport extends SpecificExport {
 
     private final PlanConfig config;
     private final Theme theme;
     private final PlanFiles files;
     private final DBSystem dbSystem;
+    private final Exporter exporter;
     private final PageFactory pageFactory;
     private final ErrorHandler errorHandler;
 
@@ -69,6 +70,7 @@ public class HtmlExport extends SpecificExport {
             PlanConfig config,
             Theme theme,
             DBSystem dbSystem,
+            Exporter exporter,
             PageFactory pageFactory,
             JSONFactory jsonFactory,
             ServerInfo serverInfo,
@@ -79,6 +81,7 @@ public class HtmlExport extends SpecificExport {
         this.theme = theme;
         this.files = files;
         this.dbSystem = dbSystem;
+        this.exporter = exporter;
         this.pageFactory = pageFactory;
         this.errorHandler = errorHandler;
     }
@@ -88,21 +91,13 @@ public class HtmlExport extends SpecificExport {
         return config.get(ExportSettings.HTML_EXPORT_PATH);
     }
 
-    public void exportServer(UUID serverUUID) {
+    public void exportServer(Server server) {
         Database database = dbSystem.getDatabase();
-        boolean hasProxy = database.query(ServerQueries.fetchProxyServerInformation()).isPresent();
-        if (serverInfo.getServer().isNotProxy() && hasProxy) {
-            return;
-        }
-        database.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
-                .map(Server::getName)
-                .ifPresent(serverName -> {
-                    try {
-                        exportAvailableServerPage(serverUUID, serverName);
-                    } catch (IOException e) {
-                        errorHandler.log(L.WARN, this.getClass(), e);
-                    }
-                });
+//        boolean hasProxy = database.query(ServerQueries.fetchProxyServerInformation()).isPresent();
+//        if (serverInfo.getServer().isNotProxy() && hasProxy) {
+//            return;
+//        }
+        exporter.exportServerPage(server);
     }
 
     public void exportPlayerPage(UUID playerUUID) {
@@ -175,66 +170,6 @@ public class HtmlExport extends SpecificExport {
         // TODO
     }
 
-    public void exportAvailableServerPages() {
-        try {
-            Map<UUID, String> serverNames = dbSystem.getDatabase().query(ServerQueries.fetchServerNames());
-
-            for (Map.Entry<UUID, String> entry : serverNames.entrySet()) {
-                exportAvailableServerPage(entry.getKey(), entry.getValue());
-            }
-        } catch (IOException | DBOpException e) {
-            errorHandler.log(L.WARN, this.getClass(), e);
-        }
-    }
-
-    public void exportCss() {
-        String[] resources = new String[]{
-                "web/css/main.css",
-                "web/css/materialize.css",
-                "web/css/style.css",
-                "web/css/themes/all-themes.css"
-        };
-        copyFromJar(resources);
-    }
-
-    public void exportJs() {
-        String[] resources = new String[]{
-                "web/js/demo.js",
-                "web/js/admin.js",
-                "web/js/helpers.js",
-                "web/js/script.js",
-                "web/js/graphs.js"
-        };
-        copyFromJar(resources);
-
-        try {
-            String demo = files.getCustomizableResourceOrDefault("web/js/demo.js")
-                    .asString()
-                    .replace("${defaultTheme}", theme.getValue(ThemeVal.THEME_DEFAULT));
-            List<String> lines = Arrays.asList(demo.split("\n"));
-            File outputFolder = new File(getFolder(), "js");
-            Verify.isTrue(outputFolder.exists() && outputFolder.isDirectory() || outputFolder.mkdirs(),
-                    () -> new FileNotFoundException("Output folder could not be created at " + outputFolder.getAbsolutePath()));
-            export(new File(outputFolder, "demo.js"), lines);
-        } catch (IOException e) {
-            errorHandler.log(L.WARN, this.getClass(), e);
-        }
-    }
-
-    public void exportPlugins() {
-        String[] resources = new String[]{
-                "web/plugins/node-waves/waves.css",
-                "web/plugins/node-waves/waves.js",
-                "web/plugins/animate-css/animate.css",
-                "web/plugins/jquery-slimscroll/jquery.slimscroll.js",
-                "web/plugins/jquery/jquery.min.js",
-                "web/plugins/fullcalendar/fullcalendar.min.js",
-                "web/plugins/fullcalendar/fullcalendar.min.css",
-                "web/plugins/momentjs/moment.js",
-        };
-        copyFromJar(resources);
-    }
-
     private void copyFromJar(String[] resources) {
         for (String resource : resources) {
             try {
@@ -262,5 +197,11 @@ public class HtmlExport extends SpecificExport {
         }
 
         export(to, lines);
+    }
+
+    public void exportAvailableServerPages() {
+        for (Server server : dbSystem.getDatabase().query(ServerQueries.fetchPlanServerInformationCollection())) {
+            exportServer(server);
+        }
     }
 }

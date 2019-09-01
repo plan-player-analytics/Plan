@@ -29,7 +29,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,6 +39,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Deprecated
 public abstract class SpecificExport {
 
     private final PlanFiles files;
@@ -109,47 +109,5 @@ public abstract class SpecificExport {
 
         String html = response.getContent();
         exportPlayerPage(name, html);
-    }
-
-    void exportAvailableServerPage(UUID serverUUID, String serverName) throws IOException {
-        // TODO Force export in the future
-        Response response = null;
-        if (response == null) {
-            return;
-        }
-
-        String html = response.getContent()
-                .replace("href=\"plugins/", "href=\"../plugins/")
-                .replace("href=\"css/", "href=\"../css/")
-                .replace("src=\"plugins/", "src=\"../plugins/")
-                .replace("src=\"js/", "src=\"../js/")
-                .replace("../json/players?serverName=" + serverName, "./players_table.json");
-
-        File htmlLocation;
-        if (serverInfo.getServer().isProxy()) {
-            if (serverUUID.equals(serverInfo.getServerUUID())) {
-                htmlLocation = new File(getFolder(), "network");
-            } else {
-                htmlLocation = new File(getServerFolder(), URLEncoder.encode(serverName, "UTF-8").replace(".", "%2E"));
-                html = html.replace("../", "../../");
-                exportPlayersTableJSON(htmlLocation, serverUUID);
-            }
-        } else {
-            htmlLocation = getServerFolder();
-            exportPlayersTableJSON(htmlLocation, serverUUID);
-        }
-
-        htmlLocation.mkdirs();
-        File exportFile = new File(htmlLocation, "index.html");
-
-        List<String> lines = Arrays.asList(html.split("\n"));
-
-        export(exportFile, lines);
-    }
-
-    private void exportPlayersTableJSON(File htmlLocation, UUID serverUUID) throws IOException {
-        htmlLocation.mkdirs();
-        File exportFile = new File(htmlLocation, "players_table.json");
-        export(exportFile, Collections.singletonList(jsonFactory.serverPlayersTableJSON(serverUUID)));
     }
 }

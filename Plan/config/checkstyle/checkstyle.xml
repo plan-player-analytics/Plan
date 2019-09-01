@@ -34,7 +34,6 @@
         <!-- Java Style -->
         <module name="ArrayTypeStyle"/>
         <module name="AvoidNestedBlocks"/>
-        <module name="CommentsIndentation"/>
         <module name="DefaultComesLast"> <!-- Switches -->
             <property name="skipIfLastAndSharedWithCase" value="true"/>
         </module>

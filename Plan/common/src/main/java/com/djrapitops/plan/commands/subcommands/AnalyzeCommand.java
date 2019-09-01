@@ -97,7 +97,7 @@ public class AnalyzeCommand extends CommandNode {
             try {
                 Server server = getServer(args);
                 sendWebUserNotificationIfNecessary(sender);
-                export.exportServer(server.getUuid());
+                export.exportServer(server);  // TODO
                 sendLink(server, sender);
             } catch (DBOpException e) {
                 sender.sendMessage("§cError occurred: " + e.toString());
