@@ -43,6 +43,7 @@ public class Exporter {
 
     private final PlanFiles files;
     private final PlanConfig config;
+    private final PlayerJSONExporter playerJSONExporter;
     private final PlayerPageExporter playerPageExporter;
     private final ServerPageExporter serverPageExporter;
     private final NetworkPageExporter networkPageExporter;
@@ -53,12 +54,14 @@ public class Exporter {
     public Exporter(
             PlanFiles files,
             PlanConfig config,
+            PlayerJSONExporter playerJSONExporter,
             PlayerPageExporter playerPageExporter,
             ServerPageExporter serverPageExporter,
             NetworkPageExporter networkPageExporter
     ) {
         this.files = files;
         this.config = config;
+        this.playerJSONExporter = playerJSONExporter;
         this.playerPageExporter = playerPageExporter;
         this.serverPageExporter = serverPageExporter;
         this.networkPageExporter = networkPageExporter;
@@ -68,6 +71,13 @@ public class Exporter {
 
     private Path getPageExportDirectory() {
         Path exportDirectory = Paths.get(config.get(ExportSettings.HTML_EXPORT_PATH));
+        return exportDirectory.isAbsolute()
+                ? exportDirectory
+                : files.getDataDirectory().resolve(exportDirectory);
+    }
+
+    private Path getJSONExportDirectory() {
+        Path exportDirectory = Paths.get(config.get(ExportSettings.JSON_EXPORT_PATH));
         return exportDirectory.isAbsolute()
                 ? exportDirectory
                 : files.getDataDirectory().resolve(exportDirectory);
@@ -114,6 +124,26 @@ public class Exporter {
             playerPageExporter.export(toDirectory, playerUUID, playerName);
             return true;
         } catch (IOException | NotFoundException | ParseException e) {
+            throw new ExportException("Failed to export player: " + playerName + ", " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Export Raw Data JSON of a player.
+     *
+     * @param playerUUID UUID of the player.
+     * @param playerName Name of the player.
+     * @return false if the json was not exported due to config settings.
+     * @throws ExportException If the export failed due to IOException.
+     */
+    public boolean exportPlayerJSON(UUID playerUUID, String playerName) throws ExportException {
+        Path toDirectory = getJSONExportDirectory();
+        if (!config.get(ExportSettings.PLAYER_JSON)) return false;
+
+        try {
+            playerJSONExporter.export(toDirectory, playerUUID, playerName);
+            return true;
+        } catch (IOException e) {
             throw new ExportException("Failed to export player: " + playerName + ", " + e.getMessage(), e);
         }
     }

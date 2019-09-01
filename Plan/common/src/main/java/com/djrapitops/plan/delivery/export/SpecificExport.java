@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.delivery.export;
 
-import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.file.PlanFiles;
 
@@ -39,15 +38,14 @@ import java.util.List;
 public abstract class SpecificExport {
 
     private final PlanFiles files;
-    private final JSONFactory jsonFactory; // Hacky, TODO export needs a rework
     protected final ServerInfo serverInfo;
 
     SpecificExport(
             PlanFiles files,
-            JSONFactory jsonFactory, ServerInfo serverInfo
+            ServerInfo serverInfo
     ) {
         this.files = files;
-        this.jsonFactory = jsonFactory;
+        // Hacky, TODO export needs a rework
         this.serverInfo = serverInfo;
     }
 
@@ -73,12 +71,6 @@ public abstract class SpecificExport {
 
     protected void export(File to, List<String> lines) throws IOException {
         Files.write(to.toPath(), lines, StandardCharsets.UTF_8, StandardOpenOption.CREATE);
-    }
-
-    File getPlayerFolder() {
-        File player = new File(getFolder(), "player");
-        player.mkdirs();
-        return player;
     }
 
 }

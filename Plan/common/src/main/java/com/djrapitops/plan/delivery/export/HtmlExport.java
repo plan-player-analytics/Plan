@@ -16,15 +16,12 @@
  */
 package com.djrapitops.plan.delivery.export;
 
-import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
 import com.djrapitops.plan.exceptions.ParseException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
-import com.djrapitops.plan.settings.theme.Theme;
-import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -49,10 +46,6 @@ import java.util.List;
 public class HtmlExport extends SpecificExport {
 
     private final PlanConfig config;
-    private final Theme theme;
-    private final PlanFiles files;
-    private final DBSystem dbSystem;
-    private final Exporter exporter;
     private final PageFactory pageFactory;
     private final ErrorHandler errorHandler;
 
@@ -60,20 +53,12 @@ public class HtmlExport extends SpecificExport {
     public HtmlExport(
             PlanFiles files,
             PlanConfig config,
-            Theme theme,
-            DBSystem dbSystem,
-            Exporter exporter,
             PageFactory pageFactory,
-            JSONFactory jsonFactory,
             ServerInfo serverInfo,
             ErrorHandler errorHandler
     ) {
-        super(files, jsonFactory, serverInfo);
+        super(files, serverInfo);
         this.config = config;
-        this.theme = theme;
-        this.files = files;
-        this.dbSystem = dbSystem;
-        this.exporter = exporter;
         this.pageFactory = pageFactory;
         this.errorHandler = errorHandler;
     }
