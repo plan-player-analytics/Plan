@@ -86,6 +86,10 @@ public class ExportScheduler {
                 .runTaskTimerAsynchronously(0L, period)
         );
 
+        taskSystem.registerTask("Players page export",
+                new ExportTask(exporter, Exporter::exportPlayersPage, logger, errorHandler)
+        ).runTaskTimerAsynchronously(0L, period);
+
         int offsetMultiplier = proxy.isPresent() ? 1 : 0; // Delay first server export if on a network.
         for (Server server : servers) {
             taskSystem.registerTask("Server export",

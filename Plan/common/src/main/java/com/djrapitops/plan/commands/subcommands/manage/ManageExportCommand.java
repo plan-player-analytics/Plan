@@ -17,7 +17,6 @@
 package com.djrapitops.plan.commands.subcommands.manage;
 
 import com.djrapitops.plan.delivery.export.Exporter;
-import com.djrapitops.plan.delivery.export.HtmlExport;
 import com.djrapitops.plan.exceptions.ExportException;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.Permissions;
@@ -57,7 +56,6 @@ public class ManageExportCommand extends CommandNode {
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final Exporter exporter;
-    private final HtmlExport htmlExport;
     private final Processing processing;
 
     @Inject
@@ -67,8 +65,7 @@ public class ManageExportCommand extends CommandNode {
             PlanConfig config,
             DBSystem dbSystem,
             Exporter exporter,
-            Processing processing,
-            HtmlExport htmlExport
+            Processing processing
     ) {
         super("export", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
 
@@ -77,7 +74,6 @@ public class ManageExportCommand extends CommandNode {
         this.config = config;
         this.dbSystem = dbSystem;
         this.exporter = exporter;
-        this.htmlExport = htmlExport;
         this.processing = processing;
 
         setArguments("<export_kind>/list");
@@ -116,7 +112,7 @@ public class ManageExportCommand extends CommandNode {
     private void exportPlayers(Sender sender) {
         sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
         if (config.get(ExportSettings.PLAYERS_PAGE)) {
-            processing.submitNonCritical(htmlExport::exportPlayersPage);
+            processing.submitNonCritical(exporter::exportPlayersPage);
         }
         Boolean exportPlayerJSON = config.get(ExportSettings.PLAYER_JSON);
         Boolean exportPlayerHTML = config.get(ExportSettings.PLAYER_PAGES);

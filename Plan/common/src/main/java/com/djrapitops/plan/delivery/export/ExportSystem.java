@@ -18,9 +18,6 @@ package com.djrapitops.plan.delivery.export;
 
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.processing.Processing;
-import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
@@ -36,28 +33,19 @@ import javax.inject.Singleton;
 @Singleton
 public class ExportSystem implements SubSystem {
 
-    private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
-    private final Processing processing;
     private final ExportScheduler exportScheduler;
-    private final HtmlExport htmlExport;
 
     @Inject
     public ExportSystem(
-            PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
-            Processing processing,
-            ExportScheduler exportScheduler,
-            HtmlExport htmlExport
+            ExportScheduler exportScheduler
     ) {
-        this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
-        this.processing = processing;
         this.exportScheduler = exportScheduler;
-        this.htmlExport = htmlExport;
     }
 
     @Override
@@ -69,10 +57,6 @@ public class ExportSystem implements SubSystem {
         }
 
         exportScheduler.scheduleExport();
-
-        if (config.isTrue(ExportSettings.PLAYERS_PAGE)) {
-            processing.submitNonCritical(htmlExport::exportPlayersPage);
-        }
     }
 
     @Override

@@ -45,6 +45,7 @@ public class Exporter {
     private final PlanConfig config;
     private final PlayerJSONExporter playerJSONExporter;
     private final PlayerPageExporter playerPageExporter;
+    private final PlayersPageExporter playersPageExporter;
     private final ServerPageExporter serverPageExporter;
     private final NetworkPageExporter networkPageExporter;
 
@@ -56,6 +57,7 @@ public class Exporter {
             PlanConfig config,
             PlayerJSONExporter playerJSONExporter,
             PlayerPageExporter playerPageExporter,
+            PlayersPageExporter playersPageExporter,
             ServerPageExporter serverPageExporter,
             NetworkPageExporter networkPageExporter
     ) {
@@ -63,6 +65,7 @@ public class Exporter {
         this.config = config;
         this.playerJSONExporter = playerJSONExporter;
         this.playerPageExporter = playerPageExporter;
+        this.playersPageExporter = playersPageExporter;
         this.serverPageExporter = serverPageExporter;
         this.networkPageExporter = networkPageExporter;
 
@@ -125,6 +128,18 @@ public class Exporter {
             return true;
         } catch (IOException | NotFoundException | ParseException e) {
             throw new ExportException("Failed to export player: " + playerName + ", " + e.getMessage(), e);
+        }
+    }
+
+    public boolean exportPlayersPage() throws ExportException {
+        Path toDirectory = getPageExportDirectory();
+        if (!config.get(ExportSettings.PLAYERS_PAGE)) return false;
+
+        try {
+            playersPageExporter.export(toDirectory);
+            return true;
+        } catch (IOException | NotFoundException | ParseException e) {
+            throw new ExportException("Failed to export players page, " + e.getMessage(), e);
         }
     }
 
