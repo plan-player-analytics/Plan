@@ -59,6 +59,7 @@ public class ExtensionRegister {
         register(new CoreProtectExtensionFactory(), CoreProtectExtensionFactory::createExtension);
         register(new DiscordSRVExtensionFactory(), DiscordSRVExtensionFactory::createExtension);
         register(new EssentialsExtensionFactory(), EssentialsExtensionFactory::createExtension, EssentialsExtensionFactory::registerUpdateListeners);
+        register(new FactionsExtensionFactory(), FactionsExtensionFactory::createExtension);
         register(new GriefPreventionExtensionFactory(), GriefPreventionExtensionFactory::createExtension);
         register(new GriefPreventionSpongeExtensionFactory(), GriefPreventionSpongeExtensionFactory::createExtension);
         register(new GriefPreventionPlusExtensionFactory(), GriefPreventionPlusExtensionFactory::createExtension);

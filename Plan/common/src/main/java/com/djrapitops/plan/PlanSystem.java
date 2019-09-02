@@ -147,9 +147,9 @@ public class PlanSystem implements SubSystem {
                 listenerSystem,
                 taskSystem
         );
+        settingsService.register();
         queryService.register();
         extensionService.register();
-        settingsService.register();
         enabled = true;
     }
 
