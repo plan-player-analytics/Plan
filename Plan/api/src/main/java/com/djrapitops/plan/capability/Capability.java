@@ -56,9 +56,13 @@ enum Capability {
      */
     DATA_EXTENSION_SHOW_IN_PLAYER_TABLE,
     /**
-     *
+     * QueryService and CommonQueries
      */
-    QUERY_API;
+    QUERY_API,
+    /**
+     * SettingsService
+     */
+    SETTINGS_API;
 
     static Optional<Capability> getByName(String name) {
         if (name == null) {

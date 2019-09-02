@@ -32,6 +32,7 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.query.QueryServiceImplementation;
 import com.djrapitops.plan.settings.ConfigSystem;
+import com.djrapitops.plan.settings.SettingsServiceImplementation;
 import com.djrapitops.plan.settings.locale.LocaleSystem;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
@@ -73,6 +74,7 @@ public class PlanSystem implements SubSystem {
     private final DeliveryUtilities deliveryUtilities;
     private final ExtensionServiceImplementation extensionService;
     private final QueryServiceImplementation queryService;
+    private final SettingsServiceImplementation settingsService;
     private final ErrorHandler errorHandler;
 
     @Inject
@@ -93,6 +95,7 @@ public class PlanSystem implements SubSystem {
             DeliveryUtilities deliveryUtilities,
             ExtensionServiceImplementation extensionService,
             QueryServiceImplementation queryService,
+            SettingsServiceImplementation settingsService,
             ErrorHandler errorHandler
     ) {
         this.files = files;
@@ -111,6 +114,7 @@ public class PlanSystem implements SubSystem {
         this.deliveryUtilities = deliveryUtilities;
         this.extensionService = extensionService;
         this.queryService = queryService;
+        this.settingsService = settingsService;
         this.errorHandler = errorHandler;
     }
 
@@ -145,6 +149,7 @@ public class PlanSystem implements SubSystem {
         );
         queryService.register();
         extensionService.register();
+        settingsService.register();
         enabled = true;
     }
 
