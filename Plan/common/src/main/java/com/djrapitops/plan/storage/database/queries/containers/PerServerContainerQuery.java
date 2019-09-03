@@ -21,7 +21,6 @@ import com.djrapitops.plan.delivery.domain.container.PerServerContainer;
 import com.djrapitops.plan.delivery.domain.container.SupplierDataContainer;
 import com.djrapitops.plan.delivery.domain.keys.Key;
 import com.djrapitops.plan.delivery.domain.keys.PerServerKeys;
-import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.domain.UserInfo;
 import com.djrapitops.plan.storage.database.SQLDB;
@@ -55,17 +54,9 @@ public class PerServerContainerQuery implements Query<PerServerContainer> {
         userInformation(db, perServerContainer);
         lastSeen(db, perServerContainer);
         playerKillCount(db, perServerContainer);
-        playerDeathCount(db, perServerContainer);
         mobKillCount(db, perServerContainer);
         totalDeathCount(db, perServerContainer);
         worldTimes(db, perServerContainer);
-
-        // After-values that can be calculated without database.
-        for (DataContainer serverContainer : perServerContainer.values()) {
-            serverContainer.putSupplier(PerServerKeys.MOB_DEATH_COUNT, () ->
-                    serverContainer.getValue(PerServerKeys.DEATH_COUNT).orElse(0) - serverContainer.getValue(PerServerKeys.PLAYER_DEATH_COUNT).orElse(0)
-            );
-        }
 
         Map<UUID, List<Session>> sessions = db.query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
         for (Map.Entry<UUID, List<Session>> entry : sessions.entrySet()) {
@@ -74,9 +65,6 @@ public class PerServerContainerQuery implements Query<PerServerContainer> {
 
             DataContainer serverContainer = perServerContainer.getOrDefault(serverUUID, new SupplierDataContainer());
             serverContainer.putRawData(PerServerKeys.SESSIONS, serverSessions);
-
-            serverContainer.putSupplier(PerServerKeys.PLAYER_KILLS, () -> SessionsMutator.forContainer(serverContainer).toPlayerKillList());
-            serverContainer.putSupplier(PerServerKeys.PLAYER_DEATHS, () -> SessionsMutator.forContainer(serverContainer).toPlayerDeathList());
 
             perServerContainer.put(serverUUID, serverContainer);
         }
@@ -90,10 +78,6 @@ public class PerServerContainerQuery implements Query<PerServerContainer> {
 
     private void worldTimes(SQLDB db, PerServerContainer container) {
         matchingEntrySet(PerServerKeys.WORLD_TIMES, WorldTimesQueries.fetchPlayerWorldTimesOnServers(playerUUID), db, container);
-    }
-
-    private void playerDeathCount(SQLDB db, PerServerContainer container) {
-        matchingEntrySet(PerServerKeys.PLAYER_DEATH_COUNT, PerServerAggregateQueries.playerDeathCountOnServers(playerUUID), db, container);
     }
 
     private void mobKillCount(SQLDB db, PerServerContainer container) {

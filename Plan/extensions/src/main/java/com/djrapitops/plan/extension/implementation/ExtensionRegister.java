@@ -105,7 +105,7 @@ public class ExtensionRegister {
     ) {
         try {
             // Creates the extension with factory and registers it
-            createExtension.apply(factory).flatMap(this::register);
+            createExtension.apply(factory).ifPresent(this::register);
         } catch (NotReadyException ignore) {
             // This exception signals that the extension can not be registered right now (Intended fail).
         } catch (Exception | NoClassDefFoundError | IncompatibleClassChangeError e) {

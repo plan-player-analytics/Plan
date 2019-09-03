@@ -86,7 +86,7 @@ public class RemoveUnsatisfiedConditionalServerResultsTransaction extends Transa
         // Nested query here is required because MySQL limits update statements with nested queries:
         // The nested query creates a temporary table that bypasses the same table query-update limit.
         // Note: MySQL versions 5.6.7+ might optimize this nested query away leading to an exception.
-        String sql = "DELETE FROM " + serverValueTable +
+        String sql = DELETE_FROM + serverValueTable +
                 WHERE + ExtensionServerValueTable.ID + " IN (" + SELECT + ExtensionServerValueTable.ID + FROM + '(' + selectUnsatisfiedValueIDs + ") as ids)";
 
         return new ExecStatement(sql) {
@@ -136,7 +136,7 @@ public class RemoveUnsatisfiedConditionalServerResultsTransaction extends Transa
         // Nested query here is required because MySQL limits update statements with nested queries:
         // The nested query creates a temporary table that bypasses the same table query-update limit.
         // Note: MySQL versions 5.6.7+ might optimize this nested query away leading to an exception.
-        String deleteValuesSQL = "DELETE FROM " + serverTableValueTable +
+        String deleteValuesSQL = DELETE_FROM + serverTableValueTable +
                 WHERE + ExtensionServerTableValueTable.TABLE_ID + " IN (" + SELECT + ExtensionTableProviderTable.ID + FROM + '(' + selectUnsatisfiedValueIDs + ") as ids)";
 
         return new ExecStatement(deleteValuesSQL) {

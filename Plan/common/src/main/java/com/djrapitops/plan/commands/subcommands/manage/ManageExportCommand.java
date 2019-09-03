@@ -133,43 +133,46 @@ public class ManageExportCommand extends CommandNode {
     }
 
     private void exportPlayers(Sender sender) {
-        Boolean exportPlayerJSON = config.get(ExportSettings.PLAYER_JSON);
-        Boolean exportPlayerHTML = config.get(ExportSettings.PLAYER_PAGES);
+        boolean exportPlayerJSON = config.get(ExportSettings.PLAYER_JSON);
+        boolean exportPlayerHTML = config.get(ExportSettings.PLAYER_PAGES);
+        boolean exportPlayersHtml = config.get(ExportSettings.PLAYERS_PAGE);
         if (!exportPlayerJSON && !exportPlayerHTML) {
             sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL));
             sender.sendMessage("§c'" + ExportSettings.PLAYER_JSON.getPath() + "' & '" + ExportSettings.PLAYER_PAGES.getPath() + "': false");
             return;
         }
 
-        processing.submitNonCritical(() -> {
-            sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
-            if (config.get(ExportSettings.PLAYERS_PAGE)) {
-                processing.submitNonCritical(exporter::exportPlayersPage);
-            }
+        if (exportPlayersHtml) {
+            processing.submitNonCritical(exporter::exportPlayersPage);
+        }
+        processing.submitNonCritical(() -> performExport(sender, exportPlayerJSON, exportPlayerHTML));
+    }
 
-            Map<UUID, String> players = dbSystem.getDatabase().query(UserIdentifierQueries.fetchAllPlayerNames());
-            int size = players.size();
-            int failed = 0;
+    private void performExport(Sender sender, boolean exportPlayerJSON, boolean exportPlayerHTML) {
+        sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
-            int i = 1;
-            for (Map.Entry<UUID, String> entry : players.entrySet()) {
-                try {
-                    if (exportPlayerJSON) exporter.exportPlayerJSON(entry.getKey(), entry.getValue());
-                    if (exportPlayerHTML) exporter.exportPlayerPage(entry.getKey(), entry.getValue());
-                } catch (ExportException e) {
-                    failed++;
-                }
-                i++;
-                if (i % 1000 == 0) {
-                    sender.sendMessage(i + " / " + size + " processed..");
-                }
+        Map<UUID, String> players = dbSystem.getDatabase().query(UserIdentifierQueries.fetchAllPlayerNames());
+        int size = players.size();
+        int failed = 0;
+
+        int i = 1;
+        for (Map.Entry<UUID, String> entry : players.entrySet()) {
+            try {
+                if (exportPlayerJSON) exporter.exportPlayerJSON(entry.getKey(), entry.getValue());
+                if (exportPlayerHTML) exporter.exportPlayerPage(entry.getKey(), entry.getValue());
+            } catch (ExportException e) {
+                failed++;
             }
-            sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
-            if (failed != 0) {
-                sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL));
-                sender.sendMessage(" §2✔: §f" + (i - failed));
-                sender.sendMessage(" §c✕: §f" + failed);
+            i++;
+            if (i % 1000 == 0) {
+                sender.sendMessage(i + " / " + size + " processed..");
             }
-        });
+        }
+        sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
+        if (failed != 0) {
+            sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL));
+            sender.sendMessage(" §2✔: §f" + (i - failed));
+            sender.sendMessage(" §c✕: §f" + failed);
+        }
     }
 }

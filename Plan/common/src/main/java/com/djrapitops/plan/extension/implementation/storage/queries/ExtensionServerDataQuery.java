@@ -232,23 +232,6 @@ public class ExtensionServerDataQuery implements Query<List<ExtensionData>> {
         return new ExtensionDescriptive(name, text, description, icon, priority);
     }
 
-    private ExtensionTabData.Factory extractTab(String tabName, ResultSet set, Map<String, ExtensionTabData.Factory> tabData) throws SQLException {
-        Optional<Integer> tabPriority = Optional.of(set.getInt("tab_priority"));
-        if (set.wasNull()) {
-            tabPriority = Optional.empty();
-        }
-        Optional<ElementOrder[]> elementOrder = Optional.ofNullable(set.getString(ExtensionTabTable.ELEMENT_ORDER)).map(ElementOrder::deserialize);
-
-        Icon tabIcon = extractTabIcon(set);
-
-        return tabData.getOrDefault(tabName, new ExtensionTabData.Factory(new TabInformation(
-                tabName,
-                tabIcon,
-                elementOrder.orElse(ElementOrder.values()),
-                tabPriority.orElse(100)
-        )));
-    }
-
     private Icon extractTabIcon(ResultSet set) throws SQLException {
         Optional<String> iconName = Optional.ofNullable(set.getString("tab_icon_name"));
         if (iconName.isPresent()) {

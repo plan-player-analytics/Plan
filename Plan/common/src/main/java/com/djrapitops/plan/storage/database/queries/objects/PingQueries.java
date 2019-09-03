@@ -151,7 +151,6 @@ public class PingQueries {
                 PingTable.MAX_PING + ", " +
                 PingTable.MIN_PING + ", " +
                 PingTable.AVG_PING + ", " +
-                PingTable.USER_UUID + ", " +
                 PingTable.SERVER_UUID +
                 FROM + PingTable.TABLE_NAME +
                 WHERE + PingTable.SERVER_UUID + "=?" +
@@ -170,7 +169,6 @@ public class PingQueries {
                 List<Ping> pings = new ArrayList<>();
 
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(PingTable.USER_UUID));
                     UUID serverUUID = UUID.fromString(set.getString(PingTable.SERVER_UUID));
                     long date = set.getLong(PingTable.DATE);
                     double avgPing = set.getDouble(PingTable.AVG_PING);

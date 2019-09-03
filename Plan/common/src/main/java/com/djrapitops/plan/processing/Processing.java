@@ -57,9 +57,9 @@ public class Processing implements SubSystem {
         return Executors.newFixedThreadPool(i,
                 new BasicThreadFactory.Builder()
                         .namingPattern(s)
-                        .uncaughtExceptionHandler((thread, throwable) -> {
-                            errorHandler.log(L.WARN, Processing.class, throwable);
-                        }).build());
+                        .uncaughtExceptionHandler((thread, throwable) ->
+                                errorHandler.log(L.WARN, Processing.class, throwable)
+                        ).build());
     }
 
     public void submit(Runnable runnable) {

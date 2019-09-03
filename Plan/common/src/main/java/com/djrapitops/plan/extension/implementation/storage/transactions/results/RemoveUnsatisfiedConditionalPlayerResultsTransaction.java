@@ -114,7 +114,7 @@ public class RemoveUnsatisfiedConditionalPlayerResultsTransaction extends Transa
         // Nested query here is required because MySQL limits update statements with nested queries:
         // The nested query creates a temporary table that bypasses the same table query-update limit.
         // Note: MySQL versions 5.6.7+ might optimize this nested query away leading to an exception.
-        String sql = "DELETE FROM " + playerValueTable +
+        String sql = DELETE_FROM + playerValueTable +
                 WHERE + ExtensionPlayerValueTable.ID + " IN (" + SELECT + ExtensionPlayerValueTable.ID + FROM + '(' + selectUnsatisfiedValueIDs + ") as ids)";
 
         return new ExecStatement(sql) {
@@ -142,7 +142,7 @@ public class RemoveUnsatisfiedConditionalPlayerResultsTransaction extends Transa
         // Nested query here is required because MySQL limits update statements with nested queries:
         // The nested query creates a temporary table that bypasses the same table query-update limit.
         // Note: MySQL versions 5.6.7+ might optimize this nested query away leading to an exception.
-        String deleteValuesSQL = "DELETE FROM " + playerTableValueTable +
+        String deleteValuesSQL = DELETE_FROM + playerTableValueTable +
                 WHERE + ExtensionPlayerTableValueTable.TABLE_ID + " IN (" + SELECT + ExtensionTableProviderTable.ID + FROM + '(' + selectUnsatisfiedValueIDs + ") as ids)";
 
         return new ExecStatement(deleteValuesSQL) {
@@ -178,7 +178,7 @@ public class RemoveUnsatisfiedConditionalPlayerResultsTransaction extends Transa
         // Nested query here is required because MySQL limits update statements with nested queries:
         // The nested query creates a temporary table that bypasses the same table query-update limit.
         // Note: MySQL versions 5.6.7+ might optimize this nested query away leading to an exception.
-        String deleteValuesSQL = "DELETE FROM " + groupTable +
+        String deleteValuesSQL = DELETE_FROM + groupTable +
                 WHERE + ID + " IN (" + SELECT + ID + FROM + '(' + selectUnsatisfiedIDs + ") as ids)";
 
         return new ExecStatement(deleteValuesSQL) {

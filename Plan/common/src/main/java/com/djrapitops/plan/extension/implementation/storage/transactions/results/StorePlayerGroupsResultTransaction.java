@@ -27,8 +27,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.AND;
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.WHERE;
+import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
 
 /**
  * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.GroupDataProvider}.
@@ -62,7 +61,7 @@ public class StorePlayerGroupsResultTransaction extends Transaction {
     }
 
     private Executable deleteOldValues() {
-        String sql = "DELETE FROM " + ExtensionGroupsTable.TABLE_NAME +
+        String sql = DELETE_FROM + ExtensionGroupsTable.TABLE_NAME +
                 WHERE + ExtensionGroupsTable.USER_UUID + "=?" +
                 AND + ExtensionGroupsTable.PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID;
 

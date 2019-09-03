@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.delivery.rendering.json.graphs.bar;
 
+import java.util.Objects;
+
 public class Bar implements Comparable<Bar> {
 
     private final String label;
@@ -37,5 +39,19 @@ public class Bar implements Comparable<Bar> {
     @Override
     public int compareTo(Bar bar) {
         return Long.compare(bar.value, this.value);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Bar)) return false;
+        Bar bar = (Bar) o;
+        return value == bar.value &&
+                Objects.equals(label, bar.label);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(label, value);
     }
 }

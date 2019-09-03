@@ -21,31 +21,31 @@ import java.util.concurrent.TimeUnit;
 /**
  * Duplicate String reducing utility class for SQL language Strings.
  */
-public interface Sql {
-    String ID = "id";
-    String P_UUID = "uuid";
+public abstract class Sql {
+    public static final String ID = "id";
+    public static final String P_UUID = "uuid";
 
-    String INT = "integer";
-    String DOUBLE = "double";
-    String LONG = "bigint";
-    String BOOL = "boolean";
+    public static final String INT = "integer";
+    public static final String DOUBLE = "double";
+    public static final String LONG = "bigint";
+    public static final String BOOL = "boolean";
 
-    String SELECT = "SELECT ";
-    String DISTINCT = "DISTINCT ";
-    String FROM = " FROM ";
-    String DELETE_FROM = "DELETE" + FROM;
-    String WHERE = " WHERE ";
-    String GROUP_BY = " GROUP BY ";
-    String ORDER_BY = " ORDER BY ";
-    String INNER_JOIN = " JOIN ";
-    String LEFT_JOIN = " LEFT JOIN ";
-    String UNION = " UNION ";
-    String AND = " AND ";
-    String OR = " OR ";
-    String IS_NULL = " IS NULL";
-    String IS_NOT_NULL = " IS NOT NULL";
+    public static final String SELECT = "SELECT ";
+    public static final String DISTINCT = "DISTINCT ";
+    public static final String FROM = " FROM ";
+    public static final String DELETE_FROM = "DELETE" + FROM;
+    public static final String WHERE = " WHERE ";
+    public static final String GROUP_BY = " GROUP BY ";
+    public static final String ORDER_BY = " ORDER BY ";
+    public static final String INNER_JOIN = " JOIN ";
+    public static final String LEFT_JOIN = " LEFT JOIN ";
+    public static final String UNION = " UNION ";
+    public static final String AND = " AND ";
+    public static final String OR = " OR ";
+    public static final String IS_NULL = " IS NULL";
+    public static final String IS_NOT_NULL = " IS NOT NULL";
 
-    static String varchar(int length) {
+    public static String varchar(int length) {
         return "varchar(" + length + ')';
     }
 
@@ -57,22 +57,22 @@ public interface Sql {
      * @param day 1 = Sunday, 2 = Monday etc.. 7 = Saturday
      * @return Milliseconds since epoch for this day to be given by {@link java.text.SimpleDateFormat} "EEEE"
      */
-    static long getDayEpochMs(int day) {
-        return TimeUnit.DAYS.toMillis(day + 2);
+    public static long getDayEpochMs(int day) {
+        return TimeUnit.DAYS.toMillis(day + 2L);
     }
 
-    String epochSecondToDate(String sql);
+    public abstract String epochSecondToDate(String sql);
 
-    String dateToEpochSecond(String sql);
+    public abstract String dateToEpochSecond(String sql);
 
-    String dateToDayStamp(String sql);
+    public abstract String dateToDayStamp(String sql);
 
-    String dateToDayOfWeek(String sql);
+    public abstract String dateToDayOfWeek(String sql);
 
-    String dateToHour(String sql);
+    public abstract String dateToHour(String sql);
 
     // https://dev.mysql.com/doc/refman/5.7/en/date-and-time-functions.html
-    class MySQL implements Sql {
+    public static class MySQL extends Sql {
 
         @Override
         public String epochSecondToDate(String sql) {
@@ -101,7 +101,7 @@ public interface Sql {
     }
 
     // https://h2database.com/html/functions.html
-    class H2 extends MySQL {
+    public static class H2 extends MySQL {
 
         @Override
         public String epochSecondToDate(String sql) {
@@ -125,7 +125,7 @@ public interface Sql {
     }
 
     // https://sqlite.org/lang_datefunc.html
-    class SQLite implements Sql {
+    public static class SQLite extends Sql {
 
         @Override
         public String epochSecondToDate(String sql) {

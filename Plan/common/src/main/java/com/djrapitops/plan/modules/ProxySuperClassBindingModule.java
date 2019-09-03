@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.modules;
 
-import com.djrapitops.plan.api.CommonAPI;
-import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.gathering.importing.EmptyImportSystem;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.settings.ConfigSystem;
@@ -34,9 +32,6 @@ import dagger.Module;
  */
 @Module
 public interface ProxySuperClassBindingModule {
-
-    @Binds
-    PlanAPI bindProxyPlanAPI(CommonAPI proxyAPI);
 
     @Binds
     DBSystem bindProxyDatabaseSystem(ProxyDBSystem proxyDBSystem);

@@ -33,6 +33,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  * @see com.djrapitops.plan.data.store.containers.AnalysisContainer for Suppliers for each Key.
+ * @deprecated AnalysisContainer can no longer be obtained, so this is deprecated.
  */
 @Deprecated
 public class AnalysisKeys {

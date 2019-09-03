@@ -76,7 +76,7 @@ public class StoreServerTableResultTransaction extends Transaction {
     }
 
     private Executable deleteOldValues(int tableID) {
-        String sql = "DELETE FROM " + TABLE_NAME +
+        String sql = DELETE_FROM + TABLE_NAME +
                 WHERE + TABLE_ID + "=?" +
                 AND + SERVER_UUID + "=?";
 

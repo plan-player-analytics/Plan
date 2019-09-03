@@ -29,6 +29,4 @@ import com.djrapitops.plan.delivery.domain.keys.PlaceholderKey;
  */
 @Deprecated
 public class AnalysisContainer extends DynamicDataContainer {
-    public AnalysisContainer() {
-    }
 }

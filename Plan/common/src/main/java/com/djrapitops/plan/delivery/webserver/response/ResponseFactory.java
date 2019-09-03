@@ -31,7 +31,6 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.version.VersionCheckSystem;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -51,7 +50,6 @@ public class ResponseFactory {
     private final PageFactory pageFactory;
     private final Locale locale;
     private final DBSystem dbSystem;
-    private final ErrorHandler errorHandler;
 
     @Inject
     public ResponseFactory(
@@ -59,15 +57,13 @@ public class ResponseFactory {
             PlanFiles files,
             PageFactory pageFactory,
             Locale locale,
-            DBSystem dbSystem,
-            ErrorHandler errorHandler
+            DBSystem dbSystem
     ) {
         this.versionCheckSystem = versionCheckSystem;
         this.files = files;
         this.pageFactory = pageFactory;
         this.locale = locale;
         this.dbSystem = dbSystem;
-        this.errorHandler = errorHandler;
     }
 
     public Response debugPageResponse() {

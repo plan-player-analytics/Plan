@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.delivery.rendering.pages;
 
-import com.djrapitops.plan.delivery.domain.DateHolder;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
@@ -60,7 +59,6 @@ public class DebugPage implements Page {
     private final Timings timings;
     private final ErrorHandler errorHandler;
 
-    private final Formatter<DateHolder> secondFormatter;
     private final Formatter<Long> yearFormatter;
 
     DebugPage(
@@ -79,7 +77,6 @@ public class DebugPage implements Page {
         this.timings = timings;
         this.errorHandler = errorHandler;
 
-        this.secondFormatter = formatters.second();
         this.yearFormatter = formatters.yearLong();
     }
 

@@ -123,6 +123,7 @@ public class JSONCache {
 
         @Inject
         public CleanTask() {
+            // Dagger requires inject constructor
         }
 
         @Override

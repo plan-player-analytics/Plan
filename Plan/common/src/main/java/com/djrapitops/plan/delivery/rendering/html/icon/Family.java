@@ -22,6 +22,7 @@ public enum Family {
     SOLID(" fa fa-", "\"></i>"),
     REGULAR(" far fa-", "\"></i>"),
     BRAND(" fab fa-", "\"></i>"),
+    @Deprecated
     LINE(" material-icons\">", "</i>");
 
     private final String middle;

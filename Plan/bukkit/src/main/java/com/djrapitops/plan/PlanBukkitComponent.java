@@ -20,7 +20,6 @@ import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.modules.APFModule;
 import com.djrapitops.plan.modules.FilesModule;
-import com.djrapitops.plan.modules.ServerSuperClassBindingModule;
 import com.djrapitops.plan.modules.SystemObjectProvidingModule;
 import com.djrapitops.plan.modules.bukkit.BukkitPlanModule;
 import com.djrapitops.plan.modules.bukkit.BukkitServerPropertiesModule;
@@ -42,7 +41,6 @@ import javax.inject.Singleton;
         APFModule.class,
         FilesModule.class,
         BukkitServerPropertiesModule.class,
-        ServerSuperClassBindingModule.class,
         BukkitSuperClassBindingModule.class
 })
 public interface PlanBukkitComponent {

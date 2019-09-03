@@ -52,6 +52,9 @@ public class SessionKeys {
     @Deprecated
     public static final Key<List<PlayerDeath>> PLAYER_DEATHS = CommonKeys.PLAYER_DEATHS;
 
+    /**
+     * @deprecated use WorldAliasSettings#getLongestWorldPlayed(Session) instead.
+     */
     @Deprecated
     public static final Key<String> LONGEST_WORLD_PLAYED = new Key<>(String.class, "longest_world_played");
 

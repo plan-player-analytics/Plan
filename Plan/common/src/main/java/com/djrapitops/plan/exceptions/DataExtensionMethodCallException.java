@@ -29,7 +29,7 @@ public class DataExtensionMethodCallException extends IllegalStateException {
 
     private final String pluginName;
     // Non serializable field due to Method not being serializable.
-    private transient final MethodWrapper method;
+    private final transient MethodWrapper method;
 
     public DataExtensionMethodCallException(Throwable cause, String pluginName, MethodWrapper method) {
         super(cause);

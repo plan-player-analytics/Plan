@@ -106,10 +106,7 @@ public class SessionsMutator {
      */
     @Deprecated
     public List<PlayerDeath> toPlayerDeathList() {
-        return sessions.stream()
-                .map(session -> session.getValue(SessionKeys.PLAYER_DEATHS).orElse(new ArrayList<>()))
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+        return Collections.emptyList();
     }
 
     public int toMobKillCount() {
@@ -241,12 +238,8 @@ public class SessionsMutator {
         return sorted;
     }
 
-    /**
-     * @deprecated Incorrect value, use PlayerVersusMutator instead.
-     */
-    @Deprecated
     public int toPlayerDeathCount() {
-        return toPlayerDeathList().size();
+        return sessions.stream().mapToInt(session -> session.getValue(SessionKeys.DEATH_COUNT).orElse(0)).sum();
     }
 
     public List<Long> toSessionStarts() {

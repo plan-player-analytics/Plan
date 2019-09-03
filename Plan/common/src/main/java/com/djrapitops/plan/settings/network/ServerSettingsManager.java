@@ -110,8 +110,8 @@ public class ServerSettingsManager implements SubSystem {
         Database database = dbSystem.getDatabase();
 
         try (ConfigReader reader = new ConfigReader(file.toPath())) {
-            Config config = reader.read();
-            database.executeTransaction(new StoreConfigTransaction(serverInfo.getServerUUID(), config, file.lastModified()));
+            Config read = reader.read();
+            database.executeTransaction(new StoreConfigTransaction(serverInfo.getServerUUID(), read, file.lastModified()));
             logger.debug("Server config saved to database.");
         } catch (IOException e) {
             throw new UncheckedIOException(e);

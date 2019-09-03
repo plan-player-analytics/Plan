@@ -33,7 +33,10 @@ import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -45,13 +48,10 @@ import java.util.concurrent.TimeUnit;
 public class NetworkOverviewJSONParser implements NetworkTabJSONParser<Map<String, Object>> {
 
     private final Formatter<Long> day;
-    private final TimeZone timeZone;
     private PlanConfig config;
     private DBSystem dbSystem;
     private ServerInfo serverInfo;
     private Formatter<Long> timeAmount;
-    private Formatter<Double> decimals;
-    private Formatter<Double> percentage;
     private Formatter<DateHolder> year;
 
     @Inject
@@ -68,9 +68,6 @@ public class NetworkOverviewJSONParser implements NetworkTabJSONParser<Map<Strin
         year = formatters.year();
         day = formatters.dayLong();
         timeAmount = formatters.timeAmount();
-        decimals = formatters.decimals();
-        percentage = formatters.percentage();
-        this.timeZone = config.getTimeZone();
     }
 
     public Map<String, Object> createJSONAsMap() {

@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import utilities.OptionalAssert;
 import utilities.RandomData;
 import utilities.mocks.BukkitMockComponent;
 
@@ -37,6 +36,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -77,7 +77,7 @@ public class BukkitSystemTest {
             Optional<String> found = database.query(ServerQueries.fetchServerMatchingIdentifier(system.getServerInfo().getServerUUID()))
                     .map(Server::getWebAddress);
 
-            OptionalAssert.equals(expectedAddress, found);
+            assertEquals(expectedAddress, found.orElse(null));
         } finally {
             system.disable();
         }

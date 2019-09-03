@@ -41,6 +41,7 @@ import java.util.UUID;
  * PlanAPI extension for all implementations.
  *
  * @author Rsl1122
+ * @deprecated Plan API v4 has been deprecated, use the APIv5 instead (https://github.com/plan-player-analytics/Plan/wiki/APIv5).
  */
 @Singleton
 @Deprecated

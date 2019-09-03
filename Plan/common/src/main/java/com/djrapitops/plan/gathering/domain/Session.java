@@ -66,7 +66,6 @@ public class Session extends DynamicDataContainer implements DateHolder {
         putSupplier(SessionKeys.START, this::getSessionStart);
         putSupplier(SessionKeys.WORLD_TIMES, this::getWorldTimes);
         putSupplier(SessionKeys.PLAYER_KILLS, this::getPlayerKills);
-        putRawData(SessionKeys.PLAYER_DEATHS, new ArrayList<>());
         putSupplier(SessionKeys.MOB_KILL_COUNT, this::getMobKills);
         putSupplier(SessionKeys.DEATH_COUNT, this::getDeaths);
         putSupplier(SessionKeys.AFK_TIME, this::getAfkTime);
@@ -75,8 +74,6 @@ public class Session extends DynamicDataContainer implements DateHolder {
         putSupplier(SessionKeys.LENGTH, () ->
                 getValue(SessionKeys.END).orElse(System.currentTimeMillis()) - getUnsafe(SessionKeys.START));
         putSupplier(SessionKeys.ACTIVE_TIME, () -> getUnsafe(SessionKeys.LENGTH) - getUnsafe(SessionKeys.AFK_TIME));
-
-        putRawData(SessionKeys.LONGEST_WORLD_PLAYED, "Key is Deprecated, use WorldAliasSettings#getLongestWorldPlayed(Session) instead.");
     }
 
     /**
@@ -113,7 +110,6 @@ public class Session extends DynamicDataContainer implements DateHolder {
         putRawData(SessionKeys.END, sessionEnd);
         putSupplier(SessionKeys.WORLD_TIMES, this::getWorldTimes);
         putSupplier(SessionKeys.PLAYER_KILLS, this::getPlayerKills);
-        putRawData(SessionKeys.PLAYER_DEATHS, new ArrayList<>());
         putSupplier(SessionKeys.MOB_KILL_COUNT, this::getMobKills);
         putSupplier(SessionKeys.DEATH_COUNT, this::getDeaths);
         putSupplier(SessionKeys.AFK_TIME, this::getAfkTime);
@@ -123,8 +119,6 @@ public class Session extends DynamicDataContainer implements DateHolder {
         putSupplier(SessionKeys.LENGTH, () ->
                 getValue(SessionKeys.END).orElse(System.currentTimeMillis()) - getUnsafe(SessionKeys.START));
         putSupplier(SessionKeys.ACTIVE_TIME, () -> getUnsafe(SessionKeys.LENGTH) - getUnsafe(SessionKeys.AFK_TIME));
-
-        putRawData(SessionKeys.LONGEST_WORLD_PLAYED, "Key is Deprecated, use WorldAliasSettings#getLongestWorldPlayed(Session) instead.");
     }
 
     /**
