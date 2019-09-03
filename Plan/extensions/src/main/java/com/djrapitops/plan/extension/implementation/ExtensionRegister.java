@@ -74,6 +74,7 @@ public class ExtensionRegister {
         register(new RedProtectExtensionFactory(), RedProtectExtensionFactory::createExtension);
         register(new SpongeEconomyExtensionFactory(), SpongeEconomyExtensionFactory::createExtension);
         register(new SuperbVoteExtensionFactory(), SuperbVoteExtensionFactory::createExtension);
+        register(new TownyExtensionFactory(), TownyExtensionFactory::createExtension);
         register(new VaultExtensionFactory(), VaultExtensionFactory::createExtension);
         register(new ViaVersionExtensionFactory(), ViaVersionExtensionFactory::createExtension);
 
