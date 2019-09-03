@@ -68,7 +68,7 @@ subprojects {
     ext.redisBungeeVersion = "0.3.8-SNAPSHOT"
 
     ext.httpClientVersion = "4.5.9"
-    ext.commonsTextVersion = "1.7"
+    ext.commonsTextVersion = "1.8"
     ext.htmlCompressorVersion = "1.5.2"
     ext.caffeineVersion = "2.8.0"
     ext.h2Version = "1.4.199"
