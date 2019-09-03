@@ -99,6 +99,6 @@ public class SettingsServiceImplementation implements SettingsService {
     }
 
     private String getPluginPath(String path) {
-        return "Plugin." + path;
+        return "Plugins." + path;
     }
 }
