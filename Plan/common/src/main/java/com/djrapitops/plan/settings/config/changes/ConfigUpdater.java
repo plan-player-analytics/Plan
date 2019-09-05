@@ -134,7 +134,9 @@ public class ConfigUpdater {
                 new ConfigChange.Removed("Time.Periodic_tasks.Clean_caches_every"),
                 new ConfigChange.Removed("Time.Periodic_tasks.Analysis_refresh_every"),
                 new ConfigChange.Removed("Display_options.Show_player_IPs"),
-                new ConfigChange.Removed("Export.Parts.JavaScript_and_CSS")
+                new ConfigChange.Removed("Export.Parts.JavaScript_and_CSS"),
+                new ConfigChange.Moved("Plugins.LiteBans", "Plugins.Litebans"),
+                new ConfigChange.Moved("Plugins.BuyCraft", "Plugins.Buycraft")
         };
     }
 
