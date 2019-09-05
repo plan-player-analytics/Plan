@@ -19,6 +19,7 @@ package com.djrapitops.plan.extension.table;
 import com.djrapitops.plan.extension.ElementOrder;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -109,7 +110,7 @@ public final class Table {
         }
 
         private Factory column(int indx, String columnName, Icon icon) {
-            building.columns[indx] = columnName;
+            building.columns[indx] = StringUtils.truncate(columnName, 50);
             building.icons[indx] = icon != null ? Icon.called(icon.getName()).of(icon.getFamily()).build() : Icon.called("question").build();
             return this;
         }

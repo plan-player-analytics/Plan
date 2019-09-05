@@ -2,6 +2,10 @@ plugins {
     id "com.jfrog.bintray" version "1.8.4"
 }
 
+dependencies {
+    compileOnly group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+}
+
 ext.apiVersion = '5.0-R0.3'
 
 bintray {
