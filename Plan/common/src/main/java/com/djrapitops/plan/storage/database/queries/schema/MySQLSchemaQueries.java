@@ -109,6 +109,25 @@ public class MySQLSchemaQueries {
         };
     }
 
+    public static Query<Integer> columnVarcharLength(String table, String column) {
+        String sql = SELECT + "CHARACTER_MAXIMUM_LENGTH" +
+                FROM + "information_schema.COLUMNS" +
+                WHERE + "TABLE_NAME=? AND COLUMN_NAME=? AND TABLE_SCHEMA=DATABASE()";
+
+        return new QueryStatement<Integer>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, table);
+                statement.setString(2, column);
+            }
+
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getInt("CHARACTER_MAXIMUM_LENGTH") : Integer.MAX_VALUE;
+            }
+        };
+    }
+
     /**
      * Represents a FOREIGN KEY constraint in a MySQL database.
      *

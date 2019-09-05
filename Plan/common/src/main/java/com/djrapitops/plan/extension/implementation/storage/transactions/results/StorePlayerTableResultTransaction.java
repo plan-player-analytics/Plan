@@ -26,6 +26,7 @@ import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -111,7 +112,7 @@ public class StorePlayerTableResultTransaction extends Transaction {
                     statement.setString(2, playerUUID.toString());
                     for (int i = 0; i < maxColumnSize; i++) {
                         Object value = row[i];
-                        setStringOrNull(statement, 3 + i, value != null ? value.toString() : null);
+                        setStringOrNull(statement, 3 + i, value != null ? StringUtils.truncate(value.toString(), 250) : null);
                     }
                     // Rest are set null if not 4 columns wide.
                     for (int i = maxColumnSize; i < 4; i++) {

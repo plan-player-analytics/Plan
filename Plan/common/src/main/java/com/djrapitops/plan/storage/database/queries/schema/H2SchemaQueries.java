@@ -18,11 +18,13 @@ package com.djrapitops.plan.storage.database.queries.schema;
 
 import com.djrapitops.plan.storage.database.queries.HasMoreThanZeroQueryStatement;
 import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.QueryStatement;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.SELECT;
+import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
 
 /**
  * Static method class for H2 Schema related queries.
@@ -53,6 +55,25 @@ public class H2SchemaQueries {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tableName);
                 statement.setString(2, columnName);
+            }
+        };
+    }
+
+    public static Query<Integer> columnVarcharLength(String table, String column) {
+        String sql = SELECT + "CHARACTER_MAXIMUM_LENGTH" +
+                FROM + "INFORMATION_SCHEMA.COLUMNS " +
+                WHERE + "TABLE_NAME=? AND COLUMN_NAME=?";
+
+        return new QueryStatement<Integer>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, table);
+                statement.setString(2, column);
+            }
+
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getInt("CHARACTER_MAXIMUM_LENGTH") : Integer.MAX_VALUE;
             }
         };
     }
