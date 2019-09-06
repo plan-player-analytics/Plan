@@ -115,21 +115,22 @@ public abstract class Response {
         this.responseHeaders = responseHeaders;
     }
 
+    protected void translate(Locale locale) {
+        content = locale.replaceMatchingLanguage(content);
+    }
+
+    protected void fixThemeColors(Theme theme) {
+        content = theme.replaceThemeColors(content);
+    }
+
     public void send(HttpExchange exchange, Locale locale, Theme theme) throws IOException {
         responseHeaders.set("Content-Type", type);
         responseHeaders.set("Content-Encoding", "gzip");
         exchange.sendResponseHeaders(getCode(), 0);
 
-        String sentContent = getContent();
-        // TODO Smell
-        if (!(this instanceof JavaScriptResponse)) {
-            sentContent = locale.replaceMatchingLanguage(sentContent);
-        }
-        sentContent = theme.replaceThemeColors(sentContent);
-
         try (
                 GZIPOutputStream out = new GZIPOutputStream(exchange.getResponseBody());
-                ByteArrayInputStream bis = new ByteArrayInputStream(sentContent.getBytes(StandardCharsets.UTF_8))
+                ByteArrayInputStream bis = new ByteArrayInputStream((content != null ? content : "").getBytes(StandardCharsets.UTF_8))
         ) {
             byte[] buffer = new byte[2048];
             int count;

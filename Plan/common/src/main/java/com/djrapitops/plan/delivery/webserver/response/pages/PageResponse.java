@@ -20,7 +20,12 @@ import com.djrapitops.plan.delivery.rendering.pages.Page;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseType;
 import com.djrapitops.plan.exceptions.ParseException;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.theme.Theme;
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
+import com.sun.net.httpserver.HttpExchange;
+
+import java.io.IOException;
 
 /**
  * Response for all HTML Page responses.
@@ -46,6 +51,13 @@ public class PageResponse extends Response {
     }
 
     public PageResponse() {
+    }
+
+    @Override
+    public void send(HttpExchange exchange, Locale locale, Theme theme) throws IOException {
+        translate(locale);
+        fixThemeColors(theme);
+        super.send(exchange, locale, theme);
     }
 
     @Override

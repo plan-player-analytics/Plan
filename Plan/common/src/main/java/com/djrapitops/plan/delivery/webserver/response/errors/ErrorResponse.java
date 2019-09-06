@@ -17,8 +17,11 @@
 package com.djrapitops.plan.delivery.webserver.response.errors;
 
 import com.djrapitops.plan.delivery.webserver.response.pages.PageResponse;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.version.VersionCheckSystem;
+import com.sun.net.httpserver.HttpExchange;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringSubstitutor;
 
@@ -66,6 +69,13 @@ public class ErrorResponse extends PageResponse {
 
     public void setParagraph(String paragraph) {
         this.paragraph = paragraph;
+    }
+
+    @Override
+    public void send(HttpExchange exchange, Locale locale, Theme theme) throws IOException {
+        translate(locale);
+        fixThemeColors(theme);
+        super.send(exchange, locale, theme);
     }
 
     @Override

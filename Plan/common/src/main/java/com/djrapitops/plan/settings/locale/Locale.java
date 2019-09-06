@@ -25,6 +25,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Represents loaded language information.
@@ -104,6 +106,14 @@ public class Locale extends HashMap<Lang, Message> {
             return from;
         }
 
+        Pattern scripts = Pattern.compile("(<script>[\\s\\S]*?</script>|<script src=[\"|'].*[\"|']></script>|<link [\\s\\S]*?>)");
+
+        Matcher scriptMatcher = scripts.matcher(from);
+        List<String> foundScripts = new ArrayList<>();
+        while (scriptMatcher.find()) {
+            foundScripts.add(scriptMatcher.toMatchResult().group(0));
+        }
+
         Lang[][] langs = new Lang[][]{
                 NetworkPageLang.values(),
                 PlayerPageLang.values(),
@@ -125,7 +135,18 @@ public class Locale extends HashMap<Lang, Message> {
                     with.add(replacement.toString());
                 }));
 
-        return StringUtils.replaceEach(from, replace.toArray(new String[0]), with.toArray(new String[0]));
+        String translated = StringUtils.replaceEach(from, replace.toArray(new String[0]), with.toArray(new String[0]));
+        StringBuilder complete = new StringBuilder(translated.length());
+
+        String[] parts = scripts.split(translated);
+        for (int i = 0; i < parts.length; i++) {
+            complete.append(parts[i]);
+            if (i < parts.length - 1) {
+                complete.append(foundScripts.get(i));
+            }
+        }
+
+        return complete.toString();
     }
 
     @Override
