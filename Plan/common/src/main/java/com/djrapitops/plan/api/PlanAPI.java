@@ -19,7 +19,13 @@ package com.djrapitops.plan.api;
 import com.djrapitops.plan.api.data.PlayerContainer;
 import com.djrapitops.plan.api.data.ServerContainer;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.identification.UUIDUtility;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
@@ -39,6 +45,7 @@ public interface PlanAPI {
                 .orElseThrow(() -> new IllegalStateException("PlanAPI has not been initialised yet."));
     }
 
+    @Singleton
     class PlanAPIHolder {
         static PlanAPI API;
 
@@ -46,8 +53,14 @@ public interface PlanAPI {
             PlanAPIHolder.API = api;
         }
 
-        private PlanAPIHolder() {
-            /* Static variable holder */
+        @Inject
+        public PlanAPIHolder(
+                DBSystem dbSystem,
+                UUIDUtility uuidUtility,
+                PluginLogger logger,
+                ErrorHandler errorHandler
+        ) {
+            set(new CommonAPI(dbSystem, uuidUtility, logger, errorHandler));
         }
     }
 

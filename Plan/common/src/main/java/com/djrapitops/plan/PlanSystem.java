@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan;
 
+import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.capability.CapabilityServiceImplementation;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.delivery.export.ExportSystem;
@@ -96,7 +97,8 @@ public class PlanSystem implements SubSystem {
             ExtensionServiceImplementation extensionService,
             QueryServiceImplementation queryService,
             SettingsServiceImplementation settingsService,
-            ErrorHandler errorHandler
+            ErrorHandler errorHandler,
+            PlanAPI.PlanAPIHolder apiHolder
     ) {
         this.files = files;
         this.configSystem = configSystem;
