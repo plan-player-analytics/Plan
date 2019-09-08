@@ -36,17 +36,6 @@ Cmd Qinspect - Player Kills                     ||   §2キルカウント(プ�
 Cmd Qinspect - Playtime                         ||   §2プレイ時間: §f${0}
 Cmd Qinspect - Registered                       ||   §2登録日: §f${0}
 Cmd Qinspect - Times Kicked                     ||   §2キックされた時間: §f${0}
-Cmd Setup - Allowed                             || §aセットアップモードが有効になりました
-Cmd Setup - Bad Request                         || §e接続は成功しましたが、受信サーバーはBungeeCordのサーバーではありませんでした。代わりにBungeeCordのアドレスを使用して下さい
-Cmd Setup - Disallowed                          || §cセットアップモードが無効になりました
-Cmd Setup - Forbidden                           || §e接続は成功しましたが、BungeeCordの「Plan」のセットアップモードが無効になっています。「/planbungee setup」コマンドを使用して有効にして下さい
-Cmd Setup - Gateway Error                       || §e接続は成功しましたが、BungeeCordの「Plan」のウェブサーバーに接続できませんでした。(ウェブサーバーが再起動中かもしれません)。「/plan m con 」と「/planbungee con」でデバック情報を表示できます
-Cmd Setup - Generic Fail                        || §e以下の理由で接続に失敗しました: ${0}
-Cmd Setup - Internal Error                      || §e接続は成功しました。 ${0}、受信サーバーのデバッグページでエラーログを確認できるようになりました
-Cmd Setup - Success                             || §a接続は成功しました。「Plan」は数秒以内に再起動します。
-Cmd Setup - Unauthorized                        || §e接続は成功しましたが、このBukkit/Spigotサーバーを受信サーバーが拒否しました。Discordのサポートに連絡して下さい
-Cmd Setup - Url mistake                         || §cウェブアドレスの入力を確かめて下さい(「http://」もしくは「https://」で始まります )。アドレスについてはBungeeCordの「Plan」を有効化した時のログを確認して下さい。
-Cmd Setup - WebServer not Enabled               || §cこのBukkit/Spigotサーバーでウェブサーバーは有効になっていません。Bukkit/Spigotサーバー起動時にウェブサーバーが有効になっていることを確認して下さい！
 Cmd SUCCESS - Feature disabled                  || §a次にプラグインがリロードされるまで一時的に「${0}」を無効にしました。
 Cmd SUCCESS - WebUser register                  || §a新規ユーザー「(${0})」の登録に成功しました！次のリンクでWebパネルを見ることができます。
 Cmd WARN - Database not open                    || §eデータベースは${0}です - 予想以上に時間がかかるかもしれません
@@ -59,7 +48,6 @@ Command Help - /plan inspect                    || 「プレイヤー」のURL�
 Command Help - /plan manage                     || 「Plan」のデータベースを管理します
 Command Help - /plan manage backup              || データベースをバックアップします
 Command Help - /plan manage clear               || データベースを消去します
-Command Help - /plan manage con                 || BungeeCordとBukkit/Spigotサーバーとの接続をデバックします
 Command Help - /plan manage disable             || 機能を一時的に無効にします
 Command Help - /plan manage export              || 手動でデータのエクスポートを行います
 Command Help - /plan manage hotswap             || データベースを高速で変更します
@@ -68,7 +56,6 @@ Command Help - /plan manage move                || データベース間でデ�
 Command Help - /plan manage raw                 || プレイヤーデータのJSONファイルを直接表示ます
 Command Help - /plan manage remove              || プレイヤーのデータを削除します
 Command Help - /plan manage restore             || 以前のバックアップから復元します
-Command Help - /plan manage setup               || BungeeCordとBukkit/Spigotサーバーとの接続をセットアップします
 Command Help - /plan manage uninstalled         || 指定されたサーバーをデータベースからアンインストールします
 Command Help - /plan network                    || 「ネットワーク」のページのURLを表示します
 Command Help - /plan players                    || 「プレイヤー」のページのURLを表示します
@@ -82,9 +69,7 @@ Command Help - /plan web delete                 || ウェブユーザーの削�
 Command Help - /plan web level                  || 権限レベルに関する情報を表示します
 Command Help - /plan web list                   || ウェブユーザーの一覧を表示します
 Command Help - /plan webuser                    || ウェブユーザーを管理します
-Command Help - /planbungee con                  || BungeeとBukkit/Spigotサーバーとの接続をデバックします
 Command Help - /planbungee disable              || プラグインを一時的に無効にします
-Command Help - /planbungee setup                || セットアップモードを切り替えます
 Database - Apply Patch                          || 次のパッチを適用しています: ${0}..
 Database - Patches Applied                      || 全てのパッチは正常にデータベースに適用されました
 Database - Patches Applied Already              || 全てのパッチは既にデータベースへ適用されています
@@ -98,7 +83,6 @@ Disable - Unsaved Session Save                  || 未保存のセッション�
 Disable - WebServer                             || ウェブサーバーが無効になりました
 Enable                                          || プレイヤー分析が有効になりました
 Enable - Database                               || ${0}のデータベースの接続が確立しました
-Enable - Notify Address Confirmation            || 次に表示されるアドレスがこのサーバーをである事を確認して下さい: ${0}
 Enable - Notify Empty IP                        || server.propertiesの設定で、IPの項目が設定されておらずAlternative IPが使用されていません。そのため誤ったリンクが表示されます!
 Enable - Notify Geolocations disabled           || 位置情報サービスが有効ではありません。 (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || 「Plan」は初回起動時、「GeoLite2」の位置情報データベースをダウンロードするためインターネットアクセスが必要です
@@ -133,7 +117,6 @@ HTML - FAVORITE_SERVER                          || お気に入りのサーバ�
 HTML - FREE_DISK_SPACE                          || ドライブの空き容量
 HTML - GEOLOCATION                              || 地域
 HTML - GEOLOCATION_TEXT                         || 地域
-HTML - HEALTH_ESTIMATE                          || ネットワークの健康状態
 HTML - INDEX_ACTIVE                             || よくログインしている
 HTML - INDEX_INACTIVE                           || 休止中
 HTML - INDEX_IRREGULAR                          || たまにログインしている
@@ -170,7 +153,6 @@ HTML - NAV_PERFORMANCE                          || パフォーマンス
 HTML - NAV_PLAYERS                              || プレイヤー
 HTML - NAV_PLUGINS                              || プラグイン
 HTML - NAV_SESSIONS                             || 接続履歴
-HTML - NAV_SEVER_HEALTH                         || サーバーの健康状態
 HTML - NETWORK                                  || ネットワーク
 HTML - NETWORK_INFORMATION                      || ネットワーク内の情報
 HTML - NEW                                      || 新規
@@ -207,7 +189,6 @@ HTML - REGULAR                                  || よくいる
 HTML - SEEN_NICKNAMES                           || ニックネーム一覧
 HTML - SERVER                                   || サーバー
 HTML - SERVER_ANALYSIS                          || サーバーの分析結果
-HTML - SERVER_HEALTH_ESTIMATE                   || サーバーの健康状態
 HTML - SERVER_INFORMATION                       || サーバーの情報
 HTML - SERVER_PREFERENCE                        || サーバー毎のプレイ時間
 HTML - SERVERS                                  || 接続されているサーバー
@@ -240,18 +221,13 @@ HTML - WORLD_LOAD                               || ワールドロード数
 HTML - WORLD_PLAYTIME                           || ワールドごとのプレイ時間
 HTML - WORST_PING                               || 最高応答時間
 HTML ERRORS - ACCESS_DENIED_403                 || アクセスが拒否されました
-HTML ERRORS - ANALYSIS_REFRESH                  || 分析結果に基づいてデータを更新中です・・・
-HTML ERRORS - ANALYSIS_REFRESH_LONG             || サーバーを分析中です・・・・<br>数秒後にページが更新されない場合、ページを更新して下さい
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - 登録したユーザーを<b>「/plan register 」</b>で確認できます。<br>- 入力したユーザー名とパスワードが正しいことを確認して下さい<br>- ユーザー名とパスワードは大文字と小文字が区別されています<br><br>パスワードを忘れた場合は、管理者に古いユーザーを削除して新しくユーザーを再登録するよう依頼して下さい
 HTML ERRORS - AUTHENTICATION_FAILED_401         || 認証に失敗しました
 HTML ERRORS - FORBIDDEN_403                     || 閲覧禁止
-HTML ERRORS - INSPECT_REFRESH                   || プレーヤページのリクエスト処理が実行中です・・
-HTML ERRORS - INSPECT_REFRESH_LONG              || ページは自動的に更新されます・・
 HTML ERRORS - NO_SERVERS_404                    || リクエストを処理するサーバーがオンラインではありません
 HTML ERRORS - NOT_FOUND_404                     || ページが見つかりませんでした
 HTML ERRORS - NOT_PLAYED_404                    || プレイヤーはこのサーバーでプレイしていません
 HTML ERRORS - PAGE_NOT_FOUND_404                || ページは存在しません
-HTML ERRORS - PLUGIN_TAB_REFRESH                || 計算中です・・・
 HTML ERRORS - UNAUTHORIZED_401                  || 未認証状態です
 HTML ERRORS - UNKNOWN_PAGE_404                  || リンクが間違っています、コマンドを使用してURLを確認して下さい。 URL例:</p><p>/player/PlayerName<br>/server/ServerName</p>
 HTML ERRORS - UUID_404                          || データベース内にプレヤーのUUIDが存在しません
@@ -261,15 +237,13 @@ In Depth Help - /plan inspect ?                 || > §2検査コマンド\  プ
 In Depth Help - /plan manage ?                  || > §2管理コマンド\  MySQLまたはSQLiteの「Plan」のデータベースを管理します\  §2/plan m §f補助コマンドの一覧を表示します\  §2/plan m <subcommand> ? §f詳細なヘルプを表示します
 In Depth Help - /plan manage backup ?           || > §2バックアップコマンド\  現在アクティブになっているデータベースの内容を含むSQLiteの新しいデータベースを「Plan」のプラグインフォルダ内に作成します(拡張子は「.db」です)
 In Depth Help - /plan manage clear ?            || > §2クリア補助コマンド\  アクティブになっているデータベースの全てを削除します。使用には注意が必要です
-In Depth Help - /plan manage con ?              || > §2接続デバッグ補助コマンド\  ネットワーク内の接続をデバッグするために使用します\  データベース内の各サーバーにリクエストを送信します。
-In Depth Help - /plan manage disable ?          || > §2無効補助コマンド\  次回のリロードまでプラグインの一部を無効にすることができます\  使用できる引数:\    §2キックカウント §fシャットダウンマクロで「/kickball」が使用されている場合の無効化されたキックカウント。
+DELETE_FROMIn Depth Help - /plan manage disable ?          || > §2無効補助コマンド\  次回のリロードまでプラグインの一部を無効にすることができます\  使用できる引数:\    §2キックカウント §fシャットダウンマクロで「/kickball」が使用されている場合の無効化されたキックカウント。
 In Depth Help - /plan manage export ?           || > §2エクスポート補助コマンド\  分析結果を特定のフォルダーへのエクスポートを有効化します\  使用できる引数:\    §2list §fList possible arguments.\    §2players §fExport /players, /player pages + /player/raw json depending on config values.\    §2server_json §fExport /server/raw JSON if enabled in config.
 In Depth Help - /plan manage import ?           || > §2インポート補助コマンド\  別のソースからデータをインポートします\  使用できる引数:\    §2オフライン §fBukkitのプレイヤーデータ、登録日と名前のみを登録できます
 In Depth Help - /plan manage move ?             || > §2移動補助コマンド\  SQLiteからMySQLもしくは他の形式にデータを移行させます\  ターゲットとなるデータベースは移行前に空である必要があります
 In Depth Help - /plan manage raw ?              || > §2生のデータ補助コマンド\ 生のJSONデータページへのリンクを表示します\  「Plan」の内部ウェブサーバーが有効になっていない場合は利用できません
 In Depth Help - /plan manage remove ?           || > §2削除補助コマンド\  プレイヤーのデータをアクティブになっているデータベースから削除します
 In Depth Help - /plan manage restore ?          || > §2復元補助コマンド\  データベースを以前にバックアップしたSQLiteデータベース(拡張子が「.db」のファイル)に復元します\  他のサーバーの拡張子が「.db」のデータベースをMySQLに復元することもできます\  ターゲットとなるデータベースは移行前に空である必要があります
-In Depth Help - /plan manage setup ?            || > §2セットアップ補助コマンド\  「ネットワーク」のページを機能させるために、BungeeCordとこのBukkit/Spigotサーバーの間の接続を設定します.\  BungeeCordのアドレスはBungeeCordで「Plan」が有効化された時のログで見つけることができます。
 In Depth Help - /plan manage uninstalled ?      || > §2サーバーアンインストール補助コマンド\  指定されたサーバーをデータベースからアンインストールします\  コマンドが実行されているサーバーをアンインストールするサーバーとしてマークすることはできません\  サーバーの接続システムに影響します
 In Depth Help - /plan network ?                 || > §2ネットワークコマンド\  「ネットワーク」のページのURLを表示します\  BungeeCordのネットワーク上にない場合は、このページにサーバーページが表示されます。
 In Depth Help - /plan players ?                 || > §2プレイヤーコマンド\  「プレイヤー」のページのURLを表示します
@@ -280,7 +254,6 @@ In Depth Help - /plan servers ?                 || > §2サーバーコマンド
 In Depth Help - /plan web ?                     || < §2ウェブユーザー管理コマンド\  §2/plan web §f補助コマンドの一覧を表示します\  §2/plan web <subcommand> ? §f詳細なヘルプを表示します
 In Depth Help - /plan web register ?            || > §2登録コマンド\  新しいウェブユーザーを登録します。\  プレイヤーが他のプレイヤーをユーザー登録するには「plan.webmanage」権限が必要です\  パスワードはPBKDF2(64,000回のSHA1の繰り返し)でソルト(暗号論)をかけてハッシュされます。
 In Depth Help - /planbungee disable ?           || > §2無効化コマンド\  BungeeCordの「Plan」で「onDisable」を実行します\  あとで「/planbungee reload」を使ってプラグインを有効にすることができます\  §bその状態で「Swapping jar」は対応していません
-In Depth Help - /planbungee setup ?             || > §2セットアップ切り替えコマンド\  BungeeCordでセットアップモードを切り替えます\  許可されていない他のサーバーがMySQLを詮索するのを防ぎます。
 Manage - Confirm Overwrite                      || ${0}のデータは上書きされます!
 Manage - Confirm Removal                        || ${0}のデータは削除されます!
 Manage - Fail                                   || > §c何かがうまくいきませんでした: ${0}
@@ -292,13 +265,7 @@ Manage - Fail No Server                         || 指定されたパラメー�
 Manage - Fail Same Database                     || > §c同じデータベースを操作することはできません！
 Manage - Fail Same server                       || このサーバーをアンインストールするサーバーとして指定することはできません(あなたがこのサーバーにログインしているため)
 Manage - Fail, Confirmation                     || > §c実行を確認するために引数「-a」を追加します: ${0}
-Manage - Fail, Connection Exception             || §e失敗した理由: 
-Manage - Fail, No Servers                       || §cデータベース内にサーバーが存在しませんでした
-Manage - Fail, Old version                      || §e失敗した理由:受信サーバーで実行されている「Plan」のバージョンが古いです
-Manage - Fail, Unauthorized                     || §e失敗した理由:権限制限があります。サーバーが別のデータベースを使用している可能性があります
-Manage - Fail, Unexpected Exception             || §e不明な例外: ${0}
-Manage - List Importers                         || インポーター: 
-Manage - Notify External Url                    || §e非ローカルアドレスです、接続先のポートが開放されていることを確認して下さい
+Manage - List Importers                         || インポーター:
 Manage - Remind HotSwap                         || §e新しいデータベースに交換することを忘れないで下さい(/plan m hotswap ${0})。そして、プラグインをリロードして下さい
 Manage - Start                                  || > §2データを処理中です..
 Manage - Success                                || > §a成功しました!

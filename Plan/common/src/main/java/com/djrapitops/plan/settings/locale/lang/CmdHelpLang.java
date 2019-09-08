@@ -36,10 +36,6 @@ public enum CmdHelpLang implements Lang {
     WEB_REGISTER("Command Help - /plan register", "Register a Web User"),
     WEB("Command Help - /plan webuser", "Manage Web Users"),
     DEV("Command Help - /plan dev", "Development mode command"),
-    @Deprecated
-    SETUP("Command Help - /planbungee setup", "Toggle set-up mode"),
-    @Deprecated
-    CON("Command Help - /planbungee con", "Debug Proxy-Server connections"),
     DISABLE("Command Help - /planbungee disable", "Disable the plugin temporarily"),
 
     MANAGE_MOVE("Command Help - /plan manage move", "Move data between Databases"),
@@ -48,14 +44,9 @@ public enum CmdHelpLang implements Lang {
     MANAGE_REMOVE("Command Help - /plan manage remove", "Remove Player's data"),
     MANAGE_HOTSWAP("Command Help - /plan manage hotswap", "Change Database quickly"),
     MANAGE_CLEAR("Command Help - /plan manage clear", "Clear a Database"),
-    @Deprecated
-    MANAGE_CON("Command Help - /plan manage con", "Debug Server-Proxy connections"),
     MANAGE_IMPORT("Command Help - /plan manage import", "Import data from elsewhere"),
     MANAGE_EXPORT("Command Help - /plan manage export", "Trigger export manually"),
     MANAGE_DISABLE("Command Help - /plan manage disable", "Disable a feature temporarily"),
-    @Deprecated
-    MANAGE_SETUP("Command Help - /plan manage setup", "Set-up Server-Proxy connection"),
-
     WEB_LEVEL("Command Help - /plan web level", "Information about permission levels"),
     WEB_LIST("Command Help - /plan web list", "List Web Users"),
     WEB_CHECK("Command Help - /plan web check", "Inspect a Web User"),

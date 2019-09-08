@@ -35,17 +35,6 @@ Cmd Qinspect - Player Kills                     ||   §2Oyuncu öldürme: §f${0
 Cmd Qinspect - Playtime                         ||   §2Oynama süresi: §f${0}
 Cmd Qinspect - Registered                       ||   §2Kayıtlı: §f${0} 
 Cmd Qinspect - Times Kicked                     ||   §2Atılma sayısı: §f${0}
-Cmd Setup - Allowed                             || §aŞuanda kuruluma izin verildi.
-Cmd Setup - Bad Request                         || §eBağlantı başarılı, fakat yönlendirilmiş sunucu bir Bungee sunucusu değil. Bunun yerine Bungee adresini kullanın.
-Cmd Setup - Disallowed                          || §cŞuanda kurulum yasaklandı
-Cmd Setup - Forbidden                           || §eBağlantı başarılı, fakat Bungee kurulum modu kapalı - açmak için '/planbungee setup' komudunu kullanın.
-Cmd Setup - Gateway Error                       || §eBağlantı başarılı, fakat Bungee bu sunucuya bağlanırken hata verdi (Geçerli web sunucusu yeniden başlatıldı mı?). Düzeltmek için /plan m con & /planbungee con komutlarını deneyin.
-Cmd Setup - Generic Fail                        || §eBağlantı başarısız: ${0}
-Cmd Setup - Internal Error                      || §eBağlantı başarılı. ${0}, sunucu ayıklama sayfasındayken hata loglarını incele. 
-Cmd Setup - Success                             || §aBağantı başarılı, Plan birkaç saniye içinde yeniden başlatılabilir..
-Cmd Setup - Unauthorized                        || §eBağlantı başarılı, ancak alıcı sunucu bu sunucuyu onaylamadı. Destek için Discord'a başvurun
-Cmd Setup - Url mistake                         || §cAdrsesi tam olarak girdiğine emin ol (http:// ya da https:// ile başlamalı) - Tam adres için Bungee loglarını kontrol et.
-Cmd Setup - WebServer not Enabled               || §cWebServer bu sunucuda aktif değil! Açılışta etkinleştirildiğinden emin ol!
 Cmd SUCCESS - Feature disabled                  || §aKapatıldı '${0}' Plugin yeniden başlatılana kadar.
 Cmd SUCCESS - WebUser register                  || §aYeni kullanıcı (${0}) başarıyla eklendi! Web panelini aşağıdaki linkte görebilirsiniz.
 Cmd Update - Cancel Success                     || §aİşlem iptal edildi.
@@ -67,14 +56,12 @@ Command Help - /plan inspect                    || Oyunucunun sayfasını göste
 Command Help - /plan manage                     || Plan Veritabanını Yönet
 Command Help - /plan manage backup              || Veritabanını yedekler
 Command Help - /plan manage clear               || Veritabanını temizler
-Command Help - /plan manage con                 || Server-Bungee bağlantı sorunlarını çözer
 Command Help - /plan manage disable             || Bir özelliği geçici olarak devre dışı bırakır
 Command Help - /plan manage hotswap             || Veritabının hızlıca değiştirir
 Command Help - /plan manage import              || Başka bir yerden veri alır
 Command Help - /plan manage move                || Veriyi Veritabanları arasında taşır
 Command Help - /plan manage remove              || Oyuncu bilgilerini siler
 Command Help - /plan manage restore             || Önceki bir Yedeği geri yükler
-Command Help - /plan manage setup               || Sunucu-Bungee kurulumunu yapar
 Command Help - /plan network                    || Network sayfasını görüntüler
 Command Help - /plan players                    || Oyuncu sayfasını görüntüler
 Command Help - /plan qinspect                   || Oyuncu bilgilerini oyun içi gösterir
@@ -88,9 +75,7 @@ Command Help - /plan web delete                 || Web kullanıcısın siler
 Command Help - /plan web level                  || Yetki seviyeleri hakkında bilgi verir
 Command Help - /plan web list                   || Web kullanıcılarını listeler
 Command Help - /plan webuser                    || Web kullanıcılarını listeler
-Command Help - /planbungee con                  || Bungee-Server bağlantı sorunlarını çözer
 Command Help - /planbungee disable              || Eklentiyi geçici olarak devre dışı bırakır
-Command Help - /planbungee setup                || Kurulum modunu değiştirir
 Database - Apply Patch                          || Yama uygulanıyor: ${0}..
 Database - Patches Applied                      || Yama tüm veritabanlarına başarıyla uygulandı.
 Database - Patches Applied Already              || Veritabanlarına yama zaten uygulanmış.
@@ -103,7 +88,6 @@ Disable - Processing Complete                   || İşlenme tamamlandı.
 Disable - WebServer                             || Websunucusu kapatıldı.
 Enable                                          || Oyuncu analizi aktif edildi.
 Enable - Database                               || ${0}- Veritabanı bağlantısı kurulmuş.
-Enable - Notify Address Confirmation            || Bu sunucu adresini doğru girdiğine emin ol: ${0}
 Enable - Notify Empty IP                        || server.properties IP adresi kısmı boş & AlternatifIP kullanılmıyor. Bu yüzden yanlış linkler verilecektir!
 Enable - Notify Geolocations disabled           || Coğrafi konum toplama etkin değil. (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || Plan GeoLite2 Geolocation veritabanını indirmek için ilk çalıştırmada internet erişimi gerektir.
@@ -135,7 +119,6 @@ HTML - ERROR                                    || Kimlik doğrulama hata nedeni
 HTML - FAVORITE_SERVER                          || Favori Sunucu
 HTML - GEOLOCATION                              || Coğrafi Konum
 HTML - GEOLOCATION_TEXT                         || Coğrafi Konum
-HTML - HEALTH_ESTIMATE                          || Sağlık Tahmini
 HTML - INDEX_ACTIVE                             || Aktivite
 HTML - INDEX_INACTIVE                           || Etkisiz
 HTML - INDEX_IRREGULAR                          || Düzensiz
@@ -172,7 +155,6 @@ HTML - NAV_PERFORMANCE                          || Performans
 HTML - NAV_PLAYERS                              || Oyuncular
 HTML - NAV_PLUGINS                              || Pluginler
 HTML - NAV_SESSIONS                             || Oturumlar
-HTML - NAV_SEVER_HEALTH                         || Sunucu Sağlığı
 HTML - NETWORK                                  || Network
 HTML - NETWORK_INFORMATION                      || NETWORK Bilgisi
 HTML - NEW                                      || YENİ
@@ -209,8 +191,7 @@ HTML - REGULAR                                  || DÜZENLİ
 HTML - SEEN_NICKNAMES                           || Görülen takma adlar
 HTML - SERVER                                   || Sunucu
 HTML - SERVER_ANALYSIS                          || Sunucu analizi
-HTML - SERVER_HEALTH_ESTIMATE                   || Sunucu Sağlığı Tahmini
-HTML - SERVER_INFORMATION                       || SUNUCU BİLGİSİ   
+HTML - SERVER_INFORMATION                       || SUNUCU BİLGİSİ
 HTML - SERVER_PREFERENCE                        || Sunucu Tercihi
 HTML - SERVERS                                  || Sunucular
 HTML - SESSION                                  || Oturum
@@ -242,8 +223,6 @@ HTML - WORLD_LOAD                               || WORLD LOAD
 HTML - WORLD_PLAYTIME                           || Dünya OyunSüresi
 HTML - WORST_PING                               || Kötü Ping
 HTML ERRORS - ACCESS_DENIED_403                 || Giriş reddedildi
-HTML ERRORS - ANALYSIS_REFRESH                  || Analiz yenileniyor..
-HTML ERRORS - ANALYSIS_REFRESH_LONG             || Analiz çalıştırılıyor, birkaç saniye sonra sayfayı yenileyin..
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Bir kullanıcıyı <b>/plan register</b><br>- ile kayıt ettiğinize emin olun ismin ve şifrenin doğru olup olmadığını kontol edin <br>- Kullanıcı adı ve şifre büyük / küçük harf duyarlıdır<br><br>Eğer şifreni unuttuysan, Yetkiliden sizi tekrar kayıt etmesini isteyin.
 HTML ERRORS - AUTHENTICATION_FAIlED_401         || Kimlik doğrulama başarısız oldu.
 HTML ERRORS - FORBIDDEN_403                     || Yasaklanmış.
@@ -260,13 +239,11 @@ In Depth Help - /plan inspect ?                 || > §2Denetleme Komutu\  Oyunc
 In Depth Help - /plan manage ?                  || > §2Yönetme Komutu\  MySQL ve SQLite Plan veritabanını yönetin.\  §2/plan m §fList subcommands\  §2/plan m <subcommand> ? §fDaha fazla yardım
 In Depth Help - /plan manage backup ?           || > §2Yedekleme Alt Komutu\  Yeni bir SQLite Veritabanı (.db dosyası) Plan eklentisi klasöründeki etkin veritabanı içeriğiyle birlikte.
 In Depth Help - /plan manage clear ?            || > §2Temizleme Alt Komutu\ Aktf Veritabanlarındaki tüm bilgileri siler. Silmeden önce yedek alın ve herkesi uyarın.
-In Depth Help - /plan manage con ?              || > §2Bağlantı sorunlarını çözme alt komutu\  Networka bağlanma sorunlarını çözmek için kullanılır.\  Veritabanındaki her sunucuya bir istek gönderir.
-In Depth Help - /plan manage disable ?          || > §2Devre Dışı Alt Komutu\  Eklentinin parçalarını bir sonraki yeniden yüklemeye kadar devre dışı bırakır.\  Kabul edilen argümanlar:\    §2Atılma sayısı §fKapatma makrosunda / kickall kullanılıyorsa kick sayımlarını devre dışı bırakır.
+DELETE_FROMIn Depth Help - /plan manage disable ?          || > §2Devre Dışı Alt Komutu\  Eklentinin parçalarını bir sonraki yeniden yüklemeye kadar devre dışı bırakır.\  Kabul edilen argümanlar:\    §2Atılma sayısı §fKapatma makrosunda / kickall kullanılıyorsa kick sayımlarını devre dışı bırakır.
 In Depth Help - /plan manage import ?           || > §2Import Subcommand\  Import data from other sources.\  Accepted Arguments:\    §2Çevrimdışı §fBukkit oyuncu verileri, sadece kayıt tarihi ve ismi. 
 In Depth Help - /plan manage move ?             || > §2Veri konumu değiştirme alt Komutu\  Verileri SQLite'den MySQL'e veya başka bir yere taşıyın.\  Dosyaların gönderileceği Veritabanı aktarımdan önce temizlendi.
 In Depth Help - /plan manage remove ?           || > §2Silme alt Komutu\  Aktif Veritabanından oyuncu bilgilerini siler.
 In Depth Help - /plan manage restore ?          || > §2Onarım Alt Komutu\  Önceki bir yedek SQLite veritabanını geri yükler (.db dosyası)\  Ayrıca database.db dosyasını başka bir sunucudan MySQL'e geri yükleyebilirsiniz.\  Veriler gönderilmeden önce Veritabanı temizlenir.
-In Depth Help - /plan manage setup ?            || > §2Kurulum alt Komutu\  Bungeecord ile server Arasında bağlantı kurmalısın.\  Bungeeaddress planını aktif ettiğinde bungee konsolunda görünür.
 In Depth Help - /plan network ?                 || > §2Network Komutu\ Ağ sayfasının bağlantısını görüntüler.\ Networkte değilse, bu sayfa sunucu sayfasını görüntüler.
 In Depth Help - /plan players ?                 || > §2Oyuncu Komutu\  Oyuncular sayfasına olan bağlantıyı verir.
 In Depth Help - /plan qinspect ?                || > §2Hızlı Denetim Komutu\  Oyun içindeyken oyuncu hakkında bilgi verir.
@@ -277,7 +254,6 @@ In Depth Help - /plan update ?                  || > §2Güncelleme Komutu\  Bir
 In Depth Help - /plan web ?                     || < §2Web Kullanıcısı Yönetim Paneli Komutu.\  §2/plan web §fList subcommands\  §2/plan web <subcommand> ? §fIn Depth help
 In Depth Help - /plan web register ?            || > §2Kayıt Alt Komutu\  Yeni bir Web Kullanıcısı kaydeder.\  Bir kullanıcıyı başka bir oyuncuya kaydetmek plan.webmanage izni gerektirir.\  Şifreler, kriptografik olarak rasgele bir sıra kullanılarak PBKDF2 (64.000 iterasyon SHA1) ile karıştırıldı.
 In Depth Help - /planbungee disable ?           || > §2Devre Dışı Komutu\  Runs onDisable on PlanBungee.\  Plugin can be enabled with /planbungee reload afterwards.\  §bDoes not support swapping jar on the fly
-In Depth Help - /planbungee setup ?             || > §2Set-up toggle Command\  Bungee'deki kurulum modunu değiştirir.\  Başka bir sunucudan yetkisiz MySQL girişine karşı korunma.
 Manage - Confirm Overwrite                      || ${0} içindeki verilen üzerinden yazılacak!
 Manage - Confirm Removal                        || ${0} İçindeki Veri Silinecek!
 Manage - Fail                                   || > §cBirşey yanlış gidiyor: ${0}
@@ -286,13 +262,7 @@ Manage - Fail Incorrect Database                || > §c'${0}' Desteklenmeyen bi
 Manage - Fail No Importer                       || §eAlıcı '${0}' yok
 Manage - Fail Same Database                     || > §cAynı veritabanında veya benzerinde çalışamaz!
 Manage - Fail, Confirmation                     || > §cKomutu onaylamak için '-a' komuta ekle: ${0}
-Manage - Fail, Connection Exception             || §eHata Sebebi: 
-Manage - Fail, No Servers                       || §cVeritabanında sunucu verileri bulunamadı.
-Manage - Fail, Old version                      || §eHata Sebebi: Şuanda sunucuzda eski Plan versiyonu çalışıyor.
-Manage - Fail, Unauthorized                     || §eHata Sebebi: Yetkisiz. Sunucu farklı veritabanı kullanıyor olabilir.
-Manage - Fail, Unexpected Exception             || §eOdd Exception: ${0}
-Manage - List Importers                         || Importers: 
-Manage - Notify External Url                    || §eBöyle bir adres yok, lütfen portların açık olduğunu kontrol edin.
+Manage - List Importers                         || Importers:
 Manage - Remind HotSwap                         || §eRemember to swap to the new database (/plan m hotswap ${0}) & reload the plugin.
 Manage - Start                                  || > §2Veri işleniyor..
 Manage - Success                                || > §aBaşarılı!

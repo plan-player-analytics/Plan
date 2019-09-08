@@ -26,8 +26,7 @@ public enum NetworkPageLang implements Lang {
     NETWORK_INFORMATION("NETWORK INFORMATION"),
     PLAYERS_TEXT("Players"),
     PLAYERS("PLAYERS"),
-    NEW_TEXT("New"),
-    HEALTH_ESTIMATE("Health Estimate");
+    NEW_TEXT("New");
 
     private final String defaultValue;
 

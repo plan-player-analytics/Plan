@@ -35,17 +35,6 @@ Cmd Qinspect - Player Kills                     ||   §2Kills de Joueurs : §f${
 Cmd Qinspect - Playtime                         ||   §2Temps de jeu : §f${0}
 Cmd Qinspect - Registered                       ||   §2Incrit depuis : §f${0}
 Cmd Qinspect - Times Kicked                     ||   §2Nombre d'éjections : §f${0}
-Cmd Setup - Allowed                             || §aLa configuration est maintenant autorisée.
-Cmd Setup - Bad Request                         || §eLa connexion a réussi, mais le serveur de réception n'était un serveur Bukkit ou Sponge. Utilisez une autre adresse à la place.
-Cmd Setup - Disallowed                          || §cLa configuration est maintenant interdite.
-Cmd Setup - Forbidden                           || §eConnexion réussie, mais le mode de configuration de Bungee est désactivé. Exécutez '/plan bungee setup' pour l'activer.
-Cmd Setup - Gateway Error                       || §eConnexion réussie, mais Bungee n'a pas réussi à se connecter à ce serveur (Le serveur Web actuel a-t-il redémarré ?). Exécutez '/plan m con' et '/planbungee con' pour déboguer.
-Cmd Setup - Generic Fail                        || §eConnexion échouée : ${0}
-Cmd Setup - Internal Error                      || §eConnexion échouée : ${0}, Vérifiez des possibles erreurs sur la page de débogage du serveur de réception.
-Cmd Setup - Success                             || §aConnexion réussie, Plan peut redémarrer dans quelques secondes.
-Cmd Setup - Unauthorized                        || §eConnexion réussie, mais le serveur de réception n'a pas autorisé ce serveur. Contactez-nous sur Discord pour obtenir de l'aide.
-Cmd Setup - Url mistake                         || §cAssurez-vous d'utiliser l'adresse complète (commençant par http:// ou https://). Consultez les logs du Bungee pour la connaître.
-Cmd Setup - WebServer not Enabled               || §cLe serveur Web n'est pas activé sur ce serveur ! Assurez-vous qu'il se soit démarré lors du lancement du serveur !
 Cmd SUCCESS - Feature disabled                  || §aFontionnalité '${0}' temporairement désactivée jusqu'au prochain rechargement du plugin.
 Cmd SUCCESS - WebUser register                  || §aAjout d'un nouvel utilisateur (${0}) avec succès ! Vous pouvez afficher le panneau Web dans le lien suivant.
 Cmd Update - Cancel Success                     || §aAnnulation de l'opération...
@@ -67,14 +56,12 @@ Command Help - /plan inspect                    || Visionner la page d'un joueur
 Command Help - /plan manage                     || Gérer la base de données de Plan.
 Command Help - /plan manage backup              || Sauvegarder une base de données.
 Command Help - /plan manage clear               || Effacer une base de données.
-Command Help - /plan manage con                 || Déboguer la connexion Serveur -> Bungee.
 Command Help - /plan manage disable             || Désactiver temporairement une fonctionnalité.
 Command Help - /plan manage hotswap             || Changer rapidement de base de données.
 Command Help - /plan manage import              || Importer des données externes.
 Command Help - /plan manage move                || Déplacer des données entre des bases de données.
 Command Help - /plan manage remove              || Supprimer les données d'un joueur.
 Command Help - /plan manage restore             || Restaurer une sauvegarde précédente.
-Command Help - /plan manage setup               || Configuration de la connexion Serveur -> Bungee.
 Command Help - /plan network                    || Visionner la page du réseau.
 Command Help - /plan players                    || Visionner la page des joueurs.
 Command Help - /plan qinspect                   || Visionner les informations d'un joueur (en jeu).
@@ -88,9 +75,7 @@ Command Help - /plan web delete                 || Supprimer un utilisateur Web.
 Command Help - /plan web level                  || Informations sur les niveaux de permission.
 Command Help - /plan web list                   || Liste des utilisateurs Web.
 Command Help - /plan webuser                    || Gérer les utilisateurs Web.
-Command Help - /planbungee con                  || Déboguer la connexion Bungee -> Serveur.
 Command Help - /planbungee disable              || Désactiver temporairement Plan.
-Command Help - /planbungee setup                || Basculer le mode de configuration (on/off).
 Database - Apply Patch                          || Application de correctifs : ${0}...
 Database - Patches Applied                      || Tous les correctifs pour la base de données ont été appliqués avec succès.
 Database - Patches Applied Already              || Tous les correctifs pour la base de données ont déjà été appliqués.
@@ -103,7 +88,6 @@ Disable - Processing Complete                   || Traitement complété.
 Disable - WebServer                             || Le serveur Web a été désactivé.
 Enable                                          || Plan a été activé.
 Enable - Database                               || Connexion à la base de données établie. (${0})
-Enable - Notify Address Confirmation            || Assurez-vous que cette adresse pointe vers ce serveur : ${0}.
 Enable - Notify Empty IP                        || L'adresse IP située dans le fichier 'server.properties' est vide et l'option 'AlternativeIP' n'est pas utilisée. Attention, des liens incorrects seront donnés !
 Enable - Notify Geolocations disabled           || La géolocalisation n'est pas active. (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || Plan nécessite un accès à Internet lors de sa première utilisation pour télécharger la base de données 'GeoLite2 Geolocation'.
@@ -135,7 +119,6 @@ HTML - ERROR                                    || Authentification échouée à
 HTML - FAVORITE_SERVER                          || Serveur favori
 HTML - GEOLOCATION                              || Géolocalisation
 HTML - GEOLOCATION_TEXT                         || Géolocalisation
-HTML - HEALTH_ESTIMATE                          || Estimation de la santé du serveur
 HTML - INDEX_ACTIVE                             || Actif
 HTML - INDEX_INACTIVE                           || Inactif
 HTML - INDEX_IRREGULAR                          || Irrégulier
@@ -172,7 +155,6 @@ HTML - NAV_PERFORMANCE                          || Performance
 HTML - NAV_PLAYERS                              || Joueurs
 HTML - NAV_PLUGINS                              || Plugins
 HTML - NAV_SESSIONS                             || Sessions
-HTML - NAV_SEVER_HEALTH                         || Santé du serveur
 HTML - NETWORK                                  || Réseau
 HTML - NETWORK_INFORMATION                      || INFORMATIONS SUR LE RÉSEAU
 HTML - NEW                                      || NOUVEAU(X)
@@ -209,7 +191,6 @@ HTML - REGULAR                                  || RÉGULIER(S)
 HTML - SEEN_NICKNAMES                           || Surnoms Vus
 HTML - SERVER                                   || Serveur
 HTML - SERVER_ANALYSIS                          || Analyse du serveur
-HTML - SERVER_HEALTH_ESTIMATE                   || Estimation de la santé du serveur
 HTML - SERVER_INFORMATION                       || INFORMATIONS SUR LE SERVEUR
 HTML - SERVER_PREFERENCE                        || Préférence de serveur
 HTML - SERVERS                                  || Serveurs
@@ -242,8 +223,6 @@ HTML - WORLD_LOAD                               || CHARGE DU MONDE
 HTML - WORLD_PLAYTIME                           || Temps de jeu par monde
 HTML - WORST_PING                               || Pire latence
 HTML ERRORS - ACCESS_DENIED_403                 || Accès refusé.
-HTML ERRORS - ANALYSIS_REFRESH                  || L'analyseur est en cours de rafraîchissement...
-HTML ERRORS - ANALYSIS_REFRESH_LONG             || L'analyse est en cours d'exécution, actualisez la page après quelques secondes....
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Assurez-vous d'avoir enregistré un utilisateur avec :<b>'/plan register'.</b><br>- Vérifiez que le nom d'utilisateur et le mot de passe soient corrects.<br>- Le nom d'utilisateur et le mot de passe sont sensibles au format majuscule/minuscule.<br><br>Si vous avez oublié votre mot de passe, demandez à un membre du staff de supprimer votre ancien utilisateur puis de vous réinscrire.
 HTML ERRORS - AUTHENTICATION_FAILED_401         || Authentification échouée.
 HTML ERRORS - FORBIDDEN_403                     || Accès interdit.
@@ -260,13 +239,11 @@ In Depth Help - /plan inspect ?                 || > §2Commande d'inspection\  
 In Depth Help - /plan manage ?                  || > §2Commande de gestion\  Gestion des bases de données MySQL et SQLite de Plan.\  §2/plan m §fListe des sous-commandes\  §2/plan m <subcommand> ? §fAide en profondeur
 In Depth Help - /plan manage backup ?           || > §2Sous-commande de sauvegarde\  Crée une nouvelle base de données SQLite (fichier .db) avec le contenu de la base de données actuellement active dans la configuration de Plan.
 In Depth Help - /plan manage clear ?            || > §2Sous-commande d'effacement\  Supprime l'intégralité de la base de données active. À utiliser avec précaution.
-In Depth Help - /plan manage con ?              || > §2Sous-commande de débogage de connexion\  Utilisée pour déboguer les connexions du réseau.\  Envoie une demande à chaque serveur présent dans la base de données.
-In Depth Help - /plan manage disable ?          || > §2Sous-commande de désactivation\  Peut désactiver des parties du plugin jusqu'au prochain rechargement.\  Arguments acceptés :\§2kickcount §fDésactive le comptage d'éjections dans le cas où tous les joueurs ont été expulsés par un arrêt.
+DELETE_FROMIn Depth Help - /plan manage disable ?          || > §2Sous-commande de désactivation\  Peut désactiver des parties du plugin jusqu'au prochain rechargement.\  Arguments acceptés :\§2kickcount §fDésactive le comptage d'éjections dans le cas où tous les joueurs ont été expulsés par un arrêt.
 In Depth Help - /plan manage import ?           || > §2Sous-commande d'importation\  Importe des données depuis d'autres sources.\  Arguments acceptés :\    §2offline §fDonnées du joueur Bukkit, uniquement la date d'enregistrement et le nom.
 In Depth Help - /plan manage move ?             || > §2Sous-commande de déplacement\  Déplace les données de SQLite vers MySQL ou autre.\  La base de données cible est effacée avant le transfert.
 In Depth Help - /plan manage remove ?           || > §2Sous-commande de suppression\  Supprime les données d'un joueur de la base de données active.
 In Depth Help - /plan manage restore ?          || > §2Sous-commande de restauration\  Restaure une sauvegarde de base de données SQLite précédente (fichier .db)\  Vous pouvez également restaurer le fichier database.db d'un autre serveur vers MySQL.\  La base de données cible est effacée avant le transfert.
-In Depth Help - /plan manage setup ?            || > §2Sous-commande de configuration\ Configure une connexion entre Bungee et ce serveur pour la fonctionnalité réseau.\  Vous pouvez trouver l'adresse du Bungee dans les logs de la la console lorsque Plan est activé sur Bungee.
 In Depth Help - /plan network ?                 || > §2Sous-commande du réseau\  Affiche le lien vers la page du réseau.\  S'il ne s'agit pas d'un réseau, elle affiche la page du serveur.
 In Depth Help - /plan players ?                 || > §2Commande des joueurs\  Affiche un lien vers la page des joueurs.
 In Depth Help - /plan qinspect ?                || > §2Quick Inspect CommandCommande d'inspection rapide\  Affiche des informations sur un joueur en jeu.
@@ -277,7 +254,6 @@ In Depth Help - /plan update ?                  || > §2Commande de mise à jour
 In Depth Help - /plan web ?                     || < §2Commande de la gestion d'utilisateurs Web\  §2/plan web §fListe des sous-commandes\  §2/plan web <subcommand> ? §fAide en profondeure
 In Depth Help - /plan web register ?            || > §2Commande d'enregistrement\  Enregistre un nouvel utilisateur Web.\  L'enregistrement d'un utilisateur pour un autre joueur nécessite l'autorisation 'plan.webmanage'.\  Les mots de passe sont hachés avec PBKDF2 (64000 itérations de SHA1) en utilisant 'un sel cryptographiquement aléatoire'.
 In Depth Help - /planbungee disable ?           || > §2Commande de désactivation\  Lance onDisable pour PlanBungee.\  Le plugin peut être activé par la suite en exécutant la commande /planbungee reload.\  §bNe supporte pas l'échange de .jar à la volée (sans redémarrage complet)
-In Depth Help - /planbungee setup ?             || > §2Commande de bascule de configuration\  Bascule le mode de configuration sur Bungee.\  Protégez-vous contre le 'fouinage' non autorisée de MySQL avec un autre serveur.
 Manage - Confirm Overwrite                      || Les données ${0} seront écrasées !
 Manage - Confirm Removal                        || Les données ${0} seront supprimées !
 Manage - Fail                                   || > §cUne erreur est survenue : ${0}.
@@ -286,13 +262,7 @@ Manage - Fail Incorrect Database                || > §c'${0}' n'est pas une bas
 Manage - Fail No Importer                       || §eL'importateur '${0}' n'existe pas.
 Manage - Fail Same Database                     || > §cNe peut pas opérer sur et depuis la même base de données !
 Manage - Fail, Confirmation                     || > §cAjoutez l'argmenter '-a' afin de confirmer l'éxécution : ${0}
-Manage - Fail, Connection Exception             || §eRaison de l'échec : 
-Manage - Fail, No Servers                       || §cAucun serveur trouvé dans la base de données.
-Manage - Fail, Old version                      || §eRaison de l'échec : Le serveur de réception utilise une ancienne version de Plan.
-Manage - Fail, Unauthorized                     || §eRaison de l'échec : Non autorisé. Le serveur utilise peut-être une base de données différente.
-Manage - Fail, Unexpected Exception             || §eErreur : ${0}.
-Manage - List Importers                         || Importateurs : 
-Manage - Notify External Url                    || §eAdresse non locale, vérifiez que le port soit ouvert.
+Manage - List Importers                         || Importateurs :
 Manage - Remind HotSwap                         || §eN'oubliez pas de passer à la nouvelle base de données (/plan m hotswap ${0}) & de recharger Plan.
 Manage - Start                                  || > §2Traitement des données...
 Manage - Success                                || > §aSuccès !

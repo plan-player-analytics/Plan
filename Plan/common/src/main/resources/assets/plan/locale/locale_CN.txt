@@ -35,17 +35,6 @@ Cmd Qinspect - Player Kills                     ||   §2玩家击杀数：§f${0
 Cmd Qinspect - Playtime                         ||   §2游玩时间：§f${0}
 Cmd Qinspect - Registered                       ||   §2注册时间：§f${0}
 Cmd Qinspect - Times Kicked                     ||   §2踢出次数：§f${0}
-Cmd Setup - Allowed                             || §a现已允许安装
-Cmd Setup - Bad Request                         || §e连接成功，但接收服务器不是 Bungee 服务器。请使用 Bungee 地址。
-Cmd Setup - Disallowed                          || §c现已禁止安装
-Cmd Setup - Forbidden                           || §e连接成功，但 Bungee 已禁用安装模式 - 请使用 '/planbungee setup' 启用。
-Cmd Setup - Gateway Error                       || §e连接成功，但 Bungee 无法与此服务器建立连接（是否重启了当前网页服务器？）请使用 /plan m con 与 /planbungee con 进行调试。
-Cmd Setup - Generic Fail                        || §e连接失败：${0}
-Cmd Setup - Internal Error                      || §e连接成功。${0}，请检查接收服务器调试页面的错误日志。
-Cmd Setup - Success                             || §a连接成功，计划可能将在几秒内重启···
-Cmd Setup - Unauthorized                        || §e连接成功，但接收服务器并未授权此服务器。请在 Discord 上联系以寻求帮助
-Cmd Setup - Url mistake                         || §c请确保您所输入的是完整地址（以 http:// 或 https:// 开头）- 请检查 Bungee 启用日志获取完整地址。
-Cmd Setup - WebServer not Enabled               || §c未在此服务器上启用网页服务器！请确保其在开机时启用！
 Cmd SUCCESS - Feature disabled                  || §a已在下次插件重载前暂时禁用 '${0}'。
 Cmd SUCCESS - WebUser register                  || §a已成功添加新用户（${0}）！您可以在以下链接中查看Web面板。
 Cmd Update - Cancel Success                     || §a已完成取消操作。
@@ -67,14 +56,12 @@ Command Help - /plan inspect                    || 检视玩家数据
 Command Help - /plan manage                     || 数据库管理命令
 Command Help - /plan manage backup              || 备份数据库至 .db 文件
 Command Help - /plan manage clear               || 从数据库中清空所有数据
-Command Help - /plan manage con                 || 调试服务器至 Bungee 的连接
 Command Help - /plan manage disable             || 暂时禁用功能
 Command Help - /plan manage hotswap             || 热插拔数据库并重启插件
 Command Help - /plan manage import              || 从插件中导入数据
 Command Help - /plan manage move                || 在数据库间移动数据
 Command Help - /plan manage remove              || 从活跃数据库中移除玩家数据
 Command Help - /plan manage restore             || 恢复数据库
-Command Help - /plan manage setup               || 设置服务器至 Bungee 的连接
 Command Help - /plan network                    || 查看网络页面
 Command Help - /plan players                    || 列出所有已缓存玩家名单
 Command Help - /plan qinspect                   || 在游戏内检视玩家数据
@@ -88,9 +75,7 @@ Command Help - /plan web delete                 || 删除网页用户
 Command Help - /plan web level                  || 权限级别信息
 Command Help - /plan web list                   || 列出网页用户
 Command Help - /plan webuser                    || 管理网页用户
-Command Help - /planbungee con                  || 调试 Bungee 至服务器的连接
 Command Help - /planbungee disable              || 暂时禁用插件
-Command Help - /planbungee setup                || 开关设置功能
 Database - Apply Patch                          || 正在应用更新：${0}···
 Database - Patches Applied                      || 已成功应用所有数据库补丁。
 Database - Patches Applied Already              || 已应用所有数据库补丁。
@@ -103,7 +88,6 @@ Disable - Processing Complete                   || 处理完毕。
 Disable - WebServer                             || 正在关闭网页服务器···
 Enable                                          || 已启用插件。
 Enable - Database                               || ${0}-已建立数据库连接。
-Enable - Notify Address Confirmation            || 确保此地址指向此服务器：${0}
 Enable - Notify Empty IP                        || server.properties 中的 IP 为空且未使用替代 IP。这将会导致地址出错！
 Enable - Notify Geolocations disabled           || 已关闭地理位置收集。（Data.Geolocations: false）
 Enable - Notify Geolocations Internet Required  || 插件需要在首次运行时访问互联网以下载 GeoLite2 地理位置数据库。
@@ -135,7 +119,6 @@ HTML - ERROR                                    || 认证时发生错误
 HTML - FAVORITE_SERVER                          || 喜爱的服务器
 HTML - GEOLOCATION                              || 地理位置
 HTML - GEOLOCATION_TEXT                         || 地理位置
-HTML - HEALTH_ESTIMATE                          || 预计健康度
 HTML - INDEX_ACTIVE                             || 活跃
 HTML - INDEX_INACTIVE                           || 不活跃
 HTML - INDEX_IRREGULAR                          || 偶尔上线
@@ -172,7 +155,6 @@ HTML - NAV_PERFORMANCE                          || 性能
 HTML - NAV_PLAYERS                              || 玩家
 HTML - NAV_PLUGINS                              || 插件
 HTML - NAV_SESSIONS                             || 时域
-HTML - NAV_SEVER_HEALTH                         || 服务器健康度
 HTML - NETWORK                                  || 服务器网络
 HTML - NETWORK_INFORMATION                      || 服务器网络信息
 HTML - NEW                                      || 新建
@@ -209,7 +191,6 @@ HTML - REGULAR                                  || 经常
 HTML - SEEN_NICKNAMES                           || 可视昵称
 HTML - SERVER                                   || 服务器
 HTML - SERVER_ANALYSIS                          || 服务器分析
-HTML - SERVER_HEALTH_ESTIMATE                   || 服务器健康估计
 HTML - SERVER_INFORMATION                       || 服务器信息
 HTML - SERVER_PREFERENCE                        || 服务器偏好设置
 HTML - SERVERS                                  || 服务器
@@ -243,8 +224,6 @@ HTML - WORLD_LOAD                               || 世界加载
 HTML - WORLD_PLAYTIME                           || 世界游玩时间
 HTML - WORST_PING                               || 最高延迟
 HTML ERRORS - ACCESS_DENIED_403                 || 拒绝访问
-HTML ERRORS - ANALYSIS_REFRESH                  || 正在刷新分析···
-HTML ERRORS - ANALYSIS_REFRESH_LONG             || 正在执行分析，请在几秒后刷新页面···
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - 确保您已使用 <b>/plan register</b> 注册用户<br>- 检查用户名与密码是否正确<br>- 用户名与密码区分大小写<br><br>若您忘记了密码，请让工作人员删除您的旧密码并重新注册。
 HTML ERRORS - AUTHENTICATION_FAILED_401         || 认证失败。
 HTML ERRORS - FORBIDDEN_403                     || 禁止访问
@@ -261,13 +240,11 @@ In Depth Help - /plan inspect ?                 || §2检视命令\§f  用于�
 In Depth Help - /plan manage ?                  || §2管理命令\§f  用于管理插件数据库。\§7  别名：/plan m\§7  /plan m - Auflistung der Unterbefehle\§7  /plan m <子命令> ? - 详细帮助
 In Depth Help - /plan manage backup ?           || > §2备份命令\  用于建立新 SQLite 数据库（.db 文件）并包含当前在计划插件文件夹中所有的活跃数据库内容。
 In Depth Help - /plan manage clear ?            || §2管理清除命令\§f  用于清除活跃数据库中的所有数据。\§7  插件在清理完毕后应被重载。\§7  别名：/plan pl
-In Depth Help - /plan manage con ?              || > §2调试连接命令\  用于调试网络间的连接。\  向数据库中的每个服务器发送请求。
-In Depth Help - /plan manage disable ?          || > §2禁用命令\  用于在下次重新载入之前禁用插件的部分特性。\  接受的参数：\    §2kickcount §f禁用在关闭服务器时 /kickall 的踢出计数。
+DELETE_FROMIn Depth Help - /plan manage disable ?          || > §2禁用命令\  用于在下次重新载入之前禁用插件的部分特性。\  接受的参数：\    §2kickcount §f禁用在关闭服务器时 /kickall 的踢出计数。
 In Depth Help - /plan manage import ?           || §2管理导入命令\§f  用于从其它来源导入数据\§7  在导入过程中将禁用数据分析。
 In Depth Help - /plan manage move ?             || > §2移动指令\  将数据从 SQLite 移动至 MySQL，反之亦然。\  目标数据库将在转移前被清除。
 In Depth Help - /plan manage remove ?           || §2管理移除命令\§f  用于从活跃数据库中移除用户数据。
 In Depth Help - /plan manage restore ?          || > §2恢复命令\  从先前备份的 SQLite 数据库中恢复数据（.db 文件）\  您也可以从其他服务器中恢复 database.db 到 MySQL。\  目标数据库将在传输前被清除。
-In Depth Help - /plan manage setup ?            || > §2安装命令\  设置 Bungee 与此服务器之间的网络连接。\  Bungee 地址可在计划于 Bungee 上启动时的控制台日志中找到。
 In Depth Help - /plan network ?                 || > §2网络命令\  显示到网络页的链接。\  若不在群组网络上，此页面将显示为服务器页面。
 In Depth Help - /plan players ?                 || > §2玩家命令\  显示到玩家页的链接。
 In Depth Help - /plan qinspect ?                || §2快速检视命令\§f  用于获取游戏内关于检视的信息。\§7  相比检视网页有着更少的信息。\§7  别名：/plan qi
@@ -278,7 +255,6 @@ In Depth Help - /plan update ?                  || > §2更新命令\  用于在
 In Depth Help - /plan web ?                     || < §2网页用户管理命令。\  §2/plan web §f列出子命令\  §2/plan web <子命令> ? §f详细帮助
 In Depth Help - /plan web register ?            || > §2注册命令\  注册一位新的网页用户。\  为其他用户注册需要 plan.webmanage 权限。\  密码通过使用随机密码盐的 PBKDF2 哈希方法加密（重复 64000 次 SHA1）。
 In Depth Help - /planbungee disable ?           || > §2禁用命令\  在 PlanBungee 上运行 onDisable。\  插件之后需要运行 /planbungee reload 以重新启用。\  §b不支持运行时热切换插件
-In Depth Help - /planbungee setup ?             || > §2设置开关命令\  开关 Bungee 上的安装功能。\  用来防止与其他服务器之间未授权的 MySQL 监听。
 Manage - Confirm Overwrite                      || 数据库 ${0} 中的数据将被覆盖！
 Manage - Confirm Removal                        || 数据库 ${0} 中的数据将被移除！
 Manage - Fail                                   || > §c[计划] 处理数据时发生错误！ ${0}
@@ -287,13 +263,7 @@ Manage - Fail Incorrect Database                || > §c'${0}' 不是一个支�
 Manage - Fail No Importer                       || §e导入器 '${0}' 不存在
 Manage - Fail Same Database                     || > §c[计划] 无法移动至相同的数据库！
 Manage - Fail, Confirmation                     || > §c[计划] 请添加 -a 以确认执行！${0}
-Manage - Fail, Connection Exception             || §e失败原因：
-Manage - Fail, No Servers                       || §c未在数据库中找到服务器。
-Manage - Fail, Old version                      || §e失败原因：接收服务器使用了旧版本的插件。
-Manage - Fail, Unauthorized                     || §e失败原因：未获得授权。服务器可能使用不同的数据库。
-Manage - Fail, Unexpected Exception             || §e异常例外：${0}
 Manage - List Importers                         || 导入器：
-Manage - Notify External Url                    || §e非本地地址，请检查端口是否开放
 Manage - Remind HotSwap                         || §e[计划] 请记住要切换至新数据库并重新载入插件（/plan m hotswap ${0}）
 Manage - Start                                  || »§7 正在处理数据···
 Manage - Success                                || §f» §2 成功！

@@ -31,13 +31,6 @@ public enum ManageLang implements Lang {
     CONFIRMATION("Manage - Fail, Confirmation", "> §cAdd '-a' argument to confirm execution: ${0}"),
     IMPORTERS("Manage - List Importers", "Importers: "),
 
-    CON_NO_SERVERS("Manage - Fail, No Servers", "§cNo Servers found in the database."),
-    CON_EXCEPTION("Manage - Fail, Unexpected Exception", "§eOdd Exception: ${0}"),
-    CON_UNAUTHORIZED("Manage - Fail, Unauthorized", "§eFail reason: Unauthorized. Server might be using different database."),
-    CON_GENERIC_FAIL("Manage - Fail, Connection Exception", "§eFail reason: "),
-    CON_EXTERNAL_URL("Manage - Notify External Url", "§eNon-local address, check that port is open"),
-    CON_OLD_VERSION("Manage - Fail, Old version", "§eFail reason: Older Plan version on receiving server"),
-
     CONFIRM_OVERWRITE("Manage - Confirm Overwrite", "Data in ${0} will be overwritten!"),
     CONFIRM_REMOVAL("Manage - Confirm Removal", "Data in ${0} will be removed!"),
 

@@ -29,7 +29,6 @@ public enum CommonHtmlLang implements Lang {
     NAV_OVERVIEW("Overview"),
     NAV_PLUGINS("Plugins"),
     NAV_ONLINE_ACTIVITY("Online Activity"),
-    NAV_SEVER_HEALTH("Server Health"),
     NAV_PERFORMANCE("Performance"),
     NAV_PLAYERS("Players"),
     NAV_GEOLOCATIONS("Geolocations"),

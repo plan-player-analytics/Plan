@@ -24,7 +24,6 @@ package com.djrapitops.plan.settings.locale.lang;
 public enum DeepHelpLang implements Lang {
     PLAN("In Depth Help - /plan ?", "> §2Main Command\\  Access to subcommands and help\\  §2/plan §fList subcommands\\  §2/plan <subcommand> ? §fIn depth help"),
     ANALYZE("In Depth Help - /plan analyze ?", "> §2Analysis Command\\  Refreshes server page and displays link to the web page."),
-    SETUP("In Depth Help - /planbungee setup ?", "> §2Set-up toggle Command\\  Toggles set-up mode on Proxy.\\  Safeguard against unauthorized MySQL snooping with another server."),
     DISABLE("In Depth Help - /planbungee disable ?", "> §2Disable Command\\  Runs Plan onDisable on Proxy.\\  Plugin can be enabled with /planbungee reload afterwards.\\  §bDoes not support swapping jar on the fly"),
     INSPECT("In Depth Help - /plan inspect ?", "> §2Inspect Command\\  Refreshes player page and displays link to the web page."),
     PLAYERS("In Depth Help - /plan players ?", "> §2Players Command\\  Displays link to the players page."),
@@ -38,15 +37,12 @@ public enum DeepHelpLang implements Lang {
 
     MANAGE_BACKUP("In Depth Help - /plan manage backup ?", "> §2Backup Subcommand\\  Creates a new SQLite database (.db file) with contents of currently active database in the Plan plugin folder."),
     MANAGE_CLEAR("In Depth Help - /plan manage clear ?", "> §2Clear Subcommand\\  Removes everything in the active database. Use with caution."),
-    MANAGE_CON("In Depth Help - /plan manage con ?", "> §2Connection Debug Subcommand\\  Used to debug connections in the network.\\  Sends a request to each server in the database."),
     MANAGE_DISABLE("In Depth Help - /plan manage disable ?", "> §2Disable Subcommand\\  Can disable parts of the plugin until next reload.\\  Accepted arguments:\\    §2kickcount §fDisables kick counts in case /kickall is used on shutdown macro."),
     MANAGE_IMPORT("In Depth Help - /plan manage import ?", "> §2Import Subcommand\\  Import data from other sources.\\  Accepted Arguments:\\    §2offline §fBukkit player data, only register date and name."),
     MANAGE_EXPORT("In Depth Help - /plan manage export ?", "> §2Export Subcommand\\  Trigger export to result folders.\\  Accepted Arguments:\\    §2list §fList possible arguments.\\    §2players §fExport /players, /player pages + /player/raw json depending on config values.\\    §2server_json §fExport /server/raw JSON if enabled in config."),
     MANAGE_MOVE("In Depth Help - /plan manage move ?", "> §2Move Subcommand\\  Move data from SQLite to MySQL or other way around.\\  Target database is cleared before transfer."),
     MANAGE_REMOVE("In Depth Help - /plan manage remove ?", "> §2Remove Subcommand\\  Remove player's data from the active database."),
     MANAGE_RESTORE("In Depth Help - /plan manage restore ?", "> §2Restore Subcommand\\  Restore a previous backup SQLite database (.db file)\\  You can also restore database.db from another server to MySQL.\\  Target database is cleared before transfer."),
-    MANAGE_SETUP("In Depth Help - /plan manage setup ?", "> §2Setup Subcommand\\  Set-up a connection between Bungee and this server for network functionality.\\  BungeeAddress can be found in the enable log on console when Plan enables on Bungee."),
-
     WEB_REGISTER("In Depth Help - /plan web register ?", "> §2Register Subcommand\\  Registers a new Web User.\\  Registering a user for another player requires plan.webmanage permission.\\  Passwords are hashed with PBKDF2 (64,000 iterations of SHA1) using a cryptographically-random salt."),
     MANAGE_RAW_DATA("In Depth Help - /plan manage raw ?", "> §2Raw Data Subcommand\\  Displays link to raw JSON data page.\\  Not available if Plan webserver is not enabled."),
     MANAGE_UNINSTALLED("In Depth Help - /plan manage uninstalled ?", "> §2Uninstalled Server Subcommand\\  Marks a server as uninstalled in the database.\\  Can not mark the server the command is being used on as uninstalled.\\  Will affect ConnectionSystem.");

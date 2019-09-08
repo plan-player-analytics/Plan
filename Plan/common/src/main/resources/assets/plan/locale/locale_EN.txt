@@ -35,17 +35,6 @@ Cmd Qinspect - Player Kills                     ||   §2Player Kills: §f${0}
 Cmd Qinspect - Playtime                         ||   §2Playtime: §f${0}
 Cmd Qinspect - Registered                       ||   §2Registered: §f${0}
 Cmd Qinspect - Times Kicked                     ||   §2Times Kicked: §f${0}
-Cmd Setup - Allowed                             || §aSet-up is now Allowed
-Cmd Setup - Bad Request                         || §eConnection succeeded, but Receiving server was a Bukkit or Sponge server. Use another address instead.
-Cmd Setup - Disallowed                          || §cSet-up is now Forbidden
-Cmd Setup - Forbidden                           || §eConnection succeeded, but Proxy has set-up mode disabled - use '/planbungee setup' to enable it.
-Cmd Setup - Gateway Error                       || §eConnection succeeded, but Proxy failed to connect to this server (Did current web server restart?). Use /plan m con & /planbungee con to debug.
-Cmd Setup - Generic Fail                        || §eConnection failed: ${0}
-Cmd Setup - Internal Error                      || §eConnection succeeded. ${0}, check possible ErrorLog on receiving server's debug page.
-Cmd Setup - Success                             || §aConnection successful, Plan may restart in a few seconds..
-Cmd Setup - Unauthorized                        || §eConnection succeeded, but Receiving server didn't authorize this server. Contact Discord for support
-Cmd Setup - Url mistake                         || §cMake sure you're using the full address (Starts with http:// or https://) - Check Proxy enable log for the full address.
-Cmd Setup - WebServer not Enabled               || §cWebServer is not enabled on this server! Make sure it enables on boot!
 Cmd SUCCESS - Feature disabled                  || §aDisabled '${0}' temporarily until next plugin reload.
 Cmd SUCCESS - WebUser register                  || §aAdded a new user (${0}) successfully! You can view the web panel in the following link.
 Cmd Update - Cancel Success                     || §aCancel operation performed.
@@ -67,14 +56,12 @@ Command Help - /plan inspect                    || View a Player Page
 Command Help - /plan manage                     || Manage Plan Database
 Command Help - /plan manage backup              || Backup a Database
 Command Help - /plan manage clear               || Clear a Database
-Command Help - /plan manage con                 || Debug Server-Proxy connections
 Command Help - /plan manage disable             || Disable a feature temporarily
 Command Help - /plan manage hotswap             || Change Database quickly
 Command Help - /plan manage import              || Import data from elsewhere
 Command Help - /plan manage move                || Move data between Databases
 Command Help - /plan manage remove              || Remove Player's data
 Command Help - /plan manage restore             || Restore a previous Backup
-Command Help - /plan manage setup               || Set-up Server-Proxy connection
 Command Help - /plan network                    || View the Network Page
 Command Help - /plan players                    || View the Players Page
 Command Help - /plan qinspect                   || View Player info in game
@@ -88,9 +75,7 @@ Command Help - /plan web delete                 || Delete a Web User
 Command Help - /plan web level                  || Information about permission levels
 Command Help - /plan web list                   || List Web Users
 Command Help - /plan webuser                    || Manage Web Users
-Command Help - /planbungee con                  || Debug Proxy-Server connections
 Command Help - /planbungee disable              || Disable the plugin temporarily
-Command Help - /planbungee setup                || Toggle set-up mode
 Database - Apply Patch                          || Applying Patch: ${0}..
 Database - Patches Applied                      || All database patches applied successfully.
 Database - Patches Applied Already              || All database patches already applied.
@@ -103,7 +88,6 @@ Disable - Processing Complete                   || Processing complete.
 Disable - WebServer                             || Webserver has been disabled.
 Enable                                          || Player Analytics Enabled.
 Enable - Database                               || ${0}-database connection established.
-Enable - Notify Address Confirmation            || Make sure that this address points to THIS Server: ${0}
 Enable - Notify Empty IP                        || IP in server.properties is empty & AlternativeIP is not in use. Incorrect links will be given!
 Enable - Notify Geolocations disabled           || Geolocation gathering is not active. (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || Plan Requires internet access on first run to download GeoLite2 Geolocation database.
@@ -135,7 +119,6 @@ HTML - ERROR                                    || Authentication failed due to 
 HTML - FAVORITE_SERVER                          || Favorite Server
 HTML - GEOLOCATION                              || Geolocation
 HTML - GEOLOCATION_TEXT                         || Geolocation
-HTML - HEALTH_ESTIMATE                          || Health Estimate
 HTML - INDEX_ACTIVE                             || Active
 HTML - INDEX_INACTIVE                           || Inactive
 HTML - INDEX_IRREGULAR                          || Irregular
@@ -172,7 +155,6 @@ HTML - NAV_PERFORMANCE                          || Performance
 HTML - NAV_PLAYERS                              || Players
 HTML - NAV_PLUGINS                              || Plugins
 HTML - NAV_SESSIONS                             || Sessions
-HTML - NAV_SEVER_HEALTH                         || Server Health
 HTML - NETWORK                                  || Network
 HTML - NETWORK_INFORMATION                      || NETWORK INFORMATION
 HTML - NEW                                      || NEW
@@ -209,7 +191,6 @@ HTML - REGULAR                                  || REGULAR
 HTML - SEEN_NICKNAMES                           || Seen Nicknames
 HTML - SERVER                                   || Server
 HTML - SERVER_ANALYSIS                          || Server Analysis
-HTML - SERVER_HEALTH_ESTIMATE                   || Server Health Estimate
 HTML - SERVER_INFORMATION                       || SERVER INFORMATION
 HTML - SERVER_PREFERENCE                        || Server Preference
 HTML - SERVERS                                  || Servers
@@ -242,8 +223,6 @@ HTML - WORLD_LOAD                               || WORLD LOAD
 HTML - WORLD_PLAYTIME                           || World Playtime
 HTML - WORST_PING                               || Worst Ping
 HTML ERRORS - ACCESS_DENIED_403                 || Access Denied
-HTML ERRORS - ANALYSIS_REFRESH                  || Analysis is being refreshed..
-HTML ERRORS - ANALYSIS_REFRESH_LONG             || Analysis is being run, refresh the page after a few seconds..
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Ensure you have registered a user with <b>/plan register</b><br>- Check that the username and password are correct<br>- Username and password are case-sensitive<br><br>If you have forgotten your password, ask a staff member to delete your old user and re-register.
 HTML ERRORS - AUTHENTICATION_FAILED_401         || Authentication Failed.
 HTML ERRORS - FORBIDDEN_403                     || Forbidden
@@ -260,13 +239,11 @@ In Depth Help - /plan inspect ?                 || > §2Inspect Command\  Refres
 In Depth Help - /plan manage ?                  || > §2Manage Command\  Manage MySQL and SQLite database of Plan.\  §2/plan m §fList subcommands\  §2/plan m <subcommand> ? §fIn depth help
 In Depth Help - /plan manage backup ?           || > §2Backup Subcommand\  Creates a new SQLite database (.db file) with contents of currently active database in the Plan plugin folder.
 In Depth Help - /plan manage clear ?            || > §2Clear Subcommand\  Removes everything in the active database. Use with caution.
-In Depth Help - /plan manage con ?              || > §2Connection Debug Subcommand\  Used to debug connections in the network.\  Sends a request to each server in the database.
-In Depth Help - /plan manage disable ?          || > §2Disable Subcommand\  Can disable parts of the plugin until next reload.\  Accepted arguments:\    §2kickcount §fDisables kick counts in case /kickall is used on shutdown macro.
+DELETE_FROMIn Depth Help - /plan manage disable ?          || > §2Disable Subcommand\  Can disable parts of the plugin until next reload.\  Accepted arguments:\    §2kickcount §fDisables kick counts in case /kickall is used on shutdown macro.
 In Depth Help - /plan manage import ?           || > §2Import Subcommand\  Import data from other sources.\  Accepted Arguments:\    §2offline §fBukkit player data, only register date and name.
 In Depth Help - /plan manage move ?             || > §2Move Subcommand\  Move data from SQLite to MySQL or other way around.\  Target database is cleared before transfer.
 In Depth Help - /plan manage remove ?           || > §2Remove Subcommand\  Remove player's data from the active database.
 In Depth Help - /plan manage restore ?          || > §2Restore Subcommand\  Restore a previous backup SQLite database (.db file)\  You can also restore database.db from another server to MySQL.\  Target database is cleared before transfer.
-In Depth Help - /plan manage setup ?            || > §2Setup Subcommand\  Set-up a connection between Proxy and this server for network functionality.\  BungeeAddress can be found in the enable log on console when Plan enables on Bungee.
 In Depth Help - /plan network ?                 || > §2Network Command\  Displays link to the network page.\  If not on a network, this page displays the server page.
 In Depth Help - /plan players ?                 || > §2Players Command\  Displays link to the players page.
 In Depth Help - /plan qinspect ?                || > §2Quick Inspect Command\  Displays some information about the player in game.
@@ -277,7 +254,6 @@ In Depth Help - /plan update ?                  || > §2Update Command\  Used to
 In Depth Help - /plan web ?                     || < §2Web User Manage Command.\  §2/plan web §fList subcommands\  §2/plan web <subcommand> ? §fIn Depth help
 In Depth Help - /plan web register ?            || > §2Register Subcommand\  Registers a new Web User.\  Registering a user for another player requires plan.webmanage permission.\  Passwords are hashed with PBKDF2 (64,000 iterations of SHA1) using a cryptographically-random salt.
 In Depth Help - /planbungee disable ?           || > §2Disable Command\  Runs Plan onDisable on Proxy servers.\  Plugin can be enabled with /planbungee reload afterwards.\  §bDoes not support swapping jar on the fly
-In Depth Help - /planbungee setup ?             || > §2Set-up toggle Command\  Toggles set-up mode on Proxy.\  Safeguard against unauthorized MySQL snooping with another server.
 Manage - Confirm Overwrite                      || Data in ${0} will be overwritten!
 Manage - Confirm Removal                        || Data in ${0} will be removed!
 Manage - Fail                                   || > §cSomething went wrong: ${0}
@@ -286,13 +262,7 @@ Manage - Fail Incorrect Database                || > §c'${0}' is not a supporte
 Manage - Fail No Importer                       || §eImporter '${0}' doesn't exist
 Manage - Fail Same Database                     || > §cCan not operate on to and from the same database!
 Manage - Fail, Confirmation                     || > §cAdd '-a' argument to confirm execution: ${0}
-Manage - Fail, Connection Exception             || §eFail reason: 
-Manage - Fail, No Servers                       || §cNo Servers found in the database.
-Manage - Fail, Old version                      || §eFail reason: Older Plan version on receiving server
-Manage - Fail, Unauthorized                     || §eFail reason: Unauthorized. Server might be using different database.
-Manage - Fail, Unexpected Exception             || §eOdd Exception: ${0}
-Manage - List Importers                         || Importers: 
-Manage - Notify External Url                    || §eNon-local address, check that port is open
+Manage - List Importers                         || Importers:
 Manage - Remind HotSwap                         || §eRemember to swap to the new database (/plan m hotswap ${0}) & reload the plugin.
 Manage - Start                                  || > §2Processing data..
 Manage - Success                                || > §aSuccess!

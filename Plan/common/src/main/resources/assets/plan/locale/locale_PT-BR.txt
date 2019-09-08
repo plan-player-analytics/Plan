@@ -35,17 +35,6 @@ Cmd Qinspect - Player Kills                     ||   §2Assassinato de Jogadores
 Cmd Qinspect - Playtime                         ||   §2Tempo de Jogo: §f${0}
 Cmd Qinspect - Registered                       ||   §2Registered: §f${0}
 Cmd Qinspect - Times Kicked                     ||   §2Vezes Kickado: §f${0}
-Cmd Setup - Allowed                             || §aA configuração agora é permitida
-Cmd Setup - Bad Request                         || §eA conexão foi bem sucedida, mas o servidor de recebimento não era um servidor Bungee. Utilize o endereço de IP do Bungee.
-Cmd Setup - Disallowed                          || §cA configuração de instalação agora foi bloqueada
-Cmd Setup - Forbidden                           || §eA conexão foi bem sucedida, mas o Bungee desativou o modo de configuração - utilize '/planbungee setup' para ativá-lo.
-Cmd Setup - Gateway Error                       || §eA conexão foi bem sucedida, mas o Bungee não conseguiu se conectar a esse servidor (O servidor web atual foi reiniciado?). Utilize /plan m con & /planbungee con para depurar.
-Cmd Setup - Generic Fail                        || §eConexão falhou: ${0}
-Cmd Setup - Internal Error                      || §eConexão bem sucedida. ${0}, verifique se possível o ErrorLog que está recebendo nos servidores na página de depuração.
-Cmd Setup - Success                             || §aConexão bem sucedida, o Plan pode reiniciar em alguns segundos..
-Cmd Setup - Unauthorized                        || §eA conexão foi bem sucedida, mas o servidor de recebimento não autorizou esse servidor. Entre em contato por Discord para receber suporte.
-Cmd Setup - Url mistake                         || §cVerifique se você está usando o endereço completo (que começa com http:// ou https://) -  verifique no console do Bungee se está recebendo o endereço corretamente.
-Cmd Setup - WebServer not Enabled               || §cO servidor web não está habilitado nesse servidor! Certifique-se que essa opção esteja habilitada no arquivo de configuração do Plan!
 Cmd SUCCESS - Feature disabled                  || §aDesativado '${0}' temporariamente até o próximo reload do plugin.
 Cmd SUCCESS - WebUser register                  || §aFoi adicionado um novo usuário (${0})! Você pode ver o painel da web no link a seguir.
 Cmd Update - Cancel Success                     || §aCancelar operação realizada.
@@ -67,14 +56,12 @@ Command Help - /plan inspect                    || Visualizar a página do jogad
 Command Help - /plan manage                     || Gerenciar o banco de dados do Plan
 Command Help - /plan manage backup              || Fazer backup do banco de dados
 Command Help - /plan manage clear               || Limpar o banco de dados
-Command Help - /plan manage con                 || Depurar as conexões Servidor-Bungee
 Command Help - /plan manage disable             || Desativar um recurso temporariamente
 Command Help - /plan manage hotswap             || Alterar o banco de dados rapidamente
 Command Help - /plan manage import              || Importar dados de outro lugar
 Command Help - /plan manage move                || Mover dados entre banco de dados
 Command Help - /plan manage remove              || Remvoer dados de jogadores
 Command Help - /plan manage restore             || Restaurar último backup realizado
-Command Help - /plan manage setup               || Configurar uma conexão Servidor-Bungee
 Command Help - /plan network                    || Visualizar a página da Network
 Command Help - /plan players                    || Visualizar a página de Jogadores
 Command Help - /plan qinspect                   || Visualziar informações do Jogador in-game
@@ -88,9 +75,7 @@ Command Help - /plan web delete                 || Excluir um usuário web
 Command Help - /plan web level                  || Informações sobre os níveis de permissão
 Command Help - /plan web list                   || Listar usuários web
 Command Help - /plan webuser                    || Gerenciar usuários web
-Command Help - /planbungee con                  || Depurar conexões Bungee-Servidor
 Command Help - /planbungee disable              || Desativar o plugin temporariamente
-Command Help - /planbungee setup                || Alternar o modo de configuração
 Database - Apply Patch                          || Aplicando o Patch: ${0}..
 Database - Patches Applied                      || Todos os patchs de bancos de dados foram aplicados.
 Database - Patches Applied Already              || Todos os patchs de bancos de dados já foram aplicados.
@@ -103,7 +88,6 @@ Disable - Processing Complete                   || Processamento completo.
 Disable - WebServer                             || O servidor web foi desativado.
 Enable                                          || Análise de Jogadores Ativado.
 Enable - Database                               || ${0}-conexão com o banco de dados estabilizada.
-Enable - Notify Address Confirmation            || Tenha certeza que esse endereço está apontando para ESSE servidor: ${0}
 Enable - Notify Empty IP                        || O IP no server.properties está vazio & o IP alternativo não está sendo usado. Os dados informados estão incorretos!
 Enable - Notify Geolocations disabled           || A coleta de geolocalização está desativada. (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || O Plan requer acesso à internet na primeira execução para baixar o banco de dados de geolocalização do GeoLite2.
@@ -135,7 +119,6 @@ HTML - ERROR                                    || Falha ao autenticar
 HTML - FAVORITE_SERVER                          || Servidor Favorito
 HTML - GEOLOCATION                              || Geolocalização
 HTML - GEOLOCATION_TEXT                         || Geolocalização
-HTML - HEALTH_ESTIMATE                          || Vida Estimada
 HTML - INDEX_ACTIVE                             || Ativo
 HTML - INDEX_INACTIVE                           || Inativo
 HTML - INDEX_IRREGULAR                          || Irregular
@@ -172,7 +155,6 @@ HTML - NAV_PERFORMANCE                          || Desempenho
 HTML - NAV_PLAYERS                              || Jogadores
 HTML - NAV_PLUGINS                              || Plugins
 HTML - NAV_SESSIONS                             || Sessões
-HTML - NAV_SEVER_HEALTH                         || Vida do Servidor
 HTML - NETWORK                                  || Network
 HTML - NETWORK_INFORMATION                      || INFORMAÇÕES DA NETWORK
 HTML - NEW                                      || NOVO
@@ -209,7 +191,6 @@ HTML - REGULAR                                  || REGULARES
 HTML - SEEN_NICKNAMES                           || Nicks Vistos
 HTML - SERVER                                   || Servidor
 HTML - SERVER_ANALYSIS                          || Análise do Servidor
-HTML - SERVER_HEALTH_ESTIMATE                   || Estimativa de Integridade do Servidor
 HTML - SERVER_INFORMATION                       || INFORMAÇÕES DO SERVIDOR
 HTML - SERVER_PREFERENCE                        || Preferência de servidor
 HTML - SERVERS                                  || Servidores
@@ -242,8 +223,6 @@ HTML - WORLD_LOAD                               || MUNDOS CARREGADOS
 HTML - WORLD_PLAYTIME                           || Tempo de Jogo por Mundo
 HTML - WORST_PING                               || Pior Ping
 HTML ERRORS - ACCESS_DENIED_403                 || Acesso Negado
-HTML ERRORS - ANALYSIS_REFRESH                  || A análise está sendo atualizada..
-HTML ERRORS - ANALYSIS_REFRESH_LONG             || A análise está sendo executada, atualize a página após alguns segundos..
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Certifique-se de ter registrado um usuário com <b>/plan register</b><br>- Verifique se o nome de usuário e a senha estão corretos<br>- O nome de usuário e senha fazem distinção entre maiúsculas e minúsculas, verifique se escreveu corretamente<br><br>Se você esqueceu sua senha, peça para um staff que exclua seu antigo usuário e registre um novo.
 HTML ERRORS - AUTHENTICATION_FAILED_401         || Falha na Autenticação.
 HTML ERRORS - FORBIDDEN_403                     || Proibido
@@ -260,13 +239,11 @@ In Depth Help - /plan inspect ?                 || > §2Comando Inspect\  Atuali
 In Depth Help - /plan manage ?                  || > §2Comando Manage\  Gerencia o banco de dados MySQL e SQLite do Plan.\  §2/plan m §fListar subcomandos\  §2/plan m <subcomando> ? §fConsulta mais detalhada
 In Depth Help - /plan manage backup ?           || > §2Subcomando Backup\  Cria um novo banco de dados SQLite (arquivo .db) com o conteúdo atual do banco de dados na pasta plugin do Plan.
 In Depth Help - /plan manage clear ?            || > §2Subcomando Clear\  Remove qualquer coisa ativa no banco de dados. Utilize com cuidado.
-In Depth Help - /plan manage con ?              || > §2Subcomando Connection Debug\  Usado para depurar conexões na network.\  Envia uma requisição para cada servidor do banco de dados.
-In Depth Help - /plan manage disable ?          || > §2Subcomando Disable\  Pode desativar recursos do plugin até o próximo reload.\  Argumentos válidos:\    §2kickcount §fDesativa as contagens de kick em caso de /kickall.
+DELETE_FROMIn Depth Help - /plan manage disable ?          || > §2Subcomando Disable\  Pode desativar recursos do plugin até o próximo reload.\  Argumentos válidos:\    §2kickcount §fDesativa as contagens de kick em caso de /kickall.
 In Depth Help - /plan manage import ?           || > §2Subcomando Import\  Importa dados de outras fontes.\  Argumentos válidos:\    §2offline §fDados de jogadores do Bukkit, somente datas de registro e nomes.
 In Depth Help - /plan manage move ?             || > §2Subcomando Move\  Move dados do SQLite para o MySQL ou outro meio.\  O banco de dados de destino é limpo antes da transferência de dados.
 In Depth Help - /plan manage remove ?           || > §2Subcomando Remove\  Remover dados de jogadores do banco de dados ativo.
 In Depth Help - /plan manage restore ?          || > §2Restore Subcommand\  Restore a previous backup SQLite database (.db file)\  You can also restore database.db from another server to MySQL.\  Target database is cleared before transfer.
-In Depth Help - /plan manage setup ?            || > §2Subcomando Setup\  Configura uma conexão entre Bungee e um servidor para a funcionalidade da rede.\  O endereço Bungee pode ser encontrado no log de ativação no console quando o Plan é habilitado no Bungee.
 In Depth Help - /plan network ?                 || > §2Comando Network\  Mostra o link para a página da network.\  Se não for uma network, essa página mostra a página do servidor.
 In Depth Help - /plan players ?                 || > §2Comando Players\  Mostra o link para a página de jogadores.
 In Depth Help - /plan qinspect ?                || > §2Comando Quick Inspect\  Mostra algumas informações sobre o jogador in-game.
@@ -277,7 +254,6 @@ In Depth Help - /plan update ?                  || > §2Comando Update\  Usado p
 In Depth Help - /plan web ?                     || > §2Comando de Gerenciado do Usuário Web.\  §2/plan web §fLista subcomandos\  §2/plan web <subcomando> ? §fConsulta mais detalhada
 In Depth Help - /plan web register ?            || > §2Subcomando Register\  Registra um novo usuário web.\  Registrando um usuário web para outro jogador precisa da permissão plan.webmanage.\  Senhas são criptografadas com PBKDF2 (64,000 iterações de SHA1) sendo totalmente aleatórias.
 In Depth Help - /planbungee disable ?           || > §2Comando Disable\  Executa onDisable no PlanBungee.\  O plugin pode ser ativado com /planbungee reload.\  §bNão suporta a troca de JAR (caso seja isso, precisa reiniciar o servidor)
-In Depth Help - /planbungee setup ?             || > §2Comando Set-up\  Alterna o modo de configuração no Bungee.\  É um método de segurança para que não haja invasão MySQL a partir de servidores fake.
 Manage - Confirm Overwrite                      || Dados em ${0} serão sobrescritos!
 Manage - Confirm Removal                        || Dados em ${0} serão removidos!
 Manage - Fail                                   || > §cAlguma coisa deu errado: ${0}
@@ -286,13 +262,7 @@ Manage - Fail Incorrect Database                || > §c'${0}' não é um banco 
 Manage - Fail No Importer                       || §eImportador '${0}' não existe
 Manage - Fail Same Database                     || > §cNão é possível operar do mesmo banco de dados!
 Manage - Fail, Confirmation                     || > §cAdicione o argumento '-a' para confirmar a execução: ${0}
-Manage - Fail, Connection Exception             || §eMotivo de falha: 
-Manage - Fail, No Servers                       || §cNenhum servidor encontrado no banco de dados.
-Manage - Fail, Old version                      || §eMotivo de falha: Versão do Plan muito antiga no servidor de recebimento
-Manage - Fail, Unauthorized                     || §eMotivo de falha: Não autorizado. O servidor pode estar usando um banco de dados diferente.
-Manage - Fail, Unexpected Exception             || §eExceção ímpar: ${0}
-Manage - List Importers                         || Importadores: 
-Manage - Notify External Url                    || §eEndereço é remoto, verifique se a porta está aberta
+Manage - List Importers                         || Importadores:
 Manage - Remind HotSwap                         || §eLembre-se de trocar para o novo banco de dados (/plan m hotswap ${0}) & reinicie o plugin.
 Manage - Start                                  || > §2Processando dados..
 Manage - Success                                || > §aSucesso!
