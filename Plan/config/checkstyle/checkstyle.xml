@@ -73,7 +73,6 @@
             <property name="exceptionVariableName" value="expected|ignore"/>
         </module>
         <module name="EmptyStatement"/>
-        <module name="HideUtilityClassConstructor"/>
         <module name="IllegalThrows"/>
         <module name="PackageAnnotation"/>
 
