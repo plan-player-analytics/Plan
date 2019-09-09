@@ -98,129 +98,88 @@ Enable FAIL - Database Patch                    || Tietokannan muutokset epäonn
 Enable FAIL - GeoDB Write                       || Jokin meni pieleen tallentaessa GeoLite2 tietokantaa
 Enable FAIL - WebServer (Bungee)                || Web Palvelin ei käynnistynyt!
 Enable FAIL - Wrong Database Type               || ${0} ei ole tuettu Tietokanta
-HTML - ACTIVITY_INDEX                           || Aktiivisuus Indeksi
-HTML - ALL                                      || KAIKKI
-HTML - ALL_TIME_PEAK                            || Paras Huippu
-HTML - AVERAGE_PING                             || Keskimääräinen Ping
-HTML - AVG                                      || AVG
-HTML - BANNED                                   || Pannassa
-HTML - BEST_PING                                || Paras Ping
-HTML - CALENDAR                                 || KALENTERI
-HTML - CALENDAR_TEXT                            ||  Kalenteri
-HTML - CHUNKS                                   || Chunkit
-HTML - COMMAND                                  ||  Komento
-HTML - COMMNAND_USAGE                           || Komentojen Käyttö
-HTML - CONNECTION_INFORMATION                   || Yhteydet
-HTML - COUNTRY                                  || Maa
-HTML - CURRENT_PLAYERBASE                       || Nykyiset pelaajat
-HTML - DEATHS                                   || Kuolemat
-HTML - ENTITIES                                 || Entiteetit
+HTML - LABEL_ACTIVITY_INDEX                           || Aktiivisuus Indeksi
+HTML - TITLE_ALL                                || Kaikki
+HTML - LABEL_BEST_PEAK                          || Paras Huippu
+HTML - LABEL_AVERAGE_PING                       || Keskimääräinen Ping
+LABEL_TIMES_KICKEDHTML - LABEL_BANNED                                   || Pannassa
+HTML - LABEL_BEST_PING                          || Paras Ping
+HTML - TITLE_CALENDAR                            ||  Kalenteri
+HTML - TITLE_CHUNKS                             || Chunkit
+HTML -  TITLE_CONNECTION_INFORMATION            || Yhteydet
+HTML - TITLE_COUNTRY                            || Maa
+HTML - TITLE_CURRENT_PLAYERBASE                 || Nykyiset pelaajat
+HTML - LABEL_DEATHS                                   || Kuolemat
+HTML - LABEL_ENTITIES                                 || Entiteetit
 HTML - ERROR                                    || Autentisointi epäonnistui virheen vuoksi
-HTML - FAVORITE_SERVER                          || Lempipalvelin
-HTML - GEOLOCATION                              || Sijainti
-HTML - GEOLOCATION_TEXT                         || Sijainti
+HTML - LABEL_FAVORITE_SERVER                          || Lempipalvelin
+HTML - TITLE_GEOLOCATION                        || Sijainti
 HTML - INDEX_ACTIVE                             || Aktiivinen
 HTML - INDEX_INACTIVE                           || Inaktiivinen
 HTML - INDEX_IRREGULAR                          || Epäsäännöllinen
 HTML - INDEX_REGULAR                            || Säännöllinen
 HTML - INDEX_VERY_ACTIVE                        || Todella Aktiivinen
-HTML - IP_ADDRESS                               || IP-osoite
-HTML - KILLED                                   || Tappanut
-HTML - KILLED_BY                                || Tappanut
-HTML - LAST_24_HOURS                            || VIIMEISET 24 TUNTIA
-HTML - LAST_30_DAYS                             || VIIMEISET 30 PÄIVÄÄ
-HTML - LAST_30_DAYS_TEXT                        || Viimeiset 30 Päivää
-HTML - LAST_7_DAYS                              || VIIMEISET 7 PÄIVÄÄ
-HTML - LAST_CONNECTED                           || Viimeisin yhteys
-HTML - LAST_PEAK                                || Viimeisin huippu
-HTML - LAST_SEEN                                || NÄHTY VIIMEKSI
-HTML - LAST_SEEN_TEXT                           || Nähty Viimeksi
-HTML - LOADED_CHUNKS                            || Ladatut Chunkit
-HTML - LOADED_ENTITIES                          || Ladatut Entiteetit
+HTML - TITLE_LAST_24_HOURS                      || Viimeiset 24 tuntia
+HTML - TITLE_LAST_30_DAYS                       || Viimeiset 30 päivää
+HTML - TITLE_LAST_7_DAYS                        || Viimeiset 7 päivää
+HTML - TITLE_LAST_CONNECTED                     || Viimeisin yhteys
+HTML - LABEL_LAST_PEAK                          || Viimeisin huippu
+HTML - LABEL_LAST_SEEN                          || Nähty Viimeksi
+HTML - LABEL_LOADED_CHUNKS                            || Ladatut Chunkit
+HTML - LABEL_LOADED_ENTITIES                          || Ladatut Entiteetit
 HTML - LOCAL_MACHINE                            || Paikallinen laite
-HTML - LONGEST                                  || Pisin
-HTML - LOW_TPS_SPIKES                           || Matalat TPS Harjat
-HTML - MOB_CAUSED_DEATHS                        || Otusten aiheuttamat Kuolemat
-HTML - MOB_KILLS                                || Tapetut Otukset
-HTML - MOST_RECENT_SESSIONS                     || Viimeisimmät Istunnot
-HTML - NAME                                     ||  Nimi
-HTML - NAV_COMMAND_USAGE                        || Komentojen Käyttö
-HTML - NAV_GEOLOCATIONS                         || Sijainnit
-HTML - NAV_INFORMATION                          || Tiedot
-HTML - NAV_NETWORK_PLAYERS                      || Verkoston Pelaajat
-HTML - NAV_ONLINE_ACTIVITY                      || Aktiivisuus
-HTML - NAV_OVERVIEW                             || Yhteenveto
-HTML - NAV_PERFORMANCE                          || Suorituskyky
-HTML - NAV_PLAYERS                              || Pelaajat
+HTML - LABEL_LOW_TPS_SPIKES                     || Matalat TPS Harjat
+HTML - LABEL_MOB_DEATHS                         || Otusten aiheuttamat Kuolemat
+HTML - LABEL_MOB_KILLS                          || Tapetut Otukset
+HTML - TITLE_RECENT_SESSIONS                    || Viimeisimmät Istunnot
+HTML - SIDE_GEOLOCATIONS                        || Sijainnit
+HTML - SIDE_ONLINE_ACTIVITY                     || Aktiivisuus
+HTML - SIDE_OVERVIEW                            || Yhteenveto
+HTML - SIDE_PERFORMANCE                         || Suorituskyky
+HTML - UNIT_PLAYERS_TEXT                        || Pelaajat
 HTML - NAV_PLUGINS                              || Lisäosat
-HTML - NAV_SESSIONS                             || Istunnot
-HTML - NETWORK                                  || Verkosto
-HTML - NETWORK_INFORMATION                      || VERKOSTON TIEDOT
-HTML - NEW                                      || UUDET
+HTML - SIDE_SESSIONS                            || Istunnot
+HTML - TITLE_NETWORK                            || Verkosto
 HTML - NEW_CALENDAR                             || Uudet:
-HTML - NEW_PLAYERS_TEXT                         || Uudet Pelaajat
-HTML - NEW_RETENTION                            || Uusien Pelaajien pysyvyys
-HTML - NEW_TEXT                                 || Uudet
-HTML - NICKNAME                                 || Lempinimi
+HTML - LABEL_NEW_PLAYERS                        || Uudet Pelaajat
+HTML - LABEL_RETENTION                          || Uusien Pelaajien pysyvyys
+HTML - LABEL_NICKNAME                                 || Lempinimi
 HTML - NO_KILLS                                 || Ei Tappoja
-HTML - NO_PLAYER_CAUSED_DEATHS                  || Ei Pelaajien auheuttamia kuolemia
 HTML - OFFLINE                                  ||  Ei Paikalla
 HTML - ONLINE                                   ||  Paikalla
-HTML - ONLINE_ACTIVITY                          || AKTIIVISUUS
-HTML - OPERATOR                                 || Operaattori
-HTML - OVERVIEW                                 || YHTEENVETO
-HTML - PER_DAY                                  || / Päivä
-HTML - PLAYER_CAUSED_DEATHS                     || Pelaajien aiheuttamat Kuolemat
-HTML - PLAYER_KILLS                             || Tapetut Pelaajat
-HTML - PLAYER_LIST                              || Pelaajalista
-HTML - PLAYERBASE_DEVELOPMENT                   || Pelaajakunnan kehitys
-HTML - PLAYERS                                  || PELAAJAT
-HTML - PLAYERS_ONLINE                           || PELAAJIA PAIKALLA
-HTML - PLAYERS_ONLINE_TEXT                      || Pelaajia Paikalla
+HTML - LABEL_OPERATOR                                 || Operaattori
+HTML - LABEL_PLAYER_DEATHS                      || Pelaajien aiheuttamat Kuolemat
+HTML - LABEL_PLAYER_KILLS                          || Tapetut Pelaajat
+HTML - SIDE_PLAYER_LIST                         || Pelaajalista
+HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Pelaajakunnan kehitys
+HTML - LABEL_PLAYERS_ONLINE                     || Pelaajia Paikalla
 HTML - PLAYERS_TEXT                             || Pelaajia
-HTML - PLAYTIME                                 || Peliaika
-HTML - PLEASE_WAIT                              || Odota Hetki...
-HTML - PREDICETED_RETENTION                     || Pysyvyyden Ennuste
-HTML - PUNCH_CARD                               || Reikäkortti
-HTML - PUNCHCARD                                || REIKÄKORTTI
-HTML - RECENT_LOGINS                            || VIIMEAIKAISET KIRJAUTUMISET
-HTML - REGISTERED                               || REKISTERÖITYNYT
-HTML - REGISTERED_TEXT                          || Rekisteröitynyt
-HTML - REGULAR                                  || SÄÄNNÖLLISET
-HTML - SEEN_NICKNAMES                           || Nähdyt Lempinimet
-HTML - SERVER                                   || Palvelin
-HTML - SERVER_ANALYSIS                          || Palvelimen Analyysi
-HTML - SERVER_INFORMATION                       || PALVELIMEN TIEDOT
-HTML - SERVER_PREFERENCE                        || Palvelinten mieleisyys
-HTML - SERVERS                                  || Palvelimet
-HTML - SESSION                                  || Istunto
-HTML - SESSION_ENDED                            || Istunto Päättyi
-HTML - SESSION_LENGTH                           || Istunnon Pituus
-HTML - SESSION_MEDIAN                           || Istuntojen Mediaani
-HTML - SESSIONS                                 || Istunnot
-HTML - TIME                                     ||  Aika
-HTML - TIMES_KICKED                             || Potkimis Kerrat
-HTML - TIMES_USED                               || Käyttökerrat
+HTML - LABEL_PLAYTIME                           || Peliaika
+HTML - TITLE_PUNCH_CARD                         || Reikäkortti 30 päivälle
+HTML - LABEL_REGISTERED                         || Rekisteröitynyt
+HTML - TITLE_SEEN_NICKNAMES                     || Nähdyt Lempinimet
+HTML - TITLE_SERVER                             || Palvelin
+HTML - LINK_SERVER_ANALYSIS                     || Palvelimen Analyysi
+HTML - SIDE_SERVERS                             || Palvelimet
+HTML - LABEL_SESSION_ENDED                            || Istunto Päättyi
+HTML - LABEL_SESSION_LENGTH                           || Istunnon Pituus
+HTML - LABEL_SESSION_MEDIAN                           || Istuntojen Mediaani
+HTML - SIDE_SESSIONS                            || Istunnot
+HTML - LABEL_TIMES_KICKED                             || Potkimis Kerrat
 HTML - TOTAL_ACTIVE                             || Aktiivinen Peliaika
 HTML - TOTAL_AFK                                || AFK
 HTML - TOTAL_PLAYERS                            || Kaikki Pelaajat
 HTML - TOTAL_PLAYTIME                           || Peliaika
-HTML - UNIQUE                                   || UNIIKIT
 HTML - UNIQUE_CALENDAR                          || Uniikit:
-HTML - UNIQUE_PLAYERS                           || UNIIKIT PELAAJAT
-HTML - UNIQUE_PLAYERS_TEXT                      || Uniikit Pelaajat
-HTML - UNIQUE_TEXT                              || Uniikit
-HTML - USAGE                                    ||  Käyttö
-HTML - USED_COMMANDS                            || Käytetyt Komennot
+HTML - LABEL_UNIQUE_PLAYERS                    || Uniikit Pelaajat
 HTML - USER_AND_PASS_NOT_SPECIFIED              || Käyttäjää ja salasana vaaditaan.
 HTML - USER_DOES_NOT_EXIST                      || Käyttäjää ei ole olemassa
-HTML - USER_INFORMATION                         || KÄYTTÄJIEN TIEDOT
 HTML - USER_PASS_MISMATCH                       || Käyttäjä ja salasana ei täsmää
 HTML - WITH                                     || <th>Millä
 HTML - WORLD                                    ||  Maailma
-HTML - WORLD_LOAD                               || MAAILMAN VARAUS
-HTML - WORLD_PLAYTIME                           || Maailman Peliaika
-HTML - WORST_PING                               || Huonoin Ping
+HTML - TITLE_WORLD_LOAD                         || Maailman varaus
+HTML - TITLE_WORLD_PLAYTIME                     || Maailman Peliaika
+HTML - LABEL_WORST_PING                         || Huonoin Ping
 HTML ERRORS - ACCESS_DENIED_403                 || Pääsy Kielletty
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Varmista että olet rekisteröinyt käyttäjän komennolla <b>/plan register</b><br>- Tarkista että käyttäjänimi ja salaasana ovat oikein<br>- Nimi ja salasana ovat CASE SENSITIVE<br><br>Jos unohdit salasanasi, pyydä valvojia poistamaan käyttäjäsi ja uudelleenrekisteröidy.
 HTML ERRORS - AUTHENTICATION_FAILED_401         || Autentikaatio ei onnistunut.
@@ -283,5 +242,5 @@ WebServer FAIL - SSL Context                    || Web Palvelin: SSL Kontekstin 
 WebServer FAIL - Store Load                     || Web Palvelin: SSL Sertifikaatin lataus ei onnistunut.
 Yesterday                                       || 'Eilen'
 Today                                           || 'Tänään'
-HTML - FREE_DISK_SPACE                          || Vapaa Levytila
-HTML - DISK_SPACE                               || LEVYTILA
+HTML - LABEL_FREE_DISK_SPACE                          || Vapaa Levytila
+HTML - TITLE_DISK                               || Levytila

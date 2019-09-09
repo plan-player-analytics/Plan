@@ -98,130 +98,89 @@ Enable FAIL - Database Patch                    || Datenbank-Patch ist fehlgesch
 Enable FAIL - GeoDB Write                       || Etwas ist beim Speichern der GeoLite2 Geolocation Datenbank fehlgeschlagen
 Enable FAIL - WebServer (Bungee)                || Webserver ist nicht geladen
 Enable FAIL - Wrong Database Type               || ${0} ist keine gültige Datenbank
-HTML - ACTIVITY_INDEX                           || Aktivitätsindex
-HTML - ALL                                      || Gesamt
-HTML - ALL_TIME_PEAK                            || Rekord
-HTML - AVERAGE_PING                             || Durchschnittlicher Ping
-HTML - AVG                                      || AVG
-HTML - BANNED                                   || Gebannt
-HTML - BEST_PING                                || Bester Ping
-HTML - CALENDAR                                 || KALENDER
-HTML - CALENDAR_TEXT                            ||  Kalender
-HTML - CHUNKS                                   || Chunks
-HTML - COMMAND                                  ||  Befehl
-HTML - COMMNAND_USAGE                           || Befehlsverwendung
-HTML - CONNECTION_INFORMATION                   || Verbindungsinformationen
-HTML - COUNTRY                                  || Land
-HTML - CURRENT_PLAYERBASE                       || Aktuelle Playerbase
-HTML - DEATHS                                   || Tode
-HTML - ENTITIES                                 || Entitäten
+HTML - LABEL_ACTIVITY_INDEX                           || Aktivitätsindex
+HTML - TITLE_ALL                                || Gesamt
+HTML - LABEL_BEST_PEAK                          || Rekord
+HTML - LABEL_AVERAGE_PING                       || Durchschnittlicher Ping
+LABEL_TIMES_KICKEDHTML - LABEL_BANNED                                   || Gebannt
+HTML - LABEL_BEST_PING                          || Bester Ping
+HTML - TITLE_CALENDAR                            ||  Kalender
+HTML - TITLE_CHUNKS                             || Chunks
+HTML -  TITLE_CONNECTION_INFORMATION            || Verbindungsinformationen
+HTML - TITLE_COUNTRY                            || Land
+HTML - TITLE_CURRENT_PLAYERBASE                 || Aktuelle Playerbase
+HTML - LABEL_DEATHS                                   || Tode
+HTML - LABEL_ENTITIES                                 || Entitäten
 HTML - ERROR                                    || Authentifikation fehlgeschlagen
-HTML - FAVORITE_SERVER                          || Lieblingsserver
-HTML - GEOLOCATION                              || Geolocation
-HTML - GEOLOCATION_TEXT                         || Geolocation
+HTML - LABEL_FAVORITE_SERVER                          || Lieblingsserver
+HTML - TITLE_GEOLOCATION                        || Geolocation
 HTML - INDEX_ACTIVE                             || Aktiv
 HTML - INDEX_INACTIVE                           || Inaktiv
 HTML - INDEX_IRREGULAR                          || Unregelmäßig
 HTML - INDEX_REGULAR                            || Regelmäßig
 HTML - INDEX_VERY_ACTIVE                        || Sehr aktiv
-HTML - IP_ADDRESS                               || IP-Adresse
-HTML - KILLED                                   || Getötet
-HTML - KILLED_BY                                || Getötet von
-HTML - LAST_24_HOURS                            || Letzte 24 Stunden
-HTML - LAST_30_DAYS                             || Letzte 30 Tage
-HTML - LAST_30_DAYS_TEXT                        || Letzte 30 Tage
-HTML - LAST_7_DAYS                              || Letzte 7 Tage
-HTML - LAST_CONNECTED                           || Letzte Verbindung
-HTML - LAST_PEAK                                || Letzter Höchststand
-HTML - LAST_SEEN                                || Zuletzt gesehen
-HTML - LAST_SEEN_TEXT                           || Zuletzt gesehen
-HTML - LOADED_CHUNKS                            || Geladene Chunks
-HTML - LOADED_ENTITIES                          || Geladenen Entitäten
+HTML - TITLE_LAST_24_HOURS                      || Letzte 24 Stunden
+HTML - TITLE_LAST_30_DAYS                       || Letzte 30 Tage
+HTML - TITLE_LAST_7_DAYS                        || Letzte 7 Tage
+HTML - TITLE_LAST_CONNECTED                     || Letzte Verbindung
+HTML - LABEL_LAST_PEAK                          || Letzter Höchststand
+HTML - LABEL_LAST_SEEN                          || Zuletzt gesehen
+HTML - LABEL_LOADED_CHUNKS                            || Geladene Chunks
+HTML - LABEL_LOADED_ENTITIES                          || Geladenen Entitäten
 HTML - LOCAL_MACHINE                            || Lokale Maschine
-HTML - LONGEST                                  || Längste
-HTML - LOW_TPS_SPIKES                           || Geringe TPS Spikes
-HTML - MOB_CAUSED_DEATHS                        || Tode durch Mobs
-HTML - MOB_KDR                                  || Mob KDR
-HTML - MOB_KILLS                                || Mob Kills
-HTML - MOST_RECENT_SESSIONS                     || Letzte Sessions
-HTML - NAME                                     ||  Name
-HTML - NAV_COMMAND_USAGE                        || Befehlsverwendung
-HTML - NAV_GEOLOCATIONS                         || Geolocations
-HTML - NAV_INFORMATION                          || Information
-HTML - NAV_NETWORK_PLAYERS                      || Netzwerk Spieler
-HTML - NAV_ONLINE_ACTIVITY                      || Onlineaktivität
-HTML - NAV_OVERVIEW                             || Übersicht
-HTML - NAV_PERFORMANCE                          || Performance
-HTML - NAV_PLAYERS                              || Spieler
+HTML - LABEL_LOW_TPS_SPIKES                     || Geringe TPS Spikes
+HTML - LABEL_MOB_DEATHS                         || Tode durch Mobs
+HTML - LABEL_MOB_KDR                                  || Mob KDR
+HTML - LABEL_MOB_KILLS                          || Mob Kills
+HTML - TITLE_RECENT_SESSIONS                    || Letzte Sessions
+HTML - SIDE_GEOLOCATIONS                        || Geolocations
+HTML - SIDE_ONLINE_ACTIVITY                     || Onlineaktivität
+HTML - SIDE_OVERVIEW                            || Übersicht
+HTML - SIDE_PERFORMANCE                         || Performance
+HTML - UNIT_PLAYERS_TEXT                        || Spieler
 HTML - NAV_PLUGINS                              || Plugins
-HTML - NAV_SESSIONS                             || Sessions
-HTML - NETWORK                                  || Netzwerk
-HTML - NETWORK_INFORMATION                      || Netzwerkinformationen
-HTML - NEW                                      || Neu
+HTML - SIDE_SESSIONS                            || Sessions
+HTML - TITLE_NETWORK                            || Netzwerk
 HTML - NEW_CALENDAR                             || Neu:
-HTML - NEW_PLAYERS_TEXT                         || Neue Spieler
-HTML - NEW_RETENTION                            || Erhaltung neuer Spieler
-HTML - NEW_TEXT                                 || Neu
-HTML - NICKNAME                                 || Nickname
+HTML - LABEL_NEW_PLAYERS                        || Neue Spieler
+HTML - LABEL_RETENTION                          || Erhaltung neuer Spieler
+HTML - LABEL_NICKNAME                                 || Nickname
 HTML - NO_KILLS                                 || Keine Kills
-HTML - NO_PLAYER_CAUSED_DEATHS                  || Keine Tode durch Spieler
 HTML - OFFLINE                                  ||  Offline
 HTML - ONLINE                                   ||  Online
-HTML - ONLINE_ACTIVITY                          || ONLINE AKTIVITÄT
-HTML - OPERATOR                                 || Operator
-HTML - OVERVIEW                                 || ÜBERSICHT
-HTML - PER_DAY                                  || / Tag
-HTML - PLAYER_CAUSED_DEATHS                     || Tode durch Spieler
-HTML - PLAYER_KILLS                             || Getötete Spieler
-HTML - PLAYER_LIST                              || Spielerliste
-HTML - PLAYERBASE_DEVELOPMENT                   || Entwicklung der Playerbase
-HTML - PLAYERS                                  || SPIELER
-HTML - PLAYERS_ONLINE                           || SPIELER ONLINE
-HTML - PLAYERS_ONLINE_TEXT                      || Spieler Online
+HTML - LABEL_OPERATOR                                 || Operator
+HTML - LABEL_PLAYER_DEATHS                      || Tode durch Spieler
+HTML - LABEL_PLAYER_KILLS                          || Getötete Spieler
+HTML - SIDE_PLAYER_LIST                         || Spielerliste
+HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Entwicklung der Playerbase
+HTML - LABEL_PLAYERS_ONLINE                     || Spieler Online
 HTML - PLAYERS_TEXT                             || Spieler
-HTML - PLAYTIME                                 || Spielzeit
-HTML - PLEASE_WAIT                              || Bitte warten...
-HTML - PREDICETED_RETENTION                     || Vorhersage Erhaltung
-HTML - PUNCH_CARD                               || Lochkarte
-HTML - PUNCHCARD                                || LOCHKARTE
-HTML - RECENT_LOGINS                            || Letzte LOGINS
-HTML - REGISTERED                               || REGISTRIERT
-HTML - REGISTERED_TEXT                          || Registriert
-HTML - REGULAR                                  || REGELMÄSSIGE
-HTML - SEEN_NICKNAMES                           || Registrierte Nicknames
-HTML - SERVER                                   || Server
-HTML - SERVER_ANALYSIS                          || Server Analyse
-HTML - SERVER_INFORMATION                       || SERVER Information
-HTML - SERVER_PREFERENCE                        || Bevorzugter Server
-HTML - SERVERS                                  || Server
-HTML - SESSION                                  || Session
-HTML - SESSION_ENDED                            || Session beendet
-HTML - SESSION_LENGTH                           || Session Länge
-HTML - SESSION_MEDIAN                           || Session Durchschnitt
-HTML - SESSIONS                                 || Sessions
-HTML - TIME                                     ||  Zeit
-HTML - TIMES_KICKED                             || Mal gekickt
-HTML - TIMES_USED                               || Mal benutzt
+HTML - LABEL_PLAYTIME                           || Spielzeit
+HTML - TITLE_PUNCH_CARD                         || Lochkarte for 30 days
+HTML - LABEL_REGISTERED                         || Registriert
+HTML - TITLE_SEEN_NICKNAMES                     || Registrierte Nicknames
+HTML - TITLE_SERVER                             || Server
+HTML - LINK_SERVER_ANALYSIS                     || Server Analyse
+HTML - SIDE_SERVERS                             || Server
+HTML - LABEL_SESSION_ENDED                            || Session beendet
+HTML - LABEL_SESSION_LENGTH                           || Session Länge
+HTML - LABEL_SESSION_MEDIAN                           || Session Durchschnitt
+HTML - SIDE_SESSIONS                            || Sessions
+HTML - LABEL_TIMES_KICKED                             || Mal gekickt
 HTML - TOTAL_ACTIVE_TEXT                        || Gesamte Aktive Spielzeit
 HTML - TOTAL_AFK                                || Gesamte AFK-Zeit
 HTML - TOTAL_PLAYERS                            || Gesamte Spieler
 HTML - TOTAL_PLAYTIME                           || Gesamte Spielzeit
-HTML - UNIQUE                                   || EINZIGARTIG
 HTML - UNIQUE_CALENDAR                          || Einzigartig:
-HTML - UNIQUE_PLAYERS                           || EINZIGARTIGE SPIELER
-HTML - UNIQUE_PLAYERS_TEXT                      || Einzigartige Spieler
-HTML - UNIQUE_TEXT                              || Einzigartig
-HTML - USAGE                                    ||  Nutzung
-HTML - USED_COMMANDS                            || Benutzte Befehle
+HTML - LABEL_UNIQUE_PLAYERS                    || Einzigartige Spieler
 HTML - USER_AND_PASS_NOT_SPECIFIED              || User und Passwort nicht spezifiziert
 HTML - USER_DOES_NOT_EXIST                      || User existiert  nicht
-HTML - USER_INFORMATION                         || USER INFORMATION
 HTML - USER_PASS_MISMATCH                       || User und Password stimmen nicht überein
 HTML - WITH                                     || <th>Breite
 HTML - WORLD                                    ||  Welt
-HTML - WORLD_LOAD                               || Weltenladung
-HTML - WORLD_PLAYTIME                           || Spielzeit in der Welt
-HTML - WORST_PING                               || Schlechtester Ping
+HTML - TITLE_WORLD_LOAD                         || Weltenladung
+HTML - TITLE_WORLD_PLAYTIME                     || Spielzeit in der Welt
+HTML - LABEL_WORST_PING                         || Schlechtester Ping
 HTML ERRORS - ACCESS_DENIED_403                 || Zugriff verweigert
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Stelle sicher, dass du einen Account mit <b>/plan register</b> hinzugefügt hast.<br>- Überprüfe, ob Passwort und Benutzername korrekt sind<br>- Bei Benutzername und Passwort auf Groß- und Kleinschreibung achten! <br><br>- Wenn du dein Passwort vergessen hast, bitte ein Teammitglied deinen Account zu löschen und neu zu erstellen.
 HTML ERRORS - AUTHENTICATION_FAILED_401         || Authentifizierung fehlgeschlagen.
@@ -284,5 +243,5 @@ WebServer FAIL - SSL Context                    || WebServer: SSL Context Initia
 WebServer FAIL - Store Load                     || WebServer: SSL Zertifikat konnte nicht geladen werden.
 Yesterday                                       || 'Gestern'
 Today                                           || 'Heute'
-HTML - FREE_DISK_SPACE                          || Freier Festplattenspeicher
-HTML - DISK_SPACE                               || Festplattenspeicher
+HTML - LABEL_FREE_DISK_SPACE                          || Freier Festplattenspeicher
+HTML - TITLE_DISK                               || Festplattenspeicher

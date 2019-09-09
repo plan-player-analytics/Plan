@@ -98,130 +98,89 @@ Enable FAIL - Database Patch                    || VeriTabanı yaması başarıs
 Enable FAIL - GeoDB Write                       || İndirilen GeoLite2 Geolocation veritabanını kaydederken bir şeyler ters gitti.
 Enable FAIL - WebServer (Bungee)                || WebServer başlatılmadı!
 Enable FAIL - Wrong Database Type               || ${0} Desteklenmeyen bir veritabanı
-HTML - ACTIVITY_INDEX                           || Aktivite göstergesi
-HTML - ALL                                      || Tamamı
-HTML - ALL_TIME_PEAK                            || Tüm Zamanların Zirvesi
-HTML - AVERAGE_PING                             || Ortalama Ping
-HTML - AVG                                      || Ortalama
-HTML - BANNED                                   || Yasaklanmış
-HTML - BEST_PING                                || En iyi Ping
-HTML - CALENDAR                                 || Takvim
-HTML - CALENDAR_TEXT                            ||  Takvim
-HTML - CHUNKS                                   || Chunks
-HTML - COMMAND                                  ||  Komut
-HTML - COMMNAND_USAGE                           || Komut Kullanımı
-HTML - CONNECTION_INFORMATION                   || Bağlantı Bilgileri
-HTML - COUNTRY                                  || Ülke
-HTML - CURRENT_PLAYERBASE                       || Current Playerbase
-HTML - DEATHS                                   || Ölümler
-HTML - ENTITIES                                 || Varlıklar
+HTML - LABEL_ACTIVITY_INDEX                           || Aktivite göstergesi
+HTML - TITLE_ALL                                || Tamamı
+HTML - LABEL_BEST_PEAK                          || Tüm Zamanların Zirvesi
+HTML - LABEL_AVERAGE_PING                       || Ortalama Ping
+LABEL_TIMES_KICKEDHTML - LABEL_BANNED                                   || Yasaklanmış
+HTML - LABEL_BEST_PING                          || En iyi Ping
+HTML - TITLE_CALENDAR                            ||  Takvim
+HTML - TITLE_CHUNKS                             || Chunks
+HTML -  TITLE_CONNECTION_INFORMATION            || Bağlantı Bilgileri
+HTML - TITLE_COUNTRY                            || Ülke
+HTML - TITLE_CURRENT_PLAYERBASE                 || Current Playerbase
+HTML - LABEL_DEATHS                                   || Ölümler
+HTML - LABEL_ENTITIES                                 || Varlıklar
 HTML - ERROR                                    || Kimlik doğrulama hata nedeniyle başarısız oldu
-HTML - FAVORITE_SERVER                          || Favori Sunucu
-HTML - GEOLOCATION                              || Coğrafi Konum
-HTML - GEOLOCATION_TEXT                         || Coğrafi Konum
+HTML - LABEL_FAVORITE_SERVER                          || Favori Sunucu
+HTML - TITLE_GEOLOCATION                        || Coğrafi Konum
 HTML - INDEX_ACTIVE                             || Aktivite
 HTML - INDEX_INACTIVE                           || Etkisiz
 HTML - INDEX_IRREGULAR                          || Düzensiz
 HTML - INDEX_REGULAR                            || Düzenli
 HTML - INDEX_VERY_ACTIVE                        || Çok Aktif
-HTML - IP_ADDRESS                               || IP-address
-HTML - KILLED                                   || Öldürülen
-HTML - KILLED_BY                                || Tarafından Öldürülen
-HTML - LAST_24_HOURS                            || SON 24 SAAT
-HTML - LAST_30_DAYS                             || SON 30 GÜN
-HTML - LAST_30_DAYS_TEXT                        || SON 30 GÜN
-HTML - LAST_7_DAYS                              || SON 7 GÜN
-HTML - LAST_CONNECTED                           || Son bağlantı
-HTML - LAST_PEAK                                || Son Zirve
-HTML - LAST_SEEN                                || Son Görülme
-HTML - LAST_SEEN_TEXT                           || Son Görülme
-HTML - LOADED_CHUNKS                            || Yüklenmiş Chunks lar
-HTML - LOADED_ENTITIES                          || Yüklenmiş Varlıklar
+HTML - TITLE_LAST_24_HOURS                      || Son 24 saat
+HTML - TITLE_LAST_30_DAYS                       || Son 30 gün
+HTML - TITLE_LAST_7_DAYS                        || Son 7 gün
+HTML - TITLE_LAST_CONNECTED                     || Son bağlantı
+HTML - LABEL_LAST_PEAK                          || Son Zirve
+HTML - LABEL_LAST_SEEN                          || Son Görülme
+HTML - LABEL_LOADED_CHUNKS                            || Yüklenmiş Chunks lar
+HTML - LABEL_LOADED_ENTITIES                          || Yüklenmiş Varlıklar
 HTML - LOCAL_MACHINE                            || Yerel makine
-HTML - LONGEST                                  || En uzun
-HTML - LOW_TPS_SPIKES                           || Düşük TPS Artışı
-HTML - MOB_CAUSED_DEATHS                        || Yaratık Yüzünden ölümler
-HTML - MOB_KDR                                  || Mob İstatistiği
-HTML - MOB_KILLS                                || Öldürülen Mob
-HTML - MOST_RECENT_SESSIONS                     || En Son Oturumlar
-HTML - NAME                                     ||  İsim
-HTML - NAV_COMMAND_USAGE                        || Komut kullanımı
-HTML - NAV_GEOLOCATIONS                         || Coğrafi Konumlar
-HTML - NAV_INFORMATION                          || Bilgi
-HTML - NAV_NETWORK_PLAYERS                      || Network Oyuncuları
-HTML - NAV_ONLINE_ACTIVITY                      || Çevrimiçi Etkinlik
-HTML - NAV_OVERVIEW                             || Genel Bakış
-HTML - NAV_PERFORMANCE                          || Performans
-HTML - NAV_PLAYERS                              || Oyuncular
+HTML - LABEL_LOW_TPS_SPIKES                     || Düşük TPS Artışı
+HTML - LABEL_MOB_DEATHS                         || Yaratık Yüzünden ölümler
+HTML - LABEL_MOB_KDR                                  || Mob İstatistiği
+HTML - LABEL_MOB_KILLS                          || Öldürülen Mob
+HTML - TITLE_RECENT_SESSIONS                    || En Son Oturumlar
+HTML - SIDE_GEOLOCATIONS                        || Coğrafi Konumlar
+HTML - SIDE_ONLINE_ACTIVITY                     || Çevrimiçi Etkinlik
+HTML - SIDE_OVERVIEW                            || Genel Bakış
+HTML - SIDE_PERFORMANCE                         || Performans
+HTML - UNIT_PLAYERS_TEXT                        || Oyuncular
 HTML - NAV_PLUGINS                              || Pluginler
-HTML - NAV_SESSIONS                             || Oturumlar
-HTML - NETWORK                                  || Network
-HTML - NETWORK_INFORMATION                      || NETWORK Bilgisi
-HTML - NEW                                      || YENİ
+HTML - SIDE_SESSIONS                            || Oturumlar
+HTML - TITLE_NETWORK                            || Network
 HTML - NEW_CALENDAR                             || Yeni:
-HTML - NEW_PLAYERS_TEXT                         || Yeni Oyuncular
-HTML - NEW_RETENTION                            || New Player Retention
-HTML - NEW_TEXT                                 || Yeni
-HTML - NICKNAME                                 || Takma ad
+HTML - LABEL_NEW_PLAYERS                        || Yeni Oyuncular
+HTML - LABEL_RETENTION                          || New Player Retention
+HTML - LABEL_NICKNAME                                 || Takma ad
 HTML - NO_KILLS                                 || Öldürmesi yok
-HTML - NO_PLAYER_CAUSED_DEATHS                  || Hiçbir Oyuncu Ölüme Sebep Olmadı
 HTML - OFFLINE                                  ||  Çevrimdışı
 HTML - ONLINE                                   ||  Çevrimiçi
-HTML - ONLINE_ACTIVITY                          || ÇEVRİMİÇİ AKTİVİTE
-HTML - OPERATOR                                 || Operator
-HTML - OVERVIEW                                 || GENEL BAKIŞ
-HTML - PER_DAY                                  || / Gün
-HTML - PLAYER_CAUSED_DEATHS                     || Oyuncu ölüme sebep oldu
-HTML - PLAYER_KILLS                             || Oyuncu Öldürüldü
-HTML - PLAYER_LIST                              || Oyuncu Listesi
-HTML - PLAYERBASE_DEVELOPMENT                   || Oyuncu Etkinlik Grafiği
-HTML - PLAYERS                                  || OYUNCULAR
-HTML - PLAYERS_ONLINE                           || OYUNCU AKTİF
-HTML - PLAYERS_ONLINE_TEXT                      || Oyuncu Çevrimiçi
+HTML - LABEL_OPERATOR                                 || Operator
+HTML - LABEL_PLAYER_DEATHS                      || Oyuncu ölüme sebep oldu
+HTML - LABEL_PLAYER_KILLS                          || Oyuncu Öldürüldü
+HTML - SIDE_PLAYER_LIST                         || Oyuncu Listesi
+HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Oyuncu Etkinlik Grafiği
+HTML - LABEL_PLAYERS_ONLINE                     || Oyuncu Çevrimiçi
 HTML - PLAYERS_TEXT                             || Oyuncular
-HTML - PLAYTIME                                 || Oyun Süresi
-HTML - PLEASE_WAIT                              || Lütfen Bekleyin...
-HTML - PREDICETED_RETENTION                     || Tahmin Edilen Tutma
-HTML - PUNCH_CARD                               || Punchcard
-HTML - PUNCHCARD                                || PUNCHCARD
-HTML - RECENT_LOGINS                            || SON GİRİŞLER
-HTML - REGISTERED                               || KAYITLI
-HTML - REGISTERED_TEXT                          || Kayıtlı
-HTML - REGULAR                                  || DÜZENLİ
-HTML - SEEN_NICKNAMES                           || Görülen takma adlar
-HTML - SERVER                                   || Sunucu
-HTML - SERVER_ANALYSIS                          || Sunucu analizi
-HTML - SERVER_INFORMATION                       || SUNUCU BİLGİSİ
-HTML - SERVER_PREFERENCE                        || Sunucu Tercihi
-HTML - SERVERS                                  || Sunucular
-HTML - SESSION                                  || Oturum
-HTML - SESSION_ENDED                            || Oturum Sona Erdi
-HTML - SESSION_LENGTH                           || Oturum Giriş Süresi
-HTML - SESSION_MEDIAN                           || Session Median
-HTML - SESSIONS                                 || Oturumlar
-HTML - TIME                                     ||  Süre
-HTML - TIMES_KICKED                             || Kere Atılmış
-HTML - TIMES_USED                               || Kere Kullanışmış
+HTML - LABEL_PLAYTIME                           || Oyun Süresi
+HTML - TITLE_PUNCH_CARD                         || Punchcard for 30 days
+HTML - LABEL_REGISTERED                         || Kayıtlı
+HTML - TITLE_SEEN_NICKNAMES                     || Görülen takma adlar
+HTML - TITLE_SERVER                             || Sunucu
+HTML - LINK_SERVER_ANALYSIS                     || Sunucu analizi
+HTML - SIDE_SERVERS                             || Sunucular
+HTML - LABEL_SESSION_ENDED                            || Oturum Sona Erdi
+HTML - LABEL_SESSION_LENGTH                           || Oturum Giriş Süresi
+HTML - LABEL_SESSION_MEDIAN                           || Session Median
+HTML - SIDE_SESSIONS                            || Oturumlar
+HTML - LABEL_TIMES_KICKED                             || Kere Atılmış
 HTML - TOTAL_ACTIVE_TEXT                        || Toplam Aktiflik
 HTML - TOTAL_AFK                                || Toplam AFKlık
 HTML - TOTAL_PLAYERS                            || Toplam Oyuncular
 HTML - TOTAL_PLAYTIME                           || Toplam Oyunda oynanan süre
-HTML - UNIQUE                                   || İLK DEFA GİRENLER
 HTML - UNIQUE_CALENDAR                          || Benzersiz:
-HTML - UNIQUE_PLAYERS                           || SUNUCUYA İLK DEFA GİRENLER
-HTML - UNIQUE_PLAYERS_TEXT                      || Sunucuya İlk Defa Girenler   
-HTML - UNIQUE_TEXT                              || İlk Defa Girenler
-HTML - USAGE                                    ||  Kullanım
-HTML - USED_COMMANDS                            || Kullanılan Komutlar
+HTML - LABEL_UNIQUE_PLAYERS                    || Sunucuya İlk Defa Girenler
 HTML - USER_AND_PASS_NOT_SPECIFIED              || Kullanıcı ve Şifre belirtilmedi
 HTML - USER_DOES_NOT_EXIST                      || Böyle Bir Kullanıcı Yok
-HTML - USER_INFORMATION                         || KULLANICI BİLGİSİ
 HTML - USER_PASS_MISMATCH                       || Kullanıcı adı ve şifre uyuşmuyor
 HTML - WITH                                     || <th>Birlikte
 HTML - WORLD                                    ||  Dünya
-HTML - WORLD_LOAD                               || WORLD LOAD
-HTML - WORLD_PLAYTIME                           || Dünya OyunSüresi
-HTML - WORST_PING                               || Kötü Ping
+HTML - TITLE_WORLD_LOAD                         || World load
+HTML - TITLE_WORLD_PLAYTIME                     || Dünya OyunSüresi
+HTML - LABEL_WORST_PING                         || Kötü Ping
 HTML ERRORS - ACCESS_DENIED_403                 || Giriş reddedildi
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Bir kullanıcıyı <b>/plan register</b><br>- ile kayıt ettiğinize emin olun ismin ve şifrenin doğru olup olmadığını kontol edin <br>- Kullanıcı adı ve şifre büyük / küçük harf duyarlıdır<br><br>Eğer şifreni unuttuysan, Yetkiliden sizi tekrar kayıt etmesini isteyin.
 HTML ERRORS - AUTHENTICATION_FAIlED_401         || Kimlik doğrulama başarısız oldu.

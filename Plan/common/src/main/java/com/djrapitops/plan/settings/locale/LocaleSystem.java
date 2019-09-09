@@ -73,10 +73,6 @@ public class LocaleSystem implements SubSystem {
                 PluginLang.values(),
                 ManageLang.values(),
                 GenericLang.values(),
-                CommonHtmlLang.values(),
-                PlayerPageLang.values(),
-                ServerPageLang.values(),
-                NetworkPageLang.values(),
                 HtmlLang.values(),
                 ErrorPageLang.values(),
                 FailReason.values()

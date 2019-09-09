@@ -16,7 +16,8 @@
  */
 package com.djrapitops.plan.settings.locale;
 
-import com.djrapitops.plan.settings.locale.lang.*;
+import com.djrapitops.plan.settings.locale.lang.HtmlLang;
+import com.djrapitops.plan.settings.locale.lang.Lang;
 import com.djrapitops.plan.storage.file.FileResource;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import org.apache.commons.lang3.StringUtils;
@@ -115,11 +116,7 @@ public class Locale extends HashMap<Lang, Message> {
         }
 
         Lang[][] langs = new Lang[][]{
-                HtmlLang.values(),
-                NetworkPageLang.values(),
-                PlayerPageLang.values(),
-                ServerPageLang.values(),
-                CommonHtmlLang.values()
+                HtmlLang.values()
         };
 
         List<String> replace = new ArrayList<>();

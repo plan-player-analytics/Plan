@@ -98,131 +98,90 @@ Enable FAIL - Database Patch                    || 数据库补丁失败，插�
 Enable FAIL - GeoDB Write                       || 保存已下载的 GeoLite2 地理位置数据库时发生问题
 Enable FAIL - WebServer (Bungee)                || 网页服务器未初始化
 Enable FAIL - Wrong Database Type               || ${0} 此数据类型不存在。
-HTML - ACTIVITY_INDEX                           || 活跃指数
-HTML - ALL                                      || 全部
-HTML - ALL_TIME_PEAK                            || 所有时间峰值
-HTML - AVERAGE_PING                             || 平均延迟
-HTML - AVG                                      || 平均
-HTML - BANNED                                   || 已封禁
-HTML - BEST_PING                                || 最低延迟
-HTML - CALENDAR                                 || 日历
-HTML - CALENDAR_TEXT                            ||  日历
-HTML - CHUNKS                                   || 区块
-HTML - COMMAND                                  ||  命令
-HTML - COMMNAND_USAGE                           || 使用命令
-HTML - CONNECTION_INFORMATION                   || 连接信息
-HTML - COUNTRY                                  || 国家
-HTML - CURRENT_PLAYERBASE                       || 当前玩家
-HTML - DEATHS                                   || 死亡数
-HTML - ENTITIES                                 || 实体数
+HTML - LABEL_ACTIVITY_INDEX                           || 活跃指数
+HTML - TITLE_ALL                                || 全部
+HTML - LABEL_BEST_PEAK                          || 所有时间峰值
+HTML - LABEL_AVERAGE_PING                       || 平均延迟
+HTML - LABEL_BANNED                                   || 已封禁
+HTML - LABEL_BEST_PING                          || 最低延迟
+HTML - TITLE_CALENDAR                            ||  日历
+HTML - TITLE_CHUNKS                             || 区块
+HTML -  TITLE_CONNECTION_INFORMATION            || 连接信息
+HTML - TITLE_COUNTRY                            || 国家
+HTML - TITLE_CURRENT_PLAYERBASE                 || 当前玩家
+HTML - LABEL_DEATHS                                   || 死亡数
+HTML - LABEL_ENTITIES                                 || 实体数
 HTML - ERROR                                    || 认证时发生错误
-HTML - FAVORITE_SERVER                          || 喜爱的服务器
-HTML - GEOLOCATION                              || 地理位置
-HTML - GEOLOCATION_TEXT                         || 地理位置
+HTML - LABEL_FAVORITE_SERVER                          || 喜爱的服务器
+HTML - TITLE_GEOLOCATION                        || 地理位置
 HTML - INDEX_ACTIVE                             || 活跃
 HTML - INDEX_INACTIVE                           || 不活跃
 HTML - INDEX_IRREGULAR                          || 偶尔上线
 HTML - INDEX_REGULAR                            || 经常上线
 HTML - INDEX_VERY_ACTIVE                        || 非常活跃
-HTML - IP_ADDRESS                               || IP 地址
-HTML - KILLED                                   || 被击杀
-HTML - KILLED_BY                                || 击杀者
-HTML - LAST_24_HOURS                            || 过去 24 小时
-HTML - LAST_30_DAYS                             || 过去 30 天
-HTML - LAST_30_DAYS_TEXT                        || 过去 30 天
-HTML - LAST_7_DAYS                              || 过去 7 天
-HTML - LAST_CONNECTED                           || 最后连接
-HTML - LAST_PEAK                                || 上次峰值
-HTML - LAST_SEEN                                || 最后在线
-HTML - LAST_SEEN_TEXT                           || 最后在线
-HTML - LOADED_CHUNKS                            || 已加载的区块
-HTML - LOADED_ENTITIES                          || 已加载的实体
+HTML - TITLE_LAST_24_HOURS                      || 过去 24 小时
+HTML - TITLE_LAST_30_DAYS                       || 过去 30 天
+HTML - TITLE_LAST_7_DAYS                        || 过去 7 天
+HTML - TITLE_LAST_CONNECTED                     || 最后连接
+HTML - LABEL_LAST_PEAK                          || 上次峰值
+HTML - LABEL_LAST_SEEN                          || 最后在线
+HTML - LABEL_LOADED_CHUNKS                            || 已加载的区块
+HTML - LABEL_LOADED_ENTITIES                          || 已加载的实体
 HTML - LOCAL_MACHINE                            || 本机
-HTML - LONGEST                                  || 最长
-HTML - LOW_TPS_SPIKES                           || 最低 TPS 值
-HTML - MOB_CAUSED_DEATHS                        || 被怪物击杀数
-HTML - MOB_KDR                                  || 怪物击杀比
-HTML - MOB_KILLS                                || 怪物击杀数
-HTML - MOST_RECENT_SESSIONS                     || 最近时域
-HTML - NAME                                     ||  名称
-HTML - NAV_COMMAND_USAGE                        || 使用指令
-HTML - NAV_GEOLOCATIONS                         || 地理位置
-HTML - NAV_INFORMATION                          || 信息
-HTML - NAV_NETWORK_PLAYERS                      || 网络玩家
-HTML - NAV_ONLINE_ACTIVITY                      || 在线玩家
-HTML - NAV_OVERVIEW                             || 预览
-HTML - NAV_PERFORMANCE                          || 性能
-HTML - NAV_PLAYERS                              || 玩家
+HTML - LABEL_LOW_TPS_SPIKES                     || 最低 TPS 值
+HTML - LABEL_MOB_DEATHS                         || 被怪物击杀数
+HTML - LABEL_MOB_KDR                                  || 怪物击杀比
+HTML - LABEL_MOB_KILLS                          || 怪物击杀数
+HTML - TITLE_RECENT_SESSIONS                    || 最近时域
+HTML - SIDE_GEOLOCATIONS                        || 地理位置
+HTML - SIDE_ONLINE_ACTIVITY                     || 在线玩家
+HTML - SIDE_OVERVIEW                            || 预览
+HTML - SIDE_PERFORMANCE                         || 性能
+HTML - UNIT_PLAYERS_TEXT                        || 玩家
 HTML - NAV_PLUGINS                              || 插件
-HTML - NAV_SESSIONS                             || 时域
-HTML - NETWORK                                  || 服务器网络
-HTML - NETWORK_INFORMATION                      || 服务器网络信息
-HTML - NEW                                      || 新建
+HTML - SIDE_SESSIONS                            || 时域
+HTML - TITLE_NETWORK                            || 服务器网络
 HTML - NEW_CALENDAR                             || 新：
-HTML - NEW_PLAYERS_TEXT                         || 新玩家
-HTML - NEW_RETENTION                            || 新玩家留坑率
-HTML - NEW_TEXT                                 || 新建
-HTML - NICKNAME                                 || 昵称
+HTML - LABEL_NEW_PLAYERS                        || 新玩家
+HTML - LABEL_RETENTION                          || 新玩家留坑率
+HTML - LABEL_NICKNAME                                 || 昵称
 HTML - NO_KILLS                                 || 无击杀数
-HTML - NO_PLAYER_CAUSED_DEATHS                  || 无被玩家击杀数
 HTML - OFFLINE                                  ||  离线
 HTML - ONLINE                                   ||  在线
-HTML - ONLINE_ACTIVITY                          || 在线活动
-HTML - OPERATOR                                 || 管理员
-HTML - OVERVIEW                                 || 预览
-HTML - PER_DAY                                  || / 天
-HTML - PLAYER_CAUSED_DEATHS                     || 被玩家击杀数
-HTML - PLAYER_KILLS                             || 玩家击杀数
-HTML - PLAYER_LIST                              || 玩家列表
-HTML - PLAYERBASE_DEVELOPMENT                   || 玩家发展
-HTML - PLAYERS                                  || 玩家
-HTML - PLAYERS_ONLINE                           || 在线玩家
-HTML - PLAYERS_ONLINE_TEXT                      || 在线玩家
+HTML - LABEL_OPERATOR                                 || 管理员
+HTML - LABEL_PLAYER_DEATHS                      || 被玩家击杀数
+HTML - LABEL_PLAYER_KILLS                          || 玩家击杀数
+HTML - SIDE_PLAYER_LIST                         || 玩家列表
+HTML - TITLE_PLAYERBASE_DEVELOPMENT             || 玩家发展
+HTML - LABEL_PLAYERS_ONLINE                     || 在线玩家
 HTML - PLAYERS_TEXT                             || 玩家
-HTML - PLAYTIME                                 || 游玩时间
-HTML - PLEASE_WAIT                              || 请稍候···
-HTML - PREDICETED_RETENTION                     || 预计留坑率
-HTML - PUNCH_CARD                               || 打卡签到
-HTML - PUNCHCARD                                || 打卡签到
-HTML - RECENT_LOGINS                            || 近期登陆
-HTML - REGISTERED                               || 已注册
-HTML - REGISTERED_TEXT                          || 已注册
-HTML - REGULAR                                  || 经常
-HTML - SEEN_NICKNAMES                           || 可视昵称
-HTML - SERVER                                   || 服务器
-HTML - SERVER_ANALYSIS                          || 服务器分析
-HTML - SERVER_INFORMATION                       || 服务器信息
-HTML - SERVER_PREFERENCE                        || 服务器偏好设置
-HTML - SERVERS                                  || 服务器
-HTML - SESSION                                  || 时域
-HTML - SESSION_ENDED                            || 时域之末
-HTML - SESSION_LENGTH                           || 时域长度
-HTML - SESSION_MEDIAN                           || 平均时域
-HTML - SESSIONS                                 || 时域
+HTML - LABEL_PLAYTIME                           || 游玩时间
+HTML - TITLE_PUNCH_CARD                         || 打卡签到 for 30 days
+HTML - LABEL_REGISTERED                         || 已注册
+HTML - TITLE_SEEN_NICKNAMES                     || 可视昵称
+HTML - TITLE_SERVER                             || 服务器
+HTML - LINK_SERVER_ANALYSIS                     || 服务器分析
+HTML - SIDE_SERVERS                             || 服务器
+HTML - LABEL_SESSION_ENDED                            || 时域之末
+HTML - LABEL_SESSION_LENGTH                           || 时域长度
+HTML - LABEL_SESSION_MEDIAN                           || 平均时域
+HTML - SIDE_SESSIONS                            || 时域
 # Not sure if this is the time or count of numbers.
-HTML - TIME                                     ||  次数
-HTML - TIMES_KICKED                             || 被踢次数
-HTML - TIMES_USED                               || 占用
+HTML - LABEL_TIMES_KICKED                             || 被踢次数
 HTML - TOTAL_ACTIVE_TEXT                        || 总活跃玩家
 HTML - TOTAL_AFK                                || 总挂机玩家
 HTML - TOTAL_PLAYERS                            || 总玩家
 HTML - TOTAL_PLAYTIME                           || 总在线时长
-HTML - UNIQUE                                   || 普通
 HTML - UNIQUE_CALENDAR                          || 普通玩家:
-HTML - UNIQUE_PLAYERS                           || 普通玩家
-HTML - UNIQUE_PLAYERS_TEXT                      || 普通玩家
-HTML - UNIQUE_TEXT                              || 普通玩家
-HTML - USAGE                                    ||  占用
-HTML - USED_COMMANDS                            || 使用的命令
+HTML - LABEL_UNIQUE_PLAYERS                    || 普通玩家
 HTML - USER_AND_PASS_NOT_SPECIFIED              || 未指定用户名与密码
 HTML - USER_DOES_NOT_EXIST                      || 用户不存在
-HTML - USER_INFORMATION                         || 用户信息
 HTML - USER_PASS_MISMATCH                       || 用户名与密码不匹配
 HTML - WITH                                     || <th> 与
 HTML - WORLD                                    ||  世界
-HTML - WORLD_LOAD                               || 世界加载
-HTML - WORLD_PLAYTIME                           || 世界游玩时间
-HTML - WORST_PING                               || 最高延迟
+HTML - TITLE_WORLD_LOAD                         || 世界加载
+HTML - TITLE_WORLD_PLAYTIME                     || 世界游玩时间
+HTML - LABEL_WORST_PING                         || 最高延迟
 HTML ERRORS - ACCESS_DENIED_403                 || 拒绝访问
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - 确保您已使用 <b>/plan register</b> 注册用户<br>- 检查用户名与密码是否正确<br>- 用户名与密码区分大小写<br><br>若您忘记了密码，请让工作人员删除您的旧密码并重新注册。
 HTML ERRORS - AUTHENTICATION_FAILED_401         || 认证失败。
@@ -285,5 +244,5 @@ WebServer FAIL - SSL Context                    || 网页服务器：SSL 环境�
 WebServer FAIL - Store Load                     || 网页服务器：SSL 证书载入失败。
 Yesterday                                       || '昨天'
 Today                                           || '今天'
-HTML - FREE_DISK_SPACE                          || 剩余磁盘空间
-HTML - DISK_SPACE                               || 磁盘空间
+HTML - LABEL_FREE_DISK_SPACE                          || 剩余磁盘空间
+HTML - TITLE_DISK                               || 磁盘空间
