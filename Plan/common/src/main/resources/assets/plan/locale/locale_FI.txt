@@ -102,11 +102,11 @@ HTML - LABEL_ACTIVITY_INDEX                           || Aktiivisuus Indeksi
 HTML - TITLE_ALL                                || Kaikki
 HTML - LABEL_BEST_PEAK                          || Paras Huippu
 HTML - LABEL_AVERAGE_PING                       || Keskimääräinen Ping
-LABEL_TIMES_KICKEDHTML - LABEL_BANNED                                   || Pannassa
+HTML - LABEL_BANNED                                   || Pannassa
 HTML - LABEL_BEST_PING                          || Paras Ping
 HTML - TITLE_CALENDAR                            ||  Kalenteri
 HTML - TITLE_CHUNKS                             || Chunkit
-HTML -  TITLE_CONNECTION_INFORMATION            || Yhteydet
+HTML - TITLE_CONNECTION_INFORMATION            || Yhteydet
 HTML - TITLE_COUNTRY                            || Maa
 HTML - TITLE_CURRENT_PLAYERBASE                 || Nykyiset pelaajat
 HTML - LABEL_DEATHS                                   || Kuolemat

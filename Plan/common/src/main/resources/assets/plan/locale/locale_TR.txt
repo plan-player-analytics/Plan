@@ -102,11 +102,11 @@ HTML - LABEL_ACTIVITY_INDEX                           || Aktivite göstergesi
 HTML - TITLE_ALL                                || Tamamı
 HTML - LABEL_BEST_PEAK                          || Tüm Zamanların Zirvesi
 HTML - LABEL_AVERAGE_PING                       || Ortalama Ping
-LABEL_TIMES_KICKEDHTML - LABEL_BANNED                                   || Yasaklanmış
+HTML - LABEL_BANNED                                   || Yasaklanmış
 HTML - LABEL_BEST_PING                          || En iyi Ping
 HTML - TITLE_CALENDAR                            ||  Takvim
 HTML - TITLE_CHUNKS                             || Chunks
-HTML -  TITLE_CONNECTION_INFORMATION            || Bağlantı Bilgileri
+HTML - TITLE_CONNECTION_INFORMATION            || Bağlantı Bilgileri
 HTML - TITLE_COUNTRY                            || Ülke
 HTML - TITLE_CURRENT_PLAYERBASE                 || Current Playerbase
 HTML - LABEL_DEATHS                                   || Ölümler

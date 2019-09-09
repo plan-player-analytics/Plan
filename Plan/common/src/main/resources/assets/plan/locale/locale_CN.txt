@@ -106,7 +106,7 @@ HTML - LABEL_BANNED                                   || 已封禁
 HTML - LABEL_BEST_PING                          || 最低延迟
 HTML - TITLE_CALENDAR                            ||  日历
 HTML - TITLE_CHUNKS                             || 区块
-HTML -  TITLE_CONNECTION_INFORMATION            || 连接信息
+HTML - TITLE_CONNECTION_INFORMATION            || 连接信息
 HTML - TITLE_COUNTRY                            || 国家
 HTML - TITLE_CURRENT_PLAYERBASE                 || 当前玩家
 HTML - LABEL_DEATHS                                   || 死亡数

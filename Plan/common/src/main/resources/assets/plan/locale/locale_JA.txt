@@ -97,11 +97,11 @@ HTML - LABEL_ACTIVITY_INDEX                           || 活動指数
 HTML - TITLE_ALL                                || 全て
 HTML - LABEL_BEST_PEAK                          || 全体のピークタイム
 HTML - LABEL_AVERAGE_PING                       || 平均応答時間
-LABEL_TIMES_KICKEDHTML - LABEL_BANNED                                   || BAN履歴
+HTML - LABEL_BANNED                                   || BAN履歴
 HTML - LABEL_BEST_PING                          || 最低応答時間
 HTML - TITLE_CALENDAR                            ||  カレンダー
 HTML - TITLE_CHUNKS                             || チャンク
-HTML -  TITLE_CONNECTION_INFORMATION            || 接続情報
+HTML - TITLE_CONNECTION_INFORMATION            || 接続情報
 HTML - TITLE_COUNTRY                            || 国/地域
 HTML - TITLE_CURRENT_PLAYERBASE                 || ログインプレイヤー
 HTML - DATABASE_NOT_OPEN                        || データベースを開くことができませんでした。「/plan info」コマンドを実行して状況を確認して下さい

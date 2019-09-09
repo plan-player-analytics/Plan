@@ -102,11 +102,11 @@ HTML - LABEL_ACTIVITY_INDEX                           || Aktivitätsindex
 HTML - TITLE_ALL                                || Gesamt
 HTML - LABEL_BEST_PEAK                          || Rekord
 HTML - LABEL_AVERAGE_PING                       || Durchschnittlicher Ping
-LABEL_TIMES_KICKEDHTML - LABEL_BANNED                                   || Gebannt
+HTML - LABEL_BANNED                                   || Gebannt
 HTML - LABEL_BEST_PING                          || Bester Ping
 HTML - TITLE_CALENDAR                            ||  Kalender
 HTML - TITLE_CHUNKS                             || Chunks
-HTML -  TITLE_CONNECTION_INFORMATION            || Verbindungsinformationen
+HTML - TITLE_CONNECTION_INFORMATION            || Verbindungsinformationen
 HTML - TITLE_COUNTRY                            || Land
 HTML - TITLE_CURRENT_PLAYERBASE                 || Aktuelle Playerbase
 HTML - LABEL_DEATHS                                   || Tode
