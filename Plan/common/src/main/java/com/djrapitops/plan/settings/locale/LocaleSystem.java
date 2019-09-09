@@ -105,7 +105,11 @@ public class LocaleSystem implements SubSystem {
 
     private void writeNewDefaultLocale(File localeFile) {
         try {
-            new LocaleFileWriter(localeFile.exists() ? Locale.fromFile(localeFile) : locale).writeToFile(localeFile);
+            Locale writing = loadSettingLocale().orElse(locale);
+            if (localeFile.exists()) {
+                writing.putAll(Locale.fromFile(localeFile));
+            }
+            new LocaleFileWriter(writing).writeToFile(localeFile);
         } catch (IOException | IllegalStateException e) {
             logger.error("Failed to write new Locale file at " + localeFile.getAbsolutePath());
             errorHandler.log(L.WARN, this.getClass(), e);
