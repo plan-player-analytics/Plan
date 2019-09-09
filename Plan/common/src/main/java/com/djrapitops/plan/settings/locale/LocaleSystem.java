@@ -77,6 +77,7 @@ public class LocaleSystem implements SubSystem {
                 PlayerPageLang.values(),
                 ServerPageLang.values(),
                 NetworkPageLang.values(),
+                HtmlLang.values(),
                 ErrorPageLang.values(),
                 FailReason.values()
         };

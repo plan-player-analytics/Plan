@@ -129,7 +129,7 @@ HTML - KILLED                                   || Killed
 HTML - KILLED_BY                                || Killed by
 HTML - LAST_24_HOURS                            || LAST 24 HOURS
 HTML - LAST_30_DAYS                             || LAST 30 DAYS
-HTML - LAST_30_DAYS_TEXT                        || Last 30 Days
+HTML - LAST_30_DAYS_TEXT                        || Last 30 days
 HTML - LAST_7_DAYS                              || LAST 7 DAYS
 HTML - LAST_CONNECTED                           || Last Connected
 HTML - LAST_PEAK                                || Last Peak

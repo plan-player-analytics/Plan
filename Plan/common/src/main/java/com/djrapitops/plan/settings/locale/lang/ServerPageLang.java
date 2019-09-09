@@ -44,7 +44,7 @@ public enum ServerPageLang implements Lang {
     NEW_CALENDAR("New:"),
     NEW_RETENTION("New Player Retention"),
     PREDICETED_RETENTION("Predicted Retention"),
-    LAST_30_DAYS_TEXT("Last 30 Days"),
+    LAST_30_DAYS_TEXT("Last 30 days"),
     PLAYERBASE_DEVELOPMENT("Playerbase Development"),
     CURRENT_PLAYERBASE("Current Playerbase"),
     WORLD_PLAYTIME("World Playtime"),

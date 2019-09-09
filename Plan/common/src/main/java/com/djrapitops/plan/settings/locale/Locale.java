@@ -115,6 +115,7 @@ public class Locale extends HashMap<Lang, Message> {
         }
 
         Lang[][] langs = new Lang[][]{
+                HtmlLang.values(),
                 NetworkPageLang.values(),
                 PlayerPageLang.values(),
                 ServerPageLang.values(),
