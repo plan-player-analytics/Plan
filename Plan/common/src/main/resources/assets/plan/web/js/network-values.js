@@ -45,7 +45,7 @@ function loadNetworkOverviewValues(json, error) {
 
     tab = $('#network-overview');
 
-    // Last 7 Days
+    // Last 7 days
     data = json.players;
     element = $(tab).find('#data_players');
 
@@ -77,6 +77,11 @@ function loadNetworkOverviewValues(json, error) {
     // Week Comparison
     data = json.weeks;
     element = $(tab).find('#data_weeks');
+
+    $(element).find('#data_start').text(data.start);
+    $(element).find('#data_midpoint').text(data.midpoint);
+    $(element).find('#data_midpoint2').text(data.midpoint);
+    $(element).find('#data_end').text(data.end);
 
     $(element).find('#data_unique_before').text(data.unique_before);
     $(element).find('#data_unique_after').text(data.unique_after);

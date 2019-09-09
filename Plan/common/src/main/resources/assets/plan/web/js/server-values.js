@@ -45,7 +45,7 @@ function loadServerOverviewValues(json, error) {
 
     tab = $('#server-overview');
 
-    // Last 7 Days
+    // Last 7 days
     data = json.last_7_days;
     element = $(tab).find('#data_7_days');
 
