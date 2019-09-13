@@ -29,6 +29,7 @@ import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.version.VersionCheckSystem;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.UUID;
@@ -96,7 +97,7 @@ public class NetworkPage implements Page {
             String tabs = pluginTabs.getTabs();
 
             placeholders.put("navPluginsTabs", nav);
-            placeholders.put("tabsPlugins", tabs);
+            placeholders.put("tabsPlugins", StringUtils.remove(tabs, "${backButton}"));
 
             return placeholders.apply(files.getCustomizableResourceOrDefault("web/network.html").asString());
         } catch (Exception e) {
