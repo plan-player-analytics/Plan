@@ -131,6 +131,7 @@ HTML - LABEL_LOADED_CHUNKS                      || Ladatut Chunkit
 HTML - LABEL_LOADED_ENTITIES                    || Ladatut Entiteetit
 HTML - LABEL_LONE_JOINS                         || Yksinäiset pelaajien liittymiset
 HTML - LABEL_LONE_NEW_JOINS                     || Yksinäiset uusien pelaajien liittymiset
+HTML - LABEL_LONGEST_SESSION                    || Longest Session
 HTML - LABEL_LOW_TPS                            || Matalan TPS:n piikit
 HTML - LABEL_MOB_DEATHS                         || Otusten aiheuttamat Kuolemat
 HTML - LABEL_MOB_KDR                            || Otus-KDR
@@ -147,6 +148,7 @@ HTML - LABEL_PLAYER_DEATHS                      || Pelaajien aiheuttamat Kuolema
 HTML - LABEL_PLAYER_KILLS                       || Tapetut Pelaajat
 HTML - LABEL_PLAYERS_ONLINE                     || Pelaajia Paikalla
 HTML - LABEL_PLAYTIME                           || Peliaika
+HTML - LABEL_REGISTERED                         || Rekisteröitynyt
 HTML - LABEL_REGISTERED_PLAYERS                 || Registered Players
 HTML - LABEL_REGULAR                            || Kantapelaaja
 HTML - LABEL_REGULAR_PLAYERS                    || Kantapelaajia
@@ -176,6 +178,7 @@ HTML - NEW_CALENDAR                             || Uudet:
 HTML - NO_KILLS                                 || Ei Tappoja
 HTML - OFFLINE                                  ||  Ei Paikalla
 HTML - ONLINE                                   ||  Paikalla
+HTML - PER_DAY                                  || / Päivä
 HTML - PLAYERS_TEXT                             || Pelaajia
 HTML - SIDE_GEOLOCATIONS                        || Sijainnit
 HTML - SIDE_INFORMATION                         || TIETOJA
@@ -207,6 +210,7 @@ HTML - TEXT_VERSION                             || Uusi versio on julkaistu ja o
 HTML - TITLE_30_DAYS                            || 30 päivää
 HTML - TITLE_30_DAYS_AGO                        || 30 päivää sitten
 HTML - TITLE_ALL                                || Kaikki
+HTML - TITLE_ALL_TIME                           || All Time
 HTML - TITLE_AS_NUMBERS                         || Numeroina
 HTML - TITLE_AVG_PING                           || Keskimääräinen Ping
 HTML - TITLE_BEST_PING                          || Paras Ping
@@ -232,9 +236,11 @@ HTML - TITLE_NETWORK_AS_NUMBERS                 || Verkosto Numeroina
 HTML - TITLE_NOW                                || Nyt
 HTML - TITLE_ONLINE_ACTIVITY                    || Paikallaolo
 HTML - TITLE_ONLINE_ACTIVITY_AS_NUMBERS         || Paikallaolo Numeroina
+HTML - TITLE_ONLINE_ACTIVITY_OVERVIEW           || Online Activity Overview
 HTML - TITLE_PERFORMANCE_AS_NUMBERS             || Tehokkuus Numeroina
 HTML - TITLE_PING                               || Ping
 HTML - TITLE_PLAYER                             || Pelaaja
+HTML - TITLE_PLAYER_OVERVIEW                    || Player Overview
 HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Pelaajakunnan kehitys
 HTML - TITLE_PVP_DEATHS                         || Viimeaikaiset PvP Kuolemat
 HTML - TITLE_PVP_KILLS                          || Viimeaikaiset PvP Tapot
@@ -244,16 +250,19 @@ HTML - TITLE_RECENT_SESSIONS                    || Viimeisimmät Istunnot
 HTML - TITLE_SEEN_NICKNAMES                     || Nähdyt Lempinimet
 HTML - TITLE_SERVER                             || Palvelin
 HTML - TITLE_SERVER_AS_NUMBERS                  || Palvelin Numeroina
+HTML - TITLE_SERVER_OVERVIEW                    || Server Overview
 HTML - TITLE_SERVER_PLAYTIME                    || Palvelimen peliaika
 HTML - TITLE_SERVER_PLAYTIME_30                 || Palvelimen peliaika 30 päivälle
 HTML - TITLE_SESSION_START                      || Istunto alkoi
 HTML - TITLE_THEME_SELECT                       || Teemavalikko
+HTML - TITLE_TITLE_PLAYER_PUNCHCARD             || Punchcard
 HTML - TITLE_TPS                                || TPS
 HTML - TITLE_TREND                              || Suunta
 HTML - TITLE_TRENDS                             || Suunnat 30 päivälle
 HTML - TITLE_VERSION                            || Versio
 HTML - TITLE_WEEK_COMPARISON                    || Viikkojen vertaus
 HTML - TITLE_WORLD                              || Maailman Varaus
+HTML - TITLE_WORLD_PLAYTIME                     || World Playtime
 HTML - TITLE_WORST_PING                         || Huonoin Ping
 HTML - TOTAL_ACTIVE_TEXT                        || Aktiivisena
 HTML - TOTAL_AFK                                || AFK
@@ -332,6 +341,3 @@ WebServer FAIL - Port Bind                      || Web Palvelin ei käynnistynyt
 WebServer FAIL - SSL Context                    || Web Palvelin: SSL Kontekstin käynnistys ei onnistunut.
 WebServer FAIL - Store Load                     || Web Palvelin: SSL Sertifikaatin lataus ei onnistunut.
 Yesterday                                       || 'Eilen'
-HTML - PER_DAY                                  || / Päivä
-HTML - LABEL_REGISTERED                         || Rekisteröitynyt
-HTML - TITLE_PLAYER_PUNCHCARD                               || Reikäkortti

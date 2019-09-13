@@ -1,6 +1,7 @@
 Cmd - Click Me                                  || Click me
 Cmd - Link                                      ||   §2Link: §f
 Cmd Disable - Disabled                          || §aPlan systems are now disabled. You can still use /planbungee reload to restart the plugin.
+Cmd FAIL - Database not open                    || §cDatabase is ${0} - Please try again a bit later.
 Cmd FAIL - Invalid Username                     || §cUser does not have an UUID.
 Cmd FAIL - No Feature                           || §eDefine a feature to disable! (currently supports ${0})
 Cmd FAIL - No Permission                        || §cYou do not have the required permission.
@@ -37,16 +38,7 @@ Cmd Qinspect - Registered                       ||   §2Registered: §f${0}
 Cmd Qinspect - Times Kicked                     ||   §2Times Kicked: §f${0}
 Cmd SUCCESS - Feature disabled                  || §aDisabled '${0}' temporarily until next plugin reload.
 Cmd SUCCESS - WebUser register                  || §aAdded a new user (${0}) successfully! You can view the web panel in the following link.
-Cmd Update - Cancel Success                     || §aCancel operation performed.
-Cmd Update - Cancelled                          || §cUpdate cancelled.
-Cmd Update - Change log                         || Change Log v${0}:
-Cmd Update - Fail Cacnel                        || §cUpdate failed on a server, cancelling update on all servers..
-Cmd Update - Fail Force Notify                  || §e${0} failed to update, -force specified, continuing update.
-Cmd Update - Fail Not Online                    || §cNot all servers were online or accessible, you can still update available servers using /plan update -u -force
-Cmd Update - Notify Cancel                      || §aYou can cancel the update on servers that haven't rebooted yet with /plan update cancel.
-Cmd Update - Online Check                       || Checking that all servers are online..
-Cmd Update - Scheduled                          || §a${0} scheduled for update.
-Cmd Update - Url mismatch                       || §cVersion download url did not start with ${0} and might not be trusted. You can download this version manually here (Direct download):
+Cmd WARN - Database not open                    || §eDatabase is ${0} - This might take longer than expected..
 Cmd Web - Permission Levels                     || >\§70: Access all pages\§71: Access '/players' and all player pages\§72: Access player page with the same username as the webuser\§73+: No permissions
 Command Help - /plan analyze                    || View the Server Page
 Command Help - /plan dev                        || Development mode command
@@ -57,11 +49,14 @@ Command Help - /plan manage                     || Manage Plan Database
 Command Help - /plan manage backup              || Backup a Database
 Command Help - /plan manage clear               || Clear a Database
 Command Help - /plan manage disable             || Disable a feature temporarily
+Command Help - /plan manage export              || Trigger export manually
 Command Help - /plan manage hotswap             || Change Database quickly
 Command Help - /plan manage import              || Import data from elsewhere
 Command Help - /plan manage move                || Move data between Databases
+Command Help - /plan manage raw                 || View raw JSON of player data
 Command Help - /plan manage remove              || Remove Player's data
 Command Help - /plan manage restore             || Restore a previous Backup
+Command Help - /plan manage uninstalled         || Mark a server as uninstalled in the database.
 Command Help - /plan network                    || View the Network Page
 Command Help - /plan players                    || View the Players Page
 Command Help - /plan qinspect                   || View Player info in game
@@ -69,7 +64,6 @@ Command Help - /plan register                   || Register a Web User
 Command Help - /plan reload                     || Restart Plan
 Command Help - /plan search                     || Search for a player name
 Command Help - /plan servers                    || List servers in Database
-Command Help - /plan update                     || Get change log link or update plugin
 Command Help - /plan web check                  || Inspect a Web User
 Command Help - /plan web delete                 || Delete a Web User
 Command Help - /plan web level                  || Information about permission levels
@@ -85,6 +79,7 @@ Database Notify - SQLite No WAL                 || SQLite WAL mode not supported
 Disable                                         || Player Analytics Disabled.
 Disable - Processing                            || Processing critical unprocessed tasks. (${0})
 Disable - Processing Complete                   || Processing complete.
+Disable - Unsaved Session Save                  || Saving unfinished sessions..
 Disable - WebServer                             || Webserver has been disabled.
 Enable                                          || Player Analytics Enabled.
 Enable - Database                               || ${0}-database connection established.
@@ -96,91 +91,189 @@ Enable - WebServer                              || Webserver running on PORT ${0
 Enable FAIL - Database                          || ${0}-Database Connection failed: ${1}
 Enable FAIL - Database Patch                    || Database Patching failed, plugin has to be disabled. Please report this issue
 Enable FAIL - GeoDB Write                       || Something went wrong saving the downloaded GeoLite2 Geolocation database
-Enable FAIL - WebServer (Bungee)                || WebServer did not initialize!
+Enable FAIL - WebServer (Proxy)                 || WebServer did not initialize!
 Enable FAIL - Wrong Database Type               || ${0} is not a supported Database
-HTML - LABEL_ACTIVITY_INDEX                           || Activity Index
-HTML - TITLE_ALL                                || All
-HTML - LABEL_BEST_PEAK                          || All Time Peak
-HTML - LABEL_AVERAGE_PING                       || Average Ping
-HTML - LABEL_BANNED                                   || Banned
-HTML - LABEL_BEST_PING                          || Best Ping
-HTML - TITLE_CALENDAR                            ||  Calendar
-HTML - TITLE_CHUNKS                             || Chunks
-HTML - TITLE_CONNECTION_INFORMATION            || Connection Information
-HTML - TITLE_COUNTRY                            || Country
-HTML - TITLE_CURRENT_PLAYERBASE                 || Current Playerbase
-HTML - LABEL_DEATHS                                   || Deaths
-HTML - LABEL_ENTITIES                                 || Entities
+HTML - COMPARING_15_DAYS                        || Comparing 15 days
+HTML - COMPARING_60_DAYS                        || Comparing 30d ago to Now
+HTML - COMPARING_7_DAYS                         || Comparing 7 days
+HTML - DATABASE_NOT_OPEN                        || Database is not open, check db status with /plan info
 HTML - ERROR                                    || Authentication failed due to error
-HTML - LABEL_FAVORITE_SERVER                          || Favorite Server
-HTML - TITLE_GEOLOCATION                        || Geolocation
 HTML - INDEX_ACTIVE                             || Active
 HTML - INDEX_INACTIVE                           || Inactive
 HTML - INDEX_IRREGULAR                          || Irregular
 HTML - INDEX_REGULAR                            || Regular
 HTML - INDEX_VERY_ACTIVE                        || Very Active
+HTML - LABEL_1ST_WEAPON                         || Deadliest PvP Weapon
+HTML - LABEL_2ND_WEAPON                         || 2nd PvP Weapon
+HTML - LABEL_3RD_WEAPON                         || 3rd PvP Weapon
+HTML - LABEL_ACTIVITY_INDEX                     || Activity Index
+HTML - LABEL_AFK                                || AFK
+HTML - LABEL_AFK_TIME                           || AFK Time
+HTML - LABEL_AVG                                || Average
+HTML - LABEL_AVG_KDR                            || Average KDR
+HTML - LABEL_AVG_MOB_KDR                        || Average Mob KDR
+HTML - LABEL_AVG_PLAYTIME                       || Average Playtime
+HTML - LABEL_AVG_SESSION_LENGTH                 || Average Session Length
+HTML - LABEL_AVG_TPS                            || Average TPS
+HTML - LABEL_BANNED                             || Banned
+HTML - LABEL_BEST_PEAK                          || All Time Peak
+HTML - LABEL_DEATHS                             || Deaths
+HTML - LABEL_DOWNTIME                           || Downtime
+HTML - LABEL_DURING_LOW_TPS                     || During Low TPS Spikes:
+HTML - LABEL_ENTITIES                           || Entities
+HTML - LABEL_FAVORITE_SERVER                    || Favorite Server
+HTML - LABEL_FIRST_SESSION_LENGTH               || First session length
+HTML - LABEL_FREE_DISK_SPACE                    || Free Disk Space
+HTML - LABEL_INACTIVE                           || Inactive
+HTML - LABEL_LAST_PEAK                          || Last Peak
+HTML - LABEL_LAST_SEEN                          || Last Seen
+HTML - LABEL_LOADED_CHUNKS                      || Loaded Chunks
+HTML - LABEL_LOADED_ENTITIES                    || Loaded Entities
+HTML - LABEL_LONE_JOINS                         || Lone joins
+HTML - LABEL_LONE_NEW_JOINS                     || Lone newbie joins
+HTML - LABEL_LONGEST_SESSION                    || Longest Session
+HTML - LABEL_LOW_TPS                            || Low TPS Spikes
+HTML - LABEL_MOB_DEATHS                         || Mob caused Deaths
+HTML - LABEL_MOB_KDR                            || Mob KDR
+HTML - LABEL_MOB_KILLS                          || Mob Kills
+HTML - LABEL_MOST_ACTIVE_GAMEMODE               || Most Active Gamemode
+HTML - LABEL_NEW                                || New
+HTML - LABEL_NEW_PLAYERS                        || New Players
+HTML - LABEL_NICKNAME                           || Nickname
+HTML - LABEL_ONLINE_FIRST_JOIN                  || Players online on first join
+HTML - LABEL_OPERATOR                           || Operator
+HTML - LABEL_PER_PLAYER                         || / Player
+HTML - LABEL_PER_REGULAR_PLAYER                 || / Regular Player
+HTML - LABEL_PLAYER_DEATHS                      || Player caused Deaths
+HTML - LABEL_PLAYER_KILLS                       || Player Kills
+HTML - LABEL_PLAYERS_ONLINE                     || Players Online
+HTML - LABEL_PLAYTIME                           || Playtime
+HTML - LABEL_REGISTERED                         || Registered
+HTML - LABEL_REGISTERED_PLAYERS                 || Registered Players
+HTML - LABEL_REGULAR                            || Regular
+HTML - LABEL_REGULAR_PLAYERS                    || Regular Players
+HTML - LABEL_RETENTION                          || New Player Retention
+HTML - LABEL_SERVER_DOWNTIME                    || Server Downtime
+HTML - LABEL_SERVER_OCCUPIED                    || Server occupied
+HTML - LABEL_SESSION_ENDED                      || Session Ended
+HTML - LABEL_SESSION_LENGTH                     || Session Lenght
+HTML - LABEL_SESSION_MEDIAN                     || Session Median
+HTML - LABEL_TIMES_KICKED                       || Times Kicked
+HTML - LABEL_TOTAL_PLAYERS                      || Total Players
+HTML - LABEL_TOTAL_PLAYTIME                     || Total Playtime
+HTML - LABEL_UNIQUE_PLAYERS                     || Unique Players
+HTML - LINK_BACK_NETWORK                        || Network page
+HTML - LINK_BACK_SERVER                         || Server page
+HTML - LINK_CHANGELOG                           || View Changelog
+HTML - LINK_DISCORD                             || General Support on Discord
+HTML - LINK_DOWNLOAD                            || Download
+HTML - LINK_ISSUES                              || Report Issues
+HTML - LINK_NIGHT_MODE                          || Night Mode
+HTML - LINK_QUICK_VIEW                          || Quick view
+HTML - LINK_SERVER_ANALYSIS                     || Server Analysis
+HTML - LINK_WIKI                                || Plan Wiki, Tutorials & Documentation
+HTML - LOCAL_MACHINE                            || Local Machine
+HTML - NAV_PLUGINS                              || Plugins
+HTML - NEW_CALENDAR                             || New:
+HTML - NO_KILLS                                 || No Kills
+HTML - OFFLINE                                  ||  Offline
+HTML - ONLINE                                   ||  Online
+HTML - PER_DAY                                  || / Day
+HTML - PLAYERS_TEXT                             || Players
+HTML - SIDE_GEOLOCATIONS                        || Geolocations
+HTML - SIDE_INFORMATION                         || INFORMATION
+HTML - SIDE_NETWORK_OVERVIEW                    || Network Overview
+HTML - SIDE_OVERVIEW                            || Overview
+HTML - SIDE_PERFORMANCE                         || Performance
+HTML - SIDE_PLAYER_LIST                         || Player List
+HTML - SIDE_PLAYERBASE                          || Playerbase
+HTML - SIDE_PLAYERBASE_OVERVIEW                 || Playerbase Overview
+HTML - SIDE_PLUGINS                             || PLUGINS
+HTML - SIDE_PVP_PVE                             || PvP & PvE
+HTML - SIDE_SERVERS                             || Servers
+HTML - SIDE_SERVERS_TITLE                       || SERVERS
+HTML - SIDE_SESSIONS                            || Sessions
+HTML - SIDE_TO_MAIN_PAGE                        || to main page
+HTML - TEXT_CLICK_TO_EXPAND                     || Click to expand
+HTML - TEXT_CONTRIBUTORS_CODE                   || code contributor
+HTML - TEXT_CONTRIBUTORS_LOCALE                 || translator
+HTML - TEXT_CONTRIBUTORS_MONEY                  || Extra special thanks to those who have monetarily supported the development.
+HTML - TEXT_CONTRIBUTORS_THANKS                 || In addition following <span class="col-plan">awesome people</span> have contributed:
+HTML - TEXT_DEV_VERSION                         || This version is a DEV release.
+HTML - TEXT_DEVELOPED_BY                        || is developed by
+HTML - TEXT_LICENSED_UNDER                      || is developed and licensed under
+HTML - TEXT_METRICS                             || bStats Metrics
+HTML - TEXT_NO_EXTENSION_DATA                   || No Extension Data
+HTML - TEXT_NO_LOW_TPS                          || No low tps spikes
+HTML - TEXT_PLUGIN_INFORMATION                  || Information about the plugin
+HTML - TEXT_VERSION                             || A new version has been released and is now available for download.
+HTML - TITLE_30_DAYS                            || 30 days
+HTML - TITLE_30_DAYS_AGO                        || 30 days ago
+HTML - TITLE_ALL                                || All
+HTML - TITLE_ALL_TIME                           || All Time
+HTML - TITLE_AS_NUMBERS                         || as Numbers
+HTML - TITLE_AVG_PING                           || Average Ping
+HTML - TITLE_BEST_PING                          || Best Ping
+HTML - TITLE_CALENDAR                           ||  Calendar
+HTML - TITLE_CONNECTION_INFO                    || Connection Information
+HTML - TITLE_COUNTRY                            || Country
+HTML - TITLE_CPU_RAM                            || CPU & RAM
+HTML - TITLE_CURRENT_PLAYERBASE                 || Current Playerbase
+HTML - TITLE_DISK                               || Disk space
+HTML - TITLE_GRAPH_DAY_BY_DAY                   || Day by Day
+HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || Network Online Activity
+HTML - TITLE_GRAPH_PUNCHCARD                    || Punchcard for 30 days
+HTML - TITLE_INSIGHTS                           || Insights for 30 days
+HTML - TITLE_IS_AVAILABLE                       || is Available
 HTML - TITLE_LAST_24_HOURS                      || Last 24 hours
 HTML - TITLE_LAST_30_DAYS                       || Last 30 days
 HTML - TITLE_LAST_7_DAYS                        || Last 7 days
 HTML - TITLE_LAST_CONNECTED                     || Last Connected
-HTML - LABEL_LAST_PEAK                          || Last Peak
-HTML - LABEL_LAST_SEEN                          || Last Seen
-HTML - LABEL_LOADED_CHUNKS                            || Loaded Chunks
-HTML - LABEL_LOADED_ENTITIES                          || Loaded Entities
-HTML - LOCAL_MACHINE                            || Local Machine
-HTML - LABEL_LOW_TPS_SPIKES                     || Low TPS Spikes
-HTML - LABEL_MOB_DEATHS                         || Mob caused Deaths
-HTML - LABEL_MOB_KDR                                  || Mob KDR
-HTML - LABEL_MOB_KILLS                          || Mob Kills
-HTML - TITLE_RECENT_SESSIONS                    || Recent Sessions
-HTML - SIDE_GEOLOCATIONS                        || Geolocations
-HTML - SIDE_ONLINE_ACTIVITY                     || Online Activity
-HTML - SIDE_OVERVIEW                            || Overview
-HTML - SIDE_PERFORMANCE                         || Performance
-HTML - UNIT_PLAYERS_TEXT                        || Players
-HTML - NAV_PLUGINS                              || Plugins
-HTML - SIDE_SESSIONS                            || Sessions
+HTML - TITLE_LENGTH                             || Length
+HTML - TITLE_MOST_PLAYED_WORLD                  || Most played World
 HTML - TITLE_NETWORK                            || Network
-HTML - NEW_CALENDAR                             || New:
-HTML - LABEL_NEW_PLAYERS                        || New Players
-HTML - LABEL_RETENTION                          || New Player Retention
-HTML - LABEL_NICKNAME                                 || Nickname
-HTML - NO_KILLS                                 || No Kills
-HTML - OFFLINE                                  ||  Offline
-HTML - ONLINE                                   ||  Online
-HTML - LABEL_OPERATOR                                 || Operator
-HTML - LABEL_PLAYER_DEATHS                      || Player caused Deaths
-HTML - LABEL_PLAYER_KILLS                          || Player Kills
-HTML - SIDE_PLAYER_LIST                         || Player List
+HTML - TITLE_NETWORK_AS_NUMBERS                 || Network as Numbers
+HTML - TITLE_NOW                                || Now
+HTML - TITLE_ONLINE_ACTIVITY                    || Online Activity
+HTML - TITLE_ONLINE_ACTIVITY_AS_NUMBERS         || Online Activity as Numbers
+HTML - TITLE_ONLINE_ACTIVITY_OVERVIEW           || Online Activity Overview
+HTML - TITLE_PERFORMANCE_AS_NUMBERS             || Performance as Numbers
+HTML - TITLE_PING                               || Ping
+HTML - TITLE_PLAYER                             || Player
+HTML - TITLE_PLAYER_OVERVIEW                    || Player Overview
 HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Playerbase Development
-HTML - LABEL_PLAYERS_ONLINE                     || Players Online
-HTML - PLAYERS_TEXT                             || Players
-HTML - LABEL_PLAYTIME                           || Playtime
-HTML - TITLE_GRAPH_PUNCHCARD                         || Punchcard for 30 days
-HTML - LABEL_REGISTERED                         || Registered
+HTML - TITLE_PVP_DEATHS                         || Recent PvP Deaths
+HTML - TITLE_PVP_KILLS                          || Recent PvP Kills
+HTML - TITLE_PVP_PVE_NUMBERS                    || PvP & PvE as Numbers
+HTML - TITLE_RECENT_KILLS                       || Recent Kills
+HTML - TITLE_RECENT_SESSIONS                    || Recent Sessions
 HTML - TITLE_SEEN_NICKNAMES                     || Seen Nicknames
 HTML - TITLE_SERVER                             || Server
-HTML - LINK_SERVER_ANALYSIS                     || Server Analysis
-HTML - SIDE_SERVERS                             || Servers
-HTML - LABEL_SESSION_ENDED                            || Session Ended
-HTML - LABEL_SESSION_LENGTH                           || Session Lenght
-HTML - LABEL_SESSION_MEDIAN                           || Session Median
-HTML - SIDE_SESSIONS                            || Sessions
-HTML - LABEL_TIMES_KICKED                             || Times Kicked
+HTML - TITLE_SERVER_AS_NUMBERS                  || Server as Numbers
+HTML - TITLE_SERVER_OVERVIEW                    || Server Overview
+HTML - TITLE_SERVER_PLAYTIME                    || Server Playtime
+HTML - TITLE_SERVER_PLAYTIME_30                 || Server Playtime for 30 days
+HTML - TITLE_SESSION_START                      || Session Started
+HTML - TITLE_THEME_SELECT                       || Theme Select
+HTML - TITLE_TITLE_PLAYER_PUNCHCARD             || Punchcard
+HTML - TITLE_TPS                                || TPS
+HTML - TITLE_TREND                              || Trend
+HTML - TITLE_TRENDS                             || Trends for 30 days
+HTML - TITLE_VERSION                            || Version
+HTML - TITLE_WEEK_COMPARISON                    || Week Comparison
+HTML - TITLE_WORLD                              || World Load
+HTML - TITLE_WORLD_PLAYTIME                     || World Playtime
+HTML - TITLE_WORST_PING                         || Worst Ping
 HTML - TOTAL_ACTIVE_TEXT                        || Total Active
 HTML - TOTAL_AFK                                || Total AFK
 HTML - TOTAL_PLAYERS                            || Total Players
-HTML - TOTAL_PLAYTIME                           || Total Playtime
 HTML - UNIQUE_CALENDAR                          || Unique:
-HTML - LABEL_UNIQUE_PLAYERS                    || Unique Players
+HTML - UNIT_NO_DATA                             || No Data
+HTML - UNIT_THE_PLAYERS                         || Players
 HTML - USER_AND_PASS_NOT_SPECIFIED              || User and Password not specified
 HTML - USER_DOES_NOT_EXIST                      || User does not exist
 HTML - USER_PASS_MISMATCH                       || User and Password did not match
 HTML - WITH                                     || <th>With
-HTML - WORLD                                    ||  World
-HTML - TITLE_WORLD_LOAD                         || World load
-HTML - TITLE_WORLD_PLAYTIME                     || World Playtime
-HTML - LABEL_WORST_PING                         || Worst Ping
 HTML ERRORS - ACCESS_DENIED_403                 || Access Denied
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Ensure you have registered a user with <b>/plan register</b><br>- Check that the username and password are correct<br>- Username and password are case-sensitive<br><br>If you have forgotten your password, ask a staff member to delete your old user and re-register.
 HTML ERRORS - AUTHENTICATION_FAILED_401         || Authentication Failed.
@@ -198,18 +291,20 @@ In Depth Help - /plan inspect ?                 || > §2Inspect Command\  Refres
 In Depth Help - /plan manage ?                  || > §2Manage Command\  Manage MySQL and SQLite database of Plan.\  §2/plan m §fList subcommands\  §2/plan m <subcommand> ? §fIn depth help
 In Depth Help - /plan manage backup ?           || > §2Backup Subcommand\  Creates a new SQLite database (.db file) with contents of currently active database in the Plan plugin folder.
 In Depth Help - /plan manage clear ?            || > §2Clear Subcommand\  Removes everything in the active database. Use with caution.
-DELETE_FROMIn Depth Help - /plan manage disable ?          || > §2Disable Subcommand\  Can disable parts of the plugin until next reload.\  Accepted arguments:\    §2kickcount §fDisables kick counts in case /kickall is used on shutdown macro.
+In Depth Help - /plan manage disable ?          || > §2Disable Subcommand\  Can disable parts of the plugin until next reload.\  Accepted arguments:\    §2kickcount §fDisables kick counts in case /kickall is used on shutdown macro.
+In Depth Help - /plan manage export ?           || > §2Export Subcommand\  Trigger export to result folders.\  Accepted Arguments:\    §2list §fList possible arguments.\    §2players §fExport /players, /player pages + /player/raw json depending on config values.\    §2server_json §fExport /server/raw JSON if enabled in config.
 In Depth Help - /plan manage import ?           || > §2Import Subcommand\  Import data from other sources.\  Accepted Arguments:\    §2offline §fBukkit player data, only register date and name.
 In Depth Help - /plan manage move ?             || > §2Move Subcommand\  Move data from SQLite to MySQL or other way around.\  Target database is cleared before transfer.
+In Depth Help - /plan manage raw ?              || > §2Raw Data Subcommand\  Displays link to raw JSON data page.\  Not available if Plan webserver is not enabled.
 In Depth Help - /plan manage remove ?           || > §2Remove Subcommand\  Remove player's data from the active database.
 In Depth Help - /plan manage restore ?          || > §2Restore Subcommand\  Restore a previous backup SQLite database (.db file)\  You can also restore database.db from another server to MySQL.\  Target database is cleared before transfer.
+In Depth Help - /plan manage uninstalled ?      || > §2Uninstalled Server Subcommand\  Marks a server as uninstalled in the database.\  Can not mark the server the command is being used on as uninstalled.\  Will affect ConnectionSystem.
 In Depth Help - /plan network ?                 || > §2Network Command\  Displays link to the network page.\  If not on a network, this page displays the server page.
 In Depth Help - /plan players ?                 || > §2Players Command\  Displays link to the players page.
 In Depth Help - /plan qinspect ?                || > §2Quick Inspect Command\  Displays some information about the player in game.
 In Depth Help - /plan reload ?                  || > §2Reload Command\  Restarts the plugin using onDisable and onEnable.\  §bDoes not support swapping jar on the fly
 In Depth Help - /plan search ?                  || > §2Search Command\  Get a list of Player names that match the given argument.\§7  Example: /plan search 123 - Finds all users with 123 in their name.
 In Depth Help - /plan servers ?                 || > §2Servers Command\  Displays list of Plan servers in the Database.\  Can be used to debug issues with database registration on a network.
-In Depth Help - /plan update ?                  || > §2Update Command\  Used to update the plugin on the next shutdown\  /plan update - Changelog link\  /plan update -u - Schedule update to happen on all network servers that are online, next time they reboot.\  /plan update cancel - Cancel scheduled update on servers that haven't rebooted yet.
 In Depth Help - /plan web ?                     || < §2Web User Manage Command.\  §2/plan web §fList subcommands\  §2/plan web <subcommand> ? §fIn Depth help
 In Depth Help - /plan web register ?            || > §2Register Subcommand\  Registers a new Web User.\  Registering a user for another player requires plan.webmanage permission.\  Passwords are hashed with PBKDF2 (64,000 iterations of SHA1) using a cryptographically-random salt.
 In Depth Help - /planbungee disable ?           || > §2Disable Command\  Runs Plan onDisable on Proxy servers.\  Plugin can be enabled with /planbungee reload afterwards.\  §bDoes not support swapping jar on the fly
@@ -218,8 +313,11 @@ Manage - Confirm Removal                        || Data in ${0} will be removed!
 Manage - Fail                                   || > §cSomething went wrong: ${0}
 Manage - Fail File not found                    || > §cNo File found at ${0}
 Manage - Fail Incorrect Database                || > §c'${0}' is not a supported database.
+Manage - Fail No Exporter                       || §eExporter '${0}' doesn't exist
 Manage - Fail No Importer                       || §eImporter '${0}' doesn't exist
+Manage - Fail No Server                         || No server found with given parameters.
 Manage - Fail Same Database                     || > §cCan not operate on to and from the same database!
+Manage - Fail Same server                       || Can not mark this server as uninstalled (You are on it)
 Manage - Fail, Confirmation                     || > §cAdd '-a' argument to confirm execution: ${0}
 Manage - List Importers                         || Importers:
 Manage - Remind HotSwap                         || §eRemember to swap to the new database (/plan m hotswap ${0}) & reload the plugin.
@@ -227,6 +325,7 @@ Manage - Start                                  || > §2Processing data..
 Manage - Success                                || > §aSuccess!
 Negative                                        || No
 Positive                                        || Yes
+Today                                           || 'Today'
 Unknown                                         || Unknown
 Version - DEV                                   ||  This is a DEV release.
 Version - Latest                                || You're using the latest version.
@@ -242,9 +341,3 @@ WebServer FAIL - Port Bind                      || WebServer was not initialized
 WebServer FAIL - SSL Context                    || WebServer: SSL Context Initialization Failed.
 WebServer FAIL - Store Load                     || WebServer: SSL Certificate loading Failed.
 Yesterday                                       || 'Yesterday'
-Today                                           || 'Today'
-HTML - LABEL_FREE_DISK_SPACE                          || Free Disk Space
-HTML - TITLE_DISK                               || Disk space
-HTML - PER_DAY                                  || / Day
-HTML - LABEL_REGISTERED                         || Registered
-HTML - TITLE_PLAYER_PUNCHCARD                               || Punchcard
