@@ -1,7 +1,7 @@
 Cmd - Click Me                                  || Cliquez ici
 Cmd - Link                                      ||   §2Lien : §f
 Cmd Disable - Disabled                          || §aLes systèmes de Plan sont maintenant désactivés. Vous pouvez toujours exécuter la commande '/planbungee reload' pour les redémarrer.
-Cmd FAIL - Database not open                    || §cLa base de donnéed est : ${0} - Merci de réessayer plus tard.
+Cmd FAIL - Database not open                    || §cLa base de données est : ${0} - Merci de réessayer plus tard.
 Cmd FAIL - Invalid Username                     || §cCet utilisateur ne possède pas d'UUID.
 Cmd FAIL - No Feature                           || §eDéfinir une fonctionnalité à désactiver ! (supporte actuellement ${0})
 Cmd FAIL - No Permission                        || §cVous ne possédez pas la permission requise.
@@ -66,7 +66,7 @@ Command Help - /plan search                     || Rechercher un joueur.
 Command Help - /plan servers                    || Obtenir la liste des serveurs dans la base de données.
 Command Help - /plan web check                  || Inspecter un utilisateur Web.
 Command Help - /plan web delete                 || Supprimer un utilisateur Web.
-Command Help - /plan web level                  || Visualiser des informations sur les niveaux de permission.
+Command Help - /plan web level                  || Visualiser les informations sur les niveaux de permission.
 Command Help - /plan web list                   || Liste des utilisateurs Web.
 Command Help - /plan webuser                    || Gérer les utilisateurs Web.
 Command Help - /planbungee disable              || Désactiver temporairement Plan.
@@ -77,7 +77,7 @@ Database MySQL - Launch Options Error           || Configurations défectueuses,
 Database Notify - Clean                         || Suppression des données de ${0} joueurs.
 Database Notify - SQLite No WAL                 || Le mode WAL de SQLite n'est pas pris en charge sur cette version du serveur, en utilisant le mode par défaut. Cela peut possiblement affecter les performances.
 Disable                                         || Plan a été désactivé.
-Disable - Processing                            || Traitement des tâches critiques non traitées... (${0})
+Disable - Processing                            || Traitement des tâches critiques inachevées... (${0})
 Disable - Processing Complete                   || Traitement complété.
 Disable - Unsaved Session Save                  || Sauvegarde des sessions inachevées...
 Disable - WebServer                             || Le serveur Web a été désactivé.
@@ -93,10 +93,10 @@ Enable FAIL - Database Patch                    || L'application de correctifs p
 Enable FAIL - GeoDB Write                       || Une erreur s'est produite lors de l'enregistrement de la base de données 'GeoLite2 Geolocation' téléchargée précédemment.
 Enable FAIL - WebServer (Proxy)                 || Le serveur Web n'a pas été initialisé !
 Enable FAIL - Wrong Database Type               || ${0} n'est pas une base de données prise en charge.
-HTML - COMPARING_15_DAYS                        || Comparaison de 15 derniers jours
-HTML - COMPARING_60_DAYS                        || Comparaison de 60 derniers jours
-HTML - COMPARING_7_DAYS                         || Comparaison de 7 derniers jours
-HTML - DATABASE_NOT_OPEN                        || La base de données n'est pas ouverte, vérifiez son état avec /plan info
+HTML - COMPARING_15_DAYS                        || Comparaison des 15 derniers jours
+HTML - COMPARING_60_DAYS                        || Comparaison des 60 derniers jours
+HTML - COMPARING_7_DAYS                         || Comparaison des 7 derniers jours
+HTML - DATABASE_NOT_OPEN                        || La base de données n'est pas ouverte, vérifiez son état avec la commande /plan info
 HTML - ERROR                                    || Authentification échouée à cause d'une erreur
 HTML - INDEX_ACTIVE                             || Actif
 HTML - INDEX_INACTIVE                           || Inactif
@@ -150,7 +150,7 @@ HTML - LABEL_PLAYERS_ONLINE                     || Joueurs en ligne
 HTML - LABEL_PLAYTIME                           || Temps de jeu
 HTML - LABEL_REGISTERED                         || Inscription
 HTML - LABEL_REGISTERED_PLAYERS                 || Joueurs enregistrés
-HTML - LABEL_REGULAR                            || Réguilier(ère)
+HTML - LABEL_REGULAR                            || Régulier(ère)
 HTML - LABEL_REGULAR_PLAYERS                    || Joueurs réguliers
 HTML - LABEL_RETENTION                          || Rétention des nouveaux joueurs
 HTML - LABEL_SERVER_DOWNTIME                    || Temps hors-ligne du serveur
@@ -166,12 +166,12 @@ HTML - LINK_BACK_NETWORK                        || Page du réseau
 HTML - LINK_BACK_SERVER                         || Page du serveur
 HTML - LINK_CHANGELOG                           || Visualiser les changements
 HTML - LINK_DISCORD                             || Support général sur Discord
-HTML - LINK_DOWNLOAD                            || téléchargement
+HTML - LINK_DOWNLOAD                            || Téléchargement
 HTML - LINK_ISSUES                              || Rapport de bogues
 HTML - LINK_NIGHT_MODE                          || Mode Nuit
-HTML - LINK_QUICK_VIEW                          || Vue rapide
+HTML - LINK_QUICK_VIEW                          || Aperçu rapide
 HTML - LINK_SERVER_ANALYSIS                     || Analyse du serveur
-HTML - LINK_WIKI                                || Document & Tutoriaux de Plan
+HTML - LINK_WIKI                                || Wiki, Documentation & Tutoriaux de Plan
 HTML - LOCAL_MACHINE                            || Machine locale
 HTML - NAV_PLUGINS                              || Plugins
 HTML - NEW_CALENDAR                             || Nouveau :
@@ -222,7 +222,7 @@ HTML - TITLE_CURRENT_PLAYERBASE                 || Base de joueurs actuelle
 HTML - TITLE_DISK                               || Espace disque
 HTML - TITLE_GRAPH_DAY_BY_DAY                   || Jour par Jour
 HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || Activité en ligne du réseau
-HTML - TITLE_GRAPH_PUNCHCARD                    || Carte perforée sur 30 joueurs
+HTML - TITLE_GRAPH_PUNCHCARD                    || Carte perforée sur 30 jours
 HTML - TITLE_INSIGHTS                           || Perspectives sur 30 jours
 HTML - TITLE_IS_AVAILABLE                       || est Disponible
 HTML - TITLE_LAST_24_HOURS                      || 24 Dernières heures
@@ -237,7 +237,7 @@ HTML - TITLE_NOW                                || Maintenant
 HTML - TITLE_ONLINE_ACTIVITY                    || Activité en ligne
 HTML - TITLE_ONLINE_ACTIVITY_AS_NUMBERS         || Activité en ligne en Nombres
 HTML - TITLE_ONLINE_ACTIVITY_OVERVIEW           || Aperçu de l'activité en ligne
-HTML - TITLE_PERFORMANCE_AS_NUMBERS             || Les Performances en Nombres
+HTML - TITLE_PERFORMANCE_AS_NUMBERS             || Performances en Nombres
 HTML - TITLE_PING                               || Latence
 HTML - TITLE_PLAYER                             || Joueur
 HTML - TITLE_PLAYER_OVERVIEW                    || Aperçu des joueurs
@@ -254,7 +254,7 @@ HTML - TITLE_SERVER_OVERVIEW                    || Aperçu du serveur
 HTML - TITLE_SERVER_PLAYTIME                    || Temps de jeu du serveur
 HTML - TITLE_SERVER_PLAYTIME_30                 || Temps de jeu du serveur sur 30 jours
 HTML - TITLE_SESSION_START                      || Début de la session
-HTML - TITLE_THEME_SELECT                       || Thème sélectionné
+HTML - TITLE_THEME_SELECT                       || Sélection du thème
 HTML - TITLE_TITLE_PLAYER_PUNCHCARD             || Carte perforée
 HTML - TITLE_TPS                                || TPS
 HTML - TITLE_TREND                              || Tendances
@@ -268,7 +268,7 @@ HTML - TOTAL_ACTIVE_TEXT                        || Temps actif total
 HTML - TOTAL_AFK                                || Temps inactif total
 HTML - TOTAL_PLAYERS                            || Joueurs totaux
 HTML - UNIQUE_CALENDAR                          || Unique :
-HTML - UNIT_NO_DATA                             || Aucunes données
+HTML - UNIT_NO_DATA                             || Aucune donnée
 HTML - UNIT_THE_PLAYERS                         || Joueurs
 HTML - USER_AND_PASS_NOT_SPECIFIED              || Utilisateur et mot de passe non spécifiés
 HTML - USER_DOES_NOT_EXIST                      || Cet utilisateur n'existe pas
@@ -315,7 +315,7 @@ Manage - Fail File not found                    || > §cAucun fichier trouvé de
 Manage - Fail Incorrect Database                || > §c'${0}' n'est pas une base de données prise en charge.
 Manage - Fail No Exporter                       || §eL'exportateur '${0}' n'existe pas.
 Manage - Fail No Importer                       || §eL'importateur '${0}' n'existe pas.
-Manage - Fail No Server                         || Aucun serveur trouvé avec des paramètres donnés.
+Manage - Fail No Server                         || Aucun serveur trouvé avec les paramètres suivants.
 Manage - Fail Same Database                     || > §cNe peut pas opérer sur et depuis la même base de données !
 Manage - Fail Same server                       || Impossible de marquer ce serveur comme désinstallé (vous y êtes).
 Manage - Fail, Confirmation                     || > §cAjoutez l'argmenter '-a' afin de confirmer l'éxécution : ${0}
