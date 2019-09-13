@@ -156,7 +156,7 @@ HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Évolution de la base de joue
 HTML - LABEL_PLAYERS_ONLINE                     || Joueurs en ligne
 HTML - PLAYERS_TEXT                             || Joueurs
 HTML - LABEL_PLAYTIME                           || Temps de jeu
-HTML - TITLE_PUNCH_CARD                         || Carte perforée for 30 days
+HTML - TITLE_GRAPH_PUNCHCARD                         || Carte perforée for 30 days
 HTML - LABEL_REGISTERED                         || Inscription
 HTML - TITLE_SEEN_NICKNAMES                     || Surnoms Vus
 HTML - TITLE_SERVER                             || Serveur
@@ -245,3 +245,6 @@ Yesterday                                       || 'Hier'
 Today                                           || 'Aujourd''hui'
 HTML - LABEL_FREE_DISK_SPACE                          || Espace disque disponible
 HTML - TITLE_DISK                               || Espace disque
+HTML - PER_DAY                                  || / Jour
+HTML - LABEL_REGISTERED                         || Inscription
+HTML - TITLE_PLAYER_PUNCHCARD                               || Carte perforée

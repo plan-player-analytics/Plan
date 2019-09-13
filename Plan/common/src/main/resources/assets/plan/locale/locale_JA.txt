@@ -154,7 +154,7 @@ HTML - TITLE_PLAYERBASE_DEVELOPMENT             || 登録されているプレ�
 HTML - LABEL_PLAYERS_ONLINE                     || オンラインのプレイヤー
 HTML - PLAYERS_TEXT                             || プレイヤー
 HTML - LABEL_PLAYTIME                           || プレイ時間
-HTML - TITLE_PUNCH_CARD                         || パンチボード for 30 days
+HTML - TITLE_GRAPH_PUNCHCARD                         || パンチボード for 30 days
 HTML - LABEL_REGISTERED                         || 登録
 HTML - TITLE_SEEN_NICKNAMES                     || ニックネーム一覧
 HTML - TITLE_SERVER                             || サーバー
@@ -246,3 +246,6 @@ WebServer - Notify no Cert file                 || Webサーバー: 以下のパ
 WebServer FAIL - Port Bind                      || Webサーバーの初期化が正常に終了しませんでした。ポート番号(${0})は使用されていませんか?
 WebServer FAIL - SSL Context                    || Webサーバー: SSLコンテキストの初期化に失敗しました。
 WebServer FAIL - Store Load                     || Webサーバー: SSL証明書のロードに失敗しました
+HTML - PER_DAY                                  || /日
+HTML - LABEL_REGISTERED                         || 登録
+HTML - TITLE_PLAYER_PUNCHCARD                               || パンチボード

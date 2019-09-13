@@ -156,7 +156,7 @@ HTML - TITLE_PLAYERBASE_DEVELOPMENT             || 玩家发展
 HTML - LABEL_PLAYERS_ONLINE                     || 在线玩家
 HTML - PLAYERS_TEXT                             || 玩家
 HTML - LABEL_PLAYTIME                           || 游玩时间
-HTML - TITLE_PUNCH_CARD                         || 打卡签到 for 30 days
+HTML - TITLE_GRAPH_PUNCHCARD                         || 打卡签到 for 30 days
 HTML - LABEL_REGISTERED                         || 已注册
 HTML - TITLE_SEEN_NICKNAMES                     || 可视昵称
 HTML - TITLE_SERVER                             || 服务器
@@ -246,3 +246,6 @@ Yesterday                                       || '昨天'
 Today                                           || '今天'
 HTML - LABEL_FREE_DISK_SPACE                          || 剩余磁盘空间
 HTML - TITLE_DISK                               || 磁盘空间
+HTML - PER_DAY                                  || / 天
+HTML - LABEL_REGISTERED                         || 已注册
+HTML - TITLE_PLAYER_PUNCHCARD                               || 打卡签到

@@ -20,7 +20,6 @@ import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plan.settings.locale.lang.Lang;
 import com.djrapitops.plan.storage.file.FileResource;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -119,24 +118,20 @@ public class Locale extends HashMap<Lang, Message> {
                 HtmlLang.values()
         };
 
-        List<String> replace = new ArrayList<>();
-        List<String> with = new ArrayList<>();
-
+        TranslatedString translated = new TranslatedString(from);
         Arrays.stream(langs).flatMap(Arrays::stream)
                 // Longest first so that entries that contain each other don't partially replace.
                 .sorted((one, two) -> Integer.compare(
                         two.getIdentifier().length(),
                         one.getIdentifier().length()
                 ))
-                .forEach(lang -> getNonDefault(lang).ifPresent(replacement -> {
-                    replace.add(lang.getDefault());
-                    with.add(replacement.toString());
-                }));
+                .forEach(lang -> getNonDefault(lang).ifPresent(replacement ->
+                        translated.translate(lang.getDefault(), replacement.toString()))
+                );
 
-        String translated = StringUtils.replaceEach(from, replace.toArray(new String[0]), with.toArray(new String[0]));
         StringBuilder complete = new StringBuilder(translated.length());
 
-        String[] parts = scripts.split(translated);
+        String[] parts = scripts.split(translated.toString());
         for (int i = 0; i < parts.length; i++) {
             complete.append(parts[i]);
             if (i < parts.length - 1) {

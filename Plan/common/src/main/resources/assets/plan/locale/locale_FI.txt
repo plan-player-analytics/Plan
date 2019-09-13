@@ -332,3 +332,6 @@ WebServer FAIL - Port Bind                      || Web Palvelin ei käynnistynyt
 WebServer FAIL - SSL Context                    || Web Palvelin: SSL Kontekstin käynnistys ei onnistunut.
 WebServer FAIL - Store Load                     || Web Palvelin: SSL Sertifikaatin lataus ei onnistunut.
 Yesterday                                       || 'Eilen'
+HTML - PER_DAY                                  || / Päivä
+HTML - LABEL_REGISTERED                         || Rekisteröitynyt
+HTML - TITLE_PLAYER_PUNCHCARD                               || Reikäkortti

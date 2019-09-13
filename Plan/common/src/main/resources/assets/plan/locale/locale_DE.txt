@@ -156,7 +156,7 @@ HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Entwicklung der Playerbase
 HTML - LABEL_PLAYERS_ONLINE                     || Spieler Online
 HTML - PLAYERS_TEXT                             || Spieler
 HTML - LABEL_PLAYTIME                           || Spielzeit
-HTML - TITLE_PUNCH_CARD                         || Lochkarte for 30 days
+HTML - TITLE_GRAPH_PUNCHCARD                         || Lochkarte for 30 days
 HTML - LABEL_REGISTERED                         || Registriert
 HTML - TITLE_SEEN_NICKNAMES                     || Registrierte Nicknames
 HTML - TITLE_SERVER                             || Server
@@ -245,3 +245,6 @@ Yesterday                                       || 'Gestern'
 Today                                           || 'Heute'
 HTML - LABEL_FREE_DISK_SPACE                          || Freier Festplattenspeicher
 HTML - TITLE_DISK                               || Festplattenspeicher
+HTML - PER_DAY                                  || / Tag
+HTML - LABEL_REGISTERED                         || Registriert
+HTML - TITLE_PLAYER_PUNCHCARD                               || Lochkarte

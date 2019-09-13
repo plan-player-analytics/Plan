@@ -156,7 +156,7 @@ HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Playerbase Development
 HTML - LABEL_PLAYERS_ONLINE                     || Players Online
 HTML - PLAYERS_TEXT                             || Players
 HTML - LABEL_PLAYTIME                           || Playtime
-HTML - TITLE_PUNCH_CARD                         || Punchcard for 30 days
+HTML - TITLE_GRAPH_PUNCHCARD                         || Punchcard for 30 days
 HTML - LABEL_REGISTERED                         || Registered
 HTML - TITLE_SEEN_NICKNAMES                     || Seen Nicknames
 HTML - TITLE_SERVER                             || Server
@@ -245,3 +245,6 @@ Yesterday                                       || 'Yesterday'
 Today                                           || 'Today'
 HTML - LABEL_FREE_DISK_SPACE                          || Free Disk Space
 HTML - TITLE_DISK                               || Disk space
+HTML - PER_DAY                                  || / Day
+HTML - LABEL_REGISTERED                         || Registered
+HTML - TITLE_PLAYER_PUNCHCARD                               || Punchcard

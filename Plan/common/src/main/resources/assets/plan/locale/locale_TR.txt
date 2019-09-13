@@ -156,7 +156,7 @@ HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Oyuncu Etkinlik Grafiği
 HTML - LABEL_PLAYERS_ONLINE                     || Oyuncu Çevrimiçi
 HTML - PLAYERS_TEXT                             || Oyuncular
 HTML - LABEL_PLAYTIME                           || Oyun Süresi
-HTML - TITLE_PUNCH_CARD                         || Punchcard for 30 days
+HTML - TITLE_GRAPH_PUNCHCARD                         || Punchcard for 30 days
 HTML - LABEL_REGISTERED                         || Kayıtlı
 HTML - TITLE_SEEN_NICKNAMES                     || Görülen takma adlar
 HTML - TITLE_SERVER                             || Sunucu
@@ -242,3 +242,6 @@ WebServer FAIL - Port Bind                      || Web Sunucusu başarıyla baş
 WebServer FAIL - SSL Context                    || WebServer: SSL İçeriği Başlatma Başarısız Oldu.
 WebServer FAIL - Store Load                     || WebServer: SSL Sertifikası yüklenirken sorun oluştu.
 Yesterday                                       || 'Dün'
+HTML - PER_DAY                                  || / Gün
+HTML - LABEL_REGISTERED                         || Kayıtlı
+HTML - TITLE_PLAYER_PUNCHCARD                               || Punchcard

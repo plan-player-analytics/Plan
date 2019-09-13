@@ -156,7 +156,7 @@ HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Desenvolvimento da base de Jo
 HTML - LABEL_PLAYERS_ONLINE                     || Jogadores Online
 HTML - PLAYERS_TEXT                             || Jogadores
 HTML - LABEL_PLAYTIME                           || Tempo de Jogo
-HTML - TITLE_PUNCH_CARD                         || Cartão Perfurado for 30 days
+HTML - TITLE_GRAPH_PUNCHCARD                         || Cartão Perfurado for 30 days
 HTML - LABEL_REGISTERED                         || Registrados
 HTML - TITLE_SEEN_NICKNAMES                     || Nicks Vistos
 HTML - TITLE_SERVER                             || Servidor
@@ -245,3 +245,6 @@ Yesterday                                       || 'Ontem'
 Today                                           || 'Hoje'
 HTML - LABEL_FREE_DISK_SPACE                          || Espaço de Disco Livre
 HTML - TITLE_DISK                               || Espaço de disco
+HTML - PER_DAY                                  || / Dia
+HTML - LABEL_REGISTERED                         || Registrados
+HTML - TITLE_PLAYER_PUNCHCARD                               || Cartão Perfurado

@@ -77,6 +77,7 @@ public enum HtmlLang implements Lang {
     LABEL_PER_PLAYER("/ Player"),
     LABEL_AVG_SESSION_LENGTH("Average Session Length"),
     TITLE_WEEK_COMPARISON("Week Comparison"),
+    TITLE_TRENDS("Trends for 30 days"),
     TITLE_TREND("Trend"),
     COMPARING_7_DAYS("Comparing 7 days"),
     // Servers tab
@@ -104,7 +105,6 @@ public enum HtmlLang implements Lang {
     // Playerbase overview tab
     TITLE_PLAYERBASE_DEVELOPMENT("Playerbase development"),
     TITLE_CURRENT_PLAYERBASE("Current Playerbase"),
-    TITLE_TRENDS("Trends for 30 days"),
     COMPARING_60_DAYS("Comparing 30d ago to Now"),
     TITLE_30_DAYS_AGO("30 days ago"),
     TITLE_NOW("Now"),
@@ -167,6 +167,16 @@ public enum HtmlLang implements Lang {
     TITLE_SERVER_PLAYTIME("Server Playtime"),
     LINK_BACK_SERVER("Server page"),
     SIDE_SERVERS_TITLE("SERVERS"),
+    // Were missing
+    TITLE_SERVER_OVERVIEW("Server Overview"),
+    TITLE_ONLINE_ACTIVITY_OVERVIEW("Online Activity Overview"),
+    PER_DAY("/ Day"),
+    TITLE_WORLD_PLAYTIME("World Playtime"),
+    TITLE_PLAYER_OVERVIEW("Player Overview"),
+    LABEL_LONGEST_SESSION("Longest Session"),
+    LABEL_REGISTERED("Registered"),
+    TITLE_TITLE_PLAYER_PUNCHCARD("Punchcard"),
+    TITLE_ALL_TIME("All Time"),
     // ----------------------------------
     // OLD
     // ----------------------------------
