@@ -7,7 +7,7 @@ Cmd FAIL - No Feature                           || §eValitse sammutettava osa! 
 Cmd FAIL - No Permission                        || §cSinulla ei ole lupaa.
 Cmd FAIL - Require only one Argument            || §cAnna ainakin yksi muuttuja ${1}
 Cmd FAIL - Requires Arguments                   || §cMääritä enemmän muuttujia (${0}) ${1}
-Cmd FAIL - Unknown Username                     || §cPleaajaa ei ole nähty tällä palvelimella.
+Cmd FAIL - Unknown Username                     || §cPelaajaa ei ole nähty tällä palvelimella.
 Cmd FAIL - WebUser does not exists              || §cKäyttäjää ei ole olemassa!
 Cmd FAIL - WebUser exists                       || §cKäyttäjä on jo olemassa!
 Cmd Header - Analysis                           || > §2Analyysin tulokset
@@ -18,7 +18,7 @@ Cmd Header - Players                            || > §2Pelaajat
 Cmd Header - Search                             || > §2${0} Tulosta haulle §f${1}§2:
 Cmd Header - Servers                            || > §2Palvelimet
 Cmd Header - Web Users                          || > §2${0} Web Käyttäjät
-Cmd Info - Bungee Connection                    ||   §2Yhdistetty BungeeCord:iin: §f${0}
+Cmd Info - Bungee Connection                    ||   §2Yhdistetty Proxyyn: §f${0}
 Cmd Info - Database                             ||   §2Aktiivinen Tietokanta: §f${0}
 Cmd Info - Reload Complete                      || §aUudelleenlataus onnistui!
 Cmd Info - Reload Failed                        || §cUudelleenlatauksessa esiintyi ongelmia. Käynnistystä uudelleen suositellaan.
@@ -97,7 +97,7 @@ HTML - COMPARING_15_DAYS                        || Verrataan 15 päivää
 HTML - COMPARING_60_DAYS                        || Verrataan 30 päivää sitten nykyhetkeen
 HTML - COMPARING_7_DAYS                         || Verrataan 7 päivää
 HTML - DATABASE_NOT_OPEN                        || Tietokanta ei ole auki, tarkista tietokannan status /plan info komennolla
-HTML - ERROR                                    || Autentisointi epäonnistui virheen vuoksi
+HTML - ERROR                                    || Todennus epäonnistui virheen vuoksi
 HTML - INDEX_ACTIVE                             || Aktiivinen
 HTML - INDEX_INACTIVE                           || Inaktiivinen
 HTML - INDEX_IRREGULAR                          || Epäsäännöllinen
@@ -108,10 +108,10 @@ HTML - LABEL_2ND_WEAPON                         || 2. PvP Ase
 HTML - LABEL_3RD_WEAPON                         || 3. PvP Ase
 HTML - LABEL_ACTIVITY_INDEX                     || Aktiivisuus Indeksi
 HTML - LABEL_AFK                                || AFK
-HTML - LABEL_AFK_TIME                           || AFK Aika
+HTML - LABEL_AFK_TIME                           || Aika AFK:ina
 HTML - LABEL_AVG                                || Keskiarvoinen
-HTML - LABEL_AVG_KDR                            || Keskiarvoinen KDR
-HTML - LABEL_AVG_MOB_KDR                        || Keskiarvoinen Otus-KDR
+HTML - LABEL_AVG_KDR                            || Keskiarvoinen Tapposuhde
+HTML - LABEL_AVG_MOB_KDR                        || Keskiarvoinen Otus-Tapposuhde
 HTML - LABEL_AVG_PLAYTIME                       || Keskiarvoinen peliaika
 HTML - LABEL_AVG_SESSION_LENGTH                 || Keskiarvoinen istunnon pituus
 HTML - LABEL_AVG_TPS                            || Keskiarvoinen TPS
@@ -131,10 +131,10 @@ HTML - LABEL_LOADED_CHUNKS                      || Ladatut Chunkit
 HTML - LABEL_LOADED_ENTITIES                    || Ladatut Entiteetit
 HTML - LABEL_LONE_JOINS                         || Yksinäiset pelaajien liittymiset
 HTML - LABEL_LONE_NEW_JOINS                     || Yksinäiset uusien pelaajien liittymiset
-HTML - LABEL_LONGEST_SESSION                    || Longest Session
+HTML - LABEL_LONGEST_SESSION                    || Pisin istunto
 HTML - LABEL_LOW_TPS                            || Matalan TPS:n piikit
 HTML - LABEL_MOB_DEATHS                         || Otusten aiheuttamat Kuolemat
-HTML - LABEL_MOB_KDR                            || Otus-KDR
+HTML - LABEL_MOB_KDR                            || Otus-Tapposuhde
 HTML - LABEL_MOB_KILLS                          || Tapetut Otukset
 HTML - LABEL_MOST_ACTIVE_GAMEMODE               || Aktiivisin pelitila
 HTML - LABEL_NEW                                || Uudet
@@ -152,13 +152,13 @@ HTML - LABEL_REGISTERED                         || Rekisteröitynyt
 HTML - LABEL_REGISTERED_PLAYERS                 || Registered Players
 HTML - LABEL_REGULAR                            || Kantapelaaja
 HTML - LABEL_REGULAR_PLAYERS                    || Kantapelaajia
-HTML - LABEL_RETENTION                          || Uusien Pelaajien pysyvyys
+HTML - LABEL_RETENTION                          || Uusien pysyvyys
 HTML - LABEL_SERVER_DOWNTIME                    || Palvelin pois päältä
 HTML - LABEL_SERVER_OCCUPIED                    || Palvelin pelaajien käytössä
 HTML - LABEL_SESSION_ENDED                      || Istunto Päättyi
 HTML - LABEL_SESSION_LENGTH                     || Istunnon Pituus
 HTML - LABEL_SESSION_MEDIAN                     || Istuntojen Mediaani
-HTML - LABEL_TIMES_KICKED                       || Potkimis Kerrat
+HTML - LABEL_TIMES_KICKED                       || Heitetty pihalle
 HTML - LABEL_TOTAL_PLAYERS                      || Pelaajia
 HTML - LABEL_TOTAL_PLAYTIME                     || Peliaikaa yhteensä
 HTML - LABEL_UNIQUE_PLAYERS                     || Uniikkeja pelaajia
@@ -171,7 +171,7 @@ HTML - LINK_ISSUES                              || Ilmoita ongelmista
 HTML - LINK_NIGHT_MODE                          || Yö-tila
 HTML - LINK_QUICK_VIEW                          || Pika-katsaus
 HTML - LINK_SERVER_ANALYSIS                     || Palvelimen Analyysi
-HTML - LINK_WIKI                                || Plan Wiki, Ohjeet ja dokumentaatio
+HTML - LINK_WIKI                                || Plan Wiki, ohjeet ja dokumentaatio
 HTML - LOCAL_MACHINE                            || Paikallinen laite
 HTML - NAV_PLUGINS                              || Lisäosat
 HTML - NEW_CALENDAR                             || Uudet:
@@ -198,19 +198,19 @@ HTML - TEXT_CLICK_TO_EXPAND                     || Klikkaa laajentaaksesi
 HTML - TEXT_CONTRIBUTORS_CODE                   || koodin tuottaja
 HTML - TEXT_CONTRIBUTORS_LOCALE                 || kääntäjä
 HTML - TEXT_CONTRIBUTORS_MONEY                  || Suuret kiitokset rahallisesti tukeneille henkilöille.
-HTML - TEXT_CONTRIBUTORS_THANKS                 || Myös seuraavat <span class="col-plan">mahtavat ihmiset</span> ovat antaneet panosta:
+HTML - TEXT_CONTRIBUTORS_THANKS                 || Myös seuraavat <span class="col-plan">mahtavat ihmiset</span> ovat tukeneet kehitystä:
 HTML - TEXT_DEV_VERSION                         || Tämä versio on KEHITYS versio.
 HTML - TEXT_DEVELOPED_BY                        || on kehittänyt
-HTML - TEXT_LICENSED_UNDER                      || kehitetään ja on lisensöity
+HTML - TEXT_LICENSED_UNDER                      || kehitetään ja käyttää lisenssiä
 HTML - TEXT_METRICS                             || bStats Metrics
 HTML - TEXT_NO_EXTENSION_DATA                   || Ei dataa lisäosista
 HTML - TEXT_NO_LOW_TPS                          || Ei matalan TPS:n piikkejä
-HTML - TEXT_PLUGIN_INFORMATION                  || Tietoa pluginista
+HTML - TEXT_PLUGIN_INFORMATION                  || Tietoa lisäosasta
 HTML - TEXT_VERSION                             || Uusi versio on julkaistu ja on nyt ladattavissa.
 HTML - TITLE_30_DAYS                            || 30 päivää
 HTML - TITLE_30_DAYS_AGO                        || 30 päivää sitten
 HTML - TITLE_ALL                                || Kaikki
-HTML - TITLE_ALL_TIME                           || All Time
+HTML - TITLE_ALL_TIME                           || Kaikkien aikojen
 HTML - TITLE_AS_NUMBERS                         || Numeroina
 HTML - TITLE_AVG_PING                           || Keskimääräinen Ping
 HTML - TITLE_BEST_PING                          || Paras Ping
@@ -222,7 +222,7 @@ HTML - TITLE_CURRENT_PLAYERBASE                 || Nykyiset pelaajat
 HTML - TITLE_DISK                               || Levytila
 HTML - TITLE_GRAPH_DAY_BY_DAY                   || Päivittäinen katsaus
 HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || Verkoston paikallaolo
-HTML - TITLE_GRAPH_PUNCHCARD                    || Punchcard 30 päivälle
+HTML - TITLE_GRAPH_PUNCHCARD                    || Reikäkortti 30 päivälle
 HTML - TITLE_INSIGHTS                           || Katsauksia 30 päivälle
 HTML - TITLE_IS_AVAILABLE                       || on saatavilla
 HTML - TITLE_LAST_24_HOURS                      || Viimeiset 24 tuntia
@@ -236,11 +236,11 @@ HTML - TITLE_NETWORK_AS_NUMBERS                 || Verkosto Numeroina
 HTML - TITLE_NOW                                || Nyt
 HTML - TITLE_ONLINE_ACTIVITY                    || Paikallaolo
 HTML - TITLE_ONLINE_ACTIVITY_AS_NUMBERS         || Paikallaolo Numeroina
-HTML - TITLE_ONLINE_ACTIVITY_OVERVIEW           || Online Activity Overview
-HTML - TITLE_PERFORMANCE_AS_NUMBERS             || Tehokkuus Numeroina
+HTML - TITLE_ONLINE_ACTIVITY_OVERVIEW           || Yhteenveto Paikallaolosta
+HTML - TITLE_PERFORMANCE_AS_NUMBERS             || Suorituskyky Numeroina
 HTML - TITLE_PING                               || Ping
 HTML - TITLE_PLAYER                             || Pelaaja
-HTML - TITLE_PLAYER_OVERVIEW                    || Player Overview
+HTML - TITLE_PLAYER_OVERVIEW                    || Yhteenveto Pelaajasta
 HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Pelaajakunnan kehitys
 HTML - TITLE_PVP_DEATHS                         || Viimeaikaiset PvP Kuolemat
 HTML - TITLE_PVP_KILLS                          || Viimeaikaiset PvP Tapot
@@ -250,19 +250,19 @@ HTML - TITLE_RECENT_SESSIONS                    || Viimeisimmät Istunnot
 HTML - TITLE_SEEN_NICKNAMES                     || Nähdyt Lempinimet
 HTML - TITLE_SERVER                             || Palvelin
 HTML - TITLE_SERVER_AS_NUMBERS                  || Palvelin Numeroina
-HTML - TITLE_SERVER_OVERVIEW                    || Server Overview
+HTML - TITLE_SERVER_OVERVIEW                    || Yhteenveto Palvelimesta
 HTML - TITLE_SERVER_PLAYTIME                    || Palvelimen peliaika
 HTML - TITLE_SERVER_PLAYTIME_30                 || Palvelimen peliaika 30 päivälle
 HTML - TITLE_SESSION_START                      || Istunto alkoi
 HTML - TITLE_THEME_SELECT                       || Teemavalikko
-HTML - TITLE_TITLE_PLAYER_PUNCHCARD             || Punchcard
+HTML - TITLE_TITLE_PLAYER_PUNCHCARD             || Reikäkortti
 HTML - TITLE_TPS                                || TPS
 HTML - TITLE_TREND                              || Suunta
 HTML - TITLE_TRENDS                             || Suunnat 30 päivälle
 HTML - TITLE_VERSION                            || Versio
 HTML - TITLE_WEEK_COMPARISON                    || Viikkojen vertaus
-HTML - TITLE_WORLD                              || Maailman Varaus
-HTML - TITLE_WORLD_PLAYTIME                     || World Playtime
+HTML - TITLE_WORLD                              || Maailmojen Resurssit
+HTML - TITLE_WORLD_PLAYTIME                     || Maailmakohtainen Peliaika
 HTML - TITLE_WORST_PING                         || Huonoin Ping
 HTML - TOTAL_ACTIVE_TEXT                        || Aktiivisena
 HTML - TOTAL_AFK                                || AFK
@@ -276,13 +276,13 @@ HTML - USER_PASS_MISMATCH                       || Käyttäjä ja salasana ei t�
 HTML - WITH                                     || <th>Millä
 HTML ERRORS - ACCESS_DENIED_403                 || Pääsy Kielletty
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Varmista että olet rekisteröinyt käyttäjän komennolla <b>/plan register</b><br>- Tarkista että käyttäjänimi ja salaasana ovat oikein<br>- Nimi ja salasana ovat CASE SENSITIVE<br><br>Jos unohdit salasanasi, pyydä valvojia poistamaan käyttäjäsi ja uudelleenrekisteröidy.
-HTML ERRORS - AUTHENTICATION_FAILED_401         || Autentikaatio ei onnistunut.
+HTML ERRORS - AUTHENTICATION_FAILED_401         || Todennus ei onnistunut.
 HTML ERRORS - FORBIDDEN_403                     || Kielletty
 HTML ERRORS - NO_SERVERS_404                    || Ei palvelimia jolla toiminto voitaisiin suorittaa.
 HTML ERRORS - NOT_FOUND_404                     || Ei löytynyt
 HTML ERRORS - NOT_PLAYED_404                    || Pelaaja ei ole pelannut palvelimella.
 HTML ERRORS - PAGE_NOT_FOUND_404                || Sivua ei ole olemassa.
-HTML ERRORS - UNAUTHORIZED_401                  || Ei Autentikoitu
+HTML ERRORS - UNAUTHORIZED_401                  || Todennusta ei suoritettu loppuun.
 HTML ERRORS - UNKNOWN_PAGE_404                  || Varmista menneeesi komennon antamaan osoitteeseen, Esim:</p><p>/player/PelaajanNimi<br>/server/PalvelimenNimi</p>
 HTML ERRORS - UUID_404                          || Pelaajan UUID:ta ei löytynyt tietokannasta.
 In Depth Help - /plan ?                         || > §2Pääkomento\  Käytä alikomentoja ja apua\  §2/plan §fListaa alikomennot\  §2/plan <alikomento> ? §fYksityiskohtainen apu
