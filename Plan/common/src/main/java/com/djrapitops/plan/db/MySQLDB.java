@@ -24,6 +24,7 @@ import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
+import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -75,12 +76,22 @@ public class MySQLDB extends SQLDB {
         return DBType.MYSQL;
     }
 
+    private void loadMySQLDriver() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            errorHandler.log(L.CRITICAL, this.getClass(), e);
+        }
+    }
+
     /**
      * Setups the {@link HikariDataSource}
      */
     @Override
     public void setupDataSource() {
         try {
+            if (Check.isVelocityAvailable()) loadMySQLDriver();
+
             HikariConfig hikariConfig = new HikariConfig();
 
             String host = config.get(DatabaseSettings.MYSQL_HOST);

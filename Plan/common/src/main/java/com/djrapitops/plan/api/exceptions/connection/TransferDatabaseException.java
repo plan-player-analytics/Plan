@@ -16,8 +16,10 @@
  */
 package com.djrapitops.plan.api.exceptions.connection;
 
+import com.djrapitops.plan.system.info.request.InfoRequest;
+
 /**
- * Thrown when {@link com.djrapitops.plan.api.exceptions.database.DBOpException} occurs during {@link com.djrapitops.plan.system.info.request.InfoRequest#placeIntoDatabase}.
+ * Thrown when {@link com.djrapitops.plan.api.exceptions.database.DBOpException} occurs during {@link InfoRequest#runLocally()}.
  *
  * @author Rsl1122
  */

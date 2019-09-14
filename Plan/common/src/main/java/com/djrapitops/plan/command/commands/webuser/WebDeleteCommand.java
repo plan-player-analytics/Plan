@@ -91,7 +91,9 @@ public class WebDeleteCommand extends CommandNode {
                     sender.sendMessage("§c[Plan] User Doesn't exist.");
                     return;
                 }
-                db.executeTransaction(new RemoveWebUserTransaction(user));
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
+                db.executeTransaction(new RemoveWebUserTransaction(user))
+                        .get(); // Wait for completion
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (Exception e) {
                 errorHandler.log(L.ERROR, this.getClass(), e);

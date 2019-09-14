@@ -41,6 +41,10 @@ import java.util.logging.Logger;
  */
 public class TestData {
 
+    private TestData() {
+        /* Utility class */
+    }
+
     private static UUID playerUUID = TestConstants.PLAYER_ONE_UUID;
     private static UUID player2UUID = TestConstants.PLAYER_TWO_UUID;
     private static UUID serverUUID = TestConstants.SERVER_UUID;

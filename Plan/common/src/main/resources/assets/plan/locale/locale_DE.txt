@@ -36,7 +36,7 @@ Cmd Qinspect - Playtime                         ||   §Spielzeit: §f${0}
 Cmd Qinspect - Registered                       ||   §2Registrierung: §f${0}
 Cmd Qinspect - Times Kicked                     ||   §2Kicks: §f${0}
 Cmd Setup - Allowed                             || §aSetupmodus wurde aktiviert.
-Cmd Setup - Bad Request                         || §eVerbindung hergestellt. Der empfangende Server ist kein Bungeecordserver. Nutze stattdessen die Bungeecord-Adresse.
+Cmd Setup - Bad Request                         || §eVerbindung hergestellt. Der empfangende Server ist ein Bukkit- oder Sponge-server. Nutze stattdessen die andere Adresse.
 Cmd Setup - Disallowed                          || §cSet-up wurde deaktiviert.
 Cmd Setup - Forbidden                           || §eVerbindung hergestellt aber der Bungeecordserver hat den Setupmodus nicht aktiviert. Nutze '/planbungee setup' um ihn zu aktivieren.
 Cmd Setup - Gateway Error                       || §eVerbindung hergestellt, aber der Bungeecordserver konnte sich nicht mit diesem Server verbinden (Wurde der aktuelle Server neugestartet?). Nutze /plan m con & /planbungee con zum debuggen.
@@ -47,7 +47,7 @@ Cmd Setup - Unauthorized                        || §eVerbindung erfolgreich, ab
 Cmd Setup - Url mistake                         || §cNutze die gesamte Adresse (Beginnend mit http:// oder https://) - Diese kannst du dem Bungee enable log entnehmen.
 Cmd Setup - WebServer not Enabled               || §cWebServer ist auf diesem Server deaktiviert! Dies sollte beim Start aktiviert werden!
 Cmd SUCCESS - Feature disabled                  || §a'${0}' wurde bis zum nächsten Reload des Plugins deaktiviert.
-Cmd SUCCESS - WebUser register                  || §aNeuer Account (${0}) erfolgreich hinzugefügt!
+Cmd SUCCESS - WebUser register                  || §aNeuer Account (${0}) erfolgreich hinzugefügt! Sie können das Web-Panel über den folgenden Link anzeigen.
 Cmd Update - Cancel Success                     || §aErfolgreich abgebrochen.
 Cmd Update - Cancelled                          || §cUpdate abgebrochen.
 Cmd Update - Change log                         || Change Log v${0}:

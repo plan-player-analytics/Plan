@@ -79,21 +79,21 @@ public class DataProviders {
         return byReturnType;
     }
 
-    public void removeProviderWithMethod(MethodWrapper method) {
-        MethodType methodType = method.getMethodType();
+    public void removeProviderWithMethod(MethodWrapper toRemove) {
+        MethodType methodType = toRemove.getMethodType();
         Map<Class, List<DataProvider>> byResultType = byMethodType.getOrDefault(methodType, Collections.emptyMap());
         if (byResultType.isEmpty()) {
             return;
         }
 
-        Class resultType = method.getResultType();
+        Class resultType = toRemove.getResultType();
         List<DataProvider> providers = byResultType.getOrDefault(resultType, Collections.emptyList());
         if (providers.isEmpty()) {
             return;
         }
 
         byResultType.put(resultType, providers.stream()
-                .filter(provider -> provider.getMethod().equals(method))
+                .filter(provider -> !provider.getMethod().equals(toRemove))
                 .collect(Collectors.toList())
         );
         byMethodType.put(methodType, byResultType);

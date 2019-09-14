@@ -26,6 +26,7 @@ import com.djrapitops.plan.db.access.transactions.init.RemoveOldSampledDataTrans
 import com.djrapitops.plan.db.sql.tables.SessionsTable;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalPlayerResultsTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalServerResultsTransaction;
+import com.djrapitops.plan.query.QueryServiceImplementation;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
@@ -47,6 +48,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Task for cleaning the active database.
  *
@@ -58,6 +61,7 @@ public class DBCleanTask extends AbsRunnable {
     private final Locale locale;
     private final DBSystem dbSystem;
     private final PlanConfig config;
+    private final QueryServiceImplementation queryService;
     private final ServerInfo serverInfo;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
@@ -67,6 +71,7 @@ public class DBCleanTask extends AbsRunnable {
             PlanConfig config,
             Locale locale,
             DBSystem dbSystem,
+            QueryServiceImplementation queryService,
             ServerInfo serverInfo,
             PluginLogger logger,
             ErrorHandler errorHandler
@@ -75,6 +80,7 @@ public class DBCleanTask extends AbsRunnable {
 
         this.dbSystem = dbSystem;
         this.config = config;
+        this.queryService = queryService;
         this.serverInfo = serverInfo;
         this.logger = logger;
         this.errorHandler = errorHandler;
@@ -110,18 +116,20 @@ public class DBCleanTask extends AbsRunnable {
         long keepActiveAfter = now - config.get(TimeSettings.DELETE_INACTIVE_PLAYERS_AFTER);
 
         List<UUID> inactivePlayers = database.query(fetchInactivePlayerUUIDs(keepActiveAfter));
-        for (UUID uuid : inactivePlayers) {
-            database.executeTransaction(new RemovePlayerTransaction(uuid));
+        for (UUID playerUUID : inactivePlayers) {
+            queryService.playerRemoved(playerUUID);
+            database.executeTransaction(new RemovePlayerTransaction(playerUUID));
         }
         return inactivePlayers.size();
     }
 
     private Query<List<UUID>> fetchInactivePlayerUUIDs(long keepActiveAfter) {
-        String sql = "SELECT uuid, last_seen FROM (SELECT" +
-                " MAX(" + SessionsTable.SESSION_END + ") as last_seen, " + SessionsTable.USER_UUID +
-                " FROM " + SessionsTable.TABLE_NAME +
-                " GROUP BY " + SessionsTable.USER_UUID + ") as q1" +
-                " WHERE last_seen < ?";
+        String sql = SELECT + "uuid, last_seen" + FROM +
+                '(' + SELECT + "MAX(" + SessionsTable.SESSION_END + ") as last_seen, " +
+                SessionsTable.USER_UUID +
+                FROM + SessionsTable.TABLE_NAME +
+                GROUP_BY + SessionsTable.USER_UUID + ") as q1" +
+                WHERE + "last_seen < ?";
         return new QueryStatement<List<UUID>>(sql, 20000) {
 
             @Override

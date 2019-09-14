@@ -28,6 +28,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Queries for {@link WebUser} objects.
  *
@@ -45,38 +47,42 @@ public class PingQueries {
      * @return Map: Player UUID - List of ping data.
      */
     public static Query<Map<UUID, List<Ping>>> fetchAllPingData() {
-        String sql = "SELECT " +
-                PingTable.DATE + ", " +
-                PingTable.MAX_PING + ", " +
-                PingTable.MIN_PING + ", " +
-                PingTable.AVG_PING + ", " +
-                PingTable.USER_UUID + ", " +
+        String sql = SELECT +
+                PingTable.DATE + ',' +
+                PingTable.MAX_PING + ',' +
+                PingTable.MIN_PING + ',' +
+                PingTable.AVG_PING + ',' +
+                PingTable.USER_UUID + ',' +
                 PingTable.SERVER_UUID +
-                " FROM " + PingTable.TABLE_NAME;
+                FROM + PingTable.TABLE_NAME;
         return new QueryAllStatement<Map<UUID, List<Ping>>>(sql, 100000) {
             @Override
             public Map<UUID, List<Ping>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, List<Ping>> userPings = new HashMap<>();
-
-                while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(PingTable.USER_UUID));
-                    UUID serverUUID = UUID.fromString(set.getString(PingTable.SERVER_UUID));
-                    long date = set.getLong(PingTable.DATE);
-                    double avgPing = set.getDouble(PingTable.AVG_PING);
-                    int minPing = set.getInt(PingTable.MIN_PING);
-                    int maxPing = set.getInt(PingTable.MAX_PING);
-
-                    List<Ping> pings = userPings.getOrDefault(uuid, new ArrayList<>());
-                    pings.add(new Ping(date, serverUUID,
-                            minPing,
-                            maxPing,
-                            avgPing));
-                    userPings.put(uuid, pings);
-                }
-
-                return userPings;
+                return extractUserPings(set);
             }
         };
+    }
+
+    private static Map<UUID, List<Ping>> extractUserPings(ResultSet set) throws SQLException {
+        Map<UUID, List<Ping>> userPings = new HashMap<>();
+
+        while (set.next()) {
+            UUID uuid = UUID.fromString(set.getString(PingTable.USER_UUID));
+            UUID serverUUID = UUID.fromString(set.getString(PingTable.SERVER_UUID));
+            long date = set.getLong(PingTable.DATE);
+            double avgPing = set.getDouble(PingTable.AVG_PING);
+            int minPing = set.getInt(PingTable.MIN_PING);
+            int maxPing = set.getInt(PingTable.MAX_PING);
+
+            List<Ping> pings = userPings.getOrDefault(uuid, new ArrayList<>());
+            pings.add(new Ping(date, serverUUID,
+                    minPing,
+                    maxPing,
+                    avgPing));
+            userPings.put(uuid, pings);
+        }
+
+        return userPings;
     }
 
     /**
@@ -86,8 +92,8 @@ public class PingQueries {
      * @return List of Ping entries for this player.
      */
     public static Query<List<Ping>> fetchPingDataOfPlayer(UUID playerUUID) {
-        String sql = "SELECT * FROM " + PingTable.TABLE_NAME +
-                " WHERE " + PingTable.USER_UUID + "=?";
+        String sql = SELECT + '*' + FROM + PingTable.TABLE_NAME +
+                WHERE + PingTable.USER_UUID + "=?";
 
         return new QueryStatement<List<Ping>>(sql, 10000) {
             @Override
@@ -116,15 +122,15 @@ public class PingQueries {
     }
 
     public static Query<Map<UUID, List<Ping>>> fetchPingDataOfServer(UUID serverUUID) {
-        String sql = "SELECT " +
-                PingTable.DATE + ", " +
-                PingTable.MAX_PING + ", " +
-                PingTable.MIN_PING + ", " +
-                PingTable.AVG_PING + ", " +
-                PingTable.USER_UUID + ", " +
+        String sql = SELECT +
+                PingTable.DATE + ',' +
+                PingTable.MAX_PING + ',' +
+                PingTable.MIN_PING + ',' +
+                PingTable.AVG_PING + ',' +
+                PingTable.USER_UUID + ',' +
                 PingTable.SERVER_UUID +
-                " FROM " + PingTable.TABLE_NAME +
-                " WHERE " + PingTable.SERVER_UUID + "=?";
+                FROM + PingTable.TABLE_NAME +
+                WHERE + PingTable.SERVER_UUID + "=?";
         return new QueryStatement<Map<UUID, List<Ping>>>(sql, 100000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -133,25 +139,7 @@ public class PingQueries {
 
             @Override
             public Map<UUID, List<Ping>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, List<Ping>> userPings = new HashMap<>();
-
-                while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(PingTable.USER_UUID));
-                    UUID serverUUID = UUID.fromString(set.getString(PingTable.SERVER_UUID));
-                    long date = set.getLong(PingTable.DATE);
-                    double avgPing = set.getDouble(PingTable.AVG_PING);
-                    int minPing = set.getInt(PingTable.MIN_PING);
-                    int maxPing = set.getInt(PingTable.MAX_PING);
-
-                    List<Ping> pings = userPings.getOrDefault(uuid, new ArrayList<>());
-                    pings.add(new Ping(date, serverUUID,
-                            minPing,
-                            maxPing,
-                            avgPing));
-                    userPings.put(uuid, pings);
-                }
-
-                return userPings;
+                return extractUserPings(set);
             }
         };
     }

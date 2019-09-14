@@ -32,7 +32,7 @@ public class Update extends WhereParser {
         int size = values.length;
         for (int i = 0; i < size; i++) {
             if (size > 1 && i > 0) {
-                parser.append(", ");
+                parser.append(',');
             }
             parser.append(values[i] + "=?");
         }

@@ -34,7 +34,7 @@ class CreateTableParserTest {
 
     @Test
     void createsSameTablesAsOldParser() {
-        String expected = "CREATE TABLE IF NOT EXISTS plan_servers (id integer NOT NULL AUTO_INCREMENT, uuid varchar(36) NOT NULL UNIQUE, name varchar(100), web_address varchar(100), is_installed boolean NOT NULL DEFAULT 1, max_players integer NOT NULL DEFAULT -1, PRIMARY KEY (id))";
+        String expected = "CREATE TABLE IF NOT EXISTS plan_servers (id integer NOT NULL AUTO_INCREMENT,uuid varchar(36) NOT NULL UNIQUE,name varchar(100),web_address varchar(100),is_installed boolean NOT NULL DEFAULT 1,max_players integer NOT NULL DEFAULT -1,PRIMARY KEY (id))";
         String result = CreateTableParser.create(ServerTable.TABLE_NAME, DBType.MYSQL)
                 .column(ServerTable.SERVER_ID, Sql.INT)
                 .primaryKey()

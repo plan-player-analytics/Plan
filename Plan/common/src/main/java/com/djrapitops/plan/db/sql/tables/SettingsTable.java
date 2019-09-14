@@ -35,8 +35,8 @@ public class SettingsTable {
     public static final String CONFIG_CONTENT = "content";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
-            SERVER_UUID + ", " +
-            UPDATED + ", " +
+            SERVER_UUID + ',' +
+            UPDATED + ',' +
             CONFIG_CONTENT + ") VALUES (?,?,?)";
     public static final String UPDATE_STATEMENT = "UPDATE " + TABLE_NAME + " SET " +
             CONFIG_CONTENT + "=?," +

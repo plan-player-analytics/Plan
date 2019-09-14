@@ -42,14 +42,15 @@ import java.io.InputStream;
 @Plugin(
         id = "plan",
         name = "Plan",
-        version = "4.8.2",
+        version = "4.9.4",
         description = "Player Analytics Plugin by Rsl1122",
         authors = {"Rsl1122"},
         dependencies = {
                 @Dependency(id = "griefprevention", optional = true),
                 @Dependency(id = "luckperms", optional = true),
                 @Dependency(id = "nucleus", optional = true),
-                @Dependency(id = "redprotect", optional = true)
+                @Dependency(id = "redprotect", optional = true),
+                @Dependency(id = "nuvotifier", optional = true)
         }
 )
 public class PlanSponge extends SpongePlugin implements PlanPlugin {

@@ -21,74 +21,102 @@ import com.djrapitops.plan.db.access.queries.ServerAggregateQueries;
 import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
 import com.djrapitops.plan.db.access.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.db.access.transactions.events.PlayerRegisterTransaction;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.info.server.Server;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import utilities.DBPreparer;
 import utilities.OptionalAssert;
+import utilities.RandomData;
+import utilities.mocks.PluginMockComponent;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Rsl1122
  */
-@RunWith(MockitoJUnitRunner.Silent.class)
-public class SQLiteTest extends CommonDBTest {
+@RunWith(JUnitPlatform.class)
+@ExtendWith(MockitoExtension.class)
+public class SQLiteTest implements DatabaseTest {
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        handleSetup("SQLite");
+    private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
+
+    private static PlanSystem system;
+    private static Database database;
+
+    @BeforeAll
+    static void setupDatabase(@TempDir Path temp) throws Exception {
+        system = new PluginMockComponent(temp).getPlanSystem();
+        database = new DBPreparer(system, TEST_PORT_NUMBER).prepareSQLite()
+                .orElseThrow(IllegalStateException::new);
+    }
+
+    @AfterAll
+    static void disableSystem() {
+        if (database != null) database.close();
+        system.disable();
+    }
+
+    @Override
+    public Database db() {
+        return database;
+    }
+
+    @Override
+    public UUID serverUUID() {
+        return system.getServerInfo().getServerUUID();
+    }
+
+    @Override
+    public PlanSystem system() {
+        return system;
     }
 
     @Test
-    public void testSQLiteGetConfigName() {
-        assertEquals("sqlite", db.getType().getConfigName());
-    }
-
-    @Test
-    public void testSQLiteGetName() {
-        assertEquals("SQLite", db.getType().getName());
-    }
-
-    @Test
-    public void testServerTableBungeeSave() {
-        Optional<Server> bungeeInfo = db.query(ServerQueries.fetchProxyServerInformation());
+    void testServerTableBungeeSave() {
+        Optional<Server> bungeeInfo = database.query(ServerQueries.fetchProxyServerInformation());
         assertFalse(bungeeInfo.isPresent());
 
         UUID bungeeUUID = UUID.randomUUID();
         Server bungeeCord = new Server(-1, bungeeUUID, "BungeeCord", "Random:1234", 20);
-        db.executeTransaction(new StoreServerInformationTransaction(bungeeCord));
+        database.executeTransaction(new StoreServerInformationTransaction(bungeeCord));
 
         commitTest();
 
         bungeeCord.setId(2);
 
-        bungeeInfo = db.query(ServerQueries.fetchProxyServerInformation());
+        bungeeInfo = database.query(ServerQueries.fetchProxyServerInformation());
         assertTrue(bungeeInfo.isPresent());
         assertEquals(bungeeCord, bungeeInfo.get());
 
-        Optional<Server> found = db.query(ServerQueries.fetchServerMatchingIdentifier(bungeeUUID));
+        Optional<Server> found = database.query(ServerQueries.fetchServerMatchingIdentifier(bungeeUUID));
         OptionalAssert.equals(2, found.map(Server::getId));
     }
 
     @Test
-    public void testServerTableBungee() {
+    void testServerTableBungee() {
         testServerTableBungeeSave();
 
-        Map<UUID, Server> serverInformation = db.query(ServerQueries.fetchPlanServerInformation());
+        Map<UUID, Server> serverInformation = database.query(ServerQueries.fetchPlanServerInformation());
 
         assertEquals(1, serverInformation.values().stream().filter(Server::isNotProxy).count());
         assertEquals(1, serverInformation.values().stream().filter(Server::isProxy).count());
     }
 
     @Test
-    public void networkGeolocationsAreCountedAppropriately() {
+    void networkGeolocationsAreCountedAppropriately() {
         UUID firstUuid = UUID.randomUUID();
         UUID secondUuid = UUID.randomUUID();
         UUID thirdUuid = UUID.randomUUID();
@@ -96,9 +124,9 @@ public class SQLiteTest extends CommonDBTest {
         UUID fifthUuid = UUID.randomUUID();
         UUID sixthUuid = UUID.randomUUID();
 
-        db.executeTransaction(new PlayerRegisterTransaction(firstUuid, () -> 0L, ""));
-        db.executeTransaction(new PlayerRegisterTransaction(secondUuid, () -> 0L, ""));
-        db.executeTransaction(new PlayerRegisterTransaction(thirdUuid, () -> 0L, ""));
+        database.executeTransaction(new PlayerRegisterTransaction(firstUuid, () -> 0L, ""));
+        database.executeTransaction(new PlayerRegisterTransaction(secondUuid, () -> 0L, ""));
+        database.executeTransaction(new PlayerRegisterTransaction(thirdUuid, () -> 0L, ""));
 
         saveGeoInfo(firstUuid, new GeoInfo("-", "Norway", 0));
         saveGeoInfo(firstUuid, new GeoInfo("-", "Finland", 5));
@@ -108,7 +136,7 @@ public class SQLiteTest extends CommonDBTest {
         saveGeoInfo(fifthUuid, new GeoInfo("-", "Not Known", 0));
         saveGeoInfo(sixthUuid, new GeoInfo("-", "Local Machine", 0));
 
-        Map<String, Integer> got = db.query(ServerAggregateQueries.networkGeolocationCounts());
+        Map<String, Integer> got = database.query(ServerAggregateQueries.networkGeolocationCounts());
 
         Map<String, Integer> expected = new HashMap<>();
         // first user has a more recent connection from Finland so their country should be counted as Finland.

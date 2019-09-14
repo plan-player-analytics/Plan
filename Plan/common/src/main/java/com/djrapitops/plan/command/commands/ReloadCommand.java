@@ -27,7 +27,6 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 
 import javax.inject.Inject;
@@ -59,17 +58,17 @@ public class ReloadCommand extends CommandNode {
 
     @Override
     public void onCommand(Sender sender, String commandLabel, String[] args) {
-        runnableFactory.create("Reload task", new AbsRunnable() {
-            @Override
-            public void run() {
-                try {
-                    plugin.reloadPlugin(true);
-                } catch (Exception e) {
-                    errorHandler.log(L.CRITICAL, this.getClass(), e);
-                    sender.sendMessage(locale.getString(CommandLang.RELOAD_FAILED));
-                }
+        new Thread(() -> {
+            try {
+                plugin.reloadPlugin(true);
                 sender.sendMessage(locale.getString(CommandLang.RELOAD_COMPLETE));
+            } catch (Exception e) {
+                errorHandler.log(L.CRITICAL, this.getClass(), e);
+                sender.sendMessage(locale.getString(CommandLang.RELOAD_FAILED));
+            } finally {
+                Thread thread = Thread.currentThread();
+                thread.interrupt();
             }
-        }).runTaskAsynchronously();
+        }, "Plan Reload Thread").start();
     }
 }

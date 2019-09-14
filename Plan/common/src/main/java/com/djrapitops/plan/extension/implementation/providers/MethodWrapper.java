@@ -18,9 +18,9 @@ package com.djrapitops.plan.extension.implementation.providers;
 
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.Group;
+import com.djrapitops.plan.extension.NotReadyException;
 import com.djrapitops.plan.extension.implementation.MethodType;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
@@ -31,7 +31,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class MethodWrapper<T> implements Serializable {
+public class MethodWrapper<T> {
 
     private final Method method;
     private final Class<T> resultType;
@@ -78,11 +78,14 @@ public class MethodWrapper<T> implements Serializable {
                 default:
                     throw new IllegalArgumentException(method.getDeclaringClass() + " method " + method.getName() + " had invalid parameters.");
             }
-        } catch (InvocationTargetException | IllegalAccessException e) {
-            Throwable cause = e.getCause();
-            boolean hasCause = cause != null;
-            throw new IllegalArgumentException(method.getDeclaringClass() + " method " + method.getName() + " had invalid parameters; caused " +
-                    (hasCause ? cause.toString() : e.toString()));
+        } catch (InvocationTargetException notReadyToBeCalled) {
+            if (notReadyToBeCalled.getCause() instanceof NotReadyException) {
+                return null; // Data or API not available to make the call.
+            } else {
+                throw new IllegalArgumentException(method.getDeclaringClass() + " method " + method.getName() + " could not be called: " + notReadyToBeCalled.getMessage(), notReadyToBeCalled);
+            }
+        } catch (IllegalAccessException e) {
+            throw new IllegalArgumentException(method.getDeclaringClass() + " method " + method.getName() + " could not be called: " + e.getMessage(), e);
         }
     }
 

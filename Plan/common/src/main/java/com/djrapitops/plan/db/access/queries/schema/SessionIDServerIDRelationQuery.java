@@ -37,7 +37,7 @@ import static com.djrapitops.plan.db.sql.parsing.Sql.SELECT;
 public class SessionIDServerIDRelationQuery extends QueryAllStatement<Map<Integer, Integer>> {
 
     public SessionIDServerIDRelationQuery() {
-        super(SELECT + SessionsTable.ID + ", " +
+        super(SELECT + SessionsTable.ID + ',' +
                 "(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=" + SessionsTable.SERVER_UUID + ") as server_id" +
                 FROM + SessionsTable.TABLE_NAME, 50000);
     }

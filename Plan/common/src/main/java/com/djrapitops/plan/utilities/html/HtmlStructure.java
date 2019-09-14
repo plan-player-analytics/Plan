@@ -28,6 +28,10 @@ import org.apache.commons.text.TextStringBuilder;
  */
 public class HtmlStructure {
 
+    private HtmlStructure() {
+        /* Static method class */
+    }
+
     public static String separateWithDots(String... elements) {
         TextStringBuilder builder = new TextStringBuilder();
         builder.appendWithSeparators(elements, " &#x2022; ");
@@ -50,6 +54,7 @@ public class HtmlStructure {
         return builder.toString();
     }
 
+    @Deprecated
     public static String[] createInspectPageTabContentCalculating() {
         String tab = "<div class=\"tab\">" +
                 "<div class=\"row clearfix\">" +

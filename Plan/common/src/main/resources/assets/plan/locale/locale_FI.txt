@@ -36,7 +36,7 @@ Cmd Qinspect - Playtime                         ||   §2Peliaika: §f${0}
 Cmd Qinspect - Registered                       ||   §2Rekisteröitynyt: §f${0}
 Cmd Qinspect - Times Kicked                     ||   §2Potkittu Pellolle: §f${0}
 Cmd Setup - Allowed                             || §aYhteydenotto on nyt sallittu.
-Cmd Setup - Bad Request                         || §eYhteys onnistui, mutta Vastaanottava palvelin ei ollut BungeeCord. Käytä BungeeCord:in osoitetta.
+Cmd Setup - Bad Request                         || §eYhteys onnistui, mutta Vastaanottava palvelin oli Bukkit tai Sponge-palvelin. Käytä toista osoitetta.
 Cmd Setup - Disallowed                          || §cYhteydenotto on nyt kielletty.
 Cmd Setup - Forbidden                           || §eYhteys onnistui, mutta BungeeCord:n set-up tila oli poissa käytöstä - käytä '/planbungee setup' laittaaksesi sen päälle.
 Cmd Setup - Gateway Error                       || §eYhteys onnistui, mutta BungeeCord ei saanut yhteyttä tähän palvelimeen (Käynnistyikö Web palvelin uudelleen?). Käytä /plan m con & /planbungee con tutkiaksesi ongelmia.
@@ -47,7 +47,7 @@ Cmd Setup - Unauthorized                        || §eYhteys onnistui, mutta Vas
 Cmd Setup - Url mistake                         || §cVarmista käyttäväsi kokonaista osoitetta (http:// tai https:// alkuinen) - Tarkista osoite BungeeCord:in käynnistyslokista.
 Cmd Setup - WebServer not Enabled               || §cWeb Palevlin ei ole käynnissä tällä palvelimella! Varmista että se käynnistyy pelin mukana!
 Cmd SUCCESS - Feature disabled                  || §aSammutettiin '${0}' toistaiseksi, kunnes Plan ladataan uudelleen.
-Cmd SUCCESS - WebUser register                  || §aLisättiin uusi Web Käyttäjä (${0})!
+Cmd SUCCESS - WebUser register                  || §aLisättiin uusi Web Käyttäjä (${0})! Voit tarkastella web-paneelia seuraavasta linkistä.
 Cmd Update - Cancel Success                     || §aPeruutettu.
 Cmd Update - Cancelled                          || §cPäivitys peruutettu.
 Cmd Update - Change log                         || Muutosloki v${0}:

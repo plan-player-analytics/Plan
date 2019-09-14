@@ -80,8 +80,13 @@ public class ExtensionServiceImplementation implements ExtensionService {
         ExtensionService.ExtensionServiceHolder.set(this);
     }
 
-    public void enable() {
-        extensionRegister.registerBuiltInExtensions();
+    public void register() {
+        try {
+            extensionRegister.registerBuiltInExtensions(config.getPluginsConfigSection().getDisabled());
+        } catch (IllegalStateException failedToRegisterOne) {
+            logger.warn("One or more extensions failed to register, see suppressed exceptions.");
+            errorHandler.log(L.WARN, this.getClass(), failedToRegisterOne);
+        }
     }
 
     @Override
@@ -101,7 +106,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
 
         processing.submitNonCritical(() -> updateServerValues(gatherer, CallEvents.SERVER_EXTENSION_REGISTER));
 
-        logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, pluginName + " extension registered.");
+        logger.info("Registered extension: " + pluginName);
         return Optional.of(new CallerImplementation(gatherer, this, processing));
     }
 
@@ -152,11 +157,11 @@ public class ExtensionServiceImplementation implements ExtensionService {
             logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, "Gathering completed:  " + playerName);
         } catch (DataExtensionMethodCallException methodCallFailed) {
             logFailure(playerName, methodCallFailed);
-            gatherer.disableMethodFromUse(methodCallFailed.getMethod());
+            methodCallFailed.getMethod().ifPresent(gatherer::disableMethodFromUse);
             // Try again
             updatePlayerValues(gatherer, playerUUID, playerName, event);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
-            logger.warn(gatherer.getPluginName() + " ran into unexpected error (please report this)" + unexpectedError +
+            logger.warn("Encountered unexpected error with " + gatherer.getPluginName() + " Extension (please report this): " + unexpectedError +
                     " (but failed safely) when updating value for '" + playerName +
                     "', stack trace to follow:");
             errorHandler.log(L.WARN, gatherer.getClass(), unexpectedError);
@@ -166,8 +171,8 @@ public class ExtensionServiceImplementation implements ExtensionService {
     private void logFailure(String playerName, DataExtensionMethodCallException methodCallFailed) {
         Throwable cause = methodCallFailed.getCause();
         String causeName = cause.getClass().getSimpleName();
-        logger.warn(methodCallFailed.getPluginName() + " ran into " + causeName +
-                " (but failed safely) when updating value for '" + playerName +
+        logger.warn("Encountered " + causeName + " with " + methodCallFailed.getPluginName() + " Extension (please report this)" +
+                " (failed safely) when updating value for '" + playerName +
                 "', the method was disabled temporarily (won't be called until next Plan reload)" +
                 ", stack trace to follow:");
         errorHandler.log(L.WARN, getClass(), cause);
@@ -191,12 +196,12 @@ public class ExtensionServiceImplementation implements ExtensionService {
             logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, "Gathering completed for server");
         } catch (DataExtensionMethodCallException methodCallFailed) {
             logFailure("server", methodCallFailed);
-            gatherer.disableMethodFromUse(methodCallFailed.getMethod());
+            methodCallFailed.getMethod().ifPresent(gatherer::disableMethodFromUse);
             // Try again
             updateServerValues(gatherer, event);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
-            logger.warn(gatherer.getPluginName() + " ran into unexpected error (please report this)" + unexpectedError +
-                    " (but failed safely) when updating value for server, stack trace to follow:");
+            logger.warn("Encountered unexpected error with " + gatherer.getPluginName() + " Extension (please report this): " + unexpectedError +
+                    " (failed safely) when updating value for server, stack trace to follow:");
             errorHandler.log(L.WARN, gatherer.getClass(), unexpectedError);
         }
     }

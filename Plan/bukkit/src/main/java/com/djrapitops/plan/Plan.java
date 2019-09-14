@@ -18,7 +18,6 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanCommand;
-import com.djrapitops.plan.command.commands.RegisterCommandFilter;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
@@ -75,7 +74,6 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
         PlanCommand command = component.planCommand();
         command.registerCommands();
         registerCommand("plan", command);
-        new RegisterCommandFilter().registerFilter();
         if (system != null) {
             system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
         }

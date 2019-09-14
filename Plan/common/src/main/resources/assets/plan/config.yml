@@ -25,7 +25,7 @@ Plugin:
 # Supported databases: SQLite, H2, MySQL
 # -----------------------------------------------------
 Database:
-  Type: H2
+  Type: SQLite
   MySQL:
     Host: localhost
     Port: 3306

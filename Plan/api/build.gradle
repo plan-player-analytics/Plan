@@ -2,7 +2,7 @@ plugins {
     id "com.jfrog.bintray" version "1.8.4"
 }
 
-ext.apiVersion = '0.0.4'
+ext.apiVersion = '0.0.6'
 
 bintray {
     user = System.getenv('BINTRAY_USER')

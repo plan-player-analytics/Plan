@@ -21,6 +21,8 @@ import com.djrapitops.plan.db.sql.tables.SessionsTable;
 
 import java.sql.PreparedStatement;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Patch that resets AFK time of sessions with afk time of length of the session to 0.
  * <p>
@@ -40,11 +42,12 @@ public class BadAFKThresholdValuePatch extends Patch {
 
     private boolean containsSessionsWithFullAFK() {
         // where |afk - session_length| < 5
-        String sql = "SELECT COUNT(1) as found FROM " + SessionsTable.TABLE_NAME +
-                " WHERE ABS(" +
+        String sql = SELECT + "COUNT(1) as found" + FROM + SessionsTable.TABLE_NAME +
+                WHERE + "ABS(" +
                 SessionsTable.AFK_TIME +
                 " - (" + SessionsTable.SESSION_END + "-" + SessionsTable.SESSION_START +
-                ")) < 5 AND " + SessionsTable.AFK_TIME + "!=0";
+                ")) < 5" +
+                AND + SessionsTable.AFK_TIME + "!=0";
         return query(new HasMoreThanZeroQueryStatement(sql, "found") {
             @Override
             public void prepare(PreparedStatement statement) {
@@ -56,10 +59,12 @@ public class BadAFKThresholdValuePatch extends Patch {
     @Override
     protected void applyPatch() {
         // where |afk - session_length| < 5
-        String sql = "UPDATE " + SessionsTable.TABLE_NAME + " SET " + SessionsTable.AFK_TIME + "=0 WHERE ABS(" +
+        String sql = "UPDATE " + SessionsTable.TABLE_NAME + " SET " + SessionsTable.AFK_TIME + "=0" +
+                WHERE + "ABS(" +
                 SessionsTable.AFK_TIME +
                 " - (" + SessionsTable.SESSION_END + "-" + SessionsTable.SESSION_START +
-                ")) < 5 AND " + SessionsTable.AFK_TIME + "!=0";
+                ")) < 5" +
+                AND + SessionsTable.AFK_TIME + "!=0";
         execute(sql);
     }
 }

@@ -35,7 +35,7 @@ import static com.djrapitops.plan.db.sql.parsing.Sql.*;
  * <p>
  * How it works:
  * - Select all fulfilled conditions for all servers (conditionName when true and not_conditionName when false)
- * - Left join with server value & provider tables when plugin_ids match, and when condition matches a condition in the
+ * - Left join with server value and provider tables when plugin_ids match, and when condition matches a condition in the
  * query above. (plugin_ids can be linked to servers)
  * - Filter the join query for values where the condition did not match any provided condition in the join (Is null)
  * - Delete all server values with IDs that are returned by the left join query after filtering

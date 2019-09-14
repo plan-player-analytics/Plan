@@ -23,8 +23,9 @@ import com.djrapitops.plugin.utilities.Verify;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
@@ -55,8 +56,7 @@ public class FileWatcher extends Thread {
     ) {
         this.errorHandler = errorHandler;
         this.running = false;
-        this.watchedFiles = new HashSet<>();
-
+        this.watchedFiles = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
         Verify.isTrue(watchedPath.toFile().isDirectory(), () -> new IllegalArgumentException("Given File " + watchedPath.toString() + " was not a folder."));
 
@@ -116,7 +116,7 @@ public class FileWatcher extends Thread {
     }
 
     private void actOnModification(Path modifiedFile) {
-        for (WatchedFile watchedFile : new HashSet<>(watchedFiles)) {
+        for (WatchedFile watchedFile : watchedFiles) {
             watchedFile.modified(modifiedFile);
         }
     }

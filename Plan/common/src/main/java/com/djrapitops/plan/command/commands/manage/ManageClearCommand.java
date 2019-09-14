@@ -16,11 +16,13 @@
  */
 package com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.access.transactions.commands.RemoveEverythingTransaction;
+import com.djrapitops.plan.query.QueryServiceImplementation;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -39,6 +41,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
 /**
  * This manage SubCommand is used to clear a database of all data.
@@ -48,23 +51,29 @@ import java.util.Arrays;
 @Singleton
 public class ManageClearCommand extends CommandNode {
 
+    private final PlanPlugin plugin;
     private final Locale locale;
     private final Processing processing;
     private final DBSystem dbSystem;
+    private final QueryServiceImplementation queryService;
     private final ErrorHandler errorHandler;
 
     @Inject
     public ManageClearCommand(
+            PlanPlugin plugin,
             Locale locale,
             Processing processing,
             DBSystem dbSystem,
+            QueryServiceImplementation queryService,
             ErrorHandler errorHandler
     ) {
         super("clear", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
+        this.plugin = plugin;
 
         this.locale = locale;
         this.processing = processing;
         this.dbSystem = dbSystem;
+        this.queryService = queryService;
         this.errorHandler = errorHandler;
 
         setArguments("<DB>", "[-a]");
@@ -101,14 +110,27 @@ public class ManageClearCommand extends CommandNode {
         processing.submitCritical(() -> {
             try {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
-
-                database.executeTransaction(new RemoveEverythingTransaction());
-
+                database.executeTransaction(new RemoveEverythingTransaction())
+                        .get(); // Wait for completion
+                queryService.dataCleared();
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
-            } catch (DBOpException e) {
+                reloadPlugin(sender);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } catch (DBOpException | ExecutionException e) {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
                 errorHandler.log(L.ERROR, this.getClass(), e);
             }
         });
+    }
+
+    private void reloadPlugin(Sender sender) {
+        try {
+            plugin.reloadPlugin(true);
+        } catch (Exception e) {
+            errorHandler.log(L.CRITICAL, this.getClass(), e);
+            sender.sendMessage(locale.getString(CommandLang.RELOAD_FAILED));
+        }
+        sender.sendMessage(locale.getString(CommandLang.RELOAD_COMPLETE));
     }
 }

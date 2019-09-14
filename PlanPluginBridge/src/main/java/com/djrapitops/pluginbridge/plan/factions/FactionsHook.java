@@ -41,7 +41,7 @@ public class FactionsHook extends Hook {
             PlanConfig config,
             Formatters formatters
     ) {
-        super("com.massivecraft.factions.Factions");
+        super("com.massivecraft.factions.entity.MPlayer");
         this.config = config;
         this.formatters = formatters;
     }

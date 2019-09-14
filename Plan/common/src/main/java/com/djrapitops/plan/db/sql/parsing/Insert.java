@@ -25,22 +25,22 @@ public class Insert extends SqlParser {
 
     public static String values(String table, String... columns) {
         Insert parser = new Insert(table);
-        parser.append("(");
+        parser.append('(');
         int size = columns.length;
         for (int i = 0; i < size; i++) {
             if (size > 1 && i > 0) {
-                parser.append(", ");
+                parser.append(',');
             }
             parser.append(columns[i]);
         }
         parser.append(") VALUES (");
         for (int i = 0; i < size; i++) {
             if (size > 1 && i > 0) {
-                parser.append(", ");
+                parser.append(',');
             }
             parser.append("?");
         }
-        parser.append(")");
+        parser.append(')');
         return parser.toString();
     }
 }

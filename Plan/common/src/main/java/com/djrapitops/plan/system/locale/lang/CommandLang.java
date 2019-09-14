@@ -36,21 +36,21 @@ public enum CommandLang implements Lang {
 
     FEATURE_DISABLED("Cmd SUCCESS - Feature disabled", "§aDisabled '${0}' temporarily until next plugin reload."),
 
-    WEB_USER_REGISTER_SUCCESS("Cmd SUCCESS - WebUser register", "§aAdded a new user (${0}) successfully!"),
+    WEB_USER_REGISTER_SUCCESS("Cmd SUCCESS - WebUser register", "§aAdded a new user (${0}) successfully! You can view the web panel in the following link."),
     WEB_USER_REGISTER_NOTIFY("Cmd Notify - WebUser register", "Registered new user: '${0}' Perm level: ${1}"),
     WEB_USER_LIST("Web User Listing", "  §2${0} §7: §f${1}"),
     NO_WEB_USER_NOTIFY("Cmd Notify - No WebUser", "You might not have a web user, use /plan register <password>"),
     WEB_PERMISSION_LEVELS("Cmd Web - Permission Levels", ">\\§70: Access all pages\\§71: Access '/players' and all player pages\\§72: Access player page with the same username as the webuser\\§73+: No permissions"),
 
     CONNECT_SUCCESS("Cmd Setup - Success", "§aConnection successful, Plan may restart in a few seconds.."),
-    CONNECT_FORBIDDEN("Cmd Setup - Forbidden", "§eConnection succeeded, but Bungee has set-up mode disabled - use '/planbungee setup' to enable it."),
-    CONNECT_BAD_REQUEST("Cmd Setup - Bad Request", "§eConnection succeeded, but Receiving server was not a Bungee server. Use Bungee address instead."),
+    CONNECT_FORBIDDEN("Cmd Setup - Forbidden", "§eConnection succeeded, but Proxy has set-up mode disabled - use 'planbungee setup' on the proxy to enable it."),
+    CONNECT_BAD_REQUEST("Cmd Setup - Bad Request", "§eConnection succeeded, but Receiving server was a Bukkit or Sponge server. Use another address instead."),
     CONNECT_UNAUTHORIZED("Cmd Setup - Unauthorized", "§eConnection succeeded, but Receiving server didn't authorize this server. Contact Discord for support"),
     CONNECT_FAIL("Cmd Setup - Generic Fail", "§eConnection failed: ${0}"),
     CONNECT_INTERNAL_ERROR("Cmd Setup - Internal Error", "§eConnection succeeded. ${0}, check possible ErrorLog on receiving server's debug page."),
-    CONNECT_GATEWAY("Cmd Setup - Gateway Error", "§eConnection succeeded, but Bungee failed to connect to this server (Did current web server restart?). Use /plan m con & /planbungee con to debug."),
+    CONNECT_GATEWAY("Cmd Setup - Gateway Error", "§eConnection succeeded, but Proxy failed to connect to this server (Did current web server restart?). Use /plan m con & /planbungee con to debug."),
     CONNECT_WEBSERVER_NOT_ENABLED("Cmd Setup - WebServer not Enabled", "§cWebServer is not enabled on this server! Make sure it enables on boot!"),
-    CONNECT_URL_MISTAKE("Cmd Setup - Url mistake", "§cMake sure you're using the full address (Starts with http:// or https://) - Check Bungee enable log for the full address."),
+    CONNECT_URL_MISTAKE("Cmd Setup - Url mistake", "§cMake sure you're using the full address (Starts with http:// or https://) - Check Proxy enable log for the full address."),
 
     SETUP_ALLOWED("Cmd Setup - Allowed", "§aSet-up is now Allowed"),
     SETUP_FORBIDDEN("Cmd Setup - Disallowed", "§cSet-up is now Forbidden"),
@@ -70,7 +70,7 @@ public enum CommandLang implements Lang {
     INFO_VERSION("Cmd Info - Version", "  §2Version: §f${0}"),
     INFO_UPDATE("Cmd Info - Update", "  §2Update Available: §f${0}"),
     INFO_DATABASE("Cmd Info - Database", "  §2Active Database: §f${0}"),
-    INFO_BUNGEE_CONNECTION("Cmd Info - Bungee Connection", "  §2Connected to Bungee: §f${0}"),
+    INFO_PROXY_CONNECTION("Cmd Info - Bungee Connection", "  §2Connected to Proxy: §f${0}"),
 
     QINSPECT_ACTIVITY_INDEX("Cmd Qinspect - Activity Index", "  §2Activity Index: §f${0} | ${1}"),
     QINSPECT_REGISTERED("Cmd Qinspect - Registered", "  §2Registered: §f${0}"),

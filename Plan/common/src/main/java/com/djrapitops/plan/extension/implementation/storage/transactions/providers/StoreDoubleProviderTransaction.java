@@ -76,7 +76,8 @@ public class StoreDoubleProviderTransaction extends Transaction {
                 PRIORITY + "=?," +
                 CONDITION + "=?," +
                 TAB_ID + "=" + ExtensionTabTable.STATEMENT_SELECT_TAB_ID + "," +
-                ICON_ID + "=" + ExtensionIconTable.STATEMENT_SELECT_ICON_ID +
+                ICON_ID + "=" + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
+                SHOW_IN_PLAYERS_TABLE + "=?" +
                 WHERE + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID +
                 AND + PROVIDER_NAME + "=?";
 
@@ -99,8 +100,9 @@ public class StoreDoubleProviderTransaction extends Transaction {
                 }
                 ExtensionTabTable.set3TabValuesToStatement(statement, 5, providerInformation.getTab().orElse("No Tab"), providerInformation.getPluginName(), serverUUID);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 8, providerInformation.getIcon());
-                ExtensionPluginTable.set2PluginValuesToStatement(statement, 11, providerInformation.getPluginName(), serverUUID);
-                statement.setString(13, providerInformation.getName());
+                statement.setBoolean(11, providerInformation.isShownInPlayersTable());
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 12, providerInformation.getPluginName(), serverUUID);
+                statement.setString(14, providerInformation.getName());
             }
         };
     }
@@ -112,10 +114,11 @@ public class StoreDoubleProviderTransaction extends Transaction {
                 DESCRIPTION + "," +
                 PRIORITY + "," +
                 CONDITION + "," +
+                SHOW_IN_PLAYERS_TABLE + ',' +
                 TAB_ID + "," +
                 ICON_ID + "," +
                 PLUGIN_ID +
-                ") VALUES (?,?,?,?,?," +
+                ") VALUES (?,?,?,?,?,?," +
                 ExtensionTabTable.STATEMENT_SELECT_TAB_ID + "," +
                 ExtensionIconTable.STATEMENT_SELECT_ICON_ID + "," +
                 ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ")";
@@ -137,9 +140,10 @@ public class StoreDoubleProviderTransaction extends Transaction {
                 } else {
                     statement.setNull(5, Types.VARCHAR);
                 }
-                ExtensionTabTable.set3TabValuesToStatement(statement, 6, providerInformation.getTab().orElse("No Tab"), providerInformation.getPluginName(), serverUUID);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 9, providerInformation.getIcon());
-                ExtensionPluginTable.set2PluginValuesToStatement(statement, 12, providerInformation.getPluginName(), serverUUID);
+                statement.setBoolean(6, providerInformation.isShownInPlayersTable());
+                ExtensionTabTable.set3TabValuesToStatement(statement, 7, providerInformation.getTab().orElse("No Tab"), providerInformation.getPluginName(), serverUUID);
+                ExtensionIconTable.set3IconValuesToStatement(statement, 10, providerInformation.getIcon());
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 13, providerInformation.getPluginName(), serverUUID);
             }
         };
     }

@@ -45,15 +45,16 @@ public class ExtensionProviderTable {
     public static final String PLUGIN_ID = "plugin_id";
     public static final String ICON_ID = "icon_id";
     public static final String TAB_ID = "tab_id"; // Can be null, related to @Tab
+    public static final String SHOW_IN_PLAYERS_TABLE = "show_in_players_table"; // default false
 
     public static final String HIDDEN = "hidden"; // default false, related to @BooleanProvider
     public static final String PROVIDED_CONDITION = "provided_condition"; // Can be null, related to @BooleanProvider
     public static final String FORMAT_TYPE = "format_type"; // Can be null,  related to @NumberProvider
     public static final String IS_PLAYER_NAME = "player_name"; // default false, related to @StringProvider
 
-    public static final String STATEMENT_SELECT_PROVIDER_ID = "(" + SELECT + ID + FROM + TABLE_NAME +
+    public static final String STATEMENT_SELECT_PROVIDER_ID = '(' + SELECT + ID + FROM + TABLE_NAME +
             WHERE + PROVIDER_NAME + "=?" +
-            AND + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ")";
+            AND + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ')';
 
     public static void set3PluginValuesToStatement(PreparedStatement statement, int parameterIndex, String providerName, String pluginName, UUID serverUUID) throws SQLException {
         statement.setString(parameterIndex, providerName);
@@ -71,6 +72,7 @@ public class ExtensionProviderTable {
                 .column(TEXT, Sql.varchar(50)).notNull()
                 .column(DESCRIPTION, Sql.varchar(150))
                 .column(PRIORITY, INT).notNull().defaultValue("0")
+                .column(SHOW_IN_PLAYERS_TABLE, BOOL).notNull().defaultValue(false)
                 .column(GROUPABLE, BOOL).notNull().defaultValue(false)
                 .column(CONDITION, Sql.varchar(54)) // 50 + 4 for "not_"
                 .column(PROVIDED_CONDITION, Sql.varchar(50))

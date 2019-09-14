@@ -23,9 +23,13 @@ import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import utilities.TestConstants;
 
 import java.util.concurrent.TimeUnit;
@@ -37,20 +41,33 @@ import static org.mockito.Mockito.*;
  *
  * @author Rsl1122
  */
+@RunWith(JUnitPlatform.class)
+@ExtendWith(MockitoExtension.class)
 public class AFKListenerTest {
 
-    private AFKListener underTest;
+    private static AFKListener underTest;
 
-    @Before
-    public void setUp() {
+    @BeforeAll
+    static void setUp() {
         PlanConfig config = Mockito.mock(PlanConfig.class);
         when(config.get(TimeSettings.AFK_THRESHOLD)).thenReturn(TimeUnit.MINUTES.toMillis(3));
         underTest = new AFKListener(config, new ConsoleErrorLogger(new TestPluginLogger()));
     }
 
     @Test
-    public void afkPermissionIsNotCalledMoreThanOnce() {
-        Player player = mockPlayer();
+    void afkPermissionIsNotCalledMoreThanOnceWhenIgnored() {
+        Player player = mockPlayerWithPermissions();
+        PlayerMoveEvent event = mockMoveEvent(player);
+
+        underTest.onMove(event);
+        underTest.onMove(event);
+
+        verify(player, times(1)).hasPermission(anyString());
+    }
+
+    @Test
+    void afkPermissionIsNotCalledMoreThanOnceWhenNotIgnored() {
+        Player player = mockPlayerWithoutPermissions();
         PlayerMoveEvent event = mockMoveEvent(player);
 
         underTest.onMove(event);
@@ -65,10 +82,17 @@ public class AFKListenerTest {
         return event;
     }
 
-    private Player mockPlayer() {
+    private Player mockPlayerWithPermissions() {
         Player player = Mockito.mock(Player.class);
         when(player.getUniqueId()).thenReturn(TestConstants.PLAYER_ONE_UUID);
         when(player.hasPermission(anyString())).thenReturn(true);
+        return player;
+    }
+
+    private Player mockPlayerWithoutPermissions() {
+        Player player = Mockito.mock(Player.class);
+        when(player.getUniqueId()).thenReturn(TestConstants.PLAYER_TWO_UUID);
+        when(player.hasPermission(anyString())).thenReturn(false);
         return player;
     }
 

@@ -22,10 +22,10 @@ import com.google.common.collect.ImmutableMap;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class is used to store active sessions of players in memory.
@@ -35,7 +35,7 @@ import java.util.UUID;
 @Singleton
 public class SessionCache {
 
-    private static final Map<UUID, Session> ACTIVE_SESSIONS = new HashMap<>();
+    private static final Map<UUID, Session> ACTIVE_SESSIONS = new ConcurrentHashMap<>();
 
     @Inject
     public SessionCache() {

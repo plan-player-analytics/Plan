@@ -8,6 +8,7 @@ dependencies {
     compile "com.googlecode.htmlcompressor:htmlcompressor:$htmlCompressorVersion"
     compile "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
     compile "com.h2database:h2:$h2Version"
+    compile "mysql:mysql-connector-java:$mysqlVersion"
     compile "com.zaxxer:HikariCP:$hikariVersion"
     compile "org.slf4j:slf4j-nop:$slf4jVersion"
     compile "org.slf4j:slf4j-api:$slf4jVersion"
@@ -15,6 +16,7 @@ dependencies {
     compileOnly "com.google.guava:guava:$guavaVersion"
 
     testCompile project(":api")
+    testCompile "com.google.code.gson:gson:2.8.5"
 }
 
 shadowJar {
@@ -28,6 +30,7 @@ shadowJar {
     exclude "**/*.woff2"
     exclude "**/*.psd"
 
+    exclude "**/module-info.class"
     exclude 'META-INF/versions/' // Causes Sponge to crash
 
     relocate('org.apache', 'plan.org.apache') {

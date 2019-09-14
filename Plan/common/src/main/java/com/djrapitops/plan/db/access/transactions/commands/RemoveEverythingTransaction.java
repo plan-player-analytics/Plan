@@ -19,6 +19,8 @@ package com.djrapitops.plan.db.access.transactions.commands;
 import com.djrapitops.plan.db.access.transactions.Transaction;
 import com.djrapitops.plan.db.sql.tables.*;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.DELETE_FROM;
+
 /**
  * Transaction that removes everything from the database.
  *
@@ -56,6 +58,6 @@ public class RemoveEverythingTransaction extends Transaction {
     }
 
     private void clearTable(String tableName) {
-        execute("DELETE FROM " + tableName);
+        execute(DELETE_FROM + tableName);
     }
 }

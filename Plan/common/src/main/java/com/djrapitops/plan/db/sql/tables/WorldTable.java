@@ -23,6 +23,8 @@ import com.djrapitops.plan.db.patches.WorldsServerIDPatch;
 import com.djrapitops.plan.db.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.db.sql.parsing.Sql;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Table information about 'plan_worlds'.
  * <p>
@@ -42,13 +44,14 @@ public class WorldTable {
     public static final String NAME = "world_name";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
-            + NAME + ", "
+            + NAME + ','
             + SERVER_UUID
             + ") VALUES (?, ?)";
 
-    public static final String SELECT_WORLD_ID_STATEMENT = "(SELECT " + TABLE_NAME + "." + ID + " FROM " + TABLE_NAME +
-            " WHERE (" + NAME + "=?)" +
-            " AND (" + TABLE_NAME + "." + SERVER_UUID + "=?)" +
+    public static final String SELECT_WORLD_ID_STATEMENT = '(' +
+            SELECT + TABLE_NAME + '.' + ID + FROM + TABLE_NAME +
+            WHERE + '(' + NAME + "=?)" +
+            AND + '(' + TABLE_NAME + '.' + SERVER_UUID + "=?)" +
             " LIMIT 1)";
 
     private WorldTable() {

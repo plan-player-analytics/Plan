@@ -26,8 +26,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.UUID;
 
-import static com.djrapitops.plan.db.sql.parsing.Sql.AND;
-import static com.djrapitops.plan.db.sql.parsing.Sql.WHERE;
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
 
 /**
  * Transaction to remove method results that correspond to {@link com.djrapitops.plan.extension.annotation.InvalidateMethod} annotations.
@@ -60,7 +59,7 @@ public class RemoveInvalidResultsTransaction extends Transaction {
     }
 
     private Executable deleteInvalidPlayerMethodResults(String invalidMethod) {
-        String sql = "DELETE FROM " + ExtensionPlayerValueTable.TABLE_NAME +
+        String sql = DELETE_FROM + ExtensionPlayerValueTable.TABLE_NAME +
                 WHERE + ExtensionPlayerValueTable.PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID;
         return new ExecStatement(sql) {
             @Override
@@ -71,7 +70,7 @@ public class RemoveInvalidResultsTransaction extends Transaction {
     }
 
     private Executable deleteInvalidServerMethodResults(String invalidMethod) {
-        String sql = "DELETE FROM " + ExtensionServerValueTable.TABLE_NAME +
+        String sql = DELETE_FROM + ExtensionServerValueTable.TABLE_NAME +
                 WHERE + ExtensionServerValueTable.PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID;
         return new ExecStatement(sql) {
             @Override
@@ -82,7 +81,7 @@ public class RemoveInvalidResultsTransaction extends Transaction {
     }
 
     private Executable deleteInvalidPlayerTableResults(String invalidMethod) {
-        String sql = "DELETE FROM " + ExtensionPlayerTableValueTable.TABLE_NAME +
+        String sql = DELETE_FROM + ExtensionPlayerTableValueTable.TABLE_NAME +
                 WHERE + ExtensionPlayerTableValueTable.TABLE_ID + "=" + ExtensionTableProviderTable.STATEMENT_SELECT_TABLE_ID;
         return new ExecStatement(sql) {
             @Override
@@ -93,7 +92,7 @@ public class RemoveInvalidResultsTransaction extends Transaction {
     }
 
     private Executable deleteInvalidServerTableResults(String invalidMethod) {
-        String sql = "DELETE FROM " + ExtensionServerTableValueTable.TABLE_NAME +
+        String sql = DELETE_FROM + ExtensionServerTableValueTable.TABLE_NAME +
                 WHERE + ExtensionServerTableValueTable.TABLE_ID + "=" + ExtensionTableProviderTable.STATEMENT_SELECT_TABLE_ID;
         return new ExecStatement(sql) {
             @Override
@@ -104,7 +103,7 @@ public class RemoveInvalidResultsTransaction extends Transaction {
     }
 
     private Executable deleteInvalidMethodProvider(String invalidMethod) {
-        String sql = "DELETE FROM " + ExtensionProviderTable.TABLE_NAME +
+        String sql = DELETE_FROM + ExtensionProviderTable.TABLE_NAME +
                 WHERE + ExtensionProviderTable.PROVIDER_NAME + "=?" +
                 AND + ExtensionProviderTable.PLUGIN_ID + '=' + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID;
         return new ExecStatement(sql) {
@@ -117,7 +116,7 @@ public class RemoveInvalidResultsTransaction extends Transaction {
     }
 
     private Executable deleteInvalidTableProvider(String invalidMethod) {
-        String sql = "DELETE FROM " + ExtensionTableProviderTable.TABLE_NAME +
+        String sql = DELETE_FROM + ExtensionTableProviderTable.TABLE_NAME +
                 WHERE + ExtensionTableProviderTable.TABLE_NAME + "=?" +
                 AND + ExtensionTableProviderTable.PLUGIN_ID + '=' + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID;
         return new ExecStatement(sql) {

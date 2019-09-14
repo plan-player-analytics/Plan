@@ -18,9 +18,11 @@ package com.djrapitops.plan.system;
 
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.capability.CapabilityServiceImplementation;
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.extension.ExtensionService;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
+import com.djrapitops.plan.query.QueryServiceImplementation;
 import com.djrapitops.plan.system.cache.CacheSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.export.ExportSystem;
@@ -72,6 +74,7 @@ public class PlanSystem implements SubSystem {
     private final HtmlUtilities htmlUtilities;
     private final HookHandler hookHandler;
     private final ExtensionServiceImplementation extensionService;
+    private final QueryServiceImplementation queryService;
     private final PlanAPI planAPI;
     private final ErrorHandler errorHandler;
 
@@ -94,6 +97,7 @@ public class PlanSystem implements SubSystem {
             HtmlUtilities htmlUtilities,
             HookHandler hookHandler,
             ExtensionServiceImplementation extensionService,
+            QueryServiceImplementation queryService,
             PlanAPI planAPI,
             ErrorHandler errorHandler
     ) {
@@ -114,12 +118,15 @@ public class PlanSystem implements SubSystem {
         this.htmlUtilities = htmlUtilities;
         this.hookHandler = hookHandler;
         this.extensionService = extensionService;
+        this.queryService = queryService;
         this.planAPI = planAPI;
         this.errorHandler = errorHandler;
     }
 
     @Override
     public void enable() throws EnableException {
+        CapabilityServiceImplementation.initialize();
+
         enableSystems(
                 files,
                 configSystem,
@@ -137,7 +144,8 @@ public class PlanSystem implements SubSystem {
                 taskSystem,
                 hookHandler
         );
-        extensionService.enable();
+        queryService.register();
+        extensionService.register();
         enabled = true;
     }
 

@@ -16,12 +16,20 @@
  */
 package com.djrapitops.plan.db;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import com.djrapitops.plan.system.PlanSystem;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import utilities.DBPreparer;
+import utilities.RandomData;
+import utilities.mocks.PluginMockComponent;
 
-import static org.junit.Assert.assertEquals;
+import java.nio.file.Path;
+import java.util.UUID;
 
 /**
  * Test for the H2 database
@@ -29,21 +37,40 @@ import static org.junit.Assert.assertEquals;
  * @author Rsl1122, Fuzzlemann
  * @see SQLiteTest
  */
-@RunWith(MockitoJUnitRunner.Silent.class)
-public class H2Test extends CommonDBTest {
+@RunWith(JUnitPlatform.class)
+@ExtendWith(MockitoExtension.class)
+public class H2Test implements DatabaseTest {
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        handleSetup("H2");
+    private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
+
+    private static PlanSystem system;
+    private static Database database;
+
+    @BeforeAll
+    static void setupDatabase(@TempDir Path temp) throws Exception {
+        system = new PluginMockComponent(temp).getPlanSystem();
+        database = new DBPreparer(system, TEST_PORT_NUMBER).prepareH2()
+                .orElseThrow(IllegalStateException::new);
     }
 
-    @Test
-    public void testH2GetConfigName() {
-        assertEquals("h2", db.getType().getConfigName());
+    @AfterAll
+    static void disableSystem() {
+        if (database != null) database.close();
+        system.disable();
     }
 
-    @Test
-    public void testH2GetName() {
-        assertEquals("H2", db.getType().getName());
+    @Override
+    public Database db() {
+        return database;
+    }
+
+    @Override
+    public UUID serverUUID() {
+        return system.getServerInfo().getServerUUID();
+    }
+
+    @Override
+    public PlanSystem system() {
+        return system;
     }
 }

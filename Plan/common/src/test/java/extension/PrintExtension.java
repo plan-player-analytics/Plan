@@ -30,14 +30,14 @@ import java.lang.reflect.Method;
 public class PrintExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
 
     @Override
-    public void beforeTestExecution(ExtensionContext context) throws Exception {
+    public void beforeTestExecution(ExtensionContext context) {
         String testName = context.getTestClass().map(Class::getSimpleName).orElse("?");
         String testMethodName = context.getTestMethod().map(Method::getName).orElse("?");
         System.out.println(">> " + testName + " - " + testMethodName);
     }
 
     @Override
-    public void afterTestExecution(ExtensionContext context) throws Exception {
+    public void afterTestExecution(ExtensionContext context) {
         System.out.println();
     }
 }

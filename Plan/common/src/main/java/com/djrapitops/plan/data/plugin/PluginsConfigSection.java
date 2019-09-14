@@ -20,6 +20,8 @@ import com.djrapitops.plan.system.settings.config.ConfigNode;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Class responsible for generating and generating settings for PluginData
@@ -37,6 +39,7 @@ public class PluginsConfigSection {
         this.config = config;
     }
 
+    @Deprecated
     public boolean hasSection(PluginData dataSource) {
         return hasSection(dataSource.getSourcePlugin());
     }
@@ -51,6 +54,7 @@ public class PluginsConfigSection {
                 .orElse(config.addNode("Plugins"));
     }
 
+    @Deprecated
     public void createSection(PluginData dataSource) throws IOException {
         createSection(dataSource.getSourcePlugin());
     }
@@ -63,6 +67,7 @@ public class PluginsConfigSection {
         section.save();
     }
 
+    @Deprecated
     public boolean isEnabled(PluginData dataSource) {
         return isEnabled(dataSource.getSourcePlugin());
     }
@@ -70,5 +75,17 @@ public class PluginsConfigSection {
     public boolean isEnabled(String pluginName) {
         ConfigNode section = getPluginsSection();
         return section.getBoolean(pluginName + ".Enabled");
+    }
+
+    public Set<String> getDisabled() {
+        ConfigNode section = getPluginsSection();
+
+        Set<String> disabledPlugins = new HashSet<>();
+        for (ConfigNode plugin : section.getChildren()) {
+            if (!plugin.getBoolean("Enabled")) {
+                disabledPlugins.add(plugin.getKey(false));
+            }
+        }
+        return disabledPlugins;
     }
 }

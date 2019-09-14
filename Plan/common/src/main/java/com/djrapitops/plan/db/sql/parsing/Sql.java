@@ -16,6 +16,9 @@
  */
 package com.djrapitops.plan.db.sql.parsing;
 
+/**
+ * Duplicate String reducing utility class for SQL language Strings.
+ */
 public class Sql {
     public static final String INT = "integer";
     public static final String DOUBLE = "double";
@@ -25,6 +28,7 @@ public class Sql {
     public static final String SELECT = "SELECT ";
     public static final String DISTINCT = "DISTINCT ";
     public static final String FROM = " FROM ";
+    public static final String DELETE_FROM = "DELETE" + FROM;
     public static final String WHERE = " WHERE ";
     public static final String GROUP_BY = " GROUP BY ";
     public static final String ORDER_BY = " ORDER BY ";
@@ -36,10 +40,10 @@ public class Sql {
     public static final String IS_NOT_NULL = " IS NOT NULL";
 
     private Sql() {
-        throw new IllegalStateException("Variable Class");
+        /* Variable class */
     }
 
     public static String varchar(int length) {
-        return "varchar(" + length + ")";
+        return "varchar(" + length + ')';
     }
 }

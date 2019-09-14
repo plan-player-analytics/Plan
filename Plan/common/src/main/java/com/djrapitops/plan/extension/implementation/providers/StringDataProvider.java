@@ -47,7 +47,7 @@ public class StringDataProvider extends DataProvider<String> {
         Icon providerIcon = new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor());
 
         ProviderInformation providerInformation = new ProviderInformation(
-                pluginName, method.getName(), annotation.text(), annotation.description(), providerIcon, annotation.priority(), tab, condition
+                pluginName, method.getName(), annotation.text(), annotation.description(), providerIcon, annotation.priority(), annotation.showInPlayerTable(), tab, condition
         );
 
         boolean playerName = annotation.playerName();

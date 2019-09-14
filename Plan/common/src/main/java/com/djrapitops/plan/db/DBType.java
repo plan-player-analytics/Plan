@@ -81,7 +81,6 @@ public enum DBType {
                 return Optional.of(dbType);
             }
         }
-
         return Optional.empty();
     }
 

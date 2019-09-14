@@ -21,7 +21,6 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.pluginbridge.plan.buycraft.BuyCraftHook;
 import com.djrapitops.pluginbridge.plan.litebans.LiteBansBungeeHook;
 import com.djrapitops.pluginbridge.plan.luckperms.LuckPermsHook;
-import com.djrapitops.pluginbridge.plan.viaversion.ViaVersionBungeeHook;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -37,23 +36,19 @@ public class BungeeBridge extends AbstractBridge {
     private final BuyCraftHook buyCraftHook;
     private final LiteBansBungeeHook liteBansHook;
     private final LuckPermsHook luckPermsHook;
-    private final ViaVersionBungeeHook viaVersionHook;
 
     @Inject
     public BungeeBridge(
             PlanConfig config,
             ErrorHandler errorHandler,
-
             BuyCraftHook buyCraftHook,
             LiteBansBungeeHook liteBansHook,
-            LuckPermsHook luckPermsHook,
-            ViaVersionBungeeHook viaVersionHook
+            LuckPermsHook luckPermsHook
     ) {
         super(config, errorHandler);
         this.buyCraftHook = buyCraftHook;
         this.liteBansHook = liteBansHook;
         this.luckPermsHook = luckPermsHook;
-        this.viaVersionHook = viaVersionHook;
     }
 
     @Override
@@ -62,7 +57,6 @@ public class BungeeBridge extends AbstractBridge {
                 buyCraftHook,
                 liteBansHook,
                 luckPermsHook,
-                viaVersionHook
         };
     }
 }

@@ -4,8 +4,8 @@ about: Create a report to help improving the plugin
 
 ---
 
-### Describe the bug
-<!-- A clear and concise description of what the bug is. Post possible exceptions further down below -->
+### Describe the issue
+<!-- A clear and concise description of what the issue is. Post possible exceptions further down below -->
 
 
 
@@ -22,7 +22,3 @@ about: Create a report to help improving the plugin
 
 ### Additional information
 <!-- Any additional information -->
-
-**Frequency of occurrence**: <>
-
-**Other:**

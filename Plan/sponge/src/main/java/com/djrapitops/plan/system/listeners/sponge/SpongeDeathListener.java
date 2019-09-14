@@ -122,14 +122,13 @@ public class SpongeDeathListener {
         Optional<Optional<UUID>> owner = wolf.get(Keys.TAMED_OWNER);
 
         // Has been tamed
-        return owner.map(ownerUUID ->
-                // Has tame owner
-                ownerUUID.map(uuid ->
-                        // Player or mob
-                        victimUUID != null
-                                ? new PlayerKillProcessor(uuid, time, victimUUID, "Wolf")
-                                : new MobKillProcessor(uuid)
-                ).orElse(null)).orElse(null);
+        // Has tame owner
+        return owner.flatMap(ownerUUID -> ownerUUID.map(uuid ->
+                // Player or mob
+                victimUUID != null
+                        ? new PlayerKillProcessor(uuid, time, victimUUID, "Wolf")
+                        : new MobKillProcessor(uuid)
+        )).orElse(null);
 
     }
 

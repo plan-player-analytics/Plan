@@ -23,7 +23,6 @@ import com.djrapitops.plan.db.access.transactions.events.SessionEndTransaction;
 import com.djrapitops.plan.db.access.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.system.webserver.cache.PageId;
@@ -47,7 +46,7 @@ import java.nio.file.Path;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * This test class is for catching any JavaScript errors.
@@ -108,14 +107,18 @@ class JSErrorRegressionTest {
     void playerPageDoesNotHaveJavascriptErrors(WebDriver driver) {
         System.out.println("Testing Player Page");
         driver.get("http://localhost:" + TEST_PORT_NUMBER + "/player/TestPlayer");
-        assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
+        assertNo500Error(driver);
+    }
+
+    private void assertNo500Error(WebDriver driver) {
+        assertFalse(driver.getPageSource().contains("500 Internal Error occurred"), driver.getPageSource());
     }
 
     @Test
     void playerPageAccessibleViaUUID(WebDriver driver) {
         System.out.println("Testing Player Page via UUID");
         driver.get("http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_UUID);
-        assertFalse(driver.getPageSource(), driver.getPageSource().contains(ErrorPageLang.NOT_PLAYED_404.getDefault()));
+        assertNo500Error(driver);
     }
 
     @Test
@@ -123,7 +126,7 @@ class JSErrorRegressionTest {
         System.out.println("Testing Server Page");
         // Open the page that has refreshing info
         driver.get("http://localhost:" + TEST_PORT_NUMBER + "/server");
-        assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
+        assertNo500Error(driver);
 
         // Wait until Plan caches analysis results
         Awaitility.await()
@@ -133,20 +136,20 @@ class JSErrorRegressionTest {
         // Open the page with analysis stuff
         SeleniumExtension.newTab(driver);
         driver.get("http://localhost:" + TEST_PORT_NUMBER + "/server");
-        assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
+        assertNo500Error(driver);
     }
 
     @Test
     void playersPageDoesNotHaveJavascriptErrors(WebDriver driver) {
         System.out.println("Testing Players Page");
         driver.get("http://localhost:" + TEST_PORT_NUMBER + "/players");
-        assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
+        assertNo500Error(driver);
     }
 
     @Test
     void debugPageDoesNotHaveJavascriptErrors(WebDriver driver) {
         System.out.println("Testing Debug Page");
         driver.get("http://localhost:" + TEST_PORT_NUMBER + "/debug");
-        assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
+        assertNo500Error(driver);
     }
 }

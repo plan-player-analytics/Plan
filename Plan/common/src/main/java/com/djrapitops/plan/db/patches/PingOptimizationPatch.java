@@ -19,6 +19,8 @@ package com.djrapitops.plan.db.patches;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.sql.tables.PingTable;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.FROM;
+
 public class PingOptimizationPatch extends Patch {
 
     private String tempTableName;
@@ -45,22 +47,22 @@ public class PingOptimizationPatch extends Patch {
             execute(PingTable.createTableSQL(dbType));
 
             execute("INSERT INTO " + tableName + " (" +
-                    PingTable.USER_UUID + ", " +
-                    PingTable.SERVER_UUID + ", " +
-                    PingTable.ID + ", " +
-                    PingTable.MIN_PING + ", " +
-                    PingTable.MAX_PING + ", " +
-                    PingTable.AVG_PING + ", " +
+                    PingTable.USER_UUID + ',' +
+                    PingTable.SERVER_UUID + ',' +
+                    PingTable.ID + ',' +
+                    PingTable.MIN_PING + ',' +
+                    PingTable.MAX_PING + ',' +
+                    PingTable.AVG_PING + ',' +
                     PingTable.DATE +
                     ") SELECT " +
                     "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
                     "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
-                    PingTable.ID + ", " +
-                    PingTable.MIN_PING + ", " +
-                    PingTable.MAX_PING + ", " +
-                    PingTable.AVG_PING + ", " +
+                    PingTable.ID + ',' +
+                    PingTable.MIN_PING + ',' +
+                    PingTable.MAX_PING + ',' +
+                    PingTable.AVG_PING + ',' +
                     PingTable.DATE +
-                    " FROM " + tempTableName
+                    FROM + tempTableName
             );
 
             dropTable(tempTableName);

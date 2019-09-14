@@ -32,6 +32,8 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+
 /**
  * Queries for {@link BaseUser} objects.
  *
@@ -56,18 +58,22 @@ public class BaseUserQueries {
         return new QueryAllStatement<Collection<BaseUser>>(sql, 20000) {
             @Override
             public Collection<BaseUser> processResults(ResultSet set) throws SQLException {
-                Collection<BaseUser> users = new HashSet<>();
-                while (set.next()) {
-                    UUID playerUUID = UUID.fromString(set.getString(UsersTable.USER_UUID));
-                    String name = set.getString(UsersTable.USER_NAME);
-                    long registered = set.getLong(UsersTable.REGISTERED);
-                    int kicked = set.getInt(UsersTable.TIMES_KICKED);
-
-                    users.add(new BaseUser(playerUUID, name, registered, kicked));
-                }
-                return users;
+                return extractBaseUsers(set);
             }
         };
+    }
+
+    private static Collection<BaseUser> extractBaseUsers(ResultSet set) throws SQLException {
+        Collection<BaseUser> users = new HashSet<>();
+        while (set.next()) {
+            UUID playerUUID = UUID.fromString(set.getString(UsersTable.USER_UUID));
+            String name = set.getString(UsersTable.USER_NAME);
+            long registered = set.getLong(UsersTable.REGISTERED);
+            int kicked = set.getInt(UsersTable.TIMES_KICKED);
+
+            users.add(new BaseUser(playerUUID, name, registered, kicked));
+        }
+        return users;
     }
 
     /**
@@ -113,15 +119,15 @@ public class BaseUserQueries {
      * @return Collection: BaseUsers
      */
     public static Query<Collection<BaseUser>> fetchServerBaseUsers(UUID serverUUID) {
-        String sql = "SELECT " +
-                UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID + ", " +
-                UsersTable.USER_NAME + ", " +
-                UsersTable.TABLE_NAME + "." + UsersTable.REGISTERED + ", " +
+        String sql = SELECT +
+                UsersTable.TABLE_NAME + '.' + UsersTable.USER_UUID + ',' +
+                UsersTable.USER_NAME + ',' +
+                UsersTable.TABLE_NAME + '.' + UsersTable.REGISTERED + ',' +
                 UsersTable.TIMES_KICKED +
-                " FROM " + UsersTable.TABLE_NAME +
-                " INNER JOIN " + UserInfoTable.TABLE_NAME + " on " +
-                UsersTable.TABLE_NAME + "." + UsersTable.USER_UUID + "=" + UserInfoTable.TABLE_NAME + "." + UserInfoTable.USER_UUID +
-                " WHERE " + UserInfoTable.SERVER_UUID + "=?";
+                FROM + UsersTable.TABLE_NAME +
+                INNER_JOIN + UserInfoTable.TABLE_NAME + " on " +
+                UsersTable.TABLE_NAME + '.' + UsersTable.USER_UUID + "=" + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_UUID +
+                WHERE + UserInfoTable.SERVER_UUID + "=?";
         return new QueryStatement<Collection<BaseUser>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -130,16 +136,7 @@ public class BaseUserQueries {
 
             @Override
             public Collection<BaseUser> processResults(ResultSet set) throws SQLException {
-                Collection<BaseUser> users = new HashSet<>();
-                while (set.next()) {
-                    UUID playerUUID = UUID.fromString(set.getString(UsersTable.USER_UUID));
-                    String name = set.getString(UsersTable.USER_NAME);
-                    long registered = set.getLong(UsersTable.REGISTERED);
-                    int kicked = set.getInt(UsersTable.TIMES_KICKED);
-
-                    users.add(new BaseUser(playerUUID, name, registered, kicked));
-                }
-                return users;
+                return extractBaseUsers(set);
             }
         };
     }

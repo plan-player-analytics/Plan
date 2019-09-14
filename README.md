@@ -1,6 +1,6 @@
 # ![Player Analytics](http://puu.sh/AXSg7/5f2f78c06c.jpg)
 
-[![Build Status](https://travis-ci.com/plan-player-analytics/Plan.svg?branch=master)](https://travis-ci.com/plan-player-analytics/Plan)
+[![Build Status](http://plan.djrapitops.com/buildStatus/icon?job=Player+Analytics%2Fmaster)](https://plan.djrapitops.com/blue/organizations/jenkins/Player%20Analytics/activity)
 [![Discord](https://img.shields.io/discord/364107873267089409.svg?logo=discord)](https://discord.gg/yXKmjzT)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)  
 [![Maintainability](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
@@ -22,6 +22,16 @@ Originally the plugin only displayed data of other plugins, but now it gathers i
 
 ## Documentation
 Documentation can be found [On the Wiki](https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki)
+
+## Building
+
+You can build the project by running the following in the repository root
+```
+cd Plan
+./gradlew shadowJar
+```
+
+- [More information about setting up the project](https://github.com/plan-player-analytics/Plan/wiki/Project-Setup)
 
 ## Used Libraries
 

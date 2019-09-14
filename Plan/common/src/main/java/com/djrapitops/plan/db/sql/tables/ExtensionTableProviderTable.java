@@ -57,9 +57,9 @@ public class ExtensionTableProviderTable {
     public static final String ICON_4_ID = "icon_4_id";
     public static final String ICON_5_ID = "icon_5_id";
 
-    public static final String STATEMENT_SELECT_TABLE_ID = "(" + SELECT + ID + FROM + TABLE_NAME +
+    public static final String STATEMENT_SELECT_TABLE_ID = '(' + SELECT + ID + FROM + TABLE_NAME +
             WHERE + PROVIDER_NAME + "=?" +
-            AND + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ")";
+            AND + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ')';
 
     private ExtensionTableProviderTable() {
         /* Static information class */

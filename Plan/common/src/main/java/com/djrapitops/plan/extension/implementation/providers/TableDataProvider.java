@@ -50,7 +50,7 @@ public class TableDataProvider extends DataProvider<Table> {
         MethodWrapper<Table> methodWrapper = new MethodWrapper<>(method, Table.class);
 
         ProviderInformation providerInformation = new ProviderInformation(
-                pluginName, method.getName(), null, null, null, 0, tab, condition
+                pluginName, method.getName(), null, null, null, 0, false, tab, condition
         );
 
         dataProviders.put(new TableDataProvider(providerInformation, methodWrapper, annotation.tableColor()));

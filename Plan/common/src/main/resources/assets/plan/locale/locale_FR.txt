@@ -36,7 +36,7 @@ Cmd Qinspect - Playtime                         ||   §2Temps de jeu : §f${0}
 Cmd Qinspect - Registered                       ||   §2Incrit depuis : §f${0}
 Cmd Qinspect - Times Kicked                     ||   §2Nombre d'éjections : §f${0}
 Cmd Setup - Allowed                             || §aLa configuration est maintenant autorisée.
-Cmd Setup - Bad Request                         || §eLa connexion a réussi, mais le serveur de réception n'était pas un serveur Bungee. Utilisez l'adresse du Bungee à la place.
+Cmd Setup - Bad Request                         || §eLa connexion a réussi, mais le serveur de réception n'était un serveur Bukkit ou Sponge. Utilisez une autre adresse à la place.
 Cmd Setup - Disallowed                          || §cLa configuration est maintenant interdite.
 Cmd Setup - Forbidden                           || §eConnexion réussie, mais le mode de configuration de Bungee est désactivé. Exécutez '/plan bungee setup' pour l'activer.
 Cmd Setup - Gateway Error                       || §eConnexion réussie, mais Bungee n'a pas réussi à se connecter à ce serveur (Le serveur Web actuel a-t-il redémarré ?). Exécutez '/plan m con' et '/planbungee con' pour déboguer.
@@ -47,7 +47,7 @@ Cmd Setup - Unauthorized                        || §eConnexion réussie, mais l
 Cmd Setup - Url mistake                         || §cAssurez-vous d'utiliser l'adresse complète (commençant par http:// ou https://). Consultez les logs du Bungee pour la connaître.
 Cmd Setup - WebServer not Enabled               || §cLe serveur Web n'est pas activé sur ce serveur ! Assurez-vous qu'il se soit démarré lors du lancement du serveur !
 Cmd SUCCESS - Feature disabled                  || §aFontionnalité '${0}' temporairement désactivée jusqu'au prochain rechargement du plugin.
-Cmd SUCCESS - WebUser register                  || §aAjout d'un nouvel utilisateur (${0}) avec succès !
+Cmd SUCCESS - WebUser register                  || §aAjout d'un nouvel utilisateur (${0}) avec succès ! Vous pouvez afficher le panneau Web dans le lien suivant.
 Cmd Update - Cancel Success                     || §aAnnulation de l'opération...
 Cmd Update - Cancelled                          || §cMise à jour annulée.
 Cmd Update - Change log                         || Changements v${0}:

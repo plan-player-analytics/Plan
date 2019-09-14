@@ -15,6 +15,8 @@ shadowJar {
     configurations = [project.configurations.compile]
 
     relocate 'dagger', 'plan.dagger'
+    relocate 'com.mysql.jdbc', 'plan.com.mysql.jdbc'
+    relocate 'com.mysql.cj', 'plan.com.mysql.cj'
 
     destinationDir = file("$rootDir/builds/")
     baseName = "Plan"

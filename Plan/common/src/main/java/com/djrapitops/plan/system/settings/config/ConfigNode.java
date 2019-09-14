@@ -63,6 +63,9 @@ public class ConfigNode {
     }
 
     public Optional<ConfigNode> getNode(String path) {
+        if (path == null) {
+            return Optional.empty();
+        }
         String[] parts = splitPathInTwo(path);
         String key = parts[0];
         String leftover = parts[1];
@@ -88,7 +91,7 @@ public class ConfigNode {
 
     public ConfigNode addNode(String path) {
         ConfigNode newParent = this;
-        if (!path.isEmpty()) {
+        if (path != null && !path.isEmpty()) {
             String[] parts = splitPathInTwo(path);
             String key = parts[0];
             String leftover = parts[1];
@@ -105,7 +108,7 @@ public class ConfigNode {
             // Otherwise continue recursively.
             return leftover.isEmpty() ? child : child.addNode(leftover);
         }
-        throw new IllegalArgumentException("Can not add a node with empty path");
+        throw new IllegalArgumentException("Can not add a node with path '" + path + "'");
     }
 
     /**
@@ -344,6 +347,10 @@ public class ConfigNode {
 
     protected List<String> getNodeOrder() {
         return nodeOrder;
+    }
+
+    public Collection<ConfigNode> getChildren() {
+        return childNodes.values();
     }
 
     @Override

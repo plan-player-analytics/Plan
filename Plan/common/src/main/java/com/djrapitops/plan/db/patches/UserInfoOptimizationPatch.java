@@ -19,6 +19,8 @@ package com.djrapitops.plan.db.patches;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.sql.tables.UserInfoTable;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.FROM;
+
 public class UserInfoOptimizationPatch extends Patch {
 
     private String tempTableName;
@@ -45,18 +47,18 @@ public class UserInfoOptimizationPatch extends Patch {
             execute(UserInfoTable.createTableSQL(dbType));
 
             execute("INSERT INTO " + tableName + " (" +
-                    UserInfoTable.USER_UUID + ", " +
-                    UserInfoTable.SERVER_UUID + ", " +
-                    UserInfoTable.REGISTERED + ", " +
-                    UserInfoTable.BANNED + ", " +
+                    UserInfoTable.USER_UUID + ',' +
+                    UserInfoTable.SERVER_UUID + ',' +
+                    UserInfoTable.REGISTERED + ',' +
+                    UserInfoTable.BANNED + ',' +
                     UserInfoTable.OP +
                     ") SELECT " +
                     "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
                     "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
-                    UserInfoTable.REGISTERED + ", " +
-                    UserInfoTable.BANNED + ", " +
+                    UserInfoTable.REGISTERED + ',' +
+                    UserInfoTable.BANNED + ',' +
                     UserInfoTable.OP +
-                    " FROM " + tempTableName
+                    FROM + tempTableName
             );
 
             dropTable(tempTableName);

@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.database;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.db.DBType;
 import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.db.H2DB;
 import com.djrapitops.plan.db.SQLiteDB;
@@ -27,7 +28,6 @@ import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Singleton;
 import java.util.HashSet;
@@ -69,13 +69,18 @@ public abstract class DBSystem implements SubSystem {
     }
 
     public Database getActiveDatabaseByName(String dbName) {
+        return DBType.getForName(dbName)
+                .map(this::getActiveDatabaseByType)
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(PluginLang.ENABLE_FAIL_WRONG_DB, dbName)));
+    }
+
+    public Database getActiveDatabaseByType(DBType type) {
         for (Database database : getDatabases()) {
-            String dbConfigName = database.getType().getConfigName();
-            if (Verify.equalsIgnoreCase(dbName, dbConfigName)) {
+            if (database.getType() == type) {
                 return database;
             }
         }
-        throw new IllegalArgumentException(locale.getString(PluginLang.ENABLE_FAIL_WRONG_DB, dbName));
+        throw new IllegalArgumentException(locale.getString(PluginLang.ENABLE_FAIL_WRONG_DB, type != null ? type.getName() : "null"));
     }
 
     public Set<Database> getDatabases() {

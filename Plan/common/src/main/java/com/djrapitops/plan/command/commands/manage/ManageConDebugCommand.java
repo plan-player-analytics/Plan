@@ -81,7 +81,8 @@ public class ManageConDebugCommand extends CommandNode {
         this.webServer = webServer;
         this.dbSystem = dbSystem;
 
-        setShortHelp(locale.getString(serverInfo.getServer().isProxy() ? CmdHelpLang.CON : CmdHelpLang.MANAGE_CON));
+        boolean isProxy = serverInfo.getServer() != null && serverInfo.getServer().isProxy();
+        setShortHelp(locale.getString(isProxy ? CmdHelpLang.CON : CmdHelpLang.MANAGE_CON));
         setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_CON));
     }
 

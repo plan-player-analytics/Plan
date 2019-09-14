@@ -68,12 +68,17 @@ public final class ExtensionExtractor {
         }
     }
 
-    private <T extends Annotation> Optional<T> getClassAnnotation(Class<T> ofClass) {
-        return Optional.ofNullable(extension.getClass().getAnnotation(ofClass));
+    private static <V extends DataExtension, T extends Annotation> Optional<T> getClassAnnotation(Class<V> from, Class<T> ofClass) {
+        return Optional.ofNullable(from.getAnnotation(ofClass));
+    }
+
+    public static <T extends DataExtension> String getPluginName(Class<T> extensionClass) {
+        return getClassAnnotation(extensionClass, PluginInfo.class).map(PluginInfo::name)
+                .orElseThrow(() -> new IllegalArgumentException("Given class had no PluginInfo annotation"));
     }
 
     private Method[] getMethods() {
-        return extension.getClass().getDeclaredMethods();
+        return extension.getClass().getMethods();
     }
 
     public void extractAnnotationInformation() {
@@ -92,7 +97,9 @@ public final class ExtensionExtractor {
         methodAnnotations = new MethodAnnotations();
 
         for (Method method : getMethods()) {
-            if (!Modifier.isPublic(method.getModifiers())) {
+            int modifiers = method.getModifiers();
+            if (!Modifier.isPublic(modifiers)
+                    || Modifier.isStatic(modifiers)) {
                 continue;
             }
 
@@ -153,6 +160,7 @@ public final class ExtensionExtractor {
         for (Class option : parameterOptions) {
             if (option.equals(methodParameter)) {
                 validParameter = true;
+                break;
             }
         }
 
@@ -279,8 +287,13 @@ public final class ExtensionExtractor {
         }
     }
 
+    private <T extends Annotation> Optional<T> getClassAnnotation(Class<T> ofClass) {
+        return getClassAnnotation(extension.getClass(), ofClass);
+    }
+
     private void extractPluginInfo() {
-        pluginInfo = getClassAnnotation(PluginInfo.class).orElseThrow(() -> new IllegalArgumentException("Given class had no PluginInfo annotation"));
+        pluginInfo = getClassAnnotation(PluginInfo.class)
+                .orElseThrow(() -> new IllegalArgumentException("Given class had no PluginInfo annotation"));
 
         if (pluginInfo.name().length() > 50) {
             warnings.add(extensionName + " PluginInfo 'name' was over 50 characters.");

@@ -19,6 +19,8 @@ package com.djrapitops.plan.db.patches;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.db.sql.tables.NicknamesTable;
 
+import static com.djrapitops.plan.db.sql.parsing.Sql.FROM;
+
 public class NicknamesOptimizationPatch extends Patch {
 
     private String tempTableName;
@@ -45,16 +47,16 @@ public class NicknamesOptimizationPatch extends Patch {
             execute(NicknamesTable.createTableSQL(dbType));
 
             execute("INSERT INTO " + tableName + " (" +
-                    NicknamesTable.USER_UUID + ", " +
-                    NicknamesTable.SERVER_UUID + ", " +
-                    NicknamesTable.NICKNAME + ", " +
+                    NicknamesTable.USER_UUID + ',' +
+                    NicknamesTable.SERVER_UUID + ',' +
+                    NicknamesTable.NICKNAME + ',' +
                     NicknamesTable.LAST_USED +
                     ") SELECT " +
                     "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
                     "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
-                    NicknamesTable.NICKNAME + ", " +
+                    NicknamesTable.NICKNAME + ',' +
                     NicknamesTable.LAST_USED +
-                    " FROM " + tempTableName
+                    FROM + tempTableName
             );
 
             dropTable(tempTableName);

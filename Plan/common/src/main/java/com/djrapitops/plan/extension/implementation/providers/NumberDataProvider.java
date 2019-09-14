@@ -48,7 +48,7 @@ public class NumberDataProvider extends DataProvider<Long> {
         Icon providerIcon = new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor());
 
         ProviderInformation providerInformation = new ProviderInformation(
-                pluginName, method.getName(), annotation.text(), annotation.description(), providerIcon, annotation.priority(), tab, condition
+                pluginName, method.getName(), annotation.text(), annotation.description(), providerIcon, annotation.priority(), annotation.showInPlayerTable(), tab, condition
         );
 
         dataProviders.put(new NumberDataProvider(providerInformation, methodWrapper, annotation.format()));

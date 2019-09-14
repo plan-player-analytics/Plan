@@ -21,45 +21,44 @@ import com.djrapitops.plan.db.SQLiteDB;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plan.system.settings.paths.ProxySettings;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.google.common.util.concurrent.MoreExecutors;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
-import rules.BungeeComponentMocker;
-import rules.ComponentMocker;
-import utilities.CIProperties;
+import utilities.DBPreparer;
 import utilities.RandomData;
+import utilities.mocks.BungeeMockComponent;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeTrue;
+import java.nio.file.Path;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * Test for Bungee PlanSystem.
  *
  * @author Rsl1122
  */
-@RunWith(MockitoJUnitRunner.Silent.class)
+@RunWith(JUnitPlatform.class)
 public class BungeeSystemTest {
-
-    @ClassRule
-    public static TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
-    @Rule
-    public ComponentMocker component = new BungeeComponentMocker(temporaryFolder);
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    private BungeeMockComponent component;
+    private DBPreparer dbPreparer;
+
+    @BeforeEach
+    void prepareSystem(@TempDir Path temp) throws Exception {
+        component = new BungeeMockComponent(temp);
+        dbPreparer = new DBPreparer(component.getPlanSystem(), TEST_PORT_NUMBER);
+    }
 
     @Test
-    public void bungeeEnables() throws Exception {
+    void bungeeEnables() throws Exception {
         PlanSystem bungeeSystem = component.getPlanSystem();
         try {
             PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
@@ -79,56 +78,51 @@ public class BungeeSystemTest {
     }
 
     @Test
-    public void bungeeDoesNotEnableWithDefaultIP() throws Exception {
-        thrown.expect(EnableException.class);
-        thrown.expectMessage("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
+    void bungeeDoesNotEnableWithDefaultIP() {
+        EnableException thrown = assertThrows(EnableException.class, () -> {
+            PlanSystem bungeeSystem = component.getPlanSystem();
+            try {
+                PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
+                config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
+                config.set(ProxySettings.IP, "0.0.0.0");
 
-        PlanSystem bungeeSystem = component.getPlanSystem();
-        try {
-            PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
-            config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
-            config.set(ProxySettings.IP, "0.0.0.0");
+                DBSystem dbSystem = bungeeSystem.getDatabaseSystem();
+                SQLiteDB db = dbSystem.getSqLiteFactory().usingDefaultFile();
+                db.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
+                dbSystem.setActiveDatabase(db);
 
-            DBSystem dbSystem = bungeeSystem.getDatabaseSystem();
-            SQLiteDB db = dbSystem.getSqLiteFactory().usingDefaultFile();
-            db.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
-            dbSystem.setActiveDatabase(db);
+                bungeeSystem.enable(); // Throws EnableException
+            } finally {
+                bungeeSystem.disable();
+            }
+        });
 
-            bungeeSystem.enable(); // Throws EnableException
-        } finally {
-            bungeeSystem.disable();
-        }
+        assertEquals("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.", thrown.getMessage());
     }
 
     @Test
-    public void testEnableNoMySQL() throws EnableException {
-        thrown.expect(EnableException.class);
+    void testEnableNoMySQL() {
+        assertThrows(EnableException.class, () -> {
+            PlanSystem bungeeSystem = component.getPlanSystem();
+            try {
+                PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
+                config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
+                config.set(ProxySettings.IP, "8.8.8.8");
 
-        PlanSystem bungeeSystem = component.getPlanSystem();
-        try {
-            PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
-            config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
-            config.set(ProxySettings.IP, "8.8.8.8");
-
-            bungeeSystem.enable(); // Throws EnableException
-        } finally {
-            bungeeSystem.disable();
-        }
+                bungeeSystem.enable(); // Throws EnableException
+            } finally {
+                bungeeSystem.disable();
+            }
+        });
     }
 
     @Test
-    public void testEnableWithMySQL() throws EnableException {
-        boolean isCI = Boolean.parseBoolean(System.getenv(CIProperties.IS_CI_SERVICE));
-        assumeTrue(isCI);
-
+    void testEnableWithMySQL() throws Exception {
         PlanSystem bungeeSystem = component.getPlanSystem();
         try {
             PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
-            config.set(DatabaseSettings.MYSQL_DATABASE, "Plan");
-            config.set(DatabaseSettings.MYSQL_USER, "travis");
-            config.set(DatabaseSettings.MYSQL_PASS, "");
-            config.set(DatabaseSettings.MYSQL_HOST, "127.0.0.1");
-            config.set(DatabaseSettings.TYPE, "MySQL");
+            // MySQL settings might not be available.
+            assumeTrue(dbPreparer.setUpMySQLSettings(config).isPresent());
 
             config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
             config.set(ProxySettings.IP, "8.8.8.8");

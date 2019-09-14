@@ -101,7 +101,7 @@ class TableProviderValueGatherer {
         MethodWrapper<Table> method = tableProvider.getMethod();
         Table result = getMethodResult(methodCaller.apply(method), method);
         if (result == null) {
-            return;
+            return; // Error during call
         }
 
         for (Icon icon : result.getIcons()) {

@@ -70,7 +70,7 @@ public @interface PercentageProvider {
     /**
      * Name of Font Awesome icon.
      * <p>
-     * See https://fontawesome.com/icons?d=gallery&m=free for icons and their {@link Family}.
+     * See https://fontawesome.com/icons (select 'free')) for icons and their {@link Family}.
      *
      * @return Name of the icon, if name is not valid no icon is shown.
      */
@@ -79,7 +79,7 @@ public @interface PercentageProvider {
     /**
      * Family of Font Awesome icon.
      * <p>
-     * See https://fontawesome.com/icons?d=gallery&m=free for icons and their {@link Family}.
+     * See https://fontawesome.com/icons (select 'free')) for icons and their {@link Family}.
      *
      * @return Family that matches an icon, if there is no icon for this family no icon is shown.
      */
@@ -94,4 +94,10 @@ public @interface PercentageProvider {
      */
     Color iconColor() default Color.NONE;
 
+    /**
+     * When the parameter is set to {@code true} the value from this Provider is shown on a table alongside players.
+     *
+     * @return false by default.
+     */
+    boolean showInPlayerTable() default false;
 }

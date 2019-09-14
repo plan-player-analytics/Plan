@@ -26,7 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestResources {
 
@@ -44,13 +44,7 @@ public class TestResources {
     public static void copyResourceIntoFile(File toFile, String resourcePath) {
         createEmptyFile(toFile);
         writeResourceToFile(toFile, resourcePath);
-        assertTrue("Failed to copy resource: '" + resourcePath + "'", toFile.exists());
-    }
-
-    public static void copyTestResourceIntoFile(File toFile, InputStream testResource) {
-        createEmptyFile(toFile);
-        copyResourceToFile(toFile, testResource);
-        assertTrue("Failed to copy resource: '" + toFile.getAbsolutePath() + "'", toFile.exists());
+        assertTrue(toFile.exists(), () -> "Failed to copy resource: '" + resourcePath + "'");
     }
 
     private static void copyResourceToFile(File toFile, InputStream testResource) {

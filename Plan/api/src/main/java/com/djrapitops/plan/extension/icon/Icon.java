@@ -19,7 +19,7 @@ package com.djrapitops.plan.extension.icon;
 /**
  * Object that represents an icon on the website.
  * <p>
- * See https://fontawesome.com/icons?d=gallery&m=free for icons and their {@link Family}.
+ * See https://fontawesome.com/icons (select 'free')) for icons and their {@link Family}.
  *
  * @author Rsl1122
  */
