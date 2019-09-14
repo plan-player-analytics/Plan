@@ -42,6 +42,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -108,10 +109,14 @@ public class ServerSettingsManager implements SubSystem {
         }
 
         Database database = dbSystem.getDatabase();
+        Optional<UUID> serverUUID = serverInfo.getServerUUIDSafe();
+        if (!serverUUID.isPresent()) {
+            return;
+        }
 
         try (ConfigReader reader = new ConfigReader(file.toPath())) {
             Config read = reader.read();
-            database.executeTransaction(new StoreConfigTransaction(serverInfo.getServerUUID(), read, file.lastModified()));
+            database.executeTransaction(new StoreConfigTransaction(serverUUID.get(), read, file.lastModified()));
             logger.debug("Server config saved to database.");
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -132,7 +137,12 @@ public class ServerSettingsManager implements SubSystem {
         File configFile = files.getConfigFile();
         long lastModified = configFile.exists() ? configFile.lastModified() : -1;
 
-        Optional<Config> foundConfig = database.query(new NewerConfigQuery(serverInfo.getServerUUID(), lastModified));
+        Optional<UUID> serverUUID = serverInfo.getServerUUIDSafe();
+        if (!serverUUID.isPresent()) {
+            return;
+        }
+
+        Optional<Config> foundConfig = database.query(new NewerConfigQuery(serverUUID.get(), lastModified));
         if (foundConfig.isPresent()) {
             try {
                 new ConfigWriter(configFile.toPath()).write(foundConfig.get());

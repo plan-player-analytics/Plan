@@ -21,6 +21,7 @@ import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plugin.utilities.Verify;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -45,6 +46,10 @@ public abstract class ServerInfo implements SubSystem {
 
     public UUID getServerUUID() {
         return getServer().getUuid();
+    }
+
+    public Optional<UUID> getServerUUIDSafe() {
+        return Optional.ofNullable(server).map(Server::getUuid);
     }
 
     public ServerProperties getServerProperties() {

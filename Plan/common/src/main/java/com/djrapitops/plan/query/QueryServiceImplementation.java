@@ -17,7 +17,6 @@
 package com.djrapitops.plan.query;
 
 import com.djrapitops.plan.exceptions.database.DBOpException;
-import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -127,7 +126,7 @@ public class QueryServiceImplementation implements QueryService {
 
     @Override
     public Optional<UUID> getServerUUID() {
-        return Optional.ofNullable(serverInfo.getServer()).map(Server::getUuid);
+        return serverInfo.getServerUUIDSafe();
     }
 
     @Override
