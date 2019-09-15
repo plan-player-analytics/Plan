@@ -112,7 +112,7 @@ public class WorldAliasSettings {
             String worldName = entry.getKey();
             long playtime = entry.getValue();
 
-            if (!aliases.contains(worldName)) {
+            if (worldName != null && !aliases.contains(worldName)) {
                 addWorld(worldName);
             }
 

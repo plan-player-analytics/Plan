@@ -29,7 +29,6 @@ import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.parsing.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
-import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -263,7 +262,7 @@ public class SessionQueries {
                 .flatMap(Collection::stream)
                 .map(SortedMap::values)
                 .flatMap(Collection::stream)
-                .sorted(new SessionStartComparator()) // Disorder arises
+                .sorted(dateColderRecentComparator) // Disorder arises
                 .collect(Collectors.toList());
     }
 

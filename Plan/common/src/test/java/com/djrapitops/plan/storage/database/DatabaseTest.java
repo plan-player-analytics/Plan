@@ -20,6 +20,7 @@ import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.domain.Nickname;
+import com.djrapitops.plan.delivery.domain.TablePlayer;
 import com.djrapitops.plan.delivery.domain.WebUser;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.container.ServerContainer;
@@ -1406,12 +1407,20 @@ public interface DatabaseTest {
     }
 
     @Test
-    default void activeTunredInactiveQueryHasAllParametersSet() {
+    default void activeTurnedInactiveQueryHasAllParametersSet() {
         Integer result = db().query(ActivityIndexQueries.countRegularPlayersTurnedInactive(
                 0, System.currentTimeMillis(), serverUUID(),
                 TimeUnit.HOURS.toMillis(2L)
         ));
         assertNotNull(result);
+    }
+
+    @Test
+    default void serverTablePlayersQueryQueriesAtLeastOnePlayer() {
+        sessionsAreStoredWithAllData();
+
+        List<TablePlayer> result = db().query(new ServerTablePlayersQuery(serverUUID(), System.currentTimeMillis(), 10L, 1));
+        assertNotEquals(Collections.emptyList(), result);
     }
 
     @PluginInfo(name = "ConditionalExtension")

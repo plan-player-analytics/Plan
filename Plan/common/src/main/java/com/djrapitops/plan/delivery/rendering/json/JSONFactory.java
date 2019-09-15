@@ -37,8 +37,6 @@ import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
-import com.djrapitops.plan.storage.database.queries.containers.AllPlayerContainersQuery;
-import com.djrapitops.plan.storage.database.queries.containers.ServerPlayersTableContainersQuery;
 import com.djrapitops.plan.storage.database.queries.objects.*;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 
@@ -84,9 +82,9 @@ public class JSONFactory {
         Database database = dbSystem.getDatabase();
 
         return new PlayersTableJSONParser(
-                database.query(new ServerPlayersTableContainersQuery(serverUUID)),
+                database.query(new ServerTablePlayersQuery(serverUUID, System.currentTimeMillis(), playtimeThreshold, xMostRecentPlayers)),
                 database.query(new ExtensionServerPlayerDataTableQuery(serverUUID, xMostRecentPlayers)),
-                xMostRecentPlayers, playtimeThreshold, openPlayerLinksInNewTab,
+                openPlayerLinksInNewTab,
                 formatters
         ).toJSONString();
     }
@@ -99,9 +97,9 @@ public class JSONFactory {
         Database database = dbSystem.getDatabase();
 
         return new PlayersTableJSONParser(
-                database.query(new AllPlayerContainersQuery()), // TODO Optimize the heck out of this
+                Collections.emptyList(),// TODO Replace with new query
                 Collections.emptyMap(),
-                xMostRecentPlayers, playtimeThreshold, openPlayerLinksInNewTab,
+                openPlayerLinksInNewTab,
                 formatters
         ).toJSONString();
     }

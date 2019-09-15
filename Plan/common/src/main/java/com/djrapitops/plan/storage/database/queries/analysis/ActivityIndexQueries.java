@@ -27,6 +27,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
 
 import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
 
@@ -72,7 +73,7 @@ public class ActivityIndexQueries {
         return fetchActivityGroupCount(date, serverUUID, playtimeThreshold, ActivityIndex.REGULAR, 5.1);
     }
 
-    private static String selectActivityIndexSQL() {
+    public static String selectActivityIndexSQL() {
         String selectActivePlaytimeSQL = SELECT +
                 SessionsTable.USER_UUID +
                 ",SUM(" +
@@ -93,7 +94,7 @@ public class ActivityIndexQueries {
                 GROUP_BY + "q1." + SessionsTable.USER_UUID;
     }
 
-    private static void setSelectActivityIndexSQLParameters(PreparedStatement statement, int index, long playtimeThreshold, UUID serverUUID, long date) throws SQLException {
+    public static void setSelectActivityIndexSQLParameters(PreparedStatement statement, int index, long playtimeThreshold, UUID serverUUID, long date) throws SQLException {
         statement.setDouble(index, Math.PI);
         statement.setLong(index + 1, playtimeThreshold);
 
@@ -474,6 +475,30 @@ public class ActivityIndexQueries {
             @Override
             public ActivityIndex processResults(ResultSet set) throws SQLException {
                 return set.next() ? new ActivityIndex(set.getDouble("average"), before) : new ActivityIndex(0.0, before);
+            }
+        };
+    }
+
+    public static Query<Object> activityIndexOnServerToMap(UUID serverUUID, long date, long threshold, BiConsumer<UUID, Double> consumer) {
+        String sql = SELECT + "activity_index,n." + UserInfoTable.USER_UUID +
+                FROM + UserInfoTable.TABLE_NAME + " n" +
+                LEFT_JOIN + '(' + selectActivityIndexSQL() + ") a on n." + SessionsTable.USER_UUID + "=a." + UserInfoTable.USER_UUID +
+                WHERE + UserInfoTable.SERVER_UUID + "=?";
+
+        return new QueryStatement<Object>(sql, 1000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                setSelectActivityIndexSQLParameters(statement, 1, threshold, serverUUID, date);
+                statement.setString(2, serverUUID.toString());
+            }
+
+            @Override
+            public Object processResults(ResultSet set) throws SQLException {
+                while (set.next()) {
+                    double activityIndex = set.getDouble("activity_index"); // Returns 0.0 if missing
+                    consumer.accept(UUID.fromString(set.getString(UserInfoTable.USER_UUID)), activityIndex);
+                }
+                return null;
             }
         };
     }
