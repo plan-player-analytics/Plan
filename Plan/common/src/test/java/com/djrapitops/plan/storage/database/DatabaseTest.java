@@ -1413,6 +1413,18 @@ public interface DatabaseTest {
         assertNotEquals(Collections.emptyList(), result);
     }
 
+    @Test
+    default void kdrCastAsDoubleDoesNotCauseExceptions() {
+        sessionsAreStoredWithAllData();
+        db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, () -> 123456789L, "Test", serverUUID()));
+
+        Long killCount = db().query(KillQueries.playerKillCount(0L, System.currentTimeMillis(), serverUUID()));
+        assertEquals(2, killCount); // Ensure the kills were saved
+
+        Double result = db().query(KillQueries.averageKDR(0L, System.currentTimeMillis(), serverUUID()));
+        assertEquals(1.0, result, 0.1);
+    }
+
     @PluginInfo(name = "ConditionalExtension")
     class ConditionalExtension implements DataExtension {
 

@@ -22,6 +22,7 @@ import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.KillsTable;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
+import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 
 import java.sql.PreparedStatement;
@@ -179,10 +180,11 @@ public class KillQueries {
                 AND + KillsTable.DATE + ">=?" +
                 AND + KillsTable.DATE + "<=?" +
                 GROUP_BY + KillsTable.VICTIM_UUID;
-        String sql = SELECT + "AVG(CAST(kills AS double)/CAST(deaths AS double)) as kdr" +
-                FROM + '(' + selectKillCounts + ") q1" +
-                INNER_JOIN + '(' + selectDeathCounts + ") q2 on q1." + KillsTable.KILLER_UUID + "=q2." + KillsTable.VICTIM_UUID +
-                WHERE + "deaths!=0";
+        String sql = SELECT + "u." + UserInfoTable.USER_UUID + ",kills, deaths" +
+                FROM + UserInfoTable.TABLE_NAME + " u" +
+                LEFT_JOIN + '(' + selectKillCounts + ") q1 on q1." + KillsTable.KILLER_UUID + "=u." + UserInfoTable.USER_UUID +
+                LEFT_JOIN + '(' + selectDeathCounts + ") q2 on q2." + KillsTable.VICTIM_UUID + "=u." + UserInfoTable.USER_UUID +
+                WHERE + "u." + UserInfoTable.SERVER_UUID + "=?";
 
         return new QueryStatement<Double>(sql) {
             @Override
@@ -193,11 +195,21 @@ public class KillQueries {
                 statement.setString(4, serverUUID.toString());
                 statement.setLong(5, after);
                 statement.setLong(6, before);
+                statement.setString(7, serverUUID.toString());
             }
 
             @Override
             public Double processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getDouble("kdr") : 0.0;
+                double totalKDR = 0.0;
+                int playerCount = 0;
+                while (set.next()) {
+                    int kills = set.getInt("kills");
+                    int deaths = set.getInt("deaths");
+                    System.out.println("K:" + kills + " D:" + deaths);
+                    totalKDR += (double) kills / (deaths > 0 ? deaths : 1);
+                    playerCount++;
+                }
+                return totalKDR / (playerCount > 0 ? playerCount : 1);
             }
         };
     }
