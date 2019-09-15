@@ -1,7 +1,7 @@
 name: Plan
 author: Rsl1122
 main: com.djrapitops.plan.Plan
-version: 5.0 ALPHA build %buildNumber%
+version: 5.0 BETA build %buildNumber%
 api-version: 1.13
 softdepend:
   - ASkyBlock
