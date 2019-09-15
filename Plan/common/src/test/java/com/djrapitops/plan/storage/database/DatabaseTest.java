@@ -51,7 +51,6 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.queries.*;
 import com.djrapitops.plan.storage.database.queries.analysis.ActivityIndexQueries;
-import com.djrapitops.plan.storage.database.queries.containers.AllPlayerContainersQuery;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.database.queries.containers.ServerPlayerContainersQuery;
 import com.djrapitops.plan.storage.database.queries.objects.*;
@@ -1081,23 +1080,6 @@ public interface DatabaseTest {
     }
 
     @Test
-    default void allPlayerContainersQueryDoesNotReturnDuplicatePlayers() {
-        db().executeTransaction(TestData.storeServers());
-        executeTransactions(TestData.storePlayerOneData());
-        executeTransactions(TestData.storePlayerTwoData());
-
-        List<UUID> expected = Arrays.asList(playerUUID, player2UUID);
-        Collections.sort(expected);
-
-        Collection<UUID> result = db().query(new AllPlayerContainersQuery())
-                .stream().map(player -> player.getUnsafe(PlayerKeys.UUID))
-                .sorted()
-                .collect(Collectors.toList());
-
-        assertEquals(expected, result);
-    }
-
-    @Test
     default void sqlDateConversionSanityCheck() {
         Database db = db();
 
@@ -1420,6 +1402,14 @@ public interface DatabaseTest {
         sessionsAreStoredWithAllData();
 
         List<TablePlayer> result = db().query(new ServerTablePlayersQuery(serverUUID(), System.currentTimeMillis(), 10L, 1));
+        assertNotEquals(Collections.emptyList(), result);
+    }
+
+    @Test
+    default void networkTablePlayersQueryQueriesAtLeastOnePlayer() {
+        sessionsAreStoredWithAllData();
+
+        List<TablePlayer> result = db().query(new NetworkTablePlayersQuery(System.currentTimeMillis(), 10L, 1));
         assertNotEquals(Collections.emptyList(), result);
     }
 

@@ -97,7 +97,7 @@ public class JSONFactory {
         Database database = dbSystem.getDatabase();
 
         return new PlayersTableJSONParser(
-                Collections.emptyList(),// TODO Replace with new query
+                database.query(new NetworkTablePlayersQuery(System.currentTimeMillis(), playtimeThreshold, xMostRecentPlayers)),
                 Collections.emptyMap(),
                 openPlayerLinksInNewTab,
                 formatters

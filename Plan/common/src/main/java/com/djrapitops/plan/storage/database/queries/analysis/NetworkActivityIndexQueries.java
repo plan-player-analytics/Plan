@@ -76,7 +76,7 @@ public class NetworkActivityIndexQueries {
         return fetchActivityGroupCount(date, playtimeThreshold, ActivityIndex.REGULAR, 5.1);
     }
 
-    private static String selectActivityIndexSQL() {
+    public static String selectActivityIndexSQL() {
         String selectActivePlaytimeSQL = SELECT +
                 SessionsTable.USER_UUID +
                 ",SUM(" +
@@ -96,7 +96,7 @@ public class NetworkActivityIndexQueries {
                 GROUP_BY + "q1." + SessionsTable.USER_UUID;
     }
 
-    private static void setSelectActivityIndexSQLParameters(PreparedStatement statement, int index, long playtimeThreshold, long date) throws SQLException {
+    public static void setSelectActivityIndexSQLParameters(PreparedStatement statement, int index, long playtimeThreshold, long date) throws SQLException {
         statement.setDouble(index, Math.PI);
         statement.setLong(index + 1, playtimeThreshold);
 

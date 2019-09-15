@@ -21,7 +21,6 @@ import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.container.ServerContainer;
 import com.djrapitops.plan.storage.database.queries.Query;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -57,21 +56,6 @@ public class ContainerFetchQueries {
      */
     public static Query<PlayerContainer> fetchPlayerContainer(UUID playerUUID) {
         return new PlayerContainerQuery(playerUUID);
-    }
-
-    /**
-     * Used to get PlayerContainers of all players on the network, some limitations apply to DataContainer keys.
-     * <p>
-     * Limitations:
-     * - PlayerContainers do not support: PlayerKeys WORLD_TIMES, PLAYER_KILLS, PLAYER_KILL_COUNT
-     * - PlayerContainers PlayerKeys.PER_SERVER does not support: PerServerKeys WORLD_TIMES, PLAYER_KILLS, PLAYER_KILL_COUNT
-     * <p>
-     * Blocking methods are not called until DataContainer getter methods are called.
-     *
-     * @return a list of PlayerContainers in Plan database.
-     */
-    public static Query<List<PlayerContainer>> fetchAllPlayerContainers() {
-        return new AllPlayerContainersQuery();
     }
 
 }
