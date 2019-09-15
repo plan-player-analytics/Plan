@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.gathering.listeners.velocity;
 
+import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.export.Exporter;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
@@ -105,7 +106,10 @@ public class PlayerOnlineListener {
         InetAddress address = player.getRemoteAddress().getAddress();
         long time = System.currentTimeMillis();
 
-        sessionCache.cacheSession(playerUUID, new Session(playerUUID, serverInfo.getServerUUID(), time, null, null));
+        Session session = new Session(playerUUID, serverInfo.getServerUUID(), time, null, null);
+        session.putRawData(SessionKeys.NAME, playerName);
+        session.putRawData(SessionKeys.SERVER_NAME, "Proxy Server");
+        sessionCache.cacheSession(playerUUID, session);
 
         Database database = dbSystem.getDatabase();
 
@@ -190,7 +194,10 @@ public class PlayerOnlineListener {
         long time = System.currentTimeMillis();
 
         // Replaces the current session in the cache.
-        sessionCache.cacheSession(playerUUID, new Session(playerUUID, serverInfo.getServerUUID(), time, null, null));
+        Session session = new Session(playerUUID, serverInfo.getServerUUID(), time, null, null);
+        session.putRawData(SessionKeys.NAME, playerName);
+        session.putRawData(SessionKeys.SERVER_NAME, "Proxy Server");
+        sessionCache.cacheSession(playerUUID, session);
 
         if (config.get(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
             processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));

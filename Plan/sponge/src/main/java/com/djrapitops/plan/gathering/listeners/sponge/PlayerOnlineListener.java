@@ -17,6 +17,7 @@
 package com.djrapitops.plan.gathering.listeners.sponge;
 
 import com.djrapitops.plan.delivery.domain.Nickname;
+import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.export.Exporter;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
@@ -177,7 +178,10 @@ public class PlayerOnlineListener {
         }
 
         database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> time, playerName, serverUUID));
-        sessionCache.cacheSession(playerUUID, new Session(playerUUID, serverUUID, time, world, gm))
+        Session session = new Session(playerUUID, serverUUID, time, world, gm);
+        session.putRawData(SessionKeys.NAME, playerName);
+        session.putRawData(SessionKeys.SERVER_NAME, serverInfo.getServer().getIdentifiableName());
+        sessionCache.cacheSession(playerUUID, session)
                 .ifPresent(previousSession -> database.executeTransaction(new SessionEndTransaction(previousSession)));
 
         database.executeTransaction(new NicknameStoreTransaction(
