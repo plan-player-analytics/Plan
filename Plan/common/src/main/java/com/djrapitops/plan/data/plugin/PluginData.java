@@ -18,8 +18,8 @@ package com.djrapitops.plan.data.plugin;
 
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
-import com.djrapitops.plan.delivery.rendering.html.icon.Color;
-import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 
 import java.util.Collection;
 import java.util.Objects;
