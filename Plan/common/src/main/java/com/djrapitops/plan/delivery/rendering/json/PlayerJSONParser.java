@@ -38,6 +38,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQuery;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import org.apache.commons.text.StringEscapeUtils;
 
 import javax.inject.Inject;
@@ -275,6 +276,7 @@ public class PlayerJSONParser {
                 Map<UUID, String> serverNames,
                 Formatter<Long> dateFormatter
         ) {
+            nicknames.sort(new DateHolderRecentComparator());
             List<Nickname> mapped = new ArrayList<>();
             for (com.djrapitops.plan.delivery.domain.Nickname nickname : nicknames) {
                 mapped.add(new Nickname(
