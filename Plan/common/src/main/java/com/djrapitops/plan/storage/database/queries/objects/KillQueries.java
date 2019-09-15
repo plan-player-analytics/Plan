@@ -205,7 +205,6 @@ public class KillQueries {
                 while (set.next()) {
                     int kills = set.getInt("kills");
                     int deaths = set.getInt("deaths");
-                    System.out.println("K:" + kills + " D:" + deaths);
                     totalKDR += (double) kills / (deaths > 0 ? deaths : 1);
                     playerCount++;
                 }
