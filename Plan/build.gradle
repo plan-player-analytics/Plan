@@ -73,7 +73,7 @@ subprojects {
     ext.caffeineVersion = "2.8.0"
     ext.h2Version = "1.4.199"
     ext.mysqlVersion = "8.0.17"
-    ext.hikariVersion = "3.4.0"
+    ext.hikariVersion = "3.4.1"
     ext.slf4jVersion = "1.7.28"
     ext.geoIpVersion = "2.12.0"
     ext.guavaVersion = "28.0-jre"
