@@ -79,7 +79,7 @@ public class NetworkTablePlayersQuery implements Query<List<TablePlayer>> {
                 FROM + SessionsTable.TABLE_NAME + " s" +
                 GROUP_BY + "s." + SessionsTable.USER_UUID;
 
-        String selectBanned = SELECT + "ub." + UserInfoTable.USER_UUID +
+        String selectBanned = SELECT + DISTINCT + "ub." + UserInfoTable.USER_UUID +
                 FROM + UserInfoTable.TABLE_NAME + " ub" +
                 WHERE + UserInfoTable.BANNED + "=?";
 
