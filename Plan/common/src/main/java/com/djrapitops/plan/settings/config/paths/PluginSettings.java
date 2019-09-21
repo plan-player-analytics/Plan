@@ -36,7 +36,7 @@ public class PluginSettings {
     public static final Setting<Integer> KEEP_LOGS_DAYS = new IntegerSetting("Plugin.Logging.Delete_logs_after_days", Setting::timeValidator);
     public static final Setting<Boolean> CHECK_FOR_UPDATES = new BooleanSetting("Plugin.Update_notifications.Check_for_updates");
     public static final Setting<Boolean> NOTIFY_ABOUT_DEV_RELEASES = new BooleanSetting("Plugin.Update_notifications.Notify_about_DEV_releases");
-    public static final Setting<Boolean> BUNGEE_COPY_CONFIG = new BooleanSetting("Plugin.Configuration.Allow_bungeecord_to_manage_settings");
+    public static final Setting<Boolean> PROXY_COPY_CONFIG = new BooleanSetting("Plugin.Configuration.Allow_proxy_to_manage_settings");
 
     private PluginSettings() {
         /* static variable class */

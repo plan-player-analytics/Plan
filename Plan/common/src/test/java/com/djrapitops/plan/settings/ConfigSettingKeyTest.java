@@ -112,7 +112,7 @@ public class ConfigSettingKeyTest {
 
         // Server settings contained in the key classes, remove
         settings.remove(PluginSettings.SERVER_NAME);
-        settings.remove(PluginSettings.BUNGEE_COPY_CONFIG);
+        settings.remove(PluginSettings.PROXY_COPY_CONFIG);
         settings.remove(DatabaseSettings.TYPE);
         settings.remove(DisplaySettings.WORLD_ALIASES);
         return settings;

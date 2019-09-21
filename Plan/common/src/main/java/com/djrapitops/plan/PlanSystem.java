@@ -20,6 +20,7 @@ import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.capability.CapabilityServiceImplementation;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.delivery.export.ExportSystem;
+import com.djrapitops.plan.delivery.webserver.NonProxyWebserverDisableChecker;
 import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.delivery.webserver.WebServerSystem;
 import com.djrapitops.plan.exceptions.EnableException;
@@ -40,6 +41,7 @@ import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.version.VersionCheckSystem;
 import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
@@ -76,6 +78,7 @@ public class PlanSystem implements SubSystem {
     private final ExtensionServiceImplementation extensionService;
     private final QueryServiceImplementation queryService;
     private final SettingsServiceImplementation settingsService;
+    private final PluginLogger logger;
     private final ErrorHandler errorHandler;
 
     @Inject
@@ -97,6 +100,7 @@ public class PlanSystem implements SubSystem {
             ExtensionServiceImplementation extensionService,
             QueryServiceImplementation queryService,
             SettingsServiceImplementation settingsService,
+            PluginLogger logger,
             ErrorHandler errorHandler,
             PlanAPI.PlanAPIHolder apiHolder
     ) {
@@ -117,6 +121,7 @@ public class PlanSystem implements SubSystem {
         this.extensionService = extensionService;
         this.queryService = queryService;
         this.settingsService = settingsService;
+        this.logger = logger;
         this.errorHandler = errorHandler;
     }
 
@@ -149,6 +154,14 @@ public class PlanSystem implements SubSystem {
                 listenerSystem,
                 taskSystem
         );
+
+        // Disables Webserver if Proxy is detected in the database
+        if (serverInfo.getServer().isNotProxy()) {
+            processing.submitNonCritical(new NonProxyWebserverDisableChecker(
+                    configSystem.getConfig(), databaseSystem, webServerSystem, logger, errorHandler
+            ));
+        }
+
         settingsService.register();
         queryService.register();
         extensionService.register();

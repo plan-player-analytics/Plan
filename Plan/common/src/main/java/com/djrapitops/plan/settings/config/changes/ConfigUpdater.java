@@ -136,7 +136,8 @@ public class ConfigUpdater {
                 new ConfigChange.Removed("Display_options.Show_player_IPs"),
                 new ConfigChange.Removed("Export.Parts.JavaScript_and_CSS"),
                 new ConfigChange.Moved("Plugins.LiteBans", "Plugins.Litebans"),
-                new ConfigChange.Moved("Plugins.BuyCraft", "Plugins.Buycraft")
+                new ConfigChange.Moved("Plugins.BuyCraft", "Plugins.Buycraft"),
+                new ConfigChange.Moved("Plugin.Configuration.Allow_bungeecord_to_manage_settings", "Plugin.Configuration.Allow_proxy_to_manage_settings")
         };
     }
 

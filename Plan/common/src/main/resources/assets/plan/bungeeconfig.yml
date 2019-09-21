@@ -179,6 +179,6 @@ Export:
 # If a plugin is causing issues the integration can be disabled by setting Plugin_name.Enabled: false
 # -----------------------------------------------------
 Plugins:
-  BuyCraft:
+  Buycraft:
     # http://help.buycraft.net/article/36-where-to-find-the-secret-key
     Secret: "-"

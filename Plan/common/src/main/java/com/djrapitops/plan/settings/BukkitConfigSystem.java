@@ -62,7 +62,7 @@ public class BukkitConfigSystem extends ConfigSystem {
     @Override
     public void enable() throws EnableException {
         super.enable();
-        if (config.isTrue(PluginSettings.BUNGEE_COPY_CONFIG)) {
+        if (config.isTrue(PluginSettings.PROXY_COPY_CONFIG)) {
             serverSettingsManager.enable();
         }
     }
