@@ -146,8 +146,8 @@ function onlineActivityCalendar(id, events, firstDay) {
 
         events: events,
 
-        height: 490,
-        contentHeight: 485,
+        height: 800,
+        contentHeight: 795,
         header: {
             left: 'title',
             center: '',

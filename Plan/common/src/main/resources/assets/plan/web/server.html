@@ -352,13 +352,13 @@
                                     <div aria-labelledby="online-calendar-tab" class="tab-pane fade" id="calendar-tab"
                                          role="tabpanel">
                                         <div class="row">
-                                            <div class="col-lg-2 col-sm" style="height: 0;"></div>
-                                            <div class="col-lg-8 col-sm-12" style="height: 550px;">
+                                            <div class="col-lg-1 col-sm" style="height: 0;"></div>
+                                            <div class="col-lg-10 col-sm-12" style="height: 850px;">
                                                 <div class="chart-area" id="calendar">
                                                     <span class="loader"></span>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-2 col-sm" style="height: 0;"></div>
+                                            <div class="col-lg-1 col-sm" style="height: 0;"></div>
                                         </div>
                                     </div>
                                     <div aria-labelledby="online-punchcard-tab" class="tab-pane fade" id="punchcard-tab"
@@ -1555,14 +1555,11 @@
 
         jsonRequest("../v1/graph?type=serverCalendar&server=${serverName}", function (json, error) {
             if (json) {
-                var clicked = false;
-                $('#online-calendar-tab').click(function () {
-                    if (!clicked) {
-                        onlineActivityCalendar('#calendar', json.data, json.firstDay);
-                        clicked = true;
-                    }
-                });
                 $('#calendar').text('');
+                onlineActivityCalendar('#calendar', json.data, json.firstDay);
+                $('#online-calendar-tab').click(function () {
+                    $('#calendar').fullCalendar('render');
+                });
             } else if (error) {
                 $('#calendar').text("Failed to load calendar data: " + error)
             }
