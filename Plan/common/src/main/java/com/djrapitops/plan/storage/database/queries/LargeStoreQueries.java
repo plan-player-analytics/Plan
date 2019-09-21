@@ -45,38 +45,6 @@ public class LargeStoreQueries {
     }
 
     /**
-     * Execute a big batch of command use insert statements.
-     *
-     * @param ofServers Multi map: Server UUID - (Command name - Usage count)
-     * @return Executable, use inside a {@link com.djrapitops.plan.storage.database.transactions.Transaction}
-     */
-    public static Executable storeAllCommandUsageData(Map<UUID, Map<String, Integer>> ofServers) {
-        if (ofServers.isEmpty()) {
-            return Executable.empty();
-        }
-
-        return new ExecBatchStatement(CommandUseTable.INSERT_STATEMENT) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                // Every Server
-                for (Map.Entry<UUID, Map<String, Integer>> serverEntry : ofServers.entrySet()) {
-                    UUID serverUUID = serverEntry.getKey();
-                    // Every Command
-                    for (Map.Entry<String, Integer> entry : serverEntry.getValue().entrySet()) {
-                        String command = entry.getKey();
-                        int timesUsed = entry.getValue();
-
-                        statement.setString(1, command);
-                        statement.setInt(2, timesUsed);
-                        statement.setString(3, serverUUID.toString());
-                        statement.addBatch();
-                    }
-                }
-            }
-        };
-    }
-
-    /**
      * Execute a big batch of GeoInfo insert statements.
      *
      * @param ofUsers Map: Player UUID - List of GeoInfo

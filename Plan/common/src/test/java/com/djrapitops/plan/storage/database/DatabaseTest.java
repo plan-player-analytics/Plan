@@ -147,56 +147,6 @@ public interface DatabaseTest {
     }
 
     @Test
-    default void testSaveCommandUse() {
-        Map<String, Integer> expected = new HashMap<>();
-
-        expected.put("plan", 1);
-        expected.put("tp", 4);
-        expected.put("pla", 7);
-        expected.put("help", 21);
-
-        useCommand("plan");
-        useCommand("tp", 4);
-        useCommand("pla", 7);
-        useCommand("help", 21);
-        useCommand("roiergbnougbierubieugbeigubeigubgierbgeugeg", 3);
-
-        commitTest();
-
-        Map<String, Integer> commandUse = db().query(ServerAggregateQueries.commandUsageCounts(serverUUID()));
-        assertEquals(expected, commandUse);
-    }
-
-    @Test
-    default void commandUsageSavingDoesNotCreateNewEntriesForOldCommands() {
-        Map<String, Integer> expected = new HashMap<>();
-
-        expected.put("plan", 1);
-        expected.put("test", 3);
-        expected.put("tp", 6);
-        expected.put("pla", 7);
-        expected.put("help", 21);
-
-        testSaveCommandUse();
-
-        useCommand("test", 3);
-        useCommand("tp", 2);
-
-        Map<String, Integer> commandUse = db().query(ServerAggregateQueries.commandUsageCounts(serverUUID()));
-        assertEquals(expected, commandUse);
-    }
-
-    default void useCommand(String commandName) {
-        db().executeTransaction(new CommandStoreTransaction(serverUUID(), commandName));
-    }
-
-    default void useCommand(String commandName, int times) {
-        for (int i = 0; i < times; i++) {
-            useCommand(commandName);
-        }
-    }
-
-    @Test
     default void testTPSSaving() {
         Random r = new Random();
 
@@ -494,7 +444,6 @@ public interface DatabaseTest {
         assertQueryIsEmpty(db(), NicknameQueries.fetchAllNicknameData());
         assertQueryIsEmpty(db(), GeoInfoQueries.fetchAllGeoInformation());
         assertTrue(db().query(SessionQueries.fetchAllSessions()).isEmpty());
-        assertQueryIsEmpty(db(), LargeFetchQueries.fetchAllCommandUsageData());
         assertQueryIsEmpty(db(), LargeFetchQueries.fetchAllWorldNames());
         assertQueryIsEmpty(db(), LargeFetchQueries.fetchAllTPSData());
         assertQueryIsEmpty(db(), ServerQueries.fetchPlanServerInformation());
@@ -524,13 +473,6 @@ public interface DatabaseTest {
         saveGeoInfo(playerUUID, new GeoInfo("TestLoc", 223456789L));
 
         assertTrue(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
-
-        useCommand("plan");
-        useCommand("plan");
-        useCommand("tp");
-        useCommand("help");
-        useCommand("help");
-        useCommand("help");
 
         List<TPS> expected = new ArrayList<>();
         Random r = new Random();
@@ -694,7 +636,6 @@ public interface DatabaseTest {
             assertQueryResultIsEqual(db(), backup, NicknameQueries.fetchAllNicknameData());
             assertQueryResultIsEqual(db(), backup, GeoInfoQueries.fetchAllGeoInformation());
             assertQueryResultIsEqual(db(), backup, SessionQueries.fetchAllSessions());
-            assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllCommandUsageData());
             assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllWorldNames());
             assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllTPSData());
             assertQueryResultIsEqual(db(), backup, ServerQueries.fetchPlanServerInformation());
@@ -722,7 +663,6 @@ public interface DatabaseTest {
             assertQueryResultIsEqual(db(), backup, NicknameQueries.fetchAllNicknameData());
             assertQueryResultIsEqual(db(), backup, GeoInfoQueries.fetchAllGeoInformation());
             assertQueryResultIsEqual(db(), backup, SessionQueries.fetchAllSessions());
-            assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllCommandUsageData());
             assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllWorldNames());
             assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllTPSData());
             assertQueryResultIsEqual(db(), backup, ServerQueries.fetchPlanServerInformation());

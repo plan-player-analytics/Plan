@@ -29,7 +29,6 @@ import utilities.TestConstants;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,7 +48,6 @@ class ImportBuilderTest {
     void emptyServerBuilderInitializesCollections() {
         ServerImportData data = ServerImportData.builder().build();
 
-        assertNotNull(data.getCommandUsages());
         assertNotNull(data.getTpsData());
     }
 
@@ -93,16 +91,9 @@ class ImportBuilderTest {
                 .tpsData(randomInt, randomInt, randomInt, randomInt, randomInt, randomInt, randomInt)
                 .tpsData(Collections.singletonList(tps))
                 .tpsData(Arrays.asList(tps, tps))
-                .commandUsage(randomString, randomInt)
-                .commandUsage(randomString, randomInt)
-                .commandUsage(randomString, randomInt)
-                .commandUsage(randomString, randomInt)
-                .commandUsages(new HashMap<>())
-                .commandUsages(ImmutableMap.of(randomString, randomInt))
                 .build();
 
         assertEquals(10, data.getTpsData().size());
-        assertEquals(1, data.getCommandUsages().size());
 
         assertEquals(randomInt, data.getTpsData().get(0).getDate());
     }

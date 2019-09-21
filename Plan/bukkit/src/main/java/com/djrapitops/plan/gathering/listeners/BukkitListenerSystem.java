@@ -35,7 +35,6 @@ public class BukkitListenerSystem extends ListenerSystem {
     private final ChatListener chatListener;
     private final GameModeChangeListener gamemodeChangeListener;
     private final WorldChangeListener worldChangeListener;
-    private final CommandListener commandListener;
     private final DeathEventListener deathEventListener;
     private final BukkitAFKListener afkListener;
 
@@ -46,7 +45,6 @@ public class BukkitListenerSystem extends ListenerSystem {
                                 ChatListener chatListener,
                                 GameModeChangeListener gamemodeChangeListener,
                                 WorldChangeListener worldChangeListener,
-                                CommandListener commandListener,
                                 DeathEventListener deathEventListener,
                                 BukkitAFKListener afkListener
     ) {
@@ -57,7 +55,6 @@ public class BukkitListenerSystem extends ListenerSystem {
         this.chatListener = chatListener;
         this.gamemodeChangeListener = gamemodeChangeListener;
         this.worldChangeListener = worldChangeListener;
-        this.commandListener = commandListener;
         this.deathEventListener = deathEventListener;
         this.afkListener = afkListener;
     }
@@ -69,7 +66,6 @@ public class BukkitListenerSystem extends ListenerSystem {
                 chatListener,
                 gamemodeChangeListener,
                 worldChangeListener,
-                commandListener,
                 deathEventListener,
                 afkListener
         );

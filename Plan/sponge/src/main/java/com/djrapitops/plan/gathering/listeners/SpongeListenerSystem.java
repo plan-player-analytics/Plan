@@ -33,7 +33,6 @@ public class SpongeListenerSystem extends ListenerSystem {
 
     private final SpongeAFKListener afkListener;
     private final SpongeChatListener chatListener;
-    private final SpongeCommandListener commandListener;
     private final SpongeDeathListener deathListener;
     private final SpongeGMChangeListener gmChangeListener;
     private final PlayerOnlineListener playerListener;
@@ -45,7 +44,6 @@ public class SpongeListenerSystem extends ListenerSystem {
             PlanSponge plugin,
             SpongeAFKListener afkListener,
             SpongeChatListener chatListener,
-            SpongeCommandListener commandListener,
             SpongeDeathListener deathListener,
             SpongeGMChangeListener gmChangeListener,
             PlayerOnlineListener playerListener,
@@ -56,7 +54,6 @@ public class SpongeListenerSystem extends ListenerSystem {
 
         this.afkListener = afkListener;
         this.chatListener = chatListener;
-        this.commandListener = commandListener;
         this.deathListener = deathListener;
         this.gmChangeListener = gmChangeListener;
         this.playerListener = playerListener;
@@ -69,7 +66,6 @@ public class SpongeListenerSystem extends ListenerSystem {
         plugin.registerListener(
                 afkListener,
                 chatListener,
-                commandListener,
                 deathListener,
                 playerListener,
                 gmChangeListener,

@@ -19,31 +19,24 @@ package com.djrapitops.plan.gathering.importing.data;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Fuzzlemann
  */
 public class ServerImportData {
 
-    private Map<String, Integer> commandUsages;
     private List<TPS> tpsData;
 
-    private ServerImportData(Map<String, Integer> commandUsages, List<TPS> tpsData) {
-        this.commandUsages = commandUsages;
+    private ServerImportData(List<TPS> tpsData) {
         this.tpsData = tpsData;
     }
 
     public static ServerImportDataBuilder builder() {
         return new ServerImportDataBuilder();
-    }
-
-    public Map<String, Integer> getCommandUsages() {
-        return commandUsages;
-    }
-
-    public void setCommandUsages(Map<String, Integer> commandUsages) {
-        this.commandUsages = commandUsages;
     }
 
     public List<TPS> getTpsData() {
@@ -55,21 +48,10 @@ public class ServerImportData {
     }
 
     public static final class ServerImportDataBuilder {
-        private final Map<String, Integer> commandUsages = new HashMap<>();
         private final List<TPS> tpsData = new ArrayList<>();
 
         private ServerImportDataBuilder() {
             /* Private Constructor */
-        }
-
-        public ServerImportDataBuilder commandUsage(String command, Integer usages) {
-            this.commandUsages.put(command, usages);
-            return this;
-        }
-
-        public ServerImportDataBuilder commandUsages(Map<String, Integer> commandUsages) {
-            this.commandUsages.putAll(commandUsages);
-            return this;
         }
 
         public ServerImportDataBuilder tpsData(long date, double ticksPerSecond, int players, double cpuUsage, long usedMemory, int entityCount, int chunksLoaded) {
@@ -97,7 +79,7 @@ public class ServerImportData {
         }
 
         public ServerImportData build() {
-            return new ServerImportData(commandUsages, tpsData);
+            return new ServerImportData(tpsData);
         }
     }
 }

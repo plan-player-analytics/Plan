@@ -26,7 +26,6 @@ import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
-import com.djrapitops.plan.storage.database.queries.ServerAggregateQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
@@ -79,7 +78,6 @@ public class ServerContainerQuery implements Query<ServerContainer> {
             return db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, twoDaysAgo)).orElse(null);
         });
 
-        container.putCachingSupplier(ServerKeys.COMMAND_USAGE, () -> db.query(ServerAggregateQueries.commandUsageCounts(serverUUID)));
         container.putCachingSupplier(ServerKeys.WORLD_TIMES, () -> db.query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID)));
 
         // Calculating getters

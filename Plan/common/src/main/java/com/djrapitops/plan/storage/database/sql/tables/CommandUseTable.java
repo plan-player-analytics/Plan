@@ -16,13 +16,6 @@
  */
 package com.djrapitops.plan.storage.database.sql.tables;
 
-import com.djrapitops.plan.storage.database.DBType;
-import com.djrapitops.plan.storage.database.sql.parsing.CreateTableParser;
-import com.djrapitops.plan.storage.database.sql.parsing.Sql;
-
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.AND;
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.WHERE;
-
 /**
  * Table information about 'plan_commandusages'.
  *
@@ -30,38 +23,15 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.WHERE;
  * {@link com.djrapitops.plan.storage.database.transactions.patches.Version10Patch}
  *
  * @author Rsl1122
+ * @deprecated TODO DELETE AFTER DROPPING TABLE
  */
+@Deprecated
 public class CommandUseTable {
 
     public static final String TABLE_NAME = "plan_commandusages";
-
-    public static final String ID = "id";
-    public static final String SERVER_ID = "server_id";
-    public static final String COMMAND = "command";
-    public static final String TIMES_USED = "times_used";
-
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
-            + COMMAND + ','
-            + TIMES_USED + ','
-            + SERVER_ID
-            + ") VALUES (?, ?, " + ServerTable.STATEMENT_SELECT_SERVER_ID + ')';
-
-    public static final String UPDATE_STATEMENT = "UPDATE " + CommandUseTable.TABLE_NAME + " SET "
-            + CommandUseTable.TIMES_USED + "=" + CommandUseTable.TIMES_USED + "+ 1" +
-            WHERE + CommandUseTable.SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
-            AND + CommandUseTable.COMMAND + "=?";
 
     private CommandUseTable() {
         /* Static information class */
     }
 
-    public static String createTableSQL(DBType dbType) {
-        return CreateTableParser.create(TABLE_NAME, dbType)
-                .column(ID, Sql.INT).primaryKey()
-                .column(COMMAND, Sql.varchar(20)).notNull()
-                .column(TIMES_USED, Sql.INT).notNull()
-                .column(SERVER_ID, Sql.INT).notNull()
-                .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.SERVER_ID)
-                .toString();
-    }
 }

@@ -55,7 +55,6 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
         copyWorldNames();
         copyTPSData();
         copyPlanWebUsers();
-        copyCommandUsageData();
         copyGeoInformation();
         copyNicknameData();
         copySessionsWithKillAndWorldData();
@@ -70,10 +69,6 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
 
     private void copyPingData() {
         copy(LargeStoreQueries::storeAllPingData, PingQueries.fetchAllPingData());
-    }
-
-    private void copyCommandUsageData() {
-        copy(LargeStoreQueries::storeAllCommandUsageData, LargeFetchQueries.fetchAllCommandUsageData());
     }
 
     private void copyGeoInformation() {

@@ -43,43 +43,6 @@ public class DataStoreQueries {
     }
 
     /**
-     * Store the used command in the database.
-     *
-     * @param serverUUID  UUID of the Plan server.
-     * @param commandName Name of the command that was used.
-     * @return Executable, use inside a {@link com.djrapitops.plan.storage.database.transactions.Transaction}
-     */
-    public static Executable storeUsedCommandInformation(UUID serverUUID, String commandName) {
-        return connection -> {
-            if (!updateCommandUsage(serverUUID, commandName).execute(connection)) {
-                insertNewCommandUsage(serverUUID, commandName).execute(connection);
-            }
-            return false;
-        };
-    }
-
-    private static Executable updateCommandUsage(UUID serverUUID, String commandName) {
-        return new ExecStatement(CommandUseTable.UPDATE_STATEMENT) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-                statement.setString(2, commandName);
-            }
-        };
-    }
-
-    private static Executable insertNewCommandUsage(UUID serverUUID, String commandName) {
-        return new ExecStatement(CommandUseTable.INSERT_STATEMENT) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, commandName);
-                statement.setInt(2, 1);
-                statement.setString(3, serverUUID.toString());
-            }
-        };
-    }
-
-    /**
      * Store a finished session in the database.
      *
      * @param session Session, of which {@link Session#endSession(long)} has been called.

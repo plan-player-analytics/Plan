@@ -98,7 +98,6 @@ public abstract class BukkitImporter implements Importer {
             @Override
             protected void performOperations() {
                 execute(LargeStoreQueries.storeAllTPSData(Collections.singletonMap(serverUUID.get(), serverImportData.getTpsData())));
-                execute(LargeStoreQueries.storeAllCommandUsageData(Collections.singletonMap(serverUUID.get(), serverImportData.getCommandUsages())));
             }
         });
     }

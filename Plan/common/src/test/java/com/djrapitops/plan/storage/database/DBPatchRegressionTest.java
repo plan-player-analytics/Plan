@@ -43,7 +43,6 @@ abstract class DBPatchRegressionTest {
         underTest.executeTransaction(new Transaction() {
             @Override
             protected void performOperations() {
-                execute("DROP TABLE " + CommandUseTable.TABLE_NAME);
                 execute("DROP TABLE " + GeoInfoTable.TABLE_NAME);
                 execute("DROP TABLE " + KillsTable.TABLE_NAME);
                 execute("DROP TABLE " + NicknamesTable.TABLE_NAME);

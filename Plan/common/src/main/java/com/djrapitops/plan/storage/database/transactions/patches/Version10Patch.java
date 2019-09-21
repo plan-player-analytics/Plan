@@ -43,8 +43,6 @@ public class Version10Patch extends Patch {
     }
 
     public void alterTablesToV10() {
-        copyCommandUsage();
-
         copyTPS();
 
         dropTable(UserInfoTable.TABLE_NAME);
@@ -101,22 +99,6 @@ public class Version10Patch extends Patch {
                 " SELECT killer_id, victim_id, weapon, date, '0'" +
                 FROM + tempKillsTableName;
         execute(statement);
-    }
-
-    private void copyCommandUsage() {
-        String tempTableName = "temp_cmdusg";
-
-        renameTable("plan_commandusages", tempTableName);
-
-        execute(CommandUseTable.createTableSQL(dbType));
-
-        String statement = "INSERT INTO plan_commandusages " +
-                "(command, times_used, server_id)" +
-                " SELECT command, times_used, '" + serverID + "'" +
-                FROM + tempTableName;
-        execute(statement);
-
-        dropTable(tempTableName);
     }
 
     private void copyTPS() {

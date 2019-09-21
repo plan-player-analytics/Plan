@@ -39,7 +39,6 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
         execute(SessionsTable.createTableSQL(dbType));
         execute(KillsTable.createTableSQL(dbType));
         execute(PingTable.createTableSQL(dbType));
-        execute(CommandUseTable.createTableSQL(dbType));
         execute(TPSTable.createTableSQL(dbType));
         execute(WorldTable.createTableSQL(dbType));
         execute(WorldTimesTable.createTableSQL(dbType));

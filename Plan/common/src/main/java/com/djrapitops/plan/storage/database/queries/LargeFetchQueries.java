@@ -18,7 +18,6 @@ package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
-import com.djrapitops.plan.storage.database.sql.tables.CommandUseTable;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.TPSTable;
 import com.djrapitops.plan.storage.database.sql.tables.WorldTable;
@@ -38,41 +37,6 @@ public class LargeFetchQueries {
 
     private LargeFetchQueries() {
         /* Static method class */
-    }
-
-    /**
-     * Query database for all command usage data.
-     *
-     * @return Multi map: Server UUID - (Command name - Usage count)
-     */
-    public static Query<Map<UUID, Map<String, Integer>>> fetchAllCommandUsageData() {
-        String serverIDColumn = ServerTable.TABLE_NAME + '.' + ServerTable.SERVER_ID;
-        String serverUUIDColumn = ServerTable.TABLE_NAME + '.' + ServerTable.SERVER_UUID + " as s_uuid";
-        String sql = SELECT +
-                CommandUseTable.COMMAND + ',' +
-                CommandUseTable.TIMES_USED + ',' +
-                serverUUIDColumn +
-                FROM + CommandUseTable.TABLE_NAME +
-                INNER_JOIN + ServerTable.TABLE_NAME + " on " + serverIDColumn + "=" + CommandUseTable.SERVER_ID;
-
-        return new QueryAllStatement<Map<UUID, Map<String, Integer>>>(sql, 10000) {
-            @Override
-            public Map<UUID, Map<String, Integer>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Map<String, Integer>> map = new HashMap<>();
-                while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
-
-                    Map<String, Integer> serverMap = map.getOrDefault(serverUUID, new HashMap<>());
-
-                    String command = set.getString(CommandUseTable.COMMAND);
-                    int timesUsed = set.getInt(CommandUseTable.TIMES_USED);
-
-                    serverMap.put(command, timesUsed);
-                    map.put(serverUUID, serverMap);
-                }
-                return map;
-            }
-        };
     }
 
     /**

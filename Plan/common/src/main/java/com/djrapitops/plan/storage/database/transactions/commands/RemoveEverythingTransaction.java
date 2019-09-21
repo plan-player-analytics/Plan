@@ -42,7 +42,6 @@ public class RemoveEverythingTransaction extends Transaction {
         clearTable(PingTable.TABLE_NAME);
         clearTable(UserInfoTable.TABLE_NAME);
         clearTable(UsersTable.TABLE_NAME);
-        clearTable(CommandUseTable.TABLE_NAME);
         clearTable(TPSTable.TABLE_NAME);
         clearTable(SecurityTable.TABLE_NAME);
         clearTable(ServerTable.TABLE_NAME);

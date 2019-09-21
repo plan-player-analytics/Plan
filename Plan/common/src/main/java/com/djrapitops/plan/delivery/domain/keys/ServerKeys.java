@@ -58,6 +58,7 @@ public class ServerKeys {
     public static final Key<List<TPS>> TPS = new Key<>(new Type<List<TPS>>() {}, "tps");
     public static final Key<DateObj<Integer>> ALL_TIME_PEAK_PLAYERS = new Key<>(new Type<DateObj<Integer>>() {}, "all_time_peak_players");
     public static final Key<DateObj<Integer>> RECENT_PEAK_PLAYERS = new Key<>(new Type<DateObj<Integer>>() {}, "recent_peak_players");
+    @Deprecated
     public static final Key<Map<String, Integer>> COMMAND_USAGE = new Key<>(new Type<Map<String, Integer>>() {}, "command_usage");
     public static final Key<List<ExtensionData>> EXTENSION_DATA = new Key<>(new Type<List<ExtensionData>>() {}, "extension_data");
 }
