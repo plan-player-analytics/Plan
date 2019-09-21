@@ -52,7 +52,7 @@ public class NetworkJSONHandler extends TreePageHandler {
         registerPage("overview", DataID.SERVER_OVERVIEW, networkOverviewJSONParser);
         registerPage("playerbaseOverview", DataID.PLAYERBASE_OVERVIEW, playerBaseOverviewJSONParser);
         registerPage("sessionsOverview", DataID.SESSIONS_OVERVIEW, sessionsOverviewJSONParser);
-        registerPage("servers", DataID.SERVER_OVERVIEW, jsonFactory::serversAsJSONMaps);
+        registerPage("servers", DataID.SERVERS, jsonFactory::serversAsJSONMaps);
         registerPage("pingTable", DataID.PING_TABLE, jsonFactory::pingPerGeolocation);
     }
 
