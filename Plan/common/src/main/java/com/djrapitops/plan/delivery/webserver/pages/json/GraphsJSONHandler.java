@@ -81,6 +81,7 @@ public class GraphsJSONHandler implements PageHandler {
             case "geolocation": return DataID.GRAPH_WORLD_MAP;
             case "aggregatedPing": return DataID.GRAPH_PING;
             case "punchCard": return DataID.GRAPH_PUNCHCARD;
+            case "serverPie": return DataID.GRAPH_SERVER_PIE;
             default: throw new BadRequestException("unknown 'type' parameter: " + type);
         }
     }
