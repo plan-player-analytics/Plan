@@ -123,6 +123,15 @@ public class PlanSystem implements SubSystem {
         this.settingsService = settingsService;
         this.logger = logger;
         this.errorHandler = errorHandler;
+
+        logger.log(L.INFO_COLOR,
+                "",
+                "§2           ██▌",
+                "§2     ██▌   ██▌",
+                "§2  ██▌██▌██▌██▌  §2Player Analytics",
+                "§2  ██▌██▌██▌██▌  §fv" + versionCheckSystem.getCurrentVersion(),
+                ""
+        );
     }
 
     public static String getMainAddress(WebServer webServer, DBSystem dbSystem) {
