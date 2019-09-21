@@ -67,7 +67,7 @@ public class NetworkTablePlayersQuery implements Query<List<TablePlayer>> {
                 GROUP_BY + GeoInfoTable.USER_UUID;
         String selectLatestGeolocations = SELECT +
                 "g1." + GeoInfoTable.GEOLOCATION + ',' +
-                DISTINCT + "g1." + GeoInfoTable.USER_UUID +
+                "g1." + GeoInfoTable.USER_UUID +
                 FROM + "(" + selectGeolocations + ") AS g1" +
                 INNER_JOIN + "(" + selectLatestGeolocationDate + ") AS g2 ON g1.uuid = g2.uuid" +
                 WHERE + GeoInfoTable.LAST_USED + "=last_used_g";
@@ -79,12 +79,12 @@ public class NetworkTablePlayersQuery implements Query<List<TablePlayer>> {
                 FROM + SessionsTable.TABLE_NAME + " s" +
                 GROUP_BY + "s." + SessionsTable.USER_UUID;
 
-        String selectBanned = SELECT + DISTINCT + "ub." + UserInfoTable.USER_UUID +
+        String selectBanned = SELECT + "ub." + UserInfoTable.USER_UUID +
                 FROM + UserInfoTable.TABLE_NAME + " ub" +
                 WHERE + UserInfoTable.BANNED + "=?";
 
         String selectBaseUsers = SELECT +
-                DISTINCT + "u." + UsersTable.USER_UUID + ',' +
+                "u." + UsersTable.USER_UUID + ',' +
                 "u." + UsersTable.USER_NAME + ',' +
                 "u." + UsersTable.REGISTERED + ',' +
                 "ban." + UserInfoTable.USER_UUID + " as banned," +
