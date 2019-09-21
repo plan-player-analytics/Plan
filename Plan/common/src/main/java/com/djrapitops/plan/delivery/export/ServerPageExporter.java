@@ -93,7 +93,7 @@ public class ServerPageExporter extends FileExporter {
     }
 
     public void exportJSON(Path toDirectory, Server server) throws IOException, NotFoundException {
-        String serverName = server.getName();
+        String serverName = toFileName(server.getName());
 
         exportJSON(toDirectory,
                 "serverOverview?server=" + serverName,
