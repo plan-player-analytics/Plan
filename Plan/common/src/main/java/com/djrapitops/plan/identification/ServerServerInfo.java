@@ -125,7 +125,7 @@ public class ServerServerInfo extends ServerInfo {
         server = foundServer.get();
 
         // Update information
-        String name = config.get(PluginSettings.SERVER_NAME).replaceAll("[^a-zA-Z0-9_\\s]", "_");
+        String name = config.get(PluginSettings.SERVER_NAME);
         server.setName("plan".equalsIgnoreCase(name) ? "Server " + server.getId() : name);
 
         String webAddress = webServer.get().getAccessAddress();
@@ -162,7 +162,7 @@ public class ServerServerInfo extends ServerInfo {
 
     private Server createServerObject(UUID serverUUID) {
         String webAddress = webServer.get().getAccessAddress();
-        String name = config.get(PluginSettings.SERVER_NAME).replaceAll("[^a-zA-Z0-9_\\s]", "_");
+        String name = config.get(PluginSettings.SERVER_NAME);
         int maxPlayers = serverProperties.getMaxPlayers();
         return new Server(-1, serverUUID, name, webAddress, maxPlayers);
     }
