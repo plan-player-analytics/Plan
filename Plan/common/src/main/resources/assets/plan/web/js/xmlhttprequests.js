@@ -15,20 +15,20 @@ function jsonRequest(address, callback) {
                             callback(json, null)
                         }, 0);
                     } else if (this.status === 404 || this.status === 403 || this.status === 500) {
-                        callback(null, this.status)
+                        callback(null, "HTTP " + this.status + " (See " + address + ")")
                     } else if (this.status === 400) {
-                        callback(null, this.responseText)
+                        callback(null, this.responseText + " (See " + address + ")")
                     } else if (this.status === 0) {
                         callback(null, "Request was blocked. (Adblocker maybe?)")
                     }
                 } catch (e) {
-                    callback(null, e.message)
+                    callback(null, e.message + " (See " + address + ")")
                 }
             }
         };
         xhttp.timeout = 20000;
         xhttp.ontimeout = function () {
-            callback(null, "Timed out after 20 seconds.")
+            callback(null, "Timed out after 20 seconds. (" + address + ")")
         };
         xhttp.open("GET", address, true);
         xhttp.send();
