@@ -34,6 +34,7 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class DeleteIPHashesPatch extends Patch {
 
     private static final String IP_HASH = "ip_hash";

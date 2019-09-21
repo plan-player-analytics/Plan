@@ -128,13 +128,13 @@ public class SQLiteTest implements DatabaseTest {
         database.executeTransaction(new PlayerRegisterTransaction(secondUuid, () -> 0L, ""));
         database.executeTransaction(new PlayerRegisterTransaction(thirdUuid, () -> 0L, ""));
 
-        saveGeoInfo(firstUuid, new GeoInfo("-", "Norway", 0));
-        saveGeoInfo(firstUuid, new GeoInfo("-", "Finland", 5));
-        saveGeoInfo(secondUuid, new GeoInfo("-", "Sweden", 0));
-        saveGeoInfo(thirdUuid, new GeoInfo("-", "Denmark", 0));
-        saveGeoInfo(fourthUuid, new GeoInfo("-", "Denmark", 0));
-        saveGeoInfo(fifthUuid, new GeoInfo("-", "Not Known", 0));
-        saveGeoInfo(sixthUuid, new GeoInfo("-", "Local Machine", 0));
+        saveGeoInfo(firstUuid, new GeoInfo("Norway", 0));
+        saveGeoInfo(firstUuid, new GeoInfo("Finland", 5));
+        saveGeoInfo(secondUuid, new GeoInfo("Sweden", 0));
+        saveGeoInfo(thirdUuid, new GeoInfo("Denmark", 0));
+        saveGeoInfo(fourthUuid, new GeoInfo("Denmark", 0));
+        saveGeoInfo(fifthUuid, new GeoInfo("Not Known", 0));
+        saveGeoInfo(sixthUuid, new GeoInfo("Local Machine", 0));
 
         Map<String, Integer> got = database.query(GeoInfoQueries.networkGeolocationCounts());
 

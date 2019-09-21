@@ -228,18 +228,14 @@ public interface DatabaseTest {
     default void geoInformationIsStored() {
         saveUserOne();
 
-        String expectedIP = "1.2.3.4";
-        String expectedGeoLoc = "TestLocation";
         long time = System.currentTimeMillis();
 
-        saveGeoInfo(playerUUID, new GeoInfo(expectedIP, expectedGeoLoc, time));
+        GeoInfo expected = new GeoInfo("TestLocation", time);
+        saveGeoInfo(playerUUID, expected);
         commitTest();
 
-        List<GeoInfo> geolocations = db().query(GeoInfoQueries.fetchAllGeoInformation()).getOrDefault(playerUUID, new ArrayList<>());
-        assertEquals(1, geolocations.size());
-
-        GeoInfo expected = new GeoInfo("1.2.xx.xx", expectedGeoLoc, time);
-        assertEquals(expected, geolocations.get(0));
+        List<GeoInfo> result = db().query(GeoInfoQueries.fetchAllGeoInformation()).getOrDefault(playerUUID, new ArrayList<>());
+        assertEquals(Collections.singletonList(expected), result);
     }
 
     @Test
@@ -474,7 +470,7 @@ public interface DatabaseTest {
 
         execute(DataStoreQueries.storeSession(session));
         db().executeTransaction(new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID()), (uuid, name) -> false /* Not cached */));
-        saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L));
+        saveGeoInfo(playerUUID, new GeoInfo("TestLoc", 223456789L));
 
         assertTrue(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
 
@@ -525,7 +521,7 @@ public interface DatabaseTest {
         db().executeTransaction(
                 new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID()), (uuid, name) -> false /* Not cached */)
         );
-        saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L));
+        saveGeoInfo(playerUUID, new GeoInfo("TestLoc", 223456789L));
 
         assertTrue(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
 
@@ -883,7 +879,7 @@ public interface DatabaseTest {
         OptionalAssert.equals(1, container.getValue(PlayerKeys.KICK_COUNT));
 
         List<GeoInfo> expectedGeoInfo =
-                Collections.singletonList(new GeoInfo("", "TestLoc", 223456789));
+                Collections.singletonList(new GeoInfo("TestLoc", 223456789));
         OptionalAssert.equals(expectedGeoInfo, container.getValue(PlayerKeys.GEO_INFO));
 
         List<Nickname> expectedNicknames = Collections.singletonList(new Nickname("TestNick", -1, serverUUID()));

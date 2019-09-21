@@ -57,7 +57,7 @@ public class GeoInfoStoreTransaction extends Transaction {
 
     private GeoInfo createGeoInfo() {
         String country = geolocationFunction.apply(ip.getHostAddress());
-        return new GeoInfo(ip, country, time);
+        return new GeoInfo(country, time);
     }
 
     @Override

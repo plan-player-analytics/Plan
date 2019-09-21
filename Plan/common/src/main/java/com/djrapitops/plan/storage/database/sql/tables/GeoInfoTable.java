@@ -19,7 +19,10 @@ package com.djrapitops.plan.storage.database.sql.tables;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.storage.database.sql.parsing.Sql;
-import com.djrapitops.plan.storage.database.transactions.patches.*;
+import com.djrapitops.plan.storage.database.transactions.patches.DeleteIPHashesPatch;
+import com.djrapitops.plan.storage.database.transactions.patches.GeoInfoLastUsedPatch;
+import com.djrapitops.plan.storage.database.transactions.patches.GeoInfoOptimizationPatch;
+import com.djrapitops.plan.storage.database.transactions.patches.Version10Patch;
 
 import static com.djrapitops.plan.storage.database.sql.parsing.Sql.AND;
 import static com.djrapitops.plan.storage.database.sql.parsing.Sql.WHERE;
@@ -30,7 +33,6 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.WHERE;
  * Patches related to this table:
  * {@link Version10Patch}
  * {@link GeoInfoLastUsedPatch}
- * {@link IPAnonPatch}
  * {@link GeoInfoOptimizationPatch}
  * {@link DeleteIPHashesPatch}
  *
@@ -42,6 +44,7 @@ public class GeoInfoTable {
 
     public static final String ID = "id";
     public static final String USER_UUID = "uuid";
+    @Deprecated
     public static final String IP = "ip";
     public static final String GEOLOCATION = "geolocation";
     public static final String LAST_USED = "last_used";

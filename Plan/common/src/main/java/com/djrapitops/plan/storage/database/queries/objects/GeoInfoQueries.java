@@ -69,10 +69,9 @@ public class GeoInfoQueries {
 
             List<GeoInfo> userGeoInfo = geoInformation.getOrDefault(uuid, new ArrayList<>());
 
-            String ip = set.getString(GeoInfoTable.IP);
             String geolocation = set.getString(GeoInfoTable.GEOLOCATION);
             long lastUsed = set.getLong(GeoInfoTable.LAST_USED);
-            userGeoInfo.add(new GeoInfo(ip, geolocation, lastUsed));
+            userGeoInfo.add(new GeoInfo(geolocation, lastUsed));
 
             geoInformation.put(uuid, userGeoInfo);
         }
@@ -105,7 +104,7 @@ public class GeoInfoQueries {
                 while (set.next()) {
                     String geolocation = set.getString(GeoInfoTable.GEOLOCATION);
                     long lastUsed = set.getLong(GeoInfoTable.LAST_USED);
-                    geoInfo.add(new GeoInfo("", geolocation, lastUsed));
+                    geoInfo.add(new GeoInfo(geolocation, lastUsed));
                 }
                 return geoInfo;
             }

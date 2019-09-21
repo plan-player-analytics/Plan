@@ -18,11 +18,8 @@ package com.djrapitops.plan.gathering.domain;
 
 import com.djrapitops.plan.delivery.domain.DateHolder;
 import com.djrapitops.plan.delivery.domain.DateMap;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
-import java.net.Inet6Address;
-import java.net.InetAddress;
 import java.util.Objects;
 
 /**
@@ -36,14 +33,10 @@ public class GeoInfo implements DateHolder, Serializable {
     private final String geolocation;
     private final long date;
 
-    public GeoInfo(InetAddress address, String geolocation, long lastUsed) {
-        this(formatIP(address), geolocation, lastUsed);
-    }
-
-    public GeoInfo(String ip, String geolocation, long date) {
-        this.ip = ip;
+    public GeoInfo(String geolocation, long lastUsed) {
+        this.ip = "ip";
         this.geolocation = geolocation;
-        this.date = date;
+        this.date = lastUsed;
     }
 
     public static DateMap<GeoInfo> intoDateMap(Iterable<GeoInfo> geoInfo) {
@@ -52,42 +45,6 @@ public class GeoInfo implements DateHolder, Serializable {
             map.put(info.date, info);
         }
         return map;
-    }
-
-    static String formatIP(InetAddress address) {
-        String ip = address.getHostAddress();
-        if ("localhost".equals(ip)) {
-            return ip;
-        }
-        if (address instanceof Inet6Address) {
-            StringBuilder b = new StringBuilder();
-            int i = 0;
-            for (String part : StringUtils.split(ip, ':')) {
-                if (i >= 3) {
-                    break;
-                }
-
-                b.append(part).append(':');
-
-                i++;
-            }
-
-            return b.append("xx..").toString();
-        } else {
-            StringBuilder b = new StringBuilder();
-            int i = 0;
-            for (String part : StringUtils.split(ip, '.')) {
-                if (i >= 2) {
-                    break;
-                }
-
-                b.append(part).append('.');
-
-                i++;
-            }
-
-            return b.append("xx.xx").toString();
-        }
     }
 
     @Deprecated
@@ -109,8 +66,7 @@ public class GeoInfo implements DateHolder, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GeoInfo geoInfo = (GeoInfo) o;
-        return Objects.equals(ip, geoInfo.ip) &&
-                Objects.equals(geolocation, geoInfo.geolocation);
+        return Objects.equals(geolocation, geoInfo.geolocation);
     }
 
     @Override
@@ -121,8 +77,7 @@ public class GeoInfo implements DateHolder, Serializable {
     @Override
     public String toString() {
         return "GeoInfo{" +
-                "ip='" + ip + '\'' +
-                ", geolocation='" + geolocation + '\'' +
+                "geolocation='" + geolocation + '\'' +
                 ", date=" + date +
                 '}';
     }

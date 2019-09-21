@@ -22,13 +22,9 @@ import com.djrapitops.plan.storage.database.transactions.StoreServerInformationT
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.events.*;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Class for saving test data to a database.
@@ -66,14 +62,10 @@ public class TestData {
     private static List<GeoInfo> createGeoInfoForPlayer() {
         List<GeoInfo> geoInfos = new ArrayList<>();
 
-        try {
-            geoInfos.add(new GeoInfo(InetAddress.getByName("1.2.3.4"), "Not Known", playerFirstJoin));
-            geoInfos.add(new GeoInfo(InetAddress.getByName("43b9:416b:3cb2:649d:ebaf:872:d89a:343d"), "Not Known", playerFirstJoin));
-            geoInfos.add(new GeoInfo(InetAddress.getByName("127.0.0.1"), "Local Machine", playerFirstJoin));
-            geoInfos.add(new GeoInfo(InetAddress.getByName("181.103.227.78"), "Argentina", playerFirstJoin));
-        } catch (UnknownHostException e) {
-            Logger.getGlobal().log(Level.WARNING, e, () -> "Failed to create GeoInfo");
-        }
+        geoInfos.add(new GeoInfo("Not Known", playerFirstJoin));
+        geoInfos.add(new GeoInfo("Not Known", playerFirstJoin));
+        geoInfos.add(new GeoInfo("Local Machine", playerFirstJoin));
+        geoInfos.add(new GeoInfo("Argentina", playerFirstJoin));
 
         return geoInfos;
     }

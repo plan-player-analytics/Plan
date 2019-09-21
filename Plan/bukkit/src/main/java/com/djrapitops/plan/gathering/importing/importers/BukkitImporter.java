@@ -200,7 +200,7 @@ public abstract class BukkitImporter implements Importer {
         return userImportData.getIps().parallelStream()
                 .map(ip -> {
                     String geoLoc = geolocationCache.getCountry(ip);
-                    return new GeoInfo(ip, geoLoc, date);
+                    return new GeoInfo(geoLoc, date);
                 }).collect(Collectors.toList());
     }
 }
