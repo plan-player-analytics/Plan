@@ -84,7 +84,6 @@ public class ConfigSettingKeyTest {
                 DisplaySettings.class,
                 ExportSettings.class,
                 FormatSettings.class,
-                PluginDataSettings.class,
                 PluginSettings.class,
                 TimeSettings.class,
                 WebserverSettings.class
@@ -108,8 +107,6 @@ public class ConfigSettingKeyTest {
         }) {
             settings.addAll(FieldFetcher.getPublicStaticFields(settingKeyClass, Setting.class));
         }
-        settings.add(PluginDataSettings.PLUGIN_BUYCRAFT_SECRET);
-
         // Server settings contained in the key classes, remove
         settings.remove(PluginSettings.SERVER_NAME);
         settings.remove(PluginSettings.PROXY_COPY_CONFIG);
