@@ -36,14 +36,17 @@ function smallTrend(trend) {
     }
 }
 
+function displayError(element, error) {
+    element.find('.d-sm-flex').after('<div class="alert alert-danger" role="alert">Failed to load values: ' + error + '</div>')
+}
+
 /* This function loads Network Overview tab */
 function loadNetworkOverviewValues(json, error) {
+    tab = $('#network-overview');
     if (error) {
-        $('#network-overview').addClass('forbidden'); // TODO Figure out 403
+        displayError(tab, error);
         return;
     }
-
-    tab = $('#network-overview');
 
     // Last 7 days
     data = json.players;
@@ -107,12 +110,11 @@ function loadNetworkOverviewValues(json, error) {
 
 /* This function loads Online Activity Overview tab */
 function loadOnlineActivityOverviewValues(json, error) {
+    tab = $('#online-activity-overview');
     if (error) {
-        $('#online-activity-overview').addClass('forbidden'); // TODO Figure out 403
+        displayError(tab, error);
         return;
     }
-
-    tab = $('#online-activity-overview');
 
     // Online Activity as Numbers
     data = json.numbers;
@@ -166,12 +168,11 @@ function loadOnlineActivityOverviewValues(json, error) {
 
 /* This function loads Sessions tab */
 function loadSessionValues(json, error) {
+    tab = $('#sessions-overview');
     if (error) {
-        $('#sessions-overview').addClass('forbidden'); // TODO Figure out 403
+        displayError(tab, error);
         return;
     }
-
-    tab = $('#sessions-overview');
 
     // Insights
     data = json.insights;
@@ -188,12 +189,11 @@ function loadSessionValues(json, error) {
 
 /* This function loads Playerbase Overview tab */
 function loadPlayerbaseOverviewValues(json, error) {
+    tab = $('#playerbase-overview');
     if (error) {
-        $('#playerbase-overview').addClass('forbidden'); // TODO Figure out 403
+        displayError(tab, error);
         return;
     }
-
-    tab = $('#playerbase-overview');
 
     // Trends
     data = json.trends;
@@ -231,7 +231,7 @@ function loadPlayerbaseOverviewValues(json, error) {
 
 function loadServerBoxes(servers, error) {
     if (error) {
-        $('#data_servers').addClass('forbidden'); // TODO Figure out 403
+        displayError($('#servers-tab'), error);
         return;
     }
 

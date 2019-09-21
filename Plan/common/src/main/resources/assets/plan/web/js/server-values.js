@@ -36,14 +36,18 @@ function smallTrend(trend) {
     }
 }
 
+function displayError(element, error) {
+    element.find('.d-sm-flex').after('<div class="alert alert-danger" role="alert">Failed to load values: ' + error + '</div>')
+}
+
 /* This function loads Server Overview tab */
 function loadServerOverviewValues(json, error) {
+    tab = $('#server-overview');
+
     if (error) {
-        $('#server-overview').addClass('forbidden'); // TODO Figure out 403
+        displayError(tab, error);
         return;
     }
-
-    tab = $('#server-overview');
 
     // Last 7 days
     data = json.last_7_days;
@@ -119,12 +123,12 @@ function loadServerOverviewValues(json, error) {
 
 /* This function loads Online Activity Overview tab */
 function loadOnlineActivityOverviewValues(json, error) {
+    tab = $('#online-activity-overview');
+
     if (error) {
-        $('#online-activity-overview').addClass('forbidden'); // TODO Figure out 403
+        displayError(tab, error);
         return;
     }
-
-    tab = $('#online-activity-overview');
 
     // Online Activity as Numbers
     data = json.numbers;
@@ -178,12 +182,12 @@ function loadOnlineActivityOverviewValues(json, error) {
 
 /* This function loads Sessions tab */
 function loadSessionValues(json, error) {
+    tab = $('#sessions-overview');
+
     if (error) {
-        $('#sessions-overview').addClass('forbidden'); // TODO Figure out 403
+        displayError(tab, error);
         return;
     }
-
-    tab = $('#sessions-overview');
 
     // Insights
     data = json.insights;
@@ -200,12 +204,11 @@ function loadSessionValues(json, error) {
 
 /* This function loads PvP & PvE tab */
 function loadPvPPvEValues(json, error) {
+    tab = $('#pvp-pve');
     if (error) {
-        $('#pvp-pve').addClass('forbidden'); // TODO Figure out 403
+        displayError(tab, error);
         return;
     }
-
-    tab = $('#pvp-pve');
 
     // as Numbers
     data = json.numbers;
@@ -246,12 +249,11 @@ function loadPvPPvEValues(json, error) {
 
 /* This function loads Playerbase Overview tab */
 function loadPlayerbaseOverviewValues(json, error) {
+    tab = $('#playerbase-overview');
     if (error) {
-        $('#playerbase-overview').addClass('forbidden'); // TODO Figure out 403
+        displayError(tab, error);
         return;
     }
-
-    tab = $('#playerbase-overview');
 
     // Trends
     data = json.trends;
@@ -289,12 +291,11 @@ function loadPlayerbaseOverviewValues(json, error) {
 
 /* This function loads Performance tab */
 function loadPerformanceValues(json, error) {
+    tab = $('#performance');
     if (error) {
-        $('#performance').addClass('forbidden'); // TODO Figure out 403
+        displayError(tab, error);
         return;
     }
-
-    tab = $('#performance');
 
     // as Numbers
     data = json.numbers;
