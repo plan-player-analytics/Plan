@@ -50,14 +50,14 @@ public class WorldAliasSettings {
 
     private final Lazy<PlanConfig> config;
     private final Supplier<Formatter<Double>> percentageFormatter;
-    private final Locale locale;
+    private final Lazy<Locale> locale;
     private final Processing processing;
     private final ErrorHandler errorHandler;
 
     @Inject
     public WorldAliasSettings(
             Lazy<PlanConfig> config,
-            Locale locale,
+            Lazy<Locale> locale,
             Lazy<Formatters> formatters,
             Processing processing,
             ErrorHandler errorHandler
@@ -159,13 +159,13 @@ public class WorldAliasSettings {
         ConfigNode aliases = getAliasSection();
 
         if (!session.supports(SessionKeys.WORLD_TIMES)) {
-            return locale.get(HtmlLang.UNIT_NO_DATA).toString();
+            return locale.get().getString(HtmlLang.UNIT_NO_DATA);
         }
         WorldTimes worldTimes = session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes());
         if (!session.supports(SessionKeys.END)) {
             return worldTimes.getCurrentWorld()
                     .map(currentWorld -> "Current: " + (aliases.contains(currentWorld) ? aliases.getString(currentWorld) : currentWorld))
-                    .orElse("Current: " + locale.get(GenericLang.UNAVAILABLE));
+                    .orElse("Current: " + locale.get().getString(GenericLang.UNAVAILABLE));
         }
 
         Map<String, Long> playtimePerAlias = getPlaytimePerAlias(worldTimes);
