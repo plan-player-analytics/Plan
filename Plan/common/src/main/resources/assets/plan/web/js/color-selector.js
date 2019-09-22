@@ -123,7 +123,7 @@
         '.bg-light-green {background-color: ' + withReducedSaturation('#8BC34A') + ';color: #eee8d5;}' +
         '.bg-lime {background-color: ' + withReducedSaturation('#CDDC39') + ';color: #eee8d5;}' +
         '.bg-yellow {background-color: ' + withReducedSaturation('#ffe821') + ';color: #eee8d5;}' +
-        '.bg-amber, {background-color: ' + withReducedSaturation('#FFC107') + ';color: #eee8d5;}' +
+        '.bg-amber {background-color: ' + withReducedSaturation('#FFC107') + ';color: #eee8d5;}' +
         '.badge-warning {background-color: ' + withReducedSaturation('#f6c23e') + ';color: #eee8d5;}' +
         '.bg-orange {background-color: ' + withReducedSaturation('#FF9800') + ';color: #eee8d5;}' +
         '.bg-deep-orange {background-color: ' + withReducedSaturation('#FF5722') + ';color: #eee8d5;}' +
@@ -148,7 +148,7 @@
         '.col-light-green {color: ' + withReducedSaturation('#8BC34A') + ';}' +
         '.col-lime {color: ' + withReducedSaturation('#CDDC39') + ';}' +
         '.col-yellow {color: ' + withReducedSaturation('#ffe821') + ';}' +
-        '.col-amber, {color: ' + withReducedSaturation('#FFC107') + ';}' +
+        '.col-amber {color: ' + withReducedSaturation('#FFC107') + ';}' +
         '.text-warning {color: ' + withReducedSaturation('#f6c23e') + ';}' +
         '.col-orange {color: ' + withReducedSaturation('#FF9800') + ';}' +
         '.col-deep-orange {color: ' + withReducedSaturation('#FF5722') + ';}' +
