@@ -71,41 +71,93 @@
 
     var nightMode = window.localStorage.getItem('nightMode') == 'true';
 
-    function nightModeColors() {
-        return '.bg-red {background-color: #D73B30;color: #eee8d5;}' +
-            '.bg-pink {background-color: #CD1A57;color: #eee8d5;}' +
-            '.bg-purple {background-color: #89229B;color: #eee8d5;}' +
-            '.bg-deep-purple {background-color: #5B33A1;color: #eee8d5;}' +
-            '.bg-indigo {background-color: #37479F;color: #eee8d5;}' +
-            '.bg-blue {background-color: #1D84D6;color: #eee8d5;}' +
-            '.bg-light-blue {background-color: #0395D7;color: #eee8d5;}' +
-            '.bg-cyan {background-color: #00A5BB;color: #eee8d5;}' +
-            '.bg-teal {background-color: #008478;color: #eee8d5;}' +
-            '.bg-green {background-color: #439A46;color: #eee8d5;}' +
-            '.bg-light-green {background-color: #7AAC41;color: #eee8d5;}' +
-            '.bg-lime {background-color: #B4C232;color: #eee8d5;}' +
-            '.bg-yellow {background-color: #E0CF34;color: #eee8d5;}' +
-            '.bg-amber {background-color: #E0AA06;color: #eee8d5;}' +
-            '.bg-orange {background-color: #E08600;color: #eee8d5;}' +
-            '.bg-deep-orange {background-color: #E04D1E;color: #eee8d5;}' +
-            '.bg-brown {background-color: #795548;color: #eee8d5;}' +
-            '.bg-grey {background-color: #9E9E9E;color: #eee8d5;}' +
-            '.bg-blue-grey {background-color: #546E7A;color: #eee8d5;}' +
-            '.bg-black {background-color: #555555;color: #eee8d5;}' +
-            '.bg-plan {background-color: #307E14;color: #eee8d5;}' +
-            '.bg-night {background-color: #44475a;color: #eee8d5;}' +
-            '.col-red {color: #D73B30;}.col-pink {color: #CD1A57;}' +
-            '.col-purple {color: #89229B;}.col-deep-purple {color: #5B33A1;}' +
-            '.col-indigo {color: #37479F;}.col-blue {color: #1D84D6;}' +
-            '.col-light-blue {color: #0395D7;}.col-cyan {color: #00A5BB;}' +
-            '.col-teal {color: #008478;}.col-green {color: #439A46;}' +
-            '.col-light-green {color: #7AAC41;}.col-lime {color: #B4C232;}' +
-            '.col-yellow {color: #E0CF34;}.col-amber {color: #E0AA06;}' +
-            '.col-orange {color: #E08600;}.col-deep-orange {color: #E04D1E;}' +
-            '.col-brown {color: #795548;}.col-grey {color: #9E9E9E;}' +
-            '.col-blue-grey {color: #546E7A;}' +
-            '.col-plan {color: #307E14;}'
+    var saturationReduction = 0.70;
+
+    // From https://stackoverflow.com/a/3732187
+    function withReducedSaturation(colorHex) {
+        // To RGB
+        var r = parseInt(colorHex.substr(1, 2), 16); // Grab the hex representation of red (chars 1-2) and convert to decimal (base 10).
+        var g = parseInt(colorHex.substr(3, 2), 16);
+        var b = parseInt(colorHex.substr(5, 2), 16);
+
+        // To HSL
+        r /= 255;
+        g /= 255;
+        b /= 255;
+        var max = Math.max(r, g, b), min = Math.min(r, g, b);
+        var h, s, l = (max + min) / 2;
+
+        if (max === min) {
+            h = s = 0; // achromatic
+        } else {
+            var d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            switch (max) {
+                case r:
+                    h = (g - b) / d + (g < b ? 6 : 0);
+                    break;
+                case g:
+                    h = (b - r) / d + 2;
+                    break;
+                case b:
+                    h = (r - g) / d + 4;
+                    break;
+            }
+            h /= 6;
+        }
+
+        // To css property
+        return 'hsl(' + h * 360 + ',' + s * 100 * saturationReduction + '%,' + l * 95 + '%)';
     }
+
+    var nightModeColors = '.bg-red {background-color: ' + withReducedSaturation('#F44336') + ';color: #eee8d5;}' +
+        '.bg-pink {background-color: ' + withReducedSaturation('#E91E63') + ';color: #eee8d5;}' +
+        '.bg-purple {background-color: ' + withReducedSaturation('#9C27B0') + ';color: #eee8d5;}' +
+        '.bg-deep-purple {background-color: ' + withReducedSaturation('#673AB7') + ';color: #eee8d5;}' +
+        '.bg-indigo {background-color: ' + withReducedSaturation('#3F51B5') + ';color: #eee8d5;}' +
+        '.bg-blue {background-color: ' + withReducedSaturation('#2196F3') + ';color: #eee8d5;}' +
+        '.bg-light-blue {background-color: ' + withReducedSaturation('#03A9F4') + ';color: #eee8d5;}' +
+        '.bg-cyan {background-color: ' + withReducedSaturation('#00BCD4') + ';color: #eee8d5;}' +
+        '.bg-teal {background-color: ' + withReducedSaturation('#009688') + ';color: #eee8d5;}' +
+        '.bg-green {background-color: ' + withReducedSaturation('#4CAF50') + ';color: #eee8d5;}' +
+        '.bg-light-green {background-color: ' + withReducedSaturation('#8BC34A') + ';color: #eee8d5;}' +
+        '.bg-lime {background-color: ' + withReducedSaturation('#CDDC39') + ';color: #eee8d5;}' +
+        '.bg-yellow {background-color: ' + withReducedSaturation('#ffe821') + ';color: #eee8d5;}' +
+        '.bg-amber, {background-color: ' + withReducedSaturation('#FFC107') + ';color: #eee8d5;}' +
+        '.badge-warning {background-color: ' + withReducedSaturation('#f6c23e') + ';color: #eee8d5;}' +
+        '.bg-orange {background-color: ' + withReducedSaturation('#FF9800') + ';color: #eee8d5;}' +
+        '.bg-deep-orange {background-color: ' + withReducedSaturation('#FF5722') + ';color: #eee8d5;}' +
+        '.badge-danger {background-color: ' + withReducedSaturation('#e74a3b') + ';color: #eee8d5;}' +
+        '.bg-brown {background-color: ' + withReducedSaturation('#795548') + ';color: #eee8d5;}' +
+        '.bg-grey {background-color: ' + withReducedSaturation('#9E9E9E') + ';color: #eee8d5;}' +
+        '.bg-blue-grey {background-color: ' + withReducedSaturation('#607D8B') + ';color: #eee8d5;}' +
+        '.bg-black {background-color: ' + withReducedSaturation('#555555') + ';color: #eee8d5;}' +
+        '.bg-plan {background-color: ' + withReducedSaturation('#368F17') + ';color: #eee8d5;}' +
+        '.badge-success {background-color: ' + withReducedSaturation('#1cc88a') + ';color: #eee8d5;}' +
+        '.bg-night {background-color: #44475a;color: #eee8d5;}' +
+        '.col-red {color: ' + withReducedSaturation('#F44336') + ';}' +
+        '.col-pink {color: ' + withReducedSaturation('#E91E63') + ';}' +
+        '.col-purple {color: ' + withReducedSaturation('#9C27B0') + ';}' +
+        '.col-deep-purple {color: ' + withReducedSaturation('#673AB7') + ';}' +
+        '.col-indigo {color: ' + withReducedSaturation('#3F51B5') + ';}' +
+        '.col-blue {color: ' + withReducedSaturation('#2196F3') + ';}' +
+        '.col-light-blue {color: ' + withReducedSaturation('#03A9F4') + ';}' +
+        '.col-cyan {color: ' + withReducedSaturation('#00BCD4') + ';}' +
+        '.col-teal {color: ' + withReducedSaturation('#009688') + ';}' +
+        '.col-green {color: ' + withReducedSaturation('#4CAF50') + ';}' +
+        '.col-light-green {color: ' + withReducedSaturation('#8BC34A') + ';}' +
+        '.col-lime {color: ' + withReducedSaturation('#CDDC39') + ';}' +
+        '.col-yellow {color: ' + withReducedSaturation('#ffe821') + ';}' +
+        '.col-amber, {color: ' + withReducedSaturation('#FFC107') + ';}' +
+        '.text-warning {color: ' + withReducedSaturation('#f6c23e') + ';}' +
+        '.col-orange {color: ' + withReducedSaturation('#FF9800') + ';}' +
+        '.col-deep-orange {color: ' + withReducedSaturation('#FF5722') + ';}' +
+        '.text-danger {color: ' + withReducedSaturation('#e74a3b') + ';}' +
+        '.col-brown {color: ' + withReducedSaturation('#795548') + ';}' +
+        '.col-grey {color: ' + withReducedSaturation('#9E9E9E') + ';}' +
+        '.col-blue-grey {color: ' + withReducedSaturation('#607D8B') + ';}' +
+        '.col-plan {color: ' + withReducedSaturation('#368F17') + ';}' +
+        '.text-success {color: ' + withReducedSaturation('#1cc88a') + ';}';
 
     function changeNightModeCSS() {
         if (nightMode) {
@@ -119,7 +171,7 @@
                 '.collapse-item:hover,.nav-link.active {background-color: #606270 !important;}' +
                 '.nav-tabs .nav-link.active {background-color: #44475a !important;border-color:#6272a4 #6272a4 #44475a !important;}' +
                 '.fc-today {background:#646e8c !important}' +
-                nightModeColors() +
+                nightModeColors +
                 '</style>');
             // Turn bright tables to dark
             $('.table').addClass('table-dark');
