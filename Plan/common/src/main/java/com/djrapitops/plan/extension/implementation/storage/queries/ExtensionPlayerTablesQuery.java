@@ -102,7 +102,7 @@ public class ExtensionPlayerTablesQuery implements Query<Map<Integer, ExtensionD
 
     private Object[] extractTableRow(ResultSet set) throws SQLException {
         List<Object> row = new ArrayList<>();
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 1; i <= 4; i++) {
             String columnName = "col_" + i + "_value"; // See ExtensionPlayerTableValueTable.VALUE_1
             String value = set.getString(columnName);
             if (value == null) {
