@@ -24,6 +24,9 @@ import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.GenericLang;
+import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
@@ -47,17 +50,20 @@ public class WorldAliasSettings {
 
     private final Lazy<PlanConfig> config;
     private final Supplier<Formatter<Double>> percentageFormatter;
+    private final Locale locale;
     private final Processing processing;
     private final ErrorHandler errorHandler;
 
     @Inject
     public WorldAliasSettings(
             Lazy<PlanConfig> config,
+            Locale locale,
             Lazy<Formatters> formatters,
             Processing processing,
             ErrorHandler errorHandler
     ) {
         this.config = config;
+        this.locale = locale;
         this.processing = processing;
         this.errorHandler = errorHandler;
 
@@ -153,13 +159,13 @@ public class WorldAliasSettings {
         ConfigNode aliases = getAliasSection();
 
         if (!session.supports(SessionKeys.WORLD_TIMES)) {
-            return "No World Time Data";
+            return locale.get(HtmlLang.UNIT_NO_DATA).toString();
         }
         WorldTimes worldTimes = session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes());
         if (!session.supports(SessionKeys.END)) {
             return worldTimes.getCurrentWorld()
                     .map(currentWorld -> "Current: " + (aliases.contains(currentWorld) ? aliases.getString(currentWorld) : currentWorld))
-                    .orElse("Current: Unavailable");
+                    .orElse("Current: " + locale.get(GenericLang.UNAVAILABLE));
         }
 
         Map<String, Long> playtimePerAlias = getPlaytimePerAlias(worldTimes);

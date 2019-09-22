@@ -341,3 +341,4 @@ WebServer FAIL - Port Bind                      || WebServer was not initialized
 WebServer FAIL - SSL Context                    || WebServer: SSL Context Initialization Failed.
 WebServer FAIL - Store Load                     || WebServer: SSL Certificate loading Failed.
 Yesterday                                       || 'Yesterday'
+HTML - LABEL_NAME                               || Name

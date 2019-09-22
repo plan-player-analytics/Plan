@@ -16,11 +16,14 @@
  */
 package com.djrapitops.plan.delivery.rendering.json.graphs.pie;
 
+import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
 import com.djrapitops.plan.gathering.domain.GMTimes;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 
@@ -38,24 +41,27 @@ import java.util.UUID;
 public class PieGraphFactory {
 
     private final PlanConfig config;
+    private final Locale locale;
     private final Theme theme;
 
     @Inject
     public PieGraphFactory(
             PlanConfig config,
+            Locale locale,
             Theme theme
     ) {
         this.config = config;
+        this.locale = locale;
         this.theme = theme;
     }
 
     public Pie activityPie(Map<String, Integer> activityData) {
         String[] colors = theme.getPieColors(ThemeVal.GRAPH_ACTIVITY_PIE);
-        return new ActivityPie(activityData, colors);
+        return new ActivityPie(activityData, colors, ActivityIndex.getGroups(locale));
     }
 
     public Pie serverPreferencePie(Map<UUID, String> serverNames, Map<UUID, WorldTimes> serverWorldTimes) {
-        return new ServerPreferencePie(serverNames, serverWorldTimes);
+        return new ServerPreferencePie(serverNames, serverWorldTimes, locale.get(GenericLang.UNKNOWN).toString());
     }
 
     public Pie serverPreferencePie(Map<String, Long> serverPlaytimes) {

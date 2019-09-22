@@ -25,6 +25,7 @@ public enum GenericLang implements Lang {
     YES("Positive", "Yes"),
     NO("Negative", "No"),
     UNKNOWN("Unknown", "Unknown"),
+    UNAVAILABLE("Unavailable", "Unavailable"),
     TODAY("Today", "'Today'"),
     YESTERDAY("Yesterday", "'Yesterday'");
 

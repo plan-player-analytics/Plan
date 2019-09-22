@@ -34,6 +34,8 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
@@ -54,6 +56,7 @@ import java.util.concurrent.TimeUnit;
 public class JSONFactory {
 
     private final PlanConfig config;
+    private final Locale locale;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final Graphs graphs;
@@ -62,12 +65,14 @@ public class JSONFactory {
     @Inject
     public JSONFactory(
             PlanConfig config,
+            Locale locale,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             Graphs graphs,
             Formatters formatters
     ) {
         this.config = config;
+        this.locale = locale;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.graphs = graphs;
@@ -85,7 +90,7 @@ public class JSONFactory {
                 database.query(new ServerTablePlayersQuery(serverUUID, System.currentTimeMillis(), playtimeThreshold, xMostRecentPlayers)),
                 database.query(new ExtensionServerPlayerDataTableQuery(serverUUID, xMostRecentPlayers)),
                 openPlayerLinksInNewTab,
-                formatters
+                formatters, locale
         ).toJSONString();
     }
 
@@ -100,7 +105,7 @@ public class JSONFactory {
                 database.query(new NetworkTablePlayersQuery(System.currentTimeMillis(), playtimeThreshold, xMostRecentPlayers)),
                 Collections.emptyMap(),
                 openPlayerLinksInNewTab,
-                formatters
+                formatters, locale
         ).toJSONString();
     }
 
@@ -200,7 +205,7 @@ public class JSONFactory {
                     server.put("unique_players", uniquePlayerCounts.getOrDefault(serverUUID, 0));
                     TPSMutator tpsWeek = tpsMonth.filterDataBetween(weekAgo, now);
                     double averageTPS = tpsWeek.averageTPS();
-                    server.put("avg_tps", averageTPS != -1 ? decimals.apply(averageTPS) : "No data");
+                    server.put("avg_tps", averageTPS != -1 ? decimals.apply(averageTPS) : locale.get(HtmlLang.UNIT_NO_DATA).toString());
                     server.put("low_tps_spikes", tpsWeek.lowTpsSpikeCount(config.getNumber(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
                     server.put("downtime", timeAmount.apply(tpsWeek.serverDownTime()));
 
@@ -208,7 +213,7 @@ public class JSONFactory {
                     server.put("online", online.isPresent() ?
                             online.get().getDate() >= now - TimeUnit.MINUTES.toMillis(3L) ?
                                     online.get().getPlayers() : "Possibly offline"
-                            : "No data");
+                            : locale.get(HtmlLang.UNIT_NO_DATA).toString());
                     servers.add(server);
                 });
         return servers;

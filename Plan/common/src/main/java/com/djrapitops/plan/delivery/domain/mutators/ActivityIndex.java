@@ -20,6 +20,8 @@ import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.List;
@@ -86,8 +88,27 @@ public class ActivityIndex {
         this.date = date;
     }
 
-    public static String[] getGroups() {
-        return new String[]{"Very Active", "Active", "Regular", "Irregular", "Inactive"};
+    public static String[] getDefaultGroups() {
+        return getGroups(null);
+    }
+
+    public static String[] getGroups(Locale locale) {
+        if (locale == null) {
+            return new String[]{
+                    HtmlLang.INDEX_VERY_ACTIVE.getDefault(),
+                    HtmlLang.INDEX_ACTIVE.getDefault(),
+                    HtmlLang.INDEX_REGULAR.getDefault(),
+                    HtmlLang.INDEX_IRREGULAR.getDefault(),
+                    HtmlLang.INDEX_INACTIVE.getDefault()
+            };
+        }
+        return new String[]{
+                locale.get(HtmlLang.INDEX_VERY_ACTIVE).toString(),
+                locale.get(HtmlLang.INDEX_ACTIVE).toString(),
+                locale.get(HtmlLang.INDEX_REGULAR).toString(),
+                locale.get(HtmlLang.INDEX_IRREGULAR).toString(),
+                locale.get(HtmlLang.INDEX_INACTIVE).toString()
+        };
     }
 
     private double calculate(DataContainer container) {

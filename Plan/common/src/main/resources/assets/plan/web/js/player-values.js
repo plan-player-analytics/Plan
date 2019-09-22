@@ -154,7 +154,7 @@ function loadServerAccordion(json, error) {
     var servers = json.servers;
 
     if (!servers.length) {
-        serverTable.append('<tr><td>No Sessions</td><td>-</td><td>-</td><td>-</td></tr>')
+        serverTable.append('<tr><td>No Data</td><td>-</td><td>-</td><td>-</td></tr>')
     }
 
     var serversHtml = '';

@@ -177,6 +177,7 @@ public enum HtmlLang implements Lang {
     LABEL_REGISTERED("Registered"),
     TITLE_TITLE_PLAYER_PUNCHCARD("Punchcard"),
     TITLE_ALL_TIME("All Time"),
+    LABEL_NAME("Name"),
     // ----------------------------------
     // OLD
     // ----------------------------------

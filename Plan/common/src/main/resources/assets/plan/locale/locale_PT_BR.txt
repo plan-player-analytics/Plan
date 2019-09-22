@@ -341,3 +341,4 @@ WebServer FAIL - Port Bind                      || O servidor web não foi inici
 WebServer FAIL - SSL Context                    || Servidor Web: Falha ao inicializar certificado SSL.
 WebServer FAIL - Store Load                     || Servidor Web: Falha ao carregar certificado SSL.
 Yesterday                                       || 'Ontem'
+HTML - LABEL_NAME                               || Nome

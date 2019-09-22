@@ -30,22 +30,22 @@ import java.util.Map;
  */
 public class ActivityPie extends Pie {
 
-    ActivityPie(Map<String, Integer> activityData, String[] colors) {
-        super(turnToSlices(activityData, colors));
+    ActivityPie(Map<String, Integer> activityData, String[] colors, String[] groups) {
+        super(turnToSlices(activityData, colors, groups));
     }
 
-    private static List<PieSlice> turnToSlices(Map<String, Integer> activityData, String[] colors) {
+    private static List<PieSlice> turnToSlices(Map<String, Integer> activityData, String[] colors, String[] groups) {
         int maxCol = colors.length;
+        String[] defaultGroups = ActivityIndex.getDefaultGroups();
 
         List<PieSlice> slices = new ArrayList<>();
         int i = 0;
-        for (String group : ActivityIndex.getGroups()) {
-            int num = activityData.getOrDefault(group, 0);
+        for (int j = 0; j < groups.length; j++) {
+            int num = activityData.getOrDefault(defaultGroups[j], 0);
 
-            slices.add(new PieSlice(group, num, colors[i % maxCol], false));
+            slices.add(new PieSlice(groups[j], num, colors[i % maxCol], false));
             i++;
         }
-
         return slices;
     }
 }

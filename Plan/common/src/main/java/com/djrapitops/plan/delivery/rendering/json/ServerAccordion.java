@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.html.structure;
+package com.djrapitops.plan.delivery.rendering.json;
 
 import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.container.PerServerContainer;
@@ -30,7 +30,7 @@ import com.djrapitops.plan.gathering.domain.WorldTimes;
 import java.util.*;
 
 /**
- * HTML utility class for creating a Server Accordion.
+ * Utility for creating JSON for Server Accordion
  *
  * @author Rsl1122
  */
@@ -38,6 +38,7 @@ public class ServerAccordion {
 
     private final Map<UUID, String> serverNames;
     private final PerServerContainer perServer;
+    private final String unknown;
 
     private final Graphs graphs;
     private final Formatter<Long> year;
@@ -47,7 +48,8 @@ public class ServerAccordion {
             PlayerContainer container, Map<UUID, String> serverNames,
             Graphs graphs,
             Formatter<Long> year,
-            Formatter<Long> timeAmount
+            Formatter<Long> timeAmount,
+            String unknown
     ) {
         this.graphs = graphs;
         this.year = year;
@@ -56,6 +58,7 @@ public class ServerAccordion {
         this.serverNames = serverNames;
         perServer = container.getValue(PlayerKeys.PER_SERVER)
                 .orElse(new PerServerContainer());
+        this.unknown = unknown;
     }
 
     public List<Map<String, Object>> asMaps() {
@@ -66,7 +69,7 @@ public class ServerAccordion {
             DataContainer perServer = entry.getValue();
             Map<String, Object> server = new HashMap<>();
 
-            String serverName = serverNames.getOrDefault(serverUUID, "Unknown");
+            String serverName = serverNames.getOrDefault(serverUUID, unknown);
             WorldTimes worldTimes = perServer.getValue(PerServerKeys.WORLD_TIMES).orElse(new WorldTimes());
             SessionsMutator sessionsMutator = SessionsMutator.forContainer(perServer);
 

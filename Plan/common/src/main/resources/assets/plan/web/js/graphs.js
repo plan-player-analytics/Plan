@@ -57,7 +57,7 @@ function diskChart(id, series) {
         yAxis: {
             labels: {
                 formatter: function () {
-                    return this.value + ' Mb';
+                    return this.value + ' MB';
                 }
             },
             softMax: 2,
@@ -317,7 +317,7 @@ function resourceChart(id, cpuSeries, ramSeries, playersOnlineSeries) {
         }, {
             labels: {
                 formatter: function () {
-                    return this.value + ' Mb';
+                    return this.value + ' MB';
                 }
             }
         }],

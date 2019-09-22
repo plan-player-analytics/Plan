@@ -22,6 +22,9 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.GenericLang;
+import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
@@ -43,6 +46,7 @@ import java.util.concurrent.TimeUnit;
 public class PerformanceJSONParser implements ServerTabJSONParser<Map<String, Object>> {
 
     private final PlanConfig config;
+    private final Locale locale;
     private final DBSystem dbSystem;
 
     private final Formatter<Double> decimals;
@@ -52,10 +56,12 @@ public class PerformanceJSONParser implements ServerTabJSONParser<Map<String, Ob
     @Inject
     public PerformanceJSONParser(
             PlanConfig config,
+            Locale locale,
             DBSystem dbSystem,
             Formatters formatters
     ) {
         this.config = config;
+        this.locale = locale;
         this.dbSystem = dbSystem;
 
         decimals = formatters.decimals();
@@ -98,9 +104,9 @@ public class PerformanceJSONParser implements ServerTabJSONParser<Map<String, Ob
         numbers.put("tps_30d", format(tpsDataMonth.averageTPS()));
         numbers.put("tps_7d", format(tpsDataWeek.averageTPS()));
         numbers.put("tps_24h", format(tpsDataDay.averageTPS()));
-        numbers.put("cpu_30d", percentageFormatter.apply(tpsDataMonth.averageCPU() / 100.0));
-        numbers.put("cpu_7d", percentageFormatter.apply(tpsDataWeek.averageCPU() / 100.0));
-        numbers.put("cpu_24h", percentageFormatter.apply(tpsDataDay.averageCPU() / 100.0));
+        numbers.put("cpu_30d", formatPerc(tpsDataMonth.averageCPU()));
+        numbers.put("cpu_7d", formatPerc(tpsDataWeek.averageCPU()));
+        numbers.put("cpu_24h", formatPerc(tpsDataDay.averageCPU()));
         numbers.put("ram_30d", format(tpsDataMonth.averageRAM(), " MB"));
         numbers.put("ram_7d", format(tpsDataWeek.averageRAM(), " MB"));
         numbers.put("ram_24h", format(tpsDataDay.averageRAM(), " MB"));
@@ -111,22 +117,26 @@ public class PerformanceJSONParser implements ServerTabJSONParser<Map<String, Ob
         numbers.put("chunks_7d", format((int) tpsDataWeek.averageChunks()));
         numbers.put("chunks_24h", format((int) tpsDataDay.averageChunks()));
 
-        numbers.put("max_disk_30d", format(tpsDataMonth.maxFreeDisk(), " Mb"));
-        numbers.put("max_disk_7d", format(tpsDataWeek.maxFreeDisk(), " Mb"));
-        numbers.put("max_disk_24h", format(tpsDataDay.maxFreeDisk(), " Mb"));
-        numbers.put("min_disk_30d", format(tpsDataMonth.minFreeDisk(), " Mb"));
-        numbers.put("min_disk_7d", format(tpsDataWeek.minFreeDisk(), " Mb"));
-        numbers.put("min_disk_24h", format(tpsDataDay.minFreeDisk(), " Mb"));
+        numbers.put("max_disk_30d", format(tpsDataMonth.maxFreeDisk(), " MB"));
+        numbers.put("max_disk_7d", format(tpsDataWeek.maxFreeDisk(), " MB"));
+        numbers.put("max_disk_24h", format(tpsDataDay.maxFreeDisk(), " MB"));
+        numbers.put("min_disk_30d", format(tpsDataMonth.minFreeDisk(), " MB"));
+        numbers.put("min_disk_7d", format(tpsDataWeek.minFreeDisk(), " MB"));
+        numbers.put("min_disk_24h", format(tpsDataDay.minFreeDisk(), " MB"));
 
         return numbers;
     }
 
     private String format(double value) {
-        return value != -1 ? decimals.apply(value) : "Unavailable";
+        return value != -1 ? decimals.apply(value) : locale.get(GenericLang.UNAVAILABLE).toString();
     }
 
     private String format(double value, String suffix) {
-        return value != -1 ? decimals.apply(value) + suffix : "Unavailable";
+        return value != -1 ? decimals.apply(value) + suffix : locale.get(GenericLang.UNAVAILABLE).toString();
+    }
+
+    private String formatPerc(double value) {
+        return value != -1 ? percentageFormatter.apply(value / 100.0) : locale.get(GenericLang.UNAVAILABLE).toString();
     }
 
     private Map<String, Object> createInsightsMap(List<TPS> tpsData) {
@@ -140,7 +150,7 @@ public class PerformanceJSONParser implements ServerTabJSONParser<Map<String, Ob
         double averageCPU = lowTPS.averageCPU();
         double averageEntities = lowTPS.averageEntities();
         double averageChunks = lowTPS.averageChunks();
-        insights.put("low_tps_players", avgPlayersOnline != -1 ? decimals.apply(avgPlayersOnline) : "No low tps spikes");
+        insights.put("low_tps_players", avgPlayersOnline != -1 ? decimals.apply(avgPlayersOnline) : locale.get(HtmlLang.TEXT_NO_LOW_TPS).toString());
         insights.put("low_tps_cpu", averageCPU != -1 ? decimals.apply(averageCPU) : "-");
         insights.put("low_tps_entities", averageEntities != -1 ? decimals.apply(averageEntities) : "-");
         insights.put("low_tps_chunks", averageChunks != -1 ? decimals.apply(averageChunks) : "-");

@@ -25,22 +25,22 @@ import java.util.UUID;
 
 public class ServerPreferencePie extends Pie {
 
-    ServerPreferencePie(Map<UUID, String> serverNames, Map<UUID, WorldTimes> serverWorldTimes) {
-        super(turnToSlices(serverNames, serverWorldTimes));
+    ServerPreferencePie(Map<UUID, String> serverNames, Map<UUID, WorldTimes> serverWorldTimes, String unknown) {
+        super(turnToSlices(serverNames, serverWorldTimes, unknown));
     }
 
     ServerPreferencePie(Map<String, Long> serverPlaytimes) {
         super(turnToSlices(serverPlaytimes));
     }
 
-    private static List<PieSlice> turnToSlices(Map<UUID, String> serverNames, Map<UUID, WorldTimes> serverWorldTimes) {
+    private static List<PieSlice> turnToSlices(Map<UUID, String> serverNames, Map<UUID, WorldTimes> serverWorldTimes, String unknown) {
         List<PieSlice> slices = new ArrayList<>();
 
         for (Map.Entry<UUID, WorldTimes> server : serverWorldTimes.entrySet()) {
             UUID serverUUID = server.getKey();
             WorldTimes worldTimes = server.getValue();
 
-            String serverName = serverNames.getOrDefault(serverUUID, "Unknown");
+            String serverName = serverNames.getOrDefault(serverUUID, unknown);
             long num = worldTimes.getTotal();
 
             slices.add(new PieSlice(serverName, num));

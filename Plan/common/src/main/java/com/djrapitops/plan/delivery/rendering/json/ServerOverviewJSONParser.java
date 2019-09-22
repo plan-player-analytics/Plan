@@ -26,6 +26,8 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.ServerAggregateQueries;
@@ -49,24 +51,27 @@ import java.util.concurrent.TimeUnit;
 public class ServerOverviewJSONParser implements ServerTabJSONParser<Map<String, Object>> {
 
     private final Formatter<Long> day;
-    private PlanConfig config;
-    private DBSystem dbSystem;
-    private ServerInfo serverInfo;
+    private final PlanConfig config;
+    private final Locale locale;
+    private final DBSystem dbSystem;
+    private final ServerInfo serverInfo;
 
-    private Formatter<Long> timeAmount;
-    private Formatter<Double> decimals;
-    private Formatter<Double> percentage;
-    private Formatter<DateHolder> year;
+    private final Formatter<Long> timeAmount;
+    private final Formatter<Double> decimals;
+    private final Formatter<Double> percentage;
+    private final Formatter<DateHolder> year;
     private final TimeZone timeZone;
 
     @Inject
     public ServerOverviewJSONParser(
             PlanConfig config,
+            Locale locale,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             Formatters formatters
     ) {
         this.config = config;
+        this.locale = locale;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
 
@@ -105,7 +110,7 @@ public class ServerOverviewJSONParser implements ServerTabJSONParser<Map<String,
         sevenDays.put("new_players_retention_perc", percentage.apply(retentionPerc7d));
         TPSMutator tpsMutator = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(weekAgo, now, serverUUID)));
         double averageTPS = tpsMutator.averageTPS();
-        sevenDays.put("average_tps", averageTPS != -1 ? decimals.apply(averageTPS) : "Unavailable");
+        sevenDays.put("average_tps", averageTPS != -1 ? decimals.apply(averageTPS) : locale.get(GenericLang.UNAVAILABLE).toString());
         sevenDays.put("low_tps_spikes", tpsMutator.lowTpsSpikeCount(config.getNumber(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
         sevenDays.put("downtime", timeAmount.apply(tpsMutator.serverDownTime()));
 
@@ -146,7 +151,7 @@ public class ServerOverviewJSONParser implements ServerTabJSONParser<Map<String,
                 ? serverInfo.getServerProperties().getOnlinePlayers()
                 : db.query(TPSQueries.fetchLatestTPSEntryForServer(serverUUID))
                 .map(TPS::getPlayers).map(Object::toString)
-                .orElse("Unknown");
+                .orElse(locale.get(GenericLang.UNKNOWN).toString());
     }
 
     private Map<String, Object> createWeeksMap(UUID serverUUID) {

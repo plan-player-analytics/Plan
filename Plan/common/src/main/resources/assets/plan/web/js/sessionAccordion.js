@@ -9,7 +9,7 @@ function loadSessionAccordion(json, error) {
     var sessions = json.sessions;
 
     if (!sessions.length) {
-        sessionTable.append('<tr><td>No Sessions</td><td>-</td><td>-</td><td>-</td></tr>');
+        sessionTable.append('<tr><td>No Data</td><td>-</td><td>-</td><td>-</td></tr>');
         return;
     }
 

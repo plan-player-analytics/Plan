@@ -9,7 +9,7 @@ function loadPingTable(json, error) {
     var countries = json;
 
     if (!countries.length) {
-        pingTable.append('<tr><td>No Ping Data</td><td>-</td><td>-</td><td>-</td></tr>');
+        pingTable.append('<tr><td>No Data</td><td>-</td><td>-</td><td>-</td></tr>');
         return;
     }
 

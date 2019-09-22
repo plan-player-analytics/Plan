@@ -341,3 +341,4 @@ WebServer FAIL - Port Bind                      || 未成功初始化网页服�
 WebServer FAIL - SSL Context                    || 网页服务器：SSL 环境初始化失败。
 WebServer FAIL - Store Load                     || 网页服务器：SSL 证书载入失败。
 Yesterday                                       || '昨天'
+HTML - LABEL_NAME                               || 名称
