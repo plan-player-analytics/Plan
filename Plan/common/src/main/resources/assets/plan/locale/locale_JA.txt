@@ -342,3 +342,5 @@ WebServer FAIL - SSL Context                    || Webサーバー: SSLコンテ
 WebServer FAIL - Store Load                     || Webサーバー: SSL証明書のロードに失敗しました
 Yesterday                                       || '昨日'
 HTML - LABEL_NAME                               || 名前
+HTML - SESSION                                  || オンライン
+HTML - KILLED                                   || 殺した人

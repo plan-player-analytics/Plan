@@ -342,3 +342,5 @@ WebServer FAIL - SSL Context                    || WebServer: SSL Context Initia
 WebServer FAIL - Store Load                     || WebServer: SSL Certificate loading Failed.
 Yesterday                                       || 'Yesterday'
 HTML - LABEL_NAME                               || Name
+HTML - SESSION                                  || Session
+HTML - KILLED                                   || Killed

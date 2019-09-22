@@ -342,3 +342,5 @@ WebServer FAIL - SSL Context                    || Servidor Web: Falha ao inicia
 WebServer FAIL - Store Load                     || Servidor Web: Falha ao carregar certificado SSL.
 Yesterday                                       || 'Ontem'
 HTML - LABEL_NAME                               || Nome
+HTML - SESSION                                  || Sessão
+HTML - KILLED                                   || Assassinou

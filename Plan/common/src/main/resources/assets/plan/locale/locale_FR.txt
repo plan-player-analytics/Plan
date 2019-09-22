@@ -341,3 +341,5 @@ WebServer FAIL - Port Bind                      || Le Serveur Web n'a pas été 
 WebServer FAIL - SSL Context                    || Serveur Web : Échec d'initialisation du contexte SSL.
 WebServer FAIL - Store Load                     || Serveur Web : Échec du chargement du certificat SSL.
 Yesterday                                       || 'Hier'
+HTML - SESSION                                  || Session
+HTML - KILLED                                   || Tué

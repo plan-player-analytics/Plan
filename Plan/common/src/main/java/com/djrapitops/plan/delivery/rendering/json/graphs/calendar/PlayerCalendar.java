@@ -22,6 +22,8 @@ import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 
@@ -39,6 +41,7 @@ public class PlayerCalendar {
     private final Formatter<Long> year;
     private final Formatter<Long> iso8601Formatter;
     private final Theme theme;
+    private final Locale locale;
     private final TimeZone timeZone;
 
     private final List<Session> allSessions;
@@ -50,6 +53,7 @@ public class PlayerCalendar {
             Formatter<Long> year,
             Formatter<Long> iso8601Formatter,
             Theme theme,
+            Locale locale,
             TimeZone timeZone
     ) {
         this.allSessions = container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>());
@@ -59,6 +63,7 @@ public class PlayerCalendar {
         this.year = year;
         this.iso8601Formatter = iso8601Formatter;
         this.theme = theme;
+        this.locale = locale;
         this.timeZone = timeZone;
     }
 
@@ -66,7 +71,7 @@ public class PlayerCalendar {
         List<CalendarEntry> entries = new ArrayList<>();
 
         entries.add(CalendarEntry
-                .of("Registered: " + year.apply(registered),
+                .of(locale.getString(HtmlLang.LABEL_REGISTERED) + ": " + year.apply(registered),
                         registered
                 ).withColor(theme.getValue(ThemeVal.LIGHT_GREEN))
         );
@@ -81,10 +86,10 @@ public class PlayerCalendar {
             long playtime = sessions.stream().mapToLong(Session::getLength).sum();
 
             entries.add(CalendarEntry
-                    .of("Playtime: " + timeAmount.apply(playtime), day)
+                    .of(locale.getString(HtmlLang.LABEL_PLAYTIME) + ": " + timeAmount.apply(playtime), day)
                     .withColor(theme.getValue(ThemeVal.GREEN))
             );
-            entries.add(CalendarEntry.of("Sessions: " + sessionCount, day));
+            entries.add(CalendarEntry.of(locale.getString(HtmlLang.SIDE_SESSIONS) + ": " + sessionCount, day));
         }
 
         long fiveMinutes = TimeUnit.MINUTES.toMillis(5L);
@@ -95,7 +100,7 @@ public class PlayerCalendar {
             Long end = session.getValue(SessionKeys.END).orElse(System.currentTimeMillis());
 
             entries.add(CalendarEntry
-                    .of("Session: " + length,
+                    .of(locale.getString(HtmlLang.SESSION) + ": " + length,
                             start + timeZone.getOffset(start))
                     .withEnd(end + timeZone.getOffset(end))
             );
@@ -104,7 +109,7 @@ public class PlayerCalendar {
                 long time = kill.getDate();
                 String victim = kill.getVictimName().orElse(kill.getVictim().toString());
                 entries.add(CalendarEntry
-                        .of("Killed: " + victim, time)
+                        .of(locale.getString(HtmlLang.KILLED) + ": " + victim, time)
                         .withEnd(time + fiveMinutes)
                         .withColor(theme.getValue(ThemeVal.RED))
                 );

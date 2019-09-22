@@ -342,3 +342,5 @@ WebServer FAIL - SSL Context                    || Web Palvelin: SSL Kontekstin 
 WebServer FAIL - Store Load                     || Web Palvelin: SSL Sertifikaatin lataus ei onnistunut.
 Yesterday                                       || 'Eilen'
 HTML - LABEL_NAME                               || Nimi
+HTML - SESSION                                  || Istunto
+HTML - KILLED                                   || Tappanut

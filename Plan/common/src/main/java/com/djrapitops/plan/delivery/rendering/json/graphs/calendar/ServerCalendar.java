@@ -17,6 +17,8 @@
 package com.djrapitops.plan.delivery.rendering.json.graphs.calendar;
 
 import com.djrapitops.plan.delivery.formatting.Formatter;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 
@@ -40,6 +42,7 @@ public class ServerCalendar {
     private final Formatter<Long> iso8601Formatter;
     private final Formatter<Long> timeAmountFormatter;
     private final Theme theme;
+    private final Locale locale;
     private final TimeZone timeZone;
 
     ServerCalendar(
@@ -50,6 +53,7 @@ public class ServerCalendar {
             Formatter<Long> iso8601Formatter,
             Formatter<Long> timeAmountFormatter,
             Theme theme,
+            Locale locale,
             TimeZone timeZone
     ) {
         this.uniquePerDay = uniquePerDay;
@@ -59,6 +63,7 @@ public class ServerCalendar {
         this.sessionsPerDay = sessionsPerDay;
         this.playtimePerDay = playtimePerDay;
         this.theme = theme;
+        this.locale = locale;
         this.timeZone = timeZone;
     }
 
@@ -89,7 +94,7 @@ public class ServerCalendar {
             Long key = entry.getKey();
             String day = iso8601Formatter.apply(key - timeZone.getOffset(key));// Remove the timezone offset since Calendar uses UTC
 
-            series.append(",{\"title\": \"New: ").append(newPlayers)
+            series.append(",{\"title\": \"").append(locale.get(HtmlLang.NEW_CALENDAR)).append(" ").append(newPlayers)
                     .append("\",\"start\":\"").append(day)
                     .append("\",\"color\": \"").append(theme.getValue(ThemeVal.LIGHT_GREEN)).append('"')
                     .append("}");
@@ -106,7 +111,7 @@ public class ServerCalendar {
             Long key = entry.getKey();
             String day = iso8601Formatter.apply(key - timeZone.getOffset(key));// Remove the timezone offset since Calendar uses UTC
 
-            series.append(",{\"title\": \"Unique: ").append(uniquePlayers)
+            series.append(",{\"title\": \"").append(locale.get(HtmlLang.UNIQUE_CALENDAR)).append(" ").append(uniquePlayers)
                     .append("\",\"start\":\"").append(day)
                     .append("\"}");
 
@@ -122,7 +127,7 @@ public class ServerCalendar {
             Long key = entry.getKey();
             String day = iso8601Formatter.apply(key - timeZone.getOffset(key));// Remove the timezone offset since Calendar uses UTC
 
-            series.append(",{\"title\": \"Playtime: ").append(timeAmountFormatter.apply(playtime))
+            series.append(",{\"title\": \"").append(locale.get(HtmlLang.LABEL_PLAYTIME)).append(": ").append(timeAmountFormatter.apply(playtime))
                     .append("\",\"start\":\"").append(day)
                     .append("\",\"color\": \"").append(theme.getValue(ThemeVal.GREEN)).append('"')
                     .append("}");
@@ -138,7 +143,7 @@ public class ServerCalendar {
             Long key = entry.getKey();
             String day = iso8601Formatter.apply(key - timeZone.getOffset(key));// Remove the timezone offset since Calendar uses UTC
 
-            series.append(",{\"title\": \"Sessions: ").append(sessionCount)
+            series.append(",{\"title\": \"").append(locale.get(HtmlLang.SIDE_SESSIONS)).append(": ").append(sessionCount)
                     .append("\",\"start\":\"").append(day)
                     .append("\",\"color\": \"").append(theme.getValue(ThemeVal.TEAL)).append('"')
                     .append("}");

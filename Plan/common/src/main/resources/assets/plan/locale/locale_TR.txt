@@ -341,3 +341,5 @@ WebServer FAIL - Port Bind                      || Web Sunucusu başarıyla baş
 WebServer FAIL - SSL Context                    || WebServer: SSL İçeriği Başlatma Başarısız Oldu.
 WebServer FAIL - Store Load                     || WebServer: SSL Sertifikası yüklenirken sorun oluştu.
 Yesterday                                       || 'Dün'
+HTML - SESSION                                  || Oturum
+HTML - KILLED                                   || Öldürülen
