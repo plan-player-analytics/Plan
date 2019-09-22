@@ -12110,40 +12110,21 @@ a:focus {
 
 .chart-area {
     position: relative;
-    height: 12rem;
+    height: 22rem;
     width: 100%;
     padding: 0.5rem;
     text-align: center;
 }
-
-@media (min-width: 768px) {
-    .chart-area {
-        height: 22rem;
-    }
-}
-
 .chart-bar {
     position: relative;
-    height: 10rem;
+    height: 20rem;
     width: 100%;
-}
-
-@media (min-width: 768px) {
-    .chart-bar {
-        height: 20rem;
-    }
 }
 
 .chart-pie {
     position: relative;
-    height: 15rem;
+    height: calc(20rem - 43px);
     width: 100%;
-}
-
-@media (min-width: 768px) {
-    .chart-pie {
-        height: calc(20rem - 43px) !important;
-    }
 }
 
 .bg-login-image {
