@@ -130,6 +130,25 @@ function lineChart(id, series) {
     }));
 }
 
+function dayByDay(id, series) {
+    graphs.push(Highcharts.stockChart(id, {
+        rangeSelector: {
+            selected: 2,
+            buttons: linegraphButtons
+        },
+        yAxis: {
+            softMax: 2,
+            softMin: 0
+        },
+        title: {text: ''},
+        legend: {
+            enabled: true
+        },
+        time: {timezoneOffset: 0},
+        series: series
+    }));
+}
+
 function onlineActivityCalendar(id, events, firstDay) {
     $(id).fullCalendar({
         eventColor: '#2196F3',

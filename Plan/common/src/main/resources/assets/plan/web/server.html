@@ -1547,7 +1547,7 @@
                     name: s.name.newPlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
                     data: data.newPlayers, color: v.colors.newPlayers
                 };
-                lineChart('uniqueChart', [uniquePlayers, newPlayers]);
+                dayByDay('uniqueChart', [uniquePlayers, newPlayers]);
             } else if (error) {
                 $('#uniqueChart').text("Failed to load graph data: " + error)
             }

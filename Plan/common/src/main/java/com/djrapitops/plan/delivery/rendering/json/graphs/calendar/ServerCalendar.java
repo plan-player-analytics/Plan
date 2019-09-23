@@ -25,7 +25,6 @@ import com.djrapitops.plan.settings.theme.ThemeVal;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.SortedMap;
-import java.util.TimeZone;
 
 /**
  * Utility for creating FullCalendar calendar event array on Player page.
@@ -43,7 +42,6 @@ public class ServerCalendar {
     private final Formatter<Long> timeAmountFormatter;
     private final Theme theme;
     private final Locale locale;
-    private final TimeZone timeZone;
 
     ServerCalendar(
             SortedMap<Long, Integer> uniquePerDay,
@@ -53,8 +51,7 @@ public class ServerCalendar {
             Formatter<Long> iso8601Formatter,
             Formatter<Long> timeAmountFormatter,
             Theme theme,
-            Locale locale,
-            TimeZone timeZone
+            Locale locale
     ) {
         this.uniquePerDay = uniquePerDay;
         this.newPerDay = newPerDay;
@@ -64,7 +61,6 @@ public class ServerCalendar {
         this.playtimePerDay = playtimePerDay;
         this.theme = theme;
         this.locale = locale;
-        this.timeZone = timeZone;
     }
 
     public String toCalendarSeries() {
@@ -77,7 +73,6 @@ public class ServerCalendar {
     }
 
     private void appendTimeZoneOffsetData(StringBuilder series) {
-        // Has a timezone offset
         appendUniquePlayers(series);
         appendNewPlayers(series);
         appendSessionCounts(series);
@@ -92,7 +87,7 @@ public class ServerCalendar {
             }
 
             Long key = entry.getKey();
-            String day = iso8601Formatter.apply(key - timeZone.getOffset(key));// Remove the timezone offset since Calendar uses UTC
+            String day = iso8601Formatter.apply(key);
 
             series.append(",{\"title\": \"").append(locale.get(HtmlLang.NEW_CALENDAR)).append(" ").append(newPlayers)
                     .append("\",\"start\":\"").append(day)
@@ -109,7 +104,7 @@ public class ServerCalendar {
             }
 
             Long key = entry.getKey();
-            String day = iso8601Formatter.apply(key - timeZone.getOffset(key));// Remove the timezone offset since Calendar uses UTC
+            String day = iso8601Formatter.apply(key);
 
             series.append(",{\"title\": \"").append(locale.get(HtmlLang.UNIQUE_CALENDAR)).append(" ").append(uniquePlayers)
                     .append("\",\"start\":\"").append(day)
@@ -125,7 +120,7 @@ public class ServerCalendar {
                 continue;
             }
             Long key = entry.getKey();
-            String day = iso8601Formatter.apply(key - timeZone.getOffset(key));// Remove the timezone offset since Calendar uses UTC
+            String day = iso8601Formatter.apply(key);
 
             series.append(",{\"title\": \"").append(locale.get(HtmlLang.LABEL_PLAYTIME)).append(": ").append(timeAmountFormatter.apply(playtime))
                     .append("\",\"start\":\"").append(day)
@@ -141,7 +136,7 @@ public class ServerCalendar {
                 continue;
             }
             Long key = entry.getKey();
-            String day = iso8601Formatter.apply(key - timeZone.getOffset(key));// Remove the timezone offset since Calendar uses UTC
+            String day = iso8601Formatter.apply(key);
 
             series.append(",{\"title\": \"").append(locale.get(HtmlLang.SIDE_SESSIONS)).append(": ").append(sessionCount)
                     .append("\",\"start\":\"").append(day)

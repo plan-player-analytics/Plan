@@ -119,14 +119,12 @@ public class GraphJSONParser {
         );
 
         return "{\"uniquePlayers\":" +
-                lineGraphs.lineGraph(MutatorFunctions.toPointsWithRemovedOffset(
-                        MutatorFunctions.addMissing(uniquePerDay, TimeUnit.DAYS.toMillis(1L), 0),
-                        timeZone
+                lineGraphs.lineGraph(MutatorFunctions.toPoints(
+                        MutatorFunctions.addMissing(uniquePerDay, TimeUnit.DAYS.toMillis(1L), 0)
                 )).toHighChartsSeries() +
                 ",\"newPlayers\":" +
-                lineGraphs.lineGraph(MutatorFunctions.toPointsWithRemovedOffset(
-                        MutatorFunctions.addMissing(newPerDay, TimeUnit.DAYS.toMillis(1L), 0),
-                        timeZone
+                lineGraphs.lineGraph(MutatorFunctions.toPoints(
+                        MutatorFunctions.addMissing(newPerDay, TimeUnit.DAYS.toMillis(1L), 0)
                 )).toHighChartsSeries() +
                 '}';
     }
@@ -144,14 +142,12 @@ public class GraphJSONParser {
         );
 
         return "{\"uniquePlayers\":" +
-                lineGraphs.lineGraph(MutatorFunctions.toPointsWithRemovedOffset(
-                        MutatorFunctions.addMissing(uniquePerDay, TimeUnit.DAYS.toMillis(1L), 0),
-                        timeZone
+                lineGraphs.lineGraph(MutatorFunctions.toPoints(
+                        MutatorFunctions.addMissing(uniquePerDay, TimeUnit.DAYS.toMillis(1L), 0)
                 )).toHighChartsSeries() +
                 ",\"newPlayers\":" +
-                lineGraphs.lineGraph(MutatorFunctions.toPointsWithRemovedOffset(
-                        MutatorFunctions.addMissing(newPerDay, TimeUnit.DAYS.toMillis(1L), 0),
-                        timeZone
+                lineGraphs.lineGraph(MutatorFunctions.toPoints(
+                        MutatorFunctions.addMissing(newPerDay, TimeUnit.DAYS.toMillis(1L), 0)
                 )).toHighChartsSeries() +
                 '}';
     }

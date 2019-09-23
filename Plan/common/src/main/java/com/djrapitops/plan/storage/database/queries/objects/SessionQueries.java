@@ -439,6 +439,15 @@ public class SessionQueries {
         };
     }
 
+    /**
+     * Query session count for each day within range on a server.
+     *
+     * @param after          After epoch ms
+     * @param before         Before epoch ms
+     * @param timeZoneOffset Offset in ms to determine start of day.
+     * @param serverUUID     UUID of the Plan server.
+     * @return Map - Epoch ms (Start of day at 0 AM, no offset) : Session count of that day
+     */
     public static Query<NavigableMap<Long, Integer>> sessionCountPerDay(long after, long before, long timeZoneOffset, UUID serverUUID) {
         return database -> {
             Sql sql = database.getSql();
@@ -539,6 +548,15 @@ public class SessionQueries {
         };
     }
 
+    /**
+     * Query playtime for each day within range on a server.
+     *
+     * @param after          After epoch ms
+     * @param before         Before epoch ms
+     * @param timeZoneOffset Offset in ms to determine start of day.
+     * @param serverUUID     UUID of the Plan server.
+     * @return Map - Epoch ms (Start of day at 0 AM, no offset) : Playtime of that day
+     */
     public static Query<NavigableMap<Long, Long>> playtimePerDay(long after, long before, long timeZoneOffset, UUID serverUUID) {
         return database -> {
             Sql sql = database.getSql();

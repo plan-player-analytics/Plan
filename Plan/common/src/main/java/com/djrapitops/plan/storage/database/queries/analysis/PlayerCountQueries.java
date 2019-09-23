@@ -130,7 +130,7 @@ public class PlayerCountQueries {
      * @param before         Before epoch ms
      * @param timeZoneOffset Offset from {@link java.util.TimeZone#getOffset(long)}, applied to the dates before grouping.
      * @param serverUUID     UUID of the Plan server
-     * @return Map: Epoch ms (Accuracy of a day) - How many unique players played that day
+     * @return Map: Epoch ms (Start of day at 0 AM, no offset) - How many unique players played that day
      */
     public static Query<NavigableMap<Long, Integer>> uniquePlayerCounts(long after, long before, long timeZoneOffset, UUID serverUUID) {
         return database -> {
@@ -172,7 +172,7 @@ public class PlayerCountQueries {
      * @param after          After epoch ms
      * @param before         Before epoch ms
      * @param timeZoneOffset Offset from {@link java.util.TimeZone#getOffset(long)}, applied to the dates before grouping.
-     * @return Map: Epoch ms (Accuracy of a day) - How many unique players played that day
+     * @return Map: Epoch ms (Start of day at 0 AM, no offset) - How many unique players played that day
      */
     public static Query<NavigableMap<Long, Integer>> uniquePlayerCounts(long after, long before, long timeZoneOffset) {
         return database -> {
@@ -288,7 +288,7 @@ public class PlayerCountQueries {
      * @param before         Before epoch ms
      * @param timeZoneOffset Offset from {@link java.util.TimeZone#getOffset(long)}, applied to the dates before grouping.
      * @param serverUUID     UUID of the Plan server
-     * @return Map: Epoch ms (Accuracy of a day) - How many new players joined that day
+     * @return Map: Epoch ms (Start of day at 0 AM, no offset) - How many new players joined that day
      */
     public static Query<NavigableMap<Long, Integer>> newPlayerCounts(long after, long before, long timeZoneOffset, UUID serverUUID) {
         return database -> {
@@ -324,6 +324,14 @@ public class PlayerCountQueries {
         };
     }
 
+    /**
+     * Fetch a EpochMs - Count map of new players on a server.
+     *
+     * @param after          After epoch ms
+     * @param before         Before epoch ms
+     * @param timeZoneOffset Offset from {@link java.util.TimeZone#getOffset(long)}, applied to the dates before grouping.
+     * @return Map: Epoch ms (Start of day at 0 AM, no offset) - How many new players joined that day
+     */
     public static Query<NavigableMap<Long, Integer>> newPlayerCounts(long after, long before, long timeZoneOffset) {
         return database -> {
             Sql sql = database.getSql();
