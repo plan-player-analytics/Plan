@@ -49,7 +49,7 @@
 
         <!-- Nav Item - Dashboard -->
         <li class="nav-item nav-button active">
-            <a class="nav-link" href="javascript:void(0)">
+            <a class="nav-link" href="#tab-network-overview">
                 <i class="fas fa-fw fa-info-circle"></i>
                 <span>Network Overview</span></a>
         </li>
@@ -69,10 +69,10 @@
             </a>
             <div aria-labelledby="headingPages" class="collapse" data-parent="#accordionSidebar" id="serverPages">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item nav-button" href="javascript:void(0)"><i
+                    <a class="collapse-item nav-button" href="#tab-servers"><i
                             class="fas fa-fw fa-network-wired"></i>
                         Overview</a>
-                    <a class="collapse-item nav-button" href="javascript:void(0)"><i
+                    <a class="collapse-item nav-button" href="#tab-sessions-overview"><i
                             class="far fa-fw fa-calendar-alt"></i>
                         Sessions</a>
                 </div>
@@ -89,12 +89,12 @@
             <div aria-labelledby="headingPages" class="collapse" data-parent="#accordionSidebar"
                  id="playerbasePages">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item nav-button" href="javascript:void(0)"><i
+                    <a class="collapse-item nav-button" href="#tab-playerbase-overview"><i
                             class="fas fa-fw fa-chart-line"></i>
                         Overview</a>
                     <a class="collapse-item" href="./players"><i class="fas fa-fw fa-users"></i>
                         Player List</a>
-                    <a class="collapse-item nav-button" href="javascript:void(0)"><i class="fas fa-fw fa-globe"></i>
+                    <a class="collapse-item nav-button" href="#tab-geolocations"><i class="fas fa-fw fa-globe"></i>
                         Geolocations</a>
                 </div>
             </div>
@@ -307,7 +307,7 @@
                 </div> <!-- /.container-fluid -->
             </div> <!-- End of Network Overview tab -->
             <!-- Begin Servers Overview Tab -->
-            <div class="tab" id="servers-tab">
+            <div class="tab" id="servers">
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -960,22 +960,9 @@
         });
 
         setLoadingText('Almost done..');
-        var navButtons = document.getElementsByClassName("nav-button");
-        var tabs = document.getElementsByClassName("tab");
-        var slideIndex = window.sessionStorage.getItem("network_slide_index");
-        if (slideIndex === null) {
-            slideIndex = 0;
-        }
-        var x = document.getElementById("content");
-        x.style.transform = "translate3d(0px,0px,0)";
-        x.style.width = "" + navButtons.length * 100 + "%";
-        for (var i = 0; i < navButtons.length; i++) {
-            navButtons[i].onclick = openFunc(i);
-            tabs[i].style.width = "" + 100 / navButtons.length + "%";
-        }
-        x.style.opacity = "1";
-        openFunc(slideIndex)();
+        openPage();
         setLoadingText('Done.');
+
         setTimeout(function () {
             $('.page-loader').fadeOut();
         }, 50);
@@ -985,33 +972,6 @@
             $('.page-loader').fadeOut();
         }, 10000);
         throw loadingError;
-    }
-
-    function openFunc(i) {
-        return function () {
-            var max = navButtons.length;
-            for (var j = 0; j < max; j++) {
-                if (navButtons[j].classList.contains('active')) {
-                    navButtons[j].classList.remove('active');
-                }
-                if (j == i) {
-                    navButtons[j].classList.add('active');
-                }
-            }
-            var percent = -100 / navButtons.length;
-            slideIndex = i;
-            if (slideIndex > max) {
-                slideIndex = 0
-            }
-            if (slideIndex < 0) {
-                slideIndex = max
-            }
-            window.scrollTo(0, 0);
-            window.sessionStorage.setItem("network_slide_index", slideIndex);
-            var value = slideIndex * percent;
-            x.style.transition = "0.5s";
-            x.style.transform = "translate3d(" + value + "%,0px,0)";
-        };
     }
 
     function setLoadingText(text) {

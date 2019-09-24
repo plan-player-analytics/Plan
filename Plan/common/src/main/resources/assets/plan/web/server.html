@@ -46,7 +46,7 @@
         <hr class="sidebar-divider my-0">
 
         <li class="nav-item nav-button active">
-            <a class="nav-link" href="javascript:void(0)">
+            <a class="nav-link" href="#tab-server-overview">
                 <i class="fas fa-fw fa-info-circle"></i>
                 <span>Server Overview</span></a>
         </li>
@@ -68,13 +68,13 @@
             <div aria-labelledby="headingPages" class="collapse" data-parent="#accordionSidebar"
                  id="onlineActivityPages">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item nav-button" href="javascript:void(0)"><i
+                    <a class="collapse-item nav-button" href="#tab-online-activity-overview"><i
                             class="fas fa-fw fa-chart-area"></i>
                         Overview</a>
-                    <a class="collapse-item nav-button" href="javascript:void(0)"><i
+                    <a class="collapse-item nav-button" href="#tab-sessions-overview"><i
                             class="far fa-fw fa-calendar-alt"></i>
                         Sessions</a>
-                    <a class="collapse-item nav-button" href="javascript:void(0)"><i
+                    <a class="collapse-item nav-button" href="#tab-pvp-pve"><i
                             class="fa fa-fw fa-campground"></i>
                         PvP & PvE</a>
                 </div>
@@ -91,19 +91,19 @@
             <div aria-labelledby="headingPages" class="collapse" data-parent="#accordionSidebar"
                  id="playerbasePages">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item nav-button" href="javascript:void(0)"><i
+                    <a class="collapse-item nav-button" href="#tab-playerbase-overview"><i
                             class="fas fa-fw fa-chart-line"></i>
                         Overview</a>
-                    <a class="collapse-item nav-button" href="javascript:void(0)"><i class="fas fa-fw fa-users"></i>
+                    <a class="collapse-item nav-button" href="#tab-playerlist"><i class="fas fa-fw fa-users"></i>
                         Player List</a>
-                    <a class="collapse-item nav-button" href="javascript:void(0)"><i class="fas fa-fw fa-globe"></i>
+                    <a class="collapse-item nav-button" href="#tab-geolocations"><i class="fas fa-fw fa-globe"></i>
                         Geolocations</a>
                 </div>
             </div>
         </li>
 
         <li class="nav-item nav-button">
-            <a class="nav-link" href="javascript:void(0)">
+            <a class="nav-link" href="#tab-performance">
                 <i class="fas fa-fw fa-cogs"></i>
                 <span>Performance</span></a>
         </li>
@@ -824,7 +824,7 @@
                 </div> <!-- /.container-fluid -->
             </div> <!-- End of Playerbase Overview tab -->
             <!-- Begin Player List Tab -->
-            <div class="tab">
+            <div class="tab" id="playerlist">
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -1298,8 +1298,6 @@
 
 <script>
     try {
-        var x = document.getElementById("content");
-
         setLoadingText('Calculating values..');
         jsonRequest("../v1/serverOverview?server=${serverName}", loadServerOverviewValues);
         jsonRequest("../v1/onlineOverview?server=${serverName}", loadOnlineActivityOverviewValues);
@@ -1604,7 +1602,7 @@
         });
 
         setLoadingText('Almost done..');
-        openPageFunc();
+        openPage();
 
         jsonRequest("../v1/sessions?server=${serverName}", loadSessionAccordion);
 
@@ -1620,50 +1618,7 @@
         throw loadingError;
     }
 
-    function openPageFunc() {
-        var navButtons = document.getElementsByClassName("nav-button");
-        var tabs = document.getElementsByClassName("tab");
-        var slideIndex = window.sessionStorage.getItem("server_slide_index");
-        if (slideIndex === null) {
-            slideIndex = 0;
-        }
-        x.style.transform = "translate3d(0px,0px,0)";
-        x.style.width = "" + navButtons.length * 100 + "%";
-        for (var i = 0; i < navButtons.length; i++) {
-            navButtons[i].onclick = openFunc(i);
-            tabs[i].style.width = "" + 100 / navButtons.length + "%";
-        }
-        x.style.opacity = "1";
-        openFunc(slideIndex)();
-    }
 
-    function openFunc(i) {
-        return function () {
-            var navButtons = document.getElementsByClassName("nav-button");
-            var max = navButtons.length;
-            for (var j = 0; j < max; j++) {
-                if (navButtons[j].classList.contains('active')) {
-                    navButtons[j].classList.remove('active');
-                }
-                if (j == i) {
-                    navButtons[j].classList.add('active');
-                }
-            }
-            var percent = -100 / navButtons.length;
-            slideIndex = i;
-            if (slideIndex > max) {
-                slideIndex = 0
-            }
-            if (slideIndex < 0) {
-                slideIndex = max
-            }
-            window.scrollTo(0, 0);
-            window.sessionStorage.setItem("server_slide_index", slideIndex);
-            var value = slideIndex * percent;
-            x.style.transition = "0.5s";
-            x.style.transform = "translate3d(" + value + "%,0px,0)";
-        };
-    }
 
     function setLoadingText(text) {
         $('.loader-text').text(text);

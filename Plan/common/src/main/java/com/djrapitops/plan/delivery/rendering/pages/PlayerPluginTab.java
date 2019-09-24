@@ -25,6 +25,7 @@ import com.djrapitops.plan.extension.ElementOrder;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.results.*;
+import com.djrapitops.plugin.utilities.Format;
 
 import java.util.*;
 
@@ -87,6 +88,7 @@ public class PlayerPluginTab implements Comparable<PlayerPluginTab> {
         if (playerData.isEmpty()) {
             nav = NavLink.collapsed(Icon.called("cubes").build(), serverName + " (No Data)").toHtml();
             tab = wrapInTab(
+                    serverName + " (No Data)",
                     "<div class=\"col-md-12\"><div class=\"card\"><div class=\"card-body\"><p>No Extension Data</p></div></div></div>"
             );
         } else {
@@ -118,14 +120,14 @@ public class PlayerPluginTab implements Comparable<PlayerPluginTab> {
             tabBuilder.append(wrapInContainer(extensionInformation, tabsElement));
         }
 
-        return wrapInTab(tabBuilder.toString());
+        return wrapInTab(serverName, tabBuilder.toString());
     }
 
-    private String wrapInTab(String content) {
-        return "<div class=\"tab\"><div class=\"container-fluid mt-4\">" +
+    private String wrapInTab(String tabName, String content) {
+        return "<div class=\"tab\" id=\"" + new Format(tabName).justLetters().lowerCase() + "\"><div class=\"container-fluid mt-4\">" +
                 // Page heading
                 "<div class=\"d-sm-flex align-items-center justify-content-between mb-4\">" +
-                "<h1 class=\"h3 mb-0 text-gray-800\"><i class=\"sidebar-toggler fa fa-fw fa-bars\"></i>${playerName} &middot; " + serverName + " Plugins</h1>${backButton}" +
+                "<h1 class=\"h3 mb-0 text-gray-800\"><i class=\"sidebar-toggler fa fa-fw fa-bars\"></i>" + serverName + " &middot; Plugins Overview</h1>${backButton}" +
                 "</div>" +
                 // End Page heading
                 "<div class=\"card-columns\">" + content + "</div></div></div>";

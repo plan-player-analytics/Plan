@@ -1,5 +1,71 @@
+function openTab(i) {
+    var x = document.getElementById("content");
+    var navButtons = document.getElementsByClassName("nav-button");
+    var max = navButtons.length;
+    for (var j = 0; j < max; j++) {
+        if (navButtons[j].classList.contains('active')) {
+            navButtons[j].classList.remove('active');
+        }
+        if (j === i) {
+            navButtons[j].classList.add('active');
+        }
+    }
+    var percent = -100 / navButtons.length;
+    slideIndex = i;
+    if (slideIndex > max) {
+        slideIndex = 0
+    }
+    if (slideIndex < 0) {
+        slideIndex = max
+    }
+    window.scrollTo(0, 0);
+    var value = slideIndex * percent;
+    x.style.transition = "0.5s";
+    x.style.transform = "translate3d(" + value + "%,0px,0)";
+}
+
+function openPage() {
+    var params = (window.location.hash.substr(5)).split("&");
+
+    if (!params.length) {
+        openTab(0);
+        return;
+    }
+    // window.sessionStorage.setItem("server_slide_index", slideIndex);
+
+    var tabID = params[0];
+    var button = $('.nav-button[href="#' + tabID + '"]');
+
+    var tabs = document.getElementsByClassName("tab");
+    for (var i = 0; i < tabs.length; i++) {
+        if (tabs[i].id === tabID) openTab(i);
+    }
+
+    if (params.length <= 1) {
+        return;
+    }
+
+    var graphTabID = params[1];
+    $('a[href="#' + graphTabID + '"]').tab('show');
+}
+
 (function ($) {
     "use strict"; // Start of use strict
+
+    var x = document.getElementById("content");
+    // Prepare tabs for display
+    var navButtons = document.getElementsByClassName("nav-button");
+    var tabs = document.getElementsByClassName("tab");
+    x.style.transform = "translate3d(0px,0px,0)";
+    x.style.width = "" + navButtons.length * 100 + "%";
+    for (var i = 0; i < navButtons.length; i++) {
+        tabs[i].style.width = "" + 100 / navButtons.length + "%";
+    }
+    x.style.opacity = "1";
+
+    window.addEventListener('hashchange', function (e) {
+        openPage();
+    });
 
     var oldWidth = null;
 

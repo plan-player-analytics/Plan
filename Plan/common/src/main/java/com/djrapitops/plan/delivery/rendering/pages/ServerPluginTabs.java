@@ -25,6 +25,7 @@ import com.djrapitops.plan.extension.ElementOrder;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.results.*;
+import com.djrapitops.plugin.utilities.Format;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -87,8 +88,10 @@ public class ServerPluginTabs {
 
     private void generate() {
         if (serverData.isEmpty()) {
-            nav = new StringBuilder(new NavLink(Icon.called("cubes").build(), "Overview (No Data)").toHtml());
+            String tabName = "Overview (No Data)";
+            nav = new StringBuilder(new NavLink(Icon.called("cubes").build(), tabName).toHtml());
             tab = wrapInTab(
+                    tabName,
                     "<div class=\"col-md-12\"><div class=\"card\"><div class=\"card-body\"><p>No Extension Data</p></div></div></div>"
             );
         } else {
@@ -124,7 +127,7 @@ public class ServerPluginTabs {
                 ).toHtmlFull();
             }
 
-            tabBuilder.append(wrapInTab(extensionInformation, wrapInContainer(extensionInformation, tabsElement)));
+            tabBuilder.append(wrapInTab(extensionInformation.getPluginName(), wrapInContainer(extensionInformation, tabsElement)));
             nav.append(new NavLink(Icon.fromExtensionIcon(extensionInformation.getIcon()), extensionInformation.getPluginName()).toHtml());
         }
         return tabBuilder.toString();
@@ -151,27 +154,17 @@ public class ServerPluginTabs {
             tabBuilder.append(wrapInContainer(extensionInformation, tabsElement));
         }
 
-        return wrapInTab(tabBuilder.toString());
+        return wrapInTab("Overview", tabBuilder.toString());
     }
 
-    private String wrapInTab(String content) {
-        return "<div class=\"tab\"><div class=\"container-fluid mt-4\">" +
+    private String wrapInTab(String tabName, String content) {
+        return "<div class=\"tab\" id=\"" + new Format(tabName).justLetters().lowerCase() + "\"><div class=\"container-fluid mt-4\">" +
                 // Page heading
                 "<div class=\"d-sm-flex align-items-center justify-content-between mb-4\">" +
                 "<h1 class=\"h3 mb-0 text-gray-800\"><i class=\"sidebar-toggler fa fa-fw fa-bars\"></i><span class=\"server-name\"></span> &middot; Plugins Overview</h1>${backButton}" +
                 "</div>" +
                 // End Page heading
                 "<div class=\"card-columns\">" + content + "</div></div></div>";
-    }
-
-    private String wrapInTab(ExtensionInformation info, String content) {
-        return "<div class=\"tab\"><div class=\"container-fluid mt-4\">" +
-                // Page heading
-                "<div class=\"d-sm-flex align-items-center justify-content-between mb-4\">" +
-                "<h1 class=\"h3 mb-0 text-gray-800\"><i class=\"sidebar-toggler fa fa-fw fa-bars\"></i><span class=\"server-name\"></span> &middot; " + info.getPluginName() + "</h1>${backButton}" +
-                "</div>" +
-                // End Page heading
-                "<div class=\"row\"><div class=\"col-xl-12 col-sm-12\">" + content + "</div></div></div></div>";
     }
 
     private TabsElement.Tab wrapToTabElementTab(ExtensionTabData tabData) {

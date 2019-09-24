@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.rendering.html.structure;
 
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
+import com.djrapitops.plugin.utilities.Format;
 
 /**
  * Html utility for creating navigation link html.
@@ -48,13 +49,14 @@ public class NavLink {
     }
 
     public String toHtml() {
+        String tabID = new Format(tabName).justLetters().lowerCase().toString();
         if (collapsed) {
-            return "<a class=\"collapse-item nav-button\" href=\"javascript:void(0)\">" +
+            return "<a class=\"collapse-item nav-button\" href=\"#tab-" + tabID + "\">" +
                     icon.toHtml() + ' ' +
                     tabName + "</a>";
         }
         return "<li class=\"nav-item nav-button\">" +
-                "<a class=\"nav-link\" href=\"javascript:void(0)\">" +
+                "<a class=\"nav-link\" href=\"#tab-" + tabID + "\">" +
                 icon.toHtml() +
                 "<span>" + tabName + "</span></a>" +
                 "</li>";
