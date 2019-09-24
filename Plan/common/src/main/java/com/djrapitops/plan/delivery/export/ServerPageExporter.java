@@ -93,27 +93,27 @@ public class ServerPageExporter extends FileExporter {
     }
 
     public void exportJSON(Path toDirectory, Server server) throws IOException, NotFoundException {
-        String serverName = toFileName(server.getName());
+        String serverUUID = server.getUuid().toString();
 
         exportJSON(toDirectory,
-                "serverOverview?server=" + serverName,
-                "onlineOverview?server=" + serverName,
-                "sessionsOverview?server=" + serverName,
-                "playerVersus?server=" + serverName,
-                "playerbaseOverview?server=" + serverName,
-                "performanceOverview?server=" + serverName,
-                "graph?type=performance&server=" + serverName,
-                "graph?type=aggregatedPing&server=" + serverName,
-                "graph?type=worldPie&server=" + serverName,
-                "graph?type=activity&server=" + serverName,
-                "graph?type=geolocation&server=" + serverName,
-                "graph?type=uniqueAndNew&server=" + serverName,
-                "graph?type=serverCalendar&server=" + serverName,
-                "graph?type=punchCard&server=" + serverName,
-                "players?server=" + serverName,
-                "kills?server=" + serverName,
-                "pingTable?server=" + serverName,
-                "sessions?server=" + serverName
+                "serverOverview?server=" + serverUUID,
+                "onlineOverview?server=" + serverUUID,
+                "sessionsOverview?server=" + serverUUID,
+                "playerVersus?server=" + serverUUID,
+                "playerbaseOverview?server=" + serverUUID,
+                "performanceOverview?server=" + serverUUID,
+                "graph?type=performance&server=" + serverUUID,
+                "graph?type=aggregatedPing&server=" + serverUUID,
+                "graph?type=worldPie&server=" + serverUUID,
+                "graph?type=activity&server=" + serverUUID,
+                "graph?type=geolocation&server=" + serverUUID,
+                "graph?type=uniqueAndNew&server=" + serverUUID,
+                "graph?type=serverCalendar&server=" + serverUUID,
+                "graph?type=punchCard&server=" + serverUUID,
+                "players?server=" + serverUUID,
+                "kills?server=" + serverUUID,
+                "pingTable?server=" + serverUUID,
+                "sessions?server=" + serverUUID
         );
     }
 
