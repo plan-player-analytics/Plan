@@ -1587,10 +1587,7 @@
                     order: [[5, "desc"]]
                 })
             } else if (error) {
-                $('.player-table').DataTable({
-                    columns: [{title: "Error"}],
-                    data: [["Failed to load Players table data: " + error]]
-                })
+                $('.player-table').text("Failed to load Players table data: " + error);
             }
         });
         jsonRequest("../v1/kills?server=${serverName}", loadPlayerKills);
