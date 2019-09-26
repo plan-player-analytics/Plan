@@ -55,7 +55,7 @@ public class NetworkTablePlayersQuery implements Query<List<TablePlayer>> {
 
     @Override
     public List<TablePlayer> executeQuery(SQLDB db) {
-        String selectGeolocations = SELECT +
+        String selectGeolocations = SELECT + DISTINCT +
                 GeoInfoTable.USER_UUID + ", " +
                 GeoInfoTable.GEOLOCATION + ", " +
                 GeoInfoTable.LAST_USED +
