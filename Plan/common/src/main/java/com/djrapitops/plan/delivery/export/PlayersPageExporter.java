@@ -51,6 +51,7 @@ public class PlayersPageExporter extends FileExporter {
     private final RootJSONHandler jsonHandler;
     private final Locale locale;
     private final Theme theme;
+    private final ServerInfo serverInfo;
 
     private final ExportPaths exportPaths;
 
@@ -68,12 +69,13 @@ public class PlayersPageExporter extends FileExporter {
         this.jsonHandler = jsonHandler;
         this.locale = locale;
         this.theme = theme;
+        this.serverInfo = serverInfo;
 
         exportPaths = new ExportPaths();
-        exportPaths.put("/", toRelativePathFromRoot(serverInfo.getServer().isProxy() ? "network" : "server"));
     }
 
     public void export(Path toDirectory) throws IOException, NotFoundException, ParseException {
+        exportPaths.put("/", toRelativePathFromRoot(serverInfo.getServer().isProxy() ? "network" : "server"));
         exportRequiredResources(toDirectory);
         exportJSON(toDirectory);
         exportHtml(toDirectory);

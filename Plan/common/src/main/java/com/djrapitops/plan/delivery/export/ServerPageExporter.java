@@ -74,10 +74,10 @@ public class ServerPageExporter extends FileExporter {
         this.serverInfo = serverInfo;
 
         exportPaths = new ExportPaths();
-        exportPaths.put("../network", toRelativePathFromRoot("network"));
     }
 
     public void export(Path toDirectory, Server server) throws IOException, NotFoundException, ParseException {
+        exportPaths.put("../network", toRelativePathFromRoot("network"));
         exportRequiredResources(toDirectory);
         exportJSON(toDirectory, server);
         exportHtml(toDirectory, server);
