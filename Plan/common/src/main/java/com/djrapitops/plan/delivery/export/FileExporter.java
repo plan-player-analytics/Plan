@@ -70,7 +70,11 @@ abstract class FileExporter {
 
     String toFileName(String resourceName) {
         try {
-            return URLEncoder.encode(resourceName, "UTF-8").replace(".", "%2E");
+            return StringUtils.replaceEach(
+                    URLEncoder.encode(resourceName, "UTF-8"),
+                    new String[]{".", "%2F"},
+                    new String[]{"%2E", "-"}
+            );
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("Unexpected: UTF-8 encoding not supported", e);
         }
