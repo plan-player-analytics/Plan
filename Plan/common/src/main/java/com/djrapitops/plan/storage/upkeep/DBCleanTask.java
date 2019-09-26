@@ -32,6 +32,7 @@ import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.transactions.commands.RemovePlayerTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.RemoveDuplicateUserInfoTransaction;
+import com.djrapitops.plan.storage.database.transactions.init.RemoveOldExtensionsTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.RemoveOldSampledDataTransaction;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -65,6 +66,10 @@ public class DBCleanTask extends AbsRunnable {
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
 
+    // This variable assumes that the system is thrown away on reload and new one is constructed.
+    // It is to avoid cleaning extension data that has not been updated after uptime longer than the deletion threshold.
+    private final long lastReload;
+
     @Inject
     public DBCleanTask(
             PlanConfig config,
@@ -83,6 +88,8 @@ public class DBCleanTask extends AbsRunnable {
         this.serverInfo = serverInfo;
         this.logger = logger;
         this.errorHandler = errorHandler;
+
+        lastReload = System.currentTimeMillis();
     }
 
     @Override
@@ -101,6 +108,10 @@ public class DBCleanTask extends AbsRunnable {
                 int removed = cleanOldPlayers(database);
                 if (removed > 0) {
                     logger.info(locale.getString(PluginLang.DB_NOTIFY_CLEAN, removed));
+                }
+                Long deleteExtensionDataAfter = config.get(TimeSettings.DELETE_EXTENSION_DATA_AFTER);
+                if (System.currentTimeMillis() - lastReload <= deleteExtensionDataAfter) {
+                    database.executeTransaction(new RemoveOldExtensionsTransaction(deleteExtensionDataAfter, serverInfo.getServerUUID()));
                 }
             }
         } catch (DBOpException e) {

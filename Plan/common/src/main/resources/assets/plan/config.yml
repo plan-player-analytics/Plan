@@ -95,6 +95,8 @@ Time:
       Unit: DAYS
     Remove_ping_data_after: 14
       Unit: DAYS
+    Remove_disabled_extension_data_after: 2
+      Unit: DAYS
   Periodic_tasks:
     Extension_data_refresh_every: 1
       Unit: HOURS
