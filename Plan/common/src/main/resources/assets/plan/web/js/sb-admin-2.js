@@ -67,6 +67,13 @@ function openPage() {
         openPage();
     });
 
+    // Persistent Bootstrap tabs
+    $('.nav-tabs a.nav-link').click(function (e) {
+        var params = (window.location.hash).split("&");
+        if (!params) return;
+        window.location.hash = params[0] + '&' + e.target.href.split('#')[1];
+    });
+
     var oldWidth = null;
 
     function reduceSidebar() {
