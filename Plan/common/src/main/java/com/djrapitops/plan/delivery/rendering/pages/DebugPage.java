@@ -145,16 +145,17 @@ public class DebugPage implements Page {
     private void appendSessionCache(StringBuilder content) {
         try {
             content.append("<pre>### Session Cache:<br><br>");
-            content.append("UUID | Session Started <br>")
+            content.append("Name | Session Started <br>")
                     .append("-- | -- <br>");
             Set<Map.Entry<UUID, Session>> sessions = SessionCache.getActiveSessions().entrySet();
             if (sessions.isEmpty()) {
                 content.append("Empty");
             }
             for (Map.Entry<UUID, Session> entry : sessions) {
-                UUID uuid = entry.getKey();
-                String start = entry.getValue().getValue(SessionKeys.START).map(yearFormatter).orElse("Unknown");
-                content.append(uuid.toString()).append(" | ").append(start).append("<br>");
+                Session session = entry.getValue();
+                String name = session.getValue(SessionKeys.NAME).orElse(entry.getKey().toString());
+                String start = session.getValue(SessionKeys.START).map(yearFormatter).orElse("Unknown");
+                content.append(name).append(" | ").append(start).append("<br>");
             }
             content.append("</pre>");
         } catch (Exception e) {
