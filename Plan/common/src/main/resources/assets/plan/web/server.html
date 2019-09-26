@@ -1390,53 +1390,53 @@
             }
         };
 
-        jsonRequest("../v1/graph?type=performance&server=${serverName}", function (data, error) {
-            if (data) {
+        jsonRequest("../v1/graph?type=performance&server=${serverName}", function (json, error) {
+            if (json) {
                 var series = {
                     playersOnline: {
                         name: s.name.playersOnline, type: s.type.areaSpline, tooltip: s.tooltip.zeroDecimals,
-                        data: data.playersOnline, color: v.colors.playersOnline, yAxis: 0
+                        data: json.playersOnline, color: v.colors.playersOnline, yAxis: 0
                     },
                     tps: {
                         name: s.name.tps, type: s.type.spline, color: v.colors.tpsHigh,
-                        zones: s.zones.tps, tooltip: s.tooltip.twoDecimals, data: data.tps,
+                        zones: s.zones.tps, tooltip: s.tooltip.twoDecimals, data: json.tps,
                         yAxis: 1
                     },
                     cpu: {
                         name: s.name.cpu, type: s.type.spline, tooltip: s.tooltip.twoDecimals,
-                        data: data.cpu, color: v.colors.cpu, yAxis: 2
+                        data: json.cpu, color: v.colors.cpu, yAxis: 2
                     },
                     cpu_alt: {
                         name: s.name.cpu, type: s.type.spline, tooltip: s.tooltip.twoDecimals,
-                        data: data.cpu, color: v.colors.cpu, yAxis: 1
+                        data: json.cpu, color: v.colors.cpu, yAxis: 1
                     },
                     ram: {
                         name: s.name.ram, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: data.ram, color: v.colors.ram, yAxis: 3
+                        data: json.ram, color: v.colors.ram, yAxis: 3
                     },
                     ram_alt: {
                         name: s.name.ram, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: data.ram, color: v.colors.ram, yAxis: 2
+                        data: json.ram, color: v.colors.ram, yAxis: 2
                     },
                     entities: {
                         name: s.name.entities, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: data.entities, color: v.colors.entities, yAxis: 4
+                        data: json.entities, color: v.colors.entities, yAxis: 4
                     },
                     entities_alt: {
                         name: s.name.entities, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: data.entities, color: v.colors.entities, yAxis: 1
+                        data: json.entities, color: v.colors.entities, yAxis: 1
                     },
                     chunks: {
                         name: s.name.chunks, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: data.chunks, color: v.colors.chunks, yAxis: 5
+                        data: json.chunks, color: v.colors.chunks, yAxis: 5
                     },
                     chunks_alt: {
                         name: s.name.chunks, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: data.chunks, color: v.colors.chunks, yAxis: 2
+                        data: json.chunks, color: v.colors.chunks, yAxis: 2
                     },
                     disk: {
                         name: s.name.disk, type: s.type.spline, color: v.colors.tpsHigh,
-                        zones: s.zones.disk, tooltip: s.tooltip.zeroDecimals, data: data.disk
+                        zones: s.zones.disk, tooltip: s.tooltip.zeroDecimals, data: json.disk
                     }
                 };
                 playersChart('playersOnlineChart', series.playersOnline, 2);
@@ -1535,15 +1535,15 @@
             }
         });
 
-        jsonRequest("../v1/graph?type=uniqueAndNew&server=${serverName}", function (data, error) {
-            if (data) {
+        jsonRequest("../v1/graph?type=uniqueAndNew&server=${serverName}", function (json, error) {
+            if (json) {
                 var uniquePlayers = {
                     name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                    data: data.uniquePlayers, color: v.colors.playersOnline
+                    data: json.uniquePlayers, color: v.colors.playersOnline
                 };
                 var newPlayers = {
                     name: s.name.newPlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                    data: data.newPlayers, color: v.colors.newPlayers
+                    data: json.newPlayers, color: v.colors.newPlayers
                 };
                 dayByDay('uniqueChart', [uniquePlayers, newPlayers]);
             } else if (error) {
@@ -1578,12 +1578,12 @@
 
         setLoadingText('Sorting players table..');
 
-        jsonRequest("../v1/players?server=${serverName}", function (playersTableJson, error) {
-            if (playersTableJson) {
+        jsonRequest("../v1/players?server=${serverName}", function (json, error) {
+            if (json) {
                 $('.player-table').DataTable({
                     responsive: true,
-                    columns: playersTableJson.columns,
-                    data: playersTableJson.data,
+                    columns: json.columns,
+                    data: json.data,
                     order: [[5, "desc"]]
                 })
             } else if (error) {
