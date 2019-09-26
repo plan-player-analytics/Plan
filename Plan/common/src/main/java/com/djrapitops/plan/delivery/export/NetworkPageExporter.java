@@ -69,6 +69,7 @@ public class NetworkPageExporter extends FileExporter {
         this.theme = theme;
 
         exportPaths = new ExportPaths();
+        exportPaths.put("./players", toRelativePathFromRoot("players"));
     }
 
     public void export(Path toDirectory, Server server) throws IOException, NotFoundException, ParseException {

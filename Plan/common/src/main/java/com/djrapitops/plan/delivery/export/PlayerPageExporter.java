@@ -69,6 +69,8 @@ public class PlayerPageExporter extends FileExporter {
         this.theme = theme;
 
         exportPaths = new ExportPaths();
+        exportPaths.put("../network", toRelativePathFromRoot("network"));
+        exportPaths.put("../server", toRelativePathFromRoot("server"));
     }
 
     public void export(Path toDirectory, UUID playerUUID, String playerName) throws IOException, NotFoundException, ParseException {

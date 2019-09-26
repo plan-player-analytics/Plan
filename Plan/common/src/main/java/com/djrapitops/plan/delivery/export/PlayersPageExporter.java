@@ -25,6 +25,7 @@ import com.djrapitops.plan.delivery.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.exceptions.ParseException;
 import com.djrapitops.plan.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.exceptions.connection.WebException;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.file.PlanFiles;
@@ -59,7 +60,8 @@ public class PlayersPageExporter extends FileExporter {
             PageFactory pageFactory,
             RootJSONHandler jsonHandler,
             Locale locale,
-            Theme theme
+            Theme theme,
+            ServerInfo serverInfo
     ) {
         this.files = files;
         this.pageFactory = pageFactory;
@@ -68,6 +70,7 @@ public class PlayersPageExporter extends FileExporter {
         this.theme = theme;
 
         exportPaths = new ExportPaths();
+        exportPaths.put("/", toRelativePathFromRoot(serverInfo.getServer().isProxy() ? "network" : "server"));
     }
 
     public void export(Path toDirectory) throws IOException, NotFoundException, ParseException {
