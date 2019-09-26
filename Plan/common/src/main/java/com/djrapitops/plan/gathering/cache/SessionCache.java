@@ -40,6 +40,7 @@ public class SessionCache {
     }
 
     public static Map<UUID, Session> getActiveSessions() {
+        refreshActiveSessionsState();
         return Collections.unmodifiableMap(new HashMap<>(ACTIVE_SESSIONS));
     }
 
@@ -49,7 +50,7 @@ public class SessionCache {
 
     public static void refreshActiveSessionsState() {
         for (Session session : ACTIVE_SESSIONS.values()) {
-            session.getUnsafe(SessionKeys.WORLD_TIMES).updateState(System.currentTimeMillis());
+            session.getValue(SessionKeys.WORLD_TIMES).ifPresent(worldTimes -> worldTimes.updateState(System.currentTimeMillis()));
         }
     }
 

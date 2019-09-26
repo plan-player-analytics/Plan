@@ -126,6 +126,7 @@ public class PlayerOnlineListener implements Listener {
         JSONCache.invalidateMatching(DataID.SERVER_OVERVIEW);
         JSONCache.invalidate(DataID.GRAPH_ONLINE, serverUUID);
         JSONCache.invalidate(DataID.SERVERS);
+        JSONCache.invalidate(DataID.SESSIONS);
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
