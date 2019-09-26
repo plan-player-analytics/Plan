@@ -49,12 +49,12 @@ abstract class FileExporter {
 
     void export(Path to, List<String> content) throws IOException {
         Files.createDirectories(to.getParent());
-        Files.write(to, content, StandardCharsets.UTF_8, StandardOpenOption.CREATE);
+        Files.write(to, content, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
     }
 
     void export(Path to, String content) throws IOException {
         Files.createDirectories(to.getParent());
-        Files.write(to, Arrays.asList(StringUtils.split(content, "\r\n")), StandardCharsets.UTF_8, StandardOpenOption.CREATE);
+        Files.write(to, Arrays.asList(StringUtils.split(content, "\r\n")), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
     }
 
     void export(Path to, Resource resource) throws IOException {
@@ -62,7 +62,7 @@ abstract class FileExporter {
 
         try (
                 InputStream in = resource.asInputStream();
-                OutputStream out = Files.newOutputStream(to, StandardOpenOption.CREATE)
+                OutputStream out = Files.newOutputStream(to, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE)
         ) {
             copy(in, out);
         }
