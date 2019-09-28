@@ -18,6 +18,10 @@ package com.djrapitops.plan.utilities.html.icon;
 
 import com.djrapitops.plugin.utilities.Verify;
 
+/**
+ * @deprecated This Class exists to keep plugins that used PluginData from breaking.
+ */
+@Deprecated
 public class Icon {
 
     private Family type;
@@ -29,35 +33,20 @@ public class Icon {
         color = Color.NONE;
     }
 
-    public static Icon fromExtensionIcon(com.djrapitops.plan.extension.icon.Icon icon) {
-        if (icon == null) {
-            return Icon.called("question").build();
-        }
-        return new Icon(
-                Family.getByName(icon.getFamily().name()).orElse(Family.SOLID),
-                icon.getName(),
-                Color.getByName(icon.getColor().name()).orElse(Color.NONE)
-        );
-    }
-
+    /**
+     * @deprecated This Class exists to keep plugins that used PluginData from breaking.
+     */
+    @Deprecated
     public Icon(Family type, String name, Color color) {
         this.type = type;
         this.name = name;
         this.color = color;
     }
 
-    public Family getFamily() {
-        return type;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
+    /**
+     * @deprecated This Class exists to keep plugins that used PluginData from breaking.
+     */
+    @Deprecated
     public static Builder called(String name) {
         return new Builder().called(name);
     }
@@ -83,6 +72,10 @@ public class Icon {
         return toHtml();
     }
 
+    /**
+     * @deprecated This Class exists to keep plugins that used PluginData from breaking.
+     */
+    @Deprecated
     public static class Builder {
 
         private final Icon icon;

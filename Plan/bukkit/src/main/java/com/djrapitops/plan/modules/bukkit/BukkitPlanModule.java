@@ -18,7 +18,7 @@ package com.djrapitops.plan.modules.bukkit;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.command.PlanCommand;
+import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plugin.command.CommandNode;
 import dagger.Binds;
 import dagger.Module;

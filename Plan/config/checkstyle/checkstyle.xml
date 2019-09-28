@@ -34,7 +34,6 @@
         <!-- Java Style -->
         <module name="ArrayTypeStyle"/>
         <module name="AvoidNestedBlocks"/>
-        <module name="CommentsIndentation"/>
         <module name="DefaultComesLast"> <!-- Switches -->
             <property name="skipIfLastAndSharedWithCase" value="true"/>
         </module>
@@ -74,7 +73,6 @@
             <property name="exceptionVariableName" value="expected|ignore"/>
         </module>
         <module name="EmptyStatement"/>
-        <module name="HideUtilityClassConstructor"/>
         <module name="IllegalThrows"/>
         <module name="PackageAnnotation"/>
 

@@ -19,8 +19,13 @@ package com.djrapitops.plan.api;
 import com.djrapitops.plan.api.data.PlayerContainer;
 import com.djrapitops.plan.api.data.ServerContainer;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
+import com.djrapitops.plan.identification.UUIDUtility;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
@@ -30,7 +35,9 @@ import java.util.UUID;
  * Interface for PlanAPI methods.
  *
  * @author Rsl1122
+ * @deprecated Plan API v4 has been deprecated, use the APIv5 instead (https://github.com/plan-player-analytics/Plan/wiki/APIv5).
  */
+@Deprecated
 public interface PlanAPI {
 
     static PlanAPI getInstance() {
@@ -38,6 +45,7 @@ public interface PlanAPI {
                 .orElseThrow(() -> new IllegalStateException("PlanAPI has not been initialised yet."));
     }
 
+    @Singleton
     class PlanAPIHolder {
         static PlanAPI API;
 
@@ -45,8 +53,14 @@ public interface PlanAPI {
             PlanAPIHolder.API = api;
         }
 
-        private PlanAPIHolder() {
-            /* Static variable holder */
+        @Inject
+        public PlanAPIHolder(
+                DBSystem dbSystem,
+                UUIDUtility uuidUtility,
+                PluginLogger logger,
+                ErrorHandler errorHandler
+        ) {
+            set(new CommonAPI(dbSystem, uuidUtility, logger, errorHandler));
         }
     }
 
@@ -65,15 +79,6 @@ public interface PlanAPI {
     UUID playerNameToUUID(String playerName);
 
     Map<UUID, String> getKnownPlayerNames();
-
-    /**
-     * Fetch things from the database.
-     *
-     * @return FetchOperations object.
-     * @deprecated FetchOperations interface is going to removed since it is too rigid.
-     */
-    @Deprecated
-    FetchOperations fetchFromPlanDB();
 
     /**
      * Fetch PlayerContainer from the database.

@@ -1,5 +1,7 @@
 dependencies {
     compile project(path: ":common", configuration: 'shadow')
+    compileOnly project(":api")
+
     compile "com.djrapitops:AbstractPluginFramework-velocity:$abstractPluginFrameworkVersion"
 
     compileOnly "com.velocitypowered:velocity-api:$velocityVersion"

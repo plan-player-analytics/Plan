@@ -16,12 +16,12 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.command.PlanCommand;
-import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.lang.PluginLang;
-import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
+import com.djrapitops.plan.commands.PlanCommand;
+import com.djrapitops.plan.exceptions.EnableException;
+import com.djrapitops.plan.gathering.ServerShutdownSave;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
+import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import com.djrapitops.plugin.SpongePlugin;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.logging.L;
@@ -42,7 +42,7 @@ import java.io.InputStream;
 @Plugin(
         id = "plan",
         name = "Plan",
-        version = "4.9.4",
+        version = "5.0 RC build %buildNumber%",
         description = "Player Analytics Plugin by Rsl1122",
         authors = {"Rsl1122"},
         dependencies = {

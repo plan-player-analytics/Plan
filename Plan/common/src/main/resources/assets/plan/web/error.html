@@ -1,270 +1,261 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <meta content="Player Analytics, generic error/debug page" name="description">
+    <meta content="Rsl1122" name="author">
+
     <title>${titleText}</title>
-    <!-- Favicon-->
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
-          type="text/css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+    <!-- Custom fonts for this template-->
+    <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,600,700,800,900"
+          rel="stylesheet">
 
-    <!-- Bootstrap Core Css -->
-    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
-          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" rel="stylesheet">
-
-    <!-- Waves Effect Css -->
-    <link href="plugins/node-waves/waves.css" rel="stylesheet"/>
-
-    <!-- Animation Css -->
-    <link href="plugins/animate-css/animate.css" rel="stylesheet"/>
-
-    <!-- Custom Css -->
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 
-    <!-- Plan Stylesheet -->
-    <link href="css/main.css" rel="stylesheet">
-
-    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
-    <link href="css/themes/all-themes.css" rel="stylesheet"/>
-
-    <!-- Font Awesome -->
-    <link href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" rel="stylesheet">
-    <link href="https://use.fontawesome.com/releases/v5.8.1/css/v4-shims.css" rel="stylesheet">
-
-    <!-- Jquery Core Js -->
-    <script src="plugins/jquery/jquery.min.js"></script>
 </head>
 
-<body class="theme-red">
-<!-- Page Loader -->
-<div class="page-loader-wrapper">
-    <div class="loader">
-        <div class="preloader">
-            <div class="spinner-layer pl-light-green">
-                <div class="circle-clipper left">
-                    <div class="circle"></div>
-                </div>
-                <div class="circle-clipper right">
-                    <div class="circle"></div>
-                </div>
-            </div>
-        </div>
-        <p>Loading Data...</p>
-    </div>
-</div>
-<!-- #END# Page Loader -->
-<!-- Overlay For Sidebars -->
-<div class="overlay"></div>
-<!-- #END# Overlay For Sidebars -->
-<!-- Search Bar (Disabled) -->
-<div class="search-bar">
-    <div class="search-icon">
-        <i class="material-icons">search</i>
-    </div>
-    <input type="text" placeholder="START TYPING...">
-    <div class="close-search">
-        <i class="material-icons">close</i>
-    </div>
-</div>
-<!-- #END# Search Bar -->
-<!-- Top Bar -->
-<nav class="navbar">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse"
-               data-target="#navbar-collapse" aria-expanded="false"></a>
-            <a href="javascript:void(0);" class="bars"></a>
-            <a class="navbar-brand">${title}</a>
-        </div>
-        <div class="collapse navbar-collapse" id="navbar-collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <!-- Call Search (Disabled)
-                <li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="material-icons">search</i></a></li>
-                <!-- #END# Call Search -->
-                <li class="pull-right"><a href="javascript:void(0);" class="js-right-sidebar" data-close="true"><i
-                        class="material-icons">settings</i></a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
-<!-- #Top Bar -->
-<section>
-    <!-- Left Sidebar -->
-    <aside id="leftsidebar" class="sidebar">
-        <!-- Menu -->
-        <div class="menu">
-            <ul class="list">
-                <li class="active">
-                    <a class="nav-button" href="javascript:void(0)">
-                        <i class="material-icons">info_outline</i>
-                        <span>Information</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <!-- #Menu -->
-        <!-- Footer -->
-        <div class="legal">
-            <div class="row clearfix">
-                <div class="col-xs-10 col-sm-10 col-lg-10">
-                    <div class="version">
-                        <b>Player Analytics: </b> v${version}
-                        ${update}
-                    </div>
-                </div>
-                <div class="col-xs-2 col-sm-2 col-lg-2">
-                    <a href="javascript:void(0)" class="help material-icons pull-right"
-                       tabindex="0" data-trigger="focus" data-toggle="popover" data-placement="top"
-                       data-container="body" data-html="true"
-                       data-original-title="Player Analytics"
-                       data-content="Author: Rsl1122
-                       <br><br>Tutorials: <a target=&quot;_blank&quot; href=&quot;https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki&quot;>Link</a>
-                       <br>Issues: <a target=&quot;_blank&quot; href=&quot;https://github.com/Rsl1122/Plan-PlayerAnalytics/issues&quot;>Link</a>
-                       <br><br>Discord: <a target=&quot;_blank&quot; href=&quot;https://discord.gg/yXKmjzT&quot;>Link</a>"
-                    >help_outline</a>
-                </div>
-            </div>
-        </div>
-        <!-- #Footer -->
-    </aside>
-    <!-- #END# Left Sidebar -->
-    <!-- Right Sidebar -->
-    <aside id="rightsidebar" class="right-sidebar">
-        <div class="tab-content">
-            <div role="tabpanel" class="tab-pane fade in active in active" id="skins">
-                <ul class="demo-choose-skin">
-                    <li data-theme="red" class="active">
-                        <div class="red"></div>
-                        <span>Red</span>
-                    </li>
-                    <li data-theme="pink">
-                        <div class="pink"></div>
-                        <span>Pink</span>
-                    </li>
-                    <li data-theme="purple">
-                        <div class="purple"></div>
-                        <span>Purple</span>
-                    </li>
-                    <li data-theme="deep-purple">
-                        <div class="deep-purple"></div>
-                        <span>Deep Purple</span>
-                    </li>
-                    <li data-theme="indigo">
-                        <div class="indigo"></div>
-                        <span>Indigo</span>
-                    </li>
-                    <li data-theme="blue">
-                        <div class="blue"></div>
-                        <span>Blue</span>
-                    </li>
-                    <li data-theme="light-blue">
-                        <div class="light-blue"></div>
-                        <span>Light Blue</span>
-                    </li>
-                    <li data-theme="cyan">
-                        <div class="cyan"></div>
-                        <span>Cyan</span>
-                    </li>
-                    <li data-theme="teal">
-                        <div class="teal"></div>
-                        <span>Teal</span>
-                    </li>
-                    <li data-theme="green">
-                        <div class="green"></div>
-                        <span>Green</span>
-                    </li>
-                    <li data-theme="light-green">
-                        <div class="light-green"></div>
-                        <span>Light Green</span>
-                    </li>
-                    <li data-theme="lime">
-                        <div class="lime"></div>
-                        <span>Lime</span>
-                    </li>
-                    <li data-theme="yellow">
-                        <div class="yellow"></div>
-                        <span>Yellow</span>
-                    </li>
-                    <li data-theme="amber">
-                        <div class="amber"></div>
-                        <span>Amber</span>
-                    </li>
-                    <li data-theme="orange">
-                        <div class="orange"></div>
-                        <span>Orange</span>
-                    </li>
-                    <li data-theme="deep-orange">
-                        <div class="deep-orange"></div>
-                        <span>Deep Orange</span>
-                    </li>
-                    <li data-theme="brown">
-                        <div class="brown"></div>
-                        <span>Brown</span>
-                    </li>
-                    <li data-theme="grey">
-                        <div class="grey"></div>
-                        <span>Grey</span>
-                    </li>
-                    <li data-theme="blue-grey">
-                        <div class="blue-grey"></div>
-                        <span>Blue Grey</span>
-                    </li>
-                    <li data-theme="black">
-                        <div class="black"></div>
-                        <span>Black</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </aside>
-    <!-- #END# Right Sidebar -->
-</section>
+<body id="page-top">
 
-<section class="content">
-    <!-- Widgets -->
-    <div class="row clearfix">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="card">
-                <div class="header">
-                    <div class="row clearfix">
-                        <div class="col-xs-12 col-sm-6">
-                            <h2>${title}</h2>
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-plan sidebar sidebar-dark accordion" id="accordionSidebar">
+
+        <!-- Sidebar - Brand -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center">
+            <img class="w-22" src="img/Flaticon_circle.png">
+        </a>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0">
+
+        <li class="nav-item nav-button active">
+            <a class="nav-link" href="/">
+                <i class="far fa-fw fa-hand-point-left"></i>
+                <span>to main page</span></a>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <div class="ml-3 align-items-center justify-content-between">
+            <button class="btn bg-plan" data-target="#colorChooserModal" data-toggle="modal" type="button">
+                <i class="fa fa-palette"></i>
+            </button>
+            <button class="btn bg-plan" data-target="#informationModal" data-toggle="modal" type="button">
+                <i class="fa fa-fw fa-question-circle"></i>
+            </button>
+        </div>
+        <div class="ml-3 align-items-center justify-content-between">
+            ${version}
+        </div>
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div class="d-flex flex-column" id="content-wrapper">
+        <div class="sidebar-close-modal hidden"></div>
+
+        <!-- Main Content -->
+        <div id="content" style="display: flex;">
+            <!-- Begin Player Overview Tab -->
+            <div class="tab" style="width: 100%;">
+                <div class="container-fluid mt-4">
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">${title}</h1>
+                    </div>
+
+                    <div class="row">
+                        <!-- Card -->
+                        <div class="col-xs-12 col-sm-12 col-lg-11">
+                            <div class="card shadow mb-4">
+                                <div class="card-body" id="data_player_info">
+                                    ${paragraph}
+                                </div>
+                            </div>
                         </div>
                     </div>
+                </div> <!-- /.container-fluid -->
+            </div> <!-- End of tab -->
+        </div> <!-- End of Main Content -->
+    </div>
+    <!-- End of Content Wrapper -->
+
+    <!-- Color Chooser Modal -->
+    <div aria-hidden="true" aria-labelledby="colorChooserModalLabel" class="modal fade" id="colorChooserModal"
+         role="dialog" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="colorChooserModalLabel"><i class="fa fa-palette"></i> Theme Select
+                    </h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="body">
-                    ${paragraph}
+                <div class="modal-body">
+                    <button class="btn color-chooser" id="choose-plan" type="button"><i
+                            class="fa fa-palette"></i></button>
+                    <button class="btn color-chooser" id="choose-red" type="button"><i
+                            class="fa fa-palette"></i></button>
+                    <button class="btn color-chooser" id="choose-pink" type="button"><i
+                            class="fa fa-palette"></i></button>
+                    <button class="btn color-chooser" id="choose-purple" type="button"><i
+                            class="fa fa-palette"></i></button>
+                    <button class="btn color-chooser" id="choose-deep-purple" type="button"><i
+                            class="fa fa-palette"></i></button>
+                    <button class="btn color-chooser" id="choose-indigo" type="button"><i
+                            class="fa fa-palette"></i></button>
+                    <button class="btn color-chooser" id="choose-blue" type="button"><i
+                            class="fa fa-palette"></i></button>
+                    <button class="btn color-chooser" id="choose-light-blue" type="button"><i
+                            class="fa fa-palette"></i></button>
+                    <button class="btn color-chooser" id="choose-cyan" type="button"><i
+                            class="fa fa-palette"></i></button>
+                    <button class="btn color-chooser" id="choose-teal" type="button"><i
+                            class="fa fa-palette"></i></button>
+                    <button class="btn color-chooser" id="choose-green" type="button"><i
+                            class="fa fa-palette"></i></button>
+                    <button class="btn color-chooser" id="choose-light-green" type="button"><i
+                            class="fa fa-palette"></i></button>
+                    <button class="btn color-chooser" id="choose-lime" type="button"><i
+                            class="fa fa-palette"></i></button>
+                    <button class="btn color-chooser" id="choose-yellow" type="button"><i
+                            class="fa fa-palette"></i></button>
+                    <button class="btn color-chooser" id="choose-amber" type="button"><i
+                            class="fa fa-palette"></i></button>
+                    <button class="btn color-chooser" id="choose-orange" type="button"><i
+                            class="fa fa-palette"></i></button>
+                    <button class="btn color-chooser" id="choose-deep-orange" type="button"><i
+                            class="fa fa-palette"></i></button>
+                    <button class="btn color-chooser" id="choose-brown" type="button"><i
+                            class="fa fa-palette"></i></button>
+                    <button class="btn color-chooser" id="choose-grey" type="button"><i
+                            class="fa fa-palette"></i></button>
+                    <button class="btn color-chooser" id="choose-blue-grey" type="button"><i
+                            class="fa fa-palette"></i></button>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" id="night-mode-toggle" type="button"><i class="fa fa-fw fa-cloud-moon"></i>
+                        Night
+                        Mode
+                    </button>
+                    <button class="btn bg-plan" data-dismiss="modal" type="button">OK</button>
                 </div>
             </div>
         </div>
     </div>
-    <!-- #END# Widgets -->
-</section>
 
-<!-- Bootstrap Core Js -->
-<script crossorigin="anonymous" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
-        src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <!-- Information Modal -->
+    <div aria-hidden="true" aria-labelledby="informationModalLabel" class="modal fade" id="informationModal"
+         role="dialog" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="informationModalLabel"><i class="fa fa-fw fa-question-circle"></i>
+                        Information about the plugin
+                    </h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Player Analytics is developed and licensed under <a
+                            href="https://opensource.org/licenses/LGPL-3.0" rel="noopener noreferrer"
+                            target="_blank">Lesser General Public License
+                        v3.0</a></p>
+                    <hr>
+                    <a class="btn col-plan" href="https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki"
+                       rel="noopener noreferrer" target="_blank"><i class="fa fa-fw fa-graduation-cap"></i> Plan
+                        Wiki,
+                        Tutorials & Documentation</a>
+                    <a class="btn col-plan" href="https://github.com/Rsl1122/Plan-PlayerAnalytics/issues"
+                       rel="noopener noreferrer" target="_blank"><i class="fa fa-fw fa-bug"></i> Report Issues</a>
+                    <a class="btn col-plan" href="https://discord.gg/yXKmjzT" rel="noopener noreferrer"
+                       target="_blank"><i class="fab fa-fw fa-discord"></i> General Support on Discord</a>
+                    <hr>
+                    <p>Player Analytics is developed by Rsl1122.</p>
+                    <p>In addition following <span class="col-plan">awesome people</span> have contributed:</p>
+                    <ul>
+                        <li>Argetan <i class="fa fa-fw fa-code"></i></li>
+                        <li>BrainStone <i class="fa fa-fw fa-code"></i></li>
+                        <li>CyanTech <i class="fa fa-fw fa-language"></i></li>
+                        <li>DarkPyves <i class="fa fa-fw fa-code"></i></li>
+                        <li>DaveDevil <i class="fa fa-fw fa-language"></i></li>
+                        <li>enterih <i class="fa fa-fw fa-language"></i></li>
+                        <li>Eyremba <i class="fa fa-fw fa-language"></i></li>
+                        <li>f0rb1d (佛壁灯) <i class="fa fa-fw fa-language"></i></li>
+                        <li>fuzzlemann <i class="fa fa-fw fa-code"></i> <i class="fa fa-fw fa-language"></i></li>
+                        <li>Miclebrick <i class="fa fa-fw fa-code"></i></li>
+                        <li>Morsmorse <i class="fa fa-fw fa-language"></i></li>
+                        <li>Vankka <i class="fa fa-fw fa-code"></i></li>
+                    </ul>
+                    <small><i class="fa fa-fw fa-code"></i> code contributor <i class="fa fa-fw fa-language"></i>
+                        translator
+                    </small>
+                    <hr>
+                    <p class="col-plan">Extra special thanks to those who have monetarily supported the development.
+                        <i class="fa fa-fw fa-star col-amber"></i></p>
+                    <hr>
+                    <h6>bStats Metrics</h6>
+                    <a class="btn col-plan" href="https://bstats.org/plugin/bukkit/Plan" rel="noopener noreferrer"
+                       target="_blank"><i class="fa fa-fw fa-chart-area"></i> Bukkit</a>
+                    <a class="btn col-plan" href="https://bstats.org/plugin/bungeecord/Plan"
+                       rel="noopener noreferrer" target="_blank"><i class="fa fa-fw fa-chart-area"></i>
+                        BungeeCord</a>
+                    <a class="btn col-plan" href="https://bstats.org/plugin/sponge/plan" rel="noopener noreferrer"
+                       target="_blank"><i class="fa fa-fw fa-chart-area"></i> Sponge</a>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn bg-plan" data-dismiss="modal" type="button">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<!-- Slimscroll Plugin Js -->
-<script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+    <!-- Update Modal -->
+    <div aria-hidden="true" aria-labelledby="updateModalLabel" class="modal fade" id="updateModal" role="dialog"
+         tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                ${updateModal}
+                <div class="modal-footer">
+                    <button class="btn bg-plan" data-dismiss="modal" type="button">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<!-- Waves Effect Plugin Js -->
-<script src="plugins/node-waves/waves.js"></script>
+</div>
+<!-- End of Page Wrapper -->
 
-<!-- Waves Effect Plugin Js -->
-<script src="plugins/node-waves/waves.js"></script>
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-fw fa-angle-up"></i>
+</a>
 
-<!-- Header, Sidenav & Skin changer -->
-<script src="js/admin.js"></script>
+<!-- Bootstrap core JavaScript-->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-<!-- Demo Js -->
-<script src="js/demo.js"></script>
+<!-- Core plugin JavaScript-->
+<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="js/sb-admin-2.js"></script>
+<script src="js/color-selector.js"></script>
+
 </body>
 
 </html>

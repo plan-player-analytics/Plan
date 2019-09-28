@@ -17,8 +17,8 @@
 package com.djrapitops.plan.modules.bukkit;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.system.info.server.properties.BukkitServerProperties;
-import com.djrapitops.plan.system.info.server.properties.ServerProperties;
+import com.djrapitops.plan.identification.properties.BukkitServerProperties;
+import com.djrapitops.plan.identification.properties.ServerProperties;
 import dagger.Module;
 import dagger.Provides;
 

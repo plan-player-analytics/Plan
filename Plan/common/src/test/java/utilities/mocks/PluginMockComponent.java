@@ -17,7 +17,7 @@
 package utilities.mocks;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.PlanSystem;
 import utilities.dagger.DaggerPlanPluginComponent;
 import utilities.dagger.PlanPluginComponent;
 

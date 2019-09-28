@@ -16,30 +16,24 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.queries;
 
-import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.db.sql.tables.ExtensionIconTable;
-import com.djrapitops.plan.db.sql.tables.ExtensionServerTableValueTable;
-import com.djrapitops.plan.db.sql.tables.ExtensionTabTable;
-import com.djrapitops.plan.db.sql.tables.ExtensionTableProviderTable;
 import com.djrapitops.plan.extension.ElementOrder;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
-import com.djrapitops.plan.extension.implementation.TabInformation;
-import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
-import com.djrapitops.plan.extension.implementation.results.ExtensionTableData;
-import com.djrapitops.plan.extension.implementation.results.server.ExtensionServerData;
+import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.extension.table.TableAccessor;
+import com.djrapitops.plan.storage.database.SQLDB;
+import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.sql.tables.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
 
 /**
  * Query server tables from tableprovider table.
@@ -57,7 +51,7 @@ import static com.djrapitops.plan.db.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionServerData.Factory>> {
+public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionData.Factory>> {
 
     private final UUID serverUUID;
 
@@ -66,49 +60,12 @@ public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionS
     }
 
     @Override
-    public Map<Integer, ExtensionServerData.Factory> executeQuery(SQLDB db) {
-        Map<Integer, Map<Integer, Table.Factory>> tablesByPluginIDAndTableID = db.query(queryTableProviders());
-        Map<Integer, Map<Integer, Table.Factory>> tablesWithValues = db.query(queryTableValues(tablesByPluginIDAndTableID));
-
-        Map<Integer, Map<String, ExtensionTabData.Factory>> tabDataByPluginID = mapToTabsByPluginID(tablesWithValues);
-        return ExtensionServerDataQuery.flatMapToServerData(tabDataByPluginID);
+    public Map<Integer, ExtensionData.Factory> executeQuery(SQLDB db) {
+        QueriedTables tablesWithValues = db.query(queryTableValues(db.query(queryTableProviders())));
+        return tablesWithValues.toQueriedTabs().toExtensionDataByPluginID();
     }
 
-    /**
-     * @param tablesByPluginIDAndTableID {@code <Plugin ID - <Table ID - Table.Factory>>}
-     * @return {@code <Plugin ID - <Tab name - ExtensionTabData.Factory>}
-     */
-    private Map<Integer, Map<String, ExtensionTabData.Factory>> mapToTabsByPluginID(Map<Integer, Map<Integer, Table.Factory>> tablesByPluginIDAndTableID) {
-        Map<Integer, Map<String, ExtensionTabData.Factory>> byPluginID = new HashMap<>();
-
-        for (Map.Entry<Integer, Map<Integer, Table.Factory>> entry : tablesByPluginIDAndTableID.entrySet()) {
-            Integer pluginID = entry.getKey();
-            Map<String, ExtensionTabData.Factory> byTabName = byPluginID.getOrDefault(pluginID, new HashMap<>());
-            for (Table.Factory table : entry.getValue().values()) {
-                // Extra Table information
-                String tableName = TableAccessor.getTableName(table);
-                Color tableColor = TableAccessor.getColor(table);
-
-                // Extra tab information
-                String tabName = TableAccessor.getTabName(table);
-                int tabPriority = TableAccessor.getTabPriority(table);
-                ElementOrder[] tabOrder = TableAccessor.getTabOrder(table);
-                Icon tabIcon = TableAccessor.getTabIcon(table);
-
-                ExtensionTabData.Factory tab = byTabName.getOrDefault(tabName, new ExtensionTabData.Factory(new TabInformation(tabName, tabIcon, tabOrder, tabPriority)));
-                tab.putTableData(new ExtensionTableData(
-                        tableName, table.build(), tableColor
-                ));
-                byTabName.put(tabName, tab);
-            }
-            byPluginID.put(pluginID, byTabName);
-        }
-
-        return byPluginID;
-    }
-
-    // Map: <Plugin ID - <Table ID - Table.Factory>>
-    private Query<Map<Integer, Map<Integer, Table.Factory>>> queryTableValues(Map<Integer, Map<Integer, Table.Factory>> tables) {
+    private Query<QueriedTables> queryTableValues(QueriedTables tables) {
         String selectTableValues = SELECT +
                 ExtensionTableProviderTable.PLUGIN_ID + ',' +
                 ExtensionServerTableValueTable.TABLE_ID + ',' +
@@ -121,36 +78,22 @@ public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionS
                 INNER_JOIN + ExtensionTableProviderTable.TABLE_NAME + " on " + ExtensionTableProviderTable.TABLE_NAME + '.' + ExtensionTableProviderTable.ID + '=' + ExtensionServerTableValueTable.TABLE_NAME + '.' + ExtensionServerTableValueTable.TABLE_ID +
                 WHERE + ExtensionServerTableValueTable.SERVER_UUID + "=?";
 
-        return new QueryStatement<Map<Integer, Map<Integer, Table.Factory>>>(selectTableValues, 10000) {
+        return new QueryStatement<QueriedTables>(selectTableValues, 10000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
             }
 
             @Override
-            public Map<Integer, Map<Integer, Table.Factory>> processResults(ResultSet set) throws SQLException {
+            public QueriedTables processResults(ResultSet set) throws SQLException {
                 while (set.next()) {
-                    Table.Factory table = getTable(set);
-                    if (table == null) {
-                        continue;
-                    }
-
-                    Object[] row = extractTableRow(set);
-                    if (row.length > 0) {
-                        table.addRow(row);
-                    }
+                    tables.addRow(
+                            set.getInt(ExtensionTableProviderTable.PLUGIN_ID),
+                            set.getInt(ExtensionPlayerTableValueTable.TABLE_ID),
+                            extractTableRow(set)
+                    );
                 }
                 return tables;
-            }
-
-            private Table.Factory getTable(ResultSet set) throws SQLException {
-                int pluginID = set.getInt(ExtensionTableProviderTable.PLUGIN_ID);
-                Map<Integer, Table.Factory> byTableID = tables.get(pluginID);
-                if (byTableID == null) {
-                    return null;
-                }
-                int tableID = set.getInt(ExtensionServerTableValueTable.TABLE_ID);
-                return byTableID.get(tableID);
             }
         };
     }
@@ -168,8 +111,7 @@ public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionS
         return row.toArray(new Object[0]);
     }
 
-    // Map: <Plugin ID - <Table ID - Table.Factory>>
-    private Query<Map<Integer, Map<Integer, Table.Factory>>> queryTableProviders() {
+    private Query<QueriedTables> queryTableProviders() {
         String selectTables = SELECT +
                 "p1." + ExtensionTableProviderTable.ID + " as table_id," +
                 "p1." + ExtensionTableProviderTable.PLUGIN_ID + " as plugin_id," +
@@ -212,39 +154,41 @@ public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionS
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i6 on i6." + ExtensionIconTable.ID + "=t1." + ExtensionTabTable.ICON_ID +
                 WHERE + "v1." + ExtensionServerTableValueTable.SERVER_UUID + "=?";
 
-        return new QueryStatement<Map<Integer, Map<Integer, Table.Factory>>>(selectTables, 100) {
+        return new QueryStatement<QueriedTables>(selectTables, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
             }
 
             @Override
-            public Map<Integer, Map<Integer, Table.Factory>> processResults(ResultSet set) throws SQLException {
-                Map<Integer, Map<Integer, Table.Factory>> byPluginID = new HashMap<>();
+            public QueriedTables processResults(ResultSet set) throws SQLException {
+                QueriedTables tables = new QueriedTables();
 
                 while (set.next()) {
-                    int pluginID = set.getInt("plugin_id");
-                    Map<Integer, Table.Factory> byTableID = byPluginID.getOrDefault(pluginID, new HashMap<>());
-
-                    int tableID = set.getInt("table_id");
-                    Table.Factory table = Table.builder();
-
-                    extractColumns(set, table);
-
-                    TableAccessor.setColor(table, Color.getByName(set.getString("table_color")).orElse(Color.NONE));
-                    TableAccessor.setTableName(table, set.getString("table_name"));
-                    TableAccessor.setTabName(table, Optional.ofNullable(set.getString("tab_name")).orElse(""));
-                    TableAccessor.setTabPriority(table, Optional.of(set.getInt("tab_priority")).orElse(100));
-                    TableAccessor.setTabOrder(table, Optional.ofNullable(set.getString(ExtensionTabTable.ELEMENT_ORDER)).map(ElementOrder::deserialize).orElse(ElementOrder.values()));
-                    TableAccessor.setTabIcon(table, extractIcon(set, "tab_icon"));
-
-                    byTableID.put(tableID, table);
-                    byPluginID.put(pluginID, byTableID);
+                    tables.put(
+                            set.getInt(ExtensionTableProviderTable.PLUGIN_ID),
+                            set.getInt(ExtensionPlayerTableValueTable.TABLE_ID),
+                            extractTable(set)
+                    );
                 }
 
-                return byPluginID;
+                return tables;
             }
         };
+    }
+
+    private Table.Factory extractTable(ResultSet set) throws SQLException {
+        Table.Factory table = Table.builder();
+
+        extractColumns(set, table);
+
+        TableAccessor.setColor(table, Color.getByName(set.getString("table_color")).orElse(Color.NONE));
+        TableAccessor.setTableName(table, set.getString("table_name"));
+        TableAccessor.setTabName(table, Optional.ofNullable(set.getString("tab_name")).orElse(""));
+        TableAccessor.setTabPriority(table, Optional.of(set.getInt("tab_priority")).orElse(100));
+        TableAccessor.setTabOrder(table, Optional.ofNullable(set.getString(ExtensionTabTable.ELEMENT_ORDER)).map(ElementOrder::deserialize).orElse(ElementOrder.values()));
+        TableAccessor.setTabIcon(table, extractIcon(set, "tab_icon"));
+        return table;
     }
 
     private void extractColumns(ResultSet set, Table.Factory table) throws SQLException {

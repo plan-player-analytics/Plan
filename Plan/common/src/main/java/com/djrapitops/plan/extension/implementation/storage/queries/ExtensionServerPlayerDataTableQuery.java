@@ -16,15 +16,15 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.queries;
 
-import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.db.sql.tables.*;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.*;
+import com.djrapitops.plan.storage.database.SQLDB;
+import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.sql.tables.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
 
 /**
  * Query Extension data of x most recent players on a server.
@@ -55,16 +55,31 @@ public class ExtensionServerPlayerDataTableQuery implements Query<Map<UUID, Exte
 
     @Override
     public Map<UUID, ExtensionTabData> executeQuery(SQLDB db) {
-        return db.query(fetchIncompletePlayerDataByPluginID());
+        return combine(db.query(fetchPlayerData()), db.query(fetchPlayerGroups()));
     }
 
-    private Query<Map<UUID, ExtensionTabData>> fetchIncompletePlayerDataByPluginID() {
+    private Map<UUID, ExtensionTabData> combine(Map<UUID, ExtensionTabData> one, Map<UUID, ExtensionTabData> two) {
+        for (Map.Entry<UUID, ExtensionTabData> entry : two.entrySet()) {
+            UUID playerUUID = entry.getKey();
+            ExtensionTabData data = entry.getValue();
+            ExtensionTabData existingData = one.get(playerUUID);
+            if (existingData != null) {
+                existingData.combine(data);
+            } else {
+                existingData = data;
+            }
+            one.put(playerUUID, existingData);
+        }
+        return one;
+    }
+
+    private Query<Map<UUID, ExtensionTabData>> fetchPlayerData() {
         String selectLimitedNumberOfPlayerUUIDsByLastSeenDate = SELECT +
                 SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_UUID +
                 ",MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
                 FROM + SessionsTable.TABLE_NAME +
-                GROUP_BY + SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_UUID + ',' + SessionsTable.SESSION_END +
-                ORDER_BY + SessionsTable.SESSION_END + " DESC LIMIT ?";
+                GROUP_BY + SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_UUID +
+                ORDER_BY + "last_seen DESC LIMIT ?";
 
         String sql = SELECT +
                 "v1." + ExtensionPlayerValueTable.USER_UUID + " as uuid," +
@@ -73,6 +88,7 @@ public class ExtensionServerPlayerDataTableQuery implements Query<Map<UUID, Exte
                 "v1." + ExtensionPlayerValueTable.PERCENTAGE_VALUE + " as percentage_value," +
                 "v1." + ExtensionPlayerValueTable.LONG_VALUE + " as long_value," +
                 "v1." + ExtensionPlayerValueTable.STRING_VALUE + " as string_value," +
+                "null as group_value," +
                 "p1." + ExtensionProviderTable.PROVIDER_NAME + " as provider_name," +
                 "p1." + ExtensionProviderTable.TEXT + " as text," +
                 "p1." + ExtensionProviderTable.FORMAT_TYPE + " as format_type," +
@@ -104,6 +120,42 @@ public class ExtensionServerPlayerDataTableQuery implements Query<Map<UUID, Exte
         };
     }
 
+    private Query<Map<UUID, ExtensionTabData>> fetchPlayerGroups() {
+        String selectLimitedNumberOfPlayerUUIDsByLastSeenDate = SELECT +
+                SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_UUID +
+                ",MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
+                FROM + SessionsTable.TABLE_NAME +
+                GROUP_BY + SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_UUID +
+                ORDER_BY + "last_seen DESC LIMIT ?";
+
+        String sql = SELECT +
+                "v1." + ExtensionGroupsTable.USER_UUID + " as uuid," +
+                "v1." + ExtensionGroupsTable.GROUP_NAME + " as group_value," +
+                "p1." + ExtensionProviderTable.PROVIDER_NAME + " as provider_name," +
+                "p1." + ExtensionProviderTable.TEXT + " as text," +
+                "i1." + ExtensionIconTable.ICON_NAME + " as provider_icon_name," +
+                "i1." + ExtensionIconTable.FAMILY + " as provider_icon_family" +
+                FROM + ExtensionGroupsTable.TABLE_NAME + " v1" +
+                INNER_JOIN + '(' + selectLimitedNumberOfPlayerUUIDsByLastSeenDate + ") as last_seen_q on last_seen_q.uuid=v1." + ExtensionGroupsTable.USER_UUID +
+                INNER_JOIN + ExtensionProviderTable.TABLE_NAME + " p1 on p1." + ExtensionProviderTable.ID + "=v1." + ExtensionGroupsTable.PROVIDER_ID +
+                INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " e1 on e1." + ExtensionPluginTable.ID + "=p1." + ExtensionProviderTable.PLUGIN_ID +
+                LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i1 on i1." + ExtensionIconTable.ID + "=p1." + ExtensionProviderTable.ICON_ID +
+                WHERE + "e1." + ExtensionPluginTable.SERVER_UUID + "=?";
+
+        return new QueryStatement<Map<UUID, ExtensionTabData>>(sql, 1000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setInt(1, xMostRecentPlayers);       // Limit to x most recently seen players
+                statement.setString(2, serverUUID.toString());
+            }
+
+            @Override
+            public Map<UUID, ExtensionTabData> processResults(ResultSet set) throws SQLException {
+                return extractDataByPlayer(set);
+            }
+        };
+    }
+
     private Map<UUID, ExtensionTabData> extractDataByPlayer(ResultSet set) throws SQLException {
         Map<UUID, ExtensionTabData.Factory> dataByPlayer = new HashMap<>();
 
@@ -120,6 +172,12 @@ public class ExtensionServerPlayerDataTableQuery implements Query<Map<UUID, Exte
     }
 
     private void extractAndPutDataTo(ExtensionTabData.Factory extensionTab, ExtensionDescriptive descriptive, ResultSet set) throws SQLException {
+        String groupValue = set.getString("group_value");
+        if (groupValue != null) {
+            extensionTab.putGroupData(new ExtensionStringData(descriptive, false, groupValue));
+            return;
+        }
+
         boolean booleanValue = set.getBoolean(ExtensionServerValueTable.BOOLEAN_VALUE);
         if (!set.wasNull()) {
             extensionTab.putBooleanData(new ExtensionBooleanData(descriptive, booleanValue));

@@ -16,21 +16,19 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
-import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.settings.ConfigSettingKeyTest;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.WebserverSettings;
-import com.djrapitops.plan.system.settings.paths.key.Setting;
+import com.djrapitops.plan.exceptions.EnableException;
+import com.djrapitops.plan.identification.Server;
+import com.djrapitops.plan.settings.ConfigSettingKeyTest;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.settings.config.paths.key.Setting;
+import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import utilities.OptionalAssert;
 import utilities.RandomData;
 import utilities.mocks.BukkitMockComponent;
 
@@ -38,6 +36,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -78,7 +77,7 @@ public class BukkitSystemTest {
             Optional<String> found = database.query(ServerQueries.fetchServerMatchingIdentifier(system.getServerInfo().getServerUUID()))
                     .map(Server::getWebAddress);
 
-            OptionalAssert.equals(expectedAddress, found);
+            assertEquals(expectedAddress, found.orElse(null));
         } finally {
             system.disable();
         }

@@ -56,12 +56,17 @@ public class ExtensionRegister {
         register(new AdvancedBanExtensionFactory(), AdvancedBanExtensionFactory::createExtension, AdvancedBanExtensionFactory::registerListener);
         register(new ASkyBlockExtensionFactory(), ASkyBlockExtensionFactory::createExtension);
         register(new BanManagerExtensionFactory(), BanManagerExtensionFactory::createExtension);
+        register(new BuycraftExtensionFactory(), BuycraftExtensionFactory::createExtension);
         register(new CoreProtectExtensionFactory(), CoreProtectExtensionFactory::createExtension);
         register(new DiscordSRVExtensionFactory(), DiscordSRVExtensionFactory::createExtension);
         register(new EssentialsExtensionFactory(), EssentialsExtensionFactory::createExtension, EssentialsExtensionFactory::registerUpdateListeners);
+        register(new FactionsExtensionFactory(), FactionsExtensionFactory::createExtension);
         register(new GriefPreventionExtensionFactory(), GriefPreventionExtensionFactory::createExtension);
         register(new GriefPreventionSpongeExtensionFactory(), GriefPreventionSpongeExtensionFactory::createExtension);
         register(new GriefPreventionPlusExtensionFactory(), GriefPreventionPlusExtensionFactory::createExtension);
+        register(new JobsExtensionFactory(), JobsExtensionFactory::createExtension);
+        register(new LitebansExtensionFactory(), LitebansExtensionFactory::createExtension, LitebansExtensionFactory::registerEvents);
+        register(new LuckPermsExtensionFactory(), LuckPermsExtensionFactory::createExtension);
         register(new McMMOExtensionFactory(), McMMOExtensionFactory::createExtension);
         registerMinigameLibExtensions();
         register(new NucleusExtensionFactory(), NucleusExtensionFactory::createExtension);
@@ -70,6 +75,7 @@ public class ExtensionRegister {
         register(new RedProtectExtensionFactory(), RedProtectExtensionFactory::createExtension);
         register(new SpongeEconomyExtensionFactory(), SpongeEconomyExtensionFactory::createExtension);
         register(new SuperbVoteExtensionFactory(), SuperbVoteExtensionFactory::createExtension);
+        register(new TownyExtensionFactory(), TownyExtensionFactory::createExtension);
         register(new VaultExtensionFactory(), VaultExtensionFactory::createExtension);
         register(new ViaVersionExtensionFactory(), ViaVersionExtensionFactory::createExtension);
 
@@ -99,7 +105,7 @@ public class ExtensionRegister {
     ) {
         try {
             // Creates the extension with factory and registers it
-            createExtension.apply(factory).flatMap(this::register);
+            createExtension.apply(factory).ifPresent(this::register);
         } catch (NotReadyException ignore) {
             // This exception signals that the extension can not be registered right now (Intended fail).
         } catch (Exception | NoClassDefFoundError | IncompatibleClassChangeError e) {

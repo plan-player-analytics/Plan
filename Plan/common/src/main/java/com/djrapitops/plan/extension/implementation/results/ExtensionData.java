@@ -16,18 +16,116 @@
  */
 package com.djrapitops.plan.extension.implementation.results;
 
+import java.util.*;
+
 /**
- * Represents a data-point given by a Provider method of a DataExtension.
+ * Represents data of a single extension about a server.
  *
  * @author Rsl1122
  */
-public interface ExtensionData {
+public class ExtensionData implements Comparable<ExtensionData> {
 
-    /**
-     * Get Descriptive information about the data point.
-     *
-     * @return a {@link ExtensionDescriptive}.
-     */
-    ExtensionDescriptive getDescriptive();
+    private final int pluginID;
+
+    private ExtensionInformation extensionInformation;
+
+    private Map<String, ExtensionTabData> tabs;
+
+    private ExtensionData(int pluginID) {
+        this.pluginID = pluginID;
+
+        tabs = new HashMap<>();
+    }
+
+    public int getPluginID() {
+        return pluginID;
+    }
+
+    public ExtensionInformation getExtensionInformation() {
+        return extensionInformation;
+    }
+
+    public boolean hasOnlyGenericTab() {
+        return tabs.size() == 1 && tabs.containsKey("");
+    }
+
+    public boolean doesNeedWiderSpace() {
+        for (ExtensionTabData tab : tabs.values()) {
+            for (ExtensionTableData table : tab.getTableData()) {
+                if (table.isWideTable()) return true;
+            }
+        }
+        return false;
+    }
+
+    public List<ExtensionTabData> getTabs() {
+        List<ExtensionTabData> tabList = new ArrayList<>(tabs.values());
+        Collections.sort(tabList);
+        return tabList;
+    }
+
+    @Override
+    public int compareTo(ExtensionData o) {
+        return String.CASE_INSENSITIVE_ORDER.compare(this.extensionInformation.getPluginName(), o.extensionInformation.getPluginName());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ExtensionData)) return false;
+        ExtensionData that = (ExtensionData) o;
+        return pluginID == that.pluginID &&
+                Objects.equals(extensionInformation, that.extensionInformation) &&
+                Objects.equals(tabs, that.tabs);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pluginID, extensionInformation, tabs);
+    }
+
+    public static class Factory {
+
+        private final ExtensionData data;
+
+        public Factory(int pluginId) {
+            data = new ExtensionData(pluginId);
+        }
+
+        public Factory combine(Factory with) {
+            if (with != null) {
+                for (ExtensionTabData tab : with.build().getTabs()) {
+                    Optional<ExtensionTabData> found = getTab(tab.getTabInformation().getTabName());
+                    if (found.isPresent()) {
+                        found.get().combine(tab);
+                    } else {
+                        addTab(tab);
+                    }
+                }
+            }
+            return this;
+        }
+
+        public Factory setInformation(ExtensionInformation information) {
+            if (information.getId() != data.pluginID) {
+                throw new IllegalArgumentException("ID mismatch, wanted id: " + data.pluginID + " but got " + information);
+            }
+            data.extensionInformation = information;
+            return this;
+        }
+
+        public Factory addTab(ExtensionTabData tab) {
+            data.tabs.put(tab.getTabInformation().getTabName(), tab);
+            return this;
+        }
+
+        public Optional<ExtensionTabData> getTab(String tabName) {
+            return Optional.ofNullable(data.tabs.get(tabName));
+        }
+
+        public ExtensionData build() {
+            return data;
+        }
+    }
 
 }

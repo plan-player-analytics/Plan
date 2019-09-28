@@ -73,4 +73,13 @@ public class MethodAnnotations {
     public String toString() {
         return "MethodAnnotations{" + byAnnotationType + '}';
     }
+
+    void makeMethodsAccessible() {
+        byAnnotationType.values().stream()
+                .map(Map::keySet)
+                .flatMap(Collection::stream)
+                .distinct()
+                .filter(method -> !method.isAccessible())
+                .forEach(method -> method.setAccessible(true));
+    }
 }

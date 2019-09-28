@@ -16,12 +16,11 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.command.PlanProxyCommand;
-import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.lang.PluginLang;
-import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
+import com.djrapitops.plan.commands.PlanProxyCommand;
+import com.djrapitops.plan.exceptions.EnableException;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
+import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import com.djrapitops.plugin.BungeePlugin;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.logging.L;
@@ -48,8 +47,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
             new BStatsBungee(
                     this,
-                    system.getDatabaseSystem().getDatabase(),
-                    system.getInfoSystem().getConnectionSystem()
+                    system.getDatabaseSystem().getDatabase()
             ).registerMetrics();
 
             logger.info(locale.getString(PluginLang.ENABLED));

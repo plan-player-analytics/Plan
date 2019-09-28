@@ -16,16 +16,14 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.command.PlanCommand;
+import com.djrapitops.plan.commands.PlanCommand;
+import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.modules.APFModule;
 import com.djrapitops.plan.modules.FilesModule;
-import com.djrapitops.plan.modules.ServerSuperClassBindingModule;
 import com.djrapitops.plan.modules.SystemObjectProvidingModule;
 import com.djrapitops.plan.modules.bukkit.BukkitPlanModule;
 import com.djrapitops.plan.modules.bukkit.BukkitServerPropertiesModule;
 import com.djrapitops.plan.modules.bukkit.BukkitSuperClassBindingModule;
-import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.pluginbridge.plan.PluginBridgeModule;
 import dagger.BindsInstance;
 import dagger.Component;
 
@@ -43,9 +41,7 @@ import javax.inject.Singleton;
         APFModule.class,
         FilesModule.class,
         BukkitServerPropertiesModule.class,
-        ServerSuperClassBindingModule.class,
-        BukkitSuperClassBindingModule.class,
-        PluginBridgeModule.Bukkit.class
+        BukkitSuperClassBindingModule.class
 })
 public interface PlanBukkitComponent {
 

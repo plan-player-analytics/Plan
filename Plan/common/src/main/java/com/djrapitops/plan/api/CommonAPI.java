@@ -18,17 +18,14 @@ package com.djrapitops.plan.api;
 
 import com.djrapitops.plan.api.data.PlayerContainer;
 import com.djrapitops.plan.api.data.ServerContainer;
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.access.queries.containers.ContainerFetchQueries;
-import com.djrapitops.plan.db.access.queries.objects.ServerQueries;
-import com.djrapitops.plan.db.access.queries.objects.UserIdentifierQueries;
-import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
-import com.djrapitops.plan.system.database.databases.sql.operation.SQLFetchOps;
-import com.djrapitops.plan.utilities.uuid.UUIDUtility;
+import com.djrapitops.plan.exceptions.database.DBOpException;
+import com.djrapitops.plan.identification.UUIDUtility;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -44,13 +41,14 @@ import java.util.UUID;
  * PlanAPI extension for all implementations.
  *
  * @author Rsl1122
+ * @deprecated Plan API v4 has been deprecated, use the APIv5 instead (https://github.com/plan-player-analytics/Plan/wiki/APIv5).
  */
 @Singleton
+@Deprecated
 public class CommonAPI implements PlanAPI {
 
     private final DBSystem dbSystem;
     private final UUIDUtility uuidUtility;
-    private final HookHandler hookHandler;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
 
@@ -58,13 +56,11 @@ public class CommonAPI implements PlanAPI {
     public CommonAPI(
             DBSystem dbSystem,
             UUIDUtility uuidUtility,
-            HookHandler hookHandler,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
         this.dbSystem = dbSystem;
         this.uuidUtility = uuidUtility;
-        this.hookHandler = hookHandler;
         this.logger = logger;
         this.errorHandler = errorHandler;
         PlanAPIHolder.set(this);
@@ -72,7 +68,9 @@ public class CommonAPI implements PlanAPI {
 
     @Override
     public void addPluginDataSource(PluginData pluginData) {
-        hookHandler.addPluginDataSource(pluginData);
+        logger.warn(pluginData.getClass().getName() + " was attempted to be registered." +
+                " PluginData API has been decommissioned, so this is a no-op." +
+                " Please move to using DataExtension API. https://github.com/plan-player-analytics/Plan/wiki/APIv5");
     }
 
     @Override
@@ -118,15 +116,6 @@ public class CommonAPI implements PlanAPI {
     @Override
     public String getPlayerName(UUID playerUUID) {
         return queryDB(UserIdentifierQueries.fetchPlayerNameOf(playerUUID)).orElse(null);
-    }
-
-    @Override
-    public FetchOperations fetchFromPlanDB() {
-        logger.warn("PlanAPI#fetchFromPlanDB has been deprecated and will be removed in the future. Stack trace to follow");
-        for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
-            logger.warn(element.toString());
-        }
-        return new SQLFetchOps(dbSystem.getDatabase());
     }
 
     private <T> T queryDB(Query<T> query) {

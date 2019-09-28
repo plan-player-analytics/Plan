@@ -16,18 +16,12 @@
  */
 package com.djrapitops.plan.modules;
 
-import com.djrapitops.plan.api.CommonAPI;
-import com.djrapitops.plan.api.PlanAPI;
-import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.ProxyDBSystem;
-import com.djrapitops.plan.system.importing.EmptyImportSystem;
-import com.djrapitops.plan.system.importing.ImportSystem;
-import com.djrapitops.plan.system.info.InfoSystem;
-import com.djrapitops.plan.system.info.ProxyInfoSystem;
-import com.djrapitops.plan.system.info.connection.ConnectionSystem;
-import com.djrapitops.plan.system.info.connection.ProxyConnectionSystem;
-import com.djrapitops.plan.system.settings.ConfigSystem;
-import com.djrapitops.plan.system.settings.ProxyConfigSystem;
+import com.djrapitops.plan.gathering.importing.EmptyImportSystem;
+import com.djrapitops.plan.gathering.importing.ImportSystem;
+import com.djrapitops.plan.settings.ConfigSystem;
+import com.djrapitops.plan.settings.ProxyConfigSystem;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.ProxyDBSystem;
 import dagger.Binds;
 import dagger.Module;
 
@@ -40,19 +34,10 @@ import dagger.Module;
 public interface ProxySuperClassBindingModule {
 
     @Binds
-    PlanAPI bindProxyPlanAPI(CommonAPI proxyAPI);
-
-    @Binds
     DBSystem bindProxyDatabaseSystem(ProxyDBSystem proxyDBSystem);
 
     @Binds
     ConfigSystem bindProxyConfigSystem(ProxyConfigSystem proxyConfigSystem);
-
-    @Binds
-    InfoSystem bindProxyInfoSystem(ProxyInfoSystem proxyInfoSystem);
-
-    @Binds
-    ConnectionSystem bindProxyConnectionSystem(ProxyConnectionSystem proxyConnectionSystem);
 
     @Binds
     ImportSystem bindImportSystem(EmptyImportSystem emptyImportSystem);
