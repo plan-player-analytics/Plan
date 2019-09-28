@@ -75,7 +75,8 @@ public class LocaleSystem implements SubSystem {
                 GenericLang.values(),
                 HtmlLang.values(),
                 ErrorPageLang.values(),
-                FailReason.values()
+                FailReason.values(),
+                JSLang.values(),
         };
 
         return Arrays.stream(lang)
