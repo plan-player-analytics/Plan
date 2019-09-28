@@ -62,7 +62,7 @@ public class MutatorFunctions {
     private static void addMissing(long from, long to, NavigableMap<Long, Integer> points, long accuracy, Integer replacement) {
         long iterate = from;
         while (iterate < to) {
-            points.put(iterate, replacement);
+            points.putIfAbsent(iterate, replacement);
             iterate += accuracy;
         }
     }
