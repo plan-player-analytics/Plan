@@ -167,7 +167,8 @@ public abstract class SQLDB extends AbstractDatabase {
                 new BadAFKThresholdValuePatch(),
                 new DeleteIPsPatch(),
                 new ExtensionShowInPlayersTablePatch(),
-                new ExtensionTableRowValueLengthPatch()
+                new ExtensionTableRowValueLengthPatch(),
+                new CommandUsageTableRemovalPatch()
         };
     }
 
