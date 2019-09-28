@@ -90,7 +90,7 @@ public class ServerPageExporter extends FileExporter {
                 .resolve("index.html");
 
         Page page = pageFactory.serverPage(serverUUID);
-        export(to, exportPaths.resolveExportPaths(locale.replaceMatchingLanguage(page.toHtml())));
+        export(to, exportPaths.resolveExportPaths(locale.replaceLanguageInHtml(page.toHtml())));
     }
 
     public void exportJSON(Path toDirectory, Server server) throws IOException, NotFoundException {

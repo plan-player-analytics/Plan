@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -115,8 +116,8 @@ public abstract class Response {
         this.responseHeaders = responseHeaders;
     }
 
-    protected void translate(Locale locale) {
-        content = locale.replaceMatchingLanguage(content);
+    protected void translate(Function<String, String> translator) {
+        content = translator.apply(content);
     }
 
     protected void fixThemeColors(Theme theme) {

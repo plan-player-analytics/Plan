@@ -229,7 +229,7 @@ function loadPlayerbaseOverviewValues(json, error) {
     $(element).find('#data_regular_to_inactive').replaceWith(data.regular_to_inactive + smallTrend(data.regular_to_inactive_trend))
 }
 
-function loadServerBoxes(servers, error) {
+function loadservers(servers, error) {
     if (error) {
         displayError($('#servers-tab'), error);
         return;
@@ -245,17 +245,17 @@ function loadServerBoxes(servers, error) {
 
     var serversHtml = '';
     for (var i = 0; i < servers.length; i++) {
-        serversHtml += createNetworkServerBox(i, servers[i]);
+        serversHtml += createnetworkserverBox(i, servers[i]);
     }
     $("#data_server_list").replaceWith(serversHtml);
 
     for (var i = 0; i < servers.length; i++) {
-        $('#server_quick_view_' + i).click(onViewServer(i, servers));
+        $('#server_quick_view_' + i).click(onViewserver(i, servers));
     }
-    onViewServer(0, servers)(); // Open first server.
+    onViewserver(0, servers)(); // Open first server.
 }
 
-function createNetworkServerBox(i, server) {
+function createnetworkserverBox(i, server) {
     return '<div class="card shadow mb-4">' +
         '<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">' +
         '<h6 class="m-0 font-weight-bold col-black"><i class="fas fa-fw fa-server col-light-green"></i> ' + server.name + '</h6>' +
@@ -273,7 +273,7 @@ function createNetworkServerBox(i, server) {
         '</div>' // /card
 }
 
-function onViewServer(i, servers) {
+function onViewserver(i, servers) {
     return function () {
         setTimeout(function () {
             var server = servers[i];

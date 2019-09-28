@@ -1299,12 +1299,12 @@
 <script>
     try {
         setLoadingText('Calculating values..');
-        jsonRequest("../v1/serverOverview?server=${serverName}", loadServerOverviewValues);
-        jsonRequest("../v1/onlineOverview?server=${serverName}", loadOnlineActivityOverviewValues);
-        jsonRequest("../v1/sessionsOverview?server=${serverName}", loadSessionValues);
-        jsonRequest("../v1/playerVersus?server=${serverName}", loadPvPPvEValues);
-        jsonRequest("../v1/playerbaseOverview?server=${serverName}", loadPlayerbaseOverviewValues);
-        jsonRequest("../v1/performanceOverview?server=${serverName}", loadPerformanceValues);
+        jsonRequest("../v1/serverOverview?server=${serverUUID}", loadserverOverviewValues);
+        jsonRequest("../v1/onlineOverview?server=${serverUUID}", loadOnlineActivityOverviewValues);
+        jsonRequest("../v1/sessionsOverview?server=${serverUUID}", loadSessionValues);
+        jsonRequest("../v1/playerVersus?server=${serverUUID}", loadPvPPvEValues);
+        jsonRequest("../v1/playerbaseOverview?server=${serverUUID}", loadPlayerbaseOverviewValues);
+        jsonRequest("../v1/performanceOverview?server=${serverUUID}", loadPerformanceValues);
         setLoadingText('Rendering graphs..');
 
         // TODO remove
@@ -1345,10 +1345,10 @@
                 uniquePlayers: 'Unique Players',
                 newPlayers: 'New Players',
                 tps: 'TPS',
-                cpu: 'CPU Usage (%)',
-                ram: 'RAM Usage (MB)',
-                entities: 'Loaded Entities',
-                chunks: 'Loaded Chunks',
+                cpu: 'CPU (%)',
+                ram: 'RAM (MB)',
+                entities: 'Entities',
+                chunks: 'Chunks',
                 maxPing: 'Worst Ping',
                 minPing: 'Best Ping',
                 avgPing: 'Average Ping',
@@ -1390,7 +1390,7 @@
             }
         };
 
-        jsonRequest("../v1/graph?type=performance&server=${serverName}", function (json, error) {
+        jsonRequest("../v1/graph?type=performance&server=${serverUUID}", function (json, error) {
             if (json) {
                 var series = {
                     playersOnline: {
@@ -1455,7 +1455,7 @@
             }
         });
 
-        jsonRequest("../v1/graph?type=aggregatedPing&server=${serverName}", function (json, error) {
+        jsonRequest("../v1/graph?type=aggregatedPing&server=${serverUUID}", function (json, error) {
             if (json) {
                 var series = {
                     avgPing: {
@@ -1486,7 +1486,7 @@
             }
         });
 
-        jsonRequest("../v1/graph?type=worldPie&server=${serverName}", function (json, error) {
+        jsonRequest("../v1/graph?type=worldPie&server=${serverUUID}", function (json, error) {
             if (json) {
                 var worldSeries = {name: 'World Playtime', colorByPoint: true, data: json.world_series};
                 var gmSeries = json.gm_series;
@@ -1496,7 +1496,7 @@
             }
         });
 
-        jsonRequest("../v1/graph?type=activity&server=${serverName}", function (json, error) {
+        jsonRequest("../v1/graph?type=activity&server=${serverUUID}", function (json, error) {
             if (json) {
                 activityPie('activityPie', {
                     name: 'Players', colorByPoint: true, data: json.activity_pie_series
@@ -1508,7 +1508,7 @@
             }
         });
 
-        jsonRequest("../v1/graph?type=geolocation&server=${serverName}", function (json, error) {
+        jsonRequest("../v1/graph?type=geolocation&server=${serverUUID}", function (json, error) {
             if (json) {
                 var geolocationSeries = {
                     name: 'Players',
@@ -1535,7 +1535,7 @@
             }
         });
 
-        jsonRequest("../v1/graph?type=uniqueAndNew&server=${serverName}", function (json, error) {
+        jsonRequest("../v1/graph?type=uniqueAndNew&server=${serverUUID}", function (json, error) {
             if (json) {
                 var uniquePlayers = {
                     name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
@@ -1551,7 +1551,7 @@
             }
         });
 
-        jsonRequest("../v1/graph?type=serverCalendar&server=${serverName}", function (json, error) {
+        jsonRequest("../v1/graph?type=serverCalendar&server=${serverUUID}", function (json, error) {
             if (json) {
                 $('#calendar').text('');
                 onlineActivityCalendar('#calendar', json.data, json.firstDay);
@@ -1563,7 +1563,7 @@
             }
         });
 
-        jsonRequest("../v1/graph?type=punchCard&server=${serverName}", function (json, error) {
+        jsonRequest("../v1/graph?type=punchCard&server=${serverUUID}", function (json, error) {
             if (json) {
                 var punchCardSeries = {
                     name: 'Relative Join Activity',
@@ -1578,7 +1578,7 @@
 
         setLoadingText('Sorting players table..');
 
-        jsonRequest("../v1/players?server=${serverName}", function (json, error) {
+        jsonRequest("../v1/players?server=${serverUUID}", function (json, error) {
             if (json) {
                 $('.player-table').DataTable({
                     responsive: true,
@@ -1590,8 +1590,8 @@
                 $('.player-table').text("Failed to load Players table data: " + error);
             }
         });
-        jsonRequest("../v1/kills?server=${serverName}", loadPlayerKills);
-        jsonRequest("../v1/pingTable?server=${serverName}", loadPingTable);
+        jsonRequest("../v1/kills?server=${serverUUID}", loadPlayerKills);
+        jsonRequest("../v1/pingTable?server=${serverUUID}", loadPingTable);
 
         $('.server-name').text('${serverName}');
         $('.player-plugin-table').DataTable({
@@ -1601,7 +1601,7 @@
         setLoadingText('Almost done..');
         openPage();
 
-        jsonRequest("../v1/sessions?server=${serverName}", loadSessionAccordion);
+        jsonRequest("../v1/sessions?server=${serverUUID}", loadSessionAccordion);
 
         setLoadingText('Done.');
         setTimeout(function () {

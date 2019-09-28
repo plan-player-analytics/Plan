@@ -156,7 +156,6 @@ HTML - LABEL_RETENTION                          || 新規プレイヤーの継�
 HTML - LABEL_SERVER_DOWNTIME                    || サーバーダウンタイム
 HTML - LABEL_SERVER_OCCUPIED                    || サーバーの占有時間
 HTML - LABEL_SESSION_ENDED                      || ログアウト時間
-HTML - LABEL_SESSION_LENGTH                     || 最長オンライン
 HTML - LABEL_SESSION_MEDIAN                     || 平均オンライン
 HTML - LABEL_TIMES_KICKED                       || キック回数
 HTML - LABEL_TOTAL_PLAYERS                      || トータルプレイヤー数

@@ -156,7 +156,6 @@ HTML - LABEL_RETENTION                          || Retenção de Novos Jogadores
 HTML - LABEL_SERVER_DOWNTIME                    || Server Downtime
 HTML - LABEL_SERVER_OCCUPIED                    || Server occupied
 HTML - LABEL_SESSION_ENDED                      || Sessões Finalizadas
-HTML - LABEL_SESSION_LENGTH                     || Tempo de Sessões
 HTML - LABEL_SESSION_MEDIAN                     || Média de Sessões
 HTML - LABEL_TIMES_KICKED                       || Vezes Kickado
 HTML - LABEL_TOTAL_PLAYERS                      || Total Players

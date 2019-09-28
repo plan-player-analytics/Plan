@@ -576,7 +576,7 @@ function worldMap(id, colorMin, colorMax, mapSeries) {
 
 function worldPie(id, worldSeries, gmSeries, bgColor) {
     var defaultTitle = '';
-    var defaultSubtitle = 'Click the slices to view used GameMode';
+    var defaultSubtitle = 'Click to expand';
     var nightMode = window.localStorage.getItem('nightMode') == 'true';
     var chart = Highcharts.chart(id, {
         chart: {

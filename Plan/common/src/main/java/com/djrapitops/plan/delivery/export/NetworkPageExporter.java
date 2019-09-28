@@ -84,7 +84,7 @@ public class NetworkPageExporter extends FileExporter {
                 .resolve("index.html");
 
         Page page = pageFactory.networkPage();
-        export(to, exportPaths.resolveExportPaths(locale.replaceMatchingLanguage(page.toHtml())));
+        export(to, exportPaths.resolveExportPaths(locale.replaceLanguageInHtml(page.toHtml())));
     }
 
     public void exportJSON(Path toDirectory, Server server) throws IOException, NotFoundException {

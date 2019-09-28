@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.response;
 
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.file.PlanFiles;
 
 import java.io.IOException;
@@ -25,8 +26,9 @@ import java.io.IOException;
  */
 public class JavaScriptResponse extends FileResponse {
 
-    JavaScriptResponse(String fileName, PlanFiles files) throws IOException {
+    JavaScriptResponse(String fileName, PlanFiles files, Locale locale) throws IOException {
         super(format(fileName), files);
+        super.translate(locale::replaceLanguageInJavascript);
         super.setType(ResponseType.JAVASCRIPT);
     }
 }

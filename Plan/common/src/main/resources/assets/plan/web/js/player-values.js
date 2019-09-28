@@ -129,7 +129,7 @@ function createConnectionsTableBody(connections) {
     var table = '<tbody>';
 
     if (connections.length === 0) {
-        table += '<tr><td>No Connection Data</td><td>-</td></tr>'
+        table += '<tr><td>No Data</td><td>-</td></tr>'
     }
 
     for (var i = 0; i < connections.length; i++) {
@@ -142,7 +142,7 @@ function createConnectionsTableBody(connections) {
     return table;
 }
 
-function loadServerAccordion(json, error) {
+function loadserverAccordion(json, error) {
     tab = $("#server-overview");
     if (error) {
         displayError(tab, error);
@@ -160,8 +160,8 @@ function loadServerAccordion(json, error) {
     var serversHtml = '';
     for (var i = 0; i < servers.length; i++) {
         var server = servers[i];
-        var title = createServerAccordionTitle(i, server);
-        var body = createServerAccordionBody(i, server);
+        var title = createserverAccordionTitle(i, server);
+        var body = createserverAccordionBody(i, server);
 
         serversHtml += title + body;
     }
@@ -169,11 +169,11 @@ function loadServerAccordion(json, error) {
     serverTable.append(serversHtml);
 
     for (var i = 0; i < servers.length; i++) {
-        $('#server_h_' + i).click(onOpenServer(i, servers));
+        $('#server_h_' + i).click(onOpenserver(i, servers));
     }
 }
 
-function onOpenServer(i, servers) {
+function onOpenserver(i, servers) {
     var opened = false;
     return function () {
         if (opened) {
@@ -190,7 +190,7 @@ function onOpenServer(i, servers) {
     }
 }
 
-function createServerAccordionTitle(i, server) {
+function createserverAccordionTitle(i, server) {
     return '<tr id="server_h_' + i + '" aria-controls="server_t_' + i + '" aria-expanded="false" class="clickable collapsed bg-light-green" data-target="#server_t_' + i + '" data-toggle="collapse"><td>'
         + server.server_name +
         (server.operator ? ' <i class="fab fa-fw fa-superpowers"></i>' : '') +
@@ -201,7 +201,7 @@ function createServerAccordionTitle(i, server) {
         + '<td>' + server.last_seen + '</td></tr>'
 }
 
-function createServerAccordionBody(i, server) {
+function createserverAccordionBody(i, server) {
 
     return '<tr class="collapse" data-parent="#tableSAccordion" id="server_t_' + i + '">' +
         '<td colspan="4">' +
@@ -212,7 +212,7 @@ function createServerAccordionBody(i, server) {
         (server.operator || server.banned ? '<br>' : '') +
         '<p><i class="col-teal far fa-fw fa-calendar-check"></i> Sessions<span class="float-right"><b>' + server.session_count + '</b></span></p>' +
         '<p><i class="col-green far fa-fw fa-clock"></i> Playtime<span class="float-right"><b>' + server.playtime + '</b></span></p>' +
-        '<p><i class="col-grey far fa-fw fa-clock"></i> Time AFK<span class="float-right"><b>' + server.afk_time + '</b></span></p>' +
+        '<p><i class="col-grey far fa-fw fa-clock"></i> AFK Time<span class="float-right"><b>' + server.afk_time + '</b></span></p>' +
         '<p><i class="col-teal far fa-fw fa-clock"></i> Longest Session<span class="float-right"><b>' + server.longest_session_length + '</b></span></p>' +
         '<p><i class="col-teal far fa-fw fa-clock"></i> Session Median<span class="float-right"><b>' + server.session_median + '</b></span></p>' +
         '<br>' +

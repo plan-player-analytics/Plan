@@ -80,7 +80,7 @@ function createAccordionBody(i, session) {
         '<div class="col-xs-12  col-sm-12 col-md-6 col-lg-6">' +
         '<p><i class="col-teal far fa-fw fa-clock"></i> Ended<span class="float-right"><b>' + session.end + '</b></span></p>' +
         '<p><i class="col-green far fa-fw fa-clock"></i> Length<span class="float-right"><b>' + session.length + '</b></span></p>' +
-        '<p><i class="col-grey far fa-fw fa-clock"></i> Time AFK<span class="float-right"><b>' + session.afk_time + '</b></span></p>' +
+        '<p><i class="col-grey far fa-fw fa-clock"></i> AFK Time<span class="float-right"><b>' + session.afk_time + '</b></span></p>' +
         '<p><i class="col-green fa fa-fw fa-server"></i> Server<span class="float-right"><b>' + session.server_name + '</b></span></p><br>' +
         '<p><i class="col-red fa fa-fw fa-crosshairs"></i> Player Kills<span class="float-right"><b>' + session.player_kills.length + '</b></span></p>' +
         '<p><i class="col-green fa fa-fw fa-crosshairs"></i> Mob Kills<span class="float-right"><b>' + session.mob_kills + '</b></span></p>' +
@@ -89,7 +89,7 @@ function createAccordionBody(i, session) {
         '</div><div class="col-xs-12  col-sm-12 col-md-6 col-lg-6">' +
         '<div id="worldpie_' + i + '" class="chart-pie"></div>' +
         '<a href="/player/' + session.player_name + '" class="float-right btn bg-blue"><i class="fa fa-user"></i><span> Player Page</span></a>' +
-        (session.network_server ? '<a href="/server/' + session.server_name + '" class="float-right btn bg-light-green mr-2"><i class="fa fa-server"></i><span> Server Page</span></a>' : '') +
+        (session.network_server ? '<a href="/server/' + session.server_name + '" class="float-right btn bg-light-green mr-2"><i class="fa fa-server"></i><span> Server Analysis</span></a>' : '') +
         '</div>' +
         '</div></td></tr>'
 }

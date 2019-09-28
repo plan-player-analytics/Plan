@@ -81,9 +81,6 @@ public enum HtmlLang implements Lang {
     TITLE_TREND("Trend"),
     COMPARING_7_DAYS("Comparing 7 days"),
     // Servers tab
-    LABEL_REGISTERED_PLAYERS("Registered Players"),
-    LINK_SERVER_ANALYSIS("Server Analysis"),
-    LINK_QUICK_VIEW("Quick view"),
     TITLE_ONLINE_ACTIVITY("Online Activity"),
     TITLE_30_DAYS("30 days"),
     TITLE_AS_NUMBERS("as Numbers"),
@@ -208,13 +205,13 @@ public enum HtmlLang implements Lang {
     LABEL_NICKNAME("Nickname"),
     LOCAL_MACHINE("Local Machine"),
     TITLE_CALENDAR(" Calendar"),
-    LABEL_SESSION_ENDED("Session Ended"),
-    LABEL_SESSION_LENGTH("Session Lenght"),
     LABEL_OPERATOR("Operator"),
     LABEL_BANNED("Banned"),
     LABEL_MOB_KDR("Mob KDR"),
     WITH("<th>With"),
     NO_KILLS("No Kills"),
+    LABEL_MAX_FREE_DISK("Max Free Disk"),
+    LABEL_MIN_FREE_DISK("Min Free Disk")
     ;
 
     private final String defaultValue;

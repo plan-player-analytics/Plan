@@ -116,7 +116,7 @@ public class ResponseFactory {
 
     public Response javaScriptResponse(String fileName) {
         try {
-            return new JavaScriptResponse(fileName, files);
+            return new JavaScriptResponse(fileName, files, locale);
         } catch (IOException e) {
             return notFound404("JS File not found from jar: " + fileName + ", " + e.toString());
         }

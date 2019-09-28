@@ -55,7 +55,7 @@ public class PageResponse extends Response {
 
     @Override
     public void send(HttpExchange exchange, Locale locale, Theme theme) throws IOException {
-        translate(locale);
+        translate(locale::replaceLanguageInHtml);
         fixThemeColors(theme);
         super.send(exchange, locale, theme);
     }

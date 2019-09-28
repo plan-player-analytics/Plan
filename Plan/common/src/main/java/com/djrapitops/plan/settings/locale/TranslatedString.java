@@ -22,7 +22,7 @@ import org.apache.commons.lang3.StringUtils;
  * Utility for translating String.
  * <p>
  * Improves performance by avoiding a double for-each loop since this class can be considered final in the lambda
- * expression in {@link Locale#replaceMatchingLanguage(String)}.
+ * expression in {@link Locale#replaceLanguageInHtml(String)}.
  *
  * @author Rsl1122
  */

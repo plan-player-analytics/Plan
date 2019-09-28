@@ -86,7 +86,7 @@ public class PlayerPageExporter extends FileExporter {
 
         try {
             Page page = pageFactory.playerPage(playerUUID);
-            export(to, exportPaths.resolveExportPaths(locale.replaceMatchingLanguage(page.toHtml())));
+            export(to, exportPaths.resolveExportPaths(locale.replaceLanguageInHtml(page.toHtml())));
         } catch (IllegalStateException notFound) {
             throw new NotFoundException(notFound.getMessage());
         }

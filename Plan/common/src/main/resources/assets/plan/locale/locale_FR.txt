@@ -156,7 +156,6 @@ HTML - LABEL_RETENTION                          || Rétention des nouveaux joueu
 HTML - LABEL_SERVER_DOWNTIME                    || Temps hors-ligne du serveur
 HTML - LABEL_SERVER_OCCUPIED                    || Serveur inoccupé
 HTML - LABEL_SESSION_ENDED                      || Session terminée
-HTML - LABEL_SESSION_LENGTH                     || Durée de la session
 HTML - LABEL_SESSION_MEDIAN                     || Session médiane
 HTML - LABEL_TIMES_KICKED                       || Nombre d'éjections
 HTML - LABEL_TOTAL_PLAYERS                      || Joueurs totaux

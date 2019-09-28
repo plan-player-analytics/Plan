@@ -156,7 +156,6 @@ HTML - LABEL_RETENTION                          || New Player Retention
 HTML - LABEL_SERVER_DOWNTIME                    || Server Downtime
 HTML - LABEL_SERVER_OCCUPIED                    || Server occupied
 HTML - LABEL_SESSION_ENDED                      || Oturum Sona Erdi
-HTML - LABEL_SESSION_LENGTH                     || Oturum Giriş Süresi
 HTML - LABEL_SESSION_MEDIAN                     || Session Median
 HTML - LABEL_TIMES_KICKED                       || Kere Atılmış
 HTML - LABEL_TOTAL_PLAYERS                      || Total Players

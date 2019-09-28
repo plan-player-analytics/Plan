@@ -17,6 +17,7 @@
 package com.djrapitops.plan.settings.locale;
 
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
+import com.djrapitops.plan.settings.locale.lang.JSLang;
 import com.djrapitops.plan.settings.locale.lang.Lang;
 import com.djrapitops.plan.storage.file.FileResource;
 import com.djrapitops.plan.storage.file.PlanFiles;
@@ -101,7 +102,7 @@ public class Locale extends HashMap<Lang, Message> {
         this.langCode = locale.langCode;
     }
 
-    public String replaceMatchingLanguage(String from) {
+    public String replaceLanguageInHtml(String from) {
         if (isEmpty()) {
             return from;
         }
@@ -114,12 +115,8 @@ public class Locale extends HashMap<Lang, Message> {
             foundScripts.add(scriptMatcher.toMatchResult().group(0));
         }
 
-        Lang[][] langs = new Lang[][]{
-                HtmlLang.values()
-        };
-
         TranslatedString translated = new TranslatedString(from);
-        Arrays.stream(langs).flatMap(Arrays::stream)
+        Arrays.stream(HtmlLang.values())
                 // Longest first so that entries that contain each other don't partially replace.
                 .sorted((one, two) -> Integer.compare(
                         two.getIdentifier().length(),
@@ -135,11 +132,59 @@ public class Locale extends HashMap<Lang, Message> {
         for (int i = 0; i < parts.length; i++) {
             complete.append(parts[i]);
             if (i < parts.length - 1) {
-                complete.append(foundScripts.get(i));
+                complete.append(replaceLanguageInJavascript(foundScripts.get(i)));
             }
         }
 
         return complete.toString();
+    }
+
+    public String replaceLanguageInJavascript(String from) {
+        if (isEmpty()) {
+            return from;
+        }
+
+        TranslatedString translated = new TranslatedString(from);
+        Arrays.stream(JSLang.values())
+                // Longest first so that entries that contain each other don't partially replace.
+                .sorted((one, two) -> Integer.compare(
+                        two.getIdentifier().length(),
+                        one.getIdentifier().length()
+                ))
+                .forEach(lang -> getNonDefault(lang).ifPresent(replacement ->
+                        translated.translate(lang.getDefault(), replacement.toString()))
+                );
+
+        for (Lang extra : new Lang[]{
+                HtmlLang.UNIT_NO_DATA,
+                HtmlLang.TITLE_WORLD_PLAYTIME,
+                HtmlLang.LABEL_OPERATOR,
+                HtmlLang.LABEL_BANNED,
+                HtmlLang.SIDE_SESSIONS,
+                HtmlLang.LABEL_PLAYTIME,
+                HtmlLang.LABEL_AFK_TIME,
+                HtmlLang.LABEL_LONGEST_SESSION,
+                HtmlLang.LABEL_SESSION_MEDIAN,
+                HtmlLang.LABEL_PLAYER_KILLS,
+                HtmlLang.LABEL_MOB_KILLS,
+                HtmlLang.LABEL_DEATHS,
+                HtmlLang.LABEL_PLAYERS_ONLINE,
+                HtmlLang.LABEL_REGISTERED,
+                HtmlLang.TITLE_SERVER,
+                HtmlLang.TITLE_LENGTH,
+                HtmlLang.TITLE_AVG_PING,
+                HtmlLang.TITLE_BEST_PING,
+                HtmlLang.TITLE_WORST_PING,
+                HtmlLang.LABEL_FREE_DISK_SPACE,
+                HtmlLang.LABEL_NEW_PLAYERS,
+                HtmlLang.LABEL_UNIQUE_PLAYERS,
+
+        }) {
+            getNonDefault(extra).ifPresent(replacement ->
+                    translated.translate(extra.getDefault(), replacement.toString()));
+        }
+
+        return translated.toString();
     }
 
     @Override

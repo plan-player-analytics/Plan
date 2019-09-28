@@ -73,7 +73,7 @@ public class ErrorResponse extends PageResponse {
 
     @Override
     public void send(HttpExchange exchange, Locale locale, Theme theme) throws IOException {
-        translate(locale);
+        translate(locale::replaceLanguageInHtml);
         fixThemeColors(theme);
         super.send(exchange, locale, theme);
     }

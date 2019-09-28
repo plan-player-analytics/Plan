@@ -156,7 +156,6 @@ HTML - LABEL_RETENTION                          || Uusien pysyvyys
 HTML - LABEL_SERVER_DOWNTIME                    || Palvelin pois päältä
 HTML - LABEL_SERVER_OCCUPIED                    || Palvelin pelaajien käytössä
 HTML - LABEL_SESSION_ENDED                      || Istunto Päättyi
-HTML - LABEL_SESSION_LENGTH                     || Istunnon Pituus
 HTML - LABEL_SESSION_MEDIAN                     || Istuntojen Mediaani
 HTML - LABEL_TIMES_KICKED                       || Heitetty pihalle
 HTML - LABEL_TOTAL_PLAYERS                      || Pelaajia

@@ -80,6 +80,7 @@ public class ServerPage implements Page {
     public String toHtml() throws ParseException {
         PlaceholderReplacer placeholders = new PlaceholderReplacer();
 
+        placeholders.put("serverUUID", server.getUuid().toString());
         placeholders.put("serverName", server.getIdentifiableName());
         placeholders.put("serverDisplayName", server.getName());
 

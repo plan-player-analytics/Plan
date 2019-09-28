@@ -87,7 +87,7 @@ public class PlayersPageExporter extends FileExporter {
                 .resolve("index.html");
 
         Page page = pageFactory.playersPage();
-        export(to, exportPaths.resolveExportPaths(locale.replaceMatchingLanguage(page.toHtml())));
+        export(to, exportPaths.resolveExportPaths(locale.replaceLanguageInHtml(page.toHtml())));
     }
 
     private void exportJSON(Path toDirectory) throws NotFoundException, IOException {

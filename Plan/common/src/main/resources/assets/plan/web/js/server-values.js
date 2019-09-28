@@ -41,7 +41,7 @@ function displayError(element, error) {
 }
 
 /* This function loads Server Overview tab */
-function loadServerOverviewValues(json, error) {
+function loadserverOverviewValues(json, error) {
     tab = $('#server-overview');
 
     if (error) {
