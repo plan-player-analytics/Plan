@@ -19,7 +19,6 @@ package com.djrapitops.plan.storage.database.sql.tables;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.parsing.CreateTableParser;
 import com.djrapitops.plan.storage.database.sql.parsing.Sql;
-import com.djrapitops.plan.storage.database.transactions.patches.DeleteIPHashesPatch;
 import com.djrapitops.plan.storage.database.transactions.patches.GeoInfoLastUsedPatch;
 import com.djrapitops.plan.storage.database.transactions.patches.GeoInfoOptimizationPatch;
 import com.djrapitops.plan.storage.database.transactions.patches.Version10Patch;
@@ -34,27 +33,23 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.WHERE;
  * {@link Version10Patch}
  * {@link GeoInfoLastUsedPatch}
  * {@link GeoInfoOptimizationPatch}
- * {@link DeleteIPHashesPatch}
  *
  * @author Rsl1122
  */
 public class GeoInfoTable {
 
-    public static final String TABLE_NAME = "plan_ips";
+    public static final String TABLE_NAME = "plan_geolocations";
 
     public static final String ID = "id";
     public static final String USER_UUID = "uuid";
-    @Deprecated
-    public static final String IP = "ip";
     public static final String GEOLOCATION = "geolocation";
     public static final String LAST_USED = "last_used";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
             + USER_UUID + ','
-            + IP + ','
             + GEOLOCATION + ','
             + LAST_USED
-            + ") VALUES (?, ?, ?, ?)";
+            + ") VALUES (?, ?, ?)";
 
     public static final String UPDATE_STATEMENT = "UPDATE " + TABLE_NAME + " SET "
             + LAST_USED + "=?" +
@@ -69,7 +64,6 @@ public class GeoInfoTable {
         return CreateTableParser.create(TABLE_NAME, dbType)
                 .column(ID, Sql.INT).primaryKey()
                 .column(USER_UUID, Sql.varchar(36)).notNull()
-                .column(IP, Sql.varchar(39)).notNull()
                 .column(GEOLOCATION, Sql.varchar(50)).notNull()
                 .column(LAST_USED, Sql.LONG).notNull().defaultValue("0")
                 .toString();

@@ -18,38 +18,40 @@ package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.parsing.Sql.DISTINCT;
+import static com.djrapitops.plan.storage.database.sql.parsing.Sql.FROM;
 
-public class GeoInfoOptimizationPatch extends Patch {
+/**
+ * Patch that replaces plan_ips with plan_geolocations table.
+ *
+ * @author Rsl1122
+ */
+public class DeleteIPsPatch extends Patch {
 
-    private String tempTableName;
-    private String oldTableName;
+    private final String tempTableName;
 
-    public GeoInfoOptimizationPatch() {
-        oldTableName = "plan_ips";
+    public DeleteIPsPatch() {
         tempTableName = "temp_ips";
     }
 
     @Override
     public boolean hasBeenApplied() {
-        return !hasTable(oldTableName)
-                || (hasColumn(oldTableName, GeoInfoTable.ID)
-                && hasColumn(oldTableName, GeoInfoTable.USER_UUID)
-                && !hasColumn(oldTableName, "user_id")
-                && !hasTable(tempTableName)); // If this table exists the patch has failed to finish.
+        return !hasTable("plan_ips");
     }
 
     @Override
     protected void applyPatch() {
         tempOldTable();
+
+        dropTable(GeoInfoTable.TABLE_NAME);
         execute(GeoInfoTable.createTableSQL(dbType));
 
         execute("INSERT INTO " + GeoInfoTable.TABLE_NAME + " (" +
                 GeoInfoTable.USER_UUID + ',' +
                 GeoInfoTable.LAST_USED + ',' +
                 GeoInfoTable.GEOLOCATION +
-                ") " + SELECT + DISTINCT +
-                "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
+                ") SELECT " + DISTINCT +
+                GeoInfoTable.USER_UUID + ',' +
                 GeoInfoTable.LAST_USED + ',' +
                 GeoInfoTable.GEOLOCATION +
                 FROM + tempTableName
@@ -60,7 +62,7 @@ public class GeoInfoOptimizationPatch extends Patch {
 
     private void tempOldTable() {
         if (!hasTable(tempTableName)) {
-            renameTable(oldTableName, tempTableName);
+            renameTable("plan_ips", tempTableName);
         }
     }
 }

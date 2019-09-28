@@ -136,9 +136,8 @@ public class DataStoreQueries {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
-                statement.setString(2, geoInfo.getIp());
-                statement.setString(3, geoInfo.getGeolocation());
-                statement.setLong(4, geoInfo.getDate());
+                statement.setString(2, geoInfo.getGeolocation());
+                statement.setLong(3, geoInfo.getDate());
             }
         };
     }

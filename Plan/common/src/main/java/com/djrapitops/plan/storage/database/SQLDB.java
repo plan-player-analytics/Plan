@@ -165,7 +165,7 @@ public abstract class SQLDB extends AbstractDatabase {
                 new GeoInfoOptimizationPatch(),
                 new TransferTableRemovalPatch(),
                 new BadAFKThresholdValuePatch(),
-                new DeleteIPHashesPatch(),
+                new DeleteIPsPatch(),
                 new ExtensionShowInPlayersTablePatch(),
                 new ExtensionTableRowValueLengthPatch()
         };

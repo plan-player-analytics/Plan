@@ -63,14 +63,12 @@ public class LargeStoreQueries {
                     UUID playerUUID = playerEntry.getKey();
                     // Every GeoInfo
                     for (GeoInfo info : playerEntry.getValue()) {
-                        String ip = info.getIp();
                         String geoLocation = info.getGeolocation();
                         long lastUsed = info.getDate();
 
                         statement.setString(1, playerUUID.toString());
-                        statement.setString(2, ip);
-                        statement.setString(3, geoLocation);
-                        statement.setLong(4, lastUsed);
+                        statement.setString(2, geoLocation);
+                        statement.setLong(3, lastUsed);
 
                         statement.addBatch();
                     }

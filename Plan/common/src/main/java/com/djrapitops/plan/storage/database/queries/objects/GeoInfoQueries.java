@@ -48,7 +48,6 @@ public class GeoInfoQueries {
      */
     public static Query<Map<UUID, List<GeoInfo>>> fetchAllGeoInformation() {
         String sql = SELECT +
-                GeoInfoTable.IP + ',' +
                 GeoInfoTable.GEOLOCATION + ',' +
                 GeoInfoTable.LAST_USED + ',' +
                 GeoInfoTable.USER_UUID +
@@ -114,8 +113,7 @@ public class GeoInfoQueries {
     public static Query<Map<UUID, List<GeoInfo>>> fetchServerGeoInformation(UUID serverUUID) {
         String sql = SELECT + GeoInfoTable.TABLE_NAME + '.' + GeoInfoTable.USER_UUID + ',' +
                 GeoInfoTable.GEOLOCATION + ',' +
-                GeoInfoTable.LAST_USED + ',' +
-                GeoInfoTable.IP +
+                GeoInfoTable.LAST_USED +
                 FROM + GeoInfoTable.TABLE_NAME +
                 INNER_JOIN + UserInfoTable.TABLE_NAME + " on " +
                 GeoInfoTable.TABLE_NAME + '.' + GeoInfoTable.USER_UUID + "=" + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_UUID +
