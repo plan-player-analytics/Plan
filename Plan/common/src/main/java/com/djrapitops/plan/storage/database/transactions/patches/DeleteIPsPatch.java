@@ -16,10 +16,13 @@
  */
 package com.djrapitops.plan.storage.database.transactions.patches;
 
+import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.DISTINCT;
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.FROM;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
 
 /**
  * Patch that replaces plan_ips with plan_geolocations table.
@@ -41,6 +44,10 @@ public class DeleteIPsPatch extends Patch {
 
     @Override
     protected void applyPatch() {
+        if (hasTable(GeoInfoTable.TABLE_NAME) && hasLessDataInPlanIPs()) {
+            dropTable("plan_ips");
+            return;
+        }
         tempOldTable();
 
         dropTable(GeoInfoTable.TABLE_NAME);
@@ -58,6 +65,22 @@ public class DeleteIPsPatch extends Patch {
         );
 
         dropTable(tempTableName);
+    }
+
+    private boolean hasLessDataInPlanIPs() {
+        Integer inIPs = query(new QueryAllStatement<Integer>(SELECT + "COUNT(1) as c" + FROM + "plan_ips") {
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getInt("c") : 0;
+            }
+        });
+        Integer inGeoInfo = query(new QueryAllStatement<Integer>(SELECT + "COUNT(1) as c" + FROM + GeoInfoTable.TABLE_NAME) {
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getInt("c") : 0;
+            }
+        });
+        return inIPs <= inGeoInfo;
     }
 
     private void tempOldTable() {
