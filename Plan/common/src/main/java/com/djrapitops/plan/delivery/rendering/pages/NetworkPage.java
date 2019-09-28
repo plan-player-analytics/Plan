@@ -98,7 +98,7 @@ public class NetworkPage implements Page {
             });
 
             String nav = JSONCache.getOrCacheString(DataID.EXTENSION_NAV, serverUUID, () -> pluginTabs.get().getNav());
-            String tabs = JSONCache.getOrCacheString(DataID.EXTENSION_NAV, serverUUID, () -> pluginTabs.get().getTabs());
+            String tabs = JSONCache.getOrCacheString(DataID.EXTENSION_TABS, serverUUID, () -> pluginTabs.get().getTabs());
 
             placeholders.put("navPluginsTabs", nav);
             placeholders.put("tabsPlugins", StringUtils.remove(tabs, "${backButton}"));
