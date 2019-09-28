@@ -56,6 +56,17 @@ public class JSONCache {
         return new JSONResponse(found);
     }
 
+    public static String getOrCacheString(DataID dataID, UUID serverUUID, Supplier<String> stringSupplier) {
+        String identifier = dataID.of(serverUUID);
+        String found = cache.getIfPresent(identifier);
+        if (found == null) {
+            String result = stringSupplier.get();
+            cache.put(identifier, result);
+            return result;
+        }
+        return found;
+    }
+
     public static Response getOrCache(DataID dataID, Supplier<JSONResponse> jsonResponseSupplier) {
         return getOrCache(dataID.name(), jsonResponseSupplier);
     }

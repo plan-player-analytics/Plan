@@ -45,6 +45,8 @@ public enum DataID {
     PVP_PVE,
     PLAYERBASE_OVERVIEW,
     PERFORMANCE_OVERVIEW,
+    EXTENSION_NAV,
+    EXTENSION_TABS
     ;
 
     public String of(UUID serverUUID) {

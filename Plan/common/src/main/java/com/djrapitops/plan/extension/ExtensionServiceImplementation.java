@@ -17,6 +17,8 @@
 package com.djrapitops.plan.extension;
 
 import com.djrapitops.plan.DebugChannels;
+import com.djrapitops.plan.delivery.webserver.cache.DataID;
+import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.implementation.CallerImplementation;
 import com.djrapitops.plan.extension.implementation.DataProviderExtractor;
@@ -161,9 +163,9 @@ public class ExtensionServiceImplementation implements ExtensionService {
             // Try again
             updatePlayerValues(gatherer, playerUUID, playerName, event);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
-            logger.warn("Encountered unexpected error with " + gatherer.getPluginName() + " Extension (please report this): " + unexpectedError +
+            logger.warn("Encountered unexpected error with " + gatherer.getPluginName() + " Extension: " + unexpectedError +
                     " (but failed safely) when updating value for '" + playerName +
-                    "', stack trace to follow:");
+                    "', stack trace to follow (please report this):");
             errorHandler.log(L.WARN, gatherer.getClass(), unexpectedError);
         }
     }
@@ -171,10 +173,10 @@ public class ExtensionServiceImplementation implements ExtensionService {
     private void logFailure(String playerName, DataExtensionMethodCallException methodCallFailed) {
         Throwable cause = methodCallFailed.getCause();
         String causeName = cause.getClass().getSimpleName();
-        logger.warn("Encountered " + causeName + " with " + methodCallFailed.getPluginName() + " Extension (please report this)" +
+        logger.warn("Encountered " + causeName + " with " + methodCallFailed.getPluginName() + " Extension" +
                 " (failed safely) when updating value for '" + playerName +
                 "', the method was disabled temporarily (won't be called until next Plan reload)" +
-                ", stack trace to follow:");
+                ", stack trace to follow (please report this):");
         errorHandler.log(L.WARN, getClass(), cause);
     }
 
@@ -182,6 +184,9 @@ public class ExtensionServiceImplementation implements ExtensionService {
         for (ProviderValueGatherer gatherer : extensionGatherers.values()) {
             updateServerValues(gatherer, event);
         }
+        UUID serverUUID = serverInfo.getServerUUID();
+        JSONCache.invalidate(DataID.EXTENSION_NAV, serverUUID);
+        JSONCache.invalidate(DataID.EXTENSION_TABS, serverUUID);
     }
 
     public void updateServerValues(ProviderValueGatherer gatherer, CallEvents event) {
@@ -200,8 +205,8 @@ public class ExtensionServiceImplementation implements ExtensionService {
             // Try again
             updateServerValues(gatherer, event);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
-            logger.warn("Encountered unexpected error with " + gatherer.getPluginName() + " Extension (please report this): " + unexpectedError +
-                    " (failed safely) when updating value for server, stack trace to follow:");
+            logger.warn("Encountered unexpected error with " + gatherer.getPluginName() + " Extension: " + unexpectedError +
+                    " (failed safely) when updating value for server, stack trace to follow (please report this):");
             errorHandler.log(L.WARN, gatherer.getClass(), unexpectedError);
         }
     }

@@ -16,12 +16,15 @@
  */
 package com.djrapitops.plan.delivery.rendering.pages;
 
+import com.djrapitops.plan.delivery.domain.container.CachingSupplier;
 import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.container.RawDataContainer;
 import com.djrapitops.plan.delivery.domain.keys.AnalysisKeys;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.delivery.rendering.html.Html;
+import com.djrapitops.plan.delivery.webserver.cache.DataID;
+import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.exceptions.ParseException;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
@@ -37,6 +40,7 @@ import com.djrapitops.plan.version.VersionCheckSystem;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import static com.djrapitops.plan.delivery.domain.keys.AnalysisKeys.*;
 
@@ -80,7 +84,8 @@ public class ServerPage implements Page {
     public String toHtml() throws ParseException {
         PlaceholderReplacer placeholders = new PlaceholderReplacer();
 
-        placeholders.put("serverUUID", server.getUuid().toString());
+        UUID serverUUID = server.getUuid();
+        placeholders.put("serverUUID", serverUUID.toString());
         placeholders.put("serverName", server.getIdentifiableName());
         placeholders.put("serverDisplayName", server.getName());
 
@@ -123,12 +128,13 @@ public class ServerPage implements Page {
         placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
         placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
 
-        List<ExtensionData> extensionData = dbSystem.getDatabase()
-                .query(new ExtensionServerDataQuery(server.getUuid()));
-        ServerPluginTabs pluginTabs = new ServerPluginTabs(extensionData, formatters);
+        CachingSupplier<ServerPluginTabs> pluginTabs = new CachingSupplier<>(() -> {
+            List<ExtensionData> extensionData = dbSystem.getDatabase().query(new ExtensionServerDataQuery(serverUUID));
+            return new ServerPluginTabs(extensionData, formatters);
+        });
 
-        String nav = pluginTabs.getNav();
-        String tabs = pluginTabs.getTabs();
+        String nav = JSONCache.getOrCacheString(DataID.EXTENSION_NAV, serverUUID, () -> pluginTabs.get().getNav());
+        String tabs = JSONCache.getOrCacheString(DataID.EXTENSION_NAV, serverUUID, () -> pluginTabs.get().getTabs());
 
         placeholders.put("navPluginsTabs", nav);
         placeholders.put("tabsPlugins", tabs);
