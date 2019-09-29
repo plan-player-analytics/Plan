@@ -106,7 +106,7 @@ HTML - INDEX_VERY_ACTIVE                        || Très actif
 HTML - KILLED                                   || Tué
 HTML - LABEL_1ST_WEAPON                         || 1ère Arme de combat (la plus mortelle)
 HTML - LABEL_2ND_WEAPON                         || 2ème Arme de combat
-HTML - LABEL_3RD_WEAPON                         || 3ème Arbe de combat
+HTML - LABEL_3RD_WEAPON                         || 3ème Arme de combat
 HTML - LABEL_ACTIVITY_INDEX                     || Indice d'activité
 HTML - LABEL_AFK                                || AFK
 HTML - LABEL_AFK_TIME                           || Temps AFK
