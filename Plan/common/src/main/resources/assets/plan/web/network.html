@@ -840,8 +840,16 @@
                 maxPing: '${maxPingColor}',
                 minPing: '${minPingColor}',
                 avgPing: '${avgPingColor}'
+            },
+            values: {
+                timezoneOffset: ${timeZone}
             }
         };
+
+        Highcharts.setOptions({
+            lang: {noData: "No Data to Display"},
+            time: {timezoneOffset: v.values.timezoneOffset * 60}
+        });
 
         // HighCharts Series
         var s = {

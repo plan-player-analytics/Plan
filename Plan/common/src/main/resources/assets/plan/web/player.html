@@ -749,6 +749,8 @@
 
 <script>
     try {
+        Highcharts.setOptions({lang: {noData: "No Data to Display"}, time: {timezoneOffset: ${timeZone} * 60}
+    })
         setLoadingText('Loading player values..');
         jsonRequest("../v1/player?player=${playerName}", function (json, error) {
             loadPlayerOverviewValues(json, error);
@@ -788,8 +790,6 @@
                 $('#sessionCalendar').text("Failed to load calendar data: " + error)
             }
         });
-        setLoadingText('Rendering graphs..');
-        setLoadingText('Sorting players table..');
         setLoadingText('Almost done..');
         openPage();
         setLoadingText('Done.');

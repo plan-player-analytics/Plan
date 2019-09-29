@@ -1336,7 +1336,10 @@
             }
         };
 
-        Highcharts.setOptions({lang: {noData: "No Data to Display"}, time: {timezoneOffset: v.timezoneOffset * 60}});
+        Highcharts.setOptions({
+            lang: {noData: "No Data to Display"},
+            time: {timezoneOffset: v.values.timezoneOffset * 60}
+        });
 
         // HighCharts Series
         var s = {
