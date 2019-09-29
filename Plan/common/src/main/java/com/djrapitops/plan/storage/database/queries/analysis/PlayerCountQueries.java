@@ -432,4 +432,22 @@ public class PlayerCountQueries {
             }
         };
     }
+
+    public static Query<Integer> operators(UUID serverUUID) {
+        String sql = SELECT + "COUNT(1) as player_count" + FROM + UserInfoTable.TABLE_NAME +
+                WHERE + UserInfoTable.SERVER_UUID + "=?" +
+                AND + UserInfoTable.OP + "=?";
+        return new QueryStatement<Integer>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setBoolean(2, true);
+            }
+
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getInt("player_count") : 0;
+            }
+        };
+    }
 }

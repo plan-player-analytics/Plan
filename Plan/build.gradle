@@ -78,6 +78,7 @@ subprojects {
     ext.gsonVersion = "2.8.5"
     ext.guavaVersion = "28.0-jre"
     ext.bstatsVersion = "1.4"
+    ext.placeholderapiVersion = "2.9.2"
 
     repositories {
         mavenCentral()

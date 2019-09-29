@@ -293,4 +293,25 @@ public class PingQueries {
             }
         };
     }
+
+    public static Query<Double> averagePing(long after, long before, UUID serverUUID) {
+        String sql = SELECT + "AVG(" + PingTable.AVG_PING + ") as average" + FROM + PingTable.TABLE_NAME +
+                WHERE + PingTable.SERVER_UUID + "=?" +
+                AND + PingTable.DATE + ">=?" +
+                AND + PingTable.DATE + "<=?";
+
+        return new QueryStatement<Double>(sql, 1000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, after);
+                statement.setLong(3, before);
+            }
+
+            @Override
+            public Double processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getDouble("average") : -1.0;
+            }
+        };
+    }
 }

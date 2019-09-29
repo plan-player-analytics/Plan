@@ -277,4 +277,164 @@ public class TPSQueries {
             }
         };
     }
+
+    public static Query<Double> averageTPS(long after, long before, UUID serverUUID) {
+        String sql = SELECT + "AVG(" + TPS + ") as average" + FROM + TABLE_NAME +
+                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                AND + DATE + "<?" +
+                AND + DATE + ">?";
+        return new QueryStatement<Double>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, before);
+                statement.setLong(3, after);
+            }
+
+            @Override
+            public Double processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getDouble("average") : -1.0;
+            }
+        };
+    }
+
+    public static Query<Double> averageCPU(long after, long before, UUID serverUUID) {
+        String sql = SELECT + "AVG(" + CPU_USAGE + ") as average" + FROM + TABLE_NAME +
+                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                AND + DATE + "<?" +
+                AND + DATE + ">?";
+        return new QueryStatement<Double>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, before);
+                statement.setLong(3, after);
+            }
+
+            @Override
+            public Double processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getDouble("average") : -1.0;
+            }
+        };
+    }
+
+    public static Query<Long> averageRAM(long after, long before, UUID serverUUID) {
+        String sql = SELECT + "AVG(" + RAM_USAGE + ") as average" + FROM + TABLE_NAME +
+                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                AND + DATE + "<?" +
+                AND + DATE + ">?";
+        return new QueryStatement<Long>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, before);
+                statement.setLong(3, after);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("average") : -1L;
+            }
+        };
+    }
+
+    public static Query<Long> averageChunks(long after, long before, UUID serverUUID) {
+        String sql = SELECT + "AVG(" + CHUNKS + ") as average" + FROM + TABLE_NAME +
+                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                AND + DATE + "<?" +
+                AND + DATE + ">?";
+        return new QueryStatement<Long>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, before);
+                statement.setLong(3, after);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("average") : -1L;
+            }
+        };
+    }
+
+    public static Query<Long> averageEntities(long after, long before, UUID serverUUID) {
+        String sql = SELECT + "AVG(" + ENTITIES + ") as average" + FROM + TABLE_NAME +
+                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                AND + DATE + "<?" +
+                AND + DATE + ">?";
+        return new QueryStatement<Long>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, before);
+                statement.setLong(3, after);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("average") : -1L;
+            }
+        };
+    }
+
+    public static Query<Long> maxFreeDisk(long after, long before, UUID serverUUID) {
+        String sql = SELECT + "MAX(" + FREE_DISK + ") as free" + FROM + TABLE_NAME +
+                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                AND + DATE + "<?" +
+                AND + DATE + ">?";
+        return new QueryStatement<Long>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, before);
+                statement.setLong(3, after);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("free") : -1L;
+            }
+        };
+    }
+
+    public static Query<Long> minFreeDisk(long after, long before, UUID serverUUID) {
+        String sql = SELECT + "MIN(" + FREE_DISK + ") as free" + FROM + TABLE_NAME +
+                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                AND + DATE + "<?" +
+                AND + DATE + ">?";
+        return new QueryStatement<Long>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, before);
+                statement.setLong(3, after);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("free") : -1L;
+            }
+        };
+    }
+
+    public static Query<Long> averageFreeDisk(long after, long before, UUID serverUUID) {
+        String sql = SELECT + "AVG(" + FREE_DISK + ") as average" + FROM + TABLE_NAME +
+                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                AND + DATE + "<?" +
+                AND + DATE + ">?";
+        return new QueryStatement<Long>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, before);
+                statement.setLong(3, after);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("average") : -1L;
+            }
+        };
+    }
 }

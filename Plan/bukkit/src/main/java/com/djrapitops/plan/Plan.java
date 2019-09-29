@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan;
 
+import com.djrapitops.plan.addons.placeholderapi.PlaceholderRegistrar;
 import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
@@ -26,6 +27,7 @@ import com.djrapitops.plugin.BukkitPlugin;
 import com.djrapitops.plugin.benchmarking.Benchmark;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.logging.Level;
@@ -53,6 +55,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
             system.enable();
 
             registerMetrics();
+            registerPlaceholderAPIExtension();
 
             logger.debug("Verbose debug messages are enabled.");
             String benchTime = " (" + timings.end("Enable").map(Benchmark::toDurationString).orElse("-") + ")";
@@ -76,6 +79,16 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
         registerCommand("plan", command);
         if (system != null) {
             system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
+        }
+    }
+
+    private void registerPlaceholderAPIExtension() {
+        try {
+            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                PlaceholderRegistrar.register(system, errorHandler);
+            }
+        } catch (Exception | NoClassDefFoundError | NoSuchMethodError failed) {
+            logger.warn("Failed to register PlaceholderAPI placeholders: " + failed.toString());
         }
     }
 

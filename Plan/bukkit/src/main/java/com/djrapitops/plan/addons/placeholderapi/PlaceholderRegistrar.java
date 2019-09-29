@@ -14,28 +14,23 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.utilities;
+package com.djrapitops.plan.addons.placeholderapi;
 
-import com.djrapitops.plan.delivery.domain.DateHolder;
-
-import java.util.function.Predicate;
+import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 /**
- * Utility class for different Predicates used in the plugin.
+ * Additional wrapper to register PlaceholderAPI placeholders.
  *
  * @author Rsl1122
  */
-public class Predicates {
+public class PlaceholderRegistrar {
 
-    private Predicates() {
-        /* static method class */
+    private PlaceholderRegistrar() {
     }
 
-    public static <T extends DateHolder> Predicate<T> within(long after, long before) {
-        return holder -> {
-            long date = holder.getDate();
-            return after < date && date <= before;
-        };
+    public static void register(PlanSystem system, ErrorHandler errorHandler) {
+        new PlanPlaceHolders(system, errorHandler).register();
     }
 
 }

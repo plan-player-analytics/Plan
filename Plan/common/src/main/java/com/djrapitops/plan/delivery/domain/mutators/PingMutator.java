@@ -20,7 +20,7 @@ import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.keys.CommonKeys;
 import com.djrapitops.plan.gathering.domain.Ping;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.UUID;
@@ -36,7 +36,7 @@ public class PingMutator {
     }
 
     public static PingMutator forContainer(DataContainer container) {
-        return new PingMutator(container.getValue(CommonKeys.PING).orElse(new ArrayList<>()));
+        return new PingMutator(container.getValue(CommonKeys.PING).orElse(Collections.emptyList()));
     }
 
     public PingMutator filterBy(Predicate<Ping> predicate) {
