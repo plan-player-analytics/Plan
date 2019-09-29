@@ -117,7 +117,7 @@ public class RemoveInvalidResultsTransaction extends Transaction {
 
     private Executable deleteInvalidTableProvider(String invalidMethod) {
         String sql = DELETE_FROM + ExtensionTableProviderTable.TABLE_NAME +
-                WHERE + ExtensionTableProviderTable.TABLE_NAME + "=?" +
+                WHERE + ExtensionTableProviderTable.PROVIDER_NAME + "=?" +
                 AND + ExtensionTableProviderTable.PLUGIN_ID + '=' + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID;
         return new ExecStatement(sql) {
             @Override
