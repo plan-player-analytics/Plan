@@ -28,6 +28,8 @@ import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.Resource;
 import org.apache.commons.lang3.StringUtils;
@@ -47,6 +49,7 @@ import java.nio.file.Path;
 public class PlayersPageExporter extends FileExporter {
 
     private final PlanFiles files;
+    private final DBSystem dbSystem;
     private final PageFactory pageFactory;
     private final RootJSONHandler jsonHandler;
     private final Locale locale;
@@ -58,6 +61,7 @@ public class PlayersPageExporter extends FileExporter {
     @Inject
     public PlayersPageExporter(
             PlanFiles files,
+            DBSystem dbSystem,
             PageFactory pageFactory,
             RootJSONHandler jsonHandler,
             Locale locale,
@@ -65,6 +69,7 @@ public class PlayersPageExporter extends FileExporter {
             ServerInfo serverInfo
     ) {
         this.files = files;
+        this.dbSystem = dbSystem;
         this.pageFactory = pageFactory;
         this.jsonHandler = jsonHandler;
         this.locale = locale;
@@ -75,6 +80,9 @@ public class PlayersPageExporter extends FileExporter {
     }
 
     public void export(Path toDirectory) throws IOException, NotFoundException, ParseException {
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
+
         exportPaths.put("/", toRelativePathFromRoot(serverInfo.getServer().isProxy() ? "network" : "server"));
         exportRequiredResources(toDirectory);
         exportJSON(toDirectory);

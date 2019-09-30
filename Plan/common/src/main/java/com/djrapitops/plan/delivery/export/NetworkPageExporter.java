@@ -28,6 +28,8 @@ import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.Resource;
 import org.apache.commons.lang3.StringUtils;
@@ -47,6 +49,7 @@ import java.nio.file.Path;
 public class NetworkPageExporter extends FileExporter {
 
     private final PlanFiles files;
+    private final DBSystem dbSystem;
     private final PageFactory pageFactory;
     private final RootJSONHandler jsonHandler;
     private final Locale locale;
@@ -57,12 +60,14 @@ public class NetworkPageExporter extends FileExporter {
     @Inject
     public NetworkPageExporter(
             PlanFiles files,
+            DBSystem dbSystem,
             PageFactory pageFactory,
             RootJSONHandler jsonHandler,
             Locale locale,
             Theme theme
     ) {
         this.files = files;
+        this.dbSystem = dbSystem;
         this.pageFactory = pageFactory;
         this.jsonHandler = jsonHandler;
         this.locale = locale;
@@ -72,6 +77,9 @@ public class NetworkPageExporter extends FileExporter {
     }
 
     public void export(Path toDirectory, Server server) throws IOException, NotFoundException, ParseException {
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
+
         exportPaths.put("./players", toRelativePathFromRoot("players"));
         exportRequiredResources(toDirectory);
         exportJSON(toDirectory, server);

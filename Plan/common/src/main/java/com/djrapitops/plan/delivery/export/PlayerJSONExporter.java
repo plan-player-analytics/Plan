@@ -17,6 +17,8 @@
 package com.djrapitops.plan.delivery.export;
 
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.Database;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -32,16 +34,22 @@ import java.util.UUID;
 @Singleton
 public class PlayerJSONExporter extends FileExporter {
 
+    private final DBSystem dbSystem;
     private final ResponseFactory responseFactory;
 
     @Inject
     public PlayerJSONExporter(
+            DBSystem dbSystem,
             ResponseFactory responseFactory
     ) {
+        this.dbSystem = dbSystem;
         this.responseFactory = responseFactory;
     }
 
     public void export(Path toDirectory, UUID playerUUID, String playerName) throws IOException {
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
+
         Path to = toDirectory.resolve("player/" + toFileName(playerName) + ".json");
         exportJSON(to, playerUUID);
     }

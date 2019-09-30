@@ -29,6 +29,8 @@ import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.Resource;
 import org.apache.commons.lang3.StringUtils;
@@ -50,6 +52,7 @@ public class ServerPageExporter extends FileExporter {
 
     private final PlanFiles files;
     private final PageFactory pageFactory;
+    private final DBSystem dbSystem;
     private final RootJSONHandler jsonHandler;
     private final Locale locale;
     private final Theme theme;
@@ -61,6 +64,7 @@ public class ServerPageExporter extends FileExporter {
     public ServerPageExporter(
             PlanFiles files,
             PageFactory pageFactory,
+            DBSystem dbSystem,
             RootJSONHandler jsonHandler,
             Locale locale,
             Theme theme,
@@ -68,6 +72,7 @@ public class ServerPageExporter extends FileExporter {
     ) {
         this.files = files;
         this.pageFactory = pageFactory;
+        this.dbSystem = dbSystem;
         this.jsonHandler = jsonHandler;
         this.locale = locale;
         this.theme = theme;
@@ -77,6 +82,9 @@ public class ServerPageExporter extends FileExporter {
     }
 
     public void export(Path toDirectory, Server server) throws IOException, NotFoundException, ParseException {
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
+
         exportPaths.put("../network", toRelativePathFromRoot("network"));
         exportRequiredResources(toDirectory);
         exportJSON(toDirectory, server);
