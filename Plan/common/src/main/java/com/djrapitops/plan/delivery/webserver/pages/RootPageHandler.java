@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.webserver.pages;
 
 import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.WebServer;
@@ -68,7 +69,7 @@ public class RootPageHandler implements PageHandler {
             case 1:
                 return new RedirectResponse("/players");
             case 2:
-                return new RedirectResponse("/player/" + webUser.getName());
+                return new RedirectResponse("/player/" + Html.encodeToURL(webUser.getName()));
             default:
                 return responseFactory.forbidden403();
         }

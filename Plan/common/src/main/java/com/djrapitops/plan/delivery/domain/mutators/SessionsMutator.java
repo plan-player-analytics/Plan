@@ -283,7 +283,9 @@ public class SessionsMutator {
         return sessions.stream().map(session -> {
             Map<String, Object> sessionMap = new HashMap<>();
             sessionMap.put("player_name", session.getValue(SessionKeys.NAME).orElse(session.getUnsafe(SessionKeys.UUID).toString()));
+            sessionMap.put("player_uuid", session.getUnsafe(SessionKeys.UUID).toString());
             sessionMap.put("server_name", session.getValue(SessionKeys.SERVER_NAME).orElse(session.getUnsafe(SessionKeys.SERVER_UUID).toString()));
+            sessionMap.put("server_uuid", session.getUnsafe(SessionKeys.SERVER_UUID).toString());
             sessionMap.put("name", nameFunction.apply(sessionMap));
             sessionMap.put("start", session.getValue(SessionKeys.START).map(formatters.yearLong()).orElse("-") +
                     (session.supports(SessionKeys.END) ? "" : " (Online)"));

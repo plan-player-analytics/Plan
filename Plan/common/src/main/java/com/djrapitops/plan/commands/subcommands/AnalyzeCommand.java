@@ -18,6 +18,7 @@ package com.djrapitops.plan.commands.subcommands;
 
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.export.Exporter;
+import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.exceptions.ExportException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
@@ -108,7 +109,7 @@ public class AnalyzeCommand extends CommandNode {
     }
 
     private void sendLink(Server server, Sender sender) {
-        String target = "/server/" + server.getName();
+        String target = "/server/" + Html.encodeToURL(server.getName());
         String address = PlanSystem.getMainAddress(webServer, dbSystem);
         String url = address + target;
         String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);

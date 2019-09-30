@@ -125,7 +125,7 @@ public class PlayersTableJSONParser {
 
     private void appendPlayerData(StringBuilder dataJSON, TablePlayer player) {
         String name = player.getName().orElse(player.getPlayerUUID().toString());
-        String url = "../player/" + name;
+        String url = "../player/" + Html.encodeToURL(name);
 
         int loginTimes = player.getSessionCount().orElse(0);
         long playtime = player.getPlaytime().orElse(-1L);

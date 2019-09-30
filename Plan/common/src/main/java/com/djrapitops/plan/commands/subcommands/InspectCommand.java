@@ -17,6 +17,7 @@
 package com.djrapitops.plan.commands.subcommands;
 
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.UUIDUtility;
@@ -132,7 +133,7 @@ public class InspectCommand extends CommandNode {
         sender.sendMessage(locale.getString(CommandLang.HEADER_INSPECT, playerName));
 
         String address = PlanSystem.getMainAddress(webServer, dbSystem);
-        String url = address + "/player/" + playerName;
+        String url = address + "/player/" + Html.encodeToURL(playerName);
         String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
 
         boolean console = !CommandUtils.isPlayer(sender);

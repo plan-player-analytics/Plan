@@ -19,6 +19,7 @@ package com.djrapitops.plan.api;
 import com.djrapitops.plan.api.data.PlayerContainer;
 import com.djrapitops.plan.api.data.ServerContainer;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.UUIDUtility;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -80,7 +81,7 @@ public class CommonAPI implements PlanAPI {
 
     @Override
     public String getPlayerInspectPageLink(String playerName) {
-        return "../player/" + playerName;
+        return "../player/" + Html.encodeToURL(playerName);
     }
 
     @Override

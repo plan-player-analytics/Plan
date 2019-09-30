@@ -20,6 +20,8 @@ import org.apache.commons.text.StringSubstitutor;
 import org.apache.commons.text.TextStringBuilder;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -168,5 +170,13 @@ public enum Html {
         StringSubstitutor sub = new StringSubstitutor(replaceMap);
         sub.setEnableSubstitutionInVariables(false);
         return sub.replace(html);
+    }
+
+    public static String encodeToURL(String string) {
+        try {
+            return URLEncoder.encode(string, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return string;
+        }
     }
 }
