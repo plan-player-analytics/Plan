@@ -20,7 +20,7 @@ import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
-import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -38,7 +38,7 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class RemoveUnsatisfiedConditionalPlayerResultsTransaction extends Transaction {
+public class RemoveUnsatisfiedConditionalPlayerResultsTransaction extends ThrowawayTransaction {
 
     private final String providerTable;
     private final String playerValueTable;

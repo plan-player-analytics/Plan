@@ -42,7 +42,7 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
 
     @Override
     protected boolean shouldBeExecuted() {
-        return !sourceDB.equals(destinationDB) && sourceDB.getState() != Database.State.CLOSED;
+        return super.shouldBeExecuted() && !sourceDB.equals(destinationDB) && sourceDB.getState() != Database.State.CLOSED;
     }
 
     @Override

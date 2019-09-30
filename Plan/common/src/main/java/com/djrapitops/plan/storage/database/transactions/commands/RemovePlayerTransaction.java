@@ -19,7 +19,7 @@ package com.djrapitops.plan.storage.database.transactions.commands;
 import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
-import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -32,7 +32,7 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class RemovePlayerTransaction extends Transaction {
+public class RemovePlayerTransaction extends ThrowawayTransaction {
 
     private final UUID playerUUID;
 

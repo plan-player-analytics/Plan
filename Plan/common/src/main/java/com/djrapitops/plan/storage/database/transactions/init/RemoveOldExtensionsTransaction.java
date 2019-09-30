@@ -20,7 +20,7 @@ import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
-import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,7 +36,7 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class RemoveOldExtensionsTransaction extends Transaction {
+public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
 
     private final long deleteOlder;
     private final UUID serverUUID;

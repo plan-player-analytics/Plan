@@ -74,9 +74,18 @@ public interface Database {
 
     State getState();
 
+    /**
+     * Possible State changes:
+     * CLOSED -> PATCHING (Database init),
+     * PATCHING -> OPEN (Database initialized),
+     * OPEN -> CLOSING (Database closing),
+     * CLOSING -> CLOSED (Database closed),
+     * PATCHING -> CLOSED (Database closed prematurely)
+     */
     enum State {
         CLOSED,
         PATCHING,
-        OPEN
+        OPEN,
+        CLOSING
     }
 }

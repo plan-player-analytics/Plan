@@ -17,7 +17,7 @@
 package com.djrapitops.plan.storage.database.transactions.init;
 
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
-import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
 
@@ -29,7 +29,7 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class RemoveDuplicateUserInfoTransaction extends Transaction {
+public class RemoveDuplicateUserInfoTransaction extends ThrowawayTransaction {
 
     private static final String COLUMN_ID = UserInfoTable.TABLE_NAME + '.' + UserInfoTable.ID;
     private static final String STATEMENT_SELECT_DUPLICATE_IDS =

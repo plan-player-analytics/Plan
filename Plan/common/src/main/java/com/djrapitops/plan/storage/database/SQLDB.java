@@ -213,8 +213,9 @@ public abstract class SQLDB extends AbstractDatabase {
 
     @Override
     public void close() {
-        setState(State.CLOSED);
+        if (getState() == State.OPEN) setState(State.CLOSING);
         closeTransactionExecutor(transactionExecutor);
+        setState(State.CLOSED);
     }
 
     public abstract Connection getConnection() throws SQLException;

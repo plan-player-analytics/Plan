@@ -19,7 +19,7 @@ package com.djrapitops.plan.extension.implementation.storage.transactions.result
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
-import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -34,7 +34,7 @@ import static com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerVal
  *
  * @author Rsl1122
  */
-public class StorePlayerNumberResultTransaction extends Transaction {
+public class StorePlayerNumberResultTransaction extends ThrowawayTransaction {
 
     private final String pluginName;
     private final UUID serverUUID;

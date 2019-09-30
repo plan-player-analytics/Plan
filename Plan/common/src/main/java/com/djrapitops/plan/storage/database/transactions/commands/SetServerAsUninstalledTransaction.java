@@ -19,7 +19,7 @@ package com.djrapitops.plan.storage.database.transactions.commands;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
-import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -32,7 +32,7 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.WHERE;
  *
  * @author Rsl1122
  */
-public class SetServerAsUninstalledTransaction extends Transaction {
+public class SetServerAsUninstalledTransaction extends ThrowawayTransaction {
 
     private final UUID serverUUID;
 

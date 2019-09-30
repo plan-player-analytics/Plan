@@ -17,7 +17,7 @@
 package com.djrapitops.plan.storage.database.transactions.commands;
 
 import com.djrapitops.plan.storage.database.sql.tables.*;
-import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import static com.djrapitops.plan.storage.database.sql.parsing.Sql.DELETE_FROM;
 
@@ -26,7 +26,7 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.DELETE_FROM;
  *
  * @author Rsl1122
  */
-public class RemoveEverythingTransaction extends Transaction {
+public class RemoveEverythingTransaction extends ThrowawayTransaction {
 
     @Override
     protected void performOperations() {

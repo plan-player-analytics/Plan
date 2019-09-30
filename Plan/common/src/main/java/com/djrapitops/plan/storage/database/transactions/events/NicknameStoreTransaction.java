@@ -18,7 +18,7 @@ package com.djrapitops.plan.storage.database.transactions.events;
 
 import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
-import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.util.UUID;
 import java.util.function.BiPredicate;
@@ -28,7 +28,7 @@ import java.util.function.BiPredicate;
  *
  * @author Rsl1122
  */
-public class NicknameStoreTransaction extends Transaction {
+public class NicknameStoreTransaction extends ThrowawayTransaction {
 
     private final UUID playerUUID;
     private final Nickname nickname;

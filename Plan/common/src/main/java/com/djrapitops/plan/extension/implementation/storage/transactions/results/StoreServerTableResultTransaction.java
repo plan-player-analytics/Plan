@@ -25,7 +25,7 @@ import com.djrapitops.plan.storage.database.sql.tables.ExtensionTableProviderTab
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
-import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
@@ -42,7 +42,7 @@ import static com.djrapitops.plan.storage.database.sql.tables.ExtensionServerTab
  *
  * @author Rsl1122
  */
-public class StoreServerTableResultTransaction extends Transaction {
+public class StoreServerTableResultTransaction extends ThrowawayTransaction {
 
     private final String pluginName;
     private final UUID serverUUID;

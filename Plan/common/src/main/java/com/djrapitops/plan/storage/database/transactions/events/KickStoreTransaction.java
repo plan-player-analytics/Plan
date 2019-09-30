@@ -18,7 +18,7 @@ package com.djrapitops.plan.storage.database.transactions.events;
 
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
-import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -31,7 +31,7 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.WHERE;
  *
  * @author Rsl1122
  */
-public class KickStoreTransaction extends Transaction {
+public class KickStoreTransaction extends ThrowawayTransaction {
 
     private final UUID playerUUID;
 

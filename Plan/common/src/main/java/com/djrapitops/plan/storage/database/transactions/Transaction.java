@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.transactions;
 
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.DBType;
+import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plugin.utilities.Verify;
@@ -168,6 +169,10 @@ public abstract class Transaction {
         transaction.connection = null;
         transaction.dbType = null;
         transaction.db = null;
+    }
+
+    protected Database.State getDBState() {
+        return db.getState();
     }
 
     protected UUID getServerUUID() {

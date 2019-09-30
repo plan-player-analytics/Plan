@@ -23,7 +23,7 @@ import com.djrapitops.plan.storage.database.sql.tables.ExtensionServerValueTable
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionTableProviderTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
-import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -42,7 +42,7 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class RemoveUnsatisfiedConditionalServerResultsTransaction extends Transaction {
+public class RemoveUnsatisfiedConditionalServerResultsTransaction extends ThrowawayTransaction {
 
     private final String providerTable;
     private final String serverValueTable;

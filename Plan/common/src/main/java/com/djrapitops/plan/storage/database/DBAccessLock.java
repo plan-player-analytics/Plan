@@ -52,7 +52,9 @@ public class DBAccessLock {
             return;
         }
         try {
-            while (database.getState() != Database.State.OPEN) {
+            // Wait for the database to be in OPEN or CLOSING state before allowing execution.
+            // CLOSING is not an allowed state if database was not OPEN at the time of close.
+            while (database.getState() != Database.State.OPEN && database.getState() != Database.State.CLOSING) {
                 synchronized (lockObject) {
                     lockObject.wait();
                     if (database.getState() == Database.State.CLOSED) {

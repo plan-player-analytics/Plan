@@ -23,7 +23,7 @@ import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionTabTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
-import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -37,7 +37,7 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.WHERE;
  *
  * @author Rsl1122
  */
-public class StoreTabInformationTransaction extends Transaction {
+public class StoreTabInformationTransaction extends ThrowawayTransaction {
 
     private final String pluginName;
     private final UUID serverUUID;

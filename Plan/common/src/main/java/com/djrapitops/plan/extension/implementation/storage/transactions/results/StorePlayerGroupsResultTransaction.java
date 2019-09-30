@@ -20,7 +20,7 @@ import com.djrapitops.plan.storage.database.sql.tables.ExtensionGroupsTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
-import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
@@ -34,7 +34,7 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class StorePlayerGroupsResultTransaction extends Transaction {
+public class StorePlayerGroupsResultTransaction extends ThrowawayTransaction {
 
     private final String pluginName;
     private final UUID serverUUID;

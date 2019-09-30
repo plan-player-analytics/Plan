@@ -24,7 +24,7 @@ import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionTabTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
-import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -42,7 +42,7 @@ import static com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderT
  * @author Rsl1122
  */
 @SuppressWarnings("Duplicates")
-public class StoreNumberProviderTransaction extends Transaction {
+public class StoreNumberProviderTransaction extends ThrowawayTransaction {
 
     private final FormatType formatType;
     private final UUID serverUUID;

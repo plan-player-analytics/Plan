@@ -20,7 +20,7 @@ import com.djrapitops.plan.storage.database.sql.parsing.Update;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
-import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -31,7 +31,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class OperatorStatusTransaction extends Transaction {
+public class OperatorStatusTransaction extends ThrowawayTransaction {
 
     private UUID playerUUID;
     private boolean operatorStatus;

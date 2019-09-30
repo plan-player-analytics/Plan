@@ -22,7 +22,7 @@ import com.djrapitops.plan.storage.database.sql.tables.PingTable;
 import com.djrapitops.plan.storage.database.sql.tables.TPSTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
-import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -36,7 +36,7 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class RemoveOldSampledDataTransaction extends Transaction {
+public class RemoveOldSampledDataTransaction extends ThrowawayTransaction {
 
     private final UUID serverUUID;
     private final long deleteTPSOlderThanMs;
