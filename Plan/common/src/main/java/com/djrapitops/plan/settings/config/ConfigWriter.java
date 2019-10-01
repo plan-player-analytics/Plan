@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -68,7 +69,8 @@ public class ConfigWriter {
         ConfigNode storedParent = writing.parent;
         writing.updateParent(null);
 
-        Files.write(outputPath, parseLines(writing), StandardCharsets.UTF_8);
+        Files.createDirectories(outputPath.getParent());
+        Files.write(outputPath, parseLines(writing), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
 
         writing.updateParent(storedParent);
     }
