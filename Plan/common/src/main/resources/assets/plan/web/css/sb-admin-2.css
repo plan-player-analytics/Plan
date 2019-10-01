@@ -55,9 +55,9 @@ html {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-@media (max-width: 1500px) {
+@media (max-width: 1520px) {
     html {
-        font-size: 16px;
+        font-size: 95%;
     }
 }
 
