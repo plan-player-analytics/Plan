@@ -128,7 +128,10 @@ public class NetworkPageExporter extends FileExporter {
 
         String jsonResourceName = toFileName(toJSONResourceName(resource)) + ".json";
 
-        export(toDirectory.resolve("data").resolve(jsonResourceName), found.getContent());
+        export(toDirectory.resolve("data").resolve(jsonResourceName),
+                // Replace ../server in urls to fix server page links
+                StringUtils.replaceEach(found.getContent(), new String[]{"../server", "../player"}, new String[]{toRelativePathFromRoot("server"), toRelativePathFromRoot("player")})
+        );
         exportPaths.put("../v1/" + resource, toRelativePathFromRoot("data/" + jsonResourceName));
     }
 
