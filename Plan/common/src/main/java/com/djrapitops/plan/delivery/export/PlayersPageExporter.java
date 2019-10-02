@@ -83,7 +83,7 @@ public class PlayersPageExporter extends FileExporter {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
 
-        exportPaths.put("/", toRelativePathFromRoot(serverInfo.getServer().isProxy() ? "network" : "server"));
+        exportPaths.put("href=\"/\"", "href=\"" + toRelativePathFromRoot(serverInfo.getServer().isProxy() ? "network" : "server") + '"');
         exportRequiredResources(toDirectory);
         exportJSON(toDirectory);
         exportHtml(toDirectory);
