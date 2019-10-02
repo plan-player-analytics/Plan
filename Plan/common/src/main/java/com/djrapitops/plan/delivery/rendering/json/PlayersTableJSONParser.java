@@ -28,6 +28,7 @@ import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.implementation.results.*;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.*;
 
@@ -141,15 +142,13 @@ public class PlayersTableJSONParser {
 
         Html link = openPlayerPageInNewTab ? Html.LINK_EXTERNAL : Html.LINK;
 
-        dataJSON
-                .append(makeDataEntry(link.parse(url, name), "name")).append(',')
+        dataJSON.append(makeDataEntry(link.parse(url, StringEscapeUtils.escapeHtml4(name)), "name")).append(',') // Backslashes escaped to prevent json errors
                 .append(makeDataEntry(activityIndex.getValue(), activityString, "index")).append(',')
                 .append(makeDataEntry(playtime, numberFormatters.get(FormatType.TIME_MILLISECONDS).apply(playtime), "playtime")).append(',')
                 .append(makeDataEntry(loginTimes, "sessions")).append(',')
                 .append(makeDataEntry(registered, numberFormatters.get(FormatType.DATE_YEAR).apply(registered), "registered")).append(',')
                 .append(makeDataEntry(lastSeen, numberFormatters.get(FormatType.DATE_YEAR).apply(lastSeen), "seen")).append(',')
-                .append(makeDataEntry(geolocation, "geolocation"))
-        ;
+                .append(makeDataEntry(geolocation, "geolocation"));
     }
 
     private String makeDataEntry(Object data, String dataName) {
