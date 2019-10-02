@@ -129,8 +129,8 @@ public class NetworkPageExporter extends FileExporter {
         String jsonResourceName = toFileName(toJSONResourceName(resource)) + ".json";
 
         export(toDirectory.resolve("data").resolve(jsonResourceName),
-                // Replace ../server in urls to fix server page links
-                StringUtils.replaceEach(found.getContent(), new String[]{"../server", "../player"}, new String[]{toRelativePathFromRoot("server"), toRelativePathFromRoot("player")})
+                // Replace ../player in urls to fix player page links
+                StringUtils.replace(found.getContent(), "../player", toRelativePathFromRoot("player"))
         );
         exportPaths.put("../v1/" + resource, toRelativePathFromRoot("data/" + jsonResourceName));
     }
@@ -186,6 +186,9 @@ public class NetworkPageExporter extends FileExporter {
         Path to = toDirectory.resolve(resourceName);
         if (resourceName.endsWith(".css")) {
             export(to, theme.replaceThemeColors(resource.asString()));
+        } else if (resourceName.equalsIgnoreCase("js/network-values.js")) {
+            // Replace /server in urls to fix server page links
+            export(to, StringUtils.replace(resource.asString(), "server/", toRelativePathFromRoot("server") + '/'));
         } else {
             export(to, resource.asLines());
         }
