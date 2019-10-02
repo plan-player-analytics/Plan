@@ -92,7 +92,7 @@ public class ServerPageHandler implements PageHandler {
                 /*ignored*/
             }
         }
-        return Optional.empty();
+        return Optional.of(serverInfo.getServer().getUuid());
     }
 
     @Override
