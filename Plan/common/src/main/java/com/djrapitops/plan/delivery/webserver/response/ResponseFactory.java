@@ -134,6 +134,12 @@ public class ResponseFactory {
         return new ByteResponse(ResponseType.IMAGE, FileResponse.format(fileName), files);
     }
 
+    /**
+     * Redirect somewhere
+     *
+     * @param location Starts with '/'
+     * @return Redirection response.
+     */
     public Response redirectResponse(String location) {
         return new RedirectResponse(location);
     }

@@ -60,13 +60,18 @@ public class ServerPageHandler implements PageHandler {
 
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
-        UUID serverUUID = getServerUUID(target);
-
-        checkDBState();
-        if (serverInfo.getServer().isProxy() && serverInfo.getServerUUID().equals(serverUUID)) {
-            return responseFactory.networkPageResponse();
+        Optional<UUID> serverUUID = getServerUUID(target);
+        boolean proxy = serverInfo.getServer().isProxy();
+        if (serverUUID.isPresent()) {
+            checkDBState();
+            if (proxy && serverInfo.getServerUUID().equals(serverUUID.get())) {
+                return responseFactory.networkPageResponse();
+            }
+            return responseFactory.serverPageResponse(serverUUID.get());
+        } else {
+            // Redirect to base server page.
+            return responseFactory.redirectResponse(proxy ? "/network" : "/server");
         }
-        return responseFactory.serverPageResponse(serverUUID);
     }
 
     private void checkDBState() throws ForbiddenException {
@@ -76,24 +81,18 @@ public class ServerPageHandler implements PageHandler {
         }
     }
 
-    private UUID getServerUUID(RequestTarget target) {
-        // Default to current server's page
-        UUID serverUUID = serverInfo.getServerUUID();
-
+    private Optional<UUID> getServerUUID(RequestTarget target) {
         if (!target.isEmpty()) {
             try {
                 String serverName = target.get(0);
-                Optional<UUID> serverUUIDOptional = dbSystem.getDatabase()
+                return dbSystem.getDatabase()
                         .query(ServerQueries.fetchServerMatchingIdentifier(serverName))
                         .map(Server::getUuid);
-                if (serverUUIDOptional.isPresent()) {
-                    serverUUID = serverUUIDOptional.get();
-                }
             } catch (IllegalArgumentException ignore) {
                 /*ignored*/
             }
         }
-        return serverUUID;
+        return Optional.empty();
     }
 
     @Override
