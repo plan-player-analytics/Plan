@@ -28,6 +28,7 @@ softdepend:
   - Vault
   - ViaVersion
   - PlaceholderAPI
+  - DKBans
 
 commands:
   plan:
