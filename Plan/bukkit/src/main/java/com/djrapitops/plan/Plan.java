@@ -85,7 +85,12 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
     private void registerPlaceholderAPIExtension() {
         try {
             if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                PlaceholderRegistrar.register(system, errorHandler);
+                runnableFactory.create("Placeholders Registrar", new AbsRunnable() {
+                    @Override
+                    public void run() {
+                        PlaceholderRegistrar.register(system, errorHandler);
+                    }
+                }).runTask();
             }
         } catch (Exception | NoClassDefFoundError | NoSuchMethodError failed) {
             logger.warn("Failed to register PlaceholderAPI placeholders: " + failed.toString());
