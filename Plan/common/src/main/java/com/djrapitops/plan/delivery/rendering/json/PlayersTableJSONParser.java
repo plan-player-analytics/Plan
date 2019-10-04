@@ -28,6 +28,7 @@ import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.implementation.results.*;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.*;
@@ -142,7 +143,7 @@ public class PlayersTableJSONParser {
 
         Html link = openPlayerPageInNewTab ? Html.LINK_EXTERNAL : Html.LINK;
 
-        dataJSON.append(makeDataEntry(link.parse(url, StringEscapeUtils.escapeHtml4(name)), "name")).append(',') // Backslashes escaped to prevent json errors
+        dataJSON.append(makeDataEntry(link.parse(url, StringUtils.replace(StringEscapeUtils.escapeHtml4(name), "\\", "\\\\")), "name")).append(',') // Backslashes escaped to prevent json errors
                 .append(makeDataEntry(activityIndex.getValue(), activityString, "index")).append(',')
                 .append(makeDataEntry(playtime, numberFormatters.get(FormatType.TIME_MILLISECONDS).apply(playtime), "playtime")).append(',')
                 .append(makeDataEntry(loginTimes, "sessions")).append(',')
