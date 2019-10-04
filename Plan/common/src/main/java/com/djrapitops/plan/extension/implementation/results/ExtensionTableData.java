@@ -101,6 +101,6 @@ public class ExtensionTableData implements Comparable<ExtensionTableData> {
     }
 
     public boolean isWideTable() {
-        return table.getMaxColumnSize() > 3;
+        return table.getMaxColumnSize() >= 3;
     }
 }
