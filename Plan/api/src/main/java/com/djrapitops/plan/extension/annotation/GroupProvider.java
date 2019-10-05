@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
  * For example:
  * {@code @GroupProvider public String[] getJobs(UUID playerUUID) {}}
  * <p>
- * Group data is parsed as Table for /server & /network page and similar to {@link StringProvider} for /player page.
+ * Group data is parsed as Table for /server and /network page and similar to {@link StringProvider} for /player page.
  * <p>
  * Requires Capability {@code DATA_EXTENSION_GROUPS}
  *

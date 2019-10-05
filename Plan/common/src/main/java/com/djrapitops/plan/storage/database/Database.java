@@ -76,11 +76,11 @@ public interface Database {
 
     /**
      * Possible State changes:
-     * CLOSED -> PATCHING (Database init),
-     * PATCHING -> OPEN (Database initialized),
-     * OPEN -> CLOSING (Database closing),
-     * CLOSING -> CLOSED (Database closed),
-     * PATCHING -> CLOSED (Database closed prematurely)
+     * CLOSED to PATCHING (Database init),
+     * PATCHING to OPEN (Database initialized),
+     * OPEN to CLOSING (Database closing),
+     * CLOSING to CLOSED (Database closed),
+     * PATCHING to CLOSED (Database closed prematurely)
      */
     enum State {
         CLOSED,

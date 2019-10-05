@@ -28,7 +28,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Parses JSON payload for /server-page PvP & PvE tab.
+ * Parses JSON payload for /server-page PvP and PvE tab.
  *
  * @author Rsl1122
  */
