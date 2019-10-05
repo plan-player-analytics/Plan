@@ -9,19 +9,14 @@
 [![Duplicate lines](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=code_smells)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
 
-Player Analytics is a Bukkit plugin that gathers data about player activity & displays that data on an internal webserver.
-Originally the plugin only displayed data of other plugins, but now it gathers it's own data, while displaying data from various other plugins.
+Player Analytics is a fully fledged solution for the analytics needs of your server. A built in webserver displays insights into different aspects on the server such as Online activity, Playerbase and how these change over time.
 
-![Image](https://puu.sh/yAt5H/2e5d955f97.jpg)
+Plan supports multiple different platforms and versions;
+Spigot, Paper, Sponge, SpongeForge, Bungeecord, Velocity, Cauldron & all derivatives; from 1.7 to 1.14 - One jar for all platforms.
 
-### Links
-- [Spigot, Resource page](https://www.spigotmc.org/resources/plan-player-analytics.32536/)
-- [Sponge Ore Page](https://ore.spongepowered.org/Rsl1122/Plan)
-- [Issues & Suggestions](https://github.com/Rsl1122/Plan-PlayerAnalytics/issues)
-- [License](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/LICENSE)
+[API, Documentation & Tutorials](https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki) | [Releases](https://github.com/plan-player-analytics/Plan/releases) | [Issues & Suggestions](https://github.com/Rsl1122/Plan-PlayerAnalytics/issues) | [Jenkins (Development builds)](https://plan.djrapitops.com/job/Player%20Analytics/job/master/)
 
-## Documentation
-Documentation can be found [On the Wiki](https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki)
+![Image](https://user-images.githubusercontent.com/24460436/66252533-96d89400-e765-11e9-978f-bc4bd040ab97.jpg)
 
 ## Building
 
@@ -43,3 +38,9 @@ cd Plan
 - **[Font Awesome Icons](http://fontawesome.io/icons/)** | [SIL Open Font License](http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)
 - **[MaxMind GeoIP2](https://www.maxmind.com/en/geoip-demo)** | [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/)
 - **[H2 Database](http://www.h2database.com)** | [MPL 2.0](http://www.h2database.com/html/license.html#mpl2) or [EPL 1.0](http://www.h2database.com/html/license.html#eclipse_license)
+
+## License
+
+Player Analytics is licensed under LGPL-3 (GNU Lesser General Public License)
+
+- [License](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/LICENSE)
