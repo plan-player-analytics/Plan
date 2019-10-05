@@ -1,11 +1,11 @@
 # Default Theme bar color when user has not chosen a color
-DefaultColor: "indigo"
+DefaultColor: "plan"
 
 Font:
   # Location of the FontStyleSheet, eg. https://fonts.googleapis.com/css?family=Quicksand:300,400
-  FontStyleSheet: https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext
+  FontStyleSheet: https://fonts.googleapis.com/css?family=Nunito:400,700,800,900&display=swap&subset=latin-ext
   # Name of the Font for CSS eg "'Quicksand', sans-serif"
-  FontFamily: '"Roboto", sans-serif'
+  FontFamily: '"Nunito"'
 
 # Color codes for each theme element color
 # These affect icons & backgrounds of all elements of this color.

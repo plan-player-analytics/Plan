@@ -81,7 +81,6 @@ Time:
     # The index is a number from 0 to 5.
     # These numbers were calibrated with data of 250 players (Small sample size).
     Activity_index:
-      Login_threshold: 2
       Playtime_threshold: 30
         Unit: MINUTES
     Remove_inactive_player_data_after: 180
@@ -91,12 +90,12 @@ Time:
       Unit: DAYS
     Remove_ping_data_after: 14
       Unit: DAYS
+    Remove_disabled_extension_data_after: 2
+      Unit: DAYS
   Periodic_tasks:
     Extension_data_refresh_every: 1
       Unit: HOURS
     Check_DB_for_server_config_files_every: 1
-      Unit: MINUTES
-    Clean_caches_every: 10
       Unit: MINUTES
     Clean_Database_every: 1
       Unit: HOURS
@@ -106,8 +105,6 @@ Display_options:
   # https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Themes
   Theme: default
   Sessions:
-    Replace_accordion_with_table: false
-    Show_most_played_world_in_title: true
     Show_on_page: 50
     # By Default World playtime pie is ordered alphabetically.
     # Colors will be determined alphabetically in any case.
@@ -116,9 +113,14 @@ Display_options:
     Show_on_server_page: 2500
     Show_on_players_page: 25000
   Open_player_links_in_new_tab: false
-  Show_player_IPs: true
   Graphs:
     Show_gaps_in_data: false
+    TPS:
+      High_threshold: 18
+      Medium_threshold: 10
+    Disk_space:
+      High_threshold: 500
+      Medium_threshold: 100
   Command_colors:
     Main: '&2'
     Secondary: '&7'
@@ -157,12 +159,12 @@ World_aliases:
 # These settings will make Plan write .js, .css, .json and .html files to some location on disk.
 # Relative path will render to /plugins/Plan/path
 # Make sure user running the server has write permissions to the path.
+# On networks export is disabled on Bukkit/Sponge servers.
 # -----------------------------------------------------
 Export:
   HTML_Export_path: 'Analysis Results'
   JSON_Export_path: 'Raw JSON'
   Parts:
-    JavaScript_and_CSS: false
     # Player pages/JSON are only written on join/leave.
     Player_pages: false
     Player_JSON: false
@@ -170,11 +172,15 @@ Export:
     Server_page: false
     Server_JSON: false
   Export_player_on_login_and_logout: false
+  # If there are multiple servers the period is divided evenly to avoid export of all servers at once
+  # Also affects Players page export
+  Server_refresh_period: 20
+    Unit: MINUTES
 # -----------------------------------------------------
 # These settings affect Plugin data integration.
 # If a plugin is causing issues the integration can be disabled by setting Plugin_name.Enabled: false
 # -----------------------------------------------------
 Plugins:
-  BuyCraft:
+  Buycraft:
     # http://help.buycraft.net/article/36-where-to-find-the-secret-key
     Secret: "-"

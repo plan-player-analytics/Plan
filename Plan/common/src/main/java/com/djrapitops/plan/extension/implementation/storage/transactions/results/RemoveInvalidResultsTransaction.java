@@ -16,24 +16,24 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
-import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.Executable;
-import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.db.sql.tables.*;
+import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.transactions.ExecStatement;
+import com.djrapitops.plan.storage.database.transactions.Executable;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.UUID;
 
-import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
 
 /**
  * Transaction to remove method results that correspond to {@link com.djrapitops.plan.extension.annotation.InvalidateMethod} annotations.
  *
  * @author Rsl1122
  */
-public class RemoveInvalidResultsTransaction extends Transaction {
+public class RemoveInvalidResultsTransaction extends ThrowawayTransaction {
 
     private final String pluginName;
     private final UUID serverUUID;
@@ -117,7 +117,7 @@ public class RemoveInvalidResultsTransaction extends Transaction {
 
     private Executable deleteInvalidTableProvider(String invalidMethod) {
         String sql = DELETE_FROM + ExtensionTableProviderTable.TABLE_NAME +
-                WHERE + ExtensionTableProviderTable.TABLE_NAME + "=?" +
+                WHERE + ExtensionTableProviderTable.PROVIDER_NAME + "=?" +
                 AND + ExtensionTableProviderTable.PLUGIN_ID + '=' + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID;
         return new ExecStatement(sql) {
             @Override

@@ -1,15 +1,18 @@
+repositories {
+    maven { // Placeholder API repository
+        url = "http://repo.extendedclip.com/content/repositories/placeholderapi/"
+    }
+}
+
 dependencies {
     compile project(path: ":common", configuration: 'shadow')
-    
+    compileOnly project(":api")
+
     compile "com.djrapitops:AbstractPluginFramework-bukkit:$abstractPluginFrameworkVersion"
     compile "org.bstats:bstats-bukkit:$bstatsVersion"
+    compileOnly "me.clip:placeholderapi:$placeholderapiVersion"
 
-//    compileOnly "org.spigotmc:spigot-api:$spigotVersion"
-//    compileOnly "org.bukkit:bukkit:$bukkitVersion"
     compileOnly "com.destroystokyo.paper:paper-api:$paperVersion"
-
-//    testCompile "org.spigotmc:spigot-api:$spigotVersion"
-//    testCompile "org.bukkit:bukkit:$bukkitVersion"
     testCompile "com.destroystokyo.paper:paper-api:$paperVersion"
 
     testCompile project(path: ":common", configuration: 'testArtifacts')

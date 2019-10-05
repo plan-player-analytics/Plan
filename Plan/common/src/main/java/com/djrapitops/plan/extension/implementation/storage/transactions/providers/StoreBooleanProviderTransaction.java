@@ -16,14 +16,14 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.providers;
 
-import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.Executable;
-import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.db.sql.tables.ExtensionIconTable;
-import com.djrapitops.plan.db.sql.tables.ExtensionPluginTable;
-import com.djrapitops.plan.db.sql.tables.ExtensionTabTable;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
+import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
+import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
+import com.djrapitops.plan.storage.database.sql.tables.ExtensionTabTable;
+import com.djrapitops.plan.storage.database.transactions.ExecStatement;
+import com.djrapitops.plan.storage.database.transactions.Executable;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -31,16 +31,16 @@ import java.sql.Types;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.djrapitops.plan.db.sql.parsing.Sql.AND;
-import static com.djrapitops.plan.db.sql.parsing.Sql.WHERE;
-import static com.djrapitops.plan.db.sql.tables.ExtensionProviderTable.*;
+import static com.djrapitops.plan.storage.database.sql.parsing.Sql.AND;
+import static com.djrapitops.plan.storage.database.sql.parsing.Sql.WHERE;
+import static com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable.*;
 
 /**
  * Transaction to store information about a {@link com.djrapitops.plan.extension.implementation.providers.BooleanDataProvider}.
  *
  * @author Rsl1122
  */
-public class StoreBooleanProviderTransaction extends Transaction {
+public class StoreBooleanProviderTransaction extends ThrowawayTransaction {
 
     private final String providedCondition;
     private final boolean hidden;

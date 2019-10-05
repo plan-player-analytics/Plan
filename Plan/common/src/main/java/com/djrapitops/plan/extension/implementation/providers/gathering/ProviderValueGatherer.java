@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.extension.implementation.providers.gathering;
 
-import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.icon.Icon;
@@ -28,8 +27,9 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIc
 import com.djrapitops.plan.extension.implementation.storage.transactions.StorePluginTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreTabInformationTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveInvalidResultsTransaction;
-import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.Database;
 
 import java.util.UUID;
 
@@ -51,6 +51,7 @@ public class ProviderValueGatherer {
     private DoubleAndPercentageProviderValueGatherer doubleAndPercentageGatherer;
     private StringProviderValueGatherer stringGatherer;
     private TableProviderValueGatherer tableGatherer;
+    private GroupProviderValueGatherer groupGatherer;
 
 
     public ProviderValueGatherer(
@@ -81,6 +82,9 @@ public class ProviderValueGatherer {
                 pluginName, extension, serverUUID, database, dataProviders
         );
         tableGatherer = new TableProviderValueGatherer(
+                pluginName, extension, serverUUID, database, dataProviders
+        );
+        groupGatherer = new GroupProviderValueGatherer(
                 pluginName, extension, serverUUID, database, dataProviders
         );
     }
@@ -129,6 +133,7 @@ public class ProviderValueGatherer {
         doubleAndPercentageGatherer.gatherDoubleDataOfPlayer(playerUUID, playerName, conditions);
         stringGatherer.gatherStringDataOfPlayer(playerUUID, playerName, conditions);
         tableGatherer.gatherTableDataOfPlayer(playerUUID, playerName, conditions);
+        groupGatherer.gatherGroupDataOfPlayer(playerUUID, playerName, conditions);
     }
 
     public void updateValues() {

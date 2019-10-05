@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.utilities.comparators;
 
-import com.djrapitops.plan.system.locale.Message;
-import com.djrapitops.plan.system.locale.lang.Lang;
+import com.djrapitops.plan.settings.locale.Message;
+import com.djrapitops.plan.settings.locale.lang.Lang;
 
 import java.util.Comparator;
 import java.util.Map;

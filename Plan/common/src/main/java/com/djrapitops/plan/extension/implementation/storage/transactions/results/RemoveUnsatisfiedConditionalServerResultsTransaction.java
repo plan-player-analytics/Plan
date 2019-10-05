@@ -16,19 +16,19 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
-import com.djrapitops.plan.db.DBType;
-import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.Executable;
-import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.db.sql.tables.ExtensionProviderTable;
-import com.djrapitops.plan.db.sql.tables.ExtensionServerTableValueTable;
-import com.djrapitops.plan.db.sql.tables.ExtensionServerValueTable;
-import com.djrapitops.plan.db.sql.tables.ExtensionTableProviderTable;
+import com.djrapitops.plan.storage.database.DBType;
+import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
+import com.djrapitops.plan.storage.database.sql.tables.ExtensionServerTableValueTable;
+import com.djrapitops.plan.storage.database.sql.tables.ExtensionServerValueTable;
+import com.djrapitops.plan.storage.database.sql.tables.ExtensionTableProviderTable;
+import com.djrapitops.plan.storage.database.transactions.ExecStatement;
+import com.djrapitops.plan.storage.database.transactions.Executable;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
 
 /**
  * Transaction to remove older results that violate an updated condition value.
@@ -42,7 +42,7 @@ import static com.djrapitops.plan.db.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class RemoveUnsatisfiedConditionalServerResultsTransaction extends Transaction {
+public class RemoveUnsatisfiedConditionalServerResultsTransaction extends ThrowawayTransaction {
 
     private final String providerTable;
     private final String serverValueTable;
@@ -86,7 +86,7 @@ public class RemoveUnsatisfiedConditionalServerResultsTransaction extends Transa
         // Nested query here is required because MySQL limits update statements with nested queries:
         // The nested query creates a temporary table that bypasses the same table query-update limit.
         // Note: MySQL versions 5.6.7+ might optimize this nested query away leading to an exception.
-        String sql = "DELETE FROM " + serverValueTable +
+        String sql = DELETE_FROM + serverValueTable +
                 WHERE + ExtensionServerValueTable.ID + " IN (" + SELECT + ExtensionServerValueTable.ID + FROM + '(' + selectUnsatisfiedValueIDs + ") as ids)";
 
         return new ExecStatement(sql) {
@@ -136,7 +136,7 @@ public class RemoveUnsatisfiedConditionalServerResultsTransaction extends Transa
         // Nested query here is required because MySQL limits update statements with nested queries:
         // The nested query creates a temporary table that bypasses the same table query-update limit.
         // Note: MySQL versions 5.6.7+ might optimize this nested query away leading to an exception.
-        String deleteValuesSQL = "DELETE FROM " + serverTableValueTable +
+        String deleteValuesSQL = DELETE_FROM + serverTableValueTable +
                 WHERE + ExtensionServerTableValueTable.TABLE_ID + " IN (" + SELECT + ExtensionTableProviderTable.ID + FROM + '(' + selectUnsatisfiedValueIDs + ") as ids)";
 
         return new ExecStatement(deleteValuesSQL) {

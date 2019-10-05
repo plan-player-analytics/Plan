@@ -21,7 +21,7 @@ package com.djrapitops.plan.extension.implementation.results;
  *
  * @author Rsl1122
  */
-public class ExtensionBooleanData implements ExtensionData {
+public class ExtensionBooleanData implements DescribedExtensionData {
 
     private ExtensionDescriptive descriptive;
     private boolean value;

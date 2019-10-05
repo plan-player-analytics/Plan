@@ -16,9 +16,8 @@
  */
 package com.djrapitops.plan.data.element;
 
-import com.djrapitops.plan.utilities.formatting.Formatter;
-import com.djrapitops.plan.utilities.html.Html;
-import com.djrapitops.plan.utilities.html.icon.Icon;
+import com.djrapitops.plan.delivery.formatting.Formatter;
+import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plugin.utilities.ArrayUtil;
 
 import java.io.Serializable;
@@ -67,14 +66,14 @@ public class TableContainer {
         return getTableHeader() +
                 parseHeader() +
                 parseBody() +
-                "</table>" + (jqueryDatatable != null ? "</div>" : "");
+                "</table></div>";
     }
 
     public final String parseBody() {
         if (values.isEmpty()) {
             addRow("No Data");
         }
-        return Html.TABLE_BODY.parse(buildBody());
+        return "<tbody>" + buildBody() + "</tbody>";
 
     }
 
@@ -136,8 +135,6 @@ public class TableContainer {
      * Make use of jQuery Data-tables plugin.
      * <p>
      * Use this with custom tables.
-     * <p>
-     * If this is called, result of {@code parseHtml()} should be wrapped with {@code Html.PANEL.parse(Html.PANEL_BODY.parse(result))}
      */
     public void useJqueryDataTables() {
         this.jqueryDatatable = "player-plugin-table";
@@ -154,9 +151,12 @@ public class TableContainer {
 
     private String getTableHeader() {
         if (jqueryDatatable != null) {
-            return "<div class=\"table-responsive\">" + Html.TABLE_JQUERY.parse(jqueryDatatable);
+            return "<div class=\"table-responsive\">" +
+                    "<table class=\"table table-bordered table-striped table-hover " +
+                    jqueryDatatable +
+                    " dataTable\">";
         } else {
-            return Html.TABLE_SCROLL.parse();
+            return "<div class=\"scrollbar\"><table class=\"table table-striped\">";
         }
     }
 }

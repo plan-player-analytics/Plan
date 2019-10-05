@@ -20,6 +20,7 @@ import com.djrapitops.extension.*;
 import com.djrapitops.plan.extension.Caller;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.ExtensionService;
+import com.djrapitops.plan.extension.NotReadyException;
 import com.djrapitops.plan.extension.extractor.ExtensionExtractor;
 
 import javax.inject.Inject;
@@ -55,12 +56,19 @@ public class ExtensionRegister {
         register(new AdvancedBanExtensionFactory(), AdvancedBanExtensionFactory::createExtension, AdvancedBanExtensionFactory::registerListener);
         register(new ASkyBlockExtensionFactory(), ASkyBlockExtensionFactory::createExtension);
         register(new BanManagerExtensionFactory(), BanManagerExtensionFactory::createExtension);
+        register(new BuycraftExtensionFactory(), BuycraftExtensionFactory::createExtension);
         register(new CoreProtectExtensionFactory(), CoreProtectExtensionFactory::createExtension);
         register(new DiscordSRVExtensionFactory(), DiscordSRVExtensionFactory::createExtension);
+        register(new DKBansExtensionFactory(), DKBansExtensionFactory::createExtension, DKBansExtensionFactory::registerListener);
+        register(new DKCoinsExtensionFactory(), DKCoinsExtensionFactory::createExtension, DKCoinsExtensionFactory::registerListener);
         register(new EssentialsExtensionFactory(), EssentialsExtensionFactory::createExtension, EssentialsExtensionFactory::registerUpdateListeners);
+        register(new FactionsExtensionFactory(), FactionsExtensionFactory::createExtension);
         register(new GriefPreventionExtensionFactory(), GriefPreventionExtensionFactory::createExtension);
         register(new GriefPreventionSpongeExtensionFactory(), GriefPreventionSpongeExtensionFactory::createExtension);
         register(new GriefPreventionPlusExtensionFactory(), GriefPreventionPlusExtensionFactory::createExtension);
+        register(new JobsExtensionFactory(), JobsExtensionFactory::createExtension);
+        register(new LitebansExtensionFactory(), LitebansExtensionFactory::createExtension, LitebansExtensionFactory::registerEvents);
+        register(new LuckPermsExtensionFactory(), LuckPermsExtensionFactory::createExtension);
         register(new McMMOExtensionFactory(), McMMOExtensionFactory::createExtension);
         registerMinigameLibExtensions();
         register(new NucleusExtensionFactory(), NucleusExtensionFactory::createExtension);
@@ -69,6 +77,7 @@ public class ExtensionRegister {
         register(new RedProtectExtensionFactory(), RedProtectExtensionFactory::createExtension);
         register(new SpongeEconomyExtensionFactory(), SpongeEconomyExtensionFactory::createExtension);
         register(new SuperbVoteExtensionFactory(), SuperbVoteExtensionFactory::createExtension);
+        register(new TownyExtensionFactory(), TownyExtensionFactory::createExtension);
         register(new VaultExtensionFactory(), VaultExtensionFactory::createExtension);
         register(new ViaVersionExtensionFactory(), ViaVersionExtensionFactory::createExtension);
 
@@ -98,8 +107,10 @@ public class ExtensionRegister {
     ) {
         try {
             // Creates the extension with factory and registers it
-            createExtension.apply(factory).flatMap(this::register);
-        } catch (IllegalStateException | NoClassDefFoundError | IncompatibleClassChangeError e) {
+            createExtension.apply(factory).ifPresent(this::register);
+        } catch (NotReadyException ignore) {
+            // This exception signals that the extension can not be registered right now (Intended fail).
+        } catch (Exception | NoClassDefFoundError | IncompatibleClassChangeError e) {
             // Places all exceptions to one exception with plugin information so that they can be reported.
             suppressException(factory.getClass(), e);
         }
@@ -115,7 +126,9 @@ public class ExtensionRegister {
             createExtension.apply(factory)
                     .flatMap(this::register)
                     .ifPresent(caller -> registerListener.accept(factory, caller));
-        } catch (IllegalStateException | NoClassDefFoundError | IncompatibleClassChangeError e) {
+        } catch (NotReadyException ignore) {
+            // This exception signals that the extension can not be registered right now (Intended fail).
+        } catch (Exception | NoClassDefFoundError | IncompatibleClassChangeError e) {
             // Places all exceptions to one exception with plugin information so that they can be reported.
             suppressException(factory.getClass(), e);
         }

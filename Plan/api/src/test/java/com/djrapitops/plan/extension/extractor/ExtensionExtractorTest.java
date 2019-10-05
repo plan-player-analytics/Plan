@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension.extractor;
 
 import com.djrapitops.plan.extension.DataExtension;
+import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.annotation.*;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
@@ -178,6 +179,34 @@ class ExtensionExtractorTest {
 
         ExtensionExtractor underTest = new ExtensionExtractor(new Extension());
         assertEquals("Extension.method has invalid return type. was: java.lang.Double, expected: com.djrapitops.plan.extension.table.Table", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
+    }
+
+    @Test
+    void groupProviderMustGroupArray() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @GroupProvider
+            public Double method(UUID playerUUID) {
+                return null;
+            }
+        }
+
+        ExtensionExtractor underTest = new ExtensionExtractor(new Extension());
+        assertEquals("Extension.method has invalid return type. was: java.lang.Double, expected: [Ljava.lang.String; (an array)", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
+    }
+
+    @Test
+    void groupProviderMustGroupArray2() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @GroupProvider
+            public Group method(UUID playerUUID) {
+                return null;
+            }
+        }
+
+        ExtensionExtractor underTest = new ExtensionExtractor(new Extension());
+        assertEquals("Extension.method has invalid return type. was: com.djrapitops.plan.extension.Group, expected: [Ljava.lang.String; (an array)", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
     }
 
     @Test

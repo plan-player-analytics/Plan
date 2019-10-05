@@ -16,30 +16,29 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.queries;
 
-import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.access.QueryStatement;
-import com.djrapitops.plan.db.sql.tables.*;
 import com.djrapitops.plan.extension.ElementOrder;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.TabInformation;
+import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionDescriptive;
 import com.djrapitops.plan.extension.implementation.results.ExtensionNumberData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
-import com.djrapitops.plan.extension.implementation.results.server.ExtensionServerData;
+import com.djrapitops.plan.storage.database.SQLDB;
+import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.sql.tables.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
 
 /**
  * Query aggregated boolean values from player value table.
@@ -56,7 +55,7 @@ import static com.djrapitops.plan.db.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, ExtensionServerData.Factory>> {
+public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, ExtensionData.Factory>> {
 
     private final UUID serverUUID;
 
@@ -65,7 +64,7 @@ public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, Extens
     }
 
     @Override
-    public Map<Integer, ExtensionServerData.Factory> executeQuery(SQLDB db) {
+    public Map<Integer, ExtensionData.Factory> executeQuery(SQLDB db) {
         String selectNumberAverage = SELECT +
                 ExtensionPlayerValueTable.PROVIDER_ID +
                 ",AVG(" + ExtensionPlayerValueTable.LONG_VALUE + ") as average" +
@@ -111,7 +110,7 @@ public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, Extens
                 AND + "p1." + ExtensionProviderTable.FORMAT_TYPE + "!=?" +
                 AND + "p1." + ExtensionProviderTable.FORMAT_TYPE + "!=?";
 
-        return db.query(new QueryStatement<Map<Integer, ExtensionServerData.Factory>>(sql, 1000) {
+        return db.query(new QueryStatement<Map<Integer, ExtensionData.Factory>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -121,31 +120,41 @@ public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, Extens
             }
 
             @Override
-            public Map<Integer, ExtensionServerData.Factory> processResults(ResultSet set) throws SQLException {
-                Map<Integer, Map<String, ExtensionTabData.Factory>> tabDataByPluginID = extractTabDataByPluginID(set);
-                return ExtensionServerDataQuery.flatMapToServerData(tabDataByPluginID);
+            public Map<Integer, ExtensionData.Factory> processResults(ResultSet set) throws SQLException {
+                return extractTabDataByPluginID(set).toExtensionDataByPluginID();
             }
         });
     }
 
-    private Map<Integer, Map<String, ExtensionTabData.Factory>> extractTabDataByPluginID(ResultSet set) throws SQLException {
-        Map<Integer, Map<String, ExtensionTabData.Factory>> tabDataByPluginID = new HashMap<>();
+    private QueriedTabData extractTabDataByPluginID(ResultSet set) throws SQLException {
+        QueriedTabData tabData = new QueriedTabData();
 
         while (set.next()) {
             int pluginID = set.getInt("plugin_id");
-            Map<String, ExtensionTabData.Factory> tabData = tabDataByPluginID.getOrDefault(pluginID, new HashMap<>());
-
             String tabName = Optional.ofNullable(set.getString("tab_name")).orElse("");
-            ExtensionTabData.Factory inMap = tabData.get(tabName);
-            ExtensionTabData.Factory extensionTab = inMap != null ? inMap : extractTab(tabName, set, tabData);
+            ExtensionTabData.Factory extensionTab = tabData.getTab(pluginID, tabName, () -> extractTabInformation(tabName, set));
 
             ExtensionDescriptive extensionDescriptive = extractDescriptive(set);
             extractAndPutDataTo(extensionTab, extensionDescriptive, set);
-
-            tabData.put(tabName, extensionTab);
-            tabDataByPluginID.put(pluginID, tabData);
         }
-        return tabDataByPluginID;
+        return tabData;
+    }
+
+    private TabInformation extractTabInformation(String tabName, ResultSet set) throws SQLException {
+        Optional<Integer> tabPriority = Optional.of(set.getInt("tab_priority"));
+        if (set.wasNull()) {
+            tabPriority = Optional.empty();
+        }
+        Optional<ElementOrder[]> elementOrder = Optional.ofNullable(set.getString(ExtensionTabTable.ELEMENT_ORDER)).map(ElementOrder::deserialize);
+
+        Icon tabIcon = extractTabIcon(set);
+
+        return new TabInformation(
+                tabName,
+                tabIcon,
+                elementOrder.orElse(ElementOrder.values()),
+                tabPriority.orElse(100)
+        );
     }
 
     private void extractAndPutDataTo(ExtensionTabData.Factory extensionTab, ExtensionDescriptive descriptive, ResultSet set) throws SQLException {
@@ -170,23 +179,6 @@ public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, Extens
         Icon icon = new Icon(family, iconName, color);
 
         return new ExtensionDescriptive(name, text, description, icon, priority);
-    }
-
-    private ExtensionTabData.Factory extractTab(String tabName, ResultSet set, Map<String, ExtensionTabData.Factory> tabData) throws SQLException {
-        Optional<Integer> tabPriority = Optional.of(set.getInt("tab_priority"));
-        if (set.wasNull()) {
-            tabPriority = Optional.empty();
-        }
-        Optional<ElementOrder[]> elementOrder = Optional.ofNullable(set.getString(ExtensionTabTable.ELEMENT_ORDER)).map(ElementOrder::deserialize);
-
-        Icon tabIcon = extractTabIcon(set);
-
-        return tabData.getOrDefault(tabName, new ExtensionTabData.Factory(new TabInformation(
-                tabName,
-                tabIcon,
-                elementOrder.orElse(ElementOrder.values()),
-                tabPriority.orElse(100)
-        )));
     }
 
     private Icon extractTabIcon(ResultSet set) throws SQLException {

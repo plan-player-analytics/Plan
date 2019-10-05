@@ -25,7 +25,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Method annotation to provide a double value about a Player.
+ * Method annotation to provide a double value.
  * <p>
  * Usage: {@code @DoubleProvider double method(UUID playerUUID)}
  *

@@ -42,6 +42,10 @@ enum Capability {
      */
     DATA_EXTENSION_TABLES,
     /**
+     * DataExtension API groups, GroupProvider and Group parameter methods
+     */
+    DATA_EXTENSION_GROUPS,
+    /**
      * DataExtension API addition, allows throwing {@link com.djrapitops.plan.extension.NotReadyException} inside a Provider method when your API is not ready for a method call.
      */
     DATA_EXTENSION_NOT_READY_EXCEPTION,
@@ -52,9 +56,13 @@ enum Capability {
      */
     DATA_EXTENSION_SHOW_IN_PLAYER_TABLE,
     /**
-     *
+     * QueryService and CommonQueries
      */
-    QUERY_API;
+    QUERY_API,
+    /**
+     * SettingsService
+     */
+    SETTINGS_API;
 
     static Optional<Capability> getByName(String name) {
         if (name == null) {

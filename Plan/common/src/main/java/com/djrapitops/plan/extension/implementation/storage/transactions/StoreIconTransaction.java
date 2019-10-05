@@ -16,25 +16,25 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions;
 
-import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.Executable;
-import com.djrapitops.plan.db.access.HasMoreThanZeroQueryStatement;
-import com.djrapitops.plan.db.access.Query;
-import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.db.sql.tables.ExtensionIconTable;
 import com.djrapitops.plan.extension.icon.Icon;
+import com.djrapitops.plan.storage.database.queries.HasMoreThanZeroQueryStatement;
+import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
+import com.djrapitops.plan.storage.database.transactions.ExecStatement;
+import com.djrapitops.plan.storage.database.transactions.Executable;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static com.djrapitops.plan.db.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
 
 /**
  * Transaction to store an Icon to the database.
  *
  * @author Rsl1122
  */
-public class StoreIconTransaction extends Transaction {
+public class StoreIconTransaction extends ThrowawayTransaction {
 
     private final Icon icon;
 

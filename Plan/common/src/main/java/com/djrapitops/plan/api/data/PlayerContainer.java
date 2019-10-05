@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.api.data;
 
-import com.djrapitops.plan.data.store.Key;
+import com.djrapitops.plan.delivery.domain.keys.Key;
 
 import java.util.Optional;
 
@@ -24,22 +24,32 @@ import java.util.Optional;
  * Wrapper for a PlayerContainer.
  * <p>
  * The actual object is wrapped to avoid exposing too much API that might change.
- * See {@link com.djrapitops.plan.data.store.keys.PlayerKeys} for Key objects.
+ * See {@link com.djrapitops.plan.delivery.domain.keys.PlayerKeys} for Key objects.
  * <p>
  * The Keys might change in the future, but the Optional API should help dealing with those cases.
  *
+ * @deprecated Plan API v4 has been deprecated, use the APIv5 instead (https://github.com/plan-player-analytics/Plan/wiki/APIv5).
  * @author Rsl1122
  */
+@Deprecated
 public class PlayerContainer {
 
-    private final com.djrapitops.plan.data.store.containers.PlayerContainer container;
+    private final com.djrapitops.plan.delivery.domain.container.PlayerContainer container;
 
-    public PlayerContainer(com.djrapitops.plan.data.store.containers.PlayerContainer container) {
+    public PlayerContainer(com.djrapitops.plan.delivery.domain.container.PlayerContainer container) {
         this.container = container;
     }
 
+    /**
+     * @deprecated loginThreshold no longer used for activity index.
+     */
+    @Deprecated
     public double getActivityIndex(long date, long playtimeMsThreshold, int loginThreshold) {
-        return container.getActivityIndex(date, playtimeMsThreshold, loginThreshold).getValue();
+        return getActivityIndex(date, playtimeMsThreshold);
+    }
+
+    public double getActivityIndex(long date, long playtimeMsThreshold) {
+        return container.getActivityIndex(date, playtimeMsThreshold).getValue();
     }
 
     public boolean playedBetween(long after, long before) {

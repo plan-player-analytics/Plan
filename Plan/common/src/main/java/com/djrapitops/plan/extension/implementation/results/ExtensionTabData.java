@@ -131,11 +131,11 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
     }
 
     private void createOrderingList() {
-        booleanData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
-        doubleData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
-        percentageData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
-        numberData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
-        stringData.values().stream().map(ExtensionData::getDescriptive).forEach(descriptives::add);
+        booleanData.values().stream().map(DescribedExtensionData::getDescriptive).forEach(descriptives::add);
+        doubleData.values().stream().map(DescribedExtensionData::getDescriptive).forEach(descriptives::add);
+        percentageData.values().stream().map(DescribedExtensionData::getDescriptive).forEach(descriptives::add);
+        numberData.values().stream().map(DescribedExtensionData::getDescriptive).forEach(descriptives::add);
+        stringData.values().stream().map(DescribedExtensionData::getDescriptive).forEach(descriptives::add);
 
         order = descriptives.stream().sorted()
                 .map(ExtensionDescriptive::getName)
@@ -173,6 +173,13 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
 
         public Factory putStringData(ExtensionStringData extensionStringData) {
             data.stringData.put(extensionStringData.getDescriptive().getName(), extensionStringData);
+            return this;
+        }
+
+        public Factory putGroupData(ExtensionStringData extensionStringData) {
+            String name = extensionStringData.getDescriptive().getName();
+            ExtensionStringData previous = data.stringData.get(name);
+            data.stringData.put(name, previous != null ? previous.concatenate(extensionStringData) : extensionStringData);
             return this;
         }
 

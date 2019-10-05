@@ -2,7 +2,6 @@ dependencies {
     compile "com.djrapitops:AbstractPluginFramework-api:$abstractPluginFrameworkVersion"
     compile project(":api")
     compile project(path: ":extensions", configuration: 'shadow')
-    compile "com.djrapitops:PlanPluginBridge:$planPluginBridgeVersion"
     compile "org.apache.httpcomponents:httpclient:$httpClientVersion"
     compile "org.apache.commons:commons-text:$commonsTextVersion"
     compile "com.googlecode.htmlcompressor:htmlcompressor:$htmlCompressorVersion"
@@ -13,10 +12,10 @@ dependencies {
     compile "org.slf4j:slf4j-nop:$slf4jVersion"
     compile "org.slf4j:slf4j-api:$slf4jVersion"
     compile "com.maxmind.geoip2:geoip2:$geoIpVersion"
-    compileOnly "com.google.guava:guava:$guavaVersion"
+    compile "com.google.code.gson:gson:$gsonVersion"
 
     testCompile project(":api")
-    testCompile "com.google.code.gson:gson:2.8.5"
+    testCompile "com.google.code.gson:gson:$gsonVersion"
 }
 
 shadowJar {
@@ -41,6 +40,7 @@ shadowJar {
     relocate 'com.zaxxer', 'plan.com.zaxxer'
     relocate 'com.github.benmanes', 'plan.com.github.benmanes'
     relocate 'com.googlecode', 'plan.com.googlecode'
+    relocate 'com.google', 'plan.com.google'
     relocate 'org.h2', 'plan.org.h2'
     relocate 'org.bstats', 'plan.org.bstats'
     relocate 'org.slf4j', 'plan.org.slf4j'

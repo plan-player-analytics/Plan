@@ -16,12 +16,12 @@
  */
 package com.djrapitops.plan.modules.bungee;
 
-import com.djrapitops.plan.system.info.server.BungeeServerInfo;
-import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.listeners.BungeeListenerSystem;
-import com.djrapitops.plan.system.listeners.ListenerSystem;
-import com.djrapitops.plan.system.tasks.BungeeTaskSystem;
-import com.djrapitops.plan.system.tasks.TaskSystem;
+import com.djrapitops.plan.BungeeTaskSystem;
+import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plan.gathering.listeners.BungeeListenerSystem;
+import com.djrapitops.plan.gathering.listeners.ListenerSystem;
+import com.djrapitops.plan.identification.BungeeServerInfo;
+import com.djrapitops.plan.identification.ServerInfo;
 import dagger.Binds;
 import dagger.Module;
 

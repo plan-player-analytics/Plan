@@ -55,7 +55,7 @@ public class ExtensionTableData implements Comparable<ExtensionTableData> {
         if (rows.size() > 50) {
             htmlTable.useJqueryDataTables(); // Use a jQuery data table since there are a lot of rows.
         } else {
-            String colorName = com.djrapitops.plan.utilities.html.icon.Color.getByName(tableColor.name()).orElse(com.djrapitops.plan.utilities.html.icon.Color.NONE).getHtmlClass()
+            String colorName = com.djrapitops.plan.delivery.rendering.html.icon.Color.getByName(tableColor.name()).orElse(com.djrapitops.plan.delivery.rendering.html.icon.Color.NONE).getHtmlClass()
                     .replace("col-", ""); // TODO after PluginData deprecation, change this thing
             htmlTable.setColor(colorName);
         }
@@ -75,7 +75,7 @@ public class ExtensionTableData implements Comparable<ExtensionTableData> {
             if (column == null) {
                 break;
             }
-            header.add(com.djrapitops.plan.utilities.html.icon.Icon.fromExtensionIcon(icons[i]).toHtml() + ' ' + column);
+            header.add(com.djrapitops.plan.delivery.rendering.html.icon.Icon.fromExtensionIcon(icons[i]).toHtml() + ' ' + column);
         }
 
         return header.toArray(new String[0]);
@@ -101,6 +101,6 @@ public class ExtensionTableData implements Comparable<ExtensionTableData> {
     }
 
     public boolean isWideTable() {
-        return table.getMaxColumnSize() > 3;
+        return table.getMaxColumnSize() >= 3;
     }
 }

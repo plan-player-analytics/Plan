@@ -28,6 +28,9 @@ import java.lang.annotation.Target;
  * If {@link com.djrapitops.plan.extension.annotation.BooleanProvider} for the condition is not specified the
  * method tagged with this annotation will not be called, (Condition is assumed false).
  *
+ * Please note that Conditional does not cross method parameter boundaries - (Conditional on a player method does not
+ * take into account conditionals of server).
+ *
  * @author Rsl1122
  */
 @Retention(RetentionPolicy.RUNTIME)

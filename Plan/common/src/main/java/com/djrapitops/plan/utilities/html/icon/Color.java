@@ -18,6 +18,10 @@ package com.djrapitops.plan.utilities.html.icon;
 
 import java.util.Optional;
 
+/**
+ * @deprecated This Class exists to keep plugins that used PluginData from breaking.
+ */
+@Deprecated
 public enum Color {
     RED("col-red"),
     PINK("col-pink"),
@@ -47,6 +51,10 @@ public enum Color {
         this.htmlClass = htmlClass;
     }
 
+    /**
+     * @deprecated This Class exists to keep plugins that used PluginData from breaking.
+     */
+    @Deprecated
     public static Color matchString(String name) {
         String lowerCaseName = name.toLowerCase();
         for (Color color : values()) {
@@ -57,6 +65,10 @@ public enum Color {
         return Color.BLACK;
     }
 
+    /**
+     * @deprecated This Class exists to keep plugins that used PluginData from breaking.
+     */
+    @Deprecated
     public static Optional<Color> getByName(String name) {
         if (name == null) {
             return Optional.empty();
