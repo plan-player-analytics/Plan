@@ -50,10 +50,6 @@ Webserver:
       Key_pass: default
       Store_pass: default
       Alias: alias
-  # For those that want to serve Html from their own WebServer instead.
-  # Set up Html Export (https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/External-WebServer-Use)
-  # ATTENTION: On BungeeCord systems it is not possible to disable the WebServer on the plugin due to connection requirements.
-  # If the WebServer is disabled with this setting BungeeCord systems will cease to function.
   Disable_Webserver: false
   External_Webserver_address: "https://www.example.address"
 # -----------------------------------------------------
