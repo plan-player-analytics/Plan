@@ -57,7 +57,7 @@ public class ExtensionRegister {
         register(new ASkyBlockExtensionFactory(), ASkyBlockExtensionFactory::createExtension);
         register(new BanManagerExtensionFactory(), BanManagerExtensionFactory::createExtension);
         register(new BuycraftExtensionFactory(), BuycraftExtensionFactory::createExtension);
-        register(new CoreProtectExtensionFactory(), CoreProtectExtensionFactory::createExtension);
+//        register(new CoreProtectExtensionFactory(), CoreProtectExtensionFactory::createExtension);
         register(new DiscordSRVExtensionFactory(), DiscordSRVExtensionFactory::createExtension);
         register(new DKBansExtensionFactory(), DKBansExtensionFactory::createExtension, DKBansExtensionFactory::registerListener);
         register(new DKCoinsExtensionFactory(), DKCoinsExtensionFactory::createExtension, DKCoinsExtensionFactory::registerListener);
