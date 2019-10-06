@@ -21,7 +21,6 @@ import com.djrapitops.plan.extension.Caller;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.extension.implementation.providers.gathering.ProviderValueGatherer;
 import com.djrapitops.plan.processing.Processing;
-import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.UUID;
 
@@ -48,8 +47,6 @@ public class CallerImplementation implements Caller {
 
     @Override
     public void updatePlayerData(UUID playerUUID, String playerName) {
-        Verify.nullCheck(playerUUID, () -> new IllegalArgumentException("'playerUUID' can not be null!"));
-        Verify.nullCheck(playerName, () -> new IllegalArgumentException("'playerName' can not be null!"));
         processing.submitNonCritical(() -> extensionServiceImplementation.updatePlayerValues(gatherer, playerUUID, playerName, CallEvents.MANUAL));
     }
 

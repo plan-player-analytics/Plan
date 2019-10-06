@@ -151,6 +151,9 @@ public class ExtensionServiceImplementation implements ExtensionService {
         if (!gatherer.canCallEvent(event)) {
             return;
         }
+        if (playerUUID == null && playerName == null) {
+            return;
+        }
         try {
             logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, "Gathering values for: " + playerName);
 
