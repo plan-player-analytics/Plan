@@ -17,6 +17,10 @@
 package com.djrapitops.plan.settings.config.changes;
 
 import com.djrapitops.plan.settings.config.Config;
+import com.djrapitops.plan.settings.config.ConfigNode;
+
+import java.util.Collections;
+import java.util.Optional;
 
 /**
  * Represents a change made to the config structure.
@@ -95,6 +99,30 @@ public interface ConfigChange {
         @Override
         public String getAppliedMessage() {
             return "Removed " + oldPath;
+        }
+    }
+
+    class RemovedComment implements ConfigChange {
+        private String path;
+
+        public RemovedComment(String path) {
+            this.path = path;
+        }
+
+        @Override
+        public boolean hasBeenApplied(Config config) {
+            Optional<ConfigNode> node = config.getNode(path);
+            return !node.isPresent() || node.get().getComment().isEmpty();
+        }
+
+        @Override
+        public void apply(Config config) {
+            config.getNode(path).ifPresent(node -> node.setComment(Collections.emptyList()));
+        }
+
+        @Override
+        public String getAppliedMessage() {
+            return "Removed Comment from " + path;
         }
     }
 }
