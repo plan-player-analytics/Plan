@@ -1597,7 +1597,6 @@
         jsonRequest("../v1/kills?server=${serverUUID}", loadPlayerKills);
         jsonRequest("../v1/pingTable?server=${serverUUID}", loadPingTable);
 
-        $('.server-name').text('${serverName}');
         $('.player-plugin-table').DataTable({
             responsive: true
         });
