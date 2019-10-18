@@ -234,7 +234,7 @@ public class PingQueries {
                             serverUUID,
                             set.getInt("minPing"),
                             set.getInt("maxPing"),
-                            set.getInt("avgPing")
+                            (int) set.getDouble("avgPing")
                     );
                     pingByGeolocation.put(set.getString(GeoInfoTable.GEOLOCATION), ping);
                 }
@@ -285,7 +285,7 @@ public class PingQueries {
                             null,
                             set.getInt("minPing"),
                             set.getInt("maxPing"),
-                            set.getInt("avgPing")
+                            (int) set.getDouble("avgPing")
                     );
                     pingByGeolocation.put(set.getString(GeoInfoTable.GEOLOCATION), ping);
                 }

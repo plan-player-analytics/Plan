@@ -231,7 +231,7 @@ public class PlayerCountQueries {
 
                 @Override
                 public Integer processResults(ResultSet set) throws SQLException {
-                    return set.next() ? set.getInt("average") : 0;
+                    return set.next() ? (int) set.getDouble("average") : 0;
                 }
             });
         };
@@ -389,7 +389,7 @@ public class PlayerCountQueries {
 
                 @Override
                 public Integer processResults(ResultSet set) throws SQLException {
-                    return set.next() ? set.getInt("average") : 0;
+                    return set.next() ? (int) set.getDouble("average") : 0;
                 }
             });
         };
