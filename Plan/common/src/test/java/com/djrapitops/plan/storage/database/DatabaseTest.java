@@ -28,6 +28,7 @@ import com.djrapitops.plan.delivery.domain.keys.Key;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.domain.keys.ServerKeys;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
+import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
@@ -1038,9 +1039,10 @@ public interface DatabaseTest {
         Database db = db();
 
         long time = System.currentTimeMillis();
+        int offset = TimeZone.getDefault().getOffset(time);
 
         Sql sql = db.getType().getSql();
-        String testSQL = SELECT + sql.dateToDayStamp(sql.epochSecondToDate(Long.toString(time / 1000))) + " as date";
+        String testSQL = SELECT + sql.dateToDayStamp(sql.epochSecondToDate(Long.toString((time + offset) / 1000))) + " as date";
 
         System.out.println(testSQL);
         String expected = system().getDeliveryUtilities().getFormatters().iso8601NoClockLong().apply(time);
@@ -1051,6 +1053,104 @@ public interface DatabaseTest {
             }
         });
         assertEquals(expected, result);
+    }
+
+    @Test
+    default void activityIndexCoalesceSanityCheck() {
+        sessionsAreStoredWithAllData();
+        Map<String, Integer> groupings = db().query(
+                ActivityIndexQueries.fetchActivityIndexGroupingsOn(System.currentTimeMillis(), serverUUID(), TimeUnit.HOURS.toMillis(2L))
+        );
+        Map<String, Integer> expected = Collections.singletonMap(ActivityIndex.getDefaultGroups()[4], 1); // Inactive
+        assertEquals(expected, groupings);
+    }
+
+    @Test
+    default void serverGeolocationsAreCountedAppropriately() {
+        UUID firstUuid = UUID.randomUUID();
+        UUID secondUuid = UUID.randomUUID();
+        UUID thirdUuid = UUID.randomUUID();
+        UUID fourthUuid = UUID.randomUUID();
+        UUID fifthUuid = UUID.randomUUID();
+        UUID sixthUuid = UUID.randomUUID();
+
+        Database database = db();
+
+        database.executeTransaction(new PlayerServerRegisterTransaction(firstUuid, () -> 0L, "", serverUUID()));
+        database.executeTransaction(new PlayerServerRegisterTransaction(secondUuid, () -> 0L, "", serverUUID()));
+        database.executeTransaction(new PlayerServerRegisterTransaction(thirdUuid, () -> 0L, "", serverUUID()));
+        database.executeTransaction(new PlayerServerRegisterTransaction(fourthUuid, () -> 0L, "", serverUUID()));
+        database.executeTransaction(new PlayerServerRegisterTransaction(fifthUuid, () -> 0L, "", serverUUID()));
+        database.executeTransaction(new PlayerServerRegisterTransaction(sixthUuid, () -> 0L, "", serverUUID()));
+
+        saveGeoInfo(firstUuid, new GeoInfo("Norway", 0));
+        saveGeoInfo(firstUuid, new GeoInfo("Finland", 5));
+        saveGeoInfo(secondUuid, new GeoInfo("Sweden", 0));
+        saveGeoInfo(thirdUuid, new GeoInfo("Denmark", 0));
+        saveGeoInfo(fourthUuid, new GeoInfo("Denmark", 0));
+        saveGeoInfo(fifthUuid, new GeoInfo("Not Known", 0));
+        saveGeoInfo(sixthUuid, new GeoInfo("Local Machine", 0));
+
+        Map<String, Integer> got = database.query(GeoInfoQueries.serverGeolocationCounts(serverUUID()));
+
+        Map<String, Integer> expected = new HashMap<>();
+        // first user has a more recent connection from Finland so their country should be counted as Finland.
+        expected.put("Finland", 1);
+        expected.put("Sweden", 1);
+        expected.put("Not Known", 1);
+        expected.put("Local Machine", 1);
+        expected.put("Denmark", 2);
+
+        assertEquals(expected, got);
+    }
+
+    @Test
+    default void pingIsGroupedByGeolocationAppropriately() {
+        UUID firstUuid = UUID.randomUUID();
+        UUID secondUuid = UUID.randomUUID();
+        UUID thirdUuid = UUID.randomUUID();
+        UUID fourthUuid = UUID.randomUUID();
+        UUID fifthUuid = UUID.randomUUID();
+        UUID sixthUuid = UUID.randomUUID();
+
+        Database database = db();
+
+        database.executeTransaction(new PlayerServerRegisterTransaction(firstUuid, () -> 0L, "", serverUUID()));
+        database.executeTransaction(new PlayerServerRegisterTransaction(secondUuid, () -> 0L, "", serverUUID()));
+        database.executeTransaction(new PlayerServerRegisterTransaction(thirdUuid, () -> 0L, "", serverUUID()));
+        database.executeTransaction(new PlayerServerRegisterTransaction(fourthUuid, () -> 0L, "", serverUUID()));
+        database.executeTransaction(new PlayerServerRegisterTransaction(fifthUuid, () -> 0L, "", serverUUID()));
+        database.executeTransaction(new PlayerServerRegisterTransaction(sixthUuid, () -> 0L, "", serverUUID()));
+
+        saveGeoInfo(firstUuid, new GeoInfo("Norway", 0));
+        saveGeoInfo(firstUuid, new GeoInfo("Finland", 5));
+        saveGeoInfo(secondUuid, new GeoInfo("Sweden", 0));
+        saveGeoInfo(thirdUuid, new GeoInfo("Denmark", 0));
+        saveGeoInfo(fourthUuid, new GeoInfo("Denmark", 0));
+        saveGeoInfo(fifthUuid, new GeoInfo("Not Known", 0));
+        saveGeoInfo(sixthUuid, new GeoInfo("Local Machine", 0));
+
+        long time = System.currentTimeMillis();
+        List<DateObj<Integer>> ping = Collections.singletonList(new DateObj<>(time, 5));
+        database.executeTransaction(new PingStoreTransaction(firstUuid, serverUUID(), ping));
+        database.executeTransaction(new PingStoreTransaction(secondUuid, serverUUID(), ping));
+        database.executeTransaction(new PingStoreTransaction(thirdUuid, serverUUID(), ping));
+        database.executeTransaction(new PingStoreTransaction(fourthUuid, serverUUID(), ping));
+        database.executeTransaction(new PingStoreTransaction(fifthUuid, serverUUID(), ping));
+        database.executeTransaction(new PingStoreTransaction(sixthUuid, serverUUID(), ping));
+
+        Map<String, Ping> got = database.query(PingQueries.fetchPingDataOfServerByGeolocation(serverUUID()));
+
+        Map<String, Ping> expected = new HashMap<>();
+        // first user has a more recent connection from Finland so their country should be counted as Finland.
+        Ping expectedPing = new Ping(time, serverUUID(), 5, 5, 5);
+        expected.put("Finland", expectedPing);
+        expected.put("Sweden", expectedPing);
+        expected.put("Not Known", expectedPing);
+        expected.put("Local Machine", expectedPing);
+        expected.put("Denmark", expectedPing);
+
+        assertEquals(expected, got);
     }
 
     @Test

@@ -18,6 +18,7 @@ package com.djrapitops.plan.gathering.domain;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Ping extends DateObj<Double> {
@@ -49,5 +50,21 @@ public class Ping extends DateObj<Double> {
 
     public int getMax() {
         return max;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Ping)) return false;
+        Ping ping = (Ping) o;
+        return Double.compare(ping.average, average) == 0 &&
+                min == ping.min &&
+                max == ping.max &&
+                Objects.equals(serverUUID, ping.serverUUID);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(serverUUID, average, min, max);
     }
 }
