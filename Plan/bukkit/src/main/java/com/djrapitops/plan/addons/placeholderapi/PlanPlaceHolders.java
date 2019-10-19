@@ -117,7 +117,6 @@ public class PlanPlaceHolders extends PlaceholderExpansion {
             }
         } catch (Exception e) {
             errorHandler.log(L.WARN, getClass(), e);
-            e.printStackTrace();
         }
 
         return null;

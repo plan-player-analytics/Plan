@@ -64,8 +64,8 @@
 
         <!-- Metrics -->
         <module name="ClassFanOutComplexity">
-            <!-- This value is high. Notable: DatabaseTest: 84, SQLDB: 56 -->
-            <property name="max" value="85"/>
+            <!-- This value is high. Notable: DatabaseTest: 86, SQLDB: 56 -->
+            <property name="max" value="87"/>
         </module>
         <module name="CyclomaticComplexity">
             <!-- This value is high. Notable: ActivityIndex: 18 -->
