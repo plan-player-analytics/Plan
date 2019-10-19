@@ -26,9 +26,9 @@ function jsonRequest(address, callback) {
                 }
             }
         };
-        xhttp.timeout = 20000;
+        xhttp.timeout = 45000;
         xhttp.ontimeout = function () {
-            callback(null, "Timed out after 20 seconds. (" + address + ")")
+            callback(null, "Timed out after 45 seconds. (" + address + ")")
         };
         xhttp.open("GET", address, true);
         xhttp.send();
