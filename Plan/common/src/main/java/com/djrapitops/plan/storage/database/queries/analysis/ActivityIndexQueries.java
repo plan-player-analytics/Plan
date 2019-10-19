@@ -143,17 +143,18 @@ public class ActivityIndexQueries {
     public static Query<Map<String, Integer>> fetchActivityIndexGroupingsOn(long date, UUID serverUUID, long threshold) {
         String selectActivityIndex = selectActivityIndexSQL();
 
-        String selectIndexes = SELECT + "? as activity_group, activity_index" +
+        // ? inside SELECT needs to be implicitly cast to a type because of H2 compile time type checks.
+        String selectIndexes = SELECT + "CAST(? as CHAR) as activity_group, activity_index" +
                 FROM + UserInfoTable.TABLE_NAME + " u" +
                 LEFT_JOIN + '(' + selectActivityIndex + ") s on s." + SessionsTable.USER_UUID + "=u." + UserInfoTable.USER_UUID +
                 WHERE + "u." + UserInfoTable.SERVER_UUID + "=?" +
                 AND + "u." + UserInfoTable.REGISTERED + "<=?";
 
-        String selectCount = SELECT + "activity_group, COUNT(1) as count" + FROM +
+        String selectCount = SELECT + "indexes.activity_group, COUNT(1) as count" + FROM +
                 '(' + selectIndexes + ") indexes" +
                 WHERE + "COALESCE(indexes.activity_index,0)>=?" +
                 AND + "COALESCE(indexes.activity_index,0)<?" +
-                GROUP_BY + "activity_group";
+                GROUP_BY + "indexes.activity_group";
 
         String selectMultipleCounts = SELECT + '*' + FROM +
                 '(' + selectCount +

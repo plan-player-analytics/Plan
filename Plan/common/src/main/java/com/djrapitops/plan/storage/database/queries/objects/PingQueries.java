@@ -210,10 +210,9 @@ public class PingQueries {
                 ", MIN(" + PingTable.MIN_PING + ") as minPing" +
                 ", MAX(" + PingTable.MAX_PING + ") as maxPing" +
                 ", AVG(" + PingTable.AVG_PING + ") as avgPing" +
-                FROM + "(" +
-                "(" + selectGeolocations + ") AS q1" +
+                FROM + "(" + selectGeolocations + ") AS q1" +
                 INNER_JOIN + "(" + selectLatestGeolocationDate + ") AS q2 ON q1.uuid = q2.uuid" +
-                INNER_JOIN + '(' + selectPingOfServer + ") sp on sp." + PingTable.USER_UUID + "=q1.uuid)" +
+                INNER_JOIN + '(' + selectPingOfServer + ") sp on sp." + PingTable.USER_UUID + "=q1.uuid" +
                 WHERE + GeoInfoTable.LAST_USED + "=m" +
                 AND + "sp." + PingTable.SERVER_UUID + "=?" +
                 GROUP_BY + GeoInfoTable.GEOLOCATION;

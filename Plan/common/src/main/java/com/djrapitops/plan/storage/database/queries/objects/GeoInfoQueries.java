@@ -171,10 +171,10 @@ public class GeoInfoQueries {
                 "MAX(" + GeoInfoTable.LAST_USED + ") as m" +
                 FROM + GeoInfoTable.TABLE_NAME +
                 GROUP_BY + GeoInfoTable.USER_UUID;
-        String sql = SELECT + GeoInfoTable.GEOLOCATION + ", COUNT(1) as c FROM (" +
+        String sql = SELECT + GeoInfoTable.GEOLOCATION + ", COUNT(1) as c FROM " +
                 "(" + selectGeolocations + ") AS q1" +
                 INNER_JOIN + "(" + selectLatestGeolocationDate + ") AS q2 ON q1.uuid = q2.uuid" +
-                INNER_JOIN + UserInfoTable.TABLE_NAME + " u on u." + UserInfoTable.USER_UUID + "=q1.uuid)" +
+                INNER_JOIN + UserInfoTable.TABLE_NAME + " u on u." + UserInfoTable.USER_UUID + "=q1.uuid" +
                 WHERE + GeoInfoTable.LAST_USED + "=m" +
                 AND + "u." + UserInfoTable.SERVER_UUID + "=?" +
                 GROUP_BY + GeoInfoTable.GEOLOCATION;
