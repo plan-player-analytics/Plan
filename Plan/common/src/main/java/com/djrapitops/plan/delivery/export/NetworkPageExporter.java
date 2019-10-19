@@ -188,7 +188,7 @@ public class NetworkPageExporter extends FileExporter {
             export(to, theme.replaceThemeColors(resource.asString()));
         } else if ("js/network-values.js".equalsIgnoreCase(resourceName)) {
             // Replace /server in urls to fix server page links
-            export(to, StringUtils.replace(resource.asString(), "server/", toRelativePathFromRoot("server") + '/'));
+            export(to, StringUtils.replaceOnce(resource.asString(), "server/", toRelativePathFromRoot("server") + '/'));
         } else {
             export(to, resource.asLines());
         }
