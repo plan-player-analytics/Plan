@@ -1154,6 +1154,46 @@ public interface DatabaseTest {
     }
 
     @Test
+    default void activityIndexCalculationsMatch() {
+        sessionsAreStoredWithAllData();
+
+        long date = System.currentTimeMillis();
+        long playtimeThreshold = TimeUnit.HOURS.toMillis(5L);
+        List<Session> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID))
+                .values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+
+        ActivityIndex javaCalculation = new ActivityIndex(sessions, date, playtimeThreshold);
+
+        List<TablePlayer> players = db().query(new ServerTablePlayersQuery(serverUUID(), date, playtimeThreshold, 5));
+        Optional<TablePlayer> found = players.stream().filter(tp -> playerUUID.equals(tp.getPlayerUUID())).findFirst();
+        assertTrue(found.isPresent());
+        Optional<ActivityIndex> currentActivityIndex = found.get().getCurrentActivityIndex();
+        assertTrue(currentActivityIndex.isPresent());
+
+        assertEquals(javaCalculation.getValue(), currentActivityIndex.get().getValue(), 0.001);
+    }
+
+    @Test
+    default void networkActivityIndexCalculationsMatch() {
+        sessionsAreStoredWithAllData();
+
+        long date = System.currentTimeMillis();
+        long playtimeThreshold = TimeUnit.HOURS.toMillis(5L);
+        List<Session> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID))
+                .values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+
+        ActivityIndex javaCalculation = new ActivityIndex(sessions, date, playtimeThreshold);
+
+        List<TablePlayer> players = db().query(new NetworkTablePlayersQuery(date, playtimeThreshold, 5));
+        Optional<TablePlayer> found = players.stream().filter(tp -> playerUUID.equals(tp.getPlayerUUID())).findFirst();
+        assertTrue(found.isPresent());
+        Optional<ActivityIndex> currentActivityIndex = found.get().getCurrentActivityIndex();
+        assertTrue(currentActivityIndex.isPresent());
+
+        assertEquals(javaCalculation.getValue(), currentActivityIndex.get().getValue(), 0.001);
+    }
+
+    @Test
     default void extensionPlayerValuesAreStored() {
         ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system().getExtensionService();
 

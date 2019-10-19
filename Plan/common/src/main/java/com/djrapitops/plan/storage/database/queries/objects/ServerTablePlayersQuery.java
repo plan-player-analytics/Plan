@@ -48,6 +48,14 @@ public class ServerTablePlayersQuery implements Query<List<TablePlayer>> {
     private final long activeMsThreshold;
     private final int xMostRecentPlayers;
 
+    /**
+     * Create a new query.
+     *
+     * @param serverUUID         UUID of the Plan server.
+     * @param date               Date used for Activity Index calculation
+     * @param activeMsThreshold  Playtime threshold for Activity Index calculation
+     * @param xMostRecentPlayers Limit query size
+     */
     public ServerTablePlayersQuery(UUID serverUUID, long date, long activeMsThreshold, int xMostRecentPlayers) {
         this.serverUUID = serverUUID;
         this.date = date;
