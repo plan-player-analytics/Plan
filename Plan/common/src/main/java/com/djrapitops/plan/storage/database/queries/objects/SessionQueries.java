@@ -616,7 +616,7 @@ public class SessionQueries {
 
                 @Override
                 public Long processResults(ResultSet set) throws SQLException {
-                    return set.next() ? set.getLong("average") : 0;
+                    return set.next() ? (long) set.getDouble("average") : 0;
                 }
             });
         };
@@ -644,7 +644,7 @@ public class SessionQueries {
 
                 @Override
                 public Long processResults(ResultSet set) throws SQLException {
-                    return set.next() ? set.getLong("average") : 0;
+                    return set.next() ? (long) set.getDouble("average") : 0;
                 }
             });
         };
@@ -677,7 +677,7 @@ public class SessionQueries {
 
                 @Override
                 public Long processResults(ResultSet set) throws SQLException {
-                    return set.next() ? set.getLong("average") : 0;
+                    return set.next() ? (long) set.getDouble("average") : 0;
                 }
             });
         };
@@ -705,7 +705,7 @@ public class SessionQueries {
 
                 @Override
                 public Long processResults(ResultSet set) throws SQLException {
-                    return set.next() ? set.getLong("average") : 0;
+                    return set.next() ? (long) set.getDouble("average") : 0;
                 }
             });
         };
@@ -738,7 +738,7 @@ public class SessionQueries {
 
                 @Override
                 public Long processResults(ResultSet set) throws SQLException {
-                    return set.next() ? set.getLong("average") : 0;
+                    return set.next() ? (long) set.getDouble("average") : 0;
                 }
             });
         };

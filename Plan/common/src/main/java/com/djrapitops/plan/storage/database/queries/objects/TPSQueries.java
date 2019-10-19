@@ -333,7 +333,7 @@ public class TPSQueries {
 
             @Override
             public Long processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getLong("average") : -1L;
+                return set.next() ? (long) set.getDouble("average") : -1L;
             }
         };
     }
@@ -353,7 +353,7 @@ public class TPSQueries {
 
             @Override
             public Long processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getLong("average") : -1L;
+                return set.next() ? (long) set.getDouble("average") : -1L;
             }
         };
     }
@@ -373,7 +373,7 @@ public class TPSQueries {
 
             @Override
             public Long processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getLong("average") : -1L;
+                return set.next() ? (long) set.getDouble("average") : -1L;
             }
         };
     }
@@ -433,7 +433,7 @@ public class TPSQueries {
 
             @Override
             public Long processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getLong("average") : -1L;
+                return set.next() ? (long) set.getDouble("average") : -1L;
             }
         };
     }
