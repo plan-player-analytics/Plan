@@ -26,6 +26,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
@@ -38,6 +39,8 @@ import java.util.List;
  */
 abstract class FileExporter {
 
+    private static final OpenOption[] OPEN_OPTIONS = {StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE};
+
     private static void copy(InputStream in, OutputStream out) throws IOException {
         int read;
         byte[] bytes = new byte[1024];
@@ -49,12 +52,12 @@ abstract class FileExporter {
 
     void export(Path to, List<String> content) throws IOException {
         Files.createDirectories(to.getParent());
-        Files.write(to, content, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+        Files.write(to, content, StandardCharsets.UTF_8, OPEN_OPTIONS);
     }
 
     void export(Path to, String content) throws IOException {
         Files.createDirectories(to.getParent());
-        Files.write(to, Arrays.asList(StringUtils.split(content, "\r\n")), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+        Files.write(to, Arrays.asList(StringUtils.split(content, "\r\n")), StandardCharsets.UTF_8, OPEN_OPTIONS);
     }
 
     void export(Path to, Resource resource) throws IOException {
@@ -62,7 +65,7 @@ abstract class FileExporter {
 
         try (
                 InputStream in = resource.asInputStream();
-                OutputStream out = Files.newOutputStream(to, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE)
+                OutputStream out = Files.newOutputStream(to, OPEN_OPTIONS)
         ) {
             copy(in, out);
         }
