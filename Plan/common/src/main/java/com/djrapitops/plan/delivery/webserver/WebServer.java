@@ -17,7 +17,6 @@
 package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.SubSystem;
-import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -26,7 +25,6 @@ import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -43,6 +41,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
@@ -95,15 +94,12 @@ public class WebServer implements SubSystem {
     }
 
     @Override
-    public void enable() throws EnableException {
+    public void enable() {
         this.port = config.get(WebserverSettings.PORT);
 
         initServer();
 
         if (!isEnabled()) {
-            if (Check.isBungeeAvailable() || Check.isVelocityAvailable()) {
-                throw new EnableException(locale.getString(PluginLang.ENABLE_FAIL_NO_WEB_SERVER_PROXY));
-            }
             if (config.isTrue(WebserverSettings.DISABLED)) {
                 logger.warn(locale.getString(PluginLang.ENABLE_NOTIFY_WEB_SERVER_DISABLED));
             } else {
@@ -118,8 +114,8 @@ public class WebServer implements SubSystem {
      * Starts up the WebServer in a new Thread Pool.
      */
     private void initServer() {
-        if ((Check.isBukkitAvailable() || Check.isSpongeAvailable()) && config.isTrue(WebserverSettings.DISABLED)) {
-            // Bukkit/Sponge WebServer has been disabled.
+        if (config.isTrue(WebserverSettings.DISABLED)) {
+            // WebServer has been disabled.
             return;
         }
 
@@ -162,13 +158,16 @@ public class WebServer implements SubSystem {
             if (!usingAlternativeIP && serverProperties.getIp().isEmpty()) {
                 logger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.ENABLE_NOTIFY_EMPTY_IP));
             }
+        } catch (BindException failedToBind) {
+            logger.error("Webserver failed to bind port: " + failedToBind.toString());
+            enabled = false;
         } catch (IllegalArgumentException | IllegalStateException | IOException e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
             enabled = false;
         }
     }
 
-    private boolean startHttpsServer() {
+    private boolean startHttpsServer() throws BindException {
         String keyStorePath = config.get(WebserverSettings.CERTIFICATE_PATH);
 
         if ("proxy".equalsIgnoreCase(keyStorePath)) {
@@ -235,6 +234,8 @@ public class WebServer implements SubSystem {
         } catch (FileNotFoundException e) {
             logger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.WEB_SERVER_NOTIFY_NO_CERT_FILE, keyStorePath));
             logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_HTTP));
+        } catch (BindException e) {
+            throw e; // Pass to above error handler
         } catch (IOException e) {
             logger.error("WebServer: " + e);
             errorHandler.log(L.ERROR, this.getClass(), e);
