@@ -29,6 +29,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.Resource;
 import org.apache.commons.lang3.StringUtils;
@@ -79,6 +80,7 @@ public class PlayerPageExporter extends FileExporter {
     public void export(Path toDirectory, UUID playerUUID, String playerName) throws IOException, NotFoundException, ParseException {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
+        if (!dbSystem.getDatabase().query(PlayerFetchQueries.isPlayerRegistered(playerUUID))) return;
 
         exportPaths.put("../network", toRelativePathFromRoot("network"));
         exportPaths.put("../server", toRelativePathFromRoot("server"));
