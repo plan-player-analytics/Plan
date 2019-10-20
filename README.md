@@ -30,11 +30,11 @@ cd Plan
 
 ## Used Libraries
 
-- **[HighCharts](https://www.highcharts.com/)** | [Free for non-commercial](https://www.highcharts.com/products/highcharts/#non-commercial)
-- **[AdminBSB Bootstrap template](https://gurayyarar.github.io/AdminBSBMaterialDesign/index.html)** | [MIT License](https://opensource.org/licenses/MIT)
+- **[SBAdmin 2 Template](https://github.com/BlackrockDigital/startbootstrap-sb-admin-2)** | [MIT License](https://opensource.org/licenses/MIT)
   - **[Bootstrap](https://v4-alpha.getbootstrap.com/)** | [MIT License](https://v4-alpha.getbootstrap.com/about/license/)
-  - **[Materialize](http://materializecss.com/about.html)** | [MIT License](https://github.com/Dogfalo/materialize/blob/master/LICENSE)
-  - **[jQuery Datatables](https://datatables.net/)** | [MIT License](https://datatables.net/license/mit)
+- **[HighCharts](https://www.highcharts.com/)** | [Free for non-commercial](https://www.highcharts.com/products/highcharts/#non-commercial)
+- **[jQuery Datatables](https://datatables.net/)** | [MIT License](https://datatables.net/license/mit)
+- **[FullCalendar](https://github.com/fullcalendar/fullcalendar)** | [MIT License](https://datatables.net/license/mit)
 - **[Font Awesome Icons](http://fontawesome.io/icons/)** | [SIL Open Font License](http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)
 - **[MaxMind GeoIP2](https://www.maxmind.com/en/geoip-demo)** | [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/)
 - **[H2 Database](http://www.h2database.com)** | [MPL 2.0](http://www.h2database.com/html/license.html#mpl2) or [EPL 1.0](http://www.h2database.com/html/license.html#eclipse_license)
