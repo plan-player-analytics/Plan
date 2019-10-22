@@ -3,20 +3,16 @@
 [![Build Status](http://plan.djrapitops.com/buildStatus/icon?job=Player+Analytics%2Fmaster)](https://plan.djrapitops.com/blue/organizations/jenkins/Player%20Analytics/activity)
 [![Discord](https://img.shields.io/discord/364107873267089409.svg?logo=discord)](https://discord.gg/yXKmjzT)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)  
-[![Maintainability](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=ncloc)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
 [![Code coverage](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=coverage)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
 [![Duplicate lines](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=code_smells)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
-
-Player Analytics is a fully fledged solution for the analytics needs of your server. A built in webserver displays insights into different aspects on the server such as Online activity, Playerbase and how these change over time.
-
-Plan supports multiple different platforms and versions;
-Spigot, Paper, Sponge, SpongeForge, Bungeecord, Velocity, Cauldron & all derivatives; from 1.7 to 1.14 - One jar for all platforms.
 
 [API, Documentation & Tutorials](https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki) | [Releases](https://github.com/plan-player-analytics/Plan/releases) | [Issues & Suggestions](https://github.com/Rsl1122/Plan-PlayerAnalytics/issues) | [Jenkins (Development builds)](https://plan.djrapitops.com/job/Player%20Analytics/job/master/)
 
-![Image](https://user-images.githubusercontent.com/24460436/66252533-96d89400-e765-11e9-978f-bc4bd040ab97.jpg)
+Player Analytics is a fully fledged solution for the analytics needs of your minecraft server. A built in webserver displays insights into different aspects on the server such as Online activity, Playerbase and how these change over time.
+
+Plan supports multiple different platforms and versions;
+Spigot, Paper, Sponge, SpongeForge, Bungeecord, Velocity, Cauldron & all derivatives; from 1.7 to 1.14 - One jar for all platforms.
 
 ## Building
 
