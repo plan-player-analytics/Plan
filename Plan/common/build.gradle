@@ -39,8 +39,10 @@ shadowJar {
     relocate 'com.fasterxml', 'plan.com.fasterxml'
     relocate 'com.zaxxer', 'plan.com.zaxxer'
     relocate 'com.github.benmanes', 'plan.com.github.benmanes'
-    relocate 'com.googlecode', 'plan.com.googlecode'
-    relocate 'com.google', 'plan.com.google'
+    relocate 'com.googlecode.htmlcompressor', 'plan.com.google.htmlcompressor'
+    relocate 'com.google.protobuf', 'plan.com.google.protobuf'
+    relocate 'com.google.gson', 'plan.com.google.gson'
+    relocate 'com.google.errorprone', 'plan.com.google.errorprone'
     relocate 'org.h2', 'plan.org.h2'
     relocate 'org.bstats', 'plan.org.bstats'
     relocate 'org.slf4j', 'plan.org.slf4j'
@@ -53,4 +55,6 @@ shadowJar {
     exclude "org/mockito/**/*"
     exclude "org/selenium/**/*"
     exclude "org/jayway/**/*"
+    exclude "google/protobuf/**/*"
+    exclude "jargs/gnu/**/*"
 }
