@@ -24,6 +24,7 @@ import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQuerie
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -45,8 +46,11 @@ public class Identifiers {
         String serverIndentifier = target.getParameter("server")
                 .orElseThrow(() -> new BadRequestException("'server' parameter was not defined."));
 
-        return UUIDUtility.parseFromString(serverIndentifier)
-                .orElse(getServerUUIDFromName(serverIndentifier));
+        Optional<UUID> parsed = UUIDUtility.parseFromString(serverIndentifier);
+        if (parsed.isPresent()) {
+            return parsed.get();
+        }
+        return getServerUUIDFromName(serverIndentifier);
     }
 
     private UUID getServerUUIDFromName(String serverName) throws BadRequestException {
@@ -57,10 +61,13 @@ public class Identifiers {
 
     public UUID getPlayerUUID(RequestTarget target) throws BadRequestException {
         String playerIdentifier = target.getParameter("player")
-                .orElseThrow(() -> new BadRequestException("'player' parameter was not defined."));
+                .orElseThrow(() -> new BadRequestException("'player' parameter was not defined.")).trim();
 
-        return UUIDUtility.parseFromString(playerIdentifier)
-                .orElse(getPlayerUUIDFromName(playerIdentifier));
+        Optional<UUID> parsed = UUIDUtility.parseFromString(playerIdentifier);
+        if (parsed.isPresent()) {
+            return parsed.get();
+        }
+        return getPlayerUUIDFromName(playerIdentifier);
     }
 
     private UUID getPlayerUUIDFromName(String playerName) throws BadRequestException {
