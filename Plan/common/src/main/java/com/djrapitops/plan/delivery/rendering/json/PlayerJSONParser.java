@@ -92,7 +92,7 @@ public class PlayerJSONParser {
         PlayerContainer player = db.query(new PlayerContainerQuery(playerUUID));
         SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);
         Map<UUID, WorldTimes> worldTimesPerServer = PerServerMutator.forContainer(player).worldTimesPerServer();
-        List<Map<String, Object>> serverAccordion = new ServerAccordion(player, serverNames, graphs, year, timeAmount, locale.get(GenericLang.UNKNOWN).toString()).asMaps();
+        List<Map<String, Object>> serverAccordion = new ServerAccordion(player, serverNames, graphs, year, timeAmount, locale.getString(GenericLang.UNKNOWN)).asMaps();
         List<PlayerKill> kills = player.getValue(PlayerKeys.PLAYER_KILLS).orElse(Collections.emptyList());
         List<PlayerKill> deaths = player.getValue(PlayerKeys.PLAYER_DEATHS_KILLS).orElse(Collections.emptyList());
 
@@ -176,8 +176,7 @@ public class PlayerJSONParser {
         info.put("session_median", timeAmount.apply(sessions.toMedianSessionLength()));
         info.put("activity_index", decimals.apply(activityIndex.getValue()));
         info.put("activity_index_group", activityIndex.getGroup());
-        UUID favoriteServer = perServer.favoriteServer();
-        info.put("favorite_server", serverNames.getOrDefault(favoriteServer, favoriteServer.toString()));
+        info.put("favorite_server", perServer.favoriteServer().map(favoriteServer -> serverNames.getOrDefault(favoriteServer, favoriteServer.toString())).orElse(locale.getString(GenericLang.UNKNOWN)));
         double averagePing = ping.average();
         int worstPing = ping.max();
         int bestPing = ping.min();

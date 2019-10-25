@@ -73,7 +73,7 @@ public class PerServerMutator {
         return timesMap;
     }
 
-    public UUID favoriteServer() {
+    public Optional<UUID> favoriteServer() {
         long max = 0;
         UUID maxServer = null;
 
@@ -85,7 +85,7 @@ public class PerServerMutator {
             }
         }
 
-        return maxServer;
+        return Optional.ofNullable(maxServer);
     }
 
     public Map<UUID, List<Session>> sessionsPerServer() {
