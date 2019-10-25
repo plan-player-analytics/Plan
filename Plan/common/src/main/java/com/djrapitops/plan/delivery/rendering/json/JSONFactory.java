@@ -160,7 +160,6 @@ public class JSONFactory {
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
         long weekAgo = now - TimeUnit.DAYS.toMillis(7L);
-        long monthAgo = now - TimeUnit.DAYS.toMillis(30L);
 
         Formatter<Long> year = formatters.yearLong();
         Formatter<Double> decimals = formatters.decimals();
@@ -173,11 +172,11 @@ public class JSONFactory {
                 .map(Server::getUuid).orElse(null);
 
         Map<UUID, List<TPS>> tpsData = db.query(
-                TPSQueries.fetchTPSDataOfAllServersBut(monthAgo, now, proxyUUID)
+                TPSQueries.fetchTPSDataOfAllServersBut(weekAgo, now, proxyUUID)
         );
         Map<UUID, Integer> totalPlayerCounts = db.query(PlayerCountQueries.newPlayerCounts(0, now));
-        Map<UUID, Integer> newPlayerCounts = db.query(PlayerCountQueries.newPlayerCounts(monthAgo, now));
-        Map<UUID, Integer> uniquePlayerCounts = db.query(PlayerCountQueries.uniquePlayerCounts(monthAgo, now));
+        Map<UUID, Integer> newPlayerCounts = db.query(PlayerCountQueries.newPlayerCounts(weekAgo, now));
+        Map<UUID, Integer> uniquePlayerCounts = db.query(PlayerCountQueries.uniquePlayerCounts(weekAgo, now));
 
         List<Map<String, Object>> servers = new ArrayList<>();
         serverInformation.entrySet()
