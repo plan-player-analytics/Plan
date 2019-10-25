@@ -42,6 +42,7 @@ public class PlayerPlaceHolder extends AbstractPlanPlaceHolder {
 
     private final DBSystem dbSystem;
     private Formatter<Long> year;
+    private Formatter<Long> time;
 
     public PlayerPlaceHolder(
             DBSystem dbSystem,
@@ -50,6 +51,7 @@ public class PlayerPlaceHolder extends AbstractPlanPlaceHolder {
     ) {
         super(serverInfo);
         this.dbSystem = dbSystem;
+        time = formatters.timeAmount();
         year = formatters.yearLong();
     }
 
@@ -100,30 +102,60 @@ public class PlayerPlaceHolder extends AbstractPlanPlaceHolder {
                 return year.apply(player.getValue(PlayerKeys.REGISTERED).orElse((long) 0));
 
             case "player_time_active":
-                return year.apply(SessionsMutator.forContainer(player)
+                return time.apply(SessionsMutator.forContainer(player)
                         .toActivePlaytime());
             case "player_time_afk":
-                return year.apply(SessionsMutator.forContainer(player)
+                return time.apply(SessionsMutator.forContainer(player)
                         .toAfkTime());
 
             case "player_time_total":
-                return year.apply(SessionsMutator.forContainer(player)
+                return time.apply(SessionsMutator.forContainer(player)
                         .toPlaytime());
             case "player_time_day":
-                return year.apply(SessionsMutator.forContainer(player)
+                return time.apply(SessionsMutator.forContainer(player)
                         .filterSessionsBetween(dayAgo(), now())
                         .toPlaytime());
             case "player_time_week":
-                return year.apply(SessionsMutator.forContainer(player)
+                return time.apply(SessionsMutator.forContainer(player)
                         .filterSessionsBetween(weekAgo(), now())
                         .toPlaytime());
             case "player_time_month":
-                return year.apply(SessionsMutator.forContainer(player)
+                return time.apply(SessionsMutator.forContainer(player)
                         .filterSessionsBetween(monthAgo(), now())
                         .toPlaytime());
 
+            case "player_server_time_active":
+                return time.apply(SessionsMutator.forContainer(player)
+                        .filterPlayedOnServer(serverUUID())
+                        .toActivePlaytime());
+            case "player_server_time_afk":
+                return time.apply(SessionsMutator.forContainer(player)
+                        .filterPlayedOnServer(serverUUID())
+                        .toAfkTime());
+
+            case "player_server_time_total":
+                return time.apply(SessionsMutator.forContainer(player)
+                        .filterPlayedOnServer(serverUUID())
+                        .toPlaytime());
+            case "player_server_time_day":
+                return time.apply(SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(dayAgo(), now())
+                        .filterPlayedOnServer(serverUUID())
+                        .toPlaytime());
+            case "player_server_time_week":
+                return time.apply(SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(weekAgo(), now())
+                        .filterPlayedOnServer(serverUUID())
+                        .toPlaytime());
+            case "player_server_time_month":
+                return time.apply(SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(monthAgo(), now())
+                        .filterPlayedOnServer(serverUUID())
+                        .toPlaytime());
+
+            default:
+                return null;
         }
-        return null;
     }
 
     // Checkstyle.ON: CyclomaticComplexity
