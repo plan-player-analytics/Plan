@@ -59,7 +59,7 @@ public class ExtensionTableProviderTable {
 
     public static final String STATEMENT_SELECT_TABLE_ID = '(' + SELECT + ID + FROM + TABLE_NAME +
             WHERE + PROVIDER_NAME + "=?" +
-            AND + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ')';
+            AND + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + " LIMIT 1)";
 
     private ExtensionTableProviderTable() {
         /* Static information class */

@@ -46,7 +46,7 @@ public class ExtensionTabTable {
     public static final String STATEMENT_SELECT_TAB_ID = '(' + SELECT + ID +
             FROM + TABLE_NAME +
             WHERE + TAB_NAME + "=?" +
-            AND + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ')';
+            AND + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + " LIMIT 1)";
 
     public static void set3TabValuesToStatement(PreparedStatement statement, int parameterIndex, String tabName, String pluginName, UUID serverUUID) throws SQLException {
         statement.setString(parameterIndex, tabName);

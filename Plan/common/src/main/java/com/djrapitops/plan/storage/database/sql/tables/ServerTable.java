@@ -58,8 +58,7 @@ public class ServerTable {
     public static final String STATEMENT_SELECT_SERVER_ID =
             '(' + SELECT + TABLE_NAME + '.' + SERVER_ID +
                     FROM + TABLE_NAME +
-                    WHERE + TABLE_NAME + '.' + SERVER_UUID + "=?" +
-                    " LIMIT 1)";
+                    WHERE + TABLE_NAME + '.' + SERVER_UUID + "=? LIMIT 1)";
 
     private ServerTable() {
         /* Static information class */

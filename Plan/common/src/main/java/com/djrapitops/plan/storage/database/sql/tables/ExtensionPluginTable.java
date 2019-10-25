@@ -44,7 +44,7 @@ public class ExtensionPluginTable {
     public static final String STATEMENT_SELECT_PLUGIN_ID = '(' + SELECT + ID +
             FROM + TABLE_NAME +
             WHERE + PLUGIN_NAME + "=?" +
-            AND + SERVER_UUID + "=?)";
+            AND + SERVER_UUID + "=? LIMIT 1)";
 
     public static void set2PluginValuesToStatement(PreparedStatement statement, int parameterIndex, String pluginName, UUID serverUUID) throws SQLException {
         statement.setString(parameterIndex, pluginName);

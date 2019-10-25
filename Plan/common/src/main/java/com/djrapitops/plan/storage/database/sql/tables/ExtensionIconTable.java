@@ -48,7 +48,7 @@ public class ExtensionIconTable {
             FROM + TABLE_NAME +
             WHERE + ICON_NAME + "=?" +
             AND + FAMILY + "=?" +
-            AND + COLOR + "=?)";
+            AND + COLOR + "=? LIMIT 1)";
 
     public static void set3IconValuesToStatement(PreparedStatement statement, Icon icon) throws SQLException {
         set3IconValuesToStatement(statement, 1, icon);
