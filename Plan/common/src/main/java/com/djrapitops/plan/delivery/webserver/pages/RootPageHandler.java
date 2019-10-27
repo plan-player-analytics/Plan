@@ -22,7 +22,6 @@ import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
-import com.djrapitops.plan.delivery.webserver.response.RedirectResponse;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.exceptions.connection.WebException;
@@ -52,7 +51,7 @@ public class RootPageHandler implements PageHandler {
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
         if (!webServer.isAuthRequired()) {
-            return responseFactory.redirectResponse(serverInfo.getServer().isProxy() ? "/network" : "/server");
+            return responseFactory.redirectResponse(serverInfo.getServer().isProxy() ? "network" : "server");
         }
 
         Optional<Authentication> auth = request.getAuth();
@@ -65,11 +64,11 @@ public class RootPageHandler implements PageHandler {
         int permLevel = webUser.getPermLevel();
         switch (permLevel) {
             case 0:
-                return new RedirectResponse(serverInfo.getServer().isProxy() ? "/network" : "/server");
+                return responseFactory.redirectResponse(serverInfo.getServer().isProxy() ? "network" : "server");
             case 1:
-                return new RedirectResponse("/players");
+                return responseFactory.redirectResponse("players");
             case 2:
-                return new RedirectResponse("/player/" + Html.encodeToURL(webUser.getName()));
+                return responseFactory.redirectResponse("player/" + Html.encodeToURL(webUser.getName()));
             default:
                 return responseFactory.forbidden403();
         }

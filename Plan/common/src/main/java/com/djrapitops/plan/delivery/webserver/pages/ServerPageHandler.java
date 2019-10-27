@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.webserver.pages;
 
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
+import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
@@ -29,6 +30,7 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -46,16 +48,19 @@ public class ServerPageHandler implements PageHandler {
     private final ResponseFactory responseFactory;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
+    private final Lazy<WebServer> webServer;
 
     @Inject
     public ServerPageHandler(
             ResponseFactory responseFactory,
             DBSystem dbSystem,
-            ServerInfo serverInfo
+            ServerInfo serverInfo,
+            Lazy<WebServer> webServer
     ) {
         this.responseFactory = responseFactory;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
+        this.webServer = webServer;
     }
 
     @Override
@@ -70,7 +75,7 @@ public class ServerPageHandler implements PageHandler {
             return responseFactory.serverPageResponse(serverUUID.get());
         } else {
             // Redirect to base server page.
-            return responseFactory.redirectResponse(proxy ? "/network" : "/server");
+            return responseFactory.redirectResponse(webServer.get().getAccessAddress() + (proxy ? "/network" : "/server"));
         }
     }
 
