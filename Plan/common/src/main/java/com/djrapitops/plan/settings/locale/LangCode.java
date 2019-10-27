@@ -29,6 +29,7 @@ public enum LangCode {
     DE("Deutch", "Eyremba & fuzzlemann & Morsmorse"),
     FI("Finnish", "Rsl1122"),
     FR("French", "CyanTech & Aurelien"),
+    IT("Italian", "Malachiel"),
     JA("Japanese", "yukieji"),
     TR("Turkish", "TDJisvan"),
     PT_BR("Portuguese (Brazil)", "jvmuller");
