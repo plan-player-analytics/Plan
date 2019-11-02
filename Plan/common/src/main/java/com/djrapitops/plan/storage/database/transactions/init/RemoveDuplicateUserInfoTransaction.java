@@ -16,8 +16,17 @@
  */
 package com.djrapitops.plan.storage.database.transactions.init;
 
+import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
+import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
 
@@ -31,20 +40,40 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
  */
 public class RemoveDuplicateUserInfoTransaction extends ThrowawayTransaction {
 
-    private static final String COLUMN_ID = UserInfoTable.TABLE_NAME + '.' + UserInfoTable.ID;
     private static final String STATEMENT_SELECT_DUPLICATE_IDS =
-            SELECT + "MIN(" + COLUMN_ID + ") as id" + FROM + UserInfoTable.TABLE_NAME +
-                    GROUP_BY + UserInfoTable.USER_UUID + ',' + UserInfoTable.SERVER_UUID;
+            SELECT + DISTINCT + "u2." + UserInfoTable.ID + " as id" +
+                    FROM + UserInfoTable.TABLE_NAME + " u1" +
+                    INNER_JOIN + UserInfoTable.TABLE_NAME + " u2 on " +
+                    "u1." + UserInfoTable.USER_UUID + "=u2." + UserInfoTable.USER_UUID + AND +
+                    "u1." + UserInfoTable.SERVER_UUID + "=u2." + UserInfoTable.SERVER_UUID + AND +
+                    "u1." + UserInfoTable.ID + "<u2." + UserInfoTable.ID;
 
     @Override
     protected void performOperations() {
-        execute(
-                "DELETE" + FROM + UserInfoTable.TABLE_NAME +
-                        WHERE + COLUMN_ID +
-                        // Nested query here is required because MySQL limits update statements with nested queries:
-                        // The nested query creates a temporary table that bypasses the same table query-update limit.
-                        // Note: MySQL versions 5.6.7+ might optimize this nested query away leading to an exception.
-                        " NOT IN (" + SELECT + "id" + FROM + '(' + STATEMENT_SELECT_DUPLICATE_IDS + ") as ids)"
-        );
+        Collection<Integer> duplicateIDs = getDuplicates();
+        if (duplicateIDs.isEmpty()) return;
+
+        execute(new ExecBatchStatement(DELETE_FROM + UserInfoTable.TABLE_NAME + WHERE + UserInfoTable.ID + "=?") {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (Integer id : duplicateIDs) {
+                    statement.setInt(1, id);
+                    statement.addBatch();
+                }
+            }
+        });
+    }
+
+    private Collection<Integer> getDuplicates() {
+        return query(new QueryAllStatement<Collection<Integer>>(STATEMENT_SELECT_DUPLICATE_IDS) {
+            @Override
+            public Collection<Integer> processResults(ResultSet set) throws SQLException {
+                Set<Integer> duplicateIDs = new HashSet<>();
+                while (set.next()) {
+                    duplicateIDs.add(set.getInt("id"));
+                }
+                return duplicateIDs;
+            }
+        });
     }
 }
