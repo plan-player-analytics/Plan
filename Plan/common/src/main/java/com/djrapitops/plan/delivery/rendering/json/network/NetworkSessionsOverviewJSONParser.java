@@ -37,10 +37,10 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class NetworkSessionsOverviewJSONParser implements NetworkTabJSONParser<Map<String, Object>> {
 
-    private DBSystem dbSystem;
+    private final DBSystem dbSystem;
 
-    private Formatter<Long> timeAmount;
-    private Formatter<Double> percentage;
+    private final Formatter<Long> timeAmount;
+    private final Formatter<Double> percentage;
 
     @Inject
     public NetworkSessionsOverviewJSONParser(

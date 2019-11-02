@@ -29,7 +29,7 @@ import java.util.function.Consumer;
  */
 public class CapabilityServiceImplementation implements CapabilityService {
 
-    private List<Consumer<Boolean>> enableListeners;
+    private final List<Consumer<Boolean>> enableListeners;
 
     private CapabilityServiceImplementation() {
         /* Inject required for dagger */

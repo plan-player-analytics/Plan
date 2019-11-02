@@ -40,8 +40,8 @@ public class FileWatcher extends Thread {
 
     private volatile boolean running;
 
-    private Path watchedPath;
-    private Set<WatchedFile> watchedFiles;
+    private final Path watchedPath;
+    private final Set<WatchedFile> watchedFiles;
 
     public FileWatcher(
             File folder,

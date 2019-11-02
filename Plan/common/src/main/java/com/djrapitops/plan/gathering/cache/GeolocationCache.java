@@ -116,16 +116,6 @@ public class GeolocationCache implements SubSystem {
     }
 
     /**
-     * Returns the cached country
-     *
-     * @param ipAddress The IP Address which is retrieved out of the cache
-     * @return The cached country, {@code null} if the country is not cached
-     */
-    private String getCachedCountry(String ipAddress) {
-        return cache.getIfPresent(ipAddress);
-    }
-
-    /**
      * Retrieves the country in full length (e.g. United States) from the IP Address.
      * <p>
      * This product includes GeoLite2 data created by MaxMind, available from

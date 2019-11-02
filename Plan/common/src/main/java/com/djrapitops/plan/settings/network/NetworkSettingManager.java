@@ -64,9 +64,9 @@ public class NetworkSettingManager implements SubSystem {
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final RunnableFactory runnableFactory;
-    private PlanConfig config;
+    private final PlanConfig config;
     private final PluginLogger logger;
-    private ErrorHandler errorHandler;
+    private final ErrorHandler errorHandler;
 
     private File serverSettingsFolder;
 

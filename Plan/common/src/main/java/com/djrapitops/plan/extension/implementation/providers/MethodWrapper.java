@@ -35,7 +35,7 @@ public class MethodWrapper<T> {
 
     private final Method method;
     private final Class<T> resultType;
-    private MethodType methodType;
+    private final MethodType methodType;
 
     public MethodWrapper(Method method, Class<T> resultType) {
         this.method = method;

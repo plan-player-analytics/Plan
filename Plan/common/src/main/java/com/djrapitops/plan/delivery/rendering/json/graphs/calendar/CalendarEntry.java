@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.Optional;
 
 /**
- * Represents an entry for calendar.
+ * Represents an entry for FullCalendar json calendar.
  *
  * @author Rsl1122
  */

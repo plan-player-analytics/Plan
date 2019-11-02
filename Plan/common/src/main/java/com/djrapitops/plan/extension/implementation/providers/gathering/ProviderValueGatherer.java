@@ -45,13 +45,13 @@ public class ProviderValueGatherer {
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
 
-    private DataProviders dataProviders;
-    private BooleanProviderValueGatherer booleanGatherer;
-    private NumberProviderValueGatherer numberGatherer;
-    private DoubleAndPercentageProviderValueGatherer doubleAndPercentageGatherer;
-    private StringProviderValueGatherer stringGatherer;
-    private TableProviderValueGatherer tableGatherer;
-    private GroupProviderValueGatherer groupGatherer;
+    private final DataProviders dataProviders;
+    private final BooleanProviderValueGatherer booleanGatherer;
+    private final NumberProviderValueGatherer numberGatherer;
+    private final DoubleAndPercentageProviderValueGatherer doubleAndPercentageGatherer;
+    private final StringProviderValueGatherer stringGatherer;
+    private final TableProviderValueGatherer tableGatherer;
+    private final GroupProviderValueGatherer groupGatherer;
 
 
     public ProviderValueGatherer(

@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  */
 public class LocaleFileWriter {
 
-    private Locale locale;
+    private final Locale locale;
 
     public LocaleFileWriter(Locale locale) {
         this.locale = locale;

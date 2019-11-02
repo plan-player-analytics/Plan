@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 public class LineGraph implements HighChart {
 
     private final boolean displayGaps;
-    private List<Point> points;
+    private final List<Point> points;
 
     public LineGraph(List<Point> points, boolean displayGaps) {
         this.points = points;

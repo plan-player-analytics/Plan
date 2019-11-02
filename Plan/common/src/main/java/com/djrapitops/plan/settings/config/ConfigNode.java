@@ -44,7 +44,7 @@ public class ConfigNode {
     protected ConfigNode parent;
 
     protected List<String> nodeOrder;
-    protected Map<String, ConfigNode> childNodes;
+    protected final Map<String, ConfigNode> childNodes;
     protected List<String> comment;
 
     protected String value;

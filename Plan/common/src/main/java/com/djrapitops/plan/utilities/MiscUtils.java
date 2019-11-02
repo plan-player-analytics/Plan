@@ -20,9 +20,6 @@ import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.Sender;
 
-import java.io.Closeable;
-import java.io.IOException;
-
 /**
  * Utility method class containing various static methods.
  *
@@ -73,18 +70,6 @@ public class MiscUtils {
             playerName = sender.getName();
         }
         return playerName;
-    }
-
-    public static void close(Closeable... close) {
-        for (Closeable c : close) {
-            if (c != null) {
-                try {
-                    c.close();
-                } catch (IOException ignored) {
-                    // Closing exceptions are ignored.
-                }
-            }
-        }
     }
 
     public static void close(AutoCloseable... close) {

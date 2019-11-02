@@ -28,7 +28,7 @@ import java.util.List;
 public class Median<T extends Number & Comparable<? super T>> {
 
     private final List<T> values;
-    private int size;
+    private final int size;
 
     private Median(List<T> values) {
         this.values = values;

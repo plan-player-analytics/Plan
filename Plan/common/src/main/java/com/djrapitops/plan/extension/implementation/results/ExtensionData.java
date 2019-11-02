@@ -29,7 +29,7 @@ public class ExtensionData implements Comparable<ExtensionData> {
 
     private ExtensionInformation extensionInformation;
 
-    private Map<String, ExtensionTabData> tabs;
+    private final Map<String, ExtensionTabData> tabs;
 
     private ExtensionData(int pluginID) {
         this.pluginID = pluginID;
@@ -84,15 +84,15 @@ public class ExtensionData implements Comparable<ExtensionData> {
         return Objects.hash(pluginID, extensionInformation, tabs);
     }
 
-    public static class Factory {
+    public static class Builder {
 
         private final ExtensionData data;
 
-        public Factory(int pluginId) {
+        public Builder(int pluginId) {
             data = new ExtensionData(pluginId);
         }
 
-        public Factory combine(Factory with) {
+        public Builder combine(Builder with) {
             if (with != null) {
                 for (ExtensionTabData tab : with.build().getTabs()) {
                     Optional<ExtensionTabData> found = getTab(tab.getTabInformation().getTabName());
@@ -106,7 +106,7 @@ public class ExtensionData implements Comparable<ExtensionData> {
             return this;
         }
 
-        public Factory setInformation(ExtensionInformation information) {
+        public Builder setInformation(ExtensionInformation information) {
             if (information.getId() != data.pluginID) {
                 throw new IllegalArgumentException("ID mismatch, wanted id: " + data.pluginID + " but got " + information);
             }
@@ -114,7 +114,7 @@ public class ExtensionData implements Comparable<ExtensionData> {
             return this;
         }
 
-        public Factory addTab(ExtensionTabData tab) {
+        public Builder addTab(ExtensionTabData tab) {
             data.tabs.put(tab.getTabInformation().getTabName(), tab);
             return this;
         }

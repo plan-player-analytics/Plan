@@ -29,6 +29,4 @@ public abstract class PieWithDrilldown extends Pie {
         super(slices);
     }
 
-    public abstract String toHighChartsDrilldown();
-
 }

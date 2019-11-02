@@ -30,11 +30,6 @@ public class PlaceholderKey<T> extends Key<T> {
         this.placeholder = placeholder;
     }
 
-    public PlaceholderKey(Type<T> type, String placeholder) {
-        super(type, placeholder);
-        this.placeholder = placeholder;
-    }
-
     public String getPlaceholder() {
         return placeholder;
     }

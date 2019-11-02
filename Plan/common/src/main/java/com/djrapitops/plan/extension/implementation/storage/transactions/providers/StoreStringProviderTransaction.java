@@ -44,7 +44,7 @@ public class StoreStringProviderTransaction extends ThrowawayTransaction {
 
     private final boolean playerName;
     private final UUID serverUUID;
-    private ProviderInformation providerInformation;
+    private final ProviderInformation providerInformation;
 
     public StoreStringProviderTransaction(DataProvider<String> provider, boolean playerName, UUID serverUUID) {
         this.playerName = playerName;

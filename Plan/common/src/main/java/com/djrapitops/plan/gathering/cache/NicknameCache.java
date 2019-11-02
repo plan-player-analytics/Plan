@@ -80,27 +80,27 @@ public class NicknameCache implements SubSystem {
      * @param uuid UUID of the player.
      * @return latest displayName or null if none are saved.
      */
-    public String getDisplayName(UUID uuid) {
+    public Optional<String> getDisplayName(UUID uuid) {
         String cached = displayNames.get(uuid);
 
         if (cached == null) {
-            cached = updateFromDatabase(uuid, cached);
+            Optional<String> found = getFromDatabase(uuid);
+            if (found.isPresent()) {
+                displayNames.put(uuid, found.get());
+                return found;
+            }
         }
-        return cached;
+        return Optional.empty();
     }
 
-    private String updateFromDatabase(UUID uuid, String cached) {
+    private Optional<String> getFromDatabase(UUID uuid) {
         try {
-            Optional<Nickname> latest = dbSystem.getDatabase().query(
+            return dbSystem.getDatabase().query(
                     NicknameQueries.fetchLastSeenNicknameOfPlayer(uuid, serverInfo.getServerUUID())
-            );
-            if (latest.isPresent()) {
-                cached = latest.get().getName();
-                displayNames.put(uuid, cached);
-            }
+            ).map(Nickname::getName);
         } catch (DBOpException e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
         }
-        return cached;
+        return Optional.empty();
     }
 }

@@ -25,7 +25,7 @@ package com.djrapitops.plan.storage.database;
  */
 public abstract class AbstractDatabase implements Database {
 
-    protected DBAccessLock accessLock;
+    protected final DBAccessLock accessLock;
     private State state;
 
     public AbstractDatabase() {

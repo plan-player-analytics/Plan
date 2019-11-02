@@ -20,7 +20,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,8 +44,12 @@ class WorldMapTest {
         geolocations.put("Local Machine", 1);
         geolocations.put("Denmark", 2);
 
-        String expected = "[{'code':'SWE','value':1},{'code':'DNK','value':2},{'code':'FIN','value':1}]";
-        String result = new WorldMap(geolocations).toHighChartsSeries();
+        List<WorldMap.Entry> expected = Arrays.asList(
+                new WorldMap.Entry("SWE", 1),
+                new WorldMap.Entry("DNK", 2),
+                new WorldMap.Entry("FIN", 1)
+        );
+        List<WorldMap.Entry> result = new WorldMap(geolocations).getEntries();
         assertEquals(expected, result);
     }
 

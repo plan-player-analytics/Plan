@@ -27,7 +27,7 @@ import java.io.IOException;
  */
 public class RedirectResponse extends Response {
 
-    private String direct;
+    private final String direct;
 
     public RedirectResponse(String direct) {
         super.setHeader("HTTP/1.1 302 Found");

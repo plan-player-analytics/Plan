@@ -178,7 +178,7 @@ public class SQLiteDB extends SQLDB {
         private final RunnableFactory runnableFactory;
         private final PluginLogger logger;
         private final ErrorHandler errorHandler;
-        private PlanFiles files;
+        private final PlanFiles files;
 
         @Inject
         public Factory(

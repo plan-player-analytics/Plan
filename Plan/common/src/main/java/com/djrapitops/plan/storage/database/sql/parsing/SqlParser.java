@@ -33,11 +33,6 @@ public class SqlParser {
         s = new StringBuilder(start);
     }
 
-    public SqlParser addSpace() {
-        s.append(" ");
-        return this;
-    }
-
     public SqlParser append(String string) {
         s.append(string);
         return this;

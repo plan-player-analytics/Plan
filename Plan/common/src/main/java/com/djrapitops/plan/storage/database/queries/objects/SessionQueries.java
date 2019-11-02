@@ -82,53 +82,6 @@ public class SessionQueries {
     private static final String ORDER_BY_SESSION_START_DESC = ORDER_BY + SessionsTable.SESSION_START + " DESC";
 
     /**
-     * Query the database for Session data without kill, death or world data.
-     *
-     * @return Multimap: Server UUID - (Player UUID - List of sessions)
-     */
-    public static Query<Map<UUID, Map<UUID, List<Session>>>> fetchAllSessionsWithoutKillOrWorldData() {
-        String sql = SELECT +
-                SessionsTable.ID + ',' +
-                SessionsTable.USER_UUID + ',' +
-                SessionsTable.SERVER_UUID + ',' +
-                SessionsTable.SESSION_START + ',' +
-                SessionsTable.SESSION_END + ',' +
-                SessionsTable.DEATHS + ',' +
-                SessionsTable.MOB_KILLS + ',' +
-                SessionsTable.AFK_TIME +
-                FROM + SessionsTable.TABLE_NAME;
-
-        return new QueryAllStatement<Map<UUID, Map<UUID, List<Session>>>>(sql, 20000) {
-            @Override
-            public Map<UUID, Map<UUID, List<Session>>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
-                while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(SessionsTable.SERVER_UUID));
-                    UUID uuid = UUID.fromString(set.getString(SessionsTable.USER_UUID));
-
-                    Map<UUID, List<Session>> sessionsByUser = map.getOrDefault(serverUUID, new HashMap<>());
-                    List<Session> sessions = sessionsByUser.getOrDefault(uuid, new ArrayList<>());
-
-                    long start = set.getLong(SessionsTable.SESSION_START);
-                    long end = set.getLong(SessionsTable.SESSION_END);
-
-                    int deaths = set.getInt(SessionsTable.DEATHS);
-                    int mobKills = set.getInt(SessionsTable.MOB_KILLS);
-                    int id = set.getInt(SessionsTable.ID);
-
-                    long timeAFK = set.getLong(SessionsTable.AFK_TIME);
-
-                    sessions.add(new Session(id, uuid, serverUUID, start, end, mobKills, deaths, timeAFK));
-
-                    sessionsByUser.put(uuid, sessions);
-                    map.put(serverUUID, sessionsByUser);
-                }
-                return map;
-            }
-        };
-    }
-
-    /**
      * Query the database for Session data with kill, death or world data.
      *
      * @return List of sessions

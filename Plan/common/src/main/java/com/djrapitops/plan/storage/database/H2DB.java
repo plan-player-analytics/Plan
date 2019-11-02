@@ -174,7 +174,7 @@ public class H2DB extends SQLDB {
         private final RunnableFactory runnableFactory;
         private final PluginLogger logger;
         private final ErrorHandler errorHandler;
-        private PlanFiles files;
+        private final PlanFiles files;
 
         @Inject
         public Factory(

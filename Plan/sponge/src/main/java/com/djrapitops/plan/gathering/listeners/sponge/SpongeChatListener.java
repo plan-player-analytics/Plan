@@ -77,7 +77,7 @@ public class SpongeChatListener {
 
         dbSystem.getDatabase().executeTransaction(new NicknameStoreTransaction(
                 uuid, new Nickname(displayName, time, serverInfo.getServerUUID()),
-                (playerUUID, name) -> name.equals(nicknameCache.getDisplayName(playerUUID))
+                (playerUUID, name) -> nicknameCache.getDisplayName(playerUUID).map(name::equals).orElse(false)
         ));
     }
 }

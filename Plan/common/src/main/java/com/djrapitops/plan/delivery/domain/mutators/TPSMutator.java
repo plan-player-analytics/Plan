@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  */
 public class TPSMutator {
 
-    private List<TPS> tpsData;
+    private final List<TPS> tpsData;
 
     public TPSMutator(List<TPS> tpsData) {
         this.tpsData = tpsData;

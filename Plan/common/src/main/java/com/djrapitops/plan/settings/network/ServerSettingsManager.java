@@ -61,10 +61,10 @@ public class ServerSettingsManager implements SubSystem {
     private final PlanFiles files;
     private final PlanConfig config;
     private final DBSystem dbSystem;
-    private ServerInfo serverInfo;
+    private final ServerInfo serverInfo;
     private final TaskSystem taskSystem;
     private final ErrorHandler errorHandler;
-    private PluginLogger logger;
+    private final PluginLogger logger;
     private FileWatcher watcher;
 
     @Inject

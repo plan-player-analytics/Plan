@@ -119,10 +119,6 @@ public class PlayerCalendar {
         return entries;
     }
 
-    public String toCalendarSeries() {
-        return getEntries().toString();
-    }
-
     private Map<String, List<Session>> getSessionsByDay() {
         Map<String, List<Session>> sessionsByDay = new HashMap<>();
         for (Session session : allSessions) {

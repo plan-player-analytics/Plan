@@ -29,7 +29,7 @@ import java.util.*;
  */
 public abstract class ImportSystem implements SubSystem {
 
-    protected Map<String, Importer> importers;
+    protected final Map<String, Importer> importers;
 
     public ImportSystem() {
         importers = new HashMap<>();

@@ -36,7 +36,7 @@ public abstract class TreePageHandler implements PageHandler {
 
     protected final ResponseFactory responseFactory;
 
-    private Map<String, PageHandler> pages;
+    private final Map<String, PageHandler> pages;
 
     public TreePageHandler(ResponseFactory responseFactory) {
         this.responseFactory = responseFactory;

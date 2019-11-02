@@ -44,7 +44,7 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class ExtensionAggregateGroupsQuery implements Query<Map<Integer, ExtensionData.Factory>> {
+public class ExtensionAggregateGroupsQuery implements Query<Map<Integer, ExtensionData.Builder>> {
 
     private final UUID serverUUID;
 
@@ -53,7 +53,7 @@ public class ExtensionAggregateGroupsQuery implements Query<Map<Integer, Extensi
     }
 
     @Override
-    public Map<Integer, ExtensionData.Factory> executeQuery(SQLDB db) {
+    public Map<Integer, ExtensionData.Builder> executeQuery(SQLDB db) {
         String selectGroupCounts = SELECT +
                 ExtensionGroupsTable.PROVIDER_ID + ',' +
                 ExtensionGroupsTable.GROUP_NAME + ',' +
@@ -87,7 +87,7 @@ public class ExtensionAggregateGroupsQuery implements Query<Map<Integer, Extensi
                 AND + "p1." + ExtensionProviderTable.HIDDEN + "=?" +
                 ORDER_BY + "table_id ASC, group_name ASC";
 
-        return db.query(new QueryStatement<Map<Integer, ExtensionData.Factory>>(sql, 1000) {
+        return db.query(new QueryStatement<Map<Integer, ExtensionData.Builder>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -95,7 +95,7 @@ public class ExtensionAggregateGroupsQuery implements Query<Map<Integer, Extensi
             }
 
             @Override
-            public Map<Integer, ExtensionData.Factory> processResults(ResultSet set) throws SQLException {
+            public Map<Integer, ExtensionData.Builder> processResults(ResultSet set) throws SQLException {
                 return extractTables(set).toQueriedTabs().toExtensionDataByPluginID();
             }
         });

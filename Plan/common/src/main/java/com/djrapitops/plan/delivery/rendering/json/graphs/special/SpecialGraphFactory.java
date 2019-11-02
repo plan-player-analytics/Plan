@@ -16,9 +16,7 @@
  */
 package com.djrapitops.plan.delivery.rendering.json.graphs.special;
 
-import com.djrapitops.plan.delivery.domain.mutators.PlayersMutator;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
-import com.djrapitops.plan.delivery.rendering.json.graphs.HighChart;
 import com.djrapitops.plan.gathering.domain.Session;
 
 import javax.inject.Inject;
@@ -51,7 +49,4 @@ public class SpecialGraphFactory {
         return new WorldMap(geolocationCounts);
     }
 
-    public HighChart worldMap(PlayersMutator mutator) {
-        return new WorldMap(mutator);
-    }
 }

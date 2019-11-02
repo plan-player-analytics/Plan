@@ -34,8 +34,8 @@ import java.util.function.BooleanSupplier;
  */
 public class BanStatusTransaction extends Transaction {
 
-    private UUID playerUUID;
-    private BooleanSupplier banStatus;
+    private final UUID playerUUID;
+    private final BooleanSupplier banStatus;
 
     public BanStatusTransaction(UUID playerUUID, BooleanSupplier banStatus) {
         this.playerUUID = playerUUID;

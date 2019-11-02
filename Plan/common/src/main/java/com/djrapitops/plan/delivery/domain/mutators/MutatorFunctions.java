@@ -30,12 +30,6 @@ public class MutatorFunctions {
                 .collect(Collectors.toList());
     }
 
-    public static List<Point> toPointsWithRemovedOffset(NavigableMap<Long, Integer> map, TimeZone timeZone) {
-        return map.entrySet().stream()
-                .map(entry -> new Point(entry.getKey() - timeZone.getOffset(entry.getKey()), entry.getValue()))
-                .collect(Collectors.toList());
-    }
-
     public static NavigableMap<Long, Integer> addMissing(NavigableMap<Long, Integer> points, long accuracy, Integer replacement) {
         if (Verify.isEmpty(points)) return points;
 

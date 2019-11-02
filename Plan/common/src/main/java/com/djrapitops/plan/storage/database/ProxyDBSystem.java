@@ -42,7 +42,7 @@ public class ProxyDBSystem extends DBSystem {
             Timings timings,
             ErrorHandler errorHandler
     ) {
-        super(locale, sqLiteDB, h2DB, logger, timings, errorHandler);
+        super(locale, sqLiteDB, h2DB, logger);
         databases.add(mySQLDB);
         db = mySQLDB;
     }

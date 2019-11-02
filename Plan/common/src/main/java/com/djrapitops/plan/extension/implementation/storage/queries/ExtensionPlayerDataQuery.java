@@ -65,7 +65,7 @@ public class ExtensionPlayerDataQuery implements Query<Map<UUID, List<ExtensionD
     @Override
     public Map<UUID, List<ExtensionData>> executeQuery(SQLDB db) {
         Map<UUID, List<ExtensionInformation>> extensionsByServerUUID = db.query(ExtensionInformationQueries.allExtensions());
-        Map<Integer, ExtensionData.Factory> extensionDataByPluginID = db.query(fetchIncompletePlayerDataByPluginID());
+        Map<Integer, ExtensionData.Builder> extensionDataByPluginID = db.query(fetchIncompletePlayerDataByPluginID());
 
         combine(extensionDataByPluginID, db.query(new ExtensionPlayerTablesQuery(playerUUID)));
         combine(extensionDataByPluginID, db.query(new ExtensionPlayerGroupsQuery(playerUUID)));
@@ -74,14 +74,14 @@ public class ExtensionPlayerDataQuery implements Query<Map<UUID, List<ExtensionD
     }
 
     private void combine(
-            Map<Integer, ExtensionData.Factory> extensionDataByPluginID,
-            Map<Integer, ExtensionData.Factory> aggregates
+            Map<Integer, ExtensionData.Builder> extensionDataByPluginID,
+            Map<Integer, ExtensionData.Builder> aggregates
     ) {
-        for (Map.Entry<Integer, ExtensionData.Factory> entry : aggregates.entrySet()) {
+        for (Map.Entry<Integer, ExtensionData.Builder> entry : aggregates.entrySet()) {
             Integer pluginID = entry.getKey();
-            ExtensionData.Factory data = entry.getValue();
+            ExtensionData.Builder data = entry.getValue();
 
-            ExtensionData.Factory found = extensionDataByPluginID.get(pluginID);
+            ExtensionData.Builder found = extensionDataByPluginID.get(pluginID);
             if (found == null) {
                 extensionDataByPluginID.put(pluginID, data);
             } else {
@@ -90,13 +90,13 @@ public class ExtensionPlayerDataQuery implements Query<Map<UUID, List<ExtensionD
         }
     }
 
-    private Map<UUID, List<ExtensionData>> flatMapByServerUUID(Map<UUID, List<ExtensionInformation>> extensionsByServerUUID, Map<Integer, ExtensionData.Factory> extensionDataByPluginID) {
+    private Map<UUID, List<ExtensionData>> flatMapByServerUUID(Map<UUID, List<ExtensionInformation>> extensionsByServerUUID, Map<Integer, ExtensionData.Builder> extensionDataByPluginID) {
         Map<UUID, List<ExtensionData>> extensionDataByServerUUID = new HashMap<>();
 
         for (Map.Entry<UUID, List<ExtensionInformation>> entry : extensionsByServerUUID.entrySet()) {
             UUID serverUUID = entry.getKey();
             for (ExtensionInformation extensionInformation : entry.getValue()) {
-                ExtensionData.Factory data = extensionDataByPluginID.get(extensionInformation.getId());
+                ExtensionData.Builder data = extensionDataByPluginID.get(extensionInformation.getId());
                 if (data == null) {
                     continue;
                 }
@@ -108,7 +108,7 @@ public class ExtensionPlayerDataQuery implements Query<Map<UUID, List<ExtensionD
         return extensionDataByServerUUID;
     }
 
-    private Query<Map<Integer, ExtensionData.Factory>> fetchIncompletePlayerDataByPluginID() {
+    private Query<Map<Integer, ExtensionData.Builder>> fetchIncompletePlayerDataByPluginID() {
         String sql = SELECT +
                 "v1." + ExtensionPlayerValueTable.BOOLEAN_VALUE + " as boolean_value," +
                 "v1." + ExtensionPlayerValueTable.DOUBLE_VALUE + " as double_value," +
@@ -139,7 +139,7 @@ public class ExtensionPlayerDataQuery implements Query<Map<UUID, List<ExtensionD
                 WHERE + ExtensionPlayerValueTable.USER_UUID + "=?" +
                 AND + "p1." + ExtensionProviderTable.HIDDEN + "=?";
 
-        return new QueryStatement<Map<Integer, ExtensionData.Factory>>(sql, 1000) {
+        return new QueryStatement<Map<Integer, ExtensionData.Builder>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
@@ -147,7 +147,7 @@ public class ExtensionPlayerDataQuery implements Query<Map<UUID, List<ExtensionD
             }
 
             @Override
-            public Map<Integer, ExtensionData.Factory> processResults(ResultSet set) throws SQLException {
+            public Map<Integer, ExtensionData.Builder> processResults(ResultSet set) throws SQLException {
                 return extractTabDataByPluginID(set).toExtensionDataByPluginID();
             }
         };
@@ -159,7 +159,7 @@ public class ExtensionPlayerDataQuery implements Query<Map<UUID, List<ExtensionD
         while (set.next()) {
             int pluginID = set.getInt("plugin_id");
             String tabName = Optional.ofNullable(set.getString("tab_name")).orElse("");
-            ExtensionTabData.Factory extensionTab = tabData.getTab(pluginID, tabName, () -> extractTabInformation(tabName, set));
+            ExtensionTabData.Builder extensionTab = tabData.getTab(pluginID, tabName, () -> extractTabInformation(tabName, set));
 
             ExtensionDescriptive extensionDescriptive = extractDescriptive(set);
             extractAndPutDataTo(extensionTab, extensionDescriptive, set);
@@ -184,7 +184,7 @@ public class ExtensionPlayerDataQuery implements Query<Map<UUID, List<ExtensionD
         );
     }
 
-    private void extractAndPutDataTo(ExtensionTabData.Factory extensionTab, ExtensionDescriptive descriptive, ResultSet set) throws SQLException {
+    private void extractAndPutDataTo(ExtensionTabData.Builder extensionTab, ExtensionDescriptive descriptive, ResultSet set) throws SQLException {
         boolean booleanValue = set.getBoolean(ExtensionPlayerValueTable.BOOLEAN_VALUE);
         if (!set.wasNull()) {
             extensionTab.putBooleanData(new ExtensionBooleanData(descriptive, booleanValue));

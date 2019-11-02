@@ -25,8 +25,8 @@ import com.djrapitops.plan.delivery.formatting.Formatter;
  */
 public class ExtensionDoubleData implements DescribedExtensionData {
 
-    private ExtensionDescriptive descriptive;
-    private double value;
+    private final ExtensionDescriptive descriptive;
+    private final double value;
 
     public ExtensionDoubleData(ExtensionDescriptive descriptive, double value) {
         this.descriptive = descriptive;

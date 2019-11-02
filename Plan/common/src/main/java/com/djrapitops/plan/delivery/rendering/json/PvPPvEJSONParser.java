@@ -35,9 +35,9 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class PvPPvEJSONParser implements ServerTabJSONParser<Map<String, Object>> {
 
-    private DBSystem dbSystem;
+    private final DBSystem dbSystem;
 
-    private Formatter<Double> decimals;
+    private final Formatter<Double> decimals;
 
     @Inject
     public PvPPvEJSONParser(

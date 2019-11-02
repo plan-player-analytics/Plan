@@ -58,7 +58,7 @@ public class PluginSuperClassBindingModule {
             Timings timings,
             ErrorHandler errorHandler
     ) {
-        return new DBSystem(locale, sqLiteDB, h2Factory, logger, timings, errorHandler) {
+        return new DBSystem(locale, sqLiteDB, h2Factory, logger) {
             @Override
             public void enable() throws EnableException {
                 databases.add(sqLiteDB.usingDefaultFile());

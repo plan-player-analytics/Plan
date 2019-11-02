@@ -26,7 +26,6 @@ import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.pages.TreePageHandler;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
-import com.djrapitops.plan.exceptions.WebUserAuthException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -61,7 +60,7 @@ public class NetworkJSONHandler extends TreePageHandler {
     }
 
     @Override
-    public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
+    public boolean isAuthorized(Authentication auth, RequestTarget target) {
         return true;
     }
 }

@@ -18,7 +18,6 @@ package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
-import com.djrapitops.plan.exceptions.EnableException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -41,7 +40,7 @@ public class WebServerSystem implements SubSystem {
     }
 
     @Override
-    public void enable() throws EnableException {
+    public void enable() {
         webServer.enable();
     }
 

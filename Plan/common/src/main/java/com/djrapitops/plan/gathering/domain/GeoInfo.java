@@ -17,7 +17,6 @@
 package com.djrapitops.plan.gathering.domain;
 
 import com.djrapitops.plan.delivery.domain.DateHolder;
-import com.djrapitops.plan.delivery.domain.DateMap;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -29,27 +28,12 @@ import java.util.Objects;
  */
 public class GeoInfo implements DateHolder, Serializable {
 
-    private final String ip;
     private final String geolocation;
     private final long date;
 
     public GeoInfo(String geolocation, long lastUsed) {
-        this.ip = "ip";
         this.geolocation = geolocation;
         this.date = lastUsed;
-    }
-
-    public static DateMap<GeoInfo> intoDateMap(Iterable<GeoInfo> geoInfo) {
-        DateMap<GeoInfo> map = new DateMap<>();
-        for (GeoInfo info : geoInfo) {
-            map.put(info.date, info);
-        }
-        return map;
-    }
-
-    @Deprecated
-    public String getIp() {
-        return ip;
     }
 
     public String getGeolocation() {
@@ -71,7 +55,7 @@ public class GeoInfo implements DateHolder, Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(ip, geolocation);
+        return Objects.hash(geolocation);
     }
 
     @Override

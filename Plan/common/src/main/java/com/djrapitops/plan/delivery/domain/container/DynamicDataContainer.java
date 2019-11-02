@@ -37,11 +37,6 @@ public class DynamicDataContainer implements DataContainer {
         rawDataContainer = new RawDataContainer();
     }
 
-    public DynamicDataContainer(long timeToLive) {
-        supplierDataContainer = new SupplierDataContainer(timeToLive);
-        rawDataContainer = new RawDataContainer();
-    }
-
     @Override
     public <T> void putRawData(Key<T> key, T obj) {
         rawDataContainer.putRawData(key, obj);

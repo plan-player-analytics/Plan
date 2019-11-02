@@ -19,7 +19,7 @@ package com.djrapitops.plan.addons.placeholderapi.placeholders;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.domain.mutators.PingMutator;
-import com.djrapitops.plan.delivery.domain.mutators.PvpInfoMutator;
+import com.djrapitops.plan.delivery.domain.mutators.PlayerVersusMutator;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
@@ -86,7 +86,7 @@ public class PlayerPlaceHolder extends AbstractPlanPlaceHolder {
             case "player_player_kill_count":
                 return player.getValue(PlayerKeys.PLAYER_KILL_COUNT).orElse(0);
             case "player_kill_death_ratio":
-                return PvpInfoMutator.forContainer(player).killDeathRatio();
+                return PlayerVersusMutator.forContainer(player).toKillDeathRatio();
 
             case "player_ping_average_day":
                 return PingMutator.forContainer(player).filterBy(Predicates.within(dayAgo(), now())).average();

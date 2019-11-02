@@ -34,7 +34,7 @@ import java.util.Optional;
 public class Request {
     private final String requestMethod;
 
-    private URI requestURI;
+    private final URI requestURI;
 
     private final HttpExchange exchange;
     private final String remoteAddress;

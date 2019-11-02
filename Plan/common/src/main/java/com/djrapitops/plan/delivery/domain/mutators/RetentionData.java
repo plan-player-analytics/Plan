@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class RetentionData {
     private final double activityIndex;
-    private double onlineOnJoin;
+    private final double onlineOnJoin;
 
     public static RetentionData average(Collection<RetentionData> stuck) {
         int size = stuck.size();

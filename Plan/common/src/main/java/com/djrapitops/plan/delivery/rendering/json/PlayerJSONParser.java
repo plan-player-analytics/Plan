@@ -264,9 +264,9 @@ public class PlayerJSONParser {
     }
 
     public static class Nickname {
-        private String nickname;
-        private String server;
-        private String date;
+        private final String nickname;
+        private final String server;
+        private final String date;
 
         public Nickname(String nickname, String server, String date) {
             this.nickname = nickname;
@@ -293,8 +293,8 @@ public class PlayerJSONParser {
     }
 
     public static class ConnectionInfo {
-        private String geolocation;
-        private String date;
+        private final String geolocation;
+        private final String date;
 
         public ConnectionInfo(String geolocation, String date) {
             this.geolocation = geolocation;

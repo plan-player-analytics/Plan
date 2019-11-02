@@ -78,7 +78,7 @@ public interface ConfigChange {
     }
 
     class Removed implements ConfigChange {
-        String oldPath;
+        final String oldPath;
 
         public Removed(String oldPath) {
             this.oldPath = oldPath;
@@ -103,7 +103,7 @@ public interface ConfigChange {
     }
 
     class RemovedComment implements ConfigChange {
-        private String path;
+        private final String path;
 
         public RemovedComment(String path) {
             this.path = path;

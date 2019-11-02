@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.storage.database.queries.objects;
 
-import com.djrapitops.plan.gathering.domain.PlayerDeath;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
@@ -36,7 +35,7 @@ import java.util.UUID;
 import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
 
 /**
- * Queries for {@link PlayerKill} and {@link PlayerDeath} objects.
+ * Queries for {@link PlayerKill} objects.
  *
  * @author Rsl1122
  */

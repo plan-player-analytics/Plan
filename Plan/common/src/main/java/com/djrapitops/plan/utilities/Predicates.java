@@ -38,4 +38,8 @@ public class Predicates {
         };
     }
 
+    public static boolean pingInRange(int value) {
+        return value > 0 && value < 4000;
+    }
+
 }

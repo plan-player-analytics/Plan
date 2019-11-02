@@ -41,10 +41,10 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class SessionsOverviewJSONParser implements ServerTabJSONParser<Map<String, Object>> {
 
-    private DBSystem dbSystem;
+    private final DBSystem dbSystem;
 
-    private Formatter<Long> timeAmount;
-    private Formatter<Double> percentage;
+    private final Formatter<Long> timeAmount;
+    private final Formatter<Double> percentage;
 
     @Inject
     public SessionsOverviewJSONParser(

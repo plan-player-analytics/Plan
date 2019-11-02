@@ -52,18 +52,6 @@ public class PingGraph {
         avgGraph = new LineGraph(avg, displayGaps);
     }
 
-    public String toMaxSeries() {
-        return maxGraph.toHighChartsSeries();
-    }
-
-    public String toMinSeries() {
-        return minGraph.toHighChartsSeries();
-    }
-
-    public String toAvgSeries() {
-        return avgGraph.toHighChartsSeries();
-    }
-
     public LineGraph getMaxGraph() {
         return maxGraph;
     }

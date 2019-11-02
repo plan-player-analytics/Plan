@@ -49,9 +49,9 @@ public class PlayersTableJSONParser {
 
     private final boolean openPlayerPageInNewTab;
 
-    private Map<FormatType, Formatter<Long>> numberFormatters;
+    private final Map<FormatType, Formatter<Long>> numberFormatters;
 
-    private Formatter<Double> decimalFormatter;
+    private final Formatter<Double> decimalFormatter;
 
     public PlayersTableJSONParser(
             List<TablePlayer> players,
@@ -116,7 +116,7 @@ public class PlayersTableJSONParser {
             dataJSON.append('{');           // Start new item
 
             appendPlayerData(dataJSON, player);
-            appendExtensionData(dataJSON, extensionData.getOrDefault(playerUUID, new ExtensionTabData.Factory(null).build()));
+            appendExtensionData(dataJSON, extensionData.getOrDefault(playerUUID, new ExtensionTabData.Builder(null).build()));
 
             dataJSON.append('}');           // Close new item
 

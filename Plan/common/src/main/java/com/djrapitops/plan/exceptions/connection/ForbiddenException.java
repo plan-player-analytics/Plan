@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.exceptions.connection;
 
-import com.djrapitops.plan.delivery.webserver.response.ResponseCode;
-
 /**
  * Thrown when Connection gets a 403 response.
  *
@@ -25,6 +23,6 @@ import com.djrapitops.plan.delivery.webserver.response.ResponseCode;
  */
 public class ForbiddenException extends WebException {
     public ForbiddenException(String url) {
-        super("Forbidden: " + url, ResponseCode.FORBIDDEN);
+        super("Forbidden: " + url);
     }
 }

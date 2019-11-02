@@ -80,34 +80,6 @@ public class WorldPie extends PieWithDrilldown {
         return data;
     }
 
-    @Override
-    public String toHighChartsDrilldown() {
-        StringBuilder drilldownBuilder = new StringBuilder();
-        int i = 0;
-
-        if (gmTimesAliasMap.isEmpty()) {
-            return "[]";
-        }
-        int size = gmTimesAliasMap.size();
-
-        drilldownBuilder.append("[");
-        for (Map.Entry<String, GMTimes> worldAlias : gmTimesAliasMap.entrySet()) {
-            drilldownBuilder.append("{name:'").append(worldAlias.getKey())
-                    .append("', id:'").append(worldAlias.getKey())
-                    .append("',colors: gmPieColors,");
-            drilldownBuilder.append("data: [");
-
-            appendGMTimesForWorld(drilldownBuilder, worldAlias);
-
-            if (i < size - 1) {
-                drilldownBuilder.append(",");
-            }
-            i++;
-        }
-        drilldownBuilder.append("]");
-        return drilldownBuilder.toString();
-    }
-
     private void appendGMTimesForWorld(StringBuilder drilldownBuilder, Map.Entry<String, GMTimes> world) {
         Map<String, Long> gmTimes = world.getValue().getTimes();
         int smallSize = gmTimes.size();

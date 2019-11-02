@@ -183,7 +183,7 @@ public class PlayerOnlineListener implements Listener {
 
         database.executeTransaction(new NicknameStoreTransaction(
                 playerUUID, new Nickname(displayName, time, serverUUID),
-                (uuid, name) -> name.equals(nicknameCache.getDisplayName(uuid))
+                (uuid, name) -> nicknameCache.getDisplayName(playerUUID).map(name::equals).orElse(false)
         ));
 
         processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));

@@ -16,14 +16,12 @@
  */
 package com.djrapitops.plan.delivery.rendering.json.graphs.stack;
 
-import com.djrapitops.plan.delivery.rendering.json.graphs.HighChart;
-
 /**
  * Utility for creating HighCharts Stack graphs.
  *
  * @author Rsl1122
  */
-public class StackGraph implements HighChart {
+public class StackGraph {
 
     private final StackDataSet[] dataSets;
     private final String[] labels;
@@ -37,42 +35,8 @@ public class StackGraph implements HighChart {
         return labels;
     }
 
-    public String toHighChartsLabels() {
-        StringBuilder labelBuilder = new StringBuilder("[");
-
-        int length = this.labels.length;
-        int i = 0;
-        for (String label : this.labels) {
-            labelBuilder.append('"').append(label).append('"');
-
-            if (i < length - 1) {
-                labelBuilder.append(",");
-            }
-            i++;
-        }
-
-        return labelBuilder.append("]").toString();
-    }
-
     public StackDataSet[] getDataSets() {
         return dataSets;
     }
 
-    @Override
-    public String toHighChartsSeries() {
-        StringBuilder seriesBuilder = new StringBuilder("[");
-
-        int size = dataSets.length;
-        int i = 0;
-        for (StackDataSet dataSet : dataSets) {
-            seriesBuilder.append(dataSet.toSeriesObjectString());
-
-            if (i < size - 1) {
-                seriesBuilder.append(",");
-            }
-            i++;
-        }
-
-        return seriesBuilder.append("]").toString();
-    }
 }

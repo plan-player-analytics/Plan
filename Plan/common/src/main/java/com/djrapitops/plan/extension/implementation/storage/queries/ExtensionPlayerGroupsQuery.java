@@ -49,7 +49,7 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class ExtensionPlayerGroupsQuery implements Query<Map<Integer, ExtensionData.Factory>> {
+public class ExtensionPlayerGroupsQuery implements Query<Map<Integer, ExtensionData.Builder>> {
 
     private final UUID playerUUID;
 
@@ -58,11 +58,11 @@ public class ExtensionPlayerGroupsQuery implements Query<Map<Integer, ExtensionD
     }
 
     @Override
-    public Map<Integer, ExtensionData.Factory> executeQuery(SQLDB db) {
+    public Map<Integer, ExtensionData.Builder> executeQuery(SQLDB db) {
         return db.query(fetchGroupsByPluginID());
     }
 
-    private Query<Map<Integer, ExtensionData.Factory>> fetchGroupsByPluginID() {
+    private Query<Map<Integer, ExtensionData.Builder>> fetchGroupsByPluginID() {
         String sql = SELECT +
                 "v1." + ExtensionGroupsTable.GROUP_NAME + " as group_name," +
                 "p1." + ExtensionProviderTable.PLUGIN_ID + " as plugin_id," +
@@ -86,7 +86,7 @@ public class ExtensionPlayerGroupsQuery implements Query<Map<Integer, ExtensionD
                 AND + "p1." + ExtensionProviderTable.HIDDEN + "=?" +
                 ORDER_BY + ExtensionGroupsTable.GROUP_NAME + " ASC";
 
-        return new QueryStatement<Map<Integer, ExtensionData.Factory>>(sql, 1000) {
+        return new QueryStatement<Map<Integer, ExtensionData.Builder>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
@@ -94,7 +94,7 @@ public class ExtensionPlayerGroupsQuery implements Query<Map<Integer, ExtensionD
             }
 
             @Override
-            public Map<Integer, ExtensionData.Factory> processResults(ResultSet set) throws SQLException {
+            public Map<Integer, ExtensionData.Builder> processResults(ResultSet set) throws SQLException {
                 return extractTabDataByPluginID(set).toExtensionDataByPluginID();
             }
         };
@@ -106,7 +106,7 @@ public class ExtensionPlayerGroupsQuery implements Query<Map<Integer, ExtensionD
         while (set.next()) {
             int pluginID = set.getInt("plugin_id");
             String tabName = Optional.ofNullable(set.getString("tab_name")).orElse("");
-            ExtensionTabData.Factory extensionTab = tabData.getTab(pluginID, tabName, () -> extractTabInformation(tabName, set));
+            ExtensionTabData.Builder extensionTab = tabData.getTab(pluginID, tabName, () -> extractTabInformation(tabName, set));
 
             ExtensionDescriptive extensionDescriptive = extractDescriptive(set);
 

@@ -52,13 +52,13 @@ import static com.djrapitops.plan.delivery.domain.keys.AnalysisKeys.*;
 public class ServerPage implements Page {
 
     private final Server server;
-    private PlanConfig config;
-    private Theme theme;
+    private final PlanConfig config;
+    private final Theme theme;
     private final VersionCheckSystem versionCheckSystem;
     private final PlanFiles files;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
-    private Formatters formatters;
+    private final Formatters formatters;
 
     ServerPage(
             Server server,
@@ -90,7 +90,6 @@ public class ServerPage implements Page {
         placeholders.put("serverDisplayName", server.getName());
 
         DataContainer constants = new RawDataContainer();
-        constants.putRawData(AnalysisKeys.VERSION, versionCheckSystem.getCurrentVersion());
         constants.putRawData(AnalysisKeys.TIME_ZONE, config.getTimeZoneOffsetHours());
 
         // TODO Move these graph settings to the graph requests instead of placeholders
@@ -113,7 +112,7 @@ public class ServerPage implements Page {
         constants.putRawData(AnalysisKeys.MIN_PING_COLOR, theme.getValue(ThemeVal.GRAPH_MIN_PING));
 
         placeholders.addAllPlaceholdersFrom(constants,
-                VERSION, TIME_ZONE,
+                TIME_ZONE,
                 FIRST_DAY, TPS_MEDIUM, TPS_HIGH,
                 DISK_MEDIUM, DISK_HIGH,
                 PLAYERS_MAX, PLAYERS_ONLINE, PLAYERS_TOTAL,

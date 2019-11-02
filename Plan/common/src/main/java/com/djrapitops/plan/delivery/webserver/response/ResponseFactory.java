@@ -160,10 +160,6 @@ public class ResponseFactory {
         return notFound404(locale.getString(ErrorPageLang.NOT_PLAYED_404));
     }
 
-    public ErrorResponse serverNotFound404() {
-        return notFound404(locale.getString(ErrorPageLang.NO_SERVERS_404));
-    }
-
     public ErrorResponse notFound404(String message) {
         try {
             return new NotFoundResponse(message, versionCheckSystem, files);

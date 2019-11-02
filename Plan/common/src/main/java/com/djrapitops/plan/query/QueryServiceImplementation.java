@@ -40,13 +40,13 @@ import java.util.function.Consumer;
 @Singleton
 public class QueryServiceImplementation implements QueryService {
 
-    private DBSystem dbSystem;
-    private ServerInfo serverInfo;
+    private final DBSystem dbSystem;
+    private final ServerInfo serverInfo;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
 
-    private Set<Consumer<UUID>> playerRemoveSubscribers;
-    private Set<VoidFunction> clearSubscribers;
+    private final Set<Consumer<UUID>> playerRemoveSubscribers;
+    private final Set<VoidFunction> clearSubscribers;
 
     @Inject
     public QueryServiceImplementation(

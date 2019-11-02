@@ -31,9 +31,9 @@ public class UserInfo {
 
     private final UUID playerUUID;
     private final UUID serverUUID;
-    private long registered;
-    private boolean banned;
-    private boolean opped;
+    private final long registered;
+    private final boolean banned;
+    private final boolean opped;
 
     public UserInfo(UUID playerUUID, UUID serverUUID, long registered, boolean opped, boolean banned) {
         this.playerUUID = playerUUID;

@@ -48,12 +48,12 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class OnlineActivityOverviewJSONParser implements ServerTabJSONParser<Map<String, Object>> {
 
-    private PlanConfig config;
-    private DBSystem dbSystem;
+    private final PlanConfig config;
+    private final DBSystem dbSystem;
 
-    private Formatter<Long> timeAmountFormatter;
-    private Formatter<Double> decimalFormatter;
-    private Formatter<Double> percentageFormatter;
+    private final Formatter<Long> timeAmountFormatter;
+    private final Formatter<Double> decimalFormatter;
+    private final Formatter<Double> percentageFormatter;
     private final TimeZone timeZone;
 
     @Inject

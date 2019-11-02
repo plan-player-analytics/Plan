@@ -16,9 +16,6 @@
  */
 package com.djrapitops.plan.delivery.rendering.json.graphs.pie;
 
-import com.djrapitops.plan.delivery.rendering.json.graphs.HighChart;
-import org.apache.commons.text.TextStringBuilder;
-
 import java.util.List;
 
 /**
@@ -26,19 +23,12 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public class Pie implements HighChart {
+public class Pie {
 
     protected final List<PieSlice> slices;
 
     public Pie(List<PieSlice> slices) {
         this.slices = slices;
-    }
-
-    @Override
-    public String toHighChartsSeries() {
-        TextStringBuilder series = new TextStringBuilder("[");
-        series.appendWithSeparators(slices, ",");
-        return series.append("]").toString();
     }
 
     public List<PieSlice> getSlices() {

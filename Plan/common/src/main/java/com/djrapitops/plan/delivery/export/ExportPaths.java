@@ -28,8 +28,8 @@ import java.util.List;
  */
 public class ExportPaths {
 
-    private List<String> replace;
-    private List<String> with;
+    private final List<String> replace;
+    private final List<String> with;
 
     public ExportPaths() {
         replace = new ArrayList<>();

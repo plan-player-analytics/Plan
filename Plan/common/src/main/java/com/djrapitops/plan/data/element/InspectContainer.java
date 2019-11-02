@@ -40,9 +40,9 @@ import java.util.TreeMap;
 @Deprecated
 public class InspectContainer {
 
-    protected List<String> values;
-    protected TreeMap<String, String> html;
-    protected TreeMap<String, TableContainer> tables;
+    protected final List<String> values;
+    protected final TreeMap<String, String> html;
+    protected final TreeMap<String, TableContainer> tables;
 
     public InspectContainer() {
         values = new ArrayList<>();

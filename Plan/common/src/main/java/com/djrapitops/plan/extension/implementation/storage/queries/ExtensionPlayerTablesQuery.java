@@ -54,7 +54,7 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class ExtensionPlayerTablesQuery implements Query<Map<Integer, ExtensionData.Factory>> {
+public class ExtensionPlayerTablesQuery implements Query<Map<Integer, ExtensionData.Builder>> {
 
     private final UUID playerUUID;
 
@@ -63,7 +63,7 @@ public class ExtensionPlayerTablesQuery implements Query<Map<Integer, ExtensionD
     }
 
     @Override
-    public Map<Integer, ExtensionData.Factory> executeQuery(SQLDB db) {
+    public Map<Integer, ExtensionData.Builder> executeQuery(SQLDB db) {
         QueriedTables tablesWithValues = db.query(placeValuesToTables(db.query(queryTableProviders())));
         return tablesWithValues.toQueriedTabs().toExtensionDataByPluginID();
     }

@@ -165,29 +165,15 @@ public class ActivityIndex {
 
     public String getGroup() {
         if (value >= VERY_ACTIVE) {
-            return "Very Active";
+            return HtmlLang.INDEX_VERY_ACTIVE.getDefault();
         } else if (value >= ACTIVE) {
-            return "Active";
+            return HtmlLang.INDEX_ACTIVE.getDefault();
         } else if (value >= REGULAR) {
-            return "Regular";
+            return HtmlLang.INDEX_REGULAR.getDefault();
         } else if (value >= IRREGULAR) {
-            return "Irregular";
+            return HtmlLang.INDEX_IRREGULAR.getDefault();
         } else {
-            return "Inactive";
-        }
-    }
-
-    public String getColor() {
-        if (value >= VERY_ACTIVE) {
-            return "green";
-        } else if (value >= ACTIVE) {
-            return "green";
-        } else if (value >= REGULAR) {
-            return "lime";
-        } else if (value >= IRREGULAR) {
-            return "amber";
-        } else {
-            return "blue-gray";
+            return HtmlLang.INDEX_INACTIVE.getDefault();
         }
     }
 }

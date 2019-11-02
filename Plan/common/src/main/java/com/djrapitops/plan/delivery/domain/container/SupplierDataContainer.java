@@ -32,7 +32,7 @@ import java.util.function.Supplier;
 public class SupplierDataContainer implements DataContainer {
 
     private final Map<Key, Supplier> map;
-    private long timeToLive;
+    private final long timeToLive;
 
     /**
      * Create a SupplierDataContainer with a default TTL of 30 seconds.

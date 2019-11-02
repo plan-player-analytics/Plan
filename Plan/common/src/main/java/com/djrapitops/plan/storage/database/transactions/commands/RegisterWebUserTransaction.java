@@ -31,7 +31,7 @@ import java.sql.SQLException;
  */
 public class RegisterWebUserTransaction extends Transaction {
 
-    private WebUser webUser;
+    private final WebUser webUser;
 
     public RegisterWebUserTransaction(WebUser webUser) {
         this.webUser = webUser;

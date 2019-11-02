@@ -43,7 +43,7 @@ import static com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderT
 public class StoreGroupProviderTransaction extends ThrowawayTransaction {
 
     private final UUID serverUUID;
-    private ProviderInformation providerInformation;
+    private final ProviderInformation providerInformation;
 
     public StoreGroupProviderTransaction(DataProvider<String[]> provider, UUID serverUUID) {
         this.serverUUID = serverUUID;

@@ -55,7 +55,7 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, ExtensionData.Factory>> {
+public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, ExtensionData.Builder>> {
 
     private final UUID serverUUID;
 
@@ -64,7 +64,7 @@ public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, Extens
     }
 
     @Override
-    public Map<Integer, ExtensionData.Factory> executeQuery(SQLDB db) {
+    public Map<Integer, ExtensionData.Builder> executeQuery(SQLDB db) {
         String selectNumberAverage = SELECT +
                 ExtensionPlayerValueTable.PROVIDER_ID +
                 ",AVG(" + ExtensionPlayerValueTable.LONG_VALUE + ") as average" +
@@ -110,7 +110,7 @@ public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, Extens
                 AND + "p1." + ExtensionProviderTable.FORMAT_TYPE + "!=?" +
                 AND + "p1." + ExtensionProviderTable.FORMAT_TYPE + "!=?";
 
-        return db.query(new QueryStatement<Map<Integer, ExtensionData.Factory>>(sql, 1000) {
+        return db.query(new QueryStatement<Map<Integer, ExtensionData.Builder>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -120,7 +120,7 @@ public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, Extens
             }
 
             @Override
-            public Map<Integer, ExtensionData.Factory> processResults(ResultSet set) throws SQLException {
+            public Map<Integer, ExtensionData.Builder> processResults(ResultSet set) throws SQLException {
                 return extractTabDataByPluginID(set).toExtensionDataByPluginID();
             }
         });
@@ -132,7 +132,7 @@ public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, Extens
         while (set.next()) {
             int pluginID = set.getInt("plugin_id");
             String tabName = Optional.ofNullable(set.getString("tab_name")).orElse("");
-            ExtensionTabData.Factory extensionTab = tabData.getTab(pluginID, tabName, () -> extractTabInformation(tabName, set));
+            ExtensionTabData.Builder extensionTab = tabData.getTab(pluginID, tabName, () -> extractTabInformation(tabName, set));
 
             ExtensionDescriptive extensionDescriptive = extractDescriptive(set);
             extractAndPutDataTo(extensionTab, extensionDescriptive, set);
@@ -157,7 +157,7 @@ public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, Extens
         );
     }
 
-    private void extractAndPutDataTo(ExtensionTabData.Factory extensionTab, ExtensionDescriptive descriptive, ResultSet set) throws SQLException {
+    private void extractAndPutDataTo(ExtensionTabData.Builder extensionTab, ExtensionDescriptive descriptive, ResultSet set) throws SQLException {
         FormatType formatType = FormatType.getByName(set.getString(ExtensionProviderTable.FORMAT_TYPE)).orElse(FormatType.NONE);
         extensionTab.putNumberData(new ExtensionNumberData(modifiedDescriptive(descriptive, "_avg", "Average "), formatType, (long) set.getDouble("average")));
         extensionTab.putNumberData(new ExtensionNumberData(modifiedDescriptive(descriptive, "_total", "Total "), formatType, (long) set.getDouble("total")));

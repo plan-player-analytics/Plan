@@ -23,7 +23,10 @@ import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.delivery.webserver.response.errors.BadRequestResponse;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
-import com.djrapitops.plan.exceptions.connection.*;
+import com.djrapitops.plan.exceptions.connection.BadRequestException;
+import com.djrapitops.plan.exceptions.connection.ForbiddenException;
+import com.djrapitops.plan.exceptions.connection.NotFoundException;
+import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -49,7 +52,7 @@ public class ResponseHandler extends TreePageHandler {
     private final ErrorHandler errorHandler;
 
     private final ServerInfo serverInfo;
-    private Lazy<WebServer> webServer;
+    private final Lazy<WebServer> webServer;
 
     @Inject
     public ResponseHandler(
@@ -100,12 +103,6 @@ public class ResponseHandler extends TreePageHandler {
             return responseFactory.forbidden403(e.getMessage());
         } catch (BadRequestException e) {
             return new BadRequestResponse(e.getMessage() + " (when requesting '" + request.getTargetString() + "')");
-        } catch (InternalErrorException e) {
-            if (e.getCause() != null) {
-                return responseFactory.internalErrorResponse(e.getCause(), request.getTargetString());
-            } else {
-                return responseFactory.internalErrorResponse(e, request.getTargetString());
-            }
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
             return responseFactory.internalErrorResponse(e, request.getTargetString());

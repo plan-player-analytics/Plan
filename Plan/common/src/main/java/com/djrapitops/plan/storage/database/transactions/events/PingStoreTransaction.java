@@ -20,10 +20,10 @@ import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.gathering.domain.Ping;
 import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.utilities.Predicates;
 import com.djrapitops.plan.utilities.analysis.Median;
 
 import java.util.List;
-import java.util.OptionalInt;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -38,18 +38,10 @@ public class PingStoreTransaction extends Transaction {
     private final UUID serverUUID;
     private final List<DateObj<Integer>> pingList;
 
-    private OptionalInt max;
-
     public PingStoreTransaction(UUID playerUUID, UUID serverUUID, List<DateObj<Integer>> pingList) {
         this.playerUUID = playerUUID;
         this.serverUUID = serverUUID;
         this.pingList = pingList;
-    }
-
-    @Override
-    protected boolean shouldBeExecuted() {
-        max = getMax();
-        return max.isPresent();
     }
 
     @Override
@@ -63,7 +55,7 @@ public class PingStoreTransaction extends Transaction {
 
         int minValue = getMinValue();
         int meanValue = getMeanValue();
-        int maxValue = max.getAsInt();
+        int maxValue = getMax();
 
         return new Ping(lastDate, serverUUID, minValue, maxValue, meanValue);
     }
@@ -71,15 +63,15 @@ public class PingStoreTransaction extends Transaction {
     private int getMinValue() {
         return pingList.stream()
                 .mapToInt(DateObj::getValue)
-                .filter(i -> i > 0 && i < 4000)
+                .filter(Predicates::pingInRange)
                 .min().orElse(-1);
     }
 
-    private OptionalInt getMax() {
+    private int getMax() {
         return pingList.stream()
                 .mapToInt(DateObj::getValue)
-                .filter(i -> i > 0 && i < 4000)
-                .max();
+                .filter(Predicates::pingInRange)
+                .max().orElse(-1);
     }
 
     // VisibleForTesting

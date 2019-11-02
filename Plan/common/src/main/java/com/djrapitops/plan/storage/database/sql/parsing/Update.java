@@ -22,8 +22,7 @@ package com.djrapitops.plan.storage.database.sql.parsing;
 public class Update extends WhereParser {
 
     public Update(String table) {
-        super("UPDATE " + table + " SET");
-        addSpace();
+        super("UPDATE " + table + " SET ");
     }
 
     public static Update values(String table, String... values) {

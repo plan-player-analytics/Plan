@@ -48,7 +48,7 @@ public class SpongeDBSystem extends DBSystem {
             Timings timings,
             ErrorHandler errorHandler
     ) {
-        super(locale, sqLiteDB, h2DB, logger, timings, errorHandler);
+        super(locale, sqLiteDB, h2DB, logger);
         this.config = config;
 
         databases.add(mySQLDB);

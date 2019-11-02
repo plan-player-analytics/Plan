@@ -48,11 +48,11 @@ import java.util.concurrent.TimeUnit;
 public class NetworkOverviewJSONParser implements NetworkTabJSONParser<Map<String, Object>> {
 
     private final Formatter<Long> day;
-    private PlanConfig config;
-    private DBSystem dbSystem;
-    private ServerInfo serverInfo;
-    private Formatter<Long> timeAmount;
-    private Formatter<DateHolder> year;
+    private final PlanConfig config;
+    private final DBSystem dbSystem;
+    private final ServerInfo serverInfo;
+    private final Formatter<Long> timeAmount;
+    private final Formatter<DateHolder> year;
 
     @Inject
     public NetworkOverviewJSONParser(

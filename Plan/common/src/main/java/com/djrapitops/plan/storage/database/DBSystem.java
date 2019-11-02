@@ -21,9 +21,7 @@ import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.exceptions.database.DBInitException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
-import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Singleton;
 import java.util.HashSet;
@@ -41,26 +39,20 @@ public abstract class DBSystem implements SubSystem {
     private final SQLiteDB.Factory sqLiteFactory;
     private final H2DB.Factory h2Factory;
     protected final PluginLogger logger;
-    protected final Timings timings;
-    protected final ErrorHandler errorHandler;
 
     protected Database db;
-    protected Set<Database> databases;
+    protected final Set<Database> databases;
 
     public DBSystem(
             Locale locale,
             SQLiteDB.Factory sqLiteDB,
             H2DB.Factory h2Factory,
-            PluginLogger logger,
-            Timings timings,
-            ErrorHandler errorHandler
+            PluginLogger logger
     ) {
         this.locale = locale;
         this.sqLiteFactory = sqLiteDB;
         this.h2Factory = h2Factory;
         this.logger = logger;
-        this.timings = timings;
-        this.errorHandler = errorHandler;
         databases = new HashSet<>();
     }
 

@@ -23,8 +23,8 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.FROM;
 
 public class WorldsOptimizationPatch extends Patch {
 
-    private String tempTableName;
-    private String tableName;
+    private final String tempTableName;
+    private final String tableName;
 
     public WorldsOptimizationPatch() {
         tableName = WorldTable.TABLE_NAME;

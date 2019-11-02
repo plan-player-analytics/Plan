@@ -27,7 +27,7 @@ import java.sql.SQLException;
 public class QueryAPIQuery<T> implements Query<T> {
 
     private final QueryService.ThrowingFunction<PreparedStatement, T> performQuery;
-    private String sql;
+    private final String sql;
 
     public QueryAPIQuery(
             String sql,

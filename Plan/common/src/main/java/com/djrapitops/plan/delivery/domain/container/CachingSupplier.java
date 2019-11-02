@@ -31,7 +31,7 @@ public class CachingSupplier<T> implements Supplier<T> {
     private final Supplier<T> original;
     private T cachedValue;
     private long cacheTime;
-    private long timeToLive;
+    private final long timeToLive;
 
     public CachingSupplier(Supplier<T> original) {
         this(original, TimeUnit.SECONDS.toMillis(30L));
@@ -53,11 +53,4 @@ public class CachingSupplier<T> implements Supplier<T> {
         return cachedValue;
     }
 
-    public boolean isCached() {
-        return cachedValue != null;
-    }
-
-    public long getCacheTime() {
-        return cacheTime;
-    }
 }

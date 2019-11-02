@@ -16,7 +16,10 @@
  */
 package com.djrapitops.plan.delivery.webserver;
 
-import com.djrapitops.plan.exceptions.connection.*;
+import com.djrapitops.plan.exceptions.connection.BadRequestException;
+import com.djrapitops.plan.exceptions.connection.ForbiddenException;
+import com.djrapitops.plan.exceptions.connection.NotFoundException;
+import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.utilities.Base64Util;
 import org.junit.jupiter.api.Test;
 import utilities.HTTPConnector;
@@ -66,7 +69,7 @@ interface HttpsServerTest {
             case 404:
                 throw new NotFoundException(url.toString() + " returned a 404, ensure that your server is connected to an up to date Plan server.");
             case 500:
-                throw new InternalErrorException();
+                throw new IllegalStateException(); // Not supported
             default:
                 throw new WebException(url.toString() + "| Wrong response code " + responseCode);
         }

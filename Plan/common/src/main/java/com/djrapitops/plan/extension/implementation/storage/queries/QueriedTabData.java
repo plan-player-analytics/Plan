@@ -31,18 +31,18 @@ import java.util.Map;
  */
 public class QueriedTabData {
 
-    private final Map<Integer, Map<String, ExtensionTabData.Factory>> byPluginID;
+    private final Map<Integer, Map<String, ExtensionTabData.Builder>> byPluginID;
 
     public QueriedTabData() {
         byPluginID = new HashMap<>();
     }
 
-    public <K extends Throwable> ExtensionTabData.Factory getTab(int pluginID, String tabName, ThrowingSupplier<TabInformation, K> newDefault) throws K {
-        Map<String, ExtensionTabData.Factory> byTabName = byPluginID.getOrDefault(pluginID, new HashMap<>());
+    public <K extends Throwable> ExtensionTabData.Builder getTab(int pluginID, String tabName, ThrowingSupplier<TabInformation, K> newDefault) throws K {
+        Map<String, ExtensionTabData.Builder> byTabName = byPluginID.getOrDefault(pluginID, new HashMap<>());
 
-        ExtensionTabData.Factory tab = byTabName.get(tabName);
+        ExtensionTabData.Builder tab = byTabName.get(tabName);
         if (tab == null) {
-            tab = new ExtensionTabData.Factory(newDefault.get());
+            tab = new ExtensionTabData.Builder(newDefault.get());
         }
 
         byTabName.put(tabName, tab);
@@ -50,17 +50,17 @@ public class QueriedTabData {
         return tab;
     }
 
-    public Map<Integer, ExtensionData.Factory> toExtensionDataByPluginID() {
-        Map<Integer, ExtensionData.Factory> dataByPluginID = new HashMap<>();
-        for (Map.Entry<Integer, Map<String, ExtensionTabData.Factory>> entry : byPluginID.entrySet()) {
+    public Map<Integer, ExtensionData.Builder> toExtensionDataByPluginID() {
+        Map<Integer, ExtensionData.Builder> dataByPluginID = new HashMap<>();
+        for (Map.Entry<Integer, Map<String, ExtensionTabData.Builder>> entry : byPluginID.entrySet()) {
             Integer pluginID = entry.getKey();
 
-            ExtensionData.Factory data = dataByPluginID.get(pluginID);
+            ExtensionData.Builder data = dataByPluginID.get(pluginID);
             if (data == null) {
-                data = new ExtensionData.Factory(pluginID);
+                data = new ExtensionData.Builder(pluginID);
             }
 
-            for (ExtensionTabData.Factory tabData : entry.getValue().values()) {
+            for (ExtensionTabData.Builder tabData : entry.getValue().values()) {
                 data.addTab(tabData.build());
             }
             dataByPluginID.put(pluginID, data);

@@ -157,11 +157,11 @@ public class ExtensionServerPlayerDataTableQuery implements Query<Map<UUID, Exte
     }
 
     private Map<UUID, ExtensionTabData> extractDataByPlayer(ResultSet set) throws SQLException {
-        Map<UUID, ExtensionTabData.Factory> dataByPlayer = new HashMap<>();
+        Map<UUID, ExtensionTabData.Builder> dataByPlayer = new HashMap<>();
 
         while (set.next()) {
             UUID playerUUID = UUID.fromString(set.getString("uuid"));
-            ExtensionTabData.Factory data = dataByPlayer.getOrDefault(playerUUID, new ExtensionTabData.Factory(null));
+            ExtensionTabData.Builder data = dataByPlayer.getOrDefault(playerUUID, new ExtensionTabData.Builder(null));
 
             ExtensionDescriptive extensionDescriptive = extractDescriptive(set);
             extractAndPutDataTo(data, extensionDescriptive, set);
@@ -171,7 +171,7 @@ public class ExtensionServerPlayerDataTableQuery implements Query<Map<UUID, Exte
         return dataByPlayer.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().build()));
     }
 
-    private void extractAndPutDataTo(ExtensionTabData.Factory extensionTab, ExtensionDescriptive descriptive, ResultSet set) throws SQLException {
+    private void extractAndPutDataTo(ExtensionTabData.Builder extensionTab, ExtensionDescriptive descriptive, ResultSet set) throws SQLException {
         String groupValue = set.getString("group_value");
         if (groupValue != null) {
             extensionTab.putGroupData(new ExtensionStringData(descriptive, false, groupValue));

@@ -40,8 +40,8 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
  */
 public class WorldTimesQueries {
 
-    private static String worldColumn = "world";
-    private static final String SELECT_WORLD_TIMES_JOIN_WORLD_NAME = WorldTable.TABLE_NAME + '.' + WorldTable.NAME + " as " + worldColumn +
+    private static final String WORLD_COLUMN = "world";
+    private static final String SELECT_WORLD_TIMES_JOIN_WORLD_NAME = WorldTable.TABLE_NAME + '.' + WorldTable.NAME + " as " + WORLD_COLUMN +
             FROM + WorldTimesTable.TABLE_NAME +
             INNER_JOIN + WorldTable.TABLE_NAME + " on " + WorldTable.TABLE_NAME + '.' + WorldTable.ID + "=" + WorldTimesTable.WORLD_ID;
     private static final String SELECT_WORLD_TIMES_STATEMENT_START = SELECT +
@@ -64,7 +64,7 @@ public class WorldTimesQueries {
         String sql = SELECT_WORLD_TIMES_STATEMENT_START +
                 SELECT_WORLD_TIMES_JOIN_WORLD_NAME +
                 WHERE + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SERVER_UUID + "=?" +
-                GROUP_BY + worldColumn;
+                GROUP_BY + WORLD_COLUMN;
 
         return new QueryStatement<WorldTimes>(sql, 1000) {
             @Override
@@ -78,7 +78,7 @@ public class WorldTimesQueries {
 
                 WorldTimes worldTimes = new WorldTimes();
                 while (set.next()) {
-                    String worldName = set.getString(worldColumn);
+                    String worldName = set.getString(WORLD_COLUMN);
 
                     GMTimes gmTimes = extractGMTimes(set, gms);
 
@@ -99,7 +99,7 @@ public class WorldTimesQueries {
         String sql = SELECT_WORLD_TIMES_STATEMENT_START +
                 SELECT_WORLD_TIMES_JOIN_WORLD_NAME +
                 WHERE + WorldTimesTable.USER_UUID + "=?" +
-                GROUP_BY + worldColumn;
+                GROUP_BY + WORLD_COLUMN;
 
         return new QueryStatement<WorldTimes>(sql) {
             @Override
@@ -113,7 +113,7 @@ public class WorldTimesQueries {
 
                 WorldTimes worldTimes = new WorldTimes();
                 while (set.next()) {
-                    String worldName = set.getString(worldColumn);
+                    String worldName = set.getString(WORLD_COLUMN);
 
                     GMTimes gmTimes = extractGMTimes(set, gms);
 
@@ -135,7 +135,7 @@ public class WorldTimesQueries {
                 WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SERVER_UUID + ',' +
                 SELECT_WORLD_TIMES_JOIN_WORLD_NAME +
                 WHERE + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.USER_UUID + "=?" +
-                GROUP_BY + worldColumn + ',' + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SERVER_UUID;
+                GROUP_BY + WORLD_COLUMN + ',' + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SERVER_UUID;
 
         return new QueryStatement<Map<UUID, WorldTimes>>(sql, 1000) {
             @Override
@@ -151,7 +151,7 @@ public class WorldTimesQueries {
                 while (set.next()) {
                     UUID serverUUID = UUID.fromString(set.getString(WorldTimesTable.SERVER_UUID));
                     WorldTimes worldTimes = worldTimesMap.getOrDefault(serverUUID, new WorldTimes());
-                    String worldName = set.getString(worldColumn);
+                    String worldName = set.getString(WORLD_COLUMN);
 
                     GMTimes gmTimes = extractGMTimes(set, gms);
 

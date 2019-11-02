@@ -35,7 +35,7 @@ public class TableContainer {
 
     protected final String[] header;
     protected final Formatter[] formatters;
-    private List<Serializable[]> values;
+    private final List<Serializable[]> values;
 
     private String jqueryDatatable;
 

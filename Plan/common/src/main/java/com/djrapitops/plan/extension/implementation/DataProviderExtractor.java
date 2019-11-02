@@ -42,8 +42,8 @@ import java.util.stream.Collectors;
  */
 public class DataProviderExtractor {
 
-    private ExtensionExtractor extensionExtractor;
-    private DataProviders dataProviders;
+    private final ExtensionExtractor extensionExtractor;
+    private final DataProviders dataProviders;
 
     /**
      * Create a DataProviderExtractor.

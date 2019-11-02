@@ -17,12 +17,11 @@
 package com.djrapitops.plan.delivery.rendering.json.graphs.special;
 
 import com.djrapitops.plan.delivery.domain.mutators.PlayersMutator;
-import com.djrapitops.plan.delivery.rendering.json.graphs.HighChart;
-import org.apache.commons.text.TextStringBuilder;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -30,7 +29,7 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class WorldMap implements HighChart {
+public class WorldMap {
 
     private final Map<String, Integer> geoCodeCounts;
 
@@ -86,21 +85,6 @@ public class WorldMap implements HighChart {
         return codeCounts;
     }
 
-    @Override
-    public String toHighChartsSeries() {
-        TextStringBuilder dataBuilder = new TextStringBuilder("[");
-
-        dataBuilder.appendWithSeparators(
-                geoCodeCounts.entrySet().stream()
-                        .filter(entry -> entry.getValue() != 0)
-                        .map(entry -> "{'code':'" + entry.getKey() + "','value':" + entry.getValue() + "}")
-                        .iterator(),
-                ","
-        );
-
-        return dataBuilder.append("]").toString();
-    }
-
     public List<Entry> getEntries() {
         return geoCodeCounts.entrySet().stream()
                 .filter(entry -> entry.getValue() != 0)
@@ -109,8 +93,8 @@ public class WorldMap implements HighChart {
     }
 
     public static class Entry {
-        private String code;
-        private int value;
+        private final String code;
+        private final int value;
 
         public Entry(String code, int value) {
             this.code = code;
@@ -123,6 +107,20 @@ public class WorldMap implements HighChart {
 
         public int getValue() {
             return value;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Entry)) return false;
+            Entry entry = (Entry) o;
+            return value == entry.value &&
+                    Objects.equals(code, entry.code);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(code, value);
         }
     }
 }

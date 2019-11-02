@@ -22,7 +22,6 @@ import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.pages.TreePageHandler;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
-import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.identification.Identifiers;
 
 import javax.inject.Inject;
@@ -36,7 +35,7 @@ import javax.inject.Singleton;
 @Singleton
 public class RootJSONHandler extends TreePageHandler {
 
-    private Identifiers identifiers;
+    private final Identifiers identifiers;
 
     @Inject
     public RootJSONHandler(
@@ -83,7 +82,7 @@ public class RootJSONHandler extends TreePageHandler {
     }
 
     @Override
-    public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
+    public boolean isAuthorized(Authentication auth, RequestTarget target) {
         return true;
     }
 }

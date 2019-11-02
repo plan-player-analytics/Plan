@@ -79,7 +79,7 @@ public class QueriedTables {
                 // Extra tab information
                 String tabName = TableAccessor.getTabName(table);
 
-                ExtensionTabData.Factory tab = tabData.getTab(pluginID, tabName, () -> extractTabInformation(table));
+                ExtensionTabData.Builder tab = tabData.getTab(pluginID, tabName, () -> extractTabInformation(table));
                 tab.putTableData(new ExtensionTableData(
                         tableName, table.build(), tableColor
                 ));

@@ -141,35 +141,6 @@ public class NicknameQueries {
     }
 
     /**
-     * Query database for all nickname data.
-     *
-     * @return Map: Player UUID - List of nicknames.
-     */
-    public static Query<Map<UUID, List<Nickname>>> fetchAllNicknameDataByPlayerUUIDs() {
-        String sql = SELECT +
-                NicknamesTable.NICKNAME + ',' +
-                NicknamesTable.LAST_USED + ',' +
-                NicknamesTable.USER_UUID + ',' +
-                NicknamesTable.SERVER_UUID +
-                FROM + NicknamesTable.TABLE_NAME;
-        return new QueryAllStatement<Map<UUID, List<Nickname>>>(sql, 5000) {
-            @Override
-            public Map<UUID, List<Nickname>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, List<Nickname>> map = new HashMap<>();
-                while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(NicknamesTable.USER_UUID));
-                    UUID serverUUID = UUID.fromString(set.getString(NicknamesTable.SERVER_UUID));
-                    List<Nickname> nicknames = map.computeIfAbsent(uuid, x -> new ArrayList<>());
-                    nicknames.add(new Nickname(
-                            set.getString(NicknamesTable.NICKNAME), set.getLong(NicknamesTable.LAST_USED), serverUUID
-                    ));
-                }
-                return map;
-            }
-        };
-    }
-
-    /**
      * Query database for nickname information of a server.
      *
      * @param serverUUID UUID the the Plan server.

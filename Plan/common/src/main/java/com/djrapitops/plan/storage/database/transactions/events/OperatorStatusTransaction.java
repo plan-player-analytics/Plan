@@ -33,8 +33,8 @@ import java.util.UUID;
  */
 public class OperatorStatusTransaction extends ThrowawayTransaction {
 
-    private UUID playerUUID;
-    private boolean operatorStatus;
+    private final UUID playerUUID;
+    private final boolean operatorStatus;
 
     public OperatorStatusTransaction(UUID playerUUID, boolean operatorStatus) {
         this.playerUUID = playerUUID;

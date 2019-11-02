@@ -34,7 +34,7 @@ import java.util.UUID;
 public abstract class ServerInfo implements SubSystem {
 
     protected Server server;
-    protected ServerProperties serverProperties;
+    protected final ServerProperties serverProperties;
 
     public ServerInfo(ServerProperties serverProperties) {
         this.serverProperties = serverProperties;

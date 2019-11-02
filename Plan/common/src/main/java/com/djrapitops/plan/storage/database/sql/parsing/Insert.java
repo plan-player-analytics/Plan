@@ -19,8 +19,7 @@ package com.djrapitops.plan.storage.database.sql.parsing;
 public class Insert extends SqlParser {
 
     public Insert(String table) {
-        super("INSERT INTO " + table);
-        addSpace();
+        super("INSERT INTO " + table + ' ');
     }
 
     public static String values(String table, String... columns) {

@@ -43,7 +43,7 @@ import java.util.UUID;
 @Deprecated
 public final class AnalysisContainer extends InspectContainer {
 
-    private Map<String, Map<UUID, ? extends Serializable>> playerTableValues;
+    private final Map<String, Map<UUID, ? extends Serializable>> playerTableValues;
 
     public AnalysisContainer() {
         playerTableValues = new TreeMap<>();

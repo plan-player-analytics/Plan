@@ -105,10 +105,10 @@ public class TablePlayer implements Comparable<TablePlayer> {
         if (this == o) return true;
         if (!(o instanceof TablePlayer)) return false;
         TablePlayer that = (TablePlayer) o;
-        return playtime == that.playtime &&
-                sessionCount == that.sessionCount &&
-                registered == that.registered &&
-                lastSeen == that.lastSeen &&
+        return playtime.equals(that.playtime) &&
+                sessionCount.equals(that.sessionCount) &&
+                registered.equals(that.registered) &&
+                lastSeen.equals(that.lastSeen) &&
                 name.equals(that.name) &&
                 activityIndex.equals(that.activityIndex) &&
                 geolocation.equals(that.geolocation);

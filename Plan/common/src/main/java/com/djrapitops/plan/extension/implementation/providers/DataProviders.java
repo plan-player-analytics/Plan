@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  */
 public class DataProviders {
 
-    private Map<MethodType, Map<Class, List<DataProvider>>> byMethodType;
+    private final Map<MethodType, Map<Class, List<DataProvider>>> byMethodType;
 
     public DataProviders() {
         byMethodType = new EnumMap<>(MethodType.class);

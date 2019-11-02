@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class PlayerContainer extends DynamicDataContainer {
 
-    private Map<Long, ActivityIndex> activityIndexCache;
+    private final Map<Long, ActivityIndex> activityIndexCache;
 
     public PlayerContainer() {
         activityIndexCache = new HashMap<>();

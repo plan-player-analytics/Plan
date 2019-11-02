@@ -37,9 +37,9 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
     private final Map<String, ExtensionStringData> stringData;
 
     private final List<ExtensionTableData> tableData;
+    private final List<ExtensionDescriptive> descriptives;
 
     private List<String> order;
-    private List<ExtensionDescriptive> descriptives;
 
     // Table and Graph data will be added later.
 
@@ -143,47 +143,47 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
                 .collect(Collectors.toList());
     }
 
-    public static class Factory {
+    public static class Builder {
 
         private final ExtensionTabData data;
 
-        public Factory(TabInformation tabInformation) {
+        public Builder(TabInformation tabInformation) {
             data = new ExtensionTabData(tabInformation);
         }
 
-        public Factory putBooleanData(ExtensionBooleanData extensionBooleanData) {
+        public Builder putBooleanData(ExtensionBooleanData extensionBooleanData) {
             data.booleanData.put(extensionBooleanData.getDescriptive().getName(), extensionBooleanData);
             return this;
         }
 
-        public Factory putDoubleData(ExtensionDoubleData extensionDoubleData) {
+        public Builder putDoubleData(ExtensionDoubleData extensionDoubleData) {
             data.doubleData.put(extensionDoubleData.getDescriptive().getName(), extensionDoubleData);
             return this;
         }
 
-        public Factory putPercentageData(ExtensionDoubleData extensionDoubleData) {
+        public Builder putPercentageData(ExtensionDoubleData extensionDoubleData) {
             data.percentageData.put(extensionDoubleData.getDescriptive().getName(), extensionDoubleData);
             return this;
         }
 
-        public Factory putNumberData(ExtensionNumberData extensionNumberData) {
+        public Builder putNumberData(ExtensionNumberData extensionNumberData) {
             data.numberData.put(extensionNumberData.getDescriptive().getName(), extensionNumberData);
             return this;
         }
 
-        public Factory putStringData(ExtensionStringData extensionStringData) {
+        public Builder putStringData(ExtensionStringData extensionStringData) {
             data.stringData.put(extensionStringData.getDescriptive().getName(), extensionStringData);
             return this;
         }
 
-        public Factory putGroupData(ExtensionStringData extensionStringData) {
+        public Builder putGroupData(ExtensionStringData extensionStringData) {
             String name = extensionStringData.getDescriptive().getName();
             ExtensionStringData previous = data.stringData.get(name);
             data.stringData.put(name, previous != null ? previous.concatenate(extensionStringData) : extensionStringData);
             return this;
         }
 
-        public Factory putTableData(ExtensionTableData extensionTableData) {
+        public Builder putTableData(ExtensionTableData extensionTableData) {
             data.tableData.add(extensionTableData);
             return this;
         }

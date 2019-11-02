@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.delivery.rendering.json.graphs.bar;
 
-import com.djrapitops.plan.delivery.domain.mutators.PlayersMutator;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Map;
@@ -32,10 +30,6 @@ public class BarGraphFactory {
     @Inject
     public BarGraphFactory() {
         // Inject Constructor.
-    }
-
-    public BarGraph geolocationBarGraph(PlayersMutator playersMutator) {
-        return new GeolocationBarGraph(playersMutator);
     }
 
     public BarGraph geolocationBarGraph(Map<String, Integer> geolocationCounts) {

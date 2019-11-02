@@ -47,16 +47,6 @@ public enum Color {
         this.htmlClass = htmlClass;
     }
 
-    public static Color matchString(String name) {
-        String lowerCaseName = name.toLowerCase();
-        for (Color color : values()) {
-            if (color.htmlClass.contains(lowerCaseName)) {
-                return color;
-            }
-        }
-        return Color.BLACK;
-    }
-
     public static Optional<Color> getByName(String name) {
         if (name == null) {
             return Optional.empty();

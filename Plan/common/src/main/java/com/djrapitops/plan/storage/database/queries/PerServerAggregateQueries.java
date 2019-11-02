@@ -100,19 +100,6 @@ public class PerServerAggregateQueries {
         return getQueryForCountOf(playerUUID, sql, "kill_count");
     }
 
-    /**
-     * Find how many times a player killed the player on servers.
-     *
-     * @param playerUUID UUID of the player.
-     * @return Map: Server UUID - Mob kill count
-     */
-    public static Query<Map<UUID, Integer>> playerDeathCountOnServers(UUID playerUUID) {
-        String sql = SELECT + "COUNT(1) as death_count, " + KillsTable.SERVER_UUID + FROM + KillsTable.TABLE_NAME +
-                WHERE + KillsTable.VICTIM_UUID + "=?" +
-                GROUP_BY + KillsTable.SERVER_UUID;
-        return getQueryForCountOf(playerUUID, sql, "death_count");
-    }
-
     public static Query<Map<UUID, Integer>> totalDeathCountOnServers(UUID playerUUID) {
         String sql = SELECT + "SUM(" + SessionsTable.DEATHS + ") as death_count, " +
                 SessionsTable.SERVER_UUID + FROM + SessionsTable.TABLE_NAME +

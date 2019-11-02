@@ -22,7 +22,6 @@ import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.WorldPie;
-import com.djrapitops.plan.gathering.domain.PlayerDeath;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
@@ -43,7 +42,7 @@ import java.util.stream.Collectors;
  */
 public class SessionsMutator {
 
-    private List<Session> sessions;
+    private final List<Session> sessions;
 
     public static SessionsMutator forContainer(DataContainer container) {
         return new SessionsMutator(container.getValue(CommonKeys.SESSIONS).orElse(new ArrayList<>()));
@@ -99,14 +98,6 @@ public class SessionsMutator {
                 .map(session -> session.getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>()))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * @deprecated Incorrect results.
-     */
-    @Deprecated
-    public List<PlayerDeath> toPlayerDeathList() {
-        return Collections.emptyList();
     }
 
     public int toMobKillCount() {
@@ -168,25 +159,6 @@ public class SessionsMutator {
     public long toMedianSessionLength() {
         List<Long> sessionLengths = sessions.stream().map(Session::getLength).collect(Collectors.toList());
         return (long) Median.forList(sessionLengths).calculate();
-    }
-
-    public int toAverageUniqueJoinsPerDay(TimeZone timeZone) {
-        return MutatorFunctions.average(uniqueJoinsPerDay(timeZone));
-    }
-
-    public TreeMap<Long, Integer> uniqueJoinsPerDay(TimeZone timeZone) {
-        // Adds Timezone offset
-        SortedMap<Long, List<Session>> byStartOfDay = toDateHoldersMutator().groupByStartOfDay(timeZone);
-
-        TreeMap<Long, Integer> uniqueJoins = new TreeMap<>();
-        for (Map.Entry<Long, List<Session>> entry : byStartOfDay.entrySet()) {
-            uniqueJoins.put(
-                    entry.getKey(),
-                    new SessionsMutator(entry.getValue()).toUniquePlayers()
-            );
-        }
-
-        return uniqueJoins;
     }
 
     public int toUniquePlayers() {

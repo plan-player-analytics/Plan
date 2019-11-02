@@ -24,7 +24,6 @@ package com.djrapitops.plan.delivery.domain.keys;
  */
 class CommonPlaceholderKeys {
 
-    static final PlaceholderKey<String> VERSION = new PlaceholderKey<>(String.class, "version");
     static final PlaceholderKey<Integer> TIME_ZONE = new PlaceholderKey<>(Integer.class, "timeZone");
     static final PlaceholderKey<String> PLAYERS_GRAPH_COLOR = new PlaceholderKey<>(String.class, "playersGraphColor");
     static final PlaceholderKey<String> PLAYERS_ONLINE_SERIES = new PlaceholderKey<>(String.class, "playersOnlineSeries");

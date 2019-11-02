@@ -67,6 +67,16 @@ public class PlayerVersusMutator {
         return sessionsMutator.toMobKillCount();
     }
 
+    public double toKillDeathRatio() {
+        int deathCount = toPlayerDeathCount();
+        return toPlayerKillCount() * 1.0 / (deathCount != 0 ? deathCount : 1);
+    }
+
+    public double toMobKillDeathRatio() {
+        int deathCount = toMobDeathCount();
+        return toMobKillCount() * 1.0 / (deathCount != 0 ? deathCount : 1);
+    }
+
     public int toPlayerDeathCount() {
         return deaths.size();
     }

@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.exceptions.connection;
 
-import com.djrapitops.plan.delivery.webserver.response.ResponseCode;
-
 /**
  * Thrown when Connection returns 404, when page is not found.
  *
@@ -25,6 +23,6 @@ import com.djrapitops.plan.delivery.webserver.response.ResponseCode;
  */
 public class NotFoundException extends WebException {
     public NotFoundException(String message) {
-        super(message, ResponseCode.NOT_FOUND);
+        super(message);
     }
 }

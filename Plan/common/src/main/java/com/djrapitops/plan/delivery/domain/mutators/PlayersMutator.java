@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  */
 public class PlayersMutator {
 
-    private List<PlayerContainer> players;
+    private final List<PlayerContainer> players;
 
     public PlayersMutator(List<PlayerContainer> players) {
         this.players = players;

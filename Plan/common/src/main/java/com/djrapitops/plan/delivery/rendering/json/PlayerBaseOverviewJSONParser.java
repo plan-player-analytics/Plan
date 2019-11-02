@@ -41,11 +41,11 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class PlayerBaseOverviewJSONParser implements ServerTabJSONParser<Map<String, Object>> {
 
-    private PlanConfig config;
-    private DBSystem dbSystem;
+    private final PlanConfig config;
+    private final DBSystem dbSystem;
 
-    private Formatter<Long> timeAmount;
-    private Formatter<Double> percentage;
+    private final Formatter<Long> timeAmount;
+    private final Formatter<Double> percentage;
 
     @Inject
     public PlayerBaseOverviewJSONParser(

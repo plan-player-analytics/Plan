@@ -30,9 +30,9 @@ public class Trend {
      */
     public static final boolean REVERSED = true;
 
-    private String text;
-    private String direction;
-    private boolean reversed;
+    private final String text;
+    private final String direction;
+    private final boolean reversed;
 
     public Trend(long before, long after, boolean reversed) {
         long difference = Math.abs(before - after);

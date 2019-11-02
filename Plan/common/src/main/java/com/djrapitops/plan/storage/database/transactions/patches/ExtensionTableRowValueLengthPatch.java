@@ -25,8 +25,8 @@ import com.djrapitops.plan.storage.database.sql.tables.ExtensionServerTableValue
 
 public class ExtensionTableRowValueLengthPatch extends Patch {
 
-    private String playerTable;
-    private String serverTable;
+    private final String playerTable;
+    private final String serverTable;
 
     public ExtensionTableRowValueLengthPatch() {
         playerTable = ExtensionPlayerTableValueTable.TABLE_NAME;

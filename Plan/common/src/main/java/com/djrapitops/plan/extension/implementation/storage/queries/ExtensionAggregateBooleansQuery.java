@@ -54,7 +54,7 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
  *
  * @author Rsl1122
  */
-public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, ExtensionData.Factory>> {
+public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, ExtensionData.Builder>> {
 
     private final UUID serverUUID;
 
@@ -63,7 +63,7 @@ public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, Exten
     }
 
     @Override
-    public Map<Integer, ExtensionData.Factory> executeQuery(SQLDB db) {
+    public Map<Integer, ExtensionData.Builder> executeQuery(SQLDB db) {
         String selectTrueBooleans = SELECT +
                 ExtensionPlayerValueTable.PROVIDER_ID +
                 ",COUNT(1) as positive" +
@@ -106,7 +106,7 @@ public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, Exten
                 WHERE + ExtensionPluginTable.SERVER_UUID + "=?" +
                 AND + "p1." + ExtensionProviderTable.HIDDEN + "=?";
 
-        return db.query(new QueryStatement<Map<Integer, ExtensionData.Factory>>(sql, 1000) {
+        return db.query(new QueryStatement<Map<Integer, ExtensionData.Builder>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setBoolean(1, true); // selectTrueBooleans parameter
@@ -115,7 +115,7 @@ public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, Exten
             }
 
             @Override
-            public Map<Integer, ExtensionData.Factory> processResults(ResultSet set) throws SQLException {
+            public Map<Integer, ExtensionData.Builder> processResults(ResultSet set) throws SQLException {
                 return extractTabDataByPluginID(set).toExtensionDataByPluginID();
             }
         });
@@ -127,7 +127,7 @@ public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, Exten
         while (set.next()) {
             int pluginID = set.getInt("plugin_id");
             String tabName = Optional.ofNullable(set.getString("tab_name")).orElse("");
-            ExtensionTabData.Factory extensionTab = tabData.getTab(pluginID, tabName, () -> extractTabInformation(tabName, set));
+            ExtensionTabData.Builder extensionTab = tabData.getTab(pluginID, tabName, () -> extractTabInformation(tabName, set));
 
             ExtensionDescriptive extensionDescriptive = extractDescriptive(set);
             extractAndPutDataTo(extensionTab, extensionDescriptive, set);
@@ -152,7 +152,7 @@ public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, Exten
         );
     }
 
-    private void extractAndPutDataTo(ExtensionTabData.Factory extensionTab, ExtensionDescriptive descriptive, ResultSet set) throws SQLException {
+    private void extractAndPutDataTo(ExtensionTabData.Builder extensionTab, ExtensionDescriptive descriptive, ResultSet set) throws SQLException {
         double percentageValue = percentage(set.getInt("positive"), set.getInt("total"));
         extensionTab.putPercentageData(new ExtensionDoubleData(descriptive, percentageValue));
     }

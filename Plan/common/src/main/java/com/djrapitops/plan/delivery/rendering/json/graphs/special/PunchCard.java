@@ -17,7 +17,6 @@
 package com.djrapitops.plan.delivery.rendering.json.graphs.special;
 
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
-import com.djrapitops.plan.delivery.rendering.json.graphs.HighChart;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,7 +28,7 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public class PunchCard implements HighChart {
+public class PunchCard {
 
     private final SessionsMutator sessions;
 
@@ -52,10 +51,6 @@ public class PunchCard implements HighChart {
             day.setTimeInMillis(start);
             int hourOfDay = day.get(Calendar.HOUR_OF_DAY); // 0 AM is 0
             int dayOfWeek = day.get(Calendar.DAY_OF_WEEK) - 2; // Monday is 0, Sunday is -1
-            if (hourOfDay == 24) { // If hour is 24 (Should be impossible but.)
-                hourOfDay = 0;
-                dayOfWeek += 1;
-            }
             if (dayOfWeek > 6) { // If Hour added a day on Sunday, move to Monday
                 dayOfWeek = 0;
             }
@@ -75,11 +70,6 @@ public class PunchCard implements HighChart {
             matrix[day][hour] = matrix[day][hour] + 1;
         }
         return matrix;
-    }
-
-    @Override
-    public String toHighChartsSeries() {
-        return getDots().toString();
     }
 
     public List<Dot> getDots() {
@@ -142,10 +132,10 @@ public class PunchCard implements HighChart {
     }
 
     public static class Dot {
-        int x;
-        int y;
-        int z;
-        Marker marker;
+        final int x;
+        final int y;
+        final int z;
+        final Marker marker;
 
         public Dot(int x, int y, int z, int radius) {
             this.x = x;
@@ -165,7 +155,7 @@ public class PunchCard implements HighChart {
         }
 
         public static class Marker {
-            int radius;
+            final int radius;
 
             Marker(int radius) {
                 this.radius = radius;

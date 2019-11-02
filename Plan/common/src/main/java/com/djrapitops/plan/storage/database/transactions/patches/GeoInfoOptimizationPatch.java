@@ -22,8 +22,8 @@ import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
 
 public class GeoInfoOptimizationPatch extends Patch {
 
-    private String tempTableName;
-    private String oldTableName;
+    private final String tempTableName;
+    private final String oldTableName;
 
     public GeoInfoOptimizationPatch() {
         oldTableName = "plan_ips";
