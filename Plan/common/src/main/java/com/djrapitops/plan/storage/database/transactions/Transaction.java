@@ -36,6 +36,8 @@ public abstract class Transaction {
 
     // SQLite version on 1.8.8 does not support savepoints, see createSavePoint() method
     private static final AtomicBoolean SUPPORTS_SAVE_POINTS = new AtomicBoolean(true);
+    // Limit for Deadlock attempts.
+    private static final int ATTEMPT_LIMIT = 3;
 
     private SQLDB db;
     protected DBType dbType;
@@ -44,9 +46,11 @@ public abstract class Transaction {
     private Savepoint savepoint;
 
     protected boolean success;
+    protected int attempts;
 
     protected Transaction() {
         success = false;
+        attempts = 0;
     }
 
     public void executeTransaction(SQLDB db) {
@@ -61,31 +65,56 @@ public abstract class Transaction {
             return;
         }
 
+        attempts++; // Keeps track how many attempts have been made to avoid infinite recursion.
+
         try {
             initializeTransaction(db);
             performOperations();
             if (connection != null) connection.commit();
             success = true;
-        } catch (Exception statementFail) {
+        } catch (SQLException statementFail) {
             manageFailure(statementFail); // Throws a DBOpException.
         } finally {
             db.returnToPool(connection);
         }
     }
 
-    private void manageFailure(Exception statementFail) {
+    private void manageFailure(SQLException statementFail) {
         String failMsg = getClass().getSimpleName() + " failed: " + statementFail.getMessage();
-        if (!SUPPORTS_SAVE_POINTS.get()) {
-            throw new DBOpException(failMsg + ", additionally rollbacks are not supported on this server version.", statementFail);
+        String rollbackStatusMsg = rollbackTransaction();
+
+        // Retry if deadlock occurs.
+        int errorCode = statementFail.getErrorCode();
+        boolean mySQLDeadlock = dbType == DBType.MYSQL && errorCode == 1213;
+        boolean h2Deadlock = dbType == DBType.H2 && errorCode == 40001;
+        boolean deadlocked = mySQLDeadlock || h2Deadlock;
+        if (deadlocked && attempts < ATTEMPT_LIMIT) {
+            executeTransaction(db); // Recurse to attempt again.
+            return;
         }
-        try {
-            if (Verify.notNull(connection, savepoint)) {
-                connection.rollback(savepoint);
+        if (attempts >= ATTEMPT_LIMIT) {
+            failMsg += " (Attempted " + attempts + " times)";
+        }
+
+        throw new DBOpException(failMsg + rollbackStatusMsg, statementFail);
+    }
+
+    private String rollbackTransaction() {
+        String rollbackStatusMsg = ", Transaction was rolled back.";
+        boolean hasNoSavepoints = !SUPPORTS_SAVE_POINTS.get();
+        if (hasNoSavepoints) {
+            rollbackStatusMsg = ", additionally rollbacks are not supported on this server version.";
+        } else {
+            // Rollbacks are supported.
+            try {
+                if (Verify.notNull(connection, savepoint)) {
+                    connection.rollback(savepoint);
+                }
+            } catch (SQLException rollbackFail) {
+                rollbackStatusMsg = ", additionally Transaction rollback failed: " + rollbackFail.getMessage();
             }
-        } catch (SQLException rollbackFail) {
-            throw new DBOpException(failMsg + ", additionally Transaction rollback failed: " + rollbackFail.getMessage(), statementFail);
         }
-        throw new DBOpException(failMsg + ", Transaction was rolled back.", statementFail);
+        return rollbackStatusMsg;
     }
 
     /**
