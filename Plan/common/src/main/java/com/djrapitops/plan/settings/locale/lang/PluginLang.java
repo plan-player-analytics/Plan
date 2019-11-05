@@ -27,6 +27,7 @@ public enum PluginLang implements Lang {
     ENABLED_DATABASE("Enable - Database", "${0}-database connection established."),
 
     ENABLE_NOTIFY_EMPTY_IP("Enable - Notify Empty IP", "IP in server.properties is empty & AlternativeIP is not in use. Incorrect links will be given!"),
+    ENABLE_NOTIFY_BAD_IP("Enable - Notify Bad IP", "0.0.0.0 is not a valid address, set up AlternativeIP settings. Incorrect links will be given!"),
     ENABLE_NOTIFY_WEB_SERVER_DISABLED("Enable - Notify Webserver disabled", "WebServer was not initialized. (WebServer.DisableWebServer: true)"),
     ENABLE_NOTIFY_GEOLOCATIONS_INTERNET_REQUIRED("Enable - Notify Geolocations Internet Required", "Plan Requires internet access on first run to download GeoLite2 Geolocation database."),
     ENABLE_NOTIFY_GEOLOCATIONS_DISABLED("Enable - Notify Geolocations disabled", "Geolocation gathering is not active. (Data.Geolocations: false)"),

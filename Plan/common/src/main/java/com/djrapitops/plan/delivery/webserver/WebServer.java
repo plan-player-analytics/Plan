@@ -99,6 +99,10 @@ public class WebServer implements SubSystem {
 
         initServer();
 
+        if (getAccessAddress().contains("0.0.0.0")) {
+            logger.warn(locale.getString(PluginLang.ENABLE_NOTIFY_BAD_IP));
+        }
+
         if (!isEnabled()) {
             if (config.isTrue(WebserverSettings.DISABLED)) {
                 logger.warn(locale.getString(PluginLang.ENABLE_NOTIFY_WEB_SERVER_DISABLED));
