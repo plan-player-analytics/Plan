@@ -57,6 +57,7 @@ public class SessionKeys {
      */
     @Deprecated
     public static final Key<String> LONGEST_WORLD_PLAYED = new Key<>(String.class, "longest_world_played");
+    public static final Key<Double> AVERAGE_PING = new Key<>(Double.class, "averagePing");
 
     private SessionKeys() {
         /* Static variable class */

@@ -210,6 +210,17 @@ public class SessionsMutator {
         return sorted;
     }
 
+    public static Map<UUID, TreeMap<Long, Session>> sortByServersToMaps(List<Session> sessions) {
+        Map<UUID, TreeMap<Long, Session>> sorted = new HashMap<>();
+        for (Session session : sessions) {
+            UUID serverUUID = session.getUnsafe(SessionKeys.SERVER_UUID);
+            TreeMap<Long, Session> serverSessions = sorted.getOrDefault(serverUUID, new TreeMap<>());
+            serverSessions.put(session.getDate(), session);
+            sorted.put(serverUUID, serverSessions);
+        }
+        return sorted;
+    }
+
     public int toPlayerDeathCount() {
         return sessions.stream().mapToInt(session -> session.getValue(SessionKeys.DEATH_COUNT).orElse(0)).sum();
     }
@@ -281,6 +292,10 @@ public class SessionsMutator {
             WorldPie worldPie = graphs.pie().worldPie(session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes()));
             sessionMap.put("world_series", worldPie.getSlices());
             sessionMap.put("gm_series", worldPie.toHighChartsDrillDownMaps());
+
+            session.getValue(SessionKeys.AVERAGE_PING).ifPresent(averagePing ->
+                    sessionMap.put("avg_ping", formatters.decimals().apply(averagePing) + " ms")
+            );
             return sessionMap;
         }).collect(Collectors.toList());
     }

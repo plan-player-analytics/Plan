@@ -96,6 +96,8 @@ public class PlayerJSONParser {
         List<PlayerKill> kills = player.getValue(PlayerKeys.PLAYER_KILLS).orElse(Collections.emptyList());
         List<PlayerKill> deaths = player.getValue(PlayerKeys.PLAYER_DEATHS_KILLS).orElse(Collections.emptyList());
 
+        PingMutator.forContainer(player).addPingToSessions(sessionsMutator.all());
+
         Map<String, Object> data = new HashMap<>();
         data.put("info", createInfoJSONMap(player, serverNames));
         data.put("online_activity", createOnlineActivityJSONMap(sessionsMutator));

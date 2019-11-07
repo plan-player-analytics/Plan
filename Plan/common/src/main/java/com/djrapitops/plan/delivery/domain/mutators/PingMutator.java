@@ -16,14 +16,15 @@
  */
 package com.djrapitops.plan.delivery.domain.mutators;
 
+import com.djrapitops.plan.delivery.domain.DateHolder;
 import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.keys.CommonKeys;
+import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.gathering.domain.Ping;
+import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.utilities.comparators.DateHolderOldestComparator;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -58,6 +59,52 @@ public class PingMutator {
                     return new Ping(entry.getKey(), null,
                             mutator.min(), mutator.max(), mutator.average());
                 }).collect(Collectors.toList()));
+    }
+
+    public static Map<UUID, SortedMap<Long, Ping>> sortByServers(List<Ping> pings) {
+        Map<UUID, SortedMap<Long, Ping>> sorted = new HashMap<>();
+        for (Ping ping : pings) {
+            UUID serverUUID = ping.getServerUUID();
+            SortedMap<Long, Ping> serverSessions = sorted.getOrDefault(serverUUID, new TreeMap<>());
+            serverSessions.put(ping.getDate(), ping);
+            sorted.put(serverUUID, serverSessions);
+        }
+        return sorted;
+    }
+
+    public void addPingToSessions(List<Session> sessions) {
+        if (sessions.isEmpty()) return;
+
+        Comparator<DateHolder> comparator = new DateHolderOldestComparator();
+        sessions.sort(comparator);
+        pings.sort(comparator);
+        Map<UUID, SortedMap<Long, Ping>> pingByServer = sortByServers(pings);
+        Map<UUID, List<Session>> sessionsByServer = SessionsMutator.sortByServers(sessions);
+        for (Map.Entry<UUID, SortedMap<Long, Ping>> entry : pingByServer.entrySet()) {
+            UUID serverUUID = entry.getKey();
+            SortedMap<Long, Ping> pingOfServer = entry.getValue();
+            if (pingOfServer.isEmpty()) continue;
+
+            List<Session> sessionsOfServer = sessionsByServer.getOrDefault(serverUUID, Collections.emptyList());
+            double pingCount = 0.0;
+            int pingEntries = 0;
+
+            for (Session session : sessionsOfServer) {
+                long start = session.getDate();
+                Long end = session.getValue(SessionKeys.END).orElseGet(System::currentTimeMillis);
+                // Calcuclate average ping for each session with a Ping submap
+                SortedMap<Long, Ping> duringSession = pingOfServer.subMap(start, end);
+                for (Ping ping : duringSession.values()) {
+                    pingCount += ping.getAverage();
+                    pingEntries++;
+                }
+                if (pingEntries != 0) {
+                    session.putRawData(SessionKeys.AVERAGE_PING, pingCount / pingEntries);
+                }
+                pingCount = 0.0;
+                pingEntries = 0;
+            }
+        }
     }
 
     public List<Ping> all() {
