@@ -254,4 +254,8 @@ public class Session extends DynamicDataContainer implements DateHolder {
                 ", afkTime=" + afkTime +
                 '}';
     }
+
+    public void updateState() {
+        worldTimes.updateState(System.currentTimeMillis());
+    }
 }

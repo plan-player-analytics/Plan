@@ -49,9 +49,7 @@ public class SessionCache {
     }
 
     public static void refreshActiveSessionsState() {
-        for (Session session : ACTIVE_SESSIONS.values()) {
-            session.getValue(SessionKeys.WORLD_TIMES).ifPresent(worldTimes -> worldTimes.updateState(System.currentTimeMillis()));
-        }
+        ACTIVE_SESSIONS.values().forEach(Session::updateState);
     }
 
     /**
@@ -61,7 +59,9 @@ public class SessionCache {
      * @return Optional with the session inside it if found.
      */
     public static Optional<Session> getCachedSession(UUID playerUUID) {
-        return Optional.ofNullable(ACTIVE_SESSIONS.get(playerUUID));
+        Optional<Session> found = Optional.ofNullable(ACTIVE_SESSIONS.get(playerUUID));
+        found.ifPresent(Session::updateState);
+        return found;
     }
 
     /**

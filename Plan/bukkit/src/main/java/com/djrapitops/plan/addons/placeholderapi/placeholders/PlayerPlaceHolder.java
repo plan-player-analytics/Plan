@@ -23,6 +23,7 @@ import com.djrapitops.plan.delivery.domain.mutators.PlayerVersusMutator;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
@@ -161,6 +162,8 @@ public class PlayerPlaceHolder extends AbstractPlanPlaceHolder {
     // Checkstyle.ON: CyclomaticComplexity
 
     private PlayerContainer getPlayer(UUID playerUUID) {
-        return dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
+        PlayerContainer player = dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
+        SessionCache.getCachedSession(playerUUID).ifPresent(session -> player.putRawData(PlayerKeys.ACTIVE_SESSION, session));
+        return player;
     }
 }
