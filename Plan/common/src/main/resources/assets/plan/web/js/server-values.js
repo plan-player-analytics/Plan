@@ -176,6 +176,7 @@ function loadOnlineActivityOverviewValues(json, error) {
 
     $(element).find('#data_players_first_join_avg').replaceWith(data.players_first_join_avg + smallTrend(data.players_first_join_trend));
     $(element).find('#data_first_session_length_avg').replaceWith(data.first_session_length_avg + smallTrend(data.first_session_length_trend));
+    $(element).find('#data_first_session_length_median').replaceWith(data.first_session_length_median + smallTrend(data.first_session_length_median_trend));
     $(element).find('#data_lone_joins').replaceWith(data.lone_joins + smallTrend(data.lone_joins_trend));
     $(element).find('#data_lone_new_joins').replaceWith(data.lone_new_joins + smallTrend(data.lone_new_joins_trend))
 }

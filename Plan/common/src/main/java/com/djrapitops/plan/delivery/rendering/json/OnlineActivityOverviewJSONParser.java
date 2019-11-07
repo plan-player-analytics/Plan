@@ -219,11 +219,17 @@ public class OnlineActivityOverviewJSONParser implements ServerTabJSONParser<Map
         SessionsMutator firstSessionsBefore = firstSessions.filterSessionsBetween(monthAgo, halfMonthAgo);
         SessionsMutator firstSessionsAfter = firstSessions.filterSessionsBetween(halfMonthAgo, now);
 
-        long avgSessionLength = firstSessions.toAverageSessionLength();
-        long avgSessionLengthBefore = firstSessionsBefore.toAverageSessionLength();
-        long avgSessionLengthAfter = firstSessionsAfter.toAverageSessionLength();
-        insights.put("first_session_length_avg", timeAmountFormatter.apply(avgSessionLength));
-        insights.put("first_session_length_trend", new Trend(avgSessionLengthBefore, avgSessionLengthAfter, false, timeAmountFormatter));
+        long avgFirstSessionLength = firstSessions.toAverageSessionLength();
+        long avgFirstSessionLengthBefore = firstSessionsBefore.toAverageSessionLength();
+        long avgFirstSessionLengthAfter = firstSessionsAfter.toAverageSessionLength();
+        insights.put("first_session_length_avg", timeAmountFormatter.apply(avgFirstSessionLength));
+        insights.put("first_session_length_trend", new Trend(avgFirstSessionLengthBefore, avgFirstSessionLengthAfter, false, timeAmountFormatter));
+
+        long medianFirstSessionLength = firstSessions.toMedianSessionLength();
+        long medianFirstSessionLengthBefore = firstSessionsBefore.toMedianSessionLength();
+        long medianFirstSessionLengthAfter = firstSessionsAfter.toMedianSessionLength();
+        insights.put("first_session_length_median", timeAmountFormatter.apply(medianFirstSessionLength));
+        insights.put("first_session_length_median_trend", new Trend(medianFirstSessionLengthBefore, medianFirstSessionLengthAfter, false, timeAmountFormatter));
 
         int lonelyJoins = playersOnlineResolver.findLonelyJoins(sessions.toSessionStarts());
         int loneJoinsBefore = playersOnlineResolver.findLonelyJoins(sessions.filterSessionsBetween(monthAgo, halfMonthAgo).toSessionStarts());
