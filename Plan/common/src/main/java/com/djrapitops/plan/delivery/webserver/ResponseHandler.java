@@ -139,8 +139,7 @@ public class ResponseHandler extends TreePageHandler {
         if (pageHandler == null) {
             return responseFactory.pageNotFound404();
         } else {
-            boolean isAuthorized = authentication.isPresent() && pageHandler.isAuthorized(authentication.get(), target);
-            if (!isAuthRequired || isAuthorized) {
+            if (!isAuthRequired || pageHandler.isAuthorized(authentication.get(), target)) {
                 return pageHandler.getResponse(request, target);
             }
             return responseFactory.forbidden403();
