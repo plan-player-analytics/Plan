@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.pages;
 
+import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.WebServer;
@@ -75,7 +76,8 @@ public class ServerPageHandler implements PageHandler {
             return responseFactory.serverPageResponse(serverUUID.get());
         } else {
             // Redirect to base server page.
-            return responseFactory.redirectResponse(webServer.get().getAccessAddress() + (proxy ? "/network" : "/server"));
+            String directTo = proxy ? "/network" : "/server/" + Html.encodeToURL(serverInfo.getServer().getIdentifiableName());
+            return responseFactory.redirectResponse(webServer.get().getAccessAddress() + directTo);
         }
     }
 

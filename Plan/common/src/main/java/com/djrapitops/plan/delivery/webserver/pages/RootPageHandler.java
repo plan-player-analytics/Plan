@@ -25,6 +25,7 @@ import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.exceptions.connection.WebException;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 
 import java.util.Optional;
@@ -50,8 +51,9 @@ public class RootPageHandler implements PageHandler {
 
     @Override
     public Response getResponse(Request request, RequestTarget target) throws WebException {
+        Server server = serverInfo.getServer();
         if (!webServer.isAuthRequired()) {
-            return responseFactory.redirectResponse(serverInfo.getServer().isProxy() ? "network" : "server");
+            return responseFactory.redirectResponse(server.isProxy() ? "network" : "server/" + Html.encodeToURL(server.getIdentifiableName()));
         }
 
         Optional<Authentication> auth = request.getAuth();
@@ -64,7 +66,7 @@ public class RootPageHandler implements PageHandler {
         int permLevel = webUser.getPermLevel();
         switch (permLevel) {
             case 0:
-                return responseFactory.redirectResponse(serverInfo.getServer().isProxy() ? "network" : "server");
+                return responseFactory.redirectResponse(server.isProxy() ? "network" : "server/" + Html.encodeToURL(server.getIdentifiableName()));
             case 1:
                 return responseFactory.redirectResponse("players");
             case 2:

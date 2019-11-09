@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.rendering.html;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringSubstitutor;
 import org.apache.commons.text.TextStringBuilder;
 
@@ -174,7 +175,10 @@ public enum Html {
 
     public static String encodeToURL(String string) {
         try {
-            return URLEncoder.encode(string, "UTF-8");
+            return StringUtils.replace(
+                    URLEncoder.encode(string, "UTF-8"),
+                    "+", "%20" // Encoding replaces spaces with +
+            );
         } catch (UnsupportedEncodingException e) {
             return string;
         }
