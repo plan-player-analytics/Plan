@@ -69,8 +69,9 @@ public class ConfigWriter {
         ConfigNode storedParent = writing.parent;
         writing.updateParent(null);
 
-        if (!Files.isDirectory(outputPath.getParent().toRealPath())) {
-            Files.createDirectories(outputPath.getParent());
+        Path directory = outputPath.getParent();
+        if (!Files.isDirectory(directory.toRealPath())) {
+            Files.createDirectories(directory);
         }
         Files.write(outputPath, parseLines(writing), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
 

@@ -659,6 +659,7 @@
                         <li>Argetan <i class="fa fa-fw fa-code"></i></li>
                         <li>Aurelien <i class="fa fa-fw fa-code"></i> <i class="fa fa-fw fa-language"></i></li>
                         <li>BrainStone <i class="fa fa-fw fa-code"></i></li>
+                        <li>Combustible <i class="fa fa-fw fa-code"></i></li>
                         <li>CyanTech <i class="fa fa-fw fa-language"></i></li>
                         <li>DarkPyves <i class="fa fa-fw fa-code"></i></li>
                         <li>DaveDevil <i class="fa fa-fw fa-language"></i></li>
@@ -751,7 +752,7 @@
 <script>
     try {
         Highcharts.setOptions({lang: {noData: "No Data to Display"}, time: {timezoneOffset: ${timeZone} * 60}
-    })
+        });
         setLoadingText('Loading player values..');
         jsonRequest("../v1/player?player=${playerName}", function (json, error) {
             loadPlayerOverviewValues(json, error);
