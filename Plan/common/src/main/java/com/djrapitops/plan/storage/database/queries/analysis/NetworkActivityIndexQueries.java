@@ -20,7 +20,6 @@ import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
-import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 
 import java.sql.PreparedStatement;
@@ -141,9 +140,9 @@ public class NetworkActivityIndexQueries {
         String selectActivityIndex = selectActivityIndexSQL();
 
         String selectIndexes = SELECT + "? as activity_group, activity_index" +
-                FROM + UserInfoTable.TABLE_NAME + " u" +
-                LEFT_JOIN + '(' + selectActivityIndex + ") s on s." + SessionsTable.USER_UUID + "=u." + UserInfoTable.USER_UUID +
-                AND + "u." + UserInfoTable.REGISTERED + "<=?";
+                FROM + UsersTable.TABLE_NAME + " u" +
+                LEFT_JOIN + '(' + selectActivityIndex + ") s on s." + SessionsTable.USER_UUID + "=u." + UsersTable.USER_UUID +
+                AND + "u." + UsersTable.REGISTERED + "<=?";
 
         String selectCount = SELECT + "activity_group, COUNT(1) as count" + FROM +
                 '(' + selectIndexes + ") indexes" +
