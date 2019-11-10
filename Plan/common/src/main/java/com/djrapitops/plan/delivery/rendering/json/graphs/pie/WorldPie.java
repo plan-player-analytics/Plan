@@ -79,24 +79,4 @@ public class WorldPie extends PieWithDrilldown {
         }
         return data;
     }
-
-    private void appendGMTimesForWorld(StringBuilder drilldownBuilder, Map.Entry<String, GMTimes> world) {
-        Map<String, Long> gmTimes = world.getValue().getTimes();
-        int smallSize = gmTimes.size();
-        int j = 0;
-        for (Map.Entry<String, Long> entry : gmTimes.entrySet()) {
-            Long time = entry.getValue();
-            drilldownBuilder.append("['")
-                    .append(entry.getKey())
-                    .append("',")
-                    .append(time)
-                    .append("]");
-
-            if (j < smallSize - 1) {
-                drilldownBuilder.append(",");
-            }
-            j++;
-        }
-        drilldownBuilder.append("]}");
-    }
 }

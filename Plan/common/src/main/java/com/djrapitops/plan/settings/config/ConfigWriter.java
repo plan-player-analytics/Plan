@@ -70,7 +70,7 @@ public class ConfigWriter {
         writing.updateParent(null);
 
         Path directory = outputPath.getParent();
-        if (!Files.isDirectory(directory.toRealPath())) {
+        if (!directory.toRealPath().toFile().isDirectory()) {
             Files.createDirectories(directory);
         }
         Files.write(outputPath, parseLines(writing), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);

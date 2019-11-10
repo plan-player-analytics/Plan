@@ -19,9 +19,10 @@ package com.djrapitops.plan.identification;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import utilities.OptionalAssert;
 
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests for {@link UUIDUtility}.
@@ -34,6 +35,6 @@ class UUIDUtilityTest {
     @Test
     void stringUUIDIsParsed() {
         String test = "f3cc3e96-1bc9-35ad-994f-d894e9764b93";
-        OptionalAssert.equals(UUID.fromString(test), UUIDUtility.parseFromString(test));
+        assertEquals(UUID.fromString(test), UUIDUtility.parseFromString(test).orElse(null));
     }
 }
