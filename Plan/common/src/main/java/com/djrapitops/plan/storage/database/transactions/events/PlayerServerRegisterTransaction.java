@@ -19,6 +19,7 @@ package com.djrapitops.plan.storage.database.transactions.events;
 import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.LongSupplier;
 
@@ -39,8 +40,15 @@ public class PlayerServerRegisterTransaction extends PlayerRegisterTransaction {
     @Override
     protected void performOperations() {
         super.performOperations();
+        long registerDate = registered.getAsLong();
         if (!query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID))) {
-            execute(DataStoreQueries.registerUserInfo(playerUUID, registered.getAsLong(), serverUUID));
+            execute(DataStoreQueries.registerUserInfo(playerUUID, registerDate, serverUUID));
+        }
+
+        // Updates register date to smallest possible value.
+        Optional<Long> foundRegisterDate = query(PlayerFetchQueries.fetchRegisterDate(playerUUID));
+        if (foundRegisterDate.isPresent() && foundRegisterDate.get() < registerDate) {
+            execute(DataStoreQueries.updateMainRegisterDate(playerUUID, registerDate));
         }
     }
 }

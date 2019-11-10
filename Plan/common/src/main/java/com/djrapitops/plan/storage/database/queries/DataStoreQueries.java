@@ -202,6 +202,19 @@ public class DataStoreQueries {
         };
     }
 
+    public static Executable updateMainRegisterDate(UUID playerUUID, long registered) {
+        String sql = "UPDATE " + UsersTable.TABLE_NAME +
+                " SET " + UsersTable.REGISTERED + "=?" +
+                WHERE + UsersTable.USER_UUID + "=?";
+        return new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, registered);
+                statement.setString(2, playerUUID.toString());
+            }
+        };
+    }
+
     /**
      * Store Ping data of a player on a server.
      *

@@ -102,4 +102,25 @@ public class PlayerFetchQueries {
             }
         };
     }
+
+    public static Query<Optional<Long>> fetchRegisterDate(UUID playerUUID) {
+        String sql = SELECT + UsersTable.REGISTERED +
+                FROM + UsersTable.TABLE_NAME +
+                WHERE + UsersTable.USER_UUID + "=? LIMIT 1";
+
+        return new QueryStatement<Optional<Long>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+            }
+
+            @Override
+            public Optional<Long> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(set.getLong(UsersTable.REGISTERED));
+                }
+                return Optional.empty();
+            }
+        };
+    }
 }
