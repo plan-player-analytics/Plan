@@ -87,7 +87,7 @@ public class PlayerPageExporter extends FileExporter {
         exportRequiredResources(toDirectory);
 
         Path playerDirectory = toDirectory.resolve("player/" + toFileName(playerName));
-        exportJSON(playerDirectory, playerUUID);
+        exportJSON(playerDirectory, playerUUID, playerName);
         exportHtml(playerDirectory, playerUUID);
     }
 
@@ -102,11 +102,11 @@ public class PlayerPageExporter extends FileExporter {
         }
     }
 
-    private void exportJSON(Path toDirectory, UUID playerUUID) throws IOException, NotFoundException {
-        exportJSON(toDirectory, "player?player=" + playerUUID);
+    private void exportJSON(Path toDirectory, UUID playerUUID, String playerName) throws IOException, NotFoundException {
+        exportJSON(toDirectory, "player?player=" + playerUUID, playerName);
     }
 
-    private void exportJSON(Path toDirectory, String resource) throws NotFoundException, IOException {
+    private void exportJSON(Path toDirectory, String resource, String playerName) throws NotFoundException, IOException {
         Response found = getJSONResponse(resource);
         if (found instanceof ErrorResponse) {
             throw new NotFoundException(resource + " was not properly exported: " + found.getContent());
@@ -115,7 +115,7 @@ public class PlayerPageExporter extends FileExporter {
         String jsonResourceName = toFileName(toJSONResourceName(resource)) + ".json";
 
         export(toDirectory.resolve(jsonResourceName), found.getContent());
-        exportPaths.put("../v1/" + resource, "./" + jsonResourceName);
+        exportPaths.put("../v1/player?player=" + playerName, "./" + jsonResourceName);
     }
 
     private String toJSONResourceName(String resource) {
