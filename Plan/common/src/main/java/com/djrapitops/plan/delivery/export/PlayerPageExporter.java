@@ -119,7 +119,7 @@ public class PlayerPageExporter extends FileExporter {
     }
 
     private String toJSONResourceName(String resource) {
-        return StringUtils.replaceEach(resource, new String[]{"?", "&", "type=", "server="}, new String[]{"-", "_", "", ""});
+        return StringUtils.replaceEach(resource, new String[]{"?", "&", "type=", "player="}, new String[]{"-", "_", "", ""});
     }
 
     private Response getJSONResponse(String resource) {
