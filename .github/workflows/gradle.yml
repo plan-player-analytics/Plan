@@ -1,0 +1,31 @@
+name: Java CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+    - name: Build with Gradle
+      run: |
+        cd Plan
+        ./gradlew shadowJar
+  test:
+    runs-on: [ubuntu-latest]
+    
+    steps:
+      - name: Checkstyle
+        run: |
+          cd Plan
+          ./gradlew checkstyleMain checkstyleTest
+      - name: Run tests
+        run: |
+          cd Plan
+          ./gradlew test
