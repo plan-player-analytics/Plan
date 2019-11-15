@@ -22,7 +22,7 @@ allprojects {
     wrapper.gradleVersion = "5.5.1"
 
     group "com.djrapitops"
-    version "5.0.285"
+    version "5.0 build 286"
 
     test {
         useJUnitPlatform()
