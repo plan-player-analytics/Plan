@@ -17,15 +17,11 @@ jobs:
       run: |
         cd Plan
         ./gradlew shadowJar
-  test:
-    runs-on: [ubuntu-latest]
-    
-    steps:
-      - name: Checkstyle
-        run: |
-          cd Plan
-          ./gradlew checkstyleMain checkstyleTest
-      - name: Run tests
-        run: |
-          cd Plan
-          ./gradlew test
+    - name: Checkstyle
+      run: |
+        cd Plan
+        ./gradlew checkstyleMain checkstyleTest
+    - name: Run tests
+      run: |
+        cd Plan
+        ./gradlew test
