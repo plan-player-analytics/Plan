@@ -23,7 +23,6 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -89,7 +88,7 @@ public class MySQLDB extends SQLDB {
     @Override
     public void setupDataSource() {
         try {
-            if (Check.isVelocityAvailable()) loadMySQLDriver();
+            loadMySQLDriver();
 
             HikariConfig hikariConfig = new HikariConfig();
 
