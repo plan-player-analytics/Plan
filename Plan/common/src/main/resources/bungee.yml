@@ -1,7 +1,7 @@
 name: Plan
 author: Rsl1122
 main: com.djrapitops.plan.PlanBungee
-version: 5.0 build 286
+version: 5.0 build 288
 softdepend:
 - AdvancedBan
 - LiteBans
