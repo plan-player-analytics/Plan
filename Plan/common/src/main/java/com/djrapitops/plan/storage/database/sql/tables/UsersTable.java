@@ -23,11 +23,12 @@ import com.djrapitops.plan.storage.database.sql.parsing.Sql;
 
 /**
  * Table information about 'plan_users'.
- *
+ * <p>
  * This table is used to store Player information that applies to all servers.
- *
+ * <p>
  * Patches that apply to this table:
  * {@link com.djrapitops.plan.storage.database.transactions.patches.Version10Patch}
+ * {@link com.djrapitops.plan.storage.database.transactions.patches.RegisterDateMinimizationPatch}
  *
  * @author Rsl1122
  */

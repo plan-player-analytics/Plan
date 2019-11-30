@@ -47,7 +47,7 @@ public class PlayerServerRegisterTransaction extends PlayerRegisterTransaction {
 
         // Updates register date to smallest possible value.
         Optional<Long> foundRegisterDate = query(PlayerFetchQueries.fetchRegisterDate(playerUUID));
-        if (foundRegisterDate.isPresent() && foundRegisterDate.get() < registerDate) {
+        if (foundRegisterDate.isPresent() && foundRegisterDate.get() > registerDate) {
             execute(DataStoreQueries.updateMainRegisterDate(playerUUID, registerDate));
         }
     }

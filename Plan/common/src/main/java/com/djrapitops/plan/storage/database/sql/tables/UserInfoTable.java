@@ -28,6 +28,7 @@ import com.djrapitops.plan.storage.database.transactions.patches.Version10Patch;
  * Patches related to this table:
  * {@link Version10Patch}
  * {@link UserInfoOptimizationPatch}
+ * {@link com.djrapitops.plan.storage.database.transactions.patches.RegisterDateMinimizationPatch}
  *
  * @author Rsl1122
  */

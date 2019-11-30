@@ -56,6 +56,7 @@ import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQue
 import com.djrapitops.plan.storage.database.queries.containers.ServerPlayerContainersQuery;
 import com.djrapitops.plan.storage.database.queries.objects.*;
 import com.djrapitops.plan.storage.database.sql.parsing.Sql;
+import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.transactions.*;
 import com.djrapitops.plan.storage.database.transactions.commands.*;
 import com.djrapitops.plan.storage.database.transactions.events.*;
@@ -63,6 +64,7 @@ import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransac
 import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.RemoveDuplicateUserInfoTransaction;
 import com.djrapitops.plan.storage.database.transactions.patches.Patch;
+import com.djrapitops.plan.storage.database.transactions.patches.RegisterDateMinimizationPatch;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
@@ -84,6 +86,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.djrapitops.plan.storage.database.sql.parsing.Sql.SELECT;
+import static com.djrapitops.plan.storage.database.sql.parsing.Sql.WHERE;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -1191,6 +1194,33 @@ public interface DatabaseTest {
         assertTrue(currentActivityIndex.isPresent());
 
         assertEquals(javaCalculation.getValue(), currentActivityIndex.get().getValue(), 0.001);
+    }
+
+    @Test
+    default void registerDateIsMinimized() {
+        executeTransactions(
+                new PlayerServerRegisterTransaction(playerUUID, () -> 1000, TestConstants.PLAYER_ONE_NAME, serverUUID())
+                , new Transaction() {
+                    @Override
+                    protected void performOperations() {
+                        execute("UPDATE " + UserInfoTable.TABLE_NAME + " SET " + UserInfoTable.REGISTERED + "=0" + WHERE + UserInfoTable.USER_UUID + "='" + playerUUID + "'");
+                    }
+                }
+        );
+
+        // Check test assumptions
+        Map<UUID, Long> registerDates = db().query(UserInfoQueries.fetchRegisterDates(0L, System.currentTimeMillis(), serverUUID()));
+        assertEquals(0L, registerDates.get(playerUUID));
+        Optional<BaseUser> baseUser = db().query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID));
+        assertEquals(1000L, baseUser.isPresent() ? baseUser.get().getRegistered() : null);
+
+        RegisterDateMinimizationPatch testedPatch = new RegisterDateMinimizationPatch();
+        executeTransactions(testedPatch);
+
+        // Test expected result
+        Optional<BaseUser> updatedBaseUser = db().query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID));
+        assertEquals(0L, updatedBaseUser.isPresent() ? updatedBaseUser.get().getRegistered() : null);
+        assertTrue(testedPatch.hasBeenApplied());
     }
 
     @Test
