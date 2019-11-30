@@ -1,3 +1,4 @@
+REL|5.0 build 292|https://github.com/plan-player-analytics/Plan/releases/download/5.0-build-292/Plan-5.0.build.292.jar|https://github.com/plan-player-analytics/Plan/releases/tag/5.0-build-292
 REL|5.0 build 288|https://github.com/plan-player-analytics/Plan/releases/download/5.0.288/Plan-5.0.build.288.jar|https://github.com/plan-player-analytics/Plan/releases/tag/5.0.288
 REL|5.0 build 286|https://github.com/plan-player-analytics/Plan/releases/download/5.0.286/Plan-5.0.build.286.jar|https://github.com/plan-player-analytics/Plan/releases/tag/5.0.286
 REL|5.0 build 279|https://github.com/plan-player-analytics/Plan/releases/download/5.0-build-279/Plan-5.0.build.279.jar|https://github.com/plan-player-analytics/Plan/releases/tag/5.0-build-279
