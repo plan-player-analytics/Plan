@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.domain.mutators;
 
+import com.djrapitops.plan.delivery.domain.DateHolder;
 import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.keys.CommonKeys;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
@@ -56,7 +57,7 @@ public class SessionsMutator {
         return sessions;
     }
 
-    public SessionsMutator sort(Comparator<Session> sessionComparator) {
+    public SessionsMutator sort(Comparator<DateHolder> sessionComparator) {
         sessions.sort(sessionComparator);
         return this;
     }

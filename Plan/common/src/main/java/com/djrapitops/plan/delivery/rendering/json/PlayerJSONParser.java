@@ -111,7 +111,7 @@ public class PlayerJSONParser {
                 .orElse(Collections.emptyList()));
         data.put("player_kills", new PlayerKillMutator(kills).filterNonSelfKills().toJSONAsMap(formatters));
         data.put("player_deaths", new PlayerKillMutator(deaths).toJSONAsMap(formatters));
-        data.put("sessions", sessionsMutator.toServerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters));
+        data.put("sessions", sessionsMutator.sort(new DateHolderRecentComparator()).toServerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters));
         data.put("sessions_per_page", config.get(DisplaySettings.SESSIONS_PER_PAGE));
         data.put("servers", serverAccordion);
         data.put("punchcard_series", graphs.special().punchCard(sessionsMutator).getDots());
