@@ -43,6 +43,7 @@ public class Formatters {
     private final SecondFormatter secondLongFormatter;
     private final ClockFormatter clockLongFormatter;
     private final ISO8601NoClockFormatter iso8601NoClockLongFormatter;
+    private final ISO8601NoClockTZIndependentFormatter iso8601NoClockTZIndependentFormatter;
 
     private final TimeAmountFormatter timeAmountFormatter;
 
@@ -56,6 +57,7 @@ public class Formatters {
         clockLongFormatter = new ClockFormatter(config, locale);
         secondLongFormatter = new SecondFormatter(config, locale);
         iso8601NoClockLongFormatter = new ISO8601NoClockFormatter(config, locale);
+        iso8601NoClockTZIndependentFormatter = new ISO8601NoClockTZIndependentFormatter();
 
         yearFormatter = new DateHolderFormatter(yearLongFormatter);
         dayFormatter = new DateHolderFormatter(dayLongFormatter);
@@ -108,6 +110,10 @@ public class Formatters {
 
     public Formatter<Long> iso8601NoClockLong() {
         return iso8601NoClockLongFormatter;
+    }
+
+    public Formatter<Long> iso8601NoClockTZIndependentLong() {
+        return iso8601NoClockTZIndependentFormatter;
     }
 
     public Formatter<Long> timeAmount() {

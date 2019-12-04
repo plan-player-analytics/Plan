@@ -38,8 +38,8 @@ public class ServerCalendar {
     private final SortedMap<Long, Integer> sessionsPerDay;
     private final SortedMap<Long, Long> playtimePerDay;
 
-    private final Formatter<Long> iso8601Formatter;
-    private final Formatter<Long> timeAmountFormatter;
+    private final Formatter<Long> iso8601TZIndependent;
+    private final Formatter<Long> timeAmount;
     private final Theme theme;
     private final Locale locale;
 
@@ -48,15 +48,15 @@ public class ServerCalendar {
             SortedMap<Long, Integer> newPerDay,
             SortedMap<Long, Long> playtimePerDay,
             NavigableMap<Long, Integer> sessionsPerDay,
-            Formatter<Long> iso8601Formatter,
-            Formatter<Long> timeAmountFormatter,
+            Formatter<Long> iso8601TZIndependent,
+            Formatter<Long> timeAmount,
             Theme theme,
             Locale locale
     ) {
         this.uniquePerDay = uniquePerDay;
         this.newPerDay = newPerDay;
-        this.iso8601Formatter = iso8601Formatter;
-        this.timeAmountFormatter = timeAmountFormatter;
+        this.iso8601TZIndependent = iso8601TZIndependent;
+        this.timeAmount = timeAmount;
         this.sessionsPerDay = sessionsPerDay;
         this.playtimePerDay = playtimePerDay;
         this.theme = theme;
@@ -87,7 +87,7 @@ public class ServerCalendar {
             }
 
             Long key = entry.getKey();
-            String day = iso8601Formatter.apply(key);
+            String day = iso8601TZIndependent.apply(key);
 
             series.append(",{\"title\": \"").append(locale.get(HtmlLang.NEW_CALENDAR)).append(" ").append(newPlayers)
                     .append("\",\"start\":\"").append(day)
@@ -104,7 +104,7 @@ public class ServerCalendar {
             }
 
             Long key = entry.getKey();
-            String day = iso8601Formatter.apply(key);
+            String day = iso8601TZIndependent.apply(key);
 
             series.append(",{\"title\": \"").append(locale.get(HtmlLang.UNIQUE_CALENDAR)).append(" ").append(uniquePlayers)
                     .append("\",\"start\":\"").append(day)
@@ -120,9 +120,9 @@ public class ServerCalendar {
                 continue;
             }
             Long key = entry.getKey();
-            String day = iso8601Formatter.apply(key);
+            String day = iso8601TZIndependent.apply(key);
 
-            series.append(",{\"title\": \"").append(locale.get(HtmlLang.LABEL_PLAYTIME)).append(": ").append(timeAmountFormatter.apply(playtime))
+            series.append(",{\"title\": \"").append(locale.get(HtmlLang.LABEL_PLAYTIME)).append(": ").append(timeAmount.apply(playtime))
                     .append("\",\"start\":\"").append(day)
                     .append("\",\"color\": \"").append(theme.getValue(ThemeVal.GREEN)).append('"')
                     .append("}");
@@ -136,7 +136,7 @@ public class ServerCalendar {
                 continue;
             }
             Long key = entry.getKey();
-            String day = iso8601Formatter.apply(key);
+            String day = iso8601TZIndependent.apply(key);
 
             series.append(",{\"title\": \"").append(locale.get(HtmlLang.SIDE_SESSIONS)).append(": ").append(sessionCount)
                     .append("\",\"start\":\"").append(day)
