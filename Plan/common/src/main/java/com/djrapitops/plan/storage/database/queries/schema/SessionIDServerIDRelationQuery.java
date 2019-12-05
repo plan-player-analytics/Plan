@@ -24,8 +24,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.FROM;
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.SELECT;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.SELECT;
 
 /**
  * Query to fetch server id for each session, used by 2 patches.

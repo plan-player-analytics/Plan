@@ -55,7 +55,7 @@ import java.util.stream.Collectors;
  * @author Rsl1122
  */
 @Singleton
-public class GraphJSONParser {
+public class GraphJSONCreator {
 
     private final PlanConfig config;
     private final Theme theme;
@@ -64,7 +64,7 @@ public class GraphJSONParser {
     private final TimeZone timeZone;
 
     @Inject
-    public GraphJSONParser(
+    public GraphJSONCreator(
             PlanConfig config,
             Theme theme,
             DBSystem dbSystem,

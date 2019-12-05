@@ -29,7 +29,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.WHERE;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 
 /**
  * Static method class for single item store queries.

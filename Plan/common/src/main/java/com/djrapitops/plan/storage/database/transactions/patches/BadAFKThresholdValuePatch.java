@@ -21,7 +21,7 @@ import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 
 import java.sql.PreparedStatement;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Patch that resets AFK time of sessions with afk time of length of the session to 0.

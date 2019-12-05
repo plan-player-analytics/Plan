@@ -65,13 +65,13 @@ public class WorldPie extends PieWithDrilldown {
             Map<String, Object> drilldown = new HashMap<>();
             drilldown.put("name", worldAlias.getKey());
             drilldown.put("id", worldAlias.getKey());
-            drilldown.put("data", parseGMTimesForWorld(worldAlias.getValue()));
+            drilldown.put("data", createGMTimesForWorld(worldAlias.getValue()));
             drilldowns.add(drilldown);
         }
         return drilldowns;
     }
 
-    private List<List> parseGMTimesForWorld(GMTimes gmTimes) {
+    private List<List> createGMTimesForWorld(GMTimes gmTimes) {
         List<List> data = new ArrayList<>();
         for (Map.Entry<String, Long> gmEntry : gmTimes.getTimes().entrySet()) {
             List gmList = Arrays.asList(gmEntry.getKey(), gmEntry.getValue());

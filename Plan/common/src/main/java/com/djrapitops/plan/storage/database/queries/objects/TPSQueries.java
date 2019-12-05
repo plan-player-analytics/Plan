@@ -21,7 +21,7 @@ import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.parsing.Select;
+import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 
 import java.sql.PreparedStatement;
@@ -29,7 +29,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 import static com.djrapitops.plan.storage.database.sql.tables.TPSTable.*;
 
 /**

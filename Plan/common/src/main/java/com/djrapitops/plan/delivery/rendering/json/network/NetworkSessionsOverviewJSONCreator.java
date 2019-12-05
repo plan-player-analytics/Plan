@@ -30,12 +30,12 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Parses JSON payload for /network-page Sessions tab.
+ * Creates JSON payload for /network-page Sessions tab.
  *
  * @author Rsl1122
  */
 @Singleton
-public class NetworkSessionsOverviewJSONParser implements NetworkTabJSONParser<Map<String, Object>> {
+public class NetworkSessionsOverviewJSONCreator implements NetworkTabJSONCreator<Map<String, Object>> {
 
     private final DBSystem dbSystem;
 
@@ -43,7 +43,7 @@ public class NetworkSessionsOverviewJSONParser implements NetworkTabJSONParser<M
     private final Formatter<Double> percentage;
 
     @Inject
-    public NetworkSessionsOverviewJSONParser(
+    public NetworkSessionsOverviewJSONCreator(
             DBSystem dbSystem,
             Formatters formatters
     ) {

@@ -14,16 +14,28 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.exceptions;
+package com.djrapitops.plan.storage.database.sql.building;
 
 /**
- * Exception thrown when Page encounters an Exception.
- *
- * @author Rsl1122
+ * @author Fuzzlemann
  */
-public class ParseException extends Exception {
+public class Update extends WhereBuilder {
 
-    public ParseException(Throwable cause) {
-        super(cause);
+    public Update(String table) {
+        super("UPDATE " + table + " SET ");
+    }
+
+    public static Update values(String table, String... values) {
+        Update builder = new Update(table);
+
+        int size = values.length;
+        for (int i = 0; i < size; i++) {
+            if (size > 1 && i > 0) {
+                builder.append(',');
+            }
+            builder.append(values[i] + "=?");
+        }
+
+        return builder;
     }
 }

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.transactions.patches;
 
-import com.djrapitops.plan.storage.database.sql.parsing.Sql;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
 
 /**

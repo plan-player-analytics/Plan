@@ -20,8 +20,8 @@ import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.storage.database.DBType;
-import com.djrapitops.plan.storage.database.sql.parsing.CreateTableParser;
-import com.djrapitops.plan.storage.database.sql.parsing.Sql;
+import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.transactions.patches.KillsOptimizationPatch;
 import com.djrapitops.plan.storage.database.transactions.patches.KillsServerIDPatch;
 import com.djrapitops.plan.storage.database.transactions.patches.Version10Patch;
@@ -66,7 +66,7 @@ public class KillsTable {
     }
 
     public static String createTableSQL(DBType dbType) {
-        return CreateTableParser.create(TABLE_NAME, dbType)
+        return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(ID, Sql.INT).primaryKey()
                 .column(KILLER_UUID, Sql.varchar(36)).notNull()
                 .column(VICTIM_UUID, Sql.varchar(36)).notNull()

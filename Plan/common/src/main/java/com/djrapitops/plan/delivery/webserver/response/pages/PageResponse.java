@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.webserver.response.pages;
 import com.djrapitops.plan.delivery.rendering.pages.Page;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseType;
-import com.djrapitops.plan.exceptions.ParseException;
+import com.djrapitops.plan.exceptions.GenerationException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
@@ -44,7 +44,7 @@ public class PageResponse extends Response {
         super(type);
     }
 
-    public PageResponse(Page page) throws ParseException {
+    public PageResponse(Page page) throws GenerationException {
         this(ResponseType.HTML);
         super.setHeader("HTTP/1.1 200 OK");
         setContent(page.toHtml());

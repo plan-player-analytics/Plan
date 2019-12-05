@@ -30,7 +30,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 public abstract class Patch extends OperationCriticalTransaction {
 

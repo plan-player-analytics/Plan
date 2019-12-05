@@ -46,13 +46,13 @@ public class RootJSONResolver extends CompositePageResolver {
             GraphsJSONResolver graphsJSONResolver,
             SessionsJSONResolver sessionsJSONResolver,
             PlayersTableJSONResolver playersTableJSONResolver,
-            ServerOverviewJSONParser overviewJSONParser,
-            OnlineActivityOverviewJSONParser onlineActivityOverviewJSONParser,
-            SessionsOverviewJSONParser sessionsOverviewJSONParser,
+            ServerOverviewJSONCreator serverOverviewJSONCreator,
+            OnlineActivityOverviewJSONCreator onlineActivityOverviewJSONCreator,
+            SessionsOverviewJSONCreator sessionsOverviewJSONCreator,
             PlayerKillsJSONResolver playerKillsJSONResolver,
-            PvPPvEJSONParser pvPPvEJSONParser,
-            PlayerBaseOverviewJSONParser playerBaseOverviewJSONParser,
-            PerformanceJSONParser performanceJSONParser,
+            PvPPvEJSONCreator pvPPvEJSONCreator,
+            PlayerBaseOverviewJSONCreator playerBaseOverviewJSONCreator,
+            PerformanceJSONCreator performanceJSONCreator,
 
             PlayerJSONResolver playerJSONResolver,
             NetworkJSONResolver networkJSONResolver
@@ -66,19 +66,19 @@ public class RootJSONResolver extends CompositePageResolver {
         registerPage("pingTable", DataID.PING_TABLE, jsonFactory::pingPerGeolocation);
         registerPage("graph", graphsJSONResolver, 0);
 
-        registerPage("serverOverview", DataID.SERVER_OVERVIEW, overviewJSONParser);
-        registerPage("onlineOverview", DataID.ONLINE_OVERVIEW, onlineActivityOverviewJSONParser);
-        registerPage("sessionsOverview", DataID.SESSIONS_OVERVIEW, sessionsOverviewJSONParser);
-        registerPage("playerVersus", DataID.PVP_PVE, pvPPvEJSONParser);
-        registerPage("playerbaseOverview", DataID.PLAYERBASE_OVERVIEW, playerBaseOverviewJSONParser);
-        registerPage("performanceOverview", DataID.PERFORMANCE_OVERVIEW, performanceJSONParser);
+        registerPage("serverOverview", DataID.SERVER_OVERVIEW, serverOverviewJSONCreator);
+        registerPage("onlineOverview", DataID.ONLINE_OVERVIEW, onlineActivityOverviewJSONCreator);
+        registerPage("sessionsOverview", DataID.SESSIONS_OVERVIEW, sessionsOverviewJSONCreator);
+        registerPage("playerVersus", DataID.PVP_PVE, pvPPvEJSONCreator);
+        registerPage("playerbaseOverview", DataID.PLAYERBASE_OVERVIEW, playerBaseOverviewJSONCreator);
+        registerPage("performanceOverview", DataID.PERFORMANCE_OVERVIEW, performanceJSONCreator);
 
         registerPage("player", playerJSONResolver, 2);
         registerPage("network", networkJSONResolver, 0);
     }
 
-    private <T> void registerPage(String identifier, DataID dataID, ServerTabJSONParser<T> tabJSONParser) {
-        registerPage(identifier, new ServerTabJSONResolver<>(dataID, identifiers, tabJSONParser), 0);
+    private <T> void registerPage(String identifier, DataID dataID, ServerTabJSONCreator<T> tabJSONCreator) {
+        registerPage(identifier, new ServerTabJSONResolver<>(dataID, identifiers, tabJSONCreator), 0);
     }
 
     @Override

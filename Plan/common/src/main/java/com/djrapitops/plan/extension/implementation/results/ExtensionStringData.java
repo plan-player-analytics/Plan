@@ -41,7 +41,7 @@ public class ExtensionStringData implements DescribedExtensionData {
 
     public String getFormattedValue() {
         String withColors = Html.swapColorCodesToSpan(value);
-        return !playerName ? withColors : Html.LINK.parse("../player/" + Html.encodeToURL(value), withColors);
+        return !playerName ? withColors : Html.LINK.create("../player/" + Html.encodeToURL(value), withColors);
     }
 
     ExtensionStringData concatenate(ExtensionStringData other) {

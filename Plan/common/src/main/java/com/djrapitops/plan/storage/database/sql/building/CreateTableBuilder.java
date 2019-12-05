@@ -14,17 +14,17 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.storage.database.sql.parsing;
+package com.djrapitops.plan.storage.database.sql.building;
 
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plugin.utilities.Verify;
 
 /**
- * SqlParser Class for parsing table creation, removal and modification statements.
+ * SQL Builder creating statements for table creation, removal and modification.
  *
  * @author Rsl1122
  */
-public class CreateTableParser {
+public class CreateTableBuilder {
 
     private final DBType dbType;
 
@@ -35,14 +35,14 @@ public class CreateTableParser {
     private int columnCount = 0;
     private int constraintCount = 0;
 
-    private CreateTableParser(DBType dbType, String tableName) {
+    private CreateTableBuilder(DBType dbType, String tableName) {
         this.dbType = dbType;
         columns = new StringBuilder("CREATE TABLE IF NOT EXISTS " + tableName + " (");
         keyConstraints = new StringBuilder();
     }
 
-    public static CreateTableParser create(String tableName, DBType type) {
-        return new CreateTableParser(type, tableName);
+    public static CreateTableBuilder create(String tableName, DBType type) {
+        return new CreateTableBuilder(type, tableName);
     }
 
     private void finalizeColumn() {
@@ -56,14 +56,14 @@ public class CreateTableParser {
         }
     }
 
-    public CreateTableParser column(String column, String type) {
+    public CreateTableBuilder column(String column, String type) {
         finalizeColumn();
         columnBuilder = new StringBuilder();
         columnBuilder.append(column).append(" ").append(type);
         return this;
     }
 
-    public CreateTableParser primaryKey() {
+    public CreateTableBuilder primaryKey() {
         String currentColumn = columnBuilder.substring(0, columnBuilder.indexOf(" "));
         if (dbType.supportsMySQLQueries()) {
             notNull();
@@ -75,26 +75,26 @@ public class CreateTableParser {
         return this;
     }
 
-    public CreateTableParser notNull() {
+    public CreateTableBuilder notNull() {
         columnBuilder.append(" NOT NULL");
         return this;
     }
 
-    public CreateTableParser unique() {
+    public CreateTableBuilder unique() {
         columnBuilder.append(" UNIQUE");
         return this;
     }
 
-    public CreateTableParser defaultValue(boolean value) {
+    public CreateTableBuilder defaultValue(boolean value) {
         return defaultValue(value ? "1" : "0");
     }
 
-    public CreateTableParser defaultValue(String value) {
+    public CreateTableBuilder defaultValue(String value) {
         columnBuilder.append(" DEFAULT ").append(value);
         return this;
     }
 
-    public CreateTableParser foreignKey(String column, String referencedTable, String referencedColumn) {
+    public CreateTableBuilder foreignKey(String column, String referencedTable, String referencedColumn) {
         finalizeColumn();
         if (constraintCount > 0) {
             keyConstraints.append(',');

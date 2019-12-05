@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Query player's Groups by Plugin ID inside ExtensionData objects.

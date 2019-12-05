@@ -48,7 +48,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Factory with different JSON parsing placed to a single class.
+ * Factory with different JSON creation methods placed to a single class.
  *
  * @author Rsl1122
  */
@@ -86,7 +86,7 @@ public class JSONFactory {
 
         Database database = dbSystem.getDatabase();
 
-        return new PlayersTableJSONParser(
+        return new PlayersTableJSONCreator(
                 database.query(new ServerTablePlayersQuery(serverUUID, System.currentTimeMillis(), playtimeThreshold, xMostRecentPlayers)),
                 database.query(new ExtensionServerPlayerDataTableQuery(serverUUID, xMostRecentPlayers)),
                 openPlayerLinksInNewTab,
@@ -101,7 +101,7 @@ public class JSONFactory {
 
         Database database = dbSystem.getDatabase();
 
-        return new PlayersTableJSONParser(
+        return new PlayersTableJSONCreator(
                 database.query(new NetworkTablePlayersQuery(System.currentTimeMillis(), playtimeThreshold, xMostRecentPlayers)),
                 Collections.emptyMap(),
                 openPlayerLinksInNewTab,

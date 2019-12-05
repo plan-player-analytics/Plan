@@ -25,7 +25,7 @@ import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Transaction to remove older results that violate an updated condition value.

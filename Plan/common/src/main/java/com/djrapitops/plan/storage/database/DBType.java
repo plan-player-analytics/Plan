@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database;
 
-import com.djrapitops.plan.storage.database.sql.parsing.Sql;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
 
 import java.util.Optional;
 

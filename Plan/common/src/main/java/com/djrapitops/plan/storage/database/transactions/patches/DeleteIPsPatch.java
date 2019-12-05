@@ -22,7 +22,7 @@ import com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Patch that replaces plan_ips with plan_geolocations table.

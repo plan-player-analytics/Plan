@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Query aggregated Group values from groups table.

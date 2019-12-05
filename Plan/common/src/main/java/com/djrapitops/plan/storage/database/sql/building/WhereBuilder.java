@@ -14,26 +14,26 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.storage.database.sql.parsing;
+package com.djrapitops.plan.storage.database.sql.building;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * @author Fuzzlemann
  */
-public abstract class WhereParser extends SqlParser {
+public abstract class WhereBuilder extends SqlBuilder {
 
     private int conditions = 0;
 
-    public WhereParser() {
+    public WhereBuilder() {
         super();
     }
 
-    public WhereParser(String start) {
+    public WhereBuilder(String start) {
         super(start);
     }
 
-    public WhereParser where(String... conditions) {
+    public WhereBuilder where(String... conditions) {
         append(WHERE);
         for (String condition : conditions) {
             if (this.conditions > 0) {
@@ -46,14 +46,14 @@ public abstract class WhereParser extends SqlParser {
         return this;
     }
 
-    public WhereParser and(String condition) {
+    public WhereBuilder and(String condition) {
         append(AND);
         append('(').append(condition).append(')');
         this.conditions++;
         return this;
     }
 
-    public WhereParser or(String condition) {
+    public WhereBuilder or(String condition) {
         append(OR);
         append('(').append(condition).append(')');
         this.conditions++;

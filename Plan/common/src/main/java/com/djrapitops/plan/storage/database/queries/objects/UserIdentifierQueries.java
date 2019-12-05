@@ -19,7 +19,7 @@ package com.djrapitops.plan.storage.database.queries.objects;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.parsing.Select;
+import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.NicknamesTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
@@ -29,7 +29,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Queries for fetching different user identifiers in the database.

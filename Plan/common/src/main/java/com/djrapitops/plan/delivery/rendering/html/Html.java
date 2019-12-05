@@ -72,19 +72,6 @@ public enum Html {
     }
 
     /**
-     * @return The HTML String
-     */
-    public String parse() {
-        return html;
-    }
-
-    public static String separateWithDots(String... elements) {
-        TextStringBuilder builder = new TextStringBuilder();
-        builder.appendWithSeparators(elements, " &#x2022; ");
-        return builder.toString();
-    }
-
-    /**
      * Changes Minecraft color codes to HTML span elements with correct color class assignments.
      *
      * @param string String to replace Minecraft color codes from
@@ -102,7 +89,7 @@ public enum Html {
         String splitWith = string.contains("&sect;") ? "&sect;" : "§";
 
         for (Html html : replacer) {
-            colorMap.put(Character.toLowerCase(html.name().charAt(6)), html.parse());
+            colorMap.put(Character.toLowerCase(html.name().charAt(6)), html.create());
             colorMap.put('k', "");
             colorMap.put('l', "");
             colorMap.put('m', "");
@@ -151,6 +138,19 @@ public enum Html {
         return result.toString();
     }
 
+    public static String separateWithDots(String... elements) {
+        TextStringBuilder builder = new TextStringBuilder();
+        builder.appendWithSeparators(elements, " &#x2022; ");
+        return builder.toString();
+    }
+
+    /**
+     * @return The HTML String
+     */
+    public String create() {
+        return html;
+    }
+
     private static void appendEndTags(StringBuilder result, int placedSpans) {
         for (int i = 0; i < placedSpans; i++) {
             result.append("</span>");
@@ -159,9 +159,9 @@ public enum Html {
 
     /**
      * @param replacements The replacement Strings
-     * @return The parsed HTML String
+     * @return The HTML String
      */
-    public String parse(Serializable... replacements) {
+    public String create(Serializable... replacements) {
         Map<String, Serializable> replaceMap = new HashMap<>();
 
         for (int i = 0; i < replacements.length; i++) {

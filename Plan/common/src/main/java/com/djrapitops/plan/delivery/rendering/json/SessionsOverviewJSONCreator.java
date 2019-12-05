@@ -34,12 +34,12 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Parses JSON payload for /server-page Sessions tab.
+ * Creates JSON payload for /server-page Sessions tab.
  *
  * @author Rsl1122
  */
 @Singleton
-public class SessionsOverviewJSONParser implements ServerTabJSONParser<Map<String, Object>> {
+public class SessionsOverviewJSONCreator implements ServerTabJSONCreator<Map<String, Object>> {
 
     private final DBSystem dbSystem;
 
@@ -47,7 +47,7 @@ public class SessionsOverviewJSONParser implements ServerTabJSONParser<Map<Strin
     private final Formatter<Double> percentage;
 
     @Inject
-    public SessionsOverviewJSONParser(
+    public SessionsOverviewJSONCreator(
             DBSystem dbSystem,
             Formatters formatters
     ) {

@@ -24,7 +24,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.WHERE;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 
 public class WorldTimesSeverIDPatch extends Patch {
 

@@ -28,7 +28,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Transaction for removing duplicate data in plan_user_info.

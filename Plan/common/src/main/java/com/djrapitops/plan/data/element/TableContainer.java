@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Container used for parsing Html tables.
+ * Container used for creating Html tables.
  *
  * @author Rsl1122
  * @deprecated PluginData API has been deprecated - see https://github.com/plan-player-analytics/Plan/wiki/APIv5---DataExtension-API for new API.
@@ -44,7 +44,7 @@ public class TableContainer {
     /**
      * Constructor, call with super(...).
      *
-     * @param header Required: example {@code new TableContainer("1st", "2nd"} parses into {@code <thead><tr><th>1st</th><th>2nd</th></tr></thead}.
+     * @param header Required: example {@code new TableContainer("1st", "2nd"} turns into {@code <thead><tr><th>1st</th><th>2nd</th></tr></thead}.
      */
     public TableContainer(String... header) {
         this.header = header;
@@ -62,7 +62,11 @@ public class TableContainer {
         this.values.add(values);
     }
 
-    public String parseHtml() {
+    public String parsehtml() {
+        return buildHtml();
+    }
+
+    public String buildHtml() {
         return getTableHeader() +
                 parseHeader() +
                 parseBody() +

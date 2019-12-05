@@ -17,9 +17,9 @@
 package com.djrapitops.plan.storage.database.sql.tables;
 
 import com.djrapitops.plan.storage.database.DBType;
-import com.djrapitops.plan.storage.database.sql.parsing.CreateTableParser;
-import com.djrapitops.plan.storage.database.sql.parsing.Insert;
-import com.djrapitops.plan.storage.database.sql.parsing.Sql;
+import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
+import com.djrapitops.plan.storage.database.sql.building.Insert;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
 
 /**
  * Table information about 'plan_security'
@@ -41,7 +41,7 @@ public class SecurityTable {
     }
 
     public static String createTableSQL(DBType dbType) {
-        return CreateTableParser.create(TABLE_NAME, dbType)
+        return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(USERNAME, Sql.varchar(100)).notNull().unique()
                 .column(SALT_PASSWORD_HASH, Sql.varchar(100)).notNull().unique()
                 .column(PERMISSION_LEVEL, Sql.INT).notNull()

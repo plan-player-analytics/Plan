@@ -18,7 +18,7 @@ package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.exceptions.database.DBInitException;
 import com.djrapitops.plan.storage.database.queries.Query;
-import com.djrapitops.plan.storage.database.sql.parsing.Sql;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 
 import java.util.concurrent.Future;

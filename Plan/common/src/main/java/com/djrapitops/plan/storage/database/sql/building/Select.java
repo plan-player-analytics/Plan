@@ -14,29 +14,29 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.storage.database.sql.parsing;
+package com.djrapitops.plan.storage.database.sql.building;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.FROM;
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.SELECT;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.SELECT;
 
-public class Select extends WhereParser {
+public class Select extends WhereBuilder {
 
     public Select(String start) {
         super(start);
     }
 
     public static Select from(String table, String... columns) {
-        Select parser = new Select(SELECT);
+        Select builder = new Select(SELECT);
         int size = columns.length;
         for (int i = 0; i < size; i++) {
             if (size > 1 && i > 0) {
-                parser.append(',');
+                builder.append(',');
             }
-            parser.append(columns[i]);
+            builder.append(columns[i]);
         }
 
-        parser.append(FROM).append(table);
-        return parser;
+        builder.append(FROM).append(table);
+        return builder;
     }
 
     public static Select all(String table) {

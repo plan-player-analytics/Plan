@@ -18,12 +18,12 @@ package com.djrapitops.plan.storage.database.sql.tables;
 
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.storage.database.DBType;
-import com.djrapitops.plan.storage.database.sql.parsing.CreateTableParser;
-import com.djrapitops.plan.storage.database.sql.parsing.Insert;
-import com.djrapitops.plan.storage.database.sql.parsing.Sql;
-import com.djrapitops.plan.storage.database.sql.parsing.Update;
+import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
+import com.djrapitops.plan.storage.database.sql.building.Insert;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
+import com.djrapitops.plan.storage.database.sql.building.Update;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Table information about 'plan_servers'.
@@ -65,7 +65,7 @@ public class ServerTable {
     }
 
     public static String createTableSQL(DBType dbType) {
-        return CreateTableParser.create(TABLE_NAME, dbType)
+        return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(SERVER_ID, Sql.INT).primaryKey()
                 .column(SERVER_UUID, Sql.varchar(36)).notNull().unique()
                 .column(NAME, Sql.varchar(100))

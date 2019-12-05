@@ -14,18 +14,22 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.webserver.response.pages;
+package com.djrapitops.plan.delivery.rendering.json;
 
-import com.djrapitops.plan.delivery.rendering.pages.PlayersPage;
-import com.djrapitops.plan.exceptions.GenerationException;
+import java.util.UUID;
+import java.util.function.Function;
 
 /**
+ * Interface using Server UUID for creating Objects that can be turned into JSON with Gson.
+ *
  * @author Rsl1122
  */
-public class PlayersPageResponse extends PageResponse {
+public interface ServerTabJSONCreator<T> extends Function<UUID, T> {
 
-    public PlayersPageResponse(PlayersPage playersPage) throws GenerationException {
-        setHeader("HTTP/1.1 200 OK");
-        setContent(playersPage.toHtml());
+    T createJSONAsMap(UUID serverUUID);
+
+    @Override
+    default T apply(UUID uuid) {
+        return createJSONAsMap(uuid);
     }
 }

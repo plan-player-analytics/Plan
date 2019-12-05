@@ -35,7 +35,7 @@ import java.util.Collections;
 import java.util.UUID;
 
 /**
- * Performs parameter parsing for PvP kills JSON requests.
+ * Resolves /v1/kills JSON requests.
  *
  * @author Rsl1122
  */

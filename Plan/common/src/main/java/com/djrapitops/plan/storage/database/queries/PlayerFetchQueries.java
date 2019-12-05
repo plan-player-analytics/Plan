@@ -25,7 +25,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Static method class for queries that return information related to a single player.

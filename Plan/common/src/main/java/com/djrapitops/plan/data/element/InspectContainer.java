@@ -23,15 +23,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Container used to parse data for Inspect page.
- * <p>
- * Can contain values: addValue("Total Examples", 1) parses into ("Total Examples: 1")
- * Html: addHtml(key, "{@code <html>}") parses into ("{@code <html>}")
- * Tables: addTable(key, TableContainer) parses into ("{@code <table>...</table}")
- * <p>
- * Has methods for adding icons to Strings:
- * getWithIcon("text", "cube") parses into {@code "<i class=\"fa fa-cube\"></i> text"}
- * getWithColoredIcon("text", "cube", "light-green") parses into {@code "<i class=\"col-light-green fa fa-cube\"></i> text"}
+ * Container used to hold data for Player page.
  *
  * @author Rsl1122
  * @see TableContainer
@@ -78,7 +70,7 @@ public class InspectContainer {
         }
 
         for (Map.Entry<String, TableContainer> entry : tables.entrySet()) {
-            parsed.append(entry.getValue().parseHtml());
+            parsed.append(entry.getValue().buildHtml());
         }
 
         return parsed.toString();

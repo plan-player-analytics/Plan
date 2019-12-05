@@ -22,7 +22,7 @@ import com.djrapitops.plan.storage.database.sql.tables.*;
 
 import java.util.Optional;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.FROM;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
 
 public class Version10Patch extends Patch {
 

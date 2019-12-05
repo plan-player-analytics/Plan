@@ -19,7 +19,7 @@ package com.djrapitops.plan.storage.database.transactions.patches;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.queries.schema.H2SchemaQueries;
 import com.djrapitops.plan.storage.database.queries.schema.MySQLSchemaQueries;
-import com.djrapitops.plan.storage.database.sql.parsing.Sql;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerTableValueTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionServerTableValueTable;
 

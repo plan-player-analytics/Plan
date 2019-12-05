@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.transactions.events;
 
-import com.djrapitops.plan.storage.database.sql.parsing.Update;
+import com.djrapitops.plan.storage.database.sql.building.Update;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;

@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Static method class for queries that count together counts for a player on a per server basis.

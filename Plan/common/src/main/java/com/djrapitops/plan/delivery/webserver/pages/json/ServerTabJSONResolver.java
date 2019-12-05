@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.pages.json;
 
-import com.djrapitops.plan.delivery.rendering.json.ServerTabJSONParser;
+import com.djrapitops.plan.delivery.rendering.json.ServerTabJSONCreator;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
@@ -41,22 +41,22 @@ public class ServerTabJSONResolver<T> implements PageResolver {
 
     private final DataID dataID;
     private final Identifiers identifiers;
-    private final Function<UUID, T> jsonParser;
+    private final Function<UUID, T> jsonCreator;
 
     public ServerTabJSONResolver(
             DataID dataID,
             Identifiers identifiers,
-            ServerTabJSONParser<T> jsonParser
+            ServerTabJSONCreator<T> jsonCreator
     ) {
         this.dataID = dataID;
         this.identifiers = identifiers;
-        this.jsonParser = jsonParser;
+        this.jsonCreator = jsonCreator;
     }
 
     @Override
     public Response resolve(Request request, RequestTarget target) throws WebException {
         UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
-        return JSONCache.getOrCache(dataID, serverUUID, () -> new JSONResponse(jsonParser.apply(serverUUID)));
+        return JSONCache.getOrCache(dataID, serverUUID, () -> new JSONResponse(jsonCreator.apply(serverUUID)));
     }
 
     @Override

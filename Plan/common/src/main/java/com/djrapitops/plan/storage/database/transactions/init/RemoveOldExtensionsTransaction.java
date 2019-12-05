@@ -29,7 +29,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.UUID;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Transaction that removes outdated plugin's data after configurable threshold.

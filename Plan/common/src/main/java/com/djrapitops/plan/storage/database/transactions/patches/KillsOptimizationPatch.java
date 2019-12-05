@@ -19,7 +19,7 @@ package com.djrapitops.plan.storage.database.transactions.patches;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.sql.tables.KillsTable;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.FROM;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
 
 public class KillsOptimizationPatch extends Patch {
 

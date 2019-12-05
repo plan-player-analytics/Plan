@@ -17,10 +17,10 @@
 package com.djrapitops.plan.delivery.webserver.pages.json;
 
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
-import com.djrapitops.plan.delivery.rendering.json.network.NetworkOverviewJSONParser;
-import com.djrapitops.plan.delivery.rendering.json.network.NetworkPlayerBaseOverviewJSONParser;
-import com.djrapitops.plan.delivery.rendering.json.network.NetworkSessionsOverviewJSONParser;
-import com.djrapitops.plan.delivery.rendering.json.network.NetworkTabJSONParser;
+import com.djrapitops.plan.delivery.rendering.json.network.NetworkOverviewJSONCreator;
+import com.djrapitops.plan.delivery.rendering.json.network.NetworkPlayerBaseOverviewJSONCreator;
+import com.djrapitops.plan.delivery.rendering.json.network.NetworkSessionsOverviewJSONCreator;
+import com.djrapitops.plan.delivery.rendering.json.network.NetworkTabJSONCreator;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
@@ -42,21 +42,21 @@ public class NetworkJSONResolver extends CompositePageResolver {
     public NetworkJSONResolver(
             ResponseFactory responseFactory,
             JSONFactory jsonFactory,
-            NetworkOverviewJSONParser networkOverviewJSONParser,
-            NetworkPlayerBaseOverviewJSONParser playerBaseOverviewJSONParser,
-            NetworkSessionsOverviewJSONParser sessionsOverviewJSONParser
+            NetworkOverviewJSONCreator networkOverviewJSONCreator,
+            NetworkPlayerBaseOverviewJSONCreator networkPlayerBaseOverviewJSONCreator,
+            NetworkSessionsOverviewJSONCreator networkSessionsOverviewJSONCreator
     ) {
         super(responseFactory);
 
-        registerPage("overview", DataID.SERVER_OVERVIEW, networkOverviewJSONParser);
-        registerPage("playerbaseOverview", DataID.PLAYERBASE_OVERVIEW, playerBaseOverviewJSONParser);
-        registerPage("sessionsOverview", DataID.SESSIONS_OVERVIEW, sessionsOverviewJSONParser);
+        registerPage("overview", DataID.SERVER_OVERVIEW, networkOverviewJSONCreator);
+        registerPage("playerbaseOverview", DataID.PLAYERBASE_OVERVIEW, networkPlayerBaseOverviewJSONCreator);
+        registerPage("sessionsOverview", DataID.SESSIONS_OVERVIEW, networkSessionsOverviewJSONCreator);
         registerPage("servers", DataID.SERVERS, jsonFactory::serversAsJSONMaps);
         registerPage("pingTable", DataID.PING_TABLE, jsonFactory::pingPerGeolocation);
     }
 
-    private <T> void registerPage(String identifier, DataID dataID, NetworkTabJSONParser<T> tabJSONParser) {
-        registerPage(identifier, new NetworkTabJSONResolver<>(dataID, tabJSONParser));
+    private <T> void registerPage(String identifier, DataID dataID, NetworkTabJSONCreator<T> tabJSONCreator) {
+        registerPage(identifier, new NetworkTabJSONResolver<>(dataID, tabJSONCreator));
     }
 
     @Override

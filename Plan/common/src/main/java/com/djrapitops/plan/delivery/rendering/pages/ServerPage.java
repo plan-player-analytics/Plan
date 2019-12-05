@@ -25,7 +25,7 @@ import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
-import com.djrapitops.plan.exceptions.ParseException;
+import com.djrapitops.plan.exceptions.GenerationException;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
 import com.djrapitops.plan.identification.Server;
@@ -45,7 +45,7 @@ import java.util.UUID;
 import static com.djrapitops.plan.delivery.domain.keys.AnalysisKeys.*;
 
 /**
- * Used for parsing a Html String out of server.html.
+ * Html String generator for /server page.
  *
  * @author Rsl1122
  */
@@ -81,7 +81,7 @@ public class ServerPage implements Page {
     }
 
     @Override
-    public String toHtml() throws ParseException {
+    public String toHtml() throws GenerationException {
         PlaceholderReplacer placeholders = new PlaceholderReplacer();
 
         UUID serverUUID = server.getUuid();
@@ -123,7 +123,7 @@ public class ServerPage implements Page {
                 AVG_PING_COLOR, MAX_PING_COLOR, MIN_PING_COLOR
         );
 
-        placeholders.put("backButton", serverInfo.getServer().isProxy() ? Html.BACK_BUTTON_NETWORK.parse() : "");
+        placeholders.put("backButton", serverInfo.getServer().isProxy() ? Html.BACK_BUTTON_NETWORK.create() : "");
         placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
         placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
 
@@ -141,7 +141,7 @@ public class ServerPage implements Page {
         try {
             return placeholders.apply(files.getCustomizableResourceOrDefault("web/server.html").asString());
         } catch (IOException e) {
-            throw new ParseException(e);
+            throw new GenerationException(e);
         }
     }
 }

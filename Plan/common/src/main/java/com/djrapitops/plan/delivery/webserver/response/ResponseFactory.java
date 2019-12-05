@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.webserver.response;
 import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
 import com.djrapitops.plan.delivery.webserver.response.errors.*;
 import com.djrapitops.plan.delivery.webserver.response.pages.*;
-import com.djrapitops.plan.exceptions.ParseException;
+import com.djrapitops.plan.exceptions.GenerationException;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -67,15 +67,15 @@ public class ResponseFactory {
         try {
             return new DebugPageResponse(pageFactory.debugPage(), versionCheckSystem, files);
         } catch (IOException e) {
-            return internalErrorResponse(e, "Failed to parse debug page");
+            return internalErrorResponse(e, "Failed to generate debug page");
         }
     }
 
     public Response playersPageResponse() {
         try {
             return new PlayersPageResponse(pageFactory.playersPage());
-        } catch (ParseException e) {
-            return internalErrorResponse(e, "Failed to parse players page");
+        } catch (GenerationException e) {
+            return internalErrorResponse(e, "Failed to generate players page");
         }
     }
 
@@ -94,16 +94,16 @@ public class ResponseFactory {
     public Response networkPageResponse() {
         try {
             return new PageResponse(pageFactory.networkPage());
-        } catch (ParseException e) {
-            return internalErrorResponse(e, "Failed to parse network page");
+        } catch (GenerationException e) {
+            return internalErrorResponse(e, "Failed to generate network page");
         }
     }
 
     public Response serverPageResponse(UUID serverUUID) throws NotFoundException {
         try {
             return new PageResponse(pageFactory.serverPage(serverUUID));
-        } catch (ParseException e) {
-            return internalErrorResponse(e, "Failed to parse server page");
+        } catch (GenerationException e) {
+            return internalErrorResponse(e, "Failed to generate server page");
         }
     }
 
@@ -161,7 +161,7 @@ public class ResponseFactory {
         try {
             return new NotFoundResponse(message, versionCheckSystem, files);
         } catch (IOException e) {
-            return internalErrorResponse(e, "Failed to parse 404 page");
+            return internalErrorResponse(e, "Failed to generate 404 page");
         }
     }
 
@@ -169,7 +169,7 @@ public class ResponseFactory {
         try {
             return PromptAuthorizationResponse.getBasicAuthResponse(e, versionCheckSystem, files);
         } catch (IOException jarReadFailed) {
-            return internalErrorResponse(e, "Failed to parse PromptAuthorizationResponse");
+            return internalErrorResponse(e, "Failed to generate PromptAuthorizationResponse");
         }
     }
 
@@ -182,7 +182,7 @@ public class ResponseFactory {
         try {
             return new ForbiddenResponse(message, versionCheckSystem, files);
         } catch (IOException e) {
-            return internalErrorResponse(e, "Failed to parse ForbiddenResponse");
+            return internalErrorResponse(e, "Failed to generate ForbiddenResponse");
         }
     }
 
@@ -190,7 +190,7 @@ public class ResponseFactory {
         try {
             return PromptAuthorizationResponse.getBasicAuthResponse(versionCheckSystem, files);
         } catch (IOException e) {
-            return internalErrorResponse(e, "Failed to parse PromptAuthorizationResponse");
+            return internalErrorResponse(e, "Failed to generate PromptAuthorizationResponse");
         }
     }
 
@@ -203,8 +203,8 @@ public class ResponseFactory {
             return new PageResponse(pageFactory.playerPage(playerUUID));
         } catch (IllegalStateException e) {
             return playerNotFound404();
-        } catch (ParseException e) {
-            return internalErrorResponse(e, "Failed to parse player page");
+        } catch (GenerationException e) {
+            return internalErrorResponse(e, "Failed to generate player page");
         }
     }
 }

@@ -37,7 +37,7 @@ public class Message {
         this.content = content;
     }
 
-    public String parse(Serializable... p) {
+    public String toString(Serializable... p) {
         Verify.nullCheck(p);
 
         Map<String, Serializable> replaceMap = new HashMap<>();
@@ -56,7 +56,7 @@ public class Message {
     }
 
     public String[] toArray(Serializable... p) {
-        return parse(p).split(content, '\\');
+        return toString(p).split(content, '\\');
     }
 
     @Override

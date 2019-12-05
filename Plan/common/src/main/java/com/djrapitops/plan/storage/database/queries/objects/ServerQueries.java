@@ -20,7 +20,7 @@ import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.parsing.Select;
+import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -29,7 +29,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Queries for {@link Server} objects.

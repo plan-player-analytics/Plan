@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Queries for {@link WorldTimes} objects.

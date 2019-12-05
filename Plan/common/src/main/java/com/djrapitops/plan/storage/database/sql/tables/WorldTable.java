@@ -17,13 +17,13 @@
 package com.djrapitops.plan.storage.database.sql.tables;
 
 import com.djrapitops.plan.storage.database.DBType;
-import com.djrapitops.plan.storage.database.sql.parsing.CreateTableParser;
-import com.djrapitops.plan.storage.database.sql.parsing.Sql;
+import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.transactions.patches.Version10Patch;
 import com.djrapitops.plan.storage.database.transactions.patches.WorldsOptimizationPatch;
 import com.djrapitops.plan.storage.database.transactions.patches.WorldsServerIDPatch;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Table information about 'plan_worlds'.
@@ -59,7 +59,7 @@ public class WorldTable {
     }
 
     public static String createTableSQL(DBType dbType) {
-        return CreateTableParser.create(TABLE_NAME, dbType)
+        return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(ID, Sql.INT).primaryKey()
                 .column(NAME, Sql.varchar(100)).notNull()
                 .column(SERVER_UUID, Sql.varchar(36)).notNull()

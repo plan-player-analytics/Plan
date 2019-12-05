@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.storage.database.sql.parsing;
+package com.djrapitops.plan.storage.database.sql.building;
 
 import java.util.concurrent.TimeUnit;
 
@@ -50,7 +50,7 @@ public abstract class Sql {
     }
 
     /**
-     * Parse day of week to epoch ms.
+     * Turn day of week to epoch ms.
      * <p>
      * 1st of January 1970 (Epoch) is Thursday (-2).
      *

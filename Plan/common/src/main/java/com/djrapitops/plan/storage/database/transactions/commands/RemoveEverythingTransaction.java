@@ -19,7 +19,7 @@ package com.djrapitops.plan.storage.database.transactions.commands;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.DELETE_FROM;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.DELETE_FROM;
 
 /**
  * Transaction that removes everything from the database.

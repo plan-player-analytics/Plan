@@ -14,22 +14,16 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.json;
-
-import java.util.UUID;
-import java.util.function.Function;
+package com.djrapitops.plan.exceptions;
 
 /**
- * Interface for different tab JSON parsers.
+ * Exception thrown when Page encounters an Exception.
  *
  * @author Rsl1122
  */
-public interface ServerTabJSONParser<T> extends Function<UUID, T> {
+public class GenerationException extends Exception {
 
-    T createJSONAsMap(UUID serverUUID);
-
-    @Override
-    default T apply(UUID uuid) {
-        return createJSONAsMap(uuid);
+    public GenerationException(Throwable cause) {
+        super(cause);
     }
 }

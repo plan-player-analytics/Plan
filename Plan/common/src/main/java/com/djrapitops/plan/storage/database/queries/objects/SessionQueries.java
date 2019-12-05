@@ -26,7 +26,7 @@ import com.djrapitops.plan.gathering.domain.WorldTimes;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.parsing.Sql;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 
@@ -36,7 +36,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Queries for {@link Session} objects.

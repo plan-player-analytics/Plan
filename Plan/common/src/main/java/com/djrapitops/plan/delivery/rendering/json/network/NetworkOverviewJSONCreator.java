@@ -40,12 +40,12 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Parses JSON payload for /network-page Network Overview tab.
+ * Creates JSON payload for /network-page Network Overview tab.
  *
  * @author Rsl1122
  */
 @Singleton
-public class NetworkOverviewJSONParser implements NetworkTabJSONParser<Map<String, Object>> {
+public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<String, Object>> {
 
     private final Formatter<Long> day;
     private final PlanConfig config;
@@ -55,7 +55,7 @@ public class NetworkOverviewJSONParser implements NetworkTabJSONParser<Map<Strin
     private final Formatter<DateHolder> year;
 
     @Inject
-    public NetworkOverviewJSONParser(
+    public NetworkOverviewJSONCreator(
             PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,

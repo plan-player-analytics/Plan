@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Query Extension data of x most recent players on a server.

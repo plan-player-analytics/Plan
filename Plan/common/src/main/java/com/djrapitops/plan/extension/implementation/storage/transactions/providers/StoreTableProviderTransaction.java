@@ -32,8 +32,8 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.UUID;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.AND;
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.WHERE;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.AND;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 import static com.djrapitops.plan.storage.database.sql.tables.ExtensionTableProviderTable.*;
 
 /**

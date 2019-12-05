@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Queries for {@link WebUser} objects.

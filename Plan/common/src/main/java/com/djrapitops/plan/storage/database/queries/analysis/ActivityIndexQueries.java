@@ -28,7 +28,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Queries for Activity Index that attempts to gain insight into player activity levels.

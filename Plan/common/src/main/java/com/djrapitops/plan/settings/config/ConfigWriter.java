@@ -73,7 +73,7 @@ public class ConfigWriter {
         if (!directory.toRealPath().toFile().isDirectory()) {
             Files.createDirectories(directory);
         }
-        Files.write(outputPath, parseLines(writing), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+        Files.write(outputPath, createLines(writing), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
 
         writing.updateParent(storedParent);
     }
@@ -86,7 +86,7 @@ public class ConfigWriter {
      * @param writing ConfigNode to "write"
      * @return List of lines that would be written.
      */
-    public List<String> parseLines(ConfigNode writing) {
+    public List<String> createLines(ConfigNode writing) {
         List<String> lines = new ArrayList<>();
 
         dfsTreeTraverseLineResolve(writing, lines);

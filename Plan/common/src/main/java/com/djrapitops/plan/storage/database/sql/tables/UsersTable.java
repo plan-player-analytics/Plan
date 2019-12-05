@@ -17,9 +17,9 @@
 package com.djrapitops.plan.storage.database.sql.tables;
 
 import com.djrapitops.plan.storage.database.DBType;
-import com.djrapitops.plan.storage.database.sql.parsing.CreateTableParser;
-import com.djrapitops.plan.storage.database.sql.parsing.Insert;
-import com.djrapitops.plan.storage.database.sql.parsing.Sql;
+import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
+import com.djrapitops.plan.storage.database.sql.building.Insert;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
 
 /**
  * Table information about 'plan_users'.
@@ -49,7 +49,7 @@ public class UsersTable {
     }
 
     public static String createTableSQL(DBType dbType) {
-        return CreateTableParser.create(TABLE_NAME, dbType)
+        return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(ID, Sql.INT).primaryKey()
                 .column(USER_UUID, Sql.varchar(36)).notNull().unique()
                 .column(REGISTERED, Sql.LONG).notNull()

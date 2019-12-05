@@ -38,12 +38,12 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Parses JSON payload for /server-page Performance tab.
+ * Creates JSON payload for /server-page Performance tab.
  *
  * @author Rsl1122
  */
 @Singleton
-public class PerformanceJSONParser implements ServerTabJSONParser<Map<String, Object>> {
+public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, Object>> {
 
     private final PlanConfig config;
     private final Locale locale;
@@ -54,7 +54,7 @@ public class PerformanceJSONParser implements ServerTabJSONParser<Map<String, Ob
     private final Formatter<Double> percentageFormatter;
 
     @Inject
-    public PerformanceJSONParser(
+    public PerformanceJSONCreator(
             PlanConfig config,
             Locale locale,
             DBSystem dbSystem,

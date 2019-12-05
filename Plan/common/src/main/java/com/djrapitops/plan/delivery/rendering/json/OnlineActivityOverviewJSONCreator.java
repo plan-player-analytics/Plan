@@ -41,12 +41,12 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Parses JSON payload for /server-page Online Activity Overview tab.
+ * Creates JSON payload for /server-page Online Activity Overview tab.
  *
  * @author Rsl1122
  */
 @Singleton
-public class OnlineActivityOverviewJSONParser implements ServerTabJSONParser<Map<String, Object>> {
+public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<Map<String, Object>> {
 
     private final PlanConfig config;
     private final DBSystem dbSystem;
@@ -57,7 +57,7 @@ public class OnlineActivityOverviewJSONParser implements ServerTabJSONParser<Map
     private final TimeZone timeZone;
 
     @Inject
-    public OnlineActivityOverviewJSONParser(
+    public OnlineActivityOverviewJSONCreator(
             PlanConfig config,
             DBSystem dbSystem,
             Formatters formatters

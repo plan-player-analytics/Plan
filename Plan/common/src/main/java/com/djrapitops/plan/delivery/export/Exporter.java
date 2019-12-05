@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.export;
 
 import com.djrapitops.plan.exceptions.ExportException;
-import com.djrapitops.plan.exceptions.ParseException;
+import com.djrapitops.plan.exceptions.GenerationException;
 import com.djrapitops.plan.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -91,7 +91,7 @@ public class Exporter extends FileExporter {
      *
      * @param server Server which page is going to be exported
      * @return false if the page was not exported due to previous failure or is disabled in config.
-     * @throws ExportException If the export failed due to IO, NotFound or ParseException.
+     * @throws ExportException If the export failed due to IO, NotFound or GenerationException.
      */
     public boolean exportServerPage(Server server) throws ExportException {
         UUID serverUUID = server.getUuid();
@@ -105,7 +105,7 @@ public class Exporter extends FileExporter {
                 serverPageExporter.export(toDirectory, server);
             }
             return true;
-        } catch (IOException | NotFoundException | ParseException e) {
+        } catch (IOException | NotFoundException | GenerationException e) {
             failedServers.add(serverUUID);
             throw new ExportException("Failed to export server: " + server.getIdentifiableName() + " (Attempts disabled until next reload), " + e.toString(), e);
         }
@@ -135,7 +135,7 @@ public class Exporter extends FileExporter {
      * @param playerUUID UUID of the player.
      * @param playerName Name of the player.
      * @return false if the page was not exported due to config settings.
-     * @throws ExportException If the export failed due to IO, NotFound or ParseException.
+     * @throws ExportException If the export failed due to IO, NotFound or GenerationException.
      */
     public boolean exportPlayerPage(UUID playerUUID, String playerName) throws ExportException {
         Path toDirectory = getPageExportDirectory();
@@ -144,7 +144,7 @@ public class Exporter extends FileExporter {
         try {
             playerPageExporter.export(toDirectory, playerUUID, playerName);
             return true;
-        } catch (IOException | NotFoundException | ParseException e) {
+        } catch (IOException | NotFoundException | GenerationException e) {
             throw new ExportException("Failed to export player: " + playerName + ", " + e.toString(), e);
         }
     }
@@ -156,7 +156,7 @@ public class Exporter extends FileExporter {
         try {
             playersPageExporter.export(toDirectory);
             return true;
-        } catch (IOException | NotFoundException | ParseException e) {
+        } catch (IOException | NotFoundException | GenerationException e) {
             throw new ExportException("Failed to export players page, " + e.toString(), e);
         }
     }

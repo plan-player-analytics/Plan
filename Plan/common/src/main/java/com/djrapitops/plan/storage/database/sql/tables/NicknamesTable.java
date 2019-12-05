@@ -17,14 +17,14 @@
 package com.djrapitops.plan.storage.database.sql.tables;
 
 import com.djrapitops.plan.storage.database.DBType;
-import com.djrapitops.plan.storage.database.sql.parsing.CreateTableParser;
-import com.djrapitops.plan.storage.database.sql.parsing.Sql;
+import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.transactions.patches.NicknameLastSeenPatch;
 import com.djrapitops.plan.storage.database.transactions.patches.NicknamesOptimizationPatch;
 import com.djrapitops.plan.storage.database.transactions.patches.Version10Patch;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.AND;
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.WHERE;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.AND;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 
 /**
  * Table information about 'plan_nicknames'.
@@ -63,7 +63,7 @@ public class NicknamesTable {
     }
 
     public static String createTableSQL(DBType dbType) {
-        return CreateTableParser.create(TABLE_NAME, dbType)
+        return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(ID, Sql.INT).primaryKey()
                 .column(USER_UUID, Sql.varchar(36)).notNull()
                 .column(NICKNAME, Sql.varchar(75)).notNull()

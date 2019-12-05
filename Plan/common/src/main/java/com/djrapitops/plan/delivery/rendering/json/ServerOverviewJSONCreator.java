@@ -43,12 +43,12 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Parses JSON payload for /server-page Server Overview tab.
+ * Creates JSON payload for /server-page Server Overview tab.
  *
  * @author Rsl1122
  */
 @Singleton
-public class ServerOverviewJSONParser implements ServerTabJSONParser<Map<String, Object>> {
+public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<String, Object>> {
 
     private final Formatter<Long> day;
     private final PlanConfig config;
@@ -63,7 +63,7 @@ public class ServerOverviewJSONParser implements ServerTabJSONParser<Map<String,
     private final TimeZone timeZone;
 
     @Inject
-    public ServerOverviewJSONParser(
+    public ServerOverviewJSONCreator(
             PlanConfig config,
             Locale locale,
             DBSystem dbSystem,

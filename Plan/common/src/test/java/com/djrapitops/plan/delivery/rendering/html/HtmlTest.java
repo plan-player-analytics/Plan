@@ -34,7 +34,7 @@ class HtmlTest {
     @Test
     void parsingWithNoArgsDoesNotReplacePlaceholder() {
         String expResult = "${0}</span>";
-        String result = Html.SPAN.parse();
+        String result = Html.SPAN.create();
 
         assertEquals(expResult, result);
     }
@@ -42,7 +42,7 @@ class HtmlTest {
     @Test
     void parsingWithArgsReplacesPlaceholder() {
         String expResult = "Test</span>";
-        String result = Html.SPAN.parse("Test");
+        String result = Html.SPAN.create("Test");
 
         assertEquals(expResult, result);
     }
@@ -50,7 +50,7 @@ class HtmlTest {
     @Test
     void colorsToSpanResetsColors() {
         String testString = "§fHello, §aPerson§r - How Are you?";
-        String expected = Html.COLOR_F.parse() + "Hello, " + Html.COLOR_A.parse() + "Person</span></span> - How Are you?";
+        String expected = Html.COLOR_F.create() + "Hello, " + Html.COLOR_A.create() + "Person</span></span> - How Are you?";
         String result = Html.swapColorCodesToSpan(testString);
         assertEquals(expected, result);
     }
@@ -58,7 +58,7 @@ class HtmlTest {
     @Test
     void colorsToSpanSwapsEscapedHtmlColors() {
         String testString = "§fHello, §aPerson§r - How Are you?";
-        String expected = Html.COLOR_F.parse() + "Hello, " + Html.COLOR_A.parse() + "Person</span></span> - How Are you?";
+        String expected = Html.COLOR_F.create() + "Hello, " + Html.COLOR_A.create() + "Person</span></span> - How Are you?";
         String result = Html.swapColorCodesToSpan(StringEscapeUtils.escapeHtml4(testString));
         assertEquals(expected, result);
     }
@@ -66,7 +66,7 @@ class HtmlTest {
     @Test
     void swapColorCodesDoesNotReplaceNonColors() {
         String testString = "1test§2yes";
-        String expected = "1test" + Html.COLOR_2.parse() + "yes</span>";
+        String expected = "1test" + Html.COLOR_2.create() + "yes</span>";
         String result = Html.swapColorCodesToSpan(testString);
         assertEquals(expected, result);
     }

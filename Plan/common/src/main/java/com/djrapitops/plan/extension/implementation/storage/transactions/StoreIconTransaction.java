@@ -27,7 +27,7 @@ import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Transaction to store an Icon to the database.

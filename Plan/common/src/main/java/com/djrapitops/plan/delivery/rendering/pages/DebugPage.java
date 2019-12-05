@@ -46,7 +46,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Html parsing for the Debug page.
+ * Html String generator for /debug page.
  *
  * @author Rsl1122
  */
@@ -84,8 +84,8 @@ public class DebugPage implements Page {
     public String toHtml() {
         StringBuilder preContent = new StringBuilder();
 
-        String issueLink = Html.LINK_EXTERNAL.parse("https://github.com/Rsl1122/Plan-PlayerAnalytics/issues/new", "Create new issue on Github");
-        String hastebinLink = Html.LINK_EXTERNAL.parse("https://hastebin.com/", "Create a new hastebin paste");
+        String issueLink = Html.LINK_EXTERNAL.create("https://github.com/Rsl1122/Plan-PlayerAnalytics/issues/new", "Create new issue on Github");
+        String hastebinLink = Html.LINK_EXTERNAL.create("https://hastebin.com/", "Create a new hastebin paste");
 
         preContent.append("<p>")
                 .append(Html.separateWithDots(issueLink, hastebinLink)).append("<br><br>")

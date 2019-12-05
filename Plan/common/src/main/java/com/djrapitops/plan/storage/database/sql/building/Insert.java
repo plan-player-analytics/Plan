@@ -14,28 +14,32 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.storage.database.sql.parsing;
+package com.djrapitops.plan.storage.database.sql.building;
 
-/**
- * @author Fuzzlemann
- */
-public class Update extends WhereParser {
+public class Insert extends SqlBuilder {
 
-    public Update(String table) {
-        super("UPDATE " + table + " SET ");
+    public Insert(String table) {
+        super("INSERT INTO " + table + ' ');
     }
 
-    public static Update values(String table, String... values) {
-        Update parser = new Update(table);
-
-        int size = values.length;
+    public static String values(String table, String... columns) {
+        Insert builder = new Insert(table);
+        builder.append('(');
+        int size = columns.length;
         for (int i = 0; i < size; i++) {
             if (size > 1 && i > 0) {
-                parser.append(',');
+                builder.append(',');
             }
-            parser.append(values[i] + "=?");
+            builder.append(columns[i]);
         }
-
-        return parser;
+        builder.append(") VALUES (");
+        for (int i = 0; i < size; i++) {
+            if (size > 1 && i > 0) {
+                builder.append(',');
+            }
+            builder.append("?");
+        }
+        builder.append(')');
+        return builder.toString();
     }
 }

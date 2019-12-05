@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.storage.database.sql.parsing;
+package com.djrapitops.plan.storage.database.sql.building;
 
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
@@ -25,17 +25,17 @@ import org.junit.runner.RunWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Tests for {@link CreateTableParser}.
+ * Tests for {@link CreateTableBuilder}.
  *
  * @author Rsl1122
  */
 @RunWith(JUnitPlatform.class)
-class CreateTableParserTest {
+class CreateTableBuilderTest {
 
     @Test
     void createsSameTablesAsOldParser() {
         String expected = "CREATE TABLE IF NOT EXISTS plan_servers (id integer NOT NULL AUTO_INCREMENT,uuid varchar(36) NOT NULL UNIQUE,name varchar(100),web_address varchar(100),is_installed boolean NOT NULL DEFAULT 1,max_players integer NOT NULL DEFAULT -1,PRIMARY KEY (id))";
-        String result = CreateTableParser.create(ServerTable.TABLE_NAME, DBType.MYSQL)
+        String result = CreateTableBuilder.create(ServerTable.TABLE_NAME, DBType.MYSQL)
                 .column(ServerTable.SERVER_ID, Sql.INT)
                 .primaryKey()
                 .column(ServerTable.SERVER_UUID, Sql.varchar(36)).notNull().unique()

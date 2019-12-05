@@ -55,7 +55,7 @@ import com.djrapitops.plan.storage.database.queries.analysis.ActivityIndexQuerie
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.database.queries.containers.ServerPlayerContainersQuery;
 import com.djrapitops.plan.storage.database.queries.objects.*;
-import com.djrapitops.plan.storage.database.sql.parsing.Sql;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.transactions.*;
 import com.djrapitops.plan.storage.database.transactions.commands.*;
@@ -85,8 +85,8 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.SELECT;
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.WHERE;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.SELECT;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -1458,7 +1458,7 @@ public interface DatabaseTest {
         expected.setColor("amber");
         expected.addRow("value", 3, 0.5, 400L);
 
-        assertEquals(expected.parseHtml(), table.getHtmlTable().parseHtml());
+        assertEquals(expected.buildHtml(), table.getHtmlTable().buildHtml());
     }
 
     @Test
@@ -1491,7 +1491,7 @@ public interface DatabaseTest {
         expected.setColor("amber");
         expected.addRow("value", 3, 0.5, 400L);
 
-        assertEquals(expected.parseHtml(), table.getHtmlTable().parseHtml());
+        assertEquals(expected.buildHtml(), table.getHtmlTable().buildHtml());
     }
 
     @Test

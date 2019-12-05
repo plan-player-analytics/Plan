@@ -25,7 +25,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.WHERE;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 
 /**
  * Transaction for telling Plan that Plan has been uninstalled from the server.

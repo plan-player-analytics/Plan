@@ -35,7 +35,7 @@ import java.util.Collections;
 import java.util.UUID;
 
 /**
- * Performs parameter parsing for Sessions JSON requests.
+ * Resolves /v1/sessions JSON requests.
  *
  * @author Rsl1122
  */

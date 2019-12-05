@@ -14,37 +14,21 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.storage.database.sql.parsing;
+package com.djrapitops.plan.delivery.rendering.json.network;
+
+import java.util.function.Supplier;
 
 /**
- * Class for parsing different SQL strings.
+ * Interface for different tab JSON creators.
  *
  * @author Rsl1122
  */
-public class SqlParser {
+public interface NetworkTabJSONCreator<T> extends Supplier<T> {
 
-    private final StringBuilder s;
-
-    public SqlParser() {
-        s = new StringBuilder();
-    }
-
-    public SqlParser(String start) {
-        s = new StringBuilder(start);
-    }
-
-    public SqlParser append(String string) {
-        s.append(string);
-        return this;
-    }
-
-    public SqlParser append(char c) {
-        s.append(c);
-        return this;
-    }
+    T createJSONAsMap();
 
     @Override
-    public String toString() {
-        return s.toString();
+    default T get() {
+        return createJSONAsMap();
     }
 }

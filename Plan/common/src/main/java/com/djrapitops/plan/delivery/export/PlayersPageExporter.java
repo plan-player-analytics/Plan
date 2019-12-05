@@ -22,7 +22,7 @@ import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.pages.json.RootJSONResolver;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.errors.ErrorResponse;
-import com.djrapitops.plan.exceptions.ParseException;
+import com.djrapitops.plan.exceptions.GenerationException;
 import com.djrapitops.plan.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -79,7 +79,7 @@ public class PlayersPageExporter extends FileExporter {
         exportPaths = new ExportPaths();
     }
 
-    public void export(Path toDirectory) throws IOException, NotFoundException, ParseException {
+    public void export(Path toDirectory) throws IOException, NotFoundException, GenerationException {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
 
@@ -89,7 +89,7 @@ public class PlayersPageExporter extends FileExporter {
         exportHtml(toDirectory);
     }
 
-    private void exportHtml(Path toDirectory) throws IOException, ParseException {
+    private void exportHtml(Path toDirectory) throws IOException, GenerationException {
         Path to = toDirectory
                 .resolve("players")
                 .resolve("index.html");

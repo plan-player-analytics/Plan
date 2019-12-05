@@ -18,7 +18,7 @@ package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
-import com.djrapitops.plan.storage.database.sql.parsing.Select;
+import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.NicknamesTable;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
@@ -28,8 +28,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.AND;
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.WHERE;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.AND;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 
 public class NicknameLastSeenPatch extends Patch {
 

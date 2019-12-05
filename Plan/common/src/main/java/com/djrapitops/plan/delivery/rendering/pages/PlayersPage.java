@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.rendering.pages;
 
 import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
-import com.djrapitops.plan.exceptions.ParseException;
+import com.djrapitops.plan.exceptions.GenerationException;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
@@ -26,7 +26,7 @@ import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.version.VersionCheckSystem;
 
 /**
- * Html String parser for /players page.
+ * Html String generator for /players page.
  *
  * @author Rsl1122
  */
@@ -50,7 +50,7 @@ public class PlayersPage implements Page {
     }
 
     @Override
-    public String toHtml() throws ParseException {
+    public String toHtml() throws GenerationException {
         try {
             PlaceholderReplacer placeholders = new PlaceholderReplacer();
 
@@ -64,7 +64,7 @@ public class PlayersPage implements Page {
 
             return placeholders.apply(files.getCustomizableResourceOrDefault("web/players.html").asString());
         } catch (Exception e) {
-            throw new ParseException(e);
+            throw new GenerationException(e);
         }
     }
 }

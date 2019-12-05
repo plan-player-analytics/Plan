@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.pages.json;
 
-import com.djrapitops.plan.delivery.rendering.json.graphs.GraphJSONParser;
+import com.djrapitops.plan.delivery.rendering.json.graphs.GraphJSONCreator;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
@@ -44,12 +44,12 @@ import java.util.UUID;
 public class GraphsJSONResolver implements PageResolver {
 
     private final Identifiers identifiers;
-    private final GraphJSONParser graphJSON;
+    private final GraphJSONCreator graphJSON;
 
     @Inject
     public GraphsJSONResolver(
             Identifiers identifiers,
-            GraphJSONParser graphJSON
+            GraphJSONCreator graphJSON
     ) {
         this.identifiers = identifiers;
         this.graphJSON = graphJSON;

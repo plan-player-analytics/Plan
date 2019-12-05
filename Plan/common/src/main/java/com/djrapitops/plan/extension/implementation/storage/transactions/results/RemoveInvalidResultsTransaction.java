@@ -26,7 +26,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.UUID;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Transaction to remove method results that correspond to {@link com.djrapitops.plan.extension.annotation.InvalidateMethod} annotations.

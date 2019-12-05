@@ -24,8 +24,8 @@ import com.djrapitops.plan.storage.database.transactions.Transaction;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.DELETE_FROM;
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.WHERE;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.DELETE_FROM;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 
 /**
  * Transaction to remove a Plan {@link WebUser} from the database.

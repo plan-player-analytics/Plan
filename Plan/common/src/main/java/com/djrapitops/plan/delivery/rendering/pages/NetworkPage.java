@@ -21,7 +21,7 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
-import com.djrapitops.plan.exceptions.ParseException;
+import com.djrapitops.plan.exceptions.GenerationException;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Html String parser for /network page.
+ * Html String generator for /network page.
  *
  * @author Rsl1122
  */
@@ -72,7 +72,7 @@ public class NetworkPage implements Page {
     }
 
     @Override
-    public String toHtml() throws ParseException {
+    public String toHtml() throws GenerationException {
         try {
             PlaceholderReplacer placeholders = new PlaceholderReplacer();
 
@@ -105,7 +105,7 @@ public class NetworkPage implements Page {
 
             return placeholders.apply(files.getCustomizableResourceOrDefault("web/network.html").asString());
         } catch (Exception e) {
-            throw new ParseException(e);
+            throw new GenerationException(e);
         }
     }
 }

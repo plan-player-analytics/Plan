@@ -34,13 +34,13 @@ import org.apache.commons.text.StringEscapeUtils;
 import java.util.*;
 
 /**
- * Parsing utility for creating jQuery Datatables JSON for a Players Table.
+ * Utility for creating jQuery Datatables JSON for a Players Table.
  * <p>
  * See https://www.datatables.net/manual/data/orthogonal-data#HTML-5 for sort kinds
  *
  * @author Rsl1122
  */
-public class PlayersTableJSONParser {
+public class PlayersTableJSONCreator {
 
     private final List<TablePlayer> players;
     private final List<ExtensionDescriptive> extensionDescriptives;
@@ -53,7 +53,7 @@ public class PlayersTableJSONParser {
 
     private final Formatter<Double> decimalFormatter;
 
-    public PlayersTableJSONParser(
+    public PlayersTableJSONCreator(
             List<TablePlayer> players,
             Map<UUID, ExtensionTabData> extensionData,
             // Settings
@@ -95,12 +95,12 @@ public class PlayersTableJSONParser {
     }
 
     public String toJSONString() {
-        String data = parseData();
-        String columnHeaders = parseColumnHeaders();
+        String data = createData();
+        String columnHeaders = createColumnHeaders();
         return "{\"columns\":" + columnHeaders + ",\"data\":" + data + '}';
     }
 
-    private String parseData() {
+    private String createData() {
         StringBuilder dataJSON = new StringBuilder("[");
 
         int currentPlayerNumber = 0;
@@ -143,7 +143,7 @@ public class PlayersTableJSONParser {
 
         Html link = openPlayerPageInNewTab ? Html.LINK_EXTERNAL : Html.LINK;
 
-        dataJSON.append(makeDataEntry(link.parse(url, StringUtils.replace(StringEscapeUtils.escapeHtml4(name), "\\", "\\\\")), "name")).append(',') // Backslashes escaped to prevent json errors
+        dataJSON.append(makeDataEntry(link.create(url, StringUtils.replace(StringEscapeUtils.escapeHtml4(name), "\\", "\\\\")), "name")).append(',') // Backslashes escaped to prevent json errors
                 .append(makeDataEntry(activityIndex.getValue(), activityString, "index")).append(',')
                 .append(makeDataEntry(playtime, numberFormatters.get(FormatType.TIME_MILLISECONDS).apply(playtime), "playtime")).append(',')
                 .append(makeDataEntry(loginTimes, "sessions")).append(',')
@@ -187,7 +187,7 @@ public class PlayersTableJSONParser {
         }
     }
 
-    private String parseColumnHeaders() {
+    private String createColumnHeaders() {
         StringBuilder columnHeaders = new StringBuilder("[");
 
         // Is the data for the column formatted

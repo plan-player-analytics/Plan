@@ -17,10 +17,10 @@
 package com.djrapitops.plan.storage.database.sql.tables;
 
 import com.djrapitops.plan.storage.database.DBType;
-import com.djrapitops.plan.storage.database.sql.parsing.CreateTableParser;
-import com.djrapitops.plan.storage.database.sql.parsing.Sql;
+import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.INT;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INT;
 
 /**
  * Table information about 'plan_extension_server_table_values'.
@@ -47,7 +47,7 @@ public class ExtensionServerTableValueTable {
     }
 
     public static String createTableSQL(DBType dbType) {
-        return CreateTableParser.create(TABLE_NAME, dbType)
+        return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(ID, INT).primaryKey()
                 .column(SERVER_UUID, Sql.varchar(36)).notNull()
                 .column(VALUE_1, Sql.varchar(250))

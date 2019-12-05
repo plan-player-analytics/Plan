@@ -28,19 +28,19 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Parses JSON payload for /server-page PvP and PvE tab.
+ * Creates JSON payload for /server-page PvP and PvE tab.
  *
  * @author Rsl1122
  */
 @Singleton
-public class PvPPvEJSONParser implements ServerTabJSONParser<Map<String, Object>> {
+public class PvPPvEJSONCreator implements ServerTabJSONCreator<Map<String, Object>> {
 
     private final DBSystem dbSystem;
 
     private final Formatter<Double> decimals;
 
     @Inject
-    public PvPPvEJSONParser(
+    public PvPPvEJSONCreator(
             DBSystem dbSystem,
             Formatters formatters
     ) {

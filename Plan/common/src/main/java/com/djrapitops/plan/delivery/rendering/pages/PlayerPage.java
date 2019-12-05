@@ -22,7 +22,7 @@ import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.delivery.rendering.html.Html;
-import com.djrapitops.plan.exceptions.ParseException;
+import com.djrapitops.plan.exceptions.GenerationException;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.theme.Theme;
@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 /**
- * Used for parsing Inspect page out of database data and the html.
+ * Html String generator for /player page.
  *
  * @author Rsl1122
  */
@@ -76,18 +76,18 @@ public class PlayerPage implements Page {
     }
 
     @Override
-    public String toHtml() throws ParseException {
+    public String toHtml() throws GenerationException {
         if (!player.getValue(PlayerKeys.REGISTERED).isPresent()) {
             throw new IllegalStateException("Player is not registered");
         }
         try {
-            return parse(player);
+            return createFor(player);
         } catch (Exception e) {
-            throw new ParseException(e);
+            throw new GenerationException(e);
         }
     }
 
-    public String parse(PlayerContainer player) throws IOException {
+    public String createFor(PlayerContainer player) throws IOException {
         long now = System.currentTimeMillis();
         UUID playerUUID = player.getUnsafe(PlayerKeys.UUID);
 
@@ -107,7 +107,7 @@ public class PlayerPage implements Page {
         placeholders.put("serverPieColors", theme.getValue(ThemeVal.GRAPH_SERVER_PREF_PIE));
         placeholders.put("firstDay", 1);
 
-        placeholders.put("backButton", (serverInfo.getServer().isProxy() ? Html.BACK_BUTTON_NETWORK : Html.BACK_BUTTON_SERVER).parse());
+        placeholders.put("backButton", (serverInfo.getServer().isProxy() ? Html.BACK_BUTTON_NETWORK : Html.BACK_BUTTON_SERVER).create());
 
         PlayerPluginTab pluginTabs = pageFactory.inspectPluginTabs(playerUUID);
 

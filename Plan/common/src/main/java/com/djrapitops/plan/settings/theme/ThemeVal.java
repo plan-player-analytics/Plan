@@ -69,7 +69,9 @@ public enum ThemeVal {
     WORLD_MAP_HIGH("GraphColors.WorldMap_High", "#267f00"),
     WORLD_MAP_LOW("GraphColors.WorldMap_Low", "#EEFFEE"),
 
+    @Deprecated
     PARSED_SESSION_ACCORDION("ParsedElements.SessionAccordion", "teal"),
+    @Deprecated
     PARSED_SERVER_ACCORDION("ParsedElements.ServerAccordion", "light-green");
 
     private final String themePath;

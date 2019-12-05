@@ -20,15 +20,15 @@ import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.storage.database.DBType;
-import com.djrapitops.plan.storage.database.sql.parsing.CreateTableParser;
-import com.djrapitops.plan.storage.database.sql.parsing.Sql;
+import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Table information about 'plan_extension_icons'.
@@ -71,7 +71,7 @@ public class ExtensionIconTable {
     }
 
     public static String createTableSQL(DBType dbType) {
-        return CreateTableParser.create(TABLE_NAME, dbType)
+        return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(ID, INT).primaryKey()
                 .column(ICON_NAME, Sql.varchar(50)).notNull().defaultValue("'question'")
                 .column(FAMILY, Sql.varchar(15)).notNull().defaultValue("'" + Family.SOLID.name() + "'")

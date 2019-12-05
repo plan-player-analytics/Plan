@@ -120,7 +120,7 @@ public class ServerPluginTabs {
             String tabsElement;
             if (onlyGeneric) {
                 ExtensionTabData genericTabData = datum.getTabs().get(0);
-                tabsElement = parseContentHtml(genericTabData);
+                tabsElement = buildContentHtml(genericTabData);
             } else {
                 tabsElement = new TabsElement(
                         datum.getTabs().stream().map(this::wrapToTabElementTab).toArray(TabsElement.Tab[]::new)
@@ -144,7 +144,7 @@ public class ServerPluginTabs {
             String tabsElement;
             if (onlyGeneric) {
                 ExtensionTabData genericTabData = datum.getTabs().get(0);
-                tabsElement = parseContentHtml(genericTabData);
+                tabsElement = buildContentHtml(genericTabData);
             } else {
                 tabsElement = new TabsElement(
                         datum.getTabs().stream().map(this::wrapToTabElementTab).toArray(TabsElement.Tab[]::new)
@@ -169,7 +169,7 @@ public class ServerPluginTabs {
 
     private TabsElement.Tab wrapToTabElementTab(ExtensionTabData tabData) {
         TabInformation tabInformation = tabData.getTabInformation();
-        String tabContentHtml = parseContentHtml(tabData);
+        String tabContentHtml = buildContentHtml(tabData);
 
         String tabName = tabInformation.getTabName();
         return new TabsElement.Tab(tabName.isEmpty()
@@ -178,13 +178,13 @@ public class ServerPluginTabs {
                 tabContentHtml);
     }
 
-    private String parseContentHtml(ExtensionTabData tabData) {
+    private String buildContentHtml(ExtensionTabData tabData) {
         TabInformation tabInformation = tabData.getTabInformation();
 
         ElementOrder[] order = tabInformation.getTabElementOrder().orElse(ElementOrder.values());
-        String values = parseValuesHtml(tabData);
+        String values = buildValuesHtml(tabData);
         String valuesHtml = values.isEmpty() ? "" : "<div class=\"card-body\">" + values + "</div>";
-        String tablesHtml = parseTablesHtml(tabData);
+        String tablesHtml = buildTablesHtml(tabData);
 
         StringBuilder builder = new StringBuilder();
 
@@ -204,15 +204,15 @@ public class ServerPluginTabs {
         return builder.toString();
     }
 
-    private String parseTablesHtml(ExtensionTabData tabData) {
+    private String buildTablesHtml(ExtensionTabData tabData) {
         StringBuilder builder = new StringBuilder();
         for (ExtensionTableData tableData : tabData.getTableData()) {
-            builder.append(tableData.getHtmlTable().parseHtml());
+            builder.append(tableData.getHtmlTable().buildHtml());
         }
         return builder.toString();
     }
 
-    private String parseValuesHtml(ExtensionTabData tabData) {
+    private String buildValuesHtml(ExtensionTabData tabData) {
         StringBuilder builder = new StringBuilder();
         for (String key : tabData.getValueOrder()) {
             tabData.getBoolean(key).ifPresent(data -> append(builder, data.getDescriptive(), data.getFormattedValue()));

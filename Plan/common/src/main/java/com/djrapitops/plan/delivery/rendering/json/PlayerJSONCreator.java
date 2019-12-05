@@ -49,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Singleton
-public class PlayerJSONParser {
+public class PlayerJSONCreator {
 
     private final PlanConfig config;
     private final Locale locale;
@@ -63,7 +63,7 @@ public class PlayerJSONParser {
     private final Formatter<Long> year;
 
     @Inject
-    public PlayerJSONParser(
+    public PlayerJSONCreator(
             PlanConfig config,
             Locale locale,
             Theme theme,

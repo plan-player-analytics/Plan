@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Queries for {@link PlayerKill} objects.

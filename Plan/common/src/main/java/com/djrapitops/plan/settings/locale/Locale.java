@@ -86,7 +86,7 @@ public class Locale extends HashMap<Lang, Message> {
     }
 
     public String getString(Lang key, Serializable... values) {
-        return get(key).parse(values);
+        return get(key).toString(values);
     }
 
     public String[] getArray(Lang key) {

@@ -28,7 +28,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
-import static com.djrapitops.plan.storage.database.sql.parsing.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Transaction to store a server's configuration file in the database.
@@ -49,7 +49,7 @@ public class StoreConfigTransaction extends Transaction {
 
     private String extractConfigSettingLines(Config config) {
         TextStringBuilder configTextBuilder = new TextStringBuilder();
-        List<String> lines = new ConfigWriter().parseLines(config);
+        List<String> lines = new ConfigWriter().createLines(config);
         configTextBuilder.appendWithSeparators(lines, "\n");
         return configTextBuilder.toString();
     }
