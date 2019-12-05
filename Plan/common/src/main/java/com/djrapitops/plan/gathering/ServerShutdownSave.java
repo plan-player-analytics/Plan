@@ -18,7 +18,6 @@ package com.djrapitops.plan.gathering;
 
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.exceptions.database.DBInitException;
-import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -33,7 +32,7 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * Class in charge of performing save operations when the server shuts down.
@@ -47,6 +46,8 @@ public abstract class ServerShutdownSave {
     private final Locale locale;
     private final ErrorHandler errorHandler;
     private boolean shuttingDown = false;
+
+    private boolean startedDatabase = false;
 
     public ServerShutdownSave(
             Locale locale,
@@ -66,14 +67,14 @@ public abstract class ServerShutdownSave {
         shuttingDown = true;
     }
 
-    public void performSave() {
+    public Optional<Future<?>> performSave() {
         if (!checkServerShuttingDownStatus() && !shuttingDown) {
-            return;
+            return Optional.empty();
         }
 
         Map<UUID, Session> activeSessions = SessionCache.getActiveSessions();
         if (activeSessions.isEmpty()) {
-            return;
+            return Optional.empty();
         }
 
         // This check ensures that logging is not attempted on JVM shutdown.
@@ -81,32 +82,33 @@ public abstract class ServerShutdownSave {
         if (!shuttingDown) {
             logger.info(locale.getString(PluginLang.DISABLED_UNSAVED_SESSIONS));
         }
-        attemptSave(activeSessions);
-
-        SessionCache.clear();
+        return attemptSave(activeSessions);
     }
 
-    private void attemptSave(Map<UUID, Session> activeSessions) {
+    private Optional<Future<?>> attemptSave(Map<UUID, Session> activeSessions) {
         try {
             prepareSessionsForStorage(activeSessions, System.currentTimeMillis());
-            saveActiveSessions(activeSessions);
+            return Optional.of(saveActiveSessions(activeSessions));
         } catch (DBInitException e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
+            return Optional.empty();
         } catch (IllegalStateException ignored) {
             /* Database is not initialized */
+            return Optional.empty();
         } finally {
             closeDatabase(dbSystem.getDatabase());
         }
     }
 
-    private void saveActiveSessions(Map<UUID, Session> activeSessions) {
+    private Future<?> saveActiveSessions(Map<UUID, Session> activeSessions) {
         Database database = dbSystem.getDatabase();
         if (database.getState() == Database.State.CLOSED) {
             // Ensure that database is not closed when performing the transaction.
+            startedDatabase = true;
             database.init();
         }
 
-        saveSessions(activeSessions, database);
+        return saveSessions(activeSessions, database);
     }
 
     private void prepareSessionsForStorage(Map<UUID, Session> activeSessions, long now) {
@@ -118,18 +120,13 @@ public abstract class ServerShutdownSave {
         }
     }
 
-    private void saveSessions(Map<UUID, Session> activeSessions, Database database) {
-        try {
-            database.executeTransaction(new ServerShutdownTransaction(activeSessions.values()))
-                    .get(); // Ensure that the transaction is executed before shutdown.
-        } catch (ExecutionException | DBOpException e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+    private Future<?> saveSessions(Map<UUID, Session> activeSessions, Database database) {
+        return database.executeTransaction(new ServerShutdownTransaction(activeSessions.values()));
     }
 
     private void closeDatabase(Database database) {
-        database.close();
+        if (startedDatabase) {
+            database.close();
+        }
     }
 }

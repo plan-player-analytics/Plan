@@ -18,6 +18,10 @@ package com.djrapitops.plan.gathering;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Thread that is run when JVM shuts down.
@@ -62,6 +66,16 @@ public class ShutdownHook extends Thread {
     @Override
     public void run() {
         serverShutdownSave.serverIsKnownToBeShuttingDown();
-        serverShutdownSave.performSave();
+        serverShutdownSave.performSave().ifPresent(this::waitForSave);
+    }
+
+    private void waitForSave(Future<?> sessionsAreSavedFuture) {
+        try {
+            sessionsAreSavedFuture.get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            Logger.getGlobal().log(Level.SEVERE, "Plan failed to save sessions on JVM shutdown.", e);
+        }
     }
 }
