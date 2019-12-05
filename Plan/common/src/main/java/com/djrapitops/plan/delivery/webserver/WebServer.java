@@ -111,7 +111,7 @@ public class WebServer implements SubSystem {
             }
         }
 
-        requestHandler.getResponseHandler().registerPages();
+        requestHandler.getResponseResolver().registerPages();
     }
 
     /**

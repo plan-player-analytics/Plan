@@ -22,7 +22,7 @@ import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
-import com.djrapitops.plan.delivery.webserver.pages.PageHandler;
+import com.djrapitops.plan.delivery.webserver.pages.PageResolver;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
@@ -36,18 +36,18 @@ import java.util.Collections;
 import java.util.UUID;
 
 /**
- * JSON handler for different graph data JSON requests.
+ * Resolves /v1/graph JSON requests.
  *
  * @author Rsl1122
  */
 @Singleton
-public class GraphsJSONHandler implements PageHandler {
+public class GraphsJSONResolver implements PageResolver {
 
     private final Identifiers identifiers;
     private final GraphJSONParser graphJSON;
 
     @Inject
-    public GraphsJSONHandler(
+    public GraphsJSONResolver(
             Identifiers identifiers,
             GraphJSONParser graphJSON
     ) {
@@ -56,7 +56,7 @@ public class GraphsJSONHandler implements PageHandler {
     }
 
     @Override
-    public Response getResponse(Request request, RequestTarget target) throws WebException {
+    public Response resolve(Request request, RequestTarget target) throws WebException {
         String type = target.getParameter("type")
                 .orElseThrow(() -> new BadRequestException("'type' parameter was not defined."));
 

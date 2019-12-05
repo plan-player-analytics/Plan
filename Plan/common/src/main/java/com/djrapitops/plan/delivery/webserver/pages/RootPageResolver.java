@@ -31,26 +31,24 @@ import com.djrapitops.plan.identification.ServerInfo;
 import java.util.Optional;
 
 /**
- * PageHandler for / page (Address root).
- * <p>
- * Not Available if Authentication is not enabled.
+ * Resolves '/' URL (Address Root).
  *
  * @author Rsl1122
  */
-public class RootPageHandler implements PageHandler {
+public class RootPageResolver implements PageResolver {
 
     private final ResponseFactory responseFactory;
     private final WebServer webServer;
     private final ServerInfo serverInfo;
 
-    public RootPageHandler(ResponseFactory responseFactory, WebServer webServer, ServerInfo serverInfo) {
+    public RootPageResolver(ResponseFactory responseFactory, WebServer webServer, ServerInfo serverInfo) {
         this.responseFactory = responseFactory;
         this.webServer = webServer;
         this.serverInfo = serverInfo;
     }
 
     @Override
-    public Response getResponse(Request request, RequestTarget target) throws WebException {
+    public Response resolve(Request request, RequestTarget target) throws WebException {
         Server server = serverInfo.getServer();
         if (!webServer.isAuthRequired()) {
             return responseFactory.redirectResponse(server.isProxy() ? "network" : "server/" + Html.encodeToURL(server.getIdentifiableName()));

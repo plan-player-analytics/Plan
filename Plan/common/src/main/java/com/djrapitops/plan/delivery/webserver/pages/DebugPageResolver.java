@@ -14,43 +14,42 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.webserver.pages.json;
+package com.djrapitops.plan.delivery.webserver.pages;
 
-import com.djrapitops.plan.delivery.rendering.json.network.NetworkTabJSONParser;
+import com.djrapitops.plan.delivery.domain.WebUser;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
-import com.djrapitops.plan.delivery.webserver.cache.DataID;
-import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
-import com.djrapitops.plan.delivery.webserver.pages.PageHandler;
 import com.djrapitops.plan.delivery.webserver.response.Response;
-import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
+import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 
-import java.util.function.Supplier;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
- * Generic Tab JSON handler for any tab's data.
+ * Resolves /debug URL.
  *
  * @author Rsl1122
  */
-public class NetworkTabJSONHandler<T> implements PageHandler {
+@Singleton
+public class DebugPageResolver implements PageResolver {
 
-    private final DataID dataID;
-    private final Supplier<T> jsonParser;
+    private final ResponseFactory responseFactory;
 
-    public NetworkTabJSONHandler(DataID dataID, NetworkTabJSONParser<T> jsonParser) {
-        this.dataID = dataID;
-        this.jsonParser = jsonParser;
+    @Inject
+    public DebugPageResolver(ResponseFactory responseFactory) {
+        this.responseFactory = responseFactory;
     }
 
     @Override
-    public Response getResponse(Request request, RequestTarget target) {
-        return JSONCache.getOrCache(dataID, () -> new JSONResponse(jsonParser.get()));
+    public Response resolve(Request request, RequestTarget target) {
+        return responseFactory.debugPageResponse();
     }
 
     @Override
     public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
-        return auth.getWebUser().getPermLevel() <= 0;
+        WebUser webUser = auth.getWebUser();
+        return webUser.getPermLevel() <= 0;
     }
 }

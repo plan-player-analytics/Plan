@@ -56,7 +56,7 @@ public class RequestHandler implements HttpHandler {
     private final PlanConfig config;
     private final Theme theme;
     private final DBSystem dbSystem;
-    private final ResponseHandler responseHandler;
+    private final ResponseResolver responseResolver;
     private final ResponseFactory responseFactory;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
@@ -71,7 +71,7 @@ public class RequestHandler implements HttpHandler {
             PlanConfig config,
             Theme theme,
             DBSystem dbSystem,
-            ResponseHandler responseHandler,
+            ResponseResolver responseResolver,
             ResponseFactory responseFactory,
             PluginLogger logger,
             ErrorHandler errorHandler
@@ -80,7 +80,7 @@ public class RequestHandler implements HttpHandler {
         this.config = config;
         this.theme = theme;
         this.dbSystem = dbSystem;
-        this.responseHandler = responseHandler;
+        this.responseResolver = responseResolver;
         this.responseFactory = responseFactory;
         this.logger = logger;
         this.errorHandler = errorHandler;
@@ -96,7 +96,7 @@ public class RequestHandler implements HttpHandler {
 
         try {
             Response response = shouldPreventRequest(request.getRemoteAddress()) // Forbidden response (Optional)
-                    .orElse(responseHandler.getResponse(request)); // Or the actual requested response
+                    .orElse(responseResolver.getResponse(request)); // Or the actual requested response
 
             // Increase attempt count and block if too high
             Optional<Response> forbid = handlePasswordBruteForceAttempts(request, response);
@@ -180,7 +180,7 @@ public class RequestHandler implements HttpHandler {
         return null;
     }
 
-    public ResponseHandler getResponseHandler() {
-        return responseHandler;
+    public ResponseResolver getResponseResolver() {
+        return responseResolver;
     }
 }

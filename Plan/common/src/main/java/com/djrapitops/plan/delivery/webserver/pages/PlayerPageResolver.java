@@ -34,19 +34,19 @@ import javax.inject.Singleton;
 import java.util.UUID;
 
 /**
- * PageHandler for /player/PlayerName pages.
+ * Resolves /player/${name/uuid} URLs.
  *
  * @author Rsl1122
  */
 @Singleton
-public class PlayerPageHandler implements PageHandler {
+public class PlayerPageResolver implements PageResolver {
 
     private final ResponseFactory responseFactory;
     private final DBSystem dbSystem;
     private final UUIDUtility uuidUtility;
 
     @Inject
-    public PlayerPageHandler(
+    public PlayerPageResolver(
             ResponseFactory responseFactory,
             DBSystem dbSystem,
             UUIDUtility uuidUtility
@@ -57,7 +57,7 @@ public class PlayerPageHandler implements PageHandler {
     }
 
     @Override
-    public Response getResponse(Request request, RequestTarget target) throws WebException {
+    public Response resolve(Request request, RequestTarget target) throws WebException {
         if (target.isEmpty()) {
             return responseFactory.pageNotFound404();
         }

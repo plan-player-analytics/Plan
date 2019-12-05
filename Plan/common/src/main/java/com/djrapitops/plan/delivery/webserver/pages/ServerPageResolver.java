@@ -39,12 +39,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * PageHandler for /server and /network pages.
+ * Resolves /network, /server and /server/${name/uuid} URLs.
  *
  * @author Rsl1122
  */
 @Singleton
-public class ServerPageHandler implements PageHandler {
+public class ServerPageResolver implements PageResolver {
 
     private final ResponseFactory responseFactory;
     private final DBSystem dbSystem;
@@ -52,7 +52,7 @@ public class ServerPageHandler implements PageHandler {
     private final Lazy<WebServer> webServer;
 
     @Inject
-    public ServerPageHandler(
+    public ServerPageResolver(
             ResponseFactory responseFactory,
             DBSystem dbSystem,
             ServerInfo serverInfo,
@@ -65,7 +65,7 @@ public class ServerPageHandler implements PageHandler {
     }
 
     @Override
-    public Response getResponse(Request request, RequestTarget target) throws WebException {
+    public Response resolve(Request request, RequestTarget target) throws WebException {
         Optional<UUID> serverUUID = getServerUUID(target);
         boolean proxy = serverInfo.getServer().isProxy();
         if (serverUUID.isPresent()) {

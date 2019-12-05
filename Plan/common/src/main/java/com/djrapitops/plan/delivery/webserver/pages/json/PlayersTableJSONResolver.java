@@ -17,13 +17,12 @@
 package com.djrapitops.plan.delivery.webserver.pages.json;
 
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
-import com.djrapitops.plan.delivery.rendering.json.PlayersTableJSONParser;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
-import com.djrapitops.plan.delivery.webserver.pages.PageHandler;
+import com.djrapitops.plan.delivery.webserver.pages.PageResolver;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
@@ -35,19 +34,18 @@ import javax.inject.Singleton;
 import java.util.UUID;
 
 /**
- * JSON handler for different Player table JSON requests.
+ * Resolves /v1/players JSON requests.
  *
  * @author Rsl1122
- * @see PlayersTableJSONParser For JSON parsing of /server players table.
  */
 @Singleton
-public class PlayersTableJSONHandler implements PageHandler {
+public class PlayersTableJSONResolver implements PageResolver {
 
     private final Identifiers identifiers;
     private final JSONFactory jsonFactory;
 
     @Inject
-    public PlayersTableJSONHandler(
+    public PlayersTableJSONResolver(
             Identifiers identifiers,
             JSONFactory jsonFactory
     ) {
@@ -56,7 +54,7 @@ public class PlayersTableJSONHandler implements PageHandler {
     }
 
     @Override
-    public Response getResponse(Request request, RequestTarget target) throws WebException {
+    public Response resolve(Request request, RequestTarget target) throws WebException {
         if (target.getParameter("server").isPresent()) {
             UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
             return JSONCache.getOrCache(DataID.PLAYERS, serverUUID, () -> new JSONResponse(jsonFactory.serverPlayersTableJSON(serverUUID)));

@@ -16,56 +16,37 @@
  */
 package com.djrapitops.plan.delivery.webserver.pages.json;
 
-import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
+import com.djrapitops.plan.delivery.rendering.json.network.NetworkTabJSONParser;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
-import com.djrapitops.plan.delivery.webserver.pages.PageHandler;
+import com.djrapitops.plan.delivery.webserver.pages.PageResolver;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
-import com.djrapitops.plan.exceptions.connection.WebException;
-import com.djrapitops.plan.identification.Identifiers;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.util.Collections;
-import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
- * Performs parameter parsing for Sessions JSON requests.
+ * Functional interface wrapper for resolving network JSON directly from other methods.
  *
  * @author Rsl1122
  */
-@Singleton
-public class SessionsJSONHandler implements PageHandler {
+public class NetworkTabJSONResolver<T> implements PageResolver {
 
-    private final Identifiers identifiers;
-    private final JSONFactory jsonFactory;
+    private final DataID dataID;
+    private final Supplier<T> jsonParser;
 
-    @Inject
-    public SessionsJSONHandler(
-            Identifiers identifiers,
-            JSONFactory jsonFactory
-    ) {
-        this.identifiers = identifiers;
-        this.jsonFactory = jsonFactory;
+    public NetworkTabJSONResolver(DataID dataID, NetworkTabJSONParser<T> jsonParser) {
+        this.dataID = dataID;
+        this.jsonParser = jsonParser;
     }
 
     @Override
-    public Response getResponse(Request request, RequestTarget target) throws WebException {
-        if (target.getParameter("server").isPresent()) {
-            UUID serverUUID = identifiers.getServerUUID(target);
-            return JSONCache.getOrCache(DataID.SESSIONS, serverUUID, () ->
-                    new JSONResponse(Collections.singletonMap("sessions", jsonFactory.serverSessionsAsJSONMap(serverUUID)))
-            );
-        }
-        // Assume network
-        return JSONCache.getOrCache(DataID.SESSIONS, () ->
-                new JSONResponse(Collections.singletonMap("sessions", jsonFactory.networkSessionsAsJSONMap()))
-        );
+    public Response resolve(Request request, RequestTarget target) {
+        return JSONCache.getOrCache(dataID, () -> new JSONResponse(jsonParser.get()));
     }
 
     @Override

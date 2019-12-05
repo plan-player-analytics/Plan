@@ -16,50 +16,47 @@
  */
 package com.djrapitops.plan.delivery.webserver.pages.json;
 
-import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
+import com.djrapitops.plan.delivery.rendering.json.ServerTabJSONParser;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
-import com.djrapitops.plan.delivery.webserver.pages.PageHandler;
+import com.djrapitops.plan.delivery.webserver.pages.PageResolver;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.Identifiers;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.util.Collections;
 import java.util.UUID;
+import java.util.function.Function;
 
 /**
- * Performs parameter parsing for PvP kills JSON requests.
+ * Functional interface wrapper for resolving server specific JSON directly from other methods.
  *
  * @author Rsl1122
  */
-@Singleton
-public class PlayerKillsJSONHandler implements PageHandler {
+public class ServerTabJSONResolver<T> implements PageResolver {
 
+    private final DataID dataID;
     private final Identifiers identifiers;
-    private final JSONFactory jsonFactory;
+    private final Function<UUID, T> jsonParser;
 
-    @Inject
-    public PlayerKillsJSONHandler(
+    public ServerTabJSONResolver(
+            DataID dataID,
             Identifiers identifiers,
-            JSONFactory jsonFactory
+            ServerTabJSONParser<T> jsonParser
     ) {
+        this.dataID = dataID;
         this.identifiers = identifiers;
-        this.jsonFactory = jsonFactory;
+        this.jsonParser = jsonParser;
     }
 
     @Override
-    public Response getResponse(Request request, RequestTarget target) throws WebException {
-        UUID serverUUID = identifiers.getServerUUID(target);
-        return JSONCache.getOrCache(DataID.KILLS, serverUUID, () ->
-                new JSONResponse(Collections.singletonMap("player_kills", jsonFactory.serverPlayerKillsAsJSONMap(serverUUID)))
-        );
+    public Response resolve(Request request, RequestTarget target) throws WebException {
+        UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
+        return JSONCache.getOrCache(dataID, serverUUID, () -> new JSONResponse(jsonParser.apply(serverUUID)));
     }
 
     @Override

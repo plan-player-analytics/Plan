@@ -31,18 +31,18 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * PageHandler for /players page.
+ * Resolves /players URL.
  *
  * @author Rsl1122
  */
 @Singleton
-public class PlayersPageHandler implements PageHandler {
+public class PlayersPageResolver implements PageResolver {
 
     private final DBSystem dbSystem;
     private final ResponseFactory responseFactory;
 
     @Inject
-    public PlayersPageHandler(
+    public PlayersPageResolver(
             DBSystem dbSystem,
             ResponseFactory responseFactory
     ) {
@@ -51,7 +51,7 @@ public class PlayersPageHandler implements PageHandler {
     }
 
     @Override
-    public Response getResponse(Request request, RequestTarget target) throws WebException {
+    public Response resolve(Request request, RequestTarget target) throws WebException {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState != Database.State.OPEN) {
             throw new ForbiddenException("Database is " + dbState.name() + " - Please try again later. You can check database status with /plan info");

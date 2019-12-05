@@ -20,7 +20,7 @@ import com.djrapitops.plan.delivery.rendering.json.*;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
-import com.djrapitops.plan.delivery.webserver.pages.TreePageHandler;
+import com.djrapitops.plan.delivery.webserver.pages.CompositePageResolver;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.identification.Identifiers;
 
@@ -28,57 +28,57 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Root handler for different JSON end points.
+ * Root resolver for JSON requests, resolves /v1/ URLs.
  *
  * @author Rsl1122
  */
 @Singleton
-public class RootJSONHandler extends TreePageHandler {
+public class RootJSONResolver extends CompositePageResolver {
 
     private final Identifiers identifiers;
 
     @Inject
-    public RootJSONHandler(
+    public RootJSONResolver(
             ResponseFactory responseFactory,
             Identifiers identifiers,
             JSONFactory jsonFactory,
 
-            GraphsJSONHandler graphsJSONHandler,
-            SessionsJSONHandler sessionsJSONHandler,
-            PlayersTableJSONHandler playersTableJSONHandler,
-            ServerOverviewJSONParser serverOverviewJSONParser,
+            GraphsJSONResolver graphsJSONResolver,
+            SessionsJSONResolver sessionsJSONResolver,
+            PlayersTableJSONResolver playersTableJSONResolver,
+            ServerOverviewJSONParser overviewJSONParser,
             OnlineActivityOverviewJSONParser onlineActivityOverviewJSONParser,
             SessionsOverviewJSONParser sessionsOverviewJSONParser,
-            PlayerKillsJSONHandler playerKillsJSONHandler,
+            PlayerKillsJSONResolver playerKillsJSONResolver,
             PvPPvEJSONParser pvPPvEJSONParser,
             PlayerBaseOverviewJSONParser playerBaseOverviewJSONParser,
             PerformanceJSONParser performanceJSONParser,
 
-            PlayerJSONHandler playerJSONHandler,
-            NetworkJSONHandler networkJSONHandler
+            PlayerJSONResolver playerJSONResolver,
+            NetworkJSONResolver networkJSONResolver
     ) {
         super(responseFactory);
         this.identifiers = identifiers;
 
-        registerPage("players", playersTableJSONHandler, 1);
-        registerPage("sessions", sessionsJSONHandler, 0);
-        registerPage("kills", playerKillsJSONHandler, 0);
+        registerPage("players", playersTableJSONResolver, 1);
+        registerPage("sessions", sessionsJSONResolver, 0);
+        registerPage("kills", playerKillsJSONResolver, 0);
         registerPage("pingTable", DataID.PING_TABLE, jsonFactory::pingPerGeolocation);
-        registerPage("graph", graphsJSONHandler, 0);
+        registerPage("graph", graphsJSONResolver, 0);
 
-        registerPage("serverOverview", DataID.SERVER_OVERVIEW, serverOverviewJSONParser);
+        registerPage("serverOverview", DataID.SERVER_OVERVIEW, overviewJSONParser);
         registerPage("onlineOverview", DataID.ONLINE_OVERVIEW, onlineActivityOverviewJSONParser);
         registerPage("sessionsOverview", DataID.SESSIONS_OVERVIEW, sessionsOverviewJSONParser);
         registerPage("playerVersus", DataID.PVP_PVE, pvPPvEJSONParser);
         registerPage("playerbaseOverview", DataID.PLAYERBASE_OVERVIEW, playerBaseOverviewJSONParser);
         registerPage("performanceOverview", DataID.PERFORMANCE_OVERVIEW, performanceJSONParser);
 
-        registerPage("player", playerJSONHandler, 2);
-        registerPage("network", networkJSONHandler, 0);
+        registerPage("player", playerJSONResolver, 2);
+        registerPage("network", networkJSONResolver, 0);
     }
 
     private <T> void registerPage(String identifier, DataID dataID, ServerTabJSONParser<T> tabJSONParser) {
-        registerPage(identifier, new ServerTabJSONHandler<>(dataID, identifiers, tabJSONParser), 0);
+        registerPage(identifier, new ServerTabJSONResolver<>(dataID, identifiers, tabJSONParser), 0);
     }
 
     @Override

@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.cache;
 
+import com.djrapitops.plan.delivery.webserver.pages.json.RootJSONResolver;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
 import com.djrapitops.plan.storage.file.ResourceCache;
@@ -32,7 +33,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * Cache for any JSON data sent via {@link com.djrapitops.plan.delivery.webserver.pages.json.RootJSONHandler}.
+ * Cache for any JSON data sent via {@link RootJSONResolver}.
  *
  * @author Rsl1122
  */

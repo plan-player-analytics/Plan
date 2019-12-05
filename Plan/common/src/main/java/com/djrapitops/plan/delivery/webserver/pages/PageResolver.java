@@ -24,20 +24,21 @@ import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.WebException;
 
 /**
- * PageHandlers are used for easier Response management and authorization checking.
+ * Used for Response resolution and authorization.
  *
  * @author Rsl1122
+ * @see CompositePageResolver for larger depth resolution than 1.
  */
-public interface PageHandler {
+public interface PageResolver {
 
     /**
-     * Get the Response of a PageHandler.
+     * Resolve the request to a response.
      *
      * @param request Request in case it is useful for choosing page.
      * @param target  Rest of the target coordinates after this page has been solved.
-     * @return Response appropriate to the PageHandler.
+     * @return Appropriate response.
      */
-    Response getResponse(Request request, RequestTarget target) throws WebException;
+    Response resolve(Request request, RequestTarget target) throws WebException;
 
     default boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
         return true;

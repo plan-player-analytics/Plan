@@ -16,12 +16,13 @@
  */
 package com.djrapitops.plan.delivery.webserver.pages.json;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
-import com.djrapitops.plan.delivery.rendering.json.PlayerJSONParser;
+import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
-import com.djrapitops.plan.delivery.webserver.pages.PageHandler;
+import com.djrapitops.plan.delivery.webserver.cache.DataID;
+import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
+import com.djrapitops.plan.delivery.webserver.pages.PageResolver;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
@@ -30,30 +31,45 @@ import com.djrapitops.plan.identification.Identifiers;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Collections;
 import java.util.UUID;
 
+/**
+ * Performs parameter parsing for Sessions JSON requests.
+ *
+ * @author Rsl1122
+ */
 @Singleton
-public class PlayerJSONHandler implements PageHandler {
+public class SessionsJSONResolver implements PageResolver {
 
     private final Identifiers identifiers;
-    private final PlayerJSONParser jsonParser;
+    private final JSONFactory jsonFactory;
 
     @Inject
-    public PlayerJSONHandler(Identifiers identifiers, PlayerJSONParser jsonParser) {
+    public SessionsJSONResolver(
+            Identifiers identifiers,
+            JSONFactory jsonFactory
+    ) {
         this.identifiers = identifiers;
-        this.jsonParser = jsonParser;
+        this.jsonFactory = jsonFactory;
     }
 
     @Override
-    public Response getResponse(Request request, RequestTarget target) throws WebException {
-        UUID playerUUID = identifiers.getPlayerUUID(target); // Can throw BadRequestException
-        return new JSONResponse(jsonParser.createJSONAsMap(playerUUID));
+    public Response resolve(Request request, RequestTarget target) throws WebException {
+        if (target.getParameter("server").isPresent()) {
+            UUID serverUUID = identifiers.getServerUUID(target);
+            return JSONCache.getOrCache(DataID.SESSIONS, serverUUID, () ->
+                    new JSONResponse(Collections.singletonMap("sessions", jsonFactory.serverSessionsAsJSONMap(serverUUID)))
+            );
+        }
+        // Assume network
+        return JSONCache.getOrCache(DataID.SESSIONS, () ->
+                new JSONResponse(Collections.singletonMap("sessions", jsonFactory.networkSessionsAsJSONMap()))
+        );
     }
 
     @Override
     public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
-        WebUser webUser = auth.getWebUser();
-        return webUser.getPermLevel() <= 1 || webUser.getName().equalsIgnoreCase(target.get(target.size() - 1));
-
+        return auth.getWebUser().getPermLevel() <= 0;
     }
 }

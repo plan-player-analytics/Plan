@@ -17,10 +17,7 @@
 package com.djrapitops.plan.delivery.webserver.response;
 
 import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
-import com.djrapitops.plan.delivery.webserver.response.errors.ErrorResponse;
-import com.djrapitops.plan.delivery.webserver.response.errors.ForbiddenResponse;
-import com.djrapitops.plan.delivery.webserver.response.errors.InternalErrorResponse;
-import com.djrapitops.plan.delivery.webserver.response.errors.NotFoundResponse;
+import com.djrapitops.plan.delivery.webserver.response.errors.*;
 import com.djrapitops.plan.delivery.webserver.response.pages.*;
 import com.djrapitops.plan.exceptions.ParseException;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
@@ -195,6 +192,10 @@ public class ResponseFactory {
         } catch (IOException e) {
             return internalErrorResponse(e, "Failed to parse PromptAuthorizationResponse");
         }
+    }
+
+    public BadRequestResponse badRequest(String errorMessage, String target) {
+        return new BadRequestResponse(errorMessage + " (when requesting '" + target + "')");
     }
 
     public Response playerPageResponse(UUID playerUUID) {

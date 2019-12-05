@@ -14,42 +14,46 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.webserver.pages;
+package com.djrapitops.plan.delivery.webserver.pages.json;
 
 import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.rendering.json.PlayerJSONParser;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
+import com.djrapitops.plan.delivery.webserver.pages.PageResolver;
 import com.djrapitops.plan.delivery.webserver.response.Response;
-import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
+import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
+import com.djrapitops.plan.exceptions.connection.WebException;
+import com.djrapitops.plan.identification.Identifiers;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.UUID;
 
-/**
- * PageHandler for /debug page.
- *
- * @author Rsl1122
- */
 @Singleton
-public class DebugPageHandler implements PageHandler {
+public class PlayerJSONResolver implements PageResolver {
 
-    private final ResponseFactory responseFactory;
+    private final Identifiers identifiers;
+    private final PlayerJSONParser jsonParser;
 
     @Inject
-    public DebugPageHandler(ResponseFactory responseFactory) {
-        this.responseFactory = responseFactory;
+    public PlayerJSONResolver(Identifiers identifiers, PlayerJSONParser jsonParser) {
+        this.identifiers = identifiers;
+        this.jsonParser = jsonParser;
     }
 
     @Override
-    public Response getResponse(Request request, RequestTarget target) {
-        return responseFactory.debugPageResponse();
+    public Response resolve(Request request, RequestTarget target) throws WebException {
+        UUID playerUUID = identifiers.getPlayerUUID(target); // Can throw BadRequestException
+        return new JSONResponse(jsonParser.createJSONAsMap(playerUUID));
     }
 
     @Override
     public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
         WebUser webUser = auth.getWebUser();
-        return webUser.getPermLevel() <= 0;
+        return webUser.getPermLevel() <= 1 || webUser.getName().equalsIgnoreCase(target.get(target.size() - 1));
+
     }
 }

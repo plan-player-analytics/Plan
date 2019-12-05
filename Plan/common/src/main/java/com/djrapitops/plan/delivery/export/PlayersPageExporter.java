@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.export;
 import com.djrapitops.plan.delivery.rendering.pages.Page;
 import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
-import com.djrapitops.plan.delivery.webserver.pages.json.RootJSONHandler;
+import com.djrapitops.plan.delivery.webserver.pages.json.RootJSONResolver;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.exceptions.ParseException;
@@ -51,7 +51,7 @@ public class PlayersPageExporter extends FileExporter {
     private final PlanFiles files;
     private final DBSystem dbSystem;
     private final PageFactory pageFactory;
-    private final RootJSONHandler jsonHandler;
+    private final RootJSONResolver jsonHandler;
     private final Locale locale;
     private final Theme theme;
     private final ServerInfo serverInfo;
@@ -63,7 +63,7 @@ public class PlayersPageExporter extends FileExporter {
             PlanFiles files,
             DBSystem dbSystem,
             PageFactory pageFactory,
-            RootJSONHandler jsonHandler,
+            RootJSONResolver jsonHandler,
             Locale locale,
             Theme theme,
             ServerInfo serverInfo
@@ -119,7 +119,7 @@ public class PlayersPageExporter extends FileExporter {
 
     private Response getJSONResponse(String resource) {
         try {
-            return jsonHandler.getResponse(null, new RequestTarget(URI.create(resource)));
+            return jsonHandler.resolve(null, new RequestTarget(URI.create(resource)));
         } catch (WebException e) {
             // The rest of the exceptions should not be thrown
             throw new IllegalStateException("Unexpected exception thrown: " + e.toString(), e);

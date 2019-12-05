@@ -24,22 +24,22 @@ import com.djrapitops.plan.delivery.rendering.json.network.NetworkTabJSONParser;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
-import com.djrapitops.plan.delivery.webserver.pages.TreePageHandler;
+import com.djrapitops.plan.delivery.webserver.pages.CompositePageResolver;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Root handler for different JSON end points.
+ * Resolves /v1/network/ JSON requests.
  *
  * @author Rsl1122
  */
 @Singleton
-public class NetworkJSONHandler extends TreePageHandler {
+public class NetworkJSONResolver extends CompositePageResolver {
 
     @Inject
-    public NetworkJSONHandler(
+    public NetworkJSONResolver(
             ResponseFactory responseFactory,
             JSONFactory jsonFactory,
             NetworkOverviewJSONParser networkOverviewJSONParser,
@@ -56,7 +56,7 @@ public class NetworkJSONHandler extends TreePageHandler {
     }
 
     private <T> void registerPage(String identifier, DataID dataID, NetworkTabJSONParser<T> tabJSONParser) {
-        registerPage(identifier, new NetworkTabJSONHandler<>(dataID, tabJSONParser));
+        registerPage(identifier, new NetworkTabJSONResolver<>(dataID, tabJSONParser));
     }
 
     @Override

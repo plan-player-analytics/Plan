@@ -18,10 +18,9 @@ package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.pages.*;
-import com.djrapitops.plan.delivery.webserver.pages.json.RootJSONHandler;
+import com.djrapitops.plan.delivery.webserver.pages.json.RootJSONResolver;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
-import com.djrapitops.plan.delivery.webserver.response.errors.BadRequestResponse;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
@@ -37,59 +36,62 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
- * Handles choosing of the correct response to a request.
+ * Resolves All URLs.
+ * <p>
+ * - Some URLs are resolved with other PageResolvers pointed at pages.
+ * - Some URLs point to resources that are resolved differently, those implementations are in this file.
  *
  * @author Rsl1122
  */
 @Singleton
-public class ResponseHandler extends TreePageHandler {
+public class ResponseResolver extends CompositePageResolver {
 
-    private final DebugPageHandler debugPageHandler;
-    private final PlayersPageHandler playersPageHandler;
-    private final PlayerPageHandler playerPageHandler;
-    private final ServerPageHandler serverPageHandler;
-    private final RootJSONHandler rootJSONHandler;
+    private final DebugPageResolver debugPageResolver;
+    private final PlayersPageResolver playersPageResolver;
+    private final PlayerPageResolver playerPageResolver;
+    private final ServerPageResolver serverPageResolver;
+    private final RootJSONResolver rootJSONResolver;
     private final ErrorHandler errorHandler;
 
     private final ServerInfo serverInfo;
     private final Lazy<WebServer> webServer;
 
     @Inject
-    public ResponseHandler(
+    public ResponseResolver(
             ResponseFactory responseFactory,
             Lazy<WebServer> webServer,
             ServerInfo serverInfo,
 
-            DebugPageHandler debugPageHandler,
-            PlayersPageHandler playersPageHandler,
-            PlayerPageHandler playerPageHandler,
-            ServerPageHandler serverPageHandler,
-            RootJSONHandler rootJSONHandler,
+            DebugPageResolver debugPageResolver,
+            PlayersPageResolver playersPageResolver,
+            PlayerPageResolver playerPageResolver,
+            ServerPageResolver serverPageResolver,
+            RootJSONResolver rootJSONResolver,
 
             ErrorHandler errorHandler
     ) {
         super(responseFactory);
         this.webServer = webServer;
         this.serverInfo = serverInfo;
-        this.debugPageHandler = debugPageHandler;
-        this.playersPageHandler = playersPageHandler;
-        this.playerPageHandler = playerPageHandler;
-        this.serverPageHandler = serverPageHandler;
-        this.rootJSONHandler = rootJSONHandler;
+        this.debugPageResolver = debugPageResolver;
+        this.playersPageResolver = playersPageResolver;
+        this.playerPageResolver = playerPageResolver;
+        this.serverPageResolver = serverPageResolver;
+        this.rootJSONResolver = rootJSONResolver;
         this.errorHandler = errorHandler;
     }
 
     public void registerPages() {
-        registerPage("debug", debugPageHandler);
-        registerPage("players", playersPageHandler);
-        registerPage("player", playerPageHandler);
+        registerPage("debug", debugPageResolver);
+        registerPage("players", playersPageResolver);
+        registerPage("player", playerPageResolver);
 
-        registerPage("network", serverPageHandler);
-        registerPage("server", serverPageHandler);
+        registerPage("network", serverPageResolver);
+        registerPage("server", serverPageResolver);
 
-        registerPage("", new RootPageHandler(responseFactory, webServer.get(), serverInfo));
+        registerPage("", new RootPageResolver(responseFactory, webServer.get(), serverInfo));
 
-        registerPage("v1", rootJSONHandler);
+        registerPage("v1", rootJSONResolver);
     }
 
     public Response getResponse(Request request) {
@@ -102,7 +104,7 @@ public class ResponseHandler extends TreePageHandler {
         } catch (ForbiddenException e) {
             return responseFactory.forbidden403(e.getMessage());
         } catch (BadRequestException e) {
-            return new BadRequestResponse(e.getMessage() + " (when requesting '" + request.getTargetString() + "')");
+            return responseFactory.badRequest(e.getMessage(), request.getTargetString());
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
             return responseFactory.internalErrorResponse(e, request.getTargetString());
@@ -135,12 +137,12 @@ public class ResponseHandler extends TreePageHandler {
                 return responseFactory.forbidden403();
             }
         }
-        PageHandler pageHandler = getPageHandler(target);
-        if (pageHandler == null) {
+        PageResolver pageResolver = getPageResolver(target);
+        if (pageResolver == null) {
             return responseFactory.pageNotFound404();
         } else {
-            if (!isAuthRequired || pageHandler.isAuthorized(authentication.get(), target)) {
-                return pageHandler.getResponse(request, target);
+            if (!isAuthRequired || pageResolver.isAuthorized(authentication.get(), target)) {
+                return pageResolver.resolve(request, target);
             }
             return responseFactory.forbidden403();
         }

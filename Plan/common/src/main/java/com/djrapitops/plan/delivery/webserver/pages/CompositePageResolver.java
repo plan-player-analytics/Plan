@@ -28,30 +28,35 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Abstract PageHandler that allows Tree-like target deduction.
+ * Extended {@link PageResolver} to implement layered resolution of addresses.
+ * <p>
+ * Allows resolving /example/foo and /example/bar with different PageResolvers as if the address being resolved
+ * was at the root of the address (/example/foo - FooPageResolver sees /foo).
+ * <p>
+ * Tree-like pattern for URL resolution.
  *
  * @author Rsl1122
  */
-public abstract class TreePageHandler implements PageHandler {
+public abstract class CompositePageResolver implements PageResolver {
 
     protected final ResponseFactory responseFactory;
 
-    private final Map<String, PageHandler> pages;
+    private final Map<String, PageResolver> pages;
 
-    public TreePageHandler(ResponseFactory responseFactory) {
+    public CompositePageResolver(ResponseFactory responseFactory) {
         this.responseFactory = responseFactory;
         pages = new HashMap<>();
     }
 
-    public void registerPage(String targetPage, PageHandler handler) {
-        pages.put(targetPage, handler);
+    public void registerPage(String targetPage, PageResolver resolver) {
+        pages.put(targetPage, resolver);
     }
 
-    public void registerPage(String targetPage, PageHandler handler, int requiredPerm) {
-        pages.put(targetPage, new PageHandler() {
+    public void registerPage(String targetPage, PageResolver resolver, int requiredPerm) {
+        pages.put(targetPage, new PageResolver() {
             @Override
-            public Response getResponse(Request request, RequestTarget target) throws WebException {
-                return handler.getResponse(request, target);
+            public Response resolve(Request request, RequestTarget target) throws WebException {
+                return resolver.resolve(request, target);
             }
 
             @Override
@@ -60,10 +65,11 @@ public abstract class TreePageHandler implements PageHandler {
             }
         });
     }
+
     public void registerPage(String targetPage, Response response, int requiredPerm) {
-        pages.put(targetPage, new PageHandler() {
+        pages.put(targetPage, new PageResolver() {
             @Override
-            public Response getResponse(Request request, RequestTarget target) {
+            public Response resolve(Request request, RequestTarget target) {
                 return response;
             }
 
@@ -75,14 +81,14 @@ public abstract class TreePageHandler implements PageHandler {
     }
 
     @Override
-    public Response getResponse(Request request, RequestTarget target) throws WebException {
-        PageHandler pageHandler = getPageHandler(target);
-        return pageHandler != null
-                ? pageHandler.getResponse(request, target)
+    public Response resolve(Request request, RequestTarget target) throws WebException {
+        PageResolver pageResolver = getPageResolver(target);
+        return pageResolver != null
+                ? pageResolver.resolve(request, target)
                 : responseFactory.pageNotFound404();
     }
 
-    public PageHandler getPageHandler(RequestTarget target) {
+    public PageResolver getPageResolver(RequestTarget target) {
         if (target.isEmpty()) {
             return pages.get("");
         }
@@ -91,7 +97,7 @@ public abstract class TreePageHandler implements PageHandler {
         return pages.get(targetPage);
     }
 
-    public PageHandler getPageHandler(String targetPage) {
+    public PageResolver getPageResolver(String targetPage) {
         return pages.get(targetPage);
     }
 }
