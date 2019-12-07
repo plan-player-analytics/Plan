@@ -57,6 +57,16 @@ public class GMTimes extends TimeKeeper {
         return new String[]{SURVIVAL, CREATIVE, ADVENTURE, SPECTATOR};
     }
 
+    public static String magicNumberToGMName(int magicNumber) {
+        switch (magicNumber) {
+            case 0: return "SURVIVAL";
+            case 1: return "CREATIVE";
+            case 2: return "ADVENTURE";
+            case 3: return "SPECTATOR";
+            default: return "UNKOWN";
+        }
+    }
+
     public Optional<String> getMostUsedGameMode() {
         long max = 0;
         String maxGM = null;

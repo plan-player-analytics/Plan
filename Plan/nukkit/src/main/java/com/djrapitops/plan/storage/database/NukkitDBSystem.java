@@ -26,17 +26,17 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Bukkit Database system that initializes SQLite and MySQL database objects.
+ * Nukkit Database system that initializes SQLite and MySQL database objects.
  *
  * @author Rsl1122
  */
 @Singleton
-public class BukkitDBSystem extends DBSystem {
+public class NukkitDBSystem extends DBSystem {
 
     private final PlanConfig config;
 
     @Inject
-    public BukkitDBSystem(
+    public NukkitDBSystem(
             Locale locale,
             MySQLDB mySQLDB,
             SQLiteDB.Factory sqLiteDB,
