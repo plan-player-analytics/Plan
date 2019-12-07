@@ -1,6 +1,5 @@
 # ![Player Analytics](http://puu.sh/AXSg7/5f2f78c06c.jpg)
 
-[![Build Status](http://plan.djrapitops.com/buildStatus/icon?job=Player+Analytics%2Fmaster)](https://plan.djrapitops.com/blue/organizations/jenkins/Player%20Analytics/activity)
 [![Discord](https://img.shields.io/discord/364107873267089409.svg?logo=discord)](https://discord.gg/yXKmjzT)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)  
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=ncloc)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
@@ -19,7 +18,7 @@ Spigot, Paper, Sponge, SpongeForge, Bungeecord, Velocity, Cauldron & all derivat
 You can build the project by running the following in the repository root
 ```
 cd Plan
-./gradlew shadowJar
+./gradlew build
 ```
 
 - [More information about setting up the project](https://github.com/plan-player-analytics/Plan/wiki/Project-Setup)
