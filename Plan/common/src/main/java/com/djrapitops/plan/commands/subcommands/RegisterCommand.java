@@ -101,6 +101,10 @@ public class RegisterCommand extends CommandNode {
                 return;
             }
 
+            if (args.length < 1) {
+                throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, 1, Arrays.toString(getArguments())));
+            }
+
             if (CommandUtils.isPlayer(sender)) {
                 playerRegister(args, sender);
             } else {
