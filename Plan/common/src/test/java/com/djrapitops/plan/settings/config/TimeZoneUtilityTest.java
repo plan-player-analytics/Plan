@@ -21,10 +21,10 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 import java.time.ZoneId;
+import java.util.Optional;
 import java.util.TimeZone;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Sanity Test for different timezones.
@@ -66,7 +66,9 @@ class TimeZoneUtilityTest {
 
     @Test
     void serverReturnsServerTimeZone() {
-        assertEquals(TimeZone.getDefault(), TimeZoneUtility.parseTimeZone("server"));
+        Optional<TimeZone> result = TimeZoneUtility.parseTimeZone("server");
+        assertTrue(result.isPresent());
+        assertEquals(TimeZone.getDefault(), result.get());
     }
 
 }
