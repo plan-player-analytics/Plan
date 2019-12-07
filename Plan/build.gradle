@@ -22,7 +22,21 @@ allprojects {
     wrapper.gradleVersion = "5.5.1"
 
     group "com.djrapitops"
-    version "5.0 build 292"
+    version "5.0-SNAPSHOT"
+
+    def determineBuildVersion = {
+        def buildInfo = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'rev-list', '--count', 'HEAD', '^cdb13e3b663b18e3938ad5efc60d165fa9301f6e'
+            standardOutput = buildInfo
+        }
+        return buildInfo.toString().replaceAll("[^0-9]", "")
+    }
+
+    ext.majorVersion = '5'
+    ext.minorVersion = '0'
+    ext.buildVersion = determineBuildVersion()
+    ext.fullVersion = "$majorVersion.$minorVersion build $buildVersion"
 
     test {
         useJUnitPlatform()

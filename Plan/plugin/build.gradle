@@ -23,12 +23,16 @@ shadowJar {
     classifier = null
 }
 
+build {
+    dependsOn tasks.named("shadowJar")
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
             groupId = 'com.djrapitops'
             artifactId = 'Plan-plugin'
-            version = project.version
+            version = "$fullVersion"
 
             artifact shadowJar
         }

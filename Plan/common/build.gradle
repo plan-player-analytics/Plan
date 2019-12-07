@@ -18,7 +18,22 @@ dependencies {
     testCompile "com.google.code.gson:gson:$gsonVersion"
 }
 
+import org.apache.tools.ant.filters.ReplaceTokens
+task updateVersion(type: Copy) {
+    from('src/main/resources') {
+        include 'plugin.yml'
+        include 'bungee.yml'
+    }
+    into 'build/sources/resources/'
+    filter(ReplaceTokens, tokens: [version: '' + project.ext.fullVersion])
+}
+processResources {
+    dependsOn updateVersion
+    from 'build/sources/resources'
+}
+
 shadowJar {
+    dependsOn processResources
     configurations = [project.configurations.compile]
 
     // Exclude these files
