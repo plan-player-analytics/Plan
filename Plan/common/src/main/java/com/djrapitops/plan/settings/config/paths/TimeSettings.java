@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.settings.config.paths;
 
-import com.djrapitops.plan.settings.config.paths.key.BooleanSetting;
 import com.djrapitops.plan.settings.config.paths.key.Setting;
 import com.djrapitops.plan.settings.config.paths.key.TimeSetting;
 
@@ -27,7 +26,6 @@ import com.djrapitops.plan.settings.config.paths.key.TimeSetting;
  */
 public class TimeSettings {
 
-    public static final Setting<Boolean> USE_SERVER_TIME = new BooleanSetting("Time.Use_server_timezone");
     public static final Setting<Long> PING_SERVER_ENABLE_DELAY = new TimeSetting("Time.Delays.Ping_server_enable_delay");
     public static final Setting<Long> PING_PLAYER_LOGIN_DELAY = new TimeSetting("Time.Delays.Ping_player_join_delay");
     public static final Setting<Long> DB_TRANSACTION_FINISH_WAIT_DELAY = new TimeSetting("Time.Delays.Wait_for_DB_Transactions_on_disable");

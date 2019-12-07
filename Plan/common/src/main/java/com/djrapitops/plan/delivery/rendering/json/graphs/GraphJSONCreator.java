@@ -61,7 +61,6 @@ public class GraphJSONCreator {
     private final Theme theme;
     private final DBSystem dbSystem;
     private final Graphs graphs;
-    private final TimeZone timeZone;
 
     @Inject
     public GraphJSONCreator(
@@ -74,7 +73,6 @@ public class GraphJSONCreator {
         this.theme = theme;
         this.dbSystem = dbSystem;
         this.graphs = graphs;
-        this.timeZone = config.getTimeZone();
     }
 
     public String performanceGraphJSON(UUID serverUUID) {
@@ -111,11 +109,12 @@ public class GraphJSONCreator {
         LineGraphFactory lineGraphs = graphs.line();
         long now = System.currentTimeMillis();
         long halfYearAgo = now - TimeUnit.DAYS.toMillis(180L);
+        int timeZoneOffset = config.getTimeZone().getOffset(now);
         NavigableMap<Long, Integer> uniquePerDay = db.query(
-                PlayerCountQueries.uniquePlayerCounts(halfYearAgo, now, timeZone.getOffset(now), serverUUID)
+                PlayerCountQueries.uniquePlayerCounts(halfYearAgo, now, timeZoneOffset, serverUUID)
         );
         NavigableMap<Long, Integer> newPerDay = db.query(
-                PlayerCountQueries.newPlayerCounts(halfYearAgo, now, timeZone.getOffset(now), serverUUID)
+                PlayerCountQueries.newPlayerCounts(halfYearAgo, now, timeZoneOffset, serverUUID)
         );
 
         return "{\"uniquePlayers\":" +
@@ -134,11 +133,12 @@ public class GraphJSONCreator {
         LineGraphFactory lineGraphs = graphs.line();
         long now = System.currentTimeMillis();
         long halfYearAgo = now - TimeUnit.DAYS.toMillis(180L);
+        int timeZoneOffset = config.getTimeZone().getOffset(now);
         NavigableMap<Long, Integer> uniquePerDay = db.query(
-                PlayerCountQueries.uniquePlayerCounts(halfYearAgo, now, timeZone.getOffset(now))
+                PlayerCountQueries.uniquePlayerCounts(halfYearAgo, now, timeZoneOffset)
         );
         NavigableMap<Long, Integer> newPerDay = db.query(
-                PlayerCountQueries.newPlayerCounts(halfYearAgo, now, timeZone.getOffset(now))
+                PlayerCountQueries.newPlayerCounts(halfYearAgo, now, timeZoneOffset)
         );
 
         return "{\"uniquePlayers\":" +
@@ -156,17 +156,18 @@ public class GraphJSONCreator {
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
         long twoYearsAgo = now - TimeUnit.DAYS.toMillis(730L);
+        int timeZoneOffset = config.getTimeZone().getOffset(now);
         NavigableMap<Long, Integer> uniquePerDay = db.query(
-                PlayerCountQueries.uniquePlayerCounts(twoYearsAgo, now, timeZone.getOffset(now), serverUUID)
+                PlayerCountQueries.uniquePlayerCounts(twoYearsAgo, now, timeZoneOffset, serverUUID)
         );
         NavigableMap<Long, Integer> newPerDay = db.query(
-                PlayerCountQueries.newPlayerCounts(twoYearsAgo, now, timeZone.getOffset(now), serverUUID)
+                PlayerCountQueries.newPlayerCounts(twoYearsAgo, now, timeZoneOffset, serverUUID)
         );
         NavigableMap<Long, Long> playtimePerDay = db.query(
-                SessionQueries.playtimePerDay(twoYearsAgo, now, timeZone.getOffset(now), serverUUID)
+                SessionQueries.playtimePerDay(twoYearsAgo, now, timeZoneOffset, serverUUID)
         );
         NavigableMap<Long, Integer> sessionsPerDay = db.query(
-                SessionQueries.sessionCountPerDay(twoYearsAgo, now, timeZone.getOffset(now), serverUUID)
+                SessionQueries.sessionCountPerDay(twoYearsAgo, now, timeZoneOffset, serverUUID)
         );
         return "{\"data\":" +
                 graphs.calendar().serverCalendar(

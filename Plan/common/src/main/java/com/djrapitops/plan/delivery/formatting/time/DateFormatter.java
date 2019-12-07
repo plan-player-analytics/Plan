@@ -20,7 +20,6 @@ import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.FormatSettings;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
-import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 
@@ -47,13 +46,12 @@ public abstract class DateFormatter implements Formatter<Long> {
     public abstract String apply(Long value);
 
     protected String format(long epochMs, String format) {
-        boolean useServerTime = config.isTrue(TimeSettings.USE_SERVER_TIME);
         String localeSetting = config.get(PluginSettings.LOCALE);
         java.util.Locale usedLocale = "default".equalsIgnoreCase(localeSetting)
                 ? java.util.Locale.ENGLISH
                 : java.util.Locale.forLanguageTag(localeSetting);
         SimpleDateFormat dateFormat = new SimpleDateFormat(format, usedLocale);
-        TimeZone timeZone = useServerTime ? TimeZone.getDefault() : TimeZone.getTimeZone("GMT");
+        TimeZone timeZone = config.getTimeZone();
         dateFormat.setTimeZone(timeZone);
         return dateFormat.format(epochMs);
     }
@@ -65,8 +63,7 @@ public abstract class DateFormatter implements Formatter<Long> {
     protected String replaceRecentDays(long epochMs, String format, String pattern) {
         long now = System.currentTimeMillis();
 
-        boolean useServerTime = config.isTrue(TimeSettings.USE_SERVER_TIME);
-        TimeZone timeZone = useServerTime ? TimeZone.getDefault() : TimeZone.getTimeZone("GMT");
+        TimeZone timeZone = config.getTimeZone();
         int offset = timeZone.getOffset(epochMs);
 
         // Time since Start of day: UTC + Timezone % 24 hours

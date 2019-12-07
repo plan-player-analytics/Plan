@@ -17,6 +17,7 @@
 package com.djrapitops.plan.settings.config.changes;
 
 import com.djrapitops.plan.settings.config.Config;
+import com.djrapitops.plan.settings.config.paths.FormatSettings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -139,6 +140,7 @@ public class ConfigUpdater {
                 new ConfigChange.Moved("Plugins.BuyCraft", "Plugins.Buycraft"),
                 new ConfigChange.Moved("Plugin.Configuration.Allow_bungeecord_to_manage_settings", "Plugin.Configuration.Allow_proxy_to_manage_settings"),
                 new ConfigChange.RemovedComment("Webserver.Disable_Webserver"),
+                new ConfigChange.BooleanToString("Time.Use_server_timezone", FormatSettings.TIMEZONE.getPath(), "server", "UTC"),
         };
     }
 

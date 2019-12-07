@@ -37,7 +37,10 @@ import com.djrapitops.plan.storage.database.queries.objects.UserInfoQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -54,7 +57,6 @@ public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<M
     private final Formatter<Long> timeAmountFormatter;
     private final Formatter<Double> decimalFormatter;
     private final Formatter<Double> percentageFormatter;
-    private final TimeZone timeZone;
 
     @Inject
     public OnlineActivityOverviewJSONCreator(
@@ -68,7 +70,6 @@ public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<M
         timeAmountFormatter = formatters.timeAmount();
         decimalFormatter = formatters.decimals();
         percentageFormatter = formatters.percentage();
-        this.timeZone = config.getTimeZone();
     }
 
     public Map<String, Object> createJSONAsMap(UUID serverUUID) {
@@ -85,7 +86,7 @@ public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<M
         long weekAgo = now - TimeUnit.DAYS.toMillis(7L);
         long halfMonthAgo = now - TimeUnit.DAYS.toMillis(15L);
         long monthAgo = now - TimeUnit.DAYS.toMillis(30L);
-        int timeZoneOffset = timeZone.getOffset(now);
+        int timeZoneOffset = config.getTimeZone().getOffset(now);
         Long playThreshold = config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD);
 
         Map<String, Object> numbers = new HashMap<>();

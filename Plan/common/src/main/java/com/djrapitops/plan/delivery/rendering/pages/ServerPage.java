@@ -89,9 +89,9 @@ public class ServerPage implements Page {
         placeholders.put("serverName", server.getIdentifiableName());
         placeholders.put("serverDisplayName", server.getName());
 
-        DataContainer constants = new RawDataContainer();
-        constants.putRawData(AnalysisKeys.TIME_ZONE, config.getTimeZoneOffsetHours());
+        placeholders.put("timeZone", config.getTimeZoneOffsetHours());
 
+        DataContainer constants = new RawDataContainer();
         // TODO Move these graph settings to the graph requests instead of placeholders
         constants.putRawData(AnalysisKeys.FIRST_DAY, 1);
         constants.putRawData(AnalysisKeys.TPS_MEDIUM, config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED));
@@ -112,7 +112,6 @@ public class ServerPage implements Page {
         constants.putRawData(AnalysisKeys.MIN_PING_COLOR, theme.getValue(ThemeVal.GRAPH_MIN_PING));
 
         placeholders.addAllPlaceholdersFrom(constants,
-                TIME_ZONE,
                 FIRST_DAY, TPS_MEDIUM, TPS_HIGH,
                 DISK_MEDIUM, DISK_HIGH,
                 PLAYERS_MAX, PLAYERS_ONLINE, PLAYERS_TOTAL,

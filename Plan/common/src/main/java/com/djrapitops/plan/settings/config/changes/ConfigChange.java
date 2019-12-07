@@ -125,4 +125,36 @@ public interface ConfigChange {
             return "Removed Comment from " + path;
         }
     }
+
+    class BooleanToString implements ConfigChange {
+        private final String oldPath;
+        private final String newPath;
+        private final String valueIfTrue;
+        private final String valueIfFalse;
+
+        public BooleanToString(String oldPath, String newPath, String valueIfTrue, String valueIfFalse) {
+            this.oldPath = oldPath;
+            this.newPath = newPath;
+            this.valueIfTrue = valueIfTrue;
+            this.valueIfFalse = valueIfFalse;
+        }
+
+        @Override
+        public boolean hasBeenApplied(Config config) {
+            Optional<ConfigNode> oldNode = config.getNode(oldPath);
+            return !oldNode.isPresent();
+        }
+
+        @Override
+        public void apply(Config config) {
+            boolean oldValue = config.getBoolean(oldPath);
+            config.set(newPath, oldValue ? valueIfTrue : valueIfFalse);
+            config.removeNode(oldPath);
+        }
+
+        @Override
+        public String getAppliedMessage() {
+            return "Moved " + oldPath + " to " + newPath + " and turned Boolean to String.";
+        }
+    }
 }

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.settings.config;
 
-import com.djrapitops.plan.settings.config.paths.TimeSettings;
+import com.djrapitops.plan.settings.config.paths.FormatSettings;
 import com.djrapitops.plan.settings.config.paths.key.Setting;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.utilities.Verify;
@@ -25,8 +25,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.File;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -54,15 +56,6 @@ public class PlanConfig extends Config {
         this.logger = logger;
 
         extensionSettings = new ExtensionSettings(this);
-    }
-
-    public int getTimeZoneOffsetHours() {
-        if (isTrue(TimeSettings.USE_SERVER_TIME)) {
-            int offset = TimeZone.getDefault().getOffset(System.currentTimeMillis());
-            int hourMs = (int) TimeUnit.HOURS.toMillis(1L);
-            return -offset / hourMs;
-        }
-        return 0; // UTC
     }
 
     public <T> T get(Setting<T> setting) {
@@ -121,7 +114,15 @@ public class PlanConfig extends Config {
     }
 
     public TimeZone getTimeZone() {
-        return get(TimeSettings.USE_SERVER_TIME) ? TimeZone.getDefault() : TimeZone.getTimeZone("GMT");
+        String timeZone = getString(FormatSettings.TIMEZONE);
+        Optional<TimeZone> foundTZ = TimeZoneUtility.parseTimeZone(timeZone);
+        return foundTZ.orElse(TimeZone.getTimeZone(ZoneId.of("UTC")));
+    }
+
+    public int getTimeZoneOffsetHours() {
+        int offset = getTimeZone().getOffset(System.currentTimeMillis());
+        int hourMs = (int) TimeUnit.HOURS.toMillis(1L);
+        return -offset / hourMs;
     }
 
     public ExtensionSettings getExtensionSettings() {

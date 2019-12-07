@@ -19,6 +19,8 @@ package com.djrapitops.plan.settings;
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.TimeZoneUtility;
+import com.djrapitops.plan.settings.config.paths.FormatSettings;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.file.PlanFiles;
@@ -30,9 +32,7 @@ import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * System for Config and other user customizable options.
@@ -83,11 +83,21 @@ public abstract class ConfigSystem implements SubSystem {
             if (logger.getDebugLogger() instanceof CombineDebugLogger) {
                 setDebugMode();
             }
+
+            checkWrongTimeZone();
         } catch (IOException e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
             throw new EnableException("Failed to save default config: " + e.getMessage(), e);
         }
         theme.enable();
+    }
+
+    public void checkWrongTimeZone() {
+        String timeZone = config.getString(FormatSettings.TIMEZONE);
+        Optional<TimeZone> foundTZ = TimeZoneUtility.parseTimeZone(timeZone);
+        if (!foundTZ.isPresent()) {
+            logger.warn("Config: " + FormatSettings.TIMEZONE.getPath() + " has invalid value '" + timeZone + "', using GMT+0");
+        }
     }
 
     private void setDebugMode() {

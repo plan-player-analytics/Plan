@@ -39,7 +39,10 @@ import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -60,7 +63,6 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
     private final Formatter<Double> decimals;
     private final Formatter<Double> percentage;
     private final Formatter<DateHolder> year;
-    private final TimeZone timeZone;
 
     @Inject
     public ServerOverviewJSONCreator(
@@ -80,7 +82,6 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
         timeAmount = formatters.timeAmount();
         decimals = formatters.decimals();
         percentage = formatters.percentage();
-        this.timeZone = config.getTimeZone();
     }
 
     public Map<String, Object> createJSONAsMap(UUID serverUUID) {
@@ -99,7 +100,7 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
         Map<String, Object> sevenDays = new HashMap<>();
 
         sevenDays.put("unique_players", db.query(PlayerCountQueries.uniquePlayerCount(weekAgo, now, serverUUID)));
-        sevenDays.put("unique_players_day", db.query(PlayerCountQueries.averageUniquePlayerCount(weekAgo, now, timeZone.getOffset(now), serverUUID)));
+        sevenDays.put("unique_players_day", db.query(PlayerCountQueries.averageUniquePlayerCount(weekAgo, now, config.getTimeZone().getOffset(now), serverUUID)));
 
         int new7d = db.query(PlayerCountQueries.newPlayerCount(weekAgo, now, serverUUID));
         int retained7d = db.query(PlayerCountQueries.retainedPlayerCount(weekAgo, now, serverUUID));

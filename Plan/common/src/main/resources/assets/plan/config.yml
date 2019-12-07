@@ -65,8 +65,6 @@ Data_gathering:
 # Supported time units: MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS
 # -----------------------------------------------------
 Time:
-  # UTC used if false. Only affects Timestamps and graphs.
-  Use_server_timezone: true
   Delays:
     Ping_server_enable_delay: 300
       Unit: SECONDS
@@ -151,6 +149,9 @@ Formatting:
     Full: 'MMM d YYYY, HH:mm:ss'
     NoSeconds: 'MMM d YYYY, HH:mm'
     JustClock: HH:mm:ss
+    # TimeZone Option uses format 'GMT+2' or 'GMT-04:30'
+    # Other valid options are 'server' and 'UTC'
+    TimeZone: 'server'
 # -----------------------------------------------------
 # World aliases can be used to rename worlds and to combine multiple worlds into a group.
 # -----------------------------------------------------
