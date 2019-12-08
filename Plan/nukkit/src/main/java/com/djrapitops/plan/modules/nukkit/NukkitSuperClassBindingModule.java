@@ -26,8 +26,8 @@ import com.djrapitops.plan.gathering.listeners.ListenerSystem;
 import com.djrapitops.plan.gathering.listeners.NukkitListenerSystem;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerServerInfo;
-import com.djrapitops.plan.settings.BukkitConfigSystem;
 import com.djrapitops.plan.settings.ConfigSystem;
+import com.djrapitops.plan.settings.NukkitConfigSystem;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.NukkitDBSystem;
 import dagger.Binds;
@@ -48,7 +48,7 @@ public interface NukkitSuperClassBindingModule {
     DBSystem bindNukkitDatabaseSystem(NukkitDBSystem dbSystem);
 
     @Binds
-    ConfigSystem bindNukkitConfigSystem(BukkitConfigSystem bukkitConfigSystem);
+    ConfigSystem bindNukkitConfigSystem(NukkitConfigSystem nukkitConfigSystem);
 
     @Binds
     TaskSystem bindNukkitTaskSystem(NukkitTaskSystem nukkitTaskSystem);

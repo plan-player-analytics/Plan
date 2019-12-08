@@ -23,7 +23,6 @@
  */
 package com.djrapitops.plugin.task.nukkit;
 
-import cn.nukkit.scheduler.NukkitRunnable;
 import cn.nukkit.scheduler.ServerScheduler;
 import com.djrapitops.plugin.NukkitPlugin;
 import com.djrapitops.plugin.task.PluginRunnable;
@@ -34,7 +33,7 @@ import com.djrapitops.plugin.task.PluginTask;
  *
  * @author Rsl1122
  */
-public abstract class AbsNukkitRunnable extends NukkitRunnable implements PluginRunnable, Runnable {
+public abstract class AbsNukkitRunnable implements PluginRunnable, Runnable {
 
     private final String name;
     private final ServerScheduler scheduler;
@@ -94,15 +93,19 @@ public abstract class AbsNukkitRunnable extends NukkitRunnable implements Plugin
 
     @Override
     public synchronized void cancel() {
-        if (plugin == null) {
+        if (plugin == null || id == -1) {
             return;
         }
         try {
             plugin.getServer().getScheduler().cancelTask(id);
-            super.cancel();
         } finally {
             plugin = null;
         }
+    }
+
+    @Override
+    public int getTaskId() {
+        return id;
     }
 
     @Override

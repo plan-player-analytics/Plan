@@ -2,6 +2,7 @@ name: Plan
 author: Rsl1122
 main: com.djrapitops.plan.PlanNukkit
 version: "@version@"
+api: ["1.0.5"]
 
 commands:
   plan:
