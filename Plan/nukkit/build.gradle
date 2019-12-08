@@ -1,0 +1,22 @@
+repositories {
+    maven { // Nukkit Repository
+        url = "http://repo.nukkitx.com/main"
+    }
+}
+
+dependencies {
+    compile project(path: ":common", configuration: 'shadow')
+    compileOnly project(":api")
+
+    compileOnly "com.djrapitops:AbstractPluginFramework-api:$abstractPluginFrameworkVersion"
+    compileOnly "cn.nukkit:nukkit:$nukkitVersion"
+    testCompile "cn.nukkit:nukkit:$nukkitVersion"
+
+    testCompile project(path: ":common", configuration: 'testArtifacts')
+}
+
+shadowJar {
+    configurations = [project.configurations.compile]
+
+    relocate 'org.slf4j', 'plan.org.slf4j'
+}

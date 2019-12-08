@@ -135,7 +135,7 @@ public class ManageBackupCommand extends CommandNode {
         if (userCount <= 0) {
             return;
         }
-        SQLiteDB backupDB = null;
+        Database backupDB = null;
         try {
             String timeStamp = iso8601LongFormatter.apply(System.currentTimeMillis());
             String fileName = dbName + "-backup-" + timeStamp;

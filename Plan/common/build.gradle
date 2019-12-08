@@ -23,6 +23,7 @@ task updateVersion(type: Copy) {
     from('src/main/resources') {
         include 'plugin.yml'
         include 'bungee.yml'
+        include 'nukkit.yml'
     }
     into 'build/sources/resources/'
     filter(ReplaceTokens, tokens: [version: '' + project.ext.fullVersion])

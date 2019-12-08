@@ -1,34 +1,8 @@
 name: Plan
 author: Rsl1122
-main: com.djrapitops.plan.Plan
-version: @version@
-api-version: 1.13
-softdepend:
-  - ASkyBlock
-  - AdvancedAchievements
-  - AdvancedBan
-  - BanManager
-  - CoreProtect
-  - DiscordSRV
-  - EssentialsX
-  - Factions
-  - GriefPrevention
-  - GriefPreventionPlus
-  - Jobs
-  - Kingdoms
-  - LiteBans
-  - LuckPerms
-  - mcMMO
-  - MinigamesLib
-  - nuVotifier
-  - ProtocolSupport
-  - RedProtect
-  - SuperbVote
-  - Towny
-  - Vault
-  - ViaVersion
-  - PlaceholderAPI
-  - DKBans
+main: com.djrapitops.plan.PlanNukkit
+version: "@version@"
+api: ["1.0.5"]
 
 commands:
   plan:

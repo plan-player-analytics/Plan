@@ -14,48 +14,37 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.storage.database;
+package com.djrapitops.plan;
 
-import com.djrapitops.plan.exceptions.EnableException;
-import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
+import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Bukkit Database system that initializes SQLite and MySQL database objects.
+ * ServerShutdownSave implementation for Nukkit based servers.
  *
  * @author Rsl1122
  */
 @Singleton
-public class BukkitDBSystem extends DBSystem {
-
-    private final PlanConfig config;
+public class NukkitServerShutdownSave extends ServerShutdownSave {
 
     @Inject
-    public BukkitDBSystem(
+    public NukkitServerShutdownSave(
             Locale locale,
-            MySQLDB mySQLDB,
-            SQLiteDB.Factory sqLiteDB,
-            H2DB.Factory h2DB,
-            PlanConfig config,
-            PluginLogger logger
+            DBSystem dbSystem,
+            PluginLogger logger,
+            ErrorHandler errorHandler
     ) {
-        super(locale, sqLiteDB, h2DB, logger);
-        this.config = config;
-
-        databases.add(mySQLDB);
-        databases.add(h2DB.usingDefaultFile());
-        databases.add(sqLiteDB.usingDefaultFile());
+        super(locale, dbSystem, logger, errorHandler);
     }
 
     @Override
-    public void enable() throws EnableException {
-        String dbType = config.get(DatabaseSettings.TYPE).toLowerCase().trim();
-        db = getActiveDatabaseByName(dbType);
-        super.enable();
+    protected boolean checkServerShuttingDownStatus() {
+        return false; // No check implementation for Nukkit yet, JVM shutdown save used instead.
     }
 }
