@@ -1,9 +1,3 @@
-repositories {
-    maven { // Nukkit Repository
-        url = "http://repo.nukkitx.com/main"
-    }
-}
-
 dependencies {
     compile project(path: ":common", configuration: 'shadow')
     compileOnly project(":api")

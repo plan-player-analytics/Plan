@@ -4,7 +4,7 @@ plugins {
 
 blossom {
     replaceTokenIn('src/main/java/com/djrapitops/plan/PlanSponge.java')
-    replaceToken('@version@', "$fullVersion")
+    replaceToken('@version@', '' + project.ext.fullVersion)
 }
 
 dependencies {
