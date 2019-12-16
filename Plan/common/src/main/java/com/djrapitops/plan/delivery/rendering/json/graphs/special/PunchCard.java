@@ -85,7 +85,7 @@ public class PunchCard {
             for (int hour = 0; hour < 24; hour++) {
                 int value = scaled[day][hour];
 
-                int x = hour == 0 ? 24 * 3600000 : hour * 3600000;
+                int x = hour * 3600000;
 
                 dots.add(new Dot(x, day, value, value));
             }
