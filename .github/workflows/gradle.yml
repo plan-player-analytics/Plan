@@ -21,4 +21,4 @@ jobs:
     - name: SonarCloud
       run: |
         cd Plan
-        ./gradlew sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=player-analytics-plan -Dsonar.pullrequest.base=master -Dsonar.pullrequest.key=5 -Dsonar.pullrequest.provider=GitHub -Dsonar.pullrequest.github.repository=plan-player-analytics/Plan
+        ./gradlew sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=player-analytics-plan
