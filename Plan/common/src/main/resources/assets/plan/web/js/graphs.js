@@ -284,7 +284,7 @@ function punchCard(id, punchcardSeries) {
             type: 'datetime',
             dateTimeLabelFormats: {
                 hour: '%I %P',
-                day: '%H %P'
+                day: '%I %P'
             },
             tickInterval: 3600000
         },
