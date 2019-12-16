@@ -18,10 +18,7 @@ package com.djrapitops.plan.delivery.rendering.json.graphs.special;
 
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * Bubble Chart that represents login "punches" of players.
@@ -31,14 +28,17 @@ import java.util.List;
 public class PunchCard {
 
     private final SessionsMutator sessions;
+    private final TimeZone timeZone;
 
     /**
      * Constructor for the graph.
      *
      * @param sessions All sessions of All users this PunchCard represents.
+     * @param timeZone TimeZone to use for the hour grouping.
      */
-    PunchCard(SessionsMutator sessions) {
+    PunchCard(SessionsMutator sessions, TimeZone timeZone) {
         this.sessions = sessions;
+        this.timeZone = timeZone;
     }
 
     /*
@@ -47,7 +47,7 @@ public class PunchCard {
      */
     private int[][] getDaysAndHours(Collection<Long> sessionStarts) {
         return sessionStarts.stream().map((Long start) -> {
-            Calendar day = Calendar.getInstance();
+            Calendar day = Calendar.getInstance(timeZone);
             day.setTimeInMillis(start);
             int hourOfDay = day.get(Calendar.HOUR_OF_DAY); // 0 AM is 0
             int dayOfWeek = day.get(Calendar.DAY_OF_WEEK) - 2; // Monday is 0, Sunday is -1

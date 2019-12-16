@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.rendering.json.graphs.special;
 
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.settings.config.PlanConfig;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -32,9 +33,12 @@ import java.util.Map;
 @Singleton
 public class SpecialGraphFactory {
 
+    private final PlanConfig config;
+
     @Inject
-    public SpecialGraphFactory() {
+    public SpecialGraphFactory(PlanConfig config) {
         // Inject Constructor.
+        this.config = config;
     }
 
     public PunchCard punchCard(List<Session> sessions) {
@@ -42,7 +46,7 @@ public class SpecialGraphFactory {
     }
 
     public PunchCard punchCard(SessionsMutator sessions) {
-        return new PunchCard(sessions);
+        return new PunchCard(sessions, config.getTimeZone());
     }
 
     public WorldMap worldMap(Map<String, Integer> geolocationCounts) {
