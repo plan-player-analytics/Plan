@@ -24,6 +24,7 @@ import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.delivery.webserver.response.errors.ForbiddenResponse;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
+import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -96,7 +97,7 @@ public class RequestHandler implements HttpHandler {
 
         try {
             Response response = shouldPreventRequest(request.getRemoteAddress()) // Forbidden response (Optional)
-                    .orElse(responseResolver.getResponse(request)); // Or the actual requested response
+                    .orElseGet(() -> responseResolver.getResponse(request));     // Or the actual requested response
 
             // Increase attempt count and block if too high
             Optional<Response> forbid = handlePasswordBruteForceAttempts(request, response);
@@ -109,6 +110,8 @@ public class RequestHandler implements HttpHandler {
                 responseHeaders.set("WWW-Authenticate", response.getHeader("WWW-Authenticate").orElse("Basic realm=\"Plan WebUser (/plan register)\""));
             }
 
+            responseHeaders.set("Access-Control-Allow-Origin", config.getString(WebserverSettings.CORS_ALLOW_ORIGIN));
+            responseHeaders.set("Access-Control-Allow-Methods", "GET, OPTIONS");
             response.setResponseHeaders(responseHeaders);
             response.send(exchange, locale, theme);
         } catch (Exception e) {

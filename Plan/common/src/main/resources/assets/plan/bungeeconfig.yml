@@ -50,6 +50,10 @@ Webserver:
       Key_pass: default
       Store_pass: default
       Alias: alias
+    # Cross-Origin Resource Sharing (Requests from non-Plan web pages)
+    # https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+    CORS:
+      Allow_origin: "*"
   Disable_Webserver: false
   External_Webserver_address: "https://www.example.address"
 # -----------------------------------------------------

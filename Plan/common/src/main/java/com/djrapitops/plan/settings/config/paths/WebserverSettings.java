@@ -32,6 +32,7 @@ public class WebserverSettings {
     public static final Setting<Boolean> SHOW_ALTERNATIVE_IP = new BooleanSetting("Webserver.Alternative_IP");
     public static final Setting<String> ALTERNATIVE_IP = new StringSetting("Webserver.Alternative_IP.Address");
     public static final Setting<String> INTERNAL_IP = new StringSetting("Webserver.Internal_IP");
+    public static final Setting<String> CORS_ALLOW_ORIGIN = new StringSetting("Webserver.Security.CORS.Allow_origin");
     public static final Setting<String> CERTIFICATE_PATH = new StringSetting("Webserver.Security.SSL_certificate.KeyStore_path");
     public static final Setting<String> CERTIFICATE_KEYPASS = new StringSetting("Webserver.Security.SSL_certificate.Key_pass");
     public static final Setting<String> CERTIFICATE_STOREPASS = new StringSetting("Webserver.Security.SSL_certificate.Store_pass");

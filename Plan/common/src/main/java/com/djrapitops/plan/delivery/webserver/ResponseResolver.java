@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.webserver;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.pages.*;
 import com.djrapitops.plan.delivery.webserver.pages.json.RootJSONResolver;
+import com.djrapitops.plan.delivery.webserver.response.OptionsResponse;
 import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
@@ -115,6 +116,10 @@ public class ResponseResolver extends CompositePageResolver {
         Optional<Authentication> authentication = request.getAuth();
         RequestTarget target = request.getTarget();
         String resource = target.getResourceString();
+
+        if ("OPTIONS".equalsIgnoreCase(request.getRequestMethod())) {
+            return new OptionsResponse();
+        }
 
         if (target.endsWith(".css")) {
             return responseFactory.cssResponse(resource);
