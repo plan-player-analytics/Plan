@@ -23,7 +23,9 @@ import com.djrapitops.plan.settings.locale.LocaleSystem;
 import dagger.Module;
 import dagger.Provides;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
+import java.util.function.Function;
 
 /**
  * Module for binding object instances found inside other systems.
@@ -43,6 +45,13 @@ public class SystemObjectProvidingModule {
     @Singleton
     ExtensionSettings providePluginsConfigSection(PlanConfig config) {
         return config.getExtensionSettings();
+    }
+
+    @Provides
+    @Singleton
+    @Named("isExtensionEnabled")
+    Function<String, Boolean> provideExtensionEnabledConfigCheck(PlanConfig config) {
+        return config.getExtensionSettings()::isEnabled;
     }
 
 }

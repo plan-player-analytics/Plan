@@ -86,8 +86,8 @@ public class ExtensionServiceImplementation implements ExtensionService {
         try {
             extensionRegister.registerBuiltInExtensions(config.getExtensionSettings().getDisabled());
         } catch (IllegalStateException failedToRegisterOne) {
-            logger.warn("One or more extensions failed to register, see suppressed exceptions.");
-            errorHandler.log(L.WARN, this.getClass(), failedToRegisterOne);
+            logger.warn("One or more extensions failed to register, see suppressed exceptions (They can be disabled in Plan config).");
+            errorHandler.log(L.WARN, ExtensionService.class, failedToRegisterOne);
         }
     }
 

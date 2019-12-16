@@ -24,6 +24,7 @@ import com.djrapitops.plan.extension.NotReadyException;
 import com.djrapitops.plan.extension.extractor.ExtensionExtractor;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.Set;
@@ -38,13 +39,15 @@ import java.util.function.Function;
 @Singleton
 public class ExtensionRegister {
 
+    private final Function<String, Boolean> isExtensionEnabledInConfig;
     private IllegalStateException registerException;
     private Set<String> disabledExtensions;
     private ExtensionService extensionService;
 
     @Inject
-    public ExtensionRegister() {
+    public ExtensionRegister(@Named("isExtensionEnabled") Function<String, Boolean> isExtensionEnabledInConfig) {
         /* Required for dagger injection */
+        this.isExtensionEnabledInConfig = isExtensionEnabledInConfig;
     }
 
     public void registerBuiltInExtensions(Set<String> disabledExtensions) {
@@ -92,14 +95,34 @@ public class ExtensionRegister {
     }
 
     private void suppressException(Class factory, Throwable e) {
+        String factoryName = factory.getSimpleName();
+        String extensionName = factoryName.replace("ExtensionFactory", "");
+
+        if (!isExtensionEnabledInConfig.apply(extensionName)) {
+            return;
+        }
+
         // Places all exceptions to one exception with plugin information so that they can be reported.
         if (registerException == null) {
             registerException = new IllegalStateException("One or more extensions failed to register:");
             registerException.setStackTrace(new StackTraceElement[0]);
         }
-        IllegalStateException info = new IllegalStateException(factory.getSimpleName() + " ran into exception when creating Extension", e);
-        info.setStackTrace(new StackTraceElement[0]);
+        IllegalStateException info = new IllegalStateException(factoryName + " failed to create Extension", e);
+        removeUselessStackTraces(info);
         registerException.addSuppressed(info);
+    }
+
+    private void removeUselessStackTraces(Throwable t) {
+        if (t == null) return;
+        if (t instanceof ReflectiveOperationException
+                || t instanceof NoClassDefFoundError
+                || t instanceof NoSuchFieldError
+                || t instanceof NoSuchMethodError
+                || t instanceof IllegalStateException
+        ) {
+            t.setStackTrace(new StackTraceElement[0]);
+        }
+        removeUselessStackTraces(t.getCause());
     }
 
     private <T> void register(
