@@ -25,7 +25,7 @@ import dagger.Provides;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Module for binding object instances found inside other systems.
@@ -50,7 +50,7 @@ public class SystemObjectProvidingModule {
     @Provides
     @Singleton
     @Named("isExtensionEnabled")
-    Function<String, Boolean> provideExtensionEnabledConfigCheck(PlanConfig config) {
+    Predicate<String> provideExtensionEnabledConfigCheck(PlanConfig config) {
         return config.getExtensionSettings()::isEnabled;
     }
 
