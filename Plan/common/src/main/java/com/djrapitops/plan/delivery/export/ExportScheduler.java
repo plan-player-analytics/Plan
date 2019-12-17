@@ -78,7 +78,7 @@ public class ExportScheduler {
     }
 
     private void scheduleServerPageExport() {
-        if (!config.get(ExportSettings.SERVER_PAGE)) return;
+        if (config.isFalse(ExportSettings.SERVER_PAGE)) return;
 
         Collection<Server> servers = dbSystem.getDatabase().query(ServerQueries.fetchPlanServerInformationCollection());
         int serverCount = servers.size();

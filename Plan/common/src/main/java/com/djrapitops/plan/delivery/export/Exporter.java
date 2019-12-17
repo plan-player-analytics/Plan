@@ -95,7 +95,7 @@ public class Exporter extends FileExporter {
      */
     public boolean exportServerPage(Server server) throws ExportException {
         UUID serverUUID = server.getUuid();
-        if (failedServers.contains(serverUUID) || !config.get(ExportSettings.SERVER_PAGE)) return false;
+        if (failedServers.contains(serverUUID) || config.isFalse(ExportSettings.SERVER_PAGE)) return false;
 
         try {
             Path toDirectory = getPageExportDirectory();
@@ -113,7 +113,7 @@ public class Exporter extends FileExporter {
 
     public boolean exportServerJSON(Server server) throws ExportException {
         UUID serverUUID = server.getUuid();
-        if (failedServers.contains(serverUUID) || !config.get(ExportSettings.SERVER_JSON)) return false;
+        if (failedServers.contains(serverUUID) || config.isFalse(ExportSettings.SERVER_JSON)) return false;
 
         try {
             Path toDirectory = getJSONExportDirectory().resolve(toFileName(server.getName()));
@@ -139,7 +139,7 @@ public class Exporter extends FileExporter {
      */
     public boolean exportPlayerPage(UUID playerUUID, String playerName) throws ExportException {
         Path toDirectory = getPageExportDirectory();
-        if (!config.get(ExportSettings.PLAYER_PAGES)) return false;
+        if (config.isFalse(ExportSettings.PLAYER_PAGES)) return false;
 
         try {
             playerPageExporter.export(toDirectory, playerUUID, playerName);
@@ -151,7 +151,7 @@ public class Exporter extends FileExporter {
 
     public boolean exportPlayersPage() throws ExportException {
         Path toDirectory = getPageExportDirectory();
-        if (!config.get(ExportSettings.PLAYERS_PAGE)) return false;
+        if (config.isFalse(ExportSettings.PLAYERS_PAGE)) return false;
 
         try {
             playersPageExporter.export(toDirectory);
@@ -171,7 +171,7 @@ public class Exporter extends FileExporter {
      */
     public boolean exportPlayerJSON(UUID playerUUID, String playerName) throws ExportException {
         Path toDirectory = getJSONExportDirectory();
-        if (!config.get(ExportSettings.PLAYER_JSON)) return false;
+        if (config.isFalse(ExportSettings.PLAYER_JSON)) return false;
 
         try {
             playerJSONExporter.export(toDirectory, playerUUID, playerName);

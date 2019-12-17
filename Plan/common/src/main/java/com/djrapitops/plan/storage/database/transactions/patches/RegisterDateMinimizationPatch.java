@@ -53,13 +53,13 @@ public class RegisterDateMinimizationPatch extends Patch {
         return new QueryAllStatement<Map<UUID, Long>>(sql, 500) {
             @Override
             public Map<UUID, Long> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Long> registerDates = new HashMap<>();
+                Map<UUID, Long> dates = new HashMap<>();
                 while (set.next()) {
                     UUID playerUUID = UUID.fromString(set.getString(1));
                     long newRegisterDate = set.getLong("min_registered");
-                    registerDates.put(playerUUID, newRegisterDate);
+                    dates.put(playerUUID, newRegisterDate);
                 }
-                return registerDates;
+                return dates;
             }
         };
 

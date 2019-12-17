@@ -26,12 +26,9 @@ package com.djrapitops.plan.utilities.java;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * An utility class that simplifies reflection in Bukkit plugins.
@@ -46,9 +43,6 @@ public final class Reflection {
     // Deduce the net.minecraft.server.v* package
     private static final String OBC_PREFIX = getOBCPrefix();
     private static final String NMS_PREFIX = OBC_PREFIX.replace("org.bukkit.craftbukkit", "net.minecraft.server");
-    private static final String VERSION = OBC_PREFIX.replace("org.bukkit.craftbukkit", "").replace(".", "");
-    // Variable replacement
-    private static final Pattern MATCH_VARIABLE = Pattern.compile("\\{([^\\}]+)\\}");
 
     private Reflection() {
         // Seal class
@@ -69,42 +63,6 @@ public final class Reflection {
      */
     public static <T> FieldAccessor<T> getField(Class<?> target, String name, Class<T> fieldType) {
         return getField(target, name, fieldType, 0);
-    }
-
-    /**
-     * Retrieve a field accessor for a specific field type and name.
-     *
-     * @param className - lookup name of the class, see {@link #getClass(String)}.
-     * @param name      - the name of the field, or NULL to ignore.
-     * @param fieldType - a compatible field type.
-     * @return The field accessor.
-     */
-    public static <T> FieldAccessor<T> getField(String className, String name, Class<T> fieldType) {
-        return getField(getClass(className), name, fieldType, 0);
-    }
-
-    /**
-     * Retrieve a field accessor for a specific field type and name.
-     *
-     * @param target    - the target type.
-     * @param fieldType - a compatible field type.
-     * @param index     - the number of compatible fields to skip.
-     * @return The field accessor.
-     */
-    public static <T> FieldAccessor<T> getField(Class<?> target, Class<T> fieldType, int index) {
-        return getField(target, null, fieldType, index);
-    }
-
-    /**
-     * Retrieve a field accessor for a specific field type and name.
-     *
-     * @param className - lookup name of the class, see {@link #getClass(String)}.
-     * @param fieldType - a compatible field type.
-     * @param index     - the number of compatible fields to skip.
-     * @return The field accessor.
-     */
-    public static <T> FieldAccessor<T> getField(String className, Class<T> fieldType, int index) {
-        return getField(getClass(className), fieldType, index);
     }
 
     // Common method
@@ -155,19 +113,6 @@ public final class Reflection {
     /**
      * Search for the first publicly and privately defined method of the given name and parameter count.
      *
-     * @param className  - lookup name of the class, see {@link #getClass(String)}.
-     * @param methodName - the method name, or NULL to skip.
-     * @param params     - the expected parameters.
-     * @return An object that invokes this specific method.
-     * @throws IllegalStateException If we cannot find this method.
-     */
-    public static MethodInvoker getMethod(String className, String methodName, Class<?>... params) {
-        return getTypedMethod(getClass(className), methodName, null, params);
-    }
-
-    /**
-     * Search for the first publicly and privately defined method of the given name and parameter count.
-     *
      * @param clazz      - a class to start with.
      * @param methodName - the method name, or NULL to skip.
      * @param params     - the expected parameters.
@@ -212,92 +157,6 @@ public final class Reflection {
     }
 
     /**
-     * Search for the first publicly and privately defined constructor of the given name and parameter count.
-     *
-     * @param className - lookup name of the class, see {@link #getClass(String)}.
-     * @param params    - the expected parameters.
-     * @return An object that invokes this constructor.
-     * @throws IllegalStateException If we cannot find this method.
-     */
-    public static ConstructorInvoker getConstructor(String className, Class<?>... params) {
-        return getConstructor(getClass(className), params);
-    }
-
-    /**
-     * Search for the first publicly and privately defined constructor of the given name and parameter count.
-     *
-     * @param clazz  - a class to start with.
-     * @param params - the expected parameters.
-     * @return An object that invokes this constructor.
-     * @throws IllegalStateException If we cannot find this method.
-     */
-    public static ConstructorInvoker getConstructor(Class<?> clazz, Class<?>... params) {
-        for (final Constructor<?> constructor : clazz.getDeclaredConstructors()) {
-            if (Arrays.equals(constructor.getParameterTypes(), params)) {
-                constructor.setAccessible(true);
-
-                return arguments -> {
-                    try {
-                        return constructor.newInstance(arguments);
-                    } catch (Exception e) {
-                        throw new IllegalStateException("Cannot invoke constructor " + constructor, e);
-                    }
-                };
-            }
-        }
-
-        throw new IllegalStateException(String.format("Unable to find constructor for %s (%s).", clazz, Arrays.asList(params)));
-    }
-
-    /**
-     * Retrieve a class from its full name, without knowing its type on compile time.
-     * <p>
-     * This is useful when looking up fields by a NMS or OBC type.
-     * <p>
-     *
-     * @param lookupName - the class name with variables.
-     * @return The class.
-     * @see Object#getClass()
-     */
-    public static Class<Object> getUntypedClass(String lookupName) {
-        @SuppressWarnings({"rawtypes", "unchecked"})
-        Class<Object> clazz = (Class) getClass(lookupName);
-        return clazz;
-    }
-
-    /**
-     * Retrieve a class from its full name.
-     * <p>
-     * Strings enclosed with curly brackets - such as {TEXT} - will be replaced according to the following table:
-     * </p>
-     * <table border="1" summary="Variables and description">
-     * <tr>
-     * <th>Variable</th>
-     * <th>Content</th>
-     * </tr>
-     * <tr>
-     * <td>{nms}</td>
-     * <td>Actual package name of net.minecraft.server.VERSION</td>
-     * </tr>
-     * <tr>
-     * <td>{obc}</td>
-     * <td>Actual package name of org.bukkit.craftbukkit.VERSION</td>
-     * </tr>
-     * <tr>
-     * <td>{version}</td>
-     * <td>The current Minecraft package VERSION, if any.</td>
-     * </tr>
-     * </table>
-     *
-     * @param lookupName - the class name with variables.
-     * @return The looked up class.
-     * @throws IllegalArgumentException If a variable or class could not be found.
-     */
-    public static Class<?> getClass(String lookupName) {
-        return getCanonicalClass(expandVariables(lookupName));
-    }
-
-    /**
      * Retrieve a class in the net.minecraft.server.VERSION.* package.
      *
      * @param name - the name of the class, excluding the package.
@@ -329,57 +188,6 @@ public final class Reflection {
         } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException("Cannot find " + canonicalName, e);
         }
-    }
-
-    /**
-     * Expand variables such as "{nms}" and "{obc}" to their corresponding packages.
-     *
-     * @param name - the full name of the class.
-     * @return The expanded string.
-     */
-    private static String expandVariables(String name) {
-        StringBuffer output = new StringBuffer();
-        Matcher matcher = MATCH_VARIABLE.matcher(name);
-
-        while (matcher.find()) {
-            String variable = matcher.group(1);
-            String replacement;
-
-            // Expand all detected variables
-            if ("nms".equalsIgnoreCase(variable)) {
-                replacement = NMS_PREFIX;
-            } else if ("obc".equalsIgnoreCase(variable)) {
-                replacement = OBC_PREFIX;
-            } else if ("version".equalsIgnoreCase(variable)) {
-                replacement = VERSION;
-            } else {
-                throw new IllegalArgumentException("Unknown variable: " + variable);
-            }
-
-            // Assume the expanded variables are all packages, and append a dot
-            if (!replacement.isEmpty() && matcher.end() < name.length() && name.charAt(matcher.end()) != '.') {
-                replacement += ".";
-            }
-            matcher.appendReplacement(output, Matcher.quoteReplacement(replacement));
-        }
-
-        matcher.appendTail(output);
-        return output.toString();
-    }
-
-    /**
-     * An interface for invoking a specific constructor.
-     */
-    @FunctionalInterface
-    public interface ConstructorInvoker {
-
-        /**
-         * Invoke a constructor for a specific class.
-         *
-         * @param arguments - the arguments to pass to the constructor.
-         * @return The constructed object.
-         */
-        Object invoke(Object... arguments);
     }
 
     /**

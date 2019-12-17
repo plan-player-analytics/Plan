@@ -118,7 +118,7 @@ public class PlayerOnlineListener implements Listener {
 
         database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> time, playerName));
         processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
-        if (config.get(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
+        if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
             processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
         }
 
@@ -152,7 +152,7 @@ public class PlayerOnlineListener implements Listener {
         UUID playerUUID = player.getUniqueId();
 
         sessionCache.endSession(playerUUID, System.currentTimeMillis());
-        if (config.get(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
+        if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
             processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
         }
         processing.submit(() -> {
@@ -194,7 +194,7 @@ public class PlayerOnlineListener implements Listener {
         session.putRawData(SessionKeys.NAME, playerName);
         session.putRawData(SessionKeys.SERVER_NAME, "Proxy Server");
         sessionCache.cacheSession(playerUUID, session);
-        if (config.get(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
+        if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
             processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
         }
 

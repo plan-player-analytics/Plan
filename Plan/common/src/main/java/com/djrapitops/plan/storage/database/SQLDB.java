@@ -84,14 +84,14 @@ public abstract class SQLDB extends AbstractDatabase {
         this.logger = logger;
         this.errorHandler = errorHandler;
 
-        devMode = config.get(PluginSettings.DEV_MODE);
+        devMode = config.isTrue(PluginSettings.DEV_MODE);
 
         this.transactionExecutorServiceProvider = () -> {
             String nameFormat = "Plan " + getClass().getSimpleName() + "-transaction-thread-%d";
             return Executors.newSingleThreadExecutor(new BasicThreadFactory.Builder()
                     .namingPattern(nameFormat)
                     .uncaughtExceptionHandler((thread, throwable) -> {
-                        if (config.get(PluginSettings.DEV_MODE)) {
+                        if (devMode) {
                             errorHandler.log(L.WARN, getClass(), throwable);
                         }
                     }).build());

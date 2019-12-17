@@ -28,6 +28,10 @@ import java.util.TimeZone;
  */
 public class TimeZoneUtility {
 
+    private TimeZoneUtility() {
+        // Static utility class
+    }
+
     public static Optional<TimeZone> parseTimeZone(String value) {
         if ("server".equalsIgnoreCase(value)) return Optional.of(TimeZone.getDefault());
 

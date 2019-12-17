@@ -190,7 +190,7 @@ public class PlayerOnlineListener {
         ));
 
         processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
-        if (config.get(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
+        if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
             processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
         }
     }
@@ -231,7 +231,7 @@ public class PlayerOnlineListener {
         sessionCache.endSession(playerUUID, time)
                 .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new SessionEndTransaction(endedSession)));
 
-        if (config.get(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
+        if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
             processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
         }
     }

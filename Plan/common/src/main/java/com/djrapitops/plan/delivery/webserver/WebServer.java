@@ -147,7 +147,7 @@ public class WebServer implements SubSystem {
                     new BasicThreadFactory.Builder()
                             .namingPattern("Plan WebServer Thread-%d")
                             .uncaughtExceptionHandler((thread, throwable) -> {
-                                if (config.get(PluginSettings.DEV_MODE)) {
+                                if (config.isTrue(PluginSettings.DEV_MODE)) {
                                     errorHandler.log(L.WARN, WebServer.class, throwable);
                                 }
                             }).build()

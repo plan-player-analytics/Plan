@@ -116,7 +116,7 @@ public class ManageExportCommand extends CommandNode {
     }
 
     private void exportServerJSON(Sender sender) {
-        if (!config.get(ExportSettings.SERVER_JSON)) {
+        if (config.isFalse(ExportSettings.SERVER_JSON)) {
             sender.sendMessage("§c'" + ExportSettings.SERVER_JSON.getPath() + "': false");
             return;
         }
@@ -133,9 +133,9 @@ public class ManageExportCommand extends CommandNode {
     }
 
     private void exportPlayers(Sender sender) {
-        boolean exportPlayerJSON = config.get(ExportSettings.PLAYER_JSON);
-        boolean exportPlayerHTML = config.get(ExportSettings.PLAYER_PAGES);
-        boolean exportPlayersHtml = config.get(ExportSettings.PLAYERS_PAGE);
+        boolean exportPlayerJSON = config.isTrue(ExportSettings.PLAYER_JSON);
+        boolean exportPlayerHTML = config.isTrue(ExportSettings.PLAYER_PAGES);
+        boolean exportPlayersHtml = config.isTrue(ExportSettings.PLAYERS_PAGE);
         if (!exportPlayerJSON && !exportPlayerHTML) {
             sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL));
             sender.sendMessage("§c'" + ExportSettings.PLAYER_JSON.getPath() + "' & '" + ExportSettings.PLAYER_PAGES.getPath() + "': false");

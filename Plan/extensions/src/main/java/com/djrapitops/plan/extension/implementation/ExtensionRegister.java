@@ -30,6 +30,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * In charge of registering built in {@link com.djrapitops.plan.extension.DataExtension} implementations.
@@ -39,13 +40,13 @@ import java.util.function.Function;
 @Singleton
 public class ExtensionRegister {
 
-    private final Function<String, Boolean> isExtensionEnabledInConfig;
+    private final Predicate<String> isExtensionEnabledInConfig;
     private IllegalStateException registerException;
     private Set<String> disabledExtensions;
     private ExtensionService extensionService;
 
     @Inject
-    public ExtensionRegister(@Named("isExtensionEnabled") Function<String, Boolean> isExtensionEnabledInConfig) {
+    public ExtensionRegister(@Named("isExtensionEnabled") Predicate<String> isExtensionEnabledInConfig) {
         /* Required for dagger injection */
         this.isExtensionEnabledInConfig = isExtensionEnabledInConfig;
     }
@@ -98,7 +99,7 @@ public class ExtensionRegister {
         String factoryName = factory.getSimpleName();
         String extensionName = factoryName.replace("ExtensionFactory", "");
 
-        if (!isExtensionEnabledInConfig.apply(extensionName)) {
+        if (!isExtensionEnabledInConfig.test(extensionName)) {
             return;
         }
 

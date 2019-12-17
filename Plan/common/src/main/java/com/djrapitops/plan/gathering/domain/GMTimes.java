@@ -59,10 +59,10 @@ public class GMTimes extends TimeKeeper {
 
     public static String magicNumberToGMName(int magicNumber) {
         switch (magicNumber) {
-            case 0: return "SURVIVAL";
-            case 1: return "CREATIVE";
-            case 2: return "ADVENTURE";
-            case 3: return "SPECTATOR";
+            case 0: return SURVIVAL;
+            case 1: return CREATIVE;
+            case 2: return ADVENTURE;
+            case 3: return SPECTATOR;
             default: return "UNKOWN";
         }
     }

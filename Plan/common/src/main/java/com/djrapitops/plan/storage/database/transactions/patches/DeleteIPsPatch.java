@@ -31,21 +31,23 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  */
 public class DeleteIPsPatch extends Patch {
 
+    private final String oldTableName;
     private final String tempTableName;
 
     public DeleteIPsPatch() {
+        oldTableName = "plan_ips";
         tempTableName = "temp_ips";
     }
 
     @Override
     public boolean hasBeenApplied() {
-        return !hasTable("plan_ips");
+        return !hasTable(oldTableName);
     }
 
     @Override
     protected void applyPatch() {
         if (hasTable(GeoInfoTable.TABLE_NAME) && hasLessDataInPlanIPs()) {
-            dropTable("plan_ips");
+            dropTable(oldTableName);
             return;
         }
         tempOldTable();
@@ -68,7 +70,7 @@ public class DeleteIPsPatch extends Patch {
     }
 
     private boolean hasLessDataInPlanIPs() {
-        Integer inIPs = query(new QueryAllStatement<Integer>(SELECT + "COUNT(1) as c" + FROM + "plan_ips") {
+        Integer inIPs = query(new QueryAllStatement<Integer>(SELECT + "COUNT(1) as c" + FROM + oldTableName) {
             @Override
             public Integer processResults(ResultSet set) throws SQLException {
                 return set.next() ? set.getInt("c") : 0;
@@ -85,7 +87,7 @@ public class DeleteIPsPatch extends Patch {
 
     private void tempOldTable() {
         if (!hasTable(tempTableName)) {
-            renameTable("plan_ips", tempTableName);
+            renameTable(oldTableName, tempTableName);
         }
     }
 }

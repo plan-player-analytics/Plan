@@ -87,7 +87,7 @@ public class BungeeTaskSystem extends TaskSystem {
         registerTask(logsFolderCleanTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
 
         Long pingDelay = config.get(TimeSettings.PING_SERVER_ENABLE_DELAY);
-        if (pingDelay < TimeUnit.HOURS.toMillis(1L) && config.get(DataGatheringSettings.PING)) {
+        if (pingDelay < TimeUnit.HOURS.toMillis(1L) && config.isTrue(DataGatheringSettings.PING)) {
             plugin.registerListener(pingCounter);
             long startDelay = TimeAmount.toTicks(pingDelay, TimeUnit.MILLISECONDS);
             registerTask(pingCounter).runTaskTimer(startDelay, 40L);

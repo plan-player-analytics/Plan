@@ -68,10 +68,7 @@ public class BukkitAFKListener implements Listener {
             UUID uuid = player.getUniqueId();
             long time = System.currentTimeMillis();
 
-            Boolean ignored = ignorePermissionInfo.get(uuid);
-            if (ignored == null) {
-                ignored = player.hasPermission(Permissions.IGNORE_AFK.getPermission());
-            }
+            boolean ignored = ignorePermissionInfo.computeIfAbsent(uuid, keyUUID -> player.hasPermission(Permissions.IGNORE_AFK.getPermission()));
             if (ignored) {
                 AFK_TRACKER.hasIgnorePermission(uuid);
                 ignorePermissionInfo.put(uuid, true);

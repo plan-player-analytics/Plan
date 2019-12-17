@@ -76,6 +76,6 @@ public class NukkitListenerSystem extends ListenerSystem {
 
     @Override
     public void callEnableEvent(PlanPlugin plugin) {
-
+        // EnableEvent was not implemented for Nukkit. If you need it please send a PR.
     }
 }
