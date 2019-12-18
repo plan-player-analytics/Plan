@@ -14,31 +14,30 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.utilities;
+package com.djrapitops.plan.utilities.java;
 
-import com.djrapitops.plan.delivery.domain.DateHolder;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
-import java.util.function.Predicate;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Utility class for different Predicates used in the plugin.
+ * Tests for Java Map shenanigans.
  *
  * @author Rsl1122
  */
-public class Predicates {
+@RunWith(JUnitPlatform.class)
+class MapsSanityTest {
 
-    private Predicates() {
-        /* static method class */
+    @Test
+    void mapComputeIfAbsentPutSideEffect() {
+        Map<String, String> t = new HashMap<>();
+        t.computeIfAbsent("Test", key -> "Confirmed");
+        assertEquals("Confirmed", t.get("Test"));
     }
 
-    public static <T extends DateHolder> Predicate<T> within(long after, long before) {
-        return holder -> {
-            long date = holder.getDate();
-            return after < date && date <= before;
-        };
-    }
-
-    public static boolean pingInRange(double value) {
-        return value > 0 && value <= 4000;
-    }
 }

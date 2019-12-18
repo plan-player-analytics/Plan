@@ -29,6 +29,7 @@ import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
+import com.djrapitops.plan.utilities.java.Maps;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -159,10 +160,10 @@ public class SessionQueries {
 
         while (set.next()) {
             UUID serverUUID = UUID.fromString(set.getString(SessionsTable.SERVER_UUID));
-            Map<UUID, SortedMap<Long, Session>> serverSessions = tempSessionMap.getOrDefault(serverUUID, new HashMap<>());
+            Map<UUID, SortedMap<Long, Session>> serverSessions = tempSessionMap.computeIfAbsent(serverUUID, Maps::create);
 
             UUID playerUUID = UUID.fromString(set.getString(SessionsTable.USER_UUID));
-            SortedMap<Long, Session> playerSessions = serverSessions.getOrDefault(playerUUID, new TreeMap<>(longRecentComparator));
+            SortedMap<Long, Session> playerSessions = serverSessions.computeIfAbsent(playerUUID, key -> new TreeMap<>(longRecentComparator));
 
             long sessionStart = set.getLong(SessionsTable.SESSION_START);
             // id, uuid, serverUUID, sessionStart, sessionEnd, mobKills, deaths, afkTime
@@ -206,8 +207,6 @@ public class SessionQueries {
             session.setAsFirstSessionIfMatches(set.getLong("registered"));
 
             playerSessions.put(sessionStart, session);
-            serverSessions.put(playerUUID, playerSessions);
-            tempSessionMap.put(serverUUID, serverSessions);
         }
 
         return tempSessionMap.values().stream()

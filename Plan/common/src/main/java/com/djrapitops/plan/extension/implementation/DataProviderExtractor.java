@@ -23,6 +23,7 @@ import com.djrapitops.plan.extension.extractor.MethodAnnotations;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.providers.*;
+import com.djrapitops.plan.utilities.java.Lists;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -42,8 +43,8 @@ import java.util.stream.Collectors;
  */
 public class DataProviderExtractor {
 
-    private final ExtensionExtractor extensionExtractor;
-    private final DataProviders dataProviders;
+    private final ExtensionExtractor extractor;
+    private final DataProviders providers;
 
     /**
      * Create a DataProviderExtractor.
@@ -52,31 +53,31 @@ public class DataProviderExtractor {
      * @throws IllegalArgumentException If something is badly wrong with the specified extension class annotations.
      */
     public DataProviderExtractor(DataExtension extension) {
-        extensionExtractor = new ExtensionExtractor(extension);
+        extractor = new ExtensionExtractor(extension);
 
-        extensionExtractor.extractAnnotationInformation();
+        extractor.extractAnnotationInformation();
 
-        dataProviders = new DataProviders();
-        extractAllDataProviders();
+        providers = new DataProviders();
+        extractProviders();
     }
 
     public String getPluginName() {
-        return extensionExtractor.getPluginInfo().name();
+        return extractor.getPluginInfo().name();
     }
 
     public Icon getPluginIcon() {
-        PluginInfo pluginInfo = extensionExtractor.getPluginInfo();
+        PluginInfo pluginInfo = extractor.getPluginInfo();
         return new Icon(pluginInfo.iconFamily(), pluginInfo.iconName(), pluginInfo.color());
     }
 
     public Collection<TabInformation> getPluginTabs() {
-        Map<String, TabInfo> tabInformation = extensionExtractor.getTabInformation()
+        Map<String, TabInfo> tabInformation = extractor.getTabInformation()
                 .stream().collect(Collectors.toMap(TabInfo::tab, Function.identity(), (one, two) -> one));
 
         Map<String, Integer> order = getTabOrder().map(this::orderToMap).orElse(new HashMap<>());
 
         // Extracts PluginTabs
-        return extensionExtractor.getMethodAnnotations().getAnnotations(Tab.class).stream()
+        return extractor.getMethodAnnotations().getAnnotations(Tab.class).stream()
                 .map(Tab::value)
                 .distinct()
                 .map(tabName -> {
@@ -99,44 +100,42 @@ public class DataProviderExtractor {
     }
 
     public Optional<String[]> getTabOrder() {
-        return extensionExtractor.getTabOrder().map(TabOrder::value);
+        return extractor.getTabOrder().map(TabOrder::value);
     }
 
     public Collection<String> getInvalidatedMethods() {
-        return extensionExtractor.getInvalidateMethodAnnotations().stream()
-                .map(InvalidateMethod::value)
-                .collect(Collectors.toSet());
+        return Lists.mapUnique(extractor.getInvalidateMethodAnnotations(), InvalidateMethod::value);
     }
 
-    public DataProviders getDataProviders() {
-        return dataProviders;
+    public DataProviders getProviders() {
+        return providers;
     }
 
-    private void extractAllDataProviders() {
-        PluginInfo pluginInfo = extensionExtractor.getPluginInfo();
+    private void extractProviders() {
+        PluginInfo pluginInfo = extractor.getPluginInfo();
 
-        MethodAnnotations methodAnnotations = extensionExtractor.getMethodAnnotations();
+        MethodAnnotations methodAnnotations = extractor.getMethodAnnotations();
         Map<Method, Tab> tabs = methodAnnotations.getMethodAnnotations(Tab.class);
         Map<Method, Conditional> conditions = methodAnnotations.getMethodAnnotations(Conditional.class);
 
-        extractDataProviders(pluginInfo, tabs, conditions, BooleanProvider.class, BooleanDataProvider::placeToDataProviders);
-        extractDataProviders(pluginInfo, tabs, conditions, DoubleProvider.class, DoubleDataProvider::placeToDataProviders);
-        extractDataProviders(pluginInfo, tabs, conditions, PercentageProvider.class, PercentageDataProvider::placeToDataProviders);
-        extractDataProviders(pluginInfo, tabs, conditions, NumberProvider.class, NumberDataProvider::placeToDataProviders);
-        extractDataProviders(pluginInfo, tabs, conditions, StringProvider.class, StringDataProvider::placeToDataProviders);
-        extractDataProviders(pluginInfo, tabs, conditions, TableProvider.class, TableDataProvider::placeToDataProviders);
-        extractDataProviders(pluginInfo, tabs, conditions, GroupProvider.class, GroupDataProvider::placeToDataProviders);
+        extractProviders(pluginInfo, tabs, conditions, BooleanProvider.class, BooleanDataProvider::placeToDataProviders);
+        extractProviders(pluginInfo, tabs, conditions, DoubleProvider.class, DoubleDataProvider::placeToDataProviders);
+        extractProviders(pluginInfo, tabs, conditions, PercentageProvider.class, PercentageDataProvider::placeToDataProviders);
+        extractProviders(pluginInfo, tabs, conditions, NumberProvider.class, NumberDataProvider::placeToDataProviders);
+        extractProviders(pluginInfo, tabs, conditions, StringProvider.class, StringDataProvider::placeToDataProviders);
+        extractProviders(pluginInfo, tabs, conditions, TableProvider.class, TableDataProvider::placeToDataProviders);
+        extractProviders(pluginInfo, tabs, conditions, GroupProvider.class, GroupDataProvider::placeToDataProviders);
     }
 
-    private <T extends Annotation> void extractDataProviders(PluginInfo pluginInfo, Map<Method, Tab> tabs, Map<Method, Conditional> conditions, Class<T> ofKind, DataProviderFactory<T> factory) {
-        for (Map.Entry<Method, T> entry : extensionExtractor.getMethodAnnotations().getMethodAnnotations(ofKind).entrySet()) {
+    private <T extends Annotation> void extractProviders(PluginInfo pluginInfo, Map<Method, Tab> tabs, Map<Method, Conditional> conditions, Class<T> ofKind, DataProviderFactory<T> factory) {
+        for (Map.Entry<Method, T> entry : extractor.getMethodAnnotations().getMethodAnnotations(ofKind).entrySet()) {
             Method method = entry.getKey();
             T annotation = entry.getValue();
             Optional<Conditional> conditional = Optional.ofNullable(conditions.get(method));
             Optional<Tab> tab = Optional.ofNullable(tabs.get(method));
 
             factory.placeToDataProviders(
-                    dataProviders, method, annotation,
+                    providers, method, annotation,
                     conditional.orElse(null),
                     tab.map(Tab::value).orElse(null),
                     pluginInfo.name()
@@ -145,7 +144,7 @@ public class DataProviderExtractor {
     }
 
     public Collection<String> getWarnings() {
-        return extensionExtractor.getWarnings();
+        return extractor.getWarnings();
     }
 
     /**

@@ -22,6 +22,7 @@ import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
+import com.djrapitops.plan.utilities.java.Lists;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -66,13 +67,9 @@ public class GeoInfoQueries {
         while (set.next()) {
             UUID uuid = UUID.fromString(set.getString(GeoInfoTable.USER_UUID));
 
-            List<GeoInfo> userGeoInfo = geoInformation.getOrDefault(uuid, new ArrayList<>());
-
-            String geolocation = set.getString(GeoInfoTable.GEOLOCATION);
-            long lastUsed = set.getLong(GeoInfoTable.LAST_USED);
-            userGeoInfo.add(new GeoInfo(geolocation, lastUsed));
-
-            geoInformation.put(uuid, userGeoInfo);
+            List<GeoInfo> userGeoInfo = geoInformation.computeIfAbsent(uuid, Lists::create);
+            GeoInfo geoInfo = new GeoInfo(set.getString(GeoInfoTable.GEOLOCATION), set.getLong(GeoInfoTable.LAST_USED));
+            userGeoInfo.add(geoInfo);
         }
         return geoInformation;
     }

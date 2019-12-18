@@ -41,13 +41,13 @@ import com.djrapitops.plan.storage.database.queries.analysis.ActivityIndexQuerie
 import com.djrapitops.plan.storage.database.queries.analysis.NetworkActivityIndexQueries;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.storage.database.queries.objects.*;
+import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * Perses Graph related Data JSON.
@@ -98,9 +98,9 @@ public class GraphJSONCreator {
         long now = System.currentTimeMillis();
         long halfYearAgo = now - TimeUnit.DAYS.toMillis(180L);
 
-        List<Point> points = db.query(TPSQueries.fetchPlayersOnlineOfServer(halfYearAgo, now, serverUUID)).stream()
-                .map(point -> new Point(point.getDate(), point.getValue()))
-                .collect(Collectors.toList());
+        List<Point> points = Lists.map(db.query(TPSQueries.fetchPlayersOnlineOfServer(halfYearAgo, now, serverUUID)),
+                point -> new Point(point.getDate(), point.getValue())
+        );
         return "{\"playersOnline\":" + graphs.line().lineGraph(points).toHighChartsSeries() + '}';
     }
 

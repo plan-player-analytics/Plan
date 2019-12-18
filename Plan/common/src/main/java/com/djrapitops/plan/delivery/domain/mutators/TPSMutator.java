@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.domain.keys.ServerKeys;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.utilities.comparators.TPSComparator;
+import com.djrapitops.plan.utilities.java.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,9 +54,7 @@ public class TPSMutator {
     }
 
     public TPSMutator filterBy(Predicate<TPS> filter) {
-        return new TPSMutator(tpsData.stream()
-                .filter(filter)
-                .collect(Collectors.toList()));
+        return new TPSMutator(Lists.filter(tpsData, filter));
     }
 
     public TPSMutator filterDataBetween(long after, long before) {
@@ -71,15 +70,11 @@ public class TPSMutator {
     }
 
     public List<Point> playersOnlinePoints() {
-        return tpsData.stream()
-                .map(tps -> new Point(tps.getDate(), tps.getPlayers()))
-                .collect(Collectors.toList());
+        return Lists.map(tpsData, tps -> new Point(tps.getDate(), tps.getPlayers()));
     }
 
     public List<Point> tpsPoints() {
-        return tpsData.stream()
-                .map(tps -> new Point(tps.getDate(), tps.getTicksPerSecond()))
-                .collect(Collectors.toList());
+        return Lists.map(tpsData, tps -> new Point(tps.getDate(), tps.getTicksPerSecond()));
     }
 
     public List<Point> cpuPoints() {
@@ -90,21 +85,15 @@ public class TPSMutator {
     }
 
     public List<Point> ramUsagePoints() {
-        return tpsData.stream()
-                .map(tps -> new Point(tps.getDate(), tps.getUsedMemory()))
-                .collect(Collectors.toList());
+        return Lists.map(tpsData, tps -> new Point(tps.getDate(), tps.getUsedMemory()));
     }
 
     public List<Point> entityPoints() {
-        return tpsData.stream()
-                .map(tps -> new Point(tps.getDate(), tps.getEntityCount()))
-                .collect(Collectors.toList());
+        return Lists.map(tpsData, tps -> new Point(tps.getDate(), tps.getEntityCount()));
     }
 
     public List<Point> chunkPoints() {
-        return tpsData.stream()
-                .map(tps -> new Point(tps.getDate(), tps.getChunksLoaded()))
-                .collect(Collectors.toList());
+        return Lists.map(tpsData, tps -> new Point(tps.getDate(), tps.getChunksLoaded()));
     }
 
     public List<Point> freeDiskPoints() {

@@ -21,6 +21,8 @@ import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.NicknamesTable;
+import com.djrapitops.plan.utilities.java.Lists;
+import com.djrapitops.plan.utilities.java.Maps;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -61,17 +63,14 @@ public class NicknameQueries {
                     UUID serverUUID = UUID.fromString(set.getString(NicknamesTable.SERVER_UUID));
                     UUID uuid = UUID.fromString(set.getString(NicknamesTable.USER_UUID));
 
-                    Map<UUID, List<Nickname>> serverMap = map.getOrDefault(serverUUID, new HashMap<>());
-                    List<Nickname> nicknames = serverMap.getOrDefault(uuid, new ArrayList<>());
+                    Map<UUID, List<Nickname>> serverMap = map.computeIfAbsent(serverUUID, Maps::create);
+                    List<Nickname> nicknames = serverMap.computeIfAbsent(uuid, Lists::create);
 
                     nicknames.add(new Nickname(
                             set.getString(NicknamesTable.NICKNAME),
                             set.getLong(NicknamesTable.LAST_USED),
                             serverUUID
                     ));
-
-                    serverMap.put(uuid, nicknames);
-                    map.put(serverUUID, serverMap);
                 }
                 return map;
             }
@@ -168,15 +167,13 @@ public class NicknameQueries {
                     UUID serverUUID = UUID.fromString(set.getString(NicknamesTable.SERVER_UUID));
                     UUID uuid = UUID.fromString(set.getString(NicknamesTable.USER_UUID));
 
-                    List<Nickname> nicknames = serverMap.getOrDefault(uuid, new ArrayList<>());
+                    List<Nickname> nicknames = serverMap.computeIfAbsent(uuid, Lists::create);
 
                     nicknames.add(new Nickname(
                             set.getString(NicknamesTable.NICKNAME),
                             set.getLong(NicknamesTable.LAST_USED),
                             serverUUID
                     ));
-
-                    serverMap.put(uuid, nicknames);
                 }
                 return serverMap;
             }

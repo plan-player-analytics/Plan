@@ -23,6 +23,7 @@ import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.PingTable;
+import com.djrapitops.plan.utilities.java.Lists;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -75,12 +76,11 @@ public class PingQueries {
             int minPing = set.getInt(PingTable.MIN_PING);
             int maxPing = set.getInt(PingTable.MAX_PING);
 
-            List<Ping> pings = userPings.getOrDefault(uuid, new ArrayList<>());
+            List<Ping> pings = userPings.computeIfAbsent(uuid, Lists::create);
             pings.add(new Ping(date, serverUUID,
                     minPing,
                     maxPing,
                     avgPing));
-            userPings.put(uuid, pings);
         }
 
         return userPings;

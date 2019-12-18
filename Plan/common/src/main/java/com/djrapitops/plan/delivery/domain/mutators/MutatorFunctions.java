@@ -17,17 +17,15 @@
 package com.djrapitops.plan.delivery.domain.mutators;
 
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
+import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class MutatorFunctions {
 
     public static List<Point> toPoints(NavigableMap<Long, Integer> map) {
-        return map.entrySet().stream()
-                .map(entry -> new Point(entry.getKey(), entry.getValue()))
-                .collect(Collectors.toList());
+        return Lists.map(map.entrySet(), entry -> new Point(entry.getKey(), entry.getValue()));
     }
 
     public static NavigableMap<Long, Integer> addMissing(NavigableMap<Long, Integer> points, long accuracy, Integer replacement) {

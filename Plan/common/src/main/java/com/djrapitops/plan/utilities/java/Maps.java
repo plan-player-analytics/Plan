@@ -14,31 +14,30 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.utilities;
+package com.djrapitops.plan.utilities.java;
 
-import com.djrapitops.plan.delivery.domain.DateHolder;
-
-import java.util.function.Predicate;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * Utility class for different Predicates used in the plugin.
+ * Methods that can be used as functional interfaces when dealing with Maps.
  *
  * @author Rsl1122
  */
-public class Predicates {
+public class Maps {
 
-    private Predicates() {
-        /* static method class */
+    private Maps() {
+        // Static method class
     }
 
-    public static <T extends DateHolder> Predicate<T> within(long after, long before) {
-        return holder -> {
-            long date = holder.getDate();
-            return after < date && date <= before;
-        };
+    public static <V, T, K> Map<V, T> create(K key) {
+        return new HashMap<>();
     }
 
-    public static boolean pingInRange(double value) {
-        return value > 0 && value <= 4000;
+    public static <V, K> Set<V> createSet(K key) {
+        return new HashSet<>();
     }
+
 }

@@ -18,11 +18,11 @@ package com.djrapitops.plan.delivery.domain.mutators;
 
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
+import com.djrapitops.plan.utilities.java.Lists;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Mutator functions for {@link PlayerKill} objects.
@@ -38,11 +38,11 @@ public class PlayerKillMutator {
     }
 
     public PlayerKillMutator filterNonSelfKills() {
-        return new PlayerKillMutator(kills.stream().filter(PlayerKill::isNotSelfKill).collect(Collectors.toList()));
+        return new PlayerKillMutator(Lists.filter(kills, PlayerKill::isNotSelfKill));
     }
 
     public List<Map<String, Object>> toJSONAsMap(Formatters formatters) {
-        return kills.stream().map(
+        return Lists.map(kills,
                 kill -> {
                     Map<String, Object> killMap = new HashMap<>();
                     killMap.put("date", formatters.secondLong().apply(kill.getDate()));
@@ -51,6 +51,6 @@ public class PlayerKillMutator {
                     killMap.put("weapon", kill.getWeapon());
                     return killMap;
                 }
-        ).collect(Collectors.toList());
+        );
     }
 }

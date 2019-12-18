@@ -21,6 +21,8 @@ import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.TPSTable;
 import com.djrapitops.plan.storage.database.sql.tables.WorldTable;
+import com.djrapitops.plan.utilities.java.Lists;
+import com.djrapitops.plan.utilities.java.Maps;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -67,7 +69,7 @@ public class LargeFetchQueries {
                 while (set.next()) {
                     UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
 
-                    List<TPS> tpsList = serverMap.getOrDefault(serverUUID, new ArrayList<>());
+                    List<TPS> tpsList = serverMap.computeIfAbsent(serverUUID, Lists::create);
 
                     TPS tps = TPSBuilder.get()
                             .date(set.getLong(TPSTable.DATE))
@@ -81,7 +83,6 @@ public class LargeFetchQueries {
                             .toTPS();
 
                     tpsList.add(tps);
-                    serverMap.put(serverUUID, tpsList);
                 }
                 return serverMap;
             }
@@ -102,9 +103,8 @@ public class LargeFetchQueries {
                 Map<UUID, Collection<String>> worldMap = new HashMap<>();
                 while (set.next()) {
                     UUID serverUUID = UUID.fromString(set.getString(WorldTable.SERVER_UUID));
-                    Collection<String> worlds = worldMap.getOrDefault(serverUUID, new HashSet<>());
+                    Collection<String> worlds = worldMap.computeIfAbsent(serverUUID, Maps::createSet);
                     worlds.add(set.getString(WorldTable.NAME));
-                    worldMap.put(serverUUID, worlds);
                 }
                 return worldMap;
             }

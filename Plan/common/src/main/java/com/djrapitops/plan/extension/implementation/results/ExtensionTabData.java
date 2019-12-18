@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension.implementation.results;
 
 import com.djrapitops.plan.extension.implementation.TabInformation;
+import com.djrapitops.plan.utilities.java.Lists;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -131,11 +132,11 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
     }
 
     private void createOrderingList() {
-        booleanData.values().stream().map(DescribedExtensionData::getDescriptive).forEach(descriptives::add);
-        doubleData.values().stream().map(DescribedExtensionData::getDescriptive).forEach(descriptives::add);
-        percentageData.values().stream().map(DescribedExtensionData::getDescriptive).forEach(descriptives::add);
-        numberData.values().stream().map(DescribedExtensionData::getDescriptive).forEach(descriptives::add);
-        stringData.values().stream().map(DescribedExtensionData::getDescriptive).forEach(descriptives::add);
+        descriptives.addAll(Lists.map(booleanData.values(), DescribedExtensionData::getDescriptive));
+        descriptives.addAll(Lists.map(doubleData.values(), DescribedExtensionData::getDescriptive));
+        descriptives.addAll(Lists.map(percentageData.values(), DescribedExtensionData::getDescriptive));
+        descriptives.addAll(Lists.map(numberData.values(), DescribedExtensionData::getDescriptive));
+        descriptives.addAll(Lists.map(stringData.values(), DescribedExtensionData::getDescriptive));
 
         order = descriptives.stream().sorted()
                 .map(ExtensionDescriptive::getName)

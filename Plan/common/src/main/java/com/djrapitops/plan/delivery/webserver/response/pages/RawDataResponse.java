@@ -18,11 +18,11 @@ package com.djrapitops.plan.delivery.webserver.response.pages;
 
 import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
+import com.djrapitops.plan.utilities.java.Lists;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Response for sending raw data as JSON when it is inside a DataContainer.
@@ -46,10 +46,10 @@ public class RawDataResponse extends JSONResponse {
                         value = mapToNormalMap((DataContainer) value);
                     }
                     if (value instanceof Map) {
-                        value = handleMap((Map) value);
+                        value = handleMap((Map<?, ?>) value);
                     }
                     if (value instanceof List) {
-                        value = handleList((List) value);
+                        value = handleList((List<?>) value);
                     }
                     values.put(key.getKeyName(), value);
                 }
@@ -57,14 +57,14 @@ public class RawDataResponse extends JSONResponse {
         return values;
     }
 
-    private static List handleList(List list) {
+    private static List<?> handleList(List<?> list) {
         if (list.stream().findAny().orElse(null) instanceof DataContainer) {
-            return (List) list.stream().map(obj -> mapToNormalMap((DataContainer) obj)).collect(Collectors.toList());
+            return Lists.map(list, obj -> mapToNormalMap((DataContainer) obj));
         }
         return list;
     }
 
-    private static Map handleMap(Map map) {
+    private static Map<?, ?> handleMap(Map<?, ?> map) {
         if (map.values().stream().findAny().orElse(null) instanceof DataContainer) {
             Map<Object, Object> newMap = new HashMap<>();
             map.forEach((key, value) -> newMap.put(key, mapToNormalMap((DataContainer) value)));

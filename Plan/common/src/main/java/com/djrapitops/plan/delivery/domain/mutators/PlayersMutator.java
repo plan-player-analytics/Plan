@@ -25,9 +25,12 @@ import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.gathering.domain.Ping;
 import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.utilities.java.Lists;
+import com.djrapitops.plan.utilities.java.Maps;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -53,7 +56,7 @@ public class PlayersMutator {
     }
 
     public <T extends Predicate<PlayerContainer>> PlayersMutator filterBy(T by) {
-        return new PlayersMutator(players.stream().filter(by).collect(Collectors.toList()));
+        return new PlayersMutator(Lists.filter(players, by));
     }
 
     public PlayersMutator filterPlayedBetween(long after, long before) {
@@ -129,11 +132,8 @@ public class PlayersMutator {
             }
             List<Ping> pings = player.getValue(PlayerKeys.PING).orElse(new ArrayList<>());
             String country = mostRecent.get().getGeolocation();
-            List<Ping> countryPings = pingPerCountry.getOrDefault(country, new ArrayList<>());
-            pings.stream()
-                    .filter(ping -> ping.getServerUUID().equals(serverUUID))
-                    .forEach(countryPings::add);
-            pingPerCountry.put(country, countryPings);
+            List<Ping> countryPings = pingPerCountry.computeIfAbsent(country, Lists::create);
+            countryPings.addAll(new PingMutator(pings).filterByServer(serverUUID).all());
         }
 
         return pingPerCountry;
@@ -142,7 +142,7 @@ public class PlayersMutator {
     public TreeMap<Long, Map<String, Set<UUID>>> toActivityDataMap(long date, long msThreshold) {
         TreeMap<Long, Map<String, Set<UUID>>> activityData = new TreeMap<>();
         for (long time = date; time >= date - TimeAmount.MONTH.toMillis(2L); time -= TimeAmount.WEEK.toMillis(1L)) {
-            Map<String, Set<UUID>> map = activityData.getOrDefault(time, new HashMap<>());
+            Map<String, Set<UUID>> map = activityData.computeIfAbsent(time, Maps::create);
             if (!players.isEmpty()) {
                 for (PlayerContainer player : players) {
                     if (player.getValue(PlayerKeys.REGISTERED).orElse(0L) > time) {
@@ -151,12 +151,10 @@ public class PlayersMutator {
                     ActivityIndex activityIndex = player.getActivityIndex(time, msThreshold);
                     String activityGroup = activityIndex.getGroup();
 
-                    Set<UUID> uuids = map.getOrDefault(activityGroup, new HashSet<>());
+                    Set<UUID> uuids = map.computeIfAbsent(activityGroup, Maps::createSet);
                     uuids.add(player.getUnsafe(PlayerKeys.UUID));
-                    map.put(activityGroup, uuids);
                 }
             }
-            activityData.put(time, map);
         }
         return activityData;
     }
@@ -170,14 +168,12 @@ public class PlayersMutator {
     }
 
     public TreeMap<Long, Integer> newPerDay(TimeZone timeZone) {
-        List<DateObj> registerDates = registerDates().stream()
-                .map(value -> new DateObj<>(value, value))
-                .collect(Collectors.toList());
+        List<DateObj<?>> registerDates = Lists.map(registerDates(), value -> new DateObj<>(value, value));
         // Adds timezone offset
-        SortedMap<Long, List<DateObj>> byDay = new DateHoldersMutator<>(registerDates).groupByStartOfDay(timeZone);
+        SortedMap<Long, List<DateObj<?>>> byDay = new DateHoldersMutator<>(registerDates).groupByStartOfDay(timeZone);
         TreeMap<Long, Integer> byDayCounts = new TreeMap<>();
 
-        for (Map.Entry<Long, List<DateObj>> entry : byDay.entrySet()) {
+        for (Map.Entry<Long, List<DateObj<?>>> entry : byDay.entrySet()) {
             byDayCounts.put(
                     entry.getKey(),
                     entry.getValue().size()
@@ -225,12 +221,9 @@ public class PlayersMutator {
             throw new IllegalStateException("No players to compare to after rejecting with dateLimit");
         }
 
-        List<RetentionData> retained = retainedAfterMonth.stream()
-                .map(player -> new RetentionData(player, onlineResolver, activityMsThreshold))
-                .collect(Collectors.toList());
-        List<RetentionData> notRetained = notRetainedAfterMonth.stream()
-                .map(player -> new RetentionData(player, onlineResolver, activityMsThreshold))
-                .collect(Collectors.toList());
+        Function<PlayerContainer, RetentionData> mapper = player -> new RetentionData(player, onlineResolver, activityMsThreshold);
+        List<RetentionData> retained = Lists.map(retainedAfterMonth, mapper);
+        List<RetentionData> notRetained = Lists.map(notRetainedAfterMonth, mapper);
 
         RetentionData avgRetained = RetentionData.average(retained);
         RetentionData avgNotRetained = RetentionData.average(notRetained);
@@ -260,8 +253,7 @@ public class PlayersMutator {
     }
 
     public List<PlayerContainer> operators() {
-        return players.stream()
-                .filter(player -> player.getValue(PlayerKeys.OPERATOR).orElse(false)).collect(Collectors.toList());
+        return Lists.filter(players, player -> player.getValue(PlayerKeys.OPERATOR).orElse(false));
     }
 
     public List<Ping> pings() {

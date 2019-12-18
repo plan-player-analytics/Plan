@@ -67,6 +67,7 @@ import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 import com.djrapitops.plan.storage.database.transactions.patches.RegisterDateMinimizationPatch;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
+import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -188,7 +189,7 @@ public interface DatabaseTest {
         saveGeoInfo(playerUUID, expected);
         commitTest();
 
-        List<GeoInfo> result = db().query(GeoInfoQueries.fetchAllGeoInformation()).getOrDefault(playerUUID, new ArrayList<>());
+        List<GeoInfo> result = db().query(GeoInfoQueries.fetchAllGeoInformation()).get(playerUUID);
         assertEquals(Collections.singletonList(expected), result);
     }
 
@@ -237,7 +238,7 @@ public interface DatabaseTest {
 
         commitTest();
 
-        Collection<String> result = db().query(LargeFetchQueries.fetchAllWorldNames()).getOrDefault(serverUUID(), new HashSet<>());
+        Collection<String> result = db().query(LargeFetchQueries.fetchAllWorldNames()).get(serverUUID());
         assertEquals(new HashSet<>(Arrays.asList(expected)), result);
     }
 
@@ -968,7 +969,7 @@ public interface DatabaseTest {
         tpsData.sort(Comparator.comparingInt(TPS::getPlayers));
         int expected = tpsData.get(tpsData.size() - 1).getPlayers();
         int actual = db().query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID())).map(DateObj::getValue).orElse(-1);
-        assertEquals(expected, actual, () -> "Wrong return value. " + tpsData.stream().map(TPS::getPlayers).collect(Collectors.toList()).toString());
+        assertEquals(expected, actual, () -> "Wrong return value. " + Lists.map(tpsData, TPS::getPlayers).toString());
     }
 
     @Test

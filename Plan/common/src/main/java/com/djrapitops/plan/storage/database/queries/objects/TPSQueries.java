@@ -23,6 +23,7 @@ import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
+import com.djrapitops.plan.utilities.java.Lists;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -157,11 +158,8 @@ public class TPSQueries {
                 Map<UUID, List<TPS>> byServer = new HashMap<>();
                 while (set.next()) {
                     UUID serverUUID = UUID.fromString(set.getString(ServerTable.SERVER_UUID));
-                    List<TPS> ofServer = byServer.getOrDefault(serverUUID, new ArrayList<>());
-
+                    List<TPS> ofServer = byServer.computeIfAbsent(serverUUID, Lists::create);
                     ofServer.add(extractTPS(set));
-
-                    byServer.put(serverUUID, ofServer);
                 }
                 return byServer;
             }

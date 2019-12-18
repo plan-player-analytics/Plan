@@ -22,11 +22,15 @@ import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.NicknamesTable;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
+import com.djrapitops.plan.utilities.java.Maps;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.AND;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
@@ -96,12 +100,11 @@ public class NicknameLastSeenPatch extends Patch {
                     int serverID = set.getInt("server_id");
                     UUID serverUUID = serverUUIDsByID.get(serverID);
                     Nickname nick = new Nickname(set.getString("additional_info"), date, serverUUID);
-                    Set<Nickname> nicknames1 = map.getOrDefault(userID, new HashSet<>());
-                    if (serverUUID == null || nicknames1.contains(nick)) {
+                    Set<Nickname> foundNicknames = map.computeIfAbsent(userID, Maps::createSet);
+                    if (serverUUID == null || foundNicknames.contains(nick)) {
                         continue;
                     }
-                    nicknames1.add(nick);
-                    map.put(userID, nicknames1);
+                    foundNicknames.add(nick);
                 }
 
                 return map;

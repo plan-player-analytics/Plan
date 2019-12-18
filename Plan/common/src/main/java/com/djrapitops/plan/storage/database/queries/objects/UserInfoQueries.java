@@ -21,6 +21,7 @@ import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
+import com.djrapitops.plan.utilities.java.Lists;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -64,14 +65,13 @@ public class UserInfoQueries {
                     UUID serverUUID = UUID.fromString(set.getString(UserInfoTable.SERVER_UUID));
                     UUID uuid = UUID.fromString(set.getString(UserInfoTable.USER_UUID));
 
-                    List<UserInfo> userInfos = serverMap.getOrDefault(serverUUID, new ArrayList<>());
+                    List<UserInfo> userInfos = serverMap.computeIfAbsent(serverUUID, Lists::create);
 
                     long registered = set.getLong(UserInfoTable.REGISTERED);
                     boolean banned = set.getBoolean(UserInfoTable.BANNED);
                     boolean op = set.getBoolean(UserInfoTable.OP);
 
                     userInfos.add(new UserInfo(uuid, serverUUID, registered, op, banned));
-                    serverMap.put(serverUUID, userInfos);
                 }
                 return serverMap;
             }

@@ -28,6 +28,7 @@ import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
 import com.djrapitops.plan.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.utilities.analysis.Median;
+import com.djrapitops.plan.utilities.java.Lists;
 
 import java.util.*;
 import java.util.function.Function;
@@ -62,10 +63,15 @@ public class SessionsMutator {
         return this;
     }
 
-    public SessionsMutator filterBy(Predicate<Session> predicate) {
-        return new SessionsMutator(sessions.stream()
-                .filter(predicate)
-                .collect(Collectors.toList()));
+    public static Map<UUID, List<Session>> sortByPlayers(List<Session> sessions) {
+        Map<UUID, List<Session>> sorted = new HashMap<>();
+        for (Session session : sessions) {
+            UUID playerUUID = session.getUnsafe(SessionKeys.UUID);
+            List<Session> playerSessions = sorted.computeIfAbsent(playerUUID, Lists::create);
+            playerSessions.add(session);
+            sorted.put(playerUUID, playerSessions);
+        }
+        return sorted;
     }
 
     public SessionsMutator filterSessionsBetween(long after, long before) {
@@ -157,9 +163,14 @@ public class SessionsMutator {
         return 0L;
     }
 
-    public long toMedianSessionLength() {
-        List<Long> sessionLengths = sessions.stream().map(Session::getLength).collect(Collectors.toList());
-        return (long) Median.forList(sessionLengths).calculate();
+    public static Map<UUID, List<Session>> sortByServers(List<Session> sessions) {
+        Map<UUID, List<Session>> sorted = new HashMap<>();
+        for (Session session : sessions) {
+            UUID serverUUID = session.getUnsafe(SessionKeys.SERVER_UUID);
+            List<Session> serverSessions = sorted.computeIfAbsent(serverUUID, Lists::create);
+            serverSessions.add(session);
+        }
+        return sorted;
     }
 
     public int toUniquePlayers() {
@@ -189,26 +200,13 @@ public class SessionsMutator {
         };
     }
 
-    public static Map<UUID, List<Session>> sortByPlayers(List<Session> sessions) {
-        Map<UUID, List<Session>> sorted = new HashMap<>();
-        for (Session session : sessions) {
-            UUID playerUUID = session.getUnsafe(SessionKeys.UUID);
-            List<Session> playerSessions = sorted.getOrDefault(playerUUID, new ArrayList<>());
-            playerSessions.add(session);
-            sorted.put(playerUUID, playerSessions);
-        }
-        return sorted;
+    public SessionsMutator filterBy(Predicate<Session> predicate) {
+        return new SessionsMutator(Lists.filter(sessions, predicate));
     }
 
-    public static Map<UUID, List<Session>> sortByServers(List<Session> sessions) {
-        Map<UUID, List<Session>> sorted = new HashMap<>();
-        for (Session session : sessions) {
-            UUID serverUUID = session.getUnsafe(SessionKeys.SERVER_UUID);
-            List<Session> serverSessions = sorted.getOrDefault(serverUUID, new ArrayList<>());
-            serverSessions.add(session);
-            sorted.put(serverUUID, serverSessions);
-        }
-        return sorted;
+    public long toMedianSessionLength() {
+        List<Long> sessionLengths = Lists.map(sessions, Session::getLength);
+        return (long) Median.forList(sessionLengths).calculate();
     }
 
     public static Map<UUID, TreeMap<Long, Session>> sortByServersToMaps(List<Session> sessions) {
@@ -264,7 +262,7 @@ public class SessionsMutator {
             Formatters formatters,
             Function<Map<String, Object>, Object> nameFunction
     ) {
-        return sessions.stream().map(session -> {
+        return Lists.map(sessions, session -> {
             Map<String, Object> sessionMap = new HashMap<>();
             sessionMap.put("player_name", session.getValue(SessionKeys.NAME).orElse(session.getUnsafe(SessionKeys.UUID).toString()));
             sessionMap.put("player_uuid", session.getUnsafe(SessionKeys.UUID).toString());
@@ -298,6 +296,6 @@ public class SessionsMutator {
                     sessionMap.put("avg_ping", formatters.decimals().apply(averagePing) + " ms")
             );
             return sessionMap;
-        }).collect(Collectors.toList());
+        });
     }
 }

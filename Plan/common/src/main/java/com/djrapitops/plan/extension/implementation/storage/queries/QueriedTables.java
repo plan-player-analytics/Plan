@@ -24,6 +24,7 @@ import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTableData;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.extension.table.TableAccessor;
+import com.djrapitops.plan.utilities.java.Maps;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,9 +49,8 @@ public class QueriedTables {
     }
 
     public void put(int pluginID, int tableID, Table.Factory table) {
-        Map<Integer, Table.Factory> byTableID = byPluginID.getOrDefault(pluginID, new HashMap<>());
+        Map<Integer, Table.Factory> byTableID = byPluginID.computeIfAbsent(pluginID, Maps::create);
         byTableID.put(tableID, table);
-        byPluginID.put(pluginID, byTableID);
     }
 
     public void addRow(int pluginID, int tableID, Object... row) {

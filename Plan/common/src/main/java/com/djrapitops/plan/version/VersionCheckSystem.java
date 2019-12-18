@@ -21,6 +21,7 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
+import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plugin.api.utility.Version;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -31,7 +32,6 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * System for checking if new Version is available when the System initializes.
@@ -73,7 +73,7 @@ public class VersionCheckSystem implements SubSystem {
         try {
             List<VersionInfo> versions = VersionInfoLoader.load();
             if (config.isFalse(PluginSettings.NOTIFY_ABOUT_DEV_RELEASES)) {
-                versions = versions.stream().filter(VersionInfo::isRelease).collect(Collectors.toList());
+                versions = Lists.filter(versions, VersionInfo::isRelease);
             }
             VersionInfo newestVersion = versions.get(0);
             if (Version.isNewVersionAvailable(new Version(currentVersion), newestVersion.getVersion())) {

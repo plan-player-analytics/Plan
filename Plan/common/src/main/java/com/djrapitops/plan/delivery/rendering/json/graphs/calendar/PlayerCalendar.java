@@ -26,6 +26,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
+import com.djrapitops.plan.utilities.java.Lists;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -124,9 +125,8 @@ public class PlayerCalendar {
         for (Session session : allSessions) {
             String day = iso8601Formatter.apply(session.getDate());
 
-            List<Session> sessionsOfDay = sessionsByDay.getOrDefault(day, new ArrayList<>());
+            List<Session> sessionsOfDay = sessionsByDay.computeIfAbsent(day, Lists::create);
             sessionsOfDay.add(session);
-            sessionsByDay.put(day, sessionsOfDay);
         }
         return sessionsByDay;
     }

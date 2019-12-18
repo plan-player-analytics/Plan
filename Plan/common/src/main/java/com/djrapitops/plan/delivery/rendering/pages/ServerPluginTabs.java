@@ -25,10 +25,10 @@ import com.djrapitops.plan.extension.ElementOrder;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.results.*;
+import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plugin.utilities.Format;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Responsible for generating /server page plugin tabs based on DataExtension API data.
@@ -61,9 +61,7 @@ public class ServerPluginTabs {
             Formatters formatters
     ) {
         this.serverData = serverData;
-        this.extraTabServerData = serverData.stream()
-                .filter(ExtensionData::doesNeedWiderSpace)
-                .collect(Collectors.toList());
+        this.extraTabServerData = Lists.filter(serverData, ExtensionData::doesNeedWiderSpace);
         this.serverData.removeAll(extraTabServerData);
 
         numberFormatters = new EnumMap<>(FormatType.class);

@@ -25,6 +25,7 @@ import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
+import com.djrapitops.plan.utilities.java.Lists;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -103,9 +104,8 @@ public class ExtensionInformationQueries {
                 Map<UUID, List<ExtensionInformation>> byServerUUID = new HashMap<>();
                 while (set.next()) {
                     UUID serverUUID = UUID.fromString(set.getString(ExtensionPluginTable.SERVER_UUID));
-                    List<ExtensionInformation> information = byServerUUID.getOrDefault(serverUUID, new ArrayList<>());
+                    List<ExtensionInformation> information = byServerUUID.computeIfAbsent(serverUUID, Lists::create);
                     information.add(extractExtensionInformationFromQuery(set));
-                    byServerUUID.put(serverUUID, information);
                 }
                 return byServerUUID;
             }

@@ -19,6 +19,7 @@ package com.djrapitops.plan.extension.implementation.storage.queries;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
+import com.djrapitops.plan.utilities.java.Maps;
 import com.djrapitops.plan.utilities.java.ThrowingSupplier;
 
 import java.util.HashMap;
@@ -38,7 +39,7 @@ public class QueriedTabData {
     }
 
     public <K extends Throwable> ExtensionTabData.Builder getTab(int pluginID, String tabName, ThrowingSupplier<TabInformation, K> newDefault) throws K {
-        Map<String, ExtensionTabData.Builder> byTabName = byPluginID.getOrDefault(pluginID, new HashMap<>());
+        Map<String, ExtensionTabData.Builder> byTabName = byPluginID.computeIfAbsent(pluginID, Maps::create);
 
         ExtensionTabData.Builder tab = byTabName.get(tabName);
         if (tab == null) {
@@ -46,7 +47,6 @@ public class QueriedTabData {
         }
 
         byTabName.put(tabName, tab);
-        byPluginID.put(pluginID, byTabName);
         return tab;
     }
 

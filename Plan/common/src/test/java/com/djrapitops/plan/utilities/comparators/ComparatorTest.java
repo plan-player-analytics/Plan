@@ -26,6 +26,7 @@ import com.djrapitops.plan.settings.locale.Message;
 import com.djrapitops.plan.settings.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.settings.locale.lang.Lang;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
+import com.djrapitops.plan.utilities.java.Lists;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -62,7 +63,7 @@ class ComparatorTest {
         Collections.reverse(expected);
 
         sessions.sort(new SessionStartComparator());
-        List<Long> result = sessions.stream().map(s -> s.getUnsafe(SessionKeys.START)).collect(Collectors.toList());
+        List<Long> result = Lists.map(sessions, s -> s.getUnsafe(SessionKeys.START));
 
         assertEquals(expected, result);
     }
@@ -89,7 +90,7 @@ class ComparatorTest {
         Collections.reverse(expected);
 
         webUsers.sort(new WebUserComparator());
-        List<Integer> result = webUsers.stream().map(WebUser::getPermLevel).collect(Collectors.toList());
+        List<Integer> result = Lists.map(webUsers, WebUser::getPermLevel);
 
         assertEquals(expected, result);
     }

@@ -22,10 +22,10 @@ import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.utilities.Predicates;
 import com.djrapitops.plan.utilities.analysis.Median;
+import com.djrapitops.plan.utilities.java.Lists;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Transaction to store player's Ping value on a server.
@@ -76,6 +76,7 @@ public class PingStoreTransaction extends Transaction {
 
     // VisibleForTesting
     int getMeanValue() {
-        return (int) Median.forList(pingList.stream().map(DateObj::getValue).collect(Collectors.toList())).calculate();
+        List<Integer> values = Lists.map(pingList, DateObj::getValue);
+        return (int) Median.forList(values).calculate();
     }
 }

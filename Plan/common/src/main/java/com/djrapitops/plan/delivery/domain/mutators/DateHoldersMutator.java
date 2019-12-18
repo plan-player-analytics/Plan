@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.domain.mutators;
 
 import com.djrapitops.plan.delivery.domain.DateHolder;
+import com.djrapitops.plan.utilities.java.Lists;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -41,19 +42,18 @@ public class DateHoldersMutator<T extends DateHolder> {
             long date = holder.getDate();
             long startOfSection = date - (date % sectionLenght);
 
-            List<T> list = map.getOrDefault(startOfSection, new ArrayList<>());
+            List<T> list = map.computeIfAbsent(startOfSection, Lists::create);
             list.add(holder);
-            map.put(startOfSection, list);
         }
         return map;
     }
 
     public SortedMap<Long, List<T>> groupByStartOfDay(TimeZone timeZone) {
         long twentyFourHours = TimeUnit.DAYS.toMillis(1L);
-        TreeMap<Long, List<T>> map = new TreeMap<>();
+        TreeMap<Long, List<T>> byStart = new TreeMap<>();
 
         if (dateHolders.isEmpty()) {
-            return map;
+            return byStart;
         }
 
         for (T holder : dateHolders) {
@@ -61,22 +61,21 @@ public class DateHoldersMutator<T extends DateHolder> {
             long dateWithOffset = date + timeZone.getOffset(date);
             long startOfSection = dateWithOffset - (dateWithOffset % twentyFourHours);
 
-            List<T> list = map.getOrDefault(startOfSection, new ArrayList<>());
-            list.add(holder);
-            map.put(startOfSection, list);
+            List<T> grouped = byStart.computeIfAbsent(startOfSection, Lists::create);
+            grouped.add(holder);
         }
 
         // Empty map firstKey attempt causes NPE if not checked.
-        if (!map.isEmpty()) {
+        if (!byStart.isEmpty()) {
             // Add missing in-between dates
-            long start = map.firstKey();
+            long start = byStart.firstKey();
             long now = System.currentTimeMillis();
             long end = now - (now % twentyFourHours);
             for (long date = start; date < end; date += twentyFourHours) {
-                map.putIfAbsent(date, new ArrayList<>());
+                byStart.putIfAbsent(date, new ArrayList<>());
             }
         }
-        return map;
+        return byStart;
     }
 
 }

@@ -30,6 +30,7 @@ import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerValueTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionTabTable;
+import com.djrapitops.plan.utilities.java.Lists;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -100,9 +101,8 @@ public class ExtensionPlayerDataQuery implements Query<Map<UUID, List<ExtensionD
                 if (data == null) {
                     continue;
                 }
-                List<ExtensionData> list = extensionDataByServerUUID.getOrDefault(serverUUID, new ArrayList<>());
+                List<ExtensionData> list = extensionDataByServerUUID.computeIfAbsent(serverUUID, Lists::create);
                 list.add(data.setInformation(extensionInformation).build());
-                extensionDataByServerUUID.put(serverUUID, list);
             }
         }
         return extensionDataByServerUUID;

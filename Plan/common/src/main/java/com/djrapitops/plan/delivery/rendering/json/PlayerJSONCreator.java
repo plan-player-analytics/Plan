@@ -40,13 +40,13 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQuery;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
+import com.djrapitops.plan.utilities.java.Lists;
 import org.apache.commons.text.StringEscapeUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Singleton
 public class PlayerJSONCreator {
@@ -304,9 +304,7 @@ public class PlayerJSONCreator {
         }
 
         public static List<ConnectionInfo> fromGeoInfo(List<GeoInfo> geoInfo, Formatter<Long> dateFormatter) {
-            return geoInfo.stream()
-                    .map(i -> new ConnectionInfo(i.getGeolocation(), dateFormatter.apply(i.getDate())))
-                    .collect(Collectors.toList());
+            return Lists.map(geoInfo, i -> new ConnectionInfo(i.getGeolocation(), dateFormatter.apply(i.getDate())));
         }
     }
 

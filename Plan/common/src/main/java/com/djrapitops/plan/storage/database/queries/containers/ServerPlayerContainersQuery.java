@@ -79,7 +79,7 @@ public class ServerPlayerContainersQuery implements Query<List<PlayerContainer>>
             container.putRawData(PlayerKeys.KICK_COUNT, user.getTimesKicked());
 
             // GeoInfo
-            container.putRawData(PlayerKeys.GEO_INFO, geoInformation.getOrDefault(uuid, new ArrayList<>()));
+            container.putRawData(PlayerKeys.GEO_INFO, geoInformation.getOrDefault(uuid, Collections.emptyList()));
 
             // Ping
             container.putRawData(PlayerKeys.PING, pingData.get(uuid));

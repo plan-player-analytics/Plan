@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.utilities.Predicates;
+import com.djrapitops.plan.utilities.java.Lists;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -54,8 +55,8 @@ public class PlayerVersusMutator {
 
         return new PlayerVersusMutator(
                 sessionsMutator.filterSessionsBetween(after, before),
-                kills.stream().filter(killWithinDate).collect(Collectors.toList()),
-                deaths.stream().filter(killWithinDate).collect(Collectors.toList())
+                Lists.filter(kills, killWithinDate),
+                Lists.filter(deaths, killWithinDate)
         );
     }
 

@@ -68,7 +68,7 @@ public class ProviderValueGatherer {
         String pluginName = extractor.getPluginName();
         UUID serverUUID = serverInfo.getServerUUID();
         Database database = dbSystem.getDatabase();
-        dataProviders = extractor.getDataProviders();
+        dataProviders = extractor.getProviders();
         booleanGatherer = new BooleanProviderValueGatherer(
                 pluginName, extension, serverUUID, database, dataProviders
         );
