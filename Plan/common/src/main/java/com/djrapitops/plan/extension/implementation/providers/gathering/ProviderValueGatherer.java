@@ -16,22 +16,31 @@
  */
 package com.djrapitops.plan.extension.implementation.providers.gathering;
 
+import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.DataProviderExtractor;
+import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.TabInformation;
+import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProviders;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StorePluginTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreTabInformationTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreNumberProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveInvalidResultsTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerNumberResultTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerNumberResultTransaction;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.transactions.Transaction;
 
 import java.util.UUID;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * Object that can be called to place data about players to the database.
@@ -39,6 +48,8 @@ import java.util.UUID;
  * @author Rsl1122
  */
 public class ProviderValueGatherer {
+
+    private final DataExtension extension;
 
     private final CallEvents[] callEvents;
     private final DataProviderExtractor extractor;
@@ -52,7 +63,8 @@ public class ProviderValueGatherer {
     private final StringProviderValueGatherer stringGatherer;
     private final TableProviderValueGatherer tableGatherer;
     private final GroupProviderValueGatherer groupGatherer;
-
+    private Gatherer<Long> serverNumberGatherer;
+    private Gatherer<Long> playerNumberGatherer;
 
     public ProviderValueGatherer(
             DataExtension extension,
@@ -60,7 +72,8 @@ public class ProviderValueGatherer {
             DBSystem dbSystem,
             ServerInfo serverInfo
     ) {
-        this.callEvents = extension.callExtensionMethodsOn();
+        this.extension = extension;
+        this.callEvents = this.extension.callExtensionMethodsOn();
         this.extractor = extractor;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
@@ -86,6 +99,13 @@ public class ProviderValueGatherer {
         );
         groupGatherer = new GroupProviderValueGatherer(
                 pluginName, extension, serverUUID, database, dataProviders
+        );
+
+        serverNumberGatherer = new Gatherer<>(
+                Long.class,
+                method -> method.callMethod(extension),
+                StoreNumberProviderTransaction::new,
+                (provider, result) -> new StoreServerNumberResultTransaction(provider, serverUUID, result)
         );
     }
 
@@ -129,7 +149,14 @@ public class ProviderValueGatherer {
 
     public void updateValues(UUID playerUUID, String playerName) {
         Conditions conditions = booleanGatherer.gatherBooleanDataOfPlayer(playerUUID, playerName);
-        numberGatherer.gatherNumberDataOfPlayer(playerUUID, playerName, conditions);
+
+        UUID serverUUID = serverInfo.getServerUUID();
+        playerNumberGatherer = new Gatherer<>(
+                Long.class, method -> method.callMethod(extension, playerUUID, playerName),
+                StoreNumberProviderTransaction::new,
+                (provider, result) -> new StorePlayerNumberResultTransaction(provider, serverUUID, playerUUID, result)
+        );
+        playerNumberGatherer.gather(conditions);
         doubleAndPercentageGatherer.gatherDoubleDataOfPlayer(playerUUID, playerName, conditions);
         stringGatherer.gatherStringDataOfPlayer(playerUUID, playerName, conditions);
         tableGatherer.gatherTableDataOfPlayer(playerUUID, playerName, conditions);
@@ -142,5 +169,69 @@ public class ProviderValueGatherer {
         doubleAndPercentageGatherer.gatherDoubleDataOfServer(conditions);
         stringGatherer.gatherStringDataOfServer(conditions);
         tableGatherer.gatherTableDataOfServer(conditions);
+    }
+
+    interface MethodCaller<T> extends Function<MethodWrapper<T>, T> {
+        default T call(DataProvider<T> provider) {
+            try {
+                return apply(provider.getMethod());
+            } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
+                throw new DataExtensionMethodCallException(e, provider.getProviderInformation().getPluginName(), provider.getMethod());
+            }
+        }
+    }
+
+    interface ProviderTransactionConstructor<T> extends BiFunction<DataProvider<T>, UUID, Transaction> {
+        default Transaction create(DataProvider<T> provider, UUID serverUUID) {
+            return apply(provider, serverUUID);
+        }
+    }
+
+    interface ResultTransactionConstructor<T> extends BiFunction<DataProvider<T>, T, Transaction> {
+        default Transaction create(DataProvider<T> provider, T result) {
+            return apply(provider, result);
+        }
+    }
+
+    class Gatherer<T> {
+        private final Class<T> type;
+        private final MethodCaller<T> methodCaller;
+        private final ProviderTransactionConstructor<T> providerTransactionConstructor;
+        private final ResultTransactionConstructor<T> resultTransactionConstructor;
+
+        public Gatherer(
+                Class<T> type,
+                MethodCaller<T> methodCaller,
+                ProviderTransactionConstructor<T> providerTransactionConstructor,
+                ResultTransactionConstructor<T> resultTransactionConstructor
+        ) {
+            this.type = type;
+            this.methodCaller = methodCaller;
+            this.providerTransactionConstructor = providerTransactionConstructor;
+            this.resultTransactionConstructor = resultTransactionConstructor;
+        }
+
+        public void gather(Conditions conditions) {
+            for (DataProvider<T> provider : dataProviders.getPlayerMethodsByType(type)) { // TODO work this out
+                gather(conditions, provider);
+            }
+        }
+
+        private void gather(Conditions conditions, DataProvider<T> provider) {
+            ProviderInformation information = provider.getProviderInformation();
+            if (information.getCondition().map(conditions::isNotFulfilled).orElse(false)) {
+                return; // Condition not fulfilled
+            }
+
+            T result = methodCaller.call(provider);
+            if (result == null) {
+                return; // Error during method call
+            }
+
+            Database db = dbSystem.getDatabase();
+            db.executeTransaction(new StoreIconTransaction(information.getIcon()));
+            db.executeTransaction(providerTransactionConstructor.create(provider, serverInfo.getServerUUID()));
+            db.executeTransaction(resultTransactionConstructor.create(provider, result));
+        }
     }
 }

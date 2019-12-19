@@ -19,6 +19,7 @@ package com.djrapitops.plan.extension.implementation.storage.transactions.provid
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
+import com.djrapitops.plan.extension.implementation.providers.NumberDataProvider;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionTabTable;
@@ -52,6 +53,10 @@ public class StoreNumberProviderTransaction extends ThrowawayTransaction {
         this.formatType = formatType;
         this.serverUUID = serverUUID;
         this.providerInformation = provider.getProviderInformation();
+    }
+
+    public StoreNumberProviderTransaction(DataProvider<Long> provider, UUID serverUUID) {
+        this(provider, NumberDataProvider.getFormatType(provider), serverUUID);
     }
 
     @Override
