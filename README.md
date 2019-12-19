@@ -6,7 +6,7 @@
 [![Code coverage](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=coverage)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
 [![Duplicate lines](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
 
-[API, Documentation & Tutorials](https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki) | [Releases](https://github.com/plan-player-analytics/Plan/releases) | [Issues & Suggestions](https://github.com/Rsl1122/Plan-PlayerAnalytics/issues) | [Jenkins (Development builds)](https://plan.djrapitops.com/job/Player%20Analytics/job/master/)
+[API, Documentation & Tutorials](https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki) | [Releases](https://github.com/plan-player-analytics/Plan/releases) | [Issues & Suggestions](https://github.com/Rsl1122/Plan-PlayerAnalytics/issues)
 
 Player Analytics is a fully fledged solution for the analytics needs of your minecraft server. A built in webserver displays insights into different aspects on the server such as Online activity, Playerbase and how these change over time.
 
