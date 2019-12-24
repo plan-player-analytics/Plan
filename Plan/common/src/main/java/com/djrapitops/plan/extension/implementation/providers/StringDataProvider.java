@@ -55,7 +55,7 @@ public class StringDataProvider extends DataProvider<String> {
         dataProviders.put(new StringDataProvider(providerInformation, methodWrapper, playerName));
     }
 
-    public static boolean isPlayerName(DataProvider<String> provider) {
+    public static boolean isPlayerName(DataProvider<?> provider) {
         if (provider instanceof StringDataProvider) {
             return ((StringDataProvider) provider).isPlayerName();
         }

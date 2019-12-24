@@ -16,6 +16,9 @@
  */
 package com.djrapitops.plan.storage.database.sql.building;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -59,6 +62,14 @@ public abstract class Sql {
      */
     public static long getDayEpochMs(int day) {
         return TimeUnit.DAYS.toMillis(day + 2L);
+    }
+
+    public static void setStringOrNull(PreparedStatement statement, int index, String value) throws SQLException {
+        if (value != null) {
+            statement.setString(index, value);
+        } else {
+            statement.setNull(index, Types.VARCHAR);
+        }
     }
 
     public abstract String epochSecondToDate(String sql);

@@ -18,14 +18,12 @@ package com.djrapitops.plan.extension.implementation.providers.gathering;
 
 import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.DataExtension;
-import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProviders;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
-import com.djrapitops.plan.extension.implementation.providers.NumberDataProvider;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
-import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreNumberProviderTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerNumberResultTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerNumberResultTransaction;
 import com.djrapitops.plan.storage.database.Database;
@@ -102,10 +100,8 @@ class NumberProviderValueGatherer {
             return; // Error during call
         }
 
-        FormatType formatType = NumberDataProvider.getFormatType(numberProvider);
-
         database.executeTransaction(new StoreIconTransaction(providerInformation.getIcon()));
-        database.executeTransaction(new StoreNumberProviderTransaction(numberProvider, formatType, serverUUID));
+        database.executeTransaction(new StoreProviderTransaction(numberProvider, serverUUID));
         database.executeTransaction(storeTransactionCreator.apply(method, result));
     }
 

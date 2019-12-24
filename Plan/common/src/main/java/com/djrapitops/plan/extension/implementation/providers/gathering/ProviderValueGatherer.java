@@ -29,7 +29,7 @@ import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StorePluginTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreTabInformationTransaction;
-import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreNumberProviderTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveInvalidResultsTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerNumberResultTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerNumberResultTransaction;
@@ -104,25 +104,25 @@ public class ProviderValueGatherer {
         serverNumberGatherer = new Gatherer<>(
                 Long.class,
                 method -> method.callMethod(extension),
-                StoreNumberProviderTransaction::new,
+                StoreProviderTransaction::new,
                 (provider, result) -> new StoreServerNumberResultTransaction(provider, serverUUID, result)
         );
     }
 
-    public void disableMethodFromUse(MethodWrapper method) {
+    public void disableMethodFromUse(MethodWrapper<?> method) {
         dataProviders.removeProviderWithMethod(method);
     }
 
-    public boolean canCallEvent(CallEvents event) {
+    public boolean shouldSkipEvent(CallEvents event) {
         if (event == CallEvents.MANUAL) {
-            return true;
+            return false;
         }
         for (CallEvents accepted : callEvents) {
             if (event == accepted) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     public String getPluginName() {
@@ -153,7 +153,7 @@ public class ProviderValueGatherer {
         UUID serverUUID = serverInfo.getServerUUID();
         playerNumberGatherer = new Gatherer<>(
                 Long.class, method -> method.callMethod(extension, playerUUID, playerName),
-                StoreNumberProviderTransaction::new,
+                StoreProviderTransaction::new,
                 (provider, result) -> new StorePlayerNumberResultTransaction(provider, serverUUID, playerUUID, result)
         );
         playerNumberGatherer.gather(conditions);

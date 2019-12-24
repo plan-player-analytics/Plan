@@ -23,7 +23,7 @@ import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProviders;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
-import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreGroupProviderTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerGroupsResultTransaction;
 import com.djrapitops.plan.storage.database.Database;
 
@@ -81,7 +81,7 @@ class GroupProviderValueGatherer {
             }
 
             database.executeTransaction(new StoreIconTransaction(providerInformation.getIcon()));
-            database.executeTransaction(new StoreGroupProviderTransaction(groupProvider, serverUUID));
+            database.executeTransaction(new StoreProviderTransaction(groupProvider, serverUUID));
             database.executeTransaction(new StorePlayerGroupsResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result));
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
             throw new DataExtensionMethodCallException(e, pluginName, method);

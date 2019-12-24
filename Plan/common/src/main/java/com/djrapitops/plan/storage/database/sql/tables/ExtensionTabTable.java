@@ -49,7 +49,7 @@ public class ExtensionTabTable {
             AND + PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + " LIMIT 1)";
 
     public static void set3TabValuesToStatement(PreparedStatement statement, int parameterIndex, String tabName, String pluginName, UUID serverUUID) throws SQLException {
-        statement.setString(parameterIndex, tabName);
+        Sql.setStringOrNull(statement, parameterIndex, tabName);
         ExtensionPluginTable.set2PluginValuesToStatement(statement, parameterIndex + 1, pluginName, serverUUID);
     }
 

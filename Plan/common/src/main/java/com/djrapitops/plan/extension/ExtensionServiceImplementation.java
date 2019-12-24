@@ -148,7 +148,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
     }
 
     public void updatePlayerValues(ProviderValueGatherer gatherer, UUID playerUUID, String playerName, CallEvents event) {
-        if (!gatherer.canCallEvent(event)) return;
+        if (gatherer.shouldSkipEvent(event)) return;
         if (playerUUID == null && playerName == null) return;
 
         try {
@@ -190,7 +190,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
     }
 
     public void updateServerValues(ProviderValueGatherer gatherer, CallEvents event) {
-        if (!gatherer.canCallEvent(event)) return;
+        if (gatherer.shouldSkipEvent(event)) return;
 
         try {
             logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, "Gathering values for server");

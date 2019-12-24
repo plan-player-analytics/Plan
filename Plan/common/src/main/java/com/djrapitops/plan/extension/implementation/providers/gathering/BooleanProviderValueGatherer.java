@@ -24,7 +24,7 @@ import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProviders;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
-import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreBooleanProviderTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerBooleanResultTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerBooleanResultTransaction;
 import com.djrapitops.plan.storage.database.Database;
@@ -121,8 +121,6 @@ class BooleanProviderValueGatherer {
             }
 
             Optional<String> providedCondition = BooleanDataProvider.getProvidedCondition(booleanProvider);
-            boolean hidden = BooleanDataProvider.isHidden(booleanProvider);
-
             MethodWrapper<Boolean> method = booleanProvider.getMethod();
             Boolean result = getMethodResult(methodCaller.apply(method), method);
             if (result == null) {
@@ -143,7 +141,7 @@ class BooleanProviderValueGatherer {
 
             satisfied.add(booleanProvider); // Prevents further attempts to call this provider for this player.
             database.executeTransaction(new StoreIconTransaction(providerInformation.getIcon()));
-            database.executeTransaction(new StoreBooleanProviderTransaction(booleanProvider, providedCondition.orElse(null), hidden, serverUUID));
+            database.executeTransaction(new StoreProviderTransaction(booleanProvider, serverUUID));
             database.executeTransaction(storeTransactionCreator.apply(method, result));
         }
         return satisfied;

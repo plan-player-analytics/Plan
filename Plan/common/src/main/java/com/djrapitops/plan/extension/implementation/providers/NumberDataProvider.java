@@ -23,6 +23,7 @@ import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 /**
  * Represents a DataExtension API method annotated with {@link NumberProvider} annotation.
@@ -54,11 +55,11 @@ public class NumberDataProvider extends DataProvider<Long> {
         dataProviders.put(new NumberDataProvider(providerInformation, methodWrapper, annotation.format()));
     }
 
-    public static FormatType getFormatType(DataProvider<Long> provider) {
+    public static Optional<FormatType> getFormatType(DataProvider<?> provider) {
         if (provider instanceof NumberDataProvider) {
-            return ((NumberDataProvider) provider).getFormatType();
+            return Optional.of(((NumberDataProvider) provider).getFormatType());
         }
-        return FormatType.NONE;
+        return Optional.empty();
     }
 
     public FormatType getFormatType() {

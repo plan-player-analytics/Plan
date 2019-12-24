@@ -24,7 +24,7 @@ import com.djrapitops.plan.extension.implementation.providers.DataProviders;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 import com.djrapitops.plan.extension.implementation.providers.PercentageDataProvider;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
-import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreDoubleProviderTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerDoubleResultTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerPercentageResultTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerDoubleResultTransaction;
@@ -108,7 +108,7 @@ class DoubleAndPercentageProviderValueGatherer {
         }
 
         database.executeTransaction(new StoreIconTransaction(providerInformation.getIcon()));
-        database.executeTransaction(new StoreDoubleProviderTransaction(doubleProvider, serverUUID));
+        database.executeTransaction(new StoreProviderTransaction(doubleProvider, serverUUID));
 
         if (doubleProvider instanceof PercentageDataProvider) {
             database.executeTransaction(percStoreTransactionCreator.apply(method, result));
