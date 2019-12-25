@@ -19,7 +19,6 @@ package com.djrapitops.plan.extension.implementation.providers.gathering;
 import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
-import com.djrapitops.plan.extension.implementation.providers.BooleanDataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProviders;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
@@ -112,15 +111,16 @@ class BooleanProviderValueGatherer {
     ) {
         Set<DataProvider<Boolean>> satisfied = new HashSet<>();
         for (DataProvider<Boolean> booleanProvider : unsatisifiedProviders) {
-            ProviderInformation providerInformation = booleanProvider.getProviderInformation();
+            ProviderInformation information = booleanProvider.getProviderInformation();
 
-            Optional<String> condition = providerInformation.getCondition();
+            Optional<String> condition = information.getCondition();
             if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
                 // Condition required by the BooleanProvider is not satisfied
                 continue;
             }
 
-            Optional<String> providedCondition = BooleanDataProvider.getProvidedCondition(booleanProvider);
+
+            String providedCondition = information.getProvidedCondition();
             MethodWrapper<Boolean> method = booleanProvider.getMethod();
             Boolean result = getMethodResult(methodCaller.apply(method), method);
             if (result == null) {
@@ -129,18 +129,18 @@ class BooleanProviderValueGatherer {
                 continue;
             }
 
-            if (providedCondition.isPresent()) {
+            if (providedCondition != null) {
                 if (result) {
                     // The condition was fulfilled (true) for this player.
-                    conditions.conditionFulfilled(providedCondition.get());
+                    conditions.conditionFulfilled(providedCondition);
                 } else {
                     // The negated condition was fulfilled (false) for this player.
-                    conditions.conditionFulfilled("not_" + providedCondition.get());
+                    conditions.conditionFulfilled("not_" + providedCondition);
                 }
             }
 
             satisfied.add(booleanProvider); // Prevents further attempts to call this provider for this player.
-            database.executeTransaction(new StoreIconTransaction(providerInformation.getIcon()));
+            database.executeTransaction(new StoreIconTransaction(information.getIcon()));
             database.executeTransaction(new StoreProviderTransaction(booleanProvider, serverUUID));
             database.executeTransaction(storeTransactionCreator.apply(method, result));
         }

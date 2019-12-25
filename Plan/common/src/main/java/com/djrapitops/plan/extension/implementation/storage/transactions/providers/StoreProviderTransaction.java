@@ -18,10 +18,7 @@ package com.djrapitops.plan.extension.implementation.storage.transactions.provid
 
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
-import com.djrapitops.plan.extension.implementation.providers.BooleanDataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
-import com.djrapitops.plan.extension.implementation.providers.NumberDataProvider;
-import com.djrapitops.plan.extension.implementation.providers.StringDataProvider;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
@@ -94,15 +91,15 @@ public class StoreProviderTransaction extends ThrowawayTransaction {
                 Sql.setStringOrNull(statement, 2, info.getDescription().orElse(null));
                 statement.setInt(3, info.getPriority());
                 Sql.setStringOrNull(statement, 4, info.getCondition().orElse(null));
-                ExtensionTabTable.set3TabValuesToStatement(statement, 5, info.getTab().orElse(null), info.getPluginName(), serverUUID);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 8, info.getIcon());
+                ExtensionIconTable.set3IconValuesToStatement(statement, 5, info.getIcon());
+                ExtensionTabTable.set3TabValuesToStatement(statement, 8, info.getTab().orElse(null), info.getPluginName(), serverUUID);
                 statement.setBoolean(11, info.isShownInPlayersTable());
 
                 // Specific provider cases
-                statement.setBoolean(12, BooleanDataProvider.isHidden(provider));
-                Sql.setStringOrNull(statement, 13, BooleanDataProvider.getProvidedCondition(provider).orElse(null));
-                Sql.setStringOrNull(statement, 14, NumberDataProvider.getFormatType(provider).map(FormatType::name).orElse(null));
-                statement.setBoolean(15, StringDataProvider.isPlayerName(provider));
+                statement.setBoolean(12, info.isHidden());
+                Sql.setStringOrNull(statement, 13, info.getProvidedCondition());
+                Sql.setStringOrNull(statement, 14, info.getFormatType().map(FormatType::name).orElse(null));
+                statement.setBoolean(15, info.isPlayerName());
 
                 // Find appropriate provider
                 ExtensionPluginTable.set2PluginValuesToStatement(statement, 16, info.getPluginName(), serverUUID);
@@ -159,10 +156,10 @@ public class StoreProviderTransaction extends ThrowawayTransaction {
                 statement.setBoolean(6, info.isShownInPlayersTable());
 
                 // Specific provider cases
-                statement.setBoolean(7, BooleanDataProvider.isHidden(provider));
-                Sql.setStringOrNull(statement, 8, BooleanDataProvider.getProvidedCondition(provider).orElse(null));
-                Sql.setStringOrNull(statement, 9, NumberDataProvider.getFormatType(provider).map(FormatType::name).orElse(null));
-                statement.setBoolean(10, StringDataProvider.isPlayerName(provider));
+                statement.setBoolean(7, info.isHidden());
+                Sql.setStringOrNull(statement, 8, info.getProvidedCondition());
+                Sql.setStringOrNull(statement, 9, info.getFormatType().map(FormatType::name).orElse(null));
+                statement.setBoolean(10, info.isPlayerName());
 
                 // Found for all providers
                 ExtensionTabTable.set3TabValuesToStatement(statement, 11, info.getTab().orElse(null), info.getPluginName(), serverUUID);

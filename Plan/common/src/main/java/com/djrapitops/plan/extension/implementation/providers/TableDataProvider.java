@@ -18,52 +18,38 @@ package com.djrapitops.plan.extension.implementation.providers;
 
 import com.djrapitops.plan.extension.annotation.Conditional;
 import com.djrapitops.plan.extension.annotation.TableProvider;
-import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.table.Table;
 
 import java.lang.reflect.Method;
 
 /**
- * Represents a DataExtension API method annotated with {@link com.djrapitops.plan.extension.annotation.TableProvider} annotation.
+ * Contains code that acts on {@link TableProvider} annotations.
  * <p>
- * Used to obtain data to place in the database.
- * <p>
- * Please note that not all {@link ProviderInformation} is present.
+ * Please note that not all {@link ProviderInformation} is present in this annotation.
  *
  * @author Rsl1122
  */
-public class TableDataProvider extends DataProvider<Table> {
+public class TableDataProvider {
 
-    private final Color tableColor;
-
-    private TableDataProvider(ProviderInformation providerInformation, MethodWrapper<Table> methodWrapper, Color tableColor) {
-        super(providerInformation, methodWrapper);
-
-        this.tableColor = tableColor;
+    private TableDataProvider() {
+        // Static method class
     }
 
     public static void placeToDataProviders(
             DataProviders dataProviders, Method method, TableProvider annotation,
             Conditional condition, String tab, String pluginName
     ) {
+        ProviderInformation information = ProviderInformation.builder(pluginName)
+                .setName(method.getName())
+                .setPriority(0)
+                .setCondition(condition)
+                .setTab(tab)
+                .setTableColor(annotation.tableColor())
+                .build();
+
         MethodWrapper<Table> methodWrapper = new MethodWrapper<>(method, Table.class);
-
-        ProviderInformation providerInformation = new ProviderInformation(
-                pluginName, method.getName(), null, null, null, 0, false, tab, condition
-        );
-
-        dataProviders.put(new TableDataProvider(providerInformation, methodWrapper, annotation.tableColor()));
+        dataProviders.put(new DataProvider<>(information, methodWrapper));
     }
 
-    public static Color getTableColor(DataProvider<Table> provider) {
-        if (provider instanceof TableDataProvider) {
-            return ((TableDataProvider) provider).getTableColor();
-        }
-        return Color.NONE;
-    }
-
-    public Color getTableColor() {
-        return tableColor;
-    }
 }

@@ -24,29 +24,36 @@ import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import java.lang.reflect.Method;
 
 /**
- * Represents a DataExtension API method annotated with {@link DoubleProvider} annotation.
- * <p>
- * Used to obtain data to place in the database.
+ * Contains code that acts on {@link DoubleProvider} annotations.
  *
  * @author Rsl1122
  */
-public class DoubleDataProvider extends DataProvider<Double> {
+public class DoubleDataProvider {
 
-    private DoubleDataProvider(ProviderInformation providerInformation, MethodWrapper<Double> methodWrapper) {
-        super(providerInformation, methodWrapper);
+    private DoubleDataProvider() {
+        // Static method class
     }
 
     public static void placeToDataProviders(
             DataProviders dataProviders, Method method, DoubleProvider annotation,
             Conditional condition, String tab, String pluginName
     ) {
+        ProviderInformation information = ProviderInformation.builder(pluginName)
+                .setName(method.getName())
+                .setText(annotation.text())
+                .setDescription(annotation.description())
+                .setPriority(annotation.priority())
+                .setIcon(new Icon(
+                        annotation.iconFamily(),
+                        annotation.iconName(),
+                        annotation.iconColor())
+                ).setShowInPlayersTable(annotation.showInPlayerTable())
+                .setCondition(condition)
+                .setTab(tab)
+                .build();
+
         MethodWrapper<Double> methodWrapper = new MethodWrapper<>(method, Double.class);
-        Icon providerIcon = new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor());
 
-        ProviderInformation providerInformation = new ProviderInformation(
-                pluginName, method.getName(), annotation.text(), annotation.description(), providerIcon, annotation.priority(), annotation.showInPlayerTable(), tab, condition
-        );
-
-        dataProviders.put(new DoubleDataProvider(providerInformation, methodWrapper));
+        dataProviders.put(new DataProvider<>(information, methodWrapper));
     }
 }

@@ -18,36 +18,40 @@ package com.djrapitops.plan.extension.implementation.providers;
 
 import com.djrapitops.plan.extension.annotation.Conditional;
 import com.djrapitops.plan.extension.annotation.GroupProvider;
-import com.djrapitops.plan.extension.annotation.StringProvider;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 
 import java.lang.reflect.Method;
 
 /**
- * Represents a DataExtension API method annotated with {@link StringProvider} annotation.
- * <p>
- * Used to obtain data to place in the database.
+ * Contains code that acts on {@link GroupProvider} annotations.
  *
  * @author Rsl1122
  */
-public class GroupDataProvider extends DataProvider<String[]> {
+public class GroupDataProvider {
 
-    private GroupDataProvider(ProviderInformation providerInformation, MethodWrapper<String[]> methodWrapper) {
-        super(providerInformation, methodWrapper);
+    private GroupDataProvider() {
+        // Static method class
     }
 
     public static void placeToDataProviders(
             DataProviders dataProviders, Method method, GroupProvider annotation,
             Conditional condition, String tab, String pluginName
     ) {
+        ProviderInformation information = ProviderInformation.builder(pluginName)
+                .setName(method.getName())
+                .setText(annotation.text())
+                .setPriority(0)
+                .setIcon(new Icon(
+                        annotation.iconFamily(),
+                        annotation.iconName(),
+                        annotation.groupColor())
+                ).setShowInPlayersTable(true)
+                .setCondition(condition)
+                .setTab(tab)
+                .build();
+
         MethodWrapper<String[]> methodWrapper = new MethodWrapper<>(method, String[].class);
-        Icon providerIcon = new Icon(annotation.iconFamily(), annotation.iconName(), annotation.groupColor());
-
-        ProviderInformation providerInformation = new ProviderInformation(
-                pluginName, method.getName(), annotation.text(), null, providerIcon, 0, true, tab, condition
-        );
-
-        dataProviders.put(new GroupDataProvider(providerInformation, methodWrapper));
+        dataProviders.put(new DataProvider<>(information, methodWrapper));
     }
 }

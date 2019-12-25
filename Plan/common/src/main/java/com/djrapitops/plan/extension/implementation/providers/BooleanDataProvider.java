@@ -20,60 +20,41 @@ import com.djrapitops.plan.extension.annotation.BooleanProvider;
 import com.djrapitops.plan.extension.annotation.Conditional;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
-import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Method;
-import java.util.Optional;
 
 /**
- * Represents a DataExtension API method annotated with {@link BooleanProvider} annotation.
- * <p>
- * Used to obtain data to place in the database.
+ * Contains code that acts on {@link BooleanProvider} annotations.
  *
  * @author Rsl1122
  */
-public class BooleanDataProvider extends DataProvider<Boolean> {
+public class BooleanDataProvider {
 
-    private final String providedCondition;
-    private final boolean hidden;
-
-    private BooleanDataProvider(ProviderInformation providerInformation, MethodWrapper<Boolean> method, String providedCondition, boolean hidden) {
-        super(providerInformation, method);
-
-        this.providedCondition = providedCondition;
-        this.hidden = hidden;
+    private BooleanDataProvider() {
+        // Static method class
     }
 
     public static void placeToDataProviders(
             DataProviders dataProviders, Method method, BooleanProvider annotation,
             Conditional condition, String tab, String pluginName
     ) {
+        ProviderInformation information = ProviderInformation.builder(pluginName)
+                .setName(method.getName())
+                .setText(annotation.text())
+                .setDescription(annotation.description())
+                .setPriority(annotation.priority())
+                .setIcon(new Icon(
+                        annotation.iconFamily(),
+                        annotation.iconName(),
+                        annotation.iconColor())
+                ).setShowInPlayersTable(annotation.showInPlayerTable())
+                .setCondition(condition)
+                .setTab(tab)
+                .setHidden(annotation.hidden())
+                .setProvidedCondition(annotation.conditionName())
+                .build();
+
         MethodWrapper<Boolean> methodWrapper = new MethodWrapper<>(method, Boolean.class);
-        Icon providerIcon = new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor());
-
-        ProviderInformation providerInformation = new ProviderInformation(
-                pluginName, method.getName(), annotation.text(), annotation.description(), providerIcon, annotation.priority(), annotation.showInPlayerTable(), tab, condition
-        );
-
-        dataProviders.put(new BooleanDataProvider(providerInformation, methodWrapper, annotation.conditionName(), annotation.hidden()));
-    }
-
-    public static Optional<String> getProvidedCondition(DataProvider<?> provider) {
-        if (provider instanceof BooleanDataProvider) {
-            return ((BooleanDataProvider) provider).getProvidedCondition();
-        }
-        return Optional.empty();
-    }
-
-    public Optional<String> getProvidedCondition() {
-        return providedCondition == null || providedCondition.isEmpty() ? Optional.empty() : Optional.of(StringUtils.truncate(providedCondition, 50));
-    }
-
-    public static boolean isHidden(DataProvider<?> provider) {
-        return provider instanceof BooleanDataProvider && ((BooleanDataProvider) provider).isHidden();
-    }
-
-    public boolean isHidden() {
-        return hidden;
+        dataProviders.put(new DataProvider<>(information, methodWrapper));
     }
 }

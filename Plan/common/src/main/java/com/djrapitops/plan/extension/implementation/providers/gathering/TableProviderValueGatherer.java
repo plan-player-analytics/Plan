@@ -23,7 +23,6 @@ import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProviders;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
-import com.djrapitops.plan.extension.implementation.providers.TableDataProvider;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreTableProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerTableResultTransaction;
@@ -109,7 +108,7 @@ class TableProviderValueGatherer {
                 database.executeTransaction(new StoreIconTransaction(icon));
             }
         }
-        database.executeTransaction(new StoreTableProviderTransaction(serverUUID, providerInformation, TableDataProvider.getTableColor(tableProvider), result));
+        database.executeTransaction(new StoreTableProviderTransaction(serverUUID, providerInformation, result));
         database.executeTransaction(storeTransactionCreator.apply(method, result));
     }
 

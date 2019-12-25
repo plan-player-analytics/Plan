@@ -16,7 +16,9 @@
  */
 package com.djrapitops.plan.extension.implementation;
 
+import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.annotation.Conditional;
+import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.ExtensionDescriptive;
 import org.apache.commons.lang3.StringUtils;
@@ -33,17 +35,29 @@ public class ProviderInformation extends ExtensionDescriptive {
 
     private final String pluginName;
     private final boolean showInPlayersTable;
-    private final String tab; // can be null
-    private final Conditional condition; // can be null
+    private final String tab;               // can be null
+    private final Conditional condition;    // can be null
+    private final boolean hidden;           // default false, BooleanProvider
+    private final String providedCondition; // can be null, BooleanProvider
+    private final FormatType formatType;    // can be null, NumberProvider
+    private final boolean isPlayerName;     // default false, StringProvider
+    private final Color tableColor;         // can be null, TableProvider
 
-    public ProviderInformation(
-            String pluginName, String name, String text, String description, Icon icon, int priority, boolean showInPlayersTable, String tab, Conditional condition
-    ) {
-        super(name, text, description, icon, priority);
-        this.pluginName = pluginName;
-        this.showInPlayersTable = showInPlayersTable;
-        this.tab = tab;
-        this.condition = condition;
+    private ProviderInformation(ProviderInformation.Builder builder) {
+        super(builder.name, builder.text, builder.description, builder.icon, builder.priority);
+        pluginName = builder.pluginName;
+        showInPlayersTable = builder.showInPlayersTable;
+        tab = builder.tab;
+        condition = builder.condition;
+        hidden = builder.hidden;
+        providedCondition = builder.providedCondition;
+        formatType = builder.formatType;
+        isPlayerName = builder.isPlayerName;
+        tableColor = builder.tableColor;
+    }
+
+    public static ProviderInformation.Builder builder(String pluginName) {
+        return new ProviderInformation.Builder(pluginName);
     }
 
     public String getPluginName() {
@@ -52,6 +66,22 @@ public class ProviderInformation extends ExtensionDescriptive {
 
     public boolean isShownInPlayersTable() {
         return showInPlayersTable;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public String getProvidedCondition() {
+        return providedCondition;
+    }
+
+    public Optional<FormatType> getFormatType() {
+        return Optional.ofNullable(formatType);
+    }
+
+    public boolean isPlayerName() {
+        return isPlayerName;
     }
 
     public Optional<String> getTab() {
@@ -88,5 +118,99 @@ public class ProviderInformation extends ExtensionDescriptive {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), pluginName, tab, condition);
+    }
+
+    public Color getTableColor() {
+        return tableColor;
+    }
+
+    public static class Builder {
+        private final String pluginName;
+        private String name;
+        private String text;
+        private String description;
+        private Icon icon;
+        private int priority;
+        private boolean showInPlayersTable = false;
+        private String tab;                   // can be null
+        private Conditional condition;        // can be null
+        private boolean hidden = false;       // default false, BooleanProvider
+        private String providedCondition;     // can be null, BooleanProvider
+        private FormatType formatType;        // can be null, NumberProvider
+        private boolean isPlayerName = false; // default false, StringProvider
+        private Color tableColor;             // can be null, TableProvider
+
+        public Builder(String pluginName) {
+            this.pluginName = pluginName;
+        }
+
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder setText(String text) {
+            this.text = text;
+            return this;
+        }
+
+        public Builder setDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder setIcon(Icon icon) {
+            this.icon = icon;
+            return this;
+        }
+
+        public Builder setPriority(int priority) {
+            this.priority = priority;
+            return this;
+        }
+
+        public Builder setShowInPlayersTable(boolean showInPlayersTable) {
+            this.showInPlayersTable = showInPlayersTable;
+            return this;
+        }
+
+        public Builder setTab(String tab) {
+            this.tab = tab;
+            return this;
+        }
+
+        public Builder setCondition(Conditional condition) {
+            this.condition = condition;
+            return this;
+        }
+
+        public Builder setHidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
+        public Builder setProvidedCondition(String providedCondition) {
+            this.providedCondition = providedCondition;
+            return this;
+        }
+
+        public Builder setFormatType(FormatType formatType) {
+            this.formatType = formatType;
+            return this;
+        }
+
+        public Builder setPlayerName(boolean playerName) {
+            isPlayerName = playerName;
+            return this;
+        }
+
+        public Builder setTableColor(Color tableColor) {
+            this.tableColor = tableColor;
+            return this;
+        }
+
+        public ProviderInformation build() {
+            return new ProviderInformation(this);
+        }
     }
 }

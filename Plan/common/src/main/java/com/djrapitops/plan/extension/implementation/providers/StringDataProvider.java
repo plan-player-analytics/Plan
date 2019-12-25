@@ -24,45 +24,36 @@ import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import java.lang.reflect.Method;
 
 /**
- * Represents a DataExtension API method annotated with {@link StringProvider} annotation.
- * <p>
- * Used to obtain data to place in the database.
+ * Contains code that acts on {@link StringProvider} annotations.
  *
  * @author Rsl1122
  */
-public class StringDataProvider extends DataProvider<String> {
+public class StringDataProvider {
 
-    private final boolean playerName;
-
-    private StringDataProvider(ProviderInformation providerInformation, MethodWrapper<String> methodWrapper, boolean playerName) {
-        super(providerInformation, methodWrapper);
-        this.playerName = playerName;
+    private StringDataProvider() {
+        // Static method class
     }
 
     public static void placeToDataProviders(
             DataProviders dataProviders, Method method, StringProvider annotation,
             Conditional condition, String tab, String pluginName
     ) {
+        ProviderInformation information = ProviderInformation.builder(pluginName)
+                .setName(method.getName())
+                .setText(annotation.text())
+                .setDescription(annotation.description())
+                .setPriority(annotation.priority())
+                .setIcon(new Icon(
+                        annotation.iconFamily(),
+                        annotation.iconName(),
+                        annotation.iconColor())
+                ).setShowInPlayersTable(annotation.showInPlayerTable())
+                .setCondition(condition)
+                .setTab(tab)
+                .setPlayerName(annotation.playerName())
+                .build();
+
         MethodWrapper<String> methodWrapper = new MethodWrapper<>(method, String.class);
-        Icon providerIcon = new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor());
-
-        ProviderInformation providerInformation = new ProviderInformation(
-                pluginName, method.getName(), annotation.text(), annotation.description(), providerIcon, annotation.priority(), annotation.showInPlayerTable(), tab, condition
-        );
-
-        boolean playerName = annotation.playerName();
-
-        dataProviders.put(new StringDataProvider(providerInformation, methodWrapper, playerName));
-    }
-
-    public static boolean isPlayerName(DataProvider<?> provider) {
-        if (provider instanceof StringDataProvider) {
-            return ((StringDataProvider) provider).isPlayerName();
-        }
-        return false;
-    }
-
-    public boolean isPlayerName() {
-        return playerName;
+        dataProviders.put(new DataProvider<>(information, methodWrapper));
     }
 }

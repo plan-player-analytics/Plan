@@ -128,17 +128,19 @@ public class DataProviderExtractor {
     }
 
     private <T extends Annotation> void extractProviders(PluginInfo pluginInfo, Map<Method, Tab> tabs, Map<Method, Conditional> conditions, Class<T> ofKind, DataProviderFactory<T> factory) {
+        String pluginName = extractor.getPluginInfo().name();
+
         for (Map.Entry<Method, T> entry : extractor.getMethodAnnotations().getMethodAnnotations(ofKind).entrySet()) {
             Method method = entry.getKey();
             T annotation = entry.getValue();
-            Optional<Conditional> conditional = Optional.ofNullable(conditions.get(method));
+            Conditional conditional = conditions.get(method);
             Optional<Tab> tab = Optional.ofNullable(tabs.get(method));
 
             factory.placeToDataProviders(
                     providers, method, annotation,
-                    conditional.orElse(null),
+                    conditional,
                     tab.map(Tab::value).orElse(null),
-                    pluginInfo.name()
+                    pluginName
             );
         }
     }
