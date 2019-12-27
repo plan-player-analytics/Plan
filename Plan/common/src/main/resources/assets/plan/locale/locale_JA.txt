@@ -167,7 +167,7 @@ HTML - LABEL_SESSION_MEDIAN                     || 平均オンライン
 HTML - LABEL_TIMES_KICKED                       || キック回数
 HTML - LABEL_TOTAL_PLAYERS                      || トータルプレイヤー数
 HTML - LABEL_TOTAL_PLAYTIME                     || トータルプレイ時間
-HTML - LABEL_UNIQUE_PLAYERS                     || ユニークプレイヤー
+HTML - LABEL_UNIQUE_PLAYERS                     || 接続したプレイヤーの総数
 HTML - LABEL_WEEK_DAYS                          || '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日', '日曜日'
 HTML - LINK_BACK_NETWORK                        || ネットワークページ
 HTML - LINK_BACK_SERVER                         || サーバーページ
@@ -280,7 +280,7 @@ HTML - TITLE_WORST_PING                         || 最低Ping値
 HTML - TOTAL_ACTIVE_TEXT                        || 累計活動時間
 HTML - TOTAL_AFK                                || 累計離席時間
 HTML - TOTAL_PLAYERS                            || 全プレイヤー数
-HTML - UNIQUE_CALENDAR                          || ユニーク:
+HTML - UNIQUE_CALENDAR                          || 接続したプレイヤーの総数:
 HTML - UNIT_CHUNKS                              || チャンク
 HTML - UNIT_ENTITIES                            || エンティティ数
 HTML - UNIT_NO_DATA                             || データなし
