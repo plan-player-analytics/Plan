@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.utilities.comparators;
 
-import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.delivery.domain.WebUser;
 
 import java.util.Comparator;
 

@@ -1,7 +1,7 @@
 name: Plan
 author: Rsl1122
 main: com.djrapitops.plan.Plan
-version: 4.9.4
+version: @version@
 api-version: 1.13
 softdepend:
   - ASkyBlock
@@ -27,32 +27,13 @@ softdepend:
   - Towny
   - Vault
   - ViaVersion
+  - PlaceholderAPI
+  - DKBans
 
 commands:
   plan:
-    usage: /<command> <name>
+    usage: /plan help
     description: base command
-  inspect:
-    usage: /plan inspect <name>
-    description: inspect player data
-  qinspect:
-    usage: /plan qinspect <name>
-    description: inspect player data &  view in chatbox
-  analyze:
-    usage: /plan analyze
-    description: analyze all players' data
-  qanalyze:
-    usage: /plan qanalyze
-    description: analyze all players' data & view in chatbox
-  reload:
-    usage: /plan reload
-    description: reload plugin config
-  search:
-    usage: /plan <search terms> -p add -p to make not search playername
-    description: search data of multiple players with search terms
-  manage:
-    usage: /plan manage <manage subcommand>
-    description: manage the database
 
 permissions:
   plan.?:

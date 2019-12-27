@@ -16,9 +16,8 @@
  */
 package com.djrapitops.plan.data.element;
 
-import com.djrapitops.plan.utilities.formatting.Formatter;
-import com.djrapitops.plan.utilities.html.Html;
-import com.djrapitops.plan.utilities.html.icon.Icon;
+import com.djrapitops.plan.delivery.formatting.Formatter;
+import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plugin.utilities.ArrayUtil;
 
 import java.io.Serializable;
@@ -26,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Container used for parsing Html tables.
+ * Container used for creating Html tables.
  *
  * @author Rsl1122
  * @deprecated PluginData API has been deprecated - see https://github.com/plan-player-analytics/Plan/wiki/APIv5---DataExtension-API for new API.
@@ -36,7 +35,7 @@ public class TableContainer {
 
     protected final String[] header;
     protected final Formatter[] formatters;
-    private List<Serializable[]> values;
+    private final List<Serializable[]> values;
 
     private String jqueryDatatable;
 
@@ -45,7 +44,7 @@ public class TableContainer {
     /**
      * Constructor, call with super(...).
      *
-     * @param header Required: example {@code new TableContainer("1st", "2nd"} parses into {@code <thead><tr><th>1st</th><th>2nd</th></tr></thead}.
+     * @param header Required: example {@code new TableContainer("1st", "2nd"} turns into {@code <thead><tr><th>1st</th><th>2nd</th></tr></thead}.
      */
     public TableContainer(String... header) {
         this.header = header;
@@ -63,18 +62,22 @@ public class TableContainer {
         this.values.add(values);
     }
 
-    public String parseHtml() {
+    public String parsehtml() {
+        return buildHtml();
+    }
+
+    public String buildHtml() {
         return getTableHeader() +
                 parseHeader() +
                 parseBody() +
-                "</table>" + (jqueryDatatable != null ? "</div>" : "");
+                "</table></div>";
     }
 
     public final String parseBody() {
         if (values.isEmpty()) {
             addRow("No Data");
         }
-        return Html.TABLE_BODY.parse(buildBody());
+        return "<tbody>" + buildBody() + "</tbody>";
 
     }
 
@@ -136,8 +139,6 @@ public class TableContainer {
      * Make use of jQuery Data-tables plugin.
      * <p>
      * Use this with custom tables.
-     * <p>
-     * If this is called, result of {@code parseHtml()} should be wrapped with {@code Html.PANEL.parse(Html.PANEL_BODY.parse(result))}
      */
     public void useJqueryDataTables() {
         this.jqueryDatatable = "player-plugin-table";
@@ -154,9 +155,12 @@ public class TableContainer {
 
     private String getTableHeader() {
         if (jqueryDatatable != null) {
-            return "<div class=\"table-responsive\">" + Html.TABLE_JQUERY.parse(jqueryDatatable);
+            return "<div class=\"table-responsive\">" +
+                    "<table class=\"table table-bordered table-striped table-hover " +
+                    jqueryDatatable +
+                    " dataTable\">";
         } else {
-            return Html.TABLE_SCROLL.parse();
+            return "<div class=\"scrollbar\"><table class=\"table table-striped\">";
         }
     }
 }

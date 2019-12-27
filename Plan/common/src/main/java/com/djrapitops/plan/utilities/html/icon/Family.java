@@ -18,10 +18,15 @@ package com.djrapitops.plan.utilities.html.icon;
 
 import java.util.Optional;
 
+/**
+ * @deprecated This Class exists to keep plugins that used PluginData from breaking.
+ */
+@Deprecated
 public enum Family {
     SOLID(" fa fa-", "\"></i>"),
     REGULAR(" far fa-", "\"></i>"),
     BRAND(" fab fa-", "\"></i>"),
+    @Deprecated
     LINE(" material-icons\">", "</i>");
 
     private final String middle;
@@ -32,10 +37,10 @@ public enum Family {
         this.suffix = suffix;
     }
 
-    public String appendAround(String color, String name) {
-        return "<i class=\"" + color + middle + name + suffix;
-    }
-
+    /**
+     * @deprecated This Class exists to keep plugins that used PluginData from breaking.
+     */
+    @Deprecated
     public static Optional<Family> getByName(String name) {
         if (name == null) {
             return Optional.empty();
@@ -45,5 +50,13 @@ public enum Family {
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         }
+    }
+
+    /**
+     * @deprecated This Class exists to keep plugins that used PluginData from breaking.
+     */
+    @Deprecated
+    public String appendAround(String color, String name) {
+        return "<i class=\"" + color + middle + name + suffix;
     }
 }

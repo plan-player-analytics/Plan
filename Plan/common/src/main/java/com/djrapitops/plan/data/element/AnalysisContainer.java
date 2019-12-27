@@ -22,18 +22,7 @@ import java.util.TreeMap;
 import java.util.UUID;
 
 /**
- * Container used to parse data for Server page.
- * <p>
- * Similar to InspectContainer, but can contain data for each player for a bigger Player data table.
- * <p>
- * Can contain values: addValue("Total Examples", 1) parses into ("Total Examples: 1")
- * Html: addHtml(key, "{@code <html>}") parses into ("{@code <html>}")
- * Tables: addTable(key, TableContainer) parses into ("{@code <table>...</table}")
- * Player Data for a big table: {@code addTableData("header", Map<UUID, value>)} parses a new column to Plugin data player table.
- * <p>
- * Has methods for adding icons to Strings:
- * getWithIcon("text", "cube") parses into {@code "<i class=\"fa fa-cube\"></i> text"}
- * getWithColoredIcon("text", "cube", "light-green") parses into {@code "<i class=\"col-light-green fa fa-cube\"></i> text"}
+ * Container used to hold data for Server page.
  *
  * @author Rsl1122
  * @see TableContainer
@@ -43,7 +32,7 @@ import java.util.UUID;
 @Deprecated
 public final class AnalysisContainer extends InspectContainer {
 
-    private Map<String, Map<UUID, ? extends Serializable>> playerTableValues;
+    private final Map<String, Map<UUID, ? extends Serializable>> playerTableValues;
 
     public AnalysisContainer() {
         playerTableValues = new TreeMap<>();

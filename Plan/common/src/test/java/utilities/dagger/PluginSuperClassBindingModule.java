@@ -17,25 +17,23 @@
 package utilities.dagger;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.db.H2DB;
-import com.djrapitops.plan.db.MySQLDB;
-import com.djrapitops.plan.db.SQLiteDB;
-import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.listeners.ListenerSystem;
-import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
-import com.djrapitops.plan.system.tasks.TaskSystem;
+import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plan.exceptions.EnableException;
+import com.djrapitops.plan.gathering.listeners.ListenerSystem;
+import com.djrapitops.plan.processing.Processing;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.H2DB;
+import com.djrapitops.plan.storage.database.MySQLDB;
+import com.djrapitops.plan.storage.database.SQLiteDB;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.RunnableFactory;
-import com.djrapitops.pluginbridge.plan.Bridge;
 import dagger.Module;
 import dagger.Provides;
-import org.mockito.Mockito;
 import utilities.mocks.TestProcessing;
 
 import javax.inject.Singleton;
@@ -60,7 +58,7 @@ public class PluginSuperClassBindingModule {
             Timings timings,
             ErrorHandler errorHandler
     ) {
-        return new DBSystem(locale, sqLiteDB, h2Factory, logger, timings, errorHandler) {
+        return new DBSystem(locale, sqLiteDB, h2Factory, logger) {
             @Override
             public void enable() throws EnableException {
                 databases.add(sqLiteDB.usingDefaultFile());
@@ -76,7 +74,7 @@ public class PluginSuperClassBindingModule {
     @Provides
     @Singleton
     TaskSystem provideTaskSystem(RunnableFactory runnableFactory) {
-        return new TaskSystem(runnableFactory, null) {
+        return new TaskSystem(runnableFactory) {
             @Override
             public void enable() {
             }
@@ -99,12 +97,6 @@ public class PluginSuperClassBindingModule {
             public void callEnableEvent(PlanPlugin plugin) {
             }
         };
-    }
-
-    @Provides
-    @Singleton
-    Bridge providePluginBridge() {
-        return Mockito.mock(Bridge.class);
     }
 
     @Provides

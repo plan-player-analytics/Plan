@@ -19,7 +19,7 @@ package utilities.mocks;
 import com.djrapitops.plan.DaggerPlanBungeeComponent;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanBungeeComponent;
-import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.PlanSystem;
 
 import java.nio.file.Path;
 

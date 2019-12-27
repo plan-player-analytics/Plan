@@ -26,7 +26,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Method annotation to provide a long (64bit number) value about a Player.
+ * Method annotation to provide a long (64bit number) value.
  * <p>
  * If you want to return int values, use this provider with a long as
  * return type of the method.

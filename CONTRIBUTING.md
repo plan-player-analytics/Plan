@@ -32,8 +32,9 @@ The information is crucial for reproducing the issue.
 
 # Writing a good Pull Request
 
-Development of new versions is done on `development`-branch, or sometimes shortlived feature branches. `master` contains latest release.  
-Keep this in mind when choosing where to start your work on.
+In order to make it easier to contribute two wiki articles are available:
+- [Project Setup](https://github.com/plan-player-analytics/Plan/wiki/Project-Setup) on setting up the build environment
+- [Project Architecture](https://github.com/plan-player-analytics/Plan/wiki/Project-Architecture) on structure of the project
 
 ## :tophat: Good Pull Request
 

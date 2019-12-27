@@ -34,18 +34,18 @@ import java.util.UUID;
 public class MethodWrapper<T> {
 
     private final Method method;
-    private final Class<T> resultType;
-    private MethodType methodType;
+    private final Class<T> returnType;
+    private final MethodType methodType;
 
-    public MethodWrapper(Method method, Class<T> resultType) {
+    public MethodWrapper(Method method, Class<T> returnType) {
         this.method = method;
-        this.resultType = resultType;
+        this.returnType = returnType;
         methodType = MethodType.forMethod(this.method);
     }
 
     public T callMethod(DataExtension extension, UUID playerUUID, String playerName) {
         if (methodType != MethodType.PLAYER_NAME && methodType != MethodType.PLAYER_UUID) {
-            throw new IllegalStateException(method.getDeclaringClass() + " method " + method.getName() + " is not GROUP method.");
+            throw new IllegalStateException(method.getDeclaringClass() + " method " + method.getName() + " is not PLAYER method.");
         }
         return callMethod(extension, playerUUID, playerName, null);
     }
@@ -68,13 +68,13 @@ public class MethodWrapper<T> {
         try {
             switch (methodType) {
                 case SERVER:
-                    return resultType.cast(method.invoke(extension));
+                    return returnType.cast(method.invoke(extension));
                 case PLAYER_UUID:
-                    return resultType.cast(method.invoke(extension, playerUUID));
+                    return returnType.cast(method.invoke(extension, playerUUID));
                 case PLAYER_NAME:
-                    return resultType.cast(method.invoke(extension, playerName));
+                    return returnType.cast(method.invoke(extension, playerName));
                 case GROUP:
-                    return resultType.cast(method.invoke(extension, group));
+                    return returnType.cast(method.invoke(extension, group));
                 default:
                     throw new IllegalArgumentException(method.getDeclaringClass() + " method " + method.getName() + " had invalid parameters.");
             }
@@ -97,8 +97,8 @@ public class MethodWrapper<T> {
         return methodType;
     }
 
-    public Class<T> getResultType() {
-        return resultType;
+    public Class<T> getReturnType() {
+        return returnType;
     }
 
     @Override
@@ -107,12 +107,12 @@ public class MethodWrapper<T> {
         if (!(o instanceof MethodWrapper)) return false;
         MethodWrapper<?> that = (MethodWrapper<?>) o;
         return method.equals(that.method) &&
-                resultType.equals(that.resultType) &&
+                returnType.equals(that.returnType) &&
                 methodType == that.methodType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(method, resultType, methodType);
+        return Objects.hash(method, returnType, methodType);
     }
 }

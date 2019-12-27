@@ -38,9 +38,9 @@ import utilities.mocks.objects.TestLogger;
 import utilities.mocks.objects.TestRunnableFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 
 import static org.mockito.Mockito.doReturn;
 
@@ -90,11 +90,10 @@ public class PlanBukkitMocker extends Mocker {
     }
 
     PlanBukkitMocker withPluginDescription() {
-        try {
-            File pluginYml = getFile("/plugin.yml");
-            PluginDescriptionFile description = new PluginDescriptionFile(new FileInputStream(pluginYml));
+        try (InputStream in = Files.newInputStream(getFile("/plugin.yml").toPath())) {
+            PluginDescriptionFile description = new PluginDescriptionFile(in);
             doReturn(description).when(planMock).getDescription();
-        } catch (FileNotFoundException | InvalidDescriptionException e) {
+        } catch (IOException | InvalidDescriptionException e) {
             System.out.println("Error while setting plugin description");
         }
         return this;
@@ -113,7 +112,7 @@ public class PlanBukkitMocker extends Mocker {
         doReturn(25565).when(serverMock).getPort();
         doReturn("1.12.2").when(serverMock).getVersion();
         doReturn("32423").when(serverMock).getBukkitVersion();
-        Mockito.doReturn(TestConstants.BUKKIT_MAX_PLAYERS).when(serverMock).getMaxPlayers();
+        Mockito.doReturn(TestConstants.SERVER_MAX_PLAYERS).when(serverMock).getMaxPlayers();
         ConsoleCommandSender sender = Mockito.mock(ConsoleCommandSender.class);
         doReturn(sender).when(serverMock).getConsoleSender();
 

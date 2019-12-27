@@ -16,14 +16,16 @@
  */
 package com.djrapitops.plan.modules;
 
-import com.djrapitops.plan.data.plugin.PluginsConfigSection;
-import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.LocaleSystem;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.ExtensionSettings;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.LocaleSystem;
 import dagger.Module;
 import dagger.Provides;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
+import java.util.function.Predicate;
 
 /**
  * Module for binding object instances found inside other systems.
@@ -41,8 +43,15 @@ public class SystemObjectProvidingModule {
 
     @Provides
     @Singleton
-    PluginsConfigSection providePluginsConfigSection(PlanConfig config) {
-        return config.getPluginsConfigSection();
+    ExtensionSettings providePluginsConfigSection(PlanConfig config) {
+        return config.getExtensionSettings();
+    }
+
+    @Provides
+    @Singleton
+    @Named("isExtensionEnabled")
+    Predicate<String> provideExtensionEnabledConfigCheck(PlanConfig config) {
+        return config.getExtensionSettings()::isEnabled;
     }
 
 }

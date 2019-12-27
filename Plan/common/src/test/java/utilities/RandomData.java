@@ -16,13 +16,13 @@
  */
 package utilities;
 
-import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.data.container.GeoInfo;
-import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.data.container.UserInfo;
+import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
+import com.djrapitops.plan.gathering.domain.GeoInfo;
+import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.TPS;
+import com.djrapitops.plan.gathering.domain.UserInfo;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
-import com.djrapitops.plan.utilities.html.graphs.line.Point;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
@@ -106,7 +106,7 @@ public class RandomData {
     public static List<GeoInfo> randomGeoInfo() {
         List<GeoInfo> test = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            GeoInfo geoInfo = new GeoInfo(randomString(10), randomString(10), r.nextLong());
+            GeoInfo geoInfo = new GeoInfo(randomString(10), r.nextLong());
             test.add(geoInfo);
         }
         return test;

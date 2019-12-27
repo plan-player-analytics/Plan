@@ -16,12 +16,12 @@
  */
 package com.djrapitops.plan.modules.velocity;
 
-import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.info.server.VelocityServerInfo;
-import com.djrapitops.plan.system.listeners.ListenerSystem;
-import com.djrapitops.plan.system.listeners.VelocityListenerSystem;
-import com.djrapitops.plan.system.tasks.TaskSystem;
-import com.djrapitops.plan.system.tasks.VelocityTaskSystem;
+import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plan.VelocityTaskSystem;
+import com.djrapitops.plan.gathering.listeners.ListenerSystem;
+import com.djrapitops.plan.gathering.listeners.VelocityListenerSystem;
+import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.VelocityServerInfo;
 import dagger.Binds;
 import dagger.Module;
 

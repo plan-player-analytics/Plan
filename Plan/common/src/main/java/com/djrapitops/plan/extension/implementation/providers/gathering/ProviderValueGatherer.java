@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.extension.implementation.providers.gathering;
 
-import com.djrapitops.plan.db.Database;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.icon.Icon;
@@ -28,8 +27,9 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIc
 import com.djrapitops.plan.extension.implementation.storage.transactions.StorePluginTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreTabInformationTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveInvalidResultsTransaction;
-import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.Database;
 
 import java.util.UUID;
 
@@ -45,12 +45,13 @@ public class ProviderValueGatherer {
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
 
-    private DataProviders dataProviders;
-    private BooleanProviderValueGatherer booleanGatherer;
-    private NumberProviderValueGatherer numberGatherer;
-    private DoubleAndPercentageProviderValueGatherer doubleAndPercentageGatherer;
-    private StringProviderValueGatherer stringGatherer;
-    private TableProviderValueGatherer tableGatherer;
+    private final DataProviders dataProviders;
+    private final BooleanProviderValueGatherer booleanGatherer;
+    private final NumberProviderValueGatherer numberGatherer;
+    private final DoubleAndPercentageProviderValueGatherer doubleAndPercentageGatherer;
+    private final StringProviderValueGatherer stringGatherer;
+    private final TableProviderValueGatherer tableGatherer;
+    private final GroupProviderValueGatherer groupGatherer;
 
 
     public ProviderValueGatherer(
@@ -67,7 +68,7 @@ public class ProviderValueGatherer {
         String pluginName = extractor.getPluginName();
         UUID serverUUID = serverInfo.getServerUUID();
         Database database = dbSystem.getDatabase();
-        dataProviders = extractor.getDataProviders();
+        dataProviders = extractor.getProviders();
         booleanGatherer = new BooleanProviderValueGatherer(
                 pluginName, extension, serverUUID, database, dataProviders
         );
@@ -81,6 +82,9 @@ public class ProviderValueGatherer {
                 pluginName, extension, serverUUID, database, dataProviders
         );
         tableGatherer = new TableProviderValueGatherer(
+                pluginName, extension, serverUUID, database, dataProviders
+        );
+        groupGatherer = new GroupProviderValueGatherer(
                 pluginName, extension, serverUUID, database, dataProviders
         );
     }
@@ -129,6 +133,7 @@ public class ProviderValueGatherer {
         doubleAndPercentageGatherer.gatherDoubleDataOfPlayer(playerUUID, playerName, conditions);
         stringGatherer.gatherStringDataOfPlayer(playerUUID, playerName, conditions);
         tableGatherer.gatherTableDataOfPlayer(playerUUID, playerName, conditions);
+        groupGatherer.gatherGroupDataOfPlayer(playerUUID, playerName, conditions);
     }
 
     public void updateValues() {

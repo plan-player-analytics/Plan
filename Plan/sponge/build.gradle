@@ -1,6 +1,16 @@
+plugins {
+    id "net.kyori.blossom" version "1.1.0"
+}
+
+blossom {
+    replaceTokenIn('src/main/java/com/djrapitops/plan/PlanSponge.java')
+    replaceToken('@version@', '' + project.ext.fullVersion)
+}
+
 dependencies {
     compile project(path: ":common", configuration: 'shadow')
-    
+    compileOnly project(":api")
+
     compile "com.djrapitops:AbstractPluginFramework-sponge:$abstractPluginFrameworkVersion"
     compile "org.bstats:bstats-sponge:$bstatsVersion"
 

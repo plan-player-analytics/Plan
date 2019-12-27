@@ -16,14 +16,13 @@
  */
 package com.djrapitops.plan.query;
 
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.access.QueryAPIExecutable;
-import com.djrapitops.plan.db.access.QueryAPIQuery;
-import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.exceptions.database.DBOpException;
+import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.QueryAPIExecutable;
+import com.djrapitops.plan.storage.database.queries.QueryAPIQuery;
+import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -41,13 +40,13 @@ import java.util.function.Consumer;
 @Singleton
 public class QueryServiceImplementation implements QueryService {
 
-    private DBSystem dbSystem;
-    private ServerInfo serverInfo;
+    private final DBSystem dbSystem;
+    private final ServerInfo serverInfo;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
 
-    private Set<Consumer<UUID>> playerRemoveSubscribers;
-    private Set<VoidFunction> clearSubscribers;
+    private final Set<Consumer<UUID>> playerRemoveSubscribers;
+    private final Set<VoidFunction> clearSubscribers;
 
     @Inject
     public QueryServiceImplementation(
@@ -127,7 +126,7 @@ public class QueryServiceImplementation implements QueryService {
 
     @Override
     public Optional<UUID> getServerUUID() {
-        return Optional.ofNullable(serverInfo.getServer()).map(Server::getUuid);
+        return serverInfo.getServerUUIDSafe();
     }
 
     @Override

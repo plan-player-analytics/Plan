@@ -16,6 +16,12 @@
     </module>
 
     <module name="TreeWalker">
+        <module name="SuppressionCommentFilter">
+            <property name="offCommentFormat" value="Checkstyle.OFF\: ([\w\|]+)"/>
+            <property name="onCommentFormat" value="Checkstyle.ON\: ([\w\|]+)"/>
+            <property name="checkFormat" value="$1"/>
+        </module>
+
         <module name="EmptyStatement"/>
 
         <!-- Length restriction -->
@@ -34,7 +40,6 @@
         <!-- Java Style -->
         <module name="ArrayTypeStyle"/>
         <module name="AvoidNestedBlocks"/>
-        <module name="CommentsIndentation"/>
         <module name="DefaultComesLast"> <!-- Switches -->
             <property name="skipIfLastAndSharedWithCase" value="true"/>
         </module>
@@ -59,8 +64,8 @@
 
         <!-- Metrics -->
         <module name="ClassFanOutComplexity">
-            <!-- This value is high. Notable: DatabaseTest: 84, SQLDB: 56 -->
-            <property name="max" value="85"/>
+            <!-- This value is high. Notable: DatabaseTest: 86, SQLDB: 56 -->
+            <property name="max" value="87"/>
         </module>
         <module name="CyclomaticComplexity">
             <!-- This value is high. Notable: ActivityIndex: 18 -->
@@ -74,7 +79,6 @@
             <property name="exceptionVariableName" value="expected|ignore"/>
         </module>
         <module name="EmptyStatement"/>
-        <module name="HideUtilityClassConstructor"/>
         <module name="IllegalThrows"/>
         <module name="PackageAnnotation"/>
 

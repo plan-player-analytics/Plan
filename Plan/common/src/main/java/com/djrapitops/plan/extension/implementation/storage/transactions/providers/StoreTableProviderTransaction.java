@@ -16,32 +16,32 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.providers;
 
-import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.Executable;
-import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.db.sql.tables.ExtensionIconTable;
-import com.djrapitops.plan.db.sql.tables.ExtensionPluginTable;
-import com.djrapitops.plan.db.sql.tables.ExtensionTabTable;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.table.Table;
+import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
+import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
+import com.djrapitops.plan.storage.database.sql.tables.ExtensionTabTable;
+import com.djrapitops.plan.storage.database.transactions.ExecStatement;
+import com.djrapitops.plan.storage.database.transactions.Executable;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.UUID;
 
-import static com.djrapitops.plan.db.sql.parsing.Sql.AND;
-import static com.djrapitops.plan.db.sql.parsing.Sql.WHERE;
-import static com.djrapitops.plan.db.sql.tables.ExtensionTableProviderTable.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.AND;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
+import static com.djrapitops.plan.storage.database.sql.tables.ExtensionTableProviderTable.*;
 
 /**
  * Transaction to store information about a {@link com.djrapitops.plan.extension.implementation.providers.TableDataProvider}.
  *
  * @author Rsl1122
  */
-public class StoreTableProviderTransaction extends Transaction {
+public class StoreTableProviderTransaction extends ThrowawayTransaction {
 
     private final UUID serverUUID;
     private final ProviderInformation providerInformation;

@@ -3,6 +3,8 @@ Plan.iml
 PlanPluginBridge.iml
 .sonar/
 builds/
+# Nukkit creates server.log during tests for some reason.
+server.log
 
 *.db
 

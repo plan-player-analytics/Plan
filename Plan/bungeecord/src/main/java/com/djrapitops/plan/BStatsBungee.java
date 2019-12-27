@@ -16,24 +16,22 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.system.info.connection.ConnectionSystem;
+import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import org.bstats.bungeecord.Metrics;
 
-import java.io.Serializable;
+import java.util.function.Supplier;
 
 public class BStatsBungee {
 
     private final PlanBungee plugin;
     private final Database database;
-    private final ConnectionSystem connectionSystem;
 
     private Metrics metrics;
 
-    public BStatsBungee(PlanBungee plugin, Database database, ConnectionSystem connectionSystem) {
+    public BStatsBungee(PlanBungee plugin, Database database) {
         this.plugin = plugin;
         this.database = database;
-        this.connectionSystem = connectionSystem;
     }
 
     public void registerMetrics() {
@@ -44,15 +42,12 @@ public class BStatsBungee {
     }
 
     private void registerConfigSettingGraphs() {
-        String serverType = plugin.getProxy().getName();
-        String databaseType = database.getType().getName();
-
-        addStringSettingPie("server_type", serverType);
-        addStringSettingPie("database_type", databaseType);
-        addStringSettingPie("network_servers", connectionSystem.getDataServers().size());
+        addStringSettingPie("server_type", () -> plugin.getProxy().getName());
+        addStringSettingPie("database_type", () -> database.getType().getName());
+        addStringSettingPie("network_servers", () -> String.valueOf(database.query(ServerQueries.fetchPlanServerInformationCollection()).size()));
     }
 
-    protected void addStringSettingPie(String id, Serializable setting) {
-        metrics.addCustomChart(new Metrics.SimplePie(id, setting::toString));
+    protected void addStringSettingPie(String id, Supplier<String> setting) {
+        metrics.addCustomChart(new Metrics.SimplePie(id, setting::get));
     }
 }

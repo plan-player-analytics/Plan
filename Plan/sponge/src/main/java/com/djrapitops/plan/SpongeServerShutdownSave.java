@@ -16,8 +16,9 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.gathering.ServerShutdownSave;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.GameState;

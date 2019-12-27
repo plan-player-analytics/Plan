@@ -2,7 +2,6 @@ dependencies {
     compile "com.djrapitops:AbstractPluginFramework-api:$abstractPluginFrameworkVersion"
     compile project(":api")
     compile project(path: ":extensions", configuration: 'shadow')
-    compile "com.djrapitops:PlanPluginBridge:$planPluginBridgeVersion"
     compile "org.apache.httpcomponents:httpclient:$httpClientVersion"
     compile "org.apache.commons:commons-text:$commonsTextVersion"
     compile "com.googlecode.htmlcompressor:htmlcompressor:$htmlCompressorVersion"
@@ -13,13 +12,29 @@ dependencies {
     compile "org.slf4j:slf4j-nop:$slf4jVersion"
     compile "org.slf4j:slf4j-api:$slf4jVersion"
     compile "com.maxmind.geoip2:geoip2:$geoIpVersion"
-    compileOnly "com.google.guava:guava:$guavaVersion"
+    compile "com.google.code.gson:gson:$gsonVersion"
 
     testCompile project(":api")
-    testCompile "com.google.code.gson:gson:2.8.5"
+    testCompile "com.google.code.gson:gson:$gsonVersion"
+}
+
+import org.apache.tools.ant.filters.ReplaceTokens
+task updateVersion(type: Copy) {
+    from('src/main/resources') {
+        include 'plugin.yml'
+        include 'bungee.yml'
+        include 'nukkit.yml'
+    }
+    into 'build/sources/resources/'
+    filter(ReplaceTokens, tokens: [version: '' + project.ext.fullVersion])
+}
+processResources {
+    dependsOn updateVersion
+    from 'build/sources/resources'
 }
 
 shadowJar {
+    dependsOn processResources
     configurations = [project.configurations.compile]
 
     // Exclude these files
@@ -40,7 +55,10 @@ shadowJar {
     relocate 'com.fasterxml', 'plan.com.fasterxml'
     relocate 'com.zaxxer', 'plan.com.zaxxer'
     relocate 'com.github.benmanes', 'plan.com.github.benmanes'
-    relocate 'com.googlecode', 'plan.com.googlecode'
+    relocate 'com.googlecode.htmlcompressor', 'plan.com.google.htmlcompressor'
+    relocate 'com.google.protobuf', 'plan.com.google.protobuf'
+    relocate 'com.google.gson', 'plan.com.google.gson'
+    relocate 'com.google.errorprone', 'plan.com.google.errorprone'
     relocate 'org.h2', 'plan.org.h2'
     relocate 'org.bstats', 'plan.org.bstats'
     relocate 'org.slf4j', 'plan.org.slf4j'
@@ -53,4 +71,6 @@ shadowJar {
     exclude "org/mockito/**/*"
     exclude "org/selenium/**/*"
     exclude "org/jayway/**/*"
+    exclude "google/protobuf/**/*"
+    exclude "jargs/gnu/**/*"
 }

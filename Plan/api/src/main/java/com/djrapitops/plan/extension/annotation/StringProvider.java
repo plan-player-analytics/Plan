@@ -25,7 +25,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Method annotation to provide a String value about a Player.
+ * Method annotation to provide a String value.
  * <p>
  * Usage: {@code @StringProvider String method(UUID playerUUID)}
  * <p>

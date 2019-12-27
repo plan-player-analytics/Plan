@@ -1,5 +1,16 @@
+plugins {
+    id "net.kyori.blossom" version "1.1.0"
+}
+
+blossom {
+    replaceTokenIn('src/main/java/com/djrapitops/plan/PlanVelocity.java')
+    replaceToken('@version@', "$fullVersion")
+}
+
 dependencies {
     compile project(path: ":common", configuration: 'shadow')
+    compileOnly project(":api")
+
     compile "com.djrapitops:AbstractPluginFramework-velocity:$abstractPluginFrameworkVersion"
 
     compileOnly "com.velocitypowered:velocity-api:$velocityVersion"
@@ -11,5 +22,7 @@ dependencies {
 }
 
 shadowJar {
+    dependsOn blossomSourceReplacementJava
+
     configurations = [project.configurations.compile]
 }

@@ -20,8 +20,7 @@ import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.Caller;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
 import com.djrapitops.plan.extension.implementation.providers.gathering.ProviderValueGatherer;
-import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plugin.utilities.Verify;
+import com.djrapitops.plan.processing.Processing;
 
 import java.util.UUID;
 
@@ -33,28 +32,26 @@ import java.util.UUID;
 public class CallerImplementation implements Caller {
 
     private final ProviderValueGatherer gatherer;
-    private final ExtensionServiceImplementation extensionServiceImplementation;
+    private final ExtensionServiceImplementation extensionService;
     private final Processing processing;
 
     public CallerImplementation(
             ProviderValueGatherer gatherer,
-            ExtensionServiceImplementation extensionServiceImplementation,
+            ExtensionServiceImplementation extensionService,
             Processing processing
     ) {
         this.gatherer = gatherer;
-        this.extensionServiceImplementation = extensionServiceImplementation;
+        this.extensionService = extensionService;
         this.processing = processing;
     }
 
     @Override
     public void updatePlayerData(UUID playerUUID, String playerName) {
-        Verify.nullCheck(playerUUID, () -> new IllegalArgumentException("'playerUUID' can not be null!"));
-        Verify.nullCheck(playerName, () -> new IllegalArgumentException("'playerName' can not be null!"));
-        processing.submitNonCritical(() -> extensionServiceImplementation.updatePlayerValues(gatherer, playerUUID, playerName, CallEvents.MANUAL));
+        processing.submitNonCritical(() -> extensionService.updatePlayerValues(gatherer, playerUUID, playerName, CallEvents.MANUAL));
     }
 
     @Override
     public void updateServerData() {
-        processing.submitNonCritical(() -> extensionServiceImplementation.updateServerValues(gatherer, CallEvents.MANUAL));
+        processing.submitNonCritical(() -> extensionService.updateServerValues(gatherer, CallEvents.MANUAL));
     }
 }

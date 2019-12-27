@@ -16,16 +16,16 @@
  */
 package utilities;
 
-import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.db.DBType;
-import com.djrapitops.plan.db.Database;
-import com.djrapitops.plan.db.SQLDB;
-import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
-import com.djrapitops.plan.system.settings.paths.WebserverSettings;
+import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.exceptions.EnableException;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
+import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.DBType;
+import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.SQLDB;
+import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plugin.utilities.Format;
 import com.djrapitops.plugin.utilities.Verify;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -69,7 +69,7 @@ public class DBPreparer {
         String database = System.getenv(CIProperties.MYSQL_DATABASE);
         String user = System.getenv(CIProperties.MYSQL_USER);
         String pass = System.getenv(CIProperties.MYSQL_PASS);
-        if (Verify.containsNull(database, user, pass)) {
+        if (Verify.containsNull(database, user)) {
             return Optional.empty();
         }
 
@@ -82,7 +82,7 @@ public class DBPreparer {
 
         config.set(DatabaseSettings.MYSQL_DATABASE, formattedDatabase);
         config.set(DatabaseSettings.MYSQL_USER, user);
-        config.set(DatabaseSettings.MYSQL_PASS, pass);
+        config.set(DatabaseSettings.MYSQL_PASS, pass != null ? pass : "");
         config.set(DatabaseSettings.MYSQL_HOST, "127.0.0.1");
         config.set(DatabaseSettings.TYPE, dbName);
         return Optional.of(formattedDatabase);

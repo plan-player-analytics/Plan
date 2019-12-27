@@ -16,26 +16,26 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions;
 
-import com.djrapitops.plan.db.access.ExecStatement;
-import com.djrapitops.plan.db.access.Executable;
-import com.djrapitops.plan.db.access.transactions.Transaction;
-import com.djrapitops.plan.db.sql.tables.ExtensionIconTable;
-import com.djrapitops.plan.db.sql.tables.ExtensionPluginTable;
 import com.djrapitops.plan.extension.icon.Icon;
+import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
+import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
+import com.djrapitops.plan.storage.database.transactions.ExecStatement;
+import com.djrapitops.plan.storage.database.transactions.Executable;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import static com.djrapitops.plan.db.sql.parsing.Sql.AND;
-import static com.djrapitops.plan.db.sql.parsing.Sql.WHERE;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.AND;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 
 /**
  * Transaction to update command usage information in the database.
  *
  * @author Rsl1122
  */
-public class StorePluginTransaction extends Transaction {
+public class StorePluginTransaction extends ThrowawayTransaction {
 
     private final String pluginName;
     private final long time;

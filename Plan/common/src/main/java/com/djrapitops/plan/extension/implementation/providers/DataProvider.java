@@ -18,6 +18,8 @@ package com.djrapitops.plan.extension.implementation.providers;
 
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 
+import java.util.Objects;
+
 /**
  * Abstract representation of all values a Provider annotation provides.
  *
@@ -39,5 +41,19 @@ public abstract class DataProvider<T> {
 
     public ProviderInformation getProviderInformation() {
         return providerInformation;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DataProvider)) return false;
+        DataProvider<?> that = (DataProvider<?>) o;
+        return Objects.equals(providerInformation, that.providerInformation) &&
+                Objects.equals(method, that.method);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(providerInformation, method);
     }
 }
