@@ -71,8 +71,8 @@ Command Help - /plan web list                   || ウェブユーザーの一�
 Command Help - /plan webuser                    || ウェブユーザーを管理します
 Command Help - /planbungee disable              || プラグインを一時的に無効にします
 Database - Apply Patch                          || 次のパッチを適用しています: ${0}..
-Database - Patches Applied                      || 全てのパッチは正常にデータベースに適用されました
-Database - Patches Applied Already              || 全てのパッチは既にデータベースへ適用されています
+Database - Patches Applied                      || データベースに全てのパッチが正常に適用されました
+Database - Patches Applied Already              || データベースに全てのパッチが適用済みです
 Database MySQL - Launch Options Error           || 起動オプションに問題があります,デフォルトのオプションを使用して下さい (${0})
 Database Notify - Clean                         || ${0} のプレイヤーデータを削除しています
 Database Notify - SQLite No WAL                 || SQLiteのWALモードはこのサーバのバージョンではサポートされていないため、初期設定に変更します。これはサーバーのパフォーマンスに影響を与える可能性があります
@@ -111,14 +111,14 @@ HTML - LABEL_ACTIVITY_INDEX                     || 活動指数
 HTML - LABEL_AFK                                || 離席
 HTML - LABEL_AFK_TIME                           || 離席時間
 HTML - LABEL_AVG                                || 平均
-HTML - LABEL_AVG_KDR                            || 平均キルデスレート
-HTML - LABEL_AVG_MOB_KDR                        || モブに対してのキルデスレート
+HTML - LABEL_AVG_KDR                            || 平均KDR
+HTML - LABEL_AVG_MOB_KDR                        || モブに対してのKDR
 HTML - LABEL_AVG_PLAYTIME                       || 平均プレイ時間
 HTML - LABEL_AVG_SESSION_LENGTH                 || 平均接続時間
 HTML - LABEL_AVG_TPS                            || 平均TPS
 HTML - LABEL_BANNED                             || BAN履歴
 HTML - LABEL_BEST_PEAK                          || 全体のピークタイム
-HTML - LABEL_DAY_OF_WEEK                        || Day of the Week
+HTML - LABEL_DAY_OF_WEEK                        || 曜日
 HTML - LABEL_DEATHS                             || 死亡回数
 HTML - LABEL_DOWNTIME                           || ダウンタイム
 HTML - LABEL_DURING_LOW_TPS                     || TPSの低下までの時間:
@@ -135,30 +135,30 @@ HTML - LABEL_LONE_JOINS                         || 一人での接続
 HTML - LABEL_LONE_NEW_JOINS                     || 新しく一人での参加
 HTML - LABEL_LONGEST_SESSION                    || 最長接続時間
 HTML - LABEL_LOW_TPS                            || TPSの低下値
-HTML - LABEL_MAX_FREE_DISK                      || Max Free Disk
-HTML - LABEL_MIN_FREE_DISK                      || Min Free Disk
+HTML - LABEL_MAX_FREE_DISK                      || ディスクの最大空き容量
+HTML - LABEL_MIN_FREE_DISK                      || ディスクの最低空き容量
 HTML - LABEL_MOB_DEATHS                         || Mobによって殺された回数
 HTML - LABEL_MOB_KDR                            || Mobに対してのKDR
 HTML - LABEL_MOB_KILLS                          || Mobを殺した回数
 HTML - LABEL_MOST_ACTIVE_GAMEMODE               || 最も有効になっているゲームモード
 HTML - LABEL_NAME                               || 名前
-HTML - LABEL_NEW                                || 新しい
+HTML - LABEL_NEW                                || New
 HTML - LABEL_NEW_PLAYERS                        || 新規プレイヤー
 HTML - LABEL_NICKNAME                           || ニックネーム
-HTML - LABEL_NO_SESSION_KILLS                   || None
-HTML - LABEL_ONLINE_FIRST_JOIN                  || Players online on first join
+HTML - LABEL_NO_SESSION_KILLS                   || なし
+HTML - LABEL_ONLINE_FIRST_JOIN                  || 新規ログイン時のオンラインプレイヤー
 HTML - LABEL_OPERATOR                           || 管理者
-HTML - LABEL_PER_PLAYER                         || / プレイヤー(1プレイヤーあたりの)
-HTML - LABEL_PER_REGULAR_PLAYER                 || / 登録済みプレイヤー(1登録済みプレイヤーあたりの)
+HTML - LABEL_PER_PLAYER                         || /プレイヤー(1プレイヤーあたりの)
+HTML - LABEL_PER_REGULAR_PLAYER                 || /登録済みプレイヤー(1登録済みプレイヤーあたりの)
 HTML - LABEL_PLAYER_DEATHS                      || プレイヤーによるキル
 HTML - LABEL_PLAYER_KILLS                       || プレイヤーキル
 HTML - LABEL_PLAYERS_ONLINE                     || オンラインのプレイヤー
 HTML - LABEL_PLAYTIME                           || プレイ時間
 HTML - LABEL_REGISTERED                         || 登録
 HTML - LABEL_REGISTERED_PLAYERS                 || 登録済みプレイヤー
-HTML - LABEL_REGULAR                            || よく居るプレイヤー
-HTML - LABEL_REGULAR_PLAYERS                    || よく居るプレイヤー
-HTML - LABEL_RELATIVE_JOIN_ACTIVITY             || Relative Join Activity
+HTML - LABEL_REGULAR                            || よくオンラインのプレイヤー
+HTML - LABEL_REGULAR_PLAYERS                    || よくオンラインのプレイヤー
+HTML - LABEL_RELATIVE_JOIN_ACTIVITY             || オンラインと活動との関係性
 HTML - LABEL_RETENTION                          || 新規プレイヤーの継続率
 HTML - LABEL_SERVER_DOWNTIME                    || サーバーダウンタイム
 HTML - LABEL_SERVER_OCCUPIED                    || サーバーの占有時間
@@ -167,8 +167,8 @@ HTML - LABEL_SESSION_MEDIAN                     || 平均オンライン
 HTML - LABEL_TIMES_KICKED                       || キック回数
 HTML - LABEL_TOTAL_PLAYERS                      || トータルプレイヤー数
 HTML - LABEL_TOTAL_PLAYTIME                     || トータルプレイ時間
-HTML - LABEL_UNIQUE_PLAYERS                     || ユニークプレイヤー
-HTML - LABEL_WEEK_DAYS                          || 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+HTML - LABEL_UNIQUE_PLAYERS                     || 接続したプレイヤーの総数
+HTML - LABEL_WEEK_DAYS                          || '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日', '日曜日'
 HTML - LINK_BACK_NETWORK                        || ネットワークページ
 HTML - LINK_BACK_SERVER                         || サーバーページ
 HTML - LINK_CHANGELOG                           || 変更履歴の確認
@@ -176,10 +176,10 @@ HTML - LINK_DISCORD                             || Discordのサポートチャ�
 HTML - LINK_DOWNLOAD                            || ダウンロード
 HTML - LINK_ISSUES                              || バグ報告
 HTML - LINK_NIGHT_MODE                          || ナイトモード
-HTML - LINK_PLAYER_PAGE                         || Player Page
+HTML - LINK_PLAYER_PAGE                         || プレイヤーページ
 HTML - LINK_QUICK_VIEW                          || クイックビュー
 HTML - LINK_SERVER_ANALYSIS                     || サーバーの分析結果
-HTML - LINK_WIKI                                || 「Plan」のwiki,チュートリアルとドキュメント
+HTML - LINK_WIKI                                || 「Plan」のwiki、チュートリアルとドキュメント
 HTML - LOCAL_MACHINE                            || ローカルマシン
 HTML - NAV_PLUGINS                              || プラグイン
 HTML - NEW_CALENDAR                             || New:
@@ -204,22 +204,22 @@ HTML - SIDE_SERVERS_TITLE                       || 接続されているサー�
 HTML - SIDE_SESSIONS                            || 接続履歴
 HTML - SIDE_TO_MAIN_PAGE                        || メインページに戻る
 HTML - TEXT_CLICK_TO_EXPAND                     || クリックして展開
-HTML - TEXT_CONTRIBUTORS_CODE                   || プログラミング貢献者:
-HTML - TEXT_CONTRIBUTORS_LOCALE                 || 翻訳者:
-HTML - TEXT_CONTRIBUTORS_MONEY                  || このプラグインの開発に募金して頂いた人々に特別な感謝を
-HTML - TEXT_CONTRIBUTORS_THANKS                 || 加えて、次の<span class="col-plan">素晴らしい人々</span>が貢献しました:
+HTML - TEXT_CONTRIBUTORS_CODE                   || :プログラミング貢献者
+HTML - TEXT_CONTRIBUTORS_LOCALE                 || :翻訳者
+HTML - TEXT_CONTRIBUTORS_MONEY                  || このプラグイン開発に募金して頂いた人々に特別な感謝を
+HTML - TEXT_CONTRIBUTORS_THANKS                 || 加えて、以下の<span class="col-plan">素晴らしい人々</span>が開発に貢献しています
 HTML - TEXT_DEV_VERSION                         || このバージョンは開発版です
 HTML - TEXT_DEVELOPED_BY                        || 開発者:
-HTML - TEXT_FIRST_SESSION                       || First session
+HTML - TEXT_FIRST_SESSION                       || 初参加
 HTML - TEXT_LICENSED_UNDER                      || のライセンスの下で開発されています
 HTML - TEXT_METRICS                             || 「bStats Metrics」が有効になっています
 HTML - TEXT_NO_EXTENSION_DATA                   || 「Extension Data」が存在しません
 HTML - TEXT_NO_LOW_TPS                          || TPSの低下が存在しません
-HTML - TEXT_NO_SERVER                           || No server to display online activity for
-HTML - TEXT_NO_SERVERS                          || No servers found in the database
+HTML - TEXT_NO_SERVER                           || オンラインアクティビティを表示するサーバーがありません
+HTML - TEXT_NO_SERVERS                          || データーベース内に登録されたサーバーが見つかりません
 HTML - TEXT_PLUGIN_INFORMATION                  || プラグインに関する情報
-HTML - TEXT_PREDICTED_RETENTION                 || This value is a prediction based on previous players
-HTML - TEXT_VERSION                             || 新しいバージョンがリリースされ、ダウンロード可能です
+HTML - TEXT_PREDICTED_RETENTION                 || これは以前のプレーヤーから基づいた予測値です
+HTML - TEXT_VERSION                             || 新バージョンがリリースされ、ダウンロード可能です
 HTML - TITLE_30_DAYS                            || 30日間
 HTML - TITLE_30_DAYS_AGO                        || 30日前
 HTML - TITLE_ALL                                || 全て
@@ -236,7 +236,7 @@ HTML - TITLE_DISK                               || ドライブの容量
 HTML - TITLE_GRAPH_DAY_BY_DAY                   || 詳細情報
 HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || ネットワーク内の接続状況
 HTML - TITLE_GRAPH_PUNCHCARD                    || 直近30日間のパンチボード
-HTML - TITLE_INSIGHTS                           || 直近30日間の
+HTML - TITLE_INSIGHTS                           || 直近30日の状態
 HTML - TITLE_IS_AVAILABLE                       || が利用可能です
 HTML - TITLE_LAST_24_HOURS                      || 直近24時間以内
 HTML - TITLE_LAST_30_DAYS                       || 直近30日以内
@@ -280,9 +280,9 @@ HTML - TITLE_WORST_PING                         || 最低Ping値
 HTML - TOTAL_ACTIVE_TEXT                        || 累計活動時間
 HTML - TOTAL_AFK                                || 累計離席時間
 HTML - TOTAL_PLAYERS                            || 全プレイヤー数
-HTML - UNIQUE_CALENDAR                          || ユニーク:
-HTML - UNIT_CHUNKS                              || Chunks
-HTML - UNIT_ENTITIES                            || Entities
+HTML - UNIQUE_CALENDAR                          || 接続したプレイヤーの総数:
+HTML - UNIT_CHUNKS                              || チャンク
+HTML - UNIT_ENTITIES                            || エンティティ数
 HTML - UNIT_NO_DATA                             || データなし
 HTML - UNIT_THE_PLAYERS                         || プレイヤー
 HTML - USER_AND_PASS_NOT_SPECIFIED              || ユーザーとパスワードが入力されてません
@@ -340,8 +340,8 @@ Manage - Start                                  || > §2データを処理中で
 Manage - Success                                || > §a成功しました!
 Negative                                        || ない
 Positive                                        || ある
-Today                                           || '今日'
-Unavailable                                     || Unavailable
+Today                                           || '本日'
+Unavailable                                     || 利用不可
 Unknown                                         || 不明
 Version - DEV                                   ||  このバージョンは開発版です
 Version - Latest                                || 最新版の「Plan」を使用しています
@@ -351,7 +351,7 @@ Version FAIL - Read info (old)                  || 新しいバージョンの�
 Version FAIL - Read versions.txt                || Github/versions.txtに存在するバージョン情報のロードに失敗しました
 Web User Listing                                ||   §2${0} §7: §f${1}
 WebServer - Notify HTTP                         || Webサーバー: 証明書が存在ません -> HTTPサーバーを使用します
-WebServer - Notify HTTP User Auth               || Webサーバー: ユーザー認証が無効になりました！ (HTTP経由だと安全ではないためです)
+WebServer - Notify HTTP User Auth               || Webサーバー: ユーザー認証を無効にします (HTTP経由だと安全ではないためです)
 WebServer - Notify no Cert file                 || Webサーバー: 以下のパスに保存された認証キーファイルが存在しません: ${0}
 WebServer FAIL - Port Bind                      || Webサーバーの初期化が正常に終了しませんでした。ポート番号(${0})は使用されていませんか?
 WebServer FAIL - SSL Context                    || Webサーバー: SSLコンテキストの初期化に失敗しました。
