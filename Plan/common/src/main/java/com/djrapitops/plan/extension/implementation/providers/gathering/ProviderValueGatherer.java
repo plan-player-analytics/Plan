@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.extension.implementation.providers.gathering;
 
-import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.icon.Icon;
@@ -26,6 +25,7 @@ import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProviders;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
+import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StorePluginTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreTabInformationTransaction;
@@ -40,7 +40,6 @@ import com.djrapitops.plan.storage.database.transactions.Transaction;
 
 import java.util.UUID;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 /**
  * Object that can be called to place data about players to the database.
@@ -58,7 +57,6 @@ public class ProviderValueGatherer {
 
     private final DataProviders dataProviders;
     private final BooleanProviderValueGatherer booleanGatherer;
-    private final NumberProviderValueGatherer numberGatherer;
     private final DoubleAndPercentageProviderValueGatherer doubleAndPercentageGatherer;
     private final StringProviderValueGatherer stringGatherer;
     private final TableProviderValueGatherer tableGatherer;
@@ -85,7 +83,7 @@ public class ProviderValueGatherer {
         booleanGatherer = new BooleanProviderValueGatherer(
                 pluginName, extension, serverUUID, database, dataProviders
         );
-        numberGatherer = new NumberProviderValueGatherer(
+        NumberProviderValueGatherer numberGatherer = new NumberProviderValueGatherer(
                 pluginName, extension, serverUUID, database, dataProviders
         );
         doubleAndPercentageGatherer = new DoubleAndPercentageProviderValueGatherer(
@@ -101,9 +99,7 @@ public class ProviderValueGatherer {
                 pluginName, extension, serverUUID, database, dataProviders
         );
 
-        serverNumberGatherer = new Gatherer<>(
-                Long.class,
-                method -> method.callMethod(extension),
+        serverNumberGatherer = new Gatherer<>(Long.class,
                 StoreProviderTransaction::new,
                 (provider, result) -> new StoreServerNumberResultTransaction(provider, serverUUID, result)
         );
@@ -150,13 +146,13 @@ public class ProviderValueGatherer {
     public void updateValues(UUID playerUUID, String playerName) {
         Conditions conditions = booleanGatherer.gatherBooleanDataOfPlayer(playerUUID, playerName);
 
+        Parameters params = Parameters.player(playerUUID, playerName);
         UUID serverUUID = serverInfo.getServerUUID();
-        playerNumberGatherer = new Gatherer<>(
-                Long.class, method -> method.callMethod(extension, playerUUID, playerName),
+        playerNumberGatherer = new Gatherer<>(Long.class,
                 StoreProviderTransaction::new,
-                (provider, result) -> new StorePlayerNumberResultTransaction(provider, serverUUID, playerUUID, result)
+                (provider, result) -> new StorePlayerNumberResultTransaction(provider, serverUUID, playerUUID, result) // TODO Sort out this use of playerUUID
         );
-        playerNumberGatherer.gather(conditions);
+        playerNumberGatherer.gather(conditions, params);
         doubleAndPercentageGatherer.gatherDoubleDataOfPlayer(playerUUID, playerName, conditions);
         stringGatherer.gatherStringDataOfPlayer(playerUUID, playerName, conditions);
         tableGatherer.gatherTableDataOfPlayer(playerUUID, playerName, conditions);
@@ -165,20 +161,12 @@ public class ProviderValueGatherer {
 
     public void updateValues() {
         Conditions conditions = booleanGatherer.gatherBooleanDataOfServer();
-        numberGatherer.gatherNumberDataOfServer(conditions);
+        Parameters params = Parameters.server();
+
+        serverNumberGatherer.gather(conditions, params);
         doubleAndPercentageGatherer.gatherDoubleDataOfServer(conditions);
         stringGatherer.gatherStringDataOfServer(conditions);
         tableGatherer.gatherTableDataOfServer(conditions);
-    }
-
-    interface MethodCaller<T> extends Function<MethodWrapper<T>, T> {
-        default T call(DataProvider<T> provider) {
-            try {
-                return apply(provider.getMethod());
-            } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
-                throw new DataExtensionMethodCallException(e, provider.getProviderInformation().getPluginName(), provider.getMethod());
-            }
-        }
     }
 
     interface ProviderTransactionConstructor<T> extends BiFunction<DataProvider<T>, UUID, Transaction> {
@@ -195,35 +183,32 @@ public class ProviderValueGatherer {
 
     class Gatherer<T> {
         private final Class<T> type;
-        private final MethodCaller<T> methodCaller;
         private final ProviderTransactionConstructor<T> providerTransactionConstructor;
         private final ResultTransactionConstructor<T> resultTransactionConstructor;
 
         public Gatherer(
                 Class<T> type,
-                MethodCaller<T> methodCaller,
                 ProviderTransactionConstructor<T> providerTransactionConstructor,
                 ResultTransactionConstructor<T> resultTransactionConstructor
         ) {
             this.type = type;
-            this.methodCaller = methodCaller;
             this.providerTransactionConstructor = providerTransactionConstructor;
             this.resultTransactionConstructor = resultTransactionConstructor;
         }
 
-        public void gather(Conditions conditions) {
-            for (DataProvider<T> provider : dataProviders.getPlayerMethodsByType(type)) { // TODO work this out
-                gather(conditions, provider);
+        public void gather(Conditions conditions, Parameters parameters) {
+            for (DataProvider<T> provider : dataProviders.getProvidersByTypes(parameters.getMethodType(), type)) {
+                gather(conditions, provider, parameters);
             }
         }
 
-        private void gather(Conditions conditions, DataProvider<T> provider) {
+        private void gather(Conditions conditions, DataProvider<T> provider, Parameters parameters) {
             ProviderInformation information = provider.getProviderInformation();
             if (information.getCondition().map(conditions::isNotFulfilled).orElse(false)) {
                 return; // Condition not fulfilled
             }
 
-            T result = methodCaller.call(provider);
+            T result = provider.getMethod().callMethod(extension, parameters);
             if (result == null) {
                 return; // Error during method call
             }

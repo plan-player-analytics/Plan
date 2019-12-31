@@ -22,6 +22,7 @@ import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProviders;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
+import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerGroupsResultTransaction;
@@ -75,7 +76,7 @@ class GroupProviderValueGatherer {
 
         MethodWrapper<String[]> method = groupProvider.getMethod();
         try {
-            String[] result = method.callMethod(extension, playerUUID, playerName);
+            String[] result = method.callMethod(extension, Parameters.player(playerUUID, playerName));
             if (result == null) {
                 return; // Error during call
             }

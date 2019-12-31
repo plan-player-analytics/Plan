@@ -22,6 +22,7 @@ import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProviders;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
+import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerNumberResultTransaction;
@@ -64,7 +65,7 @@ class NumberProviderValueGatherer {
     void gatherNumberDataOfPlayer(UUID playerUUID, String playerName, Conditions conditions) {
         // Method parameters abstracted away so that same method can be used for all parameter types
         // Same with Method result store transaction creation
-        Function<MethodWrapper<Long>, Callable<Long>> methodCaller = method -> () -> method.callMethod(extension, playerUUID, playerName);
+        Function<MethodWrapper<Long>, Callable<Long>> methodCaller = method -> () -> method.callMethod(extension, Parameters.player(playerUUID, playerName));
         BiFunction<MethodWrapper<Long>, Long, Transaction> storeTransactionCreator = (method, result) -> new StorePlayerNumberResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result);
 
         for (DataProvider<Long> numberProvider : dataProviders.getPlayerMethodsByType(Long.class)) {
@@ -75,7 +76,7 @@ class NumberProviderValueGatherer {
     void gatherNumberDataOfServer(Conditions conditions) {
         // Method parameters abstracted away so that same method can be used for all parameter types
         // Same with Method result store transaction creation
-        Function<MethodWrapper<Long>, Callable<Long>> methodCaller = method -> () -> method.callMethod(extension);
+        Function<MethodWrapper<Long>, Callable<Long>> methodCaller = method -> () -> method.callMethod(extension, Parameters.server());
         BiFunction<MethodWrapper<Long>, Long, Transaction> storeTransactionCreator = (method, result) -> new StoreServerNumberResultTransaction(pluginName, serverUUID, method.getMethodName(), result);
 
         for (DataProvider<Long> numberProvider : dataProviders.getServerMethodsByType(Long.class)) {

@@ -47,50 +47,44 @@ public class DataProviders {
         return byMethodType.computeIfAbsent(methodType, Maps::create).computeIfAbsent(returnType, Lists::create);
     }
 
-    private List<DataProvider<?>> getProvidersByTypes(MethodType methodType, Class<?> returnType) {
+    public <T> List<DataProvider<T>> getProvidersByTypes(MethodType methodType, Class<T> returnType) {
         Map<Class<?>, List<DataProvider<?>>> byReturnType = byMethodType.getOrDefault(methodType, Collections.emptyMap());
-        return byReturnType.getOrDefault(returnType, Collections.emptyList());
-    }
-
-    public <T> List<DataProvider<T>> getPlayerMethodsByType(Class<T> returnType) {
-        List<DataProvider<T>> byReturnType = new ArrayList<>();
-        for (DataProvider<?> dataProvider : getProvidersByTypes(MethodType.PLAYER_UUID, returnType)) {
-            byReturnType.add((DataProvider<T>) dataProvider);
+        List<DataProvider<?>> uncastProviders = byReturnType.get(returnType);
+        if (uncastProviders == null) {
+            return Collections.emptyList();
         }
-        for (DataProvider<?> dataProvider : getProvidersByTypes(MethodType.PLAYER_NAME, returnType)) {
-            byReturnType.add((DataProvider<T>) dataProvider);
-        }
-        return byReturnType;
-    }
-
-    public <T> List<DataProvider<T>> getServerMethodsByType(Class<T> returnType) {
+        // Cast to T
         List<DataProvider<T>> providers = new ArrayList<>();
-        for (DataProvider<?> dataProvider : getProvidersByTypes(MethodType.SERVER, returnType)) {
+        for (DataProvider<?> dataProvider : uncastProviders) {
             providers.add((DataProvider<T>) dataProvider);
         }
         return providers;
     }
 
-    public <T> List<DataProvider<T>> getGroupMethodsByType(Class<T> returnType) {
-        List<DataProvider<T>> byReturnType = new ArrayList<>();
-        for (DataProvider<?> dataProvider : getProvidersByTypes(MethodType.GROUP, returnType)) {
-            byReturnType.add((DataProvider<T>) dataProvider);
-        }
-        return byReturnType;
+    public <T> List<DataProvider<T>> getPlayerMethodsByType(Class<T> returnType) {
+        return getProvidersByTypes(MethodType.PLAYER, returnType);
     }
 
-    public void removeProviderWithMethod(MethodWrapper<?> toRemove) {
+    public <T> List<DataProvider<T>> getServerMethodsByType(Class<T> returnType) {
+        return getProvidersByTypes(MethodType.SERVER, returnType);
+    }
+
+    public <T> List<DataProvider<T>> getGroupMethodsByType(Class<T> returnType) {
+        return getProvidersByTypes(MethodType.GROUP, returnType);
+    }
+
+    public <T> void removeProviderWithMethod(MethodWrapper<T> toRemove) {
         MethodType methodType = toRemove.getMethodType();
         Map<Class<?>, List<DataProvider<?>>> byResultType = byMethodType.getOrDefault(methodType, Collections.emptyMap());
         if (byResultType.isEmpty()) {
             return;
         }
 
-        Class<?> returnType = toRemove.getReturnType();
-        List<DataProvider<?>> providers = getProvidersByTypes(methodType, returnType);
+        Class<T> returnType = toRemove.getReturnType();
+        List<DataProvider<T>> providers = getProvidersByTypes(methodType, returnType);
 
-        DataProvider<?> providerToRemove = null;
-        for (DataProvider<?> provider : providers) {
+        DataProvider<T> providerToRemove = null;
+        for (DataProvider<T> provider : providers) {
             if (provider.getMethod().equals(toRemove)) {
                 providerToRemove = provider;
                 break;

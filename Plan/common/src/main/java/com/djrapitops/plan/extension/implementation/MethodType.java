@@ -30,8 +30,11 @@ import java.util.UUID;
  */
 public enum MethodType {
 
+    @Deprecated
     PLAYER_UUID,
+    @Deprecated
     PLAYER_NAME,
+    PLAYER,
     GROUP,
     SERVER;
 
@@ -44,10 +47,8 @@ public enum MethodType {
         Class<?>[] parameterTypes = method.getParameterTypes();
         Class<?> firstParameter = parameterTypes[0];
 
-        if (UUID.class.equals(firstParameter)) {
-            return PLAYER_UUID;
-        } else if (String.class.equals(firstParameter)) {
-            return PLAYER_NAME;
+        if (UUID.class.equals(firstParameter) || String.class.equals(firstParameter)) {
+            return PLAYER;
         } else if (Group.class.equals(firstParameter)) {
             return GROUP;
         }

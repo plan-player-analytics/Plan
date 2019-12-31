@@ -19,10 +19,7 @@ package com.djrapitops.plan.extension.implementation.providers.gathering;
 import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
-import com.djrapitops.plan.extension.implementation.providers.DataProvider;
-import com.djrapitops.plan.extension.implementation.providers.DataProviders;
-import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
-import com.djrapitops.plan.extension.implementation.providers.PercentageDataProvider;
+import com.djrapitops.plan.extension.implementation.providers.*;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerDoubleResultTransaction;
@@ -67,7 +64,7 @@ class DoubleAndPercentageProviderValueGatherer {
     void gatherDoubleDataOfPlayer(UUID playerUUID, String playerName, Conditions conditions) {
         // Method parameters abstracted away so that same method can be used for all parameter types
         // Same with Method result store transaction creation
-        Function<MethodWrapper<Double>, Callable<Double>> methodCaller = method -> () -> method.callMethod(extension, playerUUID, playerName);
+        Function<MethodWrapper<Double>, Callable<Double>> methodCaller = method -> () -> method.callMethod(extension, Parameters.player(playerUUID, playerName));
         BiFunction<MethodWrapper<Double>, Double, Transaction> percStoreTransactionCreator = (method, result) -> new StorePlayerPercentageResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result);
         BiFunction<MethodWrapper<Double>, Double, Transaction> doubleStoreTransactionCreator = (method, result) -> new StorePlayerDoubleResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result);
 
@@ -79,7 +76,7 @@ class DoubleAndPercentageProviderValueGatherer {
     void gatherDoubleDataOfServer(Conditions conditions) {
         // Method parameters abstracted away so that same method can be used for all parameter types
         // Same with Method result store transaction creation
-        Function<MethodWrapper<Double>, Callable<Double>> methodCaller = method -> () -> method.callMethod(extension);
+        Function<MethodWrapper<Double>, Callable<Double>> methodCaller = method -> () -> method.callMethod(extension, Parameters.server());
         BiFunction<MethodWrapper<Double>, Double, Transaction> percStoreTransactionCreator = (method, result) -> new StoreServerPercentageResultTransaction(pluginName, serverUUID, method.getMethodName(), result);
         BiFunction<MethodWrapper<Double>, Double, Transaction> doubleStoreTransactionCreator = (method, result) -> new StoreServerDoubleResultTransaction(pluginName, serverUUID, method.getMethodName(), result);
 

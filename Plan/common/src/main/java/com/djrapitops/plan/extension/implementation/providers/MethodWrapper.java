@@ -17,14 +17,12 @@
 package com.djrapitops.plan.extension.implementation.providers;
 
 import com.djrapitops.plan.extension.DataExtension;
-import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.NotReadyException;
 import com.djrapitops.plan.extension.implementation.MethodType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * Wrap a Method so that it is easier to call.
@@ -43,41 +41,9 @@ public class MethodWrapper<T> {
         methodType = MethodType.forMethod(this.method);
     }
 
-    public T callMethod(DataExtension extension, UUID playerUUID, String playerName) {
-        if (methodType != MethodType.PLAYER_NAME && methodType != MethodType.PLAYER_UUID) {
-            throw new IllegalStateException(method.getDeclaringClass() + " method " + method.getName() + " is not PLAYER method.");
-        }
-        return callMethod(extension, playerUUID, playerName, null);
-    }
-
-    public T callMethod(DataExtension extension, Group group) {
-        if (methodType != MethodType.GROUP) {
-            throw new IllegalStateException(method.getDeclaringClass() + " method " + method.getName() + " is not GROUP method.");
-        }
-        return callMethod(extension, null, null, group);
-    }
-
-    public T callMethod(DataExtension extension) {
-        if (methodType != MethodType.SERVER) {
-            throw new IllegalStateException(method.getDeclaringClass() + " method " + method.getName() + " is not SERVER method.");
-        }
-        return callMethod(extension, null, null, null);
-    }
-
-    public T callMethod(DataExtension extension, UUID playerUUID, String playerName, Group group) {
+    public T callMethod(DataExtension of, Parameters with) {
         try {
-            switch (methodType) {
-                case SERVER:
-                    return returnType.cast(method.invoke(extension));
-                case PLAYER_UUID:
-                    return returnType.cast(method.invoke(extension, playerUUID));
-                case PLAYER_NAME:
-                    return returnType.cast(method.invoke(extension, playerName));
-                case GROUP:
-                    return returnType.cast(method.invoke(extension, group));
-                default:
-                    throw new IllegalArgumentException(method.getDeclaringClass() + " method " + method.getName() + " had invalid parameters.");
-            }
+            return returnType.cast(with.call(of, method));
         } catch (InvocationTargetException notReadyToBeCalled) {
             if (notReadyToBeCalled.getCause() instanceof NotReadyException) {
                 return null; // Data or API not available to make the call.
