@@ -64,19 +64,19 @@ class BooleanProviderValueGatherer {
     Conditions gatherBooleanDataOfPlayer(UUID playerUUID, String playerName) {
         Conditions conditions = new Conditions();
 
-        List<DataProvider<Boolean>> unsatisifiedProviders = new ArrayList<>(dataProviders.getPlayerMethodsByType(Boolean.class));
+        List<DataProvider<Boolean>> unsatisfiedProviders = new ArrayList<>(dataProviders.getPlayerMethodsByType(Boolean.class));
         Set<DataProvider<Boolean>> satisfied;
 
         // Method parameters abstracted away so that same method can be used for all parameter types
         // Same with Method result store transaction creation
-        Function<MethodWrapper<Boolean>, Callable<Boolean>> methodCaller = method -> () -> method.callMethod(extension, Parameters.player(playerUUID, playerName));
+        Function<MethodWrapper<Boolean>, Callable<Boolean>> methodCaller = method -> () -> method.callMethod(extension, Parameters.player(serverUUID, playerUUID, playerName));
         BiFunction<MethodWrapper<Boolean>, Boolean, Transaction> storeTrancationCreator = (method, result) -> new StorePlayerBooleanResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result);
 
         do {
             // Loop through all unsatisfied providers to see if more conditions are satisfied
-            satisfied = attemptToSatisfyMoreConditionsAndStoreResults(methodCaller, storeTrancationCreator, conditions, unsatisifiedProviders);
+            satisfied = attemptToSatisfyMoreConditionsAndStoreResults(methodCaller, storeTrancationCreator, conditions, unsatisfiedProviders);
             // Remove now satisfied Providers so that they are not called again
-            unsatisifiedProviders.removeAll(satisfied);
+            unsatisfiedProviders.removeAll(satisfied);
             // If no new conditions could be satisfied, stop looping.
         } while (!satisfied.isEmpty());
 
@@ -86,19 +86,19 @@ class BooleanProviderValueGatherer {
     Conditions gatherBooleanDataOfServer() {
         Conditions conditions = new Conditions();
 
-        List<DataProvider<Boolean>> unsatisifiedProviders = new ArrayList<>(dataProviders.getServerMethodsByType(Boolean.class));
+        List<DataProvider<Boolean>> unsatisfiedProviders = new ArrayList<>(dataProviders.getServerMethodsByType(Boolean.class));
         Set<DataProvider<Boolean>> satisfied;
 
         // Method parameters abstracted away so that same method can be used for all parameter types
         // Same with Method result store transaction creation
-        Function<MethodWrapper<Boolean>, Callable<Boolean>> methodCaller = method -> () -> method.callMethod(extension, Parameters.server());
+        Function<MethodWrapper<Boolean>, Callable<Boolean>> methodCaller = method -> () -> method.callMethod(extension, Parameters.server(serverUUID));
         BiFunction<MethodWrapper<Boolean>, Boolean, Transaction> storeTransactionCreator = (method, result) -> new StoreServerBooleanResultTransaction(pluginName, serverUUID, method.getMethodName(), result);
 
         do {
             // Loop through all unsatisfied providers to see if more conditions are satisfied
-            satisfied = attemptToSatisfyMoreConditionsAndStoreResults(methodCaller, storeTransactionCreator, conditions, unsatisifiedProviders);
+            satisfied = attemptToSatisfyMoreConditionsAndStoreResults(methodCaller, storeTransactionCreator, conditions, unsatisfiedProviders);
             // Remove now satisfied Providers so that they are not called again
-            unsatisifiedProviders.removeAll(satisfied);
+            unsatisfiedProviders.removeAll(satisfied);
             // If no new conditions could be satisfied, stop looping.
         } while (!satisfied.isEmpty());
 
@@ -108,10 +108,10 @@ class BooleanProviderValueGatherer {
     private Set<DataProvider<Boolean>> attemptToSatisfyMoreConditionsAndStoreResults(
             Function<MethodWrapper<Boolean>, Callable<Boolean>> methodCaller,
             BiFunction<MethodWrapper<Boolean>, Boolean, Transaction> storeTransactionCreator,
-            Conditions conditions, List<DataProvider<Boolean>> unsatisifiedProviders
+            Conditions conditions, List<DataProvider<Boolean>> unsatisfiedProviders
     ) {
         Set<DataProvider<Boolean>> satisfied = new HashSet<>();
-        for (DataProvider<Boolean> booleanProvider : unsatisifiedProviders) {
+        for (DataProvider<Boolean> booleanProvider : unsatisfiedProviders) {
             ProviderInformation information = booleanProvider.getProviderInformation();
 
             Optional<String> condition = information.getCondition();

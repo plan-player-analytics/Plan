@@ -30,7 +30,7 @@ import java.lang.reflect.Method;
  */
 public class PercentageDataProvider extends DataProvider<Double> {
 
-    // TODO Remove need for instanceof in DoubleAndPercentageProviderGatherer
+    // TODO Remove need for instanceof PercentageDataProvider
 
     private PercentageDataProvider(ProviderInformation providerInformation, MethodWrapper<Double> methodWrapper) {
         super(providerInformation, methodWrapper);

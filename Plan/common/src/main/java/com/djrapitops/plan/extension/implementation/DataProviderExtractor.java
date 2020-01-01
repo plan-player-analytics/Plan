@@ -128,7 +128,7 @@ public class DataProviderExtractor {
     }
 
     private <T extends Annotation> void extractProviders(PluginInfo pluginInfo, Map<Method, Tab> tabs, Map<Method, Conditional> conditions, Class<T> ofKind, DataProviderFactory<T> factory) {
-        String pluginName = extractor.getPluginInfo().name();
+        String pluginName = pluginInfo.name();
 
         for (Map.Entry<Method, T> entry : extractor.getMethodAnnotations().getMethodAnnotations(ofKind).entrySet()) {
             Method method = entry.getKey();

@@ -30,16 +30,13 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIc
 import com.djrapitops.plan.extension.implementation.storage.transactions.StorePluginTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreTabInformationTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreProviderTransaction;
-import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveInvalidResultsTransaction;
-import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerNumberResultTransaction;
-import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerNumberResultTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.results.*;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 
 import java.util.UUID;
-import java.util.function.BiFunction;
 
 /**
  * Object that can be called to place data about players to the database.
@@ -57,12 +54,14 @@ public class ProviderValueGatherer {
 
     private final DataProviders dataProviders;
     private final BooleanProviderValueGatherer booleanGatherer;
-    private final DoubleAndPercentageProviderValueGatherer doubleAndPercentageGatherer;
-    private final StringProviderValueGatherer stringGatherer;
     private final TableProviderValueGatherer tableGatherer;
-    private final GroupProviderValueGatherer groupGatherer;
-    private Gatherer<Long> serverNumberGatherer;
-    private Gatherer<Long> playerNumberGatherer;
+    private final Gatherer<Long> serverNumberGatherer;
+    private final Gatherer<Long> playerNumberGatherer;
+    private final Gatherer<Double> serverDoubleGatherer;
+    private final Gatherer<Double> playerDoubleGatherer;
+    private final Gatherer<String> serverStringGatherer;
+    private final Gatherer<String> playerStringGatherer;
+    private final Gatherer<String[]> playerGroupGatherer;
 
     public ProviderValueGatherer(
             DataExtension extension,
@@ -83,25 +82,30 @@ public class ProviderValueGatherer {
         booleanGatherer = new BooleanProviderValueGatherer(
                 pluginName, extension, serverUUID, database, dataProviders
         );
-        NumberProviderValueGatherer numberGatherer = new NumberProviderValueGatherer(
-                pluginName, extension, serverUUID, database, dataProviders
-        );
-        doubleAndPercentageGatherer = new DoubleAndPercentageProviderValueGatherer(
-                pluginName, extension, serverUUID, database, dataProviders
-        );
-        stringGatherer = new StringProviderValueGatherer(
-                pluginName, extension, serverUUID, database, dataProviders
-        );
         tableGatherer = new TableProviderValueGatherer(
                 pluginName, extension, serverUUID, database, dataProviders
         );
-        groupGatherer = new GroupProviderValueGatherer(
-                pluginName, extension, serverUUID, database, dataProviders
-        );
 
-        serverNumberGatherer = new Gatherer<>(Long.class,
-                StoreProviderTransaction::new,
-                (provider, result) -> new StoreServerNumberResultTransaction(provider, serverUUID, result)
+        serverNumberGatherer = new Gatherer<>(
+                Long.class, StoreServerNumberResultTransaction::new
+        );
+        serverDoubleGatherer = new Gatherer<>(
+                Double.class, StoreServerDoubleResultTransaction::new
+        );
+        serverStringGatherer = new Gatherer<>(
+                String.class, StoreServerStringResultTransaction::new
+        );
+        playerNumberGatherer = new Gatherer<>(
+                Long.class, StorePlayerNumberResultTransaction::new
+        );
+        playerDoubleGatherer = new Gatherer<>(
+                Double.class, StorePlayerDoubleResultTransaction::new
+        );
+        playerStringGatherer = new Gatherer<>(
+                String.class, StorePlayerStringResultTransaction::new
+        );
+        playerGroupGatherer = new Gatherer<>(
+                String[].class, StorePlayerGroupsResultTransaction::new
         );
     }
 
@@ -145,54 +149,37 @@ public class ProviderValueGatherer {
 
     public void updateValues(UUID playerUUID, String playerName) {
         Conditions conditions = booleanGatherer.gatherBooleanDataOfPlayer(playerUUID, playerName);
-
-        Parameters params = Parameters.player(playerUUID, playerName);
-        UUID serverUUID = serverInfo.getServerUUID();
-        playerNumberGatherer = new Gatherer<>(Long.class,
-                StoreProviderTransaction::new,
-                (provider, result) -> new StorePlayerNumberResultTransaction(provider, serverUUID, playerUUID, result) // TODO Sort out this use of playerUUID
-        );
+        Parameters params = Parameters.player(serverInfo.getServerUUID(), playerUUID, playerName);
         playerNumberGatherer.gather(conditions, params);
-        doubleAndPercentageGatherer.gatherDoubleDataOfPlayer(playerUUID, playerName, conditions);
-        stringGatherer.gatherStringDataOfPlayer(playerUUID, playerName, conditions);
+        playerDoubleGatherer.gather(conditions, params);
+        playerStringGatherer.gather(conditions, params);
         tableGatherer.gatherTableDataOfPlayer(playerUUID, playerName, conditions);
-        groupGatherer.gatherGroupDataOfPlayer(playerUUID, playerName, conditions);
+        playerGroupGatherer.gather(conditions, params);
     }
 
     public void updateValues() {
         Conditions conditions = booleanGatherer.gatherBooleanDataOfServer();
-        Parameters params = Parameters.server();
+        Parameters params = Parameters.server(serverInfo.getServerUUID());
 
         serverNumberGatherer.gather(conditions, params);
-        doubleAndPercentageGatherer.gatherDoubleDataOfServer(conditions);
-        stringGatherer.gatherStringDataOfServer(conditions);
+        serverDoubleGatherer.gather(conditions, params);
+        serverStringGatherer.gather(conditions, params);
         tableGatherer.gatherTableDataOfServer(conditions);
     }
 
-    interface ProviderTransactionConstructor<T> extends BiFunction<DataProvider<T>, UUID, Transaction> {
-        default Transaction create(DataProvider<T> provider, UUID serverUUID) {
-            return apply(provider, serverUUID);
-        }
-    }
-
-    interface ResultTransactionConstructor<T> extends BiFunction<DataProvider<T>, T, Transaction> {
-        default Transaction create(DataProvider<T> provider, T result) {
-            return apply(provider, result);
-        }
+    interface ResultTransactionConstructor<T> {
+        Transaction create(DataProvider<T> provider, Parameters parameters, T result);
     }
 
     class Gatherer<T> {
         private final Class<T> type;
-        private final ProviderTransactionConstructor<T> providerTransactionConstructor;
         private final ResultTransactionConstructor<T> resultTransactionConstructor;
 
         public Gatherer(
                 Class<T> type,
-                ProviderTransactionConstructor<T> providerTransactionConstructor,
                 ResultTransactionConstructor<T> resultTransactionConstructor
         ) {
             this.type = type;
-            this.providerTransactionConstructor = providerTransactionConstructor;
             this.resultTransactionConstructor = resultTransactionConstructor;
         }
 
@@ -215,8 +202,8 @@ public class ProviderValueGatherer {
 
             Database db = dbSystem.getDatabase();
             db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-            db.executeTransaction(providerTransactionConstructor.create(provider, serverInfo.getServerUUID()));
-            db.executeTransaction(resultTransactionConstructor.create(provider, result));
+            db.executeTransaction(new StoreProviderTransaction(provider, parameters.getServerUUID()));
+            db.executeTransaction(resultTransactionConstructor.create(provider, parameters, result));
         }
     }
 }

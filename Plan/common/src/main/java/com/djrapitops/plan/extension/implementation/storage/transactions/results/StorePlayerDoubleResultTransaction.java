@@ -16,6 +16,9 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
+import com.djrapitops.plan.extension.implementation.providers.DataProvider;
+import com.djrapitops.plan.extension.implementation.providers.Parameters;
+import com.djrapitops.plan.extension.implementation.providers.PercentageDataProvider;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
@@ -28,9 +31,13 @@ import java.util.UUID;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.AND;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 import static com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerValueTable.*;
+import static com.djrapitops.plan.storage.database.sql.tables.ExtensionServerValueTable.DOUBLE_VALUE;
+import static com.djrapitops.plan.storage.database.sql.tables.ExtensionServerValueTable.PERCENTAGE_VALUE;
 
 /**
- * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.DoubleDataProvider}.
+ * Transaction to store method result of.
+ * - {@link com.djrapitops.plan.extension.annotation.DoubleProvider}
+ * - {@link com.djrapitops.plan.extension.annotation.PercentageProvider}
  *
  * @author Rsl1122
  */
@@ -42,13 +49,15 @@ public class StorePlayerDoubleResultTransaction extends ThrowawayTransaction {
     private final UUID playerUUID;
 
     private final double value;
+    private final boolean percentage;
 
-    public StorePlayerDoubleResultTransaction(String pluginName, UUID serverUUID, String providerName, UUID playerUUID, double value) {
-        this.pluginName = pluginName;
-        this.serverUUID = serverUUID;
-        this.providerName = providerName;
-        this.playerUUID = playerUUID;
+    public StorePlayerDoubleResultTransaction(DataProvider<Double> provider, Parameters parameters, double value) {
+        this.pluginName = provider.getProviderInformation().getPluginName();
+        this.providerName = provider.getProviderInformation().getName();
+        this.serverUUID = parameters.getServerUUID();
+        this.playerUUID = parameters.getPlayerUUID();
         this.value = value;
+        this.percentage = provider instanceof PercentageDataProvider;
     }
 
     @Override
@@ -68,7 +77,7 @@ public class StorePlayerDoubleResultTransaction extends ThrowawayTransaction {
     private Executable updateValue() {
         String sql = "UPDATE " + TABLE_NAME +
                 " SET " +
-                DOUBLE_VALUE + "=?" +
+                (percentage ? PERCENTAGE_VALUE : DOUBLE_VALUE) + "=?" +
                 WHERE + USER_UUID + "=?" +
                 AND + PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID;
 
@@ -84,7 +93,7 @@ public class StorePlayerDoubleResultTransaction extends ThrowawayTransaction {
 
     private Executable insertValue() {
         String sql = "INSERT INTO " + TABLE_NAME + "(" +
-                DOUBLE_VALUE + "," +
+                (percentage ? PERCENTAGE_VALUE : DOUBLE_VALUE) + "," +
                 USER_UUID + "," +
                 PROVIDER_ID +
                 ") VALUES (?,?," + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID + ")";

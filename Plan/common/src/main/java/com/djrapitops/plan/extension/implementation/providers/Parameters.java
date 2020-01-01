@@ -25,23 +25,39 @@ import java.lang.reflect.Method;
 import java.util.UUID;
 
 public interface Parameters {
-    static Parameters player(UUID playerUUID, String playerName) {
-        return new PlayerParameters(playerUUID, playerName);
+    static Parameters player(UUID serverUUID, UUID playerUUID, String playerName) {
+        return new PlayerParameters(serverUUID, playerUUID, playerName);
     }
 
-    static Parameters server() {
-        return new ServerParameters();
+    static Parameters server(UUID serverUUID) {
+        return new ServerParameters(serverUUID);
     }
 
-    static Parameters group(String groupName) {
-        return new GroupParameters(groupName);
+    static Parameters group(UUID serverUUID, String groupName) {
+        return new GroupParameters(serverUUID, groupName);
     }
 
     Object call(DataExtension extension, Method method) throws InvocationTargetException, IllegalAccessException;
 
     MethodType getMethodType();
 
+    UUID getServerUUID();
+
+    default UUID getPlayerUUID() {
+        return null;
+    }
+
     class ServerParameters implements Parameters {
+        private final UUID serverUUID;
+
+        public ServerParameters(UUID serverUUID) {
+            this.serverUUID = serverUUID;
+        }
+
+        public UUID getServerUUID() {
+            return serverUUID;
+        }
+
         @Override
         public Object call(DataExtension extension, Method method) throws InvocationTargetException, IllegalAccessException {
             return method.invoke(extension);
@@ -54,12 +70,22 @@ public interface Parameters {
     }
 
     class PlayerParameters implements Parameters {
+        private final UUID serverUUID;
         private final UUID playerUUID;
         private final String playerName;
 
-        public PlayerParameters(UUID playerUUID, String playerName) {
+        public PlayerParameters(UUID serverUUID, UUID playerUUID, String playerName) {
+            this.serverUUID = serverUUID;
             this.playerUUID = playerUUID;
             this.playerName = playerName;
+        }
+
+        public UUID getServerUUID() {
+            return serverUUID;
+        }
+
+        public UUID getPlayerUUID() {
+            return playerUUID;
         }
 
         @Override
@@ -79,10 +105,16 @@ public interface Parameters {
     }
 
     class GroupParameters implements Parameters {
+        private final UUID serverUUID;
         private final String groupName;
 
-        public GroupParameters(String groupName) {
+        public GroupParameters(UUID serverUUID, String groupName) {
+            this.serverUUID = serverUUID;
             this.groupName = groupName;
+        }
+
+        public UUID getServerUUID() {
+            return serverUUID;
         }
 
         @Override

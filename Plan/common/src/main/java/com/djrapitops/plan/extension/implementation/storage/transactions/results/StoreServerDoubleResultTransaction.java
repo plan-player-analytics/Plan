@@ -16,6 +16,9 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
+import com.djrapitops.plan.extension.implementation.providers.DataProvider;
+import com.djrapitops.plan.extension.implementation.providers.Parameters;
+import com.djrapitops.plan.extension.implementation.providers.PercentageDataProvider;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
@@ -40,12 +43,14 @@ public class StoreServerDoubleResultTransaction extends ThrowawayTransaction {
     private final String providerName;
 
     private final double value;
+    private final boolean percentage;
 
-    public StoreServerDoubleResultTransaction(String pluginName, UUID serverUUID, String providerName, double value) {
-        this.pluginName = pluginName;
-        this.serverUUID = serverUUID;
-        this.providerName = providerName;
+    public StoreServerDoubleResultTransaction(DataProvider<Double> provider, Parameters parameters, double value) {
+        this.pluginName = provider.getProviderInformation().getPluginName();
+        this.providerName = provider.getProviderInformation().getName();
+        this.serverUUID = parameters.getServerUUID();
         this.value = value;
+        this.percentage = provider instanceof PercentageDataProvider;
     }
 
     @Override
@@ -65,7 +70,7 @@ public class StoreServerDoubleResultTransaction extends ThrowawayTransaction {
     private Executable updateValue() {
         String sql = "UPDATE " + TABLE_NAME +
                 " SET " +
-                DOUBLE_VALUE + "=?" +
+                (percentage ? PERCENTAGE_VALUE : DOUBLE_VALUE) + "=?" +
                 WHERE + PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID;
 
         return new ExecStatement(sql) {
@@ -79,7 +84,7 @@ public class StoreServerDoubleResultTransaction extends ThrowawayTransaction {
 
     private Executable insertValue() {
         String sql = "INSERT INTO " + TABLE_NAME + "(" +
-                DOUBLE_VALUE + "," +
+                (percentage ? PERCENTAGE_VALUE : DOUBLE_VALUE) + "," +
                 PROVIDER_ID +
                 ") VALUES (?," + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID + ")";
         return new ExecStatement(sql) {

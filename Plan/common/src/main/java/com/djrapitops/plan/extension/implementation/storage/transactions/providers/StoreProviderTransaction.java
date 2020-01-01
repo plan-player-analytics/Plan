@@ -109,21 +109,6 @@ public class StoreProviderTransaction extends ThrowawayTransaction {
     }
 
     private Executable insertProvider() {
-        /*  PROVIDER_NAME
-            PLUGIN_ID
-
-            TEXT
-            DESCRIPTION // Can be null
-            PRIORITY
-            GROUPABLE // default false
-            CONDITION // Can be null, related to @Conditional
-            ICON_ID
-            TAB_ID // Can be null, related to @Tab
-            SHOW_IN_PLAYERS_TABLE // default false
-            HIDDEN // default false, related to @BooleanProvider
-            PROVIDED_CONDITION // Can be null, related to @BooleanProvider
-            FORMAT_TYPE // Can be null,  related to @NumberProvider
-            IS_PLAYER_NAME // default false, related to @StringProvider */
         String sql = "INSERT INTO " + TABLE_NAME + '(' +
                 PROVIDER_NAME + ',' +
                 TEXT + ',' +

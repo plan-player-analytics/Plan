@@ -67,7 +67,7 @@ class TableProviderValueGatherer {
     void gatherTableDataOfPlayer(UUID playerUUID, String playerName, Conditions conditions) {
         // Method parameters abstracted away so that same method can be used for all parameter types
         // Same with Method result store transaction creation
-        Function<MethodWrapper<Table>, Callable<Table>> methodCaller = method -> () -> method.callMethod(extension, Parameters.player(playerUUID, playerName));
+        Function<MethodWrapper<Table>, Callable<Table>> methodCaller = method -> () -> method.callMethod(extension, Parameters.player(serverUUID, playerUUID, playerName));
         BiFunction<MethodWrapper<Table>, Table, Transaction> storeTransactionCreator = (method, result) -> new StorePlayerTableResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result);
 
         for (DataProvider<Table> tableProvider : dataProviders.getPlayerMethodsByType(Table.class)) {
@@ -78,7 +78,7 @@ class TableProviderValueGatherer {
     void gatherTableDataOfServer(Conditions conditions) {
         // Method parameters abstracted away so that same method can be used for all parameter types
         // Same with Method result store transaction creation
-        Function<MethodWrapper<Table>, Callable<Table>> methodCaller = method -> () -> method.callMethod(extension, Parameters.server());
+        Function<MethodWrapper<Table>, Callable<Table>> methodCaller = method -> () -> method.callMethod(extension, Parameters.server(serverUUID));
         BiFunction<MethodWrapper<Table>, Table, Transaction> storeTransactionCreator = (method, result) -> new StoreServerTableResultTransaction(pluginName, serverUUID, method.getMethodName(), result);
 
         for (DataProvider<Table> tableProvider : dataProviders.getServerMethodsByType(Table.class)) {
