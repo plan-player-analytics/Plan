@@ -30,10 +30,6 @@ import java.util.UUID;
  */
 public enum MethodType {
 
-    @Deprecated
-    PLAYER_UUID,
-    @Deprecated
-    PLAYER_NAME,
     PLAYER,
     GROUP,
     SERVER;

@@ -40,17 +40,14 @@ import java.util.UUID;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
- * Query aggregated boolean values from player value table.
+ * Query for selecting average and total for each double value provided for players.
  * <p>
- * Returns Map: PluginID - ExtensionServerData.Factory.
+ * Returns Map: PluginID - {@link ExtensionData.Builder}.
  * <p>
  * How it is done:
- * - Combines three queries, one that selects true boolean count, one that selects boolean value count and one that selects provider information.
- * - Data query is sorted into a multi-map: PluginID - Tab Name - Tab Data
- * - (Tab Name can be empty.)
- * - Multi-map is sorted into ExtensionPlayerData objects by PluginID, one per ID
- * <p>
- * There are multiple data extraction methods to make extracting the value query easier.
+ * 1. Query averages and totals
+ * 2. Join with provider information query
+ * 3. Map into ExtensionData objects by PluginID, one per ID
  *
  * @author Rsl1122
  */

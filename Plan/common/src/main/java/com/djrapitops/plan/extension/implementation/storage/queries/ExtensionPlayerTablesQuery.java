@@ -41,16 +41,12 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Query player tables from tableprovider table.
  * <p>
- * Returns Map: PluginID - ExtensionData.Factory.
+ * Returns Map: PluginID - {@link ExtensionData.Builder}.
  * <p>
  * How it is done:
- * - TableProviders are queried and formed into Table.Factory objects sorted into a multi-map: PluginID - TableID - Table.Factory
- * - Table values are queried and merged into the above multimap
- * - Data query is sorted into a multi-map: PluginID - Tab Name - Tab Data
- * - (Tab Name can be empty.)
- * - Multi-map is sorted into ExtensionData objects by PluginID, one per ID
- * <p>
- * There are multiple data extraction methods to make extracting the value query easier.
+ * 1. TableProviders are queried and formed into {@link Table.Factory} objects inside {@link QueriedTables}.
+ * 2. Table values are queried and merged
+ * 3. QueriedTables is mapped into ExtensionData objects by PluginID, one per ID
  *
  * @author Rsl1122
  */

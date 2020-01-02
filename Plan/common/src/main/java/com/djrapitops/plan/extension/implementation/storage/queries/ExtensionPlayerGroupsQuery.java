@@ -42,7 +42,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Query player's Groups by Plugin ID inside ExtensionData objects.
  * <p>
- * - Group names are represented as a String value, concatenated to a single one.
+ * - Group names are represented as a String value, concatenated to a single String, separated by ', '.
  * - String values are placed into Tabs they belong to
  * - Tabs are placed to plugin they belong to
  * - The map is returned

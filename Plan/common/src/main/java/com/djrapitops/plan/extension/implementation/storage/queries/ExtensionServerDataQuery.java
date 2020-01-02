@@ -36,19 +36,15 @@ import java.util.*;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
- * Query ExtensionServerData of a server.
+ * Query ExtensionData of a server.
  * <p>
- * Returns  List of ExtensionServerData.
+ * Returns List of ExtensionData.
  * <p>
- * How it is done:
- * - Two queries are run, one that fetches all extensions and one that fetches all data of the player.
- * - Data query is sorted into a multi-map: PluginID - Tab Name - Tab Data
- * - (Tab Name can be empty.)
- * - Multi-map is sorted into ExtensionServerData objects by PluginID, one per ID
- * - This map is combined with similar maps that contain aggregated player values
- * - This map is sorted into List of ExtensionPlayerData at the highest level.
- * <p>
- * There are multiple data extraction methods to make extracting the value query easier.
+ * Following utilities are used to query the data more easily.
+ * - {@link ExtensionData.Builder}
+ * - {@link QueriedTabData}
+ * - {@link QueriedTables}
+ * These utilities allow combining incomplete information.
  *
  * @author Rsl1122
  */

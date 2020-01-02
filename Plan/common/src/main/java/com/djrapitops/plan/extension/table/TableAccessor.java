@@ -21,7 +21,7 @@ import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
 
 /**
- * Utility for accessing implementation variables inside Table.Factory object.
+ * Utility for accessing implementation variables inside {@link Table.Factory} object.
  *
  * @author Rsl1122
  */
