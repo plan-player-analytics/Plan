@@ -50,7 +50,7 @@ public interface Parameters {
     class ServerParameters implements Parameters {
         private final UUID serverUUID;
 
-        public ServerParameters(UUID serverUUID) {
+        private ServerParameters(UUID serverUUID) {
             this.serverUUID = serverUUID;
         }
 
@@ -74,7 +74,7 @@ public interface Parameters {
         private final UUID playerUUID;
         private final String playerName;
 
-        public PlayerParameters(UUID serverUUID, UUID playerUUID, String playerName) {
+        private PlayerParameters(UUID serverUUID, UUID playerUUID, String playerName) {
             this.serverUUID = serverUUID;
             this.playerUUID = playerUUID;
             this.playerName = playerName;
@@ -108,7 +108,7 @@ public interface Parameters {
         private final UUID serverUUID;
         private final String groupName;
 
-        public GroupParameters(UUID serverUUID, String groupName) {
+        private GroupParameters(UUID serverUUID, String groupName) {
             this.serverUUID = serverUUID;
             this.groupName = groupName;
         }

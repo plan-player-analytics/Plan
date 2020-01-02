@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.implementation;
 
+import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.extractor.ExtensionExtractor;
@@ -35,30 +36,42 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Extracts objects that can be used to obtain data to store in the database.
+ * Represents information defined in a {@link DataExtension} class.
+ * <p>
+ * Extracts objects that can be used to obtain data from a {@link DataExtension}.
  * <p>
  * Goal of this class is to abstract away DataExtension API annotations so that they will not be needed outside when calling methods.
  *
  * @author Rsl1122
  */
-public class DataProviderExtractor {
+public class ExtensionWrapper {
 
     private final ExtensionExtractor extractor;
     private final DataProviders providers;
+    private final DataExtension extension;
 
     /**
-     * Create a DataProviderExtractor.
+     * Create an ExtensionWrapper.
      *
      * @param extension DataExtension to extract information from.
      * @throws IllegalArgumentException If something is badly wrong with the specified extension class annotations.
      */
-    public DataProviderExtractor(DataExtension extension) {
-        extractor = new ExtensionExtractor(extension);
+    public ExtensionWrapper(DataExtension extension) {
+        this.extension = extension;
+        extractor = new ExtensionExtractor(this.extension);
 
         extractor.extractAnnotationInformation();
 
         providers = new DataProviders();
         extractProviders();
+    }
+
+    public CallEvents[] getCallEvents() {
+        return extension.callExtensionMethodsOn();
+    }
+
+    public DataExtension getExtension() {
+        return extension;
     }
 
     public String getPluginName() {

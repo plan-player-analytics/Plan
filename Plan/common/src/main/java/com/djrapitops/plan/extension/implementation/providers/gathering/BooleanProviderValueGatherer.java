@@ -18,6 +18,7 @@ package com.djrapitops.plan.extension.implementation.providers.gathering;
 
 import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.DataExtension;
+import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProviders;
@@ -50,15 +51,15 @@ class BooleanProviderValueGatherer {
     private final DataProviders dataProviders;
 
     BooleanProviderValueGatherer(
-            String pluginName, DataExtension extension,
+            String pluginName,
             UUID serverUUID, Database database,
-            DataProviders dataProviders
+            ExtensionWrapper extensionWrapper
     ) {
         this.pluginName = pluginName;
-        this.extension = extension;
+        this.extension = extensionWrapper.getExtension();
         this.serverUUID = serverUUID;
         this.database = database;
-        this.dataProviders = dataProviders;
+        this.dataProviders = extensionWrapper.getProviders();
     }
 
     Conditions gatherBooleanDataOfPlayer(UUID playerUUID, String playerName) {

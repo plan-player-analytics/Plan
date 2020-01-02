@@ -17,9 +17,8 @@
 package com.djrapitops.plan.extension.implementation.providers.gathering;
 
 import com.djrapitops.plan.extension.CallEvents;
-import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.icon.Icon;
-import com.djrapitops.plan.extension.implementation.DataProviderExtractor;
+import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
@@ -45,10 +44,8 @@ import java.util.UUID;
  */
 public class ProviderValueGatherer {
 
-    private final DataExtension extension;
-
     private final CallEvents[] callEvents;
-    private final DataProviderExtractor extractor;
+    private final ExtensionWrapper extensionWrapper;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
 
@@ -64,26 +61,24 @@ public class ProviderValueGatherer {
     private final Gatherer<String[]> playerGroupGatherer;
 
     public ProviderValueGatherer(
-            DataExtension extension,
-            DataProviderExtractor extractor,
+            ExtensionWrapper extension,
             DBSystem dbSystem,
             ServerInfo serverInfo
     ) {
-        this.extension = extension;
-        this.callEvents = this.extension.callExtensionMethodsOn();
-        this.extractor = extractor;
+        this.callEvents = extension.getCallEvents();
+        this.extensionWrapper = extension;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
 
-        String pluginName = extractor.getPluginName();
+        String pluginName = extension.getPluginName();
         UUID serverUUID = serverInfo.getServerUUID();
         Database database = dbSystem.getDatabase();
-        dataProviders = extractor.getProviders();
+        dataProviders = extension.getProviders();
         booleanGatherer = new BooleanProviderValueGatherer(
-                pluginName, extension, serverUUID, database, dataProviders
+                pluginName, serverUUID, database, extension
         );
         tableGatherer = new TableProviderValueGatherer(
-                pluginName, extension, serverUUID, database, dataProviders
+                pluginName, serverUUID, database, extension
         );
 
         serverNumberGatherer = new Gatherer<>(
@@ -126,12 +121,12 @@ public class ProviderValueGatherer {
     }
 
     public String getPluginName() {
-        return extractor.getPluginName();
+        return extensionWrapper.getPluginName();
     }
 
     public void storeExtensionInformation() {
-        String pluginName = extractor.getPluginName();
-        Icon pluginIcon = extractor.getPluginIcon();
+        String pluginName = extensionWrapper.getPluginName();
+        Icon pluginIcon = extensionWrapper.getPluginIcon();
 
         long time = System.currentTimeMillis();
         UUID serverUUID = serverInfo.getServerUUID();
@@ -139,12 +134,12 @@ public class ProviderValueGatherer {
         Database database = dbSystem.getDatabase();
         database.executeTransaction(new StoreIconTransaction(pluginIcon));
         database.executeTransaction(new StorePluginTransaction(pluginName, time, serverUUID, pluginIcon));
-        for (TabInformation tab : extractor.getPluginTabs()) {
+        for (TabInformation tab : extensionWrapper.getPluginTabs()) {
             database.executeTransaction(new StoreIconTransaction(tab.getTabIcon()));
             database.executeTransaction(new StoreTabInformationTransaction(pluginName, serverUUID, tab));
         }
 
-        database.executeTransaction(new RemoveInvalidResultsTransaction(pluginName, serverUUID, extractor.getInvalidatedMethods()));
+        database.executeTransaction(new RemoveInvalidResultsTransaction(pluginName, serverUUID, extensionWrapper.getInvalidatedMethods()));
     }
 
     public void updateValues(UUID playerUUID, String playerName) {
@@ -195,7 +190,7 @@ public class ProviderValueGatherer {
                 return; // Condition not fulfilled
             }
 
-            T result = provider.getMethod().callMethod(extension, parameters);
+            T result = provider.getMethod().callMethod(extensionWrapper.getExtension(), parameters);
             if (result == null) {
                 return; // Error during method call
             }

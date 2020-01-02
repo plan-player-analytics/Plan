@@ -21,8 +21,8 @@ import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.implementation.CallerImplementation;
-import com.djrapitops.plan.extension.implementation.DataProviderExtractor;
 import com.djrapitops.plan.extension.implementation.ExtensionRegister;
+import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
 import com.djrapitops.plan.extension.implementation.providers.gathering.ProviderValueGatherer;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
@@ -93,7 +93,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
 
     @Override
     public Optional<Caller> register(DataExtension extension) {
-        DataProviderExtractor extractor = new DataProviderExtractor(extension);
+        ExtensionWrapper extractor = new ExtensionWrapper(extension);
         String pluginName = extractor.getPluginName();
 
         if (shouldNotAllowRegistration(pluginName)) return Optional.empty();
@@ -102,7 +102,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
             logger.warn("DataExtension API implementation mistake for " + pluginName + ": " + warning);
         }
 
-        ProviderValueGatherer gatherer = new ProviderValueGatherer(extension, extractor, dbSystem, serverInfo);
+        ProviderValueGatherer gatherer = new ProviderValueGatherer(extractor, dbSystem, serverInfo);
         gatherer.storeExtensionInformation();
         extensionGatherers.put(pluginName, gatherer);
 
@@ -114,7 +114,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
 
     @Override
     public void unregister(DataExtension extension) {
-        DataProviderExtractor extractor = new DataProviderExtractor(extension);
+        ExtensionWrapper extractor = new ExtensionWrapper(extension);
         String pluginName = extractor.getPluginName();
         if (extensionGatherers.remove(pluginName) != null) {
             logger.getDebugLogger().logOn(DebugChannels.DATA_EXTENSIONS, pluginName + " extension unregistered.");
