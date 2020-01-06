@@ -59,6 +59,9 @@ Webserver:
 # -----------------------------------------------------
 Data_gathering:
   Geolocations: true
+  # Please accept the EULA to download GeoLite2 IP-Country Database
+  # https://www.maxmind.com/en/geolite2/eula
+  Accept_GeoLite2_EULA: false
   Ping: true
 # -----------------------------------------------------
 # Supported time units: MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS
