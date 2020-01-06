@@ -125,10 +125,11 @@ public class RegisterCommand extends CommandNode {
     private void consoleRegister(String[] args, Sender sender, String notEnoughArgsMsg) throws PassEncryptUtil.CannotPerformOperationException {
         Verify.isTrue(args.length >= 3, () -> new IllegalArgumentException(notEnoughArgsMsg));
 
-        int permLevel;
-        permLevel = Integer.parseInt(args[2]);
+        String userName = args[1];
+        Verify.isTrue(userName.length() <= 100, () -> new IllegalArgumentException("Username can only be 100 characters long."));
+        int permLevel = Integer.parseInt(args[2]);
         String passHash = PassEncryptUtil.createHash(args[0]);
-        registerUser(new WebUser(args[1], passHash, permLevel), sender);
+        registerUser(new WebUser(userName, passHash, permLevel), sender);
     }
 
     private void playerRegister(String[] args, Sender sender) throws PassEncryptUtil.CannotPerformOperationException {

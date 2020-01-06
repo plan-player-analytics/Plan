@@ -24,6 +24,7 @@ import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 import com.djrapitops.plugin.utilities.Verify;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -86,7 +87,7 @@ public class DataStoreQueries {
         return new ExecStatement(WorldTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, worldName);
+                statement.setString(1, StringUtils.truncate(worldName, 100));
                 statement.setString(2, serverUUID.toString());
             }
         };
