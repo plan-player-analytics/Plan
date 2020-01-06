@@ -20,6 +20,7 @@ import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.queries.HasMoreThanZeroQueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.WorldTable;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -55,7 +56,7 @@ public class WorldNameStoreTransaction extends Transaction {
         return !query(new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, worldName);
+                statement.setString(1, StringUtils.truncate(worldName, 100));
                 statement.setString(2, serverUUID.toString());
             }
         });

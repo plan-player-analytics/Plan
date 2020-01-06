@@ -25,6 +25,7 @@ import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 import com.djrapitops.plugin.utilities.Verify;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -258,7 +259,7 @@ public class LargeStoreQueries {
                 for (Map.Entry<UUID, Collection<String>> entry : ofServers.entrySet()) {
                     UUID serverUUID = entry.getKey();
                     for (String world : entry.getValue()) {
-                        statement.setString(1, world);
+                        statement.setString(1, StringUtils.truncate(world, 100));
                         statement.setString(2, serverUUID.toString());
                         statement.addBatch();
                     }
