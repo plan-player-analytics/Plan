@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.keys.CommonKeys;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.WorldPie;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
@@ -265,8 +266,10 @@ public class SessionsMutator {
         return Lists.map(sessions, session -> {
             Map<String, Object> sessionMap = new HashMap<>();
             sessionMap.put("player_name", session.getValue(SessionKeys.NAME).orElse(session.getUnsafe(SessionKeys.UUID).toString()));
+            sessionMap.put("player_url_name", Html.encodeToURL((String) sessionMap.get("player_name")));
             sessionMap.put("player_uuid", session.getUnsafe(SessionKeys.UUID).toString());
             sessionMap.put("server_name", session.getValue(SessionKeys.SERVER_NAME).orElse(session.getUnsafe(SessionKeys.SERVER_UUID).toString()));
+            sessionMap.put("server_url_name", Html.encodeToURL((String) sessionMap.get("server_name")));
             sessionMap.put("server_uuid", session.getUnsafe(SessionKeys.SERVER_UUID).toString());
             sessionMap.put("name", nameFunction.apply(sessionMap));
             sessionMap.put("start", session.getValue(SessionKeys.START).map(formatters.yearLong()).orElse("-") +
