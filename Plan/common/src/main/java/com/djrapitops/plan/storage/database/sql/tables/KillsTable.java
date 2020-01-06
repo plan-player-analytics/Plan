@@ -25,6 +25,7 @@ import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.transactions.patches.KillsOptimizationPatch;
 import com.djrapitops.plan.storage.database.transactions.patches.KillsServerIDPatch;
 import com.djrapitops.plan.storage.database.transactions.patches.Version10Patch;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -94,7 +95,7 @@ public class KillsTable {
             statement.setString(6, kill.getVictim().toString());
             statement.setString(7, serverUUID.toString());
             statement.setLong(8, kill.getDate());
-            statement.setString(9, kill.getWeapon());
+            statement.setString(9, StringUtils.truncate(kill.getWeapon(), 30));
             statement.addBatch();
         }
     }
