@@ -16,14 +16,13 @@
  */
 package com.djrapitops.plan.delivery.export;
 
+import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.storage.file.Resource;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
@@ -72,15 +71,11 @@ abstract class FileExporter {
     }
 
     String toFileName(String resourceName) {
-        try {
-            return StringUtils.replaceEach(
-                    URLEncoder.encode(resourceName, "UTF-8"),
-                    new String[]{".", "%2F"},
-                    new String[]{"%2E", "-"}
-            );
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException("Unexpected: UTF-8 encoding not supported", e);
-        }
+        return StringUtils.replaceEach(
+                Html.encodeToURL(resourceName),
+                new String[]{".", "%2F", "%20"},
+                new String[]{"%2E", "-", " "}
+        );
     }
 
 }
