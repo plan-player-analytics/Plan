@@ -18,6 +18,7 @@ package com.djrapitops.plan.gathering.cache;
 
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.exceptions.EnableException;
+import com.djrapitops.plan.gathering.geolocation.GeolocationCache;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

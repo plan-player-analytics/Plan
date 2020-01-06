@@ -85,6 +85,7 @@ subprojects {
 
     ext.httpClientVersion = "4.5.10"
     ext.commonsTextVersion = "1.8"
+    ext.commonsCompressVersion = "1.19"
     ext.htmlCompressorVersion = "1.5.2"
     ext.caffeineVersion = "2.8.0"
     ext.h2Version = "1.4.199"

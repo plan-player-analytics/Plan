@@ -14,9 +14,8 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.gathering.cache;
+package com.djrapitops.plan.gathering.geolocation;
 
-import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -41,16 +40,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 /**
- * Tests for {@link GeolocationCache}.
+ * Tests for Geolocation functionality.
  *
+ * @author Rsl1122
  * @author Fuzzlemann
  */
 @RunWith(JUnitPlatform.class)
 @ExtendWith(MockitoExtension.class)
-class GeolocationCacheTest {
+class GeolocationTest {
 
     private static final Map<String, String> TEST_DATA = new HashMap<>();
     private static File IP_STORE;
@@ -65,29 +66,35 @@ class GeolocationCacheTest {
 
     @BeforeAll
     static void setUpTestData(@TempDir Path tempDir) {
-        GeolocationCacheTest.tempDir = tempDir;
-        IP_STORE = GeolocationCacheTest.tempDir.resolve("GeoIP.dat").toFile();
+        GeolocationTest.tempDir = tempDir;
+        IP_STORE = GeolocationTest.tempDir.resolve("GeoLite2-Country.mmdb").toFile();
 
-        TEST_DATA.put("8.8.8.8", "United States");
-        TEST_DATA.put("8.8.4.4", "United States");
-        TEST_DATA.put("4.4.2.2", "United States");
-        TEST_DATA.put("208.67.222.222", "United States");
-        TEST_DATA.put("208.67.220.220", "United States");
+        TEST_DATA.put("8.8.8.8", "United States"); // California, US
+        TEST_DATA.put("8.8.4.4", "United States"); // California, US
+        TEST_DATA.put("4.4.2.2", "United States"); // Colorado, US
+        TEST_DATA.put("156.53.159.86", "United States"); // Oregon, US
+        TEST_DATA.put("208.67.222.222", "United States"); // California, US
+        TEST_DATA.put("208.67.220.220", "United States"); // California, US
         TEST_DATA.put("205.210.42.205", "Canada");
         TEST_DATA.put("64.68.200.200", "Canada");
-        TEST_DATA.put("0.0.0.0", "Not Known");
+        TEST_DATA.put("0.0.0.0", "Not Found"); // Invalid IP
         TEST_DATA.put("127.0.0.1", "Local Machine");
     }
 
     @BeforeEach
-    void setUpCache() throws EnableException {
+    void setUpCache() {
         when(config.isTrue(DataGatheringSettings.GEOLOCATIONS)).thenReturn(true);
-        when(files.getFileFromPluginFolder("GeoIP.dat")).thenReturn(IP_STORE);
+        lenient().when(config.isTrue(DataGatheringSettings.ACCEPT_GEOLITE2_EULA)).thenReturn(true);
+        when(files.getFileFromPluginFolder("GeoLite2-Country.mmdb")).thenReturn(IP_STORE);
+        when(files.getFileFromPluginFolder("GeoIP.dat")).thenReturn(tempDir.resolve("Non-file").toFile());
 
         assertTrue(config.isTrue(DataGatheringSettings.GEOLOCATIONS));
 
-        underTest = new GeolocationCache(new Locale(), files, config, new TestPluginLogger());
+        GeoLite2Geolocator geoLite2Geolocator = new GeoLite2Geolocator(files, config);
+        underTest = new GeolocationCache(new Locale(), config, geoLite2Geolocator, new IP2CGeolocator(), new TestPluginLogger());
         underTest.enable();
+
+        assertTrue(underTest.canGeolocate());
     }
 
     @AfterEach
@@ -100,11 +107,10 @@ class GeolocationCacheTest {
     void countryIsFetched() {
         for (Map.Entry<String, String> entry : TEST_DATA.entrySet()) {
             String ip = entry.getKey();
-            String expCountry = entry.getValue();
+            String expected = entry.getValue();
+            String result = underTest.getCountry(ip);
 
-            String country = underTest.getCountry(ip);
-
-            assertEquals(expCountry, country);
+            assertEquals(expected, result, "Tested " + ip + ", expected: <" + expected + "> but was: <" + result + '>');
         }
     }
 

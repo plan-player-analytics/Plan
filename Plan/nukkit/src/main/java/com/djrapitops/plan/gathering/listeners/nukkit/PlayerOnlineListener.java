@@ -31,12 +31,11 @@ import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionServiceImplementation;
-import com.djrapitops.plan.gathering.cache.GeolocationCache;
 import com.djrapitops.plan.gathering.cache.NicknameCache;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.GMTimes;
-import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.geolocation.GeolocationCache;
 import com.djrapitops.plan.gathering.listeners.Status;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
@@ -168,7 +167,7 @@ public class PlayerOnlineListener implements Listener {
         boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
         if (gatheringGeolocations) {
             database.executeTransaction(
-                    new GeoInfoStoreTransaction(playerUUID, new GeoInfo(geolocationCache.getCountry(address), time))
+                    new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
             );
         }
 
