@@ -31,6 +31,7 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import utilities.mocks.objects.TestRunnableFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -91,7 +92,7 @@ class GeolocationTest {
         assertTrue(config.isTrue(DataGatheringSettings.GEOLOCATIONS));
 
         GeoLite2Geolocator geoLite2Geolocator = new GeoLite2Geolocator(files, config);
-        underTest = new GeolocationCache(new Locale(), config, geoLite2Geolocator, new IP2CGeolocator(), new TestPluginLogger());
+        underTest = new GeolocationCache(new Locale(), config, geoLite2Geolocator, new IP2CGeolocator(), new TestPluginLogger(), TestRunnableFactory.forSameThread());
         underTest.enable();
 
         assertTrue(underTest.canGeolocate());

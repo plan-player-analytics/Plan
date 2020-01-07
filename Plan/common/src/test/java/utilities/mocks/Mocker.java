@@ -69,16 +69,28 @@ abstract class Mocker {
                 "web/css/sb-admin-2.css",
 
                 "web/js/color-selector.js",
+                "web/js/graphs.js",
                 "web/js/network-values.js",
+                "web/js/pingTable.js",
+                "web/js/player-values.js",
                 "web/js/sb-admin-2.js",
                 "web/js/server-values.js",
+                "web/js/sessionAccordion.js",
                 "web/js/xmlhttprequests.js",
-                "web/js/graphs.js",
 
                 "web/vendor/bootstrap/js/bootstrap.bundle.min.js",
+                "web/vendor/datatables/jquery.dataTables.min.js",
+                "web/vendor/datatables/dataTables.bootstrap4.min.css",
+                "web/vendor/datatables/dataTables.bootstrap4.min.js",
                 "web/vendor/jquery/jquery.min.js",
                 "web/vendor/fullcalendar/fullcalendar.min.js",
                 "web/vendor/fullcalendar/fullcalendar.min.css",
+                "web/vendor/highcharts/drilldown.js",
+                "web/vendor/highcharts/highcharts-more.js",
+                "web/vendor/highcharts/highstock.js",
+                "web/vendor/highcharts/map.js",
+                "web/vendor/highcharts/no-data-to-display.js",
+                "web/vendor/highcharts/world.js",
                 "web/vendor/momentjs/moment.js"
         }) {
             withPluginFile(fileName);
