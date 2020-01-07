@@ -107,7 +107,7 @@ class JSErrorRegressionTest {
     }
 
     private void assertNo500Error(WebDriver driver) {
-        assertFalse(driver.getPageSource().contains("500 Internal Error occurred"), driver.getPageSource());
+        assertFalse(driver.getPageSource().contains("<span class=\"loader-text\">Error occurred"), driver.getPageSource());
     }
 
     @Test
