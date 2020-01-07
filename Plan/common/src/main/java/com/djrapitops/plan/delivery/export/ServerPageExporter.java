@@ -85,7 +85,7 @@ public class ServerPageExporter extends FileExporter {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
 
-        exportPaths.put("../network", toRelativePathFromRoot("network"));
+        exportPaths.put("../network/", toRelativePathFromRoot("network"));
         exportRequiredResources(toDirectory);
         exportJSON(toDirectory, server);
         exportHtml(toDirectory, server);

@@ -68,7 +68,7 @@ public class ListPlayersCommand extends CommandNode {
 
         // Link
         String address = PlanSystem.getMainAddress(webServer, dbSystem);
-        String url = address + "/players/";
+        String url = address + "/players";
         String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
         boolean console = !CommandUtils.isPlayer(sender);
         if (console) {

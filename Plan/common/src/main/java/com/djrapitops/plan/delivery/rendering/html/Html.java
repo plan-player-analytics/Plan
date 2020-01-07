@@ -52,13 +52,13 @@ public enum Html {
     LINK("<a class=\"link\" href=\"${0}\">${1}</a>"),
     LINK_EXTERNAL("<a class=\"link\" rel=\"noopener noreferrer\" target=\"_blank\" href=\"${0}\">${1}</a>"),
 
-    BACK_BUTTON_NETWORK("<a class=\"btn bg-plan btn-icon-split\" href=\"../network\">" +
+    BACK_BUTTON_NETWORK("<a class=\"btn bg-plan btn-icon-split\" href=\"../network/\">" +
             "<span class=\"icon text-white-50\">" +
             "<i class=\"fas fa-fw fa-arrow-left\"></i><i class=\"fas fa-fw fa-cloud\"></i>" +
             "</span>" +
             "<span class=\"text\">Network page</span>" +
             "</a>"),
-    BACK_BUTTON_SERVER("<a class=\"btn bg-plan btn-icon-split\" href=\"../server\">" +
+    BACK_BUTTON_SERVER("<a class=\"btn bg-plan btn-icon-split\" href=\"../server/\">" +
             "<span class=\"icon text-white-50\">" +
             "<i class=\"fas fa-fw fa-arrow-left\"></i><i class=\"fas fa-fw fa-server\"></i>" +
             "</span>" +

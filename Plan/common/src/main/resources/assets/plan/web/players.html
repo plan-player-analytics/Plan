@@ -283,7 +283,7 @@
 
 <script>
     try {
-        jsonRequest("../v1/players", function (playersTableJson, error) {
+        jsonRequest("./v1/players", function (playersTableJson, error) {
             if (playersTableJson) {
                 $('.player-table').DataTable({
                     responsive: true,
