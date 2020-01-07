@@ -82,8 +82,8 @@ public class PlayerPageExporter extends FileExporter {
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
         if (!dbSystem.getDatabase().query(PlayerFetchQueries.isPlayerRegistered(playerUUID))) return;
 
-        exportPaths.put("../network", toRelativePathFromRoot("network"));
-        exportPaths.put("../server", toRelativePathFromRoot("server"));
+        exportPaths.put("../network/", toRelativePathFromRoot("network"));
+        exportPaths.put("../server/", toRelativePathFromRoot("server"));
         exportRequiredResources(toDirectory);
 
         Path playerDirectory = toDirectory.resolve("player/" + toFileName(playerName));
