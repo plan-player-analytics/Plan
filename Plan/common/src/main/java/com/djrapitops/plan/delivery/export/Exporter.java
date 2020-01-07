@@ -23,6 +23,7 @@ import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -48,6 +49,7 @@ public class Exporter extends FileExporter {
     private final PlayersPageExporter playersPageExporter;
     private final ServerPageExporter serverPageExporter;
     private final NetworkPageExporter networkPageExporter;
+    private final PluginLogger logger;
 
     private final Set<UUID> failedServers;
 
@@ -59,7 +61,8 @@ public class Exporter extends FileExporter {
             PlayerPageExporter playerPageExporter,
             PlayersPageExporter playersPageExporter,
             ServerPageExporter serverPageExporter,
-            NetworkPageExporter networkPageExporter
+            NetworkPageExporter networkPageExporter,
+            PluginLogger logger
     ) {
         this.files = files;
         this.config = config;
@@ -68,12 +71,20 @@ public class Exporter extends FileExporter {
         this.playersPageExporter = playersPageExporter;
         this.serverPageExporter = serverPageExporter;
         this.networkPageExporter = networkPageExporter;
+        this.logger = logger;
 
         failedServers = new HashSet<>();
     }
 
     private Path getPageExportDirectory() {
         Path exportDirectory = Paths.get(config.get(ExportSettings.HTML_EXPORT_PATH));
+        Path webDirectory = files.getDataDirectory().resolve("web");
+
+        if (exportDirectory.toAbsolutePath().equals(webDirectory.toAbsolutePath())) {
+            logger.warn("'" + ExportSettings.HTML_EXPORT_PATH.getPath() + "' can not be '/Plan/web/' directory, using '/Plan/Analysis Results' as fallback.");
+            exportDirectory = files.getDataDirectory().resolve("Analysis Results");
+        }
+
         return exportDirectory.isAbsolute()
                 ? exportDirectory
                 : files.getDataDirectory().resolve(exportDirectory);
