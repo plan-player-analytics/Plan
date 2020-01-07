@@ -59,12 +59,16 @@ public class PlayersTableJSONResolver implements PageResolver {
             UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
             return JSONCache.getOrCache(DataID.PLAYERS, serverUUID, () -> new JSONResponse(jsonFactory.serverPlayersTableJSON(serverUUID)));
         }
-        // Assume network
+        // Assume players page
         return JSONCache.getOrCache(DataID.PLAYERS, () -> new JSONResponse(jsonFactory.networkPlayersTableJSON()));
     }
 
     @Override
     public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
-        return auth.getWebUser().getPermLevel() <= 0;
+        if (target.getParameter("server").isPresent()) {
+            return auth.getWebUser().getPermLevel() <= 0;
+        }
+        // Assume players page
+        return auth.getWebUser().getPermLevel() <= 1;
     }
 }
