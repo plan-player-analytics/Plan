@@ -110,7 +110,7 @@ public class RequestHandler implements HttpHandler {
                 responseHeaders.set("WWW-Authenticate", response.getHeader("WWW-Authenticate").orElse("Basic realm=\"Plan WebUser (/plan register)\""));
             }
 
-            responseHeaders.set("Access-Control-Allow-Origin", config.getString(WebserverSettings.CORS_ALLOW_ORIGIN));
+            responseHeaders.set("Access-Control-Allow-Origin", config.get(WebserverSettings.CORS_ALLOW_ORIGIN));
             responseHeaders.set("Access-Control-Allow-Methods", "GET, OPTIONS");
             response.setResponseHeaders(responseHeaders);
             response.send(exchange, locale, theme);

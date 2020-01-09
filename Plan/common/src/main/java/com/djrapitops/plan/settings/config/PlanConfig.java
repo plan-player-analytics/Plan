@@ -16,17 +16,18 @@
  */
 package com.djrapitops.plan.settings.config;
 
+import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.settings.config.paths.FormatSettings;
 import com.djrapitops.plan.settings.config.paths.key.Setting;
+import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
-import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.TimeZone;
@@ -40,22 +41,23 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class PlanConfig extends Config {
 
+    private final PlanFiles files;
     private final ExtensionSettings extensionSettings;
     private final WorldAliasSettings worldAliasSettings;
     private final PluginLogger logger;
 
     @Inject
     public PlanConfig(
-            @Named("configFile") File file,
+            PlanFiles files,
             WorldAliasSettings worldAliasSettings,
             PluginLogger logger
     ) {
-        super(file);
+        super(files.getConfigFile());
 
+        this.files = files;
+        this.extensionSettings = new ExtensionSettings(this);
         this.worldAliasSettings = worldAliasSettings;
         this.logger = logger;
-
-        extensionSettings = new ExtensionSettings(this);
     }
 
     public <T> T get(Setting<T> setting) {
@@ -83,38 +85,12 @@ public class PlanConfig extends Config {
         return !isTrue(setting);
     }
 
-    /**
-     * If the settings is a String, this method should be used.
-     *
-     * @return String value of the config setting.
-     */
-    public String getString(Setting<String> setting) {
-        return get(setting);
-    }
-
-    /**
-     * If the settings is a number, this method should be used.
-     *
-     * @return Integer value of the config setting
-     */
-    public int getNumber(Setting<Integer> setting) {
-        return get(setting);
-    }
-
-    public List<String> getStringList(Setting<List<String>> setting) {
-        return get(setting);
-    }
-
-    public ConfigNode getConfigNode(Setting<ConfigNode> setting) {
-        return get(setting);
-    }
-
     public <T> void set(Setting<T> setting, T value) {
         set(setting.getPath(), value);
     }
 
     public TimeZone getTimeZone() {
-        String timeZone = getString(FormatSettings.TIMEZONE);
+        String timeZone = get(FormatSettings.TIMEZONE);
         Optional<TimeZone> foundTZ = TimeZoneUtility.parseTimeZone(timeZone);
         return foundTZ.orElse(TimeZone.getTimeZone(ZoneId.of("UTC")));
     }
@@ -123,6 +99,27 @@ public class PlanConfig extends Config {
         int offset = getTimeZone().getOffset(System.currentTimeMillis());
         int hourMs = (int) TimeUnit.HOURS.toMillis(1L);
         return -offset / hourMs;
+    }
+
+    public Path getPageExportPath() {
+        Path exportDirectory = Paths.get(get(ExportSettings.HTML_EXPORT_PATH));
+        Path webDirectory = files.getDataDirectory().resolve("web");
+
+        if (exportDirectory.toAbsolutePath().equals(webDirectory.toAbsolutePath())) {
+            logger.warn("'" + ExportSettings.HTML_EXPORT_PATH.getPath() + "' can not be '/Plan/web/' directory, using '/Plan/Analysis Results' as fallback.");
+            exportDirectory = files.getDataDirectory().resolve("Analysis Results");
+        }
+
+        return exportDirectory.isAbsolute()
+                ? exportDirectory
+                : files.getDataDirectory().resolve(exportDirectory);
+    }
+
+    public Path getJSONExportPath() {
+        Path exportDirectory = Paths.get(get(ExportSettings.JSON_EXPORT_PATH));
+        return exportDirectory.isAbsolute()
+                ? exportDirectory
+                : files.getDataDirectory().resolve(exportDirectory);
     }
 
     public ExtensionSettings getExtensionSettings() {

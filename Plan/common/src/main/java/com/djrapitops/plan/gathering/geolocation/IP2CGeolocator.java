@@ -67,7 +67,6 @@ public class IP2CGeolocator implements Geolocator {
         try {
             return readIPFromURL(address);
         } catch (IOException e) {
-            e.printStackTrace();
             return Optional.empty();
         }
     }

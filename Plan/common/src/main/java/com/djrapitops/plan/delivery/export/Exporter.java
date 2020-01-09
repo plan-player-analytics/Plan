@@ -22,14 +22,11 @@ import com.djrapitops.plan.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
-import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -42,59 +39,32 @@ import java.util.UUID;
 @Singleton
 public class Exporter extends FileExporter {
 
-    private final PlanFiles files;
     private final PlanConfig config;
     private final PlayerJSONExporter playerJSONExporter;
     private final PlayerPageExporter playerPageExporter;
     private final PlayersPageExporter playersPageExporter;
     private final ServerPageExporter serverPageExporter;
     private final NetworkPageExporter networkPageExporter;
-    private final PluginLogger logger;
 
     private final Set<UUID> failedServers;
 
     @Inject
     public Exporter(
-            PlanFiles files,
             PlanConfig config,
             PlayerJSONExporter playerJSONExporter,
             PlayerPageExporter playerPageExporter,
             PlayersPageExporter playersPageExporter,
             ServerPageExporter serverPageExporter,
-            NetworkPageExporter networkPageExporter,
-            PluginLogger logger
+            NetworkPageExporter networkPageExporter
     ) {
-        this.files = files;
         this.config = config;
         this.playerJSONExporter = playerJSONExporter;
         this.playerPageExporter = playerPageExporter;
         this.playersPageExporter = playersPageExporter;
         this.serverPageExporter = serverPageExporter;
         this.networkPageExporter = networkPageExporter;
-        this.logger = logger;
 
         failedServers = new HashSet<>();
-    }
-
-    private Path getPageExportDirectory() {
-        Path exportDirectory = Paths.get(config.get(ExportSettings.HTML_EXPORT_PATH));
-        Path webDirectory = files.getDataDirectory().resolve("web");
-
-        if (exportDirectory.toAbsolutePath().equals(webDirectory.toAbsolutePath())) {
-            logger.warn("'" + ExportSettings.HTML_EXPORT_PATH.getPath() + "' can not be '/Plan/web/' directory, using '/Plan/Analysis Results' as fallback.");
-            exportDirectory = files.getDataDirectory().resolve("Analysis Results");
-        }
-
-        return exportDirectory.isAbsolute()
-                ? exportDirectory
-                : files.getDataDirectory().resolve(exportDirectory);
-    }
-
-    private Path getJSONExportDirectory() {
-        Path exportDirectory = Paths.get(config.get(ExportSettings.JSON_EXPORT_PATH));
-        return exportDirectory.isAbsolute()
-                ? exportDirectory
-                : files.getDataDirectory().resolve(exportDirectory);
     }
 
     /**
@@ -109,7 +79,7 @@ public class Exporter extends FileExporter {
         if (failedServers.contains(serverUUID) || config.isFalse(ExportSettings.SERVER_PAGE)) return false;
 
         try {
-            Path toDirectory = getPageExportDirectory();
+            Path toDirectory = config.getPageExportPath();
             if (server.isProxy()) {
                 networkPageExporter.export(toDirectory, server);
             } else {
@@ -127,7 +97,7 @@ public class Exporter extends FileExporter {
         if (failedServers.contains(serverUUID) || config.isFalse(ExportSettings.SERVER_JSON)) return false;
 
         try {
-            Path toDirectory = getJSONExportDirectory().resolve(toFileName(server.getName()));
+            Path toDirectory = config.getJSONExportPath().resolve(toFileName(server.getName()));
             if (server.isProxy()) {
                 networkPageExporter.exportJSON(toDirectory, server);
             } else {
@@ -149,7 +119,7 @@ public class Exporter extends FileExporter {
      * @throws ExportException If the export failed due to IO, NotFound or GenerationException.
      */
     public boolean exportPlayerPage(UUID playerUUID, String playerName) throws ExportException {
-        Path toDirectory = getPageExportDirectory();
+        Path toDirectory = config.getPageExportPath();
         if (config.isFalse(ExportSettings.PLAYER_PAGES)) return false;
 
         try {
@@ -161,7 +131,7 @@ public class Exporter extends FileExporter {
     }
 
     public boolean exportPlayersPage() throws ExportException {
-        Path toDirectory = getPageExportDirectory();
+        Path toDirectory = config.getPageExportPath();
         if (config.isFalse(ExportSettings.PLAYERS_PAGE)) return false;
 
         try {
@@ -181,7 +151,7 @@ public class Exporter extends FileExporter {
      * @throws ExportException If the export failed due to IOException.
      */
     public boolean exportPlayerJSON(UUID playerUUID, String playerName) throws ExportException {
-        Path toDirectory = getJSONExportDirectory();
+        Path toDirectory = config.getJSONExportPath();
         if (config.isFalse(ExportSettings.PLAYER_JSON)) return false;
 
         try {

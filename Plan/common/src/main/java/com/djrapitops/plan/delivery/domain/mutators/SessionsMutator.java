@@ -196,7 +196,7 @@ public class SessionsMutator {
     private Predicate<Session> getBetweenPredicate(long after, long before) {
         return session -> {
             Long start = session.getUnsafe(SessionKeys.START);
-            Long end = session.getValue(SessionKeys.END).orElse(System.currentTimeMillis());
+            long end = session.getValue(SessionKeys.END).orElse(System.currentTimeMillis());
             return (after <= start && start <= before) || (after <= end && end <= before);
         };
     }
@@ -265,12 +265,16 @@ public class SessionsMutator {
     ) {
         return Lists.map(sessions, session -> {
             Map<String, Object> sessionMap = new HashMap<>();
-            sessionMap.put("player_name", session.getValue(SessionKeys.NAME).orElse(session.getUnsafe(SessionKeys.UUID).toString()));
-            sessionMap.put("player_url_name", Html.encodeToURL((String) sessionMap.get("player_name")));
-            sessionMap.put("player_uuid", session.getUnsafe(SessionKeys.UUID).toString());
-            sessionMap.put("server_name", session.getValue(SessionKeys.SERVER_NAME).orElse(session.getUnsafe(SessionKeys.SERVER_UUID).toString()));
-            sessionMap.put("server_url_name", Html.encodeToURL((String) sessionMap.get("server_name")));
-            sessionMap.put("server_uuid", session.getUnsafe(SessionKeys.SERVER_UUID).toString());
+            String playerUUID = session.getUnsafe(SessionKeys.UUID).toString();
+            String serverUUID = session.getUnsafe(SessionKeys.SERVER_UUID).toString();
+            String playerName = session.getValue(SessionKeys.NAME).orElse(playerUUID);
+            String serverName = session.getValue(SessionKeys.SERVER_NAME).orElse(serverUUID);
+            sessionMap.put("player_name", playerName);
+            sessionMap.put("player_url_name", Html.encodeToURL(playerName));
+            sessionMap.put("player_uuid", playerUUID);
+            sessionMap.put("server_name", serverName);
+            sessionMap.put("server_url_name", Html.encodeToURL(serverName));
+            sessionMap.put("server_uuid", serverUUID);
             sessionMap.put("name", nameFunction.apply(sessionMap));
             sessionMap.put("start", session.getValue(SessionKeys.START).map(formatters.yearLong()).orElse("-") +
                     (session.supports(SessionKeys.END) ? "" : " (Online)"));
