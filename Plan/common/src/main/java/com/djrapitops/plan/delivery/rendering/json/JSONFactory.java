@@ -205,7 +205,7 @@ public class JSONFactory {
                     TPSMutator tpsWeek = tpsMonth.filterDataBetween(weekAgo, now);
                     double averageTPS = tpsWeek.averageTPS();
                     server.put("avg_tps", averageTPS != -1 ? decimals.apply(averageTPS) : locale.get(HtmlLang.UNIT_NO_DATA).toString());
-                    server.put("low_tps_spikes", tpsWeek.lowTpsSpikeCount(config.getNumber(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
+                    server.put("low_tps_spikes", tpsWeek.lowTpsSpikeCount(config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
                     server.put("downtime", timeAmount.apply(tpsWeek.serverDownTime()));
 
                     Optional<TPS> online = tpsWeek.getLast();

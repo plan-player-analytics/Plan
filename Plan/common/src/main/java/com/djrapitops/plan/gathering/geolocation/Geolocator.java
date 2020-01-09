@@ -46,7 +46,6 @@ public interface Geolocator {
             InetAddress inetAddress = InetAddress.getByName(address);
             return getCountry(inetAddress);
         } catch (UnknownHostException e) {
-            e.printStackTrace();
             return Optional.empty();
         }
     }
