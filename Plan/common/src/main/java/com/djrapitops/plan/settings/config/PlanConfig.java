@@ -25,6 +25,7 @@ import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.ZoneId;
@@ -53,6 +54,21 @@ public class PlanConfig extends Config {
             PluginLogger logger
     ) {
         super(files.getConfigFile());
+
+        this.files = files;
+        this.extensionSettings = new ExtensionSettings(this);
+        this.worldAliasSettings = worldAliasSettings;
+        this.logger = logger;
+    }
+
+    // For testing
+    public PlanConfig(
+            File configFile,
+            PlanFiles files,
+            WorldAliasSettings worldAliasSettings,
+            PluginLogger logger
+    ) {
+        super(configFile);
 
         this.files = files;
         this.extensionSettings = new ExtensionSettings(this);

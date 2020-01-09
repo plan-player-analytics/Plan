@@ -27,7 +27,7 @@ public class FieldFetcher {
         /* static method class*/
     }
 
-    public static <T> List<T> getPublicStaticFields(Class fromClass, Class<T> ofType) throws IllegalAccessException {
+    public static <T> List<T> getPublicStaticFields(Class<?> fromClass, Class<T> ofType) throws IllegalAccessException {
         List<T> list = new ArrayList<>();
         for (Field field : fromClass.getDeclaredFields()) {
             if (!Modifier.isPublic(field.getModifiers())) {
