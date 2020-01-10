@@ -112,13 +112,13 @@ subprojects {
             url = "https://oss.sonatype.org/content/repositories/snapshots"
         }
         maven { // RedisBungee Repository
-            url = "http://repo.md-5.net/content/repositories/snapshots/"
+            url = "https://repo.md-5.net/content/repositories/snapshots/"
         }
         maven { // Velocity Repository
             url = "https://repo.velocitypowered.com/snapshots/"
         }
         maven { // Nukkit Repository
-            url = "http://repo.nukkitx.com/main"
+            url = "https://repo.nukkitx.com/main"
         }
         maven { // bStats Repository
             url = "https://repo.codemc.org/repository/maven-public"
