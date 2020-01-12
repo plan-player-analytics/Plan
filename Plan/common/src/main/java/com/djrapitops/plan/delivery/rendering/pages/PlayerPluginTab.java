@@ -123,8 +123,8 @@ public class PlayerPluginTab implements Comparable<PlayerPluginTab> {
         return wrapInTab(serverName, tabBuilder.toString());
     }
 
-    private String wrapInTab(String tabName, String content) {
-        return "<div class=\"tab\" id=\"" + new Format(tabName).justLetters().lowerCase() + "\"><div class=\"container-fluid mt-4\">" +
+    private String wrapInTab(String serverName, String content) {
+        return "<div class=\"tab\" id=\"plugins-" + new Format(serverName).justLetters().lowerCase() + "\"><div class=\"container-fluid mt-4\">" +
                 // Page heading
                 "<div class=\"d-sm-flex align-items-center justify-content-between mb-4\">" +
                 "<h1 class=\"h3 mb-0 text-gray-800\"><i class=\"sidebar-toggler fa fa-fw fa-bars\"></i>" + serverName + " &middot; Plugins Overview</h1>${backButton}" +

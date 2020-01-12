@@ -78,6 +78,7 @@ public class NetworkPage implements Page {
 
             UUID serverUUID = serverInfo.getServerUUID();
             placeholders.put("networkDisplayName", config.get(ProxySettings.NETWORK_NAME));
+            placeholders.put("serverName", config.get(ProxySettings.NETWORK_NAME));
             placeholders.put("serverUUID", serverUUID.toString());
 
             placeholders.put("gmPieColors", theme.getValue(ThemeVal.GRAPH_GM_PIE));
