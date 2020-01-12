@@ -152,14 +152,14 @@ public class ServerPluginTabs {
             tabBuilder.append(wrapInContainer(extensionInformation, tabsElement));
         }
 
-        return wrapInTab("Overview", tabBuilder.toString());
+        return wrapInTab("Plugins Overview", tabBuilder.toString());
     }
 
     private String wrapInTab(String tabName, String content) {
-        return "<div class=\"tab\" id=\"" + new Format(tabName).justLetters().lowerCase() + "\"><div class=\"container-fluid mt-4\">" +
+        return "<div class=\"tab\" id=\"plugins-" + new Format(tabName).justLetters().lowerCase() + "\"><div class=\"container-fluid mt-4\">" +
                 // Page heading
                 "<div class=\"d-sm-flex align-items-center justify-content-between mb-4\">" +
-                "<h1 class=\"h3 mb-0 text-gray-800\"><i class=\"sidebar-toggler fa fa-fw fa-bars\"></i><span class=\"server-name\"></span> &middot; Plugins Overview</h1>${backButton}" +
+                "<h1 class=\"h3 mb-0 text-gray-800\"><i class=\"sidebar-toggler fa fa-fw fa-bars\"></i>${serverName} &middot; " + tabName + "</h1>${backButton}" +
                 "</div>" +
                 // End Page heading
                 "<div class=\"card-columns\">" + content + "</div></div></div>";
