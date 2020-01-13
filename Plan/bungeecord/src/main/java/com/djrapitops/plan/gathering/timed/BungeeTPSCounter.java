@@ -17,48 +17,71 @@
 package com.djrapitops.plan.gathering.timed;
 
 import com.djrapitops.plan.gathering.SystemUsage;
-import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
+import com.djrapitops.plan.utilities.analysis.Maximum;
+import com.djrapitops.plan.utilities.analysis.TimerAverager;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.concurrent.TimeUnit;
 
 @Singleton
 public class BungeeTPSCounter extends TPSCounter {
 
+    private final DBSystem dbSystem;
+    private final ServerInfo serverInfo;
     private final ServerProperties serverProperties;
+
+    private Maximum.ForInteger playersOnline;
+    private TimerAverager cpu;
+    private TimerAverager ram;
 
     @Inject
     public BungeeTPSCounter(
             DBSystem dbSystem,
             ServerInfo serverInfo,
-            ServerProperties serverProperties,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        super(dbSystem, serverInfo, logger, errorHandler);
-        this.serverProperties = serverProperties;
+        super(logger, errorHandler);
+        this.dbSystem = dbSystem;
+        this.serverInfo = serverInfo;
+        this.serverProperties = serverInfo.getServerProperties();
+
+        playersOnline = new Maximum.ForInteger(0);
+        cpu = new TimerAverager();
+        ram = new TimerAverager();
     }
 
     @Override
-    public void addNewTPSEntry(long nanoTime, long now) {
-        int onlineCount = serverProperties.getOnlinePlayers();
-        TPS tps = TPSBuilder.get()
-                .date(now)
-                .playersOnline(onlineCount)
-                .usedCPU(getCPUUsage())
-                .usedMemory(SystemUsage.getUsedMemory())
-                .entities(-1)
-                .chunksLoaded(-1)
-                .freeDiskSpace(getFreeDiskSpace())
-                .toTPS();
+    public void pulse() {
+        playersOnline.add(serverProperties.getOnlinePlayers());
+        boolean shouldSave = cpu.add(SystemUsage.getAverageSystemLoad()) || ram.add(SystemUsage.getUsedMemory());
+        if (shouldSave) save();
+    }
 
-        history.add(tps);
-        latestPlayersOnline = onlineCount;
+    private void save() {
+        long time = System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(1L);
+        int maxPlayers = playersOnline.getMaxAndReset();
+        double averageCPU = cpu.getAverageAndReset();
+        long averageRAM = (long) ram.getAverageAndReset();
+        long freeDiskSpace = getFreeDiskSpace();
+
+        dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
+                serverInfo.getServerUUID(),
+                TPSBuilder.get()
+                        .date(time)
+                        .playersOnline(maxPlayers)
+                        .usedCPU(averageCPU)
+                        .usedMemory(averageRAM)
+                        .freeDiskSpace(freeDiskSpace)
+                        .toTPS()
+        ));
     }
 }

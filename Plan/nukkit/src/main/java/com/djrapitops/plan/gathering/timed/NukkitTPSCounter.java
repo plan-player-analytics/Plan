@@ -19,118 +19,91 @@ package com.djrapitops.plan.gathering.timed;
 import cn.nukkit.level.Level;
 import com.djrapitops.plan.PlanNukkit;
 import com.djrapitops.plan.gathering.SystemUsage;
-import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
+import com.djrapitops.plan.utilities.analysis.Maximum;
+import com.djrapitops.plan.utilities.analysis.TimerAverager;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
 public class NukkitTPSCounter extends TPSCounter {
 
     protected final PlanNukkit plugin;
+    private final DBSystem dbSystem;
+    private final ServerInfo serverInfo;
     private ServerProperties serverProperties;
-    private long lastCheckNano;
+
+    private TPSCalculator tps;
+    private Maximum.ForInteger playersOnline;
+    private TimerAverager cpu;
+    private TimerAverager ram;
 
     @Inject
     public NukkitTPSCounter(
             PlanNukkit plugin,
             DBSystem dbSystem,
             ServerInfo serverInfo,
-            ServerProperties serverProperties,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        super(dbSystem, serverInfo, logger, errorHandler);
+        super(logger, errorHandler);
         this.plugin = plugin;
-        this.serverProperties = serverProperties;
-        lastCheckNano = -1;
+        this.dbSystem = dbSystem;
+        this.serverInfo = serverInfo;
+        this.serverProperties = serverInfo.getServerProperties();
+
+        tps = new TPSCalculator();
+        playersOnline = new Maximum.ForInteger(0);
+        cpu = new TimerAverager();
+        ram = new TimerAverager();
     }
 
     @Override
-    public void addNewTPSEntry(long nanoTime, long now) {
-        long diff = nanoTime - lastCheckNano;
-
-        lastCheckNano = nanoTime;
-
-        if (diff > nanoTime) { // First run's diff = nanoTime + 1, no calc possible.
-            logger.debug("First run of TPSCountTimer Task.");
-            return;
-        }
-
-        history.add(calculateTPS(diff, now));
+    public void pulse() {
+        Optional<Double> result = tps.pulse();
+        playersOnline.add(getOnlinePlayerCount());
+        cpu.add(SystemUsage.getAverageSystemLoad());
+        ram.add(SystemUsage.getUsedMemory());
+        result.ifPresent(this::save);
     }
 
-    /**
-     * Calculates the TPS
-     *
-     * @param diff The time difference between the last run and the new run
-     * @param now  The time right now
-     * @return the TPS
-     */
-    private TPS calculateTPS(long diff, long now) {
-        double averageCPUUsage = getCPUUsage();
-        long usedMemory = SystemUsage.getUsedMemory();
+    private void save(double averageTPS) {
+        long time = System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(1L);
+        int maxPlayers = playersOnline.getMaxAndReset();
+        double averageCPU = cpu.getAverageAndReset();
+        long averageRAM = (long) ram.getAverageAndReset();
+        int entityCount = getEntityCount();
+        int chunkCount = getLoadedChunks();
         long freeDiskSpace = getFreeDiskSpace();
 
-        int playersOnline = serverProperties.getOnlinePlayers();
-        latestPlayersOnline = playersOnline;
-        int loadedChunks = getLoadedChunks();
-        int entityCount = getEntityCount();
-
-        return getTPS(diff, now, averageCPUUsage, usedMemory, entityCount, loadedChunks, playersOnline, freeDiskSpace);
+        dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
+                serverInfo.getServerUUID(),
+                TPSBuilder.get()
+                        .date(time)
+                        .tps(averageTPS)
+                        .playersOnline(maxPlayers)
+                        .usedCPU(averageCPU)
+                        .usedMemory(averageRAM)
+                        .entities(entityCount)
+                        .chunksLoaded(chunkCount)
+                        .freeDiskSpace(freeDiskSpace)
+                        .toTPS()
+        ));
     }
 
-    protected TPS getTPS(long diff, long now,
-                         double cpuUsage, long usedMemory,
-                         int entityCount, int chunksLoaded,
-                         int playersOnline, long freeDiskSpace) {
-        long difference = diff;
-        if (difference < TimeUnit.SECONDS.toNanos(1L)) { // No tick count above 20
-            difference = TimeUnit.SECONDS.toNanos(1L);
-        }
-
-        long twentySeconds = TimeUnit.SECONDS.toNanos(20L);
-        while (difference > twentySeconds) {
-            // Add 0 TPS since more than 20 ticks has passed.
-            history.add(TPSBuilder.get()
-                    .date(now)
-                    .tps(0)
-                    .playersOnline(playersOnline)
-                    .usedCPU(cpuUsage)
-                    .usedMemory(usedMemory)
-                    .entities(entityCount)
-                    .chunksLoaded(chunksLoaded)
-                    .freeDiskSpace(freeDiskSpace)
-                    .toTPS());
-            difference -= twentySeconds;
-        }
-
-        double tpsN = twentySeconds * 1.0 / difference;
-
-        return TPSBuilder.get()
-                .date(now)
-                .tps(tpsN)
-                .playersOnline(playersOnline)
-                .usedCPU(cpuUsage)
-                .usedMemory(usedMemory)
-                .entities(entityCount)
-                .chunksLoaded(chunksLoaded)
-                .freeDiskSpace(freeDiskSpace)
-                .toTPS();
+    private int getOnlinePlayerCount() {
+        return serverProperties.getOnlinePlayers();
     }
 
-    /**
-     * Gets the amount of loaded chunks
-     *
-     * @return amount of loaded chunks
-     */
     private int getLoadedChunks() {
         int sum = 0;
         for (Level world : plugin.getServer().getLevels().values()) {
@@ -139,11 +112,6 @@ public class NukkitTPSCounter extends TPSCounter {
         return sum;
     }
 
-    /**
-     * Gets the amount of entities on the server for Nukkit
-     *
-     * @return amount of entities
-     */
     protected int getEntityCount() {
         int sum = 0;
         for (Level world : plugin.getServer().getLevels().values()) {

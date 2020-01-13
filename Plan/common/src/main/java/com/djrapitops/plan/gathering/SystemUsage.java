@@ -48,7 +48,7 @@ public class SystemUsage {
      * - On some OSes CPU usage information is not available, and system load average is used instead.
      * - On some OSes system load average is not available.
      *
-     * @return 0.0 to 1.0 if CPU, or system load average, or -1 if nothing is available.
+     * @return 0.0 to 100.0 if CPU, or system load average, or -1 if nothing is available.
      */
     public static double getAverageSystemLoad() {
         double averageUsage;
@@ -64,7 +64,7 @@ public class SystemUsage {
         if (averageUsage < 0) {
             averageUsage = -1; // If unavailable, getSystemLoadAverage() returns -1
         }
-        return averageUsage;
+        return averageUsage * 100.0;
     }
 
     /**

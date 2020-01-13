@@ -22,6 +22,7 @@ import com.djrapitops.plan.gathering.ShutdownHook;
 import com.djrapitops.plan.gathering.timed.BukkitPingCounter;
 import com.djrapitops.plan.gathering.timed.BukkitTPSCounter;
 import com.djrapitops.plan.gathering.timed.PaperTPSCounter;
+import com.djrapitops.plan.gathering.timed.TPSCounter;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -35,7 +36,6 @@ import org.bukkit.Bukkit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -55,7 +55,7 @@ public class BukkitTaskSystem extends TaskSystem {
     private final ConfigStoreTask configStoreTask;
     private final DBCleanTask dbCleanTask;
     private final ExtensionServerMethodCallerTask extensionServerMethodCallerTask;
-    private BukkitTPSCounter tpsCounter;
+    private TPSCounter tpsCounter;
 
     @Inject
     public BukkitTaskSystem(
@@ -139,6 +139,6 @@ public class BukkitTaskSystem extends TaskSystem {
     @Override
     public void disable() {
         super.disable();
-        Optional.ofNullable(Bukkit.getScheduler()).ifPresent(scheduler -> scheduler.cancelTasks(plugin));
+        Bukkit.getScheduler().cancelTasks(plugin);
     }
 }

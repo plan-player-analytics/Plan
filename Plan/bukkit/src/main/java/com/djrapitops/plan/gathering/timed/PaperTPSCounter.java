@@ -17,17 +17,32 @@
 package com.djrapitops.plan.gathering.timed;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.gathering.domain.TPS;
+import com.djrapitops.plan.gathering.SystemUsage;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
+import com.djrapitops.plan.utilities.analysis.Maximum;
+import com.djrapitops.plan.utilities.analysis.TimerAverager;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.bukkit.World;
 
 import javax.inject.Inject;
+import java.util.concurrent.TimeUnit;
 
-public class PaperTPSCounter extends BukkitTPSCounter {
+public class PaperTPSCounter extends TPSCounter {
+
+    private final Plan plugin;
+    private final DBSystem dbSystem;
+    private final ServerInfo serverInfo;
+    private final ServerProperties serverProperties;
+
+    private TimerAverager tps;
+    private Maximum.ForInteger playersOnline;
+    private TimerAverager cpu;
+    private TimerAverager ram;
 
     @Inject
     public PaperTPSCounter(
@@ -37,41 +52,85 @@ public class PaperTPSCounter extends BukkitTPSCounter {
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        super(plugin, dbSystem, serverInfo, serverInfo.getServerProperties(), logger, errorHandler);
+        super(logger, errorHandler);
+        this.plugin = plugin;
+        this.dbSystem = dbSystem;
+        this.serverInfo = serverInfo;
+        serverProperties = serverInfo.getServerProperties();
+
+        tps = new TimerAverager();
+        playersOnline = new Maximum.ForInteger(0);
+        cpu = new TimerAverager();
+        ram = new TimerAverager();
     }
 
     @Override
-    protected TPS getTPS(long diff, long now, double cpuUsage, long usedMemory, int entityCount, int chunksLoaded, int playersOnline, long freeDiskSpace) {
-        double tps;
-        try {
-            tps = plugin.getServer().getTPS()[0];
-        } catch (NoSuchMethodError e) {
-            // This method is from Paper
-            return super.getTPS(diff, now, cpuUsage, usedMemory, entityCount, chunksLoaded, playersOnline, freeDiskSpace);
-        }
-
-        if (tps > 20) {
-            tps = 20;
-        }
-
-        return TPSBuilder.get()
-                .date(now)
-                .tps(tps)
-                .playersOnline(playersOnline)
-                .usedCPU(cpuUsage)
-                .usedMemory(usedMemory)
-                .entities(entityCount)
-                .chunksLoaded(chunksLoaded)
-                .freeDiskSpace(freeDiskSpace)
-                .toTPS();
+    public void pulse() {
+        boolean shouldSave = tps.add(plugin.getServer().getTPS()[0]);
+        playersOnline.add(getOnlinePlayerCount());
+        cpu.add(SystemUsage.getAverageSystemLoad());
+        ram.add(SystemUsage.getUsedMemory());
+        if (shouldSave) save();
     }
 
-    @Override
-    protected int getEntityCount() {
+    private void save() {
+        long time = System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(1L);
+        double averageTPS = tps.getAverageAndReset();
+        int maxPlayers = playersOnline.getMaxAndReset();
+        double averageCPU = cpu.getAverageAndReset();
+        long averageRAM = (long) ram.getAverageAndReset();
+        int entityCount = getEntityCount();
+        int chunkCount = getLoadedChunks();
+        long freeDiskSpace = getFreeDiskSpace();
+
+        dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
+                serverInfo.getServerUUID(),
+                TPSBuilder.get()
+                        .date(time)
+                        .tps(averageTPS)
+                        .playersOnline(maxPlayers)
+                        .usedCPU(averageCPU)
+                        .usedMemory(averageRAM)
+                        .entities(entityCount)
+                        .chunksLoaded(chunkCount)
+                        .freeDiskSpace(freeDiskSpace)
+                        .toTPS()
+        ));
+    }
+
+    private int getOnlinePlayerCount() {
+        return serverProperties.getOnlinePlayers();
+    }
+
+    private int getLoadedChunks() {
+        int sum = 0;
+        for (World world : plugin.getServer().getWorlds()) {
+            sum += world.getLoadedChunks().length;
+        }
+        return sum;
+    }
+
+    private int getEntityCount() {
         try {
-            return plugin.getServer().getWorlds().stream().mapToInt(World::getEntityCount).sum();
+            return getEntitiesPaperWay();
         } catch (BootstrapMethodError | NoSuchMethodError e) {
-            return super.getEntityCount();
+            return getEntitiesSpigotWay();
         }
+    }
+
+    private int getEntitiesSpigotWay() {
+        int sum = 0;
+        for (World world : plugin.getServer().getWorlds()) {
+            sum += world.getEntities().size();
+        }
+        return sum;
+    }
+
+    private int getEntitiesPaperWay() {
+        int sum = 0;
+        for (World world : plugin.getServer().getWorlds()) {
+            sum += world.getEntityCount();
+        }
+        return sum;
     }
 }

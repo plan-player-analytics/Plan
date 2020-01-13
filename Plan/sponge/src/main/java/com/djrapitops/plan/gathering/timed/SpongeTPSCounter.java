@@ -18,82 +18,88 @@ package com.djrapitops.plan.gathering.timed;
 
 import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.gathering.SystemUsage;
-import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
+import com.djrapitops.plan.utilities.analysis.Maximum;
+import com.djrapitops.plan.utilities.analysis.TimerAverager;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.world.World;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
+import java.util.concurrent.TimeUnit;
 
-@Singleton
 public class SpongeTPSCounter extends TPSCounter {
 
-    private long lastCheckNano;
     private final PlanSponge plugin;
-    private ServerProperties serverProperties;
+    private final DBSystem dbSystem;
+    private final ServerInfo serverInfo;
+    private final ServerProperties serverProperties;
+
+    private TimerAverager tps;
+    private Maximum.ForInteger playersOnline;
+    private TimerAverager cpu;
+    private TimerAverager ram;
 
     @Inject
     public SpongeTPSCounter(
             PlanSponge plugin,
             DBSystem dbSystem,
             ServerInfo serverInfo,
-            ServerProperties serverProperties,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        super(dbSystem, serverInfo, logger, errorHandler);
+        super(logger, errorHandler);
         this.plugin = plugin;
-        this.serverProperties = serverProperties;
-        lastCheckNano = -1;
+        this.dbSystem = dbSystem;
+        this.serverInfo = serverInfo;
+        serverProperties = serverInfo.getServerProperties();
+
+        tps = new TimerAverager();
+        playersOnline = new Maximum.ForInteger(0);
+        cpu = new TimerAverager();
+        ram = new TimerAverager();
     }
 
     @Override
-    public void addNewTPSEntry(long nanoTime, long now) {
-        long diff = nanoTime - lastCheckNano;
-
-        lastCheckNano = nanoTime;
-
-        if (diff > nanoTime) { // First run's diff = nanoTime + 1, no calc possible.
-            logger.debug("First run of TPSCountTimer Task.");
-            return;
-        }
-
-        history.add(calculateTPS(now));
+    public void pulse() {
+        boolean shouldSave = tps.add(plugin.getGame().getServer().getTicksPerSecond());
+        playersOnline.add(getOnlinePlayerCount());
+        cpu.add(SystemUsage.getAverageSystemLoad());
+        ram.add(SystemUsage.getUsedMemory());
+        if (shouldSave) save();
     }
 
-    /**
-     * Calculates the TPS
-     *
-     * @param now The time right now
-     * @return the TPS
-     */
-    private TPS calculateTPS(long now) {
-        double averageCPUUsage = getCPUUsage();
-
-        long usedMemory = SystemUsage.getUsedMemory();
-
-        double tps = plugin.getGame().getServer().getTicksPerSecond();
-        int playersOnline = serverProperties.getOnlinePlayers();
-        latestPlayersOnline = playersOnline;
-        int loadedChunks = -1; // getLoadedChunks();
+    private void save() {
+        long time = System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(1L);
+        double averageTPS = tps.getAverageAndReset();
+        int maxPlayers = playersOnline.getMaxAndReset();
+        double averageCPU = cpu.getAverageAndReset();
+        long averageRAM = (long) ram.getAverageAndReset();
         int entityCount = getEntityCount();
+        int chunkCount = -1;
         long freeDiskSpace = getFreeDiskSpace();
 
-        return TPSBuilder.get()
-                .date(now)
-                .tps(tps)
-                .playersOnline(playersOnline)
-                .usedCPU(averageCPUUsage)
-                .usedMemory(usedMemory)
-                .entities(entityCount)
-                .chunksLoaded(loadedChunks)
-                .freeDiskSpace(freeDiskSpace)
-                .toTPS();
+        dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
+                serverInfo.getServerUUID(),
+                TPSBuilder.get()
+                        .date(time)
+                        .tps(averageTPS)
+                        .playersOnline(maxPlayers)
+                        .usedCPU(averageCPU)
+                        .usedMemory(averageRAM)
+                        .entities(entityCount)
+                        .chunksLoaded(chunkCount)
+                        .freeDiskSpace(freeDiskSpace)
+                        .toTPS()
+        ));
+    }
+
+    private int getOnlinePlayerCount() {
+        return serverProperties.getOnlinePlayers();
     }
 
     /**
@@ -116,6 +122,10 @@ public class SpongeTPSCounter extends TPSCounter {
      * @return amount of entities
      */
     private int getEntityCount() {
-        return plugin.getGame().getServer().getWorlds().stream().mapToInt(world -> world.getEntities().size()).sum();
+        int sum = 0;
+        for (World world : plugin.getGame().getServer().getWorlds()) {
+            sum += world.getEntities().size();
+        }
+        return sum;
     }
 }

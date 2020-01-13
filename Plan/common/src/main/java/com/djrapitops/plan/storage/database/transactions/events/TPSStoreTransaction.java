@@ -32,11 +32,18 @@ import java.util.UUID;
 public class TPSStoreTransaction extends Transaction {
 
     private final UUID serverUUID;
-    private final List<TPS> tpsList;
+
+    private TPS tps;
+    private List<TPS> tpsList;
 
     public TPSStoreTransaction(UUID serverUUID, List<TPS> tpsList) {
         this.serverUUID = serverUUID;
         this.tpsList = tpsList;
+    }
+
+    public TPSStoreTransaction(UUID serverUUID, TPS tps) {
+        this.serverUUID = serverUUID;
+        this.tps = tps;
     }
 
     @Override
@@ -46,6 +53,8 @@ public class TPSStoreTransaction extends Transaction {
     }
 
     private TPS calculateTPS() {
+        if (tps != null) return tps;
+
         long lastDate = tpsList.get(tpsList.size() - 1).getDate();
         double averageTPS = tpsList.stream().mapToDouble(TPS::getTicksPerSecond).average().orElse(0);
         int peakPlayersOnline = tpsList.stream().mapToInt(TPS::getPlayers).max().orElse(0);
