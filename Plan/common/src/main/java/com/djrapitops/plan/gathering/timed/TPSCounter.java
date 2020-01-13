@@ -17,17 +17,10 @@
 package com.djrapitops.plan.gathering.timed;
 
 import com.djrapitops.plan.gathering.SystemUsage;
-import com.djrapitops.plan.gathering.domain.TPS;
-import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class responsible for calculating TPS every second.
@@ -36,45 +29,31 @@ import java.util.List;
  */
 public abstract class TPSCounter extends AbsRunnable {
 
-    protected final List<TPS> history;
-
-    protected final DBSystem dbSystem;
-    protected final ServerInfo serverInfo;
     protected final PluginLogger logger;
     protected final ErrorHandler errorHandler;
 
     private boolean diskErrored = false;
 
-    protected int latestPlayersOnline = 0;
-
     public TPSCounter(
-            DBSystem dbSystem,
-            ServerInfo serverInfo,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        this.dbSystem = dbSystem;
-        this.serverInfo = serverInfo;
         this.logger = logger;
         this.errorHandler = errorHandler;
-        history = new ArrayList<>();
+
+        warmUp();
+    }
+
+    public void warmUp() {
+        SystemUsage.getAverageSystemLoad();
+        SystemUsage.getUsedMemory();
+        SystemUsage.getFreeDiskSpace();
     }
 
     @Override
     public void run() {
         try {
-            long nanoTime = System.nanoTime();
-            long now = System.currentTimeMillis();
-
-            addNewTPSEntry(nanoTime, now);
-
-            if (history.size() >= 60) {
-                dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
-                        serverInfo.getServerUUID(),
-                        new ArrayList<>(history)
-                ));
-                history.clear();
-            }
+            pulse();
         } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
             logger.error("TPS Count Task Disabled due to error, reload Plan to re-enable.");
             errorHandler.log(L.ERROR, this.getClass(), e);
@@ -82,15 +61,7 @@ public abstract class TPSCounter extends AbsRunnable {
         }
     }
 
-    public abstract void addNewTPSEntry(long nanoTime, long now);
-
-    public int getLatestPlayersOnline() {
-        return latestPlayersOnline;
-    }
-
-    protected double getCPUUsage() {
-        return SystemUsage.getAverageSystemLoad() * 100.0;
-    }
+    public abstract void pulse();
 
     protected long getFreeDiskSpace() {
         try {

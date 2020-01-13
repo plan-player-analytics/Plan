@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.modules;
 
+import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.gathering.importing.EmptyImportSystem;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.settings.ConfigSystem;
@@ -34,12 +35,15 @@ import dagger.Module;
 public interface ProxySuperClassBindingModule {
 
     @Binds
-    DBSystem bindProxyDatabaseSystem(ProxyDBSystem proxyDBSystem);
+    DBSystem bindDBSystem(ProxyDBSystem dbSystem);
 
     @Binds
-    ConfigSystem bindProxyConfigSystem(ProxyConfigSystem proxyConfigSystem);
+    ConfigSystem bindConfigSystem(ProxyConfigSystem configSystem);
 
     @Binds
     ImportSystem bindImportSystem(EmptyImportSystem emptyImportSystem);
+
+    @Binds
+    ServerSensor<?> bindServerSensor(ServerSensor<Object> sensor);
 
 }

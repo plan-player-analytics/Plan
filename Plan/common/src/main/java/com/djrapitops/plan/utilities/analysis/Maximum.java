@@ -14,26 +14,37 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.identification.properties;
-
-import org.bukkit.Server;
+package com.djrapitops.plan.utilities.analysis;
 
 /**
- * ServerProperties for Bukkit.
+ * Calculates maximum from given values.
  *
  * @author Rsl1122
  */
-public class BukkitServerProperties extends ServerProperties {
+public interface Maximum {
 
-    public BukkitServerProperties(Server server) {
-        super(
-                server.getName(),
-                server.getPort(),
-                server.getVersion(),
-                server.getBukkitVersion(),
-                server::getIp,
-                server.getMaxPlayers()
-        );
+    class ForInteger {
+        private int max;
+        private int startingValue;
+
+        public ForInteger() {
+            this(Integer.MIN_VALUE);
+        }
+
+        public ForInteger(int startingValue) {
+            this.startingValue = startingValue;
+            this.max = startingValue;
+        }
+
+        public void add(int value) {
+            if (value > max) max = value;
+        }
+
+        public int getMaxAndReset() {
+            int result = max;
+            max = startingValue;
+            return result;
+        }
     }
 
 }

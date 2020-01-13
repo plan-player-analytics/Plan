@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -58,6 +59,7 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
     private final Locale locale;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
+    private final ServerSensor<?> serverSensor;
 
     private final Formatter<Long> timeAmount;
     private final Formatter<Double> decimals;
@@ -70,12 +72,14 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
             Locale locale,
             DBSystem dbSystem,
             ServerInfo serverInfo,
+            ServerSensor<?> serverSensor,
             Formatters formatters
     ) {
         this.config = config;
         this.locale = locale;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
+        this.serverSensor = serverSensor;
 
         year = formatters.year();
         day = formatters.dayLong();
@@ -149,7 +153,7 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
 
     private Object getOnlinePlayers(UUID serverUUID, Database db) {
         return serverUUID.equals(serverInfo.getServerUUID())
-                ? serverInfo.getServerProperties().getOnlinePlayers()
+                ? serverSensor.getOnlinePlayerCount()
                 : db.query(TPSQueries.fetchLatestTPSEntryForServer(serverUUID))
                 .map(TPS::getPlayers).map(Object::toString)
                 .orElse(locale.get(GenericLang.UNKNOWN).toString());

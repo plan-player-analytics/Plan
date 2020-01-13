@@ -17,11 +17,13 @@
 package com.djrapitops.plan;
 
 import cn.nukkit.Server;
+import cn.nukkit.level.Level;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.gathering.ShutdownHook;
 import com.djrapitops.plan.gathering.timed.NukkitPingCounter;
-import com.djrapitops.plan.gathering.timed.NukkitTPSCounter;
+import com.djrapitops.plan.gathering.timed.ServerTPSCounter;
+import com.djrapitops.plan.gathering.timed.TPSCounter;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -49,11 +51,11 @@ public class NukkitTaskSystem extends TaskSystem {
     private final ShutdownHook shutdownHook;
     private final JSONCache.CleanTask jsonCacheCleanTask;
     private final LogsFolderCleanTask logsFolderCleanTask;
+    private final TPSCounter tpsCounter;
     private final NukkitPingCounter pingCounter;
     private final ConfigStoreTask configStoreTask;
     private final DBCleanTask dbCleanTask;
     private final ExtensionServerMethodCallerTask extensionServerMethodCallerTask;
-    private NukkitTPSCounter tpsCounter;
 
     @Inject
     public NukkitTaskSystem(
@@ -62,7 +64,7 @@ public class NukkitTaskSystem extends TaskSystem {
             ShutdownHook shutdownHook,
             RunnableFactory runnableFactory,
 
-            NukkitTPSCounter tpsCounter,
+            ServerTPSCounter<Level> tpsCounter,
             NukkitPingCounter pingCounter,
             ExtensionServerMethodCallerTask extensionServerMethodCallerTask,
 

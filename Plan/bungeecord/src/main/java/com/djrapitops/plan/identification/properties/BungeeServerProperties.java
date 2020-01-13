@@ -36,8 +36,7 @@ public class BungeeServerProperties extends ServerProperties {
                 server.getVersion(),
                 server.getVersion(),
                 () -> config.get(ProxySettings.IP),
-                server.getConfig().getPlayerLimit(),
-                RedisCheck.isClassAvailable() ? new RedisPlayersOnlineSupplier() : server::getOnlineCount
+                server.getConfig().getPlayerLimit()
         );
     }
 }

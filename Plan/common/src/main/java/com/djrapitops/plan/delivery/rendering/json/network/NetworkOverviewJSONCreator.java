@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.Trend;
+import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -51,6 +52,7 @@ public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<Str
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
+    private final ServerSensor<?> serverSensor;
     private final Formatter<Long> timeAmount;
     private final Formatter<DateHolder> year;
 
@@ -59,11 +61,13 @@ public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<Str
             PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
+            ServerSensor<?> serverSensor,
             Formatters formatters
     ) {
         this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
+        this.serverSensor = serverSensor;
 
         year = formatters.year();
         day = formatters.dayLong();
@@ -109,7 +113,7 @@ public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<Str
         Integer userCount = db.query(PlayerCountQueries.newPlayerCount(0L, now));
         numbers.put("total_players", userCount);
         numbers.put("regular_players", db.query(NetworkActivityIndexQueries.fetchRegularPlayerCount(now, playtimeThreshold)));
-        numbers.put("online_players", getOnlinePlayers());
+        numbers.put("online_players", serverSensor.getOnlinePlayerCount());
         UUID serverUUID = serverInfo.getServerUUID();
         Optional<DateObj<Integer>> lastPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, twoDaysAgo));
         Optional<DateObj<Integer>> allTimePeak = db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID));
@@ -125,10 +129,6 @@ public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<Str
         numbers.put("session_length_avg", sessionCount != 0 ? timeAmount.apply(totalPlaytime / sessionCount) : "-");
 
         return numbers;
-    }
-
-    private Object getOnlinePlayers() {
-        return serverInfo.getServerProperties().getOnlinePlayers();
     }
 
     private Map<String, Object> createWeeksMap() {

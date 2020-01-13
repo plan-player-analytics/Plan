@@ -59,20 +59,20 @@ public class NavLink {
     }
 
     public String toHtml() {
-        String tabID = getTabID();
+        String usedId = getUsedTabId();
         if (collapsed) {
-            return "<a class=\"collapse-item nav-button\" href=\"#tab-" + tabID + "\">" +
+            return "<a class=\"collapse-item nav-button\" href=\"#tab-" + usedId + "\">" +
                     icon.toHtml() + ' ' +
                     tabName + "</a>";
         }
         return "<li class=\"nav-item nav-button\">" +
-                "<a class=\"nav-link\" href=\"#tab-" + tabID + "\">" +
+                "<a class=\"nav-link\" href=\"#tab-" + usedId + "\">" +
                 icon.toHtml() +
                 "<span>" + tabName + "</span></a>" +
                 "</li>";
     }
 
-    private String getTabID() {
+    private String getUsedTabId() {
         return format(tabID != null ? tabID : tabName);
     }
 }

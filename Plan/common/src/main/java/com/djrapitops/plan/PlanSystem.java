@@ -40,6 +40,8 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.version.VersionCheckSystem;
+import com.djrapitops.plugin.benchmarking.Benchmark;
+import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -79,6 +81,7 @@ public class PlanSystem implements SubSystem {
     private final QueryServiceImplementation queryService;
     private final SettingsServiceImplementation settingsService;
     private final PluginLogger logger;
+    private final Timings timings;
     private final ErrorHandler errorHandler;
 
     @Inject
@@ -101,7 +104,7 @@ public class PlanSystem implements SubSystem {
             QueryServiceImplementation queryService,
             SettingsServiceImplementation settingsService,
             PluginLogger logger,
-            ErrorHandler errorHandler,
+            Timings timings, ErrorHandler errorHandler,
             PlanAPI.PlanAPIHolder apiHolder
     ) {
         this.files = files;
@@ -122,6 +125,7 @@ public class PlanSystem implements SubSystem {
         this.queryService = queryService;
         this.settingsService = settingsService;
         this.logger = logger;
+        this.timings = timings;
         this.errorHandler = errorHandler;
 
         logger.log(L.INFO_COLOR,
@@ -179,7 +183,13 @@ public class PlanSystem implements SubSystem {
 
     private void enableSystems(SubSystem... systems) throws EnableException {
         for (SubSystem system : systems) {
+            logger.debug("Enabling: " + system.getClass().getSimpleName());
+            timings.start("subsystem-enable");
             system.enable();
+            timings.end("subsystem-enable")
+                    .map(Benchmark::toDurationString)
+                    .map(duration -> "Took " + duration)
+                    .ifPresent(logger::debug);
         }
     }
 

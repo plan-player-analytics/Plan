@@ -14,26 +14,37 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.identification.properties;
-
-import org.bukkit.Server;
+package com.djrapitops.plan.utilities.analysis;
 
 /**
- * ServerProperties for Bukkit.
+ * Utility for averaging data.
  *
  * @author Rsl1122
  */
-public class BukkitServerProperties extends ServerProperties {
+public class Average {
 
-    public BukkitServerProperties(Server server) {
-        super(
-                server.getName(),
-                server.getPort(),
-                server.getVersion(),
-                server.getBukkitVersion(),
-                server::getIp,
-                server.getMaxPlayers()
-        );
+    private double total;
+    private int count;
+
+    public Average() {
+        total = 0.0;
+        count = 0;
     }
 
+    /**
+     * Add a new entry and check if save should be done.
+     *
+     * @param value TPS value
+     */
+    public void add(double value) {
+        total += value;
+        count++;
+    }
+
+    public double getAverageAndReset() {
+        double average = total / count;
+        total = 0.0;
+        count = 0;
+        return average;
+    }
 }

@@ -19,7 +19,8 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.gathering.timed.BungeePingCounter;
-import com.djrapitops.plan.gathering.timed.BungeeTPSCounter;
+import com.djrapitops.plan.gathering.timed.ProxyTPSCounter;
+import com.djrapitops.plan.gathering.timed.TPSCounter;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -43,7 +44,7 @@ public class BungeeTaskSystem extends TaskSystem {
 
     private final PlanBungee plugin;
     private final PlanConfig config;
-    private final BungeeTPSCounter tpsCounter;
+    private final TPSCounter tpsCounter;
     private final BungeePingCounter pingCounter;
     private final LogsFolderCleanTask logsFolderCleanTask;
     private final NetworkConfigStoreTask networkConfigStoreTask;
@@ -56,7 +57,7 @@ public class BungeeTaskSystem extends TaskSystem {
             PlanBungee plugin,
             PlanConfig config,
             RunnableFactory runnableFactory,
-            BungeeTPSCounter tpsCounter,
+            ProxyTPSCounter tpsCounter,
             BungeePingCounter pingCounter,
             LogsFolderCleanTask logsFolderCleanTask,
             NetworkConfigStoreTask networkConfigStoreTask,

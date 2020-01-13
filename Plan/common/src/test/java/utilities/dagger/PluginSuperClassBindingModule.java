@@ -19,6 +19,7 @@ package utilities.dagger;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.exceptions.EnableException;
+import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.gathering.listeners.ListenerSystem;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -28,15 +29,16 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.H2DB;
 import com.djrapitops.plan.storage.database.MySQLDB;
 import com.djrapitops.plan.storage.database.SQLiteDB;
-import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.RunnableFactory;
 import dagger.Module;
 import dagger.Provides;
+import org.mockito.Mockito;
 import utilities.mocks.TestProcessing;
 
 import javax.inject.Singleton;
+
+import static org.mockito.Mockito.when;
 
 /**
  * Module for binding Bukkit specific classes to the interface implementations.
@@ -54,9 +56,7 @@ public class PluginSuperClassBindingModule {
             SQLiteDB.Factory sqLiteDB,
             H2DB.Factory h2Factory,
             MySQLDB mySQLDB,
-            PluginLogger logger,
-            Timings timings,
-            ErrorHandler errorHandler
+            PluginLogger logger
     ) {
         return new DBSystem(locale, sqLiteDB, h2Factory, logger) {
             @Override
@@ -103,6 +103,17 @@ public class PluginSuperClassBindingModule {
     @Singleton
     Processing provideProcessing(TestProcessing testProcessing) {
         return testProcessing;
+    }
+
+    @Provides
+    @Singleton
+    ServerSensor<?> provideServerSensor() {
+        ServerSensor<?> mock = Mockito.mock(ServerSensor.class);
+        when(mock.getWorlds()).thenCallRealMethod();
+        when(mock.getChunkCount(Mockito.any())).thenCallRealMethod();
+        when(mock.getEntityCount(Mockito.any())).thenCallRealMethod();
+        when(mock.getTPS()).thenCallRealMethod();
+        return mock;
     }
 
 }

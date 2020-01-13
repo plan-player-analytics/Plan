@@ -79,7 +79,6 @@ import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.nio.file.Files;
-import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -439,7 +438,7 @@ public interface DatabaseTest {
     }
 
     @Test
-    default void testRemovalEverything() throws NoSuchAlgorithmException {
+    default void testRemovalEverything() {
         saveAllData();
 
         db().executeTransaction(new RemoveEverythingTransaction());
@@ -456,7 +455,7 @@ public interface DatabaseTest {
         assertTrue(db().query(WebUserQueries.fetchAllPlanWebUsers()).isEmpty());
     }
 
-    default <T extends Map> void assertQueryIsEmpty(Database database, Query<T> query) {
+    default <T extends Map<?, ?>> void assertQueryIsEmpty(Database database, Query<T> query) {
         assertTrue(database.query(query).isEmpty());
     }
 
@@ -782,7 +781,7 @@ public interface DatabaseTest {
     }
 
     @Test
-    default void testNewContainerForPlayer() throws NoSuchAlgorithmException {
+    default void testNewContainerForPlayer() {
         saveAllData();
 
         long start = System.nanoTime();
@@ -837,7 +836,7 @@ public interface DatabaseTest {
     }
 
     @Test
-    default void playerContainerSupportsAllPlayerKeys() throws NoSuchAlgorithmException, IllegalAccessException {
+    default void playerContainerSupportsAllPlayerKeys() throws IllegalAccessException {
         saveAllData();
 
         PlayerContainer playerContainer = db().query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
@@ -846,7 +845,7 @@ public interface DatabaseTest {
 
         List<String> unsupported = new ArrayList<>();
         List<Key> keys = FieldFetcher.getPublicStaticFields(PlayerKeys.class, Key.class);
-        for (Key key : keys) {
+        for (Key<?> key : keys) {
             if (!playerContainer.supports(key)) {
                 unsupported.add(key.getKeyName());
             }
@@ -872,14 +871,14 @@ public interface DatabaseTest {
     }
 
     @Test
-    default void serverContainerSupportsAllServerKeys() throws NoSuchAlgorithmException, IllegalAccessException {
+    default void serverContainerSupportsAllServerKeys() throws IllegalAccessException {
         saveAllData();
 
         ServerContainer serverContainer = db().query(ContainerFetchQueries.fetchServerContainer(serverUUID()));
 
         List<String> unsupported = new ArrayList<>();
         List<Key> keys = FieldFetcher.getPublicStaticFields(ServerKeys.class, Key.class);
-        for (Key key : keys) {
+        for (Key<?> key : keys) {
             if (!serverContainer.supports(key)) {
                 unsupported.add(key.getKeyName());
             }
@@ -963,7 +962,7 @@ public interface DatabaseTest {
         List<TPS> tpsData = RandomData.randomTPS();
 
         for (TPS tps : tpsData) {
-            db().executeTransaction(new TPSStoreTransaction(serverUUID(), Collections.singletonList(tps)));
+            db().executeTransaction(new TPSStoreTransaction(serverUUID(), tps));
         }
 
         tpsData.sort(Comparator.comparingInt(TPS::getPlayers));

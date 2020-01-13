@@ -19,8 +19,9 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.gathering.ShutdownHook;
+import com.djrapitops.plan.gathering.timed.ServerTPSCounter;
 import com.djrapitops.plan.gathering.timed.SpongePingCounter;
-import com.djrapitops.plan.gathering.timed.SpongeTPSCounter;
+import com.djrapitops.plan.gathering.timed.TPSCounter;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -31,6 +32,7 @@ import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.RunnableFactory;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.world.World;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,7 +44,7 @@ public class SpongeTaskSystem extends TaskSystem {
     private final PlanSponge plugin;
     private final PlanConfig config;
     private final ShutdownHook shutdownHook;
-    private final SpongeTPSCounter tpsCounter;
+    private final TPSCounter tpsCounter;
     private final JSONCache.CleanTask jsonCacheCleanTask;
     private final SpongePingCounter pingCounter;
     private final LogsFolderCleanTask logsFolderCleanTask;
@@ -57,7 +59,7 @@ public class SpongeTaskSystem extends TaskSystem {
             ShutdownHook shutdownHook,
             RunnableFactory runnableFactory,
 
-            SpongeTPSCounter tpsCounter,
+            ServerTPSCounter<World> tpsCounter,
             SpongePingCounter pingCounter,
             ExtensionServerMethodCallerTask extensionServerMethodCallerTask,
 

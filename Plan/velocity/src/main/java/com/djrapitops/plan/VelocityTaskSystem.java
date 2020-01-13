@@ -18,8 +18,9 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
+import com.djrapitops.plan.gathering.timed.ProxyTPSCounter;
+import com.djrapitops.plan.gathering.timed.TPSCounter;
 import com.djrapitops.plan.gathering.timed.VelocityPingCounter;
-import com.djrapitops.plan.gathering.timed.VelocityTPSCounter;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -43,7 +44,7 @@ public class VelocityTaskSystem extends TaskSystem {
 
     private final PlanVelocity plugin;
     private final PlanConfig config;
-    private final VelocityTPSCounter tpsCounter;
+    private final TPSCounter tpsCounter;
     private final VelocityPingCounter pingCounter;
     private final LogsFolderCleanTask logsFolderCleanTask;
     private final NetworkConfigStoreTask networkConfigStoreTask;
@@ -56,7 +57,7 @@ public class VelocityTaskSystem extends TaskSystem {
             PlanVelocity plugin,
             PlanConfig config,
             RunnableFactory runnableFactory,
-            VelocityTPSCounter tpsCounter,
+            ProxyTPSCounter tpsCounter,
             VelocityPingCounter pingCounter,
             LogsFolderCleanTask logsFolderCleanTask,
             NetworkConfigStoreTask networkConfigStoreTask,

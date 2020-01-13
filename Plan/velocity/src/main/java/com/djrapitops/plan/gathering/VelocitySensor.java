@@ -14,26 +14,31 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.identification.properties;
+package com.djrapitops.plan.gathering;
 
-import org.bukkit.Server;
+import com.djrapitops.plan.PlanVelocity;
 
-/**
- * ServerProperties for Bukkit.
- *
- * @author Rsl1122
- */
-public class BukkitServerProperties extends ServerProperties {
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.function.IntSupplier;
 
-    public BukkitServerProperties(Server server) {
-        super(
-                server.getName(),
-                server.getPort(),
-                server.getVersion(),
-                server.getBukkitVersion(),
-                server::getIp,
-                server.getMaxPlayers()
-        );
+@Singleton
+public class VelocitySensor implements ServerSensor<Object> {
+
+    private final IntSupplier onlinePlayerCountSupplier;
+
+    @Inject
+    public VelocitySensor(PlanVelocity plugin) {
+        onlinePlayerCountSupplier = plugin.getProxy()::getPlayerCount;
     }
 
+    @Override
+    public boolean supportsDirectTPS() {
+        return false;
+    }
+
+    @Override
+    public int getOnlinePlayerCount() {
+        return onlinePlayerCountSupplier.getAsInt();
+    }
 }

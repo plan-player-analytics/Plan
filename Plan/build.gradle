@@ -54,6 +54,8 @@ allprojects {
     }
 }
 
+println "Building artifact for version $fullVersion"
+
 subprojects {
     // Build plugins
     apply plugin: "java"
