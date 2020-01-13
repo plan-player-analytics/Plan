@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.rendering.html.structure;
 
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
-import com.djrapitops.plugin.utilities.Format;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Html utility for creating navigation link html.
@@ -27,29 +27,39 @@ import com.djrapitops.plugin.utilities.Format;
 public class NavLink {
 
     private final Icon icon;
+    private String tabID;
     private final String tabName;
     private final boolean collapsed;
 
-    public NavLink(Icon icon, String tabName) {
-        this(icon, tabName, false);
-    }
-
-    private NavLink(Icon icon, String tabName, boolean collapsed) {
+    private NavLink(Icon icon, String tabID, String tabName, boolean collapsed) {
         this.icon = icon;
+        this.tabID = tabID;
         this.tabName = tabName;
         this.collapsed = collapsed;
     }
 
     public static NavLink main(Icon icon, String tabName) {
-        return new NavLink(icon, tabName, false);
+        return new NavLink(icon, null, tabName, false);
+    }
+
+    public static NavLink main(Icon icon, String tabID, String tabName) {
+        return new NavLink(icon, tabID, tabName, false);
     }
 
     public static NavLink collapsed(Icon icon, String tabName) {
-        return new NavLink(icon, tabName, true);
+        return new NavLink(icon, null, tabName, true);
+    }
+
+    public static NavLink collapsed(Icon icon, String tabID, String tabName) {
+        return new NavLink(icon, tabID, tabName, true);
+    }
+
+    public static String format(String id) {
+        return StringUtils.replaceChars(StringUtils.lowerCase(id), ' ', '-');
     }
 
     public String toHtml() {
-        String tabID = new Format(tabName).justLetters().lowerCase().toString();
+        String tabID = getTabID();
         if (collapsed) {
             return "<a class=\"collapse-item nav-button\" href=\"#tab-" + tabID + "\">" +
                     icon.toHtml() + ' ' +
@@ -62,4 +72,7 @@ public class NavLink {
                 "</li>";
     }
 
+    private String getTabID() {
+        return format(tabID != null ? tabID : tabName);
+    }
 }
