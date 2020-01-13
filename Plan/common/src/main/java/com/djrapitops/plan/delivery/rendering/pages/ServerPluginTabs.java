@@ -26,7 +26,6 @@ import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.results.*;
 import com.djrapitops.plan.utilities.java.Lists;
-import com.djrapitops.plugin.utilities.Format;
 
 import java.util.*;
 
@@ -85,15 +84,14 @@ public class ServerPluginTabs {
     }
 
     private void generate() {
+        String tabID = "plugins-overview";
         if (serverData.isEmpty()) {
-            String tabName = "Overview (No Data)";
-            nav = new StringBuilder(new NavLink(Icon.called("cubes").build(), tabName).toHtml());
-            tab = wrapInTab(
-                    tabName,
-                    "<div class=\"col-md-12\"><div class=\"card\"><div class=\"card-body\"><p>No Extension Data</p></div></div></div>"
+            nav = new StringBuilder(NavLink.main(Icon.called("cubes").build(), tabID, "Overview (No Data)").toHtml());
+            tab = wrapInWideColumnTab(
+                    tabID, "<div class=\"card\"><div class=\"card-body\"><p>No Extension Data</p></div></div>"
             );
         } else {
-            nav = new StringBuilder(new NavLink(Icon.called("cubes").build(), "Overview").toHtml());
+            nav = new StringBuilder(NavLink.main(Icon.called("cubes").build(), tabID, "Overview").toHtml());
             tab = generatePageTabs();
         }
     }
@@ -125,14 +123,15 @@ public class ServerPluginTabs {
                 ).toHtmlFull();
             }
 
-            tabBuilder.append(wrapInTab(extensionInformation.getPluginName(), wrapInContainer(extensionInformation, tabsElement)));
-            nav.append(new NavLink(Icon.fromExtensionIcon(extensionInformation.getIcon()), extensionInformation.getPluginName()).toHtml());
+            String tabName = extensionInformation.getPluginName();
+            tabBuilder.append(wrapInWideColumnTab(tabName, wrapInContainer(extensionInformation, tabsElement)));
+            nav.append(NavLink.main(Icon.fromExtensionIcon(extensionInformation.getIcon()), "plugins-" + tabName, tabName).toHtml());
         }
         return tabBuilder.toString();
     }
 
     private String generateOverviewTab() {
-        StringBuilder tabBuilder = new StringBuilder();
+        StringBuilder contentBuilder = new StringBuilder();
 
         for (ExtensionData datum : serverData) {
             ExtensionInformation extensionInformation = datum.getExtensionInformation();
@@ -149,17 +148,27 @@ public class ServerPluginTabs {
                 ).toHtmlFull();
             }
 
-            tabBuilder.append(wrapInContainer(extensionInformation, tabsElement));
+            contentBuilder.append(wrapInContainer(extensionInformation, tabsElement));
         }
 
-        return wrapInTab("Plugins Overview", tabBuilder.toString());
+        return wrapInOverviewTab(contentBuilder.toString());
     }
 
-    private String wrapInTab(String tabName, String content) {
-        return "<div class=\"tab\" id=\"plugins-" + new Format(tabName).justLetters().lowerCase() + "\"><div class=\"container-fluid mt-4\">" +
+    private String wrapInWideColumnTab(String tabName, String content) {
+        return "<div class=\"tab\" id=\"" + NavLink.format("plugins-" + tabName) + "\"><div class=\"container-fluid mt-4\">" +
                 // Page heading
                 "<div class=\"d-sm-flex align-items-center justify-content-between mb-4\">" +
                 "<h1 class=\"h3 mb-0 text-gray-800\"><i class=\"sidebar-toggler fa fa-fw fa-bars\"></i>${serverName} &middot; " + tabName + "</h1>${backButton}" +
+                "</div>" +
+                // End Page heading
+                "<div class=\"row\"><div class=\"col-md-12\">" + content + "</div></div></div></div>";
+    }
+
+    private String wrapInOverviewTab(String content) {
+        return "<div class=\"tab\" id=\"" + NavLink.format("plugins-overview") + "\"><div class=\"container-fluid mt-4\">" +
+                // Page heading
+                "<div class=\"d-sm-flex align-items-center justify-content-between mb-4\">" +
+                "<h1 class=\"h3 mb-0 text-gray-800\"><i class=\"sidebar-toggler fa fa-fw fa-bars\"></i>${serverName} &middot; Plugins Overview</h1>${backButton}" +
                 "</div>" +
                 // End Page heading
                 "<div class=\"card-columns\">" + content + "</div></div></div>";
