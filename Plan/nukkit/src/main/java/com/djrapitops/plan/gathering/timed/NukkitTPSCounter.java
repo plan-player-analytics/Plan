@@ -18,6 +18,7 @@ package com.djrapitops.plan.gathering.timed;
 
 import cn.nukkit.level.Level;
 import com.djrapitops.plan.PlanNukkit;
+import com.djrapitops.plan.gathering.SystemUsage;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -75,7 +76,7 @@ public class NukkitTPSCounter extends TPSCounter {
      */
     private TPS calculateTPS(long diff, long now) {
         double averageCPUUsage = getCPUUsage();
-        long usedMemory = getUsedMemory();
+        long usedMemory = SystemUsage.getUsedMemory();
         long freeDiskSpace = getFreeDiskSpace();
 
         int playersOnline = serverProperties.getOnlinePlayers();

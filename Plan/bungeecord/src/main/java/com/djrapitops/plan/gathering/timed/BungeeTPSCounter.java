@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.gathering.timed;
 
+import com.djrapitops.plan.gathering.SystemUsage;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -51,7 +52,7 @@ public class BungeeTPSCounter extends TPSCounter {
                 .date(now)
                 .playersOnline(onlineCount)
                 .usedCPU(getCPUUsage())
-                .usedMemory(getUsedMemory())
+                .usedMemory(SystemUsage.getUsedMemory())
                 .entities(-1)
                 .chunksLoaded(-1)
                 .freeDiskSpace(getFreeDiskSpace())
