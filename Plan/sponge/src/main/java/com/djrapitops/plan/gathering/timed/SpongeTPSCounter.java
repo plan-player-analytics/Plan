@@ -17,6 +17,7 @@
 package com.djrapitops.plan.gathering.timed;
 
 import com.djrapitops.plan.PlanSponge;
+import com.djrapitops.plan.gathering.SystemUsage;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -74,7 +75,7 @@ public class SpongeTPSCounter extends TPSCounter {
     private TPS calculateTPS(long now) {
         double averageCPUUsage = getCPUUsage();
 
-        long usedMemory = getUsedMemory();
+        long usedMemory = SystemUsage.getUsedMemory();
 
         double tps = plugin.getGame().getServer().getTicksPerSecond();
         int playersOnline = serverProperties.getOnlinePlayers();
