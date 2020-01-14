@@ -40,6 +40,14 @@ public abstract class TPSCounter extends AbsRunnable {
     ) {
         this.logger = logger;
         this.errorHandler = errorHandler;
+
+        warmUp();
+    }
+
+    public void warmUp() {
+        SystemUsage.getAverageSystemLoad();
+        SystemUsage.getUsedMemory();
+        SystemUsage.getFreeDiskSpace();
     }
 
     @Override
