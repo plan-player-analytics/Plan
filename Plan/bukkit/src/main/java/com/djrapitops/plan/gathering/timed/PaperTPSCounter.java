@@ -81,8 +81,12 @@ public class PaperTPSCounter extends TPSCounter {
         int maxPlayers = playersOnline.getMaxAndReset();
         double averageCPU = cpu.getAverageAndReset();
         long averageRAM = (long) ram.getAverageAndReset();
-        int entityCount = getEntityCount();
-        int chunkCount = getLoadedChunks();
+        int entityCount = 0;
+        int chunkCount = 0;
+        for (World world : plugin.getServer().getWorlds()) {
+            entityCount += getEntityCount(world);
+            chunkCount += getChunkCount(world);
+        }
         long freeDiskSpace = getFreeDiskSpace();
 
         dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
@@ -104,35 +108,35 @@ public class PaperTPSCounter extends TPSCounter {
         return serverProperties.getOnlinePlayers();
     }
 
-    private int getLoadedChunks() {
-        int sum = 0;
-        for (World world : plugin.getServer().getWorlds()) {
-            sum += world.getLoadedChunks().length;
-        }
-        return sum;
-    }
-
-    private int getEntityCount() {
+    private int getChunkCount(World world) {
         try {
-            return getEntitiesPaperWay();
+            return getChunkCountPaperWay(world);
         } catch (BootstrapMethodError | NoSuchMethodError e) {
-            return getEntitiesSpigotWay();
+            return getChunkCountSpigotWay(world);
         }
     }
 
-    private int getEntitiesSpigotWay() {
-        int sum = 0;
-        for (World world : plugin.getServer().getWorlds()) {
-            sum += world.getEntities().size();
-        }
-        return sum;
+    private int getChunkCountSpigotWay(World world) {
+        return world.getLoadedChunks().length;
     }
 
-    private int getEntitiesPaperWay() {
-        int sum = 0;
-        for (World world : plugin.getServer().getWorlds()) {
-            sum += world.getEntityCount();
+    private int getChunkCountPaperWay(World world) {
+        return world.getChunkCount();
+    }
+
+    private int getEntityCount(World world) {
+        try {
+            return getEntitiesPaperWay(world);
+        } catch (BootstrapMethodError | NoSuchMethodError e) {
+            return getEntitiesSpigotWay(world);
         }
-        return sum;
+    }
+
+    private int getEntitiesSpigotWay(World world) {
+        return world.getEntities().size();
+    }
+
+    private int getEntitiesPaperWay(World world) {
+        return world.getEntityCount();
     }
 }

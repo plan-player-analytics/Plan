@@ -82,8 +82,12 @@ public class NukkitTPSCounter extends TPSCounter {
         int maxPlayers = playersOnline.getMaxAndReset();
         double averageCPU = cpu.getAverageAndReset();
         long averageRAM = (long) ram.getAverageAndReset();
-        int entityCount = getEntityCount();
-        int chunkCount = getLoadedChunks();
+        int entityCount = 0;
+        int chunkCount = 0;
+        for (Level world : plugin.getServer().getLevels().values()) {
+            entityCount += getEntityCount(world);
+            chunkCount += getChunkCount(world);
+        }
         long freeDiskSpace = getFreeDiskSpace();
 
         dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
@@ -101,23 +105,15 @@ public class NukkitTPSCounter extends TPSCounter {
         ));
     }
 
+    private int getChunkCount(Level world) {
+        return world.getChunks().size();
+    }
+
     private int getOnlinePlayerCount() {
         return serverProperties.getOnlinePlayers();
     }
 
-    private int getLoadedChunks() {
-        int sum = 0;
-        for (Level world : plugin.getServer().getLevels().values()) {
-            sum += world.getChunks().size();
-        }
-        return sum;
-    }
-
-    protected int getEntityCount() {
-        int sum = 0;
-        for (Level world : plugin.getServer().getLevels().values()) {
-            sum += world.getEntities().length;
-        }
-        return sum;
+    protected int getEntityCount(Level world) {
+        return world.getEntities().length;
     }
 }

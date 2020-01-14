@@ -82,8 +82,12 @@ public class BukkitTPSCounter extends TPSCounter {
         int maxPlayers = playersOnline.getMaxAndReset();
         double averageCPU = cpu.getAverageAndReset();
         long averageRAM = (long) ram.getAverageAndReset();
-        int entityCount = getEntityCount();
-        int chunkCount = getLoadedChunks();
+        int entityCount = 0;
+        int chunkCount = 0;
+        for (World world : plugin.getServer().getWorlds()) {
+            entityCount += getEntityCount(world);
+            chunkCount += getChunkCount(world);
+        }
         long freeDiskSpace = getFreeDiskSpace();
 
         dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
@@ -101,23 +105,15 @@ public class BukkitTPSCounter extends TPSCounter {
         ));
     }
 
+    private int getChunkCount(World world) {
+        return world.getLoadedChunks().length;
+    }
+
     private int getOnlinePlayerCount() {
         return serverProperties.getOnlinePlayers();
     }
 
-    private int getLoadedChunks() {
-        int sum = 0;
-        for (World world : plugin.getServer().getWorlds()) {
-            sum += world.getLoadedChunks().length;
-        }
-        return sum;
-    }
-
-    protected int getEntityCount() {
-        int sum = 0;
-        for (World world : plugin.getServer().getWorlds()) {
-            sum += world.getEntities().size();
-        }
-        return sum;
+    protected int getEntityCount(World world) {
+        return world.getEntities().size();
     }
 }

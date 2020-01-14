@@ -28,9 +28,11 @@ import com.djrapitops.plan.utilities.analysis.Maximum;
 import com.djrapitops.plan.utilities.analysis.TimerAverage;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
+import org.spongepowered.api.world.Chunk;
 import org.spongepowered.api.world.World;
 
 import javax.inject.Inject;
+import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 public class SpongeTPSCounter extends TPSCounter {
@@ -81,8 +83,12 @@ public class SpongeTPSCounter extends TPSCounter {
         int maxPlayers = playersOnline.getMaxAndReset();
         double averageCPU = cpu.getAverageAndReset();
         long averageRAM = (long) ram.getAverageAndReset();
-        int entityCount = getEntityCount();
+        int entityCount = 0;
         int chunkCount = -1;
+        for (World world : plugin.getGame().getServer().getWorlds()) {
+            entityCount += getEntityCount(world);
+            // DISABLED (lag) chunkCount += getChunkCount(world);
+        }
         long freeDiskSpace = getFreeDiskSpace();
 
         dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
@@ -100,34 +106,21 @@ public class SpongeTPSCounter extends TPSCounter {
         ));
     }
 
+    private int getChunkCount(World world) {
+        Iterator<Chunk> chunks = world.getLoadedChunks().iterator();
+        int count = 0;
+        while (chunks.hasNext()) {
+            chunks.next();
+            count++;
+        }
+        return count;
+    }
+
     private int getOnlinePlayerCount() {
         return serverProperties.getOnlinePlayers();
     }
 
-    /**
-     * Gets the amount of loaded chunks
-     *
-     * @return amount of loaded chunks
-     */
-    private int getLoadedChunks() {
-        // DISABLED
-        int loaded = 0;
-        for (World world : plugin.getGame().getServer().getWorlds()) {
-            loaded += world.getLoadedChunks().spliterator().estimateSize();
-        }
-        return loaded;
-    }
-
-    /**
-     * Gets the amount of entities on the server
-     *
-     * @return amount of entities
-     */
-    private int getEntityCount() {
-        int sum = 0;
-        for (World world : plugin.getGame().getServer().getWorlds()) {
-            sum += world.getEntities().size();
-        }
-        return sum;
+    private int getEntityCount(World world) {
+        return world.getEntities().size();
     }
 }
