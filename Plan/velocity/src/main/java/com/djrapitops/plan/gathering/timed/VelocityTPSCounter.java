@@ -22,8 +22,9 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
+import com.djrapitops.plan.utilities.analysis.Average;
 import com.djrapitops.plan.utilities.analysis.Maximum;
-import com.djrapitops.plan.utilities.analysis.TimerAverager;
+import com.djrapitops.plan.utilities.analysis.TimerAverage;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
@@ -39,8 +40,8 @@ public class VelocityTPSCounter extends TPSCounter {
     private final ServerProperties serverProperties;
 
     private Maximum.ForInteger playersOnline;
-    private TimerAverager cpu;
-    private TimerAverager ram;
+    private Average cpu;
+    private TimerAverage ram;
 
     @Inject
     public VelocityTPSCounter(
@@ -55,28 +56,30 @@ public class VelocityTPSCounter extends TPSCounter {
         this.serverProperties = serverInfo.getServerProperties();
 
         playersOnline = new Maximum.ForInteger(0);
-        cpu = new TimerAverager();
-        ram = new TimerAverager();
+        cpu = new Average();
+        ram = new TimerAverage();
     }
 
     @Override
     public void pulse() {
+        long time = System.currentTimeMillis();
+        boolean shouldSave = ram.add(time, SystemUsage.getUsedMemory());
         playersOnline.add(serverProperties.getOnlinePlayers());
-        boolean shouldSave = cpu.add(SystemUsage.getAverageSystemLoad()) || ram.add(SystemUsage.getUsedMemory());
-        if (shouldSave) save();
+        cpu.add(SystemUsage.getAverageSystemLoad());
+        if (shouldSave) save(time);
     }
 
-    private void save() {
-        long time = System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(1L);
+    private void save(long time) {
+        long timeLastMinute = time - TimeUnit.MINUTES.toMillis(1L);
         int maxPlayers = playersOnline.getMaxAndReset();
         double averageCPU = cpu.getAverageAndReset();
-        long averageRAM = (long) ram.getAverageAndReset();
+        long averageRAM = (long) ram.getAverageAndReset(time);
         long freeDiskSpace = getFreeDiskSpace();
 
         dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
                 serverInfo.getServerUUID(),
                 TPSBuilder.get()
-                        .date(time)
+                        .date(timeLastMinute)
                         .playersOnline(maxPlayers)
                         .usedCPU(averageCPU)
                         .usedMemory(averageRAM)

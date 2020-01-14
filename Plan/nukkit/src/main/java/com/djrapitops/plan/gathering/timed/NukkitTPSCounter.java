@@ -24,8 +24,8 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
+import com.djrapitops.plan.utilities.analysis.Average;
 import com.djrapitops.plan.utilities.analysis.Maximum;
-import com.djrapitops.plan.utilities.analysis.TimerAverager;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
@@ -44,8 +44,8 @@ public class NukkitTPSCounter extends TPSCounter {
 
     private TPSCalculator tps;
     private Maximum.ForInteger playersOnline;
-    private TimerAverager cpu;
-    private TimerAverager ram;
+    private Average cpu;
+    private Average ram;
 
     @Inject
     public NukkitTPSCounter(
@@ -63,21 +63,22 @@ public class NukkitTPSCounter extends TPSCounter {
 
         tps = new TPSCalculator();
         playersOnline = new Maximum.ForInteger(0);
-        cpu = new TimerAverager();
-        ram = new TimerAverager();
+        cpu = new Average();
+        ram = new Average();
     }
 
     @Override
     public void pulse() {
-        Optional<Double> result = tps.pulse();
+        long time = System.currentTimeMillis();
+        Optional<Double> result = tps.pulse(time);
         playersOnline.add(getOnlinePlayerCount());
         cpu.add(SystemUsage.getAverageSystemLoad());
         ram.add(SystemUsage.getUsedMemory());
-        result.ifPresent(this::save);
+        result.ifPresent(averageTPS -> save(averageTPS, time));
     }
 
-    private void save(double averageTPS) {
-        long time = System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(1L);
+    private void save(double averageTPS, long time) {
+        long timeLastMinute = time - TimeUnit.MINUTES.toMillis(1L);
         int maxPlayers = playersOnline.getMaxAndReset();
         double averageCPU = cpu.getAverageAndReset();
         long averageRAM = (long) ram.getAverageAndReset();
@@ -88,7 +89,7 @@ public class NukkitTPSCounter extends TPSCounter {
         dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
                 serverInfo.getServerUUID(),
                 TPSBuilder.get()
-                        .date(time)
+                        .date(timeLastMinute)
                         .tps(averageTPS)
                         .playersOnline(maxPlayers)
                         .usedCPU(averageCPU)

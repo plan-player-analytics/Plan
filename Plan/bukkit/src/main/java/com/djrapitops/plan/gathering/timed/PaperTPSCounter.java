@@ -23,8 +23,9 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
+import com.djrapitops.plan.utilities.analysis.Average;
 import com.djrapitops.plan.utilities.analysis.Maximum;
-import com.djrapitops.plan.utilities.analysis.TimerAverager;
+import com.djrapitops.plan.utilities.analysis.TimerAverage;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.bukkit.World;
@@ -39,10 +40,10 @@ public class PaperTPSCounter extends TPSCounter {
     private final ServerInfo serverInfo;
     private final ServerProperties serverProperties;
 
-    private TimerAverager tps;
+    private TimerAverage tps;
     private Maximum.ForInteger playersOnline;
-    private TimerAverager cpu;
-    private TimerAverager ram;
+    private Average cpu;
+    private Average ram;
 
     @Inject
     public PaperTPSCounter(
@@ -58,24 +59,25 @@ public class PaperTPSCounter extends TPSCounter {
         this.serverInfo = serverInfo;
         serverProperties = serverInfo.getServerProperties();
 
-        tps = new TimerAverager();
+        tps = new TimerAverage();
         playersOnline = new Maximum.ForInteger(0);
-        cpu = new TimerAverager();
-        ram = new TimerAverager();
+        cpu = new Average();
+        ram = new Average();
     }
 
     @Override
     public void pulse() {
-        boolean shouldSave = tps.add(plugin.getServer().getTPS()[0]);
+        long time = System.currentTimeMillis();
+        boolean shouldSave = tps.add(time, plugin.getServer().getTPS()[0]);
         playersOnline.add(getOnlinePlayerCount());
         cpu.add(SystemUsage.getAverageSystemLoad());
         ram.add(SystemUsage.getUsedMemory());
-        if (shouldSave) save();
+        if (shouldSave) save(time);
     }
 
-    private void save() {
-        long time = System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(1L);
-        double averageTPS = tps.getAverageAndReset();
+    private void save(long time) {
+        long timeLastMinute = time - TimeUnit.MINUTES.toMillis(1L);
+        double averageTPS = tps.getAverageAndReset(time);
         int maxPlayers = playersOnline.getMaxAndReset();
         double averageCPU = cpu.getAverageAndReset();
         long averageRAM = (long) ram.getAverageAndReset();
@@ -86,7 +88,7 @@ public class PaperTPSCounter extends TPSCounter {
         dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
                 serverInfo.getServerUUID(),
                 TPSBuilder.get()
-                        .date(time)
+                        .date(timeLastMinute)
                         .tps(averageTPS)
                         .playersOnline(maxPlayers)
                         .usedCPU(averageCPU)

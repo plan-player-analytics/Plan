@@ -16,29 +16,17 @@
  */
 package com.djrapitops.plan.utilities.analysis;
 
-import java.util.concurrent.TimeUnit;
-
 /**
- * Utility for averaging time based data.
+ * Utility for averaging data.
  *
  * @author Rsl1122
  */
-public class TimerAverager {
-
-    private long savePeriodMs;
-    private long lastSaveMs;
+public class Average {
 
     private double total;
     private int count;
 
-    public TimerAverager() {
-        this(TimeUnit.MINUTES.toMillis(1L));
-    }
-
-    public TimerAverager(long savePeriodMs) {
-        this.savePeriodMs = savePeriodMs;
-        lastSaveMs = 0;
-
+    public Average() {
         total = 0.0;
         count = 0;
     }
@@ -47,26 +35,16 @@ public class TimerAverager {
      * Add a new entry and check if save should be done.
      *
      * @param value TPS value
-     * @return If a save should be performed.
      */
-    public boolean add(double value) {
-        if (lastSaveMs <= 0) lastSaveMs = createLastSaveMs();
-        if (value < 0.0) return false;
+    public void add(double value) {
         total += value;
         count++;
-        return System.currentTimeMillis() - lastSaveMs >= savePeriodMs;
     }
 
     public double getAverageAndReset() {
-        lastSaveMs = createLastSaveMs();
         double average = total / count;
         total = 0.0;
         count = 0;
         return average;
-    }
-
-    private long createLastSaveMs() {
-        long time = System.currentTimeMillis();
-        return time - (time % savePeriodMs);
     }
 }

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.gathering.timed;
 
-import com.djrapitops.plan.utilities.analysis.TimerAverager;
+import com.djrapitops.plan.utilities.analysis.TimerAverage;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -40,24 +40,25 @@ public class TPSCalculator {
 
     public static final long SECOND_NS = TimeUnit.SECONDS.toNanos(1L);
 
-    private long pulsePeriod;
+    private long maxBeforeZeroTPS;
     private long lastPulse;
 
-    private TimerAverager averager;
+    private TimerAverage averager;
 
     public TPSCalculator() {
-        pulsePeriod = SECOND_NS * 20L; // 20 ticks
+        maxBeforeZeroTPS = SECOND_NS * 20L; // 20 ticks
         lastPulse = -1;
 
-        averager = new TimerAverager();
+        averager = new TimerAverage();
     }
 
     /**
      * Pulse the TPS clock.
      *
+     * @param time Current epoch ms
      * @return Average TPS for the minute, or empty.
      */
-    public Optional<Double> pulse() {
+    public Optional<Double> pulse(long time) {
         boolean firstRun = lastPulse < 0;
         long currentPulse = System.nanoTime();
         long difference = currentPulse - lastPulse;
@@ -71,14 +72,14 @@ public class TPSCalculator {
         if (difference < SECOND_NS) difference = SECOND_NS;
 
         // Add missed ticks, TPS has been low for a while, see the math in the class javadoc.
-        while (difference > pulsePeriod) {
-            averager.add(0.0);
-            difference -= pulsePeriod;
+        while (difference > maxBeforeZeroTPS) {
+            averager.add(time, 0.0);
+            difference -= maxBeforeZeroTPS;
         }
 
-        double tps = pulsePeriod * 1.0 / difference;
-        if (averager.add(tps)) {
-            return Optional.of(averager.getAverageAndReset());
+        double tps = maxBeforeZeroTPS * 1.0 / difference;
+        if (averager.add(time, tps)) {
+            return Optional.of(averager.getAverageAndReset(time));
         }
         return Optional.empty();
     }
