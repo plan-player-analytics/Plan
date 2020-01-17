@@ -162,7 +162,7 @@ HTML - LABEL_RELATIVE_JOIN_ACTIVITY             || オンラインと活動と�
 HTML - LABEL_RETENTION                          || 新規プレイヤーの継続率
 HTML - LABEL_SERVER_DOWNTIME                    || サーバーダウンタイム
 HTML - LABEL_SERVER_OCCUPIED                    || サーバーの占有時間
-HTML - LABEL_SESSION_ENDED                      || ログアウト時間
+HTML - LABEL_SESSION_ENDED                      ||  ログアウト時間
 HTML - LABEL_SESSION_MEDIAN                     || 平均オンライン
 HTML - LABEL_TIMES_KICKED                       || キック回数
 HTML - LABEL_TOTAL_PLAYERS                      || トータルプレイヤー数
@@ -242,7 +242,7 @@ HTML - TITLE_LAST_24_HOURS                      || 直近24時間以内
 HTML - TITLE_LAST_30_DAYS                       || 直近30日以内
 HTML - TITLE_LAST_7_DAYS                        || 一週間以内
 HTML - TITLE_LAST_CONNECTED                     || 直近の接続
-HTML - TITLE_LENGTH                             || 長さ
+HTML - TITLE_LENGTH                             ||  長さ
 HTML - TITLE_MOST_PLAYED_WORLD                  || よくプレイしているワールド
 HTML - TITLE_NETWORK                            || ネットワーク
 HTML - TITLE_NETWORK_AS_NUMBERS                 || ネットワーク数

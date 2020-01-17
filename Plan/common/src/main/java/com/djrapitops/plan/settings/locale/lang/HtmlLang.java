@@ -91,8 +91,8 @@ public enum HtmlLang implements Lang {
     TITLE_RECENT_SESSIONS("Recent Sessions"),
     TITLE_PLAYER("Player"),
     TITLE_SESSION_START("Session Started"),
-    TITLE_LENGTH("Length"),
-    TITLE_SERVER("Server"),
+    TITLE_LENGTH(" Length"),
+    TITLE_SERVER("Server"), // Can cause issue with jquery.dataTables.js
     TITLE_MOST_PLAYED_WORLD("Most played World"),
     TEXT_CLICK_TO_EXPAND("Click to expand"),
     TITLE_SERVER_PLAYTIME_30("Server Playtime for 30 days"),

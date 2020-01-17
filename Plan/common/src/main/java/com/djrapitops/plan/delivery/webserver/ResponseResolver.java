@@ -133,7 +133,7 @@ public class ResponseResolver extends CompositePageResolver {
         if (target.endsWith("favicon.ico")) {
             return responseFactory.faviconResponse();
         }
-        if (target.endsWithAny(".woff", ".woff2", ".eot", ".tff")) {
+        if (target.endsWithAny(".woff", ".woff2", ".eot", ".ttf")) {
             return responseFactory.fontResponse(resource);
         }
 

@@ -162,7 +162,7 @@ HTML - LABEL_RELATIVE_JOIN_ACTIVITY             || Relative Join Activity
 HTML - LABEL_RETENTION                          || New Player Retention
 HTML - LABEL_SERVER_DOWNTIME                    || Server Downtime
 HTML - LABEL_SERVER_OCCUPIED                    || Server occupied
-HTML - LABEL_SESSION_ENDED                      || Oturum Sona Erdi
+HTML - LABEL_SESSION_ENDED                      ||  Oturum Sona Erdi
 HTML - LABEL_SESSION_MEDIAN                     || Session Median
 HTML - LABEL_TIMES_KICKED                       || Kere Atılmış
 HTML - LABEL_TOTAL_PLAYERS                      || Total Players
@@ -242,7 +242,7 @@ HTML - TITLE_LAST_24_HOURS                      || Son 24 saat
 HTML - TITLE_LAST_30_DAYS                       || Son 30 gün
 HTML - TITLE_LAST_7_DAYS                        || Son 7 gün
 HTML - TITLE_LAST_CONNECTED                     || Son bağlantı
-HTML - TITLE_LENGTH                             || Length
+HTML - TITLE_LENGTH                             ||  Length
 HTML - TITLE_MOST_PLAYED_WORLD                  || Most played World
 HTML - TITLE_NETWORK                            || Network
 HTML - TITLE_NETWORK_AS_NUMBERS                 || Network as Numbers

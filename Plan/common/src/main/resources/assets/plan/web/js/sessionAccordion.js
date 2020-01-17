@@ -57,7 +57,7 @@ function loadPlayerKills(json, error) {
     $('#playerKillTable').replaceWith(createKillsTable(json.player_kills));
 }
 
-function loadPlayerDeaths(json, error) {
+function loadPlayerdeaths(json, error) {
     if (error) {
         $('#playerDeathTable').replaceWith('<p>Failed to load player deaths: ' + error + '</p>');
         return;
