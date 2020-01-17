@@ -11,7 +11,7 @@
 Player Analytics is a fully fledged solution for the analytics needs of your minecraft server. A built in webserver displays insights into different aspects on the server such as Online activity, Playerbase and how these change over time.
 
 Plan supports multiple different platforms and versions;
-Spigot, Paper, Sponge, SpongeForge, Bungeecord, Velocity, Cauldron & all derivatives; from 1.7 to 1.14 - One jar for all platforms.
+Spigot, Paper, Sponge, SpongeForge, Bungeecord, Velocity, Cauldron & all derivatives - One jar for all platforms.
 
 ## Building
 
