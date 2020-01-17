@@ -89,6 +89,7 @@ public class ServerPageExporter extends FileExporter {
         exportRequiredResources(toDirectory);
         exportJSON(toDirectory, server);
         exportHtml(toDirectory, server);
+        exportPaths.clear();
     }
 
     private void exportHtml(Path toDirectory, Server server) throws IOException, NotFoundException, GenerationException {

@@ -87,6 +87,7 @@ public class PlayersPageExporter extends FileExporter {
         exportRequiredResources(toDirectory);
         exportJSON(toDirectory);
         exportHtml(toDirectory);
+        exportPaths.clear();
     }
 
     private void exportHtml(Path toDirectory) throws IOException, GenerationException {

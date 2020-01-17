@@ -89,6 +89,7 @@ public class PlayerPageExporter extends FileExporter {
         Path playerDirectory = toDirectory.resolve("player/" + toFileName(playerName));
         exportJSON(playerDirectory, playerUUID, playerName);
         exportHtml(playerDirectory, playerUUID);
+        exportPaths.clear();
     }
 
     private void exportHtml(Path playerDirectory, UUID playerUUID) throws IOException, GenerationException, NotFoundException {

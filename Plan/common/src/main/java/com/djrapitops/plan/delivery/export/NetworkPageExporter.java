@@ -84,6 +84,7 @@ public class NetworkPageExporter extends FileExporter {
         exportRequiredResources(toDirectory);
         exportJSON(toDirectory, server);
         exportHtml(toDirectory);
+        exportPaths.clear();
     }
 
     private void exportHtml(Path toDirectory) throws IOException, GenerationException {
