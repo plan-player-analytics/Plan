@@ -81,6 +81,10 @@ public class RequestTarget {
         return resourceString.endsWith(suffix);
     }
 
+    public boolean endsWithAny(String... suffixes) {
+        return StringUtils.endsWithAny(resourceString, suffixes);
+    }
+
     public Optional<String> getParameter(String key) {
         return Optional.ofNullable(parameters.get(key));
     }

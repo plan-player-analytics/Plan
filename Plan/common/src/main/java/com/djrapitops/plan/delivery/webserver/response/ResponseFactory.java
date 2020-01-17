@@ -131,6 +131,20 @@ public class ResponseFactory {
         return new ByteResponse(ResponseType.IMAGE, FileResponse.format(fileName), files);
     }
 
+    public Response fontResponse(String fileName) {
+        ResponseType type = ResponseType.FONT_BYTESTREAM;
+        if (fileName.endsWith(".woff")) {
+            type = ResponseType.FONT_WOFF;
+        } else if (fileName.endsWith(".woff2")) {
+            type = ResponseType.FONT_WOFF2;
+        } else if (fileName.endsWith(".eot")) {
+            type = ResponseType.FONT_EOT;
+        } else if (fileName.endsWith(".ttf")) {
+            type = ResponseType.FONT_TTF;
+        }
+        return new ByteResponse(type, FileResponse.format(fileName), files);
+    }
+
     /**
      * Redirect somewhere
      *

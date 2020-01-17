@@ -1,5 +1,5 @@
 /*!
- * Font Awesome Free 5.6.3 by @fontawesome - https://fontawesome.com
+ * Font Awesome Free 5.12.0 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  */
 .fa.fa-glass:before {
@@ -197,6 +197,14 @@
 
 .fa.fa-mail-forward:before {
     content: "\f064";
+}
+
+.fa.fa-expand:before {
+    content: "\f424";
+}
+
+.fa.fa-compress:before {
+    content: "\f422";
 }
 
 .fa.fa-eye {
@@ -967,7 +975,7 @@
 }
 
 .fa.fa-sort-alpha-desc:before {
-    content: "\f15e";
+    content: "\f881";
 }
 
 .fa.fa-sort-amount-asc:before {
@@ -975,7 +983,7 @@
 }
 
 .fa.fa-sort-amount-desc:before {
-    content: "\f161";
+    content: "\f884";
 }
 
 .fa.fa-sort-numeric-asc:before {
@@ -983,7 +991,7 @@
 }
 
 .fa.fa-sort-numeric-desc:before {
-    content: "\f163";
+    content: "\f886";
 }
 
 .fa.fa-youtube-square {
@@ -1359,10 +1367,6 @@
     content: "\f1b9";
 }
 
-.fa.fa-cab:before {
-    content: "\f1ba";
-}
-
 .fa.fa-envelope-o {
     font-family: 'Font Awesome 5 Free';
     font-weight: 400;
@@ -1370,6 +1374,11 @@
 
 .fa.fa-envelope-o:before {
     content: "\f0e0";
+}
+
+.fa.fa-spotify {
+    font-family: 'Font Awesome 5 Brands';
+    font-weight: 400;
 }
 
 .fa.fa-deviantart {
@@ -2771,7 +2780,6 @@
     font-weight: 400;
 }
 
-.fa.fa-spotify {
-    font-family: 'Font Awesome 5 Brands';
-    font-weight: 400;
+.fa.fa-cab:before {
+    content: "\f1ba";
 }

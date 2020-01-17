@@ -40,10 +40,6 @@ shadowJar {
 
     // Exclude these files
     exclude "**/*.svg"
-    exclude "**/*.ttf"
-    exclude "**/*.woff"
-    exclude "**/*.eot"
-    exclude "**/*.woff2"
     exclude "**/*.psd"
 
     exclude "**/module-info.class"

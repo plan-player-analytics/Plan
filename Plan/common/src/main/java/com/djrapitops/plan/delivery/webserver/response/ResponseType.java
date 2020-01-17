@@ -27,7 +27,12 @@ public enum ResponseType {
     JSON("application/json"),
     JAVASCRIPT("application/javascript"),
     IMAGE("image/gif"),
-    X_ICON("image/x-icon");
+    X_ICON("image/x-icon"),
+    FONT_TTF("application/x-font-ttf"),
+    FONT_WOFF("application/font-woff"),
+    FONT_WOFF2("application/font-woff2"),
+    FONT_EOT("application/vnd.ms-fontobject"),
+    FONT_BYTESTREAM("application/octet-stream");
 
     private final String type;
 
