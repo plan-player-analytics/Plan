@@ -72,15 +72,20 @@ public class IP2CGeolocator implements Geolocator {
     }
 
     public Optional<String> readIPFromURL(String address) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) new URL("http://ip2c.org/" + address).openConnection();
-        connection.setDefaultUseCaches(false);
-        connection.setUseCaches(false);
-        connection.connect();
-        try (
-                InputStream in = connection.getInputStream()
-        ) {
-            String answer = readAnswer(in);
-            return resolveIP(answer);
+        HttpURLConnection connection = null;
+        try {
+            connection = (HttpURLConnection) new URL("http://ip2c.org/" + address).openConnection();
+            connection.setDefaultUseCaches(false);
+            connection.setUseCaches(false);
+            connection.connect();
+            try (
+                    InputStream in = connection.getInputStream()
+            ) {
+                String answer = readAnswer(in);
+                return resolveIP(answer);
+            }
+        } finally {
+            if (connection != null) connection.disconnect();
         }
     }
 
