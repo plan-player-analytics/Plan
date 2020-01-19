@@ -75,7 +75,6 @@ public class IP2CGeolocator implements Geolocator {
         HttpURLConnection connection = null;
         try {
             connection = (HttpURLConnection) new URL("http://ip2c.org/" + address).openConnection();
-            connection.setDefaultUseCaches(false);
             connection.setUseCaches(false);
             connection.connect();
             try (
