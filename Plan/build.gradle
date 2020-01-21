@@ -138,7 +138,7 @@ subprojects {
         testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerCompilerVersion"
 
         // Test Tooling Dependencies
-        testCompile "org.junit.jupiter:junit-jupiter-engine:5.5.2"   // JUnit 5
+        testCompile "org.junit.jupiter:junit-jupiter-engine:5.6.0"   // JUnit 5
         testCompile "org.junit.platform:junit-platform-runner:1.5.2" // JUnit 4 runner for JUnit 5 tests
         testCompile "org.junit.jupiter:junit-jupiter-params:5.5.2"   // JUnit 5, parameterized tests
         testCompile "org.mockito:mockito-core:3.2.4"                // Mockito Core
