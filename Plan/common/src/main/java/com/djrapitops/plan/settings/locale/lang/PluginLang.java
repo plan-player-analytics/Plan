@@ -42,7 +42,9 @@ public enum PluginLang implements Lang {
     WEB_SERVER_FAIL_STORE_LOAD("WebServer FAIL - Store Load", "WebServer: SSL Certificate loading Failed."),
     WEB_SERVER_NOTIFY_NO_CERT_FILE("WebServer - Notify no Cert file", "WebServer: Certificate KeyStore File not Found: ${0}"),
     WEB_SERVER_NOTIFY_HTTP("WebServer - Notify HTTP", "WebServer: No Certificate -> Using HTTP-server for Visualization."),
+    WEB_SERVER_NOTIFY_USING_PROXY_MODE("WebServer - Notify Using Proxy", "WebServer: Proxy-mode HTTPS enabled, make sure that your reverse-proxy is routing using HTTPS and Plan AlternativeIP.Link points to the Proxy"),
     WEB_SERVER_NOTIFY_HTTP_USER_AUTH("WebServer - Notify HTTP User Auth", "WebServer: User Authorization Disabled! (Not secure over HTTP)"),
+    WEB_SERVER_NOTIFY_HTTPS_USER_AUTH("WebServer - Notify HTTPS User Auth", "WebServer: User Authorization Disabled! (Disabled in config)"),
 
     DISABLED("Disable", "Player Analytics Disabled."),
     DISABLED_WEB_SERVER("Disable - WebServer", "Webserver has been disabled."),

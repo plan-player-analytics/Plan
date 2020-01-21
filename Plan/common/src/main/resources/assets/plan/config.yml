@@ -52,6 +52,8 @@ Webserver:
       Key_pass: default
       Store_pass: default
       Alias: alias
+    # HTTPS is required for Login.
+    Disable_authentication: false
     # Cross-Origin Resource Sharing (Requests from non-Plan web pages)
     # https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
     CORS:

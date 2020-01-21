@@ -137,8 +137,10 @@ public class WebServer implements SubSystem {
                 logger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.WEB_SERVER_NOTIFY_HTTP_USER_AUTH));
                 server = HttpServer.create(new InetSocketAddress(config.get(WebserverSettings.INTERNAL_IP), port), 10);
             } else if (server == null) {
-                logger.log(L.INFO_COLOR, "§eWebServer: Proxy HTTPS Override enabled. HTTP Server in use, make sure that your Proxy webserver is routing with HTTPS and AlternativeIP.Link points to the Proxy");
+                logger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.WEB_SERVER_NOTIFY_USING_PROXY_MODE));
                 server = HttpServer.create(new InetSocketAddress(config.get(WebserverSettings.INTERNAL_IP), port), 10);
+            } else if (config.isTrue(WebserverSettings.DISABLED_AUTHENTICATION)) {
+                logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_HTTPS_USER_AUTH));
             }
             server.createContext("/", requestHandler);
 
@@ -295,7 +297,7 @@ public class WebServer implements SubSystem {
     }
 
     public boolean isAuthRequired() {
-        return isUsingHTTPS();
+        return isUsingHTTPS() && config.isFalse(WebserverSettings.DISABLED_AUTHENTICATION);
     }
 
     public String getAccessAddress() {
