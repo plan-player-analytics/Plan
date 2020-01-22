@@ -13,6 +13,8 @@ Player Analytics is a fully fledged solution for the analytics needs of your min
 Plan supports multiple different platforms and versions;
 Spigot, Paper, Sponge, SpongeForge, Bungeecord, Velocity, Cauldron & all derivatives - One jar for all platforms.
 
+- [Version 5 Release trailer on Youtube](https://www.youtube.com/watch?v=BS_Ti9zkoRc)
+
 ## Building
 
 You can build the project by running the following in the repository root
