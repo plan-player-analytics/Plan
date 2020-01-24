@@ -18,6 +18,7 @@ package com.djrapitops.plan.gathering;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plugin.api.Check;
+import org.bukkit.Server;
 import org.bukkit.World;
 
 import javax.inject.Inject;
@@ -27,19 +28,25 @@ import javax.inject.Singleton;
 public class BukkitSensor implements ServerSensor<World> {
 
     private final Plan plugin;
-    private final boolean hasPaper;
+
+    private final boolean hasTPSMethod;
+    private final boolean hasEntityCountMethod;
+    private final boolean hasChunkCountMethod;
 
     @Inject
     public BukkitSensor(
             Plan plugin
     ) {
         this.plugin = plugin;
-        hasPaper = Check.isPaperAvailable();
+        boolean hasPaper = Check.isPaperAvailable();
+        hasTPSMethod = hasPaper && hasPaperMethod(Server.class, "getTPS");
+        hasEntityCountMethod = hasPaper && hasPaperMethod(World.class, "getEntityCount");
+        hasChunkCountMethod = hasPaper && hasPaperMethod(World.class, "getChunkCount");
     }
 
     @Override
     public boolean supportsDirectTPS() {
-        return hasPaper;
+        return hasTPSMethod;
     }
 
     @Override
@@ -49,7 +56,7 @@ public class BukkitSensor implements ServerSensor<World> {
 
     @Override
     public int getChunkCount(World world) {
-        if (hasPaper) {
+        if (hasChunkCountMethod) {
             try {
                 return getChunkCountPaperWay(world);
             } catch (BootstrapMethodError | NoSuchMethodError e) {
@@ -69,7 +76,7 @@ public class BukkitSensor implements ServerSensor<World> {
 
     @Override
     public int getEntityCount(World world) {
-        if (hasPaper) {
+        if (hasEntityCountMethod) {
             try {
                 return getEntitiesPaperWay(world);
             } catch (BootstrapMethodError | NoSuchMethodError e) {
@@ -95,5 +102,13 @@ public class BukkitSensor implements ServerSensor<World> {
     @Override
     public Iterable<World> getWorlds() {
         return plugin.getServer().getWorlds();
+    }
+
+    private boolean hasPaperMethod(Class<?> clazz, String methodName) {
+        try {
+            return clazz.getMethod(methodName) != null;
+        } catch (NoSuchMethodException e) {
+            return false;
+        }
     }
 }
