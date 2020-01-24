@@ -1,3 +1,7 @@
+function displayError(element, error) {
+    element.find('.d-sm-flex').after('<div class="alert alert-danger" role="alert">Failed to load values: ' + error + '</div>')
+}
+
 function loadPlayerOverviewValues(json, error) {
     tab = $("#player-overview");
     if (error) {

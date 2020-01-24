@@ -12,9 +12,9 @@
     <title>Plan | Server Analysis</title>
 
     <!-- Custom fonts for this template-->
-    <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
-          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:400,700,800,900&display=swap&subset=latin-ext"
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link crossorigin="anonymous"
+          href="https://fonts.googleapis.com/css?family=Nunito:400,700,800,900&display=swap&subset=latin-ext"
           rel="stylesheet">
 
     <!-- Custom styles for this template-->
@@ -472,9 +472,12 @@
                                         first
                                         join<span class="float-right"><b><span
                                                 id="data_players_first_join_avg"></span></b></span></p>
-                                    <p><i class="col-light-green fa fa-fw fa-user-clock"></i> First session
+                                    <p><i class="col-light-green fa fa-fw fa-user-clock"></i> Average First session
                                         length<span class="float-right"><b><span
                                                 id="data_first_session_length_avg"></span></b></span></p>
+                                    <p><i class="col-light-green fa fa-fw fa-user-clock"></i> Median First session
+                                        length<span class="float-right"><b><span
+                                                id="data_first_session_length_median"></span></b></span></p>
                                     <p><i class="col-teal far fa-fw fa-calendar"></i> Lone joins<span
                                             class="float-right"><b><span id="data_lone_joins"></span></b>
                                             </span></p>
@@ -1205,6 +1208,7 @@
                         <li>Argetan <i class="fa fa-fw fa-code"></i></li>
                         <li>Aurelien <i class="fa fa-fw fa-code"></i> <i class="fa fa-fw fa-language"></i></li>
                         <li>BrainStone <i class="fa fa-fw fa-code"></i></li>
+                        <li>Combustible <i class="fa fa-fw fa-code"></i></li>
                         <li>CyanTech <i class="fa fa-fw fa-language"></i></li>
                         <li>DarkPyves <i class="fa fa-fw fa-code"></i></li>
                         <li>DaveDevil <i class="fa fa-fw fa-language"></i></li>
@@ -1212,7 +1216,9 @@
                         <li>Eyremba <i class="fa fa-fw fa-language"></i></li>
                         <li>f0rb1d (佛壁灯) <i class="fa fa-fw fa-language"></i></li>
                         <li>fuzzlemann <i class="fa fa-fw fa-code"></i> <i class="fa fa-fw fa-language"></i></li>
+                        <li>jyhsu2000 <i class="fa fa-fw fa-code"></i></li>
                         <li>jvmuller <i class="fa fa-fw fa-language"></i></li>
+                        <li>Malachiel <i class="fa fa-fw fa-language"></i></li>
                         <li>Miclebrick <i class="fa fa-fw fa-code"></i></li>
                         <li>Morsmorse <i class="fa fa-fw fa-language"></i></li>
                         <li>skmedix <i class="fa fa-fw fa-code"></i></li>
@@ -1597,7 +1603,6 @@
         jsonRequest("../v1/kills?server=${serverUUID}", loadPlayerKills);
         jsonRequest("../v1/pingTable?server=${serverUUID}", loadPingTable);
 
-        $('.server-name').text('${serverName}');
         $('.player-plugin-table').DataTable({
             responsive: true
         });

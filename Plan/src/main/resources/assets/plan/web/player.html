@@ -13,9 +13,9 @@
     <title>Plan | ${playerName}</title>
 
     <!-- Custom fonts for this template-->
-    <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
-          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:400,700,800,900&display=swap&subset=latin-ext"
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link crossorigin="anonymous"
+          href="https://fonts.googleapis.com/css?family=Nunito:400,700,800,900&display=swap&subset=latin-ext"
           rel="stylesheet">
 
     <!-- Custom styles for this template-->
@@ -126,8 +126,7 @@
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i
-                                class="sidebar-toggler fa fa-fw fa-bars"></i>${playerName}
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${playerName}
                             &middot; Player Overview</h1>
                         ${backButton}
                     </div>
@@ -318,8 +317,7 @@
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i
-                                class="sidebar-toggler fa fa-fw fa-bars"></i>${playerName}
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${playerName}
                             &middot; Sessions</h1>
                         ${backButton}
                     </div>
@@ -379,8 +377,7 @@
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i
-                                class="sidebar-toggler fa fa-fw fa-bars"></i>${playerName}
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${playerName}
                             &middot; PvP & PvE</h1>
                         ${backButton}
                     </div>
@@ -505,8 +502,7 @@
                 <div class="container-fluid mt-4">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i
-                                class="sidebar-toggler fa fa-fw fa-bars"></i>${playerName}
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${playerName}
                             &middot; Servers Overview</h1>
                         ${backButton}
                     </div>
@@ -659,6 +655,7 @@
                         <li>Argetan <i class="fa fa-fw fa-code"></i></li>
                         <li>Aurelien <i class="fa fa-fw fa-code"></i> <i class="fa fa-fw fa-language"></i></li>
                         <li>BrainStone <i class="fa fa-fw fa-code"></i></li>
+                        <li>Combustible <i class="fa fa-fw fa-code"></i></li>
                         <li>CyanTech <i class="fa fa-fw fa-language"></i></li>
                         <li>DarkPyves <i class="fa fa-fw fa-code"></i></li>
                         <li>DaveDevil <i class="fa fa-fw fa-language"></i></li>
@@ -666,7 +663,9 @@
                         <li>Eyremba <i class="fa fa-fw fa-language"></i></li>
                         <li>f0rb1d (佛壁灯) <i class="fa fa-fw fa-language"></i></li>
                         <li>fuzzlemann <i class="fa fa-fw fa-code"></i> <i class="fa fa-fw fa-language"></i></li>
+                        <li>jyhsu2000 <i class="fa fa-fw fa-code"></i></li>
                         <li>jvmuller <i class="fa fa-fw fa-language"></i></li>
+                        <li>Malachiel <i class="fa fa-fw fa-language"></i></li>
                         <li>Miclebrick <i class="fa fa-fw fa-code"></i></li>
                         <li>Morsmorse <i class="fa fa-fw fa-language"></i></li>
                         <li>skmedix <i class="fa fa-fw fa-code"></i></li>
@@ -751,14 +750,14 @@
 <script>
     try {
         Highcharts.setOptions({lang: {noData: "No Data to Display"}, time: {timezoneOffset: ${timeZone} * 60}
-    })
+        });
         setLoadingText('Loading player values..');
         jsonRequest("../v1/player?player=${playerName}", function (json, error) {
             loadPlayerOverviewValues(json, error);
             loadSessionAccordion(json, error);
             loadserverAccordion(json, error);
             loadPlayerKills(json, error);
-            loadPlayerDeaths(json, error);
+            loadPlayerdeaths(json, error);
             loadPvPPvEValues(json, error);
             if (json) {
                 var series = {

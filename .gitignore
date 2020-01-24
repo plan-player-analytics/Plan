@@ -2,6 +2,9 @@ temporaryTestFolder/
 Plan.iml
 PlanPluginBridge.iml
 .sonar/
+Plan/.gradle/
+Plan/builds/
+Plan/nukkit/
 
 # Shell files
 *.sh

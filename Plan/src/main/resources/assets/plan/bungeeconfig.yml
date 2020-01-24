@@ -50,22 +50,25 @@ Webserver:
       Key_pass: default
       Store_pass: default
       Alias: alias
-  # For those that want to serve Html from their own WebServer instead.
-  # Set up Html Export (https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/External-WebServer-Use)
-  # ATTENTION: On BungeeCord systems it is not possible to disable the WebServer on the plugin due to connection requirements.
-  # If the WebServer is disabled with this setting BungeeCord systems will cease to function.
+    # HTTPS is required for Login.
+    Disable_authentication: false
+    # Cross-Origin Resource Sharing (Requests from non-Plan web pages)
+    # https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+    CORS:
+      Allow_origin: "*"
   Disable_Webserver: false
   External_Webserver_address: "https://www.example.address"
 # -----------------------------------------------------
 Data_gathering:
   Geolocations: true
+  # Please accept the EULA to download GeoLite2 IP-Country Database
+  # https://www.maxmind.com/en/geolite2/eula
+  Accept_GeoLite2_EULA: false
   Ping: true
 # -----------------------------------------------------
 # Supported time units: MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS
 # -----------------------------------------------------
 Time:
-  # UTC used if false. Only affects Timestamps and graphs.
-  Use_server_timezone: true
   Delays:
     Ping_server_enable_delay: 300
       Unit: SECONDS
@@ -150,6 +153,9 @@ Formatting:
     Full: 'MMM d YYYY, HH:mm:ss'
     NoSeconds: 'MMM d YYYY, HH:mm'
     JustClock: 'HH:mm:ss'
+    # TimeZone Option uses format 'GMT+2' or 'GMT-04:30'
+    # Other valid options are 'server' and 'UTC'
+    TimeZone: 'server'
 # -----------------------------------------------------
 # World aliases can be used to rename worlds and to combine multiple worlds into a group.
 # -----------------------------------------------------

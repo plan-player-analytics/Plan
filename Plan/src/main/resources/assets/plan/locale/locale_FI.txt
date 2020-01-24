@@ -162,7 +162,7 @@ HTML - LABEL_RELATIVE_JOIN_ACTIVITY             || Relative Join Activity
 HTML - LABEL_RETENTION                          || Uusien pysyvyys
 HTML - LABEL_SERVER_DOWNTIME                    || Palvelin pois päältä
 HTML - LABEL_SERVER_OCCUPIED                    || Palvelin pelaajien käytössä
-HTML - LABEL_SESSION_ENDED                      || Istunto Päättyi
+HTML - LABEL_SESSION_ENDED                      ||  Istunto Päättyi
 HTML - LABEL_SESSION_MEDIAN                     || Istuntojen Mediaani
 HTML - LABEL_TIMES_KICKED                       || Heitetty pihalle
 HTML - LABEL_TOTAL_PLAYERS                      || Pelaajia
@@ -242,7 +242,7 @@ HTML - TITLE_LAST_24_HOURS                      || Viimeiset 24 tuntia
 HTML - TITLE_LAST_30_DAYS                       || Viimeiset 30 päivää
 HTML - TITLE_LAST_7_DAYS                        || Viimeiset 7 päivää
 HTML - TITLE_LAST_CONNECTED                     || Viimeisin yhteys
-HTML - TITLE_LENGTH                             || Pituus
+HTML - TITLE_LENGTH                             ||  Pituus
 HTML - TITLE_MOST_PLAYED_WORLD                  || Eniten pelattu maailma
 HTML - TITLE_NETWORK                            || Verkosto
 HTML - TITLE_NETWORK_AS_NUMBERS                 || Verkosto Numeroina

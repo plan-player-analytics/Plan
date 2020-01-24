@@ -162,7 +162,7 @@ HTML - LABEL_RELATIVE_JOIN_ACTIVITY             || Relative Join Activity
 HTML - LABEL_RETENTION                          || 新玩家留坑率
 HTML - LABEL_SERVER_DOWNTIME                    || 关服时间
 HTML - LABEL_SERVER_OCCUPIED                    || 开服时间
-HTML - LABEL_SESSION_ENDED                      || 时域之末
+HTML - LABEL_SESSION_ENDED                      ||  时域之末
 HTML - LABEL_SESSION_MEDIAN                     || 平均时域
 HTML - LABEL_TIMES_KICKED                       || 被踢次数
 HTML - LABEL_TOTAL_PLAYERS                      || 总玩家数
@@ -242,7 +242,7 @@ HTML - TITLE_LAST_24_HOURS                      || 过去 24 小时
 HTML - TITLE_LAST_30_DAYS                       || 过去 30 天
 HTML - TITLE_LAST_7_DAYS                        || 过去 7 天
 HTML - TITLE_LAST_CONNECTED                     || 最后连接
-HTML - TITLE_LENGTH                             || 长度
+HTML - TITLE_LENGTH                             ||  长度
 HTML - TITLE_MOST_PLAYED_WORLD                  || 最多玩家的世界
 HTML - TITLE_NETWORK                            || 服务器网络
 HTML - TITLE_NETWORK_AS_NUMBERS                 || Network as Numbers

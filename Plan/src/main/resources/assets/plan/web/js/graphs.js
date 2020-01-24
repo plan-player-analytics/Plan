@@ -283,8 +283,9 @@ function punchCard(id, punchcardSeries) {
         xAxis: {
             type: 'datetime',
             dateTimeLabelFormats: {
+                // https://www.php.net/manual/en/function.strftime.php
                 hour: '%I %P',
-                day: '%H %P'
+                day: '%I %P'
             },
             tickInterval: 3600000
         },
