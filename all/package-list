@@ -28,7 +28,6 @@ com.djrapitops.plan.delivery.rendering.json.graphs
 com.djrapitops.plan.delivery.rendering.json.graphs.bar
 com.djrapitops.plan.delivery.rendering.json.graphs.calendar
 com.djrapitops.plan.delivery.rendering.json.graphs.line
-com.djrapitops.plan.delivery.rendering.json.graphs.line.alg
 com.djrapitops.plan.delivery.rendering.json.graphs.pie
 com.djrapitops.plan.delivery.rendering.json.graphs.special
 com.djrapitops.plan.delivery.rendering.json.graphs.stack
@@ -64,12 +63,14 @@ com.djrapitops.plan.gathering.afk
 com.djrapitops.plan.gathering.cache
 com.djrapitops.plan.gathering.domain
 com.djrapitops.plan.gathering.domain.builders
+com.djrapitops.plan.gathering.geolocation
 com.djrapitops.plan.gathering.importing
 com.djrapitops.plan.gathering.importing.data
 com.djrapitops.plan.gathering.importing.importers
 com.djrapitops.plan.gathering.listeners
 com.djrapitops.plan.gathering.listeners.bukkit
 com.djrapitops.plan.gathering.listeners.bungee
+com.djrapitops.plan.gathering.listeners.nukkit
 com.djrapitops.plan.gathering.listeners.sponge
 com.djrapitops.plan.gathering.listeners.velocity
 com.djrapitops.plan.gathering.timed
@@ -78,6 +79,7 @@ com.djrapitops.plan.identification.properties
 com.djrapitops.plan.modules
 com.djrapitops.plan.modules.bukkit
 com.djrapitops.plan.modules.bungee
+com.djrapitops.plan.modules.nukkit
 com.djrapitops.plan.modules.sponge
 com.djrapitops.plan.modules.velocity
 com.djrapitops.plan.processing
@@ -99,7 +101,7 @@ com.djrapitops.plan.storage.database.queries.analysis
 com.djrapitops.plan.storage.database.queries.containers
 com.djrapitops.plan.storage.database.queries.objects
 com.djrapitops.plan.storage.database.queries.schema
-com.djrapitops.plan.storage.database.sql.parsing
+com.djrapitops.plan.storage.database.sql.building
 com.djrapitops.plan.storage.database.sql.tables
 com.djrapitops.plan.storage.database.transactions
 com.djrapitops.plan.storage.database.transactions.commands
@@ -114,3 +116,7 @@ com.djrapitops.plan.utilities.comparators
 com.djrapitops.plan.utilities.html.icon
 com.djrapitops.plan.utilities.java
 com.djrapitops.plan.version
+com.djrapitops.plugin
+com.djrapitops.plugin.command.nukkit
+com.djrapitops.plugin.logging.console
+com.djrapitops.plugin.task.nukkit
