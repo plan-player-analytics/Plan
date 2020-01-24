@@ -49,9 +49,9 @@ allprojects {
     }
 
     // Fix for UTF-8 files showing with wrong encoding when compiled on Windows machines.
-    tasks.withType(JavaCompile) {
-        options.encoding = 'UTF-8'
-    }
+    compileJava { options.encoding = "UTF-8" }
+    tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+    javadoc { options.encoding = 'UTF-8' }
 }
 
 println "Building artifact for version $fullVersion"
