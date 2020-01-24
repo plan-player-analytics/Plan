@@ -18,15 +18,18 @@ package com.djrapitops.plan.addons.placeholderapi.placeholders;
 
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
+import com.djrapitops.plan.delivery.domain.mutators.PerServerMutator;
 import com.djrapitops.plan.delivery.domain.mutators.PingMutator;
 import com.djrapitops.plan.delivery.domain.mutators.PlayerVersusMutator;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.gathering.cache.SessionCache;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.utilities.Predicates;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import org.bukkit.entity.Player;
@@ -153,6 +156,12 @@ public class PlayerPlaceHolder extends AbstractPlanPlaceHolder {
                         .filterSessionsBetween(monthAgo(), now())
                         .filterPlayedOnServer(serverUUID())
                         .toPlaytime());
+
+            case "player_favorite_server":
+                return PerServerMutator.forContainer(player).favoriteServer()
+                        .flatMap(serverUUID -> dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID)))
+                        .map(Server::getName)
+                        .orElse("-");
 
             default:
                 return null;
