@@ -133,10 +133,9 @@ public class PlayerPageExporter extends FileExporter {
     }
 
     private void exportRequiredResources(Path toDirectory) throws IOException {
-        exportImage(toDirectory, "img/Flaticon_circle.png");
-
         // Style
         exportResources(toDirectory,
+                "img/Flaticon_circle.png",
                 "css/sb-admin-2.css",
                 "css/style.css",
                 "vendor/jquery/jquery.min.js",
@@ -187,17 +186,11 @@ public class PlayerPageExporter extends FileExporter {
 
         if (resourceName.endsWith(".css")) {
             export(to, theme.replaceThemeColors(resource.asString()));
-        } else {
+        } else if (Resource.isTextResource(resourceName)) {
             export(to, resource.asLines());
+        } else {
+            export(to, resource);
         }
-
-        exportPaths.put(resourceName, toRelativePathFromRoot(resourceName));
-    }
-
-    private void exportImage(Path toDirectory, String resourceName) throws IOException {
-        Resource resource = files.getCustomizableResourceOrDefault("web/" + resourceName);
-        Path to = toDirectory.resolve(resourceName);
-        export(to, resource);
 
         exportPaths.put(resourceName, toRelativePathFromRoot(resourceName));
     }

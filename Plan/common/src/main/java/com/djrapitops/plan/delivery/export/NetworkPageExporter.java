@@ -150,9 +150,8 @@ public class NetworkPageExporter extends FileExporter {
     }
 
     private void exportRequiredResources(Path toDirectory) throws IOException {
-        exportImage(toDirectory, "img/Flaticon_circle.png");
-
         exportResources(toDirectory,
+                "img/Flaticon_circle.png",
                 "css/sb-admin-2.css",
                 "css/style.css",
                 "vendor/jquery/jquery.min.js",
@@ -198,22 +197,17 @@ public class NetworkPageExporter extends FileExporter {
     private void exportResource(Path toDirectory, String resourceName) throws IOException {
         Resource resource = files.getCustomizableResourceOrDefault("web/" + resourceName);
         Path to = toDirectory.resolve(resourceName);
+
         if (resourceName.endsWith(".css")) {
             export(to, theme.replaceThemeColors(resource.asString()));
         } else if ("js/network-values.js".equalsIgnoreCase(resourceName)) {
             // Replace /server in urls to fix server page links
             export(to, StringUtils.replaceOnce(resource.asString(), "server/", toRelativePathFromRoot("server") + '/'));
-        } else {
+        } else if (Resource.isTextResource(resourceName)) {
             export(to, resource.asLines());
+        } else {
+            export(to, resource);
         }
-
-        exportPaths.put(resourceName, toRelativePathFromRoot(resourceName));
-    }
-
-    private void exportImage(Path toDirectory, String resourceName) throws IOException {
-        Resource resource = files.getCustomizableResourceOrDefault("web/" + resourceName);
-        Path to = toDirectory.resolve(resourceName);
-        export(to, resource);
 
         exportPaths.put(resourceName, toRelativePathFromRoot(resourceName));
     }

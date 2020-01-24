@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.storage.file;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -57,5 +59,15 @@ public interface Resource {
      * @throws IOException If the resource is unavailable.
      */
     String asString() throws IOException;
+
+    /**
+     * Check if a resource is a text based file.
+     *
+     * @param resourceName Name of the resource
+     * @return true if the resource is text based.
+     */
+    static boolean isTextResource(String resourceName) {
+        return StringUtils.endsWithAny(resourceName, ".html", ".js", ".css", ".yml", ".txt");
+    }
 
 }

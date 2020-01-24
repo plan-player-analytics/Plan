@@ -128,10 +128,9 @@ public class PlayersPageExporter extends FileExporter {
     }
 
     private void exportRequiredResources(Path toDirectory) throws IOException {
-        exportImage(toDirectory, "img/Flaticon_circle.png");
-
         // Style
         exportResources(toDirectory,
+                "img/Flaticon_circle.png",
                 "css/sb-admin-2.css",
                 "css/style.css",
                 "vendor/jquery/jquery.min.js",
@@ -139,6 +138,19 @@ public class PlayersPageExporter extends FileExporter {
                 "vendor/jquery-easing/jquery.easing.min.js",
                 "vendor/datatables/jquery.dataTables.min.js",
                 "vendor/datatables/dataTables.bootstrap4.min.js",
+                "vendor/fontawesome-free/css/all.min.css",
+                "vendor/fontawesome-free/webfonts/fa-brands-400.eot",
+                "vendor/fontawesome-free/webfonts/fa-brands-400.ttf",
+                "vendor/fontawesome-free/webfonts/fa-brands-400.woff",
+                "vendor/fontawesome-free/webfonts/fa-brands-400.woff2",
+                "vendor/fontawesome-free/webfonts/fa-regular-400.eot",
+                "vendor/fontawesome-free/webfonts/fa-regular-400.ttf",
+                "vendor/fontawesome-free/webfonts/fa-regular-400.woff",
+                "vendor/fontawesome-free/webfonts/fa-regular-400.woff2",
+                "vendor/fontawesome-free/webfonts/fa-solid-900.eot",
+                "vendor/fontawesome-free/webfonts/fa-solid-900.ttf",
+                "vendor/fontawesome-free/webfonts/fa-solid-900.woff",
+                "vendor/fontawesome-free/webfonts/fa-solid-900.woff2",
                 "js/sb-admin-2.js",
                 "js/xmlhttprequests.js",
                 "js/color-selector.js"
@@ -157,17 +169,11 @@ public class PlayersPageExporter extends FileExporter {
 
         if (resourceName.endsWith(".css")) {
             export(to, theme.replaceThemeColors(resource.asString()));
-        } else {
+        } else if (Resource.isTextResource(resourceName)) {
             export(to, resource.asLines());
+        } else {
+            export(to, resource);
         }
-
-        exportPaths.put(resourceName, toRelativePathFromRoot(resourceName));
-    }
-
-    private void exportImage(Path toDirectory, String resourceName) throws IOException {
-        Resource resource = files.getCustomizableResourceOrDefault("web/" + resourceName);
-        Path to = toDirectory.resolve(resourceName);
-        export(to, resource);
 
         exportPaths.put(resourceName, toRelativePathFromRoot(resourceName));
     }
