@@ -60,6 +60,7 @@ public class ExtensionRegister {
         register(new AdvancedBanExtensionFactory(), AdvancedBanExtensionFactory::createExtension, AdvancedBanExtensionFactory::registerListener);
         register(new ASkyBlockExtensionFactory(), ASkyBlockExtensionFactory::createExtension);
         register(new BanManagerExtensionFactory(), BanManagerExtensionFactory::createExtension);
+        registerBentoBoxExtensions();
         register(new BuycraftExtensionFactory(), BuycraftExtensionFactory::createExtension);
 //        register(new CoreProtectExtensionFactory(), CoreProtectExtensionFactory::createExtension);
         register(new DiscordSRVExtensionFactory(), DiscordSRVExtensionFactory::createExtension, DiscordSRVExtensionFactory::registerListener);
@@ -89,13 +90,22 @@ public class ExtensionRegister {
         if (registerException != null) throw registerException;
     }
 
+    private void registerBentoBoxExtensions() {
+        BentoBoxExtensionFactory factory = new BentoBoxExtensionFactory();
+        if (factory.isAvailable()) {
+            for (DataExtension minigame : factory.createExtensions()) {
+                register(minigame);
+            }
+        }
+    }
+
     private void registerMinigameLibExtensions() {
         for (DataExtension minigame : new MinigameLibExtensionFactory().createExtensions()) {
             register(minigame);
         }
     }
 
-    private void suppressException(Class factory, Throwable e) {
+    private void suppressException(Class<?> factory, Throwable e) {
         String factoryName = factory.getSimpleName();
         String extensionName = factoryName.replace("ExtensionFactory", "");
 
