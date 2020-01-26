@@ -42,6 +42,7 @@ public class ProviderInformation extends ExtensionDescriptive {
     private final FormatType formatType;    // can be null, NumberProvider
     private final boolean isPlayerName;     // default false, StringProvider
     private final Color tableColor;         // can be null, TableProvider
+    private final boolean percentage;       // affects where doubles are stored
 
     private ProviderInformation(ProviderInformation.Builder builder) {
         super(builder.name, builder.text, builder.description, builder.icon, builder.priority);
@@ -54,6 +55,7 @@ public class ProviderInformation extends ExtensionDescriptive {
         formatType = builder.formatType;
         isPlayerName = builder.isPlayerName;
         tableColor = builder.tableColor;
+        percentage = builder.percentage;
     }
 
     public static ProviderInformation.Builder builder(String pluginName) {
@@ -124,6 +126,10 @@ public class ProviderInformation extends ExtensionDescriptive {
         return tableColor;
     }
 
+    public boolean isPercentage() {
+        return percentage;
+    }
+
     public static class Builder {
         private final String pluginName;
         private String name;
@@ -139,6 +145,7 @@ public class ProviderInformation extends ExtensionDescriptive {
         private FormatType formatType;        // can be null, NumberProvider
         private boolean isPlayerName = false; // default false, StringProvider
         private Color tableColor;             // can be null, TableProvider
+        private boolean percentage;           // affects where doubles are stored
 
         public Builder(String pluginName) {
             this.pluginName = pluginName;
@@ -206,6 +213,11 @@ public class ProviderInformation extends ExtensionDescriptive {
 
         public Builder setTableColor(Color tableColor) {
             this.tableColor = tableColor;
+            return this;
+        }
+
+        public Builder setAsPercentage() {
+            percentage = true;
             return this;
         }
 

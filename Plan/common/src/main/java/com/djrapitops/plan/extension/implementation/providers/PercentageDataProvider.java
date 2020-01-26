@@ -24,16 +24,14 @@ import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import java.lang.reflect.Method;
 
 /**
- * Represents a DataExtension API method annotated with {@link PercentageProvider} annotation.
+ * Contains code that acts on {@link PercentageProvider} annotations.
  *
  * @author Rsl1122
  */
-public class PercentageDataProvider extends DataProvider<Double> {
+public class PercentageDataProvider {
 
-    // TODO Remove need for instanceof PercentageDataProvider
-
-    private PercentageDataProvider(ProviderInformation providerInformation, MethodWrapper<Double> methodWrapper) {
-        super(providerInformation, methodWrapper);
+    private PercentageDataProvider() {
+        // Static method class
     }
 
     public static void placeToDataProviders(
@@ -52,10 +50,11 @@ public class PercentageDataProvider extends DataProvider<Double> {
                 ).setShowInPlayersTable(annotation.showInPlayerTable())
                 .setCondition(condition)
                 .setTab(tab)
+                .setAsPercentage()
                 .build();
 
         MethodWrapper<Double> methodWrapper = new MethodWrapper<>(method, Double.class);
 
-        dataProviders.put(new PercentageDataProvider(information, methodWrapper));
+        dataProviders.put(new DataProvider<>(information, methodWrapper));
     }
 }

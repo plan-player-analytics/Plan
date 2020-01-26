@@ -31,7 +31,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 import static com.djrapitops.plan.storage.database.sql.tables.ExtensionServerValueTable.*;
 
 /**
- * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.PercentageDataProvider}.
+ * Transaction to store Extension String data for a server.
  *
  * @author Rsl1122
  */
