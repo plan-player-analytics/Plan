@@ -37,7 +37,7 @@ public interface Parameters {
         return new GroupParameters(serverUUID, groupName);
     }
 
-    Object call(DataExtension extension, Method method) throws InvocationTargetException, IllegalAccessException;
+    Object usingOn(DataExtension extension, Method method) throws InvocationTargetException, IllegalAccessException;
 
     MethodType getMethodType();
 
@@ -59,7 +59,7 @@ public interface Parameters {
         }
 
         @Override
-        public Object call(DataExtension extension, Method method) throws InvocationTargetException, IllegalAccessException {
+        public Object usingOn(DataExtension extension, Method method) throws InvocationTargetException, IllegalAccessException {
             return method.invoke(extension);
         }
 
@@ -89,7 +89,7 @@ public interface Parameters {
         }
 
         @Override
-        public Object call(DataExtension extension, Method method) throws InvocationTargetException, IllegalAccessException {
+        public Object usingOn(DataExtension extension, Method method) throws InvocationTargetException, IllegalAccessException {
             Class<?> parameterType = method.getParameterTypes()[0];
             if (UUID.class.equals(parameterType)) {
                 return method.invoke(extension, playerUUID);
@@ -118,7 +118,7 @@ public interface Parameters {
         }
 
         @Override
-        public Object call(DataExtension extension, Method method) throws InvocationTargetException, IllegalAccessException {
+        public Object usingOn(DataExtension extension, Method method) throws InvocationTargetException, IllegalAccessException {
             Group group = this::getGroupName;
             return method.invoke(extension, group);
         }

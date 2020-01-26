@@ -41,9 +41,9 @@ public class MethodWrapper<T> {
         methodType = MethodType.forMethod(this.method);
     }
 
-    public T callMethod(DataExtension of, Parameters with) {
+    public T callMethod(DataExtension extension, Parameters with) {
         try {
-            return returnType.cast(with.call(of, method));
+            return returnType.cast(with.usingOn(extension, method));
         } catch (InvocationTargetException notReadyToBeCalled) {
             if (notReadyToBeCalled.getCause() instanceof NotReadyException) {
                 return null; // Data or API not available to make the call.
