@@ -119,7 +119,7 @@ HTML - LABEL_AVG_SESSION_LENGTH                 || Durée moyenne d'une session
 HTML - LABEL_AVG_TPS                            || TPS moyen
 HTML - LABEL_BANNED                             || Banni(e)
 HTML - LABEL_BEST_PEAK                          || Pic maximal de joueurs connectés
-HTML - LABEL_DAY_OF_WEEK                        || Mot de la semaine
+HTML - LABEL_DAY_OF_WEEK                        || Jour de la semaine
 HTML - LABEL_DEATHS                             || Morts
 HTML - LABEL_DOWNTIME                           || Temps hors-ligne
 HTML - LABEL_DURING_LOW_TPS                     || Pendant les pics de TPS bas :
@@ -353,9 +353,9 @@ Version FAIL - Read versions.txt                || Les informations de la versio
 Web User Listing                                ||   §2${0} §7: §f${1}
 WebServer - Notify HTTP                         || Serveur Web : Aucun certificat -> Utilisation du serveur HTTP pour la visualisation.
 WebServer - Notify HTTP User Auth               || Serveur Web : Authentification utilisateur désactivée ! (Non sécurisée avec HTTP)
-WebServer - Notify HTTPS User Auth              || WebServer: User Authorization Disabled! (Disabled in config)
+WebServer - Notify HTTPS User Auth              || Serveur Web : User Authorization Disabled! (Disabled in config)
 WebServer - Notify no Cert file                 || Serveur Web : Fichier KeyStore du certificat introuvable : ${0}
-WebServer - Notify Using Proxy                  || WebServer: le Proxy-mode HTTPS est activé, assurez-vous que votre proxy inversé est routé en utilisant HTTPS et Plan AlternativeIP.Link.
+WebServer - Notify Using Proxy                  || Serveur Web : le Proxy-mode HTTPS est activé, assurez-vous que votre proxy inversé est routé en utilisant HTTPS et Plan AlternativeIP.Link.
 WebServer FAIL - Port Bind                      || Le Serveur Web n'a pas été initialisé avec succès. Le port (${0}) est-il actuellement utilisé ?
 WebServer FAIL - SSL Context                    || Serveur Web : Échec d'initialisation du contexte SSL.
 WebServer FAIL - Store Load                     || Serveur Web : Échec du chargement du certificat SSL.
