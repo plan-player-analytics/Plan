@@ -20,9 +20,9 @@ Cmd Header - Servers                            || > §2Serveurs
 Cmd Header - Web Users                          || > §2${0} Utilisateurs Web
 Cmd Info - Bungee Connection                    ||   §2Connecté à Bungee : §f${0}
 Cmd Info - Database                             ||   §2Base de données active : §f${0}
-Cmd Info - Reload Complete                      || §aRechargement terminé.
+Cmd Info - Reload Complete                      ||   §aRechargement terminé.
 Cmd Info - Reload Failed                        || §cUne erreur s'est produite lors du rechargement du plugin, un redémarrage total est recommandé.
-Cmd Info - Update                               ||   §2Mise à jour disponible : §f${0}
+Cmd Info - Update                               || §2Mise à jour disponible : §f${0}
 Cmd Info - Version                              ||   §2Version : §f${0}
 Cmd Notify - No WebUser                         || Vous n'avez peut-être pas d'utilisateur Web, essayez d'exécuter '/plan register <mot de passe>' afin d'y remédier.
 Cmd Notify - WebUser register                   || Nouvel utilisateur enregistré : '${0}' Niveau de permission : ${1}.
@@ -56,7 +56,7 @@ Command Help - /plan manage move                || Déplacer des données entre 
 Command Help - /plan manage raw                 || Visualiser le JSON brut des données du joueur.
 Command Help - /plan manage remove              || Supprimer les données d'un joueur.
 Command Help - /plan manage restore             || Restaurer une sauvegarde précédente.
-Command Help - /plan manage uninstalled         || Mark a server as uninstalled in the database.
+Command Help - /plan manage uninstalled         || Inscrit le serveur comme désinstallé dans la base de données.
 Command Help - /plan network                    || Visualiser la page du réseau.
 Command Help - /plan players                    || Visualiser la page des joueurs.
 Command Help - /plan qinspect                   || Visualiser les informations d'un joueur (en jeu).
@@ -135,8 +135,8 @@ HTML - LABEL_LONE_JOINS                         || Connexions de joueurs seuls
 HTML - LABEL_LONE_NEW_JOINS                     || Connexions de débutants seuls
 HTML - LABEL_LONGEST_SESSION                    || Session la plus longue
 HTML - LABEL_LOW_TPS                            || Pics de TPS bas
-HTML - LABEL_MAX_FREE_DISK                      || Max Free Disk
-HTML - LABEL_MIN_FREE_DISK                      || Min Free Disk
+HTML - LABEL_MAX_FREE_DISK                      || Max espace disque disponible
+HTML - LABEL_MIN_FREE_DISK                      || Min espace disque disponible
 HTML - LABEL_MOB_DEATHS                         || Morts causées par un Mob
 HTML - LABEL_MOB_KDR                            || Ratio Kills / Morts de Mobs
 HTML - LABEL_MOB_KILLS                          || Kills de Mobs
@@ -168,7 +168,7 @@ HTML - LABEL_TIMES_KICKED                       || Nombre d'éjections
 HTML - LABEL_TOTAL_PLAYERS                      || Joueurs totaux
 HTML - LABEL_TOTAL_PLAYTIME                     || Temps de jeu total
 HTML - LABEL_UNIQUE_PLAYERS                     || Joueurs uniques
-HTML - LABEL_WEEK_DAYS                          || 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+HTML - LABEL_WEEK_DAYS                          || 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'
 HTML - LINK_BACK_NETWORK                        || Page du réseau
 HTML - LINK_BACK_SERVER                         || Page du serveur
 HTML - LINK_CHANGELOG                           || Visualiser les changements
