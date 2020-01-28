@@ -22,8 +22,8 @@ Cmd Info - Bungee Connection                    ||   §2Connecté à Bungee : §
 Cmd Info - Database                             ||   §2Base de données active : §f${0}
 Cmd Info - Reload Complete                      || §aRechargement terminé.
 Cmd Info - Reload Failed                        || §cUne erreur s'est produite lors du rechargement du plugin, un redémarrage total est recommandé.
-Cmd Info - Update                               || §2Mise à jour disponible : §f${0}
-Cmd Info - Version                              || §2Version : §f${0}
+Cmd Info - Update                               ||   §2Mise à jour disponible : §f${0}
+Cmd Info - Version                              ||   §2Version : §f${0}
 Cmd Notify - No WebUser                         || Vous n'avez peut-être pas d'utilisateur Web, essayez d'exécuter '/plan register <mot de passe>' afin d'y remédier.
 Cmd Notify - WebUser register                   || Nouvel utilisateur enregistré : '${0}' Niveau de permission : ${1}.
 Cmd Qinspect - Activity Index                   ||   §2Indice d'activité : §f${0} | ${1}
