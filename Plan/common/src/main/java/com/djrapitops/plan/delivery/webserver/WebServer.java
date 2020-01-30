@@ -37,10 +37,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.net.ssl.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.nio.file.InvalidPathException;
@@ -237,8 +234,10 @@ public class WebServer implements SubSystem {
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
             logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_SSL_CONTEXT));
             errorHandler.log(L.ERROR, this.getClass(), e);
+        } catch (EOFException e) {
+            logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_EMPTY_FILE));
         } catch (FileNotFoundException e) {
-            logger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.WEB_SERVER_NOTIFY_NO_CERT_FILE, keyStorePath));
+            logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_NO_CERT_FILE, keyStorePath));
             logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_HTTP));
         } catch (BindException e) {
             throw e; // Pass to above error handler
