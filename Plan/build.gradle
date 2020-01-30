@@ -72,7 +72,7 @@ subprojects {
     targetCompatibility = 1.8
 
     ext.daggerVersion = "2.25.4"
-    ext.daggerCompilerVersion = "2.25.4"
+    ext.daggerCompilerVersion = "2.26"
 
     ext.abstractPluginFrameworkVersion = "3.4.2"
 
