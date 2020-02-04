@@ -211,6 +211,8 @@ public class PlayerOnlineListener implements Listener {
         Player player = event.getPlayer();
         String playerName = player.getName();
         UUID playerUUID = player.getUniqueId();
+        if (playerUUID == null) return; // Can be null when player is not signed in to xbox live
+
         UUID serverUUID = serverInfo.getServerUUID();
         JSONCache.invalidate(DataID.SERVER_OVERVIEW, serverUUID);
         JSONCache.invalidate(DataID.GRAPH_PERFORMANCE, serverUUID);
