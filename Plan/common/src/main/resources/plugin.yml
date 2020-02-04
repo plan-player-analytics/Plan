@@ -4,31 +4,31 @@ main: com.djrapitops.plan.Plan
 version: @version@
 api-version: 1.13
 softdepend:
+  - AAC
   - ASkyBlock
   - AdvancedAchievements
   - AdvancedBan
   - BanManager
   - CoreProtect
   - DiscordSRV
-  - EssentialsX
+  - DKBans
+  - Essentials
   - Factions
   - GriefPrevention
   - GriefPreventionPlus
   - Jobs
-  - Kingdoms
-  - LiteBans
+  - Litebans
   - LuckPerms
   - mcMMO
   - MinigamesLib
   - nuVotifier
+  - PlaceholderAPI
   - ProtocolSupport
   - RedProtect
   - SuperbVote
   - Towny
   - Vault
   - ViaVersion
-  - PlaceholderAPI
-  - DKBans
 
 commands:
   plan:
