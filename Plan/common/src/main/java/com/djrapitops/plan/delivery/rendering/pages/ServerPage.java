@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.domain.container.RawDataContainer;
 import com.djrapitops.plan.delivery.domain.keys.AnalysisKeys;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
+import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
@@ -123,6 +124,7 @@ public class ServerPage implements Page {
         );
 
         placeholders.put("backButton", serverInfo.getServer().isProxy() ? Html.BACK_BUTTON_NETWORK.create() : "");
+        placeholders.put("contributors", Contributors.generateContributorHtml());
         placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
         placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
 
