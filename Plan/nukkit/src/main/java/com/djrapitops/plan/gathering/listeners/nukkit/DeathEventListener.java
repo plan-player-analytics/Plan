@@ -26,6 +26,7 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.entity.EntityDeathEvent;
+import cn.nukkit.event.player.PlayerDeathEvent;
 import cn.nukkit.item.Item;
 import com.djrapitops.plan.delivery.formatting.EntityNameFormatter;
 import com.djrapitops.plan.delivery.formatting.ItemNameFormatter;
@@ -41,7 +42,7 @@ import javax.inject.Inject;
 import java.util.UUID;
 
 /**
- * Event Listener for EntityDeathEvents.
+ * Event Listener for detecting player and mob deaths.
  *
  * @author Rsl1122
  */
@@ -59,16 +60,11 @@ public class DeathEventListener implements Listener {
         this.errorHandler = errorHandler;
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onDeath(EntityDeathEvent event) {
+    public void onPlayerDeath(PlayerDeathEvent event) {
         long time = System.currentTimeMillis();
-        Entity dead = event.getEntity();
-
-        if (dead instanceof Player) {
-            // Process Death
-            SessionCache.getCachedSession(((Player) dead).getUniqueId()).ifPresent(Session::died);
-        }
+        Player dead = event.getEntity();
+        SessionCache.getCachedSession(dead.getUniqueId()).ifPresent(Session::died);
 
         try {
             EntityDamageEvent entityDamageEvent = dead.getLastDamageCause();
@@ -79,8 +75,28 @@ public class DeathEventListener implements Listener {
             EntityDamageByEntityEvent entityDamageByEntityEvent = (EntityDamageByEntityEvent) entityDamageEvent;
             Entity killerEntity = entityDamageByEntityEvent.getDamager();
 
-            UUID uuid = dead instanceof Player ? ((Player) dead).getUniqueId() : null;
+            UUID uuid = dead.getUniqueId();
             handleKill(time, uuid, killerEntity);
+        } catch (Exception e) {
+            errorHandler.log(L.ERROR, this.getClass(), e);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onMobDeath(EntityDeathEvent event) {
+        long time = System.currentTimeMillis();
+        Entity dead = event.getEntity();
+
+        try {
+            EntityDamageEvent entityDamageEvent = dead.getLastDamageCause();
+            if (!(entityDamageEvent instanceof EntityDamageByEntityEvent)) {
+                return;
+            }
+
+            EntityDamageByEntityEvent entityDamageByEntityEvent = (EntityDamageByEntityEvent) entityDamageEvent;
+            Entity killerEntity = entityDamageByEntityEvent.getDamager();
+
+            handleKill(time, /* Not a player */ null, killerEntity);
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
         }
