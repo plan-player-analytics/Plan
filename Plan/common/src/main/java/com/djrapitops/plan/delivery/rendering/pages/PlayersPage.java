@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.rendering.pages;
 
 import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
+import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.exceptions.GenerationException;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -56,6 +57,7 @@ public class PlayersPage implements Page {
 
             placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
             placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
+            placeholders.put("contributors", Contributors.generateContributorHtml());
             if (serverInfo.getServer().isProxy()) {
                 placeholders.put("networkName", config.get(ProxySettings.NETWORK_NAME));
             } else {

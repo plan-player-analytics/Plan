@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.rendering.pages;
 import com.djrapitops.plan.delivery.domain.container.CachingSupplier;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
+import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.exceptions.GenerationException;
@@ -92,6 +93,7 @@ public class NetworkPage implements Page {
 
             placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
             placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
+            placeholders.put("contributors", Contributors.generateContributorHtml());
 
             CachingSupplier<ServerPluginTabs> pluginTabs = new CachingSupplier<>(() -> {
                 List<ExtensionData> extensionData = dbSystem.getDatabase().query(new ExtensionServerDataQuery(serverUUID));

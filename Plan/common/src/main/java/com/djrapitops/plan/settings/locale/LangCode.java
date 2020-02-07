@@ -28,7 +28,7 @@ public enum LangCode {
     CN("Simplified Chinese", "f0rb1d (\u4f5b\u58c1\u706f) & qsefthuopq"),
     DE("Deutch", "Eyremba & fuzzlemann & Morsmorse"),
     FI("Finnish", "Rsl1122"),
-    FR("French", "CyanTech & Aurelien"),
+    FR("French", "CyanTech & Aurelien & Nogapra"),
     IT("Italian", "Malachiel"),
     JA("Japanese", "yukieji"),
     TR("Turkish", "TDJisvan"),

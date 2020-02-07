@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.response.errors;
 
+import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.webserver.response.pages.PageResponse;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
@@ -59,6 +60,7 @@ public class ErrorResponse extends PageResponse {
         placeholders.put("paragraph", paragraph);
         placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
         placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
+        placeholders.put("contributors", Contributors.generateContributorHtml());
 
         setContent(StringSubstitutor.replace(getContent(), placeholders));
     }

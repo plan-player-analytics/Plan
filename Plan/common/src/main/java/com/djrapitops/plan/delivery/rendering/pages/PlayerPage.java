@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
+import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.exceptions.GenerationException;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -108,6 +109,7 @@ public class PlayerPage implements Page {
         placeholders.put("firstDay", 1);
 
         placeholders.put("backButton", (serverInfo.getServer().isProxy() ? Html.BACK_BUTTON_NETWORK : Html.BACK_BUTTON_SERVER).create());
+        placeholders.put("contributors", Contributors.generateContributorHtml());
 
         PlayerPluginTab pluginTabs = pageFactory.inspectPluginTabs(playerUUID);
 
