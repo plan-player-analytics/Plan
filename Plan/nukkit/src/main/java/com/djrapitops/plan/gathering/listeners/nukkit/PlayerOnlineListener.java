@@ -50,6 +50,7 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Event Listener for PlayerJoin, PlayerQuit and PlayerKickEvents.
@@ -171,7 +172,8 @@ public class PlayerOnlineListener implements Listener {
             );
         }
 
-        database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, player::getFirstPlayed, playerName, serverUUID));
+        long registerDate = TimeUnit.SECONDS.toMillis(player.getFirstPlayed());
+        database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> registerDate, playerName, serverUUID));
         Session session = new Session(playerUUID, serverUUID, time, world, gm);
         session.putRawData(SessionKeys.NAME, playerName);
         session.putRawData(SessionKeys.SERVER_NAME, serverInfo.getServer().getIdentifiableName());
