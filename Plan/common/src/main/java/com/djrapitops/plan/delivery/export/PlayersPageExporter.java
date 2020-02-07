@@ -111,7 +111,7 @@ public class PlayersPageExporter extends FileExporter {
                 // Replace ../player in urls to fix player page links
                 StringUtils.replace(found.getContent(), "../player", toRelativePathFromRoot("player"))
         );
-        exportPaths.put("../v1/players", toRelativePathFromRoot("data/" + jsonResourceName));
+        exportPaths.put("./v1/players", toRelativePathFromRoot("data/" + jsonResourceName));
     }
 
     private String toJSONResourceName(String resource) {
