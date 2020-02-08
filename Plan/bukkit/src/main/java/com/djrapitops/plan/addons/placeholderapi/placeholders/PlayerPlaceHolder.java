@@ -45,6 +45,7 @@ import java.util.UUID;
 public class PlayerPlaceHolder extends AbstractPlanPlaceHolder {
 
     private final DBSystem dbSystem;
+    private final Formatter<Double> decimals;
     private Formatter<Long> year;
     private Formatter<Long> time;
 
@@ -57,10 +58,11 @@ public class PlayerPlaceHolder extends AbstractPlanPlaceHolder {
         this.dbSystem = dbSystem;
         time = formatters.timeAmount();
         year = formatters.yearLong();
+        decimals = formatters.decimals();
     }
 
     @Override
-    public String onPlaceholderRequest(Player p, String params) throws Exception {
+    public String onPlaceholderRequest(Player p, String params) {
         Serializable got = get(params, p.getUniqueId());
         return got != null ? got.toString() : null;
     }
@@ -93,12 +95,17 @@ public class PlayerPlaceHolder extends AbstractPlanPlaceHolder {
                 return PlayerVersusMutator.forContainer(player).toKillDeathRatio();
 
             case "player_ping_average_day":
-                return PingMutator.forContainer(player).filterBy(Predicates.within(dayAgo(), now())).average();
+                return decimals.apply(PingMutator.forContainer(player)
+                        .filterBy(Predicates.within(dayAgo(), now()))
+                        .average()) + " ms";
             case "player_ping_average_week":
-                return PingMutator.forContainer(player).filterBy(Predicates.within(weekAgo(), now())).average();
-
+                return decimals.apply(PingMutator.forContainer(player)
+                        .filterBy(Predicates.within(weekAgo(), now()))
+                        .average()) + " ms";
             case "player_ping_average_month":
-                return PingMutator.forContainer(player).filterBy(Predicates.within(monthAgo(), now())).average();
+                return decimals.apply(PingMutator.forContainer(player)
+                        .filterBy(Predicates.within(monthAgo(), now()))
+                        .average()) + " ms";
 
             case "player_lastseen":
                 return year.apply(player.getValue(PlayerKeys.LAST_SEEN).orElse((long) 0));

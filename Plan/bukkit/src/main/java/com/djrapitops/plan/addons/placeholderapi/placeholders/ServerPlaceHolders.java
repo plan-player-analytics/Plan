@@ -50,7 +50,7 @@ public class ServerPlaceHolders extends AbstractPlanPlaceHolder {
     }
 
     @Override
-    public String onPlaceholderRequest(Player p, String params) throws Exception {
+    public String onPlaceholderRequest(Player p, String params) {
         Database database = dbSystem.getDatabase();
         UUID serverUUID = serverUUID();
         Serializable got = get(params, database, serverUUID);

@@ -42,6 +42,7 @@ import java.util.UUID;
 public class SessionPlaceHolder extends AbstractPlanPlaceHolder {
 
     private final DBSystem dbSystem;
+    private final Formatter<Double> decimals;
     private Formatter<Long> timeAmount;
     private int tzOffsetMs;
     private Formatter<DateHolder> year;
@@ -58,10 +59,11 @@ public class SessionPlaceHolder extends AbstractPlanPlaceHolder {
         tzOffsetMs = config.getTimeZone().getOffset(System.currentTimeMillis());
         timeAmount = formatters.timeAmount();
         year = formatters.year();
+        decimals = formatters.decimals();
     }
 
     @Override
-    public String onPlaceholderRequest(Player p, String params) throws Exception {
+    public String onPlaceholderRequest(Player p, String params) {
         Serializable got = get(params);
         return got != null ? got.toString() : null;
     }
@@ -163,13 +165,13 @@ public class SessionPlaceHolder extends AbstractPlanPlaceHolder {
                 return database.query(PlayerCountQueries.newPlayerCount(monthAgo(), now(), serverUUID));
 
             case "ping_total":
-                return database.query(PingQueries.averagePing(0L, now(), serverUUID));
+                return decimals.apply(database.query(PingQueries.averagePing(0L, now(), serverUUID))) + " ms";
             case "ping_day":
-                return database.query(PingQueries.averagePing(dayAgo(), now(), serverUUID));
+                return decimals.apply(database.query(PingQueries.averagePing(dayAgo(), now(), serverUUID))) + " ms";
             case "ping_week":
-                return database.query(PingQueries.averagePing(weekAgo(), now(), serverUUID));
+                return decimals.apply(database.query(PingQueries.averagePing(weekAgo(), now(), serverUUID))) + " ms";
             case "ping_month":
-                return database.query(PingQueries.averagePing(monthAgo(), now(), serverUUID));
+                return decimals.apply(database.query(PingQueries.averagePing(monthAgo(), now(), serverUUID))) + " ms";
 
             case "sessions_peak_count":
                 return database.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID)).map(DateObj::getValue).orElse(0);
