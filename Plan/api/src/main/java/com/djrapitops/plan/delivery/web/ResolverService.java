@@ -1,0 +1,71 @@
+/*
+ *  This file is part of Player Analytics (Plan).
+ *
+ *  Plan is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Plan is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
+ */
+package com.djrapitops.plan.delivery.web;
+
+import com.djrapitops.plan.delivery.web.resolver.Resolver;
+
+import java.util.Optional;
+import java.util.regex.Pattern;
+
+/**
+ * Service for modifying webserver request resolution.
+ * <p>
+ * It is recommended to use plugin based namespace in your custom targets,
+ * eg. "/flyplugin/flying" to avoid collisions with other plugins.
+ * You can also use {@link #getResolver(String)} to check if target is already resolved.
+ *
+ * @author Rsl1122
+ */
+public interface ResolverService {
+
+    /**
+     * Register a new resolver.
+     *
+     * @param pluginName Name of the plugin that is registering (For error messages)
+     * @param start      Start of the target to match against, eg "/example" will send "/example/target" etc to the Resolver.
+     * @param resolver   {@link Resolver} to use for this
+     * @throws IllegalArgumentException If pluginName is null or empty.
+     */
+    void registerResolver(String pluginName, String start, Resolver resolver);
+
+    /**
+     * Register a new resolver with regex that maches start of target.
+     * <p>
+     * NOTICE: It is recommended to avoid too generic regex like "/.*" to not override existing resolvers.
+     * <p>
+     * Parameters (?param=value) are not included in the regex matching.
+     *
+     * @param pluginName Name of the plugin that is registering (For error messages)
+     * @param pattern    Regex Pattern, "/example.*" will send "/exampletarget" etc to the Resolver.
+     * @param resolver   {@link Resolver} to use for this.
+     * @throws IllegalArgumentException If pluginName is null or empty.
+     */
+    void registerResolverForMatches(String pluginName, Pattern pattern, Resolver resolver);
+
+    /**
+     * Obtain a {@link Resolver} for a target.
+     * <p>
+     * First matching resolver will be returned.
+     * {@link #registerResolver} resolvers have higher priority than {@link #registerResolverForMatches}.
+     * <p>
+     * Can be used when making Resolver middleware.
+     *
+     * @param target "/example/target"
+     * @return Resolver if registered or empty.
+     */
+    Optional<Resolver> getResolver(String target);
+}

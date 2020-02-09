@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     compileOnly group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+    compileOnly "com.google.code.gson:gson:$gsonVersion"
 }
 
 ext.apiVersion = '5.0-R0.3'
