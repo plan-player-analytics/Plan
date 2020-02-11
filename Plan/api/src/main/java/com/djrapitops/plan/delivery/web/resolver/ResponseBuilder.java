@@ -84,7 +84,7 @@ public class ResponseBuilder {
     }
 
     public ResponseBuilder setContent(String content, Charset charset) {
-        String mimeType = response.headers.get("Content-Type");
+        String mimeType = getMimeType();
         response.charset = charset;
 
         if (mimeType != null) {
@@ -118,11 +118,15 @@ public class ResponseBuilder {
     public Response build() {
         byte[] content = response.bytes;
         exceptionIf(content == null, "Content not defined for Response");
-        String mimeType = response.getHeaders().get("Content-Type");
+        String mimeType = getMimeType();
         exceptionIf(content.length > 0 && mimeType == null, "MIME Type not defined for Response");
         exceptionIf(content.length > 0 && mimeType.isEmpty(), "MIME Type empty for Response");
         exceptionIf(response.code < 100 || response.code >= 600, "HTTP Status code out of bounds (" + response.code + ")");
         return response;
+    }
+
+    private String getMimeType() {
+        return response.headers.get("Content-Type");
     }
 
     private void exceptionIf(boolean value, String errorMsg) {

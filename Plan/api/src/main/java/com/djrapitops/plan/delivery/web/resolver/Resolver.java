@@ -28,7 +28,7 @@ public interface Resolver {
      * @param permissions WebUser that is accessing this page.
      * @param target      Target that is being accessed, /example/target
      * @param parameters  Parameters in the URL, ?param=value etc.
-     * @return true if allowed, false if response should be 403 (forbidden)
+     * @return true if allowed or invalid target, false if response should be 403 (forbidden)
      */
     boolean canAccess(WebUser permissions, URLTarget target, Parameters parameters);
 

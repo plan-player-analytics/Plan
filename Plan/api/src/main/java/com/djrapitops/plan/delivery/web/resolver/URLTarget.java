@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.web.resolver;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +35,7 @@ public final class URLTarget {
     private List<String> parse(String target) {
         String[] partArray = target.split("/");
         // Ignores index 0, assuming target starts with /
+        if (partArray.length == 1) return Collections.emptyList();
         return Arrays.asList(partArray)
                 .subList(1, partArray.length);
     }
@@ -62,5 +64,18 @@ public final class URLTarget {
 
     public boolean endsWith(String suffix) {
         return full.endsWith(suffix);
+    }
+
+    /**
+     * Immutable modification, removes first part of the target string.
+     * <p>
+     * Example: URLTarget "/example/target" return value of omitFirst URLTarget is "/target"
+     * Example: URLTarget "/example" return value of omitFirst URLTarget is "/"
+     * Example: URLTarget "/" return value of omitFirst URLTarget is ""
+     *
+     * @return new URLTarget with first part removed.
+     */
+    public URLTarget omitFirst() {
+        return new URLTarget(full.replaceFirst("/" + getPart(0).orElse(""), ""));
     }
 }
