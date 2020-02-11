@@ -16,28 +16,14 @@
  */
 package com.djrapitops.plan.delivery.web.resolver;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 public final class URLTarget {
 
-    // Internal representation
-    private final List<String> parts;
     private final String full;
 
     public URLTarget(String target) {
-        this.parts = parse(target);
         full = target;
-    }
-
-    private List<String> parse(String target) {
-        String[] partArray = target.split("/");
-        // Ignores index 0, assuming target starts with /
-        if (partArray.length == 1) return Collections.emptyList();
-        return Arrays.asList(partArray)
-                .subList(1, partArray.length);
     }
 
     /**
@@ -50,16 +36,63 @@ public final class URLTarget {
     }
 
     /**
+     * Removes parts of the URL before an index.
+     * <p>
+     * Example: /example/target, 0 returns /example/target
+     * Example: /example/target, 1 returns /target
+     * Example: /example/target, 2 returns ''
+     * Example: /, 0 returns /
+     * Example: /, 1 returns ''
+     *
+     * @param from  URL String
+     * @param index String is indexed based on slashes /0-index/1-index/2-index/etc
+     * @return Substring based on the slash index.
+     */
+    static String removePartsBefore(String from, int index) {
+        int applied = -1;
+        String finding = from;
+        int appliedSlash;
+
+        // Find slash in the String by index
+        while (applied < index) {
+            appliedSlash = finding.indexOf('/');
+
+            boolean hasNoSlash = appliedSlash == -1;
+            if (hasNoSlash) return ""; // No more slashes
+
+            finding = finding.substring(appliedSlash + 1);
+            applied++;
+        }
+        return "/" + finding;
+    }
+
+    /**
      * Obtain part of the target by index of slashes in the URL.
+     * <p>
+     * Example: "/example/target", 0 returns "example"
+     * Example: "/example/target", 1 returns "target"
+     * Example: "/example/target", 2 returns empty optional
+     * Example: "/example/target/", 2 returns ""
+     * Example: "/", 0 returns ""
+     * Example: "/", 1 returns empty optional
      *
      * @param index Index from root, eg. /0/1/2/3 etc
-     * @return part after a '/' in the target, Example "target" for 0 in "/target/example", "" for 0 in "/", "" for 1 in "/example/"
+     * @return part after a '/' in the target,
      */
     public Optional<String> getPart(int index) {
-        if (index >= parts.size()) {
-            return Optional.empty();
+        String leftover = removePartsBefore(full, index);
+        if (leftover.isEmpty()) return Optional.empty();
+
+        // Remove the leading slash to find ending slash
+        leftover = leftover.substring(1);
+
+        // Remove rest of the target (Ends in the next slash)
+        int nextSlash = leftover.indexOf('/');
+        if (nextSlash == -1) {
+            return Optional.of(leftover);
+        } else {
+            return Optional.of(leftover.substring(0, nextSlash));
         }
-        return Optional.of(parts.get(index));
     }
 
     public boolean endsWith(String suffix) {
@@ -76,6 +109,6 @@ public final class URLTarget {
      * @return new URLTarget with first part removed.
      */
     public URLTarget omitFirst() {
-        return new URLTarget(full.replaceFirst("/" + getPart(0).orElse(""), ""));
+        return new URLTarget(removePartsBefore(full, 1));
     }
 }
