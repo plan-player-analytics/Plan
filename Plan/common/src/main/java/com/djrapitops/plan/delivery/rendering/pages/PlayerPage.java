@@ -23,15 +23,12 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.rendering.html.Html;
-import com.djrapitops.plan.exceptions.GenerationException;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
-import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.version.VersionCheckSystem;
 
-import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -41,11 +38,11 @@ import java.util.UUID;
  */
 public class PlayerPage implements Page {
 
+    private final String templateHtml;
     private final PlayerContainer player;
 
     private final VersionCheckSystem versionCheckSystem;
 
-    private final PlanFiles files;
     private final PlanConfig config;
     private final PageFactory pageFactory;
     private final Theme theme;
@@ -55,18 +52,18 @@ public class PlayerPage implements Page {
     private final Formatter<Long> secondLongFormatter;
 
     PlayerPage(
+            String templateHtml,
             PlayerContainer player,
             VersionCheckSystem versionCheckSystem,
-            PlanFiles files,
             PlanConfig config,
             PageFactory pageFactory,
             Theme theme,
             Formatters formatters,
             ServerInfo serverInfo
     ) {
+        this.templateHtml = templateHtml;
         this.player = player;
         this.versionCheckSystem = versionCheckSystem;
-        this.files = files;
         this.config = config;
         this.pageFactory = pageFactory;
         this.theme = theme;
@@ -77,18 +74,14 @@ public class PlayerPage implements Page {
     }
 
     @Override
-    public String toHtml() throws GenerationException {
+    public String toHtml() {
         if (!player.getValue(PlayerKeys.REGISTERED).isPresent()) {
             throw new IllegalStateException("Player is not registered");
         }
-        try {
-            return createFor(player);
-        } catch (Exception e) {
-            throw new GenerationException(e);
-        }
+        return createFor(player);
     }
 
-    public String createFor(PlayerContainer player) throws IOException {
+    public String createFor(PlayerContainer player) {
         long now = System.currentTimeMillis();
         UUID playerUUID = player.getUnsafe(PlayerKeys.UUID);
 
@@ -116,6 +109,6 @@ public class PlayerPage implements Page {
         placeholders.put("navPluginsTabs", pluginTabs.getNav());
         placeholders.put("pluginsTabs", pluginTabs.getTab());
 
-        return placeholders.apply(files.getCustomizableResourceOrDefault("web/player.html").asString());
+        return placeholders.apply(templateHtml);
     }
 }

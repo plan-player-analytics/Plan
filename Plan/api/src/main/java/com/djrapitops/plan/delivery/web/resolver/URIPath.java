@@ -18,29 +18,20 @@ package com.djrapitops.plan.delivery.web.resolver;
 
 import java.util.Optional;
 
-public final class URLTarget {
+public final class URIPath {
 
-    private final String full;
+    private final String path;
 
-    public URLTarget(String target) {
-        full = target;
-    }
-
-    /**
-     * Obtain the full target.
-     *
-     * @return Example: "/target/path/in/url"
-     */
-    public String asString() {
-        return full;
+    public URIPath(String path) {
+        this.path = path;
     }
 
     /**
      * Removes parts of the URL before an index.
      * <p>
-     * Example: /example/target, 0 returns /example/target
-     * Example: /example/target, 1 returns /target
-     * Example: /example/target, 2 returns ''
+     * Example: /example/path, 0 returns /example/path
+     * Example: /example/path, 1 returns /path
+     * Example: /example/path, 2 returns ''
      * Example: /, 0 returns /
      * Example: /, 1 returns ''
      *
@@ -67,26 +58,35 @@ public final class URLTarget {
     }
 
     /**
-     * Obtain part of the target by index of slashes in the URL.
+     * Obtain the full path.
+     *
+     * @return Example: "/target/path/in/url"
+     */
+    public String asString() {
+        return path;
+    }
+
+    /**
+     * Obtain part of the path by index of slashes in the URL.
      * <p>
-     * Example: "/example/target", 0 returns "example"
-     * Example: "/example/target", 1 returns "target"
-     * Example: "/example/target", 2 returns empty optional
-     * Example: "/example/target/", 2 returns ""
+     * Example: "/example/path", 0 returns "example"
+     * Example: "/example/path", 1 returns "path"
+     * Example: "/example/path", 2 returns empty optional
+     * Example: "/example/path/", 2 returns ""
      * Example: "/", 0 returns ""
      * Example: "/", 1 returns empty optional
      *
      * @param index Index from root, eg. /0/1/2/3 etc
-     * @return part after a '/' in the target,
+     * @return part after a '/' in the path,
      */
     public Optional<String> getPart(int index) {
-        String leftover = removePartsBefore(full, index);
+        String leftover = removePartsBefore(path, index);
         if (leftover.isEmpty()) return Optional.empty();
 
         // Remove the leading slash to find ending slash
         leftover = leftover.substring(1);
 
-        // Remove rest of the target (Ends in the next slash)
+        // Remove rest of the path (Ends in the next slash)
         int nextSlash = leftover.indexOf('/');
         if (nextSlash == -1) {
             return Optional.of(leftover);
@@ -96,19 +96,27 @@ public final class URLTarget {
     }
 
     public boolean endsWith(String suffix) {
-        return full.endsWith(suffix);
+        return path.endsWith(suffix);
     }
 
     /**
-     * Immutable modification, removes first part of the target string.
+     * Immutable modification, removes first part of the path string.
      * <p>
-     * Example: URLTarget "/example/target" return value of omitFirst URLTarget is "/target"
-     * Example: URLTarget "/example" return value of omitFirst URLTarget is "/"
-     * Example: URLTarget "/" return value of omitFirst URLTarget is ""
+     * Example: URIPath "/example/path" return value of omitFirst URIPath is "/path"
+     * Example: URIPath "/example" return value of omitFirst URIPath is "/"
+     * Example: URIPath "/" return value of omitFirst URIPath is ""
      *
-     * @return new URLTarget with first part removed.
+     * @return new URIPath with first part removed.
      */
-    public URLTarget omitFirst() {
-        return new URLTarget(removePartsBefore(full, 1));
+    public URIPath omitFirst() {
+        return new URIPath(removePartsBefore(path, 1));
+    }
+
+    public int length() {
+        int count = 0;
+        for (char c : path.toCharArray()) {
+            if (c == '/') count++;
+        }
+        return count;
     }
 }

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.utilities.comparators;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.WebUser_old;
 
 import java.util.Comparator;
 
@@ -25,10 +25,10 @@ import java.util.Comparator;
  *
  * @author Rsl1122
  */
-public class WebUserComparator implements Comparator<WebUser> {
+public class WebUserComparator implements Comparator<WebUser_old> {
 
     @Override
-    public int compare(WebUser o1, WebUser o2) {
+    public int compare(WebUser_old o1, WebUser_old o2) {
         return Integer.compare(o2.getPermLevel(), o1.getPermLevel());
     }
 

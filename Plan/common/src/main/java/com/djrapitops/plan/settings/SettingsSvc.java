@@ -49,7 +49,7 @@ public class SettingsSvc implements SettingsService {
     }
 
     public void register() {
-        SettingsService.SettingsServiceHolder.set(this);
+        Holder.set(this);
     }
 
     @Override

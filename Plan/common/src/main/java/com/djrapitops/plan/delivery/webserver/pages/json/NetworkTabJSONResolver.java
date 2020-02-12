@@ -23,7 +23,7 @@ import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.delivery.webserver.pages.PageResolver;
-import com.djrapitops.plan.delivery.webserver.response.Response;
+import com.djrapitops.plan.delivery.webserver.response.Response_old;
 import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 
@@ -45,7 +45,7 @@ public class NetworkTabJSONResolver<T> implements PageResolver {
     }
 
     @Override
-    public Response resolve(Request request, RequestTarget target) {
+    public Response_old resolve(Request request, RequestTarget target) {
         return JSONCache.getOrCache(dataID, () -> new JSONResponse(jsonCreator.get()));
     }
 

@@ -16,6 +16,10 @@
  */
 package com.djrapitops.plan.delivery.web.resolver;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -24,12 +28,35 @@ import java.util.Optional;
  *
  * @author Rsl1122
  */
-public final class Parameters {
+public final class URIQuery {
 
     private final Map<String, String> byKey;
 
-    public Parameters(Map<String, String> byKey) {
+    public URIQuery(Map<String, String> byKey) {
         this.byKey = byKey;
+    }
+
+    public URIQuery(String fromURI) {
+        this.byKey = parseParameters(fromURI);
+    }
+
+    private Map<String, String> parseParameters(String fromURI) {
+        if (fromURI == null || fromURI.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        Map<String, String> parameters = new HashMap<>();
+        String[] keysAndValues = StringUtils.split(fromURI, '&');
+        for (String kv : keysAndValues) {
+            if (kv.isEmpty()) {
+                continue;
+            }
+            String[] keyAndValue = StringUtils.split(kv, "=", 2);
+            if (keyAndValue.length >= 2) {
+                parameters.put(keyAndValue[0], keyAndValue[1]);
+            }
+        }
+        return parameters;
     }
 
     /**

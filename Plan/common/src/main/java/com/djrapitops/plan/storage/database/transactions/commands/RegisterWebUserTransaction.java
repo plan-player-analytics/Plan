@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.transactions.commands;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.WebUser_old;
 import com.djrapitops.plan.storage.database.sql.tables.SecurityTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
@@ -25,15 +25,15 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Transaction to save a new Plan {@link WebUser} to the database.
+ * Transaction to save a new Plan {@link WebUser_old} to the database.
  *
  * @author Rsl1122
  */
 public class RegisterWebUserTransaction extends Transaction {
 
-    private final WebUser webUser;
+    private final WebUser_old webUser;
 
-    public RegisterWebUserTransaction(WebUser webUser) {
+    public RegisterWebUserTransaction(WebUser_old webUser) {
         this.webUser = webUser;
     }
 

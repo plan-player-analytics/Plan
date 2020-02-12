@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
@@ -33,7 +34,8 @@ import java.util.zip.GZIPOutputStream;
 /**
  * @author Rsl1122
  */
-public abstract class Response {
+@Deprecated
+public abstract class Response_old {
 
     private String type;
     private String header;
@@ -41,14 +43,14 @@ public abstract class Response {
 
     protected Headers responseHeaders;
 
-    public Response(ResponseType type) {
+    public Response_old(ResponseType type) {
         this.type = type.get();
     }
 
     /**
      * Default Response constructor that defaults ResponseType to HTML.
      */
-    public Response() {
+    public Response_old() {
         this(ResponseType.HTML);
     }
 
@@ -94,13 +96,16 @@ public abstract class Response {
         return getHeader(null).map(h -> Integer.parseInt(StringUtils.split(h, ' ')[1])).orElse(500);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Response response = (Response) o;
-        return Objects.equals(header, response.header) &&
-                Objects.equals(content, response.content);
+    @Deprecated
+    public static Response_old from(com.djrapitops.plan.delivery.web.resolver.Response apiResponse) {
+        Response_old response = new Response_old() {};
+        response.setContent(apiResponse.getCharset().map(charset -> new String(apiResponse.getBytes(), charset))
+                .orElse(new String(apiResponse.getBytes())));
+        response.setHeader("HTTP/1.1 " + apiResponse.getCode() + " ");
+        for (Map.Entry<String, String> header : apiResponse.getHeaders().entrySet()) {
+            response.header += header.getKey() + ": " + header.getValue() + ";\r\n";
+        }
+        return response;
     }
 
     @Override
@@ -144,5 +149,14 @@ public abstract class Response {
     @Override
     public String toString() {
         return header + " | " + getResponse();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Response_old response = (Response_old) o;
+        return Objects.equals(header, response.header) &&
+                Objects.equals(content, response.content);
     }
 }

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.auth;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.WebUser_old;
 import com.djrapitops.plan.exceptions.PassEncryptException;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
@@ -45,7 +45,7 @@ public class BasicAuthentication implements Authentication {
     }
 
     @Override
-    public WebUser getWebUser() throws WebUserAuthException {
+    public WebUser_old getWebUser() throws WebUserAuthException {
         String decoded = Base64Util.decode(authenticationString);
 
         String[] userInfo = StringUtils.split(decoded, ':');
@@ -62,7 +62,7 @@ public class BasicAuthentication implements Authentication {
         }
 
         try {
-            WebUser webUser = database.query(WebUserQueries.fetchWebUser(user))
+            WebUser_old webUser = database.query(WebUserQueries.fetchWebUser(user))
                     .orElseThrow(() -> new WebUserAuthException(FailReason.USER_DOES_NOT_EXIST, user));
 
             boolean correctPass = PassEncryptUtil.verifyPassword(passwordRaw, webUser.getSaltedPassHash());

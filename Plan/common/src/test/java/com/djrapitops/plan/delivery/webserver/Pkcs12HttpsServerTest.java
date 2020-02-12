@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.PlanSystem;
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.WebUser_old;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
@@ -66,7 +66,7 @@ class Pkcs12HttpsServerTest implements HttpsServerTest {
 
         system.enable();
 
-        WebUser webUser = new WebUser("test", PassEncryptUtil.createHash("testPass"), 0);
+        WebUser_old webUser = new WebUser_old("test", PassEncryptUtil.createHash("testPass"), 0);
         system.getDatabaseSystem().getDatabase().executeTransaction(new RegisterWebUserTransaction(webUser));
     }
 

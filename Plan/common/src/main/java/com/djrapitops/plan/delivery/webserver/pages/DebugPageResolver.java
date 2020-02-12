@@ -16,16 +16,18 @@
  */
 package com.djrapitops.plan.delivery.webserver.pages;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.WebUser_old;
+import com.djrapitops.plan.delivery.web.resolver.*;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
-import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
+import com.djrapitops.plan.delivery.webserver.response.Response_old;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 
 /**
  * Resolves /debug URL.
@@ -33,7 +35,7 @@ import javax.inject.Singleton;
  * @author Rsl1122
  */
 @Singleton
-public class DebugPageResolver implements PageResolver {
+public class DebugPageResolver implements PageResolver, Resolver {
 
     private final ResponseFactory responseFactory;
 
@@ -43,13 +45,23 @@ public class DebugPageResolver implements PageResolver {
     }
 
     @Override
-    public Response resolve(Request request, RequestTarget target) {
-        return responseFactory.debugPageResponse();
+    public boolean canAccess(WebUser permissions, URIPath target, URIQuery query) {
+        return permissions.hasPermission("page.debug");
+    }
+
+    @Override
+    public Optional<Response> resolve(URIPath target, URIQuery query) {
+        return Optional.of(responseFactory.debugPageResponse());
+    }
+
+    @Override
+    public Response_old resolve(Request request, RequestTarget target) {
+        return responseFactory.debugPageResponse_old();
     }
 
     @Override
     public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
-        WebUser webUser = auth.getWebUser();
+        WebUser_old webUser = auth.getWebUser();
         return webUser.getPermLevel() <= 0;
     }
 }

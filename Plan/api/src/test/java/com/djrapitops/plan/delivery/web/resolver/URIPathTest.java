@@ -25,16 +25,16 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Tests for {@link URLTarget} behavior.
+ * Tests for {@link URIPath} behavior.
  *
  * @author Rsl1122
  */
 @RunWith(JUnitPlatform.class)
-class URLTargetTest {
+class URIPathTest {
 
     @Test
     void firstPartEmptyForRoot() {
-        URLTarget target = new URLTarget("/");
+        URIPath target = new URIPath("/");
         Optional<String> expected = Optional.of("");
         Optional<String> result = target.getPart(0);
         assertEquals(expected, result);
@@ -42,7 +42,7 @@ class URLTargetTest {
 
     @Test
     void fullTargetForRoot() {
-        URLTarget target = new URLTarget("/");
+        URIPath target = new URIPath("/");
         String expected = "/";
         String result = target.asString();
         assertEquals(expected, result);
@@ -50,7 +50,7 @@ class URLTargetTest {
 
     @Test
     void firstPart() {
-        URLTarget target = new URLTarget("/example/target");
+        URIPath target = new URIPath("/example/target");
         Optional<String> expected = Optional.of("example");
         Optional<String> result = target.getPart(0);
         assertEquals(expected, result);
@@ -58,7 +58,7 @@ class URLTargetTest {
 
     @Test
     void fullTarget() {
-        URLTarget target = new URLTarget("/example/target");
+        URIPath target = new URIPath("/example/target");
         String expected = "/example/target";
         String result = target.asString();
         assertEquals(expected, result);
@@ -66,7 +66,7 @@ class URLTargetTest {
 
     @Test
     void secondPart() {
-        URLTarget target = new URLTarget("/example/target");
+        URIPath target = new URIPath("/example/target");
         Optional<String> expected = Optional.of("target");
         Optional<String> result = target.getPart(1);
         assertEquals(expected, result);
@@ -74,7 +74,7 @@ class URLTargetTest {
 
     @Test
     void noPart() {
-        URLTarget target = new URLTarget("/example/target");
+        URIPath target = new URIPath("/example/target");
         Optional<String> expected = Optional.empty();
         Optional<String> result = target.getPart(2);
         assertEquals(expected, result);
@@ -82,7 +82,7 @@ class URLTargetTest {
 
     @Test
     void emptyLastPart() {
-        URLTarget target = new URLTarget("/example/target/");
+        URIPath target = new URIPath("/example/target/");
         Optional<String> expected = Optional.of("");
         Optional<String> result = target.getPart(2);
         assertEquals(expected, result);
@@ -90,7 +90,7 @@ class URLTargetTest {
 
     @Test
     void omitRoot() {
-        URLTarget target = new URLTarget("/").omitFirst();
+        URIPath target = new URIPath("/").omitFirst();
         String expected = "";
         String result = target.asString();
         assertEquals(expected, result);
@@ -98,7 +98,7 @@ class URLTargetTest {
 
     @Test
     void omitRootPart() {
-        URLTarget target = new URLTarget("/").omitFirst();
+        URIPath target = new URIPath("/").omitFirst();
         Optional<String> expected = Optional.empty();
         Optional<String> result = target.getPart(0);
         assertEquals(expected, result);
@@ -106,7 +106,7 @@ class URLTargetTest {
 
     @Test
     void omitFirstPart() {
-        URLTarget target = new URLTarget("/example/target").omitFirst();
+        URIPath target = new URIPath("/example/target").omitFirst();
         Optional<String> expected = Optional.of("target");
         Optional<String> result = target.getPart(0);
         assertEquals(expected, result);
@@ -114,7 +114,7 @@ class URLTargetTest {
 
     @Test
     void omitFirstFullTarget() {
-        URLTarget target = new URLTarget("/example/target").omitFirst();
+        URIPath target = new URIPath("/example/target").omitFirst();
         String expected = "/target";
         String result = target.asString();
         assertEquals(expected, result);
@@ -124,7 +124,7 @@ class URLTargetTest {
     void partsAreRemoved() {
         String test = "/example/target";
         String expected = "/target";
-        String result = URLTarget.removePartsBefore(test, 1);
+        String result = URIPath.removePartsBefore(test, 1);
         assertEquals(expected, result);
     }
 
@@ -132,7 +132,7 @@ class URLTargetTest {
     void partsAreRemoved2() {
         String test = "/example/target/";
         String expected = "/";
-        String result = URLTarget.removePartsBefore(test, 2);
+        String result = URIPath.removePartsBefore(test, 2);
         assertEquals(expected, result);
     }
 
@@ -140,7 +140,7 @@ class URLTargetTest {
     void partsAreRemoved3() {
         String test = "/example/target";
         String expected = "";
-        String result = URLTarget.removePartsBefore(test, 2);
+        String result = URIPath.removePartsBefore(test, 2);
         assertEquals(expected, result);
     }
 
@@ -148,7 +148,7 @@ class URLTargetTest {
     void partsAreRemoved4() {
         String test = "/example/target";
         String expected = "/example/target";
-        String result = URLTarget.removePartsBefore(test, 0);
+        String result = URIPath.removePartsBefore(test, 0);
         assertEquals(expected, result);
     }
 
@@ -156,7 +156,7 @@ class URLTargetTest {
     void partsAreRemoved5() {
         String test = "/example/target/";
         String expected = "/";
-        String result = URLTarget.removePartsBefore(test, 2);
+        String result = URIPath.removePartsBefore(test, 2);
         assertEquals(expected, result);
     }
 
@@ -164,7 +164,7 @@ class URLTargetTest {
     void noPartsToRemove() {
         String test = "";
         String expected = "";
-        String result = URLTarget.removePartsBefore(test, 1);
+        String result = URIPath.removePartsBefore(test, 1);
         assertEquals(expected, result);
     }
 

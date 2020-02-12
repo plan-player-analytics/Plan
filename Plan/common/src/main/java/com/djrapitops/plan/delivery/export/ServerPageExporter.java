@@ -20,9 +20,8 @@ import com.djrapitops.plan.delivery.rendering.pages.Page;
 import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.pages.json.RootJSONResolver;
-import com.djrapitops.plan.delivery.webserver.response.Response;
+import com.djrapitops.plan.delivery.webserver.response.Response_old;
 import com.djrapitops.plan.delivery.webserver.response.errors.ErrorResponse;
-import com.djrapitops.plan.exceptions.GenerationException;
 import com.djrapitops.plan.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.Server;
@@ -81,7 +80,7 @@ public class ServerPageExporter extends FileExporter {
         exportPaths = new ExportPaths();
     }
 
-    public void export(Path toDirectory, Server server) throws IOException, NotFoundException, GenerationException {
+    public void export(Path toDirectory, Server server) throws IOException, NotFoundException {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
 
@@ -92,7 +91,7 @@ public class ServerPageExporter extends FileExporter {
         exportPaths.clear();
     }
 
-    private void exportHtml(Path toDirectory, Server server) throws IOException, NotFoundException, GenerationException {
+    private void exportHtml(Path toDirectory, Server server) throws IOException, NotFoundException {
         UUID serverUUID = server.getUuid();
         Path to = toDirectory
                 .resolve(serverInfo.getServer().isProxy() ? "server/" + toFileName(server.getName()) : "server")
@@ -134,7 +133,7 @@ public class ServerPageExporter extends FileExporter {
     }
 
     private void exportJSON(Path toDirectory, String resource) throws NotFoundException, IOException {
-        Response found = getJSONResponse(resource);
+        Response_old found = getJSONResponse(resource);
         if (found instanceof ErrorResponse) {
             throw new NotFoundException(resource + " was not properly exported: " + found.getContent());
         }
@@ -152,7 +151,7 @@ public class ServerPageExporter extends FileExporter {
         return StringUtils.replaceEach(resource, new String[]{"?", "&", "type=", "server="}, new String[]{"-", "_", "", ""});
     }
 
-    private Response getJSONResponse(String resource) {
+    private Response_old getJSONResponse(String resource) {
         try {
             return jsonHandler.resolve(null, new RequestTarget(URI.create(resource)));
         } catch (WebException e) {

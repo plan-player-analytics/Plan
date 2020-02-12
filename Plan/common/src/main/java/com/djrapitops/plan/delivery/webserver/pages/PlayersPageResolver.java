@@ -19,8 +19,8 @@ package com.djrapitops.plan.delivery.webserver.pages;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
-import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
+import com.djrapitops.plan.delivery.webserver.response.Response_old;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
 import com.djrapitops.plan.exceptions.connection.WebException;
@@ -51,7 +51,7 @@ public class PlayersPageResolver implements PageResolver {
     }
 
     @Override
-    public Response resolve(Request request, RequestTarget target) throws WebException {
+    public Response_old resolve(Request request, RequestTarget target) throws WebException {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState != Database.State.OPEN) {
             throw new ForbiddenException("Database is " + dbState.name() + " - Please try again later. You can check database status with /plan info");

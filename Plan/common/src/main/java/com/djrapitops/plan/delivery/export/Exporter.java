@@ -17,7 +17,6 @@
 package com.djrapitops.plan.delivery.export;
 
 import com.djrapitops.plan.exceptions.ExportException;
-import com.djrapitops.plan.exceptions.GenerationException;
 import com.djrapitops.plan.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -86,7 +85,7 @@ public class Exporter extends FileExporter {
                 serverPageExporter.export(toDirectory, server);
             }
             return true;
-        } catch (IOException | NotFoundException | GenerationException e) {
+        } catch (IOException | NotFoundException e) {
             failedServers.add(serverUUID);
             throw new ExportException("Failed to export server: " + server.getIdentifiableName() + " (Attempts disabled until next reload), " + e.toString(), e);
         }
@@ -125,7 +124,7 @@ public class Exporter extends FileExporter {
         try {
             playerPageExporter.export(toDirectory, playerUUID, playerName);
             return true;
-        } catch (IOException | NotFoundException | GenerationException e) {
+        } catch (IOException | NotFoundException e) {
             throw new ExportException("Failed to export player: " + playerName + ", " + e.toString(), e);
         }
     }
@@ -137,7 +136,7 @@ public class Exporter extends FileExporter {
         try {
             playersPageExporter.export(toDirectory);
             return true;
-        } catch (IOException | NotFoundException | GenerationException e) {
+        } catch (IOException | NotFoundException e) {
             throw new ExportException("Failed to export players page, " + e.toString(), e);
         }
     }

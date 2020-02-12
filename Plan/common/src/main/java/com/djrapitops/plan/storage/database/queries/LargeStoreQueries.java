@@ -17,7 +17,7 @@
 package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.Nickname;
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.WebUser_old;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.identification.Server;
@@ -119,7 +119,7 @@ public class LargeStoreQueries {
      * @param users Collection of Plan WebUsers.
      * @return Executable, use inside a {@link com.djrapitops.plan.storage.database.transactions.Transaction}
      */
-    public static Executable storeAllPlanWebUsers(Collection<WebUser> users) {
+    public static Executable storeAllPlanWebUsers(Collection<WebUser_old> users) {
         if (Verify.isEmpty(users)) {
             return Executable.empty();
         }
@@ -127,7 +127,7 @@ public class LargeStoreQueries {
         return new ExecBatchStatement(SecurityTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                for (WebUser user : users) {
+                for (WebUser_old user : users) {
                     String userName = user.getName();
                     String pass = user.getSaltedPassHash();
                     int permLvl = user.getPermLevel();

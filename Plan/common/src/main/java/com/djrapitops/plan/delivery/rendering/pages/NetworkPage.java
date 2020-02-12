@@ -22,7 +22,6 @@ import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
-import com.djrapitops.plan.exceptions.GenerationException;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -31,7 +30,6 @@ import com.djrapitops.plan.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.version.VersionCheckSystem;
 import org.apache.commons.lang3.StringUtils;
 
@@ -45,27 +43,28 @@ import java.util.UUID;
  */
 public class NetworkPage implements Page {
 
+    private final String templateHtml;
     private final DBSystem dbSystem;
 
     private final VersionCheckSystem versionCheckSystem;
-    private final PlanFiles files;
     private final PlanConfig config;
     private final Theme theme;
     private final ServerInfo serverInfo;
     private final Formatters formatters;
 
     NetworkPage(
+            String templateHtml,
+
             DBSystem dbSystem,
             VersionCheckSystem versionCheckSystem,
-            PlanFiles files,
             PlanConfig config,
             Theme theme,
             ServerInfo serverInfo,
             Formatters formatters
     ) {
+        this.templateHtml = templateHtml;
         this.dbSystem = dbSystem;
         this.versionCheckSystem = versionCheckSystem;
-        this.files = files;
         this.config = config;
         this.theme = theme;
         this.serverInfo = serverInfo;
@@ -73,42 +72,38 @@ public class NetworkPage implements Page {
     }
 
     @Override
-    public String toHtml() throws GenerationException {
-        try {
-            PlaceholderReplacer placeholders = new PlaceholderReplacer();
+    public String toHtml() {
+        PlaceholderReplacer placeholders = new PlaceholderReplacer();
 
-            UUID serverUUID = serverInfo.getServerUUID();
-            placeholders.put("networkDisplayName", config.get(ProxySettings.NETWORK_NAME));
-            placeholders.put("serverName", config.get(ProxySettings.NETWORK_NAME));
-            placeholders.put("serverUUID", serverUUID.toString());
+        UUID serverUUID = serverInfo.getServerUUID();
+        placeholders.put("networkDisplayName", config.get(ProxySettings.NETWORK_NAME));
+        placeholders.put("serverName", config.get(ProxySettings.NETWORK_NAME));
+        placeholders.put("serverUUID", serverUUID.toString());
 
-            placeholders.put("gmPieColors", theme.getValue(ThemeVal.GRAPH_GM_PIE));
-            placeholders.put("playersGraphColor", theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));
-            placeholders.put("worldMapColLow", theme.getValue(ThemeVal.WORLD_MAP_LOW));
-            placeholders.put("worldMapColHigh", theme.getValue(ThemeVal.WORLD_MAP_HIGH));
-            placeholders.put("maxPingColor", theme.getValue(ThemeVal.GRAPH_MAX_PING));
-            placeholders.put("minPingColor", theme.getValue(ThemeVal.GRAPH_MIN_PING));
-            placeholders.put("avgPingColor", theme.getValue(ThemeVal.GRAPH_AVG_PING));
-            placeholders.put("timeZone", config.getTimeZoneOffsetHours());
+        placeholders.put("gmPieColors", theme.getValue(ThemeVal.GRAPH_GM_PIE));
+        placeholders.put("playersGraphColor", theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));
+        placeholders.put("worldMapColLow", theme.getValue(ThemeVal.WORLD_MAP_LOW));
+        placeholders.put("worldMapColHigh", theme.getValue(ThemeVal.WORLD_MAP_HIGH));
+        placeholders.put("maxPingColor", theme.getValue(ThemeVal.GRAPH_MAX_PING));
+        placeholders.put("minPingColor", theme.getValue(ThemeVal.GRAPH_MIN_PING));
+        placeholders.put("avgPingColor", theme.getValue(ThemeVal.GRAPH_AVG_PING));
+        placeholders.put("timeZone", config.getTimeZoneOffsetHours());
 
-            placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
-            placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
-            placeholders.put("contributors", Contributors.generateContributorHtml());
+        placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
+        placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
+        placeholders.put("contributors", Contributors.generateContributorHtml());
 
-            CachingSupplier<ServerPluginTabs> pluginTabs = new CachingSupplier<>(() -> {
-                List<ExtensionData> extensionData = dbSystem.getDatabase().query(new ExtensionServerDataQuery(serverUUID));
-                return new ServerPluginTabs(extensionData, formatters);
-            });
+        CachingSupplier<ServerPluginTabs> pluginTabs = new CachingSupplier<>(() -> {
+            List<ExtensionData> extensionData = dbSystem.getDatabase().query(new ExtensionServerDataQuery(serverUUID));
+            return new ServerPluginTabs(extensionData, formatters);
+        });
 
-            String nav = JSONCache.getOrCacheString(DataID.EXTENSION_NAV, serverUUID, () -> pluginTabs.get().getNav());
-            String tabs = JSONCache.getOrCacheString(DataID.EXTENSION_TABS, serverUUID, () -> pluginTabs.get().getTabs());
+        String nav = JSONCache.getOrCacheString(DataID.EXTENSION_NAV, serverUUID, () -> pluginTabs.get().getNav());
+        String tabs = JSONCache.getOrCacheString(DataID.EXTENSION_TABS, serverUUID, () -> pluginTabs.get().getTabs());
 
-            placeholders.put("navPluginsTabs", nav);
-            placeholders.put("tabsPlugins", StringUtils.remove(tabs, "${backButton}"));
+        placeholders.put("navPluginsTabs", nav);
+        placeholders.put("tabsPlugins", StringUtils.remove(tabs, "${backButton}"));
 
-            return placeholders.apply(files.getCustomizableResourceOrDefault("web/network.html").asString());
-        } catch (Exception e) {
-            throw new GenerationException(e);
-        }
+        return placeholders.apply(templateHtml);
     }
 }

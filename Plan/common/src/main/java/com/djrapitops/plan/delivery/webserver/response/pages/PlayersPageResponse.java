@@ -17,14 +17,13 @@
 package com.djrapitops.plan.delivery.webserver.response.pages;
 
 import com.djrapitops.plan.delivery.rendering.pages.PlayersPage;
-import com.djrapitops.plan.exceptions.GenerationException;
 
 /**
  * @author Rsl1122
  */
 public class PlayersPageResponse extends PageResponse {
 
-    public PlayersPageResponse(PlayersPage playersPage) throws GenerationException {
+    public PlayersPageResponse(PlayersPage playersPage) {
         setHeader("HTTP/1.1 200 OK");
         setContent(playersPage.toHtml());
     }

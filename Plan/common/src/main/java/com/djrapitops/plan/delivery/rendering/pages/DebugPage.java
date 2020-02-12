@@ -19,6 +19,8 @@ package com.djrapitops.plan.delivery.rendering.pages;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
+import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.delivery.rendering.html.structure.TabsElement;
@@ -52,6 +54,7 @@ import java.util.*;
  */
 public class DebugPage implements Page {
 
+    private final String template;
     private final Database database;
     private final ServerInfo serverInfo;
     private final VersionCheckSystem versionCheckSystem;
@@ -62,6 +65,8 @@ public class DebugPage implements Page {
     private final Formatter<Long> yearFormatter;
 
     DebugPage(
+            String htmlTemplate,
+
             Database database,
             ServerInfo serverInfo,
             Formatters formatters,
@@ -70,6 +75,8 @@ public class DebugPage implements Page {
             Timings timings,
             ErrorHandler errorHandler
     ) {
+        this.template = htmlTemplate;
+
         this.database = database;
         this.serverInfo = serverInfo;
         this.versionCheckSystem = versionCheckSystem;
@@ -82,6 +89,17 @@ public class DebugPage implements Page {
 
     @Override
     public String toHtml() {
+        PlaceholderReplacer placeholders = new PlaceholderReplacer();
+        placeholders.put("title", Icon.called("bug") + " Debug Information");
+        placeholders.put("titleText", "Debug Information");
+        placeholders.put("paragraph", createContent());
+        placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
+        placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
+        placeholders.put("contributors", Contributors.generateContributorHtml());
+        return placeholders.apply(template);
+    }
+
+    private String createContent() {
         StringBuilder preContent = new StringBuilder();
 
         String issueLink = Html.LINK_EXTERNAL.create("https://github.com/Rsl1122/Plan-PlayerAnalytics/issues/new", "Create new issue on Github");

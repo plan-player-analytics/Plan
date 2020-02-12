@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.auth;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.WebUser_old;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 
 /**
@@ -26,6 +26,6 @@ import com.djrapitops.plan.exceptions.WebUserAuthException;
  */
 public interface Authentication {
 
-    WebUser getWebUser() throws WebUserAuthException;
+    WebUser_old getWebUser() throws WebUserAuthException;
 
 }

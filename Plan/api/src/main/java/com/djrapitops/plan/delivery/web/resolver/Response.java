@@ -38,6 +38,10 @@ public final class Response {
         headers = new HashMap<>();
     }
 
+    public static ResponseBuilder builder() {
+        return new ResponseBuilder();
+    }
+
     public byte[] getBytes() {
         return bytes;
     }
@@ -52,6 +56,10 @@ public final class Response {
 
     public Optional<Charset> getCharset() {
         return Optional.ofNullable(charset);
+    }
+
+    public boolean isErrorResponse() {
+        return code >= 400;
     }
 
 }

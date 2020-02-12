@@ -16,13 +16,13 @@
  */
 package com.djrapitops.plan.delivery.webserver.pages.json;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.WebUser_old;
 import com.djrapitops.plan.delivery.rendering.json.PlayerJSONCreator;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.pages.PageResolver;
-import com.djrapitops.plan.delivery.webserver.response.Response;
+import com.djrapitops.plan.delivery.webserver.response.Response_old;
 import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.WebException;
@@ -45,14 +45,14 @@ public class PlayerJSONResolver implements PageResolver {
     }
 
     @Override
-    public Response resolve(Request request, RequestTarget target) throws WebException {
+    public Response_old resolve(Request request, RequestTarget target) throws WebException {
         UUID playerUUID = identifiers.getPlayerUUID(target); // Can throw BadRequestException
         return new JSONResponse(jsonCreator.createJSONAsMap(playerUUID));
     }
 
     @Override
     public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
-        WebUser webUser = auth.getWebUser();
+        WebUser_old webUser = auth.getWebUser();
         return webUser.getPermLevel() <= 1 || webUser.getName().equalsIgnoreCase(target.get(target.size() - 1));
 
     }

@@ -16,10 +16,12 @@
  */
 package com.djrapitops.plan.delivery.webserver.response;
 
+import com.djrapitops.plan.delivery.rendering.pages.Page;
 import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
+import com.djrapitops.plan.delivery.web.resolver.MimeType;
+import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.webserver.response.errors.*;
 import com.djrapitops.plan.delivery.webserver.response.pages.*;
-import com.djrapitops.plan.exceptions.GenerationException;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -35,7 +37,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 /**
- * Factory for creating different {@link Response} objects.
+ * Factory for creating different {@link Response_old} objects.
  *
  * @author Rsl1122
  */
@@ -65,16 +67,38 @@ public class ResponseFactory {
 
     public Response debugPageResponse() {
         try {
+            return forPage(pageFactory.debugPage());
+        } catch (IOException e) {
+            return forInternalError("Failed to generate debug page", e);
+        }
+    }
+
+    public Response forPage(Page page) throws IOException {
+        return Response.builder().setContent(page.toHtml())
+                .setMimeType(MimeType.HTML)
+                .build();
+    }
+
+    public Response forInternalError(String cause, Throwable error) {
+        return Response.builder().setContent(pageFactory.internalErrorPage(cause, error).toHtml())
+                .setMimeType(MimeType.HTML)
+                .setStatus(500)
+                .build();
+    }
+
+    @Deprecated
+    public Response_old debugPageResponse_old() {
+        try {
             return new DebugPageResponse(pageFactory.debugPage(), versionCheckSystem, files);
         } catch (IOException e) {
             return internalErrorResponse(e, "Failed to generate debug page");
         }
     }
 
-    public Response playersPageResponse() {
+    public Response_old playersPageResponse() {
         try {
             return new PlayersPageResponse(pageFactory.playersPage());
-        } catch (GenerationException e) {
+        } catch (IOException e) {
             return internalErrorResponse(e, "Failed to generate players page");
         }
     }
@@ -91,18 +115,18 @@ public class ResponseFactory {
         }
     }
 
-    public Response networkPageResponse() {
+    public Response_old networkPageResponse() {
         try {
             return new PageResponse(pageFactory.networkPage());
-        } catch (GenerationException e) {
+        } catch (IOException e) {
             return internalErrorResponse(e, "Failed to generate network page");
         }
     }
 
-    public Response serverPageResponse(UUID serverUUID) throws NotFoundException {
+    public Response_old serverPageResponse(UUID serverUUID) throws NotFoundException {
         try {
             return new PageResponse(pageFactory.serverPage(serverUUID));
-        } catch (GenerationException e) {
+        } catch (IOException e) {
             return internalErrorResponse(e, "Failed to generate server page");
         }
     }
@@ -111,7 +135,7 @@ public class ResponseFactory {
         return new RawPlayerDataResponse(dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(uuid)));
     }
 
-    public Response javaScriptResponse(String fileName) {
+    public Response_old javaScriptResponse(String fileName) {
         try {
             return new JavaScriptResponse(fileName, files, locale);
         } catch (IOException e) {
@@ -119,7 +143,7 @@ public class ResponseFactory {
         }
     }
 
-    public Response cssResponse(String fileName) {
+    public Response_old cssResponse(String fileName) {
         try {
             return new CSSResponse(fileName, files);
         } catch (IOException e) {
@@ -127,11 +151,11 @@ public class ResponseFactory {
         }
     }
 
-    public Response imageResponse(String fileName) {
+    public Response_old imageResponse(String fileName) {
         return new ByteResponse(ResponseType.IMAGE, FileResponse.format(fileName), files);
     }
 
-    public Response fontResponse(String fileName) {
+    public Response_old fontResponse(String fileName) {
         ResponseType type = ResponseType.FONT_BYTESTREAM;
         if (fileName.endsWith(".woff")) {
             type = ResponseType.FONT_WOFF;
@@ -151,11 +175,11 @@ public class ResponseFactory {
      * @param location Starts with '/'
      * @return Redirection response.
      */
-    public Response redirectResponse(String location) {
+    public Response_old redirectResponse(String location) {
         return new RedirectResponse(location);
     }
 
-    public Response faviconResponse() {
+    public Response_old faviconResponse() {
         return new ByteResponse(ResponseType.X_ICON, "web/favicon.ico", files);
     }
 
@@ -212,12 +236,12 @@ public class ResponseFactory {
         return new BadRequestResponse(errorMessage + " (when requesting '" + target + "')");
     }
 
-    public Response playerPageResponse(UUID playerUUID) {
+    public Response_old playerPageResponse(UUID playerUUID) {
         try {
             return new PageResponse(pageFactory.playerPage(playerUUID));
         } catch (IllegalStateException e) {
             return playerNotFound404();
-        } catch (GenerationException e) {
+        } catch (IOException e) {
             return internalErrorResponse(e, "Failed to generate player page");
         }
     }

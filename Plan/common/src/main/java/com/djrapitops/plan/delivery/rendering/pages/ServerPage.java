@@ -26,7 +26,6 @@ import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
-import com.djrapitops.plan.exceptions.GenerationException;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
 import com.djrapitops.plan.identification.Server;
@@ -36,10 +35,8 @@ import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.version.VersionCheckSystem;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,37 +49,36 @@ import static com.djrapitops.plan.delivery.domain.keys.AnalysisKeys.*;
  */
 public class ServerPage implements Page {
 
+    private final String templateHtml;
     private final Server server;
     private final PlanConfig config;
     private final Theme theme;
     private final VersionCheckSystem versionCheckSystem;
-    private final PlanFiles files;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final Formatters formatters;
 
     ServerPage(
-            Server server,
+            String templateHtml, Server server,
             PlanConfig config,
             Theme theme,
             VersionCheckSystem versionCheckSystem,
-            PlanFiles files,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             Formatters formatters
     ) {
+        this.templateHtml = templateHtml;
         this.server = server;
         this.config = config;
         this.theme = theme;
         this.versionCheckSystem = versionCheckSystem;
-        this.files = files;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.formatters = formatters;
     }
 
     @Override
-    public String toHtml() throws GenerationException {
+    public String toHtml() {
         PlaceholderReplacer placeholders = new PlaceholderReplacer();
 
         UUID serverUUID = server.getUuid();
@@ -139,10 +135,6 @@ public class ServerPage implements Page {
         placeholders.put("navPluginsTabs", nav);
         placeholders.put("tabsPlugins", tabs);
 
-        try {
-            return placeholders.apply(files.getCustomizableResourceOrDefault("web/server.html").asString());
-        } catch (IOException e) {
-            throw new GenerationException(e);
-        }
+        return placeholders.apply(templateHtml);
     }
 }

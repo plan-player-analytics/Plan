@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.utilities.comparators;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.WebUser_old;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
@@ -83,14 +83,14 @@ class ComparatorTest {
 
     @Test
     void webUserComparator() throws PassEncryptUtil.CannotPerformOperationException {
-        List<WebUser> webUsers = RandomData.randomWebUsers();
+        List<WebUser_old> webUsers = RandomData.randomWebUsers();
 
-        List<Integer> expected = webUsers.stream().map(WebUser::getPermLevel)
+        List<Integer> expected = webUsers.stream().map(WebUser_old::getPermLevel)
                 .sorted(Integer::compare).collect(Collectors.toList());
         Collections.reverse(expected);
 
         webUsers.sort(new WebUserComparator());
-        List<Integer> result = Lists.map(webUsers, WebUser::getPermLevel);
+        List<Integer> result = Lists.map(webUsers, WebUser_old::getPermLevel);
 
         assertEquals(expected, result);
     }

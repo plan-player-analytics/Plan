@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.transactions.commands;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.WebUser_old;
 import com.djrapitops.plan.storage.database.sql.tables.SecurityTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
@@ -28,7 +28,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.DELETE_FROM;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 
 /**
- * Transaction to remove a Plan {@link WebUser} from the database.
+ * Transaction to remove a Plan {@link WebUser_old} from the database.
  *
  * @author Rsl1122
  */

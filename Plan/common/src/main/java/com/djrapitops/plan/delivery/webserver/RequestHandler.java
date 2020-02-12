@@ -19,8 +19,8 @@ package com.djrapitops.plan.delivery.webserver;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.auth.BasicAuthentication;
 import com.djrapitops.plan.delivery.webserver.response.PromptAuthorizationResponse;
-import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
+import com.djrapitops.plan.delivery.webserver.response.Response_old;
 import com.djrapitops.plan.delivery.webserver.response.errors.ForbiddenResponse;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
@@ -96,11 +96,11 @@ public class RequestHandler implements HttpHandler {
         request.setAuth(getAuthorization(requestHeaders));
 
         try {
-            Response response = shouldPreventRequest(request.getRemoteAddress()) // Forbidden response (Optional)
+            Response_old response = shouldPreventRequest(request.getRemoteAddress()) // Forbidden response (Optional)
                     .orElseGet(() -> responseResolver.getResponse(request));     // Or the actual requested response
 
             // Increase attempt count and block if too high
-            Optional<Response> forbid = handlePasswordBruteForceAttempts(request, response);
+            Optional<Response_old> forbid = handlePasswordBruteForceAttempts(request, response);
             if (forbid.isPresent()) {
                 response = forbid.get();
             }
@@ -124,7 +124,7 @@ public class RequestHandler implements HttpHandler {
         }
     }
 
-    private Optional<Response> shouldPreventRequest(String accessor) {
+    private Optional<Response_old> shouldPreventRequest(String accessor) {
         Integer attempts = failedLoginAttempts.getIfPresent(accessor);
         if (attempts == null) {
             attempts = 0;
@@ -137,7 +137,7 @@ public class RequestHandler implements HttpHandler {
         return Optional.empty();
     }
 
-    private Optional<Response> handlePasswordBruteForceAttempts(Request request, Response response) {
+    private Optional<Response_old> handlePasswordBruteForceAttempts(Request request, Response_old response) {
         if (request.getAuth().isPresent() && response instanceof PromptAuthorizationResponse) {
             // Authentication was attempted, but failed so new attempt is going to be given if not forbidden
 
@@ -166,7 +166,7 @@ public class RequestHandler implements HttpHandler {
         return Optional.empty();
     }
 
-    private Optional<Response> createForbiddenResponse() {
+    private Optional<Response_old> createForbiddenResponse() {
         return Optional.of(responseFactory.forbidden403("You have too many failed login attempts. Please wait 2 minutes until attempting again."));
     }
 

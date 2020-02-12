@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.webserver.pages;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
-import com.djrapitops.plan.delivery.webserver.response.Response;
+import com.djrapitops.plan.delivery.webserver.response.Response_old;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.WebException;
 
@@ -29,6 +29,7 @@ import com.djrapitops.plan.exceptions.connection.WebException;
  * @author Rsl1122
  * @see CompositePageResolver for larger depth resolution than 1.
  */
+@Deprecated
 public interface PageResolver {
 
     /**
@@ -38,7 +39,7 @@ public interface PageResolver {
      * @param target  Rest of the target coordinates after this page has been solved.
      * @return Appropriate response.
      */
-    Response resolve(Request request, RequestTarget target) throws WebException;
+    Response_old resolve(Request request, RequestTarget target) throws WebException;
 
     default boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
         return true;

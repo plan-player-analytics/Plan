@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.commands.subcommands.webuser;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.WebUser_old;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -76,9 +76,9 @@ public class WebListUsersCommand extends CommandNode {
 
         processing.submitNonCritical(() -> {
             try {
-                List<WebUser> users = dbSystem.getDatabase().query(WebUserQueries.fetchAllPlanWebUsers());
+                List<WebUser_old> users = dbSystem.getDatabase().query(WebUserQueries.fetchAllPlanWebUsers());
                 sender.sendMessage(locale.getString(CommandLang.HEADER_WEB_USERS, users.size()));
-                for (WebUser user : users) {
+                for (WebUser_old user : users) {
                     sender.sendMessage(locale.getString(CommandLang.WEB_USER_LIST, user.getName(), user.getPermLevel()));
                 }
                 sender.sendMessage(">");

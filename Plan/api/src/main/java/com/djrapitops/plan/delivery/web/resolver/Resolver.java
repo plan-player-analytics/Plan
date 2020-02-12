@@ -27,23 +27,35 @@ public interface Resolver {
      *
      * @param permissions WebUser that is accessing this page.
      * @param target      Target that is being accessed, /example/target
-     * @param parameters  Parameters in the URL, ?param=value etc.
+     * @param query       Parameters in the URL, ?param=value etc.
      * @return true if allowed or invalid target, false if response should be 403 (forbidden)
      */
-    boolean canAccess(WebUser permissions, URLTarget target, Parameters parameters);
+    boolean canAccess(WebUser permissions, URIPath target, URIQuery query);
 
     /**
      * Implement request resolution.
      *
-     * @param target     Target that is being accessed, /example/target
-     * @param parameters Parameters in the URL, ?param=value etc.
+     * @param target Target that is being accessed, /example/target
+     * @param query  Parameters in the URL, ?param=value etc.
      * @return Response or empty if the response should be 404 (not found).
      * @see Response for return value
      */
-    Optional<Response> resolve(URLTarget target, Parameters parameters);
+    Optional<Response> resolve(URIPath target, URIQuery query);
 
     default ResponseBuilder newResponseBuilder() {
-        return new ResponseBuilder();
+        return Response.builder();
     }
 
+    /**
+     * Override this method with false to always allow using this resolver.
+     * <p>
+     * Use this when content/style is needed for displaying pages where authentication is not available/needed.
+     *
+     * @param target Target that is being accessed, /example/target
+     * @param query  Parameters in the URL, ?param=value etc.
+     * @return true by default. If false is returned {@link #canAccess(WebUser, URIPath, URIQuery)} will not be called.
+     */
+    default boolean requiresAuth(URIPath target, URIQuery query) {
+        return true;
+    }
 }

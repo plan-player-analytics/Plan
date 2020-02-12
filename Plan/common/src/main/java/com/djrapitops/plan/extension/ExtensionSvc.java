@@ -78,11 +78,13 @@ public class ExtensionSvc implements ExtensionService {
         this.errorHandler = errorHandler;
 
         extensionGatherers = new HashMap<>();
-
-        Holder.set(this);
     }
 
     public void register() {
+        Holder.set(this);
+    }
+
+    public void registerExtensions() {
         try {
             extensionRegister.registerBuiltInExtensions(config.getExtensionSettings().getDisabled());
         } catch (IllegalStateException failedToRegisterOne) {

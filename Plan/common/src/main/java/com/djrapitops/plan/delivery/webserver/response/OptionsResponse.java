@@ -22,7 +22,7 @@ package com.djrapitops.plan.delivery.webserver.response;
  *
  * @author Rsl1122
  */
-public class OptionsResponse extends Response {
+public class OptionsResponse extends Response_old {
 
     public OptionsResponse() {
         setHeader("HTTP/1.1 204 No Content");

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.objects;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.WebUser_old;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
@@ -32,7 +32,7 @@ import java.util.Optional;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
- * Queries for {@link WebUser} objects.
+ * Queries for {@link WebUser_old} objects.
  *
  * @author Rsl1122
  */
@@ -47,18 +47,18 @@ public class WebUserQueries {
      *
      * @return List of Plan WebUsers.
      */
-    public static Query<List<WebUser>> fetchAllPlanWebUsers() {
+    public static Query<List<WebUser_old>> fetchAllPlanWebUsers() {
         String sql = SELECT + '*' + FROM + SecurityTable.TABLE_NAME + ORDER_BY + SecurityTable.PERMISSION_LEVEL + " ASC";
 
-        return new QueryAllStatement<List<WebUser>>(sql, 5000) {
+        return new QueryAllStatement<List<WebUser_old>>(sql, 5000) {
             @Override
-            public List<WebUser> processResults(ResultSet set) throws SQLException {
-                List<WebUser> list = new ArrayList<>();
+            public List<WebUser_old> processResults(ResultSet set) throws SQLException {
+                List<WebUser_old> list = new ArrayList<>();
                 while (set.next()) {
                     String user = set.getString(SecurityTable.USERNAME);
                     String saltedPassHash = set.getString(SecurityTable.SALT_PASSWORD_HASH);
                     int permissionLevel = set.getInt(SecurityTable.PERMISSION_LEVEL);
-                    WebUser info = new WebUser(user, saltedPassHash, permissionLevel);
+                    WebUser_old info = new WebUser_old(user, saltedPassHash, permissionLevel);
                     list.add(info);
                 }
                 return list;
@@ -66,21 +66,21 @@ public class WebUserQueries {
         };
     }
 
-    public static Query<Optional<WebUser>> fetchWebUser(String called) {
+    public static Query<Optional<WebUser_old>> fetchWebUser(String called) {
         String sql = SELECT + '*' + FROM + SecurityTable.TABLE_NAME +
                 WHERE + SecurityTable.USERNAME + "=? LIMIT 1";
-        return new QueryStatement<Optional<WebUser>>(sql) {
+        return new QueryStatement<Optional<WebUser_old>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, called);
             }
 
             @Override
-            public Optional<WebUser> processResults(ResultSet set) throws SQLException {
+            public Optional<WebUser_old> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
                     String saltedPassHash = set.getString(SecurityTable.SALT_PASSWORD_HASH);
                     int permissionLevel = set.getInt(SecurityTable.PERMISSION_LEVEL);
-                    return Optional.of(new WebUser(called, saltedPassHash, permissionLevel));
+                    return Optional.of(new WebUser_old(called, saltedPassHash, permissionLevel));
                 }
                 return Optional.empty();
             }

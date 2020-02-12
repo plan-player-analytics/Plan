@@ -25,7 +25,7 @@ import java.io.IOException;
 /**
  * @author Rsl1122
  */
-public class RedirectResponse extends Response {
+public class RedirectResponse extends Response_old {
 
     private final String direct;
 

@@ -21,7 +21,7 @@ import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.delivery.domain.TablePlayer;
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.WebUser_old;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.container.ServerContainer;
 import com.djrapitops.plan.delivery.domain.keys.Key;
@@ -208,11 +208,11 @@ public interface DatabaseTest {
 
     @Test
     default void webUserIsRegistered() {
-        WebUser expected = new WebUser(TestConstants.PLAYER_ONE_NAME, "RandomGarbageBlah", 0);
+        WebUser_old expected = new WebUser_old(TestConstants.PLAYER_ONE_NAME, "RandomGarbageBlah", 0);
         db().executeTransaction(new RegisterWebUserTransaction(expected));
         commitTest();
 
-        Optional<WebUser> found = db().query(WebUserQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME));
+        Optional<WebUser_old> found = db().query(WebUserQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME));
         assertTrue(found.isPresent());
         assertEquals(expected, found.get());
     }
@@ -500,7 +500,7 @@ public interface DatabaseTest {
                 Collections.singletonList(new DateObj<>(System.currentTimeMillis(), r.nextInt())))
         );
 
-        WebUser webUser = new WebUser(TestConstants.PLAYER_ONE_NAME, "RandomGarbageBlah", 0);
+        WebUser_old webUser = new WebUser_old(TestConstants.PLAYER_ONE_NAME, "RandomGarbageBlah", 0);
         db().executeTransaction(new RegisterWebUserTransaction(webUser));
     }
 

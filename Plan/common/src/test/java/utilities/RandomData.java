@@ -16,7 +16,7 @@
  */
 package utilities;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.WebUser_old;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.gathering.domain.Session;
@@ -51,10 +51,10 @@ public class RandomData {
         return RandomStringUtils.randomAlphanumeric(size);
     }
 
-    public static List<WebUser> randomWebUsers() throws PassEncryptUtil.CannotPerformOperationException {
-        List<WebUser> test = new ArrayList<>();
+    public static List<WebUser_old> randomWebUsers() throws PassEncryptUtil.CannotPerformOperationException {
+        List<WebUser_old> test = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            test.add(new WebUser(randomString(5), PassEncryptUtil.createHash(randomString(7)), r.nextInt()));
+            test.add(new WebUser_old(randomString(5), PassEncryptUtil.createHash(randomString(7)), r.nextInt()));
         }
         return test;
     }

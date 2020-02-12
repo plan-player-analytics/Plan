@@ -16,12 +16,12 @@
  */
 package com.djrapitops.plan.delivery.webserver.response.errors;
 
-import com.djrapitops.plan.delivery.webserver.response.Response;
+import com.djrapitops.plan.delivery.webserver.response.Response_old;
 
 /**
  * @author Fuzzlemann
  */
-public class BadRequestResponse extends Response {
+public class BadRequestResponse extends Response_old {
 
     public BadRequestResponse(String error) {
         super.setHeader("HTTP/1.1 400 Bad Request " + error);

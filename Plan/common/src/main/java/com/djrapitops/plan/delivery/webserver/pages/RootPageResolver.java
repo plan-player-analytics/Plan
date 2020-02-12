@@ -16,14 +16,14 @@
  */
 package com.djrapitops.plan.delivery.webserver.pages;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.WebUser_old;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
-import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
+import com.djrapitops.plan.delivery.webserver.response.Response_old;
 import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -48,7 +48,7 @@ public class RootPageResolver implements PageResolver {
     }
 
     @Override
-    public Response resolve(Request request, RequestTarget target) throws WebException {
+    public Response_old resolve(Request request, RequestTarget target) throws WebException {
         Server server = serverInfo.getServer();
         if (!webServer.isAuthRequired()) {
             return responseFactory.redirectResponse(server.isProxy() ? "network" : "server/" + Html.encodeToURL(server.getIdentifiableName()));
@@ -59,7 +59,7 @@ public class RootPageResolver implements PageResolver {
             return responseFactory.basicAuth();
         }
 
-        WebUser webUser = auth.get().getWebUser();
+        WebUser_old webUser = auth.get().getWebUser();
 
         int permLevel = webUser.getPermLevel();
         switch (permLevel) {

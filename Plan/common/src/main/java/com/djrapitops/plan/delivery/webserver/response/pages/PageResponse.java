@@ -17,9 +17,8 @@
 package com.djrapitops.plan.delivery.webserver.response.pages;
 
 import com.djrapitops.plan.delivery.rendering.pages.Page;
-import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseType;
-import com.djrapitops.plan.exceptions.GenerationException;
+import com.djrapitops.plan.delivery.webserver.response.Response_old;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
@@ -32,7 +31,7 @@ import java.io.IOException;
  *
  * @author Rsl1122
  */
-public class PageResponse extends Response {
+public class PageResponse extends Response_old {
 
     private static final HtmlCompressor HTML_COMPRESSOR = new HtmlCompressor();
 
@@ -44,7 +43,7 @@ public class PageResponse extends Response {
         super(type);
     }
 
-    public PageResponse(Page page) throws GenerationException {
+    public PageResponse(Page page) {
         this(ResponseType.HTML);
         super.setHeader("HTTP/1.1 200 OK");
         setContent(page.toHtml());

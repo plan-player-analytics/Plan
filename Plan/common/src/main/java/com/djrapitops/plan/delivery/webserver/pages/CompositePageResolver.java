@@ -19,8 +19,8 @@ package com.djrapitops.plan.delivery.webserver.pages;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
-import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
+import com.djrapitops.plan.delivery.webserver.response.Response_old;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.WebException;
 
@@ -37,6 +37,7 @@ import java.util.Map;
  *
  * @author Rsl1122
  */
+@Deprecated
 public abstract class CompositePageResolver implements PageResolver {
 
     protected final ResponseFactory responseFactory;
@@ -48,14 +49,16 @@ public abstract class CompositePageResolver implements PageResolver {
         pages = new HashMap<>();
     }
 
+    @Deprecated
     public void registerPage(String targetPage, PageResolver resolver) {
         pages.put(targetPage, resolver);
     }
 
+    @Deprecated
     public void registerPage(String targetPage, PageResolver resolver, int requiredPerm) {
         pages.put(targetPage, new PageResolver() {
             @Override
-            public Response resolve(Request request, RequestTarget target) throws WebException {
+            public Response_old resolve(Request request, RequestTarget target) throws WebException {
                 return resolver.resolve(request, target);
             }
 
@@ -66,10 +69,11 @@ public abstract class CompositePageResolver implements PageResolver {
         });
     }
 
-    public void registerPage(String targetPage, Response response, int requiredPerm) {
+    @Deprecated
+    public void registerPage(String targetPage, Response_old response, int requiredPerm) {
         pages.put(targetPage, new PageResolver() {
             @Override
-            public Response resolve(Request request, RequestTarget target) {
+            public Response_old resolve(Request request, RequestTarget target) {
                 return response;
             }
 
@@ -81,13 +85,15 @@ public abstract class CompositePageResolver implements PageResolver {
     }
 
     @Override
-    public Response resolve(Request request, RequestTarget target) throws WebException {
+    @Deprecated
+    public Response_old resolve(Request request, RequestTarget target) throws WebException {
         PageResolver pageResolver = getPageResolver(target);
         return pageResolver != null
                 ? pageResolver.resolve(request, target)
                 : responseFactory.pageNotFound404();
     }
 
+    @Deprecated
     public PageResolver getPageResolver(RequestTarget target) {
         if (target.isEmpty()) {
             return pages.get("");
@@ -97,6 +103,7 @@ public abstract class CompositePageResolver implements PageResolver {
         return pages.get(targetPage);
     }
 
+    @Deprecated
     public PageResolver getPageResolver(String targetPage) {
         return pages.get(targetPage);
     }

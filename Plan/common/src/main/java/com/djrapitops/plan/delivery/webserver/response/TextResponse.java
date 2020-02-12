@@ -21,7 +21,7 @@ package com.djrapitops.plan.delivery.webserver.response;
  *
  * @author Rsl1122
  */
-public class TextResponse extends Response {
+public class TextResponse extends Response_old {
 
     public TextResponse(String content) {
         setHeader("HTTP/1.1 200 OK");

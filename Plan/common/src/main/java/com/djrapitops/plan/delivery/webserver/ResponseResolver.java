@@ -16,12 +16,17 @@
  */
 package com.djrapitops.plan.delivery.webserver;
 
+import com.djrapitops.plan.delivery.web.ResolverService;
+import com.djrapitops.plan.delivery.web.ResolverSvc;
+import com.djrapitops.plan.delivery.web.resolver.Resolver;
+import com.djrapitops.plan.delivery.web.resolver.URIPath;
+import com.djrapitops.plan.delivery.web.resolver.URIQuery;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.pages.*;
 import com.djrapitops.plan.delivery.webserver.pages.json.RootJSONResolver;
 import com.djrapitops.plan.delivery.webserver.response.OptionsResponse;
-import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
+import com.djrapitops.plan.delivery.webserver.response.Response_old;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
@@ -55,10 +60,12 @@ public class ResponseResolver extends CompositePageResolver {
     private final ErrorHandler errorHandler;
 
     private final ServerInfo serverInfo;
+    private final ResolverService resolverService;
     private final Lazy<WebServer> webServer;
 
     @Inject
     public ResponseResolver(
+            ResolverSvc resolverService,
             ResponseFactory responseFactory,
             Lazy<WebServer> webServer,
             ServerInfo serverInfo,
@@ -72,6 +79,7 @@ public class ResponseResolver extends CompositePageResolver {
             ErrorHandler errorHandler
     ) {
         super(responseFactory);
+        this.resolverService = resolverService;
         this.webServer = webServer;
         this.serverInfo = serverInfo;
         this.debugPageResolver = debugPageResolver;
@@ -83,19 +91,20 @@ public class ResponseResolver extends CompositePageResolver {
     }
 
     public void registerPages() {
-        registerPage("debug", debugPageResolver);
+        resolverService.registerResolver("Plan", "/debug", debugPageResolver);
         registerPage("players", playersPageResolver);
         registerPage("player", playerPageResolver);
 
         registerPage("network", serverPageResolver);
         registerPage("server", serverPageResolver);
 
+        // TODO Figure out how to deal with stuff like this
         registerPage("", new RootPageResolver(responseFactory, webServer.get(), serverInfo));
 
         registerPage("v1", rootJSONResolver);
     }
 
-    public Response getResponse(Request request) {
+    public Response_old getResponse(Request request) {
         try {
             return tryToGetResponse(request);
         } catch (NotFoundException e) {
@@ -112,15 +121,47 @@ public class ResponseResolver extends CompositePageResolver {
         }
     }
 
-    private Response tryToGetResponse(Request request) throws WebException {
-        Optional<Authentication> authentication = request.getAuth();
-        RequestTarget target = request.getTarget();
-        String resource = target.getResourceString();
-
+    private Response_old tryToGetResponse(Request request) throws WebException {
         if ("OPTIONS".equalsIgnoreCase(request.getRequestMethod())) {
             return new OptionsResponse();
         }
 
+        Optional<Authentication> authentication = request.getAuth();
+
+        URIPath target = request.getPath();
+        URIQuery query = request.getQuery();
+
+        Optional<Resolver> foundResolver = resolverService.getResolver(target.asString());
+        if (!foundResolver.isPresent()) return tryToGetResponse_old(request); // TODO Replace with 404 after refactoring
+
+        Resolver resolver = foundResolver.get();
+
+        if (resolver.requiresAuth(target, query)) {
+            // Get required auth
+            boolean isAuthRequired = webServer.get().isAuthRequired();
+            if (isAuthRequired && !authentication.isPresent()) {
+                if (webServer.get().isUsingHTTPS()) {
+                    return responseFactory.basicAuth();
+                } else {
+                    return responseFactory.forbidden403();
+                }
+            }
+
+            if (!isAuthRequired || resolver.canAccess(authentication.get().getWebUser().toNewWebUser(), target, query)) {
+                return resolver.resolve(target, query).map(Response_old::from).orElseGet(responseFactory::pageNotFound404);
+            } else {
+                return responseFactory.forbidden403();
+            }
+        } else {
+            return resolver.resolve(target, query).map(Response_old::from).orElseGet(responseFactory::pageNotFound404);
+        }
+    }
+
+    private Response_old tryToGetResponse_old(Request request) throws WebException {
+        RequestTarget target = request.getRequestTarget();
+        Optional<Authentication> authentication = request.getAuth();
+        String resource = target.getResourceString();
+        // TODO Turn into resolvers
         if (target.endsWith(".css")) {
             return responseFactory.cssResponse(resource);
         }
@@ -136,7 +177,6 @@ public class ResponseResolver extends CompositePageResolver {
         if (target.endsWithAny(".woff", ".woff2", ".eot", ".ttf")) {
             return responseFactory.fontResponse(resource);
         }
-
         boolean isAuthRequired = webServer.get().isAuthRequired();
         if (isAuthRequired && !authentication.isPresent()) {
             if (webServer.get().isUsingHTTPS()) {

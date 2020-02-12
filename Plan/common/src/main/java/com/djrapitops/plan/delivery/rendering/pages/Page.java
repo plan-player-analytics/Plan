@@ -16,14 +16,11 @@
  */
 package com.djrapitops.plan.delivery.rendering.pages;
 
-import com.djrapitops.plan.exceptions.GenerationException;
-
 /**
  * Interface for generating page HTML String.
  *
  * @author Rsl1122
  */
 public interface Page {
-
-    String toHtml() throws GenerationException;
+    String toHtml();
 }

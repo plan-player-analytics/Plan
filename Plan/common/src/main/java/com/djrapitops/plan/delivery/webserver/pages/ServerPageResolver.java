@@ -21,8 +21,8 @@ import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
-import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
+import com.djrapitops.plan.delivery.webserver.response.Response_old;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
 import com.djrapitops.plan.exceptions.connection.WebException;
@@ -65,7 +65,7 @@ public class ServerPageResolver implements PageResolver {
     }
 
     @Override
-    public Response resolve(Request request, RequestTarget target) throws WebException {
+    public Response_old resolve(Request request, RequestTarget target) throws WebException {
         Optional<UUID> serverUUID = getServerUUID(target);
         boolean proxy = serverInfo.getServer().isProxy();
         if (serverUUID.isPresent()) {

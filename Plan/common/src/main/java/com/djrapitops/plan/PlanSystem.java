@@ -20,6 +20,7 @@ import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.capability.CapabilitySvc;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.delivery.export.ExportSystem;
+import com.djrapitops.plan.delivery.web.ResolverSvc;
 import com.djrapitops.plan.delivery.webserver.NonProxyWebserverDisableChecker;
 import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.delivery.webserver.WebServerSystem;
@@ -77,6 +78,7 @@ public class PlanSystem implements SubSystem {
     private final ImportSystem importSystem;
     private final ExportSystem exportSystem;
     private final DeliveryUtilities deliveryUtilities;
+    private final ResolverSvc resolverService;
     private final ExtensionSvc extensionService;
     private final QuerySvc queryService;
     private final SettingsSvc settingsService;
@@ -100,6 +102,7 @@ public class PlanSystem implements SubSystem {
             ImportSystem importSystem,
             ExportSystem exportSystem,
             DeliveryUtilities deliveryUtilities,
+            ResolverSvc resolverService,
             ExtensionSvc extensionService,
             QuerySvc queryService,
             SettingsSvc settingsService,
@@ -122,6 +125,7 @@ public class PlanSystem implements SubSystem {
         this.importSystem = importSystem;
         this.exportSystem = exportSystem;
         this.deliveryUtilities = deliveryUtilities;
+        this.resolverService = resolverService;
         this.extensionService = extensionService;
         this.queryService = queryService;
         this.settingsService = settingsService;
@@ -153,6 +157,11 @@ public class PlanSystem implements SubSystem {
     public void enable() throws EnableException {
         CapabilitySvc.initialize();
 
+        extensionService.register();
+        resolverService.register();
+        settingsService.register();
+        queryService.register();
+
         enableSystems(
                 files,
                 configSystem,
@@ -176,9 +185,7 @@ public class PlanSystem implements SubSystem {
             ));
         }
 
-        settingsService.register();
-        queryService.register();
-        extensionService.register();
+        extensionService.registerExtensions();
         enabled = true;
     }
 

@@ -23,7 +23,7 @@ import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.delivery.webserver.pages.PageResolver;
-import com.djrapitops.plan.delivery.webserver.response.Response;
+import com.djrapitops.plan.delivery.webserver.response.Response_old;
 import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.WebException;
@@ -54,7 +54,7 @@ public class ServerTabJSONResolver<T> implements PageResolver {
     }
 
     @Override
-    public Response resolve(Request request, RequestTarget target) throws WebException {
+    public Response_old resolve(Request request, RequestTarget target) throws WebException {
         UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
         return JSONCache.getOrCache(dataID, serverUUID, () -> new JSONResponse(jsonCreator.apply(serverUUID)));
     }

@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.delivery.domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -23,13 +25,14 @@ import java.util.Objects;
  *
  * @author Rsl1122
  */
-public class WebUser {
+@Deprecated
+public class WebUser_old {
 
     private final String user;
     private final String saltedPassHash;
     private final int permLevel;
 
-    public WebUser(String user, String saltedPassHash, int permLevel) {
+    public WebUser_old(String user, String saltedPassHash, int permLevel) {
         this.user = user;
         this.saltedPassHash = saltedPassHash;
         this.permLevel = permLevel;
@@ -51,7 +54,7 @@ public class WebUser {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        WebUser webUser = (WebUser) o;
+        WebUser_old webUser = (WebUser_old) o;
         return permLevel == webUser.permLevel &&
                 Objects.equals(user, webUser.user) &&
                 Objects.equals(saltedPassHash, webUser.saltedPassHash);
@@ -60,5 +63,25 @@ public class WebUser {
     @Override
     public int hashCode() {
         return Objects.hash(user, saltedPassHash, permLevel);
+    }
+
+    public com.djrapitops.plan.delivery.web.resolver.WebUser toNewWebUser() {
+        List<String> permissions = new ArrayList<>();
+        if (permLevel <= 0) {
+            permissions.add("page.network");
+            permissions.add("page.server");
+            permissions.add("page.debug");
+            // TODO Add JSON Permissions
+        }
+        if (permLevel <= 1) {
+            permissions.add("page.players");
+            permissions.add("page.player.other");
+        }
+        if (permLevel <= 2) {
+            permissions.add("page.player.self");
+        }
+        return new com.djrapitops.plan.delivery.web.resolver.WebUser(
+                user, permissions.toArray(new String[0])
+        );
     }
 }

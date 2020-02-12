@@ -23,7 +23,7 @@ import java.util.Optional;
 /**
  * Utility Resolver for organizing resolution in a tree-like structure.
  * <p>
- * CompositeResolver removes first part of the target with {@link URLTarget#omitFirst()}
+ * CompositeResolver removes first part of the target with {@link URIPath#omitFirst()}
  * before calling the child Resolvers.
  *
  * @author Rsl1122
@@ -42,7 +42,7 @@ public final class CompositeResolver implements Resolver {
         return new Builder();
     }
 
-    private Optional<Resolver> getResolver(URLTarget target) {
+    private Optional<Resolver> getResolver(URIPath target) {
         return target.getPart(0).flatMap(this::find);
     }
 
@@ -63,16 +63,16 @@ public final class CompositeResolver implements Resolver {
     }
 
     @Override
-    public boolean canAccess(WebUser permissions, URLTarget target, Parameters parameters) {
+    public boolean canAccess(WebUser permissions, URIPath target, URIQuery query) {
         return getResolver(target)
-                .map(resolver -> resolver.canAccess(permissions, target.omitFirst(), parameters))
+                .map(resolver -> resolver.canAccess(permissions, target.omitFirst(), query))
                 .orElse(true);
     }
 
     @Override
-    public Optional<Response> resolve(URLTarget target, Parameters parameters) {
+    public Optional<Response> resolve(URIPath target, URIQuery query) {
         return getResolver(target)
-                .flatMap(resolver -> resolver.resolve(target.omitFirst(), parameters));
+                .flatMap(resolver -> resolver.resolve(target.omitFirst(), query));
     }
 
     public static class Builder {
@@ -86,7 +86,7 @@ public final class CompositeResolver implements Resolver {
          * Add a new resolver to the CompositeResolver.
          *
          * @param prefix   Start of the target (first part of the target string, eg "example" in "/example/target/", or "" in "/")
-         * @param resolver Resolver to call for this target, {@link URLTarget#omitFirst()} will be called for Resolver method calls.
+         * @param resolver Resolver to call for this target, {@link URIPath#omitFirst()} will be called for Resolver method calls.
          * @return this builder.
          */
         public Builder add(String prefix, Resolver resolver) {

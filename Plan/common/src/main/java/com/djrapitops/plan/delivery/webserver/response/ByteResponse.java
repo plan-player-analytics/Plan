@@ -26,11 +26,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * {@link Response} for raw bytes.
+ * {@link Response_old} for raw bytes.
  *
  * @author Rsl1122
  */
-public class ByteResponse extends Response {
+public class ByteResponse extends Response_old {
 
     private final PlanFiles files;
     private final String fileName;

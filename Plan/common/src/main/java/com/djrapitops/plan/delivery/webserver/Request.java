@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.delivery.webserver;
 
+import com.djrapitops.plan.delivery.web.resolver.URIPath;
+import com.djrapitops.plan.delivery.web.resolver.URIQuery;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.sun.net.httpserver.HttpExchange;
@@ -68,8 +70,12 @@ public class Request {
         return requestURI.getPath() + '?' + requestURI.getQuery();
     }
 
-    public RequestTarget getTarget() {
-        return new RequestTarget(requestURI);
+    public URIPath getPath() {
+        return new URIPath(requestURI.getPath());
+    }
+
+    public URIQuery getQuery() {
+        return new URIQuery(requestURI.getQuery());
     }
 
     public InputStream getRequestBody() {
@@ -87,5 +93,10 @@ public class Request {
 
     public Locale getLocale() {
         return locale;
+    }
+
+    @Deprecated
+    public RequestTarget getRequestTarget() {
+        return new RequestTarget(requestURI);
     }
 }

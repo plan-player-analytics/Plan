@@ -16,12 +16,12 @@
  */
 package com.djrapitops.plan.delivery.webserver.pages;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.WebUser_old;
 import com.djrapitops.plan.delivery.webserver.Request;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
-import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
+import com.djrapitops.plan.delivery.webserver.response.Response_old;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
 import com.djrapitops.plan.exceptions.connection.WebException;
@@ -57,7 +57,7 @@ public class PlayerPageResolver implements PageResolver {
     }
 
     @Override
-    public Response resolve(Request request, RequestTarget target) throws WebException {
+    public Response_old resolve(Request request, RequestTarget target) throws WebException {
         if (target.isEmpty()) {
             return responseFactory.pageNotFound404();
         }
@@ -82,7 +82,7 @@ public class PlayerPageResolver implements PageResolver {
 
     @Override
     public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
-        WebUser webUser = auth.getWebUser();
+        WebUser_old webUser = auth.getWebUser();
         return webUser.getPermLevel() <= 1 || webUser.getName().equalsIgnoreCase(target.get(target.size() - 1));
     }
 }

@@ -20,9 +20,8 @@ import com.djrapitops.plan.delivery.rendering.pages.Page;
 import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.pages.json.RootJSONResolver;
-import com.djrapitops.plan.delivery.webserver.response.Response;
+import com.djrapitops.plan.delivery.webserver.response.Response_old;
 import com.djrapitops.plan.delivery.webserver.response.errors.ErrorResponse;
-import com.djrapitops.plan.exceptions.GenerationException;
 import com.djrapitops.plan.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -73,7 +72,7 @@ public class PlayerPageExporter extends FileExporter {
         this.theme = theme;
     }
 
-    public void export(Path toDirectory, UUID playerUUID, String playerName) throws IOException, NotFoundException, GenerationException {
+    public void export(Path toDirectory, UUID playerUUID, String playerName) throws IOException, NotFoundException {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
         if (!dbSystem.getDatabase().query(PlayerFetchQueries.isPlayerRegistered(playerUUID))) return;
@@ -89,7 +88,7 @@ public class PlayerPageExporter extends FileExporter {
         exportPaths.clear();
     }
 
-    private void exportHtml(ExportPaths exportPaths, Path playerDirectory, UUID playerUUID) throws IOException, GenerationException, NotFoundException {
+    private void exportHtml(ExportPaths exportPaths, Path playerDirectory, UUID playerUUID) throws IOException, NotFoundException {
         Path to = playerDirectory.resolve("index.html");
 
         try {
@@ -105,7 +104,7 @@ public class PlayerPageExporter extends FileExporter {
     }
 
     private void exportJSON(ExportPaths exportPaths, Path toDirectory, String resource, String playerName) throws NotFoundException, IOException {
-        Response found = getJSONResponse(resource);
+        Response_old found = getJSONResponse(resource);
         if (found instanceof ErrorResponse) {
             throw new NotFoundException(resource + " was not properly exported: " + found.getContent());
         }
@@ -120,7 +119,7 @@ public class PlayerPageExporter extends FileExporter {
         return StringUtils.replaceEach(resource, new String[]{"?", "&", "type=", "player="}, new String[]{"-", "_", "", ""});
     }
 
-    private Response getJSONResponse(String resource) {
+    private Response_old getJSONResponse(String resource) {
         try {
             return jsonHandler.resolve(null, new RequestTarget(URI.create(resource)));
         } catch (WebException e) {

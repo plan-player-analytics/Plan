@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.objects;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.WebUser_old;
 import com.djrapitops.plan.gathering.domain.Ping;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
@@ -33,7 +33,7 @@ import java.util.*;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
- * Queries for {@link WebUser} objects.
+ * Queries for {@link WebUser_old} objects.
  *
  * @author Rsl1122
  */

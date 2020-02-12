@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.webserver.cache;
 
 import com.djrapitops.plan.delivery.webserver.pages.json.RootJSONResolver;
-import com.djrapitops.plan.delivery.webserver.response.Response;
+import com.djrapitops.plan.delivery.webserver.response.Response_old;
 import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
 import com.djrapitops.plan.storage.file.ResourceCache;
 import com.djrapitops.plugin.task.AbsRunnable;
@@ -47,7 +47,7 @@ public class JSONCache {
         // Static class
     }
 
-    public static Response getOrCache(String identifier, Supplier<JSONResponse> jsonResponseSupplier) {
+    public static Response_old getOrCache(String identifier, Supplier<JSONResponse> jsonResponseSupplier) {
         String found = cache.getIfPresent(identifier);
         if (found == null) {
             JSONResponse response = jsonResponseSupplier.get();
@@ -68,11 +68,11 @@ public class JSONCache {
         return found;
     }
 
-    public static Response getOrCache(DataID dataID, Supplier<JSONResponse> jsonResponseSupplier) {
+    public static Response_old getOrCache(DataID dataID, Supplier<JSONResponse> jsonResponseSupplier) {
         return getOrCache(dataID.name(), jsonResponseSupplier);
     }
 
-    public static Response getOrCache(DataID dataID, UUID serverUUID, Supplier<JSONResponse> jsonResponseSupplier) {
+    public static Response_old getOrCache(DataID dataID, UUID serverUUID, Supplier<JSONResponse> jsonResponseSupplier) {
         return getOrCache(dataID.of(serverUUID), jsonResponseSupplier);
     }
 

@@ -17,7 +17,7 @@
 package com.djrapitops.plan.commands.subcommands;
 
 import com.djrapitops.plan.PlanSystem;
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.WebUser_old;
 import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.processing.Processing;
@@ -129,7 +129,7 @@ public class RegisterCommand extends CommandNode {
         Verify.isTrue(userName.length() <= 100, () -> new IllegalArgumentException("Username can only be 100 characters long."));
         int permLevel = Integer.parseInt(args[2]);
         String passHash = PassEncryptUtil.createHash(args[0]);
-        registerUser(new WebUser(userName, passHash, permLevel), sender);
+        registerUser(new WebUser_old(userName, passHash, permLevel), sender);
     }
 
     private void playerRegister(String[] args, Sender sender) throws PassEncryptUtil.CannotPerformOperationException {
@@ -138,7 +138,7 @@ public class RegisterCommand extends CommandNode {
             String user = sender.getName();
             String pass = PassEncryptUtil.createHash(args[0]);
             int permLvl = getPermissionLevel(sender);
-            registerUser(new WebUser(user, pass, permLvl), sender);
+            registerUser(new WebUser_old(user, pass, permLvl), sender);
         } else if (sender.hasPermission(Permissions.MANAGE_WEB.getPermission())) {
             consoleRegister(args, sender, notEnoughArgsMsg);
         } else {
@@ -162,7 +162,7 @@ public class RegisterCommand extends CommandNode {
         return 100;
     }
 
-    private void registerUser(WebUser webUser, Sender sender) {
+    private void registerUser(WebUser_old webUser, Sender sender) {
         processing.submitCritical(() -> {
             String userName = webUser.getName();
             try {

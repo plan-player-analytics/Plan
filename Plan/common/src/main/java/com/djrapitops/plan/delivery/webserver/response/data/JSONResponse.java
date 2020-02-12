@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.delivery.webserver.response.data;
 
-import com.djrapitops.plan.delivery.webserver.response.Response;
 import com.djrapitops.plan.delivery.webserver.response.ResponseType;
+import com.djrapitops.plan.delivery.webserver.response.Response_old;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
@@ -28,7 +28,7 @@ import com.google.gson.JsonElement;
  *
  * @author Rsl1122
  */
-public class JSONResponse extends Response {
+public class JSONResponse extends Response_old {
 
     public JSONResponse(Object object) {
         this(new Gson().toJson(object));

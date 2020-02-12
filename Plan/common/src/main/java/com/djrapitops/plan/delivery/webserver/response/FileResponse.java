@@ -29,7 +29,7 @@ import java.io.IOException;
  *
  * @author Rsl1122
  */
-public class FileResponse extends Response {
+public class FileResponse extends Response_old {
 
     public FileResponse(String fileName, PlanFiles files) throws IOException {
         super.setHeader("HTTP/1.1 200 OK");
