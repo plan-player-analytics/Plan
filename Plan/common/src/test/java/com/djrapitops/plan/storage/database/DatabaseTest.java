@@ -33,7 +33,7 @@ import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.ExtensionService;
-import com.djrapitops.plan.extension.ExtensionServiceImplementation;
+import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
@@ -46,7 +46,7 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.results
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.identification.Server;
-import com.djrapitops.plan.query.QueryServiceImplementation;
+import com.djrapitops.plan.query.QuerySvc;
 import com.djrapitops.plan.settings.config.Config;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -546,7 +546,7 @@ public interface DatabaseTest {
                 system().getConfigSystem().getConfig(),
                 new Locale(),
                 system().getDatabaseSystem(),
-                new QueryServiceImplementation(system().getDatabaseSystem(), system().getServerInfo(), logger, errorHandler),
+                new QuerySvc(system().getDatabaseSystem(), system().getServerInfo(), logger, errorHandler),
                 system().getServerInfo(),
                 logger,
                 errorHandler
@@ -1225,7 +1225,7 @@ public interface DatabaseTest {
 
     @Test
     default void extensionPlayerValuesAreStored() {
-        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system().getExtensionService();
+        ExtensionSvc extensionService = (ExtensionSvc) system().getExtensionService();
 
         extensionService.register(new PlayerExtension());
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
@@ -1275,7 +1275,7 @@ public interface DatabaseTest {
 
     @Test
     default void extensionServerValuesAreStored() {
-        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system().getExtensionService();
+        ExtensionSvc extensionService = (ExtensionSvc) system().getExtensionService();
 
         extensionService.register(new ServerExtension());
         extensionService.updateServerValues(CallEvents.SERVER_EXTENSION_REGISTER);
@@ -1297,7 +1297,7 @@ public interface DatabaseTest {
 
     @Test
     default void extensionServerAggregateQueriesWork() {
-        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system().getExtensionService();
+        ExtensionSvc extensionService = (ExtensionSvc) system().getExtensionService();
 
         extensionService.register(new PlayerExtension());
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
@@ -1327,7 +1327,7 @@ public interface DatabaseTest {
 
     @Test
     default void unsatisfiedPlayerConditionalResultsAreCleaned() {
-        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system().getExtensionService();
+        ExtensionSvc extensionService = (ExtensionSvc) system().getExtensionService();
 
         extensionService.register(new ConditionalExtension());
 
@@ -1381,7 +1381,7 @@ public interface DatabaseTest {
 
     @Test
     default void unsatisfiedServerConditionalResultsAreCleaned() {
-        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system().getExtensionService();
+        ExtensionSvc extensionService = (ExtensionSvc) system().getExtensionService();
 
         ConditionalExtension.condition = true;
         extensionService.register(new ConditionalExtension());
@@ -1432,7 +1432,7 @@ public interface DatabaseTest {
 
     @Test
     default void extensionServerTableValuesAreInserted() {
-        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system().getExtensionService();
+        ExtensionSvc extensionService = (ExtensionSvc) system().getExtensionService();
 
         extensionService.register(new TableExtension());
         extensionService.updateServerValues(CallEvents.MANUAL);
@@ -1463,7 +1463,7 @@ public interface DatabaseTest {
 
     @Test
     default void extensionPlayerTableValuesAreInserted() {
-        ExtensionServiceImplementation extensionService = (ExtensionServiceImplementation) system().getExtensionService();
+        ExtensionSvc extensionService = (ExtensionSvc) system().getExtensionService();
 
         extensionService.register(new TableExtension());
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);

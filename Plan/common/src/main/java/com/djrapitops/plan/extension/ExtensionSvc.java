@@ -47,7 +47,7 @@ import java.util.UUID;
  * @author Rsl1122
  */
 @Singleton
-public class ExtensionServiceImplementation implements ExtensionService {
+public class ExtensionSvc implements ExtensionService {
 
     private final PlanConfig config;
     private final DBSystem dbSystem;
@@ -60,7 +60,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
     private final Map<String, ProviderValueGatherer> extensionGatherers;
 
     @Inject
-    public ExtensionServiceImplementation(
+    public ExtensionSvc(
             PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
@@ -79,7 +79,7 @@ public class ExtensionServiceImplementation implements ExtensionService {
 
         extensionGatherers = new HashMap<>();
 
-        ExtensionService.ExtensionServiceHolder.set(this);
+        Holder.set(this);
     }
 
     public void register() {

@@ -17,7 +17,7 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.PlanAPI;
-import com.djrapitops.plan.capability.CapabilityServiceImplementation;
+import com.djrapitops.plan.capability.CapabilitySvc;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.delivery.export.ExportSystem;
 import com.djrapitops.plan.delivery.webserver.NonProxyWebserverDisableChecker;
@@ -25,16 +25,16 @@ import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.delivery.webserver.WebServerSystem;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.extension.ExtensionService;
-import com.djrapitops.plan.extension.ExtensionServiceImplementation;
+import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.gathering.cache.CacheSystem;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.gathering.listeners.ListenerSystem;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
-import com.djrapitops.plan.query.QueryServiceImplementation;
+import com.djrapitops.plan.query.QuerySvc;
 import com.djrapitops.plan.settings.ConfigSystem;
-import com.djrapitops.plan.settings.SettingsServiceImplementation;
+import com.djrapitops.plan.settings.SettingsSvc;
 import com.djrapitops.plan.settings.locale.LocaleSystem;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
@@ -77,9 +77,9 @@ public class PlanSystem implements SubSystem {
     private final ImportSystem importSystem;
     private final ExportSystem exportSystem;
     private final DeliveryUtilities deliveryUtilities;
-    private final ExtensionServiceImplementation extensionService;
-    private final QueryServiceImplementation queryService;
-    private final SettingsServiceImplementation settingsService;
+    private final ExtensionSvc extensionService;
+    private final QuerySvc queryService;
+    private final SettingsSvc settingsService;
     private final PluginLogger logger;
     private final Timings timings;
     private final ErrorHandler errorHandler;
@@ -100,9 +100,9 @@ public class PlanSystem implements SubSystem {
             ImportSystem importSystem,
             ExportSystem exportSystem,
             DeliveryUtilities deliveryUtilities,
-            ExtensionServiceImplementation extensionService,
-            QueryServiceImplementation queryService,
-            SettingsServiceImplementation settingsService,
+            ExtensionSvc extensionService,
+            QuerySvc queryService,
+            SettingsSvc settingsService,
             PluginLogger logger,
             Timings timings,
             ErrorHandler errorHandler,
@@ -151,7 +151,7 @@ public class PlanSystem implements SubSystem {
 
     @Override
     public void enable() throws EnableException {
-        CapabilityServiceImplementation.initialize();
+        CapabilitySvc.initialize();
 
         enableSystems(
                 files,

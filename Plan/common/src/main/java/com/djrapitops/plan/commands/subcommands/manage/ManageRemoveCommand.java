@@ -19,7 +19,7 @@ package com.djrapitops.plan.commands.subcommands.manage;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.UUIDUtility;
 import com.djrapitops.plan.processing.Processing;
-import com.djrapitops.plan.query.QueryServiceImplementation;
+import com.djrapitops.plan.query.QuerySvc;
 import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CmdHelpLang;
@@ -56,7 +56,7 @@ public class ManageRemoveCommand extends CommandNode {
     private final Locale locale;
     private final Processing processing;
     private final DBSystem dbSystem;
-    private final QueryServiceImplementation queryService;
+    private final QuerySvc queryService;
     private final UUIDUtility uuidUtility;
     private final ErrorHandler errorHandler;
 
@@ -65,7 +65,7 @@ public class ManageRemoveCommand extends CommandNode {
             Locale locale,
             Processing processing,
             DBSystem dbSystem,
-            QueryServiceImplementation queryService,
+            QuerySvc queryService,
             UUIDUtility uuidUtility,
             ErrorHandler errorHandler
     ) {

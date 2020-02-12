@@ -27,21 +27,20 @@ import java.util.function.Consumer;
  *
  * @author Rsl1122
  */
-public class CapabilityServiceImplementation implements CapabilityService {
+public class CapabilitySvc implements CapabilityService {
 
     private final List<Consumer<Boolean>> enableListeners;
 
-    private CapabilityServiceImplementation() {
-        /* Inject required for dagger */
-        CapabilityServiceHolder.set(this);
+    private CapabilitySvc() {
+        Holder.set(this);
         enableListeners = new ArrayList<>();
     }
 
-    private static CapabilityServiceImplementation get() {
-        if (CapabilityServiceHolder.service == null) {
-            return new CapabilityServiceImplementation();
+    private static CapabilitySvc get() {
+        if (Holder.service == null) {
+            return new CapabilitySvc();
         }
-        return (CapabilityServiceImplementation) CapabilityServiceHolder.service;
+        return (CapabilitySvc) Holder.service;
     }
 
     public static void initialize() {

@@ -44,7 +44,7 @@ public interface ExtensionService {
      * @throws IllegalStateException If Plan is installed, but not enabled.
      */
     static ExtensionService getInstance() {
-        return Optional.ofNullable(ExtensionServiceHolder.service)
+        return Optional.ofNullable(Holder.service)
                 .orElseThrow(() -> new IllegalStateException("ExtensionService has not been initialised yet."));
     }
 
@@ -69,15 +69,15 @@ public interface ExtensionService {
      */
     void unregister(DataExtension extension);
 
-    class ExtensionServiceHolder {
+    class Holder {
         static ExtensionService service;
 
-        private ExtensionServiceHolder() {
+        private Holder() {
             /* Static variable holder */
         }
 
         static void set(ExtensionService service) {
-            ExtensionServiceHolder.service = service;
+            Holder.service = service;
         }
     }
 

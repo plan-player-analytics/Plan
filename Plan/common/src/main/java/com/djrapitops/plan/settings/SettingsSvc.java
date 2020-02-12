@@ -34,13 +34,13 @@ import java.util.function.Supplier;
  * @author Rsl1122
  */
 @Singleton
-public class SettingsServiceImplementation implements SettingsService {
+public class SettingsSvc implements SettingsService {
 
     private final PlanConfig config;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public SettingsServiceImplementation(
+    public SettingsSvc(
             PlanConfig config,
             ErrorHandler errorHandler
     ) {

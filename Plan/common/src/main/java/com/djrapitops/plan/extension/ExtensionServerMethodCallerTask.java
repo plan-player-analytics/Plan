@@ -29,15 +29,15 @@ import javax.inject.Singleton;
 @Singleton
 public class ExtensionServerMethodCallerTask extends AbsRunnable {
 
-    private final ExtensionServiceImplementation extensionServiceImplementation;
+    private final ExtensionSvc service;
 
     @Inject
-    public ExtensionServerMethodCallerTask(ExtensionServiceImplementation extensionServiceImplementation) {
-        this.extensionServiceImplementation = extensionServiceImplementation;
+    public ExtensionServerMethodCallerTask(ExtensionSvc service) {
+        this.service = service;
     }
 
     @Override
     public void run() {
-        extensionServiceImplementation.updateServerValues(CallEvents.SERVER_PERIODICAL);
+        service.updateServerValues(CallEvents.SERVER_PERIODICAL);
     }
 }

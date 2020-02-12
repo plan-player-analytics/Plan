@@ -39,7 +39,7 @@ public interface CapabilityService {
      * @throws IllegalStateException If Plan is installed, but not enabled.
      */
     static CapabilityService getInstance() {
-        return Optional.ofNullable(CapabilityServiceHolder.service)
+        return Optional.ofNullable(Holder.service)
                 .orElseThrow(() -> new IllegalStateException("CapabilityService has not been initialised yet."));
     }
 
@@ -61,15 +61,15 @@ public interface CapabilityService {
         return Capability.getByName(capabilityName).isPresent();
     }
 
-    class CapabilityServiceHolder {
+    class Holder {
         static CapabilityService service;
 
-        private CapabilityServiceHolder() {
+        private Holder() {
             /* Static variable holder */
         }
 
         static void set(CapabilityService service) {
-            CapabilityServiceHolder.service = service;
+            Holder.service = service;
         }
     }
 

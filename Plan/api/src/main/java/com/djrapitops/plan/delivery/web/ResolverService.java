@@ -32,6 +32,11 @@ import java.util.regex.Pattern;
  */
 public interface ResolverService {
 
+    static ResolverService getInstance() {
+        return Optional.ofNullable(ResolverService.Holder.service)
+                .orElseThrow(() -> new IllegalStateException("ResolverService has not been initialised yet."));
+    }
+
     /**
      * Register a new resolver.
      *
@@ -68,4 +73,16 @@ public interface ResolverService {
      * @return Resolver if registered or empty.
      */
     Optional<Resolver> getResolver(String target);
+
+    class Holder {
+        static ResolverService service;
+
+        private Holder() {
+            /* Static variable holder */
+        }
+
+        static void set(ResolverService service) {
+            ResolverService.Holder.service = service;
+        }
+    }
 }

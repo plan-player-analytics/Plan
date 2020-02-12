@@ -38,7 +38,7 @@ import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
 @Singleton
-public class QueryServiceImplementation implements QueryService {
+public class QuerySvc implements QueryService {
 
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
@@ -49,7 +49,7 @@ public class QueryServiceImplementation implements QueryService {
     private final Set<VoidFunction> clearSubscribers;
 
     @Inject
-    public QueryServiceImplementation(
+    public QuerySvc(
             DBSystem dbSystem,
             ServerInfo serverInfo,
             PluginLogger logger,
@@ -65,7 +65,7 @@ public class QueryServiceImplementation implements QueryService {
     }
 
     public void register() {
-        QueryService.QueryServiceHolder.set(this);
+        Holder.set(this);
     }
 
     @Override

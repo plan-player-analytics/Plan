@@ -30,7 +30,7 @@ import com.djrapitops.plan.delivery.export.Exporter;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.extension.CallEvents;
-import com.djrapitops.plan.extension.ExtensionServiceImplementation;
+import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.gathering.cache.NicknameCache;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.GMTimes;
@@ -63,7 +63,7 @@ public class PlayerOnlineListener implements Listener {
     private final Processing processing;
     private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
-    private final ExtensionServiceImplementation extensionService;
+    private final ExtensionSvc extensionService;
     private final Exporter exporter;
     private final GeolocationCache geolocationCache;
     private final NicknameCache nicknameCache;
@@ -77,7 +77,7 @@ public class PlayerOnlineListener implements Listener {
             Processing processing,
             ServerInfo serverInfo,
             DBSystem dbSystem,
-            ExtensionServiceImplementation extensionService,
+            ExtensionSvc extensionService,
             Exporter exporter,
             GeolocationCache geolocationCache,
             NicknameCache nicknameCache,
