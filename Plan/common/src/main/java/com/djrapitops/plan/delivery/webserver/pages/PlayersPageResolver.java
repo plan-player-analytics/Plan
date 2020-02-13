@@ -16,19 +16,12 @@
  */
 package com.djrapitops.plan.delivery.webserver.pages;
 
-import com.djrapitops.plan.delivery.webserver.Request;
-import com.djrapitops.plan.delivery.webserver.RequestTarget;
-import com.djrapitops.plan.delivery.webserver.auth.Authentication;
+import com.djrapitops.plan.delivery.web.resolver.*;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
-import com.djrapitops.plan.delivery.webserver.response.Response_old;
-import com.djrapitops.plan.exceptions.WebUserAuthException;
-import com.djrapitops.plan.exceptions.connection.ForbiddenException;
-import com.djrapitops.plan.exceptions.connection.WebException;
-import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.Database;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 
 /**
  * Resolves /players URL.
@@ -36,31 +29,24 @@ import javax.inject.Singleton;
  * @author Rsl1122
  */
 @Singleton
-public class PlayersPageResolver implements PageResolver {
+public class PlayersPageResolver implements Resolver {
 
-    private final DBSystem dbSystem;
     private final ResponseFactory responseFactory;
 
     @Inject
     public PlayersPageResolver(
-            DBSystem dbSystem,
             ResponseFactory responseFactory
     ) {
-        this.dbSystem = dbSystem;
         this.responseFactory = responseFactory;
     }
 
     @Override
-    public Response_old resolve(Request request, RequestTarget target) throws WebException {
-        Database.State dbState = dbSystem.getDatabase().getState();
-        if (dbState != Database.State.OPEN) {
-            throw new ForbiddenException("Database is " + dbState.name() + " - Please try again later. You can check database status with /plan info");
-        }
-        return responseFactory.playersPageResponse();
+    public boolean canAccess(WebUser permissions, URIPath target, URIQuery query) {
+        return permissions.hasPermission("page.players");
     }
 
     @Override
-    public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
-        return auth.getWebUser().getPermLevel() <= 1;
+    public Optional<Response> resolve(URIPath target, URIQuery query) {
+        return Optional.of(responseFactory.playersPageResponse());
     }
 }

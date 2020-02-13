@@ -51,12 +51,12 @@ public class RootPageResolver implements PageResolver {
     public Response_old resolve(Request request, RequestTarget target) throws WebException {
         Server server = serverInfo.getServer();
         if (!webServer.isAuthRequired()) {
-            return responseFactory.redirectResponse(server.isProxy() ? "network" : "server/" + Html.encodeToURL(server.getIdentifiableName()));
+            return responseFactory.redirectResponse_old(server.isProxy() ? "network" : "server/" + Html.encodeToURL(server.getIdentifiableName()));
         }
 
         Optional<Authentication> auth = request.getAuth();
         if (!auth.isPresent()) {
-            return responseFactory.basicAuth();
+            return responseFactory.basicAuth_old();
         }
 
         WebUser_old webUser = auth.get().getWebUser();
@@ -64,13 +64,13 @@ public class RootPageResolver implements PageResolver {
         int permLevel = webUser.getPermLevel();
         switch (permLevel) {
             case 0:
-                return responseFactory.redirectResponse(server.isProxy() ? "network" : "server/" + Html.encodeToURL(server.getIdentifiableName()));
+                return responseFactory.redirectResponse_old(server.isProxy() ? "network" : "server/" + Html.encodeToURL(server.getIdentifiableName()));
             case 1:
-                return responseFactory.redirectResponse("players");
+                return responseFactory.redirectResponse_old("players");
             case 2:
-                return responseFactory.redirectResponse("player/" + Html.encodeToURL(webUser.getName()));
+                return responseFactory.redirectResponse_old("player/" + Html.encodeToURL(webUser.getName()));
             default:
-                return responseFactory.forbidden403();
+                return responseFactory.forbidden403_old();
         }
     }
 

@@ -92,7 +92,7 @@ public class ResponseResolver extends CompositePageResolver {
 
     public void registerPages() {
         resolverService.registerResolver("Plan", "/debug", debugPageResolver);
-        registerPage("players", playersPageResolver);
+        resolverService.registerResolver("Plan", "/players", playersPageResolver);
         registerPage("player", playerPageResolver);
 
         registerPage("network", serverPageResolver);
@@ -108,16 +108,16 @@ public class ResponseResolver extends CompositePageResolver {
         try {
             return tryToGetResponse(request);
         } catch (NotFoundException e) {
-            return responseFactory.notFound404(e.getMessage());
+            return responseFactory.notFound404_old(e.getMessage());
         } catch (WebUserAuthException e) {
-            return responseFactory.basicAuthFail(e);
+            return responseFactory.basicAuthFail_old(e);
         } catch (ForbiddenException e) {
-            return responseFactory.forbidden403(e.getMessage());
+            return responseFactory.forbidden403_old(e.getMessage());
         } catch (BadRequestException e) {
-            return responseFactory.badRequest(e.getMessage(), request.getTargetString());
+            return responseFactory.badRequest_old(e.getMessage(), request.getTargetString());
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
-            return responseFactory.internalErrorResponse(e, request.getTargetString());
+            return responseFactory.internalErrorResponse_old(e, request.getTargetString());
         }
     }
 
@@ -141,19 +141,19 @@ public class ResponseResolver extends CompositePageResolver {
             boolean isAuthRequired = webServer.get().isAuthRequired();
             if (isAuthRequired && !authentication.isPresent()) {
                 if (webServer.get().isUsingHTTPS()) {
-                    return responseFactory.basicAuth();
+                    return responseFactory.basicAuth_old();
                 } else {
-                    return responseFactory.forbidden403();
+                    return responseFactory.forbidden403_old();
                 }
             }
 
             if (!isAuthRequired || resolver.canAccess(authentication.get().getWebUser().toNewWebUser(), target, query)) {
-                return resolver.resolve(target, query).map(Response_old::from).orElseGet(responseFactory::pageNotFound404);
+                return resolver.resolve(target, query).map(Response_old::from).orElseGet(responseFactory::pageNotFound404_old);
             } else {
-                return responseFactory.forbidden403();
+                return responseFactory.forbidden403_old();
             }
         } else {
-            return resolver.resolve(target, query).map(Response_old::from).orElseGet(responseFactory::pageNotFound404);
+            return resolver.resolve(target, query).map(Response_old::from).orElseGet(responseFactory::pageNotFound404_old);
         }
     }
 
@@ -163,36 +163,36 @@ public class ResponseResolver extends CompositePageResolver {
         String resource = target.getResourceString();
         // TODO Turn into resolvers
         if (target.endsWith(".css")) {
-            return responseFactory.cssResponse(resource);
+            return responseFactory.cssResponse_old(resource);
         }
         if (target.endsWith(".js")) {
-            return responseFactory.javaScriptResponse(resource);
+            return responseFactory.javaScriptResponse_old(resource);
         }
         if (target.endsWith(".png")) {
-            return responseFactory.imageResponse(resource);
+            return responseFactory.imageResponse_old(resource);
         }
         if (target.endsWith("favicon.ico")) {
-            return responseFactory.faviconResponse();
+            return responseFactory.faviconResponse_old();
         }
         if (target.endsWithAny(".woff", ".woff2", ".eot", ".ttf")) {
-            return responseFactory.fontResponse(resource);
+            return responseFactory.fontResponse_old(resource);
         }
         boolean isAuthRequired = webServer.get().isAuthRequired();
         if (isAuthRequired && !authentication.isPresent()) {
             if (webServer.get().isUsingHTTPS()) {
-                return responseFactory.basicAuth();
+                return responseFactory.basicAuth_old();
             } else {
-                return responseFactory.forbidden403();
+                return responseFactory.forbidden403_old();
             }
         }
         PageResolver pageResolver = getPageResolver(target);
         if (pageResolver == null) {
-            return responseFactory.pageNotFound404();
+            return responseFactory.pageNotFound404_old();
         } else {
             if (!isAuthRequired || pageResolver.isAuthorized(authentication.get(), target)) {
                 return pageResolver.resolve(request, target);
             }
-            return responseFactory.forbidden403();
+            return responseFactory.forbidden403_old();
         }
     }
 }

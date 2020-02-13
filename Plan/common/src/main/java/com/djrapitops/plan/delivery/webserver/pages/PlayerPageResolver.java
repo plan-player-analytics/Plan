@@ -59,7 +59,7 @@ public class PlayerPageResolver implements PageResolver {
     @Override
     public Response_old resolve(Request request, RequestTarget target) throws WebException {
         if (target.isEmpty()) {
-            return responseFactory.pageNotFound404();
+            return responseFactory.pageNotFound404_old();
         }
 
         String playerName = target.get(0);
@@ -68,16 +68,16 @@ public class PlayerPageResolver implements PageResolver {
         boolean raw = target.size() >= 2 && target.get(1).equalsIgnoreCase("raw");
 
         if (playerUUID == null) {
-            return responseFactory.uuidNotFound404();
+            return responseFactory.uuidNotFound404_old();
         }
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState != Database.State.OPEN) {
             throw new ForbiddenException("Database is " + dbState.name() + " - Please try again later. You can check database status with /plan info");
         }
         if (raw) {
-            return responseFactory.rawPlayerPageResponse(playerUUID);
+            return responseFactory.rawPlayerPageResponse_old(playerUUID);
         }
-        return responseFactory.playerPageResponse(playerUUID);
+        return responseFactory.playerPageResponse_old(playerUUID);
     }
 
     @Override

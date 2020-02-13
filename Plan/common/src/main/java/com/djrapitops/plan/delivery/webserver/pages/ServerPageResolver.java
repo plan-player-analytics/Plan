@@ -71,13 +71,13 @@ public class ServerPageResolver implements PageResolver {
         if (serverUUID.isPresent()) {
             checkDBState();
             if (proxy && serverInfo.getServerUUID().equals(serverUUID.get())) {
-                return responseFactory.networkPageResponse();
+                return responseFactory.networkPageResponse_old();
             }
-            return responseFactory.serverPageResponse(serverUUID.get());
+            return responseFactory.serverPageResponse_old(serverUUID.get());
         } else {
             // Redirect to base server page.
             String directTo = proxy ? "/network" : "/server/" + Html.encodeToURL(serverInfo.getServer().getIdentifiableName());
-            return responseFactory.redirectResponse(webServer.get().getAccessAddress() + directTo);
+            return responseFactory.redirectResponse_old(webServer.get().getAccessAddress() + directTo);
         }
     }
 

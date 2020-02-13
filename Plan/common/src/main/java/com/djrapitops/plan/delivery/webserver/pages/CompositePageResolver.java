@@ -90,7 +90,7 @@ public abstract class CompositePageResolver implements PageResolver {
         PageResolver pageResolver = getPageResolver(target);
         return pageResolver != null
                 ? pageResolver.resolve(request, target)
-                : responseFactory.pageNotFound404();
+                : responseFactory.pageNotFound404_old();
     }
 
     @Deprecated

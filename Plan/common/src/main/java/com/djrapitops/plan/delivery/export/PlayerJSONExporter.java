@@ -57,6 +57,6 @@ public class PlayerJSONExporter extends FileExporter {
     }
 
     private void exportJSON(Path to, UUID playerUUID) throws IOException {
-        export(to, responseFactory.rawPlayerPageResponse(playerUUID).getContent());
+        export(to, responseFactory.rawPlayerPageResponse_old(playerUUID).getContent());
     }
 }
