@@ -199,7 +199,7 @@ public class WebServer implements SubSystem {
             Certificate cert = keystore.getCertificate(alias);
 
             if (cert == null) {
-                throw new IllegalStateException("Certificate with Alias: " + alias + " was not found in the Keystore.");
+                throw new IllegalStateException("Alias: '" + alias + "' was not found in file " + keyStorePath + ".");
             }
 
             logger.info("Certificate: " + cert.getType());
@@ -230,7 +230,6 @@ public class WebServer implements SubSystem {
             startSuccessful = true;
         } catch (IllegalStateException e) {
             logger.error(e.getMessage());
-            errorHandler.log(L.ERROR, this.getClass(), e);
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
             logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_SSL_CONTEXT));
             errorHandler.log(L.ERROR, this.getClass(), e);
