@@ -9,6 +9,7 @@ softdepend:
   - AdvancedAchievements
   - AdvancedBan
   - BanManager
+  - BentoBox
   - CoreProtect
   - DiscordSRV
   - DKBans
