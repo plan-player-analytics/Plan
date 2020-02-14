@@ -20,9 +20,7 @@ import com.djrapitops.plan.delivery.web.resolver.Resolver;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
@@ -34,8 +32,8 @@ import java.util.regex.Pattern;
 @Singleton
 public class ResolverSvc implements ResolverService {
 
-    private final Collection<Container> basicResolvers;
-    private final Collection<Container> regexResolvers;
+    private final List<Container> basicResolvers;
+    private final List<Container> regexResolvers;
 
     @Inject
     public ResolverSvc() {
@@ -49,12 +47,14 @@ public class ResolverSvc implements ResolverService {
 
     @Override
     public void registerResolver(String pluginName, String start, Resolver resolver) {
-        basicResolvers.add(new Container(pluginName, checking -> checking.startsWith(start), resolver));
+        basicResolvers.add(new Container(pluginName, checking -> checking.startsWith(start), resolver, start));
+        Collections.sort(basicResolvers);
     }
 
     @Override
     public void registerResolverForMatches(String pluginName, Pattern pattern, Resolver resolver) {
-        regexResolvers.add(new Container(pluginName, pattern.asPredicate(), resolver));
+        regexResolvers.add(new Container(pluginName, pattern.asPredicate(), resolver, pattern.pattern()));
+        Collections.sort(regexResolvers);
     }
 
     @Override
@@ -78,15 +78,39 @@ public class ResolverSvc implements ResolverService {
         return Optional.empty();
     }
 
-    private static class Container {
+    private static class Container implements Comparable<Container> {
         final String plugin;
         final Predicate<String> matcher;
         final Resolver resolver;
+        final String sortBy;
 
-        public Container(String plugin, Predicate<String> matcher, Resolver resolver) {
+        public Container(String plugin, Predicate<String> matcher, Resolver resolver, String sortBy) {
             this.plugin = plugin;
             this.matcher = matcher;
             this.resolver = resolver;
+            this.sortBy = sortBy;
+        }
+
+        @Override
+        public int compareTo(Container o) {
+            // Longest first
+            return Integer.compare(o.sortBy.length(), this.sortBy.length());
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Container)) return false;
+            Container container = (Container) o;
+            return Objects.equals(plugin, container.plugin) &&
+                    Objects.equals(matcher, container.matcher) &&
+                    Objects.equals(resolver, container.resolver) &&
+                    Objects.equals(sortBy, container.sortBy);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(plugin, matcher, resolver, sortBy);
         }
     }
 }

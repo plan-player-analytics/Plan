@@ -93,7 +93,7 @@ public class ResponseResolver extends CompositePageResolver {
     public void registerPages() {
         resolverService.registerResolver("Plan", "/debug", debugPageResolver);
         resolverService.registerResolver("Plan", "/players", playersPageResolver);
-        registerPage("player", playerPageResolver);
+        resolverService.registerResolver("Plan", "/player", playerPageResolver);
 
         registerPage("network", serverPageResolver);
         registerPage("server", serverPageResolver);

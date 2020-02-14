@@ -16,21 +16,13 @@
  */
 package com.djrapitops.plan.delivery.webserver.pages;
 
-import com.djrapitops.plan.delivery.domain.WebUser_old;
-import com.djrapitops.plan.delivery.webserver.Request;
-import com.djrapitops.plan.delivery.webserver.RequestTarget;
-import com.djrapitops.plan.delivery.webserver.auth.Authentication;
+import com.djrapitops.plan.delivery.web.resolver.*;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
-import com.djrapitops.plan.delivery.webserver.response.Response_old;
-import com.djrapitops.plan.exceptions.WebUserAuthException;
-import com.djrapitops.plan.exceptions.connection.ForbiddenException;
-import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.UUIDUtility;
-import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.Database;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -39,50 +31,39 @@ import java.util.UUID;
  * @author Rsl1122
  */
 @Singleton
-public class PlayerPageResolver implements PageResolver {
+public class PlayerPageResolver implements Resolver {
 
     private final ResponseFactory responseFactory;
-    private final DBSystem dbSystem;
     private final UUIDUtility uuidUtility;
 
     @Inject
     public PlayerPageResolver(
             ResponseFactory responseFactory,
-            DBSystem dbSystem,
             UUIDUtility uuidUtility
     ) {
         this.responseFactory = responseFactory;
-        this.dbSystem = dbSystem;
         this.uuidUtility = uuidUtility;
     }
 
     @Override
-    public Response_old resolve(Request request, RequestTarget target) throws WebException {
-        if (target.isEmpty()) {
-            return responseFactory.pageNotFound404_old();
-        }
-
-        String playerName = target.get(0);
-        UUID playerUUID = uuidUtility.getUUIDOf(playerName);
-
-        boolean raw = target.size() >= 2 && target.get(1).equalsIgnoreCase("raw");
-
-        if (playerUUID == null) {
-            return responseFactory.uuidNotFound404_old();
-        }
-        Database.State dbState = dbSystem.getDatabase().getState();
-        if (dbState != Database.State.OPEN) {
-            throw new ForbiddenException("Database is " + dbState.name() + " - Please try again later. You can check database status with /plan info");
-        }
-        if (raw) {
-            return responseFactory.rawPlayerPageResponse_old(playerUUID);
-        }
-        return responseFactory.playerPageResponse_old(playerUUID);
+    public boolean canAccess(WebUser user, URIPath target, URIQuery query) {
+        boolean isOwnPage = target.getPart(1).map(user.getName()::equalsIgnoreCase).orElse(true);
+        return user.hasPermission("page.player.other") || (user.hasPermission("page.player.self") && isOwnPage);
     }
 
     @Override
-    public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
-        WebUser_old webUser = auth.getWebUser();
-        return webUser.getPermLevel() <= 1 || webUser.getName().equalsIgnoreCase(target.get(target.size() - 1));
+    public Optional<Response> resolve(URIPath target, URIQuery query) {
+        Optional<String> part = target.getPart(1);
+        if (!part.isPresent()) return Optional.empty();
+
+        String playerName = part.get();
+        UUID playerUUID = uuidUtility.getUUIDOf(playerName);
+        if (playerUUID == null) return Optional.of(responseFactory.uuidNotFound404());
+
+        boolean raw = target.getPart(2).map("raw"::equalsIgnoreCase).orElse(false);
+        return Optional.of(
+                raw ? responseFactory.rawPlayerPageResponse(playerUUID)
+                        : responseFactory.playerPageResponse(playerUUID)
+        );
     }
 }

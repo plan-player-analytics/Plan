@@ -38,7 +38,7 @@ public class RawDataResponse extends JSONResponse {
         super(mapToNormalMap(dataContainer));
     }
 
-    private static Map<String, Object> mapToNormalMap(DataContainer player) {
+    public static Map<String, Object> mapToNormalMap(DataContainer player) {
         Map<String, Object> values = new HashMap<>();
         player.getMap().forEach((key, value) ->
                 {

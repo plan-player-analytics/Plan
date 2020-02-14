@@ -131,48 +131,50 @@ public class PlayerPageExporter extends FileExporter {
     private void exportRequiredResources(ExportPaths exportPaths, Path toDirectory) throws IOException {
         // Style
         exportResources(exportPaths, toDirectory,
-                "img/Flaticon_circle.png",
-                "css/sb-admin-2.css",
-                "css/style.css",
-                "vendor/jquery/jquery.min.js",
-                "vendor/bootstrap/js/bootstrap.bundle.min.js",
-                "vendor/jquery-easing/jquery.easing.min.js",
-                "vendor/datatables/jquery.dataTables.min.js",
-                "vendor/datatables/dataTables.bootstrap4.min.js",
-                "vendor/highcharts/highstock.js",
-                "vendor/highcharts/map.js",
-                "vendor/highcharts/world.js",
-                "vendor/highcharts/drilldown.js",
-                "vendor/highcharts/highcharts-more.js",
-                "vendor/highcharts/no-data-to-display.js",
-                "vendor/fullcalendar/fullcalendar.min.css",
-                "vendor/momentjs/moment.js",
-                "vendor/fullcalendar/fullcalendar.min.js",
-                "vendor/fontawesome-free/css/all.min.css",
-                "vendor/fontawesome-free/webfonts/fa-brands-400.eot",
-                "vendor/fontawesome-free/webfonts/fa-brands-400.ttf",
-                "vendor/fontawesome-free/webfonts/fa-brands-400.woff",
-                "vendor/fontawesome-free/webfonts/fa-brands-400.woff2",
-                "vendor/fontawesome-free/webfonts/fa-regular-400.eot",
-                "vendor/fontawesome-free/webfonts/fa-regular-400.ttf",
-                "vendor/fontawesome-free/webfonts/fa-regular-400.woff",
-                "vendor/fontawesome-free/webfonts/fa-regular-400.woff2",
-                "vendor/fontawesome-free/webfonts/fa-solid-900.eot",
-                "vendor/fontawesome-free/webfonts/fa-solid-900.ttf",
-                "vendor/fontawesome-free/webfonts/fa-solid-900.woff",
-                "vendor/fontawesome-free/webfonts/fa-solid-900.woff2",
-                "js/sb-admin-2.js",
-                "js/xmlhttprequests.js",
-                "js/color-selector.js",
-                "js/sessionAccordion.js",
-                "js/graphs.js",
-                "js/player-values.js"
+                "../img/Flaticon_circle.png",
+                "../css/sb-admin-2.css",
+                "../css/style.css",
+                "../vendor/jquery/jquery.min.js",
+                "../vendor/bootstrap/js/bootstrap.bundle.min.js",
+                "../vendor/jquery-easing/jquery.easing.min.js",
+                "../vendor/datatables/jquery.dataTables.min.js",
+                "../vendor/datatables/dataTables.bootstrap4.min.js",
+                "../vendor/highcharts/highstock.js",
+                "../vendor/highcharts/map.js",
+                "../vendor/highcharts/world.js",
+                "../vendor/highcharts/drilldown.js",
+                "../vendor/highcharts/highcharts-more.js",
+                "../vendor/highcharts/no-data-to-display.js",
+                "../vendor/fullcalendar/fullcalendar.min.css",
+                "../vendor/momentjs/moment.js",
+                "../vendor/fullcalendar/fullcalendar.min.js",
+                "../vendor/fontawesome-free/css/all.min.css",
+                "../vendor/fontawesome-free/webfonts/fa-brands-400.eot",
+                "../vendor/fontawesome-free/webfonts/fa-brands-400.ttf",
+                "../vendor/fontawesome-free/webfonts/fa-brands-400.woff",
+                "../vendor/fontawesome-free/webfonts/fa-brands-400.woff2",
+                "../vendor/fontawesome-free/webfonts/fa-regular-400.eot",
+                "../vendor/fontawesome-free/webfonts/fa-regular-400.ttf",
+                "../vendor/fontawesome-free/webfonts/fa-regular-400.woff",
+                "../vendor/fontawesome-free/webfonts/fa-regular-400.woff2",
+                "../vendor/fontawesome-free/webfonts/fa-solid-900.eot",
+                "../vendor/fontawesome-free/webfonts/fa-solid-900.ttf",
+                "../vendor/fontawesome-free/webfonts/fa-solid-900.woff",
+                "../vendor/fontawesome-free/webfonts/fa-solid-900.woff2",
+                "../js/sb-admin-2.js",
+                "../js/xmlhttprequests.js",
+                "../js/color-selector.js",
+                "../js/sessionAccordion.js",
+                "../js/graphs.js",
+                "../js/player-values.js"
         );
     }
 
     private void exportResources(ExportPaths exportPaths, Path toDirectory, String... resourceNames) throws IOException {
         for (String resourceName : resourceNames) {
-            exportResource(exportPaths, toDirectory, resourceName);
+            String nonRelativePath = toNonRelativePath(resourceName);
+            exportResource(exportPaths, toDirectory, nonRelativePath);
+            exportPaths.put(resourceName, toRelativePathFromRoot(nonRelativePath));
         }
     }
 
@@ -187,8 +189,6 @@ public class PlayerPageExporter extends FileExporter {
         } else {
             export(to, resource);
         }
-
-        exportPaths.put(resourceName, toRelativePathFromRoot(resourceName));
     }
 
     private String toRelativePathFromRoot(String resourceName) {

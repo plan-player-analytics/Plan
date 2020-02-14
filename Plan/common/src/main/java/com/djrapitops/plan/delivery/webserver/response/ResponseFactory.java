@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.response;
 
+import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.rendering.pages.Page;
 import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
@@ -77,15 +78,17 @@ public class ResponseFactory {
         }
     }
 
-    public Response forPage(Page page) throws IOException {
-        return Response.builder().setContent(page.toHtml())
+    private Response forPage(Page page) {
+        return Response.builder()
                 .setMimeType(MimeType.HTML)
+                .setContent(page.toHtml())
                 .build();
     }
 
-    public Response forInternalError(String cause, Throwable error) {
-        return Response.builder().setContent(pageFactory.internalErrorPage(cause, error).toHtml())
+    private Response forInternalError(String cause, Throwable error) {
+        return Response.builder()
                 .setMimeType(MimeType.HTML)
+                .setContent(pageFactory.internalErrorPage(cause, error).toHtml())
                 .setStatus(500)
                 .build();
     }
@@ -103,14 +106,24 @@ public class ResponseFactory {
     private Optional<Response> checkIfDBIsOpen() {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState != Database.State.OPEN) {
-            return Optional.of(Response.builder().setContent(pageFactory.errorPage(
-                    "503 Resources Unavailable",
-                    "Database is " + dbState.name() + " - Please try again later. You can check database status with /plan info"
-            ).toHtml()).setMimeType(MimeType.HTML)
-                    .setStatus(503)
-                    .build());
+            try {
+                return Optional.of(buildDBNotOpenResponse(dbState));
+            } catch (IOException e) {
+                return Optional.of(forInternalError("Database was not open, additionally failed to generate error page for that", e));
+            }
         }
         return Optional.empty();
+    }
+
+    private Response buildDBNotOpenResponse(Database.State dbState) throws IOException {
+        return Response.builder()
+                .setMimeType(MimeType.HTML)
+                .setContent(pageFactory.errorPage(
+                        "503 Resources Unavailable",
+                        "Database is " + dbState.name() + " - Please try again later. You can check database status with /plan info"
+                ).toHtml())
+                .setStatus(503)
+                .build();
     }
 
     @Deprecated
@@ -147,6 +160,14 @@ public class ResponseFactory {
     @Deprecated
     public RawDataResponse rawPlayerPageResponse_old(UUID uuid) {
         return new RawPlayerDataResponse(dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(uuid)));
+    }
+
+    public Response rawPlayerPageResponse(UUID playerUUID) {
+        PlayerContainer player = dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
+        return Response.builder()
+                .setMimeType(MimeType.JSON)
+                .setJSONContent(RawDataResponse.mapToNormalMap(player))
+                .build();
     }
 
     @Deprecated
@@ -213,9 +234,17 @@ public class ResponseFactory {
         return notFound404_old(locale.getString(ErrorPageLang.UUID_404));
     }
 
+    public Response uuidNotFound404() {
+        return notFound404(locale.getString(ErrorPageLang.UUID_404));
+    }
+
     @Deprecated
     public ErrorResponse playerNotFound404_old() {
         return notFound404_old(locale.getString(ErrorPageLang.NOT_PLAYED_404));
+    }
+
+    public Response playerNotFound404() {
+        return notFound404(locale.getString(ErrorPageLang.NOT_PLAYED_404));
     }
 
     @Deprecated
@@ -224,6 +253,19 @@ public class ResponseFactory {
             return new NotFoundResponse(message, versionCheckSystem, files);
         } catch (IOException e) {
             return internalErrorResponse_old(e, "Failed to generate 404 page");
+        }
+    }
+
+    public Response notFound404(String message) {
+
+        try {
+            return Response.builder()
+                    .setMimeType(MimeType.HTML)
+                    .setContent(pageFactory.errorPage("404 " + message, message).toHtml())
+                    .setStatus(404)
+                    .build();
+        } catch (IOException e) {
+            return forInternalError("Failed to generate 404 page with message '" + message + "'", e);
         }
     }
 
@@ -263,6 +305,16 @@ public class ResponseFactory {
     @Deprecated
     public BadRequestResponse badRequest_old(String errorMessage, String target) {
         return new BadRequestResponse(errorMessage + " (when requesting '" + target + "')");
+    }
+
+    public Response playerPageResponse(UUID playerUUID) {
+        try {
+            return forPage(pageFactory.playerPage(playerUUID));
+        } catch (IllegalStateException e) {
+            return playerNotFound404();
+        } catch (IOException e) {
+            return forInternalError("Failed to generate player page", e);
+        }
     }
 
     @Deprecated

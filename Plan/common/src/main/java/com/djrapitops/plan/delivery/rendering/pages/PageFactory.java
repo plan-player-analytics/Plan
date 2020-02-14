@@ -174,14 +174,10 @@ public class PageFactory {
         }
     }
 
-    public Page errorPage(String title, String error) {
-        try {
-            return new ErrorMessagePage(
-                    getResource("web/error.html"), title, error,
-                    versionCheckSystem.get());
-        } catch (IOException noParse) {
-            return internalErrorPage("Failed to create error message page for error: '" + error + "'", noParse);
-        }
+    public Page errorPage(String title, String error) throws IOException {
+        return new ErrorMessagePage(
+                getResource("web/error.html"), title, error,
+                versionCheckSystem.get());
     }
 
     public String getResource(String name) throws IOException {
