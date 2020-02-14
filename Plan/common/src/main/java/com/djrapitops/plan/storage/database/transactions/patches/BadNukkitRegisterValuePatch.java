@@ -36,17 +36,19 @@ public class BadNukkitRegisterValuePatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return !hasWrongRegisterDates();
+        return hasNoWrongRegisterDates(UserInfoTable.TABLE_NAME, UserInfoTable.REGISTERED)
+                && hasNoWrongRegisterDates(UsersTable.TABLE_NAME, UsersTable.REGISTERED);
     }
 
-    public boolean hasWrongRegisterDates() {
-        String sql = SELECT + "COUNT(*) as c" + FROM + UserInfoTable.TABLE_NAME + WHERE + UserInfoTable.REGISTERED + "<?";
-        return query(new HasMoreThanZeroQueryStatement(sql) {
+    public boolean hasNoWrongRegisterDates(String tableName, String registered) {
+        String sql = SELECT + "COUNT(*) as c" + FROM + tableName + WHERE + registered + "<?";
+        Boolean foundWrongRegisterDates = query(new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, 20000000); // Before 20th August 1970
+                statement.setLong(1, System.currentTimeMillis() / 1000L);
             }
         });
+        return !foundWrongRegisterDates;
     }
 
     @Override
@@ -62,7 +64,7 @@ public class BadNukkitRegisterValuePatch extends Patch {
         execute(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, 20000000); // Before 20th August 1970
+                statement.setLong(1, System.currentTimeMillis() / 1000L);
             }
         });
     }
