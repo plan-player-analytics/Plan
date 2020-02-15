@@ -36,6 +36,8 @@ public interface Resource {
      */
     String getResourceName();
 
+    byte[] asBytes() throws IOException;
+
     /**
      * Get the resource as an InputStream.
      *

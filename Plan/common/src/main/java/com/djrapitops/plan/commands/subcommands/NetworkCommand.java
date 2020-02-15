@@ -68,7 +68,7 @@ public class NetworkCommand extends CommandNode {
 
         // Link
         String address = PlanSystem.getMainAddress(webServer, dbSystem);
-        String url = address + "/network/";
+        String url = address + "/network";
         String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
         boolean console = !CommandUtils.isPlayer(sender);
         if (console) {

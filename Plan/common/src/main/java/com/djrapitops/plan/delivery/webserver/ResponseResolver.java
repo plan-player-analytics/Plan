@@ -18,9 +18,7 @@ package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.delivery.web.ResolverService;
 import com.djrapitops.plan.delivery.web.ResolverSvc;
-import com.djrapitops.plan.delivery.web.resolver.Resolver;
-import com.djrapitops.plan.delivery.web.resolver.URIPath;
-import com.djrapitops.plan.delivery.web.resolver.URIQuery;
+import com.djrapitops.plan.delivery.web.resolver.*;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.pages.*;
 import com.djrapitops.plan.delivery.webserver.pages.json.RootJSONResolver;
@@ -91,17 +89,22 @@ public class ResponseResolver extends CompositePageResolver {
     }
 
     public void registerPages() {
-        resolverService.registerResolver("Plan", "/debug", debugPageResolver);
-        resolverService.registerResolver("Plan", "/players", playersPageResolver);
-        resolverService.registerResolver("Plan", "/player", playerPageResolver);
-
-        registerPage("network", serverPageResolver);
-        registerPage("server", serverPageResolver);
+        String pluginName = "Plan";
+        resolverService.registerResolver(pluginName, "/debug", debugPageResolver);
+        resolverService.registerResolver(pluginName, "/players", playersPageResolver);
+        resolverService.registerResolver(pluginName, "/player", playerPageResolver);
+        resolverService.registerResolver(pluginName, "/favicon.ico", noAuthResolverFor(responseFactory.faviconResponse()));
+        resolverService.registerResolver(pluginName, "/network", serverPageResolver);
+        resolverService.registerResolver(pluginName, "/server", serverPageResolver);
 
         // TODO Figure out how to deal with stuff like this
         registerPage("", new RootPageResolver(responseFactory, webServer.get(), serverInfo));
 
         registerPage("v1", rootJSONResolver);
+    }
+
+    public NoAuthResolver noAuthResolverFor(Response response) {
+        return (target, query) -> Optional.of(response);
     }
 
     public Response_old getResponse(Request request) {
@@ -170,9 +173,6 @@ public class ResponseResolver extends CompositePageResolver {
         }
         if (target.endsWith(".png")) {
             return responseFactory.imageResponse_old(resource);
-        }
-        if (target.endsWith("favicon.ico")) {
-            return responseFactory.faviconResponse_old();
         }
         if (target.endsWithAny(".woff", ".woff2", ".eot", ".ttf")) {
             return responseFactory.fontResponse_old(resource);

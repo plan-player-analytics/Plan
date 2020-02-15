@@ -13,14 +13,14 @@
     <title>Plan | Network</title>
 
     <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="./vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link crossorigin="anonymous"
           href="https://fonts.googleapis.com/css?family=Nunito:400,700,800,900&display=swap&subset=latin-ext"
           rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+    <link href="./css/sb-admin-2.css" rel="stylesheet">
+    <link href="./css/style.css" rel="stylesheet">
 
 </head>
 
@@ -41,7 +41,7 @@
 
         <!-- Sidebar - Brand -->
         <a class="sidebar-brand d-flex align-items-center justify-content-center">
-            <img class="w-22" src="img/Flaticon_circle.png">
+            <img class="w-22" src="./img/Flaticon_circle.png">
         </a>
 
         <!-- Divider -->
@@ -777,41 +777,41 @@
 </a>
 
 <!-- Bootstrap core JavaScript-->
-<script src="vendor/jquery/jquery.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="./vendor/jquery/jquery.min.js"></script>
+<script src="./vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- Core plugin JavaScript-->
-<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="./vendor/jquery-easing/jquery.easing.min.js"></script>
 
 <!-- Page level plugins -->
-<script src="vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
-<script src="vendor/highcharts/highstock.js"></script>
-<script src="vendor/highcharts/map.js"></script>
-<script src="vendor/highcharts/world.js"></script>
-<script src="vendor/highcharts/drilldown.js"></script>
-<script src="vendor/highcharts/highcharts-more.js"></script>
-<script src="vendor/highcharts/no-data-to-display.js"></script>
+<script src="./vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="./vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script src="./vendor/highcharts/highstock.js"></script>
+<script src="./vendor/highcharts/map.js"></script>
+<script src="./vendor/highcharts/world.js"></script>
+<script src="./vendor/highcharts/drilldown.js"></script>
+<script src="./vendor/highcharts/highcharts-more.js"></script>
+<script src="./vendor/highcharts/no-data-to-display.js"></script>
 
 <!-- Custom scripts for all pages-->
-<script src="js/sb-admin-2.js"></script>
-<script src="js/xmlhttprequests.js"></script>
-<script src="js/color-selector.js"></script>
+<script src="./js/sb-admin-2.js"></script>
+<script src="./js/xmlhttprequests.js"></script>
+<script src="./js/color-selector.js"></script>
 
 <!-- Page level custom scripts -->
-<script src="js/sessionAccordion.js"></script>
-<script src="js/pingTable.js"></script>
-<script src="js/graphs.js"></script>
-<script src="js/network-values.js"></script>
+<script src="./js/sessionAccordion.js"></script>
+<script src="./js/pingTable.js"></script>
+<script src="./js/graphs.js"></script>
+<script src="./js/network-values.js"></script>
 
 <script>
     try {
         setLoadingText('Calculating values..');
-        jsonRequest("../v1/network/overview", loadNetworkOverviewValues);
-        jsonRequest("../v1/network/servers", loadservers);
-        jsonRequest("../v1/network/sessionsOverview", loadSessionValues);
-        jsonRequest("../v1/network/playerbaseOverview", loadPlayerbaseOverviewValues);
-        jsonRequest("../v1/sessions", loadSessionAccordion);
+        jsonRequest("./v1/network/overview", loadNetworkOverviewValues);
+        jsonRequest("./v1/network/servers", loadservers);
+        jsonRequest("./v1/network/sessionsOverview", loadSessionValues);
+        jsonRequest("./v1/network/playerbaseOverview", loadPlayerbaseOverviewValues);
+        jsonRequest("./v1/sessions", loadSessionAccordion);
         setLoadingText('Rendering graphs..');
 
         var v = {
@@ -858,7 +858,7 @@
             }
         };
 
-        jsonRequest("../v1/graph?type=playersOnline&server=${serverUUID}", function (json, error) {
+        jsonRequest("./v1/graph?type=playersOnline&server=${serverUUID}", function (json, error) {
             if (json) {
                 var series = {
                     playersOnline: {
@@ -872,7 +872,7 @@
             }
         });
 
-        jsonRequest("../v1/graph?type=uniqueAndNew", function (json, error) {
+        jsonRequest("./v1/graph?type=uniqueAndNew", function (json, error) {
             if (json) {
                 var uniquePlayers = {
                     name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
@@ -888,7 +888,7 @@
             }
         });
 
-        jsonRequest("../v1/graph?type=serverPie", function (json, error) {
+        jsonRequest("./v1/graph?type=serverPie", function (json, error) {
             if (json) {
                 serverPieSeries = {
                     name: 'Server Playtime',
@@ -902,7 +902,7 @@
             }
         });
 
-        jsonRequest("../v1/graph?type=activity", function (json, error) {
+        jsonRequest("./v1/graph?type=activity", function (json, error) {
             if (json) {
                 activityPie('activityPie', {
                     name: 'Players', colorByPoint: true, data: json.activity_pie_series
@@ -914,7 +914,7 @@
             }
         });
 
-        jsonRequest("../v1/graph?type=geolocation", function (json, error) {
+        jsonRequest("./v1/graph?type=geolocation", function (json, error) {
             if (json) {
                 var geolocationSeries = {
                     name: 'Players',
@@ -943,7 +943,7 @@
 
         setLoadingText('Sorting out plugin tables..');
 
-        jsonRequest("../v1/network/pingTable", loadPingTable);
+        jsonRequest("./v1/network/pingTable", loadPingTable);
 
         $('.player-plugin-table').DataTable({
             responsive: true

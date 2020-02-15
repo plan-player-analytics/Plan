@@ -71,12 +71,13 @@ public class ResponseBuilder {
      * @return https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Location
      */
     public ResponseBuilder redirectTo(String url) {
-        return setStatus(302).setHeader("Location", url).setContent(new byte[]{});
+        return setStatus(302).setHeader("Location", url).setContent(new byte[0]);
     }
 
     public ResponseBuilder setContent(byte[] bytes) {
         response.bytes = bytes;
-        return setHeader("Content-Length", bytes.length);
+        return setHeader("Content-Length", bytes.length)
+                .setHeader("Accept-Ranges", "bytes"); // Does not compress
     }
 
     public ResponseBuilder setContent(String utf8String) {

@@ -17,19 +17,12 @@
 package com.djrapitops.plan.delivery.webserver.pages;
 
 import com.djrapitops.plan.delivery.rendering.html.Html;
-import com.djrapitops.plan.delivery.webserver.Request;
-import com.djrapitops.plan.delivery.webserver.RequestTarget;
+import com.djrapitops.plan.delivery.web.resolver.*;
 import com.djrapitops.plan.delivery.webserver.WebServer;
-import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
-import com.djrapitops.plan.delivery.webserver.response.Response_old;
-import com.djrapitops.plan.exceptions.WebUserAuthException;
-import com.djrapitops.plan.exceptions.connection.ForbiddenException;
-import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import dagger.Lazy;
 
@@ -44,7 +37,7 @@ import java.util.UUID;
  * @author Rsl1122
  */
 @Singleton
-public class ServerPageResolver implements PageResolver {
+public class ServerPageResolver implements Resolver {
 
     private final ResponseFactory responseFactory;
     private final DBSystem dbSystem;
@@ -65,45 +58,42 @@ public class ServerPageResolver implements PageResolver {
     }
 
     @Override
-    public Response_old resolve(Request request, RequestTarget target) throws WebException {
-        Optional<UUID> serverUUID = getServerUUID(target);
-        boolean proxy = serverInfo.getServer().isProxy();
-        if (serverUUID.isPresent()) {
-            checkDBState();
-            if (proxy && serverInfo.getServerUUID().equals(serverUUID.get())) {
-                return responseFactory.networkPageResponse_old();
-            }
-            return responseFactory.serverPageResponse_old(serverUUID.get());
-        } else {
-            // Redirect to base server page.
-            String directTo = proxy ? "/network" : "/server/" + Html.encodeToURL(serverInfo.getServer().getIdentifiableName());
-            return responseFactory.redirectResponse_old(webServer.get().getAccessAddress() + directTo);
-        }
-    }
-
-    private void checkDBState() throws ForbiddenException {
-        Database.State dbState = dbSystem.getDatabase().getState();
-        if (dbState != Database.State.OPEN) {
-            throw new ForbiddenException("Database is " + dbState.name() + " - Please try again later. You can check database status with /plan info");
-        }
-    }
-
-    private Optional<UUID> getServerUUID(RequestTarget target) {
-        if (!target.isEmpty()) {
-            try {
-                String serverName = target.get(0);
-                return dbSystem.getDatabase()
-                        .query(ServerQueries.fetchServerMatchingIdentifier(serverName))
-                        .map(Server::getUuid);
-            } catch (IllegalArgumentException ignore) {
-                /*ignored*/
-            }
-        }
-        return Optional.of(serverInfo.getServer().getUuid());
+    public boolean canAccess(WebUser permissions, URIPath target, URIQuery query) {
+        String firstPart = target.getPart(0).orElse("");
+        boolean forServerPage = firstPart.equalsIgnoreCase("server") && permissions.hasPermission("page.server");
+        boolean forNetworkPage = firstPart.equalsIgnoreCase("network") && permissions.hasPermission("page.network");
+        return forServerPage || forNetworkPage;
     }
 
     @Override
-    public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
-        return auth.getWebUser().getPermLevel() <= 0;
+    public Optional<Response> resolve(URIPath target, URIQuery query) {
+        return getServerUUID(target)
+                .map(this::getServerPage)
+                .orElseGet(this::redirectToCurrentServer);
+    }
+
+    private Optional<Response> redirectToCurrentServer() {
+        String directTo = serverInfo.getServer().isProxy()
+                ? "/network"
+                : "/server/" + Html.encodeToURL(serverInfo.getServer().getIdentifiableName());
+        return Optional.of(responseFactory.redirectResponse(webServer.get().getAccessAddress() + directTo));
+    }
+
+    private Optional<Response> getServerPage(UUID serverUUID) {
+        boolean toNetworkPage = serverInfo.getServer().isProxy() && serverInfo.getServerUUID().equals(serverUUID);
+        if (toNetworkPage) return Optional.of(responseFactory.networkPageResponse());
+        return Optional.of(responseFactory.serverPageResponse(serverUUID));
+    }
+
+    private Optional<UUID> getServerUUID(URIPath path) {
+        if (serverInfo.getServer().isProxy()
+                && path.getPart(0).map("network"::equals).orElse(false)
+                && !path.getPart(1).isPresent() // No slash at the end.
+        ) {
+            return Optional.of(serverInfo.getServerUUID());
+        }
+        return path.getPart(1).flatMap(serverName -> dbSystem.getDatabase()
+                .query(ServerQueries.fetchServerMatchingIdentifier(serverName))
+                .map(Server::getUuid));
     }
 }

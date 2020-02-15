@@ -58,4 +58,9 @@ public class StringResource implements Resource {
     public String asString() {
         return resource;
     }
+
+    @Override
+    public byte[] asBytes() {
+        return resource.getBytes(StandardCharsets.UTF_8);
+    }
 }

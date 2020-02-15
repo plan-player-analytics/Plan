@@ -19,24 +19,15 @@ package com.djrapitops.plan.delivery.web.resolver;
 import java.util.Optional;
 
 /**
- * Interface for resolving requests of Plan webserver.
+ * Special Resolver that gives responses without user authentication.
  *
  * @author Rsl1122
- * @see NoAuthResolver if resource is always accessible regardless of user.
  */
-public interface Resolver {
+public interface NoAuthResolver extends Resolver {
 
-    /**
-     * Implement access control if authorization is enabled.
-     * <p>
-     * Is not called when access control is not active.
-     *
-     * @param permissions WebUser that is accessing this page.
-     * @param target      Target that is being accessed, /example/target
-     * @param query       Parameters in the URL, ?param=value etc.
-     * @return true if allowed or invalid target, false if response should be 403 (forbidden)
-     */
-    boolean canAccess(WebUser permissions, URIPath target, URIQuery query);
+    default boolean canAccess(WebUser permissions, URIPath target, URIQuery query) {
+        return true;
+    }
 
     /**
      * Implement request resolution.
@@ -53,6 +44,6 @@ public interface Resolver {
     }
 
     default boolean requiresAuth(URIPath target, URIQuery query) {
-        return true;
+        return false;
     }
 }

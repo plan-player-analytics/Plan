@@ -84,7 +84,7 @@ public class ServerPageExporter extends FileExporter {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
 
-        exportPaths.put("../network/", toRelativePathFromRoot("network"));
+        exportPaths.put("../network", toRelativePathFromRoot("network"));
         exportRequiredResources(toDirectory);
         exportJSON(toDirectory, server);
         exportHtml(toDirectory, server);
@@ -163,49 +163,51 @@ public class ServerPageExporter extends FileExporter {
     private void exportRequiredResources(Path toDirectory) throws IOException {
         // Style
         exportResources(toDirectory,
-                "img/Flaticon_circle.png",
-                "css/sb-admin-2.css",
-                "css/style.css",
-                "vendor/jquery/jquery.min.js",
-                "vendor/bootstrap/js/bootstrap.bundle.min.js",
-                "vendor/jquery-easing/jquery.easing.min.js",
-                "vendor/datatables/jquery.dataTables.min.js",
-                "vendor/datatables/dataTables.bootstrap4.min.js",
-                "vendor/highcharts/highstock.js",
-                "vendor/highcharts/map.js",
-                "vendor/highcharts/world.js",
-                "vendor/highcharts/drilldown.js",
-                "vendor/highcharts/highcharts-more.js",
-                "vendor/highcharts/no-data-to-display.js",
-                "vendor/fullcalendar/fullcalendar.min.css",
-                "vendor/momentjs/moment.js",
-                "vendor/fullcalendar/fullcalendar.min.js",
-                "vendor/fontawesome-free/css/all.min.css",
-                "vendor/fontawesome-free/webfonts/fa-brands-400.eot",
-                "vendor/fontawesome-free/webfonts/fa-brands-400.ttf",
-                "vendor/fontawesome-free/webfonts/fa-brands-400.woff",
-                "vendor/fontawesome-free/webfonts/fa-brands-400.woff2",
-                "vendor/fontawesome-free/webfonts/fa-regular-400.eot",
-                "vendor/fontawesome-free/webfonts/fa-regular-400.ttf",
-                "vendor/fontawesome-free/webfonts/fa-regular-400.woff",
-                "vendor/fontawesome-free/webfonts/fa-regular-400.woff2",
-                "vendor/fontawesome-free/webfonts/fa-solid-900.eot",
-                "vendor/fontawesome-free/webfonts/fa-solid-900.ttf",
-                "vendor/fontawesome-free/webfonts/fa-solid-900.woff",
-                "vendor/fontawesome-free/webfonts/fa-solid-900.woff2",
-                "js/sb-admin-2.js",
-                "js/xmlhttprequests.js",
-                "js/color-selector.js",
-                "js/sessionAccordion.js",
-                "js/pingTable.js",
-                "js/graphs.js",
-                "js/server-values.js"
+                "../img/Flaticon_circle.png",
+                "../css/sb-admin-2.css",
+                "../css/style.css",
+                "../vendor/jquery/jquery.min.js",
+                "../vendor/bootstrap/js/bootstrap.bundle.min.js",
+                "../vendor/jquery-easing/jquery.easing.min.js",
+                "../vendor/datatables/jquery.dataTables.min.js",
+                "../vendor/datatables/dataTables.bootstrap4.min.js",
+                "../vendor/highcharts/highstock.js",
+                "../vendor/highcharts/map.js",
+                "../vendor/highcharts/world.js",
+                "../vendor/highcharts/drilldown.js",
+                "../vendor/highcharts/highcharts-more.js",
+                "../vendor/highcharts/no-data-to-display.js",
+                "../vendor/fullcalendar/fullcalendar.min.css",
+                "../vendor/momentjs/moment.js",
+                "../vendor/fullcalendar/fullcalendar.min.js",
+                "../vendor/fontawesome-free/css/all.min.css",
+                "../vendor/fontawesome-free/webfonts/fa-brands-400.eot",
+                "../vendor/fontawesome-free/webfonts/fa-brands-400.ttf",
+                "../vendor/fontawesome-free/webfonts/fa-brands-400.woff",
+                "../vendor/fontawesome-free/webfonts/fa-brands-400.woff2",
+                "../vendor/fontawesome-free/webfonts/fa-regular-400.eot",
+                "../vendor/fontawesome-free/webfonts/fa-regular-400.ttf",
+                "../vendor/fontawesome-free/webfonts/fa-regular-400.woff",
+                "../vendor/fontawesome-free/webfonts/fa-regular-400.woff2",
+                "../vendor/fontawesome-free/webfonts/fa-solid-900.eot",
+                "../vendor/fontawesome-free/webfonts/fa-solid-900.ttf",
+                "../vendor/fontawesome-free/webfonts/fa-solid-900.woff",
+                "../vendor/fontawesome-free/webfonts/fa-solid-900.woff2",
+                "../js/sb-admin-2.js",
+                "../js/xmlhttprequests.js",
+                "../js/color-selector.js",
+                "../js/sessionAccordion.js",
+                "../js/pingTable.js",
+                "../js/graphs.js",
+                "../js/server-values.js"
         );
     }
 
     private void exportResources(Path toDirectory, String... resourceNames) throws IOException {
         for (String resourceName : resourceNames) {
-            exportResource(toDirectory, resourceName);
+            String nonRelativePath = toNonRelativePath(resourceName);
+            exportResource(toDirectory, nonRelativePath);
+            exportPaths.put(resourceName, toRelativePathFromRoot(nonRelativePath));
         }
     }
 
@@ -220,8 +222,6 @@ public class ServerPageExporter extends FileExporter {
         } else {
             export(to, resource);
         }
-
-        exportPaths.put(resourceName, toRelativePathFromRoot(resourceName));
     }
 
     private String toRelativePathFromRoot(String resourceName) {
@@ -230,7 +230,7 @@ public class ServerPageExporter extends FileExporter {
     }
 
     private String toNonRelativePath(String resourceName) {
-        return StringUtils.remove(resourceName, "../");
+        return StringUtils.remove(StringUtils.remove(resourceName, "../"), "./");
     }
 
 }

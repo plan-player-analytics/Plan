@@ -103,6 +103,10 @@ public abstract class Response_old {
                 .orElse(new String(apiResponse.getBytes())));
         response.setHeader("HTTP/1.1 " + apiResponse.getCode() + " ");
         for (Map.Entry<String, String> header : apiResponse.getHeaders().entrySet()) {
+            if (header.getKey().equals("Content-Type")) {
+                response.type = header.getValue();
+                continue;
+            }
             response.header += header.getKey() + ": " + header.getValue() + ";\r\n";
         }
         return response;
@@ -132,6 +136,7 @@ public abstract class Response_old {
     public void send(HttpExchange exchange, Locale locale, Theme theme) throws IOException {
         responseHeaders.set("Content-Type", type);
         responseHeaders.set("Content-Encoding", "gzip");
+        // TODO handle case of ByteResponse when "Accept-Ranges", "bytes" is set
         exchange.sendResponseHeaders(getCode(), 0);
 
         try (

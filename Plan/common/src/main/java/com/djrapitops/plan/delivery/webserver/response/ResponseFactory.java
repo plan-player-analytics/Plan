@@ -22,9 +22,7 @@ import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.webserver.response.errors.*;
-import com.djrapitops.plan.delivery.webserver.response.pages.PageResponse;
 import com.djrapitops.plan.delivery.webserver.response.pages.RawDataResponse;
-import com.djrapitops.plan.delivery.webserver.response.pages.RawPlayerDataResponse;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -74,7 +72,7 @@ public class ResponseFactory {
         try {
             return forPage(pageFactory.debugPage());
         } catch (IOException e) {
-            return forInternalError("Failed to generate debug page", e);
+            return forInternalError(e, "Failed to generate debug page");
         }
     }
 
@@ -85,7 +83,7 @@ public class ResponseFactory {
                 .build();
     }
 
-    private Response forInternalError(String cause, Throwable error) {
+    private Response forInternalError(Throwable error, String cause) {
         return Response.builder()
                 .setMimeType(MimeType.HTML)
                 .setContent(pageFactory.internalErrorPage(cause, error).toHtml())
@@ -95,21 +93,21 @@ public class ResponseFactory {
 
     public Response playersPageResponse() {
         try {
-            Optional<Response> error = checkIfDBIsOpen();
+            Optional<Response> error = checkDbClosedError();
             if (error.isPresent()) return error.get();
             return forPage(pageFactory.playersPage());
         } catch (IOException e) {
-            return forInternalError("Failed to generate players page", e);
+            return forInternalError(e, "Failed to generate players page");
         }
     }
 
-    private Optional<Response> checkIfDBIsOpen() {
+    private Optional<Response> checkDbClosedError() {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState != Database.State.OPEN) {
             try {
                 return Optional.of(buildDBNotOpenResponse(dbState));
             } catch (IOException e) {
-                return Optional.of(forInternalError("Database was not open, additionally failed to generate error page for that", e));
+                return Optional.of(forInternalError(e, "Database was not open, additionally failed to generate error page for that"));
             }
         }
         return Optional.empty();
@@ -139,27 +137,26 @@ public class ResponseFactory {
         }
     }
 
-    @Deprecated
-    public Response_old networkPageResponse_old() {
+    public Response networkPageResponse() {
+        Optional<Response> error = checkDbClosedError();
+        if (error.isPresent()) return error.get();
         try {
-            return new PageResponse(pageFactory.networkPage());
+            return forPage(pageFactory.networkPage());
         } catch (IOException e) {
-            return internalErrorResponse_old(e, "Failed to generate network page");
+            return forInternalError(e, "Failed to generate network page");
         }
     }
 
-    @Deprecated
-    public Response_old serverPageResponse_old(UUID serverUUID) throws NotFoundException {
+    public Response serverPageResponse(UUID serverUUID) {
+        Optional<Response> error = checkDbClosedError();
+        if (error.isPresent()) return error.get();
         try {
-            return new PageResponse(pageFactory.serverPage(serverUUID));
+            return forPage(pageFactory.serverPage(serverUUID));
+        } catch (NotFoundException e) {
+            return notFound404(e.getMessage());
         } catch (IOException e) {
-            return internalErrorResponse_old(e, "Failed to generate server page");
+            return forInternalError(e, "Failed to generate server page");
         }
-    }
-
-    @Deprecated
-    public RawDataResponse rawPlayerPageResponse_old(UUID uuid) {
-        return new RawPlayerDataResponse(dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(uuid)));
     }
 
     public Response rawPlayerPageResponse(UUID playerUUID) {
@@ -219,9 +216,19 @@ public class ResponseFactory {
         return new RedirectResponse(location);
     }
 
-    @Deprecated
-    public Response_old faviconResponse_old() {
-        return new ByteResponse(ResponseType.X_ICON, "web/favicon.ico", files);
+    public Response redirectResponse(String location) {
+        return Response.builder().redirectTo(location).build();
+    }
+
+    public Response faviconResponse() {
+        try {
+            return Response.builder()
+                    .setMimeType(MimeType.FAVICON)
+                    .setContent(files.getCustomizableResourceOrDefault("web/favicon.ico").asBytes())
+                    .build();
+        } catch (IOException e) {
+            return forInternalError(e, "Could not read favicon");
+        }
     }
 
     @Deprecated
@@ -229,18 +236,8 @@ public class ResponseFactory {
         return notFound404_old(locale.getString(ErrorPageLang.UNKNOWN_PAGE_404));
     }
 
-    @Deprecated
-    public ErrorResponse uuidNotFound404_old() {
-        return notFound404_old(locale.getString(ErrorPageLang.UUID_404));
-    }
-
     public Response uuidNotFound404() {
         return notFound404(locale.getString(ErrorPageLang.UUID_404));
-    }
-
-    @Deprecated
-    public ErrorResponse playerNotFound404_old() {
-        return notFound404_old(locale.getString(ErrorPageLang.NOT_PLAYED_404));
     }
 
     public Response playerNotFound404() {
@@ -265,7 +262,7 @@ public class ResponseFactory {
                     .setStatus(404)
                     .build();
         } catch (IOException e) {
-            return forInternalError("Failed to generate 404 page with message '" + message + "'", e);
+            return forInternalError(e, "Failed to generate 404 page with message '" + message + "'");
         }
     }
 
@@ -313,18 +310,7 @@ public class ResponseFactory {
         } catch (IllegalStateException e) {
             return playerNotFound404();
         } catch (IOException e) {
-            return forInternalError("Failed to generate player page", e);
-        }
-    }
-
-    @Deprecated
-    public Response_old playerPageResponse_old(UUID playerUUID) {
-        try {
-            return new PageResponse(pageFactory.playerPage(playerUUID));
-        } catch (IllegalStateException e) {
-            return playerNotFound404_old();
-        } catch (IOException e) {
-            return internalErrorResponse_old(e, "Failed to generate player page");
+            return forInternalError(e, "Failed to generate player page");
         }
     }
 }

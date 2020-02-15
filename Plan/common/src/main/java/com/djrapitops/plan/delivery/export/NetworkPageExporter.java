@@ -128,11 +128,15 @@ public class NetworkPageExporter extends FileExporter {
 
         String jsonResourceName = toFileName(toJSONResourceName(resource)) + ".json";
 
+        String relativePlayerLink = toRelativePathFromRoot("player");
         export(toDirectory.resolve("data").resolve(jsonResourceName),
                 // Replace ../player in urls to fix player page links
-                StringUtils.replace(found.getContent(), "../player", toRelativePathFromRoot("player"))
+                StringUtils.replaceEach(found.getContent(),
+                        new String[]{"../player", "./player"},
+                        new String[]{relativePlayerLink, relativePlayerLink}
+                )
         );
-        exportPaths.put("../v1/" + resource, toRelativePathFromRoot("data/" + jsonResourceName));
+        exportPaths.put("./v1/" + resource, toRelativePathFromRoot("data/" + jsonResourceName));
     }
 
     private String toJSONResourceName(String resource) {
@@ -150,46 +154,48 @@ public class NetworkPageExporter extends FileExporter {
 
     private void exportRequiredResources(Path toDirectory) throws IOException {
         exportResources(toDirectory,
-                "img/Flaticon_circle.png",
-                "css/sb-admin-2.css",
-                "css/style.css",
-                "vendor/jquery/jquery.min.js",
-                "vendor/bootstrap/js/bootstrap.bundle.min.js",
-                "vendor/jquery-easing/jquery.easing.min.js",
-                "vendor/datatables/jquery.dataTables.min.js",
-                "vendor/datatables/dataTables.bootstrap4.min.js",
-                "vendor/highcharts/highstock.js",
-                "vendor/highcharts/map.js",
-                "vendor/highcharts/world.js",
-                "vendor/highcharts/drilldown.js",
-                "vendor/highcharts/highcharts-more.js",
-                "vendor/highcharts/no-data-to-display.js",
-                "vendor/fontawesome-free/css/all.min.css",
-                "vendor/fontawesome-free/webfonts/fa-brands-400.eot",
-                "vendor/fontawesome-free/webfonts/fa-brands-400.ttf",
-                "vendor/fontawesome-free/webfonts/fa-brands-400.woff",
-                "vendor/fontawesome-free/webfonts/fa-brands-400.woff2",
-                "vendor/fontawesome-free/webfonts/fa-regular-400.eot",
-                "vendor/fontawesome-free/webfonts/fa-regular-400.ttf",
-                "vendor/fontawesome-free/webfonts/fa-regular-400.woff",
-                "vendor/fontawesome-free/webfonts/fa-regular-400.woff2",
-                "vendor/fontawesome-free/webfonts/fa-solid-900.eot",
-                "vendor/fontawesome-free/webfonts/fa-solid-900.ttf",
-                "vendor/fontawesome-free/webfonts/fa-solid-900.woff",
-                "vendor/fontawesome-free/webfonts/fa-solid-900.woff2",
-                "js/sb-admin-2.js",
-                "js/xmlhttprequests.js",
-                "js/color-selector.js",
-                "js/sessionAccordion.js",
-                "js/pingTable.js",
-                "js/graphs.js",
-                "js/network-values.js"
+                "./img/Flaticon_circle.png",
+                "./css/sb-admin-2.css",
+                "./css/style.css",
+                "./vendor/jquery/jquery.min.js",
+                "./vendor/bootstrap/js/bootstrap.bundle.min.js",
+                "./vendor/jquery-easing/jquery.easing.min.js",
+                "./vendor/datatables/jquery.dataTables.min.js",
+                "./vendor/datatables/dataTables.bootstrap4.min.js",
+                "./vendor/highcharts/highstock.js",
+                "./vendor/highcharts/map.js",
+                "./vendor/highcharts/world.js",
+                "./vendor/highcharts/drilldown.js",
+                "./vendor/highcharts/highcharts-more.js",
+                "./vendor/highcharts/no-data-to-display.js",
+                "./vendor/fontawesome-free/css/all.min.css",
+                "./vendor/fontawesome-free/webfonts/fa-brands-400.eot",
+                "./vendor/fontawesome-free/webfonts/fa-brands-400.ttf",
+                "./vendor/fontawesome-free/webfonts/fa-brands-400.woff",
+                "./vendor/fontawesome-free/webfonts/fa-brands-400.woff2",
+                "./vendor/fontawesome-free/webfonts/fa-regular-400.eot",
+                "./vendor/fontawesome-free/webfonts/fa-regular-400.ttf",
+                "./vendor/fontawesome-free/webfonts/fa-regular-400.woff",
+                "./vendor/fontawesome-free/webfonts/fa-regular-400.woff2",
+                "./vendor/fontawesome-free/webfonts/fa-solid-900.eot",
+                "./vendor/fontawesome-free/webfonts/fa-solid-900.ttf",
+                "./vendor/fontawesome-free/webfonts/fa-solid-900.woff",
+                "./vendor/fontawesome-free/webfonts/fa-solid-900.woff2",
+                "./js/sb-admin-2.js",
+                "./js/xmlhttprequests.js",
+                "./js/color-selector.js",
+                "./js/sessionAccordion.js",
+                "./js/pingTable.js",
+                "./js/graphs.js",
+                "./js/network-values.js"
         );
     }
 
     private void exportResources(Path toDirectory, String... resourceNames) throws IOException {
         for (String resourceName : resourceNames) {
-            exportResource(toDirectory, resourceName);
+            String nonRelativePath = toNonRelativePath(resourceName);
+            exportResource(toDirectory, nonRelativePath);
+            exportPaths.put(resourceName, toRelativePathFromRoot(nonRelativePath));
         }
     }
 
@@ -199,16 +205,18 @@ public class NetworkPageExporter extends FileExporter {
 
         if (resourceName.endsWith(".css")) {
             export(to, theme.replaceThemeColors(resource.asString()));
-        } else if ("js/network-values.js".equalsIgnoreCase(resourceName)) {
-            // Replace /server in urls to fix server page links
-            export(to, StringUtils.replaceOnce(resource.asString(), "server/", toRelativePathFromRoot("server") + '/'));
+        } else if ("js/network-values.js".equalsIgnoreCase(resourceName) || "js/sessionAccordion.js".equalsIgnoreCase(resourceName)) {
+            String relativePlayerLink = toRelativePathFromRoot("player");
+            String relativeServerLink = toRelativePathFromRoot("server/");
+            export(to, StringUtils.replaceEach(resource.asString(),
+                    new String[]{"../player", "./player", "./server/", "server/"},
+                    new String[]{relativePlayerLink, relativePlayerLink, relativeServerLink, relativeServerLink}
+            ));
         } else if (Resource.isTextResource(resourceName)) {
             export(to, resource.asLines());
         } else {
             export(to, resource);
         }
-
-        exportPaths.put(resourceName, toRelativePathFromRoot(resourceName));
     }
 
     private String toRelativePathFromRoot(String resourceName) {
@@ -217,7 +225,7 @@ public class NetworkPageExporter extends FileExporter {
     }
 
     private String toNonRelativePath(String resourceName) {
-        return StringUtils.remove(resourceName, "../");
+        return StringUtils.remove(StringUtils.remove(resourceName, "../"), "./");
     }
 
 }

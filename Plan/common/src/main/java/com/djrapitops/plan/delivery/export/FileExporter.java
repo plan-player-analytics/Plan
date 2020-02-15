@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.storage.file.Resource;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -64,6 +65,17 @@ abstract class FileExporter {
 
         try (
                 InputStream in = resource.asInputStream();
+                OutputStream out = Files.newOutputStream(to, OPEN_OPTIONS)
+        ) {
+            copy(in, out);
+        }
+    }
+
+    void export(Path to, byte[] resource) throws IOException {
+        Files.createDirectories(to.getParent());
+
+        try (
+                InputStream in = new ByteArrayInputStream(resource);
                 OutputStream out = Files.newOutputStream(to, OPEN_OPTIONS)
         ) {
             copy(in, out);
