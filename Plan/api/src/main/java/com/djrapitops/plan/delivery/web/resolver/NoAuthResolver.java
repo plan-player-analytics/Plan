@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.delivery.web.resolver;
 
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
+
 import java.util.Optional;
 
 /**
@@ -25,25 +27,24 @@ import java.util.Optional;
  */
 public interface NoAuthResolver extends Resolver {
 
-    default boolean canAccess(WebUser permissions, URIPath target, URIQuery query) {
+    default boolean canAccess(Request request) {
         return true;
     }
 
     /**
      * Implement request resolution.
      *
-     * @param target Target that is being accessed, /example/target
-     * @param query  Parameters in the URL, ?param=value etc.
+     * @param request HTTP request, contains all information necessary to resolve the request.
      * @return Response or empty if the response should be 404 (not found).
      * @see Response for return value
      */
-    Optional<Response> resolve(URIPath target, URIQuery query);
+    Optional<Response> resolve(Request request);
 
     default ResponseBuilder newResponseBuilder() {
         return Response.builder();
     }
 
-    default boolean requiresAuth(URIPath target, URIQuery query) {
+    default boolean requiresAuth(Request request) {
         return false;
     }
 }

@@ -18,7 +18,7 @@ package com.djrapitops.plan.delivery.webserver.pages.json;
 
 import com.djrapitops.plan.delivery.domain.WebUser_old;
 import com.djrapitops.plan.delivery.rendering.json.PlayerJSONCreator;
-import com.djrapitops.plan.delivery.webserver.Request;
+import com.djrapitops.plan.delivery.webserver.RequestInternal;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.pages.PageResolver;
@@ -45,7 +45,7 @@ public class PlayerJSONResolver implements PageResolver {
     }
 
     @Override
-    public Response_old resolve(Request request, RequestTarget target) throws WebException {
+    public Response_old resolve(RequestInternal request, RequestTarget target) throws WebException {
         UUID playerUUID = identifiers.getPlayerUUID(target); // Can throw BadRequestException
         return new JSONResponse(jsonCreator.createJSONAsMap(playerUUID));
     }

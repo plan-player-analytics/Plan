@@ -254,7 +254,6 @@ public class ResponseFactory {
     }
 
     public Response notFound404(String message) {
-
         try {
             return Response.builder()
                     .setMimeType(MimeType.HTML)
@@ -279,6 +278,23 @@ public class ResponseFactory {
     public ErrorResponse forbidden403_old() {
         return forbidden403_old("Your user is not authorized to view this page.<br>"
                 + "If you believe this is an error contact staff to change your access level.");
+    }
+
+    public Response forbidden403() {
+        return forbidden403("Your user is not authorized to view this page.<br>"
+                + "If you believe this is an error contact staff to change your access level.");
+    }
+
+    public Response forbidden403(String message) {
+        try {
+            return Response.builder()
+                    .setMimeType(MimeType.HTML)
+                    .setContent(pageFactory.errorPage("403 Forbidden", message).toHtml())
+                    .setStatus(403)
+                    .build();
+        } catch (IOException e) {
+            return forInternalError(e, "Failed to generate 403 page");
+        }
     }
 
     @Deprecated

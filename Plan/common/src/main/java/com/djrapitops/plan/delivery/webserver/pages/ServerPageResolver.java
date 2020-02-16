@@ -17,7 +17,11 @@
 package com.djrapitops.plan.delivery.webserver.pages;
 
 import com.djrapitops.plan.delivery.rendering.html.Html;
-import com.djrapitops.plan.delivery.web.resolver.*;
+import com.djrapitops.plan.delivery.web.resolver.Resolver;
+import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
+import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.identification.Server;
@@ -58,16 +62,17 @@ public class ServerPageResolver implements Resolver {
     }
 
     @Override
-    public boolean canAccess(WebUser permissions, URIPath target, URIQuery query) {
-        String firstPart = target.getPart(0).orElse("");
+    public boolean canAccess(Request request) {
+        String firstPart = request.getPath().getPart(0).orElse("");
+        WebUser permissions = request.getUser().orElse(new WebUser(""));
         boolean forServerPage = firstPart.equalsIgnoreCase("server") && permissions.hasPermission("page.server");
         boolean forNetworkPage = firstPart.equalsIgnoreCase("network") && permissions.hasPermission("page.network");
         return forServerPage || forNetworkPage;
     }
 
     @Override
-    public Optional<Response> resolve(URIPath target, URIQuery query) {
-        return getServerUUID(target)
+    public Optional<Response> resolve(Request request) {
+        return getServerUUID(request.getPath())
                 .map(this::getServerPage)
                 .orElseGet(this::redirectToCurrentServer);
     }

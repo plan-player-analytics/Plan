@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.web.resolver;
+package com.djrapitops.plan.delivery.web.resolver.request;
 
 import org.apache.commons.lang3.StringUtils;
 

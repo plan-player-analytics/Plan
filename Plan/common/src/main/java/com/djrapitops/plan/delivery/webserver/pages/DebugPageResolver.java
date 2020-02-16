@@ -16,7 +16,9 @@
  */
 package com.djrapitops.plan.delivery.webserver.pages;
 
-import com.djrapitops.plan.delivery.web.resolver.*;
+import com.djrapitops.plan.delivery.web.resolver.Resolver;
+import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 
 import javax.inject.Inject;
@@ -39,12 +41,12 @@ public class DebugPageResolver implements Resolver {
     }
 
     @Override
-    public boolean canAccess(WebUser permissions, URIPath target, URIQuery query) {
-        return permissions.hasPermission("page.debug");
+    public boolean canAccess(Request request) {
+        return request.getUser().map(user -> user.hasPermission("page.debug")).orElse(false);
     }
 
     @Override
-    public Optional<Response> resolve(URIPath target, URIQuery query) {
+    public Optional<Response> resolve(Request request) {
         return Optional.of(responseFactory.debugPageResponse());
     }
 }

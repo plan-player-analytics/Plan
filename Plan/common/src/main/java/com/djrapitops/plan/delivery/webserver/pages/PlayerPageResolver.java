@@ -16,7 +16,11 @@
  */
 package com.djrapitops.plan.delivery.webserver.pages;
 
-import com.djrapitops.plan.delivery.web.resolver.*;
+import com.djrapitops.plan.delivery.web.resolver.Resolver;
+import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
+import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.identification.UUIDUtility;
 
@@ -46,21 +50,24 @@ public class PlayerPageResolver implements Resolver {
     }
 
     @Override
-    public boolean canAccess(WebUser user, URIPath target, URIQuery query) {
-        boolean isOwnPage = target.getPart(1).map(user.getName()::equalsIgnoreCase).orElse(true);
+    public boolean canAccess(Request request) {
+        URIPath path = request.getPath();
+        WebUser user = request.getUser().orElse(new WebUser(""));
+        boolean isOwnPage = path.getPart(1).map(user.getName()::equalsIgnoreCase).orElse(true);
         return user.hasPermission("page.player.other") || (user.hasPermission("page.player.self") && isOwnPage);
     }
 
     @Override
-    public Optional<Response> resolve(URIPath target, URIQuery query) {
-        Optional<String> part = target.getPart(1);
+    public Optional<Response> resolve(Request request) {
+        URIPath path = request.getPath();
+        Optional<String> part = path.getPart(1);
         if (!part.isPresent()) return Optional.empty();
 
         String playerName = part.get();
         UUID playerUUID = uuidUtility.getUUIDOf(playerName);
         if (playerUUID == null) return Optional.of(responseFactory.uuidNotFound404());
 
-        boolean raw = target.getPart(2).map("raw"::equalsIgnoreCase).orElse(false);
+        boolean raw = path.getPart(2).map("raw"::equalsIgnoreCase).orElse(false);
         return Optional.of(
                 raw ? responseFactory.rawPlayerPageResponse(playerUUID)
                         : responseFactory.playerPageResponse(playerUUID)

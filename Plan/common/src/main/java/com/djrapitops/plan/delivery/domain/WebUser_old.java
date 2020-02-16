@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.delivery.domain;
 
+import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -65,7 +67,7 @@ public class WebUser_old {
         return Objects.hash(user, saltedPassHash, permLevel);
     }
 
-    public com.djrapitops.plan.delivery.web.resolver.WebUser toNewWebUser() {
+    public WebUser toNewWebUser() {
         List<String> permissions = new ArrayList<>();
         if (permLevel <= 0) {
             permissions.add("page.network");
@@ -80,7 +82,7 @@ public class WebUser_old {
         if (permLevel <= 2) {
             permissions.add("page.player.self");
         }
-        return new com.djrapitops.plan.delivery.web.resolver.WebUser(
+        return new WebUser(
                 user, permissions.toArray(new String[0])
         );
     }

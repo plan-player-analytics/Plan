@@ -16,14 +16,20 @@
  */
 package com.djrapitops.plan.delivery.webserver;
 
-import com.djrapitops.plan.delivery.web.resolver.URIPath;
-import com.djrapitops.plan.delivery.web.resolver.URIQuery;
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
+import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
+import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
+import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -33,7 +39,7 @@ import java.util.Optional;
  *
  * @author Rsl1122
  */
-public class Request {
+public class RequestInternal {
     private final String requestMethod;
 
     private final URI requestURI;
@@ -43,7 +49,7 @@ public class Request {
     private final Locale locale;
     private Authentication auth;
 
-    public Request(HttpExchange exchange, Locale locale) {
+    public RequestInternal(HttpExchange exchange, Locale locale) {
         this.requestMethod = exchange.getRequestMethod();
         requestURI = exchange.getRequestURI();
 
@@ -98,5 +104,29 @@ public class Request {
     @Deprecated
     public RequestTarget getRequestTarget() {
         return new RequestTarget(requestURI);
+    }
+
+    public Request toAPIRequest() throws WebUserAuthException {
+        return new Request(
+                requestMethod,
+                getPath(),
+                getQuery(),
+                getWebUser(),
+                getRequestHeaders()
+        );
+    }
+
+    private WebUser getWebUser() throws WebUserAuthException {
+        Optional<Authentication> auth = getAuth();
+        return auth.isPresent() ? auth.get().getWebUser().toNewWebUser() : null;
+    }
+
+    private Map<String, String> getRequestHeaders() {
+        Map<String, String> headers = new HashMap<>();
+        for (Map.Entry<String, List<String>> e : exchange.getResponseHeaders().entrySet()) {
+            List<String> value = e.getValue();
+            headers.put(e.getKey(), value.toString().substring(0, value.size() - 1));
+        }
+        return headers;
     }
 }

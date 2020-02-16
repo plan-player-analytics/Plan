@@ -43,6 +43,8 @@ import java.util.*;
 
 /**
  * Factory for creating different {@link Page} objects.
+ * <p>
+ * TODO Set theme and locale stuff in here
  *
  * @author Rsl1122
  */

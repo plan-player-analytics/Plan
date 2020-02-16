@@ -18,7 +18,10 @@ package com.djrapitops.plan.delivery.webserver.pages;
 
 import com.djrapitops.plan.delivery.domain.WebUser_old;
 import com.djrapitops.plan.delivery.rendering.html.Html;
-import com.djrapitops.plan.delivery.webserver.Request;
+import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
+import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.webserver.RequestInternal;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
@@ -35,7 +38,7 @@ import java.util.Optional;
  *
  * @author Rsl1122
  */
-public class RootPageResolver implements PageResolver {
+public class RootPageResolver implements PageResolver, NoAuthResolver {
 
     private final ResponseFactory responseFactory;
     private final WebServer webServer;
@@ -48,7 +51,12 @@ public class RootPageResolver implements PageResolver {
     }
 
     @Override
-    public Response_old resolve(Request request, RequestTarget target) throws WebException {
+    public Optional<Response> resolve(Request request) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Response_old resolve(RequestInternal request, RequestTarget target) throws WebException {
         Server server = serverInfo.getServer();
         if (!webServer.isAuthRequired()) {
             return responseFactory.redirectResponse_old(server.isProxy() ? "network" : "server/" + Html.encodeToURL(server.getIdentifiableName()));

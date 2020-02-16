@@ -16,6 +16,9 @@
  */
 package com.djrapitops.plan.delivery.web.resolver;
 
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
+
 import java.util.Optional;
 
 /**
@@ -31,28 +34,28 @@ public interface Resolver {
      * <p>
      * Is not called when access control is not active.
      *
-     * @param permissions WebUser that is accessing this page.
-     * @param target      Target that is being accessed, /example/target
-     * @param query       Parameters in the URL, ?param=value etc.
+     * @param request HTTP request, contains all information necessary to check access.
      * @return true if allowed or invalid target, false if response should be 403 (forbidden)
+     * @see Request#getUser() for {@link WebUser} that has access permissions.
      */
-    boolean canAccess(WebUser permissions, URIPath target, URIQuery query);
+    boolean canAccess(Request request);
 
     /**
      * Implement request resolution.
      *
-     * @param target Target that is being accessed, /example/target
-     * @param query  Parameters in the URL, ?param=value etc.
+     * @param request HTTP request, contains all information necessary to resolve the request.
      * @return Response or empty if the response should be 404 (not found).
      * @see Response for return value
+     * @see Request#getPath() for path /example/path etc
+     * @see Request#getQuery() for parameters ?param=value etc
      */
-    Optional<Response> resolve(URIPath target, URIQuery query);
+    Optional<Response> resolve(Request request);
 
     default ResponseBuilder newResponseBuilder() {
         return Response.builder();
     }
 
-    default boolean requiresAuth(URIPath target, URIQuery query) {
+    default boolean requiresAuth(Request request) {
         return true;
     }
 }

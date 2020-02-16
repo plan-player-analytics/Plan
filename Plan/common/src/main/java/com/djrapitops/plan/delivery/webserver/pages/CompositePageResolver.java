@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.pages;
 
-import com.djrapitops.plan.delivery.webserver.Request;
+import com.djrapitops.plan.delivery.webserver.RequestInternal;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
@@ -58,7 +58,7 @@ public abstract class CompositePageResolver implements PageResolver {
     public void registerPage(String targetPage, PageResolver resolver, int requiredPerm) {
         pages.put(targetPage, new PageResolver() {
             @Override
-            public Response_old resolve(Request request, RequestTarget target) throws WebException {
+            public Response_old resolve(RequestInternal request, RequestTarget target) throws WebException {
                 return resolver.resolve(request, target);
             }
 
@@ -73,7 +73,7 @@ public abstract class CompositePageResolver implements PageResolver {
     public void registerPage(String targetPage, Response_old response, int requiredPerm) {
         pages.put(targetPage, new PageResolver() {
             @Override
-            public Response_old resolve(Request request, RequestTarget target) {
+            public Response_old resolve(RequestInternal request, RequestTarget target) {
                 return response;
             }
 
@@ -86,7 +86,7 @@ public abstract class CompositePageResolver implements PageResolver {
 
     @Override
     @Deprecated
-    public Response_old resolve(Request request, RequestTarget target) throws WebException {
+    public Response_old resolve(RequestInternal request, RequestTarget target) throws WebException {
         PageResolver pageResolver = getPageResolver(target);
         return pageResolver != null
                 ? pageResolver.resolve(request, target)

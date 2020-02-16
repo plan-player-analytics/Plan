@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.webserver.pages.json;
 
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
-import com.djrapitops.plan.delivery.webserver.Request;
+import com.djrapitops.plan.delivery.webserver.RequestInternal;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
@@ -55,7 +55,7 @@ public class SessionsJSONResolver implements PageResolver {
     }
 
     @Override
-    public Response_old resolve(Request request, RequestTarget target) throws WebException {
+    public Response_old resolve(RequestInternal request, RequestTarget target) throws WebException {
         if (target.getParameter("server").isPresent()) {
             UUID serverUUID = identifiers.getServerUUID(target);
             return JSONCache.getOrCache(DataID.SESSIONS, serverUUID, () ->

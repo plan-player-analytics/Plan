@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.web.resolver;
 
+import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;

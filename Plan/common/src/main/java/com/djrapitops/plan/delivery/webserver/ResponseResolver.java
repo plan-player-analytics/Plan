@@ -18,7 +18,10 @@ package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.delivery.web.ResolverService;
 import com.djrapitops.plan.delivery.web.ResolverSvc;
-import com.djrapitops.plan.delivery.web.resolver.*;
+import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
+import com.djrapitops.plan.delivery.web.resolver.Resolver;
+import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.pages.*;
 import com.djrapitops.plan.delivery.webserver.pages.json.RootJSONResolver;
@@ -104,10 +107,10 @@ public class ResponseResolver extends CompositePageResolver {
     }
 
     public NoAuthResolver noAuthResolverFor(Response response) {
-        return (target, query) -> Optional.of(response);
+        return (request) -> Optional.of(response);
     }
 
-    public Response_old getResponse(Request request) {
+    public Response_old getResponse(RequestInternal request) {
         try {
             return tryToGetResponse(request);
         } catch (NotFoundException e) {
@@ -124,22 +127,21 @@ public class ResponseResolver extends CompositePageResolver {
         }
     }
 
-    private Response_old tryToGetResponse(Request request) throws WebException {
-        if ("OPTIONS".equalsIgnoreCase(request.getRequestMethod())) {
+    private Response_old tryToGetResponse(RequestInternal internalRequest) throws WebException {
+        if ("OPTIONS".equalsIgnoreCase(internalRequest.getRequestMethod())) {
             return new OptionsResponse();
         }
 
-        Optional<Authentication> authentication = request.getAuth();
+        Optional<Authentication> authentication = internalRequest.getAuth();
 
-        URIPath target = request.getPath();
-        URIQuery query = request.getQuery();
-
-        Optional<Resolver> foundResolver = resolverService.getResolver(target.asString());
-        if (!foundResolver.isPresent()) return tryToGetResponse_old(request); // TODO Replace with 404 after refactoring
+        Optional<Resolver> foundResolver = resolverService.getResolver(internalRequest.getPath().asString());
+        // TODO Replace with 404 after refactoring
+        if (!foundResolver.isPresent()) return tryToGetResponse_old(internalRequest);
 
         Resolver resolver = foundResolver.get();
 
-        if (resolver.requiresAuth(target, query)) {
+        Request request = internalRequest.toAPIRequest();
+        if (resolver.requiresAuth(request)) {
             // Get required auth
             boolean isAuthRequired = webServer.get().isAuthRequired();
             if (isAuthRequired && !authentication.isPresent()) {
@@ -150,17 +152,17 @@ public class ResponseResolver extends CompositePageResolver {
                 }
             }
 
-            if (!isAuthRequired || resolver.canAccess(authentication.get().getWebUser().toNewWebUser(), target, query)) {
-                return resolver.resolve(target, query).map(Response_old::from).orElseGet(responseFactory::pageNotFound404_old);
+            if (!isAuthRequired || resolver.canAccess(request)) {
+                return resolver.resolve(request).map(Response_old::from).orElseGet(responseFactory::pageNotFound404_old);
             } else {
                 return responseFactory.forbidden403_old();
             }
         } else {
-            return resolver.resolve(target, query).map(Response_old::from).orElseGet(responseFactory::pageNotFound404_old);
+            return resolver.resolve(request).map(Response_old::from).orElseGet(responseFactory::pageNotFound404_old);
         }
     }
 
-    private Response_old tryToGetResponse_old(Request request) throws WebException {
+    private Response_old tryToGetResponse_old(RequestInternal request) throws WebException {
         RequestTarget target = request.getRequestTarget();
         Optional<Authentication> authentication = request.getAuth();
         String resource = target.getResourceString();

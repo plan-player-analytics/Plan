@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.pages;
 
-import com.djrapitops.plan.delivery.webserver.Request;
+import com.djrapitops.plan.delivery.webserver.RequestInternal;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.response.Response_old;
@@ -39,7 +39,7 @@ public interface PageResolver {
      * @param target  Rest of the target coordinates after this page has been solved.
      * @return Appropriate response.
      */
-    Response_old resolve(Request request, RequestTarget target) throws WebException;
+    Response_old resolve(RequestInternal request, RequestTarget target) throws WebException;
 
     default boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
         return true;

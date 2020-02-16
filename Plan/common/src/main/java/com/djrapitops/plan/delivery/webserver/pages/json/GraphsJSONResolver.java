@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.webserver.pages.json;
 
 import com.djrapitops.plan.delivery.rendering.json.graphs.GraphJSONCreator;
-import com.djrapitops.plan.delivery.webserver.Request;
+import com.djrapitops.plan.delivery.webserver.RequestInternal;
 import com.djrapitops.plan.delivery.webserver.RequestTarget;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
@@ -56,7 +56,7 @@ public class GraphsJSONResolver implements PageResolver {
     }
 
     @Override
-    public Response_old resolve(Request request, RequestTarget target) throws WebException {
+    public Response_old resolve(RequestInternal request, RequestTarget target) throws WebException {
         String type = target.getParameter("type")
                 .orElseThrow(() -> new BadRequestException("'type' parameter was not defined."));
 

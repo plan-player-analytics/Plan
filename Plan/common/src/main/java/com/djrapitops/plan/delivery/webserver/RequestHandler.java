@@ -92,7 +92,7 @@ public class RequestHandler implements HttpHandler {
         Headers requestHeaders = exchange.getRequestHeaders();
         Headers responseHeaders = exchange.getResponseHeaders();
 
-        Request request = new Request(exchange, locale);
+        RequestInternal request = new RequestInternal(exchange, locale);
         request.setAuth(getAuthorization(requestHeaders));
 
         try {
@@ -137,7 +137,7 @@ public class RequestHandler implements HttpHandler {
         return Optional.empty();
     }
 
-    private Optional<Response_old> handlePasswordBruteForceAttempts(Request request, Response_old response) {
+    private Optional<Response_old> handlePasswordBruteForceAttempts(RequestInternal request, Response_old response) {
         if (request.getAuth().isPresent() && response instanceof PromptAuthorizationResponse) {
             // Authentication was attempted, but failed so new attempt is going to be given if not forbidden
 

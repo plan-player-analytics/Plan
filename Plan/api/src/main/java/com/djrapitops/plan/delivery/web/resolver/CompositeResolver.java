@@ -16,6 +16,9 @@
  */
 package com.djrapitops.plan.delivery.web.resolver;
 
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -63,16 +66,16 @@ public final class CompositeResolver implements Resolver {
     }
 
     @Override
-    public boolean canAccess(WebUser permissions, URIPath target, URIQuery query) {
-        return getResolver(target)
-                .map(resolver -> resolver.canAccess(permissions, target.omitFirst(), query))
+    public boolean canAccess(Request request) {
+        return getResolver(request.getPath())
+                .map(resolver -> resolver.canAccess(request))
                 .orElse(true);
     }
 
     @Override
-    public Optional<Response> resolve(URIPath target, URIQuery query) {
-        return getResolver(target)
-                .flatMap(resolver -> resolver.resolve(target.omitFirst(), query));
+    public Optional<Response> resolve(Request request) {
+        return getResolver(request.getPath())
+                .flatMap(resolver -> resolver.resolve(request));
     }
 
     public static class Builder {
