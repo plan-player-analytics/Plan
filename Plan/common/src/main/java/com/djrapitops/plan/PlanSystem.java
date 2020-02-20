@@ -45,6 +45,8 @@ import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
+import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -82,6 +84,7 @@ public class PlanSystem implements SubSystem {
     private final SettingsServiceImplementation settingsService;
     private final PluginLogger logger;
     private final Timings timings;
+    private final RunnableFactory runnableFactory;
     private final ErrorHandler errorHandler;
 
     @Inject
@@ -104,7 +107,9 @@ public class PlanSystem implements SubSystem {
             QueryServiceImplementation queryService,
             SettingsServiceImplementation settingsService,
             PluginLogger logger,
-            Timings timings, ErrorHandler errorHandler,
+            Timings timings,
+            RunnableFactory runnableFactory,
+            ErrorHandler errorHandler,
             PlanAPI.PlanAPIHolder apiHolder
     ) {
         this.files = files;
@@ -125,6 +130,7 @@ public class PlanSystem implements SubSystem {
         this.queryService = queryService;
         this.settingsService = settingsService;
         this.logger = logger;
+        this.runnableFactory = runnableFactory;
         this.timings = timings;
         this.errorHandler = errorHandler;
 
@@ -177,7 +183,12 @@ public class PlanSystem implements SubSystem {
 
         settingsService.register();
         queryService.register();
-        extensionService.register();
+        runnableFactory.create("Register Extensions", new AbsRunnable() {
+            @Override
+            public void run() {
+                extensionService.register();
+            }
+        }).runTaskLaterAsynchronously(0L);
         enabled = true;
     }
 
