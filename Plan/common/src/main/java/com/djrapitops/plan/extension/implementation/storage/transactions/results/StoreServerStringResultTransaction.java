@@ -22,6 +22,7 @@ import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -47,7 +48,7 @@ public class StoreServerStringResultTransaction extends ThrowawayTransaction {
         this.pluginName = provider.getProviderInformation().getPluginName();
         this.providerName = provider.getProviderInformation().getName();
         this.serverUUID = parameters.getServerUUID();
-        this.value = value;
+        this.value = StringUtils.truncate(value, 50);
     }
 
     @Override
