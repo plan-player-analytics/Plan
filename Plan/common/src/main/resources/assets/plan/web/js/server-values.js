@@ -37,7 +37,7 @@ function smallTrend(trend) {
 }
 
 function displayError(element, error) {
-    element.find('.d-sm-flex').after('<div class="alert alert-danger" role="alert">Failed to load values: ' + error + '</div>')
+    element.find('.d-sm-flex').after(`<div class="alert alert-danger" role="alert">Failed to load values: ` + error + '</div>')
 }
 
 /* This function loads Server Overview tab */
@@ -152,7 +152,7 @@ function loadOnlineActivityOverviewValues(json, error) {
 
     $(element).find('#data_new_players_retention_30d').text('(' + data.new_players_retention_30d + '/' + data.new_players_30d + ') ' + data.new_players_retention_30d_perc);
     $(element).find('#data_new_players_retention_7d').text('(' + data.new_players_retention_7d + '/' + data.new_players_7d + ') ' + data.new_players_retention_7d_perc);
-    $(element).find('#data_new_players_retention_24h').replaceWith('<td title="This value is a prediction based on previous players.">(' + data.new_players_retention_24h + '/' + data.new_players_24h + ') ' + data.new_players_retention_24h_perc + '  <i class="far fa-fw fa-eye"></i></td>');
+    $(element).find('#data_new_players_retention_24h').replaceWith(`<td title="This value is a prediction based on previous players.">(` + data.new_players_retention_24h + '/' + data.new_players_24h + ') ' + data.new_players_retention_24h_perc + '  <i class="far fa-fw fa-eye"></i></td>');
 
     $(element).find('#data_playtime_30d').replaceWith('<td>' + data.playtime_30d + smallTrend(data.playtime_30d_trend) + '</td>');
     $(element).find('#data_playtime_7d').text(data.playtime_7d);

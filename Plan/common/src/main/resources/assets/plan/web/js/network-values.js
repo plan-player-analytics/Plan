@@ -138,7 +138,7 @@ function loadOnlineActivityOverviewValues(json, error) {
 
     $(element).find('#data_new_players_retention_30d').text('(' + data.new_players_retention_30d + '/' + data.new_players_30d + ') ' + data.new_players_retention_30d_perc);
     $(element).find('#data_new_players_retention_7d').text('(' + data.new_players_retention_7d + '/' + data.new_players_7d + ') ' + data.new_players_retention_7d_perc);
-    $(element).find('#data_new_players_retention_24h').replaceWith('<td title="This value is a prediction based on previous players.">(' + data.new_players_retention_24h + '/' + data.new_players_24h + ') ' + data.new_players_retention_24h_perc + '  <i class="far fa-fw fa-eye"></i></td>');
+    $(element).find('#data_new_players_retention_24h').replaceWith(`<td title="This value is a prediction based on previous players.">(` + data.new_players_retention_24h + '/' + data.new_players_24h + ') ' + data.new_players_retention_24h_perc + '  <i class="far fa-fw fa-eye"></i></td>');
 
     $(element).find('#data_playtime_30d').replaceWith('<td>' + data.playtime_30d + smallTrend(data.playtime_30d_trend) + '</td>');
     $(element).find('#data_playtime_7d').text(data.playtime_7d);
@@ -237,9 +237,9 @@ function loadservers(servers, error) {
 
     if (!servers || !servers.length) {
         $('#data_server_list').replaceWith(
-            '<div class="card shadow mb-4"><div class="card-body"><p>No servers found in the database.</p></div></div>'
+            `<div class="card shadow mb-4"><div class="card-body"><p>No servers found in the database.</p></div></div>`
         );
-        $('#quick_view_players_online').text('No server to display online activity for.');
+        $('#quick_view_players_online').text(`No server to display online activity for.`);
         return;
     }
 
@@ -256,21 +256,21 @@ function loadservers(servers, error) {
 }
 
 function createnetworkserverBox(i, server) {
-    return '<div class="card shadow mb-4">' +
-        '<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">' +
-        '<h6 class="m-0 font-weight-bold col-black"><i class="fas fa-fw fa-server col-light-green"></i> ' + server.name + '</h6>' +
-        '<div class="mb-0 col-lg-6">' +
-        '<p class="mb-1"><i class="fa fa-fw fa-users col-black"></i> Registered Players' +
-        '<span class="float-right"><b>' + server.players + '</b></span></p>' +
-        '<p class="mb-0"><i class="fa fa-fw fa-user col-blue"></i> Players Online' +
-        '<span class="float-right"><b>' + server.online + '</b></span></p>' +
-        '</div>' + // /column
-        '</div>' + // /header
-        '<div class="d-flex align-items-center justify-content-between">' +
-        '<a class="btn col-light-green ml-2" href="server/' + server.name + '"><i class="fa fa-fw fa-chart-line"></i> Server Analysis</a>' +
-        '<button class="btn bg-blue my-2 mr-2" id="server_quick_view_' + i + '">Quick view <i class="fa fa-fw fa-caret-square-right"></i></button>' +
-        '</div>' + // /buttons
-        '</div>' // /card
+    return `<div class="card shadow mb-4">` +
+        `<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">` +
+        `<h6 class="m-0 font-weight-bold col-black"><i class="fas fa-fw fa-server col-light-green"></i> ` + server.name + `</h6>` +
+        `<div class="mb-0 col-lg-6">` +
+        `<p class="mb-1"><i class="fa fa-fw fa-users col-black"></i> Registered Players` +
+        `<span class="float-right"><b>` + server.players + `</b></span></p>` +
+        `<p class="mb-0"><i class="fa fa-fw fa-user col-blue"></i> Players Online` +
+        `<span class="float-right"><b>` + server.online + `</b></span></p>` +
+        `</div>` + // /column
+        `</div>` + // /header
+        `<div class="d-flex align-items-center justify-content-between">` +
+        `<a class="btn col-light-green ml-2" href="server/` + server.name + `"><i class="fa fa-fw fa-chart-line"></i> Server Analysis</a>` +
+        `<button class="btn bg-blue my-2 mr-2" id="server_quick_view_` + i + `">Quick view <i class="fa fa-fw fa-caret-square-right"></i></button>` +
+        `</div>` + // /buttons
+        `</div>` // /card
 }
 
 function onViewserver(i, servers) {

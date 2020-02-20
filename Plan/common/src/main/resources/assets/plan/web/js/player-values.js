@@ -1,5 +1,5 @@
 function displayError(element, error) {
-    element.find('.d-sm-flex').after('<div class="alert alert-danger" role="alert">Failed to load values: ' + error + '</div>')
+    element.find('.d-sm-flex').after(`<div class="alert alert-danger" role="alert">Failed to load values: ` + error + '</div>')
 }
 
 function loadPlayerOverviewValues(json, error) {
@@ -13,8 +13,8 @@ function loadPlayerOverviewValues(json, error) {
     data = json.info;
     element = $(tab).find("#data_player_info");
 
-    $(element).find("#data_online").replaceWith(data.online ? '<i class="col-green fa fa-fw fa-circle"></i> Online' : '<i class="col-red fa fa-fw fa-circle"></i> Offline');
-    $(element).find("#data_titles").replaceWith((data.operator ? '<i class="col-blue fab fa-fw fa-superpowers"></i> Operator' : '') + (data.banned ? '<i class="col-red fa fa-fw fa-gavel"></i> Banned' : ''));
+    $(element).find("#data_online").replaceWith(data.online ? `<i class="col-green fa fa-fw fa-circle"></i> Online` : '<i class="col-red fa fa-fw fa-circle"></i> Offline');
+    $(element).find("#data_titles").replaceWith((data.operator ? `<i class="col-blue fab fa-fw fa-superpowers"></i> Operator` : '') + (data.banned ? `<i class="col-red fa fa-fw fa-gavel"></i> Banned` : ''));
     $(element).find("#data_kick_count").text(data.kick_count);
     $(element).find("#data_player_kills").text(data.player_kill_count);
     $(element).find("#data_mob_kills").text(data.mob_kill_count);
@@ -115,7 +115,7 @@ function createNicknameTableBody(nicknames) {
     var table = '<tbody>';
 
     if (nicknames.length === 0) {
-        table += '<tr><td>No Nicknames</td><td>-</td><td>-</td></tr>'
+        table += `<tr><td>No Nicknames</td><td>-</td><td>-</td></tr>`
     }
 
     for (var i = 0; i < nicknames.length; i++) {
@@ -133,7 +133,7 @@ function createConnectionsTableBody(connections) {
     var table = '<tbody>';
 
     if (connections.length === 0) {
-        table += '<tr><td>No Data</td><td>-</td></tr>'
+        table += `<tr><td>No Data</td><td>-</td></tr>`
     }
 
     for (var i = 0; i < connections.length; i++) {
@@ -158,7 +158,7 @@ function loadserverAccordion(json, error) {
     var servers = json.servers;
 
     if (!servers.length) {
-        serverTable.append('<tr><td>No Data</td><td>-</td><td>-</td><td>-</td></tr>')
+        serverTable.append(`<tr><td>No Data</td><td>-</td><td>-</td><td>-</td></tr>`)
     }
 
     var serversHtml = '';
@@ -185,7 +185,7 @@ function onOpenserver(i, servers) {
         }
         setTimeout(function () {
             var server = servers[i];
-            var worldSeries = {name: 'World Playtime', colorByPoint: true, data: server.world_pie_series};
+            var worldSeries = {name: `World Playtime`, colorByPoint: true, data: server.world_pie_series};
             var gmSeries = server.gm_series;
 
             worldPie("worldpie_server_" + i, worldSeries, gmSeries, '#3A3B45');
@@ -207,24 +207,24 @@ function createserverAccordionTitle(i, server) {
 
 function createserverAccordionBody(i, server) {
 
-    return '<tr class="collapse" data-parent="#tableSAccordion" id="server_t_' + i + '">' +
-        '<td colspan="4">' +
-        '<div class="collapse row" data-parent="#tableSAccordion" id="server_t_' + i + '">' +
-        '<div class="col-xs-12  col-sm-12 col-md-6 col-lg-6">' +
-        (server.operator ? '<p><i class="col-blue fab fa-fw fa-superpowers"></i> Operator</p>' : '') +
-        (server.banned ? '<p><i class="col-red fas fa-fw fa-gavel"></i> Banned</p>' : '') +
-        (server.operator || server.banned ? '<br>' : '') +
-        '<p><i class="col-teal far fa-fw fa-calendar-check"></i> Sessions<span class="float-right"><b>' + server.session_count + '</b></span></p>' +
-        '<p><i class="col-green far fa-fw fa-clock"></i> Playtime<span class="float-right"><b>' + server.playtime + '</b></span></p>' +
-        '<p><i class="col-grey far fa-fw fa-clock"></i> AFK Time<span class="float-right"><b>' + server.afk_time + '</b></span></p>' +
-        '<p><i class="col-teal far fa-fw fa-clock"></i> Longest Session<span class="float-right"><b>' + server.longest_session_length + '</b></span></p>' +
-        '<p><i class="col-teal far fa-fw fa-clock"></i> Session Median<span class="float-right"><b>' + server.session_median + '</b></span></p>' +
-        '<br>' +
-        '<p><i class="col-red fa fa-fw fa-crosshairs"></i> Player Kills<span class="float-right"><b>' + server.player_kills + '</b></span></p>' +
-        '<p><i class="col-green fa fa-fw fa-crosshairs"></i> Mob Kills<span class="float-right"><b>' + server.mob_kills + '</b></span></p>' +
-        '<p><i class=" fa fa-fw fa-skull"></i> Deaths<span class="float-right"><b>' + server.deaths + '</b></span></p>' +
-        '</div><div class="col-xs-12  col-sm-12 col-md-6 col-lg-6">' +
-        '<div id="worldpie_server_' + i + '" class="chart-pie"></div>' +
-        '</div>' +
-        '</div></td></tr>'
+    return `<tr class="collapse" data-parent="#tableSAccordion" id="server_t_` + i + `">` +
+        `<td colspan="4">` +
+        `<div class="collapse row" data-parent="#tableSAccordion" id="server_t_` + i + `">` +
+        `<div class="col-xs-12  col-sm-12 col-md-6 col-lg-6">` +
+        (server.operator ? `<p><i class="col-blue fab fa-fw fa-superpowers"></i> Operator</p>` : ``) +
+        (server.banned ? `<p><i class="col-red fas fa-fw fa-gavel"></i> Banned</p>` : ``) +
+        (server.operator || server.banned ? `<br>` : ``) +
+        `<p><i class="col-teal far fa-fw fa-calendar-check"></i> Sessions<span class="float-right"><b>` + server.session_count + `</b></span></p>` +
+        `<p><i class="col-green far fa-fw fa-clock"></i> Playtime<span class="float-right"><b>` + server.playtime + `</b></span></p>` +
+        `<p><i class="col-grey far fa-fw fa-clock"></i> AFK Time<span class="float-right"><b>` + server.afk_time + `</b></span></p>` +
+        `<p><i class="col-teal far fa-fw fa-clock"></i> Longest Session<span class="float-right"><b>` + server.longest_session_length + `</b></span></p>` +
+        `<p><i class="col-teal far fa-fw fa-clock"></i> Session Median<span class="float-right"><b>` + server.session_median + `</b></span></p>` +
+        `<br>` +
+        `<p><i class="col-red fa fa-fw fa-crosshairs"></i> Player Kills<span class="float-right"><b>` + server.player_kills + `</b></span></p>` +
+        `<p><i class="col-green fa fa-fw fa-crosshairs"></i> Mob Kills<span class="float-right"><b>` + server.mob_kills + `</b></span></p>` +
+        `<p><i class=" fa fa-fw fa-skull"></i> Deaths<span class="float-right"><b>` + server.deaths + `</b></span></p>` +
+        `</div><div class="col-xs-12  col-sm-12 col-md-6 col-lg-6">` +
+        `<div id="worldpie_server_` + i + `" class="chart-pie"></div>` +
+        `</div>` +
+        `</div></td></tr>`
 }
