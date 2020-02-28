@@ -2,7 +2,7 @@ name: Plan
 author: Rsl1122
 main: com.djrapitops.plan.PlanBungee
 version: @version@
-softdepend:
+softDepends:
 - AdvancedBan
 - LiteBans
 - LuckPerms
