@@ -27,13 +27,11 @@ import com.djrapitops.plan.delivery.webserver.pages.*;
 import com.djrapitops.plan.delivery.webserver.pages.json.RootJSONResolver;
 import com.djrapitops.plan.delivery.webserver.response.OptionsResponse;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
-import com.djrapitops.plan.delivery.webserver.response.Response_old;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
 import com.djrapitops.plan.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.exceptions.connection.WebException;
-import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import dagger.Lazy;
@@ -60,9 +58,9 @@ public class ResponseResolver extends CompositePageResolver {
     private final ServerPageResolver serverPageResolver;
     private final RootPageResolver rootPageResolver;
     private final RootJSONResolver rootJSONResolver;
+    private final StaticResourceResolver staticResourceResolver;
     private final ErrorHandler errorHandler;
 
-    private final ServerInfo serverInfo;
     private final ResolverService resolverService;
     private final Lazy<WebServer> webServer;
 
@@ -71,7 +69,6 @@ public class ResponseResolver extends CompositePageResolver {
             ResolverSvc resolverService,
             ResponseFactory responseFactory,
             Lazy<WebServer> webServer,
-            ServerInfo serverInfo,
 
             DebugPageResolver debugPageResolver,
             PlayersPageResolver playersPageResolver,
@@ -79,19 +76,20 @@ public class ResponseResolver extends CompositePageResolver {
             ServerPageResolver serverPageResolver,
             RootPageResolver rootPageResolver,
             RootJSONResolver rootJSONResolver,
+            StaticResourceResolver staticResourceResolver,
 
             ErrorHandler errorHandler
     ) {
         super(responseFactory);
         this.resolverService = resolverService;
         this.webServer = webServer;
-        this.serverInfo = serverInfo;
         this.debugPageResolver = debugPageResolver;
         this.playersPageResolver = playersPageResolver;
         this.playerPageResolver = playerPageResolver;
         this.serverPageResolver = serverPageResolver;
         this.rootPageResolver = rootPageResolver;
         this.rootJSONResolver = rootJSONResolver;
+        this.staticResourceResolver = staticResourceResolver;
         this.errorHandler = errorHandler;
     }
 
@@ -104,6 +102,7 @@ public class ResponseResolver extends CompositePageResolver {
         resolverService.registerResolver(pluginName, "/network", serverPageResolver);
         resolverService.registerResolver(pluginName, "/server", serverPageResolver);
         resolverService.registerResolverForMatches(pluginName, Pattern.compile("^/$"), rootPageResolver);
+        resolverService.registerResolverForMatches(pluginName, Pattern.compile("^/(vendor|css|js|img)/.*"), staticResourceResolver);
 
         registerPage("v1", rootJSONResolver);
     }
@@ -137,8 +136,7 @@ public class ResponseResolver extends CompositePageResolver {
         Optional<Authentication> authentication = internalRequest.getAuth();
 
         Optional<Resolver> foundResolver = resolverService.getResolver(internalRequest.getPath().asString());
-        // TODO Replace with 404 after refactoring
-        if (!foundResolver.isPresent()) return tryToGetResponse_old(internalRequest).toNewResponse();
+        if (!foundResolver.isPresent()) return responseFactory.pageNotFound404();
 
         Resolver resolver = foundResolver.get();
 
@@ -161,42 +159,6 @@ public class ResponseResolver extends CompositePageResolver {
             }
         } else {
             return resolver.resolve(request).orElseGet(responseFactory::pageNotFound404);
-        }
-    }
-
-    private Response_old tryToGetResponse_old(RequestInternal request) throws WebException {
-        RequestTarget target = request.getRequestTarget();
-        Optional<Authentication> authentication = request.getAuth();
-        String resource = target.getResourceString();
-        // TODO Turn into resolvers
-        if (target.endsWith(".css")) {
-            return responseFactory.cssResponse_old(resource);
-        }
-        if (target.endsWith(".js")) {
-            return responseFactory.javaScriptResponse_old(resource);
-        }
-        if (target.endsWith(".png")) {
-            return responseFactory.imageResponse_old(resource);
-        }
-        if (target.endsWithAny(".woff", ".woff2", ".eot", ".ttf")) {
-            return responseFactory.fontResponse_old(resource);
-        }
-        boolean isAuthRequired = webServer.get().isAuthRequired();
-        if (isAuthRequired && !authentication.isPresent()) {
-            if (webServer.get().isUsingHTTPS()) {
-                return responseFactory.basicAuth_old();
-            } else {
-                return responseFactory.forbidden403_old();
-            }
-        }
-        PageResolver pageResolver = getPageResolver(target);
-        if (pageResolver == null) {
-            return responseFactory.pageNotFound404_old();
-        } else {
-            if (!isAuthRequired || pageResolver.isAuthorized(authentication.get(), target)) {
-                return pageResolver.resolve(request, target);
-            }
-            return responseFactory.forbidden403_old();
         }
     }
 }

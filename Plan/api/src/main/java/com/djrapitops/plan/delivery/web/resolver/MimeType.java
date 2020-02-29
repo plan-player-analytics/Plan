@@ -23,7 +23,7 @@ public final class MimeType {
     public static final String JS = "application/javascript";
     public static final String IMAGE = "image/gif";
     public static final String FAVICON = "image/x-icon";
-    public static final String FONT_TFF = "application/x-font-ttf";
+    public static final String FONT_TTF = "application/x-font-ttf";
     public static final String FONT_WOFF = "application/font-woff";
     public static final String FONT_WOFF2 = "application/font-woff2";
     public static final String FONT_EOT = "application/vnd.ms-fontobject";

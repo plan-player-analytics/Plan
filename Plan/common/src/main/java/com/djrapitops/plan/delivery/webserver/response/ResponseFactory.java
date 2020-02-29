@@ -25,7 +25,6 @@ import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.delivery.webserver.response.errors.ErrorResponse;
-import com.djrapitops.plan.delivery.webserver.response.errors.ForbiddenResponse;
 import com.djrapitops.plan.delivery.webserver.response.errors.InternalErrorResponse;
 import com.djrapitops.plan.delivery.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plan.delivery.webserver.response.pages.RawDataResponse;
@@ -33,6 +32,7 @@ import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.ErrorPageLang;
+import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
@@ -48,7 +48,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Factory for creating different {@link Response_old} objects.
+ * Factory for creating different {@link Response} objects.
  *
  * @author Rsl1122
  */
@@ -60,6 +60,7 @@ public class ResponseFactory {
     private final PageFactory pageFactory;
     private final Locale locale;
     private final DBSystem dbSystem;
+    private final Theme theme;
 
     @Inject
     public ResponseFactory(
@@ -67,13 +68,15 @@ public class ResponseFactory {
             PlanFiles files,
             PageFactory pageFactory,
             Locale locale,
-            DBSystem dbSystem
+            DBSystem dbSystem,
+            Theme theme
     ) {
         this.versionCheckSystem = versionCheckSystem;
         this.files = files;
         this.pageFactory = pageFactory;
         this.locale = locale;
         this.dbSystem = dbSystem;
+        this.theme = theme;
     }
 
     public Response debugPageResponse() {
@@ -179,42 +182,65 @@ public class ResponseFactory {
                 .build();
     }
 
-    @Deprecated
-    public Response_old javaScriptResponse_old(String fileName) {
+    public Response javaScriptResponse(String fileName) {
         try {
-            return new JavaScriptResponse(fileName, files, locale);
+            String content = locale.replaceLanguageInJavascript(files.getCustomizableResourceOrDefault(fileName).asString());
+            return Response.builder()
+                    .setMimeType(MimeType.JS)
+                    .setContent(content)
+                    .setStatus(200)
+                    .build();
         } catch (IOException e) {
-            return notFound404_old("JS File not found from jar: " + fileName + ", " + e.toString());
+            return notFound404("JS File not found from jar: " + fileName + ", " + e.toString());
         }
     }
 
-    @Deprecated
-    public Response_old cssResponse_old(String fileName) {
+    public Response cssResponse(String fileName) {
         try {
-            return new CSSResponse(fileName, files);
+            String content = theme.replaceThemeColors(files.getCustomizableResourceOrDefault(fileName).asString());
+            return Response.builder()
+                    .setMimeType(MimeType.CSS)
+                    .setContent(content)
+                    .setStatus(200)
+                    .build();
         } catch (IOException e) {
-            return notFound404_old("CSS File not found from jar: " + fileName + ", " + e.toString());
+            return notFound404("CSS File not found from jar: " + fileName + ", " + e.toString());
         }
     }
 
-    @Deprecated
-    public Response_old imageResponse_old(String fileName) {
-        return new ByteResponse(ResponseType.IMAGE, FileResponse.format(fileName), files);
+    public Response imageResponse(String fileName) {
+        try {
+            return Response.builder()
+                    .setMimeType(MimeType.IMAGE)
+                    .setContent(files.getCustomizableResourceOrDefault(fileName).asBytes())
+                    .setStatus(200)
+                    .build();
+        } catch (IOException e) {
+            return notFound404("Image File not found from jar: " + fileName + ", " + e.toString());
+        }
     }
 
-    @Deprecated
-    public Response_old fontResponse_old(String fileName) {
-        ResponseType type = ResponseType.FONT_BYTESTREAM;
+    public Response fontResponse(String fileName) {
+        String type;
         if (fileName.endsWith(".woff")) {
-            type = ResponseType.FONT_WOFF;
+            type = MimeType.FONT_WOFF;
         } else if (fileName.endsWith(".woff2")) {
-            type = ResponseType.FONT_WOFF2;
+            type = MimeType.FONT_WOFF2;
         } else if (fileName.endsWith(".eot")) {
-            type = ResponseType.FONT_EOT;
+            type = MimeType.FONT_EOT;
         } else if (fileName.endsWith(".ttf")) {
-            type = ResponseType.FONT_TTF;
+            type = MimeType.FONT_TTF;
+        } else {
+            type = MimeType.FONT_BYTESTREAM;
         }
-        return new ByteResponse(type, FileResponse.format(fileName), files);
+        try {
+            return Response.builder()
+                    .setMimeType(type)
+                    .setContent(files.getCustomizableResourceOrDefault(fileName).asBytes())
+                    .build();
+        } catch (IOException e) {
+            return notFound404("Font File not found from jar: " + fileName + ", " + e.toString());
+        }
     }
 
     public Response redirectResponse(String location) {
@@ -313,12 +339,6 @@ public class ResponseFactory {
         return stackTrace;
     }
 
-    @Deprecated
-    public ErrorResponse forbidden403_old() {
-        return forbidden403_old("Your user is not authorized to view this page.<br>"
-                + "If you believe this is an error contact staff to change your access level.");
-    }
-
     public Response forbidden403() {
         return forbidden403("Your user is not authorized to view this page.<br>"
                 + "If you believe this is an error contact staff to change your access level.");
@@ -333,24 +353,6 @@ public class ResponseFactory {
                     .build();
         } catch (IOException e) {
             return forInternalError(e, "Failed to generate 403 page");
-        }
-    }
-
-    @Deprecated
-    public ErrorResponse forbidden403_old(String message) {
-        try {
-            return new ForbiddenResponse(message, versionCheckSystem, files);
-        } catch (IOException e) {
-            return internalErrorResponse_old(e, "Failed to generate ForbiddenResponse");
-        }
-    }
-
-    @Deprecated
-    public ErrorResponse basicAuth_old() {
-        try {
-            return PromptAuthorizationResponse.getBasicAuthResponse(versionCheckSystem, files);
-        } catch (IOException e) {
-            return internalErrorResponse_old(e, "Failed to generate PromptAuthorizationResponse");
         }
     }
 
