@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.response;
 
+import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.sun.net.httpserver.Headers;
@@ -25,7 +26,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
@@ -96,20 +96,12 @@ public abstract class Response_old {
         return getHeader(null).map(h -> Integer.parseInt(StringUtils.split(h, ' ')[1])).orElse(500);
     }
 
-    @Deprecated
-    public static Response_old from(com.djrapitops.plan.delivery.web.resolver.Response apiResponse) {
-        Response_old response = new Response_old() {};
-        response.setContent(apiResponse.getCharset().map(charset -> new String(apiResponse.getBytes(), charset))
-                .orElse(new String(apiResponse.getBytes())));
-        response.setHeader("HTTP/1.1 " + apiResponse.getCode() + " ");
-        for (Map.Entry<String, String> header : apiResponse.getHeaders().entrySet()) {
-            if (header.getKey().equals("Content-Type")) {
-                response.type = header.getValue();
-                continue;
-            }
-            response.header += header.getKey() + ": " + header.getValue() + ";\r\n";
-        }
-        return response;
+    public Response toNewResponse() {
+        return Response.builder()
+                .setStatus(getCode())
+                .setMimeType(type)
+                .setContent(content)
+                .build();
     }
 
     @Override

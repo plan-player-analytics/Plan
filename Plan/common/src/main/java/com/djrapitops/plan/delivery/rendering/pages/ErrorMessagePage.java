@@ -29,26 +29,35 @@ import com.djrapitops.plan.version.VersionCheckSystem;
 public class ErrorMessagePage implements Page {
 
     private final String template;
+    private final Icon icon;
     private final String errorTitle;
     private final String errorMsg;
 
     private final VersionCheckSystem versionCheckSystem;
 
     public ErrorMessagePage(
-            String template, String errorTitle, String errorMsg,
+            String template, Icon icon, String errorTitle, String errorMsg,
             VersionCheckSystem versionCheckSystem
     ) {
         this.template = template;
+        this.icon = icon;
         this.errorTitle = errorTitle;
         this.errorMsg = errorMsg;
         this.versionCheckSystem = versionCheckSystem;
+    }
+
+    public ErrorMessagePage(
+            String template, String errorTitle, String errorMsg,
+            VersionCheckSystem versionCheckSystem
+    ) {
+        this(template, Icon.called("exclamation-circle").build(), errorTitle, errorMsg, versionCheckSystem);
     }
 
     @Override
     public String toHtml() {
 
         PlaceholderReplacer placeholders = new PlaceholderReplacer();
-        placeholders.put("title", Icon.called("exclamation-circle") + " " + errorTitle);
+        placeholders.put("title", icon.toHtml() + " " + errorTitle);
         placeholders.put("titleText", errorTitle);
         placeholders.put("paragraph", errorMsg);
         placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));

@@ -16,12 +16,10 @@
  */
 package com.djrapitops.plan.delivery.webserver;
 
+import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.auth.BasicAuthentication;
-import com.djrapitops.plan.delivery.webserver.response.PromptAuthorizationResponse;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
-import com.djrapitops.plan.delivery.webserver.response.Response_old;
-import com.djrapitops.plan.delivery.webserver.response.errors.ForbiddenResponse;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
@@ -90,30 +88,30 @@ public class RequestHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) {
         Headers requestHeaders = exchange.getRequestHeaders();
-        Headers responseHeaders = exchange.getResponseHeaders();
 
         RequestInternal request = new RequestInternal(exchange, locale);
         request.setAuth(getAuthorization(requestHeaders));
 
         try {
-            Response_old response = shouldPreventRequest(request.getRemoteAddress()) // Forbidden response (Optional)
+            Response response = shouldPreventRequest(request.getRemoteAddress()) // Forbidden response (Optional)
                     .orElseGet(() -> responseResolver.getResponse(request));     // Or the actual requested response
 
             // Increase attempt count and block if too high
-            Optional<Response_old> forbid = handlePasswordBruteForceAttempts(request, response);
+            Optional<Response> forbid = handlePasswordBruteForceAttempts(request, response);
             if (forbid.isPresent()) {
                 response = forbid.get();
             }
 
             // Authentication failed, but was not blocked
-            if (response instanceof PromptAuthorizationResponse) {
-                responseHeaders.set("WWW-Authenticate", response.getHeader("WWW-Authenticate").orElse("Basic realm=\"Plan WebUser (/plan register)\""));
-            }
+//            if (response.getCode() == 401) {
+////                responseHeaders.set("WWW-Authenticate", Optional.ofNullable(response.getHeaders().get("WWW-Authenticate")).orElse("Basic realm=\"Plan WebUser (/plan register)\""));
+////            }
 
-            responseHeaders.set("Access-Control-Allow-Origin", config.get(WebserverSettings.CORS_ALLOW_ORIGIN));
-            responseHeaders.set("Access-Control-Allow-Methods", "GET, OPTIONS");
-            response.setResponseHeaders(responseHeaders);
-            response.send(exchange, locale, theme);
+            response.getHeaders().putIfAbsent("Access-Control-Allow-Origin", config.get(WebserverSettings.CORS_ALLOW_ORIGIN));
+            response.getHeaders().putIfAbsent("Access-Control-Allow-Methods", "GET, OPTIONS");
+
+            ResponseSender sender = new ResponseSender(exchange, response);
+            sender.send();
         } catch (Exception e) {
             if (config.isTrue(PluginSettings.DEV_MODE)) {
                 logger.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
@@ -124,7 +122,7 @@ public class RequestHandler implements HttpHandler {
         }
     }
 
-    private Optional<Response_old> shouldPreventRequest(String accessor) {
+    private Optional<Response> shouldPreventRequest(String accessor) {
         Integer attempts = failedLoginAttempts.getIfPresent(accessor);
         if (attempts == null) {
             attempts = 0;
@@ -137,8 +135,8 @@ public class RequestHandler implements HttpHandler {
         return Optional.empty();
     }
 
-    private Optional<Response_old> handlePasswordBruteForceAttempts(RequestInternal request, Response_old response) {
-        if (request.getAuth().isPresent() && response instanceof PromptAuthorizationResponse) {
+    private Optional<Response> handlePasswordBruteForceAttempts(RequestInternal request, Response response) {
+        if (request.getAuth().isPresent() && response.getCode() == 401) {
             // Authentication was attempted, but failed so new attempt is going to be given if not forbidden
 
             failedLoginAttempts.cleanUp();
@@ -158,7 +156,7 @@ public class RequestHandler implements HttpHandler {
             // Attempts only increased if less than 5 attempts to prevent frustration from the cache value not
             // getting removed.
             failedLoginAttempts.put(accessor, attempts + 1);
-        } else if (!(response instanceof PromptAuthorizationResponse) && !(response instanceof ForbiddenResponse)) {
+        } else if (response.getCode() != 401 && response.getCode() != 403) {
             // Successful login
             failedLoginAttempts.invalidate(request.getRemoteAddress());
         }
@@ -166,8 +164,8 @@ public class RequestHandler implements HttpHandler {
         return Optional.empty();
     }
 
-    private Optional<Response_old> createForbiddenResponse() {
-        return Optional.of(responseFactory.forbidden403_old("You have too many failed login attempts. Please wait 2 minutes until attempting again."));
+    private Optional<Response> createForbiddenResponse() {
+        return Optional.of(responseFactory.forbidden403("You have too many failed login attempts. Please wait 2 minutes until attempting again."));
     }
 
     private Authentication getAuthorization(Headers requestHeaders) {

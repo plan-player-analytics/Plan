@@ -16,21 +16,19 @@
  */
 package com.djrapitops.plan.delivery.webserver.pages;
 
-import com.djrapitops.plan.delivery.domain.WebUser_old;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
-import com.djrapitops.plan.delivery.webserver.RequestInternal;
-import com.djrapitops.plan.delivery.webserver.RequestTarget;
+import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.WebServer;
-import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
-import com.djrapitops.plan.delivery.webserver.response.Response_old;
-import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
+import dagger.Lazy;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
@@ -38,13 +36,15 @@ import java.util.Optional;
  *
  * @author Rsl1122
  */
-public class RootPageResolver implements PageResolver, NoAuthResolver {
+@Singleton
+public class RootPageResolver implements NoAuthResolver {
 
     private final ResponseFactory responseFactory;
-    private final WebServer webServer;
+    private final Lazy<WebServer> webServer;
     private final ServerInfo serverInfo;
 
-    public RootPageResolver(ResponseFactory responseFactory, WebServer webServer, ServerInfo serverInfo) {
+    @Inject
+    public RootPageResolver(ResponseFactory responseFactory, Lazy<WebServer> webServer, ServerInfo serverInfo) {
         this.responseFactory = responseFactory;
         this.webServer = webServer;
         this.serverInfo = serverInfo;
@@ -52,38 +52,31 @@ public class RootPageResolver implements PageResolver, NoAuthResolver {
 
     @Override
     public Optional<Response> resolve(Request request) {
-        return Optional.empty();
+        return Optional.of(getResponse(request));
     }
 
-    @Override
-    public Response_old resolve(RequestInternal request, RequestTarget target) throws WebException {
+    private Response getResponse(Request request) {
         Server server = serverInfo.getServer();
-        if (!webServer.isAuthRequired()) {
-            return responseFactory.redirectResponse_old(server.isProxy() ? "network" : "server/" + Html.encodeToURL(server.getIdentifiableName()));
+        if (!webServer.get().isAuthRequired()) {
+            String redirectTo = server.isProxy() ? "network" : "server/" + Html.encodeToURL(server.getIdentifiableName());
+            return responseFactory.redirectResponse(redirectTo);
         }
 
-        Optional<Authentication> auth = request.getAuth();
-        if (!auth.isPresent()) {
-            return responseFactory.basicAuth_old();
+        Optional<WebUser> webUser = request.getUser();
+        if (!webUser.isPresent()) {
+            return responseFactory.basicAuth();
         }
 
-        WebUser_old webUser = auth.get().getWebUser();
+        WebUser user = webUser.get();
 
-        int permLevel = webUser.getPermLevel();
-        switch (permLevel) {
-            case 0:
-                return responseFactory.redirectResponse_old(server.isProxy() ? "network" : "server/" + Html.encodeToURL(server.getIdentifiableName()));
-            case 1:
-                return responseFactory.redirectResponse_old("players");
-            case 2:
-                return responseFactory.redirectResponse_old("player/" + Html.encodeToURL(webUser.getName()));
-            default:
-                return responseFactory.forbidden403_old();
+        if (user.hasPermission("page.server")) {
+            return responseFactory.redirectResponse(server.isProxy() ? "network" : "server/" + Html.encodeToURL(server.getIdentifiableName()));
+        } else if (user.hasPermission("page.players")) {
+            return responseFactory.redirectResponse("players");
+        } else if (user.hasPermission("page.player.self")) {
+            return responseFactory.redirectResponse("player/" + Html.encodeToURL(user.getName()));
+        } else {
+            return responseFactory.forbidden403(user.getName() + " has insufficient permissions to be redirected to any page. Needs one of: 'page.server', 'page.players' or 'page.player.self'");
         }
-    }
-
-    @Override
-    public boolean isAuthorized(Authentication auth, RequestTarget target) {
-        return true;
     }
 }

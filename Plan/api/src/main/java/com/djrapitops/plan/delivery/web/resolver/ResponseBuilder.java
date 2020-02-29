@@ -49,6 +49,7 @@ public class ResponseBuilder {
      * @return this builder.
      */
     public ResponseBuilder setStatus(int code) {
+        response.code = code;
         return this;
     }
 
@@ -85,6 +86,8 @@ public class ResponseBuilder {
     }
 
     public ResponseBuilder setContent(String content, Charset charset) {
+        if (content == null) return setContent(new byte[0]);
+        if (charset == null) return setContent(content); // UTF-8 used
         String mimeType = getMimeType();
         response.charset = charset;
 

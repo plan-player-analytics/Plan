@@ -50,10 +50,10 @@ public class ResponseSender {
         }
     }
 
-    public void setResponseHeaders() {
+    private void setResponseHeaders() {
         Headers headers = exchange.getResponseHeaders();
         for (Map.Entry<String, String> header : response.getHeaders().entrySet()) {
-            headers.set(header.getKey(), header.getKey());
+            headers.set(header.getKey(), header.getValue());
         }
     }
 

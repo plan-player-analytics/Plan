@@ -41,6 +41,7 @@ import dagger.Lazy;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 /**
  * Resolves All URLs.
@@ -57,6 +58,7 @@ public class ResponseResolver extends CompositePageResolver {
     private final PlayersPageResolver playersPageResolver;
     private final PlayerPageResolver playerPageResolver;
     private final ServerPageResolver serverPageResolver;
+    private final RootPageResolver rootPageResolver;
     private final RootJSONResolver rootJSONResolver;
     private final ErrorHandler errorHandler;
 
@@ -75,6 +77,7 @@ public class ResponseResolver extends CompositePageResolver {
             PlayersPageResolver playersPageResolver,
             PlayerPageResolver playerPageResolver,
             ServerPageResolver serverPageResolver,
+            RootPageResolver rootPageResolver,
             RootJSONResolver rootJSONResolver,
 
             ErrorHandler errorHandler
@@ -87,6 +90,7 @@ public class ResponseResolver extends CompositePageResolver {
         this.playersPageResolver = playersPageResolver;
         this.playerPageResolver = playerPageResolver;
         this.serverPageResolver = serverPageResolver;
+        this.rootPageResolver = rootPageResolver;
         this.rootJSONResolver = rootJSONResolver;
         this.errorHandler = errorHandler;
     }
@@ -99,9 +103,7 @@ public class ResponseResolver extends CompositePageResolver {
         resolverService.registerResolver(pluginName, "/favicon.ico", noAuthResolverFor(responseFactory.faviconResponse()));
         resolverService.registerResolver(pluginName, "/network", serverPageResolver);
         resolverService.registerResolver(pluginName, "/server", serverPageResolver);
-
-        // TODO Figure out how to deal with stuff like this
-        registerPage("", new RootPageResolver(responseFactory, webServer.get(), serverInfo));
+        resolverService.registerResolverForMatches(pluginName, Pattern.compile("^/$"), rootPageResolver);
 
         registerPage("v1", rootJSONResolver);
     }
@@ -110,33 +112,33 @@ public class ResponseResolver extends CompositePageResolver {
         return (request) -> Optional.of(response);
     }
 
-    public Response_old getResponse(RequestInternal request) {
+    public Response getResponse(RequestInternal request) {
         try {
             return tryToGetResponse(request);
         } catch (NotFoundException e) {
-            return responseFactory.notFound404_old(e.getMessage());
+            return responseFactory.notFound404(e.getMessage());
         } catch (WebUserAuthException e) {
-            return responseFactory.basicAuthFail_old(e);
+            return responseFactory.basicAuthFail(e);
         } catch (ForbiddenException e) {
-            return responseFactory.forbidden403_old(e.getMessage());
+            return responseFactory.forbidden403(e.getMessage());
         } catch (BadRequestException e) {
-            return responseFactory.badRequest_old(e.getMessage(), request.getTargetString());
+            return responseFactory.badRequest(e.getMessage(), request.getTargetString());
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
-            return responseFactory.internalErrorResponse_old(e, request.getTargetString());
+            return responseFactory.internalErrorResponse(e, request.getTargetString());
         }
     }
 
-    private Response_old tryToGetResponse(RequestInternal internalRequest) throws WebException {
-        if ("OPTIONS".equalsIgnoreCase(internalRequest.getRequestMethod())) {
-            return new OptionsResponse();
+    private Response tryToGetResponse(RequestInternal internalRequest) throws WebException {
+        if ("OPTIONS" .equalsIgnoreCase(internalRequest.getRequestMethod())) {
+            return new OptionsResponse().toNewResponse();
         }
 
         Optional<Authentication> authentication = internalRequest.getAuth();
 
         Optional<Resolver> foundResolver = resolverService.getResolver(internalRequest.getPath().asString());
         // TODO Replace with 404 after refactoring
-        if (!foundResolver.isPresent()) return tryToGetResponse_old(internalRequest);
+        if (!foundResolver.isPresent()) return tryToGetResponse_old(internalRequest).toNewResponse();
 
         Resolver resolver = foundResolver.get();
 
@@ -146,19 +148,19 @@ public class ResponseResolver extends CompositePageResolver {
             boolean isAuthRequired = webServer.get().isAuthRequired();
             if (isAuthRequired && !authentication.isPresent()) {
                 if (webServer.get().isUsingHTTPS()) {
-                    return responseFactory.basicAuth_old();
+                    return responseFactory.basicAuth();
                 } else {
-                    return responseFactory.forbidden403_old();
+                    return responseFactory.forbidden403();
                 }
             }
 
             if (!isAuthRequired || resolver.canAccess(request)) {
-                return resolver.resolve(request).map(Response_old::from).orElseGet(responseFactory::pageNotFound404_old);
+                return resolver.resolve(request).orElseGet(responseFactory::pageNotFound404);
             } else {
-                return responseFactory.forbidden403_old();
+                return responseFactory.forbidden403();
             }
         } else {
-            return resolver.resolve(request).map(Response_old::from).orElseGet(responseFactory::pageNotFound404_old);
+            return resolver.resolve(request).orElseGet(responseFactory::pageNotFound404);
         }
     }
 

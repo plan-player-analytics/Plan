@@ -17,11 +17,17 @@
 package com.djrapitops.plan.delivery.webserver.response;
 
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.delivery.rendering.html.icon.Family;
+import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.delivery.rendering.pages.Page;
 import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Response;
-import com.djrapitops.plan.delivery.webserver.response.errors.*;
+import com.djrapitops.plan.delivery.webserver.auth.FailReason;
+import com.djrapitops.plan.delivery.webserver.response.errors.ErrorResponse;
+import com.djrapitops.plan.delivery.webserver.response.errors.ForbiddenResponse;
+import com.djrapitops.plan.delivery.webserver.response.errors.InternalErrorResponse;
+import com.djrapitops.plan.delivery.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plan.delivery.webserver.response.pages.RawDataResponse;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.NotFoundException;
@@ -36,6 +42,8 @@ import com.djrapitops.plan.version.VersionCheckSystem;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -137,6 +145,10 @@ public class ResponseFactory {
         }
     }
 
+    public Response internalErrorResponse(Throwable e, String s) {
+        return forInternalError(e, s);
+    }
+
     public Response networkPageResponse() {
         Optional<Response> error = checkDbClosedError();
         if (error.isPresent()) return error.get();
@@ -205,17 +217,6 @@ public class ResponseFactory {
         return new ByteResponse(type, FileResponse.format(fileName), files);
     }
 
-    /**
-     * Redirect somewhere
-     *
-     * @param location Starts with '/'
-     * @return Redirection response.
-     */
-    @Deprecated
-    public Response_old redirectResponse_old(String location) {
-        return new RedirectResponse(location);
-    }
-
     public Response redirectResponse(String location) {
         return Response.builder().redirectTo(location).build();
     }
@@ -234,6 +235,10 @@ public class ResponseFactory {
     @Deprecated
     public ErrorResponse pageNotFound404_old() {
         return notFound404_old(locale.getString(ErrorPageLang.UNKNOWN_PAGE_404));
+    }
+
+    public Response pageNotFound404() {
+        return notFound404(locale.getString(ErrorPageLang.UNKNOWN_PAGE_404));
     }
 
     public Response uuidNotFound404() {
@@ -257,7 +262,7 @@ public class ResponseFactory {
         try {
             return Response.builder()
                     .setMimeType(MimeType.HTML)
-                    .setContent(pageFactory.errorPage("404 " + message, message).toHtml())
+                    .setContent(pageFactory.errorPage(Icon.called("map-signs").build(), "404 " + message, message).toHtml())
                     .setStatus(404)
                     .build();
         } catch (IOException e) {
@@ -265,13 +270,47 @@ public class ResponseFactory {
         }
     }
 
-    @Deprecated
-    public ErrorResponse basicAuthFail_old(WebUserAuthException e) {
+    public Response basicAuthFail(WebUserAuthException e) {
         try {
-            return PromptAuthorizationResponse.getBasicAuthResponse(e, versionCheckSystem, files);
+            FailReason failReason = e.getFailReason();
+            String reason = failReason.getReason();
+            if (failReason == FailReason.ERROR) {
+                StringBuilder errorBuilder = new StringBuilder("</p><pre>");
+                for (String line : getStackTrace(e.getCause())) {
+                    errorBuilder.append(line);
+                }
+                errorBuilder.append("</pre>");
+
+                reason += errorBuilder.toString();
+            }
+            return Response.builder()
+                    .setMimeType(MimeType.HTML)
+                    .setContent(pageFactory.errorPage(Icon.called("lock").build(), "401 Unauthorized", "Authentication Failed.</p><p><b>Reason: " + reason + "</b></p><p>").toHtml())
+                    .setStatus(401)
+                    .setHeader("WWW-Authenticate", "Basic realm=\"" + failReason.getReason() + "\"")
+                    .build();
         } catch (IOException jarReadFailed) {
-            return internalErrorResponse_old(e, "Failed to generate PromptAuthorizationResponse");
+            return forInternalError(e, "Failed to generate PromptAuthorizationResponse");
         }
+    }
+
+    private List<String> getStackTrace(Throwable throwable) {
+        List<String> stackTrace = new ArrayList<>();
+        stackTrace.add(throwable.toString());
+        for (StackTraceElement element : throwable.getStackTrace()) {
+            stackTrace.add("    " + element.toString());
+        }
+
+        Throwable cause = throwable.getCause();
+        if (cause != null) {
+            List<String> causeTrace = getStackTrace(cause);
+            if (!causeTrace.isEmpty()) {
+                causeTrace.set(0, "Caused by: " + causeTrace.get(0));
+                stackTrace.addAll(causeTrace);
+            }
+        }
+
+        return stackTrace;
     }
 
     @Deprecated
@@ -289,7 +328,7 @@ public class ResponseFactory {
         try {
             return Response.builder()
                     .setMimeType(MimeType.HTML)
-                    .setContent(pageFactory.errorPage("403 Forbidden", message).toHtml())
+                    .setContent(pageFactory.errorPage(Icon.called("hand-paper").of(Family.REGULAR).build(), "403 Forbidden", message).toHtml())
                     .setStatus(403)
                     .build();
         } catch (IOException e) {
@@ -315,9 +354,29 @@ public class ResponseFactory {
         }
     }
 
-    @Deprecated
-    public BadRequestResponse badRequest_old(String errorMessage, String target) {
-        return new BadRequestResponse(errorMessage + " (when requesting '" + target + "')");
+    public Response basicAuth() {
+        try {
+            String tips = "<br>- Ensure you have registered a user with <b>/plan register</b><br>"
+                    + "- Check that the username and password are correct<br>"
+                    + "- Username and password are case-sensitive<br>"
+                    + "<br>If you have forgotten your password, ask a staff member to delete your old user and re-register.";
+            return Response.builder()
+                    .setMimeType(MimeType.HTML)
+                    .setContent(pageFactory.errorPage(Icon.called("lock").build(), "401 Unauthorized", "Authentication Failed." + tips).toHtml())
+                    .setStatus(401)
+                    .setHeader("WWW-Authenticate", "Basic realm=\"Plan WebUser (/plan register)\"")
+                    .build();
+        } catch (IOException e) {
+            return forInternalError(e, "Failed to generate PromptAuthorizationResponse");
+        }
+    }
+
+    public Response badRequest(String errorMessage, String target) {
+        return Response.builder()
+                .setMimeType(MimeType.HTML)
+                .setContent("400 Bad Request: " + errorMessage + " (when requesting '" + target + "')")
+                .setStatus(400)
+                .build();
     }
 
     public Response playerPageResponse(UUID playerUUID) {
