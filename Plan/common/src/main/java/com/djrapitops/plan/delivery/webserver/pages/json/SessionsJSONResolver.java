@@ -17,21 +17,18 @@
 package com.djrapitops.plan.delivery.webserver.pages.json;
 
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
-import com.djrapitops.plan.delivery.webserver.RequestInternal;
-import com.djrapitops.plan.delivery.webserver.RequestTarget;
-import com.djrapitops.plan.delivery.webserver.auth.Authentication;
+import com.djrapitops.plan.delivery.web.resolver.Resolver;
+import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
-import com.djrapitops.plan.delivery.webserver.pages.PageResolver;
-import com.djrapitops.plan.delivery.webserver.response.Response_old;
-import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
-import com.djrapitops.plan.exceptions.WebUserAuthException;
-import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.Identifiers;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -40,7 +37,7 @@ import java.util.UUID;
  * @author Rsl1122
  */
 @Singleton
-public class SessionsJSONResolver implements PageResolver {
+public class SessionsJSONResolver implements Resolver {
 
     private final Identifiers identifiers;
     private final JSONFactory jsonFactory;
@@ -55,21 +52,21 @@ public class SessionsJSONResolver implements PageResolver {
     }
 
     @Override
-    public Response_old resolve(RequestInternal request, RequestTarget target) throws WebException {
-        if (target.getParameter("server").isPresent()) {
-            UUID serverUUID = identifiers.getServerUUID(target);
-            return JSONCache.getOrCache(DataID.SESSIONS, serverUUID, () ->
-                    new JSONResponse(Collections.singletonMap("sessions", jsonFactory.serverSessionsAsJSONMap(serverUUID)))
-            );
-        }
-        // Assume network
-        return JSONCache.getOrCache(DataID.SESSIONS, () ->
-                new JSONResponse(Collections.singletonMap("sessions", jsonFactory.networkSessionsAsJSONMap()))
-        );
+    public boolean canAccess(Request request) {
+        return request.getUser().orElse(new WebUser("")).hasPermission("page.server");
     }
 
     @Override
-    public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
-        return auth.getWebUser().getPermLevel() <= 0;
+    public Optional<Response> resolve(Request request) {
+        return Optional.of(getResponse(request));
+    }
+
+    private Response getResponse(Request request) {
+        if (request.getQuery().get("server").isPresent()) {
+            UUID serverUUID = identifiers.getServerUUID(request);
+            return JSONCache.getOrCache(DataID.SESSIONS, serverUUID, () -> Collections.singletonMap("sessions", jsonFactory.serverSessionsAsJSONMap(serverUUID)));
+        }
+        // Assume network
+        return JSONCache.getOrCache(DataID.SESSIONS, () -> Collections.singletonMap("sessions", jsonFactory.networkSessionsAsJSONMap()));
     }
 }

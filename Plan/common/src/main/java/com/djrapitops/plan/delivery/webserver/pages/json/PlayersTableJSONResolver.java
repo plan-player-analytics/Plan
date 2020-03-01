@@ -17,20 +17,17 @@
 package com.djrapitops.plan.delivery.webserver.pages.json;
 
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
-import com.djrapitops.plan.delivery.webserver.RequestInternal;
-import com.djrapitops.plan.delivery.webserver.RequestTarget;
-import com.djrapitops.plan.delivery.webserver.auth.Authentication;
+import com.djrapitops.plan.delivery.web.resolver.Resolver;
+import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
-import com.djrapitops.plan.delivery.webserver.pages.PageResolver;
-import com.djrapitops.plan.delivery.webserver.response.Response_old;
-import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
-import com.djrapitops.plan.exceptions.WebUserAuthException;
-import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.Identifiers;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -39,7 +36,7 @@ import java.util.UUID;
  * @author Rsl1122
  */
 @Singleton
-public class PlayersTableJSONResolver implements PageResolver {
+public class PlayersTableJSONResolver implements Resolver {
 
     private final Identifiers identifiers;
     private final JSONFactory jsonFactory;
@@ -54,21 +51,26 @@ public class PlayersTableJSONResolver implements PageResolver {
     }
 
     @Override
-    public Response_old resolve(RequestInternal request, RequestTarget target) throws WebException {
-        if (target.getParameter("server").isPresent()) {
-            UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
-            return JSONCache.getOrCache(DataID.PLAYERS, serverUUID, () -> new JSONResponse(jsonFactory.serverPlayersTableJSON(serverUUID)));
+    public boolean canAccess(Request request) {
+        WebUser user = request.getUser().orElse(new WebUser(""));
+        if (request.getQuery().get("server").isPresent()) {
+            return user.hasPermission("page.server");
         }
         // Assume players page
-        return JSONCache.getOrCache(DataID.PLAYERS, () -> new JSONResponse(jsonFactory.networkPlayersTableJSON()));
+        return user.hasPermission("page.players");
     }
 
     @Override
-    public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
-        if (target.getParameter("server").isPresent()) {
-            return auth.getWebUser().getPermLevel() <= 0;
+    public Optional<Response> resolve(Request request) {
+        return Optional.of(getResponse(request));
+    }
+
+    private Response getResponse(Request request) {
+        if (request.getQuery().get("server").isPresent()) {
+            UUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException
+            return JSONCache.getOrCache(DataID.PLAYERS, serverUUID, () -> jsonFactory.serverPlayersTableJSON(serverUUID));
         }
         // Assume players page
-        return auth.getWebUser().getPermLevel() <= 1;
+        return JSONCache.getOrCache(DataID.PLAYERS, jsonFactory::networkPlayersTableJSON);
     }
 }

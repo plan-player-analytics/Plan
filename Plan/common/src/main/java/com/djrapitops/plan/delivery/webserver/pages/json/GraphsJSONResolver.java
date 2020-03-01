@@ -17,22 +17,19 @@
 package com.djrapitops.plan.delivery.webserver.pages.json;
 
 import com.djrapitops.plan.delivery.rendering.json.graphs.GraphJSONCreator;
-import com.djrapitops.plan.delivery.webserver.RequestInternal;
-import com.djrapitops.plan.delivery.webserver.RequestTarget;
-import com.djrapitops.plan.delivery.webserver.auth.Authentication;
+import com.djrapitops.plan.delivery.web.resolver.Resolver;
+import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
-import com.djrapitops.plan.delivery.webserver.pages.PageResolver;
-import com.djrapitops.plan.delivery.webserver.response.Response_old;
-import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
-import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.BadRequestException;
-import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.Identifiers;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -41,7 +38,7 @@ import java.util.UUID;
  * @author Rsl1122
  */
 @Singleton
-public class GraphsJSONResolver implements PageResolver {
+public class GraphsJSONResolver implements Resolver {
 
     private final Identifiers identifiers;
     private final GraphJSONCreator graphJSON;
@@ -56,14 +53,23 @@ public class GraphsJSONResolver implements PageResolver {
     }
 
     @Override
-    public Response_old resolve(RequestInternal request, RequestTarget target) throws WebException {
-        String type = target.getParameter("type")
+    public boolean canAccess(Request request) {
+        return request.getUser().orElse(new WebUser("")).hasPermission("page.server");
+    }
+
+    @Override
+    public Optional<Response> resolve(Request request) {
+        return Optional.of(getResponse(request));
+    }
+
+    private Response getResponse(Request request) {
+        String type = request.getQuery().get("type")
                 .orElseThrow(() -> new BadRequestException("'type' parameter was not defined."));
 
         DataID dataID = getDataID(type);
 
-        if (target.getParameter("server").isPresent()) {
-            UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
+        if (request.getQuery().get("server").isPresent()) {
+            UUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException
             return JSONCache.getOrCache(dataID, serverUUID, () -> generateGraphDataJSONOfType(dataID, serverUUID));
         }
         // Assume network
@@ -86,48 +92,43 @@ public class GraphsJSONResolver implements PageResolver {
         }
     }
 
-    private JSONResponse generateGraphDataJSONOfType(DataID id, UUID serverUUID) {
+    private Object generateGraphDataJSONOfType(DataID id, UUID serverUUID) {
         switch (id) {
             case GRAPH_PERFORMANCE:
-                return new JSONResponse(graphJSON.performanceGraphJSON(serverUUID));
+                return graphJSON.performanceGraphJSON(serverUUID);
             case GRAPH_ONLINE:
-                return new JSONResponse(graphJSON.playersOnlineGraph(serverUUID));
+                return graphJSON.playersOnlineGraph(serverUUID);
             case GRAPH_UNIQUE_NEW:
-                return new JSONResponse(graphJSON.uniqueAndNewGraphJSON(serverUUID));
+                return graphJSON.uniqueAndNewGraphJSON(serverUUID);
             case GRAPH_CALENDAR:
-                return new JSONResponse(graphJSON.serverCalendarJSON(serverUUID));
+                return graphJSON.serverCalendarJSON(serverUUID);
             case GRAPH_WORLD_PIE:
-                return new JSONResponse(graphJSON.serverWorldPieJSONAsMap(serverUUID));
+                return graphJSON.serverWorldPieJSONAsMap(serverUUID);
             case GRAPH_ACTIVITY:
-                return new JSONResponse(graphJSON.activityGraphsJSONAsMap(serverUUID));
+                return graphJSON.activityGraphsJSONAsMap(serverUUID);
             case GRAPH_WORLD_MAP:
-                return new JSONResponse(graphJSON.geolocationGraphsJSONAsMap(serverUUID));
+                return graphJSON.geolocationGraphsJSONAsMap(serverUUID);
             case GRAPH_PING:
-                return new JSONResponse(graphJSON.pingGraphsJSON(serverUUID));
+                return graphJSON.pingGraphsJSON(serverUUID);
             case GRAPH_PUNCHCARD:
-                return new JSONResponse(graphJSON.punchCardJSONAsMap(serverUUID));
+                return graphJSON.punchCardJSONAsMap(serverUUID);
             default:
-                return new JSONResponse(Collections.singletonMap("error", "Undefined ID: " + id.name()));
+                return Collections.singletonMap("error", "Undefined ID: " + id.name());
         }
     }
 
-    private JSONResponse generateGraphDataJSONOfType(DataID id) {
+    private Object generateGraphDataJSONOfType(DataID id) {
         switch (id) {
             case GRAPH_ACTIVITY:
-                return new JSONResponse(graphJSON.activityGraphsJSONAsMap());
+                return graphJSON.activityGraphsJSONAsMap();
             case GRAPH_UNIQUE_NEW:
-                return new JSONResponse(graphJSON.uniqueAndNewGraphJSON());
+                return graphJSON.uniqueAndNewGraphJSON();
             case GRAPH_SERVER_PIE:
-                return new JSONResponse(graphJSON.serverPreferencePieJSONAsMap());
+                return graphJSON.serverPreferencePieJSONAsMap();
             case GRAPH_WORLD_MAP:
-                return new JSONResponse(graphJSON.geolocationGraphsJSONAsMap());
+                return graphJSON.geolocationGraphsJSONAsMap();
             default:
-                return new JSONResponse(Collections.singletonMap("error", "Undefined ID: " + id.name()));
+                return Collections.singletonMap("error", "Undefined ID: " + id.name());
         }
-    }
-
-    @Override
-    public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
-        return auth.getWebUser().getPermLevel() <= 0;
     }
 }

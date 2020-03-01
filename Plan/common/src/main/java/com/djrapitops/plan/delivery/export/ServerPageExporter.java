@@ -18,10 +18,9 @@ package com.djrapitops.plan.delivery.export;
 
 import com.djrapitops.plan.delivery.rendering.pages.Page;
 import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
-import com.djrapitops.plan.delivery.webserver.RequestTarget;
+import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.pages.json.RootJSONResolver;
-import com.djrapitops.plan.delivery.webserver.response.Response_old;
-import com.djrapitops.plan.delivery.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.Server;
@@ -37,8 +36,9 @@ import org.apache.commons.lang3.StringUtils;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -133,16 +133,16 @@ public class ServerPageExporter extends FileExporter {
     }
 
     private void exportJSON(Path toDirectory, String resource) throws NotFoundException, IOException {
-        Response_old found = getJSONResponse(resource);
-        if (found instanceof ErrorResponse) {
-            throw new NotFoundException(resource + " was not properly exported: " + found.getContent());
+        Optional<Response> found = getJSONResponse(resource);
+        if (!found.isPresent()) {
+            throw new NotFoundException(resource + " was not properly exported: not found");
         }
 
         String jsonResourceName = toFileName(toJSONResourceName(resource)) + ".json";
 
         export(toDirectory.resolve("data").resolve(jsonResourceName),
                 // Replace ../player in urls to fix player page links
-                StringUtils.replace(found.getContent(), "../player", toRelativePathFromRoot("player"))
+                StringUtils.replace(found.get().getAsString(), "../player", toRelativePathFromRoot("player"))
         );
         exportPaths.put("../v1/" + resource, toRelativePathFromRoot("data/" + jsonResourceName));
     }
@@ -151,9 +151,9 @@ public class ServerPageExporter extends FileExporter {
         return StringUtils.replaceEach(resource, new String[]{"?", "&", "type=", "server="}, new String[]{"-", "_", "", ""});
     }
 
-    private Response_old getJSONResponse(String resource) {
+    private Optional<Response> getJSONResponse(String resource) {
         try {
-            return jsonHandler.resolve(null, new RequestTarget(URI.create(resource)));
+            return jsonHandler.getResolver().resolve(new Request("GET", "/v1/" + resource, null, Collections.emptyMap()));
         } catch (WebException e) {
             // The rest of the exceptions should not be thrown
             throw new IllegalStateException("Unexpected exception thrown: " + e.toString(), e);

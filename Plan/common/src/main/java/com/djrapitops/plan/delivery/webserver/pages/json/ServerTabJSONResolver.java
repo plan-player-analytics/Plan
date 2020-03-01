@@ -17,18 +17,15 @@
 package com.djrapitops.plan.delivery.webserver.pages.json;
 
 import com.djrapitops.plan.delivery.rendering.json.ServerTabJSONCreator;
-import com.djrapitops.plan.delivery.webserver.RequestInternal;
-import com.djrapitops.plan.delivery.webserver.RequestTarget;
-import com.djrapitops.plan.delivery.webserver.auth.Authentication;
+import com.djrapitops.plan.delivery.web.resolver.Resolver;
+import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
-import com.djrapitops.plan.delivery.webserver.pages.PageResolver;
-import com.djrapitops.plan.delivery.webserver.response.Response_old;
-import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
-import com.djrapitops.plan.exceptions.WebUserAuthException;
-import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.Identifiers;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -37,7 +34,7 @@ import java.util.function.Function;
  *
  * @author Rsl1122
  */
-public class ServerTabJSONResolver<T> implements PageResolver {
+public class ServerTabJSONResolver<T> implements Resolver {
 
     private final DataID dataID;
     private final Identifiers identifiers;
@@ -54,13 +51,14 @@ public class ServerTabJSONResolver<T> implements PageResolver {
     }
 
     @Override
-    public Response_old resolve(RequestInternal request, RequestTarget target) throws WebException {
-        UUID serverUUID = identifiers.getServerUUID(target); // Can throw BadRequestException
-        return JSONCache.getOrCache(dataID, serverUUID, () -> new JSONResponse(jsonCreator.apply(serverUUID)));
+    public boolean canAccess(Request request) {
+        return request.getUser().orElse(new WebUser("")).hasPermission("page.server");
     }
 
     @Override
-    public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
-        return auth.getWebUser().getPermLevel() <= 0;
+    public Optional<Response> resolve(Request request) {
+        UUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException
+        return Optional.of(JSONCache.getOrCache(dataID, serverUUID, () -> jsonCreator.apply(serverUUID)));
     }
+
 }

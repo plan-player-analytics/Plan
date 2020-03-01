@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.web.resolver;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -44,6 +45,10 @@ public final class Response {
 
     public byte[] getBytes() {
         return bytes;
+    }
+
+    public String getAsString() {
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     public int getCode() {

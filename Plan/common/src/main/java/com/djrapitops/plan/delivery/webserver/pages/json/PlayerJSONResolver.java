@@ -16,24 +16,21 @@
  */
 package com.djrapitops.plan.delivery.webserver.pages.json;
 
-import com.djrapitops.plan.delivery.domain.WebUser_old;
 import com.djrapitops.plan.delivery.rendering.json.PlayerJSONCreator;
-import com.djrapitops.plan.delivery.webserver.RequestInternal;
-import com.djrapitops.plan.delivery.webserver.RequestTarget;
-import com.djrapitops.plan.delivery.webserver.auth.Authentication;
-import com.djrapitops.plan.delivery.webserver.pages.PageResolver;
-import com.djrapitops.plan.delivery.webserver.response.Response_old;
-import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
-import com.djrapitops.plan.exceptions.WebUserAuthException;
-import com.djrapitops.plan.exceptions.connection.WebException;
+import com.djrapitops.plan.delivery.web.resolver.MimeType;
+import com.djrapitops.plan.delivery.web.resolver.Resolver;
+import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.identification.Identifiers;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 import java.util.UUID;
 
 @Singleton
-public class PlayerJSONResolver implements PageResolver {
+public class PlayerJSONResolver implements Resolver {
 
     private final Identifiers identifiers;
     private final PlayerJSONCreator jsonCreator;
@@ -45,15 +42,24 @@ public class PlayerJSONResolver implements PageResolver {
     }
 
     @Override
-    public Response_old resolve(RequestInternal request, RequestTarget target) throws WebException {
-        UUID playerUUID = identifiers.getPlayerUUID(target); // Can throw BadRequestException
-        return new JSONResponse(jsonCreator.createJSONAsMap(playerUUID));
+    public boolean canAccess(Request request) {
+        WebUser user = request.getUser().orElse(new WebUser(""));
+        UUID playerUUID = identifiers.getPlayerUUID(request);
+        UUID webUserUUID = identifiers.getPlayerUUID(user.getName());
+        boolean isOwnPage = playerUUID.equals(webUserUUID);
+        return user.hasPermission("page.player.other") || (user.hasPermission("page.player.self") && isOwnPage);
     }
 
     @Override
-    public boolean isAuthorized(Authentication auth, RequestTarget target) throws WebUserAuthException {
-        WebUser_old webUser = auth.getWebUser();
-        return webUser.getPermLevel() <= 1 || webUser.getName().equalsIgnoreCase(target.get(target.size() - 1));
+    public Optional<Response> resolve(Request request) {
+        return Optional.of(getResponse(request));
+    }
 
+    private Response getResponse(Request request) {
+        UUID playerUUID = identifiers.getPlayerUUID(request); // Can throw BadRequestException
+        return Response.builder()
+                .setMimeType(MimeType.JSON)
+                .setJSONContent(jsonCreator.createJSONAsMap(playerUUID))
+                .build();
     }
 }

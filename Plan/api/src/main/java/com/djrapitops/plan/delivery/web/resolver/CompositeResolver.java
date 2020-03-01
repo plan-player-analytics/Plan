@@ -22,37 +22,57 @@ import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Utility Resolver for organizing resolution in a tree-like structure.
  * <p>
  * CompositeResolver removes first part of the target with {@link URIPath#omitFirst()}
  * before calling the child Resolvers.
+ * <p>
+ * Example: {@code resolverService.registerResolver("/test/", compositeResolver);}
+ * The Resolvers added to CompositeResolver will be given Request with URIPath "/".
  *
  * @author Rsl1122
  */
 public final class CompositeResolver implements Resolver {
 
     private final List<String> prefixes;
-    private final List<Resolver> resolvers;
+    private final List<Function<Request, Optional<Response>>> resolvers;
+    private final List<Predicate<Request>> canAccess;
 
     CompositeResolver() {
         this.prefixes = new ArrayList<>();
         this.resolvers = new ArrayList<>();
+        this.canAccess = new ArrayList<>();
     }
 
     public static CompositeResolver.Builder builder() {
         return new Builder();
     }
 
-    private Optional<Resolver> getResolver(URIPath target) {
-        return target.getPart(0).flatMap(this::find);
+    private Optional<Function<Request, Optional<Response>>> getResolver(URIPath target) {
+        return target.getPart(0).flatMap(this::findResolver);
     }
 
-    private Optional<Resolver> find(String prefix) {
+    private Optional<Predicate<Request>> getAccessCheck(URIPath target) {
+        return target.getPart(0).flatMap(this::findAccessCheck);
+    }
+
+    private Optional<Function<Request, Optional<Response>>> findResolver(String prefix) {
         for (int i = 0; i < prefixes.size(); i++) {
             if (prefixes.get(i).equals(prefix)) {
                 return Optional.of(resolvers.get(i));
+            }
+        }
+        return Optional.empty();
+    }
+
+    private Optional<Predicate<Request>> findAccessCheck(String prefix) {
+        for (int i = 0; i < prefixes.size(); i++) {
+            if (prefixes.get(i).equals(prefix)) {
+                return Optional.of(canAccess.get(i));
             }
         }
         return Optional.empty();
@@ -62,20 +82,31 @@ public final class CompositeResolver implements Resolver {
         if (prefix == null) throw new IllegalArgumentException("Prefix can not be null");
         if (resolver == null) throw new IllegalArgumentException("Resolver can not be null");
         prefixes.add(prefix);
-        resolvers.add(resolver);
+        resolvers.add(resolver::resolve);
+        canAccess.add(resolver::canAccess);
+    }
+
+    void add(String prefix, Function<Request, Response> resolver, Predicate<Request> accessCheck) {
+        if (prefix == null) throw new IllegalArgumentException("Prefix can not be null");
+        if (resolver == null) throw new IllegalArgumentException("Resolver can not be null");
+        if (accessCheck == null) throw new IllegalArgumentException("Resolver can not be null");
+        prefixes.add(prefix);
+        resolvers.add(request -> Optional.ofNullable(resolver.apply(request)));
+        canAccess.add(accessCheck);
     }
 
     @Override
     public boolean canAccess(Request request) {
-        return getResolver(request.getPath())
-                .map(resolver -> resolver.canAccess(request))
+        Request forThis = request.omitFirstInPath();
+        return getAccessCheck(forThis.getPath())
+                .map(resolver -> resolver.test(forThis))
                 .orElse(true);
     }
 
     @Override
     public Optional<Response> resolve(Request request) {
-        return getResolver(request.getPath())
-                .flatMap(resolver -> resolver.resolve(request));
+        Request forThis = request.omitFirstInPath();
+        return getResolver(forThis.getPath()).flatMap(resolver -> resolver.apply(forThis));
     }
 
     public static class Builder {
@@ -94,6 +125,18 @@ public final class CompositeResolver implements Resolver {
          */
         public Builder add(String prefix, Resolver resolver) {
             composite.add(prefix, resolver);
+            return this;
+        }
+
+        /**
+         * Add a new resolver to the CompositeResolver by using functional interfaces
+         *
+         * @param prefix   Start of the target (first part of the target string, eg "example" in "/example/target/", or "" in "/")
+         * @param resolver Resolver to call for this target, {@link URIPath#omitFirst()} will be called for Resolver method calls.
+         * @return this builder.
+         */
+        public Builder add(String prefix, Function<Request, Response> resolver, Predicate<Request> accessCheck) {
+            composite.add(prefix, resolver, accessCheck);
             return this;
         }
 

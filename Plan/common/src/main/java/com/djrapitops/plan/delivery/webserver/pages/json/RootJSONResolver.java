@@ -17,11 +17,8 @@
 package com.djrapitops.plan.delivery.webserver.pages.json;
 
 import com.djrapitops.plan.delivery.rendering.json.*;
-import com.djrapitops.plan.delivery.webserver.RequestTarget;
-import com.djrapitops.plan.delivery.webserver.auth.Authentication;
+import com.djrapitops.plan.delivery.web.resolver.CompositeResolver;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
-import com.djrapitops.plan.delivery.webserver.pages.CompositePageResolver;
-import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 import com.djrapitops.plan.identification.Identifiers;
 
 import javax.inject.Inject;
@@ -33,13 +30,13 @@ import javax.inject.Singleton;
  * @author Rsl1122
  */
 @Singleton
-public class RootJSONResolver extends CompositePageResolver {
+public class RootJSONResolver {
 
     private final Identifiers identifiers;
+    private final CompositeResolver resolver;
 
     @Inject
     public RootJSONResolver(
-            ResponseFactory responseFactory,
             Identifiers identifiers,
             JSONFactory jsonFactory,
 
@@ -57,32 +54,30 @@ public class RootJSONResolver extends CompositePageResolver {
             PlayerJSONResolver playerJSONResolver,
             NetworkJSONResolver networkJSONResolver
     ) {
-        super(responseFactory);
         this.identifiers = identifiers;
 
-        registerPage("players", playersTableJSONResolver, 1);
-        registerPage("sessions", sessionsJSONResolver, 0);
-        registerPage("kills", playerKillsJSONResolver, 0);
-        registerPage("pingTable", DataID.PING_TABLE, jsonFactory::pingPerGeolocation);
-        registerPage("graph", graphsJSONResolver, 0);
-
-        registerPage("serverOverview", DataID.SERVER_OVERVIEW, serverOverviewJSONCreator);
-        registerPage("onlineOverview", DataID.ONLINE_OVERVIEW, onlineActivityOverviewJSONCreator);
-        registerPage("sessionsOverview", DataID.SESSIONS_OVERVIEW, sessionsOverviewJSONCreator);
-        registerPage("playerVersus", DataID.PVP_PVE, pvPPvEJSONCreator);
-        registerPage("playerbaseOverview", DataID.PLAYERBASE_OVERVIEW, playerBaseOverviewJSONCreator);
-        registerPage("performanceOverview", DataID.PERFORMANCE_OVERVIEW, performanceJSONCreator);
-
-        registerPage("player", playerJSONResolver, 2);
-        registerPage("network", networkJSONResolver, 0);
+        resolver = CompositeResolver.builder()
+                .add("players", playersTableJSONResolver)
+                .add("sessions", sessionsJSONResolver)
+                .add("kills", playerKillsJSONResolver)
+                .add("graph", graphsJSONResolver)
+                .add("pingTable", forJSON(DataID.PING_TABLE, jsonFactory::pingPerGeolocation))
+                .add("serverOverview", forJSON(DataID.SERVER_OVERVIEW, serverOverviewJSONCreator))
+                .add("onlineOverview", forJSON(DataID.ONLINE_OVERVIEW, onlineActivityOverviewJSONCreator))
+                .add("sessionsOverview", forJSON(DataID.SESSIONS_OVERVIEW, sessionsOverviewJSONCreator))
+                .add("playerVersus", forJSON(DataID.PVP_PVE, pvPPvEJSONCreator))
+                .add("playerbaseOverview", forJSON(DataID.PLAYERBASE_OVERVIEW, playerBaseOverviewJSONCreator))
+                .add("performanceOverview", forJSON(DataID.PERFORMANCE_OVERVIEW, performanceJSONCreator))
+                .add("player", playerJSONResolver)
+                .add("network", networkJSONResolver.getResolver())
+                .build();
     }
 
-    private <T> void registerPage(String identifier, DataID dataID, ServerTabJSONCreator<T> tabJSONCreator) {
-        registerPage(identifier, new ServerTabJSONResolver<>(dataID, identifiers, tabJSONCreator), 0);
+    private <T> ServerTabJSONResolver<T> forJSON(DataID dataID, ServerTabJSONCreator<T> tabJSONCreator) {
+        return new ServerTabJSONResolver<>(dataID, identifiers, tabJSONCreator);
     }
 
-    @Override
-    public boolean isAuthorized(Authentication auth, RequestTarget target) {
-        return true;
+    public CompositeResolver getResolver() {
+        return resolver;
     }
 }

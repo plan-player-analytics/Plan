@@ -21,11 +21,8 @@ import com.djrapitops.plan.delivery.rendering.json.network.NetworkOverviewJSONCr
 import com.djrapitops.plan.delivery.rendering.json.network.NetworkPlayerBaseOverviewJSONCreator;
 import com.djrapitops.plan.delivery.rendering.json.network.NetworkSessionsOverviewJSONCreator;
 import com.djrapitops.plan.delivery.rendering.json.network.NetworkTabJSONCreator;
-import com.djrapitops.plan.delivery.webserver.RequestTarget;
-import com.djrapitops.plan.delivery.webserver.auth.Authentication;
+import com.djrapitops.plan.delivery.web.resolver.CompositeResolver;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
-import com.djrapitops.plan.delivery.webserver.pages.CompositePageResolver;
-import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -36,31 +33,31 @@ import javax.inject.Singleton;
  * @author Rsl1122
  */
 @Singleton
-public class NetworkJSONResolver extends CompositePageResolver {
+public class NetworkJSONResolver {
+
+    private final CompositeResolver resolver;
 
     @Inject
     public NetworkJSONResolver(
-            ResponseFactory responseFactory,
             JSONFactory jsonFactory,
             NetworkOverviewJSONCreator networkOverviewJSONCreator,
             NetworkPlayerBaseOverviewJSONCreator networkPlayerBaseOverviewJSONCreator,
             NetworkSessionsOverviewJSONCreator networkSessionsOverviewJSONCreator
     ) {
-        super(responseFactory);
-
-        registerPage("overview", DataID.SERVER_OVERVIEW, networkOverviewJSONCreator);
-        registerPage("playerbaseOverview", DataID.PLAYERBASE_OVERVIEW, networkPlayerBaseOverviewJSONCreator);
-        registerPage("sessionsOverview", DataID.SESSIONS_OVERVIEW, networkSessionsOverviewJSONCreator);
-        registerPage("servers", DataID.SERVERS, jsonFactory::serversAsJSONMaps);
-        registerPage("pingTable", DataID.PING_TABLE, jsonFactory::pingPerGeolocation);
+        resolver = CompositeResolver.builder()
+                .add("overview", forJSON(DataID.SERVER_OVERVIEW, networkOverviewJSONCreator))
+                .add("playerbaseOverview", forJSON(DataID.PLAYERBASE_OVERVIEW, networkPlayerBaseOverviewJSONCreator))
+                .add("sessionsOverview", forJSON(DataID.SESSIONS_OVERVIEW, networkSessionsOverviewJSONCreator))
+                .add("servers", forJSON(DataID.SERVERS, jsonFactory::serversAsJSONMaps))
+                .add("pingTable", forJSON(DataID.PING_TABLE, jsonFactory::pingPerGeolocation))
+                .build();
     }
 
-    private <T> void registerPage(String identifier, DataID dataID, NetworkTabJSONCreator<T> tabJSONCreator) {
-        registerPage(identifier, new NetworkTabJSONResolver<>(dataID, tabJSONCreator));
+    private <T> NetworkTabJSONResolver<T> forJSON(DataID dataID, NetworkTabJSONCreator<T> tabJSONCreator) {
+        return new NetworkTabJSONResolver<>(dataID, tabJSONCreator);
     }
 
-    @Override
-    public boolean isAuthorized(Authentication auth, RequestTarget target) {
-        return true;
+    public CompositeResolver getResolver() {
+        return resolver;
     }
 }

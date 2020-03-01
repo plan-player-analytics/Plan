@@ -50,7 +50,7 @@ import java.util.regex.Pattern;
  * @author Rsl1122
  */
 @Singleton
-public class ResponseResolver extends CompositePageResolver {
+public class ResponseResolver {
 
     private final DebugPageResolver debugPageResolver;
     private final PlayersPageResolver playersPageResolver;
@@ -62,6 +62,7 @@ public class ResponseResolver extends CompositePageResolver {
     private final ErrorHandler errorHandler;
 
     private final ResolverService resolverService;
+    private final ResponseFactory responseFactory;
     private final Lazy<WebServer> webServer;
 
     @Inject
@@ -80,8 +81,8 @@ public class ResponseResolver extends CompositePageResolver {
 
             ErrorHandler errorHandler
     ) {
-        super(responseFactory);
         this.resolverService = resolverService;
+        this.responseFactory = responseFactory;
         this.webServer = webServer;
         this.debugPageResolver = debugPageResolver;
         this.playersPageResolver = playersPageResolver;
@@ -94,17 +95,17 @@ public class ResponseResolver extends CompositePageResolver {
     }
 
     public void registerPages() {
-        String pluginName = "Plan";
-        resolverService.registerResolver(pluginName, "/debug", debugPageResolver);
-        resolverService.registerResolver(pluginName, "/players", playersPageResolver);
-        resolverService.registerResolver(pluginName, "/player", playerPageResolver);
-        resolverService.registerResolver(pluginName, "/favicon.ico", noAuthResolverFor(responseFactory.faviconResponse()));
-        resolverService.registerResolver(pluginName, "/network", serverPageResolver);
-        resolverService.registerResolver(pluginName, "/server", serverPageResolver);
-        resolverService.registerResolverForMatches(pluginName, Pattern.compile("^/$"), rootPageResolver);
-        resolverService.registerResolverForMatches(pluginName, Pattern.compile("^/(vendor|css|js|img)/.*"), staticResourceResolver);
+        String plugin = "Plan";
+        resolverService.registerResolver(plugin, "/debug", debugPageResolver);
+        resolverService.registerResolver(plugin, "/players", playersPageResolver);
+        resolverService.registerResolver(plugin, "/player", playerPageResolver);
+        resolverService.registerResolver(plugin, "/favicon.ico", noAuthResolverFor(responseFactory.faviconResponse()));
+        resolverService.registerResolver(plugin, "/network", serverPageResolver);
+        resolverService.registerResolver(plugin, "/server", serverPageResolver);
+        resolverService.registerResolverForMatches(plugin, Pattern.compile("^/$"), rootPageResolver);
+        resolverService.registerResolverForMatches(plugin, Pattern.compile("^/(vendor|css|js|img)/.*"), staticResourceResolver);
 
-        registerPage("v1", rootJSONResolver);
+        resolverService.registerResolver(plugin, "/v1", rootJSONResolver.getResolver());
     }
 
     public NoAuthResolver noAuthResolverFor(Response response) {

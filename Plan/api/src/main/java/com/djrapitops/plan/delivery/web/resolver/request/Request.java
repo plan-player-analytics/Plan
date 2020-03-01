@@ -51,6 +51,21 @@ public final class Request {
         this.headers = headers;
     }
 
+    // Special constructor that figures out URIPath and URIQuery from "/path/and?query=params"
+    public Request(String method, String target, WebUser user, Map<String, String> headers) {
+        this.method = method;
+        if (target.contains("?")) {
+            String[] halves = target.split("\\?", 2);
+            this.path = new URIPath(halves[0]);
+            this.query = new URIQuery(halves[1]);
+        } else {
+            this.path = new URIPath(target);
+            this.query = new URIQuery("");
+        }
+        this.user = user;
+        this.headers = headers;
+    }
+
     /**
      * Get HTTP method.
      *
@@ -95,5 +110,9 @@ public final class Request {
      */
     public Optional<String> getHeader(String key) {
         return Optional.ofNullable(headers.get(key));
+    }
+
+    public Request omitFirstInPath() {
+        return new Request(method, path.omitFirst(), query, user, headers);
     }
 }
