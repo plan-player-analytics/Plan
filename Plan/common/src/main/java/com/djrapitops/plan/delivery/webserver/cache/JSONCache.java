@@ -18,7 +18,7 @@ package com.djrapitops.plan.delivery.webserver.cache;
 
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Response;
-import com.djrapitops.plan.delivery.webserver.pages.json.RootJSONResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
 import com.djrapitops.plan.storage.file.ResourceCache;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.github.benmanes.caffeine.cache.Cache;
@@ -72,17 +72,17 @@ public class JSONCache {
         return new String(found, StandardCharsets.UTF_8);
     }
 
-    public static <T> Response getOrCache(DataID dataID, Supplier<T> jsonResponseSupplier) {
+    public static <T> Response getOrCache(DataID dataID, Supplier<T> objectSupplier) {
         return getOrCache(dataID.name(), () -> Response.builder()
                 .setMimeType(MimeType.JSON)
-                .setJSONContent(jsonResponseSupplier.get())
+                .setJSONContent(objectSupplier.get())
                 .build());
     }
 
-    public static <T> Response getOrCache(DataID dataID, UUID serverUUID, Supplier<T> jsonResponseSupplier) {
+    public static <T> Response getOrCache(DataID dataID, UUID serverUUID, Supplier<T> objectSupplier) {
         return getOrCache(dataID.of(serverUUID), () -> Response.builder()
                 .setMimeType(MimeType.JSON)
-                .setJSONContent(jsonResponseSupplier.get())
+                .setJSONContent(objectSupplier.get())
                 .build());
     }
 

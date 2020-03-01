@@ -16,19 +16,17 @@
  */
 package utilities;
 
-import com.djrapitops.plan.delivery.domain.WebUser_old;
+import com.djrapitops.plan.delivery.domain.WebUser;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.domain.TPS;
-import com.djrapitops.plan.gathering.domain.UserInfo;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomData {
@@ -51,10 +49,10 @@ public class RandomData {
         return RandomStringUtils.randomAlphanumeric(size);
     }
 
-    public static List<WebUser_old> randomWebUsers() throws PassEncryptUtil.CannotPerformOperationException {
-        List<WebUser_old> test = new ArrayList<>();
+    public static List<WebUser> randomWebUsers() throws PassEncryptUtil.CannotPerformOperationException {
+        List<WebUser> test = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            test.add(new WebUser_old(randomString(5), PassEncryptUtil.createHash(randomString(7)), r.nextInt()));
+            test.add(new WebUser(randomString(5), PassEncryptUtil.createHash(randomString(7)), r.nextInt()));
         }
         return test;
     }
@@ -85,20 +83,6 @@ public class RandomData {
         List<Point> test = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             test.add(new Point(r.nextLong(), r.nextLong()));
-        }
-        return test;
-    }
-
-    public static <T extends Enum> T randomEnum(Class<T> clazz) {
-        int x = r.nextInt(clazz.getEnumConstants().length);
-        return clazz.getEnumConstants()[x];
-    }
-
-    public static List<UserInfo> randomUserData() {
-        List<UserInfo> test = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            UserInfo info = new UserInfo(UUID.randomUUID(), UUID.randomUUID(), r.nextLong(), r.nextBoolean(), r.nextBoolean());
-            test.add(info);
         }
         return test;
     }

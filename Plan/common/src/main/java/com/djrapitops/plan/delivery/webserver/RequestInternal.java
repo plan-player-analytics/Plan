@@ -25,7 +25,6 @@ import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.sun.net.httpserver.HttpExchange;
 
-import java.io.InputStream;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
@@ -84,10 +83,6 @@ public class RequestInternal {
         return new URIQuery(requestURI.getQuery());
     }
 
-    public InputStream getRequestBody() {
-        return exchange.getRequestBody();
-    }
-
     @Override
     public String toString() {
         return "Request:" + requestMethod + " " + requestURI.getPath();
@@ -99,11 +94,6 @@ public class RequestInternal {
 
     public Locale getLocale() {
         return locale;
-    }
-
-    @Deprecated
-    public RequestTarget getRequestTarget() {
-        return new RequestTarget(requestURI);
     }
 
     public Request toAPIRequest() throws WebUserAuthException {
@@ -118,7 +108,7 @@ public class RequestInternal {
 
     private WebUser getWebUser() throws WebUserAuthException {
         Optional<Authentication> auth = getAuth();
-        return auth.isPresent() ? auth.get().getWebUser().toNewWebUser() : null;
+        return auth.map(authentication -> authentication.getWebUser().toNewWebUser()).orElse(null);
     }
 
     private Map<String, String> getRequestHeaders() {

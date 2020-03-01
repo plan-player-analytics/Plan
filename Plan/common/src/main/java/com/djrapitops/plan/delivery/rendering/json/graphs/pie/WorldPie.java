@@ -71,10 +71,10 @@ public class WorldPie extends PieWithDrilldown {
         return drilldowns;
     }
 
-    private List<List> createGMTimesForWorld(GMTimes gmTimes) {
-        List<List> data = new ArrayList<>();
+    private List<List<Object>> createGMTimesForWorld(GMTimes gmTimes) {
+        List<List<Object>> data = new ArrayList<>();
         for (Map.Entry<String, Long> gmEntry : gmTimes.getTimes().entrySet()) {
-            List gmList = Arrays.asList(gmEntry.getKey(), gmEntry.getValue());
+            List<Object> gmList = Arrays.asList(gmEntry.getKey(), gmEntry.getValue());
             data.add(gmList);
         }
         return data;

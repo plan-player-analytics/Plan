@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.web.resolver.request;
 
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 import java.util.Optional;
@@ -55,7 +56,7 @@ public final class Request {
     public Request(String method, String target, WebUser user, Map<String, String> headers) {
         this.method = method;
         if (target.contains("?")) {
-            String[] halves = target.split("\\?", 2);
+            String[] halves = StringUtils.split(target, "?", 2);
             this.path = new URIPath(halves[0]);
             this.query = new URIQuery(halves[1]);
         } else {

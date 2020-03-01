@@ -17,7 +17,6 @@
 package com.djrapitops.plan.gathering.cache;
 
 import com.djrapitops.plan.SubSystem;
-import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.gathering.geolocation.GeolocationCache;
 
 import javax.inject.Inject;
@@ -47,7 +46,7 @@ public class CacheSystem implements SubSystem {
     }
 
     @Override
-    public void enable() throws EnableException {
+    public void enable() {
         nicknameCache.enable();
         geolocationCache.enable();
     }

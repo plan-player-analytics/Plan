@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.delivery.webserver.cache;
 
-import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
@@ -47,7 +46,7 @@ class JSONCacheTest {
 
     @Test
     void cachedByDataIDName() {
-        JSONCache.getOrCache(TEST_ID, () -> new JSONResponse(CACHED));
+        JSONCache.getOrCache(TEST_ID, () -> CACHED);
         assertContains();
     }
 
@@ -77,7 +76,7 @@ class JSONCacheTest {
 
     @Test
     void cachedByServerUUID() {
-        JSONCache.getOrCache(TEST_ID, TEST_UUID, () -> new JSONResponse(CACHED));
+        JSONCache.getOrCache(TEST_ID, TEST_UUID, () -> CACHED);
         assertContainsUUID();
     }
 

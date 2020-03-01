@@ -23,10 +23,8 @@ import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
-import com.djrapitops.plan.delivery.webserver.pages.*;
-import com.djrapitops.plan.delivery.webserver.pages.json.RootJSONResolver;
-import com.djrapitops.plan.delivery.webserver.response.OptionsResponse;
-import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
+import com.djrapitops.plan.delivery.webserver.resolver.*;
+import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
@@ -109,7 +107,7 @@ public class ResponseResolver {
     }
 
     public NoAuthResolver noAuthResolverFor(Response response) {
-        return (request) -> Optional.of(response);
+        return request -> Optional.of(response);
     }
 
     public Response getResponse(RequestInternal request) {
@@ -130,8 +128,9 @@ public class ResponseResolver {
     }
 
     private Response tryToGetResponse(RequestInternal internalRequest) throws WebException {
-        if ("OPTIONS" .equalsIgnoreCase(internalRequest.getRequestMethod())) {
-            return new OptionsResponse().toNewResponse();
+        if ("OPTIONS".equalsIgnoreCase(internalRequest.getRequestMethod())) {
+            // https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS
+            return Response.builder().setStatus(204).setContent(new byte[0]).build();
         }
 
         Optional<Authentication> authentication = internalRequest.getAuth();
