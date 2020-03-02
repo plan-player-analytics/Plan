@@ -32,6 +32,7 @@ import com.djrapitops.plan.gathering.domain.Ping;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
@@ -42,6 +43,7 @@ import com.djrapitops.plan.storage.database.queries.analysis.NetworkActivityInde
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.storage.database.queries.objects.*;
 import com.djrapitops.plan.utilities.java.Lists;
+import com.djrapitops.plan.utilities.java.Maps;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import javax.inject.Inject;
@@ -90,7 +92,21 @@ public class GraphJSONCreator {
                 ",\"entities\":" + lineGraphs.entityGraph(tpsMutator).toHighChartsSeries() +
                 ",\"chunks\":" + lineGraphs.chunkGraph(tpsMutator).toHighChartsSeries() +
                 ",\"disk\":" + lineGraphs.diskGraph(tpsMutator).toHighChartsSeries() +
-                '}';
+                ",\"colors\":{" +
+                "\"playersOnline\":\"" + theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE) + "\"," +
+                "\"cpu\":\"" + theme.getValue(ThemeVal.GRAPH_CPU) + "\"," +
+                "\"ram\":\"" + theme.getValue(ThemeVal.GRAPH_RAM) + "\"," +
+                "\"entities\":\"" + theme.getValue(ThemeVal.GRAPH_ENTITIES) + "\"," +
+                "\"chunks\":\"" + theme.getValue(ThemeVal.GRAPH_CHUNKS) + "\"," +
+                "\"low\":\"" + theme.getValue(ThemeVal.GRAPH_TPS_LOW) + "\"," +
+                "\"med\":\"" + theme.getValue(ThemeVal.GRAPH_TPS_MED) + "\"," +
+                "\"high\":\"" + theme.getValue(ThemeVal.GRAPH_TPS_HIGH) + "\"}" +
+                ",\"zones\":{" +
+                "\"tpsThresholdMed\":" + config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED) + ',' +
+                "\"tpsThresholdHigh\":" + config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_HIGH) + ',' +
+                "\"diskThresholdMed\":" + config.get(DisplaySettings.GRAPH_DISK_THRESHOLD_MED) + ',' +
+                "\"diskThresholdHigh\":" + config.get(DisplaySettings.GRAPH_DISK_THRESHOLD_HIGH) +
+                "}}";
     }
 
     public String playersOnlineGraph(UUID serverUUID) {
@@ -101,7 +117,8 @@ public class GraphJSONCreator {
         List<Point> points = Lists.map(db.query(TPSQueries.fetchPlayersOnlineOfServer(halfYearAgo, now, serverUUID)),
                 point -> new Point(point.getDate(), point.getValue())
         );
-        return "{\"playersOnline\":" + graphs.line().lineGraph(points).toHighChartsSeries() + '}';
+        return "{\"playersOnline\":" + graphs.line().lineGraph(points).toHighChartsSeries() +
+                ",\"color\":\"" + theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE) + "\"}";
     }
 
     public String uniqueAndNewGraphJSON(UUID serverUUID) {
@@ -117,6 +134,10 @@ public class GraphJSONCreator {
                 PlayerCountQueries.newPlayerCounts(halfYearAgo, now, timeZoneOffset, serverUUID)
         );
 
+        return createUniqueAndNewJSON(lineGraphs, uniquePerDay, newPerDay);
+    }
+
+    public String createUniqueAndNewJSON(LineGraphFactory lineGraphs, NavigableMap<Long, Integer> uniquePerDay, NavigableMap<Long, Integer> newPerDay) {
         return "{\"uniquePlayers\":" +
                 lineGraphs.lineGraph(MutatorFunctions.toPoints(
                         MutatorFunctions.addMissing(uniquePerDay, TimeUnit.DAYS.toMillis(1L), 0)
@@ -125,7 +146,10 @@ public class GraphJSONCreator {
                 lineGraphs.lineGraph(MutatorFunctions.toPoints(
                         MutatorFunctions.addMissing(newPerDay, TimeUnit.DAYS.toMillis(1L), 0)
                 )).toHighChartsSeries() +
-                '}';
+                ",\"colors\":{" +
+                "\"playersOnline\":\"" + theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE) + "\"," +
+                "\"newPlayers\":\"" + theme.getValue(ThemeVal.LIGHT_GREEN) + "\"" +
+                "}}";
     }
 
     public String uniqueAndNewGraphJSON() {
@@ -141,15 +165,7 @@ public class GraphJSONCreator {
                 PlayerCountQueries.newPlayerCounts(halfYearAgo, now, timeZoneOffset)
         );
 
-        return "{\"uniquePlayers\":" +
-                lineGraphs.lineGraph(MutatorFunctions.toPoints(
-                        MutatorFunctions.addMissing(uniquePerDay, TimeUnit.DAYS.toMillis(1L), 0)
-                )).toHighChartsSeries() +
-                ",\"newPlayers\":" +
-                lineGraphs.lineGraph(MutatorFunctions.toPoints(
-                        MutatorFunctions.addMissing(newPerDay, TimeUnit.DAYS.toMillis(1L), 0)
-                )).toHighChartsSeries() +
-                '}';
+        return createUniqueAndNewJSON(lineGraphs, uniquePerDay, newPerDay);
     }
 
     public String serverCalendarJSON(UUID serverUUID) {
@@ -184,10 +200,10 @@ public class GraphJSONCreator {
         WorldTimes worldTimes = db.query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID));
         WorldPie worldPie = graphs.pie().worldPie(worldTimes);
 
-        Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("world_series", worldPie.getSlices());
-        dataMap.put("gm_series", worldPie.toHighChartsDrillDownMaps());
-        return dataMap;
+        return Maps.builder(String.class, Object.class)
+                .put("world_series", worldPie.getSlices())
+                .put("gm_series", worldPie.toHighChartsDrillDownMaps())
+                .build();
     }
 
     public Map<String, Object> activityGraphsJSONAsMap(UUID serverUUID) {
@@ -200,15 +216,19 @@ public class GraphJSONCreator {
             activityData.put(time, db.query(ActivityIndexQueries.fetchActivityIndexGroupingsOn(time, serverUUID, threshold)));
         }
 
+        return createActivityGraphJSON(activityData);
+    }
+
+    public Map<String, Object> createActivityGraphJSON(DateMap<Map<String, Integer>> activityData) {
         Map.Entry<Long, Map<String, Integer>> lastActivityEntry = activityData.lastEntry();
         Pie activityPie = graphs.pie().activityPie(lastActivityEntry != null ? lastActivityEntry.getValue() : Collections.emptyMap());
         StackGraph activityStackGraph = graphs.stack().activityStackGraph(activityData);
 
-        Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("activity_series", activityStackGraph.getDataSets());
-        dataMap.put("activity_labels", activityStackGraph.getLabels());
-        dataMap.put("activity_pie_series", activityPie.getSlices());
-        return dataMap;
+        return Maps.builder(String.class, Object.class)
+                .put("activity_series", activityStackGraph.getDataSets())
+                .put("activity_labels", activityStackGraph.getLabels())
+                .put("activity_pie_series", activityPie.getSlices())
+                .build();
     }
 
     public Map<String, Object> activityGraphsJSONAsMap() {
@@ -221,41 +241,36 @@ public class GraphJSONCreator {
             activityData.put(time, db.query(NetworkActivityIndexQueries.fetchActivityIndexGroupingsOn(time, threshold)));
         }
 
-        Map.Entry<Long, Map<String, Integer>> lastActivityEntry = activityData.lastEntry();
-        Pie activityPie = graphs.pie().activityPie(lastActivityEntry != null ? lastActivityEntry.getValue() : Collections.emptyMap());
-        StackGraph activityStackGraph = graphs.stack().activityStackGraph(activityData);
-
-        Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("activity_series", activityStackGraph.getDataSets());
-        dataMap.put("activity_labels", activityStackGraph.getLabels());
-        dataMap.put("activity_pie_series", activityPie.getSlices());
-        return dataMap;
+        return createActivityGraphJSON(activityData);
     }
 
     public Map<String, Object> geolocationGraphsJSONAsMap(UUID serverUUID) {
         Database db = dbSystem.getDatabase();
         Map<String, Integer> geolocationCounts = db.query(GeoInfoQueries.serverGeolocationCounts(serverUUID));
 
+        return createGeolocationJSON(geolocationCounts);
+    }
+
+    public Map<String, Object> createGeolocationJSON(Map<String, Integer> geolocationCounts) {
         BarGraph geolocationBarGraph = graphs.bar().geolocationBarGraph(geolocationCounts);
         WorldMap worldMap = graphs.special().worldMap(geolocationCounts);
 
-        Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("geolocation_series", worldMap.getEntries());
-        dataMap.put("geolocation_bar_series", geolocationBarGraph.getBars());
-        return dataMap;
+        return Maps.builder(String.class, Object.class)
+                .put("geolocation_series", worldMap.getEntries())
+                .put("geolocation_bar_series", geolocationBarGraph.getBars())
+                .put("colors", Maps.builder(String.class, String.class)
+                        .put("low", theme.getValue(ThemeVal.WORLD_MAP_LOW))
+                        .put("high", theme.getValue(ThemeVal.WORLD_MAP_HIGH))
+                        .put("bars", theme.getValue(ThemeVal.GREEN))
+                        .build())
+                .build();
     }
 
     public Map<String, Object> geolocationGraphsJSONAsMap() {
         Database db = dbSystem.getDatabase();
         Map<String, Integer> geolocationCounts = db.query(GeoInfoQueries.networkGeolocationCounts());
 
-        BarGraph geolocationBarGraph = graphs.bar().geolocationBarGraph(geolocationCounts);
-        WorldMap worldMap = graphs.special().worldMap(geolocationCounts);
-
-        Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("geolocation_series", worldMap.getEntries());
-        dataMap.put("geolocation_bar_series", geolocationBarGraph.getBars());
-        return dataMap;
+        return createGeolocationJSON(geolocationCounts);
     }
 
     public String pingGraphsJSON(UUID serverUUID) {
@@ -267,7 +282,12 @@ public class GraphJSONCreator {
 
         return "{\"min_ping_series\":" + pingGraph.getMinGraph().toHighChartsSeries() +
                 ",\"avg_ping_series\":" + pingGraph.getAvgGraph().toHighChartsSeries() +
-                ",\"max_ping_series\":" + pingGraph.getMaxGraph().toHighChartsSeries() + '}';
+                ",\"max_ping_series\":" + pingGraph.getMaxGraph().toHighChartsSeries() +
+                ",\"colors\":{" +
+                "\"min\":\"" + theme.getValue(ThemeVal.GRAPH_MIN_PING) + "\"," +
+                "\"avg\":\"" + theme.getValue(ThemeVal.GRAPH_AVG_PING) + "\"," +
+                "\"max\":\"" + theme.getValue(ThemeVal.GRAPH_MAX_PING) + "\"" +
+                "}}";
     }
 
     public Map<String, Object> punchCardJSONAsMap(UUID serverUUID) {
@@ -276,18 +296,21 @@ public class GraphJSONCreator {
         List<Session> sessions = dbSystem.getDatabase().query(
                 SessionQueries.fetchServerSessionsWithoutKillOrWorldData(monthAgo, now, serverUUID)
         );
-        return Collections.singletonMap("punchCard", graphs.special().punchCard(sessions).getDots());
+        return Maps.builder(String.class, Object.class)
+                .put("punchCard", graphs.special().punchCard(sessions).getDots())
+                .put("color", theme.getValue(ThemeVal.GRAPH_PUNCHCARD))
+                .build();
     }
 
     public Map<String, Object> serverPreferencePieJSONAsMap() {
         long now = System.currentTimeMillis();
         long monthAgo = now - TimeUnit.DAYS.toMillis(30L);
         String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
-        Map<String, Object> data = new HashMap<>();
-        data.put("server_pie_colors", pieColors);
+        Map<String, Long> playtimePerServer = dbSystem.getDatabase().query(SessionQueries.playtimePerServer(now, monthAgo));
 
-        Map<String, Long> serverPlaytimes = dbSystem.getDatabase().query(SessionQueries.playtimePerServer(now, monthAgo));
-        data.put("server_pie_series_30d", graphs.pie().serverPreferencePie(serverPlaytimes).getSlices());
-        return data;
+        return Maps.builder(String.class, Object.class)
+                .put("server_pie_colors", pieColors)
+                .put("server_pie_series_30d", graphs.pie().serverPreferencePie(playtimePerServer).getSlices())
+                .build();
     }
 }

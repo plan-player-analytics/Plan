@@ -101,13 +101,19 @@ public class ResponseBuilder {
         return setContent(content.getBytes(charset));
     }
 
+    /**
+     * Set content as serialized JSON object.
+     *
+     * @param objectToSerialize Object to serialize into JSON with Gson. If the object is a String it is assumed to be valid JSON.
+     * @return this builder.
+     */
     public ResponseBuilder setJSONContent(Object objectToSerialize) {
+        if (objectToSerialize instanceof String) return setJSONContent((String) objectToSerialize);
         return setJSONContent(new Gson().toJson(objectToSerialize));
     }
 
     public ResponseBuilder setJSONContent(String json) {
-        setContent(json);
-        return setMimeType(MimeType.JSON);
+        return setMimeType(MimeType.JSON).setContent(json);
     }
 
     /**
