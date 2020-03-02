@@ -25,6 +25,7 @@ import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.version.VersionChecker;
@@ -46,6 +47,7 @@ public class PlayerPage implements Page {
     private final PlanConfig config;
     private final PageFactory pageFactory;
     private final Theme theme;
+    private final Locale locale;
     private final ServerInfo serverInfo;
 
     private final Formatter<Long> clockLongFormatter;
@@ -58,6 +60,7 @@ public class PlayerPage implements Page {
             PlanConfig config,
             PageFactory pageFactory,
             Theme theme,
+            Locale locale,
             Formatters formatters,
             ServerInfo serverInfo
     ) {
@@ -67,6 +70,7 @@ public class PlayerPage implements Page {
         this.config = config;
         this.pageFactory = pageFactory;
         this.theme = theme;
+        this.locale = locale;
         this.serverInfo = serverInfo;
 
         clockLongFormatter = formatters.clockLong();
@@ -91,24 +95,24 @@ public class PlayerPage implements Page {
         placeholders.put("refreshFull", secondLongFormatter.apply(now));
         placeholders.put("version", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
         placeholders.put("updateModal", versionChecker.getUpdateModal());
-        placeholders.put("timeZone", config.getTimeZoneOffsetHours());
 
         String playerName = player.getValue(PlayerKeys.NAME).orElse(playerUUID.toString());
         placeholders.put("playerName", playerName);
 
-        placeholders.put("worldPieColors", theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
+        placeholders.put("timeZone", config.getTimeZoneOffsetHours());
         placeholders.put("gmPieColors", theme.getValue(ThemeVal.GRAPH_GM_PIE));
-        placeholders.put("serverPieColors", theme.getValue(ThemeVal.GRAPH_SERVER_PREF_PIE));
-        placeholders.put("firstDay", 1);
 
         placeholders.put("backButton", (serverInfo.getServer().isProxy() ? Html.BACK_BUTTON_NETWORK : Html.BACK_BUTTON_SERVER).create());
         placeholders.put("contributors", Contributors.generateContributorHtml());
 
+        String html = locale.replaceLanguageInHtml(placeholders.apply(templateHtml));
+
+        placeholders = new PlaceholderReplacer();
         PlayerPluginTab pluginTabs = pageFactory.inspectPluginTabs(playerUUID);
 
         placeholders.put("navPluginsTabs", pluginTabs.getNav());
         placeholders.put("pluginsTabs", pluginTabs.getTab());
 
-        return placeholders.apply(templateHtml);
+        return placeholders.apply(html);
     }
 }

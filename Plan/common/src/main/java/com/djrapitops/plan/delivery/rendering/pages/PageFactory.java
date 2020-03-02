@@ -101,7 +101,7 @@ public class PageFactory {
     }
 
     public PlayersPage playersPage() throws IOException {
-        return new PlayersPage(getResource("web/players.html"), versionChecker.get(), config.get(), serverInfo.get());
+        return new PlayersPage(getResource("web/players.html"), versionChecker.get(), config.get(), locale.get(), serverInfo.get());
     }
 
     public ServerPage serverPage(UUID serverUUID) throws NotFoundException, IOException {
@@ -112,6 +112,7 @@ public class PageFactory {
                 server,
                 config.get(),
                 theme.get(),
+                locale.get(),
                 versionChecker.get(),
                 dbSystem.get(),
                 serverInfo.get(),
@@ -125,7 +126,7 @@ public class PageFactory {
         return new PlayerPage(
                 getResource("web/player.html"), player,
                 versionChecker.get(),
-                config.get(), this, theme.get(),
+                config.get(), this, theme.get(), locale.get(),
                 formatters.get(), serverInfo.get()
         );
     }
@@ -166,7 +167,9 @@ public class PageFactory {
     public NetworkPage networkPage() throws IOException {
         return new NetworkPage(getResource("web/network.html"),
                 dbSystem.get(),
-                versionChecker.get(), config.get(), theme.get(), serverInfo.get(), formatters.get());
+                versionChecker.get(),
+                config.get(), theme.get(), locale.get(),
+                serverInfo.get(), formatters.get());
     }
 
     public Page internalErrorPage(String message, Throwable error) {
@@ -184,13 +187,13 @@ public class PageFactory {
     public Page errorPage(String title, String error) throws IOException {
         return new ErrorMessagePage(
                 getResource("web/error.html"), title, error,
-                versionChecker.get());
+                versionChecker.get(), locale.get());
     }
 
     public Page errorPage(Icon icon, String title, String error) throws IOException {
         return new ErrorMessagePage(
                 getResource("web/error.html"), icon, title, error,
-                versionChecker.get());
+                locale.get(), versionChecker.get());
     }
 
     public String getResource(String name) throws IOException {

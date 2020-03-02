@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.rendering.pages;
 import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.version.VersionChecker;
 
 /**
@@ -33,24 +34,26 @@ public class ErrorMessagePage implements Page {
     private final String errorTitle;
     private final String errorMsg;
 
+    private final Locale locale;
     private final VersionChecker versionChecker;
 
     public ErrorMessagePage(
             String template, Icon icon, String errorTitle, String errorMsg,
-            VersionChecker versionChecker
+            Locale locale, VersionChecker versionChecker
     ) {
         this.template = template;
         this.icon = icon;
         this.errorTitle = errorTitle;
         this.errorMsg = errorMsg;
+        this.locale = locale;
         this.versionChecker = versionChecker;
     }
 
     public ErrorMessagePage(
             String template, String errorTitle, String errorMsg,
-            VersionChecker versionChecker
-    ) {
-        this(template, Icon.called("exclamation-circle").build(), errorTitle, errorMsg, versionChecker);
+            VersionChecker versionChecker,
+            Locale locale) {
+        this(template, Icon.called("exclamation-circle").build(), errorTitle, errorMsg, locale, versionChecker);
     }
 
     @Override
@@ -63,6 +66,6 @@ public class ErrorMessagePage implements Page {
         placeholders.put("version", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
         placeholders.put("updateModal", versionChecker.getUpdateModal());
         placeholders.put("contributors", Contributors.generateContributorHtml());
-        return placeholders.apply(template);
+        return locale.replaceLanguageInHtml(placeholders.apply(template));
     }
 }

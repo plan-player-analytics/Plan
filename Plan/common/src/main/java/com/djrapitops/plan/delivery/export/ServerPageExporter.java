@@ -25,7 +25,6 @@ import com.djrapitops.plan.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -53,7 +52,6 @@ public class ServerPageExporter extends FileExporter {
     private final PageFactory pageFactory;
     private final DBSystem dbSystem;
     private final RootJSONResolver jsonHandler;
-    private final Locale locale;
     private final Theme theme;
     private final ServerInfo serverInfo;
 
@@ -65,7 +63,6 @@ public class ServerPageExporter extends FileExporter {
             PageFactory pageFactory,
             DBSystem dbSystem,
             RootJSONResolver jsonHandler,
-            Locale locale,
             Theme theme,
             ServerInfo serverInfo // To know if current server is a Proxy
     ) {
@@ -73,7 +70,6 @@ public class ServerPageExporter extends FileExporter {
         this.pageFactory = pageFactory;
         this.dbSystem = dbSystem;
         this.jsonHandler = jsonHandler;
-        this.locale = locale;
         this.theme = theme;
         this.serverInfo = serverInfo;
 
@@ -98,7 +94,7 @@ public class ServerPageExporter extends FileExporter {
                 .resolve("index.html");
 
         Page page = pageFactory.serverPage(serverUUID);
-        export(to, exportPaths.resolveExportPaths(locale.replaceLanguageInHtml(page.toHtml())));
+        export(to, exportPaths.resolveExportPaths(page.toHtml()));
     }
 
     public void exportJSON(Path toDirectory, Server server) throws IOException, NotFoundException {

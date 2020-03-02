@@ -102,7 +102,6 @@ public class Locale extends HashMap<Lang, Message> {
         this.langCode = locale.langCode;
     }
 
-    // TODO Use inside Page implementations
     public String replaceLanguageInHtml(String from) {
         if (isEmpty()) {
             return from;

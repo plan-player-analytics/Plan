@@ -27,6 +27,7 @@ import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionSer
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.ProxySettings;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -49,6 +50,7 @@ public class NetworkPage implements Page {
     private final VersionChecker versionChecker;
     private final PlanConfig config;
     private final Theme theme;
+    private final Locale locale;
     private final ServerInfo serverInfo;
     private final Formatters formatters;
 
@@ -59,6 +61,7 @@ public class NetworkPage implements Page {
             VersionChecker versionChecker,
             PlanConfig config,
             Theme theme,
+            Locale locale,
             ServerInfo serverInfo,
             Formatters formatters
     ) {
@@ -67,6 +70,7 @@ public class NetworkPage implements Page {
         this.versionChecker = versionChecker;
         this.config = config;
         this.theme = theme;
+        this.locale = locale;
         this.serverInfo = serverInfo;
         this.formatters = formatters;
     }
@@ -98,12 +102,15 @@ public class NetworkPage implements Page {
             return new ServerPluginTabs(extensionData, formatters);
         });
 
+        String html = locale.replaceLanguageInHtml(placeholders.apply(templateHtml));
+
         String nav = JSONCache.getOrCacheString(DataID.EXTENSION_NAV, serverUUID, () -> pluginTabs.get().getNav());
         String tabs = JSONCache.getOrCacheString(DataID.EXTENSION_TABS, serverUUID, () -> pluginTabs.get().getTabs());
 
+        placeholders = new PlaceholderReplacer();
         placeholders.put("navPluginsTabs", nav);
         placeholders.put("tabsPlugins", StringUtils.remove(tabs, "${backButton}"));
 
-        return placeholders.apply(templateHtml);
+        return placeholders.apply(html);
     }
 }

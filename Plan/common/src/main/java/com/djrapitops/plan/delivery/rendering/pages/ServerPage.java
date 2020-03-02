@@ -28,6 +28,7 @@ import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionSer
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -47,6 +48,7 @@ public class ServerPage implements Page {
     private final Server server;
     private final PlanConfig config;
     private final Theme theme;
+    private final Locale locale;
     private final VersionChecker versionChecker;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
@@ -56,6 +58,7 @@ public class ServerPage implements Page {
             String templateHtml, Server server,
             PlanConfig config,
             Theme theme,
+            Locale locale,
             VersionChecker versionChecker,
             DBSystem dbSystem,
             ServerInfo serverInfo,
@@ -65,6 +68,7 @@ public class ServerPage implements Page {
         this.server = server;
         this.config = config;
         this.theme = theme;
+        this.locale = locale;
         this.versionChecker = versionChecker;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
@@ -93,12 +97,15 @@ public class ServerPage implements Page {
             return new ServerPluginTabs(extensionData, formatters);
         });
 
+        String html = locale.replaceLanguageInHtml(placeholders.apply(templateHtml));
+
         String nav = JSONCache.getOrCacheString(DataID.EXTENSION_NAV, serverUUID, () -> pluginTabs.get().getNav());
         String tabs = JSONCache.getOrCacheString(DataID.EXTENSION_TABS, serverUUID, () -> pluginTabs.get().getTabs());
 
+        placeholders = new PlaceholderReplacer();
         placeholders.put("navPluginsTabs", nav);
         placeholders.put("tabsPlugins", tabs);
 
-        return placeholders.apply(templateHtml);
+        return placeholders.apply(html);
     }
 }
