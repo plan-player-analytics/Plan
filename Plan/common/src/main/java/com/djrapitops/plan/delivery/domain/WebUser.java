@@ -24,6 +24,8 @@ import java.util.Objects;
  * Object containing webserver security user information.
  *
  * @author Rsl1122
+ *
+ * TODO Rewrite Authentication stuff
  */
 @Deprecated
 public class WebUser {

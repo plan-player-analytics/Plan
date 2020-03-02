@@ -31,7 +31,7 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plan.version.VersionCheckSystem;
+import com.djrapitops.plan.version.VersionChecker;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.debug.DebugLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -52,9 +52,10 @@ import java.util.*;
 @Singleton
 public class PageFactory {
 
-    private final Lazy<VersionCheckSystem> versionCheckSystem;
+    private final Lazy<VersionChecker> versionChecker;
     private final Lazy<PlanFiles> files;
     private final Lazy<PlanConfig> config;
+    private final Lazy<Locale> locale;
     private final Lazy<Theme> theme;
     private final Lazy<DBSystem> dbSystem;
     private final Lazy<ServerInfo> serverInfo;
@@ -65,9 +66,10 @@ public class PageFactory {
 
     @Inject
     public PageFactory(
-            Lazy<VersionCheckSystem> versionCheckSystem,
+            Lazy<VersionChecker> versionChecker,
             Lazy<PlanFiles> files,
             Lazy<PlanConfig> config,
+            Lazy<Locale> locale,
             Lazy<Theme> theme,
             Lazy<DBSystem> dbSystem,
             Lazy<ServerInfo> serverInfo,
@@ -76,9 +78,10 @@ public class PageFactory {
             Lazy<Timings> timings,
             Lazy<ErrorHandler> errorHandler
     ) {
-        this.versionCheckSystem = versionCheckSystem;
+        this.versionChecker = versionChecker;
         this.files = files;
         this.config = config;
+        this.locale = locale;
         this.theme = theme;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
@@ -91,13 +94,13 @@ public class PageFactory {
     public DebugPage debugPage() throws IOException {
         return new DebugPage(
                 getResource("web/error.html"),
-                dbSystem.get().getDatabase(), serverInfo.get(), formatters.get(), versionCheckSystem.get(),
+                dbSystem.get().getDatabase(), serverInfo.get(), formatters.get(), versionChecker.get(),
                 debugLogger.get(), timings.get(), errorHandler.get()
         );
     }
 
     public PlayersPage playersPage() throws IOException {
-        return new PlayersPage(getResource("web/players.html"), versionCheckSystem.get(), config.get(), serverInfo.get());
+        return new PlayersPage(getResource("web/players.html"), versionChecker.get(), config.get(), serverInfo.get());
     }
 
     public ServerPage serverPage(UUID serverUUID) throws NotFoundException, IOException {
@@ -108,7 +111,7 @@ public class PageFactory {
                 server,
                 config.get(),
                 theme.get(),
-                versionCheckSystem.get(),
+                versionChecker.get(),
                 dbSystem.get(),
                 serverInfo.get(),
                 formatters.get()
@@ -120,7 +123,7 @@ public class PageFactory {
         PlayerContainer player = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
         return new PlayerPage(
                 getResource("web/player.html"), player,
-                versionCheckSystem.get(),
+                versionChecker.get(),
                 config.get(), this, theme.get(),
                 formatters.get(), serverInfo.get()
         );
@@ -162,14 +165,14 @@ public class PageFactory {
     public NetworkPage networkPage() throws IOException {
         return new NetworkPage(getResource("web/network.html"),
                 dbSystem.get(),
-                versionCheckSystem.get(), config.get(), theme.get(), serverInfo.get(), formatters.get());
+                versionChecker.get(), config.get(), theme.get(), serverInfo.get(), formatters.get());
     }
 
     public Page internalErrorPage(String message, Throwable error) {
         try {
             return new InternalErrorPage(
                     getResource("web/error.html"), message, error,
-                    versionCheckSystem.get());
+                    versionChecker.get());
         } catch (IOException noParse) {
             return () -> "Error occurred: " + error.toString() +
                     ", additional error occurred when attempting to render error page to user: " +
@@ -180,13 +183,13 @@ public class PageFactory {
     public Page errorPage(String title, String error) throws IOException {
         return new ErrorMessagePage(
                 getResource("web/error.html"), title, error,
-                versionCheckSystem.get());
+                versionChecker.get());
     }
 
     public Page errorPage(Icon icon, String title, String error) throws IOException {
         return new ErrorMessagePage(
                 getResource("web/error.html"), icon, title, error,
-                versionCheckSystem.get());
+                versionChecker.get());
     }
 
     public String getResource(String name) throws IOException {

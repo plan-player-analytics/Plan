@@ -35,7 +35,7 @@ import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.version.VersionCheckSystem;
+import com.djrapitops.plan.version.VersionChecker;
 
 import java.util.List;
 import java.util.UUID;
@@ -53,7 +53,7 @@ public class ServerPage implements Page {
     private final Server server;
     private final PlanConfig config;
     private final Theme theme;
-    private final VersionCheckSystem versionCheckSystem;
+    private final VersionChecker versionChecker;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final Formatters formatters;
@@ -62,7 +62,7 @@ public class ServerPage implements Page {
             String templateHtml, Server server,
             PlanConfig config,
             Theme theme,
-            VersionCheckSystem versionCheckSystem,
+            VersionChecker versionChecker,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             Formatters formatters
@@ -71,7 +71,7 @@ public class ServerPage implements Page {
         this.server = server;
         this.config = config;
         this.theme = theme;
-        this.versionCheckSystem = versionCheckSystem;
+        this.versionChecker = versionChecker;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.formatters = formatters;
@@ -121,8 +121,8 @@ public class ServerPage implements Page {
 
         placeholders.put("backButton", serverInfo.getServer().isProxy() ? Html.BACK_BUTTON_NETWORK.create() : "");
         placeholders.put("contributors", Contributors.generateContributorHtml());
-        placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
-        placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
+        placeholders.put("version", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
+        placeholders.put("updateModal", versionChecker.getUpdateModal());
 
         CachingSupplier<ServerPluginTabs> pluginTabs = new CachingSupplier<>(() -> {
             List<ExtensionData> extensionData = dbSystem.getDatabase().query(new ExtensionServerDataQuery(serverUUID));

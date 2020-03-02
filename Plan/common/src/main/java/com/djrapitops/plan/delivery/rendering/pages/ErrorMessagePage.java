@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.rendering.pages;
 import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
-import com.djrapitops.plan.version.VersionCheckSystem;
+import com.djrapitops.plan.version.VersionChecker;
 
 /**
  * Page to display error stacktrace.
@@ -33,24 +33,24 @@ public class ErrorMessagePage implements Page {
     private final String errorTitle;
     private final String errorMsg;
 
-    private final VersionCheckSystem versionCheckSystem;
+    private final VersionChecker versionChecker;
 
     public ErrorMessagePage(
             String template, Icon icon, String errorTitle, String errorMsg,
-            VersionCheckSystem versionCheckSystem
+            VersionChecker versionChecker
     ) {
         this.template = template;
         this.icon = icon;
         this.errorTitle = errorTitle;
         this.errorMsg = errorMsg;
-        this.versionCheckSystem = versionCheckSystem;
+        this.versionChecker = versionChecker;
     }
 
     public ErrorMessagePage(
             String template, String errorTitle, String errorMsg,
-            VersionCheckSystem versionCheckSystem
+            VersionChecker versionChecker
     ) {
-        this(template, Icon.called("exclamation-circle").build(), errorTitle, errorMsg, versionCheckSystem);
+        this(template, Icon.called("exclamation-circle").build(), errorTitle, errorMsg, versionChecker);
     }
 
     @Override
@@ -60,8 +60,8 @@ public class ErrorMessagePage implements Page {
         placeholders.put("title", icon.toHtml() + " " + errorTitle);
         placeholders.put("titleText", errorTitle);
         placeholders.put("paragraph", errorMsg);
-        placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
-        placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
+        placeholders.put("version", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
+        placeholders.put("updateModal", versionChecker.getUpdateModal());
         placeholders.put("contributors", Contributors.generateContributorHtml());
         return placeholders.apply(template);
     }

@@ -27,7 +27,7 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
-import com.djrapitops.plan.version.VersionCheckSystem;
+import com.djrapitops.plan.version.VersionChecker;
 
 import java.util.UUID;
 
@@ -41,7 +41,7 @@ public class PlayerPage implements Page {
     private final String templateHtml;
     private final PlayerContainer player;
 
-    private final VersionCheckSystem versionCheckSystem;
+    private final VersionChecker versionChecker;
 
     private final PlanConfig config;
     private final PageFactory pageFactory;
@@ -54,7 +54,7 @@ public class PlayerPage implements Page {
     PlayerPage(
             String templateHtml,
             PlayerContainer player,
-            VersionCheckSystem versionCheckSystem,
+            VersionChecker versionChecker,
             PlanConfig config,
             PageFactory pageFactory,
             Theme theme,
@@ -63,7 +63,7 @@ public class PlayerPage implements Page {
     ) {
         this.templateHtml = templateHtml;
         this.player = player;
-        this.versionCheckSystem = versionCheckSystem;
+        this.versionChecker = versionChecker;
         this.config = config;
         this.pageFactory = pageFactory;
         this.theme = theme;
@@ -89,8 +89,8 @@ public class PlayerPage implements Page {
 
         placeholders.put("refresh", clockLongFormatter.apply(now));
         placeholders.put("refreshFull", secondLongFormatter.apply(now));
-        placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
-        placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
+        placeholders.put("version", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
+        placeholders.put("updateModal", versionChecker.getUpdateModal());
         placeholders.put("timeZone", config.getTimeZoneOffsetHours());
 
         String playerName = player.getValue(PlayerKeys.NAME).orElse(playerUUID.toString());

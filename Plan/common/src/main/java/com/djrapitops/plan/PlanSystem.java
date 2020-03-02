@@ -40,7 +40,7 @@ import com.djrapitops.plan.settings.locale.LocaleSystem;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plan.version.VersionCheckSystem;
+import com.djrapitops.plan.version.VersionChecker;
 import com.djrapitops.plugin.benchmarking.Benchmark;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.L;
@@ -64,7 +64,7 @@ public class PlanSystem implements SubSystem {
 
     private final PlanFiles files;
     private final ConfigSystem configSystem;
-    private final VersionCheckSystem versionCheckSystem;
+    private final VersionChecker versionChecker;
     private final LocaleSystem localeSystem;
     private final DBSystem databaseSystem;
     private final CacheSystem cacheSystem;
@@ -90,7 +90,7 @@ public class PlanSystem implements SubSystem {
     public PlanSystem(
             PlanFiles files,
             ConfigSystem configSystem,
-            VersionCheckSystem versionCheckSystem,
+            VersionChecker versionChecker,
             LocaleSystem localeSystem,
             DBSystem databaseSystem,
             CacheSystem cacheSystem,
@@ -113,7 +113,7 @@ public class PlanSystem implements SubSystem {
     ) {
         this.files = files;
         this.configSystem = configSystem;
-        this.versionCheckSystem = versionCheckSystem;
+        this.versionChecker = versionChecker;
         this.localeSystem = localeSystem;
         this.databaseSystem = databaseSystem;
         this.cacheSystem = cacheSystem;
@@ -138,7 +138,7 @@ public class PlanSystem implements SubSystem {
                 "§2           ██▌",
                 "§2     ██▌   ██▌",
                 "§2  ██▌██▌██▌██▌  §2Player Analytics",
-                "§2  ██▌██▌██▌██▌  §fv" + versionCheckSystem.getCurrentVersion(),
+                "§2  ██▌██▌██▌██▌  §fv" + versionChecker.getCurrentVersion(),
                 ""
         );
     }
@@ -166,7 +166,7 @@ public class PlanSystem implements SubSystem {
                 files,
                 configSystem,
                 localeSystem,
-                versionCheckSystem,
+                versionChecker,
                 databaseSystem,
                 webServerSystem,
                 processing,
@@ -217,7 +217,7 @@ public class PlanSystem implements SubSystem {
                 localeSystem,
                 configSystem,
                 files,
-                versionCheckSystem
+                versionChecker
         );
     }
 
@@ -235,8 +235,8 @@ public class PlanSystem implements SubSystem {
 
     // Accessor methods.
 
-    public VersionCheckSystem getVersionCheckSystem() {
-        return versionCheckSystem;
+    public VersionChecker getVersionChecker() {
+        return versionChecker;
     }
 
     public ConfigSystem getConfigSystem() {

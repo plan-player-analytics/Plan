@@ -25,7 +25,7 @@ import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
-import com.djrapitops.plan.version.VersionCheckSystem;
+import com.djrapitops.plan.version.VersionChecker;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;
@@ -42,21 +42,21 @@ public class InfoCommand extends CommandNode {
     private final PlanPlugin plugin;
     private final Locale locale;
     private final DBSystem dbSystem;
-    private final VersionCheckSystem versionCheckSystem;
+    private final VersionChecker versionChecker;
 
     @Inject
     public InfoCommand(
             PlanPlugin plugin,
             Locale locale,
             DBSystem dbSystem,
-            VersionCheckSystem versionCheckSystem
+            VersionChecker versionChecker
     ) {
         super("info", Permissions.INFO.getPermission(), CommandType.CONSOLE);
 
         this.plugin = plugin;
         this.locale = locale;
         this.dbSystem = dbSystem;
-        this.versionCheckSystem = versionCheckSystem;
+        this.versionChecker = versionChecker;
 
         setShortHelp(locale.get(CmdHelpLang.INFO).toString());
     }
@@ -68,7 +68,7 @@ public class InfoCommand extends CommandNode {
 
         Database database = dbSystem.getDatabase();
 
-        String updateAvailable = versionCheckSystem.isNewVersionAvailable() ? yes : no;
+        String updateAvailable = versionChecker.isNewVersionAvailable() ? yes : no;
         String proxyAvailable = database.query(ServerQueries.fetchProxyServerInformation()).isPresent() ? yes : no;
 
 

@@ -32,7 +32,7 @@ import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.file.FileResource;
 import com.djrapitops.plan.storage.file.ResourceCache;
-import com.djrapitops.plan.version.VersionCheckSystem;
+import com.djrapitops.plan.version.VersionChecker;
 import com.djrapitops.plugin.benchmarking.Benchmark;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.FolderTimeStampFileLogger;
@@ -57,7 +57,7 @@ public class DebugPage implements Page {
     private final String template;
     private final Database database;
     private final ServerInfo serverInfo;
-    private final VersionCheckSystem versionCheckSystem;
+    private final VersionChecker versionChecker;
     private final CombineDebugLogger debugLogger;
     private final Timings timings;
     private final ErrorHandler errorHandler;
@@ -70,7 +70,7 @@ public class DebugPage implements Page {
             Database database,
             ServerInfo serverInfo,
             Formatters formatters,
-            VersionCheckSystem versionCheckSystem,
+            VersionChecker versionChecker,
             DebugLogger debugLogger,
             Timings timings,
             ErrorHandler errorHandler
@@ -79,7 +79,7 @@ public class DebugPage implements Page {
 
         this.database = database;
         this.serverInfo = serverInfo;
-        this.versionCheckSystem = versionCheckSystem;
+        this.versionChecker = versionChecker;
         this.debugLogger = (CombineDebugLogger) debugLogger;
         this.timings = timings;
         this.errorHandler = errorHandler;
@@ -93,8 +93,8 @@ public class DebugPage implements Page {
         placeholders.put("title", Icon.called("bug") + " Debug Information");
         placeholders.put("titleText", "Debug Information");
         placeholders.put("paragraph", createContent());
-        placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
-        placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
+        placeholders.put("version", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
+        placeholders.put("updateModal", versionChecker.getUpdateModal());
         placeholders.put("contributors", Contributors.generateContributorHtml());
         return placeholders.apply(template);
     }
@@ -207,7 +207,7 @@ public class DebugPage implements Page {
 
         content.append("<pre>### Server Information<br>")
                 .append("**Plan Version:** ")
-                .append(versionCheckSystem.getCurrentVersion())
+                .append(versionChecker.getCurrentVersion())
                 .append("<br>");
 
         content.append("**Server:** ");

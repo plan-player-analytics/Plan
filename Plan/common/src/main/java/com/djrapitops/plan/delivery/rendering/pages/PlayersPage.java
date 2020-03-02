@@ -22,7 +22,7 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.ProxySettings;
-import com.djrapitops.plan.version.VersionCheckSystem;
+import com.djrapitops.plan.version.VersionChecker;
 
 /**
  * Html String generator for /players page.
@@ -32,18 +32,18 @@ import com.djrapitops.plan.version.VersionCheckSystem;
 public class PlayersPage implements Page {
 
     private final String templateHtml;
-    private final VersionCheckSystem versionCheckSystem;
+    private final VersionChecker versionChecker;
     private final PlanConfig config;
     private final ServerInfo serverInfo;
 
     PlayersPage(
             String templateHtml,
-            VersionCheckSystem versionCheckSystem,
+            VersionChecker versionChecker,
             PlanConfig config,
             ServerInfo serverInfo
     ) {
         this.templateHtml = templateHtml;
-        this.versionCheckSystem = versionCheckSystem;
+        this.versionChecker = versionChecker;
         this.config = config;
         this.serverInfo = serverInfo;
     }
@@ -52,8 +52,8 @@ public class PlayersPage implements Page {
     public String toHtml() {
         PlaceholderReplacer placeholders = new PlaceholderReplacer();
 
-        placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
-        placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
+        placeholders.put("version", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
+        placeholders.put("updateModal", versionChecker.getUpdateModal());
         placeholders.put("contributors", Contributors.generateContributorHtml());
         if (serverInfo.getServer().isProxy()) {
             placeholders.put("networkName", config.get(ProxySettings.NETWORK_NAME));

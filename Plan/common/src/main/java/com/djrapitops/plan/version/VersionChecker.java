@@ -39,7 +39,7 @@ import java.util.Optional;
  * @author Rsl1122
  */
 @Singleton
-public class VersionCheckSystem implements SubSystem {
+public class VersionChecker implements SubSystem {
 
     private final String currentVersion;
     private final Locale locale;
@@ -49,7 +49,7 @@ public class VersionCheckSystem implements SubSystem {
     private VersionInfo newVersionAvailable;
 
     @Inject
-    public VersionCheckSystem(
+    public VersionChecker(
             @Named("currentVersion") String currentVersion,
             Locale locale,
             PlanConfig config,

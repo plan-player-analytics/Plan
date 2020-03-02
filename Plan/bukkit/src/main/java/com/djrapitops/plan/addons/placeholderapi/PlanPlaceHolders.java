@@ -23,7 +23,7 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.version.VersionCheckSystem;
+import com.djrapitops.plan.version.VersionChecker;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -54,13 +54,13 @@ public class PlanPlaceHolders extends PlaceholderExpansion {
     public final ErrorHandler errorHandler;
 
     private final Collection<AbstractPlanPlaceHolder> placeholders = new ArrayList<>();
-    private final VersionCheckSystem versionCheckSystem;
+    private final VersionChecker versionChecker;
 
     public PlanPlaceHolders(
             PlanSystem system,
             ErrorHandler errorHandler
     ) {
-        this.versionCheckSystem = system.getVersionCheckSystem();
+        this.versionChecker = system.getVersionChecker();
         this.errorHandler = errorHandler;
 
         PlanConfig config = system.getConfigSystem().getConfig();
@@ -90,6 +90,7 @@ public class PlanPlaceHolders extends PlaceholderExpansion {
         return "plan";
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public String getPlugin() {
         return "Plan";
@@ -102,7 +103,7 @@ public class PlanPlaceHolders extends PlaceholderExpansion {
 
     @Override
     public String getVersion() {
-        return versionCheckSystem.getCurrentVersion();
+        return versionChecker.getCurrentVersion();
     }
 
     @Override

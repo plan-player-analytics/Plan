@@ -30,7 +30,7 @@ import com.djrapitops.plan.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.version.VersionCheckSystem;
+import com.djrapitops.plan.version.VersionChecker;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -46,7 +46,7 @@ public class NetworkPage implements Page {
     private final String templateHtml;
     private final DBSystem dbSystem;
 
-    private final VersionCheckSystem versionCheckSystem;
+    private final VersionChecker versionChecker;
     private final PlanConfig config;
     private final Theme theme;
     private final ServerInfo serverInfo;
@@ -56,7 +56,7 @@ public class NetworkPage implements Page {
             String templateHtml,
 
             DBSystem dbSystem,
-            VersionCheckSystem versionCheckSystem,
+            VersionChecker versionChecker,
             PlanConfig config,
             Theme theme,
             ServerInfo serverInfo,
@@ -64,7 +64,7 @@ public class NetworkPage implements Page {
     ) {
         this.templateHtml = templateHtml;
         this.dbSystem = dbSystem;
-        this.versionCheckSystem = versionCheckSystem;
+        this.versionChecker = versionChecker;
         this.config = config;
         this.theme = theme;
         this.serverInfo = serverInfo;
@@ -89,8 +89,8 @@ public class NetworkPage implements Page {
         placeholders.put("avgPingColor", theme.getValue(ThemeVal.GRAPH_AVG_PING));
         placeholders.put("timeZone", config.getTimeZoneOffsetHours());
 
-        placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
-        placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
+        placeholders.put("version", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
+        placeholders.put("updateModal", versionChecker.getUpdateModal());
         placeholders.put("contributors", Contributors.generateContributorHtml());
 
         CachingSupplier<ServerPluginTabs> pluginTabs = new CachingSupplier<>(() -> {

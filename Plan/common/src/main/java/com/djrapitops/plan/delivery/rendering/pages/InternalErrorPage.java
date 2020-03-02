@@ -20,7 +20,7 @@ import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
-import com.djrapitops.plan.version.VersionCheckSystem;
+import com.djrapitops.plan.version.VersionChecker;
 
 /**
  * Page to display error stacktrace.
@@ -33,16 +33,16 @@ public class InternalErrorPage implements Page {
     private final String errorMsg;
     private final Throwable error;
 
-    private final VersionCheckSystem versionCheckSystem;
+    private final VersionChecker versionChecker;
 
     public InternalErrorPage(
             String template, String errorMsg, Throwable error,
-            VersionCheckSystem versionCheckSystem
+            VersionChecker versionChecker
     ) {
         this.template = template;
         this.errorMsg = errorMsg;
         this.error = error;
-        this.versionCheckSystem = versionCheckSystem;
+        this.versionChecker = versionChecker;
     }
 
     @Override
@@ -52,8 +52,8 @@ public class InternalErrorPage implements Page {
         placeholders.put("title", Icon.called("bug") + " 500 Internal Error occurred");
         placeholders.put("titleText", "500 Internal Error occurred");
         placeholders.put("paragraph", createContent());
-        placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
-        placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
+        placeholders.put("version", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
+        placeholders.put("updateModal", versionChecker.getUpdateModal());
         placeholders.put("contributors", Contributors.generateContributorHtml());
         return placeholders.apply(template);
     }
