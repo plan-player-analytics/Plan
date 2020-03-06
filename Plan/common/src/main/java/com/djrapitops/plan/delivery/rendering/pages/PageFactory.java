@@ -104,7 +104,15 @@ public class PageFactory {
         return new PlayersPage(getResource("web/players.html"), versionChecker.get(), config.get(), locale.get(), serverInfo.get());
     }
 
-    public ServerPage serverPage(UUID serverUUID) throws NotFoundException, IOException {
+    /**
+     * Create a server page.
+     *
+     * @param serverUUID UUID of the server
+     * @return {@link Page} that matches the server page.
+     * @throws NotFoundException If the server can not be found in the database.
+     * @throws IOException       If the template files can not be read.
+     */
+    public Page serverPage(UUID serverUUID) throws IOException {
         Server server = dbSystem.get().getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
                 .orElseThrow(() -> new NotFoundException("Server not found in the database"));
         return new ServerPage(

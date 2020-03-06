@@ -26,6 +26,12 @@ import com.djrapitops.plan.exceptions.WebUserAuthException;
  */
 public interface Authentication {
 
-    WebUser getWebUser() throws WebUserAuthException;
+    /**
+     * Obtain the WebUser related to this authentication.
+     *
+     * @return Web user for the authentication.
+     * @throws WebUserAuthException If user can't be authenticated
+     */
+    WebUser getWebUser();
 
 }

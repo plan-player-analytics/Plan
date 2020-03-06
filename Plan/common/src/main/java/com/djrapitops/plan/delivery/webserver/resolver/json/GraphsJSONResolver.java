@@ -57,6 +57,14 @@ public class GraphsJSONResolver implements Resolver {
         return request.getUser().orElse(new WebUser("")).hasPermission("page.server");
     }
 
+    /**
+     * Resolves the request.
+     *
+     * @param request HTTP request, contains all information necessary to resolve the request.
+     * @return JSON response.
+     * @throws BadRequestException If 'type' parameter is not defined or supported.
+     * @throws BadRequestException If 'server' parameter is not defined or server is not found in database.
+     */
     @Override
     public Optional<Response> resolve(Request request) {
         return Optional.of(getResponse(request));
@@ -76,19 +84,30 @@ public class GraphsJSONResolver implements Resolver {
         return JSONCache.getOrCache(dataID, () -> generateGraphDataJSONOfType(dataID));
     }
 
-    private DataID getDataID(String type) throws BadRequestException {
+    private DataID getDataID(String type) {
         switch (type) {
-            case "performance": return DataID.GRAPH_PERFORMANCE;
-            case "playersOnline": return DataID.GRAPH_ONLINE;
-            case "uniqueAndNew": return DataID.GRAPH_UNIQUE_NEW;
-            case "serverCalendar": return DataID.GRAPH_CALENDAR;
-            case "worldPie": return DataID.GRAPH_WORLD_PIE;
-            case "activity": return DataID.GRAPH_ACTIVITY;
-            case "geolocation": return DataID.GRAPH_WORLD_MAP;
-            case "aggregatedPing": return DataID.GRAPH_PING;
-            case "punchCard": return DataID.GRAPH_PUNCHCARD;
-            case "serverPie": return DataID.GRAPH_SERVER_PIE;
-            default: throw new BadRequestException("unknown 'type' parameter: " + type);
+            case "performance":
+                return DataID.GRAPH_PERFORMANCE;
+            case "playersOnline":
+                return DataID.GRAPH_ONLINE;
+            case "uniqueAndNew":
+                return DataID.GRAPH_UNIQUE_NEW;
+            case "serverCalendar":
+                return DataID.GRAPH_CALENDAR;
+            case "worldPie":
+                return DataID.GRAPH_WORLD_PIE;
+            case "activity":
+                return DataID.GRAPH_ACTIVITY;
+            case "geolocation":
+                return DataID.GRAPH_WORLD_MAP;
+            case "aggregatedPing":
+                return DataID.GRAPH_PING;
+            case "punchCard":
+                return DataID.GRAPH_PUNCHCARD;
+            case "serverPie":
+                return DataID.GRAPH_SERVER_PIE;
+            default:
+                throw new BadRequestException("unknown 'type' parameter: " + type);
         }
     }
 

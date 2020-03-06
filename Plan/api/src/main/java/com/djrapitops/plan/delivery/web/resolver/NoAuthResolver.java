@@ -40,10 +40,7 @@ public interface NoAuthResolver extends Resolver {
      */
     Optional<Response> resolve(Request request);
 
-    default ResponseBuilder newResponseBuilder() {
-        return Response.builder();
-    }
-
+    @Override
     default boolean requiresAuth(Request request) {
         return false;
     }

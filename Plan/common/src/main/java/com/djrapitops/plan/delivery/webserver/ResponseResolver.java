@@ -29,7 +29,6 @@ import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
 import com.djrapitops.plan.exceptions.connection.NotFoundException;
-import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import dagger.Lazy;
@@ -127,7 +126,13 @@ public class ResponseResolver {
         }
     }
 
-    private Response tryToGetResponse(RequestInternal internalRequest) throws WebException {
+    /**
+     * @throws NotFoundException    In some cases when page was not found, not all.
+     * @throws WebUserAuthException If user could not be authenticated
+     * @throws ForbiddenException   If the user is not allowed to see the page
+     * @throws BadRequestException  If the request did not have required things.
+     */
+    private Response tryToGetResponse(RequestInternal internalRequest) {
         if ("OPTIONS".equalsIgnoreCase(internalRequest.getRequestMethod())) {
             // https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS
             return Response.builder().setStatus(204).setContent(new byte[0]).build();

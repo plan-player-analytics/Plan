@@ -45,7 +45,7 @@ public class BasicAuthentication implements Authentication {
     }
 
     @Override
-    public WebUser getWebUser() throws WebUserAuthException {
+    public WebUser getWebUser() {
         String decoded = Base64Util.decode(authenticationString);
 
         String[] userInfo = StringUtils.split(decoded, ':');

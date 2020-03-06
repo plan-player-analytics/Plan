@@ -88,8 +88,9 @@ public final class CompositeResolver implements Resolver {
 
     void add(String prefix, Function<Request, Response> resolver, Predicate<Request> accessCheck) {
         if (prefix == null) throw new IllegalArgumentException("Prefix can not be null");
-        if (resolver == null) throw new IllegalArgumentException("Resolver can not be null");
-        if (accessCheck == null) throw new IllegalArgumentException("Resolver can not be null");
+        if (resolver == null)
+            throw new IllegalArgumentException("Function<Request, Response> resolver can not be null");
+        if (accessCheck == null) throw new IllegalArgumentException("Predicate<Request> accessCheck can not be null");
         prefixes.add(prefix);
         resolvers.add(request -> Optional.ofNullable(resolver.apply(request)));
         canAccess.add(accessCheck);

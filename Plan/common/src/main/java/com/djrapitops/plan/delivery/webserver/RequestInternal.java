@@ -96,7 +96,13 @@ public class RequestInternal {
         return locale;
     }
 
-    public Request toAPIRequest() throws WebUserAuthException {
+    /**
+     * Turn the internal Request to a Page Extension API request object.
+     *
+     * @return different representation.
+     * @throws WebUserAuthException If the user could not be authenticated.
+     */
+    public Request toAPIRequest() {
         return new Request(
                 requestMethod,
                 getPath(),
@@ -106,9 +112,8 @@ public class RequestInternal {
         );
     }
 
-    private WebUser getWebUser() throws WebUserAuthException {
-        Optional<Authentication> auth = getAuth();
-        return auth.map(authentication -> authentication.getWebUser().toNewWebUser()).orElse(null);
+    private WebUser getWebUser() {
+        return getAuth().map(authentication -> authentication.getWebUser().toNewWebUser()).orElse(null);
     }
 
     private Map<String, String> getRequestHeaders() {

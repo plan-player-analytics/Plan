@@ -68,7 +68,16 @@ public class PlayerPageExporter extends FileExporter {
         this.theme = theme;
     }
 
-    public void export(Path toDirectory, UUID playerUUID, String playerName) throws IOException, NotFoundException {
+    /**
+     * Perform export for a player page.
+     *
+     * @param toDirectory Path to Export directory
+     * @param playerUUID  UUID of the player
+     * @param playerName  Name of the player
+     * @throws IOException       If a template can not be read from jar/disk or the result written
+     * @throws NotFoundException If a file or resource that is being exported can not be found
+     */
+    public void export(Path toDirectory, UUID playerUUID, String playerName) throws IOException {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
         if (!dbSystem.getDatabase().query(PlayerFetchQueries.isPlayerRegistered(playerUUID))) return;
@@ -84,7 +93,7 @@ public class PlayerPageExporter extends FileExporter {
         exportPaths.clear();
     }
 
-    private void exportHtml(ExportPaths exportPaths, Path playerDirectory, UUID playerUUID) throws IOException, NotFoundException {
+    private void exportHtml(ExportPaths exportPaths, Path playerDirectory, UUID playerUUID) throws IOException {
         Path to = playerDirectory.resolve("index.html");
 
         try {
@@ -95,11 +104,11 @@ public class PlayerPageExporter extends FileExporter {
         }
     }
 
-    private void exportJSON(ExportPaths exportPaths, Path toDirectory, UUID playerUUID, String playerName) throws IOException, NotFoundException {
+    private void exportJSON(ExportPaths exportPaths, Path toDirectory, UUID playerUUID, String playerName) throws IOException {
         exportJSON(exportPaths, toDirectory, "player?player=" + playerUUID, playerName);
     }
 
-    private void exportJSON(ExportPaths exportPaths, Path toDirectory, String resource, String playerName) throws NotFoundException, IOException {
+    private void exportJSON(ExportPaths exportPaths, Path toDirectory, String resource, String playerName) throws IOException {
         Optional<Response> found = getJSONResponse(resource);
         if (!found.isPresent()) {
             throw new NotFoundException(resource + " was not properly exported: no response");

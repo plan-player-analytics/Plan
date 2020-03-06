@@ -44,7 +44,14 @@ public class Identifiers {
         this.uuidUtility = uuidUtility;
     }
 
-    public UUID getServerUUID(Request request) throws BadRequestException {
+    /**
+     * Obtain UUID of the server.
+     *
+     * @param request for Request, URIQuery needs a 'server' parameter.
+     * @return UUID of the server.
+     * @throws BadRequestException If server parameter is not defined or the server is not in the database.
+     */
+    public UUID getServerUUID(Request request) {
         String serverIndentifier = request.getQuery().get("server")
                 .orElseThrow(() -> new BadRequestException("'server' parameter was not defined."));
 
@@ -52,13 +59,20 @@ public class Identifiers {
         return parsed.orElseGet(() -> getServerUUIDFromName(serverIndentifier));
     }
 
-    private UUID getServerUUIDFromName(String serverName) throws BadRequestException {
+    private UUID getServerUUIDFromName(String serverName) {
         return dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverName))
                 .map(Server::getUuid)
                 .orElseThrow(() -> new BadRequestException("Given 'server' was not found in the database: '" + serverName + "'"));
     }
 
-    public UUID getPlayerUUID(Request request) throws BadRequestException {
+    /**
+     * Obtain UUID of the player.
+     *
+     * @param request for Request, URIQuery needs a 'player' parameter.
+     * @return UUID of the player.
+     * @throws BadRequestException If player parameter is not defined or the player is not in the database.
+     */
+    public UUID getPlayerUUID(Request request) {
         String playerIdentifier = request.getQuery().get("player")
                 .orElseThrow(() -> new BadRequestException("'player' parameter was not defined.")).trim();
 
@@ -66,7 +80,7 @@ public class Identifiers {
         return parsed.orElseGet(() -> getPlayerUUIDFromName(playerIdentifier));
     }
 
-    private UUID getPlayerUUIDFromName(String playerName) throws BadRequestException {
+    private UUID getPlayerUUIDFromName(String playerName) {
         return dbSystem.getDatabase()
                 .query(UserIdentifierQueries.fetchPlayerUUIDOf(playerName))
                 .orElseThrow(() -> new BadRequestException("Given 'player' was not found in the database: '" + playerName + "'"));

@@ -74,7 +74,7 @@ public class PlayersPageExporter extends FileExporter {
         exportPaths = new ExportPaths();
     }
 
-    public void export(Path toDirectory) throws IOException, NotFoundException {
+    public void export(Path toDirectory) throws IOException {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
 
@@ -94,7 +94,7 @@ public class PlayersPageExporter extends FileExporter {
         export(to, exportPaths.resolveExportPaths(page.toHtml()));
     }
 
-    private void exportJSON(Path toDirectory) throws NotFoundException, IOException {
+    private void exportJSON(Path toDirectory) throws IOException {
         Optional<Response> found = getJSONResponse("players");
         if (!found.isPresent()) {
             throw new NotFoundException("players page was not properly exported: not found");

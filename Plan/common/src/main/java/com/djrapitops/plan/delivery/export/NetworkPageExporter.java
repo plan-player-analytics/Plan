@@ -71,7 +71,15 @@ public class NetworkPageExporter extends FileExporter {
         exportPaths = new ExportPaths();
     }
 
-    public void export(Path toDirectory, Server server) throws IOException, NotFoundException {
+    /**
+     * Perform export for a network page.
+     *
+     * @param toDirectory Path to Export directory
+     * @param server      Server to export as Network page, {@link Server#isProxy()} assumed true.
+     * @throws IOException       If a template can not be read from jar/disk or the result written
+     * @throws NotFoundException If a file or resource that is being exported can not be found
+     */
+    public void export(Path toDirectory, Server server) throws IOException {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
 
@@ -91,7 +99,15 @@ public class NetworkPageExporter extends FileExporter {
         export(to, exportPaths.resolveExportPaths(page.toHtml()));
     }
 
-    public void exportJSON(Path toDirectory, Server server) throws IOException, NotFoundException {
+    /**
+     * Perform export for a network page json payload.
+     *
+     * @param toDirectory Path to Export directory
+     * @param server      Server to export as Network page, {@link Server#isProxy()} assumed true.
+     * @throws IOException       If a template can not be read from jar/disk or the result written
+     * @throws NotFoundException If a file or resource that is being exported can not be found
+     */
+    public void exportJSON(Path toDirectory, Server server) throws IOException {
         String serverUUID = server.getUuid().toString();
 
         exportJSON(toDirectory,
@@ -110,13 +126,13 @@ public class NetworkPageExporter extends FileExporter {
         );
     }
 
-    private void exportJSON(Path toDirectory, String... resources) throws NotFoundException, IOException {
+    private void exportJSON(Path toDirectory, String... resources) throws IOException {
         for (String resource : resources) {
             exportJSON(toDirectory, resource);
         }
     }
 
-    private void exportJSON(Path toDirectory, String resource) throws NotFoundException, IOException {
+    private void exportJSON(Path toDirectory, String resource) throws IOException {
         Optional<Response> found = getJSONResponse(resource);
         if (!found.isPresent()) {
             throw new NotFoundException(resource + " was not properly exported: not found");
