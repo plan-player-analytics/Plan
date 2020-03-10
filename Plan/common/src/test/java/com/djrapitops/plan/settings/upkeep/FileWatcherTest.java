@@ -20,8 +20,6 @@ import com.jayway.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +32,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(JUnitPlatform.class)
 class FileWatcherTest {
 
     private Path temporaryDir;
@@ -73,7 +70,7 @@ class FileWatcherTest {
     }
 
     private void createAndModifyFile(File modified) throws IOException {
-        modified.createNewFile();
+        Files.createFile(modified.toPath());
         Files.write(modified.toPath(), Collections.singletonList("DataToWrite"), StandardCharsets.UTF_8);
         Files.write(modified.toPath(), Collections.singletonList("OverWrite"), StandardCharsets.UTF_8);
     }

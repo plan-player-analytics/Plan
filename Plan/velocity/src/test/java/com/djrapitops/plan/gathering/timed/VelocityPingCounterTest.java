@@ -21,8 +21,6 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import utilities.TestConstants;
 import utilities.mocks.PlanVelocityMocker;
@@ -38,7 +36,6 @@ import static org.mockito.Mockito.when;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 public class VelocityPingCounterTest {
 
     private PlanVelocity plugin;

@@ -24,8 +24,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.FieldFetcher;
 import utilities.TestResources;
 
@@ -45,7 +43,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 public class ConfigSettingKeyTest {
 
     public static Path temporaryFolder;

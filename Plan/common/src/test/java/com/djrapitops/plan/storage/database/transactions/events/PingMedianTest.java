@@ -20,8 +20,6 @@ import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.utilities.analysis.Median;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.RandomData;
 import utilities.TestConstants;
 
@@ -38,7 +36,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class PingMedianTest {
 
     private static List<DateObj<Integer>> testPing;

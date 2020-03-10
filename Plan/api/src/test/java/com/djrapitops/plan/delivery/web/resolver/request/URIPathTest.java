@@ -17,8 +17,6 @@
 package com.djrapitops.plan.delivery.web.resolver.request;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import java.util.Optional;
 
@@ -29,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class URIPathTest {
 
     @Test

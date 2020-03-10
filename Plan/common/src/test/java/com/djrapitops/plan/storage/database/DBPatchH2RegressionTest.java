@@ -28,8 +28,6 @@ import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 import com.google.common.util.concurrent.MoreExecutors;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.OptionalAssert;
 import utilities.TestConstants;
 import utilities.mocks.PluginMockComponent;
@@ -41,7 +39,6 @@ import java.nio.file.Path;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class DBPatchH2RegressionTest extends DBPatchRegressionTest {
 
     private static PluginMockComponent component;

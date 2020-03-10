@@ -19,8 +19,6 @@ package com.djrapitops.plan.settings.locale;
 import com.djrapitops.plan.storage.file.FileResource;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +31,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class LocaleFileWriterTest {
 
     @Test

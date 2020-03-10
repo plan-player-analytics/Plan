@@ -19,8 +19,6 @@ package com.djrapitops.plan.storage.database.sql.building;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -29,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class CreateTableBuilderTest {
 
     @Test

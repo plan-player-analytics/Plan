@@ -22,8 +22,6 @@ import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.RandomData;
 import utilities.TestConstants;
 
@@ -38,7 +36,6 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Fuzzlemann
  */
-@RunWith(JUnitPlatform.class)
 class ImportBuilderTest {
 
     private int randomInt = RandomData.randomInt(0, 10);

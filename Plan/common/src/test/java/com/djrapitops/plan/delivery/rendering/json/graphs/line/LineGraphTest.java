@@ -20,8 +20,6 @@ import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
 import com.djrapitops.plan.gathering.domain.TPS;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +32,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class LineGraphTest {
 
     private static List<TPS> DATA;

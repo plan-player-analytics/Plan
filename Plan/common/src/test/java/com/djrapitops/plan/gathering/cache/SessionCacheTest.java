@@ -20,8 +20,6 @@ import com.djrapitops.plan.gathering.domain.Session;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.TestConstants;
 
 import java.util.Optional;
@@ -30,7 +28,6 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(JUnitPlatform.class)
 class SessionCacheTest {
 
     private Session session;

@@ -26,8 +26,6 @@ import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.TestResources;
 
 import java.io.File;
@@ -45,7 +43,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class ConfigUpdaterTest {
 
     @TempDir

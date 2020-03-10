@@ -18,8 +18,6 @@ package com.djrapitops.plan.delivery.rendering.html;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -28,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class HtmlTest {
 
     @Test

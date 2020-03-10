@@ -28,8 +28,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.OptionalAssert;
 import utilities.TestConstants;
 import utilities.mocks.PluginMockComponent;
@@ -41,7 +39,6 @@ import java.nio.file.Path;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class DBPatchSQLiteRegressionTest extends DBPatchRegressionTest {
 
     private PluginMockComponent component;

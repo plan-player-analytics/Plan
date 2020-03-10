@@ -36,8 +36,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.TestConstants;
 import utilities.dagger.DaggerPlanPluginComponent;
 import utilities.dagger.PlanPluginComponent;
@@ -56,7 +54,6 @@ import static org.mockito.Mockito.when;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 @ExtendWith(PrintExtension.class)
 class ShutdownSaveTest {
 

@@ -19,8 +19,6 @@ package com.djrapitops.plan.gathering.domain;
 import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.RandomData;
 import utilities.TestConstants;
 
@@ -35,7 +33,6 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class SessionTest {
 
     private final UUID serverUUID = TestConstants.SERVER_UUID;

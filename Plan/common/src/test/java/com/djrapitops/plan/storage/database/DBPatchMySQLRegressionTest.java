@@ -27,8 +27,6 @@ import com.djrapitops.plan.storage.database.transactions.patches.KillsOptimizati
 import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.*;
 import utilities.mocks.PluginMockComponent;
 
@@ -43,7 +41,6 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);

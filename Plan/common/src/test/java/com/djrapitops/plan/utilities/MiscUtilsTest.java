@@ -20,8 +20,6 @@ import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.command.SenderType;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,7 +31,6 @@ import static org.mockito.Mockito.when;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class MiscUtilsTest {
 
     private Sender mockAPlayerSender(String name, boolean hasPermission) {

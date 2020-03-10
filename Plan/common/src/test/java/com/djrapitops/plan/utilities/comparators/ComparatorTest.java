@@ -28,8 +28,6 @@ import com.djrapitops.plan.settings.locale.lang.Lang;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plan.utilities.java.Lists;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.RandomData;
 
 import java.util.*;
@@ -38,7 +36,6 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(JUnitPlatform.class)
 class ComparatorTest {
 
     @Test

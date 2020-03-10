@@ -21,8 +21,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import utilities.DBPreparer;
 import utilities.RandomData;
@@ -37,7 +35,6 @@ import java.util.UUID;
  * @author Rsl1122, Fuzzlemann
  * @see SQLiteTest
  */
-@RunWith(JUnitPlatform.class)
 @ExtendWith(MockitoExtension.class)
 public class H2Test implements DatabaseTest {
 

@@ -18,8 +18,6 @@ package com.djrapitops.plan.utilities;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.RandomData;
 
 import java.util.HashMap;
@@ -31,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Fuzzlemann
  */
-@RunWith(JUnitPlatform.class)
 class PassEncryptTest {
 
     private static final Map<String, String> PASSWORD_MAP = new HashMap<>();

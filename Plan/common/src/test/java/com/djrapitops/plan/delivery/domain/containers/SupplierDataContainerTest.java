@@ -20,8 +20,6 @@ import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.container.SupplierDataContainer;
 import com.djrapitops.plan.delivery.domain.keys.Key;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class SupplierDataContainerTest {
 
     private static final Key<String> TEST_KEY = new Key<>(String.class, "TEST_KEY");

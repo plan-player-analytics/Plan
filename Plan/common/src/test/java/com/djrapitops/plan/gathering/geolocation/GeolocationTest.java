@@ -27,8 +27,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import utilities.mocks.objects.TestRunnableFactory;
@@ -50,7 +48,6 @@ import static org.mockito.Mockito.when;
  * @author Rsl1122
  * @author Fuzzlemann
  */
-@RunWith(JUnitPlatform.class)
 @ExtendWith(MockitoExtension.class)
 class GeolocationTest {
 

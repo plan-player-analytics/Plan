@@ -25,8 +25,6 @@ import com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.RandomData;
 import utilities.TestResources;
 import utilities.mocks.PluginMockComponent;
@@ -34,7 +32,6 @@ import utilities.mocks.PluginMockComponent;
 import java.io.File;
 import java.nio.file.Path;
 
-@RunWith(JUnitPlatform.class)
 class JksHttpsServerTest implements HttpsServerTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);

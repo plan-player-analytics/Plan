@@ -18,8 +18,6 @@ package com.djrapitops.plan.gathering.domain;
 
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.RandomData;
 
 import java.util.ArrayList;
@@ -31,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class WorldTimesTest {
 
     private final String worldOne = "ONE";

@@ -27,8 +27,6 @@ import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.RandomData;
 import utilities.mocks.BukkitMockComponent;
 
@@ -45,7 +43,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 public class BukkitSystemTest {
 
     private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);

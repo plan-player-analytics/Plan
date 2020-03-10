@@ -32,8 +32,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import utilities.RandomData;
 import utilities.TestConstants;
@@ -52,7 +50,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * - Automatic formatting of plugin javascript (See https://github.com/Rsl1122/Plan-PlayerAnalytics/issues/820)
  * - Missing file definition in Mocker
  */
-@RunWith(JUnitPlatform.class)
 @ExtendWith(SeleniumExtension.class)
 class JSErrorRegressionTest {
 

@@ -17,12 +17,9 @@
 package com.djrapitops.plan.settings.locale;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-@RunWith(JUnitPlatform.class)
 class LocaleSystemTest {
 
     @Test

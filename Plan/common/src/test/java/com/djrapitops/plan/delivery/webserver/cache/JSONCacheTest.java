@@ -18,8 +18,6 @@ package com.djrapitops.plan.delivery.webserver.cache;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import java.util.List;
 import java.util.UUID;
@@ -32,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class JSONCacheTest {
 
     private static final String CACHED = "Cached";
