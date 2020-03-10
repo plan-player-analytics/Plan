@@ -18,16 +18,13 @@ package utilities;
 
 import com.djrapitops.plan.delivery.domain.WebUser;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
-import com.djrapitops.plan.gathering.domain.GeoInfo;
-import com.djrapitops.plan.gathering.domain.Session;
-import com.djrapitops.plan.gathering.domain.TPS;
+import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 public class RandomData {
 
@@ -94,5 +91,17 @@ public class RandomData {
             test.add(geoInfo);
         }
         return test;
+    }
+
+    public static WorldTimes randomWorldTimes(String[] worlds) {
+        Map<String, GMTimes> times = new HashMap<>();
+        for (String world : worlds) {
+            Map<String, Long> gmTimes = new HashMap<>();
+            for (String gm : GMTimes.getGMKeyArray()) {
+                gmTimes.put(gm, randomLong(0, TimeUnit.HOURS.toMillis(2)));
+            }
+            times.put(world, new GMTimes(gmTimes));
+        }
+        return new WorldTimes(times);
     }
 }

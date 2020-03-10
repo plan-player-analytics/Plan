@@ -30,13 +30,14 @@ import java.nio.file.Path;
 import java.util.UUID;
 
 /**
- * Test for the H2 database
+ * Tests for the H2 database.
  *
- * @author Rsl1122, Fuzzlemann
- * @see SQLiteTest
+ * @author Rsl1122
+ * @see DatabaseTest
+ * @see ExtensionsDatabaseTest
  */
 @ExtendWith(MockitoExtension.class)
-public class H2Test implements DatabaseTest {
+public class H2Test implements DatabaseTest, ExtensionsDatabaseTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
