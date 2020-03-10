@@ -20,6 +20,8 @@ import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.utilities.java.UnaryChain;
 import com.djrapitops.plan.version.VersionChecker;
 
 /**
@@ -35,30 +37,32 @@ public class ErrorMessagePage implements Page {
     private final String errorMsg;
 
     private final Locale locale;
+    private final Theme theme;
     private final VersionChecker versionChecker;
 
     public ErrorMessagePage(
             String template, Icon icon, String errorTitle, String errorMsg,
-            Locale locale, VersionChecker versionChecker
+            Locale locale, Theme theme, VersionChecker versionChecker
     ) {
         this.template = template;
         this.icon = icon;
         this.errorTitle = errorTitle;
         this.errorMsg = errorMsg;
         this.locale = locale;
+        this.theme = theme;
         this.versionChecker = versionChecker;
     }
 
     public ErrorMessagePage(
             String template, String errorTitle, String errorMsg,
             VersionChecker versionChecker,
-            Locale locale) {
-        this(template, Icon.called("exclamation-circle").build(), errorTitle, errorMsg, locale, versionChecker);
+            Locale locale,
+            Theme theme) {
+        this(template, Icon.called("exclamation-circle").build(), errorTitle, errorMsg, locale, theme, versionChecker);
     }
 
     @Override
     public String toHtml() {
-
         PlaceholderReplacer placeholders = new PlaceholderReplacer();
         placeholders.put("title", icon.toHtml() + " " + errorTitle);
         placeholders.put("titleText", errorTitle);
@@ -66,6 +70,10 @@ public class ErrorMessagePage implements Page {
         placeholders.put("version", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
         placeholders.put("updateModal", versionChecker.getUpdateModal());
         placeholders.put("contributors", Contributors.generateContributorHtml());
-        return locale.replaceLanguageInHtml(placeholders.apply(template));
+        return UnaryChain.of(template)
+                .chain(theme::replaceThemeColors)
+                .chain(placeholders::apply)
+                .chain(locale::replaceLanguageInHtml)
+                .apply();
     }
 }

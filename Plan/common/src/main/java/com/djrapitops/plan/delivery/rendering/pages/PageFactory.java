@@ -45,8 +45,6 @@ import java.util.*;
 
 /**
  * Factory for creating different {@link Page} objects.
- * <p>
- * TODO Set theme and locale stuff in here
  *
  * @author Rsl1122
  */
@@ -101,7 +99,8 @@ public class PageFactory {
     }
 
     public PlayersPage playersPage() throws IOException {
-        return new PlayersPage(getResource("web/players.html"), versionChecker.get(), config.get(), locale.get(), serverInfo.get());
+        return new PlayersPage(getResource("web/players.html"), versionChecker.get(),
+                config.get(), locale.get(), theme.get(), serverInfo.get());
     }
 
     /**
@@ -195,13 +194,13 @@ public class PageFactory {
     public Page errorPage(String title, String error) throws IOException {
         return new ErrorMessagePage(
                 getResource("web/error.html"), title, error,
-                versionChecker.get(), locale.get());
+                versionChecker.get(), locale.get(), theme.get());
     }
 
     public Page errorPage(Icon icon, String title, String error) throws IOException {
         return new ErrorMessagePage(
                 getResource("web/error.html"), icon, title, error,
-                locale.get(), versionChecker.get());
+                locale.get(), theme.get(), versionChecker.get());
     }
 
     public String getResource(String name) throws IOException {

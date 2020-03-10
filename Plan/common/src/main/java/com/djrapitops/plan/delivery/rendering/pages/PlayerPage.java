@@ -113,6 +113,6 @@ public class PlayerPage implements Page {
         placeholders.put("navPluginsTabs", pluginTabs.getNav());
         placeholders.put("pluginsTabs", pluginTabs.getTab());
 
-        return placeholders.apply(html);
+        return placeholders.apply(theme.replaceThemeColors(html));
     }
 }

@@ -32,6 +32,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.utilities.java.UnaryChain;
 import com.djrapitops.plan.version.VersionChecker;
 
 import java.util.List;
@@ -97,15 +98,18 @@ public class ServerPage implements Page {
             return new ServerPluginTabs(extensionData, formatters);
         });
 
-        String html = locale.replaceLanguageInHtml(placeholders.apply(templateHtml));
-
         String nav = JSONCache.getOrCacheString(DataID.EXTENSION_NAV, serverUUID, () -> pluginTabs.get().getNav());
         String tabs = JSONCache.getOrCacheString(DataID.EXTENSION_TABS, serverUUID, () -> pluginTabs.get().getTabs());
 
-        placeholders = new PlaceholderReplacer();
-        placeholders.put("navPluginsTabs", nav);
-        placeholders.put("tabsPlugins", tabs);
+        PlaceholderReplacer pluginPlaceholders = new PlaceholderReplacer();
+        pluginPlaceholders.put("navPluginsTabs", nav);
+        pluginPlaceholders.put("tabsPlugins", tabs);
 
-        return placeholders.apply(html);
+        return UnaryChain.of(templateHtml)
+                .chain(theme::replaceThemeColors)
+                .chain(placeholders::apply)
+                .chain(locale::replaceLanguageInHtml)
+                .chain(pluginPlaceholders::apply)
+                .apply();
     }
 }

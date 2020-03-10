@@ -31,6 +31,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.utilities.java.UnaryChain;
 import com.djrapitops.plan.version.VersionChecker;
 import org.apache.commons.lang3.StringUtils;
 
@@ -102,15 +103,18 @@ public class NetworkPage implements Page {
             return new ServerPluginTabs(extensionData, formatters);
         });
 
-        String html = locale.replaceLanguageInHtml(placeholders.apply(templateHtml));
-
         String nav = JSONCache.getOrCacheString(DataID.EXTENSION_NAV, serverUUID, () -> pluginTabs.get().getNav());
         String tabs = JSONCache.getOrCacheString(DataID.EXTENSION_TABS, serverUUID, () -> pluginTabs.get().getTabs());
 
-        placeholders = new PlaceholderReplacer();
-        placeholders.put("navPluginsTabs", nav);
-        placeholders.put("tabsPlugins", StringUtils.remove(tabs, "${backButton}"));
+        PlaceholderReplacer pluginPlaceholders = new PlaceholderReplacer();
+        pluginPlaceholders.put("navPluginsTabs", nav);
+        pluginPlaceholders.put("tabsPlugins", StringUtils.remove(tabs, "${backButton}"));
 
-        return placeholders.apply(html);
+        return UnaryChain.of(templateHtml)
+                .chain(theme::replaceThemeColors)
+                .chain(placeholders::apply)
+                .chain(locale::replaceLanguageInHtml)
+                .chain(pluginPlaceholders::apply)
+                .apply();
     }
 }

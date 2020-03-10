@@ -23,6 +23,7 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.version.VersionChecker;
 
 /**
@@ -36,6 +37,7 @@ public class PlayersPage implements Page {
     private final VersionChecker versionChecker;
     private final PlanConfig config;
     private final Locale locale;
+    private final Theme theme;
     private final ServerInfo serverInfo;
 
     PlayersPage(
@@ -43,12 +45,14 @@ public class PlayersPage implements Page {
             VersionChecker versionChecker,
             PlanConfig config,
             Locale locale,
+            Theme theme,
             ServerInfo serverInfo
     ) {
         this.templateHtml = templateHtml;
         this.versionChecker = versionChecker;
         this.config = config;
         this.locale = locale;
+        this.theme = theme;
         this.serverInfo = serverInfo;
     }
 
@@ -65,6 +69,6 @@ public class PlayersPage implements Page {
             placeholders.put("networkName", config.get(PluginSettings.SERVER_NAME));
         }
 
-        return locale.replaceLanguageInHtml(placeholders.apply(templateHtml));
+        return locale.replaceLanguageInHtml(placeholders.apply(theme.replaceThemeColors(templateHtml)));
     }
 }

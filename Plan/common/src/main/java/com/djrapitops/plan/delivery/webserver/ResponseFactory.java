@@ -34,6 +34,7 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.java.Maps;
+import com.djrapitops.plan.utilities.java.UnaryChain;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -164,7 +165,10 @@ public class ResponseFactory {
 
     public Response javaScriptResponse(String fileName) {
         try {
-            String content = locale.replaceLanguageInJavascript(files.getCustomizableResourceOrDefault(fileName).asString());
+            String content = UnaryChain.of(files.getCustomizableResourceOrDefault(fileName).asString())
+                    .chain(theme::replaceThemeColors)
+                    .chain(locale::replaceLanguageInJavascript)
+                    .apply();
             return Response.builder()
                     .setMimeType(MimeType.JS)
                     .setContent(content)
