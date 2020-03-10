@@ -14,14 +14,16 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.exceptions.connection;
+package com.djrapitops.plan.delivery.web.resolver.exception;
 
 /**
- * Thrown when Connection returns 404, when page is not found.
+ * Throw this exception when a Resolver can not resolve a path.
+ * <p>
+ * Plan will create a "404 Not found" error page automatically.
  *
  * @author Rsl1122
  */
-public class NotFoundException extends WebException {
+public class NotFoundException extends IllegalArgumentException {
     public NotFoundException(String message) {
         super(message);
     }
