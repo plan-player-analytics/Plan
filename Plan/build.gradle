@@ -164,7 +164,7 @@ subprojects {
     }
 
     checkstyle {
-        configFile rootProject.file('config/checkstyle/checkstyle.xml')
+        configDir = file("$rootProject.projectDir/config/checkstyle")
     }
 
     jacocoTestReport {

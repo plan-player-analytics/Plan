@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  * <p>
  * It is recommended to use plugin based namespace in your custom targets,
  * eg. "/flyplugin/flying" to avoid collisions with other plugins.
- * You can also use {@link #getResolver(String)} to check if target is already resolved.
+ * You can also use {@link #getResolver(String)} to check if target already has a resolver.
  *
  * @author Rsl1122
  */

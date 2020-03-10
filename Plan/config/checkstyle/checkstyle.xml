@@ -7,7 +7,7 @@
     <property name="localeLanguage" value="en"/>
 
     <module name="RegexpHeader">
-        <property name="headerFile" value="config/checkstyle/java.header"/>
+        <property name="headerFile" value="${config_loc}/java.header"/>
     </module>
     <module name="FileLength">
         <!-- This value is high. Notable: DatabaseTest 1521 -->
