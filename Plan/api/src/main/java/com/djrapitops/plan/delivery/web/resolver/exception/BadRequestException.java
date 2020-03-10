@@ -14,14 +14,17 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.exceptions.connection;
+package com.djrapitops.plan.delivery.web.resolver.exception;
 
 /**
- * Thrown when connection is returned 401 Bad Request.
+ * Throw this exception when a Resolver gets invalid query for JSON.
+ * <p>
+ * Plan will construct bad request error json automatically.
+ * Note that you might need to handle the error page, which is json: {@code {"status": 400, "error": "message"}}
  *
  * @author Rsl1122
  */
-public class BadRequestException extends WebException {
+public class BadRequestException extends IllegalArgumentException {
 
     public BadRequestException(String message) {
         super(message);

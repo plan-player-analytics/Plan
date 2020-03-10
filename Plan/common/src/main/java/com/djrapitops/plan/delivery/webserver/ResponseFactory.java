@@ -33,6 +33,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.java.Maps;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -340,8 +341,12 @@ public class ResponseFactory {
 
     public Response badRequest(String errorMessage, String target) {
         return Response.builder()
-                .setMimeType(MimeType.HTML)
-                .setContent("400 Bad Request: " + errorMessage + " (when requesting '" + target + "')")
+                .setMimeType(MimeType.JSON)
+                .setJSONContent(Maps.builder(String.class, Object.class)
+                        .put("status", 400)
+                        .put("error", errorMessage)
+                        .put("requestedTarget", target)
+                        .build())
                 .setStatus(400)
                 .build();
     }

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver;
 
-import com.djrapitops.plan.exceptions.connection.BadRequestException;
+import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
 import com.djrapitops.plan.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.exceptions.connection.WebException;
