@@ -19,6 +19,7 @@ package com.djrapitops.plan.storage.database;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.storage.database.queries.ActivityIndexQueriesTest;
 import com.djrapitops.plan.storage.database.queries.GeolocationQueriesTest;
+import com.djrapitops.plan.storage.database.queries.SessionQueriesTest;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
@@ -48,7 +49,8 @@ import java.util.UUID;
 class MySQLTest implements DatabaseTest,
         ExtensionsDatabaseTest,
         ActivityIndexQueriesTest,
-        GeolocationQueriesTest {
+        GeolocationQueriesTest,
+        SessionQueriesTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 

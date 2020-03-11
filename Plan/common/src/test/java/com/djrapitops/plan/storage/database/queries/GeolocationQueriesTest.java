@@ -1,3 +1,19 @@
+/*
+ *  This file is part of Player Analytics (Plan).
+ *
+ *  Plan is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Plan is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
@@ -22,7 +38,7 @@ public interface GeolocationQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void geoInformationIsStored() {
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> 1000L, TestConstants.PLAYER_ONE_NAME, serverUUID()));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime, TestConstants.PLAYER_ONE_NAME, serverUUID()));
 
         List<GeoInfo> expected = RandomData.randomGeoInfo();
         for (GeoInfo geoInfo : expected) {

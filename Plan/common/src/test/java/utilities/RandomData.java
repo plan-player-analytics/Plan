@@ -19,12 +19,14 @@ package utilities;
 import com.djrapitops.plan.delivery.domain.WebUser;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
 import com.djrapitops.plan.gathering.domain.*;
+import com.djrapitops.plan.storage.database.sql.tables.KillsTable;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 public class RandomData {
 
@@ -36,6 +38,14 @@ public class RandomData {
 
     public static int randomInt(int rangeStart, int rangeEnd) {
         return ThreadLocalRandom.current().nextInt(rangeStart, rangeEnd);
+    }
+
+    public static long randomTime() {
+        return randomTimeAfter(0);
+    }
+
+    public static long randomTimeAfter(long after) {
+        return randomLong(after, System.currentTimeMillis());
     }
 
     public static long randomLong(long rangeStart, long rangeEnd) {
@@ -65,15 +75,39 @@ public class RandomData {
     }
 
     public static List<Session> randomSessions() {
-        List<Session> test = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            test.add(randomSession());
-        }
-        return test;
+        return pickMultiple(randomInt(15, 30),
+                () -> randomSession(
+                        TestConstants.SERVER_UUID,
+                        pickMultiple(4, () -> randomString(5)).toArray(new String[0]),
+                        pickMultiple(5, UUID::randomUUID).toArray(new UUID[0])
+                )
+        );
     }
 
-    public static Session randomSession() {
-        return new Session(1, TestConstants.PLAYER_ONE_UUID, TestConstants.SERVER_UUID, r.nextLong(), r.nextLong(), 0, 0, 0);
+    public static String randomGameMode() {
+        return pickAtRandom(GMTimes.getGMKeyArray());
+    }
+
+    public static <T> T pickAtRandom(T[] from) {
+        return from[randomInt(0, from.length)];
+    }
+
+    public static <T> List<T> pickMultiple(int howMany, Supplier<T> supplier) {
+        List<T> picked = new ArrayList<>();
+        for (int i = 0; i < howMany; i++) {
+            picked.add(supplier.get());
+        }
+        return picked;
+    }
+
+    public static Session randomSession(UUID serverUUID, String[] worlds, UUID... uuids) {
+        Session session = new Session(uuids[0], serverUUID, RandomData.randomTime(), pickAtRandom(worlds), randomGameMode());
+        session.endSession(RandomData.randomTimeAfter(session.getDate()));
+        session.setWorldTimes(RandomData.randomWorldTimes(worlds));
+        if (uuids.length >= 2) {
+            session.setPlayerKills(RandomData.randomKills(pickAtRandom(Arrays.copyOfRange(uuids, 1, uuids.length))));
+        }
+        return session;
     }
 
     public static List<Point> randomPoints() {
@@ -85,15 +119,10 @@ public class RandomData {
     }
 
     public static List<GeoInfo> randomGeoInfo() {
-        List<GeoInfo> test = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            GeoInfo geoInfo = new GeoInfo(randomString(10), r.nextLong());
-            test.add(geoInfo);
-        }
-        return test;
+        return pickMultiple(randomInt(15, 30), () -> new GeoInfo(randomString(10), randomTime()));
     }
 
-    public static WorldTimes randomWorldTimes(String[] worlds) {
+    public static WorldTimes randomWorldTimes(String... worlds) {
         Map<String, GMTimes> times = new HashMap<>();
         for (String world : worlds) {
             Map<String, Long> gmTimes = new HashMap<>();
@@ -103,5 +132,15 @@ public class RandomData {
             times.put(world, new GMTimes(gmTimes));
         }
         return new WorldTimes(times);
+    }
+
+    public static List<PlayerKill> randomKills(UUID... victimUUIDs) {
+        if (victimUUIDs == null || victimUUIDs.length == 1 && victimUUIDs[0] == null) return Collections.emptyList();
+
+        return pickMultiple(randomInt(3, 15), () -> new PlayerKill(
+                pickAtRandom(victimUUIDs),
+                randomString(randomInt(10, KillsTable.WEAPON_COLUMN_LENGTH)),
+                randomTime()
+        ));
     }
 }

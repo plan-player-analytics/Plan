@@ -77,7 +77,7 @@ class JSErrorRegressionTest {
         DBSystem dbSystem = bukkitSystem.getDatabaseSystem();
         Database database = dbSystem.getDatabase();
         UUID uuid = TestConstants.PLAYER_ONE_UUID;
-        database.executeTransaction(new PlayerRegisterTransaction(uuid, () -> 1000L, "name"));
+        database.executeTransaction(new PlayerRegisterTransaction(uuid, RandomData::randomTime, "name"));
         Session session = new Session(uuid, serverUUID, 1000L, "world", "SURVIVAL");
         session.endSession(11000L);
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, "world"));

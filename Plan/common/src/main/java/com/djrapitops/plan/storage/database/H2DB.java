@@ -143,6 +143,8 @@ public class H2DB extends SQLDB {
             logger.debug("H2 Connection close prompted by: " + ThrowableUtils.findCallerAfterClass(Thread.currentThread().getStackTrace(), H2DB.class));
             logger.debug("H2 " + dbName + ": Closed Connection");
             MiscUtils.close(connection);
+        } else {
+            logger.debug("H2 " + dbName + ": Connection was null when closing");
         }
     }
 
