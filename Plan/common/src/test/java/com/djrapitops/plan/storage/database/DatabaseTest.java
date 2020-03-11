@@ -26,7 +26,6 @@ import com.djrapitops.plan.delivery.domain.keys.Key;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.domain.keys.ServerKeys;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
-import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.identification.Server;
@@ -35,7 +34,6 @@ import com.djrapitops.plan.settings.config.Config;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.queries.*;
-import com.djrapitops.plan.storage.database.queries.analysis.ActivityIndexQueries;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.database.queries.containers.ServerPlayerContainersQuery;
 import com.djrapitops.plan.storage.database.queries.objects.*;
@@ -989,16 +987,6 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     }
 
     @Test
-    default void activityIndexCoalesceSanityCheck() {
-        sessionsAreStoredWithAllData();
-        Map<String, Integer> groupings = db().query(
-                ActivityIndexQueries.fetchActivityIndexGroupingsOn(System.currentTimeMillis(), serverUUID(), TimeUnit.HOURS.toMillis(2L))
-        );
-        Map<String, Integer> expected = Collections.singletonMap(ActivityIndex.getDefaultGroups()[4], 1); // Inactive
-        assertEquals(expected, groupings);
-    }
-
-    @Test
     default void serverGeolocationsAreCountedAppropriately() {
         UUID firstUuid = UUID.randomUUID();
         UUID secondUuid = UUID.randomUUID();
@@ -1154,46 +1142,6 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     }
 
     @Test
-    default void activityIndexCalculationsMatch() {
-        sessionsAreStoredWithAllData();
-
-        long date = System.currentTimeMillis();
-        long playtimeThreshold = TimeUnit.HOURS.toMillis(5L);
-        List<Session> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID))
-                .values().stream().flatMap(Collection::stream).collect(Collectors.toList());
-
-        ActivityIndex javaCalculation = new ActivityIndex(sessions, date, playtimeThreshold);
-
-        List<TablePlayer> players = db().query(new ServerTablePlayersQuery(serverUUID(), date, playtimeThreshold, 5));
-        Optional<TablePlayer> found = players.stream().filter(tp -> playerUUID.equals(tp.getPlayerUUID())).findFirst();
-        assertTrue(found.isPresent());
-        Optional<ActivityIndex> currentActivityIndex = found.get().getCurrentActivityIndex();
-        assertTrue(currentActivityIndex.isPresent());
-
-        assertEquals(javaCalculation.getValue(), currentActivityIndex.get().getValue(), 0.001);
-    }
-
-    @Test
-    default void networkActivityIndexCalculationsMatch() {
-        sessionsAreStoredWithAllData();
-
-        long date = System.currentTimeMillis();
-        long playtimeThreshold = TimeUnit.HOURS.toMillis(5L);
-        List<Session> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID))
-                .values().stream().flatMap(Collection::stream).collect(Collectors.toList());
-
-        ActivityIndex javaCalculation = new ActivityIndex(sessions, date, playtimeThreshold);
-
-        List<TablePlayer> players = db().query(new NetworkTablePlayersQuery(date, playtimeThreshold, 5));
-        Optional<TablePlayer> found = players.stream().filter(tp -> playerUUID.equals(tp.getPlayerUUID())).findFirst();
-        assertTrue(found.isPresent());
-        Optional<ActivityIndex> currentActivityIndex = found.get().getCurrentActivityIndex();
-        assertTrue(currentActivityIndex.isPresent());
-
-        assertEquals(javaCalculation.getValue(), currentActivityIndex.get().getValue(), 0.001);
-    }
-
-    @Test
     default void registerDateIsMinimized() {
         executeTransactions(
                 new PlayerServerRegisterTransaction(playerUUID, () -> 1000, TestConstants.PLAYER_ONE_NAME, serverUUID())
@@ -1218,15 +1166,6 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         Optional<BaseUser> updatedBaseUser = db().query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID));
         assertEquals(0L, updatedBaseUser.isPresent() ? updatedBaseUser.get().getRegistered() : null);
         assertTrue(testedPatch.hasBeenApplied());
-    }
-
-    @Test
-    default void activeTurnedInactiveQueryHasAllParametersSet() {
-        Integer result = db().query(ActivityIndexQueries.countRegularPlayersTurnedInactive(
-                0, System.currentTimeMillis(), serverUUID(),
-                TimeUnit.HOURS.toMillis(2L)
-        ));
-        assertNotNull(result);
     }
 
     @Test

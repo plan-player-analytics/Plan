@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.storage.database.queries.analysis.ActivityIndexQueriesTest;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
@@ -43,7 +44,9 @@ import java.util.UUID;
  * @see utilities.CIProperties for assumed MySQL setup.
  */
 @ExtendWith(MockitoExtension.class)
-class MySQLTest implements DatabaseTest, ExtensionsDatabaseTest {
+class MySQLTest implements DatabaseTest,
+        ExtensionsDatabaseTest,
+        ActivityIndexQueriesTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
