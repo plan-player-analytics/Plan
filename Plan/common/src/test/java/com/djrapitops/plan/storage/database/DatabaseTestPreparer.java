@@ -76,7 +76,7 @@ public interface DatabaseTestPreparer {
         });
     }
 
-    default void commitTest() {
+    default void forcePersistenceCheck() {
         db().close();
         db().init();
     }

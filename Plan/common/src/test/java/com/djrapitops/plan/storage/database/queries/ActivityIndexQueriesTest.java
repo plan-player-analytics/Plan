@@ -1,10 +1,10 @@
-package com.djrapitops.plan.storage.database.queries.analysis;
+package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.TablePlayer;
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
-import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
+import com.djrapitops.plan.storage.database.queries.analysis.ActivityIndexQueries;
 import com.djrapitops.plan.storage.database.queries.objects.NetworkTablePlayersQuery;
 import com.djrapitops.plan.storage.database.queries.objects.ServerTablePlayersQuery;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;

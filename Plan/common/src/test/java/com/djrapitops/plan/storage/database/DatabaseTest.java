@@ -80,19 +80,13 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void testTPSSaving() {
-        Random r = new Random();
-
-        List<TPS> expected = new ArrayList<>();
-
-        for (int i = 0; i < RandomData.randomInt(1, 5); i++) {
-            expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), r.nextDouble(), r.nextLong(), r.nextInt(), r.nextInt(), r.nextLong()));
-        }
+        List<TPS> expected = RandomData.randomTPS();
 
         for (TPS tps : expected) {
             execute(DataStoreQueries.storeTPS(serverUUID(), tps));
         }
 
-        commitTest();
+        forcePersistenceCheck();
 
         assertEquals(expected, db().query(TPSQueries.fetchTPSDataOfServer(serverUUID())));
     }
@@ -107,27 +101,13 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     }
 
     @Test
-    default void geoInformationIsStored() {
-        saveUserOne();
-
-        long time = System.currentTimeMillis();
-
-        GeoInfo expected = new GeoInfo("TestLocation", time);
-        saveGeoInfo(playerUUID, expected);
-        commitTest();
-
-        List<GeoInfo> result = db().query(GeoInfoQueries.fetchAllGeoInformation()).get(playerUUID);
-        assertEquals(Collections.singletonList(expected), result);
-    }
-
-    @Test
     default void testNicknamesTable() {
         saveUserOne();
 
         Nickname expected = new Nickname("TestNickname", System.currentTimeMillis(), serverUUID());
         db().executeTransaction(new NicknameStoreTransaction(playerUUID, expected, (uuid, name) -> false /* Not cached */));
         db().executeTransaction(new NicknameStoreTransaction(playerUUID, expected, (uuid, name) -> true /* Cached */));
-        commitTest();
+        forcePersistenceCheck();
 
         List<Nickname> nicknames = db().query(NicknameQueries.fetchNicknameDataOfPlayer(playerUUID));
         assertEquals(1, nicknames.size());
@@ -138,7 +118,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     default void webUserIsRegistered() {
         WebUser expected = new WebUser(TestConstants.PLAYER_ONE_NAME, "RandomGarbageBlah", 0);
         db().executeTransaction(new RegisterWebUserTransaction(expected));
-        commitTest();
+        forcePersistenceCheck();
 
         Optional<WebUser> found = db().query(WebUserQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME));
         assertTrue(found.isPresent());
@@ -163,7 +143,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         String[] expected = {"Test", "Test2", "Test3"};
         saveWorlds(expected);
 
-        commitTest();
+        forcePersistenceCheck();
 
         Collection<String> result = db().query(LargeFetchQueries.fetchAllWorldNames()).get(serverUUID());
         assertEquals(new HashSet<>(Arrays.asList(expected)), result);
@@ -223,7 +203,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
         execute(DataStoreQueries.storeSession(session));
 
-        commitTest();
+        forcePersistenceCheck();
 
         Map<UUID, List<Session>> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
         assertTrue(sessions.containsKey(serverUUID()));
@@ -250,7 +230,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
         execute(DataStoreQueries.storeSession(session));
 
-        commitTest();
+        forcePersistenceCheck();
 
         Map<UUID, List<Session>> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
         List<Session> savedSessions = sessions.get(serverUUID());
@@ -317,7 +297,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
         // Updates the name
         db().executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 0, "NewName"));
-        commitTest();
+        forcePersistenceCheck();
 
         assertFalse(db().query(UserIdentifierQueries.fetchPlayerUUIDOf(TestConstants.PLAYER_ONE_NAME)).isPresent());
 
@@ -334,7 +314,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         for (int i = 0; i < random + 1; i++) {
             db().executeTransaction(new KickStoreTransaction(playerUUID));
         }
-        commitTest();
+        forcePersistenceCheck();
         OptionalAssert.equals(random + 2, db().query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID)).map(BaseUser::getTimesKicked));
     }
 
@@ -447,7 +427,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         session.setPlayerKills(createKills());
         execute(DataStoreQueries.storeSession(session));
 
-        commitTest();
+        forcePersistenceCheck();
 
         Map<UUID, List<Session>> sessions = db().query(SessionQueries.fetchSessionsOfServer(serverUUID()));
 
@@ -521,7 +501,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         session.setPlayerKills(expected);
         execute(DataStoreQueries.storeSession(session));
 
-        commitTest();
+        forcePersistenceCheck();
 
         Map<UUID, List<Session>> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
         List<Session> savedSessions = sessions.get(serverUUID());
@@ -987,81 +967,6 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     }
 
     @Test
-    default void serverGeolocationsAreCountedAppropriately() {
-        UUID firstUuid = UUID.randomUUID();
-        UUID secondUuid = UUID.randomUUID();
-        UUID thirdUuid = UUID.randomUUID();
-        UUID fourthUuid = UUID.randomUUID();
-        UUID fifthUuid = UUID.randomUUID();
-        UUID sixthUuid = UUID.randomUUID();
-
-        Database database = db();
-
-        database.executeTransaction(new PlayerServerRegisterTransaction(firstUuid, () -> 0L, "", serverUUID()));
-        database.executeTransaction(new PlayerServerRegisterTransaction(secondUuid, () -> 0L, "", serverUUID()));
-        database.executeTransaction(new PlayerServerRegisterTransaction(thirdUuid, () -> 0L, "", serverUUID()));
-        database.executeTransaction(new PlayerServerRegisterTransaction(fourthUuid, () -> 0L, "", serverUUID()));
-        database.executeTransaction(new PlayerServerRegisterTransaction(fifthUuid, () -> 0L, "", serverUUID()));
-        database.executeTransaction(new PlayerServerRegisterTransaction(sixthUuid, () -> 0L, "", serverUUID()));
-
-        saveGeoInfo(firstUuid, new GeoInfo("Norway", 0));
-        saveGeoInfo(firstUuid, new GeoInfo("Finland", 5));
-        saveGeoInfo(secondUuid, new GeoInfo("Sweden", 0));
-        saveGeoInfo(thirdUuid, new GeoInfo("Denmark", 0));
-        saveGeoInfo(fourthUuid, new GeoInfo("Denmark", 0));
-        saveGeoInfo(fifthUuid, new GeoInfo("Not Known", 0));
-        saveGeoInfo(sixthUuid, new GeoInfo("Local Machine", 0));
-
-        Map<String, Integer> got = database.query(GeoInfoQueries.serverGeolocationCounts(serverUUID()));
-
-        Map<String, Integer> expected = new HashMap<>();
-        // first user has a more recent connection from Finland so their country should be counted as Finland.
-        expected.put("Finland", 1);
-        expected.put("Sweden", 1);
-        expected.put("Not Known", 1);
-        expected.put("Local Machine", 1);
-        expected.put("Denmark", 2);
-
-        assertEquals(expected, got);
-    }
-
-    @Test
-    default void networkGeolocationsAreCountedAppropriately() {
-        UUID firstUuid = UUID.randomUUID();
-        UUID secondUuid = UUID.randomUUID();
-        UUID thirdUuid = UUID.randomUUID();
-        UUID fourthUuid = UUID.randomUUID();
-        UUID fifthUuid = UUID.randomUUID();
-        UUID sixthUuid = UUID.randomUUID();
-
-        Database db = db();
-        db.executeTransaction(new PlayerRegisterTransaction(firstUuid, () -> 0L, ""));
-        db.executeTransaction(new PlayerRegisterTransaction(secondUuid, () -> 0L, ""));
-        db.executeTransaction(new PlayerRegisterTransaction(thirdUuid, () -> 0L, ""));
-
-        saveGeoInfo(firstUuid, new GeoInfo("Norway", 0));
-        saveGeoInfo(firstUuid, new GeoInfo("Finland", 5));
-        saveGeoInfo(secondUuid, new GeoInfo("Sweden", 0));
-        saveGeoInfo(thirdUuid, new GeoInfo("Denmark", 0));
-        saveGeoInfo(fourthUuid, new GeoInfo("Denmark", 0));
-        saveGeoInfo(fifthUuid, new GeoInfo("Not Known", 0));
-        saveGeoInfo(sixthUuid, new GeoInfo("Local Machine", 0));
-
-        Map<String, Integer> got = db.query(GeoInfoQueries.networkGeolocationCounts());
-
-        Map<String, Integer> expected = new HashMap<>();
-        // first user has a more recent connection from Finland so their country should be counted as Finland.
-        expected.put("Finland", 1);
-        expected.put("Sweden", 1);
-        expected.put("Not Known", 1);
-        expected.put("Local Machine", 1);
-        expected.put("Denmark", 2);
-
-        assertEquals(expected, got);
-    }
-
-
-    @Test
     default void bungeeInformationIsStored() {
         Optional<Server> bungeeInfo = db().query(ServerQueries.fetchProxyServerInformation());
         assertFalse(bungeeInfo.isPresent());
@@ -1070,7 +975,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         Server bungeeCord = new Server(-1, bungeeUUID, "BungeeCord", "Random:1234", 20);
         db().executeTransaction(new StoreServerInformationTransaction(bungeeCord));
 
-        commitTest();
+        forcePersistenceCheck();
 
         bungeeCord.setId(2);
 
@@ -1090,55 +995,6 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
         assertEquals(1, serverInformation.values().stream().filter(Server::isNotProxy).count());
         assertEquals(1, serverInformation.values().stream().filter(Server::isProxy).count());
-    }
-
-    @Test
-    default void pingIsGroupedByGeolocationAppropriately() {
-        UUID firstUuid = UUID.randomUUID();
-        UUID secondUuid = UUID.randomUUID();
-        UUID thirdUuid = UUID.randomUUID();
-        UUID fourthUuid = UUID.randomUUID();
-        UUID fifthUuid = UUID.randomUUID();
-        UUID sixthUuid = UUID.randomUUID();
-
-        Database database = db();
-
-        database.executeTransaction(new PlayerServerRegisterTransaction(firstUuid, () -> 0L, "", serverUUID()));
-        database.executeTransaction(new PlayerServerRegisterTransaction(secondUuid, () -> 0L, "", serverUUID()));
-        database.executeTransaction(new PlayerServerRegisterTransaction(thirdUuid, () -> 0L, "", serverUUID()));
-        database.executeTransaction(new PlayerServerRegisterTransaction(fourthUuid, () -> 0L, "", serverUUID()));
-        database.executeTransaction(new PlayerServerRegisterTransaction(fifthUuid, () -> 0L, "", serverUUID()));
-        database.executeTransaction(new PlayerServerRegisterTransaction(sixthUuid, () -> 0L, "", serverUUID()));
-
-        saveGeoInfo(firstUuid, new GeoInfo("Norway", 0));
-        saveGeoInfo(firstUuid, new GeoInfo("Finland", 5));
-        saveGeoInfo(secondUuid, new GeoInfo("Sweden", 0));
-        saveGeoInfo(thirdUuid, new GeoInfo("Denmark", 0));
-        saveGeoInfo(fourthUuid, new GeoInfo("Denmark", 0));
-        saveGeoInfo(fifthUuid, new GeoInfo("Not Known", 0));
-        saveGeoInfo(sixthUuid, new GeoInfo("Local Machine", 0));
-
-        long time = System.currentTimeMillis();
-        List<DateObj<Integer>> ping = Collections.singletonList(new DateObj<>(time, 5));
-        database.executeTransaction(new PingStoreTransaction(firstUuid, serverUUID(), ping));
-        database.executeTransaction(new PingStoreTransaction(secondUuid, serverUUID(), ping));
-        database.executeTransaction(new PingStoreTransaction(thirdUuid, serverUUID(), ping));
-        database.executeTransaction(new PingStoreTransaction(fourthUuid, serverUUID(), ping));
-        database.executeTransaction(new PingStoreTransaction(fifthUuid, serverUUID(), ping));
-        database.executeTransaction(new PingStoreTransaction(sixthUuid, serverUUID(), ping));
-
-        Map<String, Ping> got = database.query(PingQueries.fetchPingDataOfServerByGeolocation(serverUUID()));
-
-        Map<String, Ping> expected = new HashMap<>();
-        // first user has a more recent connection from Finland so their country should be counted as Finland.
-        Ping expectedPing = new Ping(time, serverUUID(), 5, 5, 5);
-        expected.put("Finland", expectedPing);
-        expected.put("Sweden", expectedPing);
-        expected.put("Not Known", expectedPing);
-        expected.put("Local Machine", expectedPing);
-        expected.put("Denmark", expectedPing);
-
-        assertEquals(expected, got);
     }
 
     @Test

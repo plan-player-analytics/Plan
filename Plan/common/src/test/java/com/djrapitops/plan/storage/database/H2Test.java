@@ -17,7 +17,8 @@
 package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.PlanSystem;
-import com.djrapitops.plan.storage.database.queries.analysis.ActivityIndexQueriesTest;
+import com.djrapitops.plan.storage.database.queries.ActivityIndexQueriesTest;
+import com.djrapitops.plan.storage.database.queries.GeolocationQueriesTest;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +41,8 @@ import java.util.UUID;
 @ExtendWith(MockitoExtension.class)
 public class H2Test implements DatabaseTest,
         ExtensionsDatabaseTest,
-        ActivityIndexQueriesTest {
+        ActivityIndexQueriesTest,
+        GeolocationQueriesTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 

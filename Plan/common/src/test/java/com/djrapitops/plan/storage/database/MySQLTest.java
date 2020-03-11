@@ -17,7 +17,8 @@
 package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.PlanSystem;
-import com.djrapitops.plan.storage.database.queries.analysis.ActivityIndexQueriesTest;
+import com.djrapitops.plan.storage.database.queries.ActivityIndexQueriesTest;
+import com.djrapitops.plan.storage.database.queries.GeolocationQueriesTest;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
@@ -35,7 +36,7 @@ import java.util.UUID;
 /**
  * Tests for MySQL database.
  * <p>
- * These settings assume CI environment with MySQL service running.
+ * The setup assumes CI environment with MySQL service running.
  * 'MYSQL_DB' database should be created before the test.
  *
  * @author Rsl1122
@@ -46,7 +47,8 @@ import java.util.UUID;
 @ExtendWith(MockitoExtension.class)
 class MySQLTest implements DatabaseTest,
         ExtensionsDatabaseTest,
-        ActivityIndexQueriesTest {
+        ActivityIndexQueriesTest,
+        GeolocationQueriesTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
