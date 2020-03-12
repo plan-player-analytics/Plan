@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.storage.database;
+package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.extension.CallEvents;
@@ -32,7 +32,8 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.results
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalServerResultsTransaction;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.gathering.domain.Session;
-import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
+import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
+import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,6 +62,20 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         extensionService.unregister(new ServerExtension());
         extensionService.unregister(new ConditionalExtension());
         extensionService.unregister(new TableExtension());
+    }
+
+    @Test
+    default void removeEverythingRemovesPlayerExtensionData() {
+        extensionPlayerValuesAreStored();
+        db().executeTransaction(new RemoveEverythingTransaction());
+        assertTrue(db().query(new ExtensionPlayerDataQuery(playerUUID)).isEmpty());
+    }
+
+    @Test
+    default void removeEverythingRemovesServerExtensionData() {
+        extensionServerValuesAreStored();
+        db().executeTransaction(new RemoveEverythingTransaction());
+        assertTrue(db().query(new ExtensionServerDataQuery(serverUUID())).isEmpty());
     }
 
     @Test
