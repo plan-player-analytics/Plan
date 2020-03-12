@@ -17,10 +17,7 @@
 package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.PlanSystem;
-import com.djrapitops.plan.storage.database.queries.ActivityIndexQueriesTest;
-import com.djrapitops.plan.storage.database.queries.GeolocationQueriesTest;
-import com.djrapitops.plan.storage.database.queries.SessionQueriesTest;
-import com.djrapitops.plan.storage.database.queries.WebUserQueriesTest;
+import com.djrapitops.plan.storage.database.queries.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
@@ -48,10 +45,16 @@ import java.util.UUID;
  */
 @ExtendWith(MockitoExtension.class)
 class MySQLTest implements DatabaseTest,
+        DatabaseBackupTest,
         ExtensionsDatabaseTest,
         ActivityIndexQueriesTest,
         GeolocationQueriesTest,
+        NicknameQueriesTest,
+        PingQueriesTest,
         SessionQueriesTest,
+        ServerQueriesTest,
+        TPSQueriesTest,
+        UserInfoQueriesTest,
         WebUserQueriesTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);

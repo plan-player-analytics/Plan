@@ -16,6 +16,7 @@
  */
 package utilities;
 
+import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.delivery.domain.WebUser;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
@@ -151,5 +152,23 @@ public class RandomData {
                 randomString(randomInt(10, KillsTable.WEAPON_COLUMN_LENGTH)),
                 randomTime()
         ));
+    }
+
+    public static List<Ping> randomPings(UUID serverUUID) {
+        return pickMultiple(randomInt(15, 30), () -> randomPing(serverUUID));
+    }
+
+    public static Ping randomPing(UUID serverUUID) {
+        int r1 = randomInt(1, 200);
+        int r2 = randomInt(1, 200);
+        return new Ping(randomTime(), serverUUID, Math.min(r1, r2), Math.max(r1, r2), (r1 + r2) / 2.0);
+    }
+
+    public static List<DateObj<Integer>> randomIntDateObjects() {
+        return pickMultiple(randomInt(15, 30), RandomData::randomIntDateObject);
+    }
+
+    public static DateObj<Integer> randomIntDateObject() {
+        return new DateObj<>(randomTime(), randomInt(0, 500));
     }
 }

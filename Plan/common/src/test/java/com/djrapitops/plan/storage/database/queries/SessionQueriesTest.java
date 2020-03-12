@@ -22,9 +22,11 @@ import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
+import com.djrapitops.plan.storage.database.queries.objects.KillQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerServerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
 import org.junit.jupiter.api.Test;
@@ -224,5 +226,35 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
 
         WorldTimes got = serverSessions.get(0).getValue(SessionKeys.WORLD_TIMES).orElseThrow(AssertionError::new);
         assertEquals(expected, got);
+    }
+
+    @Test
+    default void removeEverythingRemovesSessions() {
+        sessionsAreStoredWithAllData();
+        db().executeTransaction(new RemoveEverythingTransaction());
+        assertTrue(db().query(SessionQueries.fetchAllSessions()).isEmpty());
+        assertEquals(0L, db().query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID())).getTotal());
+        assertEquals(0, db().query(KillQueries.playerKillCount(0, System.currentTimeMillis(), serverUUID())));
+    }
+
+    @Test
+    default void removeEverythingRemovesWorldNames() {
+        prepareForSessionSave();
+        db().executeTransaction(new RemoveEverythingTransaction());
+        assertTrue(db().query(LargeFetchQueries.fetchAllWorldNames()).isEmpty());
+    }
+
+
+    @Test
+    default void worldNamesAreStored() {
+        String[] expected = {"Test", "Test2", "Test3"};
+        for (String worldName : expected) {
+            db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worldName));
+        }
+
+        forcePersistenceCheck();
+
+        Collection<String> result = db().query(LargeFetchQueries.fetchAllWorldNames()).get(serverUUID());
+        assertEquals(new HashSet<>(Arrays.asList(expected)), result);
     }
 }

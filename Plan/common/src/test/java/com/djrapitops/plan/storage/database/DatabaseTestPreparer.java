@@ -76,6 +76,12 @@ public interface DatabaseTestPreparer {
         });
     }
 
+    default void executeTransactions(Transaction... transactions) {
+        for (Transaction transaction : transactions) {
+            db().executeTransaction(transaction);
+        }
+    }
+
     default void forcePersistenceCheck() {
         db().close();
         db().init();

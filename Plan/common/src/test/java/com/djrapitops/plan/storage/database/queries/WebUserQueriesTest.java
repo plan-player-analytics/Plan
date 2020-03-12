@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.WebUser;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.database.transactions.commands.RegisterWebUserTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveWebUserTransaction;
 import org.junit.jupiter.api.Test;
 import utilities.TestConstants;
@@ -54,4 +55,10 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
         assertFalse(db().query(WebUserQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME)).isPresent());
     }
 
+    @Test
+    default void removeEverythingRemovesWebUser() {
+        webUserIsRegistered();
+        db().executeTransaction(new RemoveEverythingTransaction());
+        assertTrue(db().query(WebUserQueries.fetchAllPlanWebUsers()).isEmpty());
+    }
 }

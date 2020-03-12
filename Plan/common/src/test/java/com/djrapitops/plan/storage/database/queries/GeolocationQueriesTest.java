@@ -23,6 +23,7 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.objects.GeoInfoQueries;
 import com.djrapitops.plan.storage.database.queries.objects.PingQueries;
+import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.GeoInfoStoreTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PingStoreTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerServerRegisterTransaction;
@@ -33,6 +34,7 @@ import utilities.TestConstants;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public interface GeolocationQueriesTest extends DatabaseTestPreparer {
 
@@ -137,5 +139,12 @@ public interface GeolocationQueriesTest extends DatabaseTestPreparer {
         expected.put("Denmark", expectedPing);
 
         assertEquals(expected, got);
+    }
+
+    @Test
+    default void removeEverythingRemovesGeolocations() {
+        geoInformationIsStored();
+        db().executeTransaction(new RemoveEverythingTransaction());
+        assertTrue(db().query(GeoInfoQueries.fetchAllGeoInformation()).isEmpty());
     }
 }
