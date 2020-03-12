@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
+import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
@@ -140,7 +141,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
     default void playersWorldTimesMatchTotal() {
         worldTimesAreSavedWithSession();
         Session session = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID)).get(serverUUID()).get(0);
-        WorldTimes expected = session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes());
+        WorldTimes expected = session.getValue(SessionKeys.WORLD_TIMES).orElseThrow(AssertionError::new);
         WorldTimes worldTimesOfUser = db().query(WorldTimesQueries.fetchPlayerTotalWorldTimes(playerUUID));
         assertEquals(expected, worldTimesOfUser);
     }
@@ -149,7 +150,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
     default void serverWorldTimesMatchTotal() {
         worldTimesAreSavedWithSession();
         Session session = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID)).get(serverUUID()).get(0);
-        WorldTimes expected = session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes());
+        WorldTimes expected = session.getValue(SessionKeys.WORLD_TIMES).orElseThrow(AssertionError::new);
         WorldTimes worldTimesOfServer = db().query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID()));
         assertEquals(expected, worldTimesOfServer);
     }
@@ -160,4 +161,68 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         assertEquals(new WorldTimes(), worldTimesOfServer);
     }
 
+    @Test
+    default void serverSessionsAreFetchedByPlayerUUID() {
+        prepareForSessionSave();
+        Session session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        execute(DataStoreQueries.storeSession(session));
+
+        forcePersistenceCheck();
+
+        Map<UUID, List<Session>> expected = Collections.singletonMap(playerUUID, Collections.singletonList(session));
+        Map<UUID, List<Session>> fetched = db().query(SessionQueries.fetchSessionsOfServer(serverUUID()));
+
+        assertEquals(expected, fetched);
+    }
+
+    @Test
+    default void playerSessionsAreFetchedByServerUUID() {
+        prepareForSessionSave();
+
+        Session session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        execute(DataStoreQueries.storeSession(session));
+
+        forcePersistenceCheck();
+
+        Map<UUID, List<Session>> expected = Collections.singletonMap(serverUUID(), Collections.singletonList(session));
+        Map<UUID, List<Session>> fetched = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
+        assertEquals(expected, fetched);
+    }
+
+    @Test
+    default void testKillTableGetKillsOfServer() {
+        prepareForSessionSave();
+
+        Session session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        List<PlayerKill> expected = session.getPlayerKills();
+        execute(DataStoreQueries.storeSession(session));
+
+        forcePersistenceCheck();
+
+        Map<UUID, List<Session>> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
+        List<Session> savedSessions = sessions.get(serverUUID());
+        assertNotNull(savedSessions);
+        assertFalse(savedSessions.isEmpty());
+
+        List<PlayerKill> got = savedSessions.get(0).getPlayerKills();
+        assertEquals(expected, got);
+    }
+
+    @Test
+    default void sessionWorldTimesAreFetchedCorrectly() {
+        prepareForSessionSave();
+
+        Session session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        WorldTimes expected = session.getValue(SessionKeys.WORLD_TIMES).orElseThrow(AssertionError::new);
+        execute(DataStoreQueries.storeSession(session));
+
+        // Fetch the session
+        Map<UUID, List<Session>> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
+        List<Session> serverSessions = sessions.get(serverUUID());
+        assertNotNull(serverSessions);
+        assertFalse(serverSessions.isEmpty());
+
+        WorldTimes got = serverSessions.get(0).getValue(SessionKeys.WORLD_TIMES).orElseThrow(AssertionError::new);
+        assertEquals(expected, got);
+    }
 }

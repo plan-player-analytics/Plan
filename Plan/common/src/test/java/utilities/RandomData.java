@@ -16,6 +16,7 @@
  */
 package utilities;
 
+import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.delivery.domain.WebUser;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
 import com.djrapitops.plan.gathering.domain.*;
@@ -54,6 +55,14 @@ public class RandomData {
 
     public static String randomString(int size) {
         return RandomStringUtils.randomAlphanumeric(size);
+    }
+
+    public static List<Nickname> randomNicknames(UUID serverUUID) {
+        return pickMultiple(randomInt(15, 30), () -> randomNickname(serverUUID));
+    }
+
+    public static Nickname randomNickname(UUID serverUUID) {
+        return new Nickname(randomString(randomInt(50, 100)), randomTime(), serverUUID);
     }
 
     public static List<WebUser> randomWebUsers() throws PassEncryptUtil.CannotPerformOperationException {

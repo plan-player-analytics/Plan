@@ -25,7 +25,6 @@ import com.djrapitops.plan.delivery.domain.container.ServerContainer;
 import com.djrapitops.plan.delivery.domain.keys.Key;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.domain.keys.ServerKeys;
-import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.query.QuerySvc;
@@ -42,13 +41,15 @@ import com.djrapitops.plan.storage.database.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.storage.database.transactions.StoreConfigTransaction;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
-import com.djrapitops.plan.storage.database.transactions.commands.*;
+import com.djrapitops.plan.storage.database.transactions.commands.RegisterWebUserTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.RemovePlayerTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.SetServerAsUninstalledTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.*;
 import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.RemoveDuplicateUserInfoTransaction;
 import com.djrapitops.plan.storage.database.transactions.patches.RegisterDateMinimizationPatch;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
-import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
@@ -57,8 +58,6 @@ import org.junit.jupiter.api.Test;
 import utilities.*;
 
 import java.io.File;
-import java.lang.management.ManagementFactory;
-import java.lang.management.OperatingSystemMXBean;
 import java.nio.file.Files;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -78,9 +77,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public interface DatabaseTest extends DatabaseTestPreparer {
 
     @Test
-    default void testTPSSaving() {
+    default void tpsIsStored() {
         List<TPS> expected = RandomData.randomTPS();
-
         for (TPS tps : expected) {
             execute(DataStoreQueries.storeTPS(serverUUID(), tps));
         }
@@ -96,45 +94,23 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     }
 
     default void saveUserTwo() {
-        db().executeTransaction(new PlayerRegisterTransaction(player2UUID, () -> 123456789L, "Test"));
+        db().executeTransaction(new PlayerRegisterTransaction(player2UUID, RandomData::randomTime, TestConstants.PLAYER_TWO_NAME));
     }
 
     @Test
-    default void testNicknamesTable() {
+    default void allNicknamesAreSaved() {
         saveUserOne();
 
-        Nickname expected = new Nickname("TestNickname", System.currentTimeMillis(), serverUUID());
-        db().executeTransaction(new NicknameStoreTransaction(playerUUID, expected, (uuid, name) -> false /* Not cached */));
-        db().executeTransaction(new NicknameStoreTransaction(playerUUID, expected, (uuid, name) -> true /* Cached */));
+        List<Nickname> saved = RandomData.randomNicknames(serverUUID());
+        for (Nickname nickname : saved) {
+            db().executeTransaction(new NicknameStoreTransaction(playerUUID, nickname, (uuid, name) -> false /* Not cached */));
+            db().executeTransaction(new NicknameStoreTransaction(playerUUID, nickname, (uuid, name) -> true /* Cached */));
+        }
+
         forcePersistenceCheck();
 
-        List<Nickname> nicknames = db().query(NicknameQueries.fetchNicknameDataOfPlayer(playerUUID));
-        assertEquals(1, nicknames.size());
-        assertEquals(expected, nicknames.get(0));
-    }
-
-    @Test
-    default void webUserIsRegistered() {
-        WebUser expected = new WebUser(TestConstants.PLAYER_ONE_NAME, "RandomGarbageBlah", 0);
-        db().executeTransaction(new RegisterWebUserTransaction(expected));
-        forcePersistenceCheck();
-
-        Optional<WebUser> found = db().query(WebUserQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME));
-        assertTrue(found.isPresent());
-        assertEquals(expected, found.get());
-    }
-
-    @Test
-    default void multipleWebUsersAreFetchedAppropriately() {
-        webUserIsRegistered();
-        assertEquals(1, db().query(WebUserQueries.fetchAllPlanWebUsers()).size());
-    }
-
-    @Test
-    default void webUserIsRemoved() {
-        webUserIsRegistered();
-        db().executeTransaction(new RemoveWebUserTransaction(TestConstants.PLAYER_ONE_NAME));
-        assertFalse(db().query(WebUserQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME)).isPresent());
+        List<Nickname> fetched = db().query(NicknameQueries.fetchNicknameDataOfPlayer(playerUUID));
+        assertEquals(saved, fetched);
     }
 
     @Test
@@ -160,30 +136,6 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
     default void saveTwoWorlds() {
         saveWorlds(worlds);
-    }
-
-    default WorldTimes createWorldTimes() {
-        Map<String, GMTimes> times = new HashMap<>();
-        Map<String, Long> gm = new HashMap<>();
-        String[] gms = GMTimes.getGMKeyArray();
-        gm.put(gms[0], 1000L);
-        gm.put(gms[1], 2000L);
-        gm.put(gms[2], 3000L);
-        gm.put(gms[3], 4000L);
-
-        String worldName = worlds[0];
-        times.put(worldName, new GMTimes(gm));
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worldName));
-
-        return new WorldTimes(times);
-    }
-
-    default List<PlayerKill> createKills() {
-        List<PlayerKill> kills = new ArrayList<>();
-        kills.add(new PlayerKill(TestConstants.PLAYER_TWO_UUID, "Iron Sword", 4321L));
-        kills.add(new PlayerKill(TestConstants.PLAYER_TWO_UUID, "Gold Sword", 5321L));
-        kills.sort(new DateHolderRecentComparator());
-        return kills;
     }
 
     @Test
@@ -253,17 +205,14 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     default void testRemovalSingleUser() {
         saveUserTwo();
 
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> 223456789L, "Test_name", serverUUID()));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime, TestConstants.PLAYER_ONE_NAME, serverUUID()));
         saveTwoWorlds();
 
-        Session session = new Session(playerUUID, serverUUID(), 12345L, worlds[0], "SURVIVAL");
-        session.endSession(22345L);
-        session.setWorldTimes(createWorldTimes());
-        session.setPlayerKills(createKills());
+        Session session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
 
         execute(DataStoreQueries.storeSession(session));
-        db().executeTransaction(new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID()), (uuid, name) -> false /* Not cached */));
-        saveGeoInfo(playerUUID, new GeoInfo("TestLoc", 223456789L));
+        db().executeTransaction(new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", RandomData.randomTime(), serverUUID()), (uuid, name) -> false /* Not cached */));
+        saveGeoInfo(playerUUID, new GeoInfo("TestLoc", RandomData.randomTime()));
 
         assertTrue(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
 
@@ -304,69 +253,32 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
         saveTwoWorlds();
 
-        Session session = new Session(playerUUID, serverUUID(), 12345L, worlds[0], "SURVIVAL");
-        session.endSession(22345L);
-        session.setWorldTimes(createWorldTimes());
-        session.setPlayerKills(createKills());
+        Session session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
 
         execute(DataStoreQueries.storeSession(session));
         db().executeTransaction(
-                new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID()), (uuid, name) -> false /* Not cached */)
+                new NicknameStoreTransaction(playerUUID, RandomData.randomNickname(serverUUID()), (uuid, name) -> false /* Not cached */)
         );
-        saveGeoInfo(playerUUID, new GeoInfo("TestLoc", 223456789L));
+        saveGeoInfo(playerUUID, new GeoInfo("TestLoc", RandomData.randomTime()));
 
         assertTrue(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
 
-        List<TPS> expected = new ArrayList<>();
-        Random r = new Random();
-        OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
-        int availableProcessors = ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors();
-        double averageCPUUsage = operatingSystemMXBean.getSystemLoadAverage() / availableProcessors * 100.0;
-        long usedMemory = 51231251254L;
-        int entityCount = 6123;
-        int chunksLoaded = 2134;
-        long freeDiskSpace = new File("").getUsableSpace();
-        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded, freeDiskSpace));
-        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded, freeDiskSpace));
-        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded, freeDiskSpace));
-        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded, freeDiskSpace));
+        List<TPS> expected = RandomData.randomTPS();
         for (TPS tps : expected) {
             execute(DataStoreQueries.storeTPS(serverUUID(), tps));
         }
 
         db().executeTransaction(new PingStoreTransaction(
                 playerUUID, serverUUID(),
-                Collections.singletonList(new DateObj<>(System.currentTimeMillis(), r.nextInt())))
+                Collections.singletonList(new DateObj<>(System.currentTimeMillis(), RandomData.randomInt(-1, 40))))
         );
 
-        WebUser webUser = new WebUser(TestConstants.PLAYER_ONE_NAME, "RandomGarbageBlah", 0);
+        WebUser webUser = new WebUser(TestConstants.PLAYER_ONE_NAME, RandomData.randomString(100), 0);
         db().executeTransaction(new RegisterWebUserTransaction(webUser));
     }
 
     default void saveGeoInfo(UUID uuid, GeoInfo geoInfo) {
         db().executeTransaction(new GeoInfoStoreTransaction(uuid, geoInfo));
-    }
-
-    @Test
-    default void testSessionTableGetInfoOfServer() {
-        saveUserOne();
-        saveUserTwo();
-
-        Session session = new Session(playerUUID, serverUUID(), 12345L, worlds[0], "SURVIVAL");
-        session.endSession(22345L);
-        session.setWorldTimes(createWorldTimes());
-        session.setPlayerKills(createKills());
-        execute(DataStoreQueries.storeSession(session));
-
-        forcePersistenceCheck();
-
-        Map<UUID, List<Session>> sessions = db().query(SessionQueries.fetchSessionsOfServer(serverUUID()));
-
-        List<Session> sSessions = sessions.get(playerUUID);
-        assertFalse(sessions.isEmpty());
-        assertNotNull(sSessions);
-        assertFalse(sSessions.isEmpty());
-        assertEquals(session, sSessions.get(0));
     }
 
     @Test
@@ -420,45 +332,6 @@ public interface DatabaseTest extends DatabaseTestPreparer {
                 Collections.singletonList(new UserInfo(player2UUID, serverUUID(), 0, false, false)),
                 found2
         );
-    }
-
-    @Test
-    default void testKillTableGetKillsOfServer() {
-        saveUserOne();
-        saveUserTwo();
-
-        Session session = createSession();
-        List<PlayerKill> expected = createKills();
-        session.setPlayerKills(expected);
-        execute(DataStoreQueries.storeSession(session));
-
-        forcePersistenceCheck();
-
-        Map<UUID, List<Session>> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
-        List<Session> savedSessions = sessions.get(serverUUID());
-        assertNotNull(savedSessions);
-        assertFalse(savedSessions.isEmpty());
-
-        Session savedSession = savedSessions.get(0);
-        assertNotNull(savedSession);
-
-        List<PlayerKill> kills = savedSession.getPlayerKills();
-        assertNotNull(kills);
-        assertFalse(kills.isEmpty());
-        assertEquals(expected, kills);
-    }
-
-    default Session createSession() {
-        Session session = new Session(
-                playerUUID,
-                serverUUID(),
-                System.currentTimeMillis(),
-                "world",
-                GMTimes.getGMKeyArray()[0]
-        );
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), "world"));
-        session.endSession(System.currentTimeMillis() + 1L);
-        return session;
     }
 
     @Test
@@ -517,24 +390,6 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
     default <T> void assertQueryResultIsEqual(Database one, Database two, Query<T> query) {
         assertEquals(one.query(query), two.query(query));
-    }
-
-    @Test
-    default void sessionWorldTimesAreFetchedCorrectly() {
-        saveUserOne();
-        WorldTimes worldTimes = createWorldTimes();
-        Session session = new Session(1, playerUUID, serverUUID(), 12345L, 23456L, 0, 0, 0);
-        session.setWorldTimes(worldTimes);
-        execute(DataStoreQueries.storeSession(session));
-
-        // Fetch the session
-        Map<UUID, List<Session>> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
-        List<Session> serverSessions = sessions.get(serverUUID());
-        assertNotNull(serverSessions);
-        assertFalse(serverSessions.isEmpty());
-
-        Session savedSession = serverSessions.get(0);
-        assertEquals(worldTimes, savedSession.getUnsafe(SessionKeys.WORLD_TIMES));
     }
 
     @Test
@@ -600,7 +455,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
                 Collections.singletonList(new GeoInfo("TestLoc", 223456789));
         OptionalAssert.equals(expectedGeoInfo, container.getValue(PlayerKeys.GEO_INFO));
 
-        List<Nickname> expectedNicknames = Collections.singletonList(new Nickname("TestNick", -1, serverUUID()));
+        List<Nickname> expectedNicknames = db().query(NicknameQueries.fetchNicknameDataOfPlayer(playerUUID));
         OptionalAssert.equals(expectedNicknames, container.getValue(PlayerKeys.NICKNAMES));
 
         OptionalAssert.equals(false, container.getValue(PlayerKeys.OPERATOR));

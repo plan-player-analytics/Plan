@@ -20,6 +20,7 @@ import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.storage.database.queries.ActivityIndexQueriesTest;
 import com.djrapitops.plan.storage.database.queries.GeolocationQueriesTest;
 import com.djrapitops.plan.storage.database.queries.SessionQueriesTest;
+import com.djrapitops.plan.storage.database.queries.WebUserQueriesTest;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
@@ -50,7 +51,8 @@ class MySQLTest implements DatabaseTest,
         ExtensionsDatabaseTest,
         ActivityIndexQueriesTest,
         GeolocationQueriesTest,
-        SessionQueriesTest {
+        SessionQueriesTest,
+        WebUserQueriesTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 

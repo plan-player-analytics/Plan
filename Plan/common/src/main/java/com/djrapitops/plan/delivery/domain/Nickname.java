@@ -63,7 +63,7 @@ public class Nickname implements DateHolder {
         if (this == o) return true;
         if (!(o instanceof Nickname)) return false;
         Nickname nickname = (Nickname) o;
-        return Objects.equals(name, nickname.name) &&
+        return Objects.equals(getName(), nickname.getName()) &&
                 Objects.equals(serverUUID, nickname.serverUUID);
     }
 
