@@ -75,7 +75,7 @@ public class SystemUsage {
      */
     public static long getFreeDiskSpace() {
         File file = new File(new File("").getAbsolutePath());
-        return file.getFreeSpace() / 1000000L;
+        return file.getUsableSpace() / 1000000L;
     }
 
 }
