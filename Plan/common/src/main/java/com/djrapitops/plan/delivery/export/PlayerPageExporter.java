@@ -56,8 +56,6 @@ public class PlayerPageExporter extends FileExporter {
     private final Locale locale;
     private final Theme theme;
 
-    private final ExportPaths exportPaths;
-
     @Inject
     public PlayerPageExporter(
             PlanFiles files,
@@ -73,8 +71,6 @@ public class PlayerPageExporter extends FileExporter {
         this.jsonHandler = jsonHandler;
         this.locale = locale;
         this.theme = theme;
-
-        exportPaths = new ExportPaths();
     }
 
     public void export(Path toDirectory, UUID playerUUID, String playerName) throws IOException, NotFoundException, GenerationException {
@@ -82,17 +78,18 @@ public class PlayerPageExporter extends FileExporter {
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
         if (!dbSystem.getDatabase().query(PlayerFetchQueries.isPlayerRegistered(playerUUID))) return;
 
+        ExportPaths exportPaths = new ExportPaths();
         exportPaths.put("../network/", toRelativePathFromRoot("network"));
         exportPaths.put("../server/", toRelativePathFromRoot("server"));
-        exportRequiredResources(toDirectory);
+        exportRequiredResources(exportPaths, toDirectory);
 
         Path playerDirectory = toDirectory.resolve("player/" + toFileName(playerName));
-        exportJSON(playerDirectory, playerUUID, playerName);
-        exportHtml(playerDirectory, playerUUID);
+        exportJSON(exportPaths, playerDirectory, playerUUID, playerName);
+        exportHtml(exportPaths, playerDirectory, playerUUID);
         exportPaths.clear();
     }
 
-    private void exportHtml(Path playerDirectory, UUID playerUUID) throws IOException, GenerationException, NotFoundException {
+    private void exportHtml(ExportPaths exportPaths, Path playerDirectory, UUID playerUUID) throws IOException, GenerationException, NotFoundException {
         Path to = playerDirectory.resolve("index.html");
 
         try {
@@ -103,11 +100,11 @@ public class PlayerPageExporter extends FileExporter {
         }
     }
 
-    private void exportJSON(Path toDirectory, UUID playerUUID, String playerName) throws IOException, NotFoundException {
-        exportJSON(toDirectory, "player?player=" + playerUUID, playerName);
+    private void exportJSON(ExportPaths exportPaths, Path toDirectory, UUID playerUUID, String playerName) throws IOException, NotFoundException {
+        exportJSON(exportPaths, toDirectory, "player?player=" + playerUUID, playerName);
     }
 
-    private void exportJSON(Path toDirectory, String resource, String playerName) throws NotFoundException, IOException {
+    private void exportJSON(ExportPaths exportPaths, Path toDirectory, String resource, String playerName) throws NotFoundException, IOException {
         Response found = getJSONResponse(resource);
         if (found instanceof ErrorResponse) {
             throw new NotFoundException(resource + " was not properly exported: " + found.getContent());
@@ -132,9 +129,9 @@ public class PlayerPageExporter extends FileExporter {
         }
     }
 
-    private void exportRequiredResources(Path toDirectory) throws IOException {
+    private void exportRequiredResources(ExportPaths exportPaths, Path toDirectory) throws IOException {
         // Style
-        exportResources(toDirectory,
+        exportResources(exportPaths, toDirectory,
                 "img/Flaticon_circle.png",
                 "css/sb-admin-2.css",
                 "css/style.css",
@@ -174,13 +171,13 @@ public class PlayerPageExporter extends FileExporter {
         );
     }
 
-    private void exportResources(Path toDirectory, String... resourceNames) throws IOException {
+    private void exportResources(ExportPaths exportPaths, Path toDirectory, String... resourceNames) throws IOException {
         for (String resourceName : resourceNames) {
-            exportResource(toDirectory, resourceName);
+            exportResource(exportPaths, toDirectory, resourceName);
         }
     }
 
-    private void exportResource(Path toDirectory, String resourceName) throws IOException {
+    private void exportResource(ExportPaths exportPaths, Path toDirectory, String resourceName) throws IOException {
         Resource resource = files.getCustomizableResourceOrDefault("web/" + resourceName);
         Path to = toDirectory.resolve(resourceName);
 
