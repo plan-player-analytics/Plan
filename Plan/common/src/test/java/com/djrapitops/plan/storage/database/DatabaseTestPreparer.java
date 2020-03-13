@@ -17,19 +17,11 @@
 package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.PlanSystem;
-import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.storage.database.transactions.Executable;
-import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
-import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
-import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
-import com.djrapitops.plan.storage.database.transactions.patches.Patch;
-import org.junit.jupiter.api.BeforeEach;
 import utilities.TestConstants;
 
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public interface DatabaseTestPreparer {
 
@@ -42,30 +34,6 @@ public interface DatabaseTestPreparer {
     UUID serverUUID();
 
     PlanSystem system();
-
-    @BeforeEach
-    default void setUp() {
-        db().executeTransaction(new Patch() {
-            @Override
-            public boolean hasBeenApplied() {
-                return false;
-            }
-
-            @Override
-            public void applyPatch() {
-                dropTable("plan_world_times");
-                dropTable("plan_kills");
-                dropTable("plan_sessions");
-                dropTable("plan_worlds");
-                dropTable("plan_users");
-            }
-        });
-        db().executeTransaction(new CreateTablesTransaction());
-        db().executeTransaction(new RemoveEverythingTransaction());
-
-        db().executeTransaction(new StoreServerInformationTransaction(new Server(-1, serverUUID(), "ServerName", "", 20)));
-        assertEquals(serverUUID(), ((SQLDB) db()).getServerUUIDSupplier().get());
-    }
 
     default void execute(Executable executable) {
         db().executeTransaction(new Transaction() {

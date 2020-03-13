@@ -17,9 +17,15 @@
 package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.storage.database.queries.*;
+import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
+import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
+import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -29,6 +35,8 @@ import utilities.mocks.PluginMockComponent;
 
 import java.nio.file.Path;
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests for SQLite Database.
@@ -61,6 +69,30 @@ public class SQLiteTest implements DatabaseTest,
         system = new PluginMockComponent(temp).getPlanSystem();
         database = new DBPreparer(system, TEST_PORT_NUMBER).prepareSQLite()
                 .orElseThrow(IllegalStateException::new);
+    }
+
+    @BeforeEach
+    void setUp() {
+        db().executeTransaction(new Patch() {
+            @Override
+            public boolean hasBeenApplied() {
+                return false;
+            }
+
+            @Override
+            public void applyPatch() {
+                dropTable("plan_world_times");
+                dropTable("plan_kills");
+                dropTable("plan_sessions");
+                dropTable("plan_worlds");
+                dropTable("plan_users");
+            }
+        });
+        db().executeTransaction(new CreateTablesTransaction());
+        db().executeTransaction(new RemoveEverythingTransaction());
+
+        db().executeTransaction(new StoreServerInformationTransaction(new Server(-1, serverUUID(), "ServerName", "", 20)));
+        assertEquals(serverUUID(), ((SQLDB) db()).getServerUUIDSupplier().get());
     }
 
     @AfterAll
