@@ -65,6 +65,7 @@ Data_gathering:
   # https://www.maxmind.com/en/geolite2/eula
   Accept_GeoLite2_EULA: false
   Ping: true
+  Disk_space: true
 # -----------------------------------------------------
 # Supported time units: MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS
 # -----------------------------------------------------

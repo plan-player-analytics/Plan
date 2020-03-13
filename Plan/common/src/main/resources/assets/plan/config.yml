@@ -67,6 +67,7 @@ Data_gathering:
   # https://www.maxmind.com/en/geolite2/eula
   Accept_GeoLite2_EULA: false
   Ping: true
+  Disk_space: true
   Commands:
     Log_unknown: false
     Log_aliases_as_main_command: true

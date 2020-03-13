@@ -20,6 +20,8 @@ import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.gathering.SystemUsage;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
 import com.djrapitops.plan.utilities.analysis.Average;
@@ -54,12 +56,13 @@ public class ServerTPSCounter<W> extends TPSCounter {
     @Inject
     public ServerTPSCounter(
             ServerSensor<W> serverSensor,
+            PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        super(logger, errorHandler);
+        super(config.get(DataGatheringSettings.DISK_SPACE), logger, errorHandler);
 
         noDirectTPS = !serverSensor.supportsDirectTPS();
         this.serverSensor = serverSensor;
