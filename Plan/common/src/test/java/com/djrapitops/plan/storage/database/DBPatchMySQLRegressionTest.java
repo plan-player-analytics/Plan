@@ -76,12 +76,13 @@ class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
     }
 
     private void dropAllTables() {
+        String dbName = System.getenv(CIProperties.MYSQL_DATABASE);
         underTest.executeTransaction(new Transaction() {
             @Override
             protected void performOperations() {
-                execute("DROP DATABASE Plan");
-                execute("CREATE DATABASE Plan");
-                execute("USE Plan");
+                execute("DROP DATABASE " + dbName);
+                execute("CREATE DATABASE " + dbName);
+                execute("USE " + dbName);
             }
         });
     }
