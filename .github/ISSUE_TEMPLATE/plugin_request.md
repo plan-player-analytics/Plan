@@ -1,6 +1,8 @@
 ---
 name: Plugin Suggestion
 about: Suggest data from another plugin for Plan
+labels: 'New Feature, DataExtensions, Help Wanted'
+
 ---
 
 ### Data to display
