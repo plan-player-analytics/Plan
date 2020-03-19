@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.settings.config;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
@@ -32,10 +34,11 @@ public class ResourceSettings {
     public boolean shouldBeCustomized(String plugin, String fileName) {
         ConfigNode fileCustomization = config.getNode("Customized_files").orElseGet(() -> config.addNode("Customized_files"));
         ConfigNode pluginCustomization = fileCustomization.getNode(plugin).orElseGet(() -> fileCustomization.addNode(plugin));
-        if (pluginCustomization.contains(fileName)) {
-            return pluginCustomization.getBoolean(fileName);
+        String fileNameNonPath = StringUtils.replaceChars(fileName, '.', ',');
+        if (pluginCustomization.contains(fileNameNonPath)) {
+            return pluginCustomization.getBoolean(fileNameNonPath);
         } else {
-            pluginCustomization.set(fileName, false);
+            pluginCustomization.set(fileNameNonPath, false);
             try {
                 pluginCustomization.save();
             } catch (IOException e) {
