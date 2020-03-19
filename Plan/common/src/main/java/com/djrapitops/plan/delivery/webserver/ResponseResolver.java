@@ -96,17 +96,13 @@ public class ResponseResolver {
         resolverService.registerResolver(plugin, "/debug", debugPageResolver);
         resolverService.registerResolver(plugin, "/players", playersPageResolver);
         resolverService.registerResolver(plugin, "/player", playerPageResolver);
-        resolverService.registerResolver(plugin, "/favicon.ico", noAuthResolverFor(responseFactory.faviconResponse()));
+        resolverService.registerResolver(plugin, "/favicon.ico", (NoAuthResolver) request -> Optional.of(responseFactory.faviconResponse()));
         resolverService.registerResolver(plugin, "/network", serverPageResolver);
         resolverService.registerResolver(plugin, "/server", serverPageResolver);
         resolverService.registerResolverForMatches(plugin, Pattern.compile("^/$"), rootPageResolver);
         resolverService.registerResolverForMatches(plugin, Pattern.compile("^/(vendor|css|js|img)/.*"), staticResourceResolver);
 
         resolverService.registerResolver(plugin, "/v1", rootJSONResolver.getResolver());
-    }
-
-    public NoAuthResolver noAuthResolverFor(Response response) {
-        return request -> Optional.of(response);
     }
 
     public Response getResponse(RequestInternal request) {

@@ -16,10 +16,12 @@
  */
 package com.djrapitops.plan.storage.file;
 
+import com.djrapitops.plan.delivery.web.resource.WebResource;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.List;
 
 /**
@@ -61,6 +63,17 @@ public interface Resource {
      * @throws IOException If the resource is unavailable.
      */
     String asString() throws IOException;
+
+    /**
+     * @throws UncheckedIOException if fails to read the file
+     */
+    default WebResource asWebResource() {
+        try {
+            return WebResource.create(asInputStream());
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to read '" + getResourceName() + "'", e);
+        }
+    }
 
     /**
      * Check if a resource is a text based file.

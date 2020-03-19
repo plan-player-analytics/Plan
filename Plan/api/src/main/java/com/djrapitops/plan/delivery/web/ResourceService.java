@@ -16,8 +16,9 @@
  */
 package com.djrapitops.plan.delivery.web;
 
-import com.djrapitops.plan.delivery.web.resource.Resource;
+import com.djrapitops.plan.delivery.web.resource.WebResource;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -27,15 +28,20 @@ import java.util.function.Supplier;
  */
 public interface ResourceService {
 
+    static ResourceService getInstance() {
+        return Optional.ofNullable(ResourceService.Holder.service)
+                .orElseThrow(() -> new IllegalStateException("ResourceService has not been initialised yet."));
+    }
+
     /**
      * Make one of your web resources customizable by user or Plan API.
      *
      * @param pluginName Name of your plugin (for config purposes)
      * @param fileName   Name of the file (for customization)
-     * @param source     Supplier to use to get the original resource.
+     * @param source     Supplier to use to get the original resource, it is assumed that any text based files are encoded in UTF-8.
      * @return Resource of the customized file.
      */
-    Resource getResource(String pluginName, String fileName, Supplier<Resource> source);
+    WebResource getResource(String pluginName, String fileName, Supplier<WebResource> source);
 
     /**
      * Add javascript to load in an existing html resource.
@@ -80,5 +86,17 @@ public interface ResourceService {
          * Recommended for loading data to custom structure on the page.
          */
         BODY_END
+    }
+
+    class Holder {
+        static ResourceService service;
+
+        private Holder() {
+            /* Static variable holder */
+        }
+
+        static void set(ResourceService service) {
+            ResourceService.Holder.service = service;
+        }
     }
 }

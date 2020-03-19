@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.rendering.pages;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
+import com.djrapitops.plan.delivery.web.ResourceService;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
@@ -41,6 +42,7 @@ import dagger.Lazy;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.*;
 
 /**
@@ -92,14 +94,14 @@ public class PageFactory {
 
     public DebugPage debugPage() throws IOException {
         return new DebugPage(
-                getResource("web/error.html"),
+                getResource("error.html"),
                 dbSystem.get().getDatabase(), serverInfo.get(), formatters.get(), versionChecker.get(),
                 debugLogger.get(), timings.get(), errorHandler.get()
         );
     }
 
     public PlayersPage playersPage() throws IOException {
-        return new PlayersPage(getResource("web/players.html"), versionChecker.get(),
+        return new PlayersPage(getResource("players.html"), versionChecker.get(),
                 config.get(), locale.get(), theme.get(), serverInfo.get());
     }
 
@@ -115,7 +117,7 @@ public class PageFactory {
         Server server = dbSystem.get().getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
                 .orElseThrow(() -> new NotFoundException("Server not found in the database"));
         return new ServerPage(
-                getResource("web/server.html"),
+                getResource("server.html"),
                 server,
                 config.get(),
                 theme.get(),
@@ -131,7 +133,7 @@ public class PageFactory {
         Database db = dbSystem.get().getDatabase();
         PlayerContainer player = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
         return new PlayerPage(
-                getResource("web/player.html"), player,
+                getResource("player.html"), player,
                 versionChecker.get(),
                 config.get(), this, theme.get(), locale.get(),
                 formatters.get(), serverInfo.get()
@@ -172,7 +174,7 @@ public class PageFactory {
     }
 
     public NetworkPage networkPage() throws IOException {
-        return new NetworkPage(getResource("web/network.html"),
+        return new NetworkPage(getResource("network.html"),
                 dbSystem.get(),
                 versionChecker.get(),
                 config.get(), theme.get(), locale.get(),
@@ -182,7 +184,7 @@ public class PageFactory {
     public Page internalErrorPage(String message, Throwable error) {
         try {
             return new InternalErrorPage(
-                    getResource("web/error.html"), message, error,
+                    getResource("error.html"), message, error,
                     versionChecker.get());
         } catch (IOException noParse) {
             return () -> "Error occurred: " + error.toString() +
@@ -193,17 +195,23 @@ public class PageFactory {
 
     public Page errorPage(String title, String error) throws IOException {
         return new ErrorMessagePage(
-                getResource("web/error.html"), title, error,
+                getResource("error.html"), title, error,
                 versionChecker.get(), locale.get(), theme.get());
     }
 
     public Page errorPage(Icon icon, String title, String error) throws IOException {
         return new ErrorMessagePage(
-                getResource("web/error.html"), icon, title, error,
+                getResource("error.html"), icon, title, error,
                 locale.get(), theme.get(), versionChecker.get());
     }
 
     public String getResource(String name) throws IOException {
-        return files.get().getCustomizableResourceOrDefault(name).asString();
+        try {
+            return ResourceService.getInstance().getResource("Plan", name,
+                    () -> files.get().getResourceFromJar("web/" + name).asWebResource()
+            ).asString();
+        } catch (UncheckedIOException readFail) {
+            throw readFail.getCause();
+        }
     }
 }

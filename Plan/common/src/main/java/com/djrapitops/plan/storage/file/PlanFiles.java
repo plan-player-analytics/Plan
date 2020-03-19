@@ -57,6 +57,10 @@ public class PlanFiles implements SubSystem {
         return dataFolder.toPath();
     }
 
+    public Path getCustomizationDirectory() {
+        return dataFolder.toPath().resolve("web");
+    }
+
     public File getLogsFolder() {
         File folder = getFileFromPluginFolder("logs");
         folder.mkdirs();
@@ -119,7 +123,9 @@ public class PlanFiles implements SubSystem {
      *
      * @param resourceName Path to the file inside the plugin folder.
      * @return a {@link Resource} for accessing the resource, either from the plugin folder or jar.
+     * @deprecated Use {@link PlanFiles#getCustomizableResource(String)} instead.
      */
+    @Deprecated
     public Resource getCustomizableResourceOrDefault(String resourceName) {
         return ResourceCache.getOrCache(resourceName, () ->
                 attemptToFind(resourceName).map(file -> (Resource) new FileResource(resourceName, file))
@@ -143,5 +149,9 @@ public class PlanFiles implements SubSystem {
             }
         }
         return Optional.empty();
+    }
+
+    public Optional<Resource> getCustomizableResource(String resourceName) {
+        return attemptToFind(resourceName).map(found -> new FileResource(resourceName, found));
     }
 }

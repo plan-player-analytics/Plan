@@ -44,6 +44,7 @@ public class PlanConfig extends Config {
 
     private final PlanFiles files;
     private final ExtensionSettings extensionSettings;
+    private final ResourceSettings resourceSettings;
     private final WorldAliasSettings worldAliasSettings;
     private final PluginLogger logger;
 
@@ -53,12 +54,7 @@ public class PlanConfig extends Config {
             WorldAliasSettings worldAliasSettings,
             PluginLogger logger
     ) {
-        super(files.getConfigFile());
-
-        this.files = files;
-        this.extensionSettings = new ExtensionSettings(this);
-        this.worldAliasSettings = worldAliasSettings;
-        this.logger = logger;
+        this(files.getConfigFile(), files, worldAliasSettings, logger);
     }
 
     // For testing
@@ -72,6 +68,7 @@ public class PlanConfig extends Config {
 
         this.files = files;
         this.extensionSettings = new ExtensionSettings(this);
+        this.resourceSettings = new ResourceSettings(this);
         this.worldAliasSettings = worldAliasSettings;
         this.logger = logger;
     }
@@ -140,6 +137,10 @@ public class PlanConfig extends Config {
 
     public ExtensionSettings getExtensionSettings() {
         return extensionSettings;
+    }
+
+    public ResourceSettings getResourceSettings() {
+        return resourceSettings;
     }
 
     public WorldAliasSettings getWorldAliasSettings() {

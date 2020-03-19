@@ -26,18 +26,41 @@ import java.nio.charset.StandardCharsets;
  * Represents a customizable resource.
  * <p>
  * You can use the create methods for simple resources when using {@link com.djrapitops.plan.delivery.web.ResourceService}.
+ * <p>
+ * It is assumed that any text based files are encoded in UTF-8.
+ *
+ * @author Rsl1122
  */
-public interface Resource {
+public interface WebResource {
 
-    static Resource create(byte[] content) {
+    /**
+     * Create a new WebResource from byte array.
+     *
+     * @param content Bytes of the resource.
+     * @return WebResource.
+     */
+    static WebResource create(byte[] content) {
         return new ByteResource(content);
     }
 
-    static Resource create(String utf8String) {
+    /**
+     * Create a new WebResource from an UTF-8 String.
+     *
+     * @param utf8String String in UTF-8 encoding.
+     * @return WebResource.
+     */
+    static WebResource create(String utf8String) {
         return new ByteResource(utf8String.getBytes(StandardCharsets.UTF_8));
     }
 
-    static Resource create(InputStream in) throws IOException {
+    /**
+     * Creates a new WebResource from an InputStream.
+     *
+     * @param in InputStream for the resource, closed after inside the method.
+     * @return WebResource.
+     * @throws IOException If the stream can not be read.
+     */
+    static WebResource create(InputStream in) throws IOException {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             int read;
             byte[] bytes = new byte[1024];
@@ -53,11 +76,16 @@ public interface Resource {
 
     byte[] asBytes();
 
+    /**
+     * Return the resource as a UTF-8 String.
+     *
+     * @return The resource in UTF-8.
+     */
     String asString();
 
     InputStream asStream();
 
-    final class ByteResource implements Resource {
+    final class ByteResource implements WebResource {
         private final byte[] content;
 
         public ByteResource(byte[] content) {

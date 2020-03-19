@@ -17,10 +17,10 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.PlanAPI;
-import com.djrapitops.plan.capability.CapabilitySvc;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.delivery.export.ExportSystem;
 import com.djrapitops.plan.delivery.web.ResolverSvc;
+import com.djrapitops.plan.delivery.web.ResourceSvc;
 import com.djrapitops.plan.delivery.webserver.NonProxyWebserverDisableChecker;
 import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.delivery.webserver.WebServerSystem;
@@ -79,6 +79,7 @@ public class PlanSystem implements SubSystem {
     private final ExportSystem exportSystem;
     private final DeliveryUtilities deliveryUtilities;
     private final ResolverSvc resolverService;
+    private final ResourceSvc resourceService;
     private final ExtensionSvc extensionService;
     private final QuerySvc queryService;
     private final SettingsSvc settingsService;
@@ -103,6 +104,7 @@ public class PlanSystem implements SubSystem {
             ExportSystem exportSystem,
             DeliveryUtilities deliveryUtilities,
             ResolverSvc resolverService,
+            ResourceSvc resourceService,
             ExtensionSvc extensionService,
             QuerySvc queryService,
             SettingsSvc settingsService,
@@ -126,6 +128,7 @@ public class PlanSystem implements SubSystem {
         this.exportSystem = exportSystem;
         this.deliveryUtilities = deliveryUtilities;
         this.resolverService = resolverService;
+        this.resourceService = resourceService;
         this.extensionService = extensionService;
         this.queryService = queryService;
         this.settingsService = settingsService;
@@ -155,10 +158,9 @@ public class PlanSystem implements SubSystem {
 
     @Override
     public void enable() throws EnableException {
-        CapabilitySvc.initialize();
-
         extensionService.register();
         resolverService.register();
+        resourceService.register();
         settingsService.register();
         queryService.register();
 
