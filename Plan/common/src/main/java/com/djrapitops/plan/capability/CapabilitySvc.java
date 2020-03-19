@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.capability;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -29,32 +27,9 @@ import java.util.function.Consumer;
  */
 public class CapabilitySvc implements CapabilityService {
 
-    private final List<Consumer<Boolean>> enableListeners;
-
-    private CapabilitySvc() {
-        Holder.set(this);
-        enableListeners = new ArrayList<>();
-    }
-
-    private static CapabilitySvc get() {
-        if (Holder.service == null) {
-            return new CapabilitySvc();
-        }
-        return (CapabilitySvc) Holder.service;
-    }
-
-    public static void initialize() {
-        get();
-    }
-
     public static void notifyAboutEnable(boolean isEnabled) {
-        for (Consumer<Boolean> enableListener : get().enableListeners) {
+        for (Consumer<Boolean> enableListener : CapabilityService.ListHolder.ENABLE_LISTENERS) {
             enableListener.accept(isEnabled);
         }
-    }
-
-    @Override
-    public void registerEnableListener(Consumer<Boolean> enableListener) {
-        enableListeners.add(enableListener);
     }
 }
