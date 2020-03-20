@@ -73,19 +73,19 @@ public interface ResourceService {
         /**
          * Loaded before page contents.
          */
-        HEAD,
+        PRE_CONTENT,
         /**
-         * Loaded after page contents.
+         * Loaded after library scripts.
          * <p>
          * Recommended for modifying the structure of the page or loading libraries.
          */
-        BODY,
+        PRE_MAIN_SCRIPT,
         /**
          * Loaded after script execution.
          * <p>
          * Recommended for loading data to custom structure on the page.
          */
-        BODY_END
+        AFTER_MAIN_SCRIPT
     }
 
     class Holder {

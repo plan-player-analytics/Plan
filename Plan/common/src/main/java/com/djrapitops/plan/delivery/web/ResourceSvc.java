@@ -84,23 +84,23 @@ public class ResourceSvc implements ResourceService {
             return "Error: Given resource did not support WebResource#asString method properly and returned 'null'";
         }
 
-        StringBuilder toHead = byPosition.get(Position.HEAD);
+        StringBuilder toHead = byPosition.get(Position.PRE_CONTENT);
         if (toHead != null) {
             html = StringUtils.replaceOnce(html, "</head>", toHead.append("</head>").toString());
         }
 
-        StringBuilder toBody = byPosition.get(Position.BODY);
+        StringBuilder toBody = byPosition.get(Position.PRE_MAIN_SCRIPT);
         if (toBody != null) {
-            if (StringUtils.contains(html, "<!-- End of Page Wrapper -->")) {
-                html = StringUtils.replaceOnce(html, "<!-- End of Page Wrapper -->", toBody.toString());
+            if (StringUtils.contains(html, "<script id=\"mainScript\"")) {
+                html = StringUtils.replaceOnce(html, "<script id=\"mainScript\"", toBody.append("<script id=\"mainScript\"").toString());
             } else {
-                html = StringUtils.replaceOnce(html, "<body>", toBody.append("<body>").toString());
+                html = StringUtils.replaceOnce(html, "</body>", toBody.append("</body>").toString());
             }
         }
 
-        StringBuilder toBodyEnd = byPosition.get(Position.BODY_END);
+        StringBuilder toBodyEnd = byPosition.get(Position.AFTER_MAIN_SCRIPT);
         if (toBodyEnd != null) {
-            html = StringUtils.replaceOnce(html, "<\body>", toBodyEnd.append("<\body>").toString());
+            html = StringUtils.replaceOnce(html, "</body>", toBodyEnd.append("</body>").toString());
         }
 
         return html;
