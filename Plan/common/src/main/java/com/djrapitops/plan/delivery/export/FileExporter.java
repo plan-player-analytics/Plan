@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.export;
 
 import com.djrapitops.plan.delivery.rendering.html.Html;
-import com.djrapitops.plan.storage.file.Resource;
+import com.djrapitops.plan.delivery.web.resource.WebResource;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayInputStream;
@@ -56,15 +56,14 @@ abstract class FileExporter {
     }
 
     void export(Path to, String content) throws IOException {
-        Files.createDirectories(to.getParent());
-        Files.write(to, Arrays.asList(StringUtils.split(content, "\r\n")), StandardCharsets.UTF_8, OPEN_OPTIONS);
+        export(to, Arrays.asList(StringUtils.split(content, "\r\n")));
     }
 
-    void export(Path to, Resource resource) throws IOException {
+    void export(Path to, WebResource resource) throws IOException {
         Files.createDirectories(to.getParent());
 
         try (
-                InputStream in = resource.asInputStream();
+                InputStream in = resource.asStream();
                 OutputStream out = Files.newOutputStream(to, OPEN_OPTIONS)
         ) {
             copy(in, out);

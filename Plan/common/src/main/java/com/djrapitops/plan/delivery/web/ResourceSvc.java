@@ -19,9 +19,12 @@ package com.djrapitops.plan.delivery.web;
 import com.djrapitops.plan.delivery.web.resource.WebResource;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.ResourceSettings;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.Resource;
 import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.TextStringBuilder;
@@ -47,16 +50,22 @@ public class ResourceSvc implements ResourceService {
     public final Set<Snippet> snippets;
     private final PlanFiles files;
     private final ResourceSettings resourceSettings;
+    private final Locale locale;
+    private final PluginLogger logger;
     private final ErrorHandler errorHandler;
 
     @Inject
     public ResourceSvc(
             PlanFiles files,
             PlanConfig config,
+            Locale locale,
+            PluginLogger logger,
             ErrorHandler errorHandler
     ) {
         this.files = files;
         this.resourceSettings = config.getResourceSettings();
+        this.locale = locale;
+        this.logger = logger;
         this.errorHandler = errorHandler;
         this.snippets = new HashSet<>();
     }
@@ -67,7 +76,20 @@ public class ResourceSvc implements ResourceService {
 
     @Override
     public WebResource getResource(String pluginName, String fileName, Supplier<WebResource> source) {
+        checkParams(pluginName, fileName, source);
         return applySnippets(pluginName, fileName, getTheResource(pluginName, fileName, source));
+    }
+
+    public void checkParams(String pluginName, String fileName, Supplier<WebResource> source) {
+        if (pluginName == null || pluginName.isEmpty()) {
+            throw new IllegalArgumentException("'pluginName' can't be '" + pluginName + "'!");
+        }
+        if (fileName == null || fileName.isEmpty()) {
+            throw new IllegalArgumentException("'fileName' can't be '" + fileName + "'!");
+        }
+        if (source == null) {
+            throw new IllegalArgumentException("'source' can't be null!");
+        }
     }
 
     private WebResource applySnippets(String pluginName, String fileName, WebResource resource) {
@@ -155,24 +177,42 @@ public class ResourceSvc implements ResourceService {
 
     @Override
     public void addScriptsToResource(String pluginName, String fileName, Position position, String... jsSrcs) {
-        if (!fileName.endsWith(".html")) {
-            throw new IllegalArgumentException("'" + fileName + "' is not a .html file! Only html files can be added to.");
-        }
+        checkParams(pluginName, fileName, position, jsSrcs);
+
         String snippet = new TextStringBuilder("<script src=\"")
                 .appendWithSeparators(jsSrcs, "\"></script><script src=\"")
                 .append("\"></script>").build();
         snippets.add(new Snippet(pluginName, fileName, position, snippet));
+        logger.info(locale.getString(PluginLang.API_ADD_RESOURCE_JS, pluginName, fileName, position.cleanName()));
+    }
+
+    public void checkParams(String pluginName, String fileName, Position position, String[] jsSrcs) {
+        if (pluginName == null || pluginName.isEmpty()) {
+            throw new IllegalArgumentException("'pluginName' can't be '" + pluginName + "'!");
+        }
+        if (fileName == null || fileName.isEmpty()) {
+            throw new IllegalArgumentException("'fileName' can't be '" + fileName + "'!");
+        }
+        if (!fileName.endsWith(".html")) {
+            throw new IllegalArgumentException("'" + fileName + "' is not a .html file! Only html files can be added to.");
+        }
+        if (position == null) {
+            throw new IllegalArgumentException("'position' can't be null!");
+        }
+        if (jsSrcs == null || jsSrcs.length == 0) {
+            throw new IllegalArgumentException("Can't add snippets to resource without snippets!");
+        }
     }
 
     @Override
     public void addStylesToResource(String pluginName, String fileName, Position position, String... cssSrcs) {
-        if (!fileName.endsWith(".html")) {
-            throw new IllegalArgumentException("'" + fileName + "' is not a .html file! Only html files can be added to.");
-        }
+        checkParams(pluginName, fileName, position, cssSrcs);
+
         String snippet = new TextStringBuilder("<link href=\"")
                 .appendWithSeparators(cssSrcs, "\" ref=\"stylesheet\"></link><link href=\"")
                 .append("\" ref=\"stylesheet\"></link>").build();
         snippets.add(new Snippet(pluginName, fileName, position, snippet));
+        logger.info(locale.getString(PluginLang.API_ADD_RESOURCE_CSS, pluginName, fileName, position.cleanName()));
     }
 
     private static class Snippet {

@@ -40,6 +40,9 @@ public interface ResourceService {
      * @param fileName   Name of the file (for customization)
      * @param source     Supplier to use to get the original resource, it is assumed that any text based files are encoded in UTF-8.
      * @return Resource of the customized file.
+     * @throws IllegalArgumentException If pluginName is empty or null
+     * @throws IllegalArgumentException If fileName is empty or null
+     * @throws IllegalArgumentException If source is null
      */
     WebResource getResource(String pluginName, String fileName, Supplier<WebResource> source);
 
@@ -52,7 +55,10 @@ public interface ResourceService {
      * @param fileName   Name of the .html file being modified
      * @param position   Where to place the script tag on the page.
      * @param jsSrcs     Source URLs.
-     * @throws IllegalArgumentException If fileName does not end with .html or .htm
+     * @throws IllegalArgumentException If pluginName is empty or null
+     * @throws IllegalArgumentException If fileName is null, empty or does not end with .html
+     * @throws IllegalArgumentException If position null
+     * @throws IllegalArgumentException If jsSrcs is empty or null
      */
     void addScriptsToResource(String pluginName, String fileName, Position position, String... jsSrcs);
 
@@ -65,7 +71,10 @@ public interface ResourceService {
      * @param fileName   Name of the .html file being modified
      * @param position   Where to place the link tag on the page.
      * @param cssSrcs    Source URLs.
-     * @throws IllegalArgumentException If fileName does not end with .html or .htm
+     * @throws IllegalArgumentException If pluginName is empty or null
+     * @throws IllegalArgumentException If fileName is null, empty or does not end with .html
+     * @throws IllegalArgumentException If position null
+     * @throws IllegalArgumentException If cssSrcs is empty or null
      */
     void addStylesToResource(String pluginName, String fileName, Position position, String... cssSrcs);
 
@@ -85,7 +94,11 @@ public interface ResourceService {
          * <p>
          * Recommended for loading data to custom structure on the page.
          */
-        AFTER_MAIN_SCRIPT
+        AFTER_MAIN_SCRIPT;
+
+        public String cleanName() {
+            return name().toLowerCase().replace('_', ' ');
+        }
     }
 
     class Holder {

@@ -118,21 +118,6 @@ public class PlanFiles implements SubSystem {
         return new FileResource(resourceName, getFileFromPluginFolder(resourceName));
     }
 
-    /**
-     * Get a customizable resource from the plugin files or from the jar if one doesn't exist.
-     *
-     * @param resourceName Path to the file inside the plugin folder.
-     * @return a {@link Resource} for accessing the resource, either from the plugin folder or jar.
-     * @deprecated Use {@link PlanFiles#getCustomizableResource(String)} instead.
-     */
-    @Deprecated
-    public Resource getCustomizableResourceOrDefault(String resourceName) {
-        return ResourceCache.getOrCache(resourceName, () ->
-                attemptToFind(resourceName).map(file -> (Resource) new FileResource(resourceName, file))
-                        .orElse(getResourceFromJar(resourceName))
-        );
-    }
-
     private Optional<File> attemptToFind(String resourceName) {
         if (dataFolder.exists() && dataFolder.isDirectory()) {
 
@@ -152,6 +137,10 @@ public class PlanFiles implements SubSystem {
     }
 
     public Optional<Resource> getCustomizableResource(String resourceName) {
-        return attemptToFind(resourceName).map(found -> new FileResource(resourceName, found));
+        return Optional.ofNullable(ResourceCache.getOrCache(resourceName,
+                () -> attemptToFind(resourceName)
+                        .map(found -> new FileResource(resourceName, found))
+                        .orElse(null)
+        ));
     }
 }

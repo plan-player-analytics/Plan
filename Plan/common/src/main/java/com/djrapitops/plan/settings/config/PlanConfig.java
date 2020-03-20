@@ -116,9 +116,9 @@ public class PlanConfig extends Config {
 
     public Path getPageExportPath() {
         Path exportDirectory = Paths.get(get(ExportSettings.HTML_EXPORT_PATH));
-        Path webDirectory = files.getDataDirectory().resolve("web");
+        Path customizationDirectory = files.getCustomizationDirectory();
 
-        if (exportDirectory.toAbsolutePath().equals(webDirectory.toAbsolutePath())) {
+        if (exportDirectory.toAbsolutePath().equals(customizationDirectory.toAbsolutePath())) {
             logger.warn("'" + ExportSettings.HTML_EXPORT_PATH.getPath() + "' can not be '/Plan/web/' directory, using '/Plan/Analysis Results' as fallback.");
             exportDirectory = files.getDataDirectory().resolve("Analysis Results");
         }

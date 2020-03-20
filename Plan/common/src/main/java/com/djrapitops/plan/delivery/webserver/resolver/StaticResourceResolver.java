@@ -47,19 +47,18 @@ public class StaticResourceResolver implements NoAuthResolver {
     }
 
     private Response getResponse(Request request) {
-        String resource = request.getPath().asString();
-        String filePath = "web" + resource;
+        String resource = request.getPath().asString().substring(1);
         if (resource.endsWith(".css")) {
-            return responseFactory.cssResponse(filePath);
+            return responseFactory.cssResponse(resource);
         }
         if (resource.endsWith(".js")) {
-            return responseFactory.javaScriptResponse(filePath);
+            return responseFactory.javaScriptResponse(resource);
         }
         if (resource.endsWith(".png")) {
-            return responseFactory.imageResponse(filePath);
+            return responseFactory.imageResponse(resource);
         }
         if (StringUtils.endsWithAny(resource, ".woff", ".woff2", ".eot", ".ttf")) {
-            return responseFactory.fontResponse(filePath);
+            return responseFactory.fontResponse(resource);
         }
         return null;
     }

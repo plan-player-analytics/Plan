@@ -18,9 +18,11 @@ package com.djrapitops.plan.delivery.export;
 
 import com.djrapitops.plan.delivery.rendering.pages.Page;
 import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
+import com.djrapitops.plan.delivery.web.ResourceService;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resource.WebResource;
 import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
 import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.settings.theme.Theme;
@@ -178,19 +180,20 @@ public class PlayerPageExporter extends FileExporter {
     private void exportResources(ExportPaths exportPaths, Path toDirectory, String... resourceNames) throws IOException {
         for (String resourceName : resourceNames) {
             String nonRelativePath = toNonRelativePath(resourceName);
-            exportResource(exportPaths, toDirectory, nonRelativePath);
+            exportResource(toDirectory, nonRelativePath);
             exportPaths.put(resourceName, toRelativePathFromRoot(nonRelativePath));
         }
     }
 
-    private void exportResource(ExportPaths exportPaths, Path toDirectory, String resourceName) throws IOException {
-        Resource resource = files.getCustomizableResourceOrDefault("web/" + resourceName);
+    private void exportResource(Path toDirectory, String resourceName) throws IOException {
+        WebResource resource = ResourceService.getInstance().getResource("Plan", resourceName,
+                () -> files.getResourceFromJar("web/" + resourceName).asWebResource());
         Path to = toDirectory.resolve(resourceName);
 
         if (resourceName.endsWith(".css")) {
             export(to, theme.replaceThemeColors(resource.asString()));
         } else if (Resource.isTextResource(resourceName)) {
-            export(to, resource.asLines());
+            export(to, resource.asString());
         } else {
             export(to, resource);
         }

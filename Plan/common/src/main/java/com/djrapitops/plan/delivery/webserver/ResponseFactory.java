@@ -21,9 +21,11 @@ import com.djrapitops.plan.delivery.rendering.html.icon.Family;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.delivery.rendering.pages.Page;
 import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
+import com.djrapitops.plan.delivery.web.ResourceService;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
+import com.djrapitops.plan.delivery.web.resource.WebResource;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -39,6 +41,7 @@ import com.djrapitops.plan.utilities.java.UnaryChain;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -71,6 +74,11 @@ public class ResponseFactory {
         this.locale = locale;
         this.dbSystem = dbSystem;
         this.theme = theme;
+    }
+
+    public WebResource getResource(String resourceName) {
+        return ResourceService.getInstance().getResource("Plan", resourceName,
+                () -> files.getResourceFromJar("web/" + resourceName).asWebResource());
     }
 
     public Response debugPageResponse() {
@@ -165,7 +173,7 @@ public class ResponseFactory {
 
     public Response javaScriptResponse(String fileName) {
         try {
-            String content = UnaryChain.of(files.getCustomizableResourceOrDefault(fileName).asString())
+            String content = UnaryChain.of(getResource(fileName).asString())
                     .chain(theme::replaceThemeColors)
                     .chain(locale::replaceLanguageInJavascript)
                     .apply();
@@ -174,20 +182,20 @@ public class ResponseFactory {
                     .setContent(content)
                     .setStatus(200)
                     .build();
-        } catch (IOException e) {
+        } catch (UncheckedIOException e) {
             return notFound404("JS File not found from jar: " + fileName + ", " + e.toString());
         }
     }
 
     public Response cssResponse(String fileName) {
         try {
-            String content = theme.replaceThemeColors(files.getCustomizableResourceOrDefault(fileName).asString());
+            String content = theme.replaceThemeColors(getResource(fileName).asString());
             return Response.builder()
                     .setMimeType(MimeType.CSS)
                     .setContent(content)
                     .setStatus(200)
                     .build();
-        } catch (IOException e) {
+        } catch (UncheckedIOException e) {
             return notFound404("CSS File not found from jar: " + fileName + ", " + e.toString());
         }
     }
@@ -196,10 +204,10 @@ public class ResponseFactory {
         try {
             return Response.builder()
                     .setMimeType(MimeType.IMAGE)
-                    .setContent(files.getCustomizableResourceOrDefault(fileName).asBytes())
+                    .setContent(getResource(fileName).asBytes())
                     .setStatus(200)
                     .build();
-        } catch (IOException e) {
+        } catch (UncheckedIOException e) {
             return notFound404("Image File not found from jar: " + fileName + ", " + e.toString());
         }
     }
@@ -220,9 +228,9 @@ public class ResponseFactory {
         try {
             return Response.builder()
                     .setMimeType(type)
-                    .setContent(files.getCustomizableResourceOrDefault(fileName).asBytes())
+                    .setContent(getResource(fileName).asBytes())
                     .build();
-        } catch (IOException e) {
+        } catch (UncheckedIOException e) {
             return notFound404("Font File not found from jar: " + fileName + ", " + e.toString());
         }
     }
@@ -235,9 +243,9 @@ public class ResponseFactory {
         try {
             return Response.builder()
                     .setMimeType(MimeType.FAVICON)
-                    .setContent(files.getCustomizableResourceOrDefault("web/favicon.ico").asBytes())
+                    .setContent(getResource("favicon.ico").asBytes())
                     .build();
-        } catch (IOException e) {
+        } catch (UncheckedIOException e) {
             return forInternalError(e, "Could not read favicon");
         }
     }
