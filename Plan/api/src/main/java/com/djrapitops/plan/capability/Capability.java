@@ -56,13 +56,21 @@ enum Capability {
      */
     DATA_EXTENSION_SHOW_IN_PLAYER_TABLE,
     /**
-     * QueryService and CommonQueries
+     * {@link com.djrapitops.plan.query.QueryService} and {@link com.djrapitops.plan.query.CommonQueries}
      */
     QUERY_API,
     /**
-     * SettingsService
+     * {@link com.djrapitops.plan.settings.SettingsService}
      */
-    SETTINGS_API;
+    SETTINGS_API,
+    /**
+     * {@link com.djrapitops.plan.delivery.web.ResolverService}
+     */
+    PAGE_EXTENSION_RESOLVERS,
+    /**
+     * {@link com.djrapitops.plan.delivery.web.ResourceService}
+     */
+    PAGE_EXTENSION_RESOURCES;
 
     static Optional<Capability> getByName(String name) {
         if (name == null) {
