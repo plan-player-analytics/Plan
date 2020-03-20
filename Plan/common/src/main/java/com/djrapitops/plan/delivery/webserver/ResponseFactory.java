@@ -204,7 +204,7 @@ public class ResponseFactory {
         try {
             return Response.builder()
                     .setMimeType(MimeType.IMAGE)
-                    .setContent(getResource(fileName).asBytes())
+                    .setContent(getResource(fileName))
                     .setStatus(200)
                     .build();
         } catch (UncheckedIOException e) {
@@ -228,7 +228,7 @@ public class ResponseFactory {
         try {
             return Response.builder()
                     .setMimeType(type)
-                    .setContent(getResource(fileName).asBytes())
+                    .setContent(getResource(fileName))
                     .build();
         } catch (UncheckedIOException e) {
             return notFound404("Font File not found from jar: " + fileName + ", " + e.toString());
@@ -243,7 +243,7 @@ public class ResponseFactory {
         try {
             return Response.builder()
                     .setMimeType(MimeType.FAVICON)
-                    .setContent(getResource("favicon.ico").asBytes())
+                    .setContent(getResource("favicon.ico"))
                     .build();
         } catch (UncheckedIOException e) {
             return forInternalError(e, "Could not read favicon");

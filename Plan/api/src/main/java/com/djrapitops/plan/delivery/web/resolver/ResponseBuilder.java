@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.web.resolver;
 
+import com.djrapitops.plan.delivery.web.resource.WebResource;
 import com.google.gson.Gson;
 
 import java.nio.charset.Charset;
@@ -73,6 +74,10 @@ public class ResponseBuilder {
      */
     public ResponseBuilder redirectTo(String url) {
         return setStatus(302).setHeader("Location", url).setContent(new byte[0]);
+    }
+
+    public ResponseBuilder setContent(WebResource resource) {
+        return setContent(resource.asBytes());
     }
 
     public ResponseBuilder setContent(byte[] bytes) {
