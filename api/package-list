@@ -1,4 +1,9 @@
 com.djrapitops.plan.capability
+com.djrapitops.plan.delivery.web
+com.djrapitops.plan.delivery.web.resolver
+com.djrapitops.plan.delivery.web.resolver.exception
+com.djrapitops.plan.delivery.web.resolver.request
+com.djrapitops.plan.delivery.web.resource
 com.djrapitops.plan.extension
 com.djrapitops.plan.extension.annotation
 com.djrapitops.plan.extension.extractor
