@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
+import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.function.Supplier;
@@ -171,7 +172,9 @@ public class ResourceSvc implements ResourceService {
         WebResource original = source.get();
         byte[] bytes = original.asBytes();
         OpenOption[] overwrite = {StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE};
-        Files.write(files.getCustomizationDirectory().resolve(fileName), bytes, overwrite);
+        Path to = files.getCustomizationDirectory().resolve(fileName);
+        Files.createDirectories(to.getParent());
+        Files.write(to, bytes, overwrite);
         return original;
     }
 

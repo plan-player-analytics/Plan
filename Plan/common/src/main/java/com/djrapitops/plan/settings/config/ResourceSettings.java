@@ -20,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.Collections;
 
 public class ResourceSettings {
 
@@ -33,13 +34,17 @@ public class ResourceSettings {
 
     public boolean shouldBeCustomized(String plugin, String fileName) {
         ConfigNode fileCustomization = config.getNode("Customized_files").orElseGet(() -> config.addNode("Customized_files"));
+        fileCustomization.setComment(Collections.singletonList("The files are placed in /Plan/web/ if the setting is 'true' when accessed."));
+
         ConfigNode pluginCustomization = fileCustomization.getNode(plugin).orElseGet(() -> fileCustomization.addNode(plugin));
         String fileNameNonPath = StringUtils.replaceChars(fileName, '.', ',');
+
         if (pluginCustomization.contains(fileNameNonPath)) {
             return pluginCustomization.getBoolean(fileNameNonPath);
         } else {
             pluginCustomization.set(fileNameNonPath, false);
             try {
+                pluginCustomization.sort();
                 pluginCustomization.save();
             } catch (IOException e) {
                 throw new UncheckedIOException("Could not save config.yml: " + e.getMessage(), e);
