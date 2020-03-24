@@ -25,10 +25,7 @@ import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
@@ -426,6 +423,28 @@ public class NetworkActivityIndexQueries {
             @Override
             public ActivityIndex processResults(ResultSet set) throws SQLException {
                 return set.next() ? new ActivityIndex(set.getDouble("average"), before) : new ActivityIndex(0.0, before);
+            }
+        };
+    }
+
+    public static Query<Map<UUID, ActivityIndex>> activityIndexForAllPlayers(long date, long playtimeThreshold) {
+        String selectActivityIndex = selectActivityIndexSQL();
+        return new QueryStatement<Map<UUID, ActivityIndex>>(selectActivityIndex, 1000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                setSelectActivityIndexSQLParameters(statement, 1, playtimeThreshold, date);
+            }
+
+            @Override
+            public Map<UUID, ActivityIndex> processResults(ResultSet set) throws SQLException {
+                Map<UUID, ActivityIndex> indexes = new HashMap<>();
+                while (set.next()) {
+                    indexes.put(
+                            UUID.fromString(set.getString(SessionsTable.USER_UUID)),
+                            new ActivityIndex(set.getDouble("activity_index"), date)
+                    );
+                }
+                return indexes;
             }
         };
     }

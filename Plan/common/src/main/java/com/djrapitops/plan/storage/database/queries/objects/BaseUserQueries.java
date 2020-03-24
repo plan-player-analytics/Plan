@@ -28,10 +28,7 @@ import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -138,6 +135,40 @@ public class BaseUserQueries {
             @Override
             public Collection<BaseUser> processResults(ResultSet set) throws SQLException {
                 return extractBaseUsers(set);
+            }
+        };
+    }
+
+    public static Query<Set<UUID>> uuidsOfRegisteredBetween(long after, long before) {
+        String sql = SELECT + DISTINCT + UsersTable.USER_UUID +
+                FROM + UsersTable.TABLE_NAME +
+                WHERE + UsersTable.REGISTERED + ">=?" +
+                AND + UsersTable.REGISTERED + "<=?";
+        return new QueryStatement<Set<UUID>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, after);
+                statement.setLong(2, before);
+            }
+
+            @Override
+            public Set<UUID> processResults(ResultSet set) throws SQLException {
+                Set<UUID> uuids = new HashSet<>();
+                while (set.next()) {
+                    uuids.add(UUID.fromString(set.getString(UsersTable.USER_UUID)));
+                }
+                return uuids;
+            }
+        };
+    }
+
+    public static Query<Long> minimumRegisterDate() {
+        String sql = SELECT + "MIN(" + UsersTable.REGISTERED + ") as min" +
+                FROM + UsersTable.TABLE_NAME;
+        return new QueryAllStatement<Long>(sql) {
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("min") : -1;
             }
         };
     }

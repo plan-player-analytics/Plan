@@ -18,6 +18,7 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.modules.APFModule;
+import com.djrapitops.plan.modules.FiltersModule;
 import com.djrapitops.plan.modules.PlaceholderModule;
 import com.djrapitops.plan.modules.ProxySuperClassBindingModule;
 import com.djrapitops.plan.modules.SystemObjectProvidingModule;
@@ -38,6 +39,7 @@ import javax.inject.Singleton;
         VelocityCommandModule.class,
         SystemObjectProvidingModule.class,
         APFModule.class,
+        FiltersModule.class,
         PlaceholderModule.class,
 
         ProxySuperClassBindingModule.class,

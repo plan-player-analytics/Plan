@@ -813,4 +813,27 @@ public class SessionQueries {
             }
         };
     }
+
+    public static Query<Set<UUID>> uuidsOfPlayedBetween(long after, long before) {
+        String sql = SELECT + DISTINCT + SessionsTable.USER_UUID +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?";
+        return new QueryStatement<Set<UUID>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, after);
+                statement.setLong(2, before);
+            }
+
+            @Override
+            public Set<UUID> processResults(ResultSet set) throws SQLException {
+                Set<UUID> uuids = new HashSet<>();
+                while (set.next()) {
+                    uuids.add(UUID.fromString(set.getString(SessionsTable.USER_UUID)));
+                }
+                return uuids;
+            }
+        };
+    }
 }
