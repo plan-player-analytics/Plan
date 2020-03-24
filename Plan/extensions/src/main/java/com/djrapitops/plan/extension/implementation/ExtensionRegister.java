@@ -86,7 +86,7 @@ public class ExtensionRegister {
         register(new SuperbVoteExtensionFactory(), SuperbVoteExtensionFactory::createExtension);
         register(new TownyExtensionFactory(), TownyExtensionFactory::createExtension);
         registerMany(new VaultExtensionFactory(), VaultExtensionFactory::createExtensions);
-        register(new ViaVersionExtensionFactory(), ViaVersionExtensionFactory::createExtension);
+        register(new ViaVersionExtensionFactory(), ViaVersionExtensionFactory::createExtension, ViaVersionExtensionFactory::registerListener);
 
         if (registerException != null) throw registerException;
     }
