@@ -123,8 +123,11 @@ public class ManageExportCommand extends CommandNode {
         processing.submitNonCritical(() -> {
             try {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
-                exporter.exportServerJSON(serverInfo.getServer());
-                sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
+                if (exporter.exportServerJSON(serverInfo.getServer())) {
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
+                } else {
+                    sender.sendMessage(locale.get(ManageLang.PROGRESS_FAIL).toString("see '" + ExportSettings.SERVER_JSON.getPath() + "' in config.yml"));
+                }
             } catch (ExportException e) {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL));
                 sender.sendMessage("§c" + e.toString());

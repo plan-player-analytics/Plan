@@ -54,8 +54,6 @@ public class NetworkPageExporter extends FileExporter {
     private final RootJSONResolver jsonHandler;
     private final Theme theme;
 
-    private final ExportPaths exportPaths;
-
     @Inject
     public NetworkPageExporter(
             PlanFiles files,
@@ -69,8 +67,6 @@ public class NetworkPageExporter extends FileExporter {
         this.pageFactory = pageFactory;
         this.jsonHandler = jsonHandler;
         this.theme = theme;
-
-        exportPaths = new ExportPaths();
     }
 
     /**
@@ -85,14 +81,14 @@ public class NetworkPageExporter extends FileExporter {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
 
+        ExportPaths exportPaths = new ExportPaths();
         exportPaths.put("./players", toRelativePathFromRoot("players"));
-        exportRequiredResources(toDirectory);
-        exportJSON(toDirectory, server);
-        exportHtml(toDirectory);
-        exportPaths.clear();
+        exportRequiredResources(exportPaths, toDirectory);
+        exportJSON(exportPaths, toDirectory, server);
+        exportHtml(exportPaths, toDirectory);
     }
 
-    private void exportHtml(Path toDirectory) throws IOException {
+    private void exportHtml(ExportPaths exportPaths, Path toDirectory) throws IOException {
         Path to = toDirectory
                 .resolve("network")
                 .resolve("index.html");
@@ -104,15 +100,16 @@ public class NetworkPageExporter extends FileExporter {
     /**
      * Perform export for a network page json payload.
      *
+     * @param exportPaths
      * @param toDirectory Path to Export directory
      * @param server      Server to export as Network page, {@link Server#isProxy()} assumed true.
      * @throws IOException       If a template can not be read from jar/disk or the result written
      * @throws NotFoundException If a file or resource that is being exported can not be found
      */
-    public void exportJSON(Path toDirectory, Server server) throws IOException {
+    public void exportJSON(ExportPaths exportPaths, Path toDirectory, Server server) throws IOException {
         String serverUUID = server.getUuid().toString();
 
-        exportJSON(toDirectory,
+        exportJSON(exportPaths, toDirectory,
                 "network/overview",
                 "network/servers",
                 "network/sessionsOverview",
@@ -128,13 +125,13 @@ public class NetworkPageExporter extends FileExporter {
         );
     }
 
-    private void exportJSON(Path toDirectory, String... resources) throws IOException {
+    private void exportJSON(ExportPaths exportPaths, Path toDirectory, String... resources) throws IOException {
         for (String resource : resources) {
-            exportJSON(toDirectory, resource);
+            exportJSON(exportPaths, toDirectory, resource);
         }
     }
 
-    private void exportJSON(Path toDirectory, String resource) throws IOException {
+    private void exportJSON(ExportPaths exportPaths, Path toDirectory, String resource) throws IOException {
         Optional<Response> found = getJSONResponse(resource);
         if (!found.isPresent()) {
             throw new NotFoundException(resource + " was not properly exported: not found");
@@ -166,8 +163,8 @@ public class NetworkPageExporter extends FileExporter {
         }
     }
 
-    private void exportRequiredResources(Path toDirectory) throws IOException {
-        exportResources(toDirectory,
+    private void exportRequiredResources(ExportPaths exportPaths, Path toDirectory) throws IOException {
+        exportResources(exportPaths, toDirectory,
                 "./img/Flaticon_circle.png",
                 "./css/sb-admin-2.css",
                 "./css/style.css",
@@ -205,7 +202,7 @@ public class NetworkPageExporter extends FileExporter {
         );
     }
 
-    private void exportResources(Path toDirectory, String... resourceNames) throws IOException {
+    private void exportResources(ExportPaths exportPaths, Path toDirectory, String... resourceNames) throws IOException {
         for (String resourceName : resourceNames) {
             String nonRelativePath = toNonRelativePath(resourceName);
             exportResource(toDirectory, nonRelativePath);

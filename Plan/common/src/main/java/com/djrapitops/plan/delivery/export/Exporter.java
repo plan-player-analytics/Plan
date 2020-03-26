@@ -98,7 +98,7 @@ public class Exporter extends FileExporter {
         try {
             Path toDirectory = config.getJSONExportPath().resolve(toFileName(server.getName()));
             if (server.isProxy()) {
-                networkPageExporter.exportJSON(toDirectory, server);
+                networkPageExporter.exportJSON(new ExportPaths(), toDirectory, server);
             } else {
                 serverPageExporter.exportJSON(toDirectory, server);
             }
