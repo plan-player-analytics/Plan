@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.transactions.events;
 
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
@@ -52,11 +53,22 @@ public class PlayerRegisterTransaction extends Transaction {
     protected void performOperations() {
         if (!query(PlayerFetchQueries.isPlayerRegistered(playerUUID))) {
             long registerDate = registered.getAsLong();
-            execute(DataStoreQueries.registerBaseUser(playerUUID, registerDate, playerName));
+            insertUser(registerDate);
             SessionCache.getCachedSession(playerUUID).ifPresent(session -> session.setAsFirstSessionIfMatches(registerDate));
         }
         execute(DataStoreQueries.updatePlayerName(playerUUID, playerName));
 
         JSONCache.invalidateMatching(DataID.PLAYERS);
+    }
+
+    private void insertUser(long registerDate) {
+        try {
+            execute(DataStoreQueries.registerBaseUser(playerUUID, registerDate, playerName));
+        } catch (DBOpException failed) {
+            boolean alreadySaved = failed.getMessage().contains("Duplicate entry");
+            if (!alreadySaved) {
+                throw failed;
+            }
+        }
     }
 }
