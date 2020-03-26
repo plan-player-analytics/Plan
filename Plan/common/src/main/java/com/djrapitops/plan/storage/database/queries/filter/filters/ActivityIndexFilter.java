@@ -58,8 +58,8 @@ public class ActivityIndexFilter extends MultiOptionFilter {
     }
 
     @Override
-    public List<String> getOptions() {
-        return Collections.singletonList(serializeOptions(getOptionsArray()));
+    public Map<String, Object> getOptions() {
+        return Collections.singletonMap("options", getOptionsArray());
     }
 
     @Override

@@ -20,6 +20,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.filter.FilterQuery;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -45,7 +46,7 @@ public class PluginGroupsFilter extends MultiOptionFilter {
     }
 
     @Override
-    public List<String> getOptions() {
+    public Map<String, Object> getOptions() {
         return null;
     }
 

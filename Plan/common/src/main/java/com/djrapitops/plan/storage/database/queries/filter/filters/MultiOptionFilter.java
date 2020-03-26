@@ -19,7 +19,6 @@ package com.djrapitops.plan.storage.database.queries.filter.filters;
 import com.djrapitops.plan.storage.database.queries.filter.Filter;
 import com.djrapitops.plan.storage.database.queries.filter.FilterQuery;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.TextStringBuilder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,10 +33,6 @@ public abstract class MultiOptionFilter implements Filter {
     protected List<String> getSelected(FilterQuery query) {
         String selected = query.get("selected").orElseThrow(IllegalArgumentException::new);
         return Arrays.asList(deserializeOptions(selected));
-    }
-
-    protected String serializeOptions(String... options) {
-        return new TextStringBuilder().appendWithSeparators(options, ",").build();
     }
 
     private String[] deserializeOptions(String selected) {

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Represents parameters for a single {@link Filter} parsed from the query json.
@@ -48,6 +49,12 @@ public class FilterQuery {
     }
 
     public Optional<String> get(String key) {
+        if (parameters == null) return Optional.empty();
         return Optional.ofNullable(parameters.get(key));
+    }
+
+    public Set<String> getSetParameters() {
+        if (parameters == null) return null;
+        return parameters.keySet();
     }
 }

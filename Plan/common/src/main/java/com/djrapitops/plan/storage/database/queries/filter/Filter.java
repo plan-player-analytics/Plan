@@ -17,7 +17,7 @@
 package com.djrapitops.plan.storage.database.queries.filter;
 
 import java.util.Collections;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -32,8 +32,8 @@ public interface Filter {
 
     String[] getExpectedParameters();
 
-    default List<String> getOptions() {
-        return Collections.emptyList();
+    default Map<String, Object> getOptions() {
+        return Collections.emptyMap();
     }
 
     /**
@@ -46,4 +46,51 @@ public interface Filter {
      */
     Set<UUID> getMatchingUUIDs(FilterQuery query);
 
+    default Result apply(FilterQuery query) {
+        return new Result(null, getKind(), getMatchingUUIDs(query));
+    }
+
+    class Result {
+        private Result previous;
+
+        private String filterKind;
+        private int resultSize;
+        private Set<UUID> currentUUIDs;
+
+        private Result(Result previous, String filterKind, Set<UUID> currentUUIDs) {
+            this.previous = previous;
+            this.filterKind = filterKind;
+            this.resultSize = currentUUIDs.size();
+            this.currentUUIDs = currentUUIDs;
+        }
+
+        public Result apply(Filter filter, FilterQuery query) {
+            Set<UUID> got = filter.getMatchingUUIDs(query);
+            currentUUIDs.retainAll(got);
+            return new Result(this, filter.getKind(), currentUUIDs);
+        }
+
+        public Result notApplied(Filter filter) {
+            return new Result(this, filter.getKind(), currentUUIDs);
+        }
+
+        public boolean isEmpty() {
+            return resultSize <= 0;
+        }
+
+        public Set<UUID> getResultUUIDs() {
+            return currentUUIDs;
+        }
+
+        public StringBuilder getResultPath(String separator) {
+            StringBuilder builder;
+            if (previous == null) {
+                // First Result in chain
+                builder = new StringBuilder();
+            } else {
+                builder = previous.getResultPath(separator);
+            }
+            return builder.append(separator).append("-> ").append(filterKind).append(": ").append(resultSize);
+        }
+    }
 }

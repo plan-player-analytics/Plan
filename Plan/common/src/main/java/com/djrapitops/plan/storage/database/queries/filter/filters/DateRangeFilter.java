@@ -20,12 +20,12 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.filter.Filter;
 import com.djrapitops.plan.storage.database.queries.filter.FilterQuery;
 import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
+import com.djrapitops.plan.utilities.java.Maps;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Map;
 
 public abstract class DateRangeFilter implements Filter {
 
@@ -48,13 +48,16 @@ public abstract class DateRangeFilter implements Filter {
     }
 
     @Override
-    public List<String> getOptions() {
+    public Map<String, Object> getOptions() {
         long earliestData = dbSystem.getDatabase().query(BaseUserQueries.minimumRegisterDate());
         long now = System.currentTimeMillis();
         if (earliestData == -1) earliestData = now;
         String[] afterDate = StringUtils.split(dateFormat.format(earliestData), ' ');
         String[] beforeDate = StringUtils.split(dateFormat.format(now), ' ');
-        return Arrays.asList(afterDate[0], afterDate[1], beforeDate[0], beforeDate[1]);
+        return Maps.builder(String.class, Object.class)
+                .put("after", afterDate)
+                .put("before", beforeDate)
+                .build();
     }
 
     protected long getAfter(FilterQuery query) {
