@@ -60,6 +60,7 @@ public class ServerPluginTabs {
             Formatters formatters
     ) {
         this.serverData = serverData;
+        Collections.sort(serverData);
         this.extraTabServerData = Lists.filter(serverData, ExtensionData::doesNeedWiderSpace);
         this.serverData.removeAll(extraTabServerData);
 
@@ -92,17 +93,9 @@ public class ServerPluginTabs {
             );
         } else {
             nav = new StringBuilder(NavLink.main(Icon.called("cubes").build(), tabID, "Overview").toHtml());
-            tab = generatePageTabs();
+            tab = generateOverviewTab();
         }
-    }
-
-    private String generatePageTabs() {
-        Collections.sort(serverData);
-
-        String overviewTab = generateOverviewTab();
-        String extraTabs = generateExtraTabs();
-
-        return overviewTab + extraTabs;
+        tab += generateExtraTabs();
     }
 
     private String generateExtraTabs() {

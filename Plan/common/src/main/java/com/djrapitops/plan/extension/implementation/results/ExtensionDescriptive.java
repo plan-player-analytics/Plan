@@ -84,4 +84,15 @@ public class ExtensionDescriptive implements Comparable<ExtensionDescriptive> {
     public int hashCode() {
         return Objects.hash(name, text, description, icon, priority);
     }
+
+    @Override
+    public String toString() {
+        return "ExtensionDescriptive{" +
+                "name='" + name + '\'' +
+                ", text='" + text + '\'' +
+                ", description='" + description + '\'' +
+                ", icon=" + icon +
+                ", priority=" + priority +
+                '}';
+    }
 }
