@@ -107,7 +107,7 @@ public class Locale extends HashMap<Lang, Message> {
             return from;
         }
 
-        Pattern scripts = Pattern.compile("(<script>[\\s\\S]*?</script>|<script src=[\"|'].*[\"|']></script>|<link [\\s\\S]*?>)");
+        Pattern scripts = Pattern.compile("(<script id=[\"|'].*[\"|']>[\\s\\S]*?</script>|<script>[\\s\\S]*?</script>|<script src=[\"|'].*[\"|']></script>|<link [\\s\\S]*?>)");
 
         Matcher scriptMatcher = scripts.matcher(from);
         List<String> foundScripts = new ArrayList<>();
