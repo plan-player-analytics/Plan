@@ -63,7 +63,7 @@ public class ExtensionSettings {
 
         Set<String> disabledPlugins = new HashSet<>();
         for (ConfigNode plugin : section.getChildren()) {
-            if (!plugin.getBoolean("Enabled")) {
+            if (plugin.contains("Enabled") && !plugin.getBoolean("Enabled")) {
                 disabledPlugins.add(plugin.getKey(false));
             }
         }
