@@ -88,7 +88,6 @@ public class ServerPage implements Page {
         placeholders.put("timeZone", config.getTimeZoneOffsetHours());
         placeholders.put("gmPieColors", theme.getValue(ThemeVal.GRAPH_GM_PIE));
 
-        placeholders.put("backButton", serverInfo.getServer().isProxy() ? Html.BACK_BUTTON_NETWORK.create() : "");
         placeholders.put("contributors", Contributors.generateContributorHtml());
         placeholders.put("version", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
         placeholders.put("updateModal", versionChecker.getUpdateModal());
@@ -102,6 +101,7 @@ public class ServerPage implements Page {
         String tabs = JSONCache.getOrCacheString(DataID.EXTENSION_TABS, serverUUID, () -> pluginTabs.get().getTabs());
 
         PlaceholderReplacer pluginPlaceholders = new PlaceholderReplacer();
+        pluginPlaceholders.put("backButton", serverInfo.getServer().isProxy() ? Html.BACK_BUTTON_NETWORK.create() : "");
         pluginPlaceholders.put("navPluginsTabs", nav);
         pluginPlaceholders.put("tabsPlugins", tabs);
 

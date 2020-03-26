@@ -102,7 +102,6 @@ public class PlayerPage implements Page {
         placeholders.put("timeZone", config.getTimeZoneOffsetHours());
         placeholders.put("gmPieColors", theme.getValue(ThemeVal.GRAPH_GM_PIE));
 
-        placeholders.put("backButton", (serverInfo.getServer().isProxy() ? Html.BACK_BUTTON_NETWORK : Html.BACK_BUTTON_SERVER).create());
         placeholders.put("contributors", Contributors.generateContributorHtml());
 
         String html = locale.replaceLanguageInHtml(placeholders.apply(templateHtml));
@@ -110,6 +109,7 @@ public class PlayerPage implements Page {
         placeholders = new PlaceholderReplacer();
         PlayerPluginTab pluginTabs = pageFactory.inspectPluginTabs(playerUUID);
 
+        placeholders.put("backButton", (serverInfo.getServer().isProxy() ? Html.BACK_BUTTON_NETWORK : Html.BACK_BUTTON_SERVER).create());
         placeholders.put("navPluginsTabs", pluginTabs.getNav());
         placeholders.put("pluginsTabs", pluginTabs.getTab());
 
