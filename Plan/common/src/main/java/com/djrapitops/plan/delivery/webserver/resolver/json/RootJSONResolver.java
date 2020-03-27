@@ -53,6 +53,7 @@ public class RootJSONResolver {
 
             PlayerJSONResolver playerJSONResolver,
             NetworkJSONResolver networkJSONResolver,
+            FiltersJSONResolver filtersJSONResolver,
             QueryJSONResolver queryJSONResolver
     ) {
         this.identifiers = identifiers;
@@ -71,6 +72,7 @@ public class RootJSONResolver {
                 .add("performanceOverview", forJSON(DataID.PERFORMANCE_OVERVIEW, performanceJSONCreator))
                 .add("player", playerJSONResolver)
                 .add("network", networkJSONResolver.getResolver())
+                .add("filters", filtersJSONResolver)
                 .add("query", queryJSONResolver)
                 .build();
     }

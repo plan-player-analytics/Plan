@@ -84,4 +84,8 @@ public class QueryFilters {
             return current == null ? null : current.notApplied(filter);
         }
     }
+
+    public Map<String, Filter> getFilters() {
+        return filters;
+    }
 }
