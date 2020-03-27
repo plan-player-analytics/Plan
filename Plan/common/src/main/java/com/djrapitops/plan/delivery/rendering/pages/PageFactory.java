@@ -222,4 +222,11 @@ public class PageFactory {
     public Page registerPage() throws IOException {
         return new LoginPage(getResource("register.html"), serverInfo.get());
     }
+
+    public Page queryPage() throws IOException {
+        return new QueryPage(
+                getResource("query.html"),
+                locale.get(), theme.get(), versionChecker.get()
+        );
+    }
 }

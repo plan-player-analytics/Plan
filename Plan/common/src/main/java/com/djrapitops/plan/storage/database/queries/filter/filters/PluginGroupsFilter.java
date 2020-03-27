@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.queries.filter.filters;
 
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.filter.FilterQuery;
+import com.djrapitops.plan.utilities.java.Maps;
 
 import java.util.List;
 import java.util.Map;
@@ -42,12 +43,15 @@ public class PluginGroupsFilter extends MultiOptionFilter {
 
     @Override
     public String getKind() {
-        return null;
+        return "pluginGroups";
     }
 
     @Override
     public Map<String, Object> getOptions() {
-        return null;
+        return Maps.builder(String.class, Object.class)
+                .put("plugin", pluginName)
+                .put("options", groups)
+                .build();
     }
 
     @Override

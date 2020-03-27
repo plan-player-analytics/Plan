@@ -423,4 +423,12 @@ public class ResponseFactory {
             return forInternalError(e, "Failed to generate player page");
         }
     }
+
+    public Response queryPageResponse() {
+        try {
+            return forPage(pageFactory.queryPage());
+        } catch (IOException e) {
+            return forInternalError(e, "Failed to generate query page");
+        }
+    }
 }

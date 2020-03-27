@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <meta content="Player Analytics, generic error/debug page" name="description">
+    <meta content="Rsl1122" name="author">
+
+    <title>Plan | Query</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link crossorigin="anonymous" href="https://fonts.googleapis.com/css?family=Nunito:300,400,600,700,800,900"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-plan sidebar sidebar-dark accordion" id="accordionSidebar">
+
+        <!-- Sidebar - Brand -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center">
+            <img class="w-22" src="img/Flaticon_circle.png">
+        </a>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0">
+
+        <li class="nav-item nav-button active">
+            <a class="nav-link" href="/">
+                <i class="far fa-fw fa-hand-point-left"></i>
+                <span>to main page</span></a>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <div class="ml-3 align-items-center justify-content-between">
+            <button class="btn bg-plan" data-target="#colorChooserModal" data-toggle="modal" type="button">
+                <i class="fa fa-palette"></i>
+            </button>
+            <button class="btn bg-plan" data-target="#informationModal" data-toggle="modal" type="button">
+                <i class="fa fa-fw fa-question-circle"></i>
+            </button>
+        </div>
+        <div class="ml-3 align-items-center justify-content-between">
+            ${version}
+        </div>
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div class="d-flex flex-column" id="content-wrapper">
+        <div class="sidebar-close-modal hidden"></div>
+
+        <!-- Main Content -->
+        <div id="content" style="display: flex;">
+            <!-- Begin Player Overview Tab -->
+            <div class="tab" style="width: 100%;">
+                <div class="container-fluid mt-4">
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>Plan &middot;
+                            Query</h1>
+                    </div>
+
+                    <div class="row">
+                        <!-- Card -->
+                        <div class="col-xs-12 col-sm-12 col-lg-11">
+                            <div class="card shadow mb-4">
+                                <div class="card-body" id="data_player_info">
+                                    <label class="mt-2 mb-0" for="inlineFormCustomSelectPref">Show a view</label>
+                                    <div class="mt-2 input-group input-row">
+                                        <div class="col-auto">
+                                            <label class="mt-2 mb-0" for="inlineFormCustomSelectPref">from</label>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="sr-only" for="inlineFormInputGroup">Date: DD/MM/YYYY</label>
+                                            <div class="input-group mb-2">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text"><i class="far fa-calendar"></i></div>
+                                                </div>
+                                                <input class="form-control" id="inlineFormInputGroup"
+                                                       placeholder="31/12/2016" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <label class="sr-only" for="inlineFormInputGroup">Time: H H : M M</label>
+                                            <div class="input-group mb-2">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                                </div>
+                                                <input class="form-control" id="inlineFormInputGroup"
+                                                       placeholder="23:59" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <label class="mt-2 mb-0" for="inlineFormCustomSelectPref">to</label>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="input-group mb-2">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text"><i class="far fa-calendar"></i></div>
+                                                </div>
+                                                <input class="form-control" id="inlineFormInputGroup"
+                                                       placeholder="23/03/2020" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="input-group mb-2">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                                </div>
+                                                <input class="form-control" id="inlineFormInputGroup"
+                                                       placeholder="21:26" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+
+                                    <div id="filters"></div>
+
+                                    <div class="mt-2 dropdown" id="addFilter">
+                                        <button aria-expanded="false" aria-haspopup="true" class="btn dropdown-toggle"
+                                                data-toggle="dropdown" id="filterDropdown" type="button">
+                                            <i class="fa fa-plus"></i> Add a filter..
+                                        </button>
+                                        <div aria-labelledby="filterDropdown" class="dropdown-menu">
+                                            <a class="dropdown-item" id="dropdown-loading">Loading filters..</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="mt-2 mb-2 btn col-plan"><i class="fa fa-search"></i> Perform Query!
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- /.container-fluid -->
+        </div> <!-- End of tab -->
+    </div> <!-- End of Main Content -->
+</div><!-- End of Content Wrapper -->
+
+<!-- Color Chooser Modal -->
+<div aria-hidden="true" aria-labelledby="colorChooserModalLabel" class="modal fade" id="colorChooserModal"
+     role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="colorChooserModalLabel"><i class="fa fa-palette"></i> Theme Select
+                </h5>
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <button class="btn color-chooser" id="choose-plan" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-red" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-pink" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-purple" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-deep-purple" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-indigo" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-blue" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-light-blue" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-cyan" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-teal" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-green" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-light-green" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-lime" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-yellow" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-amber" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-orange" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-deep-orange" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-brown" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-grey" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-blue-grey" type="button"><i
+                        class="fa fa-palette"></i></button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="night-mode-toggle" type="button"><i class="fa fa-fw fa-cloud-moon"></i>
+                    Night
+                    Mode
+                </button>
+                <button class="btn bg-plan" data-dismiss="modal" type="button">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Information Modal -->
+<div aria-hidden="true" aria-labelledby="informationModalLabel" class="modal fade" id="informationModal"
+     role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="informationModalLabel"><i class="fa fa-fw fa-question-circle"></i>
+                    Information about the plugin
+                </h5>
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Player Analytics is developed and licensed under <a
+                        href="https://opensource.org/licenses/LGPL-3.0" rel="noopener noreferrer"
+                        target="_blank">Lesser General Public License
+                    v3.0</a></p>
+                <hr>
+                <a class="btn col-plan" href="https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki"
+                   rel="noopener noreferrer" target="_blank"><i class="fa fa-fw fa-graduation-cap"></i> Plan
+                    Wiki,
+                    Tutorials & Documentation</a>
+                <a class="btn col-plan" href="https://github.com/Rsl1122/Plan-PlayerAnalytics/issues"
+                   rel="noopener noreferrer" target="_blank"><i class="fa fa-fw fa-bug"></i> Report Issues</a>
+                <a class="btn col-plan" href="https://discord.gg/yXKmjzT" rel="noopener noreferrer"
+                   target="_blank"><i class="fab fa-fw fa-discord"></i> General Support on Discord</a>
+                <hr>
+                <p>Player Analytics is developed by Rsl1122.</p>
+                <p>In addition following <span class="col-plan">awesome people</span> have contributed:</p>
+                <ul>
+                    ${contributors}
+                    <li>& Bug reporters!</li>
+                </ul>
+                <small><i class="fa fa-fw fa-code"></i> code contributor <i class="fa fa-fw fa-language"></i>
+                    translator
+                </small>
+                <hr>
+                <p class="col-plan">Extra special thanks to those who have monetarily supported the development.
+                    <i class="fa fa-fw fa-star col-amber"></i></p>
+                <hr>
+                <h6>bStats Metrics</h6>
+                <a class="btn col-plan" href="https://bstats.org/plugin/bukkit/Plan" rel="noopener noreferrer"
+                   target="_blank"><i class="fa fa-fw fa-chart-area"></i> Bukkit</a>
+                <a class="btn col-plan" href="https://bstats.org/plugin/bungeecord/Plan"
+                   rel="noopener noreferrer" target="_blank"><i class="fa fa-fw fa-chart-area"></i>
+                    BungeeCord</a>
+                <a class="btn col-plan" href="https://bstats.org/plugin/sponge/plan" rel="noopener noreferrer"
+                   target="_blank"><i class="fa fa-fw fa-chart-area"></i> Sponge</a>
+            </div>
+            <div class="modal-footer">
+                <button class="btn bg-plan" data-dismiss="modal" type="button">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Modal -->
+<div aria-hidden="true" aria-labelledby="updateModalLabel" class="modal fade" id="updateModal" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            ${updateModal}
+            <div class="modal-footer">
+                <button class="btn bg-plan" data-dismiss="modal" type="button">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-fw fa-angle-up"></i>
+</a>
+
+<!-- Bootstrap core JavaScript-->
+<script src="./vendor/jquery/jquery.min.js"></script>
+<script src="./vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="./vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="./vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="./vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script src='./vendor/momentjs/moment.js'></script>
+
+<!-- Custom scripts for all pages-->
+<script src="./js/sb-admin-2.js"></script>
+<script src="./js/xmlhttprequests.js"></script>
+<script src="./js/color-selector.js"></script>
+
+<!-- Page level custom scripts -->
+<script src='./js/query.js'></script>
+
+<script id="mainScript">
+    var filters = [];
+    jsonRequest("./v1/filters", function (json, error) {
+        var dropdown = $('#addFilter .dropdown-menu');
+
+        filters.push(...json.filters);
+        console.log(filters);
+
+        var filterElements = [];
+        for (var i = 0; i < filters.length; i++) {
+            filterElements.push(createFilterSelector('#filters', i, filters[i]));
+        }
+        $('#dropdown-loading').replaceWith(filterElements);
+    });
+</script>
+
+</body>
+
+</html>
