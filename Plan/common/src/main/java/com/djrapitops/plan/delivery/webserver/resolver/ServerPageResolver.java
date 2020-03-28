@@ -68,7 +68,7 @@ public class ServerPageResolver implements Resolver {
     @Override
     public Optional<Response> resolve(Request request) {
         return getServerUUID(request.getPath())
-                .map(this::getServerPage)
+                .map(serverUUID -> getServerPage(serverUUID, request))
                 .orElseGet(this::redirectToCurrentServer);
     }
 
@@ -79,9 +79,16 @@ public class ServerPageResolver implements Resolver {
         return Optional.of(responseFactory.redirectResponse(directTo));
     }
 
-    private Optional<Response> getServerPage(UUID serverUUID) {
+    private Optional<Response> getServerPage(UUID serverUUID, Request request) {
         boolean toNetworkPage = serverInfo.getServer().isProxy() && serverInfo.getServerUUID().equals(serverUUID);
-        if (toNetworkPage) return Optional.of(responseFactory.networkPageResponse());
+        if (toNetworkPage) {
+            if (request.getPath().getPart(0).map("network"::equals).orElse(false)) {
+                return Optional.of(responseFactory.networkPageResponse());
+            } else {
+                // Accessing /server/Server <Bungee ID> which should be redirected to /network
+                return redirectToCurrentServer();
+            }
+        }
         return Optional.of(responseFactory.serverPageResponse(serverUUID));
     }
 
