@@ -101,6 +101,9 @@ public class ServerPage implements Page {
         String tabs = JSONCache.getOrCacheString(DataID.EXTENSION_TABS, serverUUID, () -> pluginTabs.get().getTabs());
 
         PlaceholderReplacer pluginPlaceholders = new PlaceholderReplacer();
+        pluginPlaceholders.put("serverUUID", serverUUID.toString());
+        pluginPlaceholders.put("serverName", server.getIdentifiableName());
+        pluginPlaceholders.put("serverDisplayName", server.getName());
         pluginPlaceholders.put("backButton", serverInfo.getServer().isProxy() ? Html.BACK_BUTTON_NETWORK.create() : "");
         pluginPlaceholders.put("navPluginsTabs", nav);
         pluginPlaceholders.put("tabsPlugins", tabs);

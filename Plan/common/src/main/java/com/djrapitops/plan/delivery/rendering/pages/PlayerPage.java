@@ -109,6 +109,7 @@ public class PlayerPage implements Page {
         placeholders = new PlaceholderReplacer();
         PlayerPluginTab pluginTabs = pageFactory.inspectPluginTabs(playerUUID);
 
+        placeholders.put("playerName", playerName);
         placeholders.put("backButton", (serverInfo.getServer().isProxy() ? Html.BACK_BUTTON_NETWORK : Html.BACK_BUTTON_SERVER).create());
         placeholders.put("navPluginsTabs", pluginTabs.getNav());
         placeholders.put("pluginsTabs", pluginTabs.getTab());

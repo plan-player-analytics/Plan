@@ -107,6 +107,9 @@ public class NetworkPage implements Page {
         String tabs = JSONCache.getOrCacheString(DataID.EXTENSION_TABS, serverUUID, () -> pluginTabs.get().getTabs());
 
         PlaceholderReplacer pluginPlaceholders = new PlaceholderReplacer();
+        pluginPlaceholders.put("networkDisplayName", config.get(ProxySettings.NETWORK_NAME));
+        pluginPlaceholders.put("serverName", config.get(ProxySettings.NETWORK_NAME));
+        pluginPlaceholders.put("serverUUID", serverUUID.toString());
         pluginPlaceholders.put("navPluginsTabs", nav);
         pluginPlaceholders.put("tabsPlugins", StringUtils.remove(tabs, "${backButton}"));
 
