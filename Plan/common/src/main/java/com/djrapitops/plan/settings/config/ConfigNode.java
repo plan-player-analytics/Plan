@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 /**
@@ -54,7 +55,7 @@ public class ConfigNode {
         this.parent = parent;
         this.value = value;
 
-        nodeOrder = new ArrayList<>();
+        nodeOrder = new CopyOnWriteArrayList<>();
         childNodes = new HashMap<>();
         comment = new ArrayList<>();
     }
