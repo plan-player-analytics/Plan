@@ -20,12 +20,13 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plugin.utilities.Verify;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
@@ -62,9 +63,13 @@ public class PlanFiles implements SubSystem {
     }
 
     public File getLogsFolder() {
-        File folder = getFileFromPluginFolder("logs");
-        folder.mkdirs();
-        return folder;
+        try {
+            File folder = getFileFromPluginFolder("logs");
+            Files.createDirectories(folder.toPath());
+            return folder;
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     public File getConfigFile() {
@@ -118,29 +123,23 @@ public class PlanFiles implements SubSystem {
         return new FileResource(resourceName, getFileFromPluginFolder(resourceName));
     }
 
-    private Optional<File> attemptToFind(String resourceName) {
-        if (dataFolder.exists() && dataFolder.isDirectory()) {
-
-            String[] path = StringUtils.split(resourceName, '/');
-
-            Path toFile = dataFolder.getAbsoluteFile().toPath().toAbsolutePath();
-            for (String next : path) {
-                toFile = toFile.resolve(next);
-            }
-
-            File found = toFile.toFile();
-            if (found.exists()) {
-                return Optional.of(found);
-            }
-        }
-        return Optional.empty();
-    }
-
     public Optional<Resource> getCustomizableResource(String resourceName) {
         return Optional.ofNullable(ResourceCache.getOrCache(resourceName,
                 () -> attemptToFind(resourceName)
                         .map(found -> new FileResource(resourceName, found))
                         .orElse(null)
         ));
+    }
+
+    private Optional<File> attemptToFind(String resourceName) {
+        Path dir = getCustomizationDirectory();
+        if (dir.toFile().exists() && dir.toFile().isDirectory()) {
+            Path asPath = dir.resolve(resourceName);
+            File found = asPath.toFile();
+            if (found.exists()) {
+                return Optional.of(found);
+            }
+        }
+        return Optional.empty();
     }
 }
