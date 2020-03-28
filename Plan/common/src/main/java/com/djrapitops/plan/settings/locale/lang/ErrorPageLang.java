@@ -24,7 +24,7 @@ package com.djrapitops.plan.settings.locale.lang;
 public enum ErrorPageLang implements Lang {
     UUID_404("Player UUID was not found in the database."),
     NO_SERVERS_404("No Servers online to perform the request."),
-    NOT_PLAYED_404("Player has not played on this server."),
+    NOT_PLAYED_404("Plan has not seen this player."),
     UNKNOWN_PAGE_404("Make sure you're accessing a link given by a command, Examples:</p><p>/player/PlayerName<br>/server/ServerName</p>"),
     UNAUTHORIZED_401("Unauthorized"),
     AUTHENTICATION_FAILED_401("Authentication Failed."),

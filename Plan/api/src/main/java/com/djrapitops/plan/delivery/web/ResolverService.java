@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.web;
 
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -73,6 +74,18 @@ public interface ResolverService {
      * @return Resolver if registered or empty.
      */
     Optional<Resolver> getResolver(String target);
+
+    /**
+     * Obtain all Resolvers that match the target.
+     * <p>
+     * If first returns Optional.empty next one should be used.
+     * <p>
+     * Requires Capability PAGE_EXTENSION_RESOLVERS_LIST.
+     *
+     * @param target "/example/target"
+     * @return List of Resolvers if registered or empty list.
+     */
+    List<Resolver> getResolvers(String target);
 
     class Holder {
         static ResolverService service;

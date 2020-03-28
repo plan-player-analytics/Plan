@@ -68,6 +68,18 @@ public class ResolverSvc implements ResolverService {
         return Optional.empty();
     }
 
+    @Override
+    public List<Resolver> getResolvers(String target) {
+        List<Resolver> resolvers = new ArrayList<>();
+        for (Container container : basicResolvers) {
+            if (container.matcher.test(target)) resolvers.add(container.resolver);
+        }
+        for (Container container : regexResolvers) {
+            if (container.matcher.test(target)) resolvers.add(container.resolver);
+        }
+        return resolvers;
+    }
+
     public Optional<String> getPluginInChargeOf(String target) {
         for (Container container : basicResolvers) {
             if (container.matcher.test(target)) return Optional.of(container.plugin);

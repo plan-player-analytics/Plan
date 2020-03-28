@@ -68,6 +68,10 @@ enum Capability {
      */
     PAGE_EXTENSION_RESOLVERS,
     /**
+     * {@link com.djrapitops.plan.delivery.web.ResolverService#getResolvers(String)}
+     */
+    PAGE_EXTENSION_RESOLVERS_LIST,
+    /**
      * {@link com.djrapitops.plan.delivery.web.ResourceService}
      */
     PAGE_EXTENSION_RESOURCES;

@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.webserver.resolver;
 import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
 import org.apache.commons.lang3.StringUtils;
 
@@ -47,7 +48,7 @@ public class StaticResourceResolver implements NoAuthResolver {
     }
 
     private Response getResponse(Request request) {
-        String resource = request.getPath().asString().substring(1);
+        String resource = getPath(request).asString().substring(1);
         if (resource.endsWith(".css")) {
             return responseFactory.cssResponse(resource);
         }
@@ -61,5 +62,14 @@ public class StaticResourceResolver implements NoAuthResolver {
             return responseFactory.fontResponse(resource);
         }
         return null;
+    }
+
+    private URIPath getPath(Request request) {
+        URIPath path = request.getPath();
+        // Remove everything before /vendor /css /js or /img
+        while (!path.getPart(0).map(part -> part.matches("(vendor|css|js|img)")).orElse(true)) {
+            path = path.omitFirst();
+        }
+        return path;
     }
 }

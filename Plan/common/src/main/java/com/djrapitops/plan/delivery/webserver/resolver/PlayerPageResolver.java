@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver;
 
+import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
@@ -23,6 +24,7 @@ import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
 import com.djrapitops.plan.identification.UUIDUtility;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -60,17 +62,26 @@ public class PlayerPageResolver implements Resolver {
     @Override
     public Optional<Response> resolve(Request request) {
         URIPath path = request.getPath();
-        Optional<String> part = path.getPart(1);
-        if (!part.isPresent()) return Optional.empty();
+        if (StringUtils.containsAny(path.asString(), "/vendor/", "/js/", "/css/", "/img/")) {
+            return Optional.empty();
+        }
+        return path.getPart(1)
+                .map(playerName -> getResponse(request.getPath(), playerName));
+    }
 
-        String playerName = part.get();
+    private Response getResponse(URIPath path, String playerName) {
         UUID playerUUID = uuidUtility.getUUIDOf(playerName);
-        if (playerUUID == null) return Optional.of(responseFactory.uuidNotFound404());
+        if (playerUUID == null) return responseFactory.uuidNotFound404();
 
         boolean raw = path.getPart(2).map("raw"::equalsIgnoreCase).orElse(false);
-        return Optional.of(
-                raw ? responseFactory.rawPlayerPageResponse(playerUUID)
-                        : responseFactory.playerPageResponse(playerUUID)
-        );
+        if (raw) {
+            return responseFactory.rawPlayerPageResponse(playerUUID);
+        }
+
+        if (path.getPart(2).isPresent()) {
+            // Redirect /player/Name/ to /player/Name
+            return responseFactory.redirectResponse("../" + Html.encodeToURL(playerName));
+        }
+        return responseFactory.playerPageResponse(playerUUID);
     }
 }

@@ -35,6 +35,7 @@ import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -100,7 +101,7 @@ public class ResponseResolver {
         resolverService.registerResolver(plugin, "/network", serverPageResolver);
         resolverService.registerResolver(plugin, "/server", serverPageResolver);
         resolverService.registerResolverForMatches(plugin, Pattern.compile("^/$"), rootPageResolver);
-        resolverService.registerResolverForMatches(plugin, Pattern.compile("^/(vendor|css|js|img)/.*"), staticResourceResolver);
+        resolverService.registerResolverForMatches(plugin, Pattern.compile("^.*/(vendor|css|js|img)/.*"), staticResourceResolver);
 
         resolverService.registerResolver(plugin, "/v1", rootJSONResolver.getResolver());
     }
@@ -136,30 +137,33 @@ public class ResponseResolver {
 
         Optional<Authentication> authentication = internalRequest.getAuth();
 
-        Optional<Resolver> foundResolver = resolverService.getResolver(internalRequest.getPath().asString());
-        if (!foundResolver.isPresent()) return responseFactory.pageNotFound404();
+        List<Resolver> foundResolvers = resolverService.getResolvers(internalRequest.getPath().asString());
+        if (foundResolvers.isEmpty()) return responseFactory.pageNotFound404();
 
-        Resolver resolver = foundResolver.get();
+        for (Resolver resolver : foundResolvers) {
+            Request request = internalRequest.toAPIRequest();
+            if (resolver.requiresAuth(request)) {
+                // Get required auth
+                boolean isAuthRequired = webServer.get().isAuthRequired();
+                if (isAuthRequired && !authentication.isPresent()) {
+                    if (webServer.get().isUsingHTTPS()) {
+                        return responseFactory.basicAuth();
+                    } else {
+                        return responseFactory.forbidden403();
+                    }
+                }
 
-        Request request = internalRequest.toAPIRequest();
-        if (resolver.requiresAuth(request)) {
-            // Get required auth
-            boolean isAuthRequired = webServer.get().isAuthRequired();
-            if (isAuthRequired && !authentication.isPresent()) {
-                if (webServer.get().isUsingHTTPS()) {
-                    return responseFactory.basicAuth();
+                if (!isAuthRequired || resolver.canAccess(request)) {
+                    Optional<Response> resolved = resolver.resolve(request);
+                    if (resolved.isPresent()) return resolved.get();
                 } else {
                     return responseFactory.forbidden403();
                 }
-            }
-
-            if (!isAuthRequired || resolver.canAccess(request)) {
-                return resolver.resolve(request).orElseGet(responseFactory::pageNotFound404);
             } else {
-                return responseFactory.forbidden403();
+                Optional<Response> resolved = resolver.resolve(request);
+                if (resolved.isPresent()) return resolved.get();
             }
-        } else {
-            return resolver.resolve(request).orElseGet(responseFactory::pageNotFound404);
         }
+        return responseFactory.pageNotFound404();
     }
 }
