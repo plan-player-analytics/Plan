@@ -58,6 +58,7 @@ public class WebServer implements SubSystem {
     private final PlanConfig config;
 
     private final ServerProperties serverProperties;
+    private Addresses addresses;
     private final RequestHandler requestHandler;
 
     private final PluginLogger logger;
@@ -75,6 +76,7 @@ public class WebServer implements SubSystem {
             PlanFiles files,
             PlanConfig config,
             ServerInfo serverInfo,
+            Addresses addresses,
             PluginLogger logger,
             ErrorHandler errorHandler,
             RequestHandler requestHandler
@@ -83,6 +85,7 @@ public class WebServer implements SubSystem {
         this.files = files;
         this.config = config;
         this.serverProperties = serverInfo.getServerProperties();
+        this.addresses = addresses;
 
         this.requestHandler = requestHandler;
 
@@ -96,7 +99,7 @@ public class WebServer implements SubSystem {
 
         initServer();
 
-        if (getAccessAddress().contains("0.0.0.0")) {
+        if (!addresses.getAccessAddress().isPresent()) {
             logger.warn(locale.getString(PluginLang.ENABLE_NOTIFY_BAD_IP));
         }
 
@@ -156,9 +159,11 @@ public class WebServer implements SubSystem {
 
             enabled = true;
 
-            logger.info(locale.getString(PluginLang.ENABLED_WEB_SERVER, server.getAddress().getPort(), getAccessAddress()));
+            String address = addresses.getAccessAddress().orElse(addresses.getFallbackLocalhostAddress());
+            logger.info(locale.getString(PluginLang.ENABLED_WEB_SERVER, server.getAddress().getPort(), address));
+
             boolean usingAlternativeIP = config.isTrue(WebserverSettings.SHOW_ALTERNATIVE_IP);
-            if (!usingAlternativeIP && serverProperties.getIp().isEmpty()) {
+            if (!usingAlternativeIP && !addresses.getAccessAddress().isPresent()) {
                 logger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.ENABLE_NOTIFY_EMPTY_IP));
             }
         } catch (BindException failedToBind) {
@@ -298,13 +303,7 @@ public class WebServer implements SubSystem {
         return isUsingHTTPS() && config.isFalse(WebserverSettings.DISABLED_AUTHENTICATION);
     }
 
-    public String getAccessAddress() {
-        return isEnabled() ? getProtocol() + "://" + getIP() : config.get(WebserverSettings.EXTERNAL_LINK);
-    }
-
-    private String getIP() {
-        return config.isTrue(WebserverSettings.SHOW_ALTERNATIVE_IP)
-                ? config.get(WebserverSettings.ALTERNATIVE_IP).replace("%port%", String.valueOf(port))
-                : serverProperties.getIp() + ":" + port;
+    public int getPort() {
+        return port;
     }
 }

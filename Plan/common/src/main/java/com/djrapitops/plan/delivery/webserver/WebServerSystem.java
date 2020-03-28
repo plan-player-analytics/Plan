@@ -30,12 +30,15 @@ import javax.inject.Singleton;
 @Singleton
 public class WebServerSystem implements SubSystem {
 
+    private final Addresses addresses;
     private final WebServer webServer;
 
     @Inject
     public WebServerSystem(
+            Addresses addresses,
             WebServer webServer
     ) {
+        this.addresses = addresses;
         this.webServer = webServer;
     }
 
@@ -55,4 +58,7 @@ public class WebServerSystem implements SubSystem {
         return webServer;
     }
 
+    public Addresses getAddresses() {
+        return addresses;
+    }
 }

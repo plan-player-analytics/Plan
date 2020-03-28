@@ -33,10 +33,12 @@ import java.util.zip.GZIPOutputStream;
  */
 public class ResponseSender {
 
+    private final Addresses addresses;
     private final HttpExchange exchange;
     private final Response response;
 
-    public ResponseSender(HttpExchange exchange, Response response) {
+    public ResponseSender(Addresses addresses, HttpExchange exchange, Response response) {
+        this.addresses = addresses;
         this.exchange = exchange;
         this.response = response;
     }
@@ -52,8 +54,20 @@ public class ResponseSender {
 
     private void setResponseHeaders() {
         Headers headers = exchange.getResponseHeaders();
-        for (Map.Entry<String, String> header : response.getHeaders().entrySet()) {
+
+        Map<String, String> responseHeaders = response.getHeaders();
+        correctRedirect(responseHeaders);
+
+        for (Map.Entry<String, String> header : responseHeaders.entrySet()) {
             headers.set(header.getKey(), header.getValue());
+        }
+    }
+
+    private void correctRedirect(Map<String, String> responseHeaders) {
+        String redirect = responseHeaders.get("Location");
+        if (redirect != null) {
+            if (redirect.startsWith("http") || !redirect.startsWith("/")) return;
+            addresses.getAccessAddress().ifPresent(address -> responseHeaders.put("Location", address + redirect));
         }
     }
 

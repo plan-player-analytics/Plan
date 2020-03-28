@@ -16,9 +16,8 @@
  */
 package com.djrapitops.plan.commands.subcommands;
 
-import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.WebUser;
-import com.djrapitops.plan.delivery.webserver.WebServer;
+import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.Permissions;
@@ -62,7 +61,7 @@ public class RegisterCommand extends CommandNode {
     private final Locale locale;
     private final Processing processing;
     private final DBSystem dbSystem;
-    private final WebServer webServer;
+    private final Addresses addresses;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
 
@@ -70,8 +69,8 @@ public class RegisterCommand extends CommandNode {
     public RegisterCommand(
             Locale locale,
             Processing processing,
+            Addresses addresses,
             DBSystem dbSystem,
-            WebServer webServer,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
@@ -80,7 +79,7 @@ public class RegisterCommand extends CommandNode {
 
         this.locale = locale;
         this.processing = processing;
-        this.webServer = webServer;
+        this.addresses = addresses;
         this.logger = logger;
         this.dbSystem = dbSystem;
         this.errorHandler = errorHandler;
@@ -187,7 +186,10 @@ public class RegisterCommand extends CommandNode {
     }
 
     private void sendLink(Sender sender) {
-        String url = PlanSystem.getMainAddress(webServer, dbSystem);
+        String url = addresses.getMainAddress().orElseGet(() -> {
+            sender.sendMessage(locale.getString(CommandLang.NO_ADDRESS_NOTIFY));
+            return addresses.getFallbackLocalhostAddress();
+        });
         String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
         // Link
         boolean console = !CommandUtils.isPlayer(sender);

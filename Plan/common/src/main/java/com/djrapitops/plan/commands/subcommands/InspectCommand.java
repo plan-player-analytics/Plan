@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.commands.subcommands;
 
-import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.rendering.html.Html;
+import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.UUIDUtility;
@@ -52,6 +52,7 @@ public class InspectCommand extends CommandNode {
     private final Locale locale;
     private final DBSystem dbSystem;
     private final WebServer webServer;
+    private final Addresses addresses;
     private final Processing processing;
     private final UUIDUtility uuidUtility;
     private final ErrorHandler errorHandler;
@@ -59,6 +60,7 @@ public class InspectCommand extends CommandNode {
     @Inject
     public InspectCommand(
             Locale locale,
+            Addresses addresses,
             Processing processing,
             DBSystem dbSystem,
             WebServer webServer,
@@ -66,6 +68,7 @@ public class InspectCommand extends CommandNode {
             ErrorHandler errorHandler
     ) {
         super("inspect", Permissions.INSPECT.getPermission(), CommandType.PLAYER_OR_ARGS);
+        this.addresses = addresses;
         this.processing = processing;
         setArguments("<player>");
 
@@ -132,7 +135,10 @@ public class InspectCommand extends CommandNode {
     private void sendInspectMsg(Sender sender, String playerName) {
         sender.sendMessage(locale.getString(CommandLang.HEADER_INSPECT, playerName));
 
-        String address = PlanSystem.getMainAddress(webServer, dbSystem);
+        String address = addresses.getMainAddress().orElseGet(() -> {
+            sender.sendMessage(locale.getString(CommandLang.NO_ADDRESS_NOTIFY));
+            return addresses.getFallbackLocalhostAddress();
+        });
         String url = address + "/player/" + Html.encodeToURL(playerName);
         String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
 

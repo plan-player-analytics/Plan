@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.identification;
 
-import com.djrapitops.plan.delivery.webserver.WebServer;
+import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.properties.ServerProperties;
@@ -25,7 +25,6 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,19 +41,19 @@ import java.util.concurrent.ExecutionException;
 public class VelocityServerInfo extends ServerInfo {
 
     private final DBSystem dbSystem;
-    private final Lazy<WebServer> webServer;
+    private final Addresses addresses;
     private final PluginLogger logger;
 
     @Inject
     public VelocityServerInfo(
             ServerProperties serverProperties,
             DBSystem dbSystem,
-            Lazy<WebServer> webServer,
+            Addresses addresses,
             PluginLogger logger
     ) {
         super(serverProperties);
         this.dbSystem = dbSystem;
-        this.webServer = webServer;
+        this.addresses = addresses;
         this.logger = logger;
     }
 
@@ -67,7 +66,7 @@ public class VelocityServerInfo extends ServerInfo {
             Optional<Server> proxyInfo = database.query(ServerQueries.fetchProxyServerInformation());
             if (proxyInfo.isPresent()) {
                 server = proxyInfo.get();
-                updateServerInfo(database);
+                updateServerInfo();
             } else {
                 server = registerVelocityInfo(database);
             }
@@ -78,26 +77,29 @@ public class VelocityServerInfo extends ServerInfo {
         }
     }
 
-    private void updateServerInfo(Database db) {
-        String accessAddress = webServer.get().getAccessAddress();
+    private void updateServerInfo() {
+        addresses.getAccessAddress().ifPresent(this::saveAddress);
+    }
+
+    private void saveAddress(String accessAddress) {
         if (!accessAddress.equals(server.getWebAddress())) {
             server.setWebAddress(accessAddress);
-            db.executeTransaction(new StoreServerInformationTransaction(server));
+            dbSystem.getDatabase().executeTransaction(new StoreServerInformationTransaction(server));
         }
     }
 
     private void checkIfDefaultIP() throws EnableException {
         String ip = serverProperties.getIp();
         if ("0.0.0.0".equals(ip)) {
-            logger.error("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
+            logger.error("IP setting still 0.0.0.0 - Configure Alternative_IP/IP that connects to the Proxy server.");
             logger.info("Player Analytics partially enabled (Use /planbungee to reload config)");
-            throw new EnableException("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
+            throw new EnableException("IP setting still 0.0.0.0 - Configure Alternative_IP/IP that connects to the Proxy server.");
         }
     }
 
     private Server registerVelocityInfo(Database db) throws EnableException, ExecutionException, InterruptedException {
         UUID serverUUID = generateNewUUID();
-        String accessAddress = webServer.get().getAccessAddress();
+        String accessAddress = addresses.getAccessAddress().orElseThrow(() -> new EnableException("Velocity can not have '0.0.0.0' or '' as an address. Set up 'Server.IP' setting."));
 
         // TODO Rework to allow Velocity as name.
         Server proxy = new Server(-1, serverUUID, "BungeeCord", accessAddress, serverProperties.getMaxPlayers());

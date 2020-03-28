@@ -23,12 +23,10 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
-import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
-import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -46,19 +44,16 @@ public class ServerPageResolver implements Resolver {
     private final ResponseFactory responseFactory;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
-    private final Lazy<WebServer> webServer;
 
     @Inject
     public ServerPageResolver(
             ResponseFactory responseFactory,
             DBSystem dbSystem,
-            ServerInfo serverInfo,
-            Lazy<WebServer> webServer
+            ServerInfo serverInfo
     ) {
         this.responseFactory = responseFactory;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
-        this.webServer = webServer;
     }
 
     @Override
@@ -81,7 +76,7 @@ public class ServerPageResolver implements Resolver {
         String directTo = serverInfo.getServer().isProxy()
                 ? "/network"
                 : "/server/" + Html.encodeToURL(serverInfo.getServer().getIdentifiableName());
-        return Optional.of(responseFactory.redirectResponse(webServer.get().getAccessAddress() + directTo));
+        return Optional.of(responseFactory.redirectResponse(directTo));
     }
 
     private Optional<Response> getServerPage(UUID serverUUID) {

@@ -73,7 +73,8 @@ public enum CommandLang implements Lang {
     DISABLE_DISABLED("Cmd Disable - Disabled", "§aPlan systems are now disabled. You can still use /planbungee reload to restart the plugin."),
 
     RELOAD_COMPLETE("Cmd Info - Reload Complete", "§aReload Complete"),
-    RELOAD_FAILED("Cmd Info - Reload Failed", "§cSomething went wrong during reload of the plugin, a restart is recommended.");
+    RELOAD_FAILED("Cmd Info - Reload Failed", "§cSomething went wrong during reload of the plugin, a restart is recommended."),
+    NO_ADDRESS_NOTIFY("Cmd Notify - No Address", "§eNo address was available - using localhost as fallback. Set up 'Alternative_IP' settings.");
 
     private final String identifier;
     private final String defaultValue;

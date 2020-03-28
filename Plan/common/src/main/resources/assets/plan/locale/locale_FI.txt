@@ -83,7 +83,7 @@ Disable - Unsaved Session Save                  || Tallennetaan päättymättöm
 Disable - WebServer                             || Web palvelin on sammutettu.
 Enable                                          || Player Analytics Käynnistetty.
 Enable - Database                               || ${0}-tietokanta yhteys luotu.
-Enable - Notify Empty IP                        || IP server.properties tiedostossa on tyhjä & AlternativeIP ei ole käytössä. Linkit ovat virheellisiä!
+Enable - Notify Empty IP                        || IP server.properties tiedostossa on tyhjä & Alternative_IP ei ole käytössä. Linkit ovat virheellisiä!
 Enable - Notify Geolocations disabled           || Sijaintien keräys ei ole päällä. (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || Plan Vaatii internetin ensimmäisellä käynnistyskerralla GeoLite2 tietokannan lataamiseen.
 Enable - Notify Webserver disabled              || Web Palvelinta ei käynnistetty. (WebServer.DisableWebServer: true)

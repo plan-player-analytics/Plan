@@ -16,15 +16,13 @@
  */
 package com.djrapitops.plan.commands.subcommands.manage;
 
-import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.rendering.html.Html;
-import com.djrapitops.plan.delivery.webserver.WebServer;
+import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.settings.locale.lang.DeepHelpLang;
-import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -44,16 +42,17 @@ import java.util.Arrays;
 public class ManageRawDataCommand extends CommandNode {
 
     private final Locale locale;
-    private final DBSystem dbSystem;
-    private final WebServer webServer;
+    private Addresses addresses;
 
     @Inject
-    public ManageRawDataCommand(Locale locale, DBSystem dbSystem, WebServer webServer) {
+    public ManageRawDataCommand(
+            Locale locale,
+            Addresses addresses
+    ) {
         super("raw", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
 
         this.locale = locale;
-        this.dbSystem = dbSystem;
-        this.webServer = webServer;
+        this.addresses = addresses;
 
         setArguments("<player>");
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_RAW_DATA));
@@ -69,7 +68,10 @@ public class ManageRawDataCommand extends CommandNode {
 
         sender.sendMessage(locale.getString(CommandLang.HEADER_INSPECT, playerName));
         // Link
-        String address = PlanSystem.getMainAddress(webServer, dbSystem);
+        String address = addresses.getMainAddress().orElseGet(() -> {
+            sender.sendMessage(locale.getString(CommandLang.NO_ADDRESS_NOTIFY));
+            return addresses.getFallbackLocalhostAddress();
+        });
         String url = address + "/player/" + Html.encodeToURL(playerName) + "/raw";
         String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
         boolean console = !CommandUtils.isPlayer(sender);

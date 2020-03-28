@@ -93,7 +93,7 @@ public class BungeeSystemTest {
             }
         });
 
-        assertEquals("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.", thrown.getMessage());
+        assertEquals("IP setting still 0.0.0.0 - Configure Alternative_IP/IP that connects to the Proxy server.", thrown.getMessage());
     }
 
     @Test

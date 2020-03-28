@@ -19,8 +19,6 @@ package com.djrapitops.plan.delivery.webserver;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
-import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -35,20 +33,20 @@ import java.io.IOException;
 public class NonProxyWebserverDisableChecker implements Runnable {
 
     private final PlanConfig config;
-    private final DBSystem dbSystem;
+    private final Addresses addresses;
     private final WebServerSystem webServerSystem;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
 
     public NonProxyWebserverDisableChecker(
             PlanConfig config,
-            DBSystem dbSystem,
+            Addresses addresses,
             WebServerSystem webServerSystem,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
         this.config = config;
-        this.dbSystem = dbSystem;
+        this.addresses = addresses;
         this.webServerSystem = webServerSystem;
         this.logger = logger;
         this.errorHandler = errorHandler;
@@ -58,8 +56,8 @@ public class NonProxyWebserverDisableChecker implements Runnable {
     public void run() {
         if (config.isFalse(PluginSettings.PROXY_COPY_CONFIG)) return;
 
-        dbSystem.getDatabase().query(ServerQueries.fetchProxyServerInformation()).ifPresent(proxy -> {
-            logger.info("Proxy server detected in the database - Proxy Webserver address is '" + proxy.getWebAddress() + "'.");
+        addresses.getProxyServerAddress().ifPresent(address -> {
+            logger.info("Proxy server detected in the database - Proxy Webserver address is '" + address + "'.");
             WebServer webServer = webServerSystem.getWebServer();
 
             if (webServer.isEnabled()) {

@@ -84,7 +84,7 @@ Disable - WebServer                             || Le serveur Web a été désac
 Enable                                          || Plan a été activé.
 Enable - Database                               || Connexion à la base de données établie. (${0})
 Enable - Notify Bad IP                          || L'adresse IP située dans le fichier 'server.properties' est érronée. Attention, des liens incorrects seront donnés !
-Enable - Notify Empty IP                        || L'adresse IP située dans le fichier 'server.properties' est vide et l'option 'AlternativeIP' n'est pas utilisée. Attention, des liens incorrects seront donnés !
+Enable - Notify Empty IP                        || L'adresse IP située dans le fichier 'server.properties' est vide et l'option 'Alternative_IP' n'est pas utilisée. Attention, des liens incorrects seront donnés !
 Enable - Notify Geolocations disabled           || La Géolocalisation n'est pas active. (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || Plan nécessite un accès à Internet lors de sa première utilisation pour télécharger la base de données 'GeoLite2 Geolocation'.
 Enable - Notify Webserver disabled              || Le serveur Web n'a pas été initialisé. (WebServer.DisableWebServer: true)
@@ -355,7 +355,7 @@ WebServer - Notify HTTP                         || Serveur Web : Aucun certifica
 WebServer - Notify HTTP User Auth               || Serveur Web : Authentification utilisateur désactivée ! (Non sécurisée avec HTTP)
 WebServer - Notify HTTPS User Auth              || Serveur Web : Authentification d'utilisateur désactivée ! (dans la configuration)
 WebServer - Notify no Cert file                 || Serveur Web : Fichier KeyStore du certificat introuvable : ${0}
-WebServer - Notify Using Proxy                  || Serveur Web : le Proxy-mode HTTPS est activé, assurez-vous que votre proxy inversé est routé en utilisant HTTPS et Plan AlternativeIP.Link.
+WebServer - Notify Using Proxy                  || Serveur Web : le Proxy-mode HTTPS est activé, assurez-vous que votre proxy inversé est routé en utilisant HTTPS et Plan Alternative_IP.Link.
 WebServer FAIL - Port Bind                      || Le Serveur Web n'a pas été initialisé avec succès. Le port (${0}) est-il actuellement utilisé ?
 WebServer FAIL - SSL Context                    || Serveur Web : Échec d'initialisation du contexte SSL.
 WebServer FAIL - Store Load                     || Serveur Web : Échec du chargement du certificat SSL.

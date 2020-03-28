@@ -23,7 +23,6 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -52,8 +51,8 @@ public class RequestHandler implements HttpHandler {
 
     private final Locale locale;
     private final PlanConfig config;
-    private final Theme theme;
     private final DBSystem dbSystem;
+    private final Addresses addresses;
     private final ResponseResolver responseResolver;
     private final ResponseFactory responseFactory;
     private final PluginLogger logger;
@@ -67,8 +66,8 @@ public class RequestHandler implements HttpHandler {
     RequestHandler(
             Locale locale,
             PlanConfig config,
-            Theme theme,
             DBSystem dbSystem,
+            Addresses addresses,
             ResponseResolver responseResolver,
             ResponseFactory responseFactory,
             PluginLogger logger,
@@ -76,8 +75,8 @@ public class RequestHandler implements HttpHandler {
     ) {
         this.locale = locale;
         this.config = config;
-        this.theme = theme;
         this.dbSystem = dbSystem;
+        this.addresses = addresses;
         this.responseResolver = responseResolver;
         this.responseFactory = responseFactory;
         this.logger = logger;
@@ -109,7 +108,7 @@ public class RequestHandler implements HttpHandler {
             response.getHeaders().putIfAbsent("Access-Control-Allow-Origin", config.get(WebserverSettings.CORS_ALLOW_ORIGIN));
             response.getHeaders().putIfAbsent("Access-Control-Allow-Methods", "GET, OPTIONS");
 
-            ResponseSender sender = new ResponseSender(exchange, response);
+            ResponseSender sender = new ResponseSender(addresses, exchange, response);
             sender.send();
         } catch (Exception e) {
             if (config.isTrue(PluginSettings.DEV_MODE)) {

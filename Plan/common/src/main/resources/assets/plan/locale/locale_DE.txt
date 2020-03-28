@@ -83,7 +83,7 @@ Disable - Unsaved Session Save                  || Saving unfinished sessions..
 Disable - WebServer                             || Webserver deaktiviert.
 Enable                                          || Player Analytics eingeschaltet.
 Enable - Database                               || ${0}-dDatenbankverbindung hergestellt.
-Enable - Notify Empty IP                        || IP in der server.properties ist leer & AlternativeIP ist nicht in Verwendung. Es werden falsche Links verwendet!
+Enable - Notify Empty IP                        || IP in der server.properties ist leer & Alternative_IP ist nicht in Verwendung. Es werden falsche Links verwendet!
 Enable - Notify Geolocations disabled           || Geolocation wird nicht aufgezeichnet (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || Plan braucht einen Internetzugang um die GeoLite2 Geolocation Datenbank runterzuladen.
 Enable - Notify Webserver disabled              || WebServer wurde nicht geladen. (WebServer.DisableWebServer: true)

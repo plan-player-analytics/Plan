@@ -22,7 +22,6 @@ import com.djrapitops.plan.delivery.export.ExportSystem;
 import com.djrapitops.plan.delivery.web.ResolverSvc;
 import com.djrapitops.plan.delivery.web.ResourceSvc;
 import com.djrapitops.plan.delivery.webserver.NonProxyWebserverDisableChecker;
-import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.delivery.webserver.WebServerSystem;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.extension.ExtensionService;
@@ -30,7 +29,6 @@ import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.gathering.cache.CacheSystem;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.gathering.listeners.ListenerSystem;
-import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.query.QuerySvc;
@@ -38,7 +36,6 @@ import com.djrapitops.plan.settings.ConfigSystem;
 import com.djrapitops.plan.settings.SettingsSvc;
 import com.djrapitops.plan.settings.locale.LocaleSystem;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.version.VersionChecker;
 import com.djrapitops.plugin.benchmarking.Benchmark;
@@ -146,14 +143,9 @@ public class PlanSystem implements SubSystem {
         );
     }
 
-    public static String getMainAddress(WebServer webServer, DBSystem dbSystem) {
-        return dbSystem.getDatabase().query(ServerQueries.fetchProxyServerInformation())
-                .map(Server::getWebAddress)
-                .orElse(webServer.getAccessAddress());
-    }
-
+    @Deprecated
     public String getMainAddress() {
-        return PlanSystem.getMainAddress(webServerSystem.getWebServer(), databaseSystem);
+        return webServerSystem.getAddresses().getMainAddress().orElse(webServerSystem.getAddresses().getFallbackLocalhostAddress());
     }
 
     @Override
@@ -183,7 +175,7 @@ public class PlanSystem implements SubSystem {
         // Disables Webserver if Proxy is detected in the database
         if (serverInfo.getServer().isNotProxy()) {
             processing.submitNonCritical(new NonProxyWebserverDisableChecker(
-                    configSystem.getConfig(), databaseSystem, webServerSystem, logger, errorHandler
+                    configSystem.getConfig(), webServerSystem.getAddresses(), webServerSystem, logger, errorHandler
             ));
         }
 

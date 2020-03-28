@@ -16,14 +16,12 @@
  */
 package com.djrapitops.plan.commands.subcommands;
 
-import com.djrapitops.plan.PlanSystem;
-import com.djrapitops.plan.delivery.webserver.WebServer;
+import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.settings.locale.lang.DeepHelpLang;
-import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
@@ -39,20 +37,17 @@ import javax.inject.Inject;
 public class NetworkCommand extends CommandNode {
 
     private final Locale locale;
-    private final DBSystem dbSystem;
-    private final WebServer webServer;
+    private final Addresses addresses;
 
     @Inject
     public NetworkCommand(
             Locale locale,
-            DBSystem dbSystem,
-            WebServer webServer
+            Addresses addresses
     ) {
         super("network|n|netw", Permissions.ANALYZE.getPermission(), CommandType.CONSOLE);
 
         this.locale = locale;
-        this.dbSystem = dbSystem;
-        this.webServer = webServer;
+        this.addresses = addresses;
 
         setShortHelp(locale.getString(CmdHelpLang.NETWORK));
         setInDepthHelp(locale.getArray(DeepHelpLang.NETWORK));
@@ -67,7 +62,10 @@ public class NetworkCommand extends CommandNode {
         sender.sendMessage(locale.getString(CommandLang.HEADER_NETWORK));
 
         // Link
-        String address = PlanSystem.getMainAddress(webServer, dbSystem);
+        String address = addresses.getMainAddress().orElseGet(() -> {
+            sender.sendMessage(locale.getString(CommandLang.NO_ADDRESS_NOTIFY));
+            return addresses.getFallbackLocalhostAddress();
+        });
         String url = address + "/network";
         String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
         boolean console = !CommandUtils.isPlayer(sender);

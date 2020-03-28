@@ -28,8 +28,8 @@ public enum PluginLang implements Lang {
     API_ADD_RESOURCE_JS("API - js+", "PageExtension: ${0} added javascript(s) to ${1}, ${2}"),
     API_ADD_RESOURCE_CSS("API - css+", "PageExtension: ${0} added stylesheet(s) to ${1}, ${2}"),
 
-    ENABLE_NOTIFY_EMPTY_IP("Enable - Notify Empty IP", "IP in server.properties is empty & AlternativeIP is not in use. Incorrect links will be given!"),
-    ENABLE_NOTIFY_BAD_IP("Enable - Notify Bad IP", "0.0.0.0 is not a valid address, set up AlternativeIP settings. Incorrect links will be given!"),
+    ENABLE_NOTIFY_EMPTY_IP("Enable - Notify Empty IP", "IP in server.properties is empty & Alternative_IP is not in use. Incorrect links might be given!"),
+    ENABLE_NOTIFY_BAD_IP("Enable - Notify Bad IP", "0.0.0.0 is not a valid address, set up Alternative_IP settings. Incorrect links might be given!"),
     ENABLE_NOTIFY_WEB_SERVER_DISABLED("Enable - Notify Webserver disabled", "WebServer was not initialized. (WebServer.DisableWebServer: true)"),
     ENABLE_NOTIFY_GEOLOCATIONS_INTERNET_REQUIRED("Enable - Notify Geolocations Internet Required", "Plan Requires internet access on first run to download GeoLite2 Geolocation database."),
     ENABLE_NOTIFY_GEOLOCATIONS_DISABLED("Enable - Notify Geolocations disabled", "Geolocation gathering is not active. (Data.Geolocations: false)"),
@@ -45,7 +45,7 @@ public enum PluginLang implements Lang {
     WEB_SERVER_FAIL_EMPTY_FILE("WebServer FAIL - EOF", "WebServer: EOF when reading Certificate file. (Check that the file is not empty)"),
     WEB_SERVER_NOTIFY_NO_CERT_FILE("WebServer - Notify no Cert file", "WebServer: Certificate KeyStore File not Found: ${0}"),
     WEB_SERVER_NOTIFY_HTTP("WebServer - Notify HTTP", "WebServer: No Certificate -> Using HTTP-server for Visualization."),
-    WEB_SERVER_NOTIFY_USING_PROXY_MODE("WebServer - Notify Using Proxy", "WebServer: Proxy-mode HTTPS enabled, make sure that your reverse-proxy is routing using HTTPS and Plan AlternativeIP.Link points to the Proxy"),
+    WEB_SERVER_NOTIFY_USING_PROXY_MODE("WebServer - Notify Using Proxy", "WebServer: Proxy-mode HTTPS enabled, make sure that your reverse-proxy is routing using HTTPS and Plan Alternative_IP.Link points to the Proxy"),
     WEB_SERVER_NOTIFY_HTTP_USER_AUTH("WebServer - Notify HTTP User Auth", "WebServer: User Authorization Disabled! (Not secure over HTTP)"),
     WEB_SERVER_NOTIFY_HTTPS_USER_AUTH("WebServer - Notify HTTPS User Auth", "WebServer: User Authorization Disabled! (Disabled in config)"),
 
