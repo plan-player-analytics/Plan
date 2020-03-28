@@ -28,10 +28,12 @@ import java.util.function.IntSupplier;
 public class BungeeSensor implements ServerSensor<Object> {
 
     private final IntSupplier onlinePlayerCountSupplier;
+    private final IntSupplier onlinePlayerCountBungee;
 
     @Inject
     public BungeeSensor(PlanBungee plugin) {
-        onlinePlayerCountSupplier = RedisCheck.isClassAvailable() ? new RedisPlayersOnlineSupplier() : plugin.getProxy()::getOnlineCount;
+        onlinePlayerCountBungee = plugin.getProxy()::getOnlineCount;
+        onlinePlayerCountSupplier = RedisCheck.isClassAvailable() ? new RedisPlayersOnlineSupplier() : onlinePlayerCountBungee;
     }
 
     @Override
@@ -41,6 +43,7 @@ public class BungeeSensor implements ServerSensor<Object> {
 
     @Override
     public int getOnlinePlayerCount() {
-        return onlinePlayerCountSupplier.getAsInt();
+        int count = onlinePlayerCountSupplier.getAsInt();
+        return count != -1 ? count : onlinePlayerCountBungee.getAsInt();
     }
 }

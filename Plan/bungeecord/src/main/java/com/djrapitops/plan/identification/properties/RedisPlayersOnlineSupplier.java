@@ -17,6 +17,7 @@
 package com.djrapitops.plan.identification.properties;
 
 import com.imaginarycode.minecraft.redisbungee.RedisBungee;
+import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 
 import java.util.function.IntSupplier;
 
@@ -29,6 +30,11 @@ public class RedisPlayersOnlineSupplier implements IntSupplier {
 
     @Override
     public int getAsInt() {
-        return RedisBungee.getApi().getPlayerCount();
+        RedisBungeeAPI api = RedisBungee.getApi();
+        try {
+            return api != null ? api.getPlayerCount() : -1;
+        } catch (NullPointerException e) {
+            return -1;
+        }
     }
 }
