@@ -103,7 +103,7 @@ public class Addresses {
     }
 
     private boolean isValidAddress(String address) {
-        return !address.isEmpty() && !address.equals("0.0.0.0");
+        return !address.isEmpty() && !"0.0.0.0".equals(address);
     }
 
     public Optional<String> getServerPropertyIP() {
