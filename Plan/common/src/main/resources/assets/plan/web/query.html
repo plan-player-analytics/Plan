@@ -319,8 +319,6 @@
 <script id="mainScript">
     var filters = [];
     jsonRequest("./v1/filters", function (json, error) {
-        var dropdown = $('#addFilter .dropdown-menu');
-
         filters.push(...json.filters);
         console.log(filters);
 
