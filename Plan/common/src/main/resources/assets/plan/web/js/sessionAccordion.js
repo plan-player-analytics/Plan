@@ -66,7 +66,8 @@ function loadPlayerdeaths(json, error) {
 }
 
 function createAccordionTitle(i, session) {
-    return `<tr id="session_h_` + i + `" aria-controls="session_t_` + i + `" aria-expanded="false" class="clickable collapsed bg-teal" data-target="#session_t_` + i + `" data-toggle="collapse"><td>`
+    let style = session.start.includes("Online") ? 'bg-teal' : 'bg-white';
+    return `<tr id="session_h_` + i + `" aria-controls="session_t_` + i + `" aria-expanded="false" class="clickable collapsed ` + style + `" data-target="#session_t_` + i + `" data-toggle="collapse"><td>`
         + session.name + (session.first_session ? ` <i title="Registered (First session)" class="far fa-calendar-plus"></i>` : ``) + `</td>`
         + `<td>` + session.start + `</td>`
         + `<td>` + session.length + `</td>`
