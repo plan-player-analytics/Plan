@@ -17,11 +17,8 @@
 package com.djrapitops.plan.gathering.timed;
 
 import com.djrapitops.plan.gathering.ServerSensor;
-import com.djrapitops.plan.gathering.SystemUsage;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
 import com.djrapitops.plan.utilities.analysis.Average;
@@ -43,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 public class ProxyTPSCounter extends TPSCounter {
 
     private final ServerSensor<Object> serverSensor;
+    private final SystemUsageBuffer systemUsage;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private Maximum.ForInteger playersOnline;
@@ -52,17 +50,18 @@ public class ProxyTPSCounter extends TPSCounter {
     @Inject
     public ProxyTPSCounter(
             ServerSensor<Object> serverSensor,
-            PlanConfig config,
+            SystemUsageBuffer systemUsage,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        super(config.get(DataGatheringSettings.DISK_SPACE), logger, errorHandler);
+        super(logger, errorHandler);
 
         this.serverSensor = serverSensor;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
+        this.systemUsage = systemUsage;
         playersOnline = new Maximum.ForInteger(0);
         cpu = new Average();
         ram = new TimerAverage();
@@ -71,9 +70,9 @@ public class ProxyTPSCounter extends TPSCounter {
     @Override
     public void pulse() {
         long time = System.currentTimeMillis();
-        boolean shouldSave = ram.add(time, SystemUsage.getUsedMemory());
+        boolean shouldSave = ram.add(time, systemUsage.getRam());
         playersOnline.add(serverSensor.getOnlinePlayerCount());
-        cpu.add(SystemUsage.getAverageSystemLoad());
+        cpu.add(systemUsage.getCpu());
         if (shouldSave) save(time);
     }
 
@@ -82,7 +81,7 @@ public class ProxyTPSCounter extends TPSCounter {
         int maxPlayers = playersOnline.getMaxAndReset();
         double averageCPU = cpu.getAverageAndReset();
         long averageRAM = (long) ram.getAverageAndReset(time);
-        long freeDiskSpace = getFreeDiskSpace();
+        long freeDiskSpace = systemUsage.getFreeDiskSpace();
 
         dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
                 serverInfo.getServerUUID(),

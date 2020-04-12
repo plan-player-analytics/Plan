@@ -21,6 +21,7 @@ import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.gathering.ShutdownHook;
 import com.djrapitops.plan.gathering.timed.BukkitPingCounter;
 import com.djrapitops.plan.gathering.timed.ServerTPSCounter;
+import com.djrapitops.plan.gathering.timed.SystemUsageBuffer;
 import com.djrapitops.plan.gathering.timed.TPSCounter;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
@@ -54,7 +55,9 @@ public class BukkitTaskSystem extends TaskSystem {
     private final ConfigStoreTask configStoreTask;
     private final DBCleanTask dbCleanTask;
     private final ExtensionServerMethodCallerTask extensionServerMethodCallerTask;
-    private TPSCounter tpsCounter;
+    private final TPSCounter tpsCounter;
+    private final SystemUsageBuffer.RamAndCpuTask ramAndCpuTask;
+    private final SystemUsageBuffer.DiskTask diskTask;
 
     @Inject
     public BukkitTaskSystem(
@@ -70,7 +73,9 @@ public class BukkitTaskSystem extends TaskSystem {
             LogsFolderCleanTask logsFolderCleanTask,
             ConfigStoreTask configStoreTask,
             DBCleanTask dbCleanTask,
-            JSONCache.CleanTask jsonCacheCleanTask
+            JSONCache.CleanTask jsonCacheCleanTask,
+            SystemUsageBuffer.RamAndCpuTask ramAndCpuTask,
+            SystemUsageBuffer.DiskTask diskTask
     ) {
         super(runnableFactory);
         this.plugin = plugin;
@@ -85,6 +90,8 @@ public class BukkitTaskSystem extends TaskSystem {
         this.logsFolderCleanTask = logsFolderCleanTask;
         this.configStoreTask = configStoreTask;
         this.dbCleanTask = dbCleanTask;
+        this.ramAndCpuTask = ramAndCpuTask;
+        this.diskTask = diskTask;
     }
 
     @Override
@@ -111,7 +118,12 @@ public class BukkitTaskSystem extends TaskSystem {
     }
 
     private void registerTPSCounter() {
-        registerTask(tpsCounter).runTaskTimer(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
+        long halfSecondTicks = TimeAmount.toTicks(500L, TimeUnit.MILLISECONDS);
+        long secondTicks = TimeAmount.toTicks(1L, TimeUnit.SECONDS);
+        long minuteTicks = TimeAmount.toTicks(1L, TimeUnit.MINUTES);
+        registerTask(tpsCounter).runTaskTimer(minuteTicks, secondTicks);
+        registerTask(ramAndCpuTask).runTaskTimerAsynchronously(minuteTicks - halfSecondTicks, secondTicks);
+        registerTask(diskTask).runTaskTimerAsynchronously(50L * secondTicks, minuteTicks);
     }
 
     private void registerPingCounter() {

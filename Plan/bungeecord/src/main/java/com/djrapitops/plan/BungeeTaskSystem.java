@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.gathering.timed.BungeePingCounter;
 import com.djrapitops.plan.gathering.timed.ProxyTPSCounter;
+import com.djrapitops.plan.gathering.timed.SystemUsageBuffer;
 import com.djrapitops.plan.gathering.timed.TPSCounter;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
@@ -51,6 +52,8 @@ public class BungeeTaskSystem extends TaskSystem {
     private final DBCleanTask dbCleanTask;
     private final JSONCache.CleanTask jsonCacheCleanTask;
     private final ExtensionServerMethodCallerTask extensionServerMethodCallerTask;
+    private final SystemUsageBuffer.RamAndCpuTask ramAndCpuTask;
+    private final SystemUsageBuffer.DiskTask diskTask;
 
     @Inject
     public BungeeTaskSystem(
@@ -63,7 +66,9 @@ public class BungeeTaskSystem extends TaskSystem {
             NetworkConfigStoreTask networkConfigStoreTask,
             DBCleanTask dbCleanTask,
             JSONCache.CleanTask jsonCacheCleanTask,
-            ExtensionServerMethodCallerTask extensionServerMethodCallerTask
+            ExtensionServerMethodCallerTask extensionServerMethodCallerTask,
+            SystemUsageBuffer.RamAndCpuTask ramAndCpuTask,
+            SystemUsageBuffer.DiskTask diskTask
     ) {
         super(runnableFactory);
         this.plugin = plugin;
@@ -76,6 +81,8 @@ public class BungeeTaskSystem extends TaskSystem {
         this.dbCleanTask = dbCleanTask;
         this.jsonCacheCleanTask = jsonCacheCleanTask;
         this.extensionServerMethodCallerTask = extensionServerMethodCallerTask;
+        this.ramAndCpuTask = ramAndCpuTask;
+        this.diskTask = diskTask;
     }
 
     @Override
@@ -83,8 +90,17 @@ public class BungeeTaskSystem extends TaskSystem {
         registerTasks();
     }
 
+    private void registerTPSCounter() {
+        long halfSecondTicks = TimeAmount.toTicks(500L, TimeUnit.MILLISECONDS);
+        long secondTicks = TimeAmount.toTicks(1L, TimeUnit.SECONDS);
+        long minuteTicks = TimeAmount.toTicks(1L, TimeUnit.MINUTES);
+        registerTask(tpsCounter).runTaskTimer(minuteTicks, secondTicks);
+        registerTask(ramAndCpuTask).runTaskTimerAsynchronously(minuteTicks - halfSecondTicks, secondTicks);
+        registerTask(diskTask).runTaskTimerAsynchronously(50L * secondTicks, minuteTicks);
+    }
+
     private void registerTasks() {
-        registerTask(tpsCounter).runTaskTimerAsynchronously(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
+        registerTPSCounter();
         registerTask(logsFolderCleanTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
 
         Long pingDelay = config.get(TimeSettings.PING_SERVER_ENABLE_DELAY);

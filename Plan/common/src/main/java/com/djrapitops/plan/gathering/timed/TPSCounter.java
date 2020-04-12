@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.gathering.timed;
 
-import com.djrapitops.plan.gathering.SystemUsage;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -29,28 +28,15 @@ import com.djrapitops.plugin.task.AbsRunnable;
  */
 public abstract class TPSCounter extends AbsRunnable {
 
-    private boolean gatherDiskSpace;
     protected final PluginLogger logger;
     protected final ErrorHandler errorHandler;
 
-    private boolean diskErrored = false;
-
     public TPSCounter(
-            boolean gatherDiskSpace,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        this.gatherDiskSpace = gatherDiskSpace;
         this.logger = logger;
         this.errorHandler = errorHandler;
-
-        warmUp();
-    }
-
-    public void warmUp() {
-        SystemUsage.getAverageSystemLoad();
-        SystemUsage.getUsedMemory();
-        SystemUsage.getFreeDiskSpace();
     }
 
     @Override
@@ -66,16 +52,4 @@ public abstract class TPSCounter extends AbsRunnable {
 
     public abstract void pulse();
 
-    protected long getFreeDiskSpace() {
-        if (!gatherDiskSpace) return -1;
-        try {
-            return SystemUsage.getFreeDiskSpace();
-        } catch (SecurityException noPermission) {
-            if (!diskErrored) {
-                errorHandler.log(L.WARN, this.getClass(), noPermission);
-            }
-            diskErrored = true;
-            return -1;
-        }
-    }
 }

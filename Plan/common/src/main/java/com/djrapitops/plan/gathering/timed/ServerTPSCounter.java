@@ -17,11 +17,8 @@
 package com.djrapitops.plan.gathering.timed;
 
 import com.djrapitops.plan.gathering.ServerSensor;
-import com.djrapitops.plan.gathering.SystemUsage;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
 import com.djrapitops.plan.utilities.analysis.Average;
@@ -45,6 +42,7 @@ public class ServerTPSCounter<W> extends TPSCounter {
 
     private final boolean noDirectTPS;
     private final ServerSensor<W> serverSensor;
+    private final SystemUsageBuffer systemUsage;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private TPSCalculator indirectTPS;
@@ -56,18 +54,19 @@ public class ServerTPSCounter<W> extends TPSCounter {
     @Inject
     public ServerTPSCounter(
             ServerSensor<W> serverSensor,
-            PlanConfig config,
+            SystemUsageBuffer systemUsage,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        super(config.get(DataGatheringSettings.DISK_SPACE), logger, errorHandler);
+        super(logger, errorHandler);
 
         noDirectTPS = !serverSensor.supportsDirectTPS();
         this.serverSensor = serverSensor;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
+        this.systemUsage = systemUsage;
         if (noDirectTPS) {
             indirectTPS = new TPSCalculator();
         } else {
@@ -83,8 +82,8 @@ public class ServerTPSCounter<W> extends TPSCounter {
         long time = System.currentTimeMillis();
         Optional<Double> result = pulseTPS(time);
         playersOnline.add(serverSensor.getOnlinePlayerCount());
-        cpu.add(SystemUsage.getAverageSystemLoad());
-        ram.add(SystemUsage.getUsedMemory());
+        cpu.add(systemUsage.getCpu());
+        ram.add(systemUsage.getRam());
         result.ifPresent(tps -> save(tps, time));
     }
 
@@ -99,7 +98,7 @@ public class ServerTPSCounter<W> extends TPSCounter {
             entityCount += serverSensor.getEntityCount(world);
             chunkCount += serverSensor.getChunkCount(world);
         }
-        long freeDiskSpace = getFreeDiskSpace();
+        long freeDiskSpace = systemUsage.getFreeDiskSpace();
 
         dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
                 serverInfo.getServerUUID(),
