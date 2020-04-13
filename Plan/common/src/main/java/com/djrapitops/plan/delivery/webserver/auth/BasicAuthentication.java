@@ -26,6 +26,8 @@ import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
+
 /**
  * Authentication handling for Basic Auth.
  * <p>
@@ -50,7 +52,7 @@ public class BasicAuthentication implements Authentication {
 
         String[] userInfo = StringUtils.split(decoded, ':');
         if (userInfo.length != 2) {
-            throw new WebUserAuthException(FailReason.USER_AND_PASS_NOT_SPECIFIED);
+            throw new WebUserAuthException(FailReason.USER_AND_PASS_NOT_SPECIFIED, Arrays.toString(userInfo));
         }
 
         String user = userInfo[0];

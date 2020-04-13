@@ -24,10 +24,9 @@ import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
-import com.djrapitops.plan.delivery.webserver.auth.Authentication;
+import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.resolver.*;
 import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
-import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -106,46 +105,41 @@ public class ResponseResolver {
         resolverService.registerResolver(plugin, "/v1", rootJSONResolver.getResolver());
     }
 
-    public Response getResponse(RequestInternal request) {
+    public Response getResponse(Request request) {
         try {
             return tryToGetResponse(request);
         } catch (NotFoundException e) {
             return responseFactory.notFound404(e.getMessage());
-        } catch (WebUserAuthException e) {
-            return responseFactory.basicAuthFail(e);
         } catch (ForbiddenException e) {
             return responseFactory.forbidden403(e.getMessage());
         } catch (BadRequestException e) {
-            return responseFactory.badRequest(e.getMessage(), request.getTargetString());
+            return responseFactory.badRequest(e.getMessage(), request.getPath().asString());
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
-            return responseFactory.internalErrorResponse(e, request.getTargetString());
+            return responseFactory.internalErrorResponse(e, request.getPath().asString());
         }
     }
 
     /**
-     * @throws NotFoundException    In some cases when page was not found, not all.
-     * @throws WebUserAuthException If user could not be authenticated
-     * @throws ForbiddenException   If the user is not allowed to see the page
-     * @throws BadRequestException  If the request did not have required things.
+     * @throws NotFoundException   In some cases when page was not found, not all.
+     * @throws ForbiddenException  If the user is not allowed to see the page
+     * @throws BadRequestException If the request did not have required things.
      */
-    private Response tryToGetResponse(RequestInternal internalRequest) {
-        if ("OPTIONS".equalsIgnoreCase(internalRequest.getRequestMethod())) {
+    private Response tryToGetResponse(Request request) {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             // https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS
             return Response.builder().setStatus(204).setContent(new byte[0]).build();
         }
 
-        Optional<Authentication> authentication = internalRequest.getAuth();
+        Optional<WebUser> user = request.getUser();
 
-        List<Resolver> foundResolvers = resolverService.getResolvers(internalRequest.getPath().asString());
+        List<Resolver> foundResolvers = resolverService.getResolvers(request.getPath().asString());
         if (foundResolvers.isEmpty()) return responseFactory.pageNotFound404();
 
         for (Resolver resolver : foundResolvers) {
-            Request request = internalRequest.toAPIRequest();
-            if (resolver.requiresAuth(request)) {
-                // Get required auth
-                boolean isAuthRequired = webServer.get().isAuthRequired();
-                if (isAuthRequired && !authentication.isPresent()) {
+            boolean isAuthRequired = webServer.get().isAuthRequired() && resolver.requiresAuth(request);
+            if (isAuthRequired) {
+                if (!user.isPresent()) {
                     if (webServer.get().isUsingHTTPS()) {
                         return responseFactory.basicAuth();
                     } else {
@@ -153,7 +147,7 @@ public class ResponseResolver {
                     }
                 }
 
-                if (!isAuthRequired || resolver.canAccess(request)) {
+                if (resolver.canAccess(request)) {
                     Optional<Response> resolved = resolver.resolve(request);
                     if (resolved.isPresent()) return resolved.get();
                 } else {

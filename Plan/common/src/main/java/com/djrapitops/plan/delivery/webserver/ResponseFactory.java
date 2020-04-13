@@ -334,6 +334,15 @@ public class ResponseFactory {
         }
     }
 
+    public Response failedLoginAttempts403() {
+        return Response.builder()
+                .setMimeType(MimeType.HTML)
+                .setContent("<h1>403 Forbidden</h1>" +
+                        "<p>You have too many failed login attempts. Please wait 2 minutes until attempting again.</p>")
+                .setStatus(403)
+                .build();
+    }
+
     public Response basicAuth() {
         try {
             String tips = "<br>- Ensure you have registered a user with <b>/plan register</b><br>"
