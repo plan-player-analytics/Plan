@@ -105,7 +105,7 @@ public class RequestHandler implements HttpHandler {
 
     public Response getResponse(HttpExchange exchange) {
         String accessor = exchange.getRemoteAddress().getAddress().getHostAddress();
-        Request request;
+        Request request = null;
         Response response;
         try {
             request = buildRequest(exchange);
@@ -124,7 +124,10 @@ public class RequestHandler implements HttpHandler {
         if (bruteForceGuard.shouldPreventRequest(accessor)) {
             response = responseFactory.failedLoginAttempts403();
         }
-        if (response.getCode() != 401 && response.getCode() != 403) {
+        if (response.getCode() != 401 // Not failed
+                && response.getCode() != 403 // Not blocked
+                && (request != null && request.getUser().isPresent()) // Logged in
+        ) {
             bruteForceGuard.resetAttemptCount(accessor);
         }
         return response;
