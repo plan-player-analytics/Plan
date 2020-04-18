@@ -110,6 +110,10 @@ public class RandomData {
         return picked;
     }
 
+    public static List<Session> randomSessions(UUID serverUUID, String[] worlds, UUID... uuids) {
+        return pickMultiple(randomInt(5, 50), () -> randomSession(serverUUID, worlds, uuids));
+    }
+
     public static Session randomSession(UUID serverUUID, String[] worlds, UUID... uuids) {
         Session session = new Session(uuids[0], serverUUID, RandomData.randomTime(), pickAtRandom(worlds), randomGameMode());
         session.endSession(RandomData.randomTimeAfter(session.getDate()));
