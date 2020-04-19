@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.addons.placeholderapi.placeholders;
+package com.djrapitops.plan.placeholder;
 
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
@@ -22,8 +22,6 @@ import com.djrapitops.plan.gathering.domain.WorldTimes;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.entity.Player;
 
 /**
  * Placeholders about a world times.
@@ -32,7 +30,6 @@ import org.bukkit.entity.Player;
  */
 public class WorldTimePlaceHolder extends AbstractPlanPlaceHolder {
 
-    private final DBSystem dbSystem;
     private Formatter<Long> timeAmount;
 
     public WorldTimePlaceHolder(
@@ -40,27 +37,29 @@ public class WorldTimePlaceHolder extends AbstractPlanPlaceHolder {
             ServerInfo serverInfo,
             Formatters formatters
     ) {
-        super(serverInfo);
-        this.dbSystem = dbSystem;
+        super(serverInfo, dbSystem);
         timeAmount = formatters.timeAmount();
     }
 
-    @Override
-    public String onPlaceholderRequest(Player p, String params) throws Exception {
-        String string = params.toLowerCase();
+    public void register() {
+        PlanPlaceholders.registerRaw("worlds_playtime_total_", (input, p) -> {
+            String worldName = input.substring(22);
 
-        if (StringUtils.startsWith(string, "worlds_playtime_total_")) {
-            // get world total play time
-            // e.g. "plan_worlds_playtime_total_%worldname%"
-            // where %worldname% is "world_nether"
-
-            String worldName = StringUtils.removeStart(string, "worlds_playtime_total_");
             WorldTimes worldTimes = dbSystem.getDatabase().query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID()));
 
             return timeAmount.apply(worldTimes.getWorldPlaytime(worldName));
-        }
+        });
 
-        return null;
+        PlanPlaceholders.registerStatic("worlds_playtime_total", params -> {
+            if (params.isEmpty()) {
+                return null;
+            }
+
+            String worldName = params.get(0);
+
+            WorldTimes worldTimes = dbSystem.getDatabase().query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID()));
+
+            return timeAmount.apply(worldTimes.getWorldPlaytime(worldName));
+        });
     }
-
 }

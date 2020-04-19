@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan;
 
+import com.djrapitops.plan.addons.placeholderapi.PlaceholderRegistrar;
 import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
@@ -25,6 +26,7 @@ import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import com.djrapitops.plugin.NukkitPlugin;
 import com.djrapitops.plugin.benchmarking.Benchmark;
 import com.djrapitops.plugin.command.ColorScheme;
+import com.djrapitops.plugin.task.AbsRunnable;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -113,5 +115,20 @@ public class PlanNukkit extends NukkitPlugin implements PlanPlugin {
     @Override
     public PlanSystem getSystem() {
         return system;
+    }
+
+    private void registerPlaceholderAPI() {
+        if (this.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            runnableFactory.create("Placeholders Registrar", new AbsRunnable() {
+                @Override
+                public void run() {
+                    try {
+                        PlaceholderRegistrar.register(system, errorHandler);
+                    } catch (Exception | NoClassDefFoundError | NoSuchMethodError failed) {
+                        logger.warn("Failed to register PlaceholderAPI placeholders: " + failed.toString());
+                    }
+                }
+            }).runTask();
+        }
     }
 }

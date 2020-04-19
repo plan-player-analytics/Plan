@@ -17,20 +17,16 @@
 package com.djrapitops.plan.addons.placeholderapi;
 
 import com.djrapitops.plan.PlanSystem;
-import com.djrapitops.plan.addons.placeholderapi.placeholders.*;
 import com.djrapitops.plan.delivery.domain.keys.ServerKeys;
-import com.djrapitops.plan.delivery.formatting.Formatters;
-import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.placeholder.*;
 import com.djrapitops.plan.version.VersionChecker;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
+import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Placeholder expansion used to provide data from Plan.
@@ -50,29 +46,18 @@ import java.util.Collection;
  *
  * @author aidn5
  */
-public class PlanPlaceHolders extends PlaceholderExpansion {
+public class BukkitPlanPlaceHolders extends PlaceholderExpansion {
     public final ErrorHandler errorHandler;
-
-    private final Collection<AbstractPlanPlaceHolder> placeholders = new ArrayList<>();
     private final VersionChecker versionChecker;
 
-    public PlanPlaceHolders(
+    public BukkitPlanPlaceHolders(
             PlanSystem system,
             ErrorHandler errorHandler
     ) {
         this.versionChecker = system.getVersionChecker();
         this.errorHandler = errorHandler;
 
-        PlanConfig config = system.getConfigSystem().getConfig();
-        DBSystem databaseSystem = system.getDatabaseSystem();
-        ServerInfo serverInfo = system.getServerInfo();
-        Formatters formatters = system.getDeliveryUtilities().getFormatters();
-
-        placeholders.add(new ServerPlaceHolders(databaseSystem, serverInfo, formatters));
-        placeholders.add(new OperatorPlaceholders(databaseSystem, serverInfo));
-        placeholders.add(new WorldTimePlaceHolder(databaseSystem, serverInfo, formatters));
-        placeholders.add(new SessionPlaceHolder(config, databaseSystem, serverInfo, formatters));
-        placeholders.add(new PlayerPlaceHolder(databaseSystem, serverInfo, formatters));
+        PlanPlaceholders.init(system);
     }
 
     @Override
@@ -109,13 +94,15 @@ public class PlanPlaceHolders extends PlaceholderExpansion {
     @Override
     public String onPlaceholderRequest(Player p, String params) {
         try {
-            for (AbstractPlanPlaceHolder placeholder : placeholders) {
-                String value = placeholder.onPlaceholderRequest(p, params);
-                if (value == null) continue;
+            String value = PlanPlaceholders.onPlaceholderRequest(p.getUniqueId(), params, Collections.emptyList());
 
-                return value;
-
+            if ("true".equals(value)) { //hack
+                value = PlaceholderAPIPlugin.booleanTrue();
+            } else if ("false".equals(value)) {
+                value = PlaceholderAPIPlugin.booleanFalse();
             }
+
+            return value;
         } catch (Exception e) {
             errorHandler.log(L.WARN, getClass(), e);
         }

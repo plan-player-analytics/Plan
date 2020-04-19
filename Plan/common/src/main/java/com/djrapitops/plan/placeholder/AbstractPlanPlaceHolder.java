@@ -14,11 +14,10 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.addons.placeholderapi.placeholders;
+package com.djrapitops.plan.placeholder;
 
-import com.djrapitops.plan.addons.placeholderapi.PlanPlaceHolders;
 import com.djrapitops.plan.identification.ServerInfo;
-import org.bukkit.entity.Player;
+import com.djrapitops.plan.storage.database.DBSystem;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -27,18 +26,18 @@ import java.util.concurrent.TimeUnit;
  * abstract class used for plan placeholders list. This class contains most used
  * methods (static methods and non-static one). It is also used as a universe
  * interface for the Plan-placeholders instances
- * {@link #onPlaceholderRequest(Player, String)}. Check {@link PlanPlaceHolders}
  * to learn more how it is used.
  *
  * @author aidn5
- * @see PlanPlaceHolders
  */
 public abstract class AbstractPlanPlaceHolder {
 
     protected final ServerInfo serverInfo;
+    protected final DBSystem dbSystem;
 
-    AbstractPlanPlaceHolder(ServerInfo serverInfo) {
+    AbstractPlanPlaceHolder(ServerInfo serverInfo, DBSystem dbSystem) {
         this.serverInfo = serverInfo;
+        this.dbSystem = dbSystem;
     }
 
     static long now() {
@@ -60,16 +59,4 @@ public abstract class AbstractPlanPlaceHolder {
     UUID serverUUID() {
         return serverInfo.getServerUUID();
     }
-
-    /**
-     * Look up the placeholder and check if it is registered in this instance.
-     *
-     * @param p      the player who is viewing the placeholder
-     * @param params the placeholder to look up to.
-     * @return the value of the placeholder if found, or empty {@link String} if no
-     * value found but the placeholder is registered,
-     * otherwise {@code null}
-     * @throws Exception if any error occurs
-     */
-    public abstract String onPlaceholderRequest(Player p, String params) throws Exception;
 }
