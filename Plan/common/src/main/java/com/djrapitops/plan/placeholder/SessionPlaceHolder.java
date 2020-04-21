@@ -53,7 +53,6 @@ public class SessionPlaceHolder {
         Formatter<Long> timeAmount = formatters.timeAmount();
         Formatter<DateHolder> year = formatters.year();
         Formatter<Double> decimals = formatters.decimals();
-
         Database database = dbSystem.getDatabase();
         UUID serverUUID = serverInfo.getServerUUID();
 
@@ -94,10 +93,8 @@ public class SessionPlaceHolder {
                 () -> timeAmount.apply(database.query(SessionQueries.afkTime(monthAgo(), now(), serverUUID))));
 
         Supplier<Serializable> uniquePlayers = () -> database.query(PlayerCountQueries.newPlayerCount(0L, now(), serverUUID));
-        PlanPlaceholders.registerStatic("sessions_unique_players_total",
-                uniquePlayers);
-        PlanPlaceholders.registerStatic("sessions_new_players_total",
-                uniquePlayers);
+        PlanPlaceholders.registerStatic("sessions_unique_players_total", uniquePlayers);
+        PlanPlaceholders.registerStatic("sessions_new_players_total", uniquePlayers);
 
         PlanPlaceholders.registerStatic("sessions_unique_players_day",
                 () -> database.query(PlayerCountQueries.uniquePlayerCount(dayAgo(), now(), serverUUID)));
@@ -200,7 +197,6 @@ public class SessionPlaceHolder {
 
         PlanPlaceholders.registerStatic("sessions_recent_peak_date",
                 () -> database.query(TPSQueries.fetchPeakPlayerCount(serverUUID, dayAgo() * 2L)).map(year).orElse("-"));
-
     }
 
     private static String getPlaytime(Database database, long after, long before, UUID serverUUID, Formatter<Long> timeAmount) {
