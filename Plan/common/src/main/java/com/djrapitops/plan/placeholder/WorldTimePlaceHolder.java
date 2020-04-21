@@ -28,24 +28,22 @@ import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
  *
  * @author aidn5, Rsl1122
  */
-public class WorldTimePlaceHolder extends AbstractPlanPlaceHolder {
+public class WorldTimePlaceHolder {
 
-    private Formatter<Long> timeAmount;
-
-    public WorldTimePlaceHolder(
+    public static void register(
             DBSystem dbSystem,
             ServerInfo serverInfo,
             Formatters formatters
     ) {
-        super(serverInfo, dbSystem);
-        timeAmount = formatters.timeAmount();
-    }
+        Formatter<Long> timeAmount = formatters.timeAmount();
 
-    public void register() {
         PlanPlaceholders.registerRaw("worlds_playtime_total_", (input, p) -> {
-            String worldName = input.substring(22);
+            // get world total play time
+            // e.g. "plan_worlds_playtime_total_%worldname%"
+            // where %worldname% is "world_nether"
+            String worldName = input.substring("worlds_playtime_total_".length());
 
-            WorldTimes worldTimes = dbSystem.getDatabase().query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID()));
+            WorldTimes worldTimes = dbSystem.getDatabase().query(WorldTimesQueries.fetchServerTotalWorldTimes(serverInfo.getServerUUID()));
 
             return timeAmount.apply(worldTimes.getWorldPlaytime(worldName));
         });
@@ -57,7 +55,7 @@ public class WorldTimePlaceHolder extends AbstractPlanPlaceHolder {
 
             String worldName = params.get(0);
 
-            WorldTimes worldTimes = dbSystem.getDatabase().query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID()));
+            WorldTimes worldTimes = dbSystem.getDatabase().query(WorldTimesQueries.fetchServerTotalWorldTimes(serverInfo.getServerUUID()));
 
             return timeAmount.apply(worldTimes.getWorldPlaytime(worldName));
         });

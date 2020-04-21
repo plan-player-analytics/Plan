@@ -25,15 +25,11 @@ import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
  *
  * @author aidn5, Rsl1122
  */
-public class OperatorPlaceholders extends AbstractPlanPlaceHolder {
+public class OperatorPlaceholders {
 
-    public OperatorPlaceholders(DBSystem dbSystem, ServerInfo serverInfo) {
-        super(serverInfo, dbSystem);
-    }
-
-    public void register() {
+    public static void register(DBSystem dbSystem, ServerInfo serverInfo) {
         PlanPlaceholders.registerStatic("operators_total",
-                () -> dbSystem.getDatabase().query(PlayerCountQueries.operators(serverUUID()))
+                () -> dbSystem.getDatabase().query(PlayerCountQueries.operators(serverInfo.getServerUUID()))
         );
     }
 }

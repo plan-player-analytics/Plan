@@ -49,15 +49,15 @@ public final class PlanPlaceholders {
         ServerInfo serverInfo = system.getServerInfo();
         Formatters formatters = system.getDeliveryUtilities().getFormatters();
 
-        new ServerPlaceHolders(dbSystem, serverInfo, formatters).register();
-        new OperatorPlaceholders(dbSystem, serverInfo).register();
-        new WorldTimePlaceHolder(dbSystem, serverInfo, formatters).register();
-        new SessionPlaceHolder(config, dbSystem, serverInfo, formatters).register();
-        new PlayerPlaceHolder(dbSystem, serverInfo, formatters).register();
+        ServerPlaceHolders.register(dbSystem, serverInfo, formatters);
+        OperatorPlaceholders.register(dbSystem, serverInfo);
+        WorldTimePlaceHolder.register(dbSystem, serverInfo, formatters);
+        SessionPlaceHolder.register(config, dbSystem, serverInfo, formatters);
+        PlayerPlaceHolder.register(dbSystem, serverInfo, formatters);
     }
 
     public static void registerStatic(String name, Supplier<Serializable> loader) {
-        registerStatic(name, a -> loader.get());
+        registerStatic(name, params -> loader.get());
     }
 
     public static void registerStatic(String name, Function<List<String>, Serializable> loader) {
@@ -65,7 +65,7 @@ public final class PlanPlaceholders {
     }
 
     public static void register(String name, Function<PlayerContainer, Serializable> loader) {
-        register(name, (p, a) -> loader.apply(p));
+        register(name, (player, params) -> loader.apply(player));
     }
 
     public static void register(String name, BiFunction<PlayerContainer, List<String>, Serializable> loader) {
@@ -85,22 +85,22 @@ public final class PlanPlaceholders {
     }
 
     public static String onPlaceholderRequest(UUID uuid, String placeholder, List<String> parameters) {
-        PlayerContainer p;
+        PlayerContainer player;
 
         if (uuid != null) {
-            p = dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(uuid));
-            SessionCache.getCachedSession(uuid).ifPresent(session -> p.putRawData(PlayerKeys.ACTIVE_SESSION, session));
+            player = dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(uuid));
+            SessionCache.getCachedSession(uuid).ifPresent(session -> player.putRawData(PlayerKeys.ACTIVE_SESSION, session));
         } else {
-            p = null;
+            player = null;
         }
 
-        return onPlaceholderRequest(p, placeholder, parameters);
+        return onPlaceholderRequest(player, placeholder, parameters);
     }
 
     /**
      * Look up the placeholder and check if it is registered.
      *
-     * @param p           the player who is viewing the placeholder
+     * @param player      the player who is viewing the placeholder
      * @param placeholder the placeholder to look up to.
      * @param parameters  additional placeholder parameters
      * @return the value of the placeholder if found, or empty {@link String} if no
@@ -108,10 +108,10 @@ public final class PlanPlaceholders {
      * otherwise {@code null}
      * @throws Exception if any error occurs
      */
-    public static String onPlaceholderRequest(PlayerContainer p, String placeholder, List<String> parameters) {
+    public static String onPlaceholderRequest(PlayerContainer player, String placeholder, List<String> parameters) {
         for (Entry<String, BiFunction<String, PlayerContainer, Serializable>> entry : rawHandlers.entrySet()) {
             if (placeholder.startsWith(entry.getKey())) {
-                return Objects.toString(entry.getValue().apply(placeholder, p));
+                return Objects.toString(entry.getValue().apply(placeholder, player));
             }
         }
 
@@ -121,11 +121,11 @@ public final class PlanPlaceholders {
             return Objects.toString(staticLoader.apply(parameters));
         }
 
-        if (p != null) {
+        if (player != null) {
             BiFunction<PlayerContainer, List<String>, Serializable> loader = placeholders.get(placeholder);
 
             if (loader != null) {
-                return Objects.toString(loader.apply(p, parameters));
+                return Objects.toString(loader.apply(player, parameters));
             }
         }
 

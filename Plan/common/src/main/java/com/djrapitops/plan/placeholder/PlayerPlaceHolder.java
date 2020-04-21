@@ -29,114 +29,167 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.utilities.Predicates;
 
+import static com.djrapitops.plan.utilities.MiscUtils.*;
+
 /**
  * Placeholders about a player.
  *
  * @author aidn5, Rsl1122
  */
-public class PlayerPlaceHolder extends AbstractPlanPlaceHolder {
+public class PlayerPlaceHolder {
 
-    private final Formatter<Double> decimals;
-    private Formatter<Long> year;
-    private Formatter<Long> time;
-
-    public PlayerPlaceHolder(
+    public static void register(
             DBSystem dbSystem,
             ServerInfo serverInfo,
             Formatters formatters
     ) {
-        super(serverInfo, dbSystem);
-        time = formatters.timeAmount();
-        year = formatters.yearLong();
-        decimals = formatters.decimals();
-    }
+        Formatter<Double> decimals = formatters.decimals();
+        Formatter<Long> year = formatters.yearLong();
+        Formatter<Long> time = formatters.timeAmount();
 
-    public void register() {
-        PlanPlaceholders.register("player_banned", p -> p.getValue(PlayerKeys.BANNED)
-                .orElse(Boolean.FALSE));
+        PlanPlaceholders.register("player_banned",
+                player -> player.getValue(PlayerKeys.BANNED)
+                        .orElse(Boolean.FALSE)
+        );
 
-        PlanPlaceholders.register("player_operator", p -> p.getValue(PlayerKeys.OPERATOR)
-                .orElse(Boolean.FALSE));
+        PlanPlaceholders.register("player_operator",
+                player -> player.getValue(PlayerKeys.OPERATOR)
+                        .orElse(Boolean.FALSE)
+        );
 
-        PlanPlaceholders.register("player_sessions_count", p -> SessionsMutator.forContainer(p).count());
+        PlanPlaceholders.register("player_sessions_count",
+                player -> SessionsMutator.forContainer(player)
+                        .count()
+        );
 
-        PlanPlaceholders.register("player_kick_count", p -> p.getValue(PlayerKeys.KICK_COUNT).orElse(0));
+        PlanPlaceholders.register("player_kick_count",
+                player -> player.getValue(PlayerKeys.KICK_COUNT)
+                        .orElse(0)
+        );
 
-        PlanPlaceholders.register("player_death_count", p -> p.getValue(PlayerKeys.DEATH_COUNT).orElse(0));
+        PlanPlaceholders.register("player_death_count",
+                player -> player.getValue(PlayerKeys.DEATH_COUNT)
+                        .orElse(0)
+        );
 
-        PlanPlaceholders.register("player_mob_kill_count", p -> p.getValue(PlayerKeys.MOB_KILL_COUNT).orElse(0));
+        PlanPlaceholders.register("player_mob_kill_count",
+                player -> player.getValue(PlayerKeys.MOB_KILL_COUNT)
+                        .orElse(0)
+        );
 
-        PlanPlaceholders.register("player_player_kill_count", p -> p.getValue(PlayerKeys.PLAYER_KILL_COUNT).orElse(0));
+        PlanPlaceholders.register("player_player_kill_count",
+                player -> player.getValue(PlayerKeys.PLAYER_KILL_COUNT)
+                        .orElse(0)
+        );
 
-        PlanPlaceholders.register("player_kill_death_ratio", p -> PlayerVersusMutator.forContainer(p).toKillDeathRatio());
+        PlanPlaceholders.register("player_kill_death_ratio",
+                player -> PlayerVersusMutator.forContainer(player).toKillDeathRatio());
 
-        PlanPlaceholders.register("player_ping_average_day", p -> decimals.apply(PingMutator.forContainer(p)
-                .filterBy(Predicates.within(dayAgo(), now()))
-                .average()) + " ms");
+        PlanPlaceholders.register("player_ping_average_day",
+                player -> decimals.apply(PingMutator.forContainer(player)
+                        .filterBy(Predicates.within(dayAgo(), now()))
+                        .average()) + " ms"
+        );
 
-        PlanPlaceholders.register("player_ping_average_week", p -> decimals.apply(PingMutator.forContainer(p)
-                .filterBy(Predicates.within(weekAgo(), now()))
-                .average()) + " ms");
+        PlanPlaceholders.register("player_ping_average_week",
+                player -> decimals.apply(PingMutator.forContainer(player)
+                        .filterBy(Predicates.within(weekAgo(), now()))
+                        .average()) + " ms"
+        );
 
-        PlanPlaceholders.register("player_ping_average_month", p -> decimals.apply(PingMutator.forContainer(p)
-                .filterBy(Predicates.within(monthAgo(), now()))
-                .average()) + " ms");
+        PlanPlaceholders.register("player_ping_average_month",
+                player -> decimals.apply(PingMutator.forContainer(player)
+                        .filterBy(Predicates.within(monthAgo(), now()))
+                        .average()) + " ms"
+        );
 
-        PlanPlaceholders.register("player_lastseen", p -> year.apply(p.getValue(PlayerKeys.LAST_SEEN).orElse((long) 0)));
+        PlanPlaceholders.register("player_lastseen",
+                player -> year.apply(player.getValue(PlayerKeys.LAST_SEEN)
+                        .orElse((long) 0))
+        );
 
-        PlanPlaceholders.register("player_registered", p -> year.apply(p.getValue(PlayerKeys.REGISTERED).orElse((long) 0)));
+        PlanPlaceholders.register("player_registered",
+                player -> year.apply(player.getValue(PlayerKeys.REGISTERED)
+                        .orElse((long) 0))
+        );
 
-        PlanPlaceholders.register("player_time_active", p -> time.apply(SessionsMutator.forContainer(p)
-                .toActivePlaytime()));
+        PlanPlaceholders.register("player_time_active",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .toActivePlaytime())
+        );
 
-        PlanPlaceholders.register("player_time_afk", p -> time.apply(SessionsMutator.forContainer(p)
-                .toAfkTime()));
+        PlanPlaceholders.register("player_time_afk",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .toAfkTime())
+        );
 
-        PlanPlaceholders.register("player_time_total", p -> time.apply(SessionsMutator.forContainer(p)
-                .toPlaytime()));
+        PlanPlaceholders.register("player_time_total",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .toPlaytime())
+        );
 
-        PlanPlaceholders.register("player_time_day", p -> time.apply(SessionsMutator.forContainer(p)
-                .filterSessionsBetween(dayAgo(), now())
-                .toPlaytime()));
+        PlanPlaceholders.register("player_time_day",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(dayAgo(), now())
+                        .toPlaytime())
+        );
 
-        PlanPlaceholders.register("player_time_week", p -> time.apply(SessionsMutator.forContainer(p)
-                .filterSessionsBetween(weekAgo(), now())
-                .toPlaytime()));
+        PlanPlaceholders.register("player_time_week",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(weekAgo(), now())
+                        .toPlaytime())
+        );
 
-        PlanPlaceholders.register("player_time_month", p -> time.apply(SessionsMutator.forContainer(p)
-                .filterSessionsBetween(monthAgo(), now())
-                .toPlaytime()));
+        PlanPlaceholders.register("player_time_month",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(monthAgo(), now())
+                        .toPlaytime())
+        );
 
-        PlanPlaceholders.register("player_server_time_active", p -> time.apply(SessionsMutator.forContainer(p)
-                .filterPlayedOnServer(serverUUID())
-                .toActivePlaytime()));
+        PlanPlaceholders.register("player_server_time_active",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .filterPlayedOnServer(serverInfo.getServerUUID())
+                        .toActivePlaytime())
+        );
 
-        PlanPlaceholders.register("player_server_time_afk", p -> time.apply(SessionsMutator.forContainer(p)
-                .filterPlayedOnServer(serverUUID())
-                .toAfkTime()));
+        PlanPlaceholders.register("player_server_time_afk",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .filterPlayedOnServer(serverInfo.getServerUUID())
+                        .toAfkTime())
+        );
 
-        PlanPlaceholders.register("player_server_time_total", p -> time.apply(SessionsMutator.forContainer(p)
-                .filterPlayedOnServer(serverUUID())
-                .toPlaytime()));
+        PlanPlaceholders.register("player_server_time_total",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .filterPlayedOnServer(serverInfo.getServerUUID())
+                        .toPlaytime())
+        );
 
-        PlanPlaceholders.register("player_server_time_day", p -> time.apply(SessionsMutator.forContainer(p)
-                .filterSessionsBetween(dayAgo(), now())
-                .filterPlayedOnServer(serverUUID())
-                .toPlaytime()));
+        PlanPlaceholders.register("player_server_time_day",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(dayAgo(), now())
+                        .filterPlayedOnServer(serverInfo.getServerUUID())
+                        .toPlaytime())
+        );
 
-        PlanPlaceholders.register("player_server_time_week", p -> time.apply(SessionsMutator.forContainer(p)
-                .filterSessionsBetween(weekAgo(), now())
-                .filterPlayedOnServer(serverUUID())
-                .toPlaytime()));
+        PlanPlaceholders.register("player_server_time_week",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(weekAgo(), now())
+                        .filterPlayedOnServer(serverInfo.getServerUUID())
+                        .toPlaytime())
+        );
 
-        PlanPlaceholders.register("player_server_time_month", p -> time.apply(SessionsMutator.forContainer(p)
-                .filterSessionsBetween(monthAgo(), now())
-                .filterPlayedOnServer(serverUUID())
-                .toPlaytime()));
+        PlanPlaceholders.register("player_server_time_month",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(monthAgo(), now())
+                        .filterPlayedOnServer(serverInfo.getServerUUID())
+                        .toPlaytime())
+        );
 
-        PlanPlaceholders.register("player_favorite_server", p -> PerServerMutator.forContainer(p).favoriteServer()
-                .flatMap(serverUUID -> dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID)))
-                .map(Server::getName)
-                .orElse("-"));
+        PlanPlaceholders.register("player_favorite_server",
+                player -> PerServerMutator.forContainer(player).favoriteServer()
+                        .flatMap(serverUUID -> dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID)))
+                        .map(Server::getName)
+                        .orElse("-")
+        );
     }
 }

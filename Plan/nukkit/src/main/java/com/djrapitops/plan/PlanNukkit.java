@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.addons.placeholderapi.PlaceholderRegistrar;
+import com.djrapitops.plan.addons.placeholderapi.NKPlaceholderRegistrar;
 import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
@@ -51,6 +51,8 @@ public class PlanNukkit extends NukkitPlugin implements PlanPlugin {
             serverShutdownSave = component.serverShutdownSave();
             locale = system.getLocaleSystem().getLocale();
             system.enable();
+
+            registerPlaceholderAPI();
 
             logger.debug("Verbose debug messages are enabled.");
             String benchTime = " (" + timings.end("Enable").map(Benchmark::toDurationString).orElse("-") + ")";
@@ -123,7 +125,7 @@ public class PlanNukkit extends NukkitPlugin implements PlanPlugin {
                 @Override
                 public void run() {
                     try {
-                        PlaceholderRegistrar.register(system, errorHandler);
+                        NKPlaceholderRegistrar.register(system, errorHandler);
                     } catch (Exception | NoClassDefFoundError | NoSuchMethodError failed) {
                         logger.warn("Failed to register PlaceholderAPI placeholders: " + failed.toString());
                     }

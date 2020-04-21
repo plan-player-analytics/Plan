@@ -20,6 +20,8 @@ import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.Sender;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Utility method class containing various static methods.
  *
@@ -82,5 +84,21 @@ public class MiscUtils {
                 }
             }
         }
+    }
+
+    public static long now() {
+        return System.currentTimeMillis();
+    }
+
+    public static long dayAgo() {
+        return now() - TimeUnit.DAYS.toMillis(1L);
+    }
+
+    public static long weekAgo() {
+        return now() - (TimeUnit.DAYS.toMillis(7L));
+    }
+
+    public static long monthAgo() {
+        return now() - (TimeUnit.DAYS.toMillis(30L));
     }
 }

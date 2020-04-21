@@ -30,12 +30,12 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class PlaceholderRegistrar {
+public class NKPlaceholderRegistrar {
 
     private final ErrorHandler errorHandler;
     private final PlanSystem system;
 
-    public PlaceholderRegistrar(PlanSystem system, ErrorHandler errorHandler) {
+    public NKPlaceholderRegistrar(PlanSystem system, ErrorHandler errorHandler) {
         this.system = system;
         this.errorHandler = errorHandler;
     }
@@ -77,6 +77,6 @@ public class PlaceholderRegistrar {
     }
 
     public static void register(PlanSystem system, ErrorHandler errorHandler) {
-        new PlaceholderRegistrar(system, errorHandler).register0();
+        new NKPlaceholderRegistrar(system, errorHandler).register0();
     }
 }

@@ -25,81 +25,103 @@ import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 
 import java.util.UUID;
 
+import static com.djrapitops.plan.utilities.MiscUtils.*;
+
 /**
  * Placeholders about a servers.
  *
  * @author aidn5, Rsl1122
  */
-public class ServerPlaceHolders extends AbstractPlanPlaceHolder {
+public class ServerPlaceHolders {
 
-    private Formatter<Double> decimals;
-    private Formatter<Double> percentage;
-
-    public ServerPlaceHolders(
+    public static void register(
             DBSystem dbSystem,
             ServerInfo serverInfo,
             Formatters formatters
     ) {
-        super(serverInfo, dbSystem);
-        decimals = formatters.decimals();
-        percentage = formatters.percentage();
-    }
+        Formatter<Double> decimals = formatters.decimals();
+        Formatter<Double> percentage = formatters.percentage();
 
-    public void register() {
         Database database = dbSystem.getDatabase();
-        UUID serverUUID = serverUUID();
+        UUID serverUUID = serverInfo.getServerUUID();
 
-        PlanPlaceholders.registerStatic("server_tps_day", () -> decimals.apply(database.query(TPSQueries.averageTPS(dayAgo(), now(), serverUUID))));
+        PlanPlaceholders.registerStatic("server_tps_day",
+                () -> decimals.apply(database.query(TPSQueries.averageTPS(dayAgo(), now(), serverUUID))));
 
-        PlanPlaceholders.registerStatic("server_tps_week", () -> decimals.apply(database.query(TPSQueries.averageTPS(weekAgo(), now(), serverUUID))));
+        PlanPlaceholders.registerStatic("server_tps_week",
+                () -> decimals.apply(database.query(TPSQueries.averageTPS(weekAgo(), now(), serverUUID))));
 
-        PlanPlaceholders.registerStatic("server_tps_month", () -> decimals.apply(database.query(TPSQueries.averageTPS(monthAgo(), now(), serverUUID))));
+        PlanPlaceholders.registerStatic("server_tps_month",
+                () -> decimals.apply(database.query(TPSQueries.averageTPS(monthAgo(), now(), serverUUID))));
 
-        PlanPlaceholders.registerStatic("server_cpu_day", () -> percentage.apply(database.query(TPSQueries.averageCPU(dayAgo(), now(), serverUUID))));
+        PlanPlaceholders.registerStatic("server_cpu_day",
+                () -> percentage.apply(database.query(TPSQueries.averageCPU(dayAgo(), now(), serverUUID))));
 
-        PlanPlaceholders.registerStatic("server_cpu_week", () -> percentage.apply(database.query(TPSQueries.averageCPU(weekAgo(), now(), serverUUID))));
+        PlanPlaceholders.registerStatic("server_cpu_week",
+                () -> percentage.apply(database.query(TPSQueries.averageCPU(weekAgo(), now(), serverUUID))));
 
-        PlanPlaceholders.registerStatic("server_cpu_month", () -> percentage.apply(database.query(TPSQueries.averageCPU(monthAgo(), now(), serverUUID))));
+        PlanPlaceholders.registerStatic("server_cpu_month",
+                () -> percentage.apply(database.query(TPSQueries.averageCPU(monthAgo(), now(), serverUUID))));
 
-        PlanPlaceholders.registerStatic("server_ram_day", () -> database.query(TPSQueries.averageRAM(dayAgo(), now(), serverUUID)) + " MB");
+        PlanPlaceholders.registerStatic("server_ram_day",
+                () -> database.query(TPSQueries.averageRAM(dayAgo(), now(), serverUUID)) + " MB");
 
-        PlanPlaceholders.registerStatic("server_ram_week", () -> database.query(TPSQueries.averageRAM(weekAgo(), now(), serverUUID)) + " MB");
+        PlanPlaceholders.registerStatic("server_ram_week",
+                () -> database.query(TPSQueries.averageRAM(weekAgo(), now(), serverUUID)) + " MB");
 
-        PlanPlaceholders.registerStatic("server_ram_month", () -> database.query(TPSQueries.averageRAM(monthAgo(), now(), serverUUID)) + " MB");
+        PlanPlaceholders.registerStatic("server_ram_month",
+                () -> database.query(TPSQueries.averageRAM(monthAgo(), now(), serverUUID)) + " MB");
 
-        PlanPlaceholders.registerStatic("server_chunks_day", () -> database.query(TPSQueries.averageChunks(dayAgo(), now(), serverUUID)));
+        PlanPlaceholders.registerStatic("server_chunks_day",
+                () -> database.query(TPSQueries.averageChunks(dayAgo(), now(), serverUUID)));
 
-        PlanPlaceholders.registerStatic("server_chunks_week", () -> database.query(TPSQueries.averageChunks(weekAgo(), now(), serverUUID)));
+        PlanPlaceholders.registerStatic("server_chunks_week",
+                () -> database.query(TPSQueries.averageChunks(weekAgo(), now(), serverUUID)));
 
-        PlanPlaceholders.registerStatic("server_chunks_month", () -> database.query(TPSQueries.averageChunks(monthAgo(), now(), serverUUID)));
+        PlanPlaceholders.registerStatic("server_chunks_month",
+                () -> database.query(TPSQueries.averageChunks(monthAgo(), now(), serverUUID)));
 
-        PlanPlaceholders.registerStatic("server_entities_day", () -> database.query(TPSQueries.averageEntities(dayAgo(), now(), serverUUID)));
+        PlanPlaceholders.registerStatic("server_entities_day",
+                () -> database.query(TPSQueries.averageEntities(dayAgo(), now(), serverUUID)));
 
-        PlanPlaceholders.registerStatic("server_entities_week", () -> database.query(TPSQueries.averageEntities(weekAgo(), now(), serverUUID)));
+        PlanPlaceholders.registerStatic("server_entities_week",
+                () -> database.query(TPSQueries.averageEntities(weekAgo(), now(), serverUUID)));
 
-        PlanPlaceholders.registerStatic("server_entities_month", () -> database.query(TPSQueries.averageEntities(monthAgo(), now(), serverUUID)));
+        PlanPlaceholders.registerStatic("server_entities_month",
+                () -> database.query(TPSQueries.averageEntities(monthAgo(), now(), serverUUID)));
 
-        PlanPlaceholders.registerStatic("server_max_free_disk_day", () -> database.query(TPSQueries.maxFreeDisk(dayAgo(), now(), serverUUID)));
+        PlanPlaceholders.registerStatic("server_max_free_disk_day",
+                () -> database.query(TPSQueries.maxFreeDisk(dayAgo(), now(), serverUUID)));
 
-        PlanPlaceholders.registerStatic("server_max_free_disk_week", () -> database.query(TPSQueries.maxFreeDisk(weekAgo(), now(), serverUUID)));
+        PlanPlaceholders.registerStatic("server_max_free_disk_week",
+                () -> database.query(TPSQueries.maxFreeDisk(weekAgo(), now(), serverUUID)));
 
-        PlanPlaceholders.registerStatic("server_max_free_disk_month", () -> database.query(TPSQueries.maxFreeDisk(monthAgo(), now(), serverUUID)));
+        PlanPlaceholders.registerStatic("server_max_free_disk_month",
+                () -> database.query(TPSQueries.maxFreeDisk(monthAgo(), now(), serverUUID)));
 
-        PlanPlaceholders.registerStatic("server_min_free_disk_day", () -> database.query(TPSQueries.minFreeDisk(dayAgo(), now(), serverUUID)));
+        PlanPlaceholders.registerStatic("server_min_free_disk_day",
+                () -> database.query(TPSQueries.minFreeDisk(dayAgo(), now(), serverUUID)));
 
-        PlanPlaceholders.registerStatic("server_min_free_disk_week", () -> database.query(TPSQueries.minFreeDisk(weekAgo(), now(), serverUUID)));
+        PlanPlaceholders.registerStatic("server_min_free_disk_week",
+                () -> database.query(TPSQueries.minFreeDisk(weekAgo(), now(), serverUUID)));
 
-        PlanPlaceholders.registerStatic("server_min_free_disk_month", () -> database.query(TPSQueries.minFreeDisk(monthAgo(), now(), serverUUID)));
+        PlanPlaceholders.registerStatic("server_min_free_disk_month",
+                () -> database.query(TPSQueries.minFreeDisk(monthAgo(), now(), serverUUID)));
 
-        PlanPlaceholders.registerStatic("server_average_free_disk_day", () -> database.query(TPSQueries.averageFreeDisk(dayAgo(), now(), serverUUID)));
+        PlanPlaceholders.registerStatic("server_average_free_disk_day",
+                () -> database.query(TPSQueries.averageFreeDisk(dayAgo(), now(), serverUUID)));
 
-        PlanPlaceholders.registerStatic("server_average_free_disk_week", () -> database.query(TPSQueries.averageFreeDisk(weekAgo(), now(), serverUUID)));
+        PlanPlaceholders.registerStatic("server_average_free_disk_week",
+                () -> database.query(TPSQueries.averageFreeDisk(weekAgo(), now(), serverUUID)));
 
-        PlanPlaceholders.registerStatic("server_average_free_disk_month", () -> database.query(TPSQueries.averageFreeDisk(monthAgo(), now(), serverUUID)));
+        PlanPlaceholders.registerStatic("server_average_free_disk_month",
+                () -> database.query(TPSQueries.averageFreeDisk(monthAgo(), now(), serverUUID)));
 
-        PlanPlaceholders.registerStatic("server_name", () -> serverInfo.getServer().getName());
+        PlanPlaceholders.registerStatic("server_name",
+                () -> serverInfo.getServer().getName());
 
-        PlanPlaceholders.registerStatic("server_uuid", serverInfo::getServerUUID);
+        PlanPlaceholders.registerStatic("server_uuid",
+                serverInfo::getServerUUID);
 
     }
 }
