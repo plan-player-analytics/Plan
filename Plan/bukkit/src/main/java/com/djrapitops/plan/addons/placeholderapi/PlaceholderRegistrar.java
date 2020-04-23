@@ -30,7 +30,7 @@ public class PlaceholderRegistrar {
     }
 
     public static void register(PlanSystem system, ErrorHandler errorHandler) {
-        new PlanPlaceHolders(system, errorHandler).register();
+        new BukkitPlanPlaceHolders(system, errorHandler).register();
     }
 
 }

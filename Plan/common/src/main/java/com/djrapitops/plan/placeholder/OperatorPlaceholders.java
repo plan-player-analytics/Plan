@@ -14,33 +14,22 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.addons.placeholderapi.placeholders;
+package com.djrapitops.plan.placeholder;
 
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
-import org.bukkit.entity.Player;
 
 /**
  * Placeholders about operators.
  *
  * @author aidn5, Rsl1122
  */
-public class OperatorPlaceholders extends AbstractPlanPlaceHolder {
+public class OperatorPlaceholders {
 
-    private final DBSystem dbSystem;
-
-    public OperatorPlaceholders(DBSystem dbSystem, ServerInfo serverInfo) {
-        super(serverInfo);
-        this.dbSystem = dbSystem;
-    }
-
-    @Override
-    public String onPlaceholderRequest(Player p, String params) throws Exception {
-        if ("operators_total".equalsIgnoreCase(params)) {
-            return dbSystem.getDatabase().query(PlayerCountQueries.operators(serverUUID())).toString();
-        }
-
-        return null;
+    public static void register(DBSystem dbSystem, ServerInfo serverInfo) {
+        PlanPlaceholders.registerStatic("operators_total",
+                () -> dbSystem.getDatabase().query(PlayerCountQueries.operators(serverInfo.getServerUUID()))
+        );
     }
 }
