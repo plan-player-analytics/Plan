@@ -26,6 +26,8 @@ import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Collections;
 
 /**
@@ -38,26 +40,30 @@ import java.util.Collections;
  * {@link ServerKeys#TPS},{@link ServerKeys#NAME},
  * {@link ServerKeys#SERVER_UUID}</li>
  * <li>{@link OperatorPlaceholders}: {@link ServerKeys#OPERATORS}</li>
- * <li>{@link WorldTimePlaceHolder}: {@link ServerKeys#WORLD_TIMES}</li>
- * <li>{@link SessionPlaceHolder}: {@link ServerKeys#SESSIONS},
+ * <li>{@link WorldTimePlaceHolders}: {@link ServerKeys#WORLD_TIMES}</li>
+ * <li>{@link SessionPlaceHolders}: {@link ServerKeys#SESSIONS},
  * {@link ServerKeys#PLAYERS},{@link ServerKeys#PING},{@link ServerKeys#ALL_TIME_PEAK_PLAYERS},
  * {@link ServerKeys#RECENT_PEAK_PLAYERS}</li>
  * </ul>
  *
  * @author aidn5
  */
-public class BukkitPlanPlaceHolders extends PlaceholderExpansion {
+@Singleton
+public class BukkitPlaceholderRegistrar extends PlaceholderExpansion {
+
     public final ErrorHandler errorHandler;
     private final VersionChecker versionChecker;
+    private final PlanPlaceholders placeholders;
 
-    public BukkitPlanPlaceHolders(
+    @Inject
+    public BukkitPlaceholderRegistrar(
+            PlanPlaceholders placeholders,
             PlanSystem system,
             ErrorHandler errorHandler
     ) {
+        this.placeholders = placeholders;
         this.versionChecker = system.getVersionChecker();
         this.errorHandler = errorHandler;
-
-        PlanPlaceholders.init(system);
     }
 
     @Override
@@ -94,7 +100,7 @@ public class BukkitPlanPlaceHolders extends PlaceholderExpansion {
     @Override
     public String onPlaceholderRequest(Player p, String params) {
         try {
-            String value = PlanPlaceholders.onPlaceholderRequest(p.getUniqueId(), params, Collections.emptyList());
+            String value = placeholders.onPlaceholderRequest(p.getUniqueId(), params, Collections.emptyList());
 
             if ("true".equals(value)) { //hack
                 value = PlaceholderAPIPlugin.booleanTrue();

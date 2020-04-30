@@ -20,15 +20,31 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Placeholders about operators.
  *
  * @author aidn5, Rsl1122
  */
-public class OperatorPlaceholders {
+@Singleton
+public class OperatorPlaceholders implements PlaceholderRegistry {
 
-    public static void register(DBSystem dbSystem, ServerInfo serverInfo) {
-        PlanPlaceholders.registerStatic("operators_total",
+    private final DBSystem dbSystem;
+    private final ServerInfo serverInfo;
+
+    @Inject
+    public OperatorPlaceholders(
+            DBSystem dbSystem, ServerInfo serverInfo
+    ) {
+        this.dbSystem = dbSystem;
+        this.serverInfo = serverInfo;
+    }
+
+    @Override
+    public void register(PlanPlaceholders placeholders) {
+        placeholders.registerStatic("operators_total",
                 () -> dbSystem.getDatabase().query(PlayerCountQueries.operators(serverInfo.getServerUUID()))
         );
     }

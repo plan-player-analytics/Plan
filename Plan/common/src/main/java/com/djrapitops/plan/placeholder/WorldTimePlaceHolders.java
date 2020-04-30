@@ -23,21 +23,39 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Placeholders about a world times.
  *
  * @author aidn5, Rsl1122
  */
-public class WorldTimePlaceHolder {
+@Singleton
+public class WorldTimePlaceHolders implements PlaceholderRegistry {
 
-    public static void register(
+    private final DBSystem dbSystem;
+    private final ServerInfo serverInfo;
+    private final Formatters formatters;
+
+    @Inject
+    public WorldTimePlaceHolders(
             DBSystem dbSystem,
             ServerInfo serverInfo,
             Formatters formatters
     ) {
+        this.dbSystem = dbSystem;
+        this.serverInfo = serverInfo;
+        this.formatters = formatters;
+    }
+
+    @Override
+    public void register(
+            PlanPlaceholders placeholders
+    ) {
         Formatter<Long> timeAmount = formatters.timeAmount();
 
-        PlanPlaceholders.registerRaw("worlds_playtime_total_", (input, p) -> {
+        placeholders.registerRaw("worlds_playtime_total_", (input, p) -> {
             // get world total play time
             // e.g. "plan_worlds_playtime_total_%worldname%"
             // where %worldname% is "world_nether"
@@ -48,7 +66,7 @@ public class WorldTimePlaceHolder {
             return timeAmount.apply(worldTimes.getWorldPlaytime(worldName));
         });
 
-        PlanPlaceholders.registerStatic("worlds_playtime_total", params -> {
+        placeholders.registerStatic("worlds_playtime_total", params -> {
             if (params.isEmpty()) {
                 return null;
             }

@@ -27,24 +27,32 @@ import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQue
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class NKPlaceholderRegistrar {
+@Singleton
+public class NukkitPlaceholderRegistrar {
 
-    private final ErrorHandler errorHandler;
+    private final PlanPlaceholders placeholders;
     private final PlanSystem system;
+    private final ErrorHandler errorHandler;
 
-    public NKPlaceholderRegistrar(PlanSystem system, ErrorHandler errorHandler) {
+    @Inject
+    public NukkitPlaceholderRegistrar(
+            PlanPlaceholders placeholders,
+            PlanSystem system,
+            ErrorHandler errorHandler
+    ) {
+        this.placeholders = placeholders;
         this.system = system;
         this.errorHandler = errorHandler;
     }
 
-    private void register0() {
-        PlanPlaceholders.init(system);
-
+    public void register() {
         PlaceholderAPI api = PlaceholderAPI.getInstance();
-        PlanPlaceholders.getPlaceholders().forEach((name, loader) ->
+        placeholders.getPlaceholders().forEach((name, loader) ->
                 api.visitorSensitivePlaceholder(name, (player, params) -> {
                             try {
                                 return loader.apply(getPlayer(player), new ArrayList<>(params.getAll().values()));
@@ -55,7 +63,7 @@ public class NKPlaceholderRegistrar {
                         }
                 ));
 
-        PlanPlaceholders.getStaticPlaceholders().forEach((name, loader) ->
+        placeholders.getStaticPlaceholders().forEach((name, loader) ->
                 api.staticPlaceholder(name, params -> {
                             try {
                                 return loader.apply(new ArrayList<>(params.getAll().values()));
@@ -70,13 +78,9 @@ public class NKPlaceholderRegistrar {
     private PlayerContainer getPlayer(Player player) {
         UUID uuid = player.getUniqueId();
 
-        PlayerContainer p = system.getDatabaseSystem().getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(uuid));
-        SessionCache.getCachedSession(uuid).ifPresent(session -> p.putRawData(PlayerKeys.ACTIVE_SESSION, session));
+        PlayerContainer container = system.getDatabaseSystem().getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(uuid));
+        SessionCache.getCachedSession(uuid).ifPresent(session -> container.putRawData(PlayerKeys.ACTIVE_SESSION, session));
 
-        return p;
-    }
-
-    public static void register(PlanSystem system, ErrorHandler errorHandler) {
-        new NKPlaceholderRegistrar(system, errorHandler).register0();
+        return container;
     }
 }

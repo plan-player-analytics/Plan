@@ -16,9 +16,11 @@
  */
 package com.djrapitops.plan;
 
+import com.djrapitops.plan.addons.placeholderapi.BukkitPlaceholderRegistrar;
 import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.modules.APFModule;
+import com.djrapitops.plan.modules.PlaceholderModule;
 import com.djrapitops.plan.modules.SystemObjectProvidingModule;
 import com.djrapitops.plan.modules.bukkit.BukkitPlanModule;
 import com.djrapitops.plan.modules.bukkit.BukkitServerPropertiesModule;
@@ -38,6 +40,7 @@ import javax.inject.Singleton;
         BukkitPlanModule.class,
         SystemObjectProvidingModule.class,
         APFModule.class,
+        PlaceholderModule.class,
 
         BukkitServerPropertiesModule.class,
         BukkitSuperClassBindingModule.class
@@ -47,6 +50,8 @@ public interface PlanBukkitComponent {
     PlanCommand planCommand();
 
     PlanSystem system();
+
+    BukkitPlaceholderRegistrar placeholders();
 
     ServerShutdownSave serverShutdownSave();
 
