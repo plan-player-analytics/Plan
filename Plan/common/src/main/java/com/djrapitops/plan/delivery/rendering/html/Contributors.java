@@ -40,6 +40,7 @@ public class Contributors {
                 new Contributor("CyanTech", LANG),
                 new Contributor("DarkPyves", CODE),
                 new Contributor("DaveDevil", LANG),
+                new Contributor("developStorm", CODE),
                 new Contributor("enterih", LANG),
                 new Contributor("Eyremba", LANG),
                 new Contributor("f0rb1d (\u4f5b\u58c1\u706f)", LANG),

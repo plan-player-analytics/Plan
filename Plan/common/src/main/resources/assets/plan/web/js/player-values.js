@@ -195,7 +195,7 @@ function onOpenserver(i, servers) {
 }
 
 function createserverAccordionTitle(i, server) {
-    return '<tr id="server_h_' + i + '" aria-controls="server_t_' + i + '" aria-expanded="false" class="clickable collapsed bg-light-green" data-target="#server_t_' + i + '" data-toggle="collapse"><td>'
+    return '<tr id="server_h_' + i + '" aria-controls="server_t_' + i + '" aria-expanded="false" class="clickable collapsed bg-light-green-outline" data-target="#server_t_' + i + '" data-toggle="collapse"><td>'
         + server.server_name +
         (server.operator ? ' <i class="fab fa-fw fa-superpowers"></i>' : '') +
         (server.banned ? ' <i class="fas fa-fw fa-gavel"></i>' : '') +

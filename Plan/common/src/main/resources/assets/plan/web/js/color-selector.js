@@ -110,54 +110,99 @@
         return 'hsl(' + h * 360 + ',' + s * 100 * saturationReduction + '%,' + l * 95 + '%)';
     }
 
-    var nightModeColors = '.bg-red {background-color: ' + withReducedSaturation('#F44336') + ';color: #eee8d5;}' +
-        '.bg-pink {background-color: ' + withReducedSaturation('#E91E63') + ';color: #eee8d5;}' +
-        '.bg-purple {background-color: ' + withReducedSaturation('#9C27B0') + ';color: #eee8d5;}' +
-        '.bg-deep-purple {background-color: ' + withReducedSaturation('#673AB7') + ';color: #eee8d5;}' +
-        '.bg-indigo {background-color: ' + withReducedSaturation('#3F51B5') + ';color: #eee8d5;}' +
-        '.bg-blue {background-color: ' + withReducedSaturation('#2196F3') + ';color: #eee8d5;}' +
-        '.bg-light-blue {background-color: ' + withReducedSaturation('#03A9F4') + ';color: #eee8d5;}' +
-        '.bg-cyan {background-color: ' + withReducedSaturation('#00BCD4') + ';color: #eee8d5;}' +
-        '.bg-teal {background-color: ' + withReducedSaturation('#009688') + ';color: #eee8d5;}' +
-        '.bg-green {background-color: ' + withReducedSaturation('#4CAF50') + ';color: #eee8d5;}' +
-        '.bg-light-green {background-color: ' + withReducedSaturation('#8BC34A') + ';color: #eee8d5;}' +
-        '.bg-lime {background-color: ' + withReducedSaturation('#CDDC39') + ';color: #eee8d5;}' +
-        '.bg-yellow {background-color: ' + withReducedSaturation('#ffe821') + ';color: #eee8d5;}' +
-        '.bg-amber {background-color: ' + withReducedSaturation('#FFC107') + ';color: #eee8d5;}' +
-        '.badge-warning {background-color: ' + withReducedSaturation('#f6c23e') + ';color: #eee8d5;}' +
-        '.bg-orange {background-color: ' + withReducedSaturation('#FF9800') + ';color: #eee8d5;}' +
-        '.bg-deep-orange {background-color: ' + withReducedSaturation('#FF5722') + ';color: #eee8d5;}' +
-        '.badge-danger {background-color: ' + withReducedSaturation('#e74a3b') + ';color: #eee8d5;}' +
-        '.bg-brown {background-color: ' + withReducedSaturation('#795548') + ';color: #eee8d5;}' +
-        '.bg-grey {background-color: ' + withReducedSaturation('#9E9E9E') + ';color: #eee8d5;}' +
-        '.bg-blue-grey {background-color: ' + withReducedSaturation('#607D8B') + ';color: #eee8d5;}' +
-        '.bg-black {background-color: ' + withReducedSaturation('#555555') + ';color: #eee8d5;}' +
-        '.bg-plan {background-color: ' + withReducedSaturation('#368F17') + ';color: #eee8d5;}' +
-        '.badge-success {background-color: ' + withReducedSaturation('#1cc88a') + ';color: #eee8d5;}' +
-        '.bg-night {background-color: #44475a;color: #eee8d5;}' +
-        '.col-red {color: ' + withReducedSaturation('#F44336') + ';}' +
-        '.col-pink {color: ' + withReducedSaturation('#E91E63') + ';}' +
-        '.col-purple {color: ' + withReducedSaturation('#9C27B0') + ';}' +
-        '.col-deep-purple {color: ' + withReducedSaturation('#673AB7') + ';}' +
-        '.col-indigo {color: ' + withReducedSaturation('#3F51B5') + ';}' +
-        '.col-blue {color: ' + withReducedSaturation('#2196F3') + ';}' +
-        '.col-light-blue {color: ' + withReducedSaturation('#03A9F4') + ';}' +
-        '.col-cyan {color: ' + withReducedSaturation('#00BCD4') + ';}' +
-        '.col-teal {color: ' + withReducedSaturation('#009688') + ';}' +
-        '.col-green {color: ' + withReducedSaturation('#4CAF50') + ';}' +
-        '.col-light-green {color: ' + withReducedSaturation('#8BC34A') + ';}' +
-        '.col-lime {color: ' + withReducedSaturation('#CDDC39') + ';}' +
-        '.col-yellow {color: ' + withReducedSaturation('#ffe821') + ';}' +
-        '.col-amber {color: ' + withReducedSaturation('#FFC107') + ';}' +
-        '.text-warning {color: ' + withReducedSaturation('#f6c23e') + ';}' +
-        '.col-orange {color: ' + withReducedSaturation('#FF9800') + ';}' +
-        '.col-deep-orange {color: ' + withReducedSaturation('#FF5722') + ';}' +
-        '.text-danger {color: ' + withReducedSaturation('#e74a3b') + ';}' +
-        '.col-brown {color: ' + withReducedSaturation('#795548') + ';}' +
-        '.col-grey {color: ' + withReducedSaturation('#9E9E9E') + ';}' +
-        '.col-blue-grey {color: ' + withReducedSaturation('#607D8B') + ';}' +
-        '.col-plan {color: ' + withReducedSaturation('#368F17') + ';}' +
-        '.text-success {color: ' + withReducedSaturation('#1cc88a') + ';}';
+    const red = withReducedSaturation('#F44336');
+    const pink = withReducedSaturation('#E91E63');
+    const purple = withReducedSaturation('#9C27B0');
+    const deepPurple = withReducedSaturation('#673AB7');
+    const indigo = withReducedSaturation('#3F51B5');
+    const blue = withReducedSaturation('#2196F3');
+    const lightBlue = withReducedSaturation('#03A9F4');
+    const cyan = withReducedSaturation('#00BCD4');
+    const teal = withReducedSaturation('#009688');
+    const green = withReducedSaturation('#4CAF50');
+    const lightGreen = withReducedSaturation('#8BC34A');
+    const lime = withReducedSaturation('#CDDC39');
+    const yellow = withReducedSaturation('#ffe821');
+    const amber = withReducedSaturation('#FFC107');
+    const warningColor = withReducedSaturation('#f6c23e');
+    const orange = withReducedSaturation('#FF9800');
+    const deepOrange = withReducedSaturation('#FF5722');
+    const dangerColor = withReducedSaturation('#e74a3b');
+    const brown = withReducedSaturation('#795548');
+    const grey = withReducedSaturation('#9E9E9E');
+    const blueGrey = withReducedSaturation('#607D8B');
+    const black = withReducedSaturation('#555555');
+    const planColor = withReducedSaturation('#368F17');
+    const successColor = withReducedSaturation('#1cc88a');
+    const nightModeColors = `.bg-red {background-color: ${red};color: #eee8d5;}` +
+        `.bg-pink {background-color: ${pink};color: #eee8d5;}` +
+        `.bg-purple {background-color: ${purple};color: #eee8d5;}` +
+        `.bg-deep-purple {background-color: ${deepPurple};color: #eee8d5;}` +
+        `.bg-indigo {background-color: ${indigo};color: #eee8d5;}` +
+        `.bg-blue {background-color: ${blue};color: #eee8d5;}` +
+        `.bg-light-blue {background-color: ${lightBlue};color: #eee8d5;}` +
+        `.bg-cyan {background-color: ${cyan};color: #eee8d5;}` +
+        `.bg-teal {background-color: ${teal};color: #eee8d5;}` +
+        `.bg-green {background-color: ${green};color: #eee8d5;}` +
+        `.bg-light-green {background-color: ${lightGreen};color: #eee8d5;}` +
+        `.bg-lime {background-color: ${lime};color: #eee8d5;}` +
+        `.bg-yellow {background-color: ${yellow};color: #eee8d5;}` +
+        `.bg-amber {background-color: ${amber};color: #eee8d5;}` +
+        `.badge-warning {background-color: ${warningColor};color: #eee8d5;}` +
+        `.bg-orange {background-color: ${orange};color: #eee8d5;}` +
+        `.bg-deep-orange {background-color: ${deepOrange};color: #eee8d5;}` +
+        `.badge-danger {background-color: ${dangerColor};color: #eee8d5;}` +
+        `.bg-brown {background-color: ${brown};color: #eee8d5;}` +
+        `.bg-grey {background-color: ${grey};color: #eee8d5;}` +
+        `.bg-blue-grey {background-color: ${blueGrey};color: #eee8d5;}` +
+        `.bg-black {background-color: ${black};color: #eee8d5;}` +
+        `.bg-plan {background-color: ${planColor};color: #eee8d5;}` +
+        `.badge-success {background-color: ${successColor};color: #eee8d5;}` +
+        `.bg-night {background-color: #44475a;color: #eee8d5;}` +
+        `.bg-red-outline {outline-color: ${red};border-color: ${red};}` +
+        `.bg-pink-outline {outline-color: ${pink};border-color: ${pink};}` +
+        `.bg-purple-outline {outline-color: ${purple};border-color: ${purple};}` +
+        `.bg-deep-purple-outline {outline-color: ${deepPurple};border-color: ${deepPurple};}` +
+        `.bg-indigo-outline {outline-color: ${indigo};border-color: ${indigo};}` +
+        `.bg-blue-outline {outline-color: ${blue};border-color: ${blue};}` +
+        `.bg-light-blue-outline {outline-color: ${lightBlue};border-color: ${lightBlue};}` +
+        `.bg-cyan-outline {outline-color: ${cyan};border-color: ${cyan};}` +
+        `.bg-teal-outline {outline-color: ${teal};border-color: ${teal};}` +
+        `.bg-green-outline {outline-color: ${green};border-color: ${green};}` +
+        `.bg-light-green-outline {outline-color: ${lightGreen};border-color: ${lightGreen};}` +
+        `.bg-lime-outline {outline-color: ${lime};border-color: ${lime};}` +
+        `.bg-yellow-outline {outline-color: ${yellow};border-color: ${yellow};}` +
+        `.bg-amber-outline {outline-color: ${amber};border-color: ${amber};}` +
+        `.bg-orange-outline {outline-color: ${orange};border-color: ${orange};}` +
+        `.bg-deep-orange-outline {outline-color: ${deepOrange};border-color: ${deepOrange};}` +
+        `.bg-brown-outline {outline-color: ${brown};border-color: ${brown};}` +
+        `.bg-grey-outline {outline-color: ${grey};border-color: ${grey};}` +
+        `.bg-blue-grey-outline {outline-color: ${blueGrey};border-color: ${blueGrey};}` +
+        `.bg-black-outline {outline-color: ${black};border-color: ${black};}` +
+        `.bg-plan-outline {outline-color: ${planColor};border-color: ${planColor};}` +
+        `.col-red {color: ${red};}` +
+        `.col-pink {color: ${pink};}` +
+        `.col-purple {color: ${purple};}` +
+        `.col-deep-purple {color: ${deepPurple};}` +
+        `.col-indigo {color: ${indigo};}` +
+        `.col-blue {color: ${blue};}` +
+        `.col-light-blue {color: ${lightBlue};}` +
+        `.col-cyan {color: ${cyan};}` +
+        `.col-teal {color: ${teal};}` +
+        `.col-green {color: ${green};}` +
+        `.col-light-green {color: ${lightGreen};}` +
+        `.col-lime {color: ${lime};}` +
+        `.col-yellow {color: ${yellow};}` +
+        `.col-amber {color: ${amber};}` +
+        `.text-warning {color: ${warningColor};}` +
+        `.col-orange {color: ${orange};}` +
+        `.col-deep-orange {color: ${deepOrange};}` +
+        `.text-danger {color: ${dangerColor};}` +
+        `.col-brown {color: ${brown};}` +
+        `.col-grey {color: ${grey};}` +
+        `.col-blue-grey {color: ${blueGrey};}` +
+        `.col-plan {color: ${planColor};}` +
+        `.text-success {color: ${successColor};}`;
 
     function changeNightModeCSS() {
         if (nightMode) {
