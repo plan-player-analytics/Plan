@@ -25,6 +25,7 @@ public enum LangCode {
 
     CUSTOM("Custom", ""),
     EN("English", "Rsl1122"),
+    ES("Spanish", "Catalina"),
     CN("Simplified Chinese", "f0rb1d (\u4f5b\u58c1\u706f) & qsefthuopq"),
     DE("Deutch", "Eyremba & fuzzlemann & Morsmorse"),
     FI("Finnish", "Rsl1122"),
