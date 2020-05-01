@@ -38,6 +38,7 @@ public class Contributors {
                 new Contributor("BrainStone", CODE),
                 new Contributor("Catalina", LANG),
                 new Contributor("Combustible", CODE),
+                new Contributor("Creeperface01", CODE),
                 new Contributor("CyanTech", LANG),
                 new Contributor("DarkPyves", CODE),
                 new Contributor("DaveDevil", LANG),
