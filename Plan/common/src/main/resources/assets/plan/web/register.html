@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="Player Analytics, login page" name="description">
+    <meta content="Rsl1122" name="author">
+
+    <title>Plan | Register</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link crossorigin="anonymous" href="https://fonts.googleapis.com/css?family=Nunito:300,400,600,700,800,900"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-plan bg-gradient">
+
+<div class="container">
+
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+        <img alt="logo" class="w-15 mt-5" src="img/Flaticon_circle.png">
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-xl-6 col-lg-7 col-md-9">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="p-5">
+                                <div class="text-center">
+                                    <h1 class="h4 text-gray-900 mb-4">Create a new user</h1>
+                                </div>
+                                <div class="hidden alert alert-danger" id="fail-msg">
+                                    Failed
+                                </div>
+                                <form class="user">
+                                    <div class="form-group">
+                                        <input autocomplete="username" class="form-control form-control-user"
+                                               id="inputUser"
+                                               placeholder="Username" type="text">
+                                        <small class="form-text text-muted" id="usernameHelpBlock">
+                                            Username can be up to 50 characters.
+                                        </small>
+                                    </div>
+                                    <div class="form-group">
+                                        <input autocomplete="new-password" class="form-control form-control-user"
+                                               id="inputPassword" placeholder="Password" type="password">
+                                        <small class="form-text text-muted" id="passwordHelpBlock">
+                                            Password should be more than 8 characters, but there are no limitations.
+                                        </small>
+                                    </div>
+                                    <a class="btn bg-plan btn-user btn-block" href="#" id="register-button">
+                                        Register
+                                    </a>
+                                </form>
+                                <hr>
+                                <div class="text-center">
+                                    <a class="col-plan small" href="./login">Already have an account? Login!</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Finalize Register Modal -->
+<div aria-hidden="true" aria-labelledby="finalizeModalLabel" class="modal fade" id="finalizeModal"
+     role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-white">
+                <h5 class="modal-title" id="finalizeModalLabel"><i class="far fa-fw fa-hand-point-right"></i>
+                    Complete Registration
+                </h5>
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body bg-white">
+                <p>You can now finish registering the user. The registration should be completed before next
+                    restart.</p>
+                <p>Use the following command in game to finish registration:</p>
+                <p><code>/${command} register <span class="register-code"></span></code></p>
+                <p>Or using console:</p>
+                <p><code>${command} register superuser <span class="register-code"></span></code></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript-->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="js/sb-admin-2.min.js"></script>
+<script src="js/xmlhttprequests.js"></script>
+
+<script id="mainScript">
+    const msg = $(`#fail-msg`);
+
+    function displayError(message) {
+        msg.text(message);
+        msg.removeClass('hidden');
+    }
+
+    function checkIfRegistered(user) {
+        jsonRequest(`./v1/registerCheck?user=${encodeURI(user)}`, (json, error) => {
+            if (json && json.success) {
+                window.location.href = "./login";
+            } else if (error) {
+                displayError('Checking registration status failed: ' + error)
+            } else {
+                setTimeout(() => checkIfRegistered(user), 5000);
+            }
+        })
+    }
+
+    $('#register-button').click(() => {
+        msg.addClass('hidden');
+        const user = $('#inputUser').val();
+        if (!user || user.length < 1) {
+            return displayError('You need to specify a Username');
+        }
+        if (user.length > 50) {
+            return displayError('Username can be up to 50 characters, yours is ' + user.length);
+        }
+        const password = $('#inputPassword').val();
+        if (!password || password.length < 1) {
+            return displayError('You need to specify a Password');
+        }
+        jsonRequest(`./v1/register?user=${encodeURI(user)}&password=${encodeURI(password)}`, (json, error) => {
+            if (error) {
+                return displayError('Registration failed: ' + error);
+            }
+            const code = json.code;
+            $('.register-code').text(code);
+            $('#finalizeModal').modal();
+            setTimeout(() => checkIfRegistered(user), 10000);
+        });
+    })
+</script>
+</body>
+
+</html>

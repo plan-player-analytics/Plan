@@ -6,6 +6,7 @@
 function jsonRequest(address, callback) {
     setTimeout(function () {
         var xhttp = new XMLHttpRequest();
+        xhttp.withCredentials = true;
         xhttp.onreadystatechange = function () {
             if (this.readyState === 4) {
                 try {
