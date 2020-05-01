@@ -18,7 +18,7 @@ function jsonRequest(address, callback) {
                     } else if (this.status === 404 || this.status === 403 || this.status === 500) {
                         callback(null, "HTTP " + this.status + " (See " + address + ")")
                     } else if (this.status === 400) {
-                        callback(null, this.responseText + " (See " + address + ")")
+                        callback(JSON.parse(this.responseText), this.responseText + " (See " + address + ")")
                     } else if (this.status === 0) {
                         callback(null, "Request was blocked. (Adblocker maybe?)")
                     }

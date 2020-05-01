@@ -381,4 +381,12 @@ public class ResponseFactory {
             return forInternalError(e, "Failed to generate player page");
         }
     }
+
+    public Response loginPageResponse() {
+        try {
+            return forPage(pageFactory.loginPage());
+        } catch (IOException e) {
+            return forInternalError(e, "Failed to generate player page");
+        }
+    }
 }

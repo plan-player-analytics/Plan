@@ -214,4 +214,8 @@ public class PageFactory {
             throw readFail.getCause();
         }
     }
+
+    public Page loginPage() throws IOException {
+        return new LoginPage(getResource("login.html"), serverInfo.get());
+    }
 }

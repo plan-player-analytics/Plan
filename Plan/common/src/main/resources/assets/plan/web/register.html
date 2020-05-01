@@ -123,7 +123,7 @@
     }
 
     function checkIfRegistered(user) {
-        jsonRequest(`./v1/registerCheck?user=${encodeURI(user)}`, (json, error) => {
+        jsonRequest(`./auth/registerCheck?user=${encodeURI(user)}`, (json, error) => {
             if (json && json.success) {
                 window.location.href = "./login";
             } else if (error) {
@@ -147,7 +147,7 @@
         if (!password || password.length < 1) {
             return displayError('You need to specify a Password');
         }
-        jsonRequest(`./v1/register?user=${encodeURI(user)}&password=${encodeURI(password)}`, (json, error) => {
+        jsonRequest(`./auth/register?user=${encodeURI(user)}&password=${encodeURI(password)}`, (json, error) => {
             if (error) {
                 return displayError('Registration failed: ' + error);
             }

@@ -135,7 +135,7 @@
         if (!password || password.length < 1) {
             return displayError('You need to specify a Password');
         }
-        jsonRequest(`./v1/login?user=${encodeURI(user)}&password=${encodeURI(password)}`, (json, error) => {
+        jsonRequest(`./auth/login?user=${encodeURI(user)}&password=${encodeURI(password)}`, (json, error) => {
             if (error) {
                 return displayError('Login failed: ' + error);
             }
