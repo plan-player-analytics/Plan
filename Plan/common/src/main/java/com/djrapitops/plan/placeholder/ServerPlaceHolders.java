@@ -35,7 +35,7 @@ import static com.djrapitops.plan.utilities.MiscUtils.*;
  * @author aidn5, Rsl1122
  */
 @Singleton
-public class ServerPlaceHolders implements PlaceholderRegistry {
+public class ServerPlaceHolders implements Placeholders {
 
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;

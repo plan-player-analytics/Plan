@@ -29,7 +29,7 @@ import javax.inject.Singleton;
  * @author aidn5, Rsl1122
  */
 @Singleton
-public class OperatorPlaceholders implements PlaceholderRegistry {
+public class OperatorPlaceholders implements Placeholders {
 
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;

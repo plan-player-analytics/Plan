@@ -32,7 +32,7 @@ import javax.inject.Singleton;
  * @author aidn5, Rsl1122
  */
 @Singleton
-public class WorldTimePlaceHolders implements PlaceholderRegistry {
+public class WorldTimePlaceHolders implements Placeholders {
 
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;

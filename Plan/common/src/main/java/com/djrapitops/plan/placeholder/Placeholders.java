@@ -1,6 +1,6 @@
 package com.djrapitops.plan.placeholder;
 
-public interface PlaceholderRegistry {
+public interface Placeholders {
 
     void register(PlanPlaceholders placeholders);
 

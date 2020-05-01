@@ -34,6 +34,15 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ * Registry for all placeholders.
+ *
+ * @see ServerPlaceHolders Placeholders about the current server
+ * @see OperatorPlaceholders Placeholders about operators of the current server
+ * @see PlayerPlaceHolders Placeholders about the current player on the whole network
+ * @see SessionPlaceHolders Placeholders about the player on the current server
+ * @see WorldTimePlaceHolders Placeholders about the world times of current player on the current server
+ */
 @Singleton
 public final class PlanPlaceholders {
 
@@ -50,7 +59,7 @@ public final class PlanPlaceholders {
             DBSystem dbSystem,
             ServerInfo serverInfo,
             Formatters formatters,
-            Set<PlaceholderRegistry> placeholderRegistries
+            Set<Placeholders> placeholderRegistries
     ) {
         this.dbSystem = dbSystem;
 
@@ -58,7 +67,7 @@ public final class PlanPlaceholders {
         this.staticPlaceholders = new HashMap<>();
         this.rawHandlers = new HashMap<>();
 
-        for (PlaceholderRegistry registry : placeholderRegistries) {
+        for (Placeholders registry : placeholderRegistries) {
             registry.register(this);
         }
     }
@@ -122,17 +131,13 @@ public final class PlanPlaceholders {
         }
 
         StaticPlaceholderLoader staticLoader = staticPlaceholders.get(placeholder);
-
         if (staticLoader != null) {
             return Objects.toString(staticLoader.apply(parameters));
         }
 
-        if (player != null) {
-            PlayerPlaceholderLoader loader = playerPlaceholders.get(placeholder);
-
-            if (loader != null) {
-                return Objects.toString(loader.apply(player, parameters));
-            }
+        PlayerPlaceholderLoader loader = playerPlaceholders.get(placeholder);
+        if (loader != null && player != null) {
+            return Objects.toString(loader.apply(player, parameters));
         }
 
         return null;

@@ -17,8 +17,7 @@
 package com.djrapitops.plan.addons.placeholderapi;
 
 import com.djrapitops.plan.PlanSystem;
-import com.djrapitops.plan.delivery.domain.keys.ServerKeys;
-import com.djrapitops.plan.placeholder.*;
+import com.djrapitops.plan.placeholder.PlanPlaceholders;
 import com.djrapitops.plan.version.VersionChecker;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -31,20 +30,7 @@ import javax.inject.Singleton;
 import java.util.Collections;
 
 /**
- * Placeholder expansion used to provide data from Plan.
- *
- * <p>
- * <b>Current used services for placeholders:</b>
- * <ul>
- * <li>{@link ServerPlaceHolders}:
- * {@link ServerKeys#TPS},{@link ServerKeys#NAME},
- * {@link ServerKeys#SERVER_UUID}</li>
- * <li>{@link OperatorPlaceholders}: {@link ServerKeys#OPERATORS}</li>
- * <li>{@link WorldTimePlaceHolders}: {@link ServerKeys#WORLD_TIMES}</li>
- * <li>{@link SessionPlaceHolders}: {@link ServerKeys#SESSIONS},
- * {@link ServerKeys#PLAYERS},{@link ServerKeys#PING},{@link ServerKeys#ALL_TIME_PEAK_PLAYERS},
- * {@link ServerKeys#RECENT_PEAK_PLAYERS}</li>
- * </ul>
+ * Placeholder expansion used to provide data from Plan on Bukkit.
  *
  * @author aidn5
  */
@@ -98,9 +84,9 @@ public class BukkitPlaceholderRegistrar extends PlaceholderExpansion {
     }
 
     @Override
-    public String onPlaceholderRequest(Player p, String params) {
+    public String onPlaceholderRequest(Player player, String params) {
         try {
-            String value = placeholders.onPlaceholderRequest(p.getUniqueId(), params, Collections.emptyList());
+            String value = placeholders.onPlaceholderRequest(player.getUniqueId(), params, Collections.emptyList());
 
             if ("true".equals(value)) { //hack
                 value = PlaceholderAPIPlugin.booleanTrue();
@@ -111,8 +97,7 @@ public class BukkitPlaceholderRegistrar extends PlaceholderExpansion {
             return value;
         } catch (Exception e) {
             errorHandler.log(L.WARN, getClass(), e);
+            return null;
         }
-
-        return null;
     }
 }

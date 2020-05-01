@@ -39,12 +39,12 @@ import java.util.function.Supplier;
 import static com.djrapitops.plan.utilities.MiscUtils.*;
 
 /**
- * Placeholders about a sessions.
+ * Placeholders about sessions.
  *
  * @author aidn5, Rsl1122
  */
 @Singleton
-public class SessionPlaceHolders implements PlaceholderRegistry {
+public class SessionPlaceHolders implements Placeholders {
 
     private final PlanConfig config;
     private final DBSystem dbSystem;

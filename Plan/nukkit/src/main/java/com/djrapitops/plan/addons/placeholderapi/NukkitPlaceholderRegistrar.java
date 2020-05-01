@@ -32,6 +32,11 @@ import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * Placeholder expansion used to provide data from Plan on Nukkit.
+ *
+ * @author developStorm
+ */
 @Singleton
 public class NukkitPlaceholderRegistrar {
 

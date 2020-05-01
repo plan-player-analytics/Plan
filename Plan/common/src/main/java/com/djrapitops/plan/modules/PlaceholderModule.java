@@ -5,27 +5,32 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoSet;
 
+/**
+ * Module for the Placeholder API related objects.
+ *
+ * @author Rsl1122
+ */
 @Module
 public interface PlaceholderModule {
 
     @Binds
     @IntoSet
-    PlaceholderRegistry bindOperatorPlaceholders(OperatorPlaceholders placeholders);
+    Placeholders bindOperatorPlaceholders(OperatorPlaceholders placeholders);
 
     @Binds
     @IntoSet
-    PlaceholderRegistry bindPlayerPlaceHolders(PlayerPlaceHolders placeholders);
+    Placeholders bindPlayerPlaceHolders(PlayerPlaceHolders placeholders);
 
     @Binds
     @IntoSet
-    PlaceholderRegistry bindServerPlaceHolders(ServerPlaceHolders placeholders);
+    Placeholders bindServerPlaceHolders(ServerPlaceHolders placeholders);
 
     @Binds
     @IntoSet
-    PlaceholderRegistry bindSessionPlaceHolders(SessionPlaceHolders placeholders);
+    Placeholders bindSessionPlaceHolders(SessionPlaceHolders placeholders);
 
     @Binds
     @IntoSet
-    PlaceholderRegistry bindWorldTimePlaceHolders(WorldTimePlaceHolders placeholders);
+    Placeholders bindWorldTimePlaceHolders(WorldTimePlaceHolders placeholders);
 
 }
