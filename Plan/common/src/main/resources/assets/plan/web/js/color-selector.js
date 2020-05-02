@@ -1,6 +1,6 @@
 (function ($) {
-    var bgElements = ['.sidebar', '.btn'];
-    var textElements = [];
+    var bgElements = ['.sidebar', '.btn', 'body'];
+    var textElements = ['a', 'button'];
 
     var colors = ['plan',
         'red', 'pink', 'purple', 'deep-purple',
