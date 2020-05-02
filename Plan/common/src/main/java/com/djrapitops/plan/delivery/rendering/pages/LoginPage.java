@@ -21,7 +21,7 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plugin.api.Check;
 
 /**
- * Html String generator for /debug page.
+ * Html String generator for /login and /register page.
  *
  * @author Rsl1122
  */

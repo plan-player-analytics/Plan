@@ -95,9 +95,9 @@
                 <p>You can now finish registering the user. The registration should be completed before next
                     restart.</p>
                 <p>Use the following command in game to finish registration:</p>
-                <p><code>/${command} register <span class="register-code"></span></code></p>
+                <p><code>/${command} register --code <span class="register-code"></span></code></p>
                 <p>Or using console:</p>
-                <p><code>${command} register superuser <span class="register-code"></span></code></p>
+                <p><code>${command} register superuser --code <span class="register-code"></span></code></p>
             </div>
         </div>
     </div>
@@ -122,14 +122,15 @@
         msg.removeClass('hidden');
     }
 
-    function checkIfRegistered(user) {
-        jsonRequest(`./auth/registerCheck?user=${encodeURI(user)}`, (json, error) => {
+    function checkIfRegistered(code) {
+        jsonRequest(`./auth/register?code=${encodeURI(code)}`, (json, error) => {
+            if (error) {
+                displayError('Checking registration status failed: ' + error)
+            }
             if (json && json.success) {
                 window.location.href = "./login";
-            } else if (error) {
-                displayError('Checking registration status failed: ' + error)
             } else {
-                setTimeout(() => checkIfRegistered(user), 5000);
+                setTimeout(() => checkIfRegistered(code), 5000);
             }
         })
     }
@@ -154,7 +155,7 @@
             const code = json.code;
             $('.register-code').text(code);
             $('#finalizeModal').modal();
-            setTimeout(() => checkIfRegistered(user), 10000);
+            setTimeout(() => checkIfRegistered(code), 10000);
         });
     })
 </script>

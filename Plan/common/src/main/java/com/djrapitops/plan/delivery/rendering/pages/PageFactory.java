@@ -218,4 +218,8 @@ public class PageFactory {
     public Page loginPage() throws IOException {
         return new LoginPage(getResource("login.html"), serverInfo.get());
     }
+
+    public Page registerPage() throws IOException {
+        return new LoginPage(getResource("register.html"), serverInfo.get());
+    }
 }

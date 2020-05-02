@@ -18,6 +18,8 @@ package com.djrapitops.plan.commands.subcommands;
 
 import com.djrapitops.plan.delivery.domain.WebUser;
 import com.djrapitops.plan.delivery.webserver.Addresses;
+import com.djrapitops.plan.delivery.webserver.auth.FailReason;
+import com.djrapitops.plan.delivery.webserver.auth.RegistrationBin;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.Permissions;
@@ -42,6 +44,8 @@ import com.djrapitops.plugin.utilities.Verify;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -104,10 +108,23 @@ public class RegisterCommand extends CommandNode {
                 throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, 1, Arrays.toString(getArguments())));
             }
 
-            if (CommandUtils.isPlayer(sender)) {
-                playerRegister(args, sender);
+            List<String> argumentList = Arrays.asList(args);
+            boolean newRegister = argumentList.contains("--code");
+            if (newRegister) {
+                if (CommandUtils.isPlayer(sender)) {
+                    register(argumentList, getPermissionLevel(sender), sender);
+                } else if (argumentList.contains("superuser")) {
+                    register(argumentList, 0, sender);
+                } else {
+                    sender.sendMessage("§cInvalid arguments.");
+                }
             } else {
-                consoleRegister(args, sender, notEnoughArgsMsg);
+                // Legacy support
+                if (CommandUtils.isPlayer(sender)) {
+                    playerRegister(args, sender);
+                } else {
+                    consoleRegister(args, sender, notEnoughArgsMsg);
+                }
             }
         } catch (PassEncryptUtil.CannotPerformOperationException e) {
             errorHandler.log(L.WARN, this.getClass(), e);
@@ -129,6 +146,22 @@ public class RegisterCommand extends CommandNode {
         int permLevel = Integer.parseInt(args[2]);
         String passHash = PassEncryptUtil.createHash(args[0]);
         registerUser(new WebUser(userName, passHash, permLevel), sender);
+    }
+
+    private void register(List<String> args, int permissionLevel, Sender sender) {
+        String code = "";
+        for (String arg : args) {
+            if (arg.length() == 12) code = arg;
+        }
+        if (code.isEmpty()) {
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, 1, "--code !<code>!"));
+        }
+        Optional<WebUser> user = RegistrationBin.register(code, permissionLevel);
+        if (!user.isPresent()) {
+            sender.sendMessage("§c" + locale.getString(FailReason.USER_DOES_NOT_EXIST));
+        } else {
+            registerUser(user.get(), sender);
+        }
     }
 
     private void playerRegister(String[] args, Sender sender) throws PassEncryptUtil.CannotPerformOperationException {

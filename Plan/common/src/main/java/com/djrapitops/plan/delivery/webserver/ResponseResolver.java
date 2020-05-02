@@ -27,9 +27,7 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.delivery.webserver.resolver.*;
-import com.djrapitops.plan.delivery.webserver.resolver.auth.LoginPageResolver;
-import com.djrapitops.plan.delivery.webserver.resolver.auth.LoginResolver;
-import com.djrapitops.plan.delivery.webserver.resolver.auth.LogoutResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.auth.*;
 import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
@@ -62,8 +60,10 @@ public class ResponseResolver {
     private final RootJSONResolver rootJSONResolver;
     private final StaticResourceResolver staticResourceResolver;
     private LoginPageResolver loginPageResolver;
+    private RegisterPageResolver registerPageResolver;
     private LoginResolver loginResolver;
     private LogoutResolver logoutResolver;
+    private RegisterResolver registerResolver;
     private final ErrorHandler errorHandler;
 
     private final ResolverService resolverService;
@@ -85,8 +85,10 @@ public class ResponseResolver {
             StaticResourceResolver staticResourceResolver,
 
             LoginPageResolver loginPageResolver,
+            RegisterPageResolver registerPageResolver,
             LoginResolver loginResolver,
             LogoutResolver logoutResolver,
+            RegisterResolver registerResolver,
 
             ErrorHandler errorHandler
     ) {
@@ -101,8 +103,10 @@ public class ResponseResolver {
         this.rootJSONResolver = rootJSONResolver;
         this.staticResourceResolver = staticResourceResolver;
         this.loginPageResolver = loginPageResolver;
+        this.registerPageResolver = registerPageResolver;
         this.loginResolver = loginResolver;
         this.logoutResolver = logoutResolver;
+        this.registerResolver = registerResolver;
         this.errorHandler = errorHandler;
     }
 
@@ -116,8 +120,10 @@ public class ResponseResolver {
         resolverService.registerResolver(plugin, "/server", serverPageResolver);
 
         resolverService.registerResolver(plugin, "/login", loginPageResolver);
+        resolverService.registerResolver(plugin, "/register", registerPageResolver);
         resolverService.registerResolver(plugin, "/auth/login", loginResolver);
         resolverService.registerResolver(plugin, "/auth/logout", logoutResolver);
+        resolverService.registerResolver(plugin, "/auth/register", registerResolver);
 
         resolverService.registerResolverForMatches(plugin, Pattern.compile("^/$"), rootPageResolver);
         resolverService.registerResolverForMatches(plugin, Pattern.compile("^.*/(vendor|css|js|img)/.*"), staticResourceResolver);
