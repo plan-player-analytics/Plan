@@ -21,7 +21,10 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
 import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
-import com.djrapitops.plan.delivery.webserver.auth.*;
+import com.djrapitops.plan.delivery.webserver.auth.Authentication;
+import com.djrapitops.plan.delivery.webserver.auth.BasicAuthentication;
+import com.djrapitops.plan.delivery.webserver.auth.CookieAuthentication;
+import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
@@ -111,18 +114,16 @@ public class RequestHandler implements HttpHandler {
                 response = responseResolver.getResponse(request);
             }
         } catch (WebUserAuthException thrownByAuthentication) {
+            errorHandler.log(L.WARN, this.getClass(), thrownByAuthentication);
             FailReason failReason = thrownByAuthentication.getFailReason();
             if (failReason == FailReason.USER_PASS_MISMATCH) {
                 bruteForceGuard.increaseAttemptCountOnFailedLogin(accessor);
             }
-            if (failReason == FailReason.EXPIRED_COOKIE) {
-                response = Response.builder()
-                        .redirectTo("/login")
-                        .setHeader("Set-Cookie", "auth=expired; Path=/; Max-Age=1")
-                        .build();
-            } else {
-                response = responseFactory.redirectResponse("/login?from=" + exchange.getRequestURI().toASCIIString());
-            }
+            String from = exchange.getRequestURI().toASCIIString();
+            response = Response.builder()
+                    .redirectTo(StringUtils.startsWithAny(from, "/auth/", "/login") ? "/login" : "/login?from=" + from)
+                    .setHeader("Set-Cookie", "auth=expired; Path=/; Max-Age=1")
+                    .build();
         }
 
         if (bruteForceGuard.shouldPreventRequest(accessor)) {
@@ -175,9 +176,6 @@ public class RequestHandler implements HttpHandler {
                 String name = split[0];
                 String value = split[1];
                 if ("auth".equals(name)) {
-                    if (!ActiveCookieStore.checkCookie(value).isPresent()) {
-                        throw new WebUserAuthException(FailReason.EXPIRED_COOKIE);
-                    }
                     return Optional.of(new CookieAuthentication(value));
                 }
             }

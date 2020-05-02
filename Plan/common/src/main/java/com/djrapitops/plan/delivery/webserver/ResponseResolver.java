@@ -27,6 +27,7 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.delivery.webserver.resolver.*;
+import com.djrapitops.plan.delivery.webserver.resolver.auth.LoginPageResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.auth.LoginResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.auth.LogoutResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
@@ -60,6 +61,7 @@ public class ResponseResolver {
     private final RootPageResolver rootPageResolver;
     private final RootJSONResolver rootJSONResolver;
     private final StaticResourceResolver staticResourceResolver;
+    private LoginPageResolver loginPageResolver;
     private LoginResolver loginResolver;
     private LogoutResolver logoutResolver;
     private final ErrorHandler errorHandler;
@@ -82,6 +84,7 @@ public class ResponseResolver {
             RootJSONResolver rootJSONResolver,
             StaticResourceResolver staticResourceResolver,
 
+            LoginPageResolver loginPageResolver,
             LoginResolver loginResolver,
             LogoutResolver logoutResolver,
 
@@ -97,6 +100,7 @@ public class ResponseResolver {
         this.rootPageResolver = rootPageResolver;
         this.rootJSONResolver = rootJSONResolver;
         this.staticResourceResolver = staticResourceResolver;
+        this.loginPageResolver = loginPageResolver;
         this.loginResolver = loginResolver;
         this.logoutResolver = logoutResolver;
         this.errorHandler = errorHandler;
@@ -111,7 +115,7 @@ public class ResponseResolver {
         resolverService.registerResolver(plugin, "/network", serverPageResolver);
         resolverService.registerResolver(plugin, "/server", serverPageResolver);
 
-        resolverService.registerResolver(plugin, "/login", (NoAuthResolver) request -> Optional.of(responseFactory.loginPageResponse()));
+        resolverService.registerResolver(plugin, "/login", loginPageResolver);
         resolverService.registerResolver(plugin, "/auth/login", loginResolver);
         resolverService.registerResolver(plugin, "/auth/logout", logoutResolver);
 
