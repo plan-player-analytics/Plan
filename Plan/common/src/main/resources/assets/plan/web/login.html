@@ -137,6 +137,10 @@
         }
         jsonRequest(`./auth/login?user=${encodeURI(user)}&password=${encodeURI(password)}`, (json, error) => {
             if (error) {
+                if (error.includes("HTTP 403")) {
+                    location.reload();
+                }
+                $('#inputPassword').val("");
                 return displayError('Login failed: ' + error);
             }
             if (json && json.success) {

@@ -338,7 +338,9 @@ public class ResponseFactory {
         return Response.builder()
                 .setMimeType(MimeType.HTML)
                 .setContent("<h1>403 Forbidden</h1>" +
-                        "<p>You have too many failed login attempts. Please wait 2 minutes until attempting again.</p>")
+                        "<p>You have too many failed login attempts. Please wait 2 minutes until attempting again.</p>" +
+                        "<script>setTimeout(() => location.reload(), 120500);\" +\n" +
+                        "</script>")
                 .setStatus(403)
                 .build();
     }

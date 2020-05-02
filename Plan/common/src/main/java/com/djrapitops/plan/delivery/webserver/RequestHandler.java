@@ -42,7 +42,10 @@ import org.apache.commons.text.TextStringBuilder;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * HttpHandler for WebServer request management.
@@ -114,16 +117,17 @@ public class RequestHandler implements HttpHandler {
                 response = responseResolver.getResponse(request);
             }
         } catch (WebUserAuthException thrownByAuthentication) {
-            errorHandler.log(L.WARN, this.getClass(), thrownByAuthentication);
             FailReason failReason = thrownByAuthentication.getFailReason();
             if (failReason == FailReason.USER_PASS_MISMATCH) {
                 bruteForceGuard.increaseAttemptCountOnFailedLogin(accessor);
+                response = responseFactory.badRequest(failReason.getReason(), "/auth/login");
+            } else {
+                String from = exchange.getRequestURI().toASCIIString();
+                response = Response.builder()
+                        .redirectTo(StringUtils.startsWithAny(from, "/auth/", "/login") ? "/login" : "/login?from=" + from)
+                        .setHeader("Set-Cookie", "auth=expired; Path=/; Max-Age=1")
+                        .build();
             }
-            String from = exchange.getRequestURI().toASCIIString();
-            response = Response.builder()
-                    .redirectTo(StringUtils.startsWithAny(from, "/auth/", "/login") ? "/login" : "/login?from=" + from)
-                    .setHeader("Set-Cookie", "auth=expired; Path=/; Max-Age=1")
-                    .build();
         }
 
         if (bruteForceGuard.shouldPreventRequest(accessor)) {
@@ -172,7 +176,6 @@ public class RequestHandler implements HttpHandler {
         if (cookies != null && !cookies.isEmpty()) {
             for (String cookie : new TextStringBuilder().appendWithSeparators(cookies, ";").build().split(";")) {
                 String[] split = cookie.trim().split("=", 2);
-                System.out.println(Arrays.toString(split));
                 String name = split[0];
                 String value = split[1];
                 if ("auth".equals(name)) {
