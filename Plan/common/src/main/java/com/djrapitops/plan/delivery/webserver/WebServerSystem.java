@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.SubSystem;
+import com.djrapitops.plan.delivery.web.ResourceService;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 
 import javax.inject.Inject;
@@ -45,6 +46,13 @@ public class WebServerSystem implements SubSystem {
     @Override
     public void enable() {
         webServer.enable();
+        if (!webServer.isAuthRequired()) {
+            ResourceService.getInstance().addStylesToResource("Plan", "error.html", ResourceService.Position.PRE_CONTENT, "./css/noauth.css");
+            ResourceService.getInstance().addStylesToResource("Plan", "server.html", ResourceService.Position.PRE_CONTENT, "../css/noauth.css");
+            ResourceService.getInstance().addStylesToResource("Plan", "player.html", ResourceService.Position.PRE_CONTENT, "../css/noauth.css");
+            ResourceService.getInstance().addStylesToResource("Plan", "players.html", ResourceService.Position.PRE_CONTENT, "./css/noauth.css");
+            ResourceService.getInstance().addStylesToResource("Plan", "network.html", ResourceService.Position.PRE_CONTENT, "./css/noauth.css");
+        }
     }
 
     @Override
