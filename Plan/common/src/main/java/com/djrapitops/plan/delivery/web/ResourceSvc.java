@@ -94,7 +94,7 @@ public class ResourceSvc implements ResourceService {
     }
 
     private WebResource applySnippets(String pluginName, String fileName, WebResource resource) {
-        Map<Position, StringBuilder> byPosition = calculateSnippets(pluginName, fileName);
+        Map<Position, StringBuilder> byPosition = calculateSnippets(fileName);
         if (byPosition.isEmpty()) return resource;
 
         String html = applySnippets(resource, byPosition);
@@ -129,10 +129,10 @@ public class ResourceSvc implements ResourceService {
         return html;
     }
 
-    private Map<Position, StringBuilder> calculateSnippets(String pluginName, String fileName) {
+    private Map<Position, StringBuilder> calculateSnippets(String fileName) {
         Map<Position, StringBuilder> byPosition = new EnumMap<>(Position.class);
         for (Snippet snippet : snippets) {
-            if (snippet.matches(pluginName, fileName)) {
+            if (snippet.matches(fileName)) {
                 byPosition.computeIfAbsent(snippet.position, k -> new StringBuilder()).append(snippet.content);
             }
         }
@@ -186,7 +186,9 @@ public class ResourceSvc implements ResourceService {
                 .appendWithSeparators(jsSrcs, "\"></script><script src=\"")
                 .append("\"></script>").build();
         snippets.add(new Snippet(pluginName, fileName, position, snippet));
-        logger.info(locale.getString(PluginLang.API_ADD_RESOURCE_JS, pluginName, fileName, position.cleanName()));
+        if (!"Plan".equals(pluginName)) {
+            logger.info(locale.getString(PluginLang.API_ADD_RESOURCE_JS, pluginName, fileName, position.cleanName()));
+        }
     }
 
     public void checkParams(String pluginName, String fileName, Position position, String[] jsSrcs) {
@@ -212,10 +214,12 @@ public class ResourceSvc implements ResourceService {
         checkParams(pluginName, fileName, position, cssSrcs);
 
         String snippet = new TextStringBuilder("<link href=\"")
-                .appendWithSeparators(cssSrcs, "\" ref=\"stylesheet\"></link><link href=\"")
-                .append("\" ref=\"stylesheet\"></link>").build();
+                .appendWithSeparators(cssSrcs, "\" rel=\"stylesheet\"></link><link href=\"")
+                .append("\" rel=\"stylesheet\">").build();
         snippets.add(new Snippet(pluginName, fileName, position, snippet));
-        logger.info(locale.getString(PluginLang.API_ADD_RESOURCE_CSS, pluginName, fileName, position.cleanName()));
+        if (!"Plan".equals(pluginName)) {
+            logger.info(locale.getString(PluginLang.API_ADD_RESOURCE_CSS, pluginName, fileName, position.cleanName()));
+        }
     }
 
     private static class Snippet {
@@ -231,8 +235,8 @@ public class ResourceSvc implements ResourceService {
             this.content = content;
         }
 
-        public boolean matches(String pluginName, String fileName) {
-            return pluginName.equals(this.pluginName) && fileName.equals(this.fileName);
+        public boolean matches(String fileName) {
+            return fileName.equals(this.fileName);
         }
 
         @Override

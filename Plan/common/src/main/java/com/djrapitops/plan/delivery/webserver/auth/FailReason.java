@@ -25,6 +25,8 @@ import com.djrapitops.plan.settings.locale.lang.Lang;
  * @see com.djrapitops.plan.exceptions.WebUserAuthException
  */
 public enum FailReason implements Lang {
+    NO_USER_PRESENT("User cookie not present"),
+    EXPIRED_COOKIE("User cookie has expired"),
     USER_AND_PASS_NOT_SPECIFIED("User and Password not specified"),
     USER_DOES_NOT_EXIST("User does not exist"),
     USER_PASS_MISMATCH("User and Password did not match"),

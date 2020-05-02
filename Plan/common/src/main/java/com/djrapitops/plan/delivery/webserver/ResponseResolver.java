@@ -25,8 +25,11 @@ import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
+import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.delivery.webserver.resolver.*;
+import com.djrapitops.plan.delivery.webserver.resolver.auth.*;
 import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
+import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -56,6 +59,11 @@ public class ResponseResolver {
     private final RootPageResolver rootPageResolver;
     private final RootJSONResolver rootJSONResolver;
     private final StaticResourceResolver staticResourceResolver;
+    private LoginPageResolver loginPageResolver;
+    private RegisterPageResolver registerPageResolver;
+    private LoginResolver loginResolver;
+    private LogoutResolver logoutResolver;
+    private RegisterResolver registerResolver;
     private final ErrorHandler errorHandler;
 
     private final ResolverService resolverService;
@@ -76,6 +84,12 @@ public class ResponseResolver {
             RootJSONResolver rootJSONResolver,
             StaticResourceResolver staticResourceResolver,
 
+            LoginPageResolver loginPageResolver,
+            RegisterPageResolver registerPageResolver,
+            LoginResolver loginResolver,
+            LogoutResolver logoutResolver,
+            RegisterResolver registerResolver,
+
             ErrorHandler errorHandler
     ) {
         this.resolverService = resolverService;
@@ -88,6 +102,11 @@ public class ResponseResolver {
         this.rootPageResolver = rootPageResolver;
         this.rootJSONResolver = rootJSONResolver;
         this.staticResourceResolver = staticResourceResolver;
+        this.loginPageResolver = loginPageResolver;
+        this.registerPageResolver = registerPageResolver;
+        this.loginResolver = loginResolver;
+        this.logoutResolver = logoutResolver;
+        this.registerResolver = registerResolver;
         this.errorHandler = errorHandler;
     }
 
@@ -99,6 +118,13 @@ public class ResponseResolver {
         resolverService.registerResolver(plugin, "/favicon.ico", (NoAuthResolver) request -> Optional.of(responseFactory.faviconResponse()));
         resolverService.registerResolver(plugin, "/network", serverPageResolver);
         resolverService.registerResolver(plugin, "/server", serverPageResolver);
+
+        resolverService.registerResolver(plugin, "/login", loginPageResolver);
+        resolverService.registerResolver(plugin, "/register", registerPageResolver);
+        resolverService.registerResolver(plugin, "/auth/login", loginResolver);
+        resolverService.registerResolver(plugin, "/auth/logout", logoutResolver);
+        resolverService.registerResolver(plugin, "/auth/register", registerResolver);
+
         resolverService.registerResolverForMatches(plugin, Pattern.compile("^/$"), rootPageResolver);
         resolverService.registerResolverForMatches(plugin, Pattern.compile("^.*/(vendor|css|js|img)/.*"), staticResourceResolver);
 
@@ -114,6 +140,8 @@ public class ResponseResolver {
             return responseFactory.forbidden403(e.getMessage());
         } catch (BadRequestException e) {
             return responseFactory.badRequest(e.getMessage(), request.getPath().asString());
+        } catch (WebUserAuthException e) {
+            throw e; // Pass along
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
             return responseFactory.internalErrorResponse(e, request.getPath().asString());
@@ -141,7 +169,7 @@ public class ResponseResolver {
             if (isAuthRequired) {
                 if (!user.isPresent()) {
                     if (webServer.get().isUsingHTTPS()) {
-                        return responseFactory.basicAuth();
+                        throw new WebUserAuthException(FailReason.NO_USER_PRESENT);
                     } else {
                         return responseFactory.forbidden403();
                     }

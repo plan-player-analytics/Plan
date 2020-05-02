@@ -14,10 +14,20 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.placeholder;
+package com.djrapitops.plan.delivery.webserver.auth;
 
-public interface Placeholders {
+import com.djrapitops.plan.delivery.domain.WebUser;
 
-    void register(PlanPlaceholders placeholders);
+public class CookieAuthentication implements Authentication {
 
+    private final String cookie;
+
+    public CookieAuthentication(String cookie) {
+        this.cookie = cookie;
+    }
+
+    @Override
+    public WebUser getWebUser() {
+        return ActiveCookieStore.checkCookie(cookie).orElse(null);
+    }
 }

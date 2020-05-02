@@ -23,6 +23,8 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
 import com.djrapitops.plan.delivery.webserver.WebServer;
+import com.djrapitops.plan.delivery.webserver.auth.FailReason;
+import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import dagger.Lazy;
@@ -62,12 +64,8 @@ public class RootPageResolver implements NoAuthResolver {
             return responseFactory.redirectResponse(redirectTo);
         }
 
-        Optional<WebUser> webUser = request.getUser();
-        if (!webUser.isPresent()) {
-            return responseFactory.basicAuth();
-        }
-
-        WebUser user = webUser.get();
+        WebUser user = request.getUser()
+                .orElseThrow(() -> new WebUserAuthException(FailReason.NO_USER_PRESENT));
 
         if (user.hasPermission("page.server")) {
             return responseFactory.redirectResponse(server.isProxy() ? "network" : "server/" + Html.encodeToURL(server.getIdentifiableName()));

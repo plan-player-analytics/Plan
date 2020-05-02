@@ -68,4 +68,20 @@ public final class URIQuery {
     public Optional<String> get(String key) {
         return Optional.ofNullable(byKey.get(key));
     }
+
+    public String asString() {
+        StringBuilder builder = new StringBuilder("?");
+        int i = 0;
+        int max = byKey.size();
+        for (Map.Entry<String, String> entry : byKey.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            builder.append(key).append('=').append(value);
+            if (i < max - 1) {
+                builder.append('&');
+            }
+            i++;
+        }
+        return builder.toString();
+    }
 }

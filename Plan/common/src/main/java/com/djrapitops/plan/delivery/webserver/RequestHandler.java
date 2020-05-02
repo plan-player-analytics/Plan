@@ -23,6 +23,7 @@ import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.auth.BasicAuthentication;
+import com.djrapitops.plan.delivery.webserver.auth.CookieAuthentication;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -91,6 +92,7 @@ public class RequestHandler implements HttpHandler {
             Response response = getResponse(exchange);
             response.getHeaders().putIfAbsent("Access-Control-Allow-Origin", config.get(WebserverSettings.CORS_ALLOW_ORIGIN));
             response.getHeaders().putIfAbsent("Access-Control-Allow-Methods", "GET, OPTIONS");
+            response.getHeaders().putIfAbsent("Access-Control-Allow-Credentials", "true");
             ResponseSender sender = new ResponseSender(addresses, exchange, response);
             sender.send();
         } catch (Exception e) {
@@ -115,10 +117,17 @@ public class RequestHandler implements HttpHandler {
                 response = responseResolver.getResponse(request);
             }
         } catch (WebUserAuthException thrownByAuthentication) {
-            if (thrownByAuthentication.getFailReason() != FailReason.USER_AND_PASS_NOT_SPECIFIED) {
+            FailReason failReason = thrownByAuthentication.getFailReason();
+            if (failReason == FailReason.USER_PASS_MISMATCH) {
                 bruteForceGuard.increaseAttemptCountOnFailedLogin(accessor);
+                response = responseFactory.badRequest(failReason.getReason(), "/auth/login");
+            } else {
+                String from = exchange.getRequestURI().toASCIIString();
+                response = Response.builder()
+                        .redirectTo(StringUtils.startsWithAny(from, "/auth/", "/login") ? "/login" : "/login?from=" + from)
+                        .setHeader("Set-Cookie", "auth=expired; Path=/; Max-Age=1")
+                        .build();
             }
-            response = responseFactory.basicAuthFail(thrownByAuthentication);
         }
 
         if (bruteForceGuard.shouldPreventRequest(accessor)) {
@@ -143,7 +152,7 @@ public class RequestHandler implements HttpHandler {
     }
 
     private WebUser getWebUser(HttpExchange exchange) {
-        return getAuthorization(exchange.getRequestHeaders())
+        return getAuthentication(exchange.getRequestHeaders())
                 .map(Authentication::getWebUser) // Can throw WebUserAuthException
                 .map(com.djrapitops.plan.delivery.domain.WebUser::toNewWebUser)
                 .orElse(null);
@@ -158,9 +167,21 @@ public class RequestHandler implements HttpHandler {
         return headers;
     }
 
-    private Optional<Authentication> getAuthorization(Headers requestHeaders) {
+    private Optional<Authentication> getAuthentication(Headers requestHeaders) {
         if (config.isTrue(WebserverSettings.DISABLED_AUTHENTICATION)) {
             return Optional.empty();
+        }
+
+        List<String> cookies = requestHeaders.get("Cookie");
+        if (cookies != null && !cookies.isEmpty()) {
+            for (String cookie : new TextStringBuilder().appendWithSeparators(cookies, ";").build().split(";")) {
+                String[] split = cookie.trim().split("=", 2);
+                String name = split[0];
+                String value = split[1];
+                if ("auth".equals(name)) {
+                    return Optional.of(new CookieAuthentication(value));
+                }
+            }
         }
 
         List<String> authorization = requestHeaders.get("Authorization");

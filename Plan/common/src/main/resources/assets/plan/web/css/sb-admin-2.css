@@ -8604,6 +8604,10 @@ button.bg-dark:focus {
     box-shadow: none !important;
 }
 
+.w-15 {
+    width: 15% !important;
+}
+
 .w-22 {
     width: 22% !important;
 }
@@ -11707,6 +11711,7 @@ a:focus {
 
 .hidden {
     width: 0 !important;
+    display: none;
 }
 
 .hidden .sidebar .sidebar-brand img {
