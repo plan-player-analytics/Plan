@@ -21,6 +21,8 @@ import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
+import com.djrapitops.plan.delivery.webserver.WebServer;
+import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -30,18 +32,21 @@ import java.util.Optional;
 public class RegisterPageResolver implements NoAuthResolver {
 
     private ResponseFactory responseFactory;
+    private Lazy<WebServer> webServer;
 
     @Inject
     public RegisterPageResolver(
-            ResponseFactory responseFactory
+            ResponseFactory responseFactory,
+            Lazy<WebServer> webServer
     ) {
         this.responseFactory = responseFactory;
+        this.webServer = webServer;
     }
 
     @Override
     public Optional<Response> resolve(Request request) {
         Optional<WebUser> user = request.getUser();
-        if (user.isPresent()) {
+        if (user.isPresent() || !webServer.get().isAuthRequired()) {
             return Optional.of(responseFactory.redirectResponse("/"));
         }
         return Optional.of(responseFactory.registerPageResponse());
