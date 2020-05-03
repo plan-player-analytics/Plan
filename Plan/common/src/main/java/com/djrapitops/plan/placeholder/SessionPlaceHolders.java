@@ -34,6 +34,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.Serializable;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import static com.djrapitops.plan.utilities.MiscUtils.*;
@@ -212,10 +213,10 @@ public class SessionPlaceHolders implements Placeholders {
                 () -> database.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID)).map(year).orElse("-"));
 
         placeholders.registerStatic("sessions_recent_peak_count",
-                () -> database.query(TPSQueries.fetchPeakPlayerCount(serverUUID, dayAgo() * 2L)).map(DateObj::getValue).orElse(0));
+                () -> database.query(TPSQueries.fetchPeakPlayerCount(serverUUID, now() - TimeUnit.DAYS.toMillis(2L))).map(DateObj::getValue).orElse(0));
 
         placeholders.registerStatic("sessions_recent_peak_date",
-                () -> database.query(TPSQueries.fetchPeakPlayerCount(serverUUID, dayAgo() * 2L)).map(year).orElse("-"));
+                () -> database.query(TPSQueries.fetchPeakPlayerCount(serverUUID, now() - TimeUnit.DAYS.toMillis(2L))).map(year).orElse("-"));
     }
 
     private static String getPlaytime(Database database, long after, long before, UUID serverUUID, Formatter<Long> timeAmount) {
