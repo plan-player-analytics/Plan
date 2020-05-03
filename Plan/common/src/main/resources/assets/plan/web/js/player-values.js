@@ -51,8 +51,8 @@ function loadPlayerOverviewValues(json, error) {
     $(element).find("#data_active_playtime_7d").text(data.active_playtime_7d);
     $(element).find("#data_afk_time_30d").text(data.afk_time_30d);
     $(element).find("#data_afk_time_7d").text(data.afk_time_7d);
-    $(element).find("#data_average_session_length_30d").text(data.average_session_length_30d);
-    $(element).find("#data_average_session_length_7d").text(data.average_session_length_7d);
+    $(element).find("#data_median_session_length_30d").text(data.median_session_length_30d);
+    $(element).find("#data_median_session_length_7d").text(data.median_session_length_7d);
     $(element).find("#data_session_count_30d").text(data.session_count_30d);
     $(element).find("#data_session_count_7d").text(data.session_count_7d);
     $(element).find("#data_player_kills_30d").text(data.player_kill_count_30d);
