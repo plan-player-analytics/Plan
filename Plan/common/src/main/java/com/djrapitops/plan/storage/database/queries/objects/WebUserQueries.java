@@ -17,10 +17,12 @@
 package com.djrapitops.plan.storage.database.queries.objects;
 
 import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.SecurityTable;
+import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,11 +30,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
- * Queries for {@link WebUser} objects.
+ * Queries for web user objects.
  *
  * @author Rsl1122
  */
@@ -47,6 +50,7 @@ public class WebUserQueries {
      *
      * @return List of Plan WebUsers.
      */
+    @Deprecated
     public static Query<List<WebUser>> fetchAllPlanWebUsers() {
         String sql = SELECT + '*' + FROM + SecurityTable.TABLE_NAME + ORDER_BY + SecurityTable.PERMISSION_LEVEL + " ASC";
 
@@ -66,6 +70,31 @@ public class WebUserQueries {
         };
     }
 
+    public static Query<Optional<User>> fetchUser(String username) {
+        String sql = SELECT + '*' + FROM + SecurityTable.TABLE_NAME +
+                LEFT_JOIN + UsersTable.TABLE_NAME + " on " + SecurityTable.LINKED_TO + "=" + UsersTable.USER_UUID +
+                WHERE + SecurityTable.USERNAME + "=? LIMIT 1";
+        return new QueryStatement<Optional<User>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, username);
+            }
+
+            @Override
+            public Optional<User> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    String linkedTo = set.getString(UsersTable.USER_NAME);
+                    UUID linkedToUUID = linkedTo != null ? UUID.fromString(set.getString(SecurityTable.LINKED_TO)) : null;
+                    String passwordHash = set.getString(SecurityTable.SALT_PASSWORD_HASH);
+                    List<String> permissions = WebUser.getPermissionsForLevel(set.getInt(SecurityTable.PERMISSION_LEVEL));
+                    return Optional.of(new User(username, linkedTo != null ? linkedTo : "console", linkedToUUID, passwordHash, permissions));
+                }
+                return Optional.empty();
+            }
+        };
+    }
+
+    @Deprecated
     public static Query<Optional<WebUser>> fetchWebUser(String called) {
         String sql = SELECT + '*' + FROM + SecurityTable.TABLE_NAME +
                 WHERE + SecurityTable.USERNAME + "=? LIMIT 1";

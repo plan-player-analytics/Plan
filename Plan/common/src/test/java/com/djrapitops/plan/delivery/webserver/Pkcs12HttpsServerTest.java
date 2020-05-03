@@ -64,7 +64,7 @@ class Pkcs12HttpsServerTest implements HttpsServerTest {
         system.enable();
 
         WebUser webUser = new WebUser("test", PassEncryptUtil.createHash("testPass"), 0);
-        system.getDatabaseSystem().getDatabase().executeTransaction(new RegisterWebUserTransaction(webUser));
+        system.getDatabaseSystem().getDatabase().executeTransaction(new RegisterWebUserTransaction(webUser, ));
     }
 
     @AfterAll

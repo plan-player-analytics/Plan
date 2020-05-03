@@ -14,16 +14,20 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.exceptions;
+package com.djrapitops.plan.storage.database.transactions.patches;
 
-public class PassEncryptException extends IllegalArgumentException {
+import com.djrapitops.plan.storage.database.sql.building.Sql;
+import com.djrapitops.plan.storage.database.sql.tables.SecurityTable;
 
-    public PassEncryptException(String s) {
-        super(s);
+public class LinkedToSecurityTablePatch extends Patch {
+
+    @Override
+    public boolean hasBeenApplied() {
+        return hasColumn(SecurityTable.TABLE_NAME, SecurityTable.LINKED_TO);
     }
 
-    public PassEncryptException(String s, Throwable throwable) {
-        super(s, throwable);
+    @Override
+    protected void applyPatch() {
+        addColumn(SecurityTable.TABLE_NAME, SecurityTable.LINKED_TO + ' ' + Sql.varchar(36) + " DEFAULT ''");
     }
-
 }

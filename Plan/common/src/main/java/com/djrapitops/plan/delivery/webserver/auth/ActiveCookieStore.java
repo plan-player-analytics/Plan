@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.auth;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.auth.User;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.HashMap;
@@ -26,14 +26,14 @@ import java.util.UUID;
 
 public class ActiveCookieStore {
 
-    private static final Map<String, WebUser> USERS_BY_COOKIE = new HashMap<>();
+    private static final Map<String, User> USERS_BY_COOKIE = new HashMap<>();
 
-    public static Optional<WebUser> checkCookie(String cookie) {
+    public static Optional<User> checkCookie(String cookie) {
         return Optional.ofNullable(USERS_BY_COOKIE.get(cookie));
     }
 
-    public static String generateNewCookie(WebUser user) {
-        String cookie = DigestUtils.sha256Hex(user.getName() + UUID.randomUUID() + System.currentTimeMillis());
+    public static String generateNewCookie(User user) {
+        String cookie = DigestUtils.sha256Hex(user.getUsername() + UUID.randomUUID() + System.currentTimeMillis());
         USERS_BY_COOKIE.put(cookie, user);
         return cookie;
     }
@@ -42,8 +42,8 @@ public class ActiveCookieStore {
         USERS_BY_COOKIE.remove(cookie);
     }
 
-    public static void removeCookie(WebUser user) {
-        USERS_BY_COOKIE.entrySet().stream().filter(entry -> entry.getValue().getName().equals(user.getName()))
+    public static void removeCookie(User user) {
+        USERS_BY_COOKIE.entrySet().stream().filter(entry -> entry.getValue().getUsername().equals(user.getUsername()))
                 .findAny()
                 .map(Map.Entry::getKey)
                 .ifPresent(ActiveCookieStore::removeCookie);

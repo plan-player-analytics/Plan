@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.auth;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.auth.User;
 
 public class CookieAuthentication implements Authentication {
 
@@ -27,7 +27,7 @@ public class CookieAuthentication implements Authentication {
     }
 
     @Override
-    public WebUser getWebUser() {
+    public User getUser() {
         return ActiveCookieStore.checkCookie(cookie).orElse(null);
     }
 }

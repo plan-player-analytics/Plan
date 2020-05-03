@@ -68,7 +68,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
         );
 
         WebUser webUser = new WebUser(TestConstants.PLAYER_ONE_NAME, RandomData.randomString(100), 0);
-        db().executeTransaction(new RegisterWebUserTransaction(webUser));
+        db().executeTransaction(new RegisterWebUserTransaction(webUser, ));
     }
 
     @Test

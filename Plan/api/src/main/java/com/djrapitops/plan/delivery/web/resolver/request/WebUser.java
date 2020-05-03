@@ -17,21 +17,34 @@
 package com.djrapitops.plan.delivery.web.resolver.request;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 public final class WebUser {
 
-    private final String name;
+    private final String playerName;
+    private final String username;
     private final Set<String> permissions;
 
-    public WebUser(String name) {
-        this.name = name;
+    public WebUser(String playerName) {
+        this.playerName = playerName;
+        this.username = playerName;
         this.permissions = new HashSet<>();
     }
 
-    public WebUser(String name, String... permissions) {
-        this(name);
+    public WebUser(String playerName, String username, Collection<String> permissions) {
+        this.playerName = playerName;
+        this.username = username;
+        this.permissions = new HashSet<>(permissions);
+    }
+
+    /**
+     * @deprecated WebUser now has username and player name.
+     */
+    @Deprecated
+    public WebUser(String playerName, String... permissions) {
+        this(playerName);
         this.permissions.addAll(Arrays.asList(permissions));
     }
 
@@ -40,6 +53,10 @@ public final class WebUser {
     }
 
     public String getName() {
-        return name;
+        return playerName;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }

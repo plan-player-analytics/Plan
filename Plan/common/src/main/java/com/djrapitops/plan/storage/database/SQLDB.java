@@ -170,7 +170,9 @@ public abstract class SQLDB extends AbstractDatabase {
                 new ExtensionTableRowValueLengthPatch(),
                 new CommandUsageTableRemovalPatch(),
                 new RegisterDateMinimizationPatch(),
-                new BadNukkitRegisterValuePatch()
+                new BadNukkitRegisterValuePatch(),
+                new LinkedToSecurityTablePatch(),
+                new LinkUsersToPlayersSecurityTablePatch()
         };
     }
 

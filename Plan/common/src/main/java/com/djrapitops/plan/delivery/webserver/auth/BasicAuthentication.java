@@ -16,14 +16,13 @@
  */
 package com.djrapitops.plan.delivery.webserver.auth;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.exceptions.PassEncryptException;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.utilities.Base64Util;
-import com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
@@ -47,7 +46,7 @@ public class BasicAuthentication implements Authentication {
     }
 
     @Override
-    public WebUser getWebUser() {
+    public User getUser() {
         String decoded = Base64Util.decode(authenticationString);
 
         String[] userInfo = StringUtils.split(decoded, ':');
@@ -55,7 +54,7 @@ public class BasicAuthentication implements Authentication {
             throw new WebUserAuthException(FailReason.USER_AND_PASS_NOT_SPECIFIED, Arrays.toString(userInfo));
         }
 
-        String user = userInfo[0];
+        String username = userInfo[0];
         String passwordRaw = userInfo[1];
 
         Database.State dbState = database.getState();
@@ -64,14 +63,14 @@ public class BasicAuthentication implements Authentication {
         }
 
         try {
-            WebUser webUser = database.query(WebUserQueries.fetchWebUser(user))
-                    .orElseThrow(() -> new WebUserAuthException(FailReason.USER_DOES_NOT_EXIST, user));
+            User user = database.query(WebUserQueries.fetchUser(username))
+                    .orElseThrow(() -> new WebUserAuthException(FailReason.USER_DOES_NOT_EXIST, username));
 
-            boolean correctPass = PassEncryptUtil.verifyPassword(passwordRaw, webUser.getSaltedPassHash());
+            boolean correctPass = user.doesPasswordMatch(passwordRaw);
             if (!correctPass) {
-                throw new WebUserAuthException(FailReason.USER_PASS_MISMATCH, user);
+                throw new WebUserAuthException(FailReason.USER_PASS_MISMATCH, username);
             }
-            return webUser;
+            return user;
         } catch (DBOpException | PassEncryptException e) {
             throw new WebUserAuthException(e);
         }

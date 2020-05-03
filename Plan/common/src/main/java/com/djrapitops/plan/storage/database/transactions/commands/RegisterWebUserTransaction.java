@@ -16,25 +16,28 @@
  */
 package com.djrapitops.plan.storage.database.transactions.commands;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.storage.database.sql.tables.SecurityTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 
 /**
- * Transaction to save a new Plan {@link WebUser} to the database.
+ * Transaction to save a new Plan {@link User} to the database.
  *
  * @author Rsl1122
  */
 public class RegisterWebUserTransaction extends Transaction {
 
-    private final WebUser webUser;
+    private final User user;
+    private final int permissionLevel;
 
-    public RegisterWebUserTransaction(WebUser webUser) {
-        this.webUser = webUser;
+    public RegisterWebUserTransaction(User user, int permissionLevel) {
+        this.user = user;
+        this.permissionLevel = permissionLevel;
     }
 
     @Override
@@ -42,9 +45,14 @@ public class RegisterWebUserTransaction extends Transaction {
         execute(new ExecStatement(SecurityTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, webUser.getName());
-                statement.setString(2, webUser.getSaltedPassHash());
-                statement.setInt(3, webUser.getPermLevel());
+                statement.setString(1, user.getUsername());
+                if (user.getLinkedToUUID() == null) {
+                    statement.setNull(2, Types.VARCHAR);
+                } else {
+                    statement.setString(2, user.getLinkedToUUID().toString());
+                }
+                statement.setString(3, user.getPasswordHash());
+                statement.setInt(4, permissionLevel);
             }
         });
     }

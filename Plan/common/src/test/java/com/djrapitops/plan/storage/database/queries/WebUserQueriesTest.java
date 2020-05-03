@@ -34,7 +34,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
     @Test
     default void webUserIsRegistered() {
         WebUser expected = new WebUser(TestConstants.PLAYER_ONE_NAME, "RandomGarbageBlah", 0);
-        db().executeTransaction(new RegisterWebUserTransaction(expected));
+        db().executeTransaction(new RegisterWebUserTransaction(expected, ));
         forcePersistenceCheck();
 
         Optional<WebUser> found = db().query(WebUserQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME));

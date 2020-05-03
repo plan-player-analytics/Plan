@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver;
 
+import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
@@ -153,8 +154,8 @@ public class RequestHandler implements HttpHandler {
 
     private WebUser getWebUser(HttpExchange exchange) {
         return getAuthentication(exchange.getRequestHeaders())
-                .map(Authentication::getWebUser) // Can throw WebUserAuthException
-                .map(com.djrapitops.plan.delivery.domain.WebUser::toNewWebUser)
+                .map(Authentication::getUser) // Can throw WebUserAuthException
+                .map(User::toWebUser)
                 .orElse(null);
     }
 

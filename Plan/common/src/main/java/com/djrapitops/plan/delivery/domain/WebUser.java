@@ -30,18 +30,32 @@ import java.util.Objects;
 @Deprecated
 public class WebUser {
 
-    private final String user;
+    private final String username;
     private final String saltedPassHash;
     private final int permLevel;
 
-    public WebUser(String user, String saltedPassHash, int permLevel) {
-        this.user = user;
+    public WebUser(String username, String saltedPassHash, int permLevel) {
+        this.username = username;
         this.saltedPassHash = saltedPassHash;
         this.permLevel = permLevel;
     }
 
-    public String getName() {
-        return user;
+    public static List<String> getPermissionsForLevel(int level) {
+        List<String> permissions = new ArrayList<>();
+        if (level <= 0) {
+            permissions.add("page.network");
+            permissions.add("page.server");
+            permissions.add("page.debug");
+            // TODO Add JSON Permissions
+        }
+        if (level <= 1) {
+            permissions.add("page.players");
+            permissions.add("page.player.other");
+        }
+        if (level <= 2) {
+            permissions.add("page.player.self");
+        }
+        return permissions;
     }
 
     public String getSaltedPassHash() {
@@ -52,38 +66,28 @@ public class WebUser {
         return permLevel;
     }
 
+    public String getName() {
+        return username;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WebUser webUser = (WebUser) o;
         return permLevel == webUser.permLevel &&
-                Objects.equals(user, webUser.user) &&
+                Objects.equals(username, webUser.username) &&
                 Objects.equals(saltedPassHash, webUser.saltedPassHash);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(user, saltedPassHash, permLevel);
+        return Objects.hash(username, saltedPassHash, permLevel);
     }
 
     public com.djrapitops.plan.delivery.web.resolver.request.WebUser toNewWebUser() {
-        List<String> permissions = new ArrayList<>();
-        if (permLevel <= 0) {
-            permissions.add("page.network");
-            permissions.add("page.server");
-            permissions.add("page.debug");
-            // TODO Add JSON Permissions
-        }
-        if (permLevel <= 1) {
-            permissions.add("page.players");
-            permissions.add("page.player.other");
-        }
-        if (permLevel <= 2) {
-            permissions.add("page.player.self");
-        }
         return new com.djrapitops.plan.delivery.web.resolver.request.WebUser(
-                user, permissions.toArray(new String[0])
+                username, getPermissionsForLevel(permLevel).toArray(new String[0])
         );
     }
 }
