@@ -17,6 +17,7 @@
 package com.djrapitops.plan.capability;
 
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * List of different capabilities current version provides.
@@ -59,6 +60,10 @@ enum Capability {
      * {@link com.djrapitops.plan.query.QueryService} and {@link com.djrapitops.plan.query.CommonQueries}
      */
     QUERY_API,
+    /**
+     * {@link com.djrapitops.plan.query.CommonQueries#fetchCurrentSessionPlaytime(UUID)}
+     */
+    QUERY_API_ACTIVE_SESSION_PLAYTIME,
     /**
      * {@link com.djrapitops.plan.settings.SettingsService}
      */

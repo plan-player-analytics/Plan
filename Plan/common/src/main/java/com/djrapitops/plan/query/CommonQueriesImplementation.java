@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.query;
 
+import com.djrapitops.plan.gathering.cache.SessionCache;
+import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
@@ -40,6 +42,11 @@ public class CommonQueriesImplementation implements CommonQueries {
     @Override
     public long fetchPlaytime(UUID playerUUID, UUID serverUUID, long after, long before) {
         return db.query(SessionQueries.playtimeOfPlayer(after, before, playerUUID)).getOrDefault(serverUUID, 0L);
+    }
+
+    @Override
+    public long fetchCurrentSessionPlaytime(UUID playerUUID) {
+        return SessionCache.getCachedSession(playerUUID).map(Session::getLength).orElse(0L);
     }
 
     @Override
