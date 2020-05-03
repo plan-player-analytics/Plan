@@ -18,28 +18,17 @@ package com.djrapitops.plan.addons.placeholderapi;
 
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.placeholder.PlanPlaceholders;
-import com.djrapitops.plan.version.VersionChecker;
-import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Collections;
 
-/**
- * Placeholder expansion used to provide data from Plan on Bukkit.
- *
- * @author aidn5
- */
 @Singleton
-public class BukkitPlaceholderRegistrar extends PlaceholderExpansion {
+public class BukkitPlaceholderRegistrar {
 
-    public final ErrorHandler errorHandler;
-    private final VersionChecker versionChecker;
     private final PlanPlaceholders placeholders;
+    private final PlanSystem system;
+    private final ErrorHandler errorHandler;
 
     @Inject
     public BukkitPlaceholderRegistrar(
@@ -48,56 +37,11 @@ public class BukkitPlaceholderRegistrar extends PlaceholderExpansion {
             ErrorHandler errorHandler
     ) {
         this.placeholders = placeholders;
-        this.versionChecker = system.getVersionChecker();
+        this.system = system;
         this.errorHandler = errorHandler;
     }
 
-    @Override
-    public boolean persist() {
-        return true;
-    }
-
-    @Override
-    public boolean canRegister() {
-        return true;
-    }
-
-    @Override
-    public String getIdentifier() {
-        return "plan";
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public String getPlugin() {
-        return "Plan";
-    }
-
-    @Override
-    public String getAuthor() {
-        return "Rsl1122";
-    }
-
-    @Override
-    public String getVersion() {
-        return versionChecker.getCurrentVersion();
-    }
-
-    @Override
-    public String onPlaceholderRequest(Player player, String params) {
-        try {
-            String value = placeholders.onPlaceholderRequest(player.getUniqueId(), params, Collections.emptyList());
-
-            if ("true".equals(value)) { //hack
-                value = PlaceholderAPIPlugin.booleanTrue();
-            } else if ("false".equals(value)) {
-                value = PlaceholderAPIPlugin.booleanFalse();
-            }
-
-            return value;
-        } catch (Exception e) {
-            errorHandler.log(L.WARN, getClass(), e);
-            return null;
-        }
+    public void register() {
+        new PlanPlaceholderExtension(placeholders, system, errorHandler).register();
     }
 }
