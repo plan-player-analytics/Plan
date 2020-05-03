@@ -64,6 +64,8 @@ public enum CommandLang implements Lang {
     QINSPECT_LAST_SEEN("Cmd Qinspect - Last Seen", "  §2Last Seen: §f${0}"),
     QINSPECT_GEOLOCATION("Cmd Qinspect - Geolocation", "  §2Logged in from: §f${0}"),
     QINSPECT_PLAYTIME("Cmd Qinspect - Playtime", "  §2Playtime: §f${0}"),
+    QINSPECT_ACTIVE_PLAYTIME("Cmd Qinspect - Active Playtime", "  §2Active Playtime: §f${0}"),
+    QINSPECT_AFK_PLAYTIME("Cmd Qinspect - AFK Playtime", "  §2AFK Time: §f${0}"),
     QINSPECT_LONGEST_SESSION("Cmd Qinspect - Longest Session", "  §2Longest Session: §f${0}"),
     QINSPECT_TIMES_KICKED("Cmd Qinspect - Times Kicked", "  §2Times Kicked: §f${0}"),
     QINSPECT_PLAYER_KILLS("Cmd Qinspect - Player Kills", "  §2Player Kills: §f${0}"),
