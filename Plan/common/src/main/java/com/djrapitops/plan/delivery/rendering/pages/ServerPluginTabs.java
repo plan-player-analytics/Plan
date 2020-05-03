@@ -89,7 +89,7 @@ public class ServerPluginTabs {
         if (serverData.isEmpty()) {
             nav = new StringBuilder(NavLink.main(Icon.called("cubes").build(), tabID, "Overview (No Data)").toHtml());
             tab = wrapInWideColumnTab(
-                    tabID, "<div class=\"card\"><div class=\"card-body\"><p>No Extension Data</p></div></div>"
+                    "overview", "<div class=\"card\"><div class=\"card-body\"><p>No Extension Data</p></div></div>"
             );
         } else {
             nav = new StringBuilder(NavLink.main(Icon.called("cubes").build(), tabID, "Overview").toHtml());

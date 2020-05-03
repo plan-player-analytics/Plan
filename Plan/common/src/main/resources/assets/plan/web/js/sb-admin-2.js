@@ -1,147 +1,116 @@
-function openTab(i) {
-    var x = document.getElementById("content");
-    var navButtons = document.getElementsByClassName("nav-button");
-    var max = navButtons.length;
-    for (var j = 0; j < max; j++) {
-        if (navButtons[j].classList.contains('active')) {
-            navButtons[j].classList.remove('active');
+const content = document.getElementById("content");
+const navButtons = Array.from(document.getElementsByClassName("nav-button"));
+const tabs = Array.from(document.getElementsByClassName("tab")).filter(tab => tab.id);
+const tabCount = tabs.length;
+
+function openTab(openIndex) {
+    for (let navButton of navButtons) {
+        if (navButton.classList.contains('active')) {
+            navButton.classList.remove('active');
         }
-        if (j === i) {
-            navButtons[j].classList.add('active');
-        }
     }
-    var percent = -100 / navButtons.length;
-    slideIndex = i;
-    if (slideIndex > max) {
-        slideIndex = 0
-    }
-    if (slideIndex < 0) {
-        slideIndex = max
-    }
-    window.scrollTo(0, 0);
-    var value = slideIndex * percent;
-    x.style.transition = "0.5s";
-    x.style.transform = "translate3d(" + value + "%,0px,0)";
+
+    const outOfRange = openIndex < 0 || tabCount < openIndex;
+    const slideIndex = outOfRange ? 0 : openIndex;
+
+    navButtons[slideIndex].classList.add('active');
+
+    window.scrollTo(0, 0); // Scroll to top
+    const tabWidthPercent = -100 / tabCount;
+    const verticalScrollPercent = slideIndex * tabWidthPercent;
+    content.style.transition = "0.5s";
+    content.style.transform = "translate3d(" + verticalScrollPercent + "%,0px,0)";
 }
 
 function openPage() {
-    var params = (window.location.hash.substr(5)).split("&");
+    // substr removes tab- from the id
+    const uriHash = (window.location.hash.substr(5)).split("&").filter(part => part);
 
-    if (!params.length) {
+    if (!uriHash.length) {
         openTab(0);
         return;
     }
-    // window.sessionStorage.setItem("server_slide_index", slideIndex);
 
-    var tabID = params[0];
-    var button = $('.nav-button[href="#' + tabID + '"]');
+    const tabId = uriHash[0];
+    const openIndex = tabs.map(tab => tab.id).indexOf(tabId);
+    openTab(openIndex);
 
-    var tabs = document.getElementsByClassName("tab");
-    for (var i = 0; i < tabs.length; i++) {
-        if (tabs[i].id === tabID) openTab(i);
+    if (uriHash.length > 1) {
+        const bootstrapTabId = uriHash[1];
+        $('a[href="#' + bootstrapTabId + '"]').tab('show');
     }
+}
 
-    if (params.length <= 1) {
+// Prepare tabs for display
+content.style.transform = "translate3d(0px,0px,0)";
+content.style.width = (tabCount * 100) + "%";
+content.style.opacity = "1";
+for (let tab of tabs) {
+    tab.style.width = (100 / tabCount) + "%";
+}
+
+window.addEventListener('hashchange', openPage);
+
+// Persistent Bootstrap tabs
+$('.nav-tabs a.nav-link').click(event => {
+    const uriHash = (window.location.hash).split("&");
+    if (!uriHash) return;
+    const currentTab = uriHash[0];
+    const originalTargetId = event.target.href.split('#')[1];
+    window.location.hash = currentTab + '&' + originalTargetId;
+});
+
+let oldWidth = null;
+
+function reduceSidebar() {
+    const newWidth = $(window).width();
+    if (oldWidth && oldWidth === newWidth) {
         return;
     }
 
-    var graphTabID = params[1];
-    $('a[href="#' + graphTabID + '"]').tab('show');
+    const $sidebar = $('.sidebar');
+    const closeModal = $('.sidebar-close-modal');
+    if ($(window).width() < 1350) {
+        if (!$sidebar.hasClass('hidden')) $sidebar.addClass('hidden');
+        if (!closeModal.hasClass('hidden')) closeModal.addClass('hidden');
+
+        // Close any open menu accordions when window is resized
+        $('.sidebar .collapse').collapse('hide');
+    } else if ($(window).width() > 1400 && $sidebar.hasClass('hidden')) {
+        $sidebar.removeClass('hidden');
+        if (!closeModal.hasClass('hidden')) closeModal.addClass('hidden');
+    }
+    oldWidth = newWidth;
 }
 
-(function ($) {
-    "use strict"; // Start of use strict
+reduceSidebar();
+$(window).resize(reduceSidebar);
 
-    var x = document.getElementById("content");
-    // Prepare tabs for display
-    var navButtons = document.getElementsByClassName("nav-button");
-    var tabs = document.getElementsByClassName("tab");
-    x.style.transform = "translate3d(0px,0px,0)";
-    x.style.width = "" + navButtons.length * 100 + "%";
-    for (var i = 0; i < navButtons.length; i++) {
-        tabs[i].style.width = "" + 100 / navButtons.length + "%";
+function toggleSidebar() {
+    $('.sidebar').toggleClass('hidden');
+    $('.sidebar .collapse').collapse('hide');
+
+    const closeModal = $('.sidebar-close-modal');
+    if ($(window).width() < 900) {
+        closeModal.toggleClass('hidden');
+    } else {
+        if (!closeModal.hasClass('hidden')) closeModal.addClass('hidden');
     }
-    x.style.opacity = "1";
+}
 
-    window.addEventListener('hashchange', function (e) {
-        openPage();
-    });
+$('.sidebar-toggler,.sidebar-close-modal').on('click', toggleSidebar);
 
-    // Persistent Bootstrap tabs
-    $('.nav-tabs a.nav-link').click(function (e) {
-        var params = (window.location.hash).split("&");
-        if (!params) return;
-        window.location.hash = params[0] + '&' + e.target.href.split('#')[1];
-    });
-
-    var oldWidth = null;
-
-    function reduceSidebar() {
-        var newWidth = $(window).width();
-        if (oldWidth && oldWidth === newWidth) {
-            return;
-        }
-
-        var $sidebar = $('.sidebar');
-        var closeModal = $('.sidebar-close-modal');
-        if ($(window).width() < 1350) {
-            if (!$sidebar.hasClass('hidden')) $sidebar.addClass('hidden');
-            if (!closeModal.hasClass('hidden')) closeModal.addClass('hidden');
-
-            $('.sidebar .collapse').collapse('hide');
-        } else if ($(window).width() > 1400 && $sidebar.hasClass('hidden')) {
-            $sidebar.removeClass('hidden');
-            if (!closeModal.hasClass('hidden')) closeModal.addClass('hidden');
-        }
-        oldWidth = newWidth;
+// Scroll to top button appear
+$(document).on('scroll', () => {
+    const scrollDistance = $(this).scrollTop();
+    if (scrollDistance > 100) {
+        $('.scroll-to-top').fadeIn();
+    } else {
+        $('.scroll-to-top').fadeOut();
     }
+});
 
-    reduceSidebar();
-
-    function toggleSidebar() {
-        $('.sidebar').toggleClass('hidden');
-        $('.sidebar .collapse').collapse('hide');
-
-        var closeModal = $('.sidebar-close-modal');
-        if ($(window).width() < 900) {
-            closeModal.toggleClass('hidden');
-        } else {
-            if (!closeModal.hasClass('hidden')) closeModal.addClass('hidden');
-        }
-    }
-
-    $('.sidebar-toggler,.sidebar-close-modal').on('click', toggleSidebar);
-
-    // Close any open menu accordions when window is resized below 924px
-    $(window).resize(reduceSidebar);
-
-    // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
-    $('body.fixed-nav .sidebar').on('mousewheel DOMMouseScroll wheel', function (e) {
-        if ($(window).width() > 924) {
-            var e0 = e.originalEvent,
-                delta = e0.wheelDelta || -e0.detail;
-            this.scrollTop += (delta < 0 ? 1 : -1) * 30;
-            e.preventDefault();
-        }
-    });
-
-    // Scroll to top button appear
-    $(document).on('scroll', function () {
-        var scrollDistance = $(this).scrollTop();
-        if (scrollDistance > 100) {
-            $('.scroll-to-top').fadeIn();
-        } else {
-            $('.scroll-to-top').fadeOut();
-        }
-    });
-
-    // Smooth scrolling using jQuery easing
-    $(document).on('click', 'a.scroll-to-top', function (e) {
-        var $anchor = $(this);
-        $('html, body').stop().animate({
-            scrollTop: ($($anchor.attr('href')).offset().top)
-        }, 1000, 'easeInOutExpo');
-        e.preventDefault();
-    });
-
-})(jQuery); // End of use strict
+$('.scroll-to-top').on('click', 'a.scroll-to-top', event => {
+    window.scrollTo(0, 0); // Scroll to top
+    event.preventDefault();
+});

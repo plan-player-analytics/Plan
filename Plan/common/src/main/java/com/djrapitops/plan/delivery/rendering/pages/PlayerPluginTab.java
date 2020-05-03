@@ -85,7 +85,7 @@ public class PlayerPluginTab implements Comparable<PlayerPluginTab> {
 
     private void generate() {
         if (playerData.isEmpty()) {
-            nav = NavLink.collapsed(Icon.called("cubes").build(), "plugins-" + serverName, serverName + " (No Data)").toHtml();
+            nav = NavLink.collapsed(Icon.called("cubes").build(), "plugins-" + serverName + " (No Data)", serverName + " (No Data)").toHtml();
             tab = wrapInWideTab(
                     serverName + " (No Data)",
                     "<div class=\"card\"><div class=\"card-body\"><p>No Extension Data</p></div></div>"

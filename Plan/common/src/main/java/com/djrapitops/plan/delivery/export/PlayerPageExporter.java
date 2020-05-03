@@ -143,7 +143,6 @@ public class PlayerPageExporter extends FileExporter {
                 "../css/style.css",
                 "../vendor/jquery/jquery.min.js",
                 "../vendor/bootstrap/js/bootstrap.bundle.min.js",
-                "../vendor/jquery-easing/jquery.easing.min.js",
                 "../vendor/datatables/jquery.dataTables.min.js",
                 "../vendor/datatables/dataTables.bootstrap4.min.js",
                 "../vendor/highcharts/highstock.js",
