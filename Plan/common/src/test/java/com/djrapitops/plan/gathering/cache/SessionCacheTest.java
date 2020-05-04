@@ -25,20 +25,20 @@ import utilities.TestConstants;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class SessionCacheTest {
 
     private Session session;
     private final UUID uuid = TestConstants.PLAYER_ONE_UUID;
     private final UUID serverUUID = TestConstants.SERVER_UUID;
+    private SessionCache sessionCache;
 
     @BeforeEach
     void setUp() {
         session = new Session(uuid, serverUUID, 12345L, "World1", "SURVIVAL");
 
-        SessionCache sessionCache = new SessionCache();
+        sessionCache = new SessionCache();
         sessionCache.cacheSession(uuid, session);
     }
 
@@ -52,5 +52,25 @@ class SessionCacheTest {
         Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
         assertTrue(cachedSession.isPresent());
         assertEquals(session, cachedSession.get());
+    }
+
+    @Test
+    void sessionsAreRemovedFromCacheOnEnd() {
+        Optional<Session> ended = new SessionCache().endSession(uuid, System.currentTimeMillis());
+        assertTrue(ended.isPresent());
+        for (Session session : SessionCache.getActiveSessions().values()) {
+            fail("Session was still in cache: " + session);
+        }
+    }
+
+    @Test
+    void sessionsAreRemovedFromCacheOnStart() {
+        Optional<Session> ended = new SessionCache().cacheSession(uuid, new Session(uuid, serverUUID, 52345L, "World1", "SURVIVAL"));
+        assertTrue(ended.isPresent());
+        for (Session session : SessionCache.getActiveSessions().values()) {
+            if (session.getDate() == 12345L) {
+                fail("Session was still in cache: " + session);
+            }
+        }
     }
 }
