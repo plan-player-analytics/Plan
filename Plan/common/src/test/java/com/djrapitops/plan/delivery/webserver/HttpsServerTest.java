@@ -20,12 +20,15 @@ import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
 import com.djrapitops.plan.exceptions.connection.WebException;
-import com.djrapitops.plan.utilities.Base64Util;
+import org.apache.commons.compress.utils.IOUtils;
 import org.junit.jupiter.api.Test;
 import utilities.HTTPConnector;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -50,28 +53,53 @@ interface HttpsServerTest {
         webServerIsRunningHTTPS();
 
         String address = "https://localhost:" + testPortNumber();
-        URL url = new URL(address);
-        HttpURLConnection connection = connector.getConnection("GET", address);
 
-        String user = Base64Util.encode("test:testPass");
-        connection.setRequestProperty("Authorization", "Basic " + user);
+        String cookie = login(address);
+        testAccess(address, cookie);
+    }
 
-        int responseCode = connection.getResponseCode();
+    default void testAccess(String address, String cookie) throws IOException, KeyManagementException, NoSuchAlgorithmException {
+        HttpURLConnection connection = null;
+        try {
+            connection = connector.getConnection("GET", address);
+            connection.setRequestProperty("Cookie", cookie);
 
-        switch (responseCode) {
-            case 200:
-            case 302:
-                return;
-            case 400:
-                throw new BadRequestException("Bad Request: " + url.toString());
-            case 403:
-                throw new ForbiddenException(url.toString() + " returned 403");
-            case 404:
-                throw new NotFoundException(url.toString() + " returned a 404, ensure that your server is connected to an up to date Plan server.");
-            case 500:
-                throw new IllegalStateException(); // Not supported
-            default:
-                throw new WebException(url.toString() + "| Wrong response code " + responseCode);
+            int responseCode = connection.getResponseCode();
+
+            switch (responseCode) {
+                case 200:
+                case 302:
+                    return;
+                case 400:
+                    throw new BadRequestException("Bad Request: " + address);
+                case 403:
+                    throw new ForbiddenException(address + " returned 403");
+                case 404:
+                    throw new NotFoundException(address + " returned a 404, ensure that your server is connected to an up to date Plan server.");
+                case 500:
+                    throw new IllegalStateException(); // Not supported
+                default:
+                    throw new WebException(address + "| Wrong response code " + responseCode);
+            }
+        } finally {
+            connection.disconnect();
         }
+    }
+
+    default String login(String address) throws IOException, KeyManagementException, NoSuchAlgorithmException {
+        HttpURLConnection loginConnection = null;
+        String cookie = "";
+        try {
+            loginConnection = connector.getConnection("GET", address + "/auth/login?user=test&password=testPass");
+            try (InputStream in = loginConnection.getInputStream()) {
+                String responseBody = new String(IOUtils.toByteArray(in));
+                assertTrue(responseBody.contains("\"success\":true"), () -> "Not successful: " + responseBody);
+                cookie = loginConnection.getHeaderField("Set-Cookie").split(";")[0];
+                System.out.println("Got cookie: " + cookie);
+            }
+        } finally {
+            loginConnection.disconnect();
+        }
+        return cookie;
     }
 }

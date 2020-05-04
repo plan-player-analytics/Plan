@@ -161,11 +161,11 @@ public class RegisterCommand extends CommandNode {
             String playerName = sender.getName();
             UUID linkedToUUID = uuidUtility.getUUIDOf(playerName);
             String username = arguments.get(1).orElse(playerName);
-            registerUser(new User(username, playerName, linkedToUUID, passwordHash, Collections.emptyList()), sender, permissionLevel);
+            registerUser(new User(username, playerName, linkedToUUID, passwordHash, permissionLevel, Collections.emptyList()), sender, permissionLevel);
         } else {
             String username = arguments.get(1)
                     .orElseThrow(() -> new IllegalArgumentException(notEnoughArgsMsg));
-            registerUser(new User(username, "console", null, passwordHash, Collections.emptyList()), sender, permissionLevel);
+            registerUser(new User(username, "console", null, passwordHash, permissionLevel, Collections.emptyList()), sender, permissionLevel);
         }
     }
 
@@ -188,6 +188,7 @@ public class RegisterCommand extends CommandNode {
     private void registerUser(User user, Sender sender, int permissionLevel) {
         processing.submitCritical(() -> {
             String username = user.getUsername();
+            user.setPermissionLevel(permissionLevel);
             try {
                 Database database = dbSystem.getDatabase();
                 boolean userExists = database.query(WebUserQueries.fetchUser(username)).isPresent();
@@ -195,7 +196,7 @@ public class RegisterCommand extends CommandNode {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_WEB_USER_EXISTS));
                     return;
                 }
-                database.executeTransaction(new RegisterWebUserTransaction(user, permissionLevel))
+                database.executeTransaction(new RegisterWebUserTransaction(user))
                         .get(); // Wait for completion
 
                 sender.sendMessage(locale.getString(CommandLang.WEB_USER_REGISTER_SUCCESS, username));

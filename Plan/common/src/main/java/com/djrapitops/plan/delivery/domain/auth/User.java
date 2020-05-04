@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -33,13 +34,15 @@ public class User {
     private final String linkedTo;
     private final UUID linkedToUUID; // null for 'console'
     private final String passwordHash;
+    private int permissionLevel;
     private final Collection<String> permissions;
 
-    public User(String username, String linkedTo, UUID linkedToUUID, String passwordHash, Collection<String> permissions) {
+    public User(String username, String linkedTo, UUID linkedToUUID, String passwordHash, int permissionLevel, Collection<String> permissions) {
         this.username = username;
         this.linkedTo = linkedTo;
         this.linkedToUUID = linkedToUUID;
         this.passwordHash = passwordHash;
+        this.permissionLevel = permissionLevel;
         this.permissions = permissions;
     }
 
@@ -65,5 +68,45 @@ public class User {
 
     public String getPasswordHash() {
         return passwordHash;
+    }
+
+    @Deprecated
+    public int getPermissionLevel() {
+        return permissionLevel;
+    }
+
+    @Deprecated
+    public void setPermissionLevel(int permissionLevel) {
+        this.permissionLevel = permissionLevel;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", linkedTo='" + linkedTo + '\'' +
+                ", linkedToUUID=" + linkedToUUID +
+                ", passwordHash='" + passwordHash + '\'' +
+                ", permissionLevel=" + permissionLevel +
+                ", permissions=" + permissions +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return permissionLevel == user.permissionLevel &&
+                Objects.equals(username, user.username) &&
+                Objects.equals(linkedTo, user.linkedTo) &&
+                Objects.equals(linkedToUUID, user.linkedToUUID) &&
+                Objects.equals(passwordHash, user.passwordHash) &&
+                Objects.equals(permissions, user.permissions);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, linkedTo, linkedToUUID, passwordHash, permissionLevel, permissions);
     }
 }

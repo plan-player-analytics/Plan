@@ -47,7 +47,7 @@ public class SecurityTable {
     public static String createTableSQL(DBType dbType) {
         return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(USERNAME, Sql.varchar(100)).notNull().unique()
-                .column(LINKED_TO, Sql.varchar(36))
+                .column(LINKED_TO, Sql.varchar(36)).defaultValue("''")
                 .column(SALT_PASSWORD_HASH, Sql.varchar(100)).notNull().unique()
                 .column(PERMISSION_LEVEL, Sql.INT).notNull()
                 .toString();

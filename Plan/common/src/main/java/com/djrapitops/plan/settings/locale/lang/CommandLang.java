@@ -29,6 +29,7 @@ public enum CommandLang implements Lang {
     FAIL_USERNAME_NOT_KNOWN("Cmd FAIL - Unknown Username", "§cUser has not been seen on this server"),
     FAIL_DATABASE_NOT_OPEN("Cmd FAIL - Database not open", "§cDatabase is ${0} - Please try again a bit later."),
     WARN_DATABASE_NOT_OPEN("Cmd WARN - Database not open", "§eDatabase is ${0} - This might take longer than expected.."),
+    USER_NOT_LINKED("Cmd FAIL - Users not linked", "User is not linked to your account and you don't have permission to remove other user's accounts."),
 
     FAIL_WEB_USER_EXISTS("Cmd FAIL - WebUser exists", "§cUser already exists!"),
     FAIL_WEB_USER_NOT_EXISTS("Cmd FAIL - WebUser does not exists", "§cUser does not exists!"),

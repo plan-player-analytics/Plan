@@ -17,11 +17,13 @@
 package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.database.transactions.commands.RegisterWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveWebUserTransaction;
+import com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.junit.jupiter.api.Test;
 import utilities.TestConstants;
 
@@ -32,33 +34,34 @@ import static org.junit.jupiter.api.Assertions.*;
 public interface WebUserQueriesTest extends DatabaseTestPreparer {
 
     @Test
-    default void webUserIsRegistered() {
-        WebUser expected = new WebUser(TestConstants.PLAYER_ONE_NAME, "RandomGarbageBlah", 0);
-        db().executeTransaction(new RegisterWebUserTransaction(expected, ));
+    default void userIsRegistered() {
+        String username = TestConstants.PLAYER_ONE_NAME;
+        User expected = new User(username, "console", null, PassEncryptUtil.createHash("testPass"), 0, WebUser.getPermissionsForLevel(0));
+        db().executeTransaction(new RegisterWebUserTransaction(expected));
         forcePersistenceCheck();
 
-        Optional<WebUser> found = db().query(WebUserQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME));
+        Optional<User> found = db().query(WebUserQueries.fetchUser(username));
         assertTrue(found.isPresent());
         assertEquals(expected, found.get());
     }
 
     @Test
     default void multipleWebUsersAreFetchedAppropriately() {
-        webUserIsRegistered();
-        assertEquals(1, db().query(WebUserQueries.fetchAllPlanWebUsers()).size());
+        userIsRegistered();
+        assertEquals(1, db().query(WebUserQueries.fetchAllUsers()).size());
     }
 
     @Test
     default void webUserIsRemoved() {
-        webUserIsRegistered();
+        userIsRegistered();
         db().executeTransaction(new RemoveWebUserTransaction(TestConstants.PLAYER_ONE_NAME));
-        assertFalse(db().query(WebUserQueries.fetchWebUser(TestConstants.PLAYER_ONE_NAME)).isPresent());
+        assertFalse(db().query(WebUserQueries.fetchUser(TestConstants.PLAYER_ONE_NAME)).isPresent());
     }
 
     @Test
     default void removeEverythingRemovesWebUser() {
-        webUserIsRegistered();
+        userIsRegistered();
         db().executeTransaction(new RemoveEverythingTransaction());
-        assertTrue(db().query(WebUserQueries.fetchAllPlanWebUsers()).isEmpty());
+        assertTrue(db().query(WebUserQueries.fetchAllUsers()).isEmpty());
     }
 }

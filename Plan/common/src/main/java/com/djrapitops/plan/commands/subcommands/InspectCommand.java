@@ -124,7 +124,7 @@ public class InspectCommand extends CommandNode {
 
     private void checkWebUserAndNotify(Sender sender) {
         if (CommandUtils.isPlayer(sender) && webServer.isAuthRequired()) {
-            boolean senderHasWebUser = dbSystem.getDatabase().query(WebUserQueries.fetchWebUser(sender.getName())).isPresent();
+            boolean senderHasWebUser = dbSystem.getDatabase().query(WebUserQueries.fetchUserLinkedTo(sender.getName())).isPresent();
 
             if (!senderHasWebUser) {
                 sender.sendMessage("§e" + locale.getString(CommandLang.NO_WEB_USER_NOTIFY));

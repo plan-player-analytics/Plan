@@ -16,7 +16,8 @@
  */
 package com.djrapitops.plan.commands.subcommands.webuser;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -86,9 +87,9 @@ public class WebDeleteCommand extends CommandNode {
         processing.submitNonCritical(() -> {
             try {
                 Database db = dbSystem.getDatabase();
-                Optional<WebUser> found = db.query(WebUserQueries.fetchWebUser(user));
+                Optional<User> found = db.query(WebUserQueries.fetchUser(user));
                 if (!found.isPresent()) {
-                    sender.sendMessage("§c[Plan] User Doesn't exist.");
+                    sender.sendMessage("§c" + locale.getString(FailReason.USER_DOES_NOT_EXIST));
                     return;
                 }
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));

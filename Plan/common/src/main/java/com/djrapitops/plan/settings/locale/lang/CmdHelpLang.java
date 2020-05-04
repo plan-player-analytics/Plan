@@ -50,7 +50,7 @@ public enum CmdHelpLang implements Lang {
     WEB_LEVEL("Command Help - /plan web level", "Information about permission levels"),
     WEB_LIST("Command Help - /plan web list", "List Web Users"),
     WEB_CHECK("Command Help - /plan web check", "Inspect a Web User"),
-    WEB_DELETE("Command Help - /plan web delete", "Delete a Web User"),
+    WEB_DELETE("Command Help - /plan web delete", "Unregister a Web User"),
     MANAGE_RAW_DATA("Command Help - /plan manage raw", "View raw JSON of player data"),
     MANAGE_UNINSTALLED("Command Help - /plan manage uninstalled", "Mark a server as uninstalled in the database.");
 

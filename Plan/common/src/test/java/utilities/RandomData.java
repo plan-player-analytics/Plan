@@ -18,11 +18,9 @@ package utilities;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.domain.Nickname;
-import com.djrapitops.plan.delivery.domain.WebUser;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
 import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.storage.database.sql.tables.KillsTable;
-import com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.*;
@@ -64,14 +62,6 @@ public class RandomData {
 
     public static Nickname randomNickname(UUID serverUUID) {
         return new Nickname(randomString(randomInt(50, 100)), randomTime(), serverUUID);
-    }
-
-    public static List<WebUser> randomWebUsers() throws PassEncryptUtil.CannotPerformOperationException {
-        List<WebUser> test = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            test.add(new WebUser(randomString(5), PassEncryptUtil.createHash(randomString(7)), r.nextInt()));
-        }
-        return test;
     }
 
     public static List<TPS> randomTPS() {

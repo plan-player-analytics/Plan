@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.PlanSystem;
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.transactions.commands.RegisterWebUserTransaction;
@@ -31,6 +31,7 @@ import utilities.mocks.PluginMockComponent;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Collections;
 
 class JksHttpsServerTest implements HttpsServerTest {
 
@@ -58,8 +59,8 @@ class JksHttpsServerTest implements HttpsServerTest {
 
         system.enable();
 
-        WebUser webUser = new WebUser("test", PassEncryptUtil.createHash("testPass"), 0);
-        system.getDatabaseSystem().getDatabase().executeTransaction(new RegisterWebUserTransaction(webUser, ));
+        User user = new User("test", "console", null, PassEncryptUtil.createHash("testPass"), 0, Collections.emptyList());
+        system.getDatabaseSystem().getDatabase().executeTransaction(new RegisterWebUserTransaction(user));
     }
 
     @AfterAll

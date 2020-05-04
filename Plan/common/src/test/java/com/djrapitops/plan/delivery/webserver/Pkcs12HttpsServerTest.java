@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.PlanSystem;
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
@@ -34,6 +34,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Collections;
 
 class Pkcs12HttpsServerTest implements HttpsServerTest {
 
@@ -63,8 +64,8 @@ class Pkcs12HttpsServerTest implements HttpsServerTest {
 
         system.enable();
 
-        WebUser webUser = new WebUser("test", PassEncryptUtil.createHash("testPass"), 0);
-        system.getDatabaseSystem().getDatabase().executeTransaction(new RegisterWebUserTransaction(webUser, ));
+        User user = new User("test", "console", null, PassEncryptUtil.createHash("testPass"), 0, Collections.emptyList());
+        system.getDatabaseSystem().getDatabase().executeTransaction(new RegisterWebUserTransaction(user));
     }
 
     @AfterAll

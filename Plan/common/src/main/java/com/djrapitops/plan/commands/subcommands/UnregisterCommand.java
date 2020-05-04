@@ -14,9 +14,12 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.commands.subcommands.webuser;
+package com.djrapitops.plan.commands.subcommands;
 
+import com.djrapitops.plan.commands.Arguments;
 import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.delivery.webserver.auth.FailReason;
+import com.djrapitops.plan.identification.UUIDUtility;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -26,47 +29,53 @@ import com.djrapitops.plan.settings.locale.lang.ManageLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
+import com.djrapitops.plan.storage.database.transactions.commands.RemoveWebUserTransaction;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
+import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
- * Subcommand for checking WebUser permission level.
+ * Subcommand for deleting a WebUser.
  *
  * @author Rsl1122
  */
 @Singleton
-public class WebCheckCommand extends CommandNode {
+public class UnregisterCommand extends CommandNode {
 
     private final Locale locale;
     private final Processing processing;
     private final DBSystem dbSystem;
+    private final UUIDUtility uuidUtility;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public WebCheckCommand(
+    public UnregisterCommand(
             Locale locale,
             Processing processing,
             DBSystem dbSystem,
+            UUIDUtility uuidUtility,
             ErrorHandler errorHandler
     ) {
-        super("check", Permissions.MANAGE_WEB.getPerm(), CommandType.PLAYER_OR_ARGS);
+        super("unregister", "", CommandType.PLAYER_OR_ARGS);
 
         this.locale = locale;
         this.processing = processing;
         this.dbSystem = dbSystem;
+        this.uuidUtility = uuidUtility;
         this.errorHandler = errorHandler;
 
-        setShortHelp(locale.getString(CmdHelpLang.WEB_CHECK));
-        setArguments("<username>");
+        setShortHelp(locale.getString(CmdHelpLang.WEB_DELETE));
+        setArguments("[username]");
     }
 
     @Override
@@ -77,21 +86,44 @@ public class WebCheckCommand extends CommandNode {
             return;
         }
 
-        Verify.isTrue(args.length >= 1,
-                () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments()))));
+        Arguments arguments = new Arguments(args);
 
-        String user = args[0];
+        Optional<String> givenUsername = arguments.get(0);
 
         processing.submitNonCritical(() -> {
+            Database database = dbSystem.getDatabase();
             try {
-                Database db = dbSystem.getDatabase();
-                Optional<User> found = db.query(WebUserQueries.fetchUser(user));
+                UUID playerUUID = CommandUtils.isPlayer(sender) ? uuidUtility.getUUIDOf(sender.getName()) : null;
+
+                String username;
+                if (!givenUsername.isPresent() && playerUUID != null) {
+                    Optional<User> found = database.query(WebUserQueries.fetchUser(playerUUID));
+                    if (!found.isPresent()) {
+                        sender.sendMessage("§c" + locale.getString(FailReason.USER_DOES_NOT_EXIST));
+                        return;
+                    }
+                    username = found.get().getUsername();
+                } else if (!givenUsername.isPresent()) {
+                    sender.sendMessage("§c" + locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments())));
+                    return;
+                } else {
+                    username = givenUsername.get();
+                }
+
+                Optional<User> found = database.query(WebUserQueries.fetchUser(username));
                 if (!found.isPresent()) {
-                    sender.sendMessage(locale.getString(CommandLang.FAIL_WEB_USER_NOT_EXISTS));
+                    sender.sendMessage("§c" + locale.getString(FailReason.USER_DOES_NOT_EXIST));
                     return;
                 }
-                User info = found.get();
-                sender.sendMessage(locale.getString(CommandLang.WEB_USER_LIST, info.getUsername(), info.getPermissionLevel()));
+                User presentUser = found.get();
+                if (!Objects.equals(playerUUID, presentUser.getLinkedToUUID()) && sender.hasPermission(Permissions.MANAGE_WEB.getPerm())) {
+                    sender.sendMessage("§c" + locale.getString(CommandLang.USER_NOT_LINKED));
+                    return;
+                }
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
+                database.executeTransaction(new RemoveWebUserTransaction(username))
+                        .get(); // Wait for completion
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (Exception e) {
                 errorHandler.log(L.ERROR, this.getClass(), e);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));

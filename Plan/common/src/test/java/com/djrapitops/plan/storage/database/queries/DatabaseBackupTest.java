@@ -17,7 +17,7 @@
 package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.domain.TPS;
@@ -29,6 +29,7 @@ import com.djrapitops.plan.storage.database.queries.objects.*;
 import com.djrapitops.plan.storage.database.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RegisterWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.*;
+import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.google.common.util.concurrent.MoreExecutors;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
@@ -67,8 +68,8 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
                 Collections.singletonList(new DateObj<>(System.currentTimeMillis(), RandomData.randomInt(-1, 40))))
         );
 
-        WebUser webUser = new WebUser(TestConstants.PLAYER_ONE_NAME, RandomData.randomString(100), 0);
-        db().executeTransaction(new RegisterWebUserTransaction(webUser, ));
+        User user = new User("test", "console", null, PassEncryptUtil.createHash("testPass"), 0, Collections.emptyList());
+        db().executeTransaction(new RegisterWebUserTransaction(user));
     }
 
     @Test
@@ -92,7 +93,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
             assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllWorldNames());
             assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllTPSData());
             assertQueryResultIsEqual(db(), backup, ServerQueries.fetchPlanServerInformation());
-            assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAllPlanWebUsers());
+            assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAllUsers());
         } finally {
             backup.close();
         }
@@ -119,7 +120,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
             assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllWorldNames());
             assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllTPSData());
             assertQueryResultIsEqual(db(), backup, ServerQueries.fetchPlanServerInformation());
-            assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAllPlanWebUsers());
+            assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAllUsers());
         } finally {
             backup.close();
         }

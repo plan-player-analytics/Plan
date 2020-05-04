@@ -33,11 +33,9 @@ import java.sql.Types;
 public class RegisterWebUserTransaction extends Transaction {
 
     private final User user;
-    private final int permissionLevel;
 
-    public RegisterWebUserTransaction(User user, int permissionLevel) {
+    public RegisterWebUserTransaction(User user) {
         this.user = user;
-        this.permissionLevel = permissionLevel;
     }
 
     @Override
@@ -52,7 +50,7 @@ public class RegisterWebUserTransaction extends Transaction {
                     statement.setString(2, user.getLinkedToUUID().toString());
                 }
                 statement.setString(3, user.getPasswordHash());
-                statement.setInt(4, permissionLevel);
+                statement.setInt(4, user.getPermissionLevel());
             }
         });
     }

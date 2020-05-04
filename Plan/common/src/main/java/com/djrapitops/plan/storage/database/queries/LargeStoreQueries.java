@@ -17,7 +17,7 @@
 package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.Nickname;
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.identification.Server;
@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -113,13 +114,7 @@ public class LargeStoreQueries {
         };
     }
 
-    /**
-     * Execute a big batch of web user insert statements.
-     *
-     * @param users Collection of Plan WebUsers.
-     * @return Executable, use inside a {@link com.djrapitops.plan.storage.database.transactions.Transaction}
-     */
-    public static Executable storeAllPlanWebUsers(Collection<WebUser> users) {
+    public static Executable storeAllPlanWebUsers(Collection<User> users) {
         if (Verify.isEmpty(users)) {
             return Executable.empty();
         }
@@ -127,14 +122,15 @@ public class LargeStoreQueries {
         return new ExecBatchStatement(SecurityTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                for (WebUser user : users) {
-                    String userName = user.getName();
-                    String pass = user.getSaltedPassHash();
-                    int permLvl = user.getPermLevel();
-
-                    statement.setString(1, userName);
-                    statement.setString(2, pass);
-                    statement.setInt(3, permLvl);
+                for (User user : users) {
+                    statement.setString(1, user.getUsername());
+                    if (user.getLinkedToUUID() == null) {
+                        statement.setNull(2, Types.VARCHAR);
+                    } else {
+                        statement.setString(2, user.getLinkedToUUID().toString());
+                    }
+                    statement.setString(3, user.getPasswordHash());
+                    statement.setInt(4, user.getPermissionLevel());
                     statement.addBatch();
                 }
             }

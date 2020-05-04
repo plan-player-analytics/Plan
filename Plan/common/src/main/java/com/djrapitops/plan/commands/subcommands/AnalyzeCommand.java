@@ -134,7 +134,7 @@ public class AnalyzeCommand extends CommandNode {
     private void sendWebUserNotificationIfNecessary(Sender sender) {
         if (webServer.isAuthRequired() &&
                 CommandUtils.isPlayer(sender) &&
-                !dbSystem.getDatabase().query(WebUserQueries.fetchWebUser(sender.getName())).isPresent()) {
+                !dbSystem.getDatabase().query(WebUserQueries.fetchUserLinkedTo(sender.getName())).isPresent()) {
             sender.sendMessage("§e" + locale.getString(CommandLang.NO_WEB_USER_NOTIFY));
         }
     }
