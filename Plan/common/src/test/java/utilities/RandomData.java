@@ -114,6 +114,19 @@ public class RandomData {
         return session;
     }
 
+    public static List<Session> randomUnfinishedSessions(UUID serverUUID, String[] worlds, UUID... uuids) {
+        return pickMultiple(randomInt(5, 50), () -> randomUnfinishedSession(serverUUID, worlds, uuids));
+    }
+
+    public static Session randomUnfinishedSession(UUID serverUUID, String[] worlds, UUID... uuids) {
+        Session session = new Session(uuids[0], serverUUID, RandomData.randomTime(), pickAtRandom(worlds), randomGameMode());
+        session.setWorldTimes(RandomData.randomWorldTimes(worlds));
+        if (uuids.length >= 2) {
+            session.setPlayerKills(RandomData.randomKills(pickAtRandom(Arrays.copyOfRange(uuids, 1, uuids.length))));
+        }
+        return session;
+    }
+
     public static List<Point> randomPoints() {
         List<Point> test = new ArrayList<>();
         for (int i = 0; i < 20; i++) {

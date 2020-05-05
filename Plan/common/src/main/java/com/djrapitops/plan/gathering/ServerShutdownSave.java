@@ -111,7 +111,7 @@ public abstract class ServerShutdownSave {
         return saveSessions(activeSessions, database);
     }
 
-    private void prepareSessionsForStorage(Map<UUID, Session> activeSessions, long now) {
+    void prepareSessionsForStorage(Map<UUID, Session> activeSessions, long now) {
         for (Session session : activeSessions.values()) {
             Optional<Long> end = session.getValue(SessionKeys.END);
             if (!end.isPresent()) {
