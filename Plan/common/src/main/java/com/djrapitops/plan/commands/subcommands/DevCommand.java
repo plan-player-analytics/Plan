@@ -24,6 +24,7 @@ import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.utilities.Verify;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.TextStringBuilder;
 
 import javax.inject.Inject;
@@ -54,16 +55,25 @@ public class DevCommand extends CommandNode {
         Verify.isTrue(args.length >= 1,
                 () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments()))));
 
+        sender.sendMessage(" |space");
+        sender.sendMessage("§l §r|fat space");
+        sender.sendMessage("        |space");
+        sender.sendMessage("§l        §r|fat space");
+
         Object actual = sender.getSender();
 
         try {
             Method method = actual.getClass().getMethod("sendMessage", String.class);
-            int indent = 8;
+//            int indent = new Random().nextInt(25);
             String msg = new TextStringBuilder().appendWithSeparators(args, " ").toString();
-            method.invoke(actual, "With indent: " + indent);
-            method.invoke(actual, ChatFormatter.indent(indent, msg));
-            method.invoke(actual, "Centered:");
+//            method.invoke(actual, "With indent: " + indent);
+//            method.invoke(actual, ChatFormatter.leftPad(msg, indent));
+//            method.invoke(actual, "Centered:");
             method.invoke(actual, ChatFormatter.center(msg));
+            method.invoke(actual, "Table:");
+            String[] split = StringUtils.split(msg, ':');
+            int columnCount = split[0].length() - split[0].replace("-", "").length();
+            method.invoke(actual, ChatFormatter.columns(columnCount, split, "-"));
         } catch (Exception e) {
             e.printStackTrace();
         }
