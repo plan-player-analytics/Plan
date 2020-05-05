@@ -188,7 +188,7 @@ function onOpenserver(i, servers) {
             var worldSeries = {name: `World Playtime`, colorByPoint: true, data: server.world_pie_series};
             var gmSeries = server.gm_series;
 
-            worldPie("worldpie_server_" + i, worldSeries, gmSeries, '#3A3B45');
+            worldPie("worldpie_server_" + i, worldSeries, gmSeries);
         }, 250);
         opened = true;
     }

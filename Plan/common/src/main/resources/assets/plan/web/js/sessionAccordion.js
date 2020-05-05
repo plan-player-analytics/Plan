@@ -43,7 +43,7 @@ function onOpenSession(i, sessions) {
             var worldSeries = {name: `World Playtime`, colorByPoint: true, data: session.world_series};
             var gmSeries = session.gm_series;
 
-            worldPie("worldpie_" + i, worldSeries, gmSeries, '#3A3B45');
+            worldPie("worldpie_" + i, worldSeries, gmSeries);
         }, 250);
         opened = true;
     }

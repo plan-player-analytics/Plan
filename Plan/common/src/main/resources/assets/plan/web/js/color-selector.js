@@ -239,7 +239,7 @@
         try {
             Highcharts.theme = nightMode ? {
                 chart: {
-                    backgroundColor: '#44475a',
+                    backgroundColor: null,
                     plotBorderColor: '#606063'
                 },
                 title: {
@@ -351,7 +351,7 @@
                 }
             } : { // Defaults
                 chart: {
-                    backgroundColor: '#fff',
+                    backgroundColor: null,
                     plotBorderColor: '#cccccc'
                 },
                 title: {
