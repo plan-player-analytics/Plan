@@ -2,16 +2,19 @@ package com.djrapitops.plan.utilities.chat;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Formats chat messages in different ways.
  * <p>
  * Original code: https://hastebin.com/uziyajirag.avrasm
  */
 public class ChatFormatter {
-    private final static int CENTER_PX = 154;
-    private final static int MAX_PX = 250;
+    private static final int CENTER_PX = 154;
+    private static final int MAX_PX = 260;
 
-    public static String indent(int spaces, String message) {
+    public static String leftPad(String message, int spaces) {
         StringBuilder returnMessage = new StringBuilder();
 
         String padding = StringUtils.leftPad("", spaces);
@@ -32,8 +35,102 @@ public class ChatFormatter {
                 line = new StringBuilder(padding);
             }
         }
-        returnMessage.append(line.toString().trim());
+        returnMessage.append(StringUtils.chop(line.toString()));
         return returnMessage.toString();
+    }
+
+    public static String columns(int columns, String[] lines, String separator) {
+        StringBuilder returnMessage = new StringBuilder();
+        List<String[]> table = new ArrayList<>();
+        for (String line : lines) {
+            table.add(StringUtils.split(line, separator, columns));
+        }
+        int[] biggestWidth = new int[columns];
+        for (String[] line : table) {
+            for (int i = 0; i < line.length; i++) {
+                int width = getPxMessageWidth(line[i]);
+                if (biggestWidth[i] < width) {
+                    biggestWidth[i] = width;
+                }
+            }
+        }
+
+        for (String[] line : table) {
+            StringBuilder lineBuilder = new StringBuilder();
+
+            String currentStyle = "";
+            for (int i = 0; i < line.length; i++) {
+                int columnWidth = getPxMessageWidth(line[i]);
+                int required = biggestWidth[i] + DefaultFontInfo.SPACE.getLength() + 1;
+                lineBuilder.append(line[i]);
+                currentStyle = getLastStyle(currentStyle + line[i]);
+                compensate(required, columnWidth, lineBuilder, currentStyle);
+            }
+            returnMessage.append(lineBuilder.toString()).append("\n");
+        }
+        return returnMessage.toString();
+    }
+
+    public static String getLastStyle(String message) {
+        boolean wasColorChar = false;
+        char color = ' ';
+        boolean k = false;
+        boolean l = false;
+        boolean m = false;
+        boolean n = false;
+        boolean o = false;
+        for (char c : message.toCharArray()) {
+            if (c == '\u00a7') { // §
+                wasColorChar = true;
+            } else if (wasColorChar) {
+                switch (c) {
+                    case '0':
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                    case '9':
+                    case 'a':
+                    case 'b':
+                    case 'c':
+                    case 'd':
+                    case 'e':
+                    case 'f':
+                        color = c;
+                        break;
+                    case 'k':
+                        k = true;
+                        break;
+                    case 'l':
+                        l = true;
+                        break;
+                    case 'm':
+                        m = true;
+                        break;
+                    case 'n':
+                        n = true;
+                        break;
+                    case 'o':
+                        o = true;
+                        break;
+                    case 'r':
+                        color = ' ';
+                        k = false;
+                        l = false;
+                        m = false;
+                        n = false;
+                        o = false;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        return (color == ' ' ? "§" + color : "") + (k ? "§k" : "") + (l ? "§l" : "") + (m ? "§m" : "") + (n ? "§n" : "") + (o ? "§o" : "");
     }
 
     public static String center(String message) {
@@ -44,14 +141,29 @@ public class ChatFormatter {
 
         int halfOfWidth = messagePxWidth / 2;
         int toCompensate = CENTER_PX - halfOfWidth;
-        int spaceLength = DefaultFontInfo.SPACE.getLength() + 1;
         int compensated = 0;
         StringBuilder sb = new StringBuilder();
+        compensate(toCompensate, compensated, sb, "");
+        return sb.append(message).toString();
+    }
+
+    public static void compensate(int toCompensate, int compensated, StringBuilder builder, String currentStyle) {
+        int space = DefaultFontInfo.SPACE.getLength() + 1;
+        int boldSpace = DefaultFontInfo.SPACE.getBoldLength() + 1;
         while (compensated < toCompensate) {
-            sb.append(" ");
-            compensated += spaceLength;
+            int left = toCompensate - compensated;
+            if (left % 6 == 0) {
+                builder.append("§l");
+                for (int i = 0; i < left / 6; i++) {
+                    builder.append(" ");
+                    compensated += boldSpace;
+                }
+                builder.append("§r").append(currentStyle);
+            } else {
+                builder.append(" ");
+                compensated += space;
+            }
         }
-        return sb.toString() + message;
     }
 
     public static int getPxMessageWidth(String message) {
