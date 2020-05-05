@@ -628,8 +628,6 @@ function worldPie(id, worldSeries, gmSeries) {
 }
 
 function updateGraphs() {
-    var nightMode = window.localStorage.getItem('nightMode') == 'true';
-    console.log(Highcharts.theme);
     for (let graph of graphs) {
         graph.update(Highcharts.theme);
     }
