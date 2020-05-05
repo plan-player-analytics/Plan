@@ -21,12 +21,6 @@ var linegraphButtons = [{
 
 var graphs = [];
 
-HighCharts.setOptions({
-    chart: {
-        backgroundColor: null
-    }
-});
-
 function activityPie(id, activitySeries) {
     graphs.push(Highcharts.chart(id, {
         chart: {

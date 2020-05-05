@@ -1,17 +1,17 @@
 (function ($) {
-    var bgElements = ['.sidebar', '.btn', 'body'];
-    var textElements = ['a', 'button'];
+    const bgElements = ['.sidebar', '.btn', 'body'];
+    const textElements = ['a', 'button'];
 
-    var colors = ['plan',
+    const colors = ['plan',
         'red', 'pink', 'purple', 'deep-purple',
         'indigo', 'blue', 'light-blue', 'cyan',
         'teal', 'green', 'light-green', 'lime',
         'yellow', 'amber', 'orange', 'deep-orange',
         'brown', 'grey', 'blue-grey'];
 
-    var selectedColor = window.localStorage.getItem('themeColor');
-    var themeDefaultColor = 'plan';
-    var currentColor = 'plan';
+    const selectedColor = window.localStorage.getItem('themeColor');
+    const themeDefaultColor = 'plan';
+    let currentColor = 'plan';
 
     if (selectedColor === null) {
         window.localStorage.setItem('themeColor', currentColor);
@@ -23,18 +23,18 @@
             return;
         }
 
-        for (i in bgElements) {
-            var element = bgElements[i];
-            $(element + '.bg-' + currentColor + ":not(.color-chooser)")
-                .removeClass('bg-' + currentColor)
-                .addClass('bg-' + nextColor);
-        }
-        for (i in textElements) {
-            var element = textElements[i];
-            $(element + '.col-' + currentColor)
-                .removeClass('col-' + currentColor)
-                .addClass('col-' + nextColor);
-        }
+        let bgElementSelector = '';
+        bgElements.map(element => element + '.bg-' + currentColor + ":not(.color-chooser)")
+            .forEach(selector => bgElementSelector += selector + ',');
+        $(bgElementSelector.substr(0, bgElementSelector.length - 1))
+            .removeClass('bg-' + currentColor)
+            .addClass('bg-' + nextColor);
+        let textElementSelector = '';
+        textElements.map(element => element + '.col-' + currentColor)
+            .forEach(selector => textElementSelector += selector + ',');
+        $(textElementSelector.substr(0, textElementSelector.length - 1))
+            .removeClass('col-' + currentColor)
+            .addClass('col-' + nextColor);
         if (nextColor != 'night') {
             window.localStorage.setItem('themeColor', nextColor);
         }
@@ -49,11 +49,12 @@
             }
         }
 
-        for (i in colors) {
-            var color = colors[i];
-            var func = colorSetter(i);
-            $('#choose-' + color).on('click', func);
-            $('#choose-' + color).addClass('bg-' + color);
+        for (let i in colors) {
+            const color = colors[i];
+            const func = colorSetter(i);
+            $('#choose-' + color)
+                .on('click', func)
+                .addClass('bg-' + color);
         }
     }
 
@@ -61,7 +62,7 @@
 
     function disableColorSetters() {
         for (i in colors) {
-            var color = colors[i];
+            const color = colors[i];
             $('#choose-' + color).addClass('disabled').unbind('click');
         }
     }
@@ -69,28 +70,29 @@
     // Change the color of the theme
     setColor(selectedColor ? selectedColor : themeDefaultColor);
 
-    var nightMode = window.localStorage.getItem('nightMode') == 'true';
+    let nightMode = window.localStorage.getItem('nightMode') == 'true';
 
-    var saturationReduction = 0.70;
+    const saturationReduction = 0.70;
 
     // From https://stackoverflow.com/a/3732187
     function withReducedSaturation(colorHex) {
         // To RGB
-        var r = parseInt(colorHex.substr(1, 2), 16); // Grab the hex representation of red (chars 1-2) and convert to decimal (base 10).
-        var g = parseInt(colorHex.substr(3, 2), 16);
-        var b = parseInt(colorHex.substr(5, 2), 16);
+        let r = parseInt(colorHex.substr(1, 2), 16); // Grab the hex representation of red (chars 1-2) and convert to decimal (base 10).
+        let g = parseInt(colorHex.substr(3, 2), 16);
+        let b = parseInt(colorHex.substr(5, 2), 16);
 
         // To HSL
         r /= 255;
         g /= 255;
         b /= 255;
-        var max = Math.max(r, g, b), min = Math.min(r, g, b);
-        var h, s, l = (max + min) / 2;
+        const max = Math.max(r, g, b), min = Math.min(r, g, b);
+        let h, s;
+        const l = (max + min) / 2;
 
         if (max === min) {
             h = s = 0; // achromatic
         } else {
-            var d = max - min;
+            const d = max - min;
             s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
             switch (max) {
                 case r:
@@ -209,10 +211,10 @@
             // Background colors from dracula theme
             $('head').append('<style id="nightmode">' +
                 '#content {background-color:#282a36;}' +
-                '.card,.bg-white,.modal-content,.page-loader,.nav-tabs .nav-link:hover,.nav-tabs,hr {background-color:#44475a;border-color:#6272a4!important;}' +
+                '.card,.bg-white,.modal-content,.page-loader,.nav-tabs .nav-link:hover,.nav-tabs,hr,form .btn{background-color:#44475a;border-color:#6272a4!important;}' +
                 '.bg-white.collapse-inner {border:1px solid;}' +
                 '.card-header {background-color:#44475a;border-color:#6272a4;}' +
-                '#content,.col-black,.text-gray-800,.collapse-item,.modal-title,.modal-body,.page-loader,.close,.fc-title,.fc-time,pre,.table-dark {color:#eee8d5 !important;}' +
+                '#content,.col-black,.text-gray-900,.text-gray-800,.collapse-item,.modal-title,.modal-body,.page-loader,.close,.fc-title,.fc-time,pre,.table-dark{color:#eee8d5 !important;}' +
                 '.collapse-item:hover,.nav-link.active {background-color: #606270 !important;}' +
                 '.nav-tabs .nav-link.active {background-color: #44475a !important;border-color:#6272a4 #6272a4 #44475a !important;}' +
                 '.fc-today {background:#646e8c !important}' +
