@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.commands;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -61,5 +62,11 @@ public class Arguments {
 
     public List<String> asList() {
         return args;
+    }
+
+    public Arguments removeFirst() {
+        List<String> copy = new ArrayList<>(args);
+        if (!copy.isEmpty()) copy.remove(0);
+        return new Arguments(copy);
     }
 }
