@@ -118,10 +118,10 @@ HTML - LABEL_AVG_SESSION_LENGTH                 || 平均时域长度
 HTML - LABEL_AVG_TPS                            || 平均TPS
 HTML - LABEL_BANNED                             || 已封禁
 HTML - LABEL_BEST_PEAK                          || 所有时间峰值
-HTML - LABEL_DAY_OF_WEEK                        || Day of the Week
+HTML - LABEL_DAY_OF_WEEK                        || 星期
 HTML - LABEL_DEATHS                             || 死亡数
 HTML - LABEL_DOWNTIME                           || 停机时间
-HTML - LABEL_DURING_LOW_TPS                     || TPS Spikes:
+HTML - LABEL_DURING_LOW_TPS                     || TPS峰值:
 HTML - LABEL_ENTITIES                           || 实体数
 HTML - LABEL_FAVORITE_SERVER                    || 喜爱的服务器
 HTML - LABEL_FIRST_SESSION_LENGTH               || 第一个时域的长度
@@ -134,9 +134,9 @@ HTML - LABEL_LOADED_ENTITIES                    || 已加载的实体
 HTML - LABEL_LONE_JOINS                         || Lone joins
 HTML - LABEL_LONE_NEW_JOINS                     || Lone newbie joins
 HTML - LABEL_LONGEST_SESSION                    || 最长时域
-HTML - LABEL_LOW_TPS                            || 最低TPS Spikes
-HTML - LABEL_MAX_FREE_DISK                      || Max Free Disk
-HTML - LABEL_MIN_FREE_DISK                      || Min Free Disk
+HTML - LABEL_LOW_TPS                            || TPS最低峰
+HTML - LABEL_MAX_FREE_DISK                      || 最大可用磁盘空间
+HTML - LABEL_MIN_FREE_DISK                      || 最小可用磁盘空间
 HTML - LABEL_MOB_DEATHS                         || 被怪物击杀数
 HTML - LABEL_MOB_KDR                            || 怪物击杀比
 HTML - LABEL_MOB_KILLS                          || 怪物击杀数
@@ -145,7 +145,7 @@ HTML - LABEL_NAME                               || 名称
 HTML - LABEL_NEW                                || 新
 HTML - LABEL_NEW_PLAYERS                        || 新玩家
 HTML - LABEL_NICKNAME                           || 昵称
-HTML - LABEL_NO_SESSION_KILLS                   || None
+HTML - LABEL_NO_SESSION_KILLS                   || 无
 HTML - LABEL_ONLINE_FIRST_JOIN                  || 第一次加入服务器的在线玩家
 HTML - LABEL_OPERATOR                           || 管理员
 HTML - LABEL_PER_PLAYER                         || / 玩家
@@ -156,9 +156,9 @@ HTML - LABEL_PLAYERS_ONLINE                     || 在线玩家
 HTML - LABEL_PLAYTIME                           || 游玩时间
 HTML - LABEL_REGISTERED                         || 已注册
 HTML - LABEL_REGISTERED_PLAYERS                 || 已注册的玩家
-HTML - LABEL_REGULAR                            || Regular
+HTML - LABEL_REGULAR                            || 普通
 HTML - LABEL_REGULAR_PLAYERS                    || 普通玩家
-HTML - LABEL_RELATIVE_JOIN_ACTIVITY             || Relative Join Activity
+HTML - LABEL_RELATIVE_JOIN_ACTIVITY             || 最近加入活动
 HTML - LABEL_RETENTION                          || 新玩家留坑率
 HTML - LABEL_SERVER_DOWNTIME                    || 关服时间
 HTML - LABEL_SERVER_OCCUPIED                    || 开服时间
@@ -175,8 +175,8 @@ HTML - LINK_CHANGELOG                           || 查看更新日志
 HTML - LINK_DISCORD                             || Discord支持
 HTML - LINK_DOWNLOAD                            || 下载
 HTML - LINK_ISSUES                              || 提问
-HTML - LINK_NIGHT_MODE                          || 夜晚模式
-HTML - LINK_PLAYER_PAGE                         || Player Page
+HTML - LINK_NIGHT_MODE                          || 夜间模式
+HTML - LINK_PLAYER_PAGE                         || 玩家页面
 HTML - LINK_QUICK_VIEW                          || 快速检索
 HTML - LINK_SERVER_ANALYSIS                     || 服务器分析
 HTML - LINK_WIKI                                || Plan Wiki,教程 & 文档
@@ -210,15 +210,15 @@ HTML - TEXT_CONTRIBUTORS_MONEY                  || 特别感谢那些在经济�
 HTML - TEXT_CONTRIBUTORS_THANKS                 || 另外以下 <span class="col-plan">awesome people</span> 也为该插件作出了贡献:
 HTML - TEXT_DEV_VERSION                         || 该版本为开发版本.
 HTML - TEXT_DEVELOPED_BY                        || 的开发者为
-HTML - TEXT_FIRST_SESSION                       || First session
+HTML - TEXT_FIRST_SESSION                       || 第一时域
 HTML - TEXT_LICENSED_UNDER                      || is developed and licensed under
 HTML - TEXT_METRICS                             || bStats Metrics
 HTML - TEXT_NO_EXTENSION_DATA                   || 没有拓展数据
-HTML - TEXT_NO_LOW_TPS                          || No low tps spikes
-HTML - TEXT_NO_SERVER                           || No server to display online activity for
-HTML - TEXT_NO_SERVERS                          || No servers found in the database
+HTML - TEXT_NO_LOW_TPS                          || 无tps低峰
+HTML - TEXT_NO_SERVER                           || 没有可显示的在线活动的服务器
+HTML - TEXT_NO_SERVERS                          || 数据库中找不到服务器
 HTML - TEXT_PLUGIN_INFORMATION                  || 插件信息
-HTML - TEXT_PREDICTED_RETENTION                 || This value is a prediction based on previous players
+HTML - TEXT_PREDICTED_RETENTION                 || 这个数值根据之前的玩家预测得出
 HTML - TEXT_VERSION                             || 有新版本的插件可用.
 HTML - TITLE_30_DAYS                            || 30 天
 HTML - TITLE_30_DAYS_AGO                        || 30 天前
@@ -233,7 +233,7 @@ HTML - TITLE_COUNTRY                            || 国家
 HTML - TITLE_CPU_RAM                            || CPU & RAM
 HTML - TITLE_CURRENT_PLAYERBASE                 || 当前玩家
 HTML - TITLE_DISK                               || 磁盘空间
-HTML - TITLE_GRAPH_DAY_BY_DAY                   || Day by Day
+HTML - TITLE_GRAPH_DAY_BY_DAY                   || 每日
 HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || Network Online Activity
 HTML - TITLE_GRAPH_PUNCHCARD                    || 打卡签到30天
 HTML - TITLE_INSIGHTS                           || Insights30天
@@ -245,24 +245,24 @@ HTML - TITLE_LAST_CONNECTED                     || 最后连接
 HTML - TITLE_LENGTH                             ||  长度
 HTML - TITLE_MOST_PLAYED_WORLD                  || 最多玩家的世界
 HTML - TITLE_NETWORK                            || 服务器网络
-HTML - TITLE_NETWORK_AS_NUMBERS                 || Network as Numbers
+HTML - TITLE_NETWORK_AS_NUMBERS                 || 以网络作为数字
 HTML - TITLE_NOW                                || 现在
 HTML - TITLE_ONLINE_ACTIVITY                    || 在线活动
-HTML - TITLE_ONLINE_ACTIVITY_AS_NUMBERS         || Online Activity as Numbers
-HTML - TITLE_ONLINE_ACTIVITY_OVERVIEW           || Online Activity Overview
-HTML - TITLE_PERFORMANCE_AS_NUMBERS             || Performance as Numbers
+HTML - TITLE_ONLINE_ACTIVITY_AS_NUMBERS         || 以在线活动作为数字
+HTML - TITLE_ONLINE_ACTIVITY_OVERVIEW           || 在线活动预览
+HTML - TITLE_PERFORMANCE_AS_NUMBERS             || 以性能作为数字
 HTML - TITLE_PING                               || 延迟
 HTML - TITLE_PLAYER                             || 玩家
 HTML - TITLE_PLAYER_OVERVIEW                    || 玩家预览
 HTML - TITLE_PLAYERBASE_DEVELOPMENT             || 玩家发展
 HTML - TITLE_PVP_DEATHS                         || 最近的PVP死亡
 HTML - TITLE_PVP_KILLS                          || 最近的PVP击杀
-HTML - TITLE_PVP_PVE_NUMBERS                    || PvP & PvE as Numbers
+HTML - TITLE_PVP_PVE_NUMBERS                    || 以PvP & PvE作为数字
 HTML - TITLE_RECENT_KILLS                       || 最近击杀
 HTML - TITLE_RECENT_SESSIONS                    || 最近时域
 HTML - TITLE_SEEN_NICKNAMES                     || 可视昵称
 HTML - TITLE_SERVER                             || 服务器
-HTML - TITLE_SERVER_AS_NUMBERS                  || Server as Numbers
+HTML - TITLE_SERVER_AS_NUMBERS                  || 以服务器作为数字
 HTML - TITLE_SERVER_OVERVIEW                    || 服务器预览
 HTML - TITLE_SERVER_PLAYTIME                    || 服务器游戏时间
 HTML - TITLE_SERVER_PLAYTIME_30                 || 服务器30天的游戏时间
@@ -281,8 +281,8 @@ HTML - TOTAL_ACTIVE_TEXT                        || 总活跃玩家
 HTML - TOTAL_AFK                                || 总挂机玩家
 HTML - TOTAL_PLAYERS                            || 总玩家
 HTML - UNIQUE_CALENDAR                          || 普通玩家:
-HTML - UNIT_CHUNKS                              || Chunks
-HTML - UNIT_ENTITIES                            || Entities
+HTML - UNIT_CHUNKS                              || 区块
+HTML - UNIT_ENTITIES                            || 实体
 HTML - UNIT_NO_DATA                             || 没有数据
 HTML - UNIT_THE_PLAYERS                         || 玩家
 HTML - USER_AND_PASS_NOT_SPECIFIED              || 未指定用户名与密码
@@ -306,11 +306,11 @@ In Depth Help - /plan inspect ?                 || §2检视命令\§f  用于�
 In Depth Help - /plan manage ?                  || §2管理命令\§f  用于管理插件数据库。\§7  别名：/plan m\§7  /plan m - Auflistung der Unterbefehle\§7  /plan m <子命令> ? - 详细帮助
 In Depth Help - /plan manage backup ?           || > §2备份命令\  用于建立新 SQLite 数据库（.db 文件）并包含当前在计划插件文件夹中所有的活跃数据库内容。
 In Depth Help - /plan manage clear ?            || §2管理清除命令\§f  用于清除活跃数据库中的所有数据。\§7  插件在清理完毕后应被重载。\§7  别名：/plan pl
-In Depth Help - /plan manage disable ?          || > §2关闭子命令\  Can disable parts of the plugin until next reload.\  Accepted arguments:\    §2kickcount §fDisables kick counts in case /kickall is used on shutdown macro.
-In Depth Help - /plan manage export ?           || > §2导出子命令\  Trigger export to result folders.\  Accepted Arguments:\    §2list §fList possible arguments.\    §2players §fExport /players, /player pages + /player/raw json depending on config values.\    §2server_json §fExport /server/raw JSON if enabled in config.
+In Depth Help - /plan manage disable ?          || > §2关闭子命令\  可禁用插件部分功能直到下载重载插件。\  可用参数:\    §2kickcount §fDisables kick counts in case /kickall is used on shutdown macro.
+In Depth Help - /plan manage export ?           || > §2导出子命令\  导出到目标文件夹.\  可用参数:\    §2list §f列出所有可用参数。\    §2players §fExport /players, /player pages + /player/raw json depending on config values.\    §2server_json §fExport /server/raw JSON if enabled in config.
 In Depth Help - /plan manage import ?           || §2管理导入命令\§f  用于从其它来源导入数据\§7  在导入过程中将禁用数据分析。
 In Depth Help - /plan manage move ?             || > §2移动指令\  将数据从 SQLite 移动至 MySQL，反之亦然。\  目标数据库将在转移前被清除。
-In Depth Help - /plan manage raw ?              || > §2Raw数据子命令\  Displays link to raw JSON data page.\  Not available if Plan webserver is not enabled.
+In Depth Help - /plan manage raw ?              || > §2Raw数据子命令\  显示 raw JSON数据页面的链接.\  Not available if Plan webserver is not enabled.
 In Depth Help - /plan manage remove ?           || §2管理移除命令\§f  用于从活跃数据库中移除用户数据。
 In Depth Help - /plan manage restore ?          || > §2恢复命令\  从先前备份的 SQLite 数据库中恢复数据（.db 文件）\  您也可以从其他服务器中恢复 database.db 到 MySQL。\  目标数据库将在传输前被清除。
 In Depth Help - /plan manage uninstalled ?      || > §2卸载服务器的子命令\  在数据库中将一个服务器视为未安装。\  Can not mark the server the command is being used on as uninstalled.\  将会影响连接系统。
@@ -341,7 +341,7 @@ Manage - Success                                || §f» §2 成功！
 Negative                                        || 否
 Positive                                        || 是
 Today                                           || '今天'
-Unavailable                                     || Unavailable
+Unavailable                                     || 不可用
 Unknown                                         || 未知
 Version - DEV                                   ||  这是开发版本。
 Version - Latest                                || 您正使用最新版本。
