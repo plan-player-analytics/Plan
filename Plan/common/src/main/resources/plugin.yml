@@ -18,7 +18,7 @@ softdepend:
   - GriefPrevention
   - GriefPreventionPlus
   - Jobs
-  - Litebans
+  - LiteBans
   - LuckPerms
   - mcMMO
   - MinigamesLib
