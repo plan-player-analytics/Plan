@@ -1,6 +1,6 @@
 const content = document.getElementById("content");
 const navButtons = Array.from(document.getElementsByClassName("nav-button"));
-const tabs = Array.from(document.getElementsByClassName("tab")).filter(tab => tab.id);
+const tabs = Array.from(document.getElementsByClassName("tab")).filter(tab => tab.id); // TABS NEED IDS
 const tabCount = tabs.length;
 
 function openTab(openIndex) {

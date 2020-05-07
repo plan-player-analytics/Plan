@@ -28,6 +28,7 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
+import com.djrapitops.plan.utilities.java.UnaryChain;
 import com.djrapitops.plan.version.VersionChecker;
 
 import java.util.UUID;
@@ -104,16 +105,19 @@ public class PlayerPage implements Page {
 
         placeholders.put("contributors", Contributors.generateContributorHtml());
 
-        String html = locale.replaceLanguageInHtml(placeholders.apply(templateHtml));
-
-        placeholders = new PlaceholderReplacer();
+        PlaceholderReplacer pluginPlaceholders = new PlaceholderReplacer();
         PlayerPluginTab pluginTabs = pageFactory.inspectPluginTabs(playerUUID);
 
-        placeholders.put("playerName", playerName);
-        placeholders.put("backButton", (serverInfo.getServer().isProxy() ? Html.BACK_BUTTON_NETWORK : Html.BACK_BUTTON_SERVER).create());
-        placeholders.put("navPluginsTabs", pluginTabs.getNav());
-        placeholders.put("pluginsTabs", pluginTabs.getTab());
+        pluginPlaceholders.put("playerName", playerName);
+        pluginPlaceholders.put("backButton", (serverInfo.getServer().isProxy() ? Html.BACK_BUTTON_NETWORK : Html.BACK_BUTTON_SERVER).create());
+        pluginPlaceholders.put("navPluginsTabs", pluginTabs.getNav());
+        pluginPlaceholders.put("pluginsTabs", pluginTabs.getTab());
 
-        return placeholders.apply(theme.replaceThemeColors(html));
+        return UnaryChain.of(templateHtml)
+                .chain(theme::replaceThemeColors)
+                .chain(placeholders::apply)
+                .chain(pluginPlaceholders::apply)
+                .chain(locale::replaceLanguageInHtml)
+                .apply();
     }
 }

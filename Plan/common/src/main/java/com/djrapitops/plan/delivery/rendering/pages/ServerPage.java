@@ -111,8 +111,8 @@ public class ServerPage implements Page {
         return UnaryChain.of(templateHtml)
                 .chain(theme::replaceThemeColors)
                 .chain(placeholders::apply)
-                .chain(locale::replaceLanguageInHtml)
                 .chain(pluginPlaceholders::apply)
+                .chain(locale::replaceLanguageInHtml)
                 .apply();
     }
 }
