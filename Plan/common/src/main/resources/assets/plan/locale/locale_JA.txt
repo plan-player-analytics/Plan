@@ -205,8 +205,8 @@ HTML - SIDE_SESSIONS                            || 接続履歴
 HTML - SIDE_TO_MAIN_PAGE                        || メインページに戻る
 HTML - TEXT_CLICK_TO_EXPAND                     || クリックして展開
 HTML - TEXT_CONTRIBUTORS_CODE                   || :プログラミング貢献者　
-HTML - TEXT_CONTRIBUTORS_LOCALE                 || :翻訳者
-HTML - TEXT_CONTRIBUTORS_MONEY                  || このプラグイン開発に募金して頂いた人々に特別な感謝を
+HTML - TEXT_CONTRIBUTORS_LOCALE                 || :翻訳者　
+HTML - TEXT_CONTRIBUTORS_MONEY                  || このプラグイン開発に募金して頂いた人々へ特別な感謝を
 HTML - TEXT_CONTRIBUTORS_THANKS                 || 加えて、以下の<span class="col-plan">素晴らしい人々</span>が開発に貢献しています
 HTML - TEXT_DEV_VERSION                         || このバージョンは開発版です
 HTML - TEXT_DEVELOPED_BY                        || 開発者:
