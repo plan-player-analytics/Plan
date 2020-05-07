@@ -22,7 +22,6 @@ import dagger.Provides;
 
 import javax.inject.Singleton;
 import java.net.InetSocketAddress;
-import java.util.Random;
 
 /**
  * Dagger module for Bukkit ServerProperties.
@@ -41,8 +40,7 @@ public class PluginServerPropertiesModule {
                 "1.13",
                 "1.13-git-mock",
                 () -> new InetSocketAddress(25565).getAddress().getHostAddress(),
-                20,
-                () -> new Random().nextInt(20)
+                20
         ) {};
     }
 }

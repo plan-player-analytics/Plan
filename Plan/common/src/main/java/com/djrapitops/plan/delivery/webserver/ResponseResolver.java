@@ -16,25 +16,30 @@
  */
 package com.djrapitops.plan.delivery.webserver;
 
-import com.djrapitops.plan.delivery.webserver.auth.Authentication;
-import com.djrapitops.plan.delivery.webserver.pages.*;
-import com.djrapitops.plan.delivery.webserver.pages.json.RootJSONResolver;
-import com.djrapitops.plan.delivery.webserver.response.OptionsResponse;
-import com.djrapitops.plan.delivery.webserver.response.Response;
-import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
+import com.djrapitops.plan.delivery.web.ResolverService;
+import com.djrapitops.plan.delivery.web.ResolverSvc;
+import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
+import com.djrapitops.plan.delivery.web.resolver.Resolver;
+import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
+import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
+import com.djrapitops.plan.delivery.webserver.auth.FailReason;
+import com.djrapitops.plan.delivery.webserver.resolver.*;
+import com.djrapitops.plan.delivery.webserver.resolver.auth.*;
+import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
-import com.djrapitops.plan.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
-import com.djrapitops.plan.exceptions.connection.NotFoundException;
-import com.djrapitops.plan.exceptions.connection.WebException;
-import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 /**
  * Resolves All URLs.
@@ -45,54 +50,85 @@ import java.util.Optional;
  * @author Rsl1122
  */
 @Singleton
-public class ResponseResolver extends CompositePageResolver {
+public class ResponseResolver {
 
     private final DebugPageResolver debugPageResolver;
     private final PlayersPageResolver playersPageResolver;
     private final PlayerPageResolver playerPageResolver;
     private final ServerPageResolver serverPageResolver;
+    private final RootPageResolver rootPageResolver;
     private final RootJSONResolver rootJSONResolver;
+    private final StaticResourceResolver staticResourceResolver;
+    private LoginPageResolver loginPageResolver;
+    private RegisterPageResolver registerPageResolver;
+    private LoginResolver loginResolver;
+    private LogoutResolver logoutResolver;
+    private RegisterResolver registerResolver;
     private final ErrorHandler errorHandler;
 
-    private final ServerInfo serverInfo;
+    private final ResolverService resolverService;
+    private final ResponseFactory responseFactory;
     private final Lazy<WebServer> webServer;
 
     @Inject
     public ResponseResolver(
+            ResolverSvc resolverService,
             ResponseFactory responseFactory,
             Lazy<WebServer> webServer,
-            ServerInfo serverInfo,
 
             DebugPageResolver debugPageResolver,
             PlayersPageResolver playersPageResolver,
             PlayerPageResolver playerPageResolver,
             ServerPageResolver serverPageResolver,
+            RootPageResolver rootPageResolver,
             RootJSONResolver rootJSONResolver,
+            StaticResourceResolver staticResourceResolver,
+
+            LoginPageResolver loginPageResolver,
+            RegisterPageResolver registerPageResolver,
+            LoginResolver loginResolver,
+            LogoutResolver logoutResolver,
+            RegisterResolver registerResolver,
 
             ErrorHandler errorHandler
     ) {
-        super(responseFactory);
+        this.resolverService = resolverService;
+        this.responseFactory = responseFactory;
         this.webServer = webServer;
-        this.serverInfo = serverInfo;
         this.debugPageResolver = debugPageResolver;
         this.playersPageResolver = playersPageResolver;
         this.playerPageResolver = playerPageResolver;
         this.serverPageResolver = serverPageResolver;
+        this.rootPageResolver = rootPageResolver;
         this.rootJSONResolver = rootJSONResolver;
+        this.staticResourceResolver = staticResourceResolver;
+        this.loginPageResolver = loginPageResolver;
+        this.registerPageResolver = registerPageResolver;
+        this.loginResolver = loginResolver;
+        this.logoutResolver = logoutResolver;
+        this.registerResolver = registerResolver;
         this.errorHandler = errorHandler;
     }
 
     public void registerPages() {
-        registerPage("debug", debugPageResolver);
-        registerPage("players", playersPageResolver);
-        registerPage("player", playerPageResolver);
+        String plugin = "Plan";
+        resolverService.registerResolver(plugin, "/debug", debugPageResolver);
+        resolverService.registerResolver(plugin, "/players", playersPageResolver);
+        resolverService.registerResolver(plugin, "/player", playerPageResolver);
+        resolverService.registerResolver(plugin, "/favicon.ico", (NoAuthResolver) request -> Optional.of(responseFactory.faviconResponse()));
+        resolverService.registerResolver(plugin, "/network", serverPageResolver);
+        resolverService.registerResolver(plugin, "/server", serverPageResolver);
 
-        registerPage("network", serverPageResolver);
-        registerPage("server", serverPageResolver);
+        resolverService.registerResolver(plugin, "/login", loginPageResolver);
+        resolverService.registerResolver(plugin, "/register", registerPageResolver);
+        resolverService.registerResolver(plugin, "/auth/login", loginResolver);
+        resolverService.registerResolver(plugin, "/auth/logout", logoutResolver);
+        resolverService.registerResolver(plugin, "/auth/register", registerResolver);
 
-        registerPage("", new RootPageResolver(responseFactory, webServer.get(), serverInfo));
+        resolverService.registerResolverForMatches(plugin, Pattern.compile("^/$"), rootPageResolver);
+        resolverService.registerResolverForMatches(plugin, Pattern.compile("^.*/(vendor|css|js|img)/.*"), staticResourceResolver);
 
-        registerPage("v1", rootJSONResolver);
+        resolverService.registerResolver(plugin, "/v1", rootJSONResolver.getResolver());
     }
 
     public Response getResponse(Request request) {
@@ -100,56 +136,56 @@ public class ResponseResolver extends CompositePageResolver {
             return tryToGetResponse(request);
         } catch (NotFoundException e) {
             return responseFactory.notFound404(e.getMessage());
-        } catch (WebUserAuthException e) {
-            return responseFactory.basicAuthFail(e);
         } catch (ForbiddenException e) {
             return responseFactory.forbidden403(e.getMessage());
         } catch (BadRequestException e) {
-            return responseFactory.badRequest(e.getMessage(), request.getTargetString());
+            return responseFactory.badRequest(e.getMessage(), request.getPath().asString());
+        } catch (WebUserAuthException e) {
+            throw e; // Pass along
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
-            return responseFactory.internalErrorResponse(e, request.getTargetString());
+            return responseFactory.internalErrorResponse(e, request.getPath().asString());
         }
     }
 
-    private Response tryToGetResponse(Request request) throws WebException {
-        Optional<Authentication> authentication = request.getAuth();
-        RequestTarget target = request.getTarget();
-        String resource = target.getResourceString();
-
-        if ("OPTIONS".equalsIgnoreCase(request.getRequestMethod())) {
-            return new OptionsResponse();
+    /**
+     * @throws NotFoundException   In some cases when page was not found, not all.
+     * @throws ForbiddenException  If the user is not allowed to see the page
+     * @throws BadRequestException If the request did not have required things.
+     */
+    private Response tryToGetResponse(Request request) {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            // https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS
+            return Response.builder().setStatus(204).setContent(new byte[0]).build();
         }
 
-        if (target.endsWith(".css")) {
-            return responseFactory.cssResponse(resource);
-        }
-        if (target.endsWith(".js")) {
-            return responseFactory.javaScriptResponse(resource);
-        }
-        if (target.endsWith(".png")) {
-            return responseFactory.imageResponse(resource);
-        }
-        if (target.endsWith("favicon.ico")) {
-            return responseFactory.faviconResponse();
-        }
+        Optional<WebUser> user = request.getUser();
 
-        boolean isAuthRequired = webServer.get().isAuthRequired();
-        if (isAuthRequired && !authentication.isPresent()) {
-            if (webServer.get().isUsingHTTPS()) {
-                return responseFactory.basicAuth();
+        List<Resolver> foundResolvers = resolverService.getResolvers(request.getPath().asString());
+        if (foundResolvers.isEmpty()) return responseFactory.pageNotFound404();
+
+        for (Resolver resolver : foundResolvers) {
+            boolean isAuthRequired = webServer.get().isAuthRequired() && resolver.requiresAuth(request);
+            if (isAuthRequired) {
+                if (!user.isPresent()) {
+                    if (webServer.get().isUsingHTTPS()) {
+                        throw new WebUserAuthException(FailReason.NO_USER_PRESENT);
+                    } else {
+                        return responseFactory.forbidden403();
+                    }
+                }
+
+                if (resolver.canAccess(request)) {
+                    Optional<Response> resolved = resolver.resolve(request);
+                    if (resolved.isPresent()) return resolved.get();
+                } else {
+                    return responseFactory.forbidden403();
+                }
             } else {
-                return responseFactory.forbidden403();
+                Optional<Response> resolved = resolver.resolve(request);
+                if (resolved.isPresent()) return resolved.get();
             }
         }
-        PageResolver pageResolver = getPageResolver(target);
-        if (pageResolver == null) {
-            return responseFactory.pageNotFound404();
-        } else {
-            if (!isAuthRequired || pageResolver.isAuthorized(authentication.get(), target)) {
-                return pageResolver.resolve(request, target);
-            }
-            return responseFactory.forbidden403();
-        }
+        return responseFactory.pageNotFound404();
     }
 }

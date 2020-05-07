@@ -20,7 +20,7 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.modules.APFModule;
-import com.djrapitops.plan.modules.FilesModule;
+import com.djrapitops.plan.modules.PlaceholderModule;
 import com.djrapitops.plan.modules.SystemObjectProvidingModule;
 import dagger.BindsInstance;
 import dagger.Component;
@@ -37,7 +37,8 @@ import javax.inject.Singleton;
         PlanPluginModule.class,
         SystemObjectProvidingModule.class,
         APFModule.class,
-        FilesModule.class,
+        PlaceholderModule.class,
+
         PluginServerPropertiesModule.class,
         PluginSuperClassBindingModule.class
 })

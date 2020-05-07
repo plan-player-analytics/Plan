@@ -16,10 +16,11 @@
  */
 package com.djrapitops.plan;
 
+import com.djrapitops.plan.addons.placeholderapi.NukkitPlaceholderRegistrar;
 import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.modules.APFModule;
-import com.djrapitops.plan.modules.FilesModule;
+import com.djrapitops.plan.modules.PlaceholderModule;
 import com.djrapitops.plan.modules.SystemObjectProvidingModule;
 import com.djrapitops.plan.modules.nukkit.NukkitPlanModule;
 import com.djrapitops.plan.modules.nukkit.NukkitServerPropertiesModule;
@@ -39,7 +40,8 @@ import javax.inject.Singleton;
         NukkitPlanModule.class,
         SystemObjectProvidingModule.class,
         APFModule.class,
-        FilesModule.class,
+        PlaceholderModule.class,
+
         NukkitServerPropertiesModule.class,
         NukkitSuperClassBindingModule.class
 })
@@ -50,6 +52,8 @@ public interface PlanNukkitComponent {
     PlanSystem system();
 
     ServerShutdownSave serverShutdownSave();
+
+    NukkitPlaceholderRegistrar placeholders();
 
     @Component.Builder
     interface Builder {

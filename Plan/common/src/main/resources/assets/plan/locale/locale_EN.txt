@@ -83,7 +83,7 @@ Disable - Unsaved Session Save                  || Saving unfinished sessions..
 Disable - WebServer                             || Webserver has been disabled.
 Enable                                          || Player Analytics Enabled.
 Enable - Database                               || ${0}-database connection established.
-Enable - Notify Empty IP                        || IP in server.properties is empty & AlternativeIP is not in use. Incorrect links will be given!
+Enable - Notify Empty IP                        || IP in server.properties is empty & Alternative_IP is not in use. Incorrect links might be given!
 Enable - Notify Geolocations disabled           || Geolocation gathering is not active. (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || Plan Requires internet access on first run to download GeoLite2 Geolocation database.
 Enable - Notify Webserver disabled              || WebServer was not initialized. (WebServer.DisableWebServer: true)
@@ -162,7 +162,7 @@ HTML - LABEL_RELATIVE_JOIN_ACTIVITY             || Relative Join Activity
 HTML - LABEL_RETENTION                          || New Player Retention
 HTML - LABEL_SERVER_DOWNTIME                    || Server Downtime
 HTML - LABEL_SERVER_OCCUPIED                    || Server occupied
-HTML - LABEL_SESSION_ENDED                      || Ended
+HTML - LABEL_SESSION_ENDED                      ||  Ended
 HTML - LABEL_SESSION_MEDIAN                     || Session Median
 HTML - LABEL_TIMES_KICKED                       || Times Kicked
 HTML - LABEL_TOTAL_PLAYERS                      || Total Players
@@ -242,7 +242,7 @@ HTML - TITLE_LAST_24_HOURS                      || Last 24 hours
 HTML - TITLE_LAST_30_DAYS                       || Last 30 days
 HTML - TITLE_LAST_7_DAYS                        || Last 7 days
 HTML - TITLE_LAST_CONNECTED                     || Last Connected
-HTML - TITLE_LENGTH                             || Length
+HTML - TITLE_LENGTH                             ||  Length
 HTML - TITLE_MOST_PLAYED_WORLD                  || Most played World
 HTML - TITLE_NETWORK                            || Network
 HTML - TITLE_NETWORK_AS_NUMBERS                 || Network as Numbers
@@ -295,7 +295,7 @@ HTML ERRORS - AUTHENTICATION_FAILED_401         || Authentication Failed.
 HTML ERRORS - FORBIDDEN_403                     || Forbidden
 HTML ERRORS - NO_SERVERS_404                    || No Servers online to perform the request.
 HTML ERRORS - NOT_FOUND_404                     || Not Found
-HTML ERRORS - NOT_PLAYED_404                    || Player has not played on this server.
+HTML ERRORS - NOT_PLAYED_404                    || Plan has not seen this player.
 HTML ERRORS - PAGE_NOT_FOUND_404                || Page does not exist.
 HTML ERRORS - UNAUTHORIZED_401                  || Unauthorized
 HTML ERRORS - UNKNOWN_PAGE_404                  || Make sure you're accessing a link given by a command, Examples:</p><p>/player/PlayerName<br>/server/ServerName</p>

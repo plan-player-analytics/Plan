@@ -19,7 +19,7 @@ package com.djrapitops.plan.gathering.listeners;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.events.PlanBukkitEnableEvent;
-import com.djrapitops.plan.capability.CapabilityServiceImplementation;
+import com.djrapitops.plan.capability.CapabilitySvc;
 import com.djrapitops.plan.gathering.listeners.bukkit.*;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -82,6 +82,6 @@ public class BukkitListenerSystem extends ListenerSystem {
         boolean isEnabled = plugin.isSystemEnabled();
         PlanBukkitEnableEvent event = new PlanBukkitEnableEvent(isEnabled);
         Bukkit.getServer().getPluginManager().callEvent(event);
-        CapabilityServiceImplementation.notifyAboutEnable(isEnabled);
+        CapabilitySvc.notifyAboutEnable(isEnabled);
     }
 }

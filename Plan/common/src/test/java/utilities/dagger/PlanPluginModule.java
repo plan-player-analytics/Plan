@@ -49,5 +49,4 @@ public interface PlanPluginModule {
 
     @Binds
     ServerInfo bindServerInfo(ServerServerInfo serverServerInfo);
-
 }

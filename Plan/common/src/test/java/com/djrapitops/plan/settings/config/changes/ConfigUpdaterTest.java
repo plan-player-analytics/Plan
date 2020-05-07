@@ -26,8 +26,6 @@ import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.TestResources;
 
 import java.io.File;
@@ -45,7 +43,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class ConfigUpdaterTest {
 
     @TempDir
@@ -84,7 +81,7 @@ class ConfigUpdaterTest {
         Path config = tempDir.resolve("oldconfig.yml");
         Files.copy(oldConfig.toPath(), config, StandardCopyOption.REPLACE_EXISTING);
 
-        PlanConfig planConfig = new PlanConfig(config.toFile(), null, new TestPluginLogger());
+        PlanConfig planConfig = new PlanConfig(config.toFile(), null, null, new TestPluginLogger());
 
         UNDER_TEST.applyConfigUpdate(planConfig);
 
@@ -100,7 +97,7 @@ class ConfigUpdaterTest {
         Path config = tempDir.resolve("oldconfig.yml");
         Files.copy(oldBungeeConfig.toPath(), config, StandardCopyOption.REPLACE_EXISTING);
 
-        PlanConfig planConfig = new PlanConfig(config.toFile(), null, new TestPluginLogger());
+        PlanConfig planConfig = new PlanConfig(config.toFile(), null, null, new TestPluginLogger());
 
         UNDER_TEST.applyConfigUpdate(planConfig);
 
@@ -122,7 +119,7 @@ class ConfigUpdaterTest {
         Path config = tempDir.resolve("oldconfig.yml");
         Files.copy(oldConfig.toPath(), config, StandardCopyOption.REPLACE_EXISTING);
 
-        PlanConfig planConfig = new PlanConfig(config.toFile(), null, new TestPluginLogger());
+        PlanConfig planConfig = new PlanConfig(config.toFile(), null, null, new TestPluginLogger());
 
         ConfigChange[] changes = UNDER_TEST.configEnhancementPatch();
         assertMoveChangesAreAppliedProperly(planConfig, changes);
@@ -133,7 +130,7 @@ class ConfigUpdaterTest {
         Path config = tempDir.resolve("oldconfig.yml");
         Files.copy(oldBungeeConfig.toPath(), config, StandardCopyOption.REPLACE_EXISTING);
 
-        PlanConfig planConfig = new PlanConfig(config.toFile(), null, new TestPluginLogger());
+        PlanConfig planConfig = new PlanConfig(config.toFile(), null, null, new TestPluginLogger());
 
         ConfigChange[] changes = UNDER_TEST.configEnhancementPatch();
         assertMoveChangesAreAppliedProperly(planConfig, changes);

@@ -32,8 +32,7 @@ public class BukkitServerProperties extends ServerProperties {
                 server.getVersion(),
                 server.getBukkitVersion(),
                 server::getIp,
-                server.getMaxPlayers(),
-                () -> server.getOnlinePlayers().size()
+                server.getMaxPlayers()
         );
     }
 

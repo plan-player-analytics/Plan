@@ -21,8 +21,6 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.FormatSettings;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import java.util.concurrent.TimeUnit;
@@ -35,7 +33,6 @@ import static org.mockito.Mockito.when;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class TimeAmountFormatterDefaultTest {
 
     private static TimeAmountFormatter underTest;

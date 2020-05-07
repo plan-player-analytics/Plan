@@ -25,6 +25,7 @@ import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.transactions.patches.KillsOptimizationPatch;
 import com.djrapitops.plan.storage.database.transactions.patches.KillsServerIDPatch;
 import com.djrapitops.plan.storage.database.transactions.patches.Version10Patch;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -52,6 +53,8 @@ public class KillsTable {
     public static final String WEAPON = "weapon";
     public static final String DATE = "date";
 
+    public static final int WEAPON_COLUMN_LENGTH = 30;
+
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
             + SESSION_ID + ','
             + KILLER_UUID + ','
@@ -71,7 +74,7 @@ public class KillsTable {
                 .column(KILLER_UUID, Sql.varchar(36)).notNull()
                 .column(VICTIM_UUID, Sql.varchar(36)).notNull()
                 .column(SERVER_UUID, Sql.varchar(36)).notNull()
-                .column(WEAPON, Sql.varchar(30)).notNull()
+                .column(WEAPON, Sql.varchar(WEAPON_COLUMN_LENGTH)).notNull()
                 .column(DATE, Sql.LONG).notNull()
                 .column(SESSION_ID, Sql.INT).notNull()
                 .foreignKey(SESSION_ID, SessionsTable.TABLE_NAME, SessionsTable.ID)
@@ -94,7 +97,7 @@ public class KillsTable {
             statement.setString(6, kill.getVictim().toString());
             statement.setString(7, serverUUID.toString());
             statement.setLong(8, kill.getDate());
-            statement.setString(9, kill.getWeapon());
+            statement.setString(9, StringUtils.truncate(kill.getWeapon(), WEAPON_COLUMN_LENGTH));
             statement.addBatch();
         }
     }

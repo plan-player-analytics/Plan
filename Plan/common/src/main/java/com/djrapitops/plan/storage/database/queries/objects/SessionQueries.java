@@ -155,7 +155,7 @@ public class SessionQueries {
 
         // Utilities
         String[] gms = GMTimes.getGMKeyArray();
-        Comparator<DateHolder> dateColderRecentComparator = new DateHolderRecentComparator();
+        Comparator<DateHolder> mostRecentFirst = new DateHolderRecentComparator();
         Comparator<Long> longRecentComparator = (one, two) -> Long.compare(two, one); // Descending order, most recent first.
 
         while (set.next()) {
@@ -197,8 +197,10 @@ public class SessionQueries {
                 long date = set.getLong(KillsTable.DATE);
                 String weapon = set.getString(KillsTable.WEAPON);
                 List<PlayerKill> playerKills = session.getPlayerKills();
-                playerKills.add(new PlayerKill(victim, weapon, date, victimName));
-                playerKills.sort(dateColderRecentComparator);
+                PlayerKill newKill = new PlayerKill(victim, weapon, date, victimName);
+                if (!playerKills.contains(newKill)) {
+                    playerKills.add(newKill);
+                }
             }
 
             session.putRawData(SessionKeys.NAME, set.getString("name"));
@@ -214,7 +216,7 @@ public class SessionQueries {
                 .flatMap(Collection::stream)
                 .map(SortedMap::values)
                 .flatMap(Collection::stream)
-                .sorted(dateColderRecentComparator) // Disorder arises
+                .sorted(mostRecentFirst) // Disorder arises
                 .collect(Collectors.toList());
     }
 

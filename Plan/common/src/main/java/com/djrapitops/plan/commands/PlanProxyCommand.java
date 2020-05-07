@@ -46,6 +46,7 @@ public class PlanProxyCommand extends TreeCmdNode {
     private final ListServersCommand listServersCommand;
     private final ListPlayersCommand listPlayersCommand;
     private final RegisterCommand registerCommand;
+    private final UnregisterCommand unregisterCommand;
     private final Lazy<WebUserCommand> webUserCommand;
     private final ManageRawDataCommand rawDataCommand;
     private final ReloadCommand reloadCommand;
@@ -65,6 +66,7 @@ public class PlanProxyCommand extends TreeCmdNode {
             ListPlayersCommand listPlayersCommand,
             // Group 2
             RegisterCommand registerCommand,
+            UnregisterCommand unregisterCommand,
             Lazy<WebUserCommand> webUserCommand,
             // Group 3
             ManageRawDataCommand rawDataCommand,
@@ -73,6 +75,7 @@ public class PlanProxyCommand extends TreeCmdNode {
             DisableCommand disableCommand
     ) {
         super(mainCommandName, Permissions.MANAGE.getPermission(), CommandType.CONSOLE, null);
+        this.unregisterCommand = unregisterCommand;
         this.uninstalledCommand = uninstalledCommand;
 
         commandsRegistered = false;
@@ -103,6 +106,7 @@ public class PlanProxyCommand extends TreeCmdNode {
         };
         CommandNode[] webGroup = {
                 registerCommand,
+                unregisterCommand,
                 webUserCommand.get()
         };
         CommandNode[] manageGroup = {

@@ -37,10 +37,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.net.ssl.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.nio.file.InvalidPathException;
@@ -61,6 +58,7 @@ public class WebServer implements SubSystem {
     private final PlanConfig config;
 
     private final ServerProperties serverProperties;
+    private Addresses addresses;
     private final RequestHandler requestHandler;
 
     private final PluginLogger logger;
@@ -78,6 +76,7 @@ public class WebServer implements SubSystem {
             PlanFiles files,
             PlanConfig config,
             ServerInfo serverInfo,
+            Addresses addresses,
             PluginLogger logger,
             ErrorHandler errorHandler,
             RequestHandler requestHandler
@@ -86,6 +85,7 @@ public class WebServer implements SubSystem {
         this.files = files;
         this.config = config;
         this.serverProperties = serverInfo.getServerProperties();
+        this.addresses = addresses;
 
         this.requestHandler = requestHandler;
 
@@ -99,7 +99,7 @@ public class WebServer implements SubSystem {
 
         initServer();
 
-        if (getAccessAddress().contains("0.0.0.0")) {
+        if (!addresses.getAccessAddress().isPresent()) {
             logger.warn(locale.getString(PluginLang.ENABLE_NOTIFY_BAD_IP));
         }
 
@@ -137,8 +137,10 @@ public class WebServer implements SubSystem {
                 logger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.WEB_SERVER_NOTIFY_HTTP_USER_AUTH));
                 server = HttpServer.create(new InetSocketAddress(config.get(WebserverSettings.INTERNAL_IP), port), 10);
             } else if (server == null) {
-                logger.log(L.INFO_COLOR, "§eWebServer: Proxy HTTPS Override enabled. HTTP Server in use, make sure that your Proxy webserver is routing with HTTPS and AlternativeIP.Link points to the Proxy");
+                logger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.WEB_SERVER_NOTIFY_USING_PROXY_MODE));
                 server = HttpServer.create(new InetSocketAddress(config.get(WebserverSettings.INTERNAL_IP), port), 10);
+            } else if (config.isTrue(WebserverSettings.DISABLED_AUTHENTICATION)) {
+                logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_HTTPS_USER_AUTH));
             }
             server.createContext("/", requestHandler);
 
@@ -157,9 +159,11 @@ public class WebServer implements SubSystem {
 
             enabled = true;
 
-            logger.info(locale.getString(PluginLang.ENABLED_WEB_SERVER, server.getAddress().getPort(), getAccessAddress()));
+            String address = addresses.getAccessAddress().orElse(addresses.getFallbackLocalhostAddress());
+            logger.info(locale.getString(PluginLang.ENABLED_WEB_SERVER, server.getAddress().getPort(), address));
+
             boolean usingAlternativeIP = config.isTrue(WebserverSettings.SHOW_ALTERNATIVE_IP);
-            if (!usingAlternativeIP && serverProperties.getIp().isEmpty()) {
+            if (!usingAlternativeIP && !addresses.getAccessAddress().isPresent()) {
                 logger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.ENABLE_NOTIFY_EMPTY_IP));
             }
         } catch (BindException failedToBind) {
@@ -200,7 +204,7 @@ public class WebServer implements SubSystem {
             Certificate cert = keystore.getCertificate(alias);
 
             if (cert == null) {
-                throw new IllegalStateException("Certificate with Alias: " + alias + " was not found in the Keystore.");
+                throw new IllegalStateException("Alias: '" + alias + "' was not found in file " + keyStorePath + ".");
             }
 
             logger.info("Certificate: " + cert.getType());
@@ -231,12 +235,13 @@ public class WebServer implements SubSystem {
             startSuccessful = true;
         } catch (IllegalStateException e) {
             logger.error(e.getMessage());
-            errorHandler.log(L.ERROR, this.getClass(), e);
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
             logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_SSL_CONTEXT));
             errorHandler.log(L.ERROR, this.getClass(), e);
+        } catch (EOFException e) {
+            logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_EMPTY_FILE));
         } catch (FileNotFoundException e) {
-            logger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.WEB_SERVER_NOTIFY_NO_CERT_FILE, keyStorePath));
+            logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_NO_CERT_FILE, keyStorePath));
             logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_HTTP));
         } catch (BindException e) {
             throw e; // Pass to above error handler
@@ -295,16 +300,10 @@ public class WebServer implements SubSystem {
     }
 
     public boolean isAuthRequired() {
-        return isUsingHTTPS();
+        return isUsingHTTPS() && config.isFalse(WebserverSettings.DISABLED_AUTHENTICATION);
     }
 
-    public String getAccessAddress() {
-        return isEnabled() ? getProtocol() + "://" + getIP() : config.get(WebserverSettings.EXTERNAL_LINK);
-    }
-
-    private String getIP() {
-        return config.isTrue(WebserverSettings.SHOW_ALTERNATIVE_IP)
-                ? config.get(WebserverSettings.ALTERNATIVE_IP).replace("%port%", String.valueOf(port))
-                : serverProperties.getIp() + ":" + port;
+    public int getPort() {
+        return port;
     }
 }

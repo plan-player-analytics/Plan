@@ -16,19 +16,16 @@
  */
 package com.djrapitops.plan.delivery.export;
 
+import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.exceptions.ExportException;
-import com.djrapitops.plan.exceptions.GenerationException;
-import com.djrapitops.plan.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
-import com.djrapitops.plan.storage.file.PlanFiles;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -41,7 +38,6 @@ import java.util.UUID;
 @Singleton
 public class Exporter extends FileExporter {
 
-    private final PlanFiles files;
     private final PlanConfig config;
     private final PlayerJSONExporter playerJSONExporter;
     private final PlayerPageExporter playerPageExporter;
@@ -53,7 +49,6 @@ public class Exporter extends FileExporter {
 
     @Inject
     public Exporter(
-            PlanFiles files,
             PlanConfig config,
             PlayerJSONExporter playerJSONExporter,
             PlayerPageExporter playerPageExporter,
@@ -61,7 +56,6 @@ public class Exporter extends FileExporter {
             ServerPageExporter serverPageExporter,
             NetworkPageExporter networkPageExporter
     ) {
-        this.files = files;
         this.config = config;
         this.playerJSONExporter = playerJSONExporter;
         this.playerPageExporter = playerPageExporter;
@@ -70,20 +64,6 @@ public class Exporter extends FileExporter {
         this.networkPageExporter = networkPageExporter;
 
         failedServers = new HashSet<>();
-    }
-
-    private Path getPageExportDirectory() {
-        Path exportDirectory = Paths.get(config.get(ExportSettings.HTML_EXPORT_PATH));
-        return exportDirectory.isAbsolute()
-                ? exportDirectory
-                : files.getDataDirectory().resolve(exportDirectory);
-    }
-
-    private Path getJSONExportDirectory() {
-        Path exportDirectory = Paths.get(config.get(ExportSettings.JSON_EXPORT_PATH));
-        return exportDirectory.isAbsolute()
-                ? exportDirectory
-                : files.getDataDirectory().resolve(exportDirectory);
     }
 
     /**
@@ -98,14 +78,14 @@ public class Exporter extends FileExporter {
         if (failedServers.contains(serverUUID) || config.isFalse(ExportSettings.SERVER_PAGE)) return false;
 
         try {
-            Path toDirectory = getPageExportDirectory();
+            Path toDirectory = config.getPageExportPath();
             if (server.isProxy()) {
                 networkPageExporter.export(toDirectory, server);
             } else {
                 serverPageExporter.export(toDirectory, server);
             }
             return true;
-        } catch (IOException | NotFoundException | GenerationException e) {
+        } catch (IOException | NotFoundException e) {
             failedServers.add(serverUUID);
             throw new ExportException("Failed to export server: " + server.getIdentifiableName() + " (Attempts disabled until next reload), " + e.toString(), e);
         }
@@ -116,9 +96,9 @@ public class Exporter extends FileExporter {
         if (failedServers.contains(serverUUID) || config.isFalse(ExportSettings.SERVER_JSON)) return false;
 
         try {
-            Path toDirectory = getJSONExportDirectory().resolve(toFileName(server.getName()));
+            Path toDirectory = config.getJSONExportPath().resolve(toFileName(server.getName()));
             if (server.isProxy()) {
-                networkPageExporter.exportJSON(toDirectory, server);
+                networkPageExporter.exportJSON(new ExportPaths(), toDirectory, server);
             } else {
                 serverPageExporter.exportJSON(toDirectory, server);
             }
@@ -138,25 +118,25 @@ public class Exporter extends FileExporter {
      * @throws ExportException If the export failed due to IO, NotFound or GenerationException.
      */
     public boolean exportPlayerPage(UUID playerUUID, String playerName) throws ExportException {
-        Path toDirectory = getPageExportDirectory();
+        Path toDirectory = config.getPageExportPath();
         if (config.isFalse(ExportSettings.PLAYER_PAGES)) return false;
 
         try {
             playerPageExporter.export(toDirectory, playerUUID, playerName);
             return true;
-        } catch (IOException | NotFoundException | GenerationException e) {
+        } catch (IOException | NotFoundException e) {
             throw new ExportException("Failed to export player: " + playerName + ", " + e.toString(), e);
         }
     }
 
     public boolean exportPlayersPage() throws ExportException {
-        Path toDirectory = getPageExportDirectory();
+        Path toDirectory = config.getPageExportPath();
         if (config.isFalse(ExportSettings.PLAYERS_PAGE)) return false;
 
         try {
             playersPageExporter.export(toDirectory);
             return true;
-        } catch (IOException | NotFoundException | GenerationException e) {
+        } catch (IOException | NotFoundException e) {
             throw new ExportException("Failed to export players page, " + e.toString(), e);
         }
     }
@@ -170,7 +150,7 @@ public class Exporter extends FileExporter {
      * @throws ExportException If the export failed due to IOException.
      */
     public boolean exportPlayerJSON(UUID playerUUID, String playerName) throws ExportException {
-        Path toDirectory = getJSONExportDirectory();
+        Path toDirectory = config.getJSONExportPath();
         if (config.isFalse(ExportSettings.PLAYER_JSON)) return false;
 
         try {

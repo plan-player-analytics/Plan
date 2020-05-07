@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.gathering;
 
+import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.GMTimes;
 import com.djrapitops.plan.gathering.domain.Session;
@@ -36,18 +37,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.dagger.DaggerPlanPluginComponent;
 import utilities.dagger.PlanPluginComponent;
 import utilities.mocks.PlanPluginMocker;
 
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -56,7 +56,6 @@ import static org.mockito.Mockito.when;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 @ExtendWith(PrintExtension.class)
 class ShutdownSaveTest {
 
@@ -153,5 +152,22 @@ class ShutdownSaveTest {
         Session session = new Session(playerUUID, serverUUID, 0L, worldName, GMTimes.getGMKeyArray()[0]);
 
         sessionCache.cacheSession(playerUUID, session);
+    }
+
+    @Test
+    public void endedSessionsHaveSameEndTime() {
+        for (int i = 0; i < 100; i++) {
+            UUID playerUUID = UUID.randomUUID();
+            Session session = RandomData.randomUnfinishedSession(
+                    TestConstants.SERVER_UUID, new String[]{"w1", "w2"}, playerUUID
+            );
+            sessionCache.cacheSession(playerUUID, session);
+        }
+        long endTime = System.currentTimeMillis();
+        Map<UUID, Session> activeSessions = SessionCache.getActiveSessions();
+        underTest.prepareSessionsForStorage(activeSessions, endTime);
+        for (Session session : activeSessions.values()) {
+            assertEquals(endTime, session.getUnsafe(SessionKeys.END), () -> "One of the sessions had differing end time");
+        }
     }
 }

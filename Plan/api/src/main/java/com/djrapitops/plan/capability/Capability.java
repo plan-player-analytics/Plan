@@ -17,6 +17,7 @@
 package com.djrapitops.plan.capability;
 
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * List of different capabilities current version provides.
@@ -56,13 +57,29 @@ enum Capability {
      */
     DATA_EXTENSION_SHOW_IN_PLAYER_TABLE,
     /**
-     * QueryService and CommonQueries
+     * {@link com.djrapitops.plan.query.QueryService} and {@link com.djrapitops.plan.query.CommonQueries}
      */
     QUERY_API,
     /**
-     * SettingsService
+     * {@link com.djrapitops.plan.query.CommonQueries#fetchCurrentSessionPlaytime(UUID)}
      */
-    SETTINGS_API;
+    QUERY_API_ACTIVE_SESSION_PLAYTIME,
+    /**
+     * {@link com.djrapitops.plan.settings.SettingsService}
+     */
+    SETTINGS_API,
+    /**
+     * {@link com.djrapitops.plan.delivery.web.ResolverService}
+     */
+    PAGE_EXTENSION_RESOLVERS,
+    /**
+     * {@link com.djrapitops.plan.delivery.web.ResolverService#getResolvers(String)}
+     */
+    PAGE_EXTENSION_RESOLVERS_LIST,
+    /**
+     * {@link com.djrapitops.plan.delivery.web.ResourceService}
+     */
+    PAGE_EXTENSION_RESOURCES;
 
     static Optional<Capability> getByName(String name) {
         if (name == null) {

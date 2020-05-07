@@ -19,6 +19,8 @@ package com.djrapitops.plan.delivery.rendering.pages;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
+import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.delivery.rendering.html.structure.TabsElement;
@@ -30,7 +32,7 @@ import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.file.FileResource;
 import com.djrapitops.plan.storage.file.ResourceCache;
-import com.djrapitops.plan.version.VersionCheckSystem;
+import com.djrapitops.plan.version.VersionChecker;
 import com.djrapitops.plugin.benchmarking.Benchmark;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.FolderTimeStampFileLogger;
@@ -52,9 +54,10 @@ import java.util.*;
  */
 public class DebugPage implements Page {
 
+    private final String template;
     private final Database database;
     private final ServerInfo serverInfo;
-    private final VersionCheckSystem versionCheckSystem;
+    private final VersionChecker versionChecker;
     private final CombineDebugLogger debugLogger;
     private final Timings timings;
     private final ErrorHandler errorHandler;
@@ -62,17 +65,21 @@ public class DebugPage implements Page {
     private final Formatter<Long> yearFormatter;
 
     DebugPage(
+            String htmlTemplate,
+
             Database database,
             ServerInfo serverInfo,
             Formatters formatters,
-            VersionCheckSystem versionCheckSystem,
+            VersionChecker versionChecker,
             DebugLogger debugLogger,
             Timings timings,
             ErrorHandler errorHandler
     ) {
+        this.template = htmlTemplate;
+
         this.database = database;
         this.serverInfo = serverInfo;
-        this.versionCheckSystem = versionCheckSystem;
+        this.versionChecker = versionChecker;
         this.debugLogger = (CombineDebugLogger) debugLogger;
         this.timings = timings;
         this.errorHandler = errorHandler;
@@ -82,6 +89,17 @@ public class DebugPage implements Page {
 
     @Override
     public String toHtml() {
+        PlaceholderReplacer placeholders = new PlaceholderReplacer();
+        placeholders.put("title", Icon.called("bug") + " Debug Information");
+        placeholders.put("titleText", "Debug Information");
+        placeholders.put("paragraph", createContent());
+        placeholders.put("version", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
+        placeholders.put("updateModal", versionChecker.getUpdateModal());
+        placeholders.put("contributors", Contributors.generateContributorHtml());
+        return placeholders.apply(template);
+    }
+
+    private String createContent() {
         StringBuilder preContent = new StringBuilder();
 
         String issueLink = Html.LINK_EXTERNAL.create("https://github.com/Rsl1122/Plan-PlayerAnalytics/issues/new", "Create new issue on Github");
@@ -189,7 +207,7 @@ public class DebugPage implements Page {
 
         content.append("<pre>### Server Information<br>")
                 .append("**Plan Version:** ")
-                .append(versionCheckSystem.getCurrentVersion())
+                .append(versionChecker.getCurrentVersion())
                 .append("<br>");
 
         content.append("**Server:** ");

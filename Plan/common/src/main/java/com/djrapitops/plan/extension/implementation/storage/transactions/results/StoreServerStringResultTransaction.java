@@ -16,10 +16,13 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
+import com.djrapitops.plan.extension.implementation.providers.DataProvider;
+import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -29,7 +32,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 import static com.djrapitops.plan.storage.database.sql.tables.ExtensionServerValueTable.*;
 
 /**
- * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.PercentageDataProvider}.
+ * Transaction to store Extension String data for a server.
  *
  * @author Rsl1122
  */
@@ -41,11 +44,11 @@ public class StoreServerStringResultTransaction extends ThrowawayTransaction {
 
     private final String value;
 
-    public StoreServerStringResultTransaction(String pluginName, UUID serverUUID, String providerName, String value) {
-        this.pluginName = pluginName;
-        this.serverUUID = serverUUID;
-        this.providerName = providerName;
-        this.value = value;
+    public StoreServerStringResultTransaction(DataProvider<String> provider, Parameters parameters, String value) {
+        this.pluginName = provider.getProviderInformation().getPluginName();
+        this.providerName = provider.getProviderInformation().getName();
+        this.serverUUID = parameters.getServerUUID();
+        this.value = StringUtils.truncate(value, 50);
     }
 
     @Override

@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.storage.database;
 
-import com.djrapitops.plan.delivery.domain.container.ServerContainer;
-import com.djrapitops.plan.delivery.domain.keys.ServerKeys;
+import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
@@ -28,8 +28,6 @@ import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 import com.google.common.util.concurrent.MoreExecutors;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.OptionalAssert;
 import utilities.TestConstants;
 import utilities.mocks.PluginMockComponent;
@@ -41,7 +39,6 @@ import java.nio.file.Path;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class DBPatchH2RegressionTest extends DBPatchRegressionTest {
 
     private static PluginMockComponent component;
@@ -127,8 +124,8 @@ class DBPatchH2RegressionTest extends DBPatchRegressionTest {
         assertPatchesHaveBeenApplied(patches);
 
         // Make sure that a fetch works.
-        ServerContainer server = underTest.query(ContainerFetchQueries.fetchServerContainer(TestConstants.SERVER_UUID));
-        OptionalAssert.equals(1, server.getValue(ServerKeys.PLAYER_KILL_COUNT));
+        PlayerContainer player = underTest.query(ContainerFetchQueries.fetchPlayerContainer(TestConstants.PLAYER_ONE_UUID));
+        OptionalAssert.equals(1, player.getValue(PlayerKeys.PLAYER_KILL_COUNT));
 
         // Make sure no foreign key checks fail on removal
         underTest.executeTransaction(new RemoveEverythingTransaction());

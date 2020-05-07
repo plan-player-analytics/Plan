@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.utilities.comparators;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
@@ -25,11 +24,8 @@ import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.settings.locale.Message;
 import com.djrapitops.plan.settings.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.settings.locale.lang.Lang;
-import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plan.utilities.java.Lists;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.RandomData;
 
 import java.util.*;
@@ -38,7 +34,6 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(JUnitPlatform.class)
 class ComparatorTest {
 
     @Test
@@ -77,20 +72,6 @@ class ComparatorTest {
 
         tpsList.sort(new TPSComparator());
         List<Long> result = tpsList.stream().map(TPS::getDate).collect(Collectors.toList());
-
-        assertEquals(expected, result);
-    }
-
-    @Test
-    void webUserComparator() throws PassEncryptUtil.CannotPerformOperationException {
-        List<WebUser> webUsers = RandomData.randomWebUsers();
-
-        List<Integer> expected = webUsers.stream().map(WebUser::getPermLevel)
-                .sorted(Integer::compare).collect(Collectors.toList());
-        Collections.reverse(expected);
-
-        webUsers.sort(new WebUserComparator());
-        List<Integer> result = Lists.map(webUsers, WebUser::getPermLevel);
 
         assertEquals(expected, result);
     }

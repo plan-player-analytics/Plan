@@ -21,7 +21,7 @@ package com.djrapitops.plan.exceptions.connection;
  *
  * @author Rsl1122
  */
-public class WebException extends Exception {
+public class WebException extends IllegalStateException {
 
     public WebException() {
     }

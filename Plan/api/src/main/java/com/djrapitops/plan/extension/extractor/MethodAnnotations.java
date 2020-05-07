@@ -30,15 +30,15 @@ import java.util.Optional;
  */
 public class MethodAnnotations {
 
-    private final Map<Class, Map<Method, Annotation>> byAnnotationType;
+    private final Map<Class<?>, Map<Method, Annotation>> byAnnotationType;
 
     public MethodAnnotations() {
         byAnnotationType = new HashMap<>();
     }
 
-    public static boolean hasAnyOf(Method method, Class... annotationClasses) {
+    public static boolean hasAnyOf(Method method, Class<?>... annotationClasses) {
         for (Annotation annotation : method.getAnnotations()) {
-            for (Class annotationClass : annotationClasses) {
+            for (Class<?> annotationClass : annotationClasses) {
                 if (annotationClass.isAssignableFrom(annotation.getClass())) {
                     return true;
                 }

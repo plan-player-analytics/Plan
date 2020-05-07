@@ -13,14 +13,14 @@
     <title>Plan | Network</title>
 
     <!-- Custom fonts for this template-->
-    <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
-          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:400,700,800,900&display=swap&subset=latin-ext"
+    <link href="./vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link crossorigin="anonymous"
+          href="https://fonts.googleapis.com/css?family=Nunito:400,700,800,900&display=swap&subset=latin-ext"
           rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+    <link href="./css/sb-admin-2.css" rel="stylesheet">
+    <link href="./css/style.css" rel="stylesheet">
 
 </head>
 
@@ -41,7 +41,7 @@
 
         <!-- Sidebar - Brand -->
         <a class="sidebar-brand d-flex align-items-center justify-content-center">
-            <img class="w-22" src="img/Flaticon_circle.png">
+            <img alt="logo" class="w-22" src="./img/Flaticon_circle.png">
         </a>
 
         <!-- Divider -->
@@ -120,6 +120,9 @@
             <button class="btn bg-plan" data-target="#informationModal" data-toggle="modal" type="button">
                 <i class="fa fa-fw fa-question-circle"></i>
             </button>
+            <a class="btn bg-plan" href="/auth/logout" id="logout-button">
+                <i class="fa fa-fw fa-door-open"></i> Logout
+            </a>
         </div>
         <div class="ml-3 align-items-center justify-content-between">
             ${version}
@@ -383,7 +386,7 @@
                                                 class="far fa-fw fa-hand-pointer"></i>
                                                 <small>Click to expand</small></span></h6>
                                 </div>
-                                <table class="table mb-0" id="tableAccordion">
+                                <table class="table mb-0 accordion-striped" id="tableAccordion">
                                     <thead>
                                     <tr>
                                         <th><i class="fa fa-fw fa-user"></i> Player</th>
@@ -629,8 +632,6 @@
             </div> <!-- End of Geolocations tab -->
             <!-- Begin Plugins Overview Tab -->
             ${tabsPlugins}
-            <div class="tab"></div>
-            <div class="tab"></div>
         </div> <!-- End of Main Content -->
     </div>
     <!-- End of Content Wrapper -->
@@ -730,28 +731,7 @@
                     <p>Player Analytics is developed by Rsl1122.</p>
                     <p>In addition following <span class="col-plan">awesome people</span> have contributed:</p>
                     <ul>
-                        <li>aidn5 <i class="fa fa-fw fa-code"></i></li>
-                        <li>Argetan <i class="fa fa-fw fa-code"></i></li>
-                        <li>Aurelien <i class="fa fa-fw fa-code"></i> <i class="fa fa-fw fa-language"></i></li>
-                        <li>BrainStone <i class="fa fa-fw fa-code"></i></li>
-                        <li>Combustible <i class="fa fa-fw fa-code"></i></li>
-                        <li>CyanTech <i class="fa fa-fw fa-language"></i></li>
-                        <li>DarkPyves <i class="fa fa-fw fa-code"></i></li>
-                        <li>DaveDevil <i class="fa fa-fw fa-language"></i></li>
-                        <li>enterih <i class="fa fa-fw fa-language"></i></li>
-                        <li>Eyremba <i class="fa fa-fw fa-language"></i></li>
-                        <li>f0rb1d (佛壁灯) <i class="fa fa-fw fa-language"></i></li>
-                        <li>fuzzlemann <i class="fa fa-fw fa-code"></i> <i class="fa fa-fw fa-language"></i></li>
-                        <li>jyhsu2000 <i class="fa fa-fw fa-code"></i></li>
-                        <li>jvmuller <i class="fa fa-fw fa-language"></i></li>
-                        <li>Malachiel <i class="fa fa-fw fa-language"></i></li>
-                        <li>Miclebrick <i class="fa fa-fw fa-code"></i></li>
-                        <li>Morsmorse <i class="fa fa-fw fa-language"></i></li>
-                        <li>skmedix <i class="fa fa-fw fa-code"></i></li>
-                        <li>TDJisvan <i class="fa fa-fw fa-language"></i></li>
-                        <li>Vankka <i class="fa fa-fw fa-code"></i></li>
-                        <li>yukieji <i class="fa fa-fw fa-language"></i></li>
-                        <li>qsefthuopq <i class="fa fa-fw fa-language"></i></li>
+                        ${contributors}
                         <li>& Bug reporters!</li>
                     </ul>
                     <small><i class="fa fa-fw fa-code"></i> code contributor <i class="fa fa-fw fa-language"></i>
@@ -798,43 +778,41 @@
 </a>
 
 <!-- Bootstrap core JavaScript-->
-<script src="vendor/jquery/jquery.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-<!-- Core plugin JavaScript-->
-<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="./vendor/jquery/jquery.min.js"></script>
+<script src="./vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- Page level plugins -->
-<script src="vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
-<script src="vendor/highcharts/highstock.js"></script>
-<script src="vendor/highcharts/map.js"></script>
-<script src="vendor/highcharts/world.js"></script>
-<script src="vendor/highcharts/drilldown.js"></script>
-<script src="vendor/highcharts/highcharts-more.js"></script>
-<script src="vendor/highcharts/no-data-to-display.js"></script>
+<script src="./vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="./vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script src="./vendor/highcharts/highstock.js"></script>
+<script src="./vendor/highcharts/map.js"></script>
+<script src="./vendor/highcharts/world.js"></script>
+<script src="./vendor/highcharts/drilldown.js"></script>
+<script src="./vendor/highcharts/highcharts-more.js"></script>
+<script src="./vendor/highcharts/no-data-to-display.js"></script>
 
 <!-- Custom scripts for all pages-->
-<script src="js/sb-admin-2.js"></script>
-<script src="js/xmlhttprequests.js"></script>
-<script src="js/color-selector.js"></script>
+<script src="./js/sb-admin-2.js"></script>
+<script src="./js/xmlhttprequests.js"></script>
+<script src="./js/color-selector.js"></script>
 
 <!-- Page level custom scripts -->
-<script src="js/sessionAccordion.js"></script>
-<script src="js/pingTable.js"></script>
-<script src="js/graphs.js"></script>
-<script src="js/network-values.js"></script>
+<script src="./js/sessionAccordion.js"></script>
+<script src="./js/pingTable.js"></script>
+<script src="./js/graphs.js"></script>
+<script src="./js/network-values.js"></script>
 
-<script>
+<script id="mainScript">
     try {
         setLoadingText('Calculating values..');
-        jsonRequest("../v1/network/overview", loadNetworkOverviewValues);
-        jsonRequest("../v1/network/servers", loadservers);
-        jsonRequest("../v1/network/sessionsOverview", loadSessionValues);
-        jsonRequest("../v1/network/playerbaseOverview", loadPlayerbaseOverviewValues);
-        jsonRequest("../v1/sessions", loadSessionAccordion);
+        jsonRequest("./v1/network/overview", loadNetworkOverviewValues);
+        jsonRequest("./v1/network/servers", loadservers);
+        jsonRequest("./v1/network/sessionsOverview", loadSessionValues);
+        jsonRequest("./v1/network/playerbaseOverview", loadPlayerbaseOverviewValues);
+        jsonRequest("./v1/sessions", loadSessionAccordion);
         setLoadingText('Rendering graphs..');
 
+        // TODO remove
         var v = {
             colors: {
                 playersOnline: '${playersGraphColor}',
@@ -879,7 +857,7 @@
             }
         };
 
-        jsonRequest("../v1/graph?type=playersOnline&server=${serverUUID}", function (json, error) {
+        jsonRequest("./v1/graph?type=playersOnline&server=${serverUUID}", function (json, error) {
             if (json) {
                 var series = {
                     playersOnline: {
@@ -893,7 +871,7 @@
             }
         });
 
-        jsonRequest("../v1/graph?type=uniqueAndNew", function (json, error) {
+        jsonRequest("./v1/graph?type=uniqueAndNew", function (json, error) {
             if (json) {
                 var uniquePlayers = {
                     name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
@@ -909,7 +887,7 @@
             }
         });
 
-        jsonRequest("../v1/graph?type=serverPie", function (json, error) {
+        jsonRequest("./v1/graph?type=serverPie", function (json, error) {
             if (json) {
                 serverPieSeries = {
                     name: 'Server Playtime',
@@ -923,7 +901,7 @@
             }
         });
 
-        jsonRequest("../v1/graph?type=activity", function (json, error) {
+        jsonRequest("./v1/graph?type=activity", function (json, error) {
             if (json) {
                 activityPie('activityPie', {
                     name: 'Players', colorByPoint: true, data: json.activity_pie_series
@@ -935,7 +913,7 @@
             }
         });
 
-        jsonRequest("../v1/graph?type=geolocation", function (json, error) {
+        jsonRequest("./v1/graph?type=geolocation", function (json, error) {
             if (json) {
                 var geolocationSeries = {
                     name: 'Players',
@@ -964,7 +942,7 @@
 
         setLoadingText('Sorting out plugin tables..');
 
-        jsonRequest("../v1/network/pingTable", loadPingTable);
+        jsonRequest("./v1/network/pingTable", loadPingTable);
 
         $('.player-plugin-table').DataTable({
             responsive: true

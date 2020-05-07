@@ -85,6 +85,7 @@ public class ServerQueries {
         String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME +
                 " WHERE (LOWER(" + ServerTable.SERVER_UUID + ") LIKE LOWER(?)" +
                 OR + "LOWER(" + ServerTable.NAME + ") LIKE LOWER(?)" +
+                OR + ServerTable.SERVER_ID + "=?" +
                 OR + ServerTable.SERVER_ID + "=?)" +
                 AND + ServerTable.INSTALLED + "=?" +
                 " LIMIT 1";
@@ -94,7 +95,9 @@ public class ServerQueries {
                 statement.setString(1, identifier);
                 statement.setString(2, identifier);
                 statement.setInt(3, NumberUtils.isParsable(identifier) ? Integer.parseInt(identifier) : -1);
-                statement.setBoolean(4, true);
+                String id = identifier.startsWith("Server ") ? identifier.substring(7) : identifier;
+                statement.setInt(4, NumberUtils.isParsable(id) ? Integer.parseInt(id) : -1);
+                statement.setBoolean(5, true);
             }
 
             @Override

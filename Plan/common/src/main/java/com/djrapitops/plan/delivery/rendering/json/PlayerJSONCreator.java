@@ -138,6 +138,7 @@ public class PlayerJSONCreator {
         onlineActivity.put("active_playtime_30d", timeAmount.apply(sessions30d.toActivePlaytime()));
         onlineActivity.put("afk_time_30d", timeAmount.apply(sessions30d.toAfkTime()));
         onlineActivity.put("average_session_length_30d", timeAmount.apply(sessions30d.toAverageSessionLength()));
+        onlineActivity.put("median_session_length_30d", timeAmount.apply(sessions30d.toMedianSessionLength()));
         onlineActivity.put("session_count_30d", sessions30d.count());
         onlineActivity.put("player_kill_count_30d", sessions30d.toPlayerKillCount());
         onlineActivity.put("mob_kill_count_30d", sessions30d.toMobKillCount());
@@ -147,6 +148,7 @@ public class PlayerJSONCreator {
         onlineActivity.put("active_playtime_7d", timeAmount.apply(sessions7d.toActivePlaytime()));
         onlineActivity.put("afk_time_7d", timeAmount.apply(sessions7d.toAfkTime()));
         onlineActivity.put("average_session_length_7d", timeAmount.apply(sessions7d.toAverageSessionLength()));
+        onlineActivity.put("median_session_length_7d", timeAmount.apply(sessions7d.toMedianSessionLength()));
         onlineActivity.put("session_count_7d", sessions7d.count());
         onlineActivity.put("player_kill_count_7d", sessions7d.toPlayerKillCount());
         onlineActivity.put("mob_kill_count_7d", sessions7d.toMobKillCount());

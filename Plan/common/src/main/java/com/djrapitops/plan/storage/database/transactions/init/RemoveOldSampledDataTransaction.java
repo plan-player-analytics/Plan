@@ -19,6 +19,7 @@ package com.djrapitops.plan.storage.database.transactions.init;
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 import com.djrapitops.plan.storage.database.sql.tables.PingTable;
+import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.TPSTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
@@ -62,27 +63,31 @@ public class RemoveOldSampledDataTransaction extends ThrowawayTransaction {
 
     private Executable cleanTPSTable(int allTimePlayerPeak) {
         String sql = DELETE_FROM + TPSTable.TABLE_NAME +
-                WHERE + '(' + TPSTable.DATE + "<?)" +
-                AND + '(' + TPSTable.PLAYERS_ONLINE + "!=?)";
+                WHERE + TPSTable.DATE + "<?" +
+                AND + TPSTable.PLAYERS_ONLINE + "!=?" +
+                AND + TPSTable.SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID;
 
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, System.currentTimeMillis() - deleteTPSOlderThanMs);
                 statement.setInt(2, allTimePlayerPeak);
+                statement.setString(3, serverUUID.toString());
             }
         };
     }
 
     private Executable cleanPingTable() {
         String sql = DELETE_FROM + PingTable.TABLE_NAME +
-                WHERE + '(' + PingTable.DATE + "<?)" +
-                OR + '(' + PingTable.MIN_PING + "<0)";
+                WHERE + '(' + PingTable.DATE + "<?" +
+                AND + PingTable.SERVER_UUID + "=?)" +
+                OR + PingTable.MIN_PING + "<0";
 
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, System.currentTimeMillis() - deletePingOlderThanMs);
+                statement.setString(2, serverUUID.toString());
             }
         };
     }

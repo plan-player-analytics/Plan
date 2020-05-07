@@ -16,11 +16,8 @@
  */
 package com.djrapitops.plan.delivery.webserver.cache;
 
-import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import java.util.List;
 import java.util.UUID;
@@ -33,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class JSONCacheTest {
 
     private static final String CACHED = "Cached";
@@ -47,7 +43,7 @@ class JSONCacheTest {
 
     @Test
     void cachedByDataIDName() {
-        JSONCache.getOrCache(TEST_ID, () -> new JSONResponse(CACHED));
+        JSONCache.getOrCache(TEST_ID, () -> CACHED);
         assertContains();
     }
 
@@ -77,7 +73,7 @@ class JSONCacheTest {
 
     @Test
     void cachedByServerUUID() {
-        JSONCache.getOrCache(TEST_ID, TEST_UUID, () -> new JSONResponse(CACHED));
+        JSONCache.getOrCache(TEST_ID, TEST_UUID, () -> CACHED);
         assertContainsUUID();
     }
 

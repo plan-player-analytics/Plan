@@ -51,6 +51,7 @@ public class PlanCommand extends TreeCmdNode {
     private final ListServersCommand listServersCommand;
     private final Lazy<WebUserCommand> webUserCommand;
     private final RegisterCommand registerCommand;
+    private final UnregisterCommand unregisterCommand;
     private final InfoCommand infoCommand;
     private final ReloadCommand reloadCommand;
     private final Lazy<ManageCommand> manageCommand;
@@ -74,6 +75,7 @@ public class PlanCommand extends TreeCmdNode {
             // Group 2
             Lazy<WebUserCommand> webUserCommand,
             RegisterCommand registerCommand,
+            UnregisterCommand unregisterCommand,
             // Group 3
             InfoCommand infoCommand,
             ReloadCommand reloadCommand,
@@ -81,6 +83,7 @@ public class PlanCommand extends TreeCmdNode {
             DevCommand devCommand
     ) {
         super("plan", "", CommandType.CONSOLE, null);
+        this.unregisterCommand = unregisterCommand;
 
         commandsRegistered = false;
 
@@ -121,7 +124,8 @@ public class PlanCommand extends TreeCmdNode {
         };
         CommandNode[] webGroup = {
                 webUserCommand.get(),
-                registerCommand
+                registerCommand,
+                unregisterCommand
         };
         CommandNode[] manageGroup = {
                 infoCommand,

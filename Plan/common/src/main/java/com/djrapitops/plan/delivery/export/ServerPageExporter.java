@@ -18,16 +18,15 @@ package com.djrapitops.plan.delivery.export;
 
 import com.djrapitops.plan.delivery.rendering.pages.Page;
 import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
-import com.djrapitops.plan.delivery.webserver.RequestTarget;
-import com.djrapitops.plan.delivery.webserver.pages.json.RootJSONResolver;
-import com.djrapitops.plan.delivery.webserver.response.Response;
-import com.djrapitops.plan.delivery.webserver.response.errors.ErrorResponse;
-import com.djrapitops.plan.exceptions.GenerationException;
-import com.djrapitops.plan.exceptions.connection.NotFoundException;
+import com.djrapitops.plan.delivery.web.ResourceService;
+import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resource.WebResource;
+import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
 import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -38,8 +37,9 @@ import org.apache.commons.lang3.StringUtils;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -54,7 +54,6 @@ public class ServerPageExporter extends FileExporter {
     private final PageFactory pageFactory;
     private final DBSystem dbSystem;
     private final RootJSONResolver jsonHandler;
-    private final Locale locale;
     private final Theme theme;
     private final ServerInfo serverInfo;
 
@@ -66,7 +65,6 @@ public class ServerPageExporter extends FileExporter {
             PageFactory pageFactory,
             DBSystem dbSystem,
             RootJSONResolver jsonHandler,
-            Locale locale,
             Theme theme,
             ServerInfo serverInfo // To know if current server is a Proxy
     ) {
@@ -74,14 +72,21 @@ public class ServerPageExporter extends FileExporter {
         this.pageFactory = pageFactory;
         this.dbSystem = dbSystem;
         this.jsonHandler = jsonHandler;
-        this.locale = locale;
         this.theme = theme;
         this.serverInfo = serverInfo;
 
         exportPaths = new ExportPaths();
     }
 
-    public void export(Path toDirectory, Server server) throws IOException, NotFoundException, GenerationException {
+    /**
+     * Perform export for a server page.
+     *
+     * @param toDirectory Path to Export directory
+     * @param server      Server to export
+     * @throws IOException       If a template can not be read from jar/disk or the result written
+     * @throws NotFoundException If a file or resource that is being exported can not be found
+     */
+    public void export(Path toDirectory, Server server) throws IOException {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
 
@@ -89,19 +94,28 @@ public class ServerPageExporter extends FileExporter {
         exportRequiredResources(toDirectory);
         exportJSON(toDirectory, server);
         exportHtml(toDirectory, server);
+        exportPaths.clear();
     }
 
-    private void exportHtml(Path toDirectory, Server server) throws IOException, NotFoundException, GenerationException {
+    private void exportHtml(Path toDirectory, Server server) throws IOException {
         UUID serverUUID = server.getUuid();
         Path to = toDirectory
                 .resolve(serverInfo.getServer().isProxy() ? "server/" + toFileName(server.getName()) : "server")
                 .resolve("index.html");
 
         Page page = pageFactory.serverPage(serverUUID);
-        export(to, exportPaths.resolveExportPaths(locale.replaceLanguageInHtml(page.toHtml())));
+        export(to, exportPaths.resolveExportPaths(page.toHtml()));
     }
 
-    public void exportJSON(Path toDirectory, Server server) throws IOException, NotFoundException {
+    /**
+     * Perform export for a server page json payload.
+     *
+     * @param toDirectory Path to Export directory
+     * @param server      Server to export
+     * @throws IOException       If a template can not be read from jar/disk or the result written
+     * @throws NotFoundException If a file or resource that is being exported can not be found
+     */
+    public void exportJSON(Path toDirectory, Server server) throws IOException {
         String serverUUID = server.getUuid().toString();
 
         exportJSON(toDirectory,
@@ -126,23 +140,23 @@ public class ServerPageExporter extends FileExporter {
         );
     }
 
-    private void exportJSON(Path toDirectory, String... resources) throws NotFoundException, IOException {
+    private void exportJSON(Path toDirectory, String... resources) throws IOException {
         for (String resource : resources) {
             exportJSON(toDirectory, resource);
         }
     }
 
-    private void exportJSON(Path toDirectory, String resource) throws NotFoundException, IOException {
-        Response found = getJSONResponse(resource);
-        if (found instanceof ErrorResponse) {
-            throw new NotFoundException(resource + " was not properly exported: " + found.getContent());
+    private void exportJSON(Path toDirectory, String resource) throws IOException {
+        Optional<Response> found = getJSONResponse(resource);
+        if (!found.isPresent()) {
+            throw new NotFoundException(resource + " was not properly exported: not found");
         }
 
         String jsonResourceName = toFileName(toJSONResourceName(resource)) + ".json";
 
         export(toDirectory.resolve("data").resolve(jsonResourceName),
                 // Replace ../player in urls to fix player page links
-                StringUtils.replace(found.getContent(), "../player", toRelativePathFromRoot("player"))
+                StringUtils.replace(found.get().getAsString(), "../player", toRelativePathFromRoot("player"))
         );
         exportPaths.put("../v1/" + resource, toRelativePathFromRoot("data/" + jsonResourceName));
     }
@@ -151,9 +165,9 @@ public class ServerPageExporter extends FileExporter {
         return StringUtils.replaceEach(resource, new String[]{"?", "&", "type=", "server="}, new String[]{"-", "_", "", ""});
     }
 
-    private Response getJSONResponse(String resource) {
+    private Optional<Response> getJSONResponse(String resource) {
         try {
-            return jsonHandler.resolve(null, new RequestTarget(URI.create(resource)));
+            return jsonHandler.getResolver().resolve(new Request("GET", "/v1/" + resource, null, Collections.emptyMap()));
         } catch (WebException e) {
             // The rest of the exceptions should not be thrown
             throw new IllegalStateException("Unexpected exception thrown: " + e.toString(), e);
@@ -161,61 +175,67 @@ public class ServerPageExporter extends FileExporter {
     }
 
     private void exportRequiredResources(Path toDirectory) throws IOException {
-        exportImage(toDirectory, "img/Flaticon_circle.png");
-
         // Style
         exportResources(toDirectory,
-                "css/sb-admin-2.css",
-                "css/style.css",
-                "vendor/jquery/jquery.min.js",
-                "vendor/bootstrap/js/bootstrap.bundle.min.js",
-                "vendor/jquery-easing/jquery.easing.min.js",
-                "vendor/datatables/jquery.dataTables.min.js",
-                "vendor/datatables/dataTables.bootstrap4.min.js",
-                "vendor/highcharts/highstock.js",
-                "vendor/highcharts/map.js",
-                "vendor/highcharts/world.js",
-                "vendor/highcharts/drilldown.js",
-                "vendor/highcharts/highcharts-more.js",
-                "vendor/highcharts/no-data-to-display.js",
-                "vendor/fullcalendar/fullcalendar.min.css",
-                "vendor/momentjs/moment.js",
-                "vendor/fullcalendar/fullcalendar.min.js",
-                "js/sb-admin-2.js",
-                "js/xmlhttprequests.js",
-                "js/color-selector.js",
-                "js/sessionAccordion.js",
-                "js/pingTable.js",
-                "js/graphs.js",
-                "js/server-values.js"
+                "../img/Flaticon_circle.png",
+                "../css/sb-admin-2.css",
+                "../css/style.css",
+                "../vendor/jquery/jquery.min.js",
+                "../vendor/bootstrap/js/bootstrap.bundle.min.js",
+                "../vendor/datatables/jquery.dataTables.min.js",
+                "../vendor/datatables/dataTables.bootstrap4.min.js",
+                "../vendor/highcharts/highstock.js",
+                "../vendor/highcharts/map.js",
+                "../vendor/highcharts/world.js",
+                "../vendor/highcharts/drilldown.js",
+                "../vendor/highcharts/highcharts-more.js",
+                "../vendor/highcharts/no-data-to-display.js",
+                "../vendor/fullcalendar/fullcalendar.min.css",
+                "../vendor/momentjs/moment.js",
+                "../vendor/fullcalendar/fullcalendar.min.js",
+                "../vendor/fontawesome-free/css/all.min.css",
+                "../vendor/fontawesome-free/webfonts/fa-brands-400.eot",
+                "../vendor/fontawesome-free/webfonts/fa-brands-400.ttf",
+                "../vendor/fontawesome-free/webfonts/fa-brands-400.woff",
+                "../vendor/fontawesome-free/webfonts/fa-brands-400.woff2",
+                "../vendor/fontawesome-free/webfonts/fa-regular-400.eot",
+                "../vendor/fontawesome-free/webfonts/fa-regular-400.ttf",
+                "../vendor/fontawesome-free/webfonts/fa-regular-400.woff",
+                "../vendor/fontawesome-free/webfonts/fa-regular-400.woff2",
+                "../vendor/fontawesome-free/webfonts/fa-solid-900.eot",
+                "../vendor/fontawesome-free/webfonts/fa-solid-900.ttf",
+                "../vendor/fontawesome-free/webfonts/fa-solid-900.woff",
+                "../vendor/fontawesome-free/webfonts/fa-solid-900.woff2",
+                "../js/sb-admin-2.js",
+                "../js/xmlhttprequests.js",
+                "../js/color-selector.js",
+                "../js/sessionAccordion.js",
+                "../js/pingTable.js",
+                "../js/graphs.js",
+                "../js/server-values.js"
         );
     }
 
     private void exportResources(Path toDirectory, String... resourceNames) throws IOException {
         for (String resourceName : resourceNames) {
-            exportResource(toDirectory, resourceName);
+            String nonRelativePath = toNonRelativePath(resourceName);
+            exportResource(toDirectory, nonRelativePath);
+            exportPaths.put(resourceName, toRelativePathFromRoot(nonRelativePath));
         }
     }
 
     private void exportResource(Path toDirectory, String resourceName) throws IOException {
-        Resource resource = files.getCustomizableResourceOrDefault("web/" + resourceName);
+        WebResource resource = ResourceService.getInstance().getResource("Plan", resourceName,
+                () -> files.getResourceFromJar("web/" + resourceName).asWebResource());
         Path to = toDirectory.resolve(resourceName);
 
         if (resourceName.endsWith(".css")) {
             export(to, theme.replaceThemeColors(resource.asString()));
+        } else if (Resource.isTextResource(resourceName)) {
+            export(to, resource.asString());
         } else {
-            export(to, resource.asLines());
+            export(to, resource);
         }
-
-        exportPaths.put(resourceName, toRelativePathFromRoot(resourceName));
-    }
-
-    private void exportImage(Path toDirectory, String resourceName) throws IOException {
-        Resource resource = files.getCustomizableResourceOrDefault("web/" + resourceName);
-        Path to = toDirectory.resolve(resourceName);
-        export(to, resource);
-
-        exportPaths.put(resourceName, toRelativePathFromRoot(resourceName));
     }
 
     private String toRelativePathFromRoot(String resourceName) {
@@ -224,7 +244,7 @@ public class ServerPageExporter extends FileExporter {
     }
 
     private String toNonRelativePath(String resourceName) {
-        return StringUtils.remove(resourceName, "../");
+        return StringUtils.remove(StringUtils.remove(resourceName, "../"), "./");
     }
 
 }

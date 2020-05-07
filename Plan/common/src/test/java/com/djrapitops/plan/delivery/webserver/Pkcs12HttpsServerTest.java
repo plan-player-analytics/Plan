@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.PlanSystem;
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
@@ -26,8 +26,6 @@ import com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.RandomData;
 import utilities.TestResources;
 import utilities.mocks.PluginMockComponent;
@@ -36,8 +34,8 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Collections;
 
-@RunWith(JUnitPlatform.class)
 class Pkcs12HttpsServerTest implements HttpsServerTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
@@ -66,8 +64,8 @@ class Pkcs12HttpsServerTest implements HttpsServerTest {
 
         system.enable();
 
-        WebUser webUser = new WebUser("test", PassEncryptUtil.createHash("testPass"), 0);
-        system.getDatabaseSystem().getDatabase().executeTransaction(new RegisterWebUserTransaction(webUser));
+        User user = new User("test", "console", null, PassEncryptUtil.createHash("testPass"), 0, Collections.emptyList());
+        system.getDatabaseSystem().getDatabase().executeTransaction(new RegisterWebUserTransaction(user));
     }
 
     @AfterAll

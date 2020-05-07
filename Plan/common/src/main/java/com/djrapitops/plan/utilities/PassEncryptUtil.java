@@ -55,11 +55,18 @@ public class PassEncryptUtil {
         throw new IllegalStateException("Utility class");
     }
 
-    public static String createHash(String password) throws CannotPerformOperationException {
+    /**
+     * Create a hash of password + salt.
+     *
+     * @param password Password
+     * @return Hash + salt
+     * @throws CannotPerformOperationException If the hash creation fails
+     */
+    public static String createHash(String password) {
         return createHash(password.toCharArray());
     }
 
-    private static String createHash(char[] password) throws CannotPerformOperationException {
+    private static String createHash(char[] password) {
         // Generate a random salt
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[SALT_BYTE_SIZE];
@@ -77,11 +84,20 @@ public class PassEncryptUtil {
                 + ":" + toBase64(hash);
     }
 
-    public static boolean verifyPassword(String password, String correctHash) throws CannotPerformOperationException, InvalidHashException {
+    /**
+     * Verify that a password matches a hash.
+     *
+     * @param password    Password
+     * @param correctHash hash created with {@link PassEncryptUtil#createHash(String)}
+     * @return true if match
+     * @throws CannotPerformOperationException If hashing fails
+     * @throws InvalidHashException            If the hash is missing details.
+     */
+    public static boolean verifyPassword(String password, String correctHash) {
         return verifyPassword(password.toCharArray(), correctHash);
     }
 
-    private static boolean verifyPassword(char[] password, String correctHash) throws CannotPerformOperationException, InvalidHashException {
+    private static boolean verifyPassword(char[] password, String correctHash) {
         // Decode the hash into its parameters
         String[] params = StringUtils.split(correctHash, ':');
         if (params.length != HASH_SECTIONS) {
@@ -160,7 +176,7 @@ public class PassEncryptUtil {
         return diff == 0;
     }
 
-    private static byte[] pbkdf2(char[] password, byte[] salt, int iterations, int bytes) throws CannotPerformOperationException {
+    private static byte[] pbkdf2(char[] password, byte[] salt, int iterations, int bytes) {
         try {
             PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, bytes * 8);
             SecretKeyFactory skf = SecretKeyFactory.getInstance(PBKDF2_ALGORITHM);

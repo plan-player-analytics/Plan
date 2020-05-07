@@ -19,11 +19,12 @@ package com.djrapitops.plan.extension.implementation.providers.gathering;
 import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.icon.Icon;
+import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProviders;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
-import com.djrapitops.plan.extension.implementation.providers.TableDataProvider;
+import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreTableProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerTableResultTransaction;
@@ -53,21 +54,21 @@ class TableProviderValueGatherer {
     private final DataProviders dataProviders;
 
     TableProviderValueGatherer(
-            String pluginName, DataExtension extension,
+            String pluginName,
             UUID serverUUID, Database database,
-            DataProviders dataProviders
+            ExtensionWrapper extensionWrapper
     ) {
         this.pluginName = pluginName;
-        this.extension = extension;
+        this.extension = extensionWrapper.getExtension();
         this.serverUUID = serverUUID;
         this.database = database;
-        this.dataProviders = dataProviders;
+        this.dataProviders = extensionWrapper.getProviders();
     }
 
     void gatherTableDataOfPlayer(UUID playerUUID, String playerName, Conditions conditions) {
         // Method parameters abstracted away so that same method can be used for all parameter types
         // Same with Method result store transaction creation
-        Function<MethodWrapper<Table>, Callable<Table>> methodCaller = method -> () -> method.callMethod(extension, playerUUID, playerName);
+        Function<MethodWrapper<Table>, Callable<Table>> methodCaller = method -> () -> method.callMethod(extension, Parameters.player(serverUUID, playerUUID, playerName));
         BiFunction<MethodWrapper<Table>, Table, Transaction> storeTransactionCreator = (method, result) -> new StorePlayerTableResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result);
 
         for (DataProvider<Table> tableProvider : dataProviders.getPlayerMethodsByType(Table.class)) {
@@ -78,7 +79,7 @@ class TableProviderValueGatherer {
     void gatherTableDataOfServer(Conditions conditions) {
         // Method parameters abstracted away so that same method can be used for all parameter types
         // Same with Method result store transaction creation
-        Function<MethodWrapper<Table>, Callable<Table>> methodCaller = method -> () -> method.callMethod(extension);
+        Function<MethodWrapper<Table>, Callable<Table>> methodCaller = method -> () -> method.callMethod(extension, Parameters.server(serverUUID));
         BiFunction<MethodWrapper<Table>, Table, Transaction> storeTransactionCreator = (method, result) -> new StoreServerTableResultTransaction(pluginName, serverUUID, method.getMethodName(), result);
 
         for (DataProvider<Table> tableProvider : dataProviders.getServerMethodsByType(Table.class)) {
@@ -109,7 +110,7 @@ class TableProviderValueGatherer {
                 database.executeTransaction(new StoreIconTransaction(icon));
             }
         }
-        database.executeTransaction(new StoreTableProviderTransaction(serverUUID, providerInformation, TableDataProvider.getTableColor(tableProvider), result));
+        database.executeTransaction(new StoreTableProviderTransaction(serverUUID, providerInformation, result));
         database.executeTransaction(storeTransactionCreator.apply(method, result));
     }
 

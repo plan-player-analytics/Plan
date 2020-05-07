@@ -19,8 +19,10 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.gathering.ShutdownHook;
+import com.djrapitops.plan.gathering.timed.ServerTPSCounter;
 import com.djrapitops.plan.gathering.timed.SpongePingCounter;
-import com.djrapitops.plan.gathering.timed.SpongeTPSCounter;
+import com.djrapitops.plan.gathering.timed.SystemUsageBuffer;
+import com.djrapitops.plan.gathering.timed.TPSCounter;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -31,6 +33,7 @@ import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.RunnableFactory;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.world.World;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,8 +45,10 @@ public class SpongeTaskSystem extends TaskSystem {
     private final PlanSponge plugin;
     private final PlanConfig config;
     private final ShutdownHook shutdownHook;
-    private final SpongeTPSCounter tpsCounter;
+    private final TPSCounter tpsCounter;
     private final JSONCache.CleanTask jsonCacheCleanTask;
+    private final SystemUsageBuffer.RamAndCpuTask ramAndCpuTask;
+    private final SystemUsageBuffer.DiskTask diskTask;
     private final SpongePingCounter pingCounter;
     private final LogsFolderCleanTask logsFolderCleanTask;
     private final ConfigStoreTask configStoreTask;
@@ -57,14 +62,16 @@ public class SpongeTaskSystem extends TaskSystem {
             ShutdownHook shutdownHook,
             RunnableFactory runnableFactory,
 
-            SpongeTPSCounter tpsCounter,
+            ServerTPSCounter<World> tpsCounter,
             SpongePingCounter pingCounter,
             ExtensionServerMethodCallerTask extensionServerMethodCallerTask,
 
             LogsFolderCleanTask logsFolderCleanTask,
             ConfigStoreTask configStoreTask,
             DBCleanTask dbCleanTask,
-            JSONCache.CleanTask jsonCacheCleanTask
+            JSONCache.CleanTask jsonCacheCleanTask,
+            SystemUsageBuffer.RamAndCpuTask ramAndCpuTask,
+            SystemUsageBuffer.DiskTask diskTask
     ) {
         super(runnableFactory);
         this.plugin = plugin;
@@ -80,6 +87,8 @@ public class SpongeTaskSystem extends TaskSystem {
         this.dbCleanTask = dbCleanTask;
         this.jsonCacheCleanTask = jsonCacheCleanTask;
 
+        this.ramAndCpuTask = ramAndCpuTask;
+        this.diskTask = diskTask;
     }
 
     @Override
@@ -106,7 +115,12 @@ public class SpongeTaskSystem extends TaskSystem {
     }
 
     private void registerTPSCounter() {
-        registerTask(tpsCounter).runTaskTimer(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
+        long halfSecondTicks = TimeAmount.toTicks(500L, TimeUnit.MILLISECONDS);
+        long secondTicks = TimeAmount.toTicks(1L, TimeUnit.SECONDS);
+        long minuteTicks = TimeAmount.toTicks(1L, TimeUnit.MINUTES);
+        registerTask(tpsCounter).runTaskTimer(minuteTicks, secondTicks);
+        registerTask(ramAndCpuTask).runTaskTimerAsynchronously(minuteTicks - halfSecondTicks, secondTicks);
+        registerTask(diskTask).runTaskTimerAsynchronously(50L * secondTicks, minuteTicks);
     }
 
     private void registerPingCounter() {

@@ -17,8 +17,8 @@
 package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.PlanSystem;
-import com.djrapitops.plan.delivery.domain.container.ServerContainer;
-import com.djrapitops.plan.delivery.domain.keys.ServerKeys;
+import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
@@ -27,8 +27,6 @@ import com.djrapitops.plan.storage.database.transactions.patches.KillsOptimizati
 import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.*;
 import utilities.mocks.PluginMockComponent;
 
@@ -43,7 +41,6 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
@@ -79,12 +76,13 @@ class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
     }
 
     private void dropAllTables() {
+        String dbName = System.getenv(CIProperties.MYSQL_DATABASE);
         underTest.executeTransaction(new Transaction() {
             @Override
             protected void performOperations() {
-                execute("DROP DATABASE Plan");
-                execute("CREATE DATABASE Plan");
-                execute("USE Plan");
+                execute("DROP DATABASE " + dbName);
+                execute("CREATE DATABASE " + dbName);
+                execute("USE " + dbName);
             }
         });
     }
@@ -140,8 +138,8 @@ class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
         assertPatchesHaveBeenApplied(patches);
 
         // Make sure that a fetch works.
-        ServerContainer server = underTest.query(ContainerFetchQueries.fetchServerContainer(TestConstants.SERVER_UUID));
-        OptionalAssert.equals(1, server.getValue(ServerKeys.PLAYER_KILL_COUNT));
+        PlayerContainer player = underTest.query(ContainerFetchQueries.fetchPlayerContainer(TestConstants.PLAYER_ONE_UUID));
+        OptionalAssert.equals(1, player.getValue(PlayerKeys.PLAYER_KILL_COUNT));
 
         // Make sure no foreign key checks fail on removal
         underTest.executeTransaction(new RemoveEverythingTransaction());

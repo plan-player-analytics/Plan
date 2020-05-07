@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.providers;
 
-import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.table.Table;
@@ -44,13 +43,11 @@ import static com.djrapitops.plan.storage.database.sql.tables.ExtensionTableProv
 public class StoreTableProviderTransaction extends ThrowawayTransaction {
 
     private final UUID serverUUID;
-    private final ProviderInformation providerInformation;
-    private final Color tableColor;
+    private final ProviderInformation information;
     private final Table table;
 
-    public StoreTableProviderTransaction(UUID serverUUID, ProviderInformation providerInformation, Color tableColor, Table table) {
-        this.providerInformation = providerInformation;
-        this.tableColor = tableColor;
+    public StoreTableProviderTransaction(UUID serverUUID, ProviderInformation information, Table table) {
+        this.information = information;
         this.table = table;
         this.serverUUID = serverUUID;
     }
@@ -93,21 +90,21 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, tableColor.name());
+                statement.setString(1, information.getTableColor().name());
                 setStringOrNull(statement, 2, columns[0]);
                 setStringOrNull(statement, 3, columns[1]);
                 setStringOrNull(statement, 4, columns[2]);
                 setStringOrNull(statement, 5, columns[3]);
                 setStringOrNull(statement, 6, columns[4]);
-                setStringOrNull(statement, 7, providerInformation.getCondition().orElse(null));
-                ExtensionTabTable.set3TabValuesToStatement(statement, 8, providerInformation.getTab().orElse("No Tab"), providerInformation.getPluginName(), serverUUID);
+                setStringOrNull(statement, 7, information.getCondition().orElse(null));
+                ExtensionTabTable.set3TabValuesToStatement(statement, 8, information.getTab().orElse("No Tab"), information.getPluginName(), serverUUID);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 11, icons[0]);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 14, icons[1]);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 17, icons[2]);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 20, icons[3]);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 23, icons[4]);
-                statement.setString(26, providerInformation.getName());
-                ExtensionPluginTable.set2PluginValuesToStatement(statement, 27, providerInformation.getPluginName(), serverUUID);
+                statement.setString(26, information.getName());
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 27, information.getPluginName(), serverUUID);
             }
         };
     }
@@ -144,16 +141,16 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, providerInformation.getName());
-                statement.setString(2, tableColor.name());
+                statement.setString(1, information.getName());
+                statement.setString(2, information.getTableColor().name());
                 setStringOrNull(statement, 3, columns[0]);
                 setStringOrNull(statement, 4, columns[1]);
                 setStringOrNull(statement, 5, columns[2]);
                 setStringOrNull(statement, 6, columns[3]);
                 setStringOrNull(statement, 7, columns[4]);
-                setStringOrNull(statement, 8, providerInformation.getCondition().orElse(null));
-                ExtensionTabTable.set3TabValuesToStatement(statement, 9, providerInformation.getTab().orElse("No Tab"), providerInformation.getPluginName(), serverUUID);
-                ExtensionPluginTable.set2PluginValuesToStatement(statement, 12, providerInformation.getPluginName(), serverUUID);
+                setStringOrNull(statement, 8, information.getCondition().orElse(null));
+                ExtensionTabTable.set3TabValuesToStatement(statement, 9, information.getTab().orElse("No Tab"), information.getPluginName(), serverUUID);
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 12, information.getPluginName(), serverUUID);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 14, icons[0]);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 17, icons[1]);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 20, icons[2]);

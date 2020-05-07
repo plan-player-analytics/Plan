@@ -18,7 +18,10 @@ package com.djrapitops.plan.delivery.domain.container;
 
 import com.djrapitops.plan.delivery.domain.keys.Key;
 import com.djrapitops.plan.delivery.formatting.Formatter;
+import com.djrapitops.plan.utilities.java.Lists;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -32,6 +35,41 @@ import java.util.function.Supplier;
  * @author Rsl1122
  */
 public interface DataContainer {
+
+    default Map<String, Object> mapToNormalMap() {
+        Map<String, Object> values = new HashMap<>();
+        getMap().forEach((key, value) ->
+                {
+                    if (value instanceof DataContainer) {
+                        value = ((DataContainer) value).mapToNormalMap();
+                    }
+                    if (value instanceof Map) {
+                        value = handleMap((Map<?, ?>) value);
+                    }
+                    if (value instanceof List) {
+                        value = handleList((List<?>) value);
+                    }
+                    values.put(key.getKeyName(), value);
+                }
+        );
+        return values;
+    }
+
+    default List<?> handleList(List<?> list) {
+        if (list.stream().findAny().orElse(null) instanceof DataContainer) {
+            return Lists.map(list, obj -> ((DataContainer) obj).mapToNormalMap());
+        }
+        return list;
+    }
+
+    default Map<?, ?> handleMap(Map<?, ?> map) {
+        if (map.values().stream().findAny().orElse(null) instanceof DataContainer) {
+            Map<Object, Object> newMap = new HashMap<>();
+            map.forEach((key, value) -> newMap.put(key, ((DataContainer) value).mapToNormalMap()));
+            return newMap;
+        }
+        return map;
+    }
 
     /**
      * Place your data inside the container.

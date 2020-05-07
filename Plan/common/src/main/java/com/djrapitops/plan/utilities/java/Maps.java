@@ -40,4 +40,24 @@ public class Maps {
         return new HashSet<>();
     }
 
+    public static <K, V> Builder<K, V> builder(Class<K> key, Class<V> value) {
+        return new Builder<>();
+    }
+
+    public static class Builder<K, V> {
+        private Map<K, V> map;
+
+        private Builder() {
+            map = new HashMap<>();
+        }
+
+        public Builder<K, V> put(K key, V value) {
+            map.put(key, value);
+            return this;
+        }
+
+        public Map<K, V> build() {
+            return map;
+        }
+    }
 }

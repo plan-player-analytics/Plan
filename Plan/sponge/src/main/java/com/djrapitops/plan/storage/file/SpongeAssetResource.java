@@ -68,4 +68,9 @@ public class SpongeAssetResource implements Resource {
     public String asString() throws IOException {
         return asset.readString(StandardCharsets.UTF_8);
     }
+
+    @Override
+    public byte[] asBytes() throws IOException {
+        return asset.readBytes();
+    }
 }

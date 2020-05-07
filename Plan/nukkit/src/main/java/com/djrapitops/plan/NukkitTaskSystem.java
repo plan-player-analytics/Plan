@@ -17,11 +17,14 @@
 package com.djrapitops.plan;
 
 import cn.nukkit.Server;
+import cn.nukkit.level.Level;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.gathering.ShutdownHook;
 import com.djrapitops.plan.gathering.timed.NukkitPingCounter;
-import com.djrapitops.plan.gathering.timed.NukkitTPSCounter;
+import com.djrapitops.plan.gathering.timed.ServerTPSCounter;
+import com.djrapitops.plan.gathering.timed.SystemUsageBuffer;
+import com.djrapitops.plan.gathering.timed.TPSCounter;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -49,11 +52,13 @@ public class NukkitTaskSystem extends TaskSystem {
     private final ShutdownHook shutdownHook;
     private final JSONCache.CleanTask jsonCacheCleanTask;
     private final LogsFolderCleanTask logsFolderCleanTask;
+    private final TPSCounter tpsCounter;
     private final NukkitPingCounter pingCounter;
     private final ConfigStoreTask configStoreTask;
     private final DBCleanTask dbCleanTask;
+    private final SystemUsageBuffer.RamAndCpuTask ramAndCpuTask;
+    private final SystemUsageBuffer.DiskTask diskTask;
     private final ExtensionServerMethodCallerTask extensionServerMethodCallerTask;
-    private NukkitTPSCounter tpsCounter;
 
     @Inject
     public NukkitTaskSystem(
@@ -62,14 +67,16 @@ public class NukkitTaskSystem extends TaskSystem {
             ShutdownHook shutdownHook,
             RunnableFactory runnableFactory,
 
-            NukkitTPSCounter tpsCounter,
+            ServerTPSCounter<Level> tpsCounter,
             NukkitPingCounter pingCounter,
             ExtensionServerMethodCallerTask extensionServerMethodCallerTask,
 
             LogsFolderCleanTask logsFolderCleanTask,
             ConfigStoreTask configStoreTask,
             DBCleanTask dbCleanTask,
-            JSONCache.CleanTask jsonCacheCleanTask
+            JSONCache.CleanTask jsonCacheCleanTask,
+            SystemUsageBuffer.RamAndCpuTask ramAndCpuTask,
+            SystemUsageBuffer.DiskTask diskTask
     ) {
         super(runnableFactory);
         this.plugin = plugin;
@@ -84,6 +91,8 @@ public class NukkitTaskSystem extends TaskSystem {
         this.logsFolderCleanTask = logsFolderCleanTask;
         this.configStoreTask = configStoreTask;
         this.dbCleanTask = dbCleanTask;
+        this.ramAndCpuTask = ramAndCpuTask;
+        this.diskTask = diskTask;
     }
 
     @Override
@@ -110,7 +119,12 @@ public class NukkitTaskSystem extends TaskSystem {
     }
 
     private void registerTPSCounter() {
-        registerTask(tpsCounter).runTaskTimer(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
+        long halfSecondTicks = TimeAmount.toTicks(500L, TimeUnit.MILLISECONDS);
+        long secondTicks = TimeAmount.toTicks(1L, TimeUnit.SECONDS);
+        long minuteTicks = TimeAmount.toTicks(1L, TimeUnit.MINUTES);
+        registerTask(tpsCounter).runTaskTimer(minuteTicks, secondTicks);
+        registerTask(ramAndCpuTask).runTaskTimerAsynchronously(minuteTicks - halfSecondTicks, secondTicks);
+        registerTask(diskTask).runTaskTimerAsynchronously(50L * secondTicks, minuteTicks);
     }
 
     private void registerPingCounter() {

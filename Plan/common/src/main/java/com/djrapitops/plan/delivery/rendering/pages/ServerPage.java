@@ -17,32 +17,26 @@
 package com.djrapitops.plan.delivery.rendering.pages;
 
 import com.djrapitops.plan.delivery.domain.container.CachingSupplier;
-import com.djrapitops.plan.delivery.domain.container.DataContainer;
-import com.djrapitops.plan.delivery.domain.container.RawDataContainer;
-import com.djrapitops.plan.delivery.domain.keys.AnalysisKeys;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
+import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
-import com.djrapitops.plan.exceptions.GenerationException;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.DisplaySettings;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plan.version.VersionCheckSystem;
+import com.djrapitops.plan.utilities.java.UnaryChain;
+import com.djrapitops.plan.version.VersionChecker;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
-
-import static com.djrapitops.plan.delivery.domain.keys.AnalysisKeys.*;
 
 /**
  * Html String generator for /server page.
@@ -51,37 +45,39 @@ import static com.djrapitops.plan.delivery.domain.keys.AnalysisKeys.*;
  */
 public class ServerPage implements Page {
 
+    private final String templateHtml;
     private final Server server;
     private final PlanConfig config;
     private final Theme theme;
-    private final VersionCheckSystem versionCheckSystem;
-    private final PlanFiles files;
+    private final Locale locale;
+    private final VersionChecker versionChecker;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final Formatters formatters;
 
     ServerPage(
-            Server server,
+            String templateHtml, Server server,
             PlanConfig config,
             Theme theme,
-            VersionCheckSystem versionCheckSystem,
-            PlanFiles files,
+            Locale locale,
+            VersionChecker versionChecker,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             Formatters formatters
     ) {
+        this.templateHtml = templateHtml;
         this.server = server;
         this.config = config;
         this.theme = theme;
-        this.versionCheckSystem = versionCheckSystem;
-        this.files = files;
+        this.locale = locale;
+        this.versionChecker = versionChecker;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.formatters = formatters;
     }
 
     @Override
-    public String toHtml() throws GenerationException {
+    public String toHtml() {
         PlaceholderReplacer placeholders = new PlaceholderReplacer();
 
         UUID serverUUID = server.getUuid();
@@ -90,41 +86,11 @@ public class ServerPage implements Page {
         placeholders.put("serverDisplayName", server.getName());
 
         placeholders.put("timeZone", config.getTimeZoneOffsetHours());
+        placeholders.put("gmPieColors", theme.getValue(ThemeVal.GRAPH_GM_PIE));
 
-        DataContainer constants = new RawDataContainer();
-        // TODO Move these graph settings to the graph requests instead of placeholders
-        constants.putRawData(AnalysisKeys.FIRST_DAY, 1);
-        constants.putRawData(AnalysisKeys.TPS_MEDIUM, config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED));
-        constants.putRawData(AnalysisKeys.TPS_HIGH, config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_HIGH));
-        constants.putRawData(AnalysisKeys.DISK_MEDIUM, config.get(DisplaySettings.GRAPH_DISK_THRESHOLD_MED));
-        constants.putRawData(AnalysisKeys.DISK_HIGH, config.get(DisplaySettings.GRAPH_DISK_THRESHOLD_HIGH));
-        constants.putRawData(AnalysisKeys.ACTIVITY_PIE_COLORS, theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE));
-        constants.putRawData(AnalysisKeys.GM_PIE_COLORS, theme.getValue(ThemeVal.GRAPH_GM_PIE));
-        constants.putRawData(AnalysisKeys.PLAYERS_GRAPH_COLOR, theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));
-        constants.putRawData(AnalysisKeys.TPS_LOW_COLOR, theme.getValue(ThemeVal.GRAPH_TPS_LOW));
-        constants.putRawData(AnalysisKeys.TPS_MEDIUM_COLOR, theme.getValue(ThemeVal.GRAPH_TPS_MED));
-        constants.putRawData(AnalysisKeys.TPS_HIGH_COLOR, theme.getValue(ThemeVal.GRAPH_TPS_HIGH));
-        constants.putRawData(AnalysisKeys.WORLD_MAP_LOW_COLOR, theme.getValue(ThemeVal.WORLD_MAP_LOW));
-        constants.putRawData(AnalysisKeys.WORLD_MAP_HIGH_COLOR, theme.getValue(ThemeVal.WORLD_MAP_HIGH));
-        constants.putRawData(AnalysisKeys.WORLD_PIE_COLORS, theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
-        constants.putRawData(AnalysisKeys.AVG_PING_COLOR, theme.getValue(ThemeVal.GRAPH_AVG_PING));
-        constants.putRawData(AnalysisKeys.MAX_PING_COLOR, theme.getValue(ThemeVal.GRAPH_MAX_PING));
-        constants.putRawData(AnalysisKeys.MIN_PING_COLOR, theme.getValue(ThemeVal.GRAPH_MIN_PING));
-
-        placeholders.addAllPlaceholdersFrom(constants,
-                FIRST_DAY, TPS_MEDIUM, TPS_HIGH,
-                DISK_MEDIUM, DISK_HIGH,
-                PLAYERS_MAX, PLAYERS_ONLINE, PLAYERS_TOTAL,
-
-                WORLD_PIE_COLORS, GM_PIE_COLORS, ACTIVITY_PIE_COLORS,
-                PLAYERS_GRAPH_COLOR, TPS_HIGH_COLOR, TPS_MEDIUM_COLOR,
-                TPS_LOW_COLOR, WORLD_MAP_HIGH_COLOR, WORLD_MAP_LOW_COLOR,
-                AVG_PING_COLOR, MAX_PING_COLOR, MIN_PING_COLOR
-        );
-
-        placeholders.put("backButton", serverInfo.getServer().isProxy() ? Html.BACK_BUTTON_NETWORK.create() : "");
-        placeholders.put("version", versionCheckSystem.getUpdateButton().orElse(versionCheckSystem.getCurrentVersionButton()));
-        placeholders.put("updateModal", versionCheckSystem.getUpdateModal());
+        placeholders.put("contributors", Contributors.generateContributorHtml());
+        placeholders.put("version", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
+        placeholders.put("updateModal", versionChecker.getUpdateModal());
 
         CachingSupplier<ServerPluginTabs> pluginTabs = new CachingSupplier<>(() -> {
             List<ExtensionData> extensionData = dbSystem.getDatabase().query(new ExtensionServerDataQuery(serverUUID));
@@ -134,13 +100,19 @@ public class ServerPage implements Page {
         String nav = JSONCache.getOrCacheString(DataID.EXTENSION_NAV, serverUUID, () -> pluginTabs.get().getNav());
         String tabs = JSONCache.getOrCacheString(DataID.EXTENSION_TABS, serverUUID, () -> pluginTabs.get().getTabs());
 
-        placeholders.put("navPluginsTabs", nav);
-        placeholders.put("tabsPlugins", tabs);
+        PlaceholderReplacer pluginPlaceholders = new PlaceholderReplacer();
+        pluginPlaceholders.put("serverUUID", serverUUID.toString());
+        pluginPlaceholders.put("serverName", server.getIdentifiableName());
+        pluginPlaceholders.put("serverDisplayName", server.getName());
+        pluginPlaceholders.put("backButton", serverInfo.getServer().isProxy() ? Html.BACK_BUTTON_NETWORK.create() : "");
+        pluginPlaceholders.put("navPluginsTabs", nav);
+        pluginPlaceholders.put("tabsPlugins", tabs);
 
-        try {
-            return placeholders.apply(files.getCustomizableResourceOrDefault("web/server.html").asString());
-        } catch (IOException e) {
-            throw new GenerationException(e);
-        }
+        return UnaryChain.of(templateHtml)
+                .chain(theme::replaceThemeColors)
+                .chain(placeholders::apply)
+                .chain(pluginPlaceholders::apply)
+                .chain(locale::replaceLanguageInHtml)
+                .apply();
     }
 }

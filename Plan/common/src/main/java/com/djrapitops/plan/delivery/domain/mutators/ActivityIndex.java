@@ -163,7 +163,7 @@ public class ActivityIndex {
         return Math.abs(Math.log(other.value) - Math.log(value));
     }
 
-    public String getGroup() {
+    public static String getGroup(double value) {
         if (value >= VERY_ACTIVE) {
             return HtmlLang.INDEX_VERY_ACTIVE.getDefault();
         } else if (value >= ACTIVE) {
@@ -175,5 +175,9 @@ public class ActivityIndex {
         } else {
             return HtmlLang.INDEX_INACTIVE.getDefault();
         }
+    }
+
+    public String getGroup() {
+        return getGroup(value);
     }
 }

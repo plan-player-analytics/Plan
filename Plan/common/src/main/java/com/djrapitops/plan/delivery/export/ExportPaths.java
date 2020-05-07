@@ -44,4 +44,9 @@ public class ExportPaths {
         this.replace.add(replace);
         this.with.add(with);
     }
+
+    public void clear() {
+        this.replace.clear();
+        this.with.clear();
+    }
 }

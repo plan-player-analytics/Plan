@@ -32,11 +32,18 @@ import java.util.function.UnaryOperator;
 public class GeoInfoStoreTransaction extends Transaction {
 
     private final UUID playerUUID;
-    private InetAddress ip;
+    private String ip;
     private long time;
     private UnaryOperator<String> geolocationFunction;
 
     private GeoInfo geoInfo;
+
+    public GeoInfoStoreTransaction(UUID playerUUID, String ip, long time, UnaryOperator<String> geolocationFunction) {
+        this.playerUUID = playerUUID;
+        this.ip = ip;
+        this.time = time;
+        this.geolocationFunction = geolocationFunction;
+    }
 
     public GeoInfoStoreTransaction(
             UUID playerUUID,
@@ -45,7 +52,7 @@ public class GeoInfoStoreTransaction extends Transaction {
             UnaryOperator<String> geolocationFunction
     ) {
         this.playerUUID = playerUUID;
-        this.ip = ip;
+        this.ip = ip.getHostAddress();
         this.time = time;
         this.geolocationFunction = geolocationFunction;
     }
@@ -56,13 +63,15 @@ public class GeoInfoStoreTransaction extends Transaction {
     }
 
     private GeoInfo createGeoInfo() {
-        String country = geolocationFunction.apply(ip.getHostAddress());
+        // Can return null
+        String country = geolocationFunction.apply(ip);
         return new GeoInfo(country, time);
     }
 
     @Override
     protected void performOperations() {
         if (geoInfo == null) geoInfo = createGeoInfo();
+        if (geoInfo.getGeolocation() == null) return; // Don't save null geolocation.
         execute(DataStoreQueries.storeGeoInfo(playerUUID, geoInfo));
     }
 }

@@ -82,4 +82,14 @@ public class TabInformation {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return "TabInformation{" +
+                "tabName='" + tabName + '\'' +
+                ", icon=" + icon +
+                ", elementOrder=" + Arrays.toString(elementOrder) +
+                ", tabPriority=" + tabPriority +
+                '}';
+    }
 }

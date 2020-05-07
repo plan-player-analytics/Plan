@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.extension.implementation.providers;
 
-import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.annotation.Conditional;
 import com.djrapitops.plan.extension.annotation.NumberProvider;
 import com.djrapitops.plan.extension.icon.Icon;
@@ -25,43 +24,36 @@ import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import java.lang.reflect.Method;
 
 /**
- * Represents a DataExtension API method annotated with {@link NumberProvider} annotation.
- * <p>
- * Used to obtain data to place in the database.
+ * Contains code that acts on {@link NumberProvider} annotations.
  *
  * @author Rsl1122
  */
-public class NumberDataProvider extends DataProvider<Long> {
+public class NumberDataProvider {
 
-    private final FormatType formatType;
-
-    private NumberDataProvider(ProviderInformation providerInformation, MethodWrapper<Long> methodWrapper, FormatType formatType) {
-        super(providerInformation, methodWrapper);
-        this.formatType = formatType;
+    private NumberDataProvider() {
+        // Static method class
     }
 
     public static void placeToDataProviders(
             DataProviders dataProviders, Method method, NumberProvider annotation,
             Conditional condition, String tab, String pluginName
     ) {
+        ProviderInformation information = ProviderInformation.builder(pluginName)
+                .setName(method.getName())
+                .setText(annotation.text())
+                .setDescription(annotation.description())
+                .setPriority(annotation.priority())
+                .setIcon(new Icon(
+                        annotation.iconFamily(),
+                        annotation.iconName(),
+                        annotation.iconColor())
+                ).setShowInPlayersTable(annotation.showInPlayerTable())
+                .setCondition(condition)
+                .setTab(tab)
+                .setFormatType(annotation.format())
+                .build();
+
         MethodWrapper<Long> methodWrapper = new MethodWrapper<>(method, Long.class);
-        Icon providerIcon = new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor());
-
-        ProviderInformation providerInformation = new ProviderInformation(
-                pluginName, method.getName(), annotation.text(), annotation.description(), providerIcon, annotation.priority(), annotation.showInPlayerTable(), tab, condition
-        );
-
-        dataProviders.put(new NumberDataProvider(providerInformation, methodWrapper, annotation.format()));
-    }
-
-    public static FormatType getFormatType(DataProvider<Long> provider) {
-        if (provider instanceof NumberDataProvider) {
-            return ((NumberDataProvider) provider).getFormatType();
-        }
-        return FormatType.NONE;
-    }
-
-    public FormatType getFormatType() {
-        return formatType;
+        dataProviders.put(new DataProvider<>(information, methodWrapper));
     }
 }

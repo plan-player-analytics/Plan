@@ -16,20 +16,17 @@
  */
 package utilities;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.DateObj;
+import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
-import com.djrapitops.plan.gathering.domain.GeoInfo;
-import com.djrapitops.plan.gathering.domain.Session;
-import com.djrapitops.plan.gathering.domain.TPS;
-import com.djrapitops.plan.gathering.domain.UserInfo;
-import com.djrapitops.plan.utilities.PassEncryptUtil;
+import com.djrapitops.plan.gathering.domain.*;
+import com.djrapitops.plan.storage.database.sql.tables.KillsTable;
 import org.apache.commons.lang3.RandomStringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 public class RandomData {
 
@@ -43,6 +40,14 @@ public class RandomData {
         return ThreadLocalRandom.current().nextInt(rangeStart, rangeEnd);
     }
 
+    public static long randomTime() {
+        return randomTimeAfter(0);
+    }
+
+    public static long randomTimeAfter(long after) {
+        return randomLong(after, System.currentTimeMillis());
+    }
+
     public static long randomLong(long rangeStart, long rangeEnd) {
         return ThreadLocalRandom.current().nextLong(rangeStart, rangeEnd);
     }
@@ -51,17 +56,17 @@ public class RandomData {
         return RandomStringUtils.randomAlphanumeric(size);
     }
 
-    public static List<WebUser> randomWebUsers() throws PassEncryptUtil.CannotPerformOperationException {
-        List<WebUser> test = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            test.add(new WebUser(randomString(5), PassEncryptUtil.createHash(randomString(7)), r.nextInt()));
-        }
-        return test;
+    public static List<Nickname> randomNicknames(UUID serverUUID) {
+        return pickMultiple(randomInt(15, 30), () -> randomNickname(serverUUID));
+    }
+
+    public static Nickname randomNickname(UUID serverUUID) {
+        return new Nickname(randomString(randomInt(50, 100)), randomTime(), serverUUID);
     }
 
     public static List<TPS> randomTPS() {
         List<TPS> test = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < randomInt(5, 100); i++) {
             int randInt = r.nextInt();
             long randLong = Math.abs(r.nextLong());
             test.add(new TPS(randLong, randLong, randInt, randLong, randLong, randInt, randInt, randLong));
@@ -70,15 +75,56 @@ public class RandomData {
     }
 
     public static List<Session> randomSessions() {
-        List<Session> test = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            test.add(randomSession());
-        }
-        return test;
+        return pickMultiple(randomInt(15, 30),
+                () -> randomSession(
+                        TestConstants.SERVER_UUID,
+                        pickMultiple(4, () -> randomString(5)).toArray(new String[0]),
+                        pickMultiple(5, UUID::randomUUID).toArray(new UUID[0])
+                )
+        );
     }
 
-    public static Session randomSession() {
-        return new Session(1, TestConstants.PLAYER_ONE_UUID, TestConstants.SERVER_UUID, r.nextLong(), r.nextLong(), 0, 0, 0);
+    public static String randomGameMode() {
+        return pickAtRandom(GMTimes.getGMKeyArray());
+    }
+
+    public static <T> T pickAtRandom(T[] from) {
+        return from[randomInt(0, from.length)];
+    }
+
+    public static <T> List<T> pickMultiple(int howMany, Supplier<T> supplier) {
+        List<T> picked = new ArrayList<>();
+        for (int i = 0; i < howMany; i++) {
+            picked.add(supplier.get());
+        }
+        return picked;
+    }
+
+    public static List<Session> randomSessions(UUID serverUUID, String[] worlds, UUID... uuids) {
+        return pickMultiple(randomInt(5, 50), () -> randomSession(serverUUID, worlds, uuids));
+    }
+
+    public static Session randomSession(UUID serverUUID, String[] worlds, UUID... uuids) {
+        Session session = new Session(uuids[0], serverUUID, RandomData.randomTime(), pickAtRandom(worlds), randomGameMode());
+        session.endSession(RandomData.randomTimeAfter(session.getDate()));
+        session.setWorldTimes(RandomData.randomWorldTimes(worlds));
+        if (uuids.length >= 2) {
+            session.setPlayerKills(RandomData.randomKills(pickAtRandom(Arrays.copyOfRange(uuids, 1, uuids.length))));
+        }
+        return session;
+    }
+
+    public static List<Session> randomUnfinishedSessions(UUID serverUUID, String[] worlds, UUID... uuids) {
+        return pickMultiple(randomInt(5, 50), () -> randomUnfinishedSession(serverUUID, worlds, uuids));
+    }
+
+    public static Session randomUnfinishedSession(UUID serverUUID, String[] worlds, UUID... uuids) {
+        Session session = new Session(uuids[0], serverUUID, RandomData.randomTime(), pickAtRandom(worlds), randomGameMode());
+        session.setWorldTimes(RandomData.randomWorldTimes(worlds));
+        if (uuids.length >= 2) {
+            session.setPlayerKills(RandomData.randomKills(pickAtRandom(Arrays.copyOfRange(uuids, 1, uuids.length))));
+        }
+        return session;
     }
 
     public static List<Point> randomPoints() {
@@ -89,26 +135,47 @@ public class RandomData {
         return test;
     }
 
-    public static <T extends Enum> T randomEnum(Class<T> clazz) {
-        int x = r.nextInt(clazz.getEnumConstants().length);
-        return clazz.getEnumConstants()[x];
-    }
-
-    public static List<UserInfo> randomUserData() {
-        List<UserInfo> test = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            UserInfo info = new UserInfo(UUID.randomUUID(), UUID.randomUUID(), r.nextLong(), r.nextBoolean(), r.nextBoolean());
-            test.add(info);
-        }
-        return test;
-    }
-
     public static List<GeoInfo> randomGeoInfo() {
-        List<GeoInfo> test = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            GeoInfo geoInfo = new GeoInfo(randomString(10), r.nextLong());
-            test.add(geoInfo);
+        return pickMultiple(randomInt(15, 30), () -> new GeoInfo(randomString(10), randomTime()));
+    }
+
+    public static WorldTimes randomWorldTimes(String... worlds) {
+        Map<String, GMTimes> times = new HashMap<>();
+        for (String world : worlds) {
+            Map<String, Long> gmTimes = new HashMap<>();
+            for (String gm : GMTimes.getGMKeyArray()) {
+                gmTimes.put(gm, randomLong(0, TimeUnit.HOURS.toMillis(2)));
+            }
+            times.put(world, new GMTimes(gmTimes));
         }
-        return test;
+        return new WorldTimes(times);
+    }
+
+    public static List<PlayerKill> randomKills(UUID... victimUUIDs) {
+        if (victimUUIDs == null || victimUUIDs.length == 1 && victimUUIDs[0] == null) return Collections.emptyList();
+
+        return pickMultiple(randomInt(3, 15), () -> new PlayerKill(
+                pickAtRandom(victimUUIDs),
+                randomString(randomInt(10, KillsTable.WEAPON_COLUMN_LENGTH)),
+                randomTime()
+        ));
+    }
+
+    public static List<Ping> randomPings(UUID serverUUID) {
+        return pickMultiple(randomInt(15, 30), () -> randomPing(serverUUID));
+    }
+
+    public static Ping randomPing(UUID serverUUID) {
+        int r1 = randomInt(1, 200);
+        int r2 = randomInt(1, 200);
+        return new Ping(randomTime(), serverUUID, Math.min(r1, r2), Math.max(r1, r2), (r1 + r2) / 2.0);
+    }
+
+    public static List<DateObj<Integer>> randomIntDateObjects() {
+        return pickMultiple(randomInt(15, 30), RandomData::randomIntDateObject);
+    }
+
+    public static DateObj<Integer> randomIntDateObject() {
+        return new DateObj<>(randomTime(), randomInt(0, 500));
     }
 }

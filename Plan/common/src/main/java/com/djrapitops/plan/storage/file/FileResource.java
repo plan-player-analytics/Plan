@@ -64,6 +64,11 @@ public class FileResource implements Resource {
     }
 
     @Override
+    public byte[] asBytes() throws IOException {
+        return Files.readAllBytes(file.toPath());
+    }
+
+    @Override
     public List<String> asLines() throws IOException {
         return lines(file);
     }

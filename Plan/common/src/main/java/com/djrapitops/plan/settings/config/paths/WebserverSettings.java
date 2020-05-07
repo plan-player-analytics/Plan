@@ -38,6 +38,7 @@ public class WebserverSettings {
     public static final Setting<String> CERTIFICATE_STOREPASS = new StringSetting("Webserver.Security.SSL_certificate.Store_pass");
     public static final Setting<String> CERTIFICATE_ALIAS = new StringSetting("Webserver.Security.SSL_certificate.Alias");
     public static final Setting<Boolean> DISABLED = new BooleanSetting("Webserver.Disable_Webserver");
+    public static final Setting<Boolean> DISABLED_AUTHENTICATION = new BooleanSetting("Webserver.Security.Disable_authentication");
     public static final Setting<String> EXTERNAL_LINK = new StringSetting("Webserver.External_Webserver_address");
 
     private WebserverSettings() {

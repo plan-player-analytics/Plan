@@ -33,7 +33,7 @@ import java.util.function.Supplier;
 public interface SettingsService {
 
     static SettingsService getInstance() {
-        return Optional.ofNullable(SettingsServiceHolder.service)
+        return Optional.ofNullable(Holder.service)
                 .orElseThrow(() -> new IllegalStateException("SettingsService has not been initialised yet."));
     }
 
@@ -64,15 +64,15 @@ public interface SettingsService {
      */
     List<String> getStringList(String path, Supplier<List<String>> defaultValue);
 
-    class SettingsServiceHolder {
+    class Holder {
         static SettingsService service;
 
-        private SettingsServiceHolder() {
+        private Holder() {
             /* Static variable holder */
         }
 
         static void set(SettingsService service) {
-            SettingsServiceHolder.service = service;
+            Holder.service = service;
         }
     }
 

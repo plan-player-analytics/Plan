@@ -54,4 +54,9 @@ public class StringCachingResource implements Resource {
         ResourceCache.cache(implementation.getResourceName(), got);
         return got;
     }
+
+    @Override
+    public byte[] asBytes() throws IOException {
+        return implementation.asBytes();
+    }
 }

@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
+import com.djrapitops.plan.extension.implementation.providers.DataProvider;
+import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionGroupsTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
@@ -43,11 +45,11 @@ public class StorePlayerGroupsResultTransaction extends ThrowawayTransaction {
 
     private final String[] value;
 
-    public StorePlayerGroupsResultTransaction(String pluginName, UUID serverUUID, String providerName, UUID playerUUID, String[] value) {
-        this.pluginName = pluginName;
-        this.serverUUID = serverUUID;
-        this.providerName = providerName;
-        this.playerUUID = playerUUID;
+    public StorePlayerGroupsResultTransaction(DataProvider<String[]> provider, Parameters parameters, String[] value) {
+        this.pluginName = provider.getProviderInformation().getPluginName();
+        this.providerName = provider.getProviderInformation().getName();
+        this.serverUUID = parameters.getServerUUID();
+        this.playerUUID = parameters.getPlayerUUID();
         this.value = value;
     }
 

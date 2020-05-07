@@ -16,7 +16,8 @@
  */
 package com.djrapitops.plan.capability;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -39,8 +40,7 @@ public interface CapabilityService {
      * @throws IllegalStateException If Plan is installed, but not enabled.
      */
     static CapabilityService getInstance() {
-        return Optional.ofNullable(CapabilityServiceHolder.service)
-                .orElseThrow(() -> new IllegalStateException("CapabilityService has not been initialised yet."));
+        return new CapabilityService() {};
     }
 
     /**
@@ -48,7 +48,9 @@ public interface CapabilityService {
      *
      * @param isEnabledListener The boolean given to the method tells if Plan has enabled successfully.
      */
-    void registerEnableListener(Consumer<Boolean> isEnabledListener);
+    default void registerEnableListener(Consumer<Boolean> isEnabledListener) {
+        ListHolder.ENABLE_LISTENERS.add(isEnabledListener);
+    }
 
     /**
      * Check if the API on the current version provides a capability.
@@ -61,16 +63,7 @@ public interface CapabilityService {
         return Capability.getByName(capabilityName).isPresent();
     }
 
-    class CapabilityServiceHolder {
-        static CapabilityService service;
-
-        private CapabilityServiceHolder() {
-            /* Static variable holder */
-        }
-
-        static void set(CapabilityService service) {
-            CapabilityServiceHolder.service = service;
-        }
+    class ListHolder {
+        static List<Consumer<Boolean>> ENABLE_LISTENERS = new ArrayList<>();
     }
-
 }

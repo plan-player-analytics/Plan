@@ -20,7 +20,7 @@ import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalPlayerResultsTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalServerResultsTransaction;
 import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.query.QueryServiceImplementation;
+import com.djrapitops.plan.query.QuerySvc;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -61,7 +61,7 @@ public class DBCleanTask extends AbsRunnable {
     private final Locale locale;
     private final DBSystem dbSystem;
     private final PlanConfig config;
-    private final QueryServiceImplementation queryService;
+    private final QuerySvc queryService;
     private final ServerInfo serverInfo;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
@@ -75,7 +75,7 @@ public class DBCleanTask extends AbsRunnable {
             PlanConfig config,
             Locale locale,
             DBSystem dbSystem,
-            QueryServiceImplementation queryService,
+            QuerySvc queryService,
             ServerInfo serverInfo,
             PluginLogger logger,
             ErrorHandler errorHandler

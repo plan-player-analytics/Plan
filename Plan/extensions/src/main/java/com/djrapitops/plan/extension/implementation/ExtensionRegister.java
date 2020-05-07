@@ -26,6 +26,7 @@ import com.djrapitops.plan.extension.extractor.ExtensionExtractor;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -60,6 +61,7 @@ public class ExtensionRegister {
         register(new AdvancedBanExtensionFactory(), AdvancedBanExtensionFactory::createExtension, AdvancedBanExtensionFactory::registerListener);
         register(new ASkyBlockExtensionFactory(), ASkyBlockExtensionFactory::createExtension);
         register(new BanManagerExtensionFactory(), BanManagerExtensionFactory::createExtension);
+        registerBentoBoxExtensions();
         register(new BuycraftExtensionFactory(), BuycraftExtensionFactory::createExtension);
 //        register(new CoreProtectExtensionFactory(), CoreProtectExtensionFactory::createExtension);
         register(new DiscordSRVExtensionFactory(), DiscordSRVExtensionFactory::createExtension, DiscordSRVExtensionFactory::registerListener);
@@ -75,7 +77,7 @@ public class ExtensionRegister {
         register(new LitebansExtensionFactory(), LitebansExtensionFactory::createExtension, LitebansExtensionFactory::registerEvents);
         register(new LuckPermsExtensionFactory(), LuckPermsExtensionFactory::createExtension);
         register(new McMMOExtensionFactory(), McMMOExtensionFactory::createExtension);
-        registerMinigameLibExtensions();
+        registerMany(new MinigameLibExtensionFactory(), MinigameLibExtensionFactory::createExtensions);
         register(new NucleusExtensionFactory(), NucleusExtensionFactory::createExtension);
         register(new NuVotifierExtensionFactory(), NuVotifierExtensionFactory::createExtension);
         register(new ProtocolSupportExtensionFactory(), ProtocolSupportExtensionFactory::createExtension);
@@ -83,19 +85,22 @@ public class ExtensionRegister {
         register(new SpongeEconomyExtensionFactory(), SpongeEconomyExtensionFactory::createExtension);
         register(new SuperbVoteExtensionFactory(), SuperbVoteExtensionFactory::createExtension);
         register(new TownyExtensionFactory(), TownyExtensionFactory::createExtension);
-        register(new VaultExtensionFactory(), VaultExtensionFactory::createExtension);
-        register(new ViaVersionExtensionFactory(), ViaVersionExtensionFactory::createExtension);
+        registerMany(new VaultExtensionFactory(), VaultExtensionFactory::createExtensions);
+        register(new ViaVersionExtensionFactory(), ViaVersionExtensionFactory::createExtension, ViaVersionExtensionFactory::registerListener);
 
         if (registerException != null) throw registerException;
     }
 
-    private void registerMinigameLibExtensions() {
-        for (DataExtension minigame : new MinigameLibExtensionFactory().createExtensions()) {
-            register(minigame);
+    private void registerBentoBoxExtensions() {
+        BentoBoxExtensionFactory factory = new BentoBoxExtensionFactory();
+        if (factory.isAvailable()) {
+            for (DataExtension minigame : factory.createExtensions()) {
+                register(minigame);
+            }
         }
     }
 
-    private void suppressException(Class factory, Throwable e) {
+    private void suppressException(Class<?> factory, Throwable e) {
         String factoryName = factory.getSimpleName();
         String extensionName = factoryName.replace("ExtensionFactory", "");
 
@@ -133,6 +138,21 @@ public class ExtensionRegister {
         try {
             // Creates the extension with factory and registers it
             createExtension.apply(factory).ifPresent(this::register);
+        } catch (NotReadyException ignore) {
+            // This exception signals that the extension can not be registered right now (Intended fail).
+        } catch (Exception | NoClassDefFoundError | IncompatibleClassChangeError e) {
+            // Places all exceptions to one exception with plugin information so that they can be reported.
+            suppressException(factory.getClass(), e);
+        }
+    }
+
+    private <T> void registerMany(
+            T factory,
+            Function<T, Collection<DataExtension>> createExtension
+    ) {
+        try {
+            // Creates the extension with factory and registers it
+            createExtension.apply(factory).forEach(this::register);
         } catch (NotReadyException ignore) {
             // This exception signals that the extension can not be registered right now (Intended fail).
         } catch (Exception | NoClassDefFoundError | IncompatibleClassChangeError e) {

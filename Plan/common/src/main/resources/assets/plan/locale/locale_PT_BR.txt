@@ -162,7 +162,7 @@ HTML - LABEL_RELATIVE_JOIN_ACTIVITY             || Relative Join Activity
 HTML - LABEL_RETENTION                          || Retenção de Novos Jogadores
 HTML - LABEL_SERVER_DOWNTIME                    || Server Downtime
 HTML - LABEL_SERVER_OCCUPIED                    || Server occupied
-HTML - LABEL_SESSION_ENDED                      || Sessões Finalizadas
+HTML - LABEL_SESSION_ENDED                      ||  Sessões Finalizadas
 HTML - LABEL_SESSION_MEDIAN                     || Média de Sessões
 HTML - LABEL_TIMES_KICKED                       || Vezes Kickado
 HTML - LABEL_TOTAL_PLAYERS                      || Total Players
@@ -242,7 +242,7 @@ HTML - TITLE_LAST_24_HOURS                      || Últimas 24 horas
 HTML - TITLE_LAST_30_DAYS                       || Últimos 30 dias
 HTML - TITLE_LAST_7_DAYS                        || Últimos 7 dias
 HTML - TITLE_LAST_CONNECTED                     || Última Conexão
-HTML - TITLE_LENGTH                             || Length
+HTML - TITLE_LENGTH                             ||  Length
 HTML - TITLE_MOST_PLAYED_WORLD                  || Most played World
 HTML - TITLE_NETWORK                            || Network
 HTML - TITLE_NETWORK_AS_NUMBERS                 || Network as Numbers

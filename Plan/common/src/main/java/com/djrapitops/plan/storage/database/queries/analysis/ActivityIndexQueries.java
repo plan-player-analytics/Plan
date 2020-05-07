@@ -142,53 +142,27 @@ public class ActivityIndexQueries {
     public static Query<Map<String, Integer>> fetchActivityIndexGroupingsOn(long date, UUID serverUUID, long threshold) {
         String selectActivityIndex = selectActivityIndexSQL();
 
-        // ? inside SELECT needs to be implicitly cast to a type because of H2 compile time type checks.
-        String selectIndexes = SELECT + "CAST(? as CHAR) as activity_group, activity_index" +
+        String selectIndexes = SELECT + "activity_index" +
                 FROM + UserInfoTable.TABLE_NAME + " u" +
                 LEFT_JOIN + '(' + selectActivityIndex + ") s on s." + SessionsTable.USER_UUID + "=u." + UserInfoTable.USER_UUID +
                 WHERE + "u." + UserInfoTable.SERVER_UUID + "=?" +
                 AND + "u." + UserInfoTable.REGISTERED + "<=?";
 
-        String selectCount = SELECT + "indexes.activity_group, COUNT(1) as count" + FROM +
-                '(' + selectIndexes + ") indexes" +
-                WHERE + "COALESCE(indexes.activity_index,0)>=?" +
-                AND + "COALESCE(indexes.activity_index,0)<?" +
-                GROUP_BY + "indexes.activity_group";
-
-        String selectMultipleCounts = SELECT + '*' + FROM +
-                '(' + selectCount +
-                UNION + selectCount +
-                UNION + selectCount +
-                UNION + selectCount +
-                UNION + selectCount + ") selectMultiple";
-
-        return new QueryStatement<Map<String, Integer>>(selectMultipleCounts) {
+        return new QueryStatement<Map<String, Integer>>(selectIndexes) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                set16ValuesForQuery(statement, 1, "Very Active", ActivityIndex.VERY_ACTIVE, 5.1);
-                set16ValuesForQuery(statement, 17, "Active", ActivityIndex.ACTIVE, ActivityIndex.VERY_ACTIVE);
-                set16ValuesForQuery(statement, 33, "Regular", ActivityIndex.REGULAR, ActivityIndex.ACTIVE);
-                set16ValuesForQuery(statement, 49, "Irregular", ActivityIndex.IRREGULAR, ActivityIndex.REGULAR);
-                set16ValuesForQuery(statement, 65, "Inactive", -1, ActivityIndex.IRREGULAR);
-            }
-
-            private void set16ValuesForQuery(
-                    PreparedStatement statement, int index,
-                    String group, double above, double below
-            ) throws SQLException {
-                statement.setString(index, group);
-                setSelectActivityIndexSQLParameters(statement, index + 1, threshold, serverUUID, date);
-                statement.setString(index + 12, serverUUID.toString());
-                statement.setLong(index + 13, date);
-                statement.setDouble(index + 14, above);
-                statement.setDouble(index + 15, below);
+                setSelectActivityIndexSQLParameters(statement, 1, threshold, serverUUID, date);
+                statement.setString(12, serverUUID.toString());
+                statement.setLong(13, date);
             }
 
             @Override
             public Map<String, Integer> processResults(ResultSet set) throws SQLException {
                 Map<String, Integer> groups = new HashMap<>();
                 while (set.next()) {
-                    groups.put(set.getString("activity_group"), set.getInt("count"));
+                    double activityIndex = set.getDouble("activity_index");
+                    String group = ActivityIndex.getGroup(activityIndex);
+                    groups.put(group, groups.getOrDefault(group, 0) + 1);
                 }
                 return groups;
             }

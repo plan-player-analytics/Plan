@@ -40,7 +40,7 @@ public interface QueryService {
      * @throws IllegalStateException If Plan is installed, but not enabled.
      */
     static QueryService getInstance() {
-        return Optional.ofNullable(QueryService.QueryServiceHolder.service)
+        return Optional.ofNullable(Holder.service)
                 .orElseThrow(() -> new IllegalStateException("QueryService has not been initialised yet."));
     }
 
@@ -148,15 +148,15 @@ public interface QueryService {
         void apply();
     }
 
-    class QueryServiceHolder {
+    class Holder {
         static QueryService service;
 
-        private QueryServiceHolder() {
+        private Holder() {
             /* Static variable holder */
         }
 
         static void set(QueryService service) {
-            QueryService.QueryServiceHolder.service = service;
+            Holder.service = service;
         }
     }
 

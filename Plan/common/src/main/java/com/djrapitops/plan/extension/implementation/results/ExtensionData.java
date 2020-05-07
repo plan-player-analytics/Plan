@@ -84,6 +84,15 @@ public class ExtensionData implements Comparable<ExtensionData> {
         return Objects.hash(pluginID, extensionInformation, tabs);
     }
 
+    @Override
+    public String toString() {
+        return "ExtensionData{" +
+                "pluginID=" + pluginID +
+                ", extensionInformation=" + extensionInformation +
+                ", tabs=" + tabs +
+                '}';
+    }
+
     public static class Builder {
 
         private final ExtensionData data;

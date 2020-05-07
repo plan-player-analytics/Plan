@@ -19,8 +19,6 @@ package com.djrapitops.plan.delivery.domain.containers;
 import com.djrapitops.plan.delivery.domain.keys.Key;
 import com.djrapitops.plan.delivery.domain.keys.Type;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +31,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class KeyTest {
 
     @Test

@@ -16,9 +16,12 @@
  */
 package com.djrapitops.plan.modules.nukkit;
 
+import cn.nukkit.level.Level;
 import com.djrapitops.plan.NukkitServerShutdownSave;
 import com.djrapitops.plan.NukkitTaskSystem;
 import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plan.gathering.NukkitSensor;
+import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.gathering.importing.EmptyImportSystem;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
@@ -34,7 +37,7 @@ import dagger.Binds;
 import dagger.Module;
 
 /**
- * Module for binding Nukkit specific classes to the interface implementations.
+ * Module for binding Nukkit specific classes as interface implementations.
  *
  * @author Rsl1122
  */
@@ -42,24 +45,29 @@ import dagger.Module;
 public interface NukkitSuperClassBindingModule {
 
     @Binds
-    ServerInfo bindNukkitServerInfo(ServerServerInfo serverServerInfo);
+    ServerInfo bindServerInfo(ServerServerInfo serverInfo);
 
     @Binds
-    DBSystem bindNukkitDatabaseSystem(NukkitDBSystem dbSystem);
+    DBSystem bindDBSystem(NukkitDBSystem dbSystem);
 
     @Binds
-    ConfigSystem bindNukkitConfigSystem(NukkitConfigSystem nukkitConfigSystem);
+    ConfigSystem bindConfigSystem(NukkitConfigSystem configSystem);
 
     @Binds
-    TaskSystem bindNukkitTaskSystem(NukkitTaskSystem nukkitTaskSystem);
+    TaskSystem bindTaskSystem(NukkitTaskSystem taskSystem);
 
     @Binds
-    ListenerSystem bindNukkitListenerSystem(NukkitListenerSystem nukkitListenerSystem);
+    ListenerSystem bindListenerSystem(NukkitListenerSystem listenerSystem);
 
     @Binds
     ImportSystem bindImportSystem(EmptyImportSystem emptyImportSystem);
 
     @Binds
-    ServerShutdownSave bindNukkitServerShutdownSave(NukkitServerShutdownSave nukkitServerShutdownSave);
+    ServerShutdownSave bindServerShutdownSave(NukkitServerShutdownSave shutdownSave);
 
+    @Binds
+    ServerSensor<Level> bindServerSensor(NukkitSensor sensor);
+
+    @Binds
+    ServerSensor<?> bindGenericsServerSensor(ServerSensor<Level> sensor);
 }

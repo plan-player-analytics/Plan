@@ -29,6 +29,7 @@ public enum CommandLang implements Lang {
     FAIL_USERNAME_NOT_KNOWN("Cmd FAIL - Unknown Username", "§cUser has not been seen on this server"),
     FAIL_DATABASE_NOT_OPEN("Cmd FAIL - Database not open", "§cDatabase is ${0} - Please try again a bit later."),
     WARN_DATABASE_NOT_OPEN("Cmd WARN - Database not open", "§eDatabase is ${0} - This might take longer than expected.."),
+    USER_NOT_LINKED("Cmd FAIL - Users not linked", "User is not linked to your account and you don't have permission to remove other user's accounts."),
 
     FAIL_WEB_USER_EXISTS("Cmd FAIL - WebUser exists", "§cUser already exists!"),
     FAIL_WEB_USER_NOT_EXISTS("Cmd FAIL - WebUser does not exists", "§cUser does not exists!"),
@@ -64,6 +65,8 @@ public enum CommandLang implements Lang {
     QINSPECT_LAST_SEEN("Cmd Qinspect - Last Seen", "  §2Last Seen: §f${0}"),
     QINSPECT_GEOLOCATION("Cmd Qinspect - Geolocation", "  §2Logged in from: §f${0}"),
     QINSPECT_PLAYTIME("Cmd Qinspect - Playtime", "  §2Playtime: §f${0}"),
+    QINSPECT_ACTIVE_PLAYTIME("Cmd Qinspect - Active Playtime", "  §2Active Playtime: §f${0}"),
+    QINSPECT_AFK_PLAYTIME("Cmd Qinspect - AFK Playtime", "  §2AFK Time: §f${0}"),
     QINSPECT_LONGEST_SESSION("Cmd Qinspect - Longest Session", "  §2Longest Session: §f${0}"),
     QINSPECT_TIMES_KICKED("Cmd Qinspect - Times Kicked", "  §2Times Kicked: §f${0}"),
     QINSPECT_PLAYER_KILLS("Cmd Qinspect - Player Kills", "  §2Player Kills: §f${0}"),
@@ -73,7 +76,8 @@ public enum CommandLang implements Lang {
     DISABLE_DISABLED("Cmd Disable - Disabled", "§aPlan systems are now disabled. You can still use /planbungee reload to restart the plugin."),
 
     RELOAD_COMPLETE("Cmd Info - Reload Complete", "§aReload Complete"),
-    RELOAD_FAILED("Cmd Info - Reload Failed", "§cSomething went wrong during reload of the plugin, a restart is recommended.");
+    RELOAD_FAILED("Cmd Info - Reload Failed", "§cSomething went wrong during reload of the plugin, a restart is recommended."),
+    NO_ADDRESS_NOTIFY("Cmd Notify - No Address", "§eNo address was available - using localhost as fallback. Set up 'Alternative_IP' settings.");
 
     private final String identifier;
     private final String defaultValue;

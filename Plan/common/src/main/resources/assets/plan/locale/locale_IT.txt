@@ -83,7 +83,7 @@ Disable - Unsaved Session Save                  || Salvano le sessioni..
 Disable - WebServer                             || Webserver è stato disabilitato.
 Enable                                          || Analisi Giocatori Abilitata.
 Enable - Database                               || ${0}-connession al database stabilita.
-Enable - Notify Empty IP                        || IP in server.properties è vuoto e AlternativeIP non è in uso. Correggi queste informazioni!
+Enable - Notify Empty IP                        || IP in server.properties è vuoto e Alternative_IP non è in uso. Correggi queste informazioni!
 Enable - Notify Geolocations disabled           || Geolocalizazione non attiva. (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || Plan richiesta una connessione internet la prima volta per scaricare il database Geolite.
 Enable - Notify Webserver disabled              || WebServer non avviato. (WebServer.DisableWebServer: true)
@@ -162,7 +162,7 @@ HTML - LABEL_RELATIVE_JOIN_ACTIVITY             || Attività Entrate Relative
 HTML - LABEL_RETENTION                          || Retenzione Nuovo Giocatore
 HTML - LABEL_SERVER_DOWNTIME                    || Server Downtime
 HTML - LABEL_SERVER_OCCUPIED                    || Server occupato
-HTML - LABEL_SESSION_ENDED                      || Fine
+HTML - LABEL_SESSION_ENDED                      ||  Fine
 HTML - LABEL_SESSION_MEDIAN                     || Media Sessioni
 HTML - LABEL_TIMES_KICKED                       || Cacciato
 HTML - LABEL_TOTAL_PLAYERS                      || Giocatori Totali
@@ -242,7 +242,7 @@ HTML - TITLE_LAST_24_HOURS                      || Ultime 24 ore
 HTML - TITLE_LAST_30_DAYS                       || Ultimi 30 giorni
 HTML - TITLE_LAST_7_DAYS                        || Ultimi 7 giorni
 HTML - TITLE_LAST_CONNECTED                     || Ultima connessione
-HTML - TITLE_LENGTH                             || Durata
+HTML - TITLE_LENGTH                             ||  Durata
 HTML - TITLE_MOST_PLAYED_WORLD                  || Mondo più giocato
 HTML - TITLE_NETWORK                            || Network
 HTML - TITLE_NETWORK_AS_NUMBERS                 || Statistiche Network

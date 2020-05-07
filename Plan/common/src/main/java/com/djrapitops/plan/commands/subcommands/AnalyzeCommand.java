@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.commands.subcommands;
 
-import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.export.Exporter;
 import com.djrapitops.plan.delivery.rendering.html.Html;
+import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.exceptions.ExportException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
@@ -56,6 +56,7 @@ public class AnalyzeCommand extends CommandNode {
     private final Locale locale;
     private final Processing processing;
     private final Exporter exporter;
+    private final Addresses addresses;
     private final ServerInfo serverInfo;
     private final WebServer webServer;
     private final DBSystem dbSystem;
@@ -66,6 +67,7 @@ public class AnalyzeCommand extends CommandNode {
             Locale locale,
             Processing processing,
             Exporter exporter,
+            Addresses addresses,
             ServerInfo serverInfo,
             WebServer webServer,
             DBSystem dbSystem,
@@ -76,6 +78,7 @@ public class AnalyzeCommand extends CommandNode {
         this.locale = locale;
         this.processing = processing;
         this.exporter = exporter;
+        this.addresses = addresses;
         this.serverInfo = serverInfo;
         this.webServer = webServer;
         this.dbSystem = dbSystem;
@@ -110,7 +113,10 @@ public class AnalyzeCommand extends CommandNode {
 
     private void sendLink(Server server, Sender sender) {
         String target = "/server/" + Html.encodeToURL(server.getName());
-        String address = PlanSystem.getMainAddress(webServer, dbSystem);
+        String address = addresses.getMainAddress().orElseGet(() -> {
+            sender.sendMessage(locale.getString(CommandLang.NO_ADDRESS_NOTIFY));
+            return addresses.getFallbackLocalhostAddress();
+        });
         String url = address + target;
         String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
         sender.sendMessage(locale.getString(CommandLang.HEADER_ANALYSIS));
@@ -128,7 +134,7 @@ public class AnalyzeCommand extends CommandNode {
     private void sendWebUserNotificationIfNecessary(Sender sender) {
         if (webServer.isAuthRequired() &&
                 CommandUtils.isPlayer(sender) &&
-                !dbSystem.getDatabase().query(WebUserQueries.fetchWebUser(sender.getName())).isPresent()) {
+                !dbSystem.getDatabase().query(WebUserQueries.fetchUserLinkedTo(sender.getName())).isPresent()) {
             sender.sendMessage("§e" + locale.getString(CommandLang.NO_WEB_USER_NOTIFY));
         }
     }

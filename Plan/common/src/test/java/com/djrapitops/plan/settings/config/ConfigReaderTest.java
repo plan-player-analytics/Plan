@@ -17,8 +17,6 @@
 package com.djrapitops.plan.settings.config;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import java.util.Arrays;
 import java.util.Scanner;
@@ -30,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class ConfigReaderTest {
 
     @Test

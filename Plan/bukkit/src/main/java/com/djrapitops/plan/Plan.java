@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.addons.placeholderapi.PlaceholderRegistrar;
+import com.djrapitops.plan.addons.placeholderapi.BukkitPlaceholderRegistrar;
 import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
@@ -55,7 +55,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
             system.enable();
 
             registerMetrics();
-            registerPlaceholderAPIExtension();
+            registerPlaceholderAPIExtension(component.placeholders());
 
             logger.debug("Verbose debug messages are enabled.");
             String benchTime = " (" + timings.end("Enable").map(Benchmark::toDurationString).orElse("-") + ")";
@@ -82,13 +82,13 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
         }
     }
 
-    private void registerPlaceholderAPIExtension() {
+    private void registerPlaceholderAPIExtension(BukkitPlaceholderRegistrar placeholders) {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             runnableFactory.create("Placeholders Registrar", new AbsRunnable() {
                 @Override
                 public void run() {
                     try {
-                        PlaceholderRegistrar.register(system, errorHandler);
+                        placeholders.register();
                     } catch (Exception | NoClassDefFoundError | NoSuchMethodError failed) {
                         logger.warn("Failed to register PlaceholderAPI placeholders: " + failed.toString());
                     }

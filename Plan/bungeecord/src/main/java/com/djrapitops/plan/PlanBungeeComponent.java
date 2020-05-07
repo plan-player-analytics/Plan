@@ -18,7 +18,7 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.commands.PlanProxyCommand;
 import com.djrapitops.plan.modules.APFModule;
-import com.djrapitops.plan.modules.FilesModule;
+import com.djrapitops.plan.modules.PlaceholderModule;
 import com.djrapitops.plan.modules.ProxySuperClassBindingModule;
 import com.djrapitops.plan.modules.SystemObjectProvidingModule;
 import com.djrapitops.plan.modules.bungee.BungeeCommandModule;
@@ -41,7 +41,8 @@ import javax.inject.Singleton;
         BungeeCommandModule.class,
         SystemObjectProvidingModule.class,
         APFModule.class,
-        FilesModule.class,
+        PlaceholderModule.class,
+
         ProxySuperClassBindingModule.class,
         BungeeSuperClassBindingModule.class,
         BungeeServerPropertiesModule.class

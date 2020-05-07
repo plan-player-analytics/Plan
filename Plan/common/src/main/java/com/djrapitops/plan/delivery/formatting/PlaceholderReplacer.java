@@ -16,13 +16,10 @@
  */
 package com.djrapitops.plan.delivery.formatting;
 
-import com.djrapitops.plan.delivery.domain.container.DataContainer;
-import com.djrapitops.plan.delivery.domain.keys.PlaceholderKey;
 import org.apache.commons.text.StringSubstitutor;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Objects;
 
 /**
  * Formatter for replacing ${placeholder} values inside strings.
@@ -30,16 +27,6 @@ import java.util.Objects;
  * @author Rsl1122
  */
 public class PlaceholderReplacer extends HashMap<String, Serializable> implements Formatter<String> {
-
-    public <T> void addPlaceholderFrom(DataContainer container, PlaceholderKey<T> key) {
-        put(key.getPlaceholder(), container.getValue(key).map(Objects::toString).orElse("Missing value " + key.getPlaceholder()));
-    }
-
-    public void addAllPlaceholdersFrom(DataContainer container, PlaceholderKey... keys) {
-        for (PlaceholderKey key : keys) {
-            addPlaceholderFrom(container, key);
-        }
-    }
 
     @Override
     public String apply(String string) {

@@ -17,41 +17,53 @@
 package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.PlanSystem;
-import com.djrapitops.plan.gathering.domain.GeoInfo;
-import com.djrapitops.plan.storage.database.queries.objects.GeoInfoQueries;
-import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
+import com.djrapitops.plan.identification.Server;
+import com.djrapitops.plan.storage.database.queries.*;
+import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
+import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
+import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import utilities.DBPreparer;
 import utilities.RandomData;
 import utilities.mocks.PluginMockComponent;
 
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Tests for {@link MySQLDB}.
+ * Tests for MySQL database.
  * <p>
- * These settings assume Travis CI environment with MySQL service running.
- * 'Plan' database should be created before the test.
+ * The setup assumes CI environment with MySQL service running.
+ * 'MYSQL_DB' database should be created before the test.
  *
  * @author Rsl1122
+ * @see DatabaseTest
+ * @see ExtensionsDatabaseTest
+ * @see utilities.CIProperties for assumed MySQL setup.
  */
-@RunWith(JUnitPlatform.class)
 @ExtendWith(MockitoExtension.class)
-class MySQLTest implements DatabaseTest {
+class MySQLTest implements DatabaseTest,
+        DatabaseBackupTest,
+        ExtensionsDatabaseTest,
+        ActivityIndexQueriesTest,
+        GeolocationQueriesTest,
+        NicknameQueriesTest,
+        PingQueriesTest,
+        SessionQueriesTest,
+        ServerQueriesTest,
+        TPSQueriesTest,
+        UserInfoQueriesTest,
+        WebUserQueriesTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
@@ -66,6 +78,29 @@ class MySQLTest implements DatabaseTest {
         database = mysql.get();
     }
 
+    @BeforeEach
+    void setUp() {
+        db().executeTransaction(new Patch() {
+            @Override
+            public boolean hasBeenApplied() {
+                return false;
+            }
+
+            @Override
+            public void applyPatch() {
+                dropTable("plan_world_times");
+                dropTable("plan_kills");
+                dropTable("plan_sessions");
+                dropTable("plan_worlds");
+                dropTable("plan_users");
+            }
+        });
+        db().executeTransaction(new CreateTablesTransaction());
+        db().executeTransaction(new RemoveEverythingTransaction());
+
+        db().executeTransaction(new StoreServerInformationTransaction(new Server(-1, serverUUID(), "ServerName", "", 20)));
+        assertEquals(serverUUID(), ((SQLDB) db()).getServerUUIDSupplier().get());
+    }
     @AfterAll
     static void disableSystem() {
         if (database != null) database.close();
@@ -85,39 +120,5 @@ class MySQLTest implements DatabaseTest {
     @Override
     public PlanSystem system() {
         return system;
-    }
-
-    @Test
-    void networkGeolocationsAreCountedAppropriately() {
-        UUID firstUuid = UUID.randomUUID();
-        UUID secondUuid = UUID.randomUUID();
-        UUID thirdUuid = UUID.randomUUID();
-        UUID fourthUuid = UUID.randomUUID();
-        UUID fifthUuid = UUID.randomUUID();
-        UUID sixthUuid = UUID.randomUUID();
-
-        database.executeTransaction(new PlayerRegisterTransaction(firstUuid, () -> 0L, ""));
-        database.executeTransaction(new PlayerRegisterTransaction(secondUuid, () -> 0L, ""));
-        database.executeTransaction(new PlayerRegisterTransaction(thirdUuid, () -> 0L, ""));
-
-        saveGeoInfo(firstUuid, new GeoInfo("Norway", 0));
-        saveGeoInfo(firstUuid, new GeoInfo("Finland", 5));
-        saveGeoInfo(secondUuid, new GeoInfo("Sweden", 0));
-        saveGeoInfo(thirdUuid, new GeoInfo("Denmark", 0));
-        saveGeoInfo(fourthUuid, new GeoInfo("Denmark", 0));
-        saveGeoInfo(fifthUuid, new GeoInfo("Not Known", 0));
-        saveGeoInfo(sixthUuid, new GeoInfo("Local Machine", 0));
-
-        Map<String, Integer> got = database.query(GeoInfoQueries.networkGeolocationCounts());
-
-        Map<String, Integer> expected = new HashMap<>();
-        // first user has a more recent connection from Finland so their country should be counted as Finland.
-        expected.put("Finland", 1);
-        expected.put("Sweden", 1);
-        expected.put("Not Known", 1);
-        expected.put("Local Machine", 1);
-        expected.put("Denmark", 2);
-
-        assertEquals(expected, got);
     }
 }

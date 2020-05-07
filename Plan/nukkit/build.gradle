@@ -4,6 +4,7 @@ dependencies {
 
     compileOnly "com.djrapitops:AbstractPluginFramework-api:$abstractPluginFrameworkVersion"
     compileOnly "cn.nukkit:nukkit:$nukkitVersion"
+    compileOnly "com.creeperface.nukkit.placeholderapi:PlaceholderAPI:$nkPlaceholderapiVersion"
     testCompile "cn.nukkit:nukkit:$nukkitVersion"
 
     testCompile project(path: ":common", configuration: 'testArtifacts')

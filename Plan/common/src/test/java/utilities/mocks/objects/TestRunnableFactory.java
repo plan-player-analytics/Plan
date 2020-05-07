@@ -18,8 +18,11 @@ package utilities.mocks.objects;
 
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.PluginRunnable;
+import com.djrapitops.plugin.task.PluginTask;
 import com.djrapitops.plugin.task.RunnableFactory;
+import org.mockito.Mockito;
 
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -32,13 +35,42 @@ import static org.mockito.Mockito.mock;
  */
 public class TestRunnableFactory extends RunnableFactory {
 
+    private boolean callOnSameThread;
+
+    public TestRunnableFactory() {
+        this(false);
+    }
+
+    private TestRunnableFactory(boolean callOnSameThread) {
+        this.callOnSameThread = callOnSameThread;
+    }
+
+    public static RunnableFactory forSameThread() {
+        return new TestRunnableFactory(true);
+    }
+
     @Override
-    protected PluginRunnable createNewRunnable(String name, AbsRunnable absRunnable, long l) {
-        return mock(PluginRunnable.class);
+    protected PluginRunnable createNewRunnable(String name, AbsRunnable runnable, long l) {
+        PluginRunnable mock = mock(PluginRunnable.class);
+        if (callOnSameThread) {
+            lenient().when(mock.runTask()).then(invocation -> run(runnable));
+            lenient().when(mock.runTaskAsynchronously()).then(invocation -> run(runnable));
+            lenient().when(mock.runTaskLater(Mockito.anyLong())).then(invocation -> run(runnable));
+            lenient().when(mock.runTaskLaterAsynchronously(Mockito.anyLong())).then(invocation -> run(runnable));
+            lenient().when(mock.runTaskTimer(Mockito.anyLong(), Mockito.anyLong())).then(invocation -> run(runnable));
+            lenient().when(mock.runTaskTimerAsynchronously(Mockito.anyLong(), Mockito.anyLong())).then(invocation -> run(runnable));
+        }
+        return mock;
+    }
+
+    private PluginTask run(AbsRunnable runnable) {
+        runnable.run();
+        return null;
     }
 
     @Override
     public void cancelAllKnownTasks() {
         /* Nothing to cancel, nothing is actually run. */
     }
+
 }

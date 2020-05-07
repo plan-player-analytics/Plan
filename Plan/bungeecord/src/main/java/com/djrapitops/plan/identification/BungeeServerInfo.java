@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.identification;
 
+import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
@@ -42,6 +43,7 @@ import java.util.concurrent.ExecutionException;
 public class BungeeServerInfo extends ServerInfo {
 
     private final DBSystem dbSystem;
+    private final Addresses addresses;
     private final Lazy<WebServer> webServer;
     private final PluginLogger logger;
 
@@ -49,11 +51,13 @@ public class BungeeServerInfo extends ServerInfo {
     public BungeeServerInfo(
             ServerProperties serverProperties,
             DBSystem dbSystem,
+            Addresses addresses,
             Lazy<WebServer> webServer,
             PluginLogger logger
     ) {
         super(serverProperties);
         this.dbSystem = dbSystem;
+        this.addresses = addresses;
         this.webServer = webServer;
         this.logger = logger;
     }
@@ -67,7 +71,7 @@ public class BungeeServerInfo extends ServerInfo {
             Optional<Server> proxyInfo = database.query(ServerQueries.fetchProxyServerInformation());
             if (proxyInfo.isPresent()) {
                 server = proxyInfo.get();
-                updateServerInfo(database);
+                updateServerInfo();
             } else {
                 server = registerBungeeInfo(database);
             }
@@ -78,26 +82,29 @@ public class BungeeServerInfo extends ServerInfo {
         }
     }
 
-    private void updateServerInfo(Database db) {
-        String accessAddress = webServer.get().getAccessAddress();
+    private void updateServerInfo() {
+        addresses.getAccessAddress().ifPresent(this::saveAddress);
+    }
+
+    private void saveAddress(String accessAddress) {
         if (!accessAddress.equals(server.getWebAddress())) {
             server.setWebAddress(accessAddress);
-            db.executeTransaction(new StoreServerInformationTransaction(server));
+            dbSystem.getDatabase().executeTransaction(new StoreServerInformationTransaction(server));
         }
     }
 
     private void checkIfDefaultIP() throws EnableException {
         String ip = serverProperties.getIp();
         if ("0.0.0.0".equals(ip)) {
-            logger.error("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
+            logger.error("IP setting still 0.0.0.0 - Configure Alternative_IP/IP that connects to the Proxy server.");
             logger.info("Player Analytics partially enabled (Use /planbungee to reload config)");
-            throw new EnableException("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
+            throw new EnableException("IP setting still 0.0.0.0 - Configure Alternative_IP/IP that connects to the Proxy server.");
         }
     }
 
     private Server registerBungeeInfo(Database db) throws EnableException, ExecutionException, InterruptedException {
         UUID serverUUID = generateNewUUID();
-        String accessAddress = webServer.get().getAccessAddress();
+        String accessAddress = addresses.getAccessAddress().orElseThrow(() -> new EnableException("BungeeCord can not have '0.0.0.0' or '' as an address. Set up 'Server.IP' setting."));
 
         Server proxy = new Server(-1, serverUUID, "BungeeCord", accessAddress, serverProperties.getMaxPlayers());
         db.executeTransaction(new StoreServerInformationTransaction(proxy))
@@ -107,6 +114,6 @@ public class BungeeServerInfo extends ServerInfo {
         if (proxyInfo.isPresent()) {
             return proxyInfo.get();
         }
-        throw new EnableException("BungeeCord registration failed (DB)");
+        throw new EnableException("BungeeCord registration failed (Was not found in the database after saving)");
     }
 }

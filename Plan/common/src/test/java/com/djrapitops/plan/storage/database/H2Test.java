@@ -17,12 +17,17 @@
 package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.identification.Server;
+import com.djrapitops.plan.storage.database.queries.*;
+import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
+import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
+import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import utilities.DBPreparer;
 import utilities.RandomData;
@@ -31,15 +36,28 @@ import utilities.mocks.PluginMockComponent;
 import java.nio.file.Path;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
- * Test for the H2 database
+ * Tests for the H2 database.
  *
- * @author Rsl1122, Fuzzlemann
- * @see SQLiteTest
+ * @author Rsl1122
+ * @see DatabaseTest
+ * @see ExtensionsDatabaseTest
  */
-@RunWith(JUnitPlatform.class)
 @ExtendWith(MockitoExtension.class)
-public class H2Test implements DatabaseTest {
+public class H2Test implements DatabaseTest,
+        DatabaseBackupTest,
+        ExtensionsDatabaseTest,
+        ActivityIndexQueriesTest,
+        GeolocationQueriesTest,
+        NicknameQueriesTest,
+        PingQueriesTest,
+        SessionQueriesTest,
+        ServerQueriesTest,
+        TPSQueriesTest,
+        UserInfoQueriesTest,
+        WebUserQueriesTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
@@ -53,9 +71,36 @@ public class H2Test implements DatabaseTest {
                 .orElseThrow(IllegalStateException::new);
     }
 
+    @BeforeEach
+    void setUp() {
+        db().executeTransaction(new Patch() {
+            @Override
+            public boolean hasBeenApplied() {
+                return false;
+            }
+
+            @Override
+            public void applyPatch() {
+                dropTable("plan_world_times");
+                dropTable("plan_kills");
+                dropTable("plan_sessions");
+                dropTable("plan_worlds");
+                dropTable("plan_users");
+            }
+        });
+        db().executeTransaction(new CreateTablesTransaction());
+        db().executeTransaction(new RemoveEverythingTransaction());
+
+        db().executeTransaction(new StoreServerInformationTransaction(new Server(-1, serverUUID(), "ServerName", "", 20)));
+        assertEquals(serverUUID(), ((SQLDB) db()).getServerUUIDSupplier().get());
+    }
+
     @AfterAll
     static void disableSystem() {
-        if (database != null) database.close();
+        if (database != null) {
+            database.close();
+            System.out.println("Database state after close: " + database.getState().name());
+        }
         system.disable();
     }
 

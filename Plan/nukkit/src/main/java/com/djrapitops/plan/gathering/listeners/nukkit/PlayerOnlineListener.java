@@ -30,13 +30,12 @@ import com.djrapitops.plan.delivery.export.Exporter;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.extension.CallEvents;
-import com.djrapitops.plan.extension.ExtensionServiceImplementation;
-import com.djrapitops.plan.gathering.cache.GeolocationCache;
+import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.gathering.cache.NicknameCache;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.GMTimes;
-import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.geolocation.GeolocationCache;
 import com.djrapitops.plan.gathering.listeners.Status;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
@@ -51,6 +50,7 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Event Listener for PlayerJoin, PlayerQuit and PlayerKickEvents.
@@ -63,7 +63,7 @@ public class PlayerOnlineListener implements Listener {
     private final Processing processing;
     private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
-    private final ExtensionServiceImplementation extensionService;
+    private final ExtensionSvc extensionService;
     private final Exporter exporter;
     private final GeolocationCache geolocationCache;
     private final NicknameCache nicknameCache;
@@ -77,7 +77,7 @@ public class PlayerOnlineListener implements Listener {
             Processing processing,
             ServerInfo serverInfo,
             DBSystem dbSystem,
-            ExtensionServiceImplementation extensionService,
+            ExtensionSvc extensionService,
             Exporter exporter,
             GeolocationCache geolocationCache,
             NicknameCache nicknameCache,
@@ -168,11 +168,12 @@ public class PlayerOnlineListener implements Listener {
         boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
         if (gatheringGeolocations) {
             database.executeTransaction(
-                    new GeoInfoStoreTransaction(playerUUID, new GeoInfo(geolocationCache.getCountry(address), time))
+                    new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
             );
         }
 
-        database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, player::getFirstPlayed, playerName, serverUUID));
+        long registerDate = TimeUnit.SECONDS.toMillis(player.getFirstPlayed());
+        database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> registerDate, playerName, serverUUID));
         Session session = new Session(playerUUID, serverUUID, time, world, gm);
         session.putRawData(SessionKeys.NAME, playerName);
         session.putRawData(SessionKeys.SERVER_NAME, serverInfo.getServer().getIdentifiableName());
@@ -212,6 +213,8 @@ public class PlayerOnlineListener implements Listener {
         Player player = event.getPlayer();
         String playerName = player.getName();
         UUID playerUUID = player.getUniqueId();
+        if (playerUUID == null) return; // Can be null when player is not signed in to xbox live
+
         UUID serverUUID = serverInfo.getServerUUID();
         JSONCache.invalidate(DataID.SERVER_OVERVIEW, serverUUID);
         JSONCache.invalidate(DataID.GRAPH_PERFORMANCE, serverUUID);

@@ -16,6 +16,9 @@
  */
 package com.djrapitops.plan.storage.file;
 
+import org.apache.commons.compress.utils.IOUtils;
+
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,6 +78,17 @@ public class JarResource implements Resource {
             }
         }
         return flat.toString();
+    }
+
+    @Override
+    public byte[] asBytes() throws IOException {
+        try (
+                InputStream in = asInputStream();
+                ByteArrayOutputStream out = new ByteArrayOutputStream()
+        ) {
+            IOUtils.copy(in, out);
+            return out.toByteArray();
+        }
     }
 
     @Override

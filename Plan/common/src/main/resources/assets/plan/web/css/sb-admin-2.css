@@ -1881,6 +1881,10 @@ pre code {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
+.accordion-striped tbody tr:nth-of-type(4n+1):not(.bg-teal), .accordion-striped tbody tr:nth-of-type(4n+2) {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
 .table-hover tbody tr:hover {
     background-color: rgba(0, 0, 0, 0.075);
 }
@@ -2104,6 +2108,10 @@ pre code {
 }
 
 .table-dark.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.table-dark.accordion-striped tbody tr:nth-of-type(4n+1):not(.bg-teal), .table-dark.accordion-striped tbody tr:nth-of-type(4n+2) {
     background-color: rgba(255, 255, 255, 0.05);
 }
 
@@ -8604,6 +8612,10 @@ button.bg-dark:focus {
     box-shadow: none !important;
 }
 
+.w-15 {
+    width: 15% !important;
+}
+
 .w-22 {
     width: 22% !important;
 }
@@ -11707,6 +11719,7 @@ a:focus {
 
 .hidden {
     width: 0 !important;
+    display: none;
 }
 
 .hidden .sidebar .sidebar-brand img {

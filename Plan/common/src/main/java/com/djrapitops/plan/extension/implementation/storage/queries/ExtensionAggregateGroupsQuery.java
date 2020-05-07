@@ -38,9 +38,14 @@ import java.util.UUID;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
- * Query aggregated Group values from groups table.
+ * Query for selecting Tables out of groups for players.
  * <p>
- * Returns Map: PluginID - ExtensionServerData.Factory.
+ * Returns Map: PluginID - {@link ExtensionData.Builder}.
+ * <p>
+ * How it's done:
+ * 1. Query count for each group name
+ * 2. Join with provider information
+ * 3. Map to ExtensionData objects, one per Plugin ID
  *
  * @author Rsl1122
  */

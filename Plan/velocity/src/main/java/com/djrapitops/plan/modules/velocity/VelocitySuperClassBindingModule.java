@@ -18,6 +18,8 @@ package com.djrapitops.plan.modules.velocity;
 
 import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.VelocityTaskSystem;
+import com.djrapitops.plan.gathering.ServerSensor;
+import com.djrapitops.plan.gathering.VelocitySensor;
 import com.djrapitops.plan.gathering.listeners.ListenerSystem;
 import com.djrapitops.plan.gathering.listeners.VelocityListenerSystem;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -26,7 +28,7 @@ import dagger.Binds;
 import dagger.Module;
 
 /**
- * Module for binding Velocity specific classes to the interface implementations.
+ * Module for binding Velocity specific classes as interface implementations.
  *
  * @author Rsl1122
  */
@@ -34,11 +36,14 @@ import dagger.Module;
 public interface VelocitySuperClassBindingModule {
 
     @Binds
-    ServerInfo provideVelocityServerInfo(VelocityServerInfo velocityServerInfo);
+    ServerInfo bindServerInfo(VelocityServerInfo serverInfo);
 
     @Binds
-    TaskSystem provideVelocityTaskSystem(VelocityTaskSystem velocityTaskSystem);
+    TaskSystem bindTaskSystem(VelocityTaskSystem taskSystem);
 
     @Binds
-    ListenerSystem provideVelocityListenerSystem(VelocityListenerSystem velocityListenerSystem);
+    ListenerSystem bindListenerSystem(VelocityListenerSystem listenerSystem);
+
+    @Binds
+    ServerSensor<Object> bindServerSensor(VelocitySensor sensor);
 }

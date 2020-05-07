@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.delivery.webserver.cache;
 
-import com.djrapitops.plan.delivery.webserver.pages.json.RootJSONResolver;
-import com.djrapitops.plan.delivery.webserver.response.Response;
-import com.djrapitops.plan.delivery.webserver.response.data.JSONResponse;
+import com.djrapitops.plan.delivery.web.resolver.MimeType;
+import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
 import com.djrapitops.plan.storage.file.ResourceCache;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.github.benmanes.caffeine.cache.Cache;
@@ -27,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -39,7 +40,7 @@ import java.util.stream.Collectors;
  */
 public class JSONCache {
 
-    private static final Cache<String, String> cache = Caffeine.newBuilder()
+    private static final Cache<String, byte[]> cache = Caffeine.newBuilder()
             .expireAfterAccess(2, TimeUnit.MINUTES)
             .build();
 
@@ -47,33 +48,42 @@ public class JSONCache {
         // Static class
     }
 
-    public static Response getOrCache(String identifier, Supplier<JSONResponse> jsonResponseSupplier) {
-        String found = cache.getIfPresent(identifier);
+    public static Response getOrCache(String identifier, Supplier<Response> jsonResponseSupplier) {
+        byte[] found = cache.getIfPresent(identifier);
         if (found == null) {
-            JSONResponse response = jsonResponseSupplier.get();
-            cache.put(identifier, response.getContent());
+            Response response = jsonResponseSupplier.get();
+            cache.put(identifier, response.getBytes());
             return response;
         }
-        return new JSONResponse(found);
+        return Response.builder()
+                .setMimeType(MimeType.JSON)
+                .setContent(found)
+                .build();
     }
 
     public static String getOrCacheString(DataID dataID, UUID serverUUID, Supplier<String> stringSupplier) {
         String identifier = dataID.of(serverUUID);
-        String found = cache.getIfPresent(identifier);
+        byte[] found = cache.getIfPresent(identifier);
         if (found == null) {
             String result = stringSupplier.get();
-            cache.put(identifier, result);
+            cache.put(identifier, result.getBytes(StandardCharsets.UTF_8));
             return result;
         }
-        return found;
+        return new String(found, StandardCharsets.UTF_8);
     }
 
-    public static Response getOrCache(DataID dataID, Supplier<JSONResponse> jsonResponseSupplier) {
-        return getOrCache(dataID.name(), jsonResponseSupplier);
+    public static <T> Response getOrCache(DataID dataID, Supplier<T> objectSupplier) {
+        return getOrCache(dataID.name(), () -> Response.builder()
+                .setMimeType(MimeType.JSON)
+                .setJSONContent(objectSupplier.get())
+                .build());
     }
 
-    public static Response getOrCache(DataID dataID, UUID serverUUID, Supplier<JSONResponse> jsonResponseSupplier) {
-        return getOrCache(dataID.of(serverUUID), jsonResponseSupplier);
+    public static <T> Response getOrCache(DataID dataID, UUID serverUUID, Supplier<T> objectSupplier) {
+        return getOrCache(dataID.of(serverUUID), () -> Response.builder()
+                .setMimeType(MimeType.JSON)
+                .setJSONContent(objectSupplier.get())
+                .build());
     }
 
     public static void invalidate(String identifier) {

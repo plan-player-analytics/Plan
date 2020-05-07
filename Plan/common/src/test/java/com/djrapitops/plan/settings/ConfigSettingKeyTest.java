@@ -24,8 +24,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.FieldFetcher;
 import utilities.TestResources;
 
@@ -45,7 +43,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 public class ConfigSettingKeyTest {
 
     public static Path temporaryFolder;
@@ -57,13 +54,13 @@ public class ConfigSettingKeyTest {
 
     public static void assertValidDefaultValuesForAllSettings(PlanConfig config, Iterable<Setting> settings) {
         List<String> fails = new ArrayList<>();
-        for (Setting setting : settings) {
+        for (Setting<?> setting : settings) {
             checkSettingForFailures(config, setting).ifPresent(fails::add);
         }
         assertTrue(fails.isEmpty(), fails::toString);
     }
 
-    private static Optional<String> checkSettingForFailures(PlanConfig config, Setting setting) {
+    private static Optional<String> checkSettingForFailures(PlanConfig config, Setting<?> setting) {
         try {
             if (!config.contains(setting.getPath())) {
                 return Optional.of("Did not contain " + setting.getPath());
@@ -138,7 +135,7 @@ public class ConfigSettingKeyTest {
     }
 
     private PlanConfig createConfig(File configFile) throws IOException {
-        PlanConfig config = new PlanConfig(configFile, null, new TestPluginLogger());
+        PlanConfig config = new PlanConfig(configFile, null, null, new TestPluginLogger());
         config.save();
         return config;
     }

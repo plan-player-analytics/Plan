@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.exceptions;
 
-public class PassEncryptException extends Exception {
+public class PassEncryptException extends IllegalArgumentException {
 
     public PassEncryptException(String s) {
         super(s);

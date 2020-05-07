@@ -17,26 +17,19 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.exceptions.EnableException;
-import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.settings.ConfigSettingKeyTest;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.config.paths.key.Setting;
-import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import utilities.RandomData;
 import utilities.mocks.BukkitMockComponent;
 
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -45,7 +38,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 public class BukkitSystemTest {
 
     private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
@@ -63,21 +55,6 @@ public class BukkitSystemTest {
         try {
             system.enable();
             assertTrue(system.isEnabled());
-        } finally {
-            system.disable();
-        }
-    }
-
-    @Test
-    void correctWebAddressInDatabaseAfterEnable() throws EnableException {
-        try {
-            system.enable();
-            Database database = system.getDatabaseSystem().getDatabase();
-            String expectedAddress = system.getWebServerSystem().getWebServer().getAccessAddress();
-            Optional<String> found = database.query(ServerQueries.fetchServerMatchingIdentifier(system.getServerInfo().getServerUUID()))
-                    .map(Server::getWebAddress);
-
-            assertEquals(expectedAddress, found.orElse(null));
         } finally {
             system.disable();
         }

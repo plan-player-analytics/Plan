@@ -20,22 +20,22 @@ import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.extension.ExtensionServerMethodCallerTask;
 import com.djrapitops.plan.gathering.ShutdownHook;
 import com.djrapitops.plan.gathering.timed.BukkitPingCounter;
-import com.djrapitops.plan.gathering.timed.BukkitTPSCounter;
-import com.djrapitops.plan.gathering.timed.PaperTPSCounter;
+import com.djrapitops.plan.gathering.timed.ServerTPSCounter;
+import com.djrapitops.plan.gathering.timed.SystemUsageBuffer;
+import com.djrapitops.plan.gathering.timed.TPSCounter;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.upkeep.ConfigStoreTask;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
 import com.djrapitops.plan.storage.upkeep.LogsFolderCleanTask;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.RunnableFactory;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -55,7 +55,9 @@ public class BukkitTaskSystem extends TaskSystem {
     private final ConfigStoreTask configStoreTask;
     private final DBCleanTask dbCleanTask;
     private final ExtensionServerMethodCallerTask extensionServerMethodCallerTask;
-    private BukkitTPSCounter tpsCounter;
+    private final TPSCounter tpsCounter;
+    private final SystemUsageBuffer.RamAndCpuTask ramAndCpuTask;
+    private final SystemUsageBuffer.DiskTask diskTask;
 
     @Inject
     public BukkitTaskSystem(
@@ -64,15 +66,16 @@ public class BukkitTaskSystem extends TaskSystem {
             ShutdownHook shutdownHook,
             RunnableFactory runnableFactory,
 
-            PaperTPSCounter paperTPSCountTimer,
-            BukkitTPSCounter bukkitTPSCountTimer,
+            ServerTPSCounter<World> tpsCounter,
             BukkitPingCounter pingCounter,
             ExtensionServerMethodCallerTask extensionServerMethodCallerTask,
 
             LogsFolderCleanTask logsFolderCleanTask,
             ConfigStoreTask configStoreTask,
             DBCleanTask dbCleanTask,
-            JSONCache.CleanTask jsonCacheCleanTask
+            JSONCache.CleanTask jsonCacheCleanTask,
+            SystemUsageBuffer.RamAndCpuTask ramAndCpuTask,
+            SystemUsageBuffer.DiskTask diskTask
     ) {
         super(runnableFactory);
         this.plugin = plugin;
@@ -80,13 +83,15 @@ public class BukkitTaskSystem extends TaskSystem {
         this.shutdownHook = shutdownHook;
         this.jsonCacheCleanTask = jsonCacheCleanTask;
 
-        this.tpsCounter = Check.isPaperAvailable() ? paperTPSCountTimer : bukkitTPSCountTimer;
+        this.tpsCounter = tpsCounter;
         this.pingCounter = pingCounter;
         this.extensionServerMethodCallerTask = extensionServerMethodCallerTask;
 
         this.logsFolderCleanTask = logsFolderCleanTask;
         this.configStoreTask = configStoreTask;
         this.dbCleanTask = dbCleanTask;
+        this.ramAndCpuTask = ramAndCpuTask;
+        this.diskTask = diskTask;
     }
 
     @Override
@@ -113,7 +118,12 @@ public class BukkitTaskSystem extends TaskSystem {
     }
 
     private void registerTPSCounter() {
-        registerTask(tpsCounter).runTaskTimer(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
+        long halfSecondTicks = TimeAmount.toTicks(500L, TimeUnit.MILLISECONDS);
+        long secondTicks = TimeAmount.toTicks(1L, TimeUnit.SECONDS);
+        long minuteTicks = TimeAmount.toTicks(1L, TimeUnit.MINUTES);
+        registerTask(tpsCounter).runTaskTimer(minuteTicks, secondTicks);
+        registerTask(ramAndCpuTask).runTaskTimerAsynchronously(minuteTicks - halfSecondTicks, secondTicks);
+        registerTask(diskTask).runTaskTimerAsynchronously(50L * secondTicks, minuteTicks);
     }
 
     private void registerPingCounter() {
@@ -139,6 +149,6 @@ public class BukkitTaskSystem extends TaskSystem {
     @Override
     public void disable() {
         super.disable();
-        Optional.ofNullable(Bukkit.getScheduler()).ifPresent(scheduler -> scheduler.cancelTasks(plugin));
+        Bukkit.getScheduler().cancelTasks(plugin);
     }
 }

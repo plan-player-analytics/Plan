@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.identification.properties;
 
-import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 
 /**
@@ -34,16 +33,13 @@ public abstract class ServerProperties {
     private final Supplier<String> ip;
     private final int maxPlayers;
 
-    private final IntSupplier onlinePlayers;
-
     protected ServerProperties(
             String name,
             int port,
             String version,
             String implVersion,
             Supplier<String> ip,
-            int maxPlayers,
-            IntSupplier onlinePlayers
+            int maxPlayers
     ) {
         this.name = name;
         this.port = port;
@@ -51,7 +47,6 @@ public abstract class ServerProperties {
         this.implVersion = implVersion;
         this.ip = ip;
         this.maxPlayers = maxPlayers;
-        this.onlinePlayers = onlinePlayers;
     }
 
     /**
@@ -83,7 +78,4 @@ public abstract class ServerProperties {
         return maxPlayers;
     }
 
-    public int getOnlinePlayers() {
-        return onlinePlayers.getAsInt();
-    }
 }

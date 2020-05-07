@@ -17,29 +17,29 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.PlanAPI;
-import com.djrapitops.plan.capability.CapabilityServiceImplementation;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.delivery.export.ExportSystem;
+import com.djrapitops.plan.delivery.web.ResolverSvc;
+import com.djrapitops.plan.delivery.web.ResourceSvc;
 import com.djrapitops.plan.delivery.webserver.NonProxyWebserverDisableChecker;
-import com.djrapitops.plan.delivery.webserver.WebServer;
 import com.djrapitops.plan.delivery.webserver.WebServerSystem;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.extension.ExtensionService;
-import com.djrapitops.plan.extension.ExtensionServiceImplementation;
+import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.gathering.cache.CacheSystem;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.gathering.listeners.ListenerSystem;
-import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
-import com.djrapitops.plan.query.QueryServiceImplementation;
+import com.djrapitops.plan.query.QuerySvc;
 import com.djrapitops.plan.settings.ConfigSystem;
-import com.djrapitops.plan.settings.SettingsServiceImplementation;
+import com.djrapitops.plan.settings.SettingsSvc;
 import com.djrapitops.plan.settings.locale.LocaleSystem;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plan.version.VersionCheckSystem;
+import com.djrapitops.plan.version.VersionChecker;
+import com.djrapitops.plugin.benchmarking.Benchmark;
+import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -61,7 +61,7 @@ public class PlanSystem implements SubSystem {
 
     private final PlanFiles files;
     private final ConfigSystem configSystem;
-    private final VersionCheckSystem versionCheckSystem;
+    private final VersionChecker versionChecker;
     private final LocaleSystem localeSystem;
     private final DBSystem databaseSystem;
     private final CacheSystem cacheSystem;
@@ -75,17 +75,20 @@ public class PlanSystem implements SubSystem {
     private final ImportSystem importSystem;
     private final ExportSystem exportSystem;
     private final DeliveryUtilities deliveryUtilities;
-    private final ExtensionServiceImplementation extensionService;
-    private final QueryServiceImplementation queryService;
-    private final SettingsServiceImplementation settingsService;
+    private final ResolverSvc resolverService;
+    private final ResourceSvc resourceService;
+    private final ExtensionSvc extensionService;
+    private final QuerySvc queryService;
+    private final SettingsSvc settingsService;
     private final PluginLogger logger;
+    private final Timings timings;
     private final ErrorHandler errorHandler;
 
     @Inject
     public PlanSystem(
             PlanFiles files,
             ConfigSystem configSystem,
-            VersionCheckSystem versionCheckSystem,
+            VersionChecker versionChecker,
             LocaleSystem localeSystem,
             DBSystem databaseSystem,
             CacheSystem cacheSystem,
@@ -97,16 +100,19 @@ public class PlanSystem implements SubSystem {
             ImportSystem importSystem,
             ExportSystem exportSystem,
             DeliveryUtilities deliveryUtilities,
-            ExtensionServiceImplementation extensionService,
-            QueryServiceImplementation queryService,
-            SettingsServiceImplementation settingsService,
+            ResolverSvc resolverService,
+            ResourceSvc resourceService,
+            ExtensionSvc extensionService,
+            QuerySvc queryService,
+            SettingsSvc settingsService,
             PluginLogger logger,
+            Timings timings,
             ErrorHandler errorHandler,
             PlanAPI.PlanAPIHolder apiHolder
     ) {
         this.files = files;
         this.configSystem = configSystem;
-        this.versionCheckSystem = versionCheckSystem;
+        this.versionChecker = versionChecker;
         this.localeSystem = localeSystem;
         this.databaseSystem = databaseSystem;
         this.cacheSystem = cacheSystem;
@@ -118,10 +124,13 @@ public class PlanSystem implements SubSystem {
         this.importSystem = importSystem;
         this.exportSystem = exportSystem;
         this.deliveryUtilities = deliveryUtilities;
+        this.resolverService = resolverService;
+        this.resourceService = resourceService;
         this.extensionService = extensionService;
         this.queryService = queryService;
         this.settingsService = settingsService;
         this.logger = logger;
+        this.timings = timings;
         this.errorHandler = errorHandler;
 
         logger.log(L.INFO_COLOR,
@@ -129,30 +138,29 @@ public class PlanSystem implements SubSystem {
                 "§2           ██▌",
                 "§2     ██▌   ██▌",
                 "§2  ██▌██▌██▌██▌  §2Player Analytics",
-                "§2  ██▌██▌██▌██▌  §fv" + versionCheckSystem.getCurrentVersion(),
+                "§2  ██▌██▌██▌██▌  §fv" + versionChecker.getCurrentVersion(),
                 ""
         );
     }
 
-    public static String getMainAddress(WebServer webServer, DBSystem dbSystem) {
-        return dbSystem.getDatabase().query(ServerQueries.fetchProxyServerInformation())
-                .map(Server::getWebAddress)
-                .orElse(webServer.getAccessAddress());
-    }
-
+    @Deprecated
     public String getMainAddress() {
-        return PlanSystem.getMainAddress(webServerSystem.getWebServer(), databaseSystem);
+        return webServerSystem.getAddresses().getMainAddress().orElse(webServerSystem.getAddresses().getFallbackLocalhostAddress());
     }
 
     @Override
     public void enable() throws EnableException {
-        CapabilityServiceImplementation.initialize();
+        extensionService.register();
+        resolverService.register();
+        resourceService.register();
+        settingsService.register();
+        queryService.register();
 
         enableSystems(
                 files,
                 configSystem,
                 localeSystem,
-                versionCheckSystem,
+                versionChecker,
                 databaseSystem,
                 webServerSystem,
                 processing,
@@ -167,19 +175,23 @@ public class PlanSystem implements SubSystem {
         // Disables Webserver if Proxy is detected in the database
         if (serverInfo.getServer().isNotProxy()) {
             processing.submitNonCritical(new NonProxyWebserverDisableChecker(
-                    configSystem.getConfig(), databaseSystem, webServerSystem, logger, errorHandler
+                    configSystem.getConfig(), webServerSystem.getAddresses(), webServerSystem, logger, errorHandler
             ));
         }
 
-        settingsService.register();
-        queryService.register();
-        extensionService.register();
+        extensionService.registerExtensions();
         enabled = true;
     }
 
     private void enableSystems(SubSystem... systems) throws EnableException {
         for (SubSystem system : systems) {
+            logger.debug("Enabling: " + system.getClass().getSimpleName());
+            timings.start("subsystem-enable");
             system.enable();
+            timings.end("subsystem-enable")
+                    .map(Benchmark::toDurationString)
+                    .map(duration -> "Took " + duration)
+                    .ifPresent(logger::debug);
         }
     }
 
@@ -199,7 +211,7 @@ public class PlanSystem implements SubSystem {
                 localeSystem,
                 configSystem,
                 files,
-                versionCheckSystem
+                versionChecker
         );
     }
 
@@ -217,8 +229,8 @@ public class PlanSystem implements SubSystem {
 
     // Accessor methods.
 
-    public VersionCheckSystem getVersionCheckSystem() {
-        return versionCheckSystem;
+    public VersionChecker getVersionChecker() {
+        return versionChecker;
     }
 
     public ConfigSystem getConfigSystem() {

@@ -18,19 +18,22 @@ package com.djrapitops.plan.delivery.rendering.pages;
 
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.formatting.Formatters;
-import com.djrapitops.plan.exceptions.connection.NotFoundException;
+import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
+import com.djrapitops.plan.delivery.web.ResourceService;
+import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plan.version.VersionCheckSystem;
+import com.djrapitops.plan.version.VersionChecker;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.debug.DebugLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -38,6 +41,8 @@ import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.*;
 
 /**
@@ -48,9 +53,10 @@ import java.util.*;
 @Singleton
 public class PageFactory {
 
-    private final Lazy<VersionCheckSystem> versionCheckSystem;
-    private final Lazy<PlanFiles> fileSystem;
+    private final Lazy<VersionChecker> versionChecker;
+    private final Lazy<PlanFiles> files;
     private final Lazy<PlanConfig> config;
+    private final Lazy<Locale> locale;
     private final Lazy<Theme> theme;
     private final Lazy<DBSystem> dbSystem;
     private final Lazy<ServerInfo> serverInfo;
@@ -61,9 +67,10 @@ public class PageFactory {
 
     @Inject
     public PageFactory(
-            Lazy<VersionCheckSystem> versionCheckSystem,
-            Lazy<PlanFiles> fileSystem,
+            Lazy<VersionChecker> versionChecker,
+            Lazy<PlanFiles> files,
             Lazy<PlanConfig> config,
+            Lazy<Locale> locale,
             Lazy<Theme> theme,
             Lazy<DBSystem> dbSystem,
             Lazy<ServerInfo> serverInfo,
@@ -72,9 +79,10 @@ public class PageFactory {
             Lazy<Timings> timings,
             Lazy<ErrorHandler> errorHandler
     ) {
-        this.versionCheckSystem = versionCheckSystem;
-        this.fileSystem = fileSystem;
+        this.versionChecker = versionChecker;
+        this.files = files;
         this.config = config;
+        this.locale = locale;
         this.theme = theme;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
@@ -84,38 +92,50 @@ public class PageFactory {
         this.errorHandler = errorHandler;
     }
 
-    public DebugPage debugPage() {
+    public DebugPage debugPage() throws IOException {
         return new DebugPage(
-                dbSystem.get().getDatabase(), serverInfo.get(), formatters.get(), versionCheckSystem.get(),
+                getResource("error.html"),
+                dbSystem.get().getDatabase(), serverInfo.get(), formatters.get(), versionChecker.get(),
                 debugLogger.get(), timings.get(), errorHandler.get()
         );
     }
 
-    public PlayersPage playersPage() {
-        return new PlayersPage(versionCheckSystem.get(), fileSystem.get(), config.get(), serverInfo.get());
+    public PlayersPage playersPage() throws IOException {
+        return new PlayersPage(getResource("players.html"), versionChecker.get(),
+                config.get(), locale.get(), theme.get(), serverInfo.get());
     }
 
-    public ServerPage serverPage(UUID serverUUID) throws NotFoundException {
-        return dbSystem.get().getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
-                .map(server -> new ServerPage(
-                        server,
-                        config.get(),
-                        theme.get(),
-                        versionCheckSystem.get(),
-                        fileSystem.get(),
-                        dbSystem.get(),
-                        serverInfo.get(),
-                        formatters.get()
-                )).orElseThrow(() -> new NotFoundException("Server not found in the database"));
+    /**
+     * Create a server page.
+     *
+     * @param serverUUID UUID of the server
+     * @return {@link Page} that matches the server page.
+     * @throws NotFoundException If the server can not be found in the database.
+     * @throws IOException       If the template files can not be read.
+     */
+    public Page serverPage(UUID serverUUID) throws IOException {
+        Server server = dbSystem.get().getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
+                .orElseThrow(() -> new NotFoundException("Server not found in the database"));
+        return new ServerPage(
+                getResource("server.html"),
+                server,
+                config.get(),
+                theme.get(),
+                locale.get(),
+                versionChecker.get(),
+                dbSystem.get(),
+                serverInfo.get(),
+                formatters.get()
+        );
     }
 
-    public PlayerPage playerPage(UUID playerUUID) {
+    public PlayerPage playerPage(UUID playerUUID) throws IOException {
         Database db = dbSystem.get().getDatabase();
         PlayerContainer player = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
         return new PlayerPage(
-                player,
-                versionCheckSystem.get(),
-                fileSystem.get(), config.get(), this, theme.get(),
+                getResource("player.html"), player,
+                versionChecker.get(),
+                config.get(), this, theme.get(), locale.get(),
                 formatters.get(), serverInfo.get()
         );
     }
@@ -153,8 +173,53 @@ public class PageFactory {
         return new PlayerPluginTab(navs.toString(), tabs.toString());
     }
 
-    public NetworkPage networkPage() {
-        return new NetworkPage(dbSystem.get(),
-                versionCheckSystem.get(), fileSystem.get(), config.get(), theme.get(), serverInfo.get(), formatters.get());
+    public NetworkPage networkPage() throws IOException {
+        return new NetworkPage(getResource("network.html"),
+                dbSystem.get(),
+                versionChecker.get(),
+                config.get(), theme.get(), locale.get(),
+                serverInfo.get(), formatters.get());
+    }
+
+    public Page internalErrorPage(String message, Throwable error) {
+        try {
+            return new InternalErrorPage(
+                    getResource("error.html"), message, error,
+                    versionChecker.get());
+        } catch (IOException noParse) {
+            return () -> "Error occurred: " + error.toString() +
+                    ", additional error occurred when attempting to render error page to user: " +
+                    noParse.toString();
+        }
+    }
+
+    public Page errorPage(String title, String error) throws IOException {
+        return new ErrorMessagePage(
+                getResource("error.html"), title, error,
+                versionChecker.get(), locale.get(), theme.get());
+    }
+
+    public Page errorPage(Icon icon, String title, String error) throws IOException {
+        return new ErrorMessagePage(
+                getResource("error.html"), icon, title, error,
+                locale.get(), theme.get(), versionChecker.get());
+    }
+
+    public String getResource(String name) throws IOException {
+        try {
+            return ResourceService.getInstance().getResource("Plan", name,
+                    () -> files.get().getResourceFromJar("web/" + name).asWebResource()
+            ).asString();
+        } catch (UncheckedIOException readFail) {
+            throw readFail.getCause();
+        }
+    }
+
+    public Page loginPage() throws IOException {
+        return new LoginPage(getResource("login.html"), serverInfo.get());
+    }
+
+    public Page registerPage() throws IOException {
+        return new LoginPage(getResource("register.html"), serverInfo.get());
     }
 }

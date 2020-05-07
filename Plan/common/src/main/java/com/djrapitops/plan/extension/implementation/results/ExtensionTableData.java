@@ -96,6 +96,13 @@ public class ExtensionTableData implements Comparable<ExtensionTableData> {
     }
 
     @Override
+    public String toString() {
+        return "ExtensionTableData{" +
+                "providerName='" + providerName + '\'' +
+                '}';
+    }
+
+    @Override
     public int compareTo(ExtensionTableData other) {
         return String.CASE_INSENSITIVE_ORDER.compare(providerName, other.providerName);
     }

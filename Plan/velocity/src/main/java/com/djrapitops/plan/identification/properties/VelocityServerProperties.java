@@ -36,8 +36,7 @@ public class VelocityServerProperties extends ServerProperties {
                 server.getClass().getPackage().getImplementationVersion(),
                 server.getClass().getPackage().getImplementationVersion(),
                 () -> config.get(ProxySettings.IP),
-                -1,
-                server::getPlayerCount
+                -1
         );
     }
 }

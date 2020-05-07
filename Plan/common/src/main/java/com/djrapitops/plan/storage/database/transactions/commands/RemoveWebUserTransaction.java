@@ -17,6 +17,8 @@
 package com.djrapitops.plan.storage.database.transactions.commands;
 
 import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
+import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.database.sql.tables.SecurityTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
@@ -42,6 +44,9 @@ public class RemoveWebUserTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
+        // Logout the user
+        query(WebUserQueries.fetchUser(username)).ifPresent(ActiveCookieStore::removeCookie);
+
         String sql = DELETE_FROM + SecurityTable.TABLE_NAME + WHERE + SecurityTable.USERNAME + "=?";
 
         execute(new ExecStatement(sql) {

@@ -19,7 +19,7 @@ package com.djrapitops.plan.gathering.listeners;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.events.PlanBungeeEnableEvent;
-import com.djrapitops.plan.capability.CapabilityServiceImplementation;
+import com.djrapitops.plan.capability.CapabilitySvc;
 import com.djrapitops.plan.gathering.listeners.bungee.PlayerOnlineListener;
 
 import javax.inject.Inject;
@@ -50,6 +50,6 @@ public class BungeeListenerSystem extends ListenerSystem {
         boolean isEnabled = plugin.isSystemEnabled();
         PlanBungeeEnableEvent event = new PlanBungeeEnableEvent(isEnabled);
         ((PlanBungee) plugin).getProxy().getPluginManager().callEvent(event);
-        CapabilityServiceImplementation.notifyAboutEnable(isEnabled);
+        CapabilitySvc.notifyAboutEnable(isEnabled);
     }
 }

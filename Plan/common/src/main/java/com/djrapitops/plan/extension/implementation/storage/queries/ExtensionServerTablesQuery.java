@@ -38,16 +38,12 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Query server tables from tableprovider table.
  * <p>
- * Returns Map: PluginID - ExtensionServerData.Factory.
+ * Returns Map: PluginID - {@link ExtensionData.Builder}.
  * <p>
  * How it is done:
- * - TableProviders are queried and formed into Table.Factory objects sorted into a multi-map: PluginID - TableID - Table.Factory
- * - Table values are queried and merged into the above multimap
- * - Data query is sorted into a multi-map: PluginID - Tab Name - Tab Data
- * - (Tab Name can be empty.)
- * - Multi-map is sorted into ExtensionServerData objects by PluginID, one per ID
- * <p>
- * There are multiple data extraction methods to make extracting the value query easier.
+ * 1. TableProviders are queried and formed into {@link Table.Factory} objects inside {@link QueriedTables}.
+ * 2. Table values are queried and merged
+ * 3. QueriedTables is mapped into ExtensionData objects by PluginID, one per ID
  *
  * @author Rsl1122
  */
@@ -61,11 +57,12 @@ public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionD
 
     @Override
     public Map<Integer, ExtensionData.Builder> executeQuery(SQLDB db) {
-        QueriedTables tablesWithValues = db.query(queryTableValues(db.query(queryTableProviders())));
+        QueriedTables tables = db.query(tableProviders());
+        QueriedTables tablesWithValues = db.query(tableValues(tables));
         return tablesWithValues.toQueriedTabs().toExtensionDataByPluginID();
     }
 
-    private Query<QueriedTables> queryTableValues(QueriedTables tables) {
+    private Query<QueriedTables> tableValues(QueriedTables tables) {
         String selectTableValues = SELECT +
                 ExtensionTableProviderTable.PLUGIN_ID + ',' +
                 ExtensionServerTableValueTable.TABLE_ID + ',' +
@@ -111,7 +108,7 @@ public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionD
         return row.toArray(new Object[0]);
     }
 
-    private Query<QueriedTables> queryTableProviders() {
+    private Query<QueriedTables> tableProviders() {
         String selectTables = SELECT +
                 "p1." + ExtensionTableProviderTable.ID + " as table_id," +
                 "p1." + ExtensionTableProviderTable.PLUGIN_ID + " as plugin_id," +
@@ -144,7 +141,7 @@ public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionD
                 "i6." + ExtensionIconTable.FAMILY + " as tab_icon_family," +
                 "i6." + ExtensionIconTable.COLOR + " as tab_icon_color" +
                 FROM + ExtensionTableProviderTable.TABLE_NAME + " p1" +
-                INNER_JOIN + ExtensionServerTableValueTable.TABLE_NAME + " v1 on v1." + ExtensionServerTableValueTable.TABLE_ID + "=p1." + ExtensionTableProviderTable.ID +
+                INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " p2 on p2." + ExtensionPluginTable.ID + "=p1." + ExtensionTableProviderTable.PLUGIN_ID +
                 LEFT_JOIN + ExtensionTabTable.TABLE_NAME + " t1 on t1." + ExtensionTabTable.ID + "=p1." + ExtensionTableProviderTable.TAB_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i1 on i1." + ExtensionIconTable.ID + "=p1." + ExtensionTableProviderTable.ICON_1_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i2 on i2." + ExtensionIconTable.ID + "=p1." + ExtensionTableProviderTable.ICON_2_ID +
@@ -152,7 +149,7 @@ public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionD
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i4 on i4." + ExtensionIconTable.ID + "=p1." + ExtensionTableProviderTable.ICON_4_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i5 on i5." + ExtensionIconTable.ID + "=p1." + ExtensionTableProviderTable.ICON_5_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i6 on i6." + ExtensionIconTable.ID + "=t1." + ExtensionTabTable.ICON_ID +
-                WHERE + "v1." + ExtensionServerTableValueTable.SERVER_UUID + "=?";
+                WHERE + "p2." + ExtensionPluginTable.SERVER_UUID + "=?";
 
         return new QueryStatement<QueriedTables>(selectTables, 100) {
             @Override

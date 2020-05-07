@@ -80,7 +80,7 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
     }
 
     private void copyPlanWebUsers() {
-        copy(LargeStoreQueries::storeAllPlanWebUsers, WebUserQueries.fetchAllPlanWebUsers());
+        copy(LargeStoreQueries::storeAllPlanWebUsers, WebUserQueries.fetchAllUsers());
     }
 
     private void copyPlanServerInformation() {

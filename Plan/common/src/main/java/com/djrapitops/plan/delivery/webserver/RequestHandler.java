@@ -16,34 +16,37 @@
  */
 package com.djrapitops.plan.delivery.webserver;
 
+import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
+import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
+import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.auth.BasicAuthentication;
-import com.djrapitops.plan.delivery.webserver.response.PromptAuthorizationResponse;
-import com.djrapitops.plan.delivery.webserver.response.Response;
-import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
-import com.djrapitops.plan.delivery.webserver.response.errors.ForbiddenResponse;
+import com.djrapitops.plan.delivery.webserver.auth.CookieAuthentication;
+import com.djrapitops.plan.delivery.webserver.auth.FailReason;
+import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.TextStringBuilder;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 /**
  * HttpHandler for WebServer request management.
@@ -53,67 +56,46 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class RequestHandler implements HttpHandler {
 
-    private final Locale locale;
     private final PlanConfig config;
-    private final Theme theme;
     private final DBSystem dbSystem;
+    private final Addresses addresses;
     private final ResponseResolver responseResolver;
     private final ResponseFactory responseFactory;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
 
-    private final Cache<String, Integer> failedLoginAttempts = Caffeine.newBuilder()
-            .expireAfterWrite(90, TimeUnit.SECONDS)
-            .build();
+    private PassBruteForceGuard bruteForceGuard;
 
     @Inject
     RequestHandler(
-            Locale locale,
             PlanConfig config,
-            Theme theme,
             DBSystem dbSystem,
+            Addresses addresses,
             ResponseResolver responseResolver,
             ResponseFactory responseFactory,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        this.locale = locale;
         this.config = config;
-        this.theme = theme;
         this.dbSystem = dbSystem;
+        this.addresses = addresses;
         this.responseResolver = responseResolver;
         this.responseFactory = responseFactory;
         this.logger = logger;
         this.errorHandler = errorHandler;
+
+        bruteForceGuard = new PassBruteForceGuard();
     }
 
     @Override
     public void handle(HttpExchange exchange) {
-        Headers requestHeaders = exchange.getRequestHeaders();
-        Headers responseHeaders = exchange.getResponseHeaders();
-
-        Request request = new Request(exchange, locale);
-        request.setAuth(getAuthorization(requestHeaders));
-
         try {
-            Response response = shouldPreventRequest(request.getRemoteAddress()) // Forbidden response (Optional)
-                    .orElseGet(() -> responseResolver.getResponse(request));     // Or the actual requested response
-
-            // Increase attempt count and block if too high
-            Optional<Response> forbid = handlePasswordBruteForceAttempts(request, response);
-            if (forbid.isPresent()) {
-                response = forbid.get();
-            }
-
-            // Authentication failed, but was not blocked
-            if (response instanceof PromptAuthorizationResponse) {
-                responseHeaders.set("WWW-Authenticate", response.getHeader("WWW-Authenticate").orElse("Basic realm=\"Plan WebUser (/plan register)\""));
-            }
-
-            responseHeaders.set("Access-Control-Allow-Origin", config.getString(WebserverSettings.CORS_ALLOW_ORIGIN));
-            responseHeaders.set("Access-Control-Allow-Methods", "GET, OPTIONS");
-            response.setResponseHeaders(responseHeaders);
-            response.send(exchange, locale, theme);
+            Response response = getResponse(exchange);
+            response.getHeaders().putIfAbsent("Access-Control-Allow-Origin", config.get(WebserverSettings.CORS_ALLOW_ORIGIN));
+            response.getHeaders().putIfAbsent("Access-Control-Allow-Methods", "GET, OPTIONS");
+            response.getHeaders().putIfAbsent("Access-Control-Allow-Credentials", "true");
+            ResponseSender sender = new ResponseSender(addresses, exchange, response);
+            sender.send();
         } catch (Exception e) {
             if (config.isTrue(PluginSettings.DEV_MODE)) {
                 logger.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
@@ -124,63 +106,93 @@ public class RequestHandler implements HttpHandler {
         }
     }
 
-    private Optional<Response> shouldPreventRequest(String accessor) {
-        Integer attempts = failedLoginAttempts.getIfPresent(accessor);
-        if (attempts == null) {
-            attempts = 0;
-        }
-
-        // Too many attempts, forbid further attempts.
-        if (attempts >= 5) {
-            return createForbiddenResponse();
-        }
-        return Optional.empty();
-    }
-
-    private Optional<Response> handlePasswordBruteForceAttempts(Request request, Response response) {
-        if (request.getAuth().isPresent() && response instanceof PromptAuthorizationResponse) {
-            // Authentication was attempted, but failed so new attempt is going to be given if not forbidden
-
-            failedLoginAttempts.cleanUp();
-
-            String accessor = request.getRemoteAddress();
-            Integer attempts = failedLoginAttempts.getIfPresent(accessor);
-            if (attempts == null) {
-                attempts = 0;
+    public Response getResponse(HttpExchange exchange) {
+        String accessor = exchange.getRemoteAddress().getAddress().getHostAddress();
+        Request request = null;
+        Response response;
+        try {
+            request = buildRequest(exchange);
+            if (bruteForceGuard.shouldPreventRequest(accessor)) {
+                response = responseFactory.failedLoginAttempts403();
+            } else {
+                response = responseResolver.getResponse(request);
             }
-
-            // Too many attempts, forbid further attempts.
-            if (attempts >= 5) {
-                logger.warn(accessor + " failed to login 5 times. Their access is blocked for 90 seconds.");
-                return createForbiddenResponse();
+        } catch (WebUserAuthException thrownByAuthentication) {
+            FailReason failReason = thrownByAuthentication.getFailReason();
+            if (failReason == FailReason.USER_PASS_MISMATCH) {
+                bruteForceGuard.increaseAttemptCountOnFailedLogin(accessor);
+                response = responseFactory.badRequest(failReason.getReason(), "/auth/login");
+            } else {
+                String from = exchange.getRequestURI().toASCIIString();
+                response = Response.builder()
+                        .redirectTo(StringUtils.startsWithAny(from, "/auth/", "/login") ? "/login" : "/login?from=" + from)
+                        .setHeader("Set-Cookie", "auth=expired; Path=/; Max-Age=1")
+                        .build();
             }
-
-            // Attempts only increased if less than 5 attempts to prevent frustration from the cache value not
-            // getting removed.
-            failedLoginAttempts.put(accessor, attempts + 1);
-        } else if (!(response instanceof PromptAuthorizationResponse) && !(response instanceof ForbiddenResponse)) {
-            // Successful login
-            failedLoginAttempts.invalidate(request.getRemoteAddress());
         }
-        // First connection, no authentication headers present.
-        return Optional.empty();
+
+        if (bruteForceGuard.shouldPreventRequest(accessor)) {
+            response = responseFactory.failedLoginAttempts403();
+        }
+        if (response.getCode() != 401 // Not failed
+                && response.getCode() != 403 // Not blocked
+                && (request != null && request.getUser().isPresent()) // Logged in
+        ) {
+            bruteForceGuard.resetAttemptCount(accessor);
+        }
+        return response;
     }
 
-    private Optional<Response> createForbiddenResponse() {
-        return Optional.of(responseFactory.forbidden403("You have too many failed login attempts. Please wait 2 minutes until attempting again."));
+    private Request buildRequest(HttpExchange exchange) {
+        String requestMethod = exchange.getRequestMethod();
+        URIPath path = new URIPath(exchange.getRequestURI().getPath());
+        URIQuery query = new URIQuery(exchange.getRequestURI().getQuery());
+        WebUser user = getWebUser(exchange);
+        Map<String, String> headers = getRequestHeaders(exchange);
+        return new Request(requestMethod, path, query, user, headers);
     }
 
-    private Authentication getAuthorization(Headers requestHeaders) {
+    private WebUser getWebUser(HttpExchange exchange) {
+        return getAuthentication(exchange.getRequestHeaders())
+                .map(Authentication::getUser) // Can throw WebUserAuthException
+                .map(User::toWebUser)
+                .orElse(null);
+    }
+
+    private Map<String, String> getRequestHeaders(HttpExchange exchange) {
+        Map<String, String> headers = new HashMap<>();
+        for (Map.Entry<String, List<String>> e : exchange.getResponseHeaders().entrySet()) {
+            List<String> value = e.getValue();
+            headers.put(e.getKey(), new TextStringBuilder().appendWithSeparators(value, ";").build());
+        }
+        return headers;
+    }
+
+    private Optional<Authentication> getAuthentication(Headers requestHeaders) {
+        if (config.isTrue(WebserverSettings.DISABLED_AUTHENTICATION)) {
+            return Optional.empty();
+        }
+
+        List<String> cookies = requestHeaders.get("Cookie");
+        if (cookies != null && !cookies.isEmpty()) {
+            for (String cookie : new TextStringBuilder().appendWithSeparators(cookies, ";").build().split(";")) {
+                String[] split = cookie.trim().split("=", 2);
+                String name = split[0];
+                String value = split[1];
+                if ("auth".equals(name)) {
+                    return Optional.of(new CookieAuthentication(value));
+                }
+            }
+        }
+
         List<String> authorization = requestHeaders.get("Authorization");
-        if (Verify.isEmpty(authorization)) {
-            return null;
-        }
+        if (Verify.isEmpty(authorization)) return Optional.empty();
 
         String authLine = authorization.get(0);
         if (StringUtils.contains(authLine, "Basic ")) {
-            return new BasicAuthentication(StringUtils.split(authLine, ' ')[1], dbSystem.getDatabase());
+            return Optional.of(new BasicAuthentication(StringUtils.split(authLine, ' ')[1], dbSystem.getDatabase()));
         }
-        return null;
+        return Optional.empty();
     }
 
     public ResponseResolver getResponseResolver() {

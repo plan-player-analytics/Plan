@@ -67,4 +67,14 @@ public class Ping extends DateObj<Double> {
     public int hashCode() {
         return Objects.hash(serverUUID, average, min, max);
     }
+
+    @Override
+    public String toString() {
+        return "Ping{" +
+                "serverUUID=" + serverUUID +
+                ", average=" + average +
+                ", min=" + min +
+                ", max=" + max +
+                '}';
+    }
 }

@@ -7,12 +7,16 @@
     <property name="localeLanguage" value="en"/>
 
     <module name="RegexpHeader">
-        <property name="headerFile" value="config/checkstyle/java.header"/>
+        <property name="headerFile" value="${config_loc}/java.header"/>
     </module>
     <module name="FileLength">
-        <!-- This value is high. Notable: DatabaseTest 1521 -->
-        <property name="max" value="1750"/>
+        <!-- This value is alright. Notable: SessionQueries 808 -->
+        <property name="max" value="1000"/>
         <property name="fileExtensions" value=".java"/>
+    </module>
+    <module name="LineLength">
+        <!-- This value is very high. Notable: ExtensionExtractor: 254, DeepHelpLang 345, WorldMap 2964 -->
+        <property name="max" value="3000"/>
     </module>
 
     <module name="TreeWalker">
@@ -28,10 +32,7 @@
         <module name="AnonInnerLength">
             <property name="max" value="50"/>
         </module>
-        <module name="LineLength">
-            <!-- This value is very high. Notable: ExtensionExtractor: 254, DeepHelpLang 345, WorldMap 2964 -->
-            <property name="max" value="3000"/>
-        </module>
+
         <module name="MethodLength">
             <!-- This value is high. Notable: InspectPage: 138 -->
             <property name="max" value="150"/>
@@ -64,12 +65,12 @@
 
         <!-- Metrics -->
         <module name="ClassFanOutComplexity">
-            <!-- This value is high. Notable: DatabaseTest: 86, SQLDB: 56 -->
-            <property name="max" value="87"/>
+            <!-- This value is high. Notable: SQLDB: 57 -->
+            <property name="max" value="60"/>
         </module>
         <module name="CyclomaticComplexity">
-            <!-- This value is high. Notable: ActivityIndex: 18 -->
-            <property name="max" value="18"/>
+            <!-- This value is high. Notable: ThemeConfig: 16 -->
+            <property name="max" value="17"/>
         </module>
 
         <!-- Bugs -->

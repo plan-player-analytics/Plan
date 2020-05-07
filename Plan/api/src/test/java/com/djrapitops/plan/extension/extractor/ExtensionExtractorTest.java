@@ -20,8 +20,6 @@ import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.annotation.*;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import java.util.UUID;
 
@@ -35,7 +33,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class ExtensionExtractorTest {
 
     @Test

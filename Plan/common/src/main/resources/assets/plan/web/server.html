@@ -12,14 +12,14 @@
     <title>Plan | Server Analysis</title>
 
     <!-- Custom fonts for this template-->
-    <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
-          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:400,700,800,900&display=swap&subset=latin-ext"
+    <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link crossorigin="anonymous"
+          href="https://fonts.googleapis.com/css?family=Nunito:400,700,800,900&display=swap&subset=latin-ext"
           rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+    <link href="../css/sb-admin-2.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
 </head>
 
 <body id="page-top">
@@ -39,7 +39,7 @@
 
         <!-- Sidebar - Brand -->
         <a class="sidebar-brand d-flex align-items-center justify-content-center">
-            <img class="w-22" src="img/Flaticon_circle.png">
+            <img alt="logo" class="w-22" src="../img/Flaticon_circle.png">
         </a>
 
         <!-- Divider -->
@@ -126,6 +126,9 @@
             <button class="btn bg-plan" data-target="#informationModal" data-toggle="modal" type="button">
                 <i class="fa fa-fw fa-question-circle"></i>
             </button>
+            <a class="btn bg-plan" href="/auth/logout" id="logout-button">
+                <i class="fa fa-fw fa-door-open"></i> Logout
+            </a>
         </div>
         <div class="ml-3 align-items-center justify-content-between">
             ${version}
@@ -516,7 +519,7 @@
                                                 <small>Click to expand</small></span></h6>
                                 </div>
                                 <div class="scrollbar" style="max-height: 80vh">
-                                    <table class="table" id="tableAccordion">
+                                    <table class="table accordion-striped" id="tableAccordion">
                                         <thead>
                                         <tr>
                                             <th><i class="fa fa-fw fa-user"></i> Player</th>
@@ -1102,8 +1105,6 @@
             </div> <!-- End of Performance tab -->
             <!-- Begin Plugins Overview Tab -->
             ${tabsPlugins}
-            <div class="tab"></div>
-            <div class="tab"></div>
         </div> <!-- End of Main Content -->
     </div>
     <!-- End of Content Wrapper -->
@@ -1204,28 +1205,7 @@
                     <p>Player Analytics is developed by Rsl1122.</p>
                     <p>In addition following <span class="col-plan">awesome people</span> have contributed:</p>
                     <ul>
-                        <li>aidn5 <i class="fa fa-fw fa-code"></i></li>
-                        <li>Argetan <i class="fa fa-fw fa-code"></i></li>
-                        <li>Aurelien <i class="fa fa-fw fa-code"></i> <i class="fa fa-fw fa-language"></i></li>
-                        <li>BrainStone <i class="fa fa-fw fa-code"></i></li>
-                        <li>Combustible <i class="fa fa-fw fa-code"></i></li>
-                        <li>CyanTech <i class="fa fa-fw fa-language"></i></li>
-                        <li>DarkPyves <i class="fa fa-fw fa-code"></i></li>
-                        <li>DaveDevil <i class="fa fa-fw fa-language"></i></li>
-                        <li>enterih <i class="fa fa-fw fa-language"></i></li>
-                        <li>Eyremba <i class="fa fa-fw fa-language"></i></li>
-                        <li>f0rb1d (佛壁灯) <i class="fa fa-fw fa-language"></i></li>
-                        <li>fuzzlemann <i class="fa fa-fw fa-code"></i> <i class="fa fa-fw fa-language"></i></li>
-                        <li>jyhsu2000 <i class="fa fa-fw fa-code"></i></li>
-                        <li>jvmuller <i class="fa fa-fw fa-language"></i></li>
-                        <li>Malachiel <i class="fa fa-fw fa-language"></i></li>
-                        <li>Miclebrick <i class="fa fa-fw fa-code"></i></li>
-                        <li>Morsmorse <i class="fa fa-fw fa-language"></i></li>
-                        <li>skmedix <i class="fa fa-fw fa-code"></i></li>
-                        <li>TDJisvan <i class="fa fa-fw fa-language"></i></li>
-                        <li>Vankka <i class="fa fa-fw fa-code"></i></li>
-                        <li>yukieji <i class="fa fa-fw fa-language"></i></li>
-                        <li>qsefthuopq <i class="fa fa-fw fa-language"></i></li>
+                        ${contributors}
                         <li>& Bug reporters!</li>
                     </ul>
                     <small><i class="fa fa-fw fa-code"></i> code contributor <i class="fa fa-fw fa-language"></i>
@@ -1273,37 +1253,34 @@
 </a>
 
 <!-- Bootstrap core JavaScript-->
-<script src="vendor/jquery/jquery.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-<!-- Core plugin JavaScript-->
-<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="../vendor/jquery/jquery.min.js"></script>
+<script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- Page level plugins -->
-<script src="vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
-<script src="vendor/highcharts/highstock.js"></script>
-<script src="vendor/highcharts/map.js"></script>
-<script src="vendor/highcharts/world.js"></script>
-<script src="vendor/highcharts/drilldown.js"></script>
-<script src="vendor/highcharts/highcharts-more.js"></script>
-<script src="vendor/highcharts/no-data-to-display.js"></script>
-<link href='vendor/fullcalendar/fullcalendar.min.css' rel='stylesheet'/>
-<script src='vendor/momentjs/moment.js'></script>
-<script src='vendor/fullcalendar/fullcalendar.min.js'></script>
+<script src="../vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script src="../vendor/highcharts/highstock.js"></script>
+<script src="../vendor/highcharts/map.js"></script>
+<script src="../vendor/highcharts/world.js"></script>
+<script src="../vendor/highcharts/drilldown.js"></script>
+<script src="../vendor/highcharts/highcharts-more.js"></script>
+<script src="../vendor/highcharts/no-data-to-display.js"></script>
+<link href='../vendor/fullcalendar/fullcalendar.min.css' rel='stylesheet'/>
+<script src='../vendor/momentjs/moment.js'></script>
+<script src='../vendor/fullcalendar/fullcalendar.min.js'></script>
 
 <!-- Custom scripts for all pages-->
-<script src="js/sb-admin-2.js"></script>
-<script src="js/xmlhttprequests.js"></script>
-<script src="js/color-selector.js"></script>
+<script src="../js/sb-admin-2.js"></script>
+<script src="../js/xmlhttprequests.js"></script>
+<script src="../js/color-selector.js"></script>
 
 <!-- Page level custom scripts -->
-<script src="js/sessionAccordion.js"></script>
-<script src="js/pingTable.js"></script>
-<script src="js/graphs.js"></script>
-<script src="js/server-values.js"></script>
+<script src="../js/sessionAccordion.js"></script>
+<script src="../js/pingTable.js"></script>
+<script src="../js/graphs.js"></script>
+<script src="../js/server-values.js"></script>
 
-<script>
+<script id="mainScript">
     try {
         setLoadingText('Calculating values..');
         jsonRequest("../v1/serverOverview?server=${serverUUID}", loadserverOverviewValues);
@@ -1314,38 +1291,9 @@
         jsonRequest("../v1/performanceOverview?server=${serverUUID}", loadPerformanceValues);
         setLoadingText('Rendering graphs..');
 
-        // TODO remove
-        var v = {
-            colors: {
-                playersOnline: '${playersGraphColor}',
-                newPlayers: '#8BC34A',
-                tpsLow: '${tpsLowColor}',
-                tpsMed: '${tpsMediumColor}',
-                tpsHigh: '${tpsHighColor}',
-                cpu: '#e0d264',
-                ram: '#7dcc24',
-                entities: '#ac69ef',
-                chunks: '#b58310',
-                geolocationsLow: '${worldMapColLow}',
-                geolocationsHigh: '${worldMapColHigh}',
-                punchCard: '#222',
-                maxPing: '${maxPingColor}',
-                minPing: '${minPingColor}',
-                avgPing: '${avgPingColor}'
-            },
-            values: {
-                tpsMed: ${tpsMedium},
-                tpsHigh: ${tpsHigh},
-                diskMed: ${diskMedium},
-                diskHigh: ${diskHigh},
-                firstDay: ${firstDay},
-                timezoneOffset: ${timeZone}
-            }
-        };
-
         Highcharts.setOptions({
             lang: {noData: "No Data to Display"},
-            time: {timezoneOffset: v.values.timezoneOffset * 60}
+            time: {timezoneOffset: (${timeZone}) * 60}
         });
 
         // HighCharts Series
@@ -1375,78 +1323,78 @@
             type: {
                 areaSpline: 'areaspline',
                 spline: 'spline'
-            },
-            zones: {
-                tps: [{
-                    value: v.values.tpsMed,
-                    color: v.colors.tpsLow
-                }, {
-                    value: v.values.tpsHigh,
-                    color: v.colors.tpsMed
-                }, {
-                    value: 30,
-                    color: v.colors.tpsHigh
-                }],
-                disk: [{
-                    value: v.values.diskMed,
-                    color: v.colors.tpsLow
-                }, {
-                    value: v.values.diskHigh,
-                    color: v.colors.tpsMed
-                }, {
-                    value: Number.MAX_VALUE,
-                    color: v.colors.tpsHigh
-                }]
             }
         };
 
         jsonRequest("../v1/graph?type=performance&server=${serverUUID}", function (json, error) {
             if (json) {
+                var zones = {
+                    tps: [{
+                        value: json.zones.tpsThresholdMed,
+                        color: json.colors.low
+                    }, {
+                        value: json.zones.tpsThresholdHigh,
+                        color: json.colors.med
+                    }, {
+                        value: 30,
+                        color: json.colors.high
+                    }],
+                    disk: [{
+                        value: json.zones.diskThresholdMed,
+                        color: json.colors.low
+                    }, {
+                        value: json.zones.tpsThresholdHigh,
+                        color: json.colors.med
+                    }, {
+                        value: Number.MAX_VALUE,
+                        color: json.colors.high
+                    }]
+                };
                 var series = {
                     playersOnline: {
                         name: s.name.playersOnline, type: s.type.areaSpline, tooltip: s.tooltip.zeroDecimals,
-                        data: json.playersOnline, color: v.colors.playersOnline, yAxis: 0
+                        data: json.playersOnline, color: json.colors.playersOnline, yAxis: 0
                     },
                     tps: {
-                        name: s.name.tps, type: s.type.spline, color: v.colors.tpsHigh,
-                        zones: s.zones.tps, tooltip: s.tooltip.twoDecimals, data: json.tps,
+                        name: s.name.tps, type: s.type.spline, color: json.colors.high,
+                        zones: zones.tps, tooltip: s.tooltip.twoDecimals, data: json.tps,
                         yAxis: 1
                     },
                     cpu: {
                         name: s.name.cpu, type: s.type.spline, tooltip: s.tooltip.twoDecimals,
-                        data: json.cpu, color: v.colors.cpu, yAxis: 2
+                        data: json.cpu, color: json.colors.cpu, yAxis: 2
                     },
                     cpu_alt: {
                         name: s.name.cpu, type: s.type.spline, tooltip: s.tooltip.twoDecimals,
-                        data: json.cpu, color: v.colors.cpu, yAxis: 1
+                        data: json.cpu, color: json.colors.cpu, yAxis: 1
                     },
                     ram: {
                         name: s.name.ram, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: json.ram, color: v.colors.ram, yAxis: 3
+                        data: json.ram, color: json.colors.ram, yAxis: 3
                     },
                     ram_alt: {
                         name: s.name.ram, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: json.ram, color: v.colors.ram, yAxis: 2
+                        data: json.ram, color: json.colors.ram, yAxis: 2
                     },
                     entities: {
                         name: s.name.entities, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: json.entities, color: v.colors.entities, yAxis: 4
+                        data: json.entities, color: json.colors.entities, yAxis: 4
                     },
                     entities_alt: {
                         name: s.name.entities, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: json.entities, color: v.colors.entities, yAxis: 1
+                        data: json.entities, color: json.colors.entities, yAxis: 1
                     },
                     chunks: {
                         name: s.name.chunks, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: json.chunks, color: v.colors.chunks, yAxis: 5
+                        data: json.chunks, color: json.colors.chunks, yAxis: 5
                     },
                     chunks_alt: {
                         name: s.name.chunks, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: json.chunks, color: v.colors.chunks, yAxis: 2
+                        data: json.chunks, color: json.colors.chunks, yAxis: 2
                     },
                     disk: {
-                        name: s.name.disk, type: s.type.spline, color: v.colors.tpsHigh,
-                        zones: s.zones.disk, tooltip: s.tooltip.zeroDecimals, data: json.disk
+                        name: s.name.disk, type: s.type.spline, color: json.colors.high,
+                        zones: zones.disk, tooltip: s.tooltip.zeroDecimals, data: json.disk
                     }
                 };
                 playersChart('playersOnlineChart', series.playersOnline, 2);
@@ -1473,21 +1421,21 @@
                         type: s.type.spline,
                         tooltip: s.tooltip.twoDecimals,
                         data: json.avg_ping_series,
-                        color: v.colors.avgPing
+                        color: json.colors.avgPing
                     },
                     maxPing: {
                         name: s.name.maxPing,
                         type: s.type.spline,
                         tooltip: s.tooltip.zeroDecimals,
                         data: json.max_ping_series,
-                        color: v.colors.maxPing
+                        color: json.colors.maxPing
                     },
                     minPing: {
                         name: s.name.minPing,
                         type: s.type.spline,
                         tooltip: s.tooltip.zeroDecimals,
                         data: json.min_ping_series,
-                        color: v.colors.minPing
+                        color: json.colors.minPing
                     }
                 };
                 lineChart('pingGraph', [series.avgPing, series.maxPing, series.minPing]);
@@ -1528,7 +1476,7 @@
                     joinBy: ['iso-a3', 'code']
                 };
                 var geolocationBarSeries = {
-                    color: '#4CAF50',
+                    color: json.colors.bars,
                     name: 'Players',
                     data: json.geolocation_bar_series.map(function (bar) {
                         return bar.value
@@ -1537,7 +1485,7 @@
                 var geolocationBarCategories = json.geolocation_bar_series.map(function (bar) {
                     return bar.label
                 });
-                worldMap('worldMap', v.colors.geolocationsLow, v.colors.geolocationsHigh, geolocationSeries);
+                worldMap('worldMap', json.colors.low, json.colors.high, geolocationSeries);
                 horizontalBarChart('countryBarChart', geolocationBarCategories, [geolocationBarSeries], 'Players');
             } else if (error) {
                 $('#worldMap').text("Failed to load graph data: " + error);
@@ -1549,11 +1497,11 @@
             if (json) {
                 var uniquePlayers = {
                     name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                    data: json.uniquePlayers, color: v.colors.playersOnline
+                    data: json.uniquePlayers, color: json.colors.playersOnline
                 };
                 var newPlayers = {
                     name: s.name.newPlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                    data: json.newPlayers, color: v.colors.newPlayers
+                    data: json.newPlayers, color: json.colors.newPlayers
                 };
                 dayByDay('uniqueChart', [uniquePlayers, newPlayers]);
             } else if (error) {
@@ -1577,7 +1525,7 @@
             if (json) {
                 var punchCardSeries = {
                     name: 'Relative Join Activity',
-                    color: v.colors.punchCard,
+                    color: json.color,
                     data: json.punchCard
                 };
                 punchCard('punchCard', punchCardSeries);

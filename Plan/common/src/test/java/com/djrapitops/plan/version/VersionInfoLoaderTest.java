@@ -18,8 +18,6 @@ package com.djrapitops.plan.version;
 
 import com.djrapitops.plugin.api.utility.Version;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.List;
@@ -27,7 +25,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(JUnitPlatform.class)
 class VersionInfoLoaderTest {
 
     @Test

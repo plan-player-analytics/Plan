@@ -30,7 +30,7 @@ public enum JSLang implements Lang {
     LINK_SERVER_ANALYSIS("Server Analysis"),
     LINK_QUICK_VIEW("Quick view"),
     TEXT_FIRST_SESSION("First session"),
-    LABEL_SESSION_ENDED("Ended"),
+    LABEL_SESSION_ENDED(" Ended"),
     LINK_PLAYER_PAGE("Player Page"),
     LABEL_NO_SESSION_KILLS("None"),
     UNIT_ENTITIES("Entities"),

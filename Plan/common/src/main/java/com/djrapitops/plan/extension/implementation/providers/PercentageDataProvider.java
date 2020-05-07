@@ -24,29 +24,37 @@ import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import java.lang.reflect.Method;
 
 /**
- * Represents a DataExtension API method annotated with {@link PercentageProvider} annotation.
- * <p>
- * Used to obtain data to place in the database.
+ * Contains code that acts on {@link PercentageProvider} annotations.
  *
  * @author Rsl1122
  */
-public class PercentageDataProvider extends DataProvider<Double> {
+public class PercentageDataProvider {
 
-    private PercentageDataProvider(ProviderInformation providerInformation, MethodWrapper<Double> methodWrapper) {
-        super(providerInformation, methodWrapper);
+    private PercentageDataProvider() {
+        // Static method class
     }
 
     public static void placeToDataProviders(
             DataProviders dataProviders, Method method, PercentageProvider annotation,
             Conditional condition, String tab, String pluginName
     ) {
+        ProviderInformation information = ProviderInformation.builder(pluginName)
+                .setName(method.getName())
+                .setText(annotation.text())
+                .setDescription(annotation.description())
+                .setPriority(annotation.priority())
+                .setIcon(new Icon(
+                        annotation.iconFamily(),
+                        annotation.iconName(),
+                        annotation.iconColor())
+                ).setShowInPlayersTable(annotation.showInPlayerTable())
+                .setCondition(condition)
+                .setTab(tab)
+                .setAsPercentage()
+                .build();
+
         MethodWrapper<Double> methodWrapper = new MethodWrapper<>(method, Double.class);
-        Icon providerIcon = new Icon(annotation.iconFamily(), annotation.iconName(), annotation.iconColor());
 
-        ProviderInformation providerInformation = new ProviderInformation(
-                pluginName, method.getName(), annotation.text(), annotation.description(), providerIcon, annotation.priority(), annotation.showInPlayerTable(), tab, condition
-        );
-
-        dataProviders.put(new PercentageDataProvider(providerInformation, methodWrapper));
+        dataProviders.put(new DataProvider<>(information, methodWrapper));
     }
 }

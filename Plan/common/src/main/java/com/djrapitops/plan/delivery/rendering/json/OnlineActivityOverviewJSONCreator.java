@@ -193,7 +193,7 @@ public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<M
 
         TPSMutator tpsMutator = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(monthAgo, now, serverUUID)));
         numbers.put("average_tps", decimalFormatter.apply(tpsMutator.averageTPS()));
-        numbers.put("low_tps_spikes", tpsMutator.lowTpsSpikeCount(config.getNumber(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
+        numbers.put("low_tps_spikes", tpsMutator.lowTpsSpikeCount(config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
         numbers.put("downtime", timeAmountFormatter.apply(tpsMutator.serverDownTime()));
 
         return numbers;

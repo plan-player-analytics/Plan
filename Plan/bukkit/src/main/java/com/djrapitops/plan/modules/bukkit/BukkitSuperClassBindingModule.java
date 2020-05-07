@@ -19,6 +19,8 @@ package com.djrapitops.plan.modules.bukkit;
 import com.djrapitops.plan.BukkitServerShutdownSave;
 import com.djrapitops.plan.BukkitTaskSystem;
 import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plan.gathering.BukkitSensor;
+import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.gathering.importing.BukkitImportSystem;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
@@ -32,9 +34,10 @@ import com.djrapitops.plan.storage.database.BukkitDBSystem;
 import com.djrapitops.plan.storage.database.DBSystem;
 import dagger.Binds;
 import dagger.Module;
+import org.bukkit.World;
 
 /**
- * Module for binding Bukkit specific classes to the interface implementations.
+ * Module for binding Bukkit specific classes as interface implementations.
  *
  * @author Rsl1122
  */
@@ -42,24 +45,29 @@ import dagger.Module;
 public interface BukkitSuperClassBindingModule {
 
     @Binds
-    ServerInfo bindBukkitServerInfo(ServerServerInfo serverServerInfo);
+    ServerInfo bindServerInfo(ServerServerInfo serverInfo);
 
     @Binds
-    DBSystem bindBukkitDatabaseSystem(BukkitDBSystem dbSystem);
+    DBSystem bindDBSystem(BukkitDBSystem dbSystem);
 
     @Binds
-    ConfigSystem bindBukkitConfigSystem(BukkitConfigSystem bukkitConfigSystem);
+    ConfigSystem bindConfigSystem(BukkitConfigSystem configSystem);
 
     @Binds
-    TaskSystem bindBukkitTaskSystem(BukkitTaskSystem bukkitTaskSystem);
+    TaskSystem bindTaskSystem(BukkitTaskSystem taskSystem);
 
     @Binds
-    ListenerSystem bindBukkitListenerSystem(BukkitListenerSystem bukkitListenerSystem);
+    ListenerSystem bindListenerSystem(BukkitListenerSystem listenerSystem);
 
     @Binds
-    ImportSystem bindImportSystem(BukkitImportSystem bukkitImportSystem);
+    ImportSystem bindImportSystem(BukkitImportSystem importSystem);
 
     @Binds
-    ServerShutdownSave bindBukkitServerShutdownSave(BukkitServerShutdownSave bukkitServerShutdownSave);
+    ServerShutdownSave bindServerShutdownSave(BukkitServerShutdownSave shutdownSave);
 
+    @Binds
+    ServerSensor<World> bindServerSensor(BukkitSensor sensor);
+
+    @Binds
+    ServerSensor<?> bindGenericsServerSensor(ServerSensor<World> sensor);
 }

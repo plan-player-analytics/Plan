@@ -32,8 +32,7 @@ public class NukkitServerProperties extends ServerProperties {
                 server.getVersion(),
                 server.getNukkitVersion(),
                 server::getIp,
-                server.getMaxPlayers(),
-                () -> server.getOnlinePlayers().size()
+                server.getMaxPlayers()
         );
     }
 

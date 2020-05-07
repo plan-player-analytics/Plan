@@ -39,7 +39,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Query Extension data of x most recent players on a server.
  * <p>
- * Returns Map: Player UUID - ExtensionTabData (container for provider based data)
+ * Returns Map: Player UUID - {@link ExtensionTabData} (container for provider based data)
  *
  * @author Rsl1122
  */

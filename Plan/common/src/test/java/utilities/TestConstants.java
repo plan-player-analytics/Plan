@@ -38,6 +38,7 @@ public class TestConstants {
     public static final String PLAYER_TWO_NAME = "Test_Player_two";
 
     public static final String WORLD_ONE_NAME = "World One";
+    public static final Long REGISTER_TIME = RandomData.randomTime();
 
     public static final int SERVER_MAX_PLAYERS = 20;
     public static final int BUNGEE_MAX_PLAYERS = 100;

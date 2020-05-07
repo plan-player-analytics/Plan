@@ -43,7 +43,9 @@ public class ResourceCache {
     public static Resource getOrCache(String resourceName, Supplier<Resource> resourceSupplier) {
         String found = cache.getIfPresent(resourceName);
         if (found == null) {
-            return new StringCachingResource(resourceSupplier.get());
+            Resource created = resourceSupplier.get();
+            if (created == null) return null;
+            return new StringCachingResource(created);
         }
         return new StringResource(resourceName, found);
     }

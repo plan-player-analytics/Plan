@@ -36,8 +36,7 @@ public class SpongeServerProperties extends ServerProperties {
                 () -> game.getServer().getBoundAddress()
                         .orElseGet(() -> new InetSocketAddress(25565))
                         .getAddress().getHostAddress(),
-                game.getServer().getMaxPlayers(),
-                () -> game.getServer().getOnlinePlayers().size()
+                game.getServer().getMaxPlayers()
         );
     }
 }

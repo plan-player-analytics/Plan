@@ -119,6 +119,21 @@ public class TablePlayer implements Comparable<TablePlayer> {
         return Objects.hash(name, activityIndex, playtime, sessionCount, registered, lastSeen, geolocation);
     }
 
+    @Override
+    public String toString() {
+        return "TablePlayer{" +
+                "uuid=" + uuid +
+                ", name='" + name + '\'' +
+                ", activityIndex=" + activityIndex +
+                ", playtime=" + playtime +
+                ", sessionCount=" + sessionCount +
+                ", registered=" + registered +
+                ", lastSeen=" + lastSeen +
+                ", geolocation='" + geolocation + '\'' +
+                ", banned=" + banned +
+                '}';
+    }
+
     public static class Builder {
         private final TablePlayer player;
 

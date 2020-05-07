@@ -74,7 +74,7 @@ public class PlanBukkitMocker extends Mocker {
         ErrorHandler consoleErrorLogger = new ConsoleErrorLogger(testPluginLogger);
         Timings timings = new Timings(debugLogger);
 
-        Mockito.doReturn(testLogger).when(planMock).getLogger();
+        doReturn(testLogger).when(planMock).getLogger();
         doReturn(runnableFactory).when(planMock).getRunnableFactory();
         doReturn(testPluginLogger).when(planMock).getPluginLogger();
         doReturn(debugLogger).when(planMock).getDebugLogger();
@@ -99,7 +99,7 @@ public class PlanBukkitMocker extends Mocker {
         return this;
     }
 
-    PlanBukkitMocker withResourceFetchingFromJar() throws IOException {
+    PlanBukkitMocker withResourceFetchingFromJar() {
         withPluginFiles();
         return this;
     }
@@ -112,7 +112,7 @@ public class PlanBukkitMocker extends Mocker {
         doReturn(25565).when(serverMock).getPort();
         doReturn("1.12.2").when(serverMock).getVersion();
         doReturn("32423").when(serverMock).getBukkitVersion();
-        Mockito.doReturn(TestConstants.SERVER_MAX_PLAYERS).when(serverMock).getMaxPlayers();
+        doReturn(TestConstants.SERVER_MAX_PLAYERS).when(serverMock).getMaxPlayers();
         ConsoleCommandSender sender = Mockito.mock(ConsoleCommandSender.class);
         doReturn(sender).when(serverMock).getConsoleSender();
 

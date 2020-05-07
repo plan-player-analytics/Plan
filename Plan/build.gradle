@@ -30,29 +30,23 @@ def determineBuildVersion = {
 def buildVersion = determineBuildVersion()
 
 allprojects {
-    wrapper.gradleVersion = "5.5.1"
+    wrapper.gradleVersion = "6.2.1"
 
     group "com.djrapitops"
-    version "5.0-SNAPSHOT"
+    version "5.1-SNAPSHOT"
 
     ext.majorVersion = '5'
-    ext.minorVersion = '0'
+    ext.minorVersion = '1'
     ext.buildVersion = buildVersion
     ext.fullVersion = project.ext.majorVersion + '.' + project.ext.minorVersion + ' build ' + project.ext.buildVersion
 
-    test {
-        useJUnitPlatform()
-        testLogging {
-            events "passed", "failed"
-            exceptionFormat "full"
-        }
-    }
-
     // Fix for UTF-8 files showing with wrong encoding when compiled on Windows machines.
-    tasks.withType(JavaCompile) {
-        options.encoding = 'UTF-8'
-    }
+    compileJava { options.encoding = "UTF-8" }
+    tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+    javadoc { options.encoding = 'UTF-8' }
 }
+
+println "Building artifact for version $fullVersion"
 
 subprojects {
     // Build plugins
@@ -66,11 +60,11 @@ subprojects {
     apply plugin: "checkstyle"
     apply plugin: "jacoco"
 
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 
-    ext.daggerVersion = "2.25.3"
-    ext.daggerCompilerVersion = "2.25.3"
+    ext.daggerVersion = "2.27"
+    ext.daggerCompilerVersion = "2.27"
 
     ext.abstractPluginFrameworkVersion = "3.4.2"
 
@@ -83,19 +77,21 @@ subprojects {
     ext.velocityVersion = "1.0-SNAPSHOT"
     ext.redisBungeeVersion = "0.3.8-SNAPSHOT"
 
-    ext.httpClientVersion = "4.5.10"
+    ext.httpClientVersion = "4.5.12"
     ext.commonsTextVersion = "1.8"
+    ext.commonsCompressVersion = "1.20"
     ext.htmlCompressorVersion = "1.5.2"
     ext.caffeineVersion = "2.8.0"
     ext.h2Version = "1.4.199"
-    ext.mysqlVersion = "8.0.18"
-    ext.hikariVersion = "3.4.1"
+    ext.mysqlVersion = "8.0.20"
+    ext.hikariVersion = "3.4.3"
     ext.slf4jVersion = "1.7.30"
-    ext.geoIpVersion = "2.13.0"
+    ext.geoIpVersion = "2.13.1"
     ext.gsonVersion = "2.8.6"
     ext.guavaVersion = "28.0-jre"
     ext.bstatsVersion = "1.4"
     ext.placeholderapiVersion = "2.9.2"
+    ext.nkPlaceholderapiVersion = "1.3-SNAPSHOT"
 
     repositories {
         mavenCentral()
@@ -112,13 +108,13 @@ subprojects {
             url = "https://oss.sonatype.org/content/repositories/snapshots"
         }
         maven { // RedisBungee Repository
-            url = "http://repo.md-5.net/content/repositories/snapshots/"
+            url = "https://repo.md-5.net/content/repositories/snapshots/"
         }
         maven { // Velocity Repository
             url = "https://repo.velocitypowered.com/snapshots/"
         }
         maven { // Nukkit Repository
-            url = "http://repo.nukkitx.com/main"
+            url = "https://repo.nukkitx.com/main"
         }
         maven { // bStats Repository
             url = "https://repo.codemc.org/repository/maven-public"
@@ -135,16 +131,16 @@ subprojects {
         testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerCompilerVersion"
 
         // Test Tooling Dependencies
-        testCompile "org.junit.jupiter:junit-jupiter-engine:5.5.2"   // JUnit 5
-        testCompile "org.junit.platform:junit-platform-runner:1.5.2" // JUnit 4 runner for JUnit 5 tests
-        testCompile "org.junit.jupiter:junit-jupiter-params:5.5.2"   // JUnit 5, parameterized tests
-        testCompile "org.mockito:mockito-core:3.2.4"                // Mockito Core
-        testCompile "org.mockito:mockito-junit-jupiter:3.2.4"       // Mockito JUnit 5 Extension
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.6.2"   // JUnit 5
+        testCompile "org.junit.jupiter:junit-jupiter-params:5.6.2"   // JUnit 5, parameterized tests
+        testCompile "org.mockito:mockito-core:3.3.3"                // Mockito Core
+        testCompile "org.mockito:mockito-junit-jupiter:3.3.3"       // Mockito JUnit 5 Extension
         testCompile "org.seleniumhq.selenium:selenium-java:3.141.59" // Selenium (Browser tests)
         testCompile "com.jayway.awaitility:awaitility:1.7.0"         // Awaitility (Concurrent wait conditions)
 
         // Testing dependencies required by Plan
-        testCompile "org.xerial:sqlite-jdbc:3.30.1"     // SQLite
+        testCompile "org.xerial:sqlite-jdbc:3.31.1"     // SQLite
         testCompile "mysql:mysql-connector-java:$mysqlVersion" // MySQL
     }
 
@@ -160,8 +156,16 @@ subprojects {
         testArtifacts testJar
     }
 
+    test {
+        useJUnitPlatform()
+        testLogging {
+            events "passed", "failed", "skipped"
+            exceptionFormat "full"
+        }
+    }
+
     checkstyle {
-        configFile rootProject.file('config/checkstyle/checkstyle.xml')
+        getConfigDirectory().set file("$rootProject.projectDir/config/checkstyle")
     }
 
     jacocoTestReport {

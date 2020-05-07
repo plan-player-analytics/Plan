@@ -59,6 +59,7 @@ public final class Reflection {
      * @param target    - the target type.
      * @param name      - the name of the field, or NULL to ignore.
      * @param fieldType - a compatible field type.
+     * @param <T>       Type of the field.
      * @return The field accessor.
      */
     public static <T> FieldAccessor<T> getField(Class<?> target, String name, Class<T> fieldType) {

@@ -1,12 +1,13 @@
 plugins {
-    id "com.jfrog.bintray" version "1.8.4"
+    id "com.jfrog.bintray" version "1.8.5"
 }
 
 dependencies {
-    compileOnly group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+    compileOnly group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
+    compileOnly "com.google.code.gson:gson:$gsonVersion"
 }
 
-ext.apiVersion = '5.0-R0.3'
+ext.apiVersion = '5.1-R0.4'
 
 bintray {
     user = System.getenv('BINTRAY_USER')

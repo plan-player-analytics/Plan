@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.commands.subcommands.webuser;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
+import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -85,13 +85,13 @@ public class WebCheckCommand extends CommandNode {
         processing.submitNonCritical(() -> {
             try {
                 Database db = dbSystem.getDatabase();
-                Optional<WebUser> found = db.query(WebUserQueries.fetchWebUser(user));
+                Optional<User> found = db.query(WebUserQueries.fetchUser(user));
                 if (!found.isPresent()) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_WEB_USER_NOT_EXISTS));
                     return;
                 }
-                WebUser info = found.get();
-                sender.sendMessage(locale.getString(CommandLang.WEB_USER_LIST, info.getName(), info.getPermLevel()));
+                User info = found.get();
+                sender.sendMessage(locale.getString(CommandLang.WEB_USER_LIST, info.getUsername(), info.getPermissionLevel()));
             } catch (Exception e) {
                 errorHandler.log(L.ERROR, this.getClass(), e);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));

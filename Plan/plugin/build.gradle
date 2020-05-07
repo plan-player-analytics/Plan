@@ -19,6 +19,7 @@ shadowJar {
     relocate 'dagger', 'plan.dagger'
     relocate 'com.mysql.jdbc', 'plan.com.mysql.jdbc'
     relocate 'com.mysql.cj', 'plan.com.mysql.cj'
+    relocate 'javax.inject', 'plan.javax.inject'
 
     destinationDir = file("$rootDir/builds/")
     baseName = "Plan"

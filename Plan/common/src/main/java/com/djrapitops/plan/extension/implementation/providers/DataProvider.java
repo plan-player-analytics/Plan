@@ -21,11 +21,11 @@ import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import java.util.Objects;
 
 /**
- * Abstract representation of all values a Provider annotation provides.
+ * Representation of all values a Provider annotation provides.
  *
  * @author Rsl1122
  */
-public abstract class DataProvider<T> {
+public class DataProvider<T> {
 
     private final ProviderInformation providerInformation;
     private final MethodWrapper<T> method;

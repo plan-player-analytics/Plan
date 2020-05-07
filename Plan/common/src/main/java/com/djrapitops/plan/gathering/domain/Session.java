@@ -19,6 +19,7 @@ package com.djrapitops.plan.gathering.domain;
 import com.djrapitops.plan.delivery.domain.DateHolder;
 import com.djrapitops.plan.delivery.domain.container.DynamicDataContainer;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
+import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -183,7 +184,7 @@ public class Session extends DynamicDataContainer implements DateHolder {
                 getValue(SessionKeys.END).orElse(-1L).equals(session.getValue(SessionKeys.END).orElse(-1L)) &&
                 mobKills == session.mobKills &&
                 deaths == session.deaths &&
-                Objects.equals(playerKills, session.playerKills) &&
+                Objects.equals(getPlayerKills(), session.getPlayerKills()) &&
                 Objects.equals(worldTimes, session.worldTimes);
     }
 
@@ -210,6 +211,7 @@ public class Session extends DynamicDataContainer implements DateHolder {
     }
 
     public List<PlayerKill> getPlayerKills() {
+        playerKills.sort(new DateHolderRecentComparator());
         return playerKills;
     }
 

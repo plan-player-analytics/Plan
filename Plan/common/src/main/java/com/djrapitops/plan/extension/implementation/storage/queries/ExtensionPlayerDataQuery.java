@@ -44,14 +44,11 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * <p>
  * Returns Map: Server UUID - List of ExtensionData.
  * <p>
- * How it is done:
- * - Two queries are run, one that fetches all extensions and one that fetches all data of the player.
- * - Data query is sorted into a multi-map: PluginID - Tab Name - Tab Data
- * - (Tab Name can be empty.)
- * - Multi-map is sorted into ExtensionData objects by PluginID, one per ID
- * - This map is sorted into final Map: Server UUID - List of ExtensionData at the highest level.
- * <p>
- * There are multiple data extraction methods to make extracting the value query easier.
+ * Following utilities are used to query the data more easily.
+ * - {@link ExtensionData.Builder}
+ * - {@link QueriedTabData}
+ * - {@link QueriedTables}
+ * These utilities allow combining incomplete information.
  *
  * @author Rsl1122
  */

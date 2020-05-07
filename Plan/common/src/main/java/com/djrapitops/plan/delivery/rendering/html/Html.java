@@ -58,7 +58,7 @@ public enum Html {
             "</span>" +
             "<span class=\"text\">Network page</span>" +
             "</a>"),
-    BACK_BUTTON_SERVER("<a class=\"btn bg-plan btn-icon-split\" href=\"../server\">" +
+    BACK_BUTTON_SERVER("<a class=\"btn bg-plan btn-icon-split\" href=\"../server/\">" +
             "<span class=\"icon text-white-50\">" +
             "<i class=\"fas fa-fw fa-arrow-left\"></i><i class=\"fas fa-fw fa-server\"></i>" +
             "</span>" +

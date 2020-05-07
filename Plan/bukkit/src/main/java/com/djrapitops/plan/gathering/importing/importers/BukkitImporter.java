@@ -18,8 +18,8 @@ package com.djrapitops.plan.gathering.importing.importers;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.delivery.domain.Nickname;
-import com.djrapitops.plan.gathering.cache.GeolocationCache;
 import com.djrapitops.plan.gathering.domain.*;
+import com.djrapitops.plan.gathering.geolocation.GeolocationCache;
 import com.djrapitops.plan.gathering.importing.data.BukkitUserImportRefiner;
 import com.djrapitops.plan.gathering.importing.data.ServerImportData;
 import com.djrapitops.plan.gathering.importing.data.UserImportData;
@@ -196,10 +196,10 @@ public abstract class BukkitImporter implements Importer {
     private List<GeoInfo> convertGeoInfo(UserImportData userImportData) {
         long date = System.currentTimeMillis();
 
-        return userImportData.getIps().parallelStream()
-                .map(ip -> {
-                    String geoLoc = geolocationCache.getCountry(ip);
-                    return new GeoInfo(geoLoc, date);
-                }).collect(Collectors.toList());
+        return userImportData.getIps().stream()
+                .map(geolocationCache::getCountry)
+                .filter(Objects::nonNull)
+                .map(geoLocation -> new GeoInfo(geoLocation, date))
+                .collect(Collectors.toList());
     }
 }

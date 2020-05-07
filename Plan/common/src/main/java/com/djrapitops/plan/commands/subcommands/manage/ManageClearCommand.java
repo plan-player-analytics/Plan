@@ -20,7 +20,7 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.exceptions.database.DBInitException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.processing.Processing;
-import com.djrapitops.plan.query.QueryServiceImplementation;
+import com.djrapitops.plan.query.QuerySvc;
 import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CmdHelpLang;
@@ -55,7 +55,7 @@ public class ManageClearCommand extends CommandNode {
     private final Locale locale;
     private final Processing processing;
     private final DBSystem dbSystem;
-    private final QueryServiceImplementation queryService;
+    private final QuerySvc queryService;
     private final ErrorHandler errorHandler;
 
     @Inject
@@ -64,7 +64,7 @@ public class ManageClearCommand extends CommandNode {
             Locale locale,
             Processing processing,
             DBSystem dbSystem,
-            QueryServiceImplementation queryService,
+            QuerySvc queryService,
             ErrorHandler errorHandler
     ) {
         super("clear", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);

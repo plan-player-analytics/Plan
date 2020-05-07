@@ -139,50 +139,25 @@ public class NetworkActivityIndexQueries {
     public static Query<Map<String, Integer>> fetchActivityIndexGroupingsOn(long date, long threshold) {
         String selectActivityIndex = selectActivityIndexSQL();
 
-        String selectIndexes = SELECT + "? as activity_group, activity_index" +
+        String selectIndexes = SELECT + "activity_index" +
                 FROM + UsersTable.TABLE_NAME + " u" +
                 LEFT_JOIN + '(' + selectActivityIndex + ") s on s." + SessionsTable.USER_UUID + "=u." + UsersTable.USER_UUID +
-                AND + "u." + UsersTable.REGISTERED + "<=?";
+                WHERE + "u." + UsersTable.REGISTERED + "<=?";
 
-        String selectCount = SELECT + "activity_group, COUNT(1) as count" + FROM +
-                '(' + selectIndexes + ") indexes" +
-                WHERE + "COALESCE(indexes.activity_index,0)>=?" +
-                AND + "COALESCE(indexes.activity_index,0)<?" +
-                GROUP_BY + "activity_group";
-
-        String selectMultipleCounts = SELECT + '*' + FROM +
-                '(' + selectCount +
-                UNION + selectCount +
-                UNION + selectCount +
-                UNION + selectCount +
-                UNION + selectCount + ") selectMultiple";
-
-        return new QueryStatement<Map<String, Integer>>(selectMultipleCounts) {
+        return new QueryStatement<Map<String, Integer>>(selectIndexes) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                set12ValuesForQuery(statement, 1, "Very Active", ActivityIndex.VERY_ACTIVE, 5.1);
-                set12ValuesForQuery(statement, 13, "Active", ActivityIndex.ACTIVE, ActivityIndex.VERY_ACTIVE);
-                set12ValuesForQuery(statement, 25, "Regular", ActivityIndex.REGULAR, ActivityIndex.ACTIVE);
-                set12ValuesForQuery(statement, 37, "Irregular", ActivityIndex.IRREGULAR, ActivityIndex.REGULAR);
-                set12ValuesForQuery(statement, 49, "Inactive", -1, ActivityIndex.IRREGULAR);
-            }
-
-            private void set12ValuesForQuery(
-                    PreparedStatement statement, int index,
-                    String group, double above, double below
-            ) throws SQLException {
-                statement.setString(index, group);
-                setSelectActivityIndexSQLParameters(statement, index + 1, threshold, date);
-                statement.setLong(index + 9, date);
-                statement.setDouble(index + 10, above);
-                statement.setDouble(index + 11, below);
+                setSelectActivityIndexSQLParameters(statement, 1, threshold, date);
+                statement.setLong(9, date);
             }
 
             @Override
             public Map<String, Integer> processResults(ResultSet set) throws SQLException {
                 Map<String, Integer> groups = new HashMap<>();
                 while (set.next()) {
-                    groups.put(set.getString("activity_group"), set.getInt("count"));
+                    double activityIndex = set.getDouble("activity_index");
+                    String group = ActivityIndex.getGroup(activityIndex);
+                    groups.put(group, groups.getOrDefault(group, 0) + 1);
                 }
                 return groups;
             }

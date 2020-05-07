@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.identification;
 
-import com.djrapitops.plan.delivery.webserver.WebServer;
+import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.properties.ServerProperties;
@@ -29,7 +29,6 @@ import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -53,7 +52,7 @@ public class ServerServerInfo extends ServerInfo {
     private final PlanConfig config;
     private final Processing processing;
     private final DBSystem dbSystem;
-    private final Lazy<WebServer> webServer;
+    private final Addresses addresses;
     private final ErrorHandler errorHandler;
 
     @Inject
@@ -63,14 +62,14 @@ public class ServerServerInfo extends ServerInfo {
             Processing processing,
             PlanConfig config,
             DBSystem dbSystem,
-            Lazy<WebServer> webServer,
+            Addresses addresses,
             ErrorHandler errorHandler
     ) {
         super(serverProperties);
         this.serverInfoFile = serverInfoFile;
         this.processing = processing;
         this.dbSystem = dbSystem;
-        this.webServer = webServer;
+        this.addresses = addresses;
         this.config = config;
         this.errorHandler = errorHandler;
     }
@@ -128,8 +127,7 @@ public class ServerServerInfo extends ServerInfo {
         String name = config.get(PluginSettings.SERVER_NAME);
         server.setName("plan".equalsIgnoreCase(name) ? "Server " + server.getId() : name);
 
-        String webAddress = webServer.get().getAccessAddress();
-        server.setWebAddress(webAddress);
+        addresses.getAccessAddress().ifPresent(server::setWebAddress);
 
         int maxPlayers = serverProperties.getMaxPlayers();
         server.setMaxPlayers(maxPlayers);
@@ -161,7 +159,7 @@ public class ServerServerInfo extends ServerInfo {
     }
 
     private Server createServerObject(UUID serverUUID) {
-        String webAddress = webServer.get().getAccessAddress();
+        String webAddress = addresses.getAccessAddress().orElse(addresses.getFallbackLocalhostAddress());
         String name = config.get(PluginSettings.SERVER_NAME);
         int maxPlayers = serverProperties.getMaxPlayers();
         return new Server(-1, serverUUID, name, webAddress, maxPlayers);

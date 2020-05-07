@@ -87,7 +87,7 @@ public abstract class Transaction {
         int errorCode = statementFail.getErrorCode();
         boolean mySQLDeadlock = dbType == DBType.MYSQL && errorCode == 1213;
         boolean h2Deadlock = dbType == DBType.H2 && errorCode == 40001;
-        boolean deadlocked = mySQLDeadlock || h2Deadlock;
+        boolean deadlocked = mySQLDeadlock || h2Deadlock || statementFail instanceof SQLTransactionRollbackException;
         if (deadlocked && attempts < ATTEMPT_LIMIT) {
             executeTransaction(db); // Recurse to attempt again.
             return;

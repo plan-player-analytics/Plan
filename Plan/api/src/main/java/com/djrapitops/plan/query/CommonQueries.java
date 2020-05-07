@@ -44,6 +44,16 @@ public interface CommonQueries {
     long fetchPlaytime(UUID playerUUID, UUID serverUUID, long after, long before);
 
     /**
+     * Get playtime of current online session.
+     * <p>
+     * Requires Capability QUERY_API_ACTIVE_SESSION_PLAYTIME
+     *
+     * @param playerUUID UUID of the player.
+     * @return Milliseconds the player has played during current online session. 0 if player is offline.
+     */
+    long fetchCurrentSessionPlaytime(UUID playerUUID);
+
+    /**
      * Fetch last seen Epoch ms for a player on a server.
      *
      * @param playerUUID UUID of the player.

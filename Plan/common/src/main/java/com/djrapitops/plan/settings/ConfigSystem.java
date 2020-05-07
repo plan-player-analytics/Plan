@@ -93,7 +93,7 @@ public abstract class ConfigSystem implements SubSystem {
     }
 
     public void checkWrongTimeZone() {
-        String timeZone = config.getString(FormatSettings.TIMEZONE);
+        String timeZone = config.get(FormatSettings.TIMEZONE);
         Optional<TimeZone> foundTZ = TimeZoneUtility.parseTimeZone(timeZone);
         if (!foundTZ.isPresent()) {
             logger.warn("Config: " + FormatSettings.TIMEZONE.getPath() + " has invalid value '" + timeZone + "', using GMT+0");

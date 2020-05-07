@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.export;
 
-import com.djrapitops.plan.delivery.webserver.response.ResponseFactory;
+import com.djrapitops.plan.delivery.webserver.ResponseFactory;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
@@ -57,6 +57,6 @@ public class PlayerJSONExporter extends FileExporter {
     }
 
     private void exportJSON(Path to, UUID playerUUID) throws IOException {
-        export(to, responseFactory.rawPlayerPageResponse(playerUUID).getContent());
+        export(to, responseFactory.rawPlayerPageResponse(playerUUID).getBytes());
     }
 }

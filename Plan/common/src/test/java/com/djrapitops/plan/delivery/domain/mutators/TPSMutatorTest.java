@@ -21,8 +21,6 @@ import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plugin.api.TimeAmount;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +35,6 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Rsl1122
  */
-@RunWith(JUnitPlatform.class)
 class TPSMutatorTest {
 
     private static List<TPS> testData;
