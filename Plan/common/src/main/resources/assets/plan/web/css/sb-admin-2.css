@@ -1881,7 +1881,7 @@ pre code {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
-.accordion-striped tbody tr:nth-of-type(4n+1), .accordion-striped tbody tr:nth-of-type(4n+2) {
+.accordion-striped tbody tr:nth-of-type(4n+1):not(.bg-teal), .accordion-striped tbody tr:nth-of-type(4n+2) {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
@@ -2111,7 +2111,7 @@ pre code {
     background-color: rgba(255, 255, 255, 0.05);
 }
 
-.table-dark.accordion-striped tbody tr:nth-of-type(4n+1), .table-dark.accordion-striped tbody tr:nth-of-type(4n+2) {
+.table-dark.accordion-striped tbody tr:nth-of-type(4n+1):not(.bg-teal), .table-dark.accordion-striped tbody tr:nth-of-type(4n+2) {
     background-color: rgba(255, 255, 255, 0.05);
 }
 
