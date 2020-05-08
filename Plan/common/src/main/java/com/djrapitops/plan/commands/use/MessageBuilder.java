@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.commands.use;
 
+import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -23,7 +24,9 @@ public interface MessageBuilder {
 
     MessageBuilder defineColorCharacter(char colorChar);
 
-    MessageBuilder append(String msg);
+    MessageBuilder addPart(String msg);
+
+    MessageBuilder newLine();
 
     MessageBuilder link(String address);
 
@@ -32,6 +35,8 @@ public interface MessageBuilder {
     MessageBuilder hover(String text);
 
     MessageBuilder hover(String... text);
+
+    MessageBuilder hover(Collection<String> text);
 
     MessageBuilder indent(int spaces);
 

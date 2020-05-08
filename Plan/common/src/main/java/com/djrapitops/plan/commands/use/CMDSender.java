@@ -27,6 +27,19 @@ public interface CMDSender {
 
     boolean hasPermission(String permission);
 
+    default boolean hasAllPermissionsFor(Subcommand subcommand) {
+        return !isMissingPermissionsFor(subcommand);
+    }
+
+    default boolean isMissingPermissionsFor(Subcommand subcommand) {
+        for (String permission : subcommand.getRequiredPermissions()) {
+            if (!hasPermission(permission)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     Optional<UUID> getUUID();
 
     void send(String message);

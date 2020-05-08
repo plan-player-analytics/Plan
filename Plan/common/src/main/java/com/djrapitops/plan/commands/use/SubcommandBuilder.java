@@ -39,6 +39,10 @@ public interface SubcommandBuilder {
 
     SubcommandBuilder inDepthDescription(String... lines);
 
+    SubcommandBuilder requiredArgument(String name, String description);
+
+    SubcommandBuilder optionalArgument(String name, String description);
+
     SubcommandBuilder onCommand(BiConsumer<CMDSender, Arguments> executor);
 
     SubcommandBuilder onTabComplete(BiFunction<CMDSender, Arguments, List<String>> resolver);
