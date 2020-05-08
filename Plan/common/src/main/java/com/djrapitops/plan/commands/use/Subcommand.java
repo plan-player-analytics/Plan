@@ -27,15 +27,17 @@ public class Subcommand {
     private final Set<String> aliases;
     private final Set<String> requiredPermissions;
     private final List<String> inDepthDescription;
+    private final List<ArgumentDescriptor> arguments;
     private String primaryAlias;
     private String description;
     private BiConsumer<CMDSender, Arguments> executor;
     private BiFunction<CMDSender, Arguments, List<String>> argumentResolver;
 
-    private Subcommand() {
+    Subcommand() {
         aliases = new HashSet<>();
         requiredPermissions = new HashSet<>();
         inDepthDescription = new ArrayList<>();
+        arguments = new ArrayList<>();
     }
 
     public static SubcommandBuilder builder() {
@@ -62,6 +64,10 @@ public class Subcommand {
         return inDepthDescription;
     }
 
+    public List<ArgumentDescriptor> getArguments() {
+        return arguments;
+    }
+
     public BiConsumer<CMDSender, Arguments> getExecutor() {
         return executor;
     }
@@ -71,9 +77,15 @@ public class Subcommand {
     }
 
     public static class Builder implements SubcommandBuilder {
-        private Subcommand subcommand;
+        private final Subcommand subcommand;
 
-        private Builder() {}
+        private Builder() {
+            this.subcommand = new Subcommand();
+        }
+
+        Builder(Subcommand subcommand) {
+            this.subcommand = subcommand;
+        }
 
         @Override
         public SubcommandBuilder alias(String alias) {
@@ -109,6 +121,18 @@ public class Subcommand {
         }
 
         @Override
+        public SubcommandBuilder requiredArgument(String name, String description) {
+            subcommand.arguments.add(new ArgumentDescriptor(name, description, true));
+            return this;
+        }
+
+        @Override
+        public SubcommandBuilder optionalArgument(String name, String description) {
+            subcommand.arguments.add(new ArgumentDescriptor(name, description, false));
+            return this;
+        }
+
+        @Override
         public SubcommandBuilder onCommand(BiConsumer<CMDSender, Arguments> executor) {
             subcommand.executor = executor;
             return this;
@@ -130,4 +154,27 @@ public class Subcommand {
         }
     }
 
+    public static class ArgumentDescriptor {
+        private final String name;
+        private final String description;
+        private final boolean required;
+
+        public ArgumentDescriptor(String name, String description, boolean required) {
+            this.name = name;
+            this.description = description;
+            this.required = required;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public boolean isRequired() {
+            return required;
+        }
+    }
 }
