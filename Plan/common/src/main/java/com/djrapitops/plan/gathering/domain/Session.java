@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Session extends DynamicDataContainer implements DateHolder {
 
-    private long sessionStart;
+    private final long sessionStart;
     private WorldTimes worldTimes;
     private List<PlayerKill> playerKills;
 
@@ -74,7 +74,7 @@ public class Session extends DynamicDataContainer implements DateHolder {
         putSupplier(SessionKeys.PLAYER_KILL_COUNT, getUnsafe(SessionKeys.PLAYER_KILLS)::size);
         putSupplier(SessionKeys.LENGTH, () ->
                 getValue(SessionKeys.END).orElse(System.currentTimeMillis()) - getUnsafe(SessionKeys.START));
-        putSupplier(SessionKeys.ACTIVE_TIME, () -> getUnsafe(SessionKeys.LENGTH) - getUnsafe(SessionKeys.AFK_TIME));
+        putSupplier(SessionKeys.ACTIVE_TIME, () -> getLength() - this.afkTime);
     }
 
     /**
@@ -119,7 +119,7 @@ public class Session extends DynamicDataContainer implements DateHolder {
         putSupplier(SessionKeys.PLAYER_KILL_COUNT, () -> getUnsafe(SessionKeys.PLAYER_KILLS).size());
         putSupplier(SessionKeys.LENGTH, () ->
                 getValue(SessionKeys.END).orElse(System.currentTimeMillis()) - getUnsafe(SessionKeys.START));
-        putSupplier(SessionKeys.ACTIVE_TIME, () -> getUnsafe(SessionKeys.LENGTH) - getUnsafe(SessionKeys.AFK_TIME));
+        putSupplier(SessionKeys.ACTIVE_TIME, () -> getLength() - this.afkTime);
     }
 
     /**

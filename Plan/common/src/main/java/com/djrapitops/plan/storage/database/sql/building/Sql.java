@@ -43,6 +43,7 @@ public abstract class Sql {
     public static final String INNER_JOIN = " JOIN ";
     public static final String LEFT_JOIN = " LEFT JOIN ";
     public static final String UNION = " UNION ";
+    public static final String UNION_ALL = " UNION ALL ";
     public static final String AND = " AND ";
     public static final String OR = " OR ";
     public static final String IS_NULL = " IS NULL";
