@@ -38,6 +38,7 @@ jobs:
         MYSQL_DB: test
         MYSQL_USER: user
         MYSQL_PASS: password
+        MYSQL_PORT: ${{ job.services.mariadb.ports[3306] }}
       run: |
         cd Plan
         ./gradlew build
