@@ -7,6 +7,14 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+            MYSQL_DATABASE: test_db
+        ports:
+            - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=
 
     steps:
     - uses: actions/checkout@v1
@@ -15,6 +23,10 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Gradle
+      env:
+        MYSQL_DB: test_db
+        MYSQL_USER: root
+        MYSQL_PASS: root
       run: |
         cd Plan
         ./gradlew build
