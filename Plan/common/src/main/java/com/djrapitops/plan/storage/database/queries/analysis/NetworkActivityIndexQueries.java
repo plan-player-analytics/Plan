@@ -90,7 +90,7 @@ public class NetworkActivityIndexQueries {
         String selectThreeWeeks = selectActivePlaytimeSQL + UNION_ALL + selectActivePlaytimeSQL + UNION_ALL + selectActivePlaytimeSQL;
 
         return SELECT +
-                "5.0 - 5.0 * AVG(1.0 / (?/2.0 * (q1.active_playtime/?) +1.0)) as activity_index," +
+                "5.0 - 5.0 * AVG(1.0 / (?/2.0 * (q1.active_playtime*1.0/?) +1.0)) as activity_index," +
                 "q1." + SessionsTable.USER_UUID +
                 FROM + '(' + selectThreeWeeks + ") q1" +
                 GROUP_BY + "q1." + SessionsTable.USER_UUID;
