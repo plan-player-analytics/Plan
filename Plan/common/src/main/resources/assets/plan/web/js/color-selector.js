@@ -17,18 +17,42 @@
         window.localStorage.setItem('themeColor', currentColor);
     }
 
+    let excludeSidebarFromNightMode = window.localStorage.getItem('excludeSidebarFromNightMode') == `true`;
+
     // Function for changing color
     function setColor(nextColor) {
         if (!nextColor || nextColor == currentColor) {
-            return;
+            //return;
         }
 
         let bgElementSelector = '';
+
         bgElements.map(element => element + '.bg-' + currentColor + ":not(.color-chooser)")
-            .forEach(selector => bgElementSelector += selector + ',');
+        .forEach(function (selector) {
+            if (nextColor.includes('night')) {
+
+                if (excludeSidebarFromNightMode) {
+                    if (!selector.includes('.sidebar')) {
+
+                        bgElementSelector += selector + ',';
+                    }
+
+                } else {
+                    bgElementSelector += selector + ',';
+                }
+
+            } else {
+                bgElementSelector += selector + ',';
+
+            }
+
+            return true;
+        });
+
         $(bgElementSelector.substr(0, bgElementSelector.length - 1))
             .removeClass('bg-' + currentColor)
             .addClass('bg-' + nextColor);
+
         let textElementSelector = '';
         textElements.map(element => element + '.col-' + currentColor)
             .forEach(selector => textElementSelector += selector + ',');
@@ -223,7 +247,6 @@
             // Turn bright tables to dark
             $('.table').addClass('table-dark');
             // Sidebar is grey when in night mode
-            disableColorSetters();
             setColor('night');
         } else {
             // Remove night mode style sheet
@@ -231,8 +254,7 @@
             // Turn dark tables bright again
             $('.table').removeClass('table-dark');
             // Sidebar is colorful
-            $('.color-chooser').removeClass('disabled');
-            enableColorSetters();
+
             setColor(window.localStorage.getItem('themeColor'));
         }
     }
@@ -482,6 +504,14 @@
         }, 0);
     }
 
-    $('#night-mode-toggle').on('click', toggleNightMode);
+    function toggleSidebarMode() {
+        excludeSidebarFromNightMode = !excludeSidebarFromNightMode;
+        setTimeout(function () {
+            window.localStorage.setItem('excludeSidebarFromNightMode', excludeSidebarFromNightMode);
+        }, 0);
 
+    }
+
+    $('#night-mode-toggle').on('click', toggleNightMode);
+    $('#sidebar-mode-toggle').on('click', toggleSidebarMode);
 })(jQuery);
