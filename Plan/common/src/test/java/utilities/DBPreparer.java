@@ -35,7 +35,7 @@ import java.util.Optional;
 public class DBPreparer {
 
     private final PlanSystem system;
-    private int testPortNumber;
+    private final int testPortNumber;
 
     public DBPreparer(PlanSystem system, int testPortNumber) {
         this.system = system;
@@ -69,6 +69,7 @@ public class DBPreparer {
         String database = System.getenv(CIProperties.MYSQL_DATABASE);
         String user = System.getenv(CIProperties.MYSQL_USER);
         String pass = System.getenv(CIProperties.MYSQL_PASS);
+        String port = System.getenv(CIProperties.MYSQL_PORT);
         if (Verify.containsNull(database, user)) {
             return Optional.empty();
         }
@@ -84,6 +85,7 @@ public class DBPreparer {
         config.set(DatabaseSettings.MYSQL_USER, user);
         config.set(DatabaseSettings.MYSQL_PASS, pass != null ? pass : "");
         config.set(DatabaseSettings.MYSQL_HOST, "127.0.0.1");
+        config.set(DatabaseSettings.MYSQL_PORT, port != null ? port : "3306");
         config.set(DatabaseSettings.TYPE, dbName);
         return Optional.of(formattedDatabase);
     }

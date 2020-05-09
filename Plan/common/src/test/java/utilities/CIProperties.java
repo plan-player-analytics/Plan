@@ -28,6 +28,7 @@ public class CIProperties {
     // (To prevent outside connections with CI user)
     public static final String MYSQL_USER = "MYSQL_USER";
     public static final String MYSQL_PASS = "MYSQL_PASS";
+    public static final String MYSQL_PORT = "MYSQL_PORT";
     public static final String CHROME_DRIVER = "CHROMEDRIVER";
 
     private CIProperties() {
