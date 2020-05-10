@@ -22,7 +22,7 @@
     // Function for changing color
     function setColor(nextColor) {
         if (!nextColor || nextColor == currentColor) {
-            //return;
+            return;
         }
 
         let bgElementSelector = '';
@@ -246,6 +246,9 @@
                 '</style>');
             // Turn bright tables to dark
             $('.table').addClass('table-dark');
+			
+			$('#sidebar-color-toggle').show();
+			
             // Sidebar is grey when in night mode
             setColor('night');
         } else {
@@ -254,6 +257,7 @@
             // Turn dark tables bright again
             $('.table').removeClass('table-dark');
             // Sidebar is colorful
+            $('#sidebar-color-toggle').hide();
 
             setColor(window.localStorage.getItem('themeColor'));
         }
@@ -504,7 +508,7 @@
         }, 0);
     }
 
-    function toggleSidebarMode() {
+    function toggleSidebarColor() {
         excludeSidebarFromNightMode = !excludeSidebarFromNightMode;
         setTimeout(function () {
             window.localStorage.setItem('excludeSidebarFromNightMode', excludeSidebarFromNightMode);
@@ -513,5 +517,5 @@
     }
 
     $('#night-mode-toggle').on('click', toggleNightMode);
-    $('#sidebar-mode-toggle').on('click', toggleSidebarMode);
+    $('#sidebar-color-toggle').on('click', toggleSidebarColor);
 })(jQuery);
