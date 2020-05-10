@@ -118,9 +118,9 @@ HTML - LABEL_3RD_WEAPON                         || 3-е PvP оружие
 HTML - LABEL_ACTIVITY_INDEX                     || Индекс активности
 HTML - LABEL_AFK                                || AFK
 HTML - LABEL_AFK_TIME                           || Время AFK
-HTML - LABEL_AVG                                || Средний
-HTML - LABEL_AVG_KDR                            || Средний KDR
-HTML - LABEL_AVG_MOB_KDR                        || Средний моб KDR
+HTML - LABEL_AVG                                || Сред.
+HTML - LABEL_AVG_KDR                            || Сред. KDR
+HTML - LABEL_AVG_MOB_KDR                        || Сред. моб KDR
 HTML - LABEL_AVG_PLAYTIME                       || Среднее время игры
 HTML - LABEL_AVG_SESSION_LENGTH                 || Средняя продолжительность сеанса
 HTML - LABEL_AVG_TPS                            || Средний TPS
@@ -245,7 +245,7 @@ HTML - TITLE_DISK                               || Дисковое простр
 HTML - TITLE_GRAPH_DAY_BY_DAY                   || День за днем
 HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || Сетевая активность
 HTML - TITLE_GRAPH_PUNCHCARD                    || Перфокарта на 30 дней
-HTML - TITLE_INSIGHTS                           || Выводы за 30 дней
+HTML - TITLE_INSIGHTS                           || Статистика за 30 дней
 HTML - TITLE_IS_AVAILABLE                       || доступен
 HTML - TITLE_LAST_24_HOURS                      || Последние 24 часа
 HTML - TITLE_LAST_30_DAYS                       || Последние 30 дней
