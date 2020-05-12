@@ -16,124 +16,116 @@
  */
 package com.djrapitops.plan.commands;
 
-import com.djrapitops.plan.commands.subcommands.*;
-import com.djrapitops.plan.settings.Permissions;
-import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.PluginSettings;
+import com.djrapitops.plan.commands.subcommands.LinkCommands;
+import com.djrapitops.plan.commands.use.CMDSender;
+import com.djrapitops.plan.commands.use.CommandWithSubcommands;
+import com.djrapitops.plan.commands.use.Subcommand;
 import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.lang.DeepHelpLang;
 import com.djrapitops.plugin.command.ColorScheme;
-import com.djrapitops.plugin.command.CommandNode;
-import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.TreeCmdNode;
-import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Collections;
+import java.util.List;
 
-/**
- * TreeCommand for the /plan command, and all SubCommands.
- * <p>
- * Uses the Abstract Plugin Framework for easier command management.
- *
- * @author Rsl1122
- */
 @Singleton
-public class PlanCommand extends TreeCmdNode {
+public class PlanCommand {
 
-    private final PlanConfig config;
-    private final InspectCommand inspectCommand;
-    private final QInspectCommand qInspectCommand;
-    private final SearchCommand searchCommand;
-    private final ListPlayersCommand listPlayersCommand;
-    private final AnalyzeCommand analyzeCommand;
-    private final NetworkCommand networkCommand;
-    private final ListServersCommand listServersCommand;
-    private final Lazy<WebUserCommand> webUserCommand;
-    private final RegisterCommand registerCommand;
-    private final UnregisterCommand unregisterCommand;
-    private final InfoCommand infoCommand;
-    private final ReloadCommand reloadCommand;
-    private final Lazy<ManageCommand> manageCommand;
-    private final DevCommand devCommand;
-
-    private boolean commandsRegistered;
+    private final Locale locale;
+    private final ColorScheme colors;
+    private final LinkCommands linkCommands;
 
     @Inject
     public PlanCommand(
-            ColorScheme colorScheme,
             Locale locale,
-            PlanConfig config,
-            // Group 1
-            InspectCommand inspectCommand,
-            QInspectCommand qInspectCommand,
-            SearchCommand searchCommand,
-            ListPlayersCommand listPlayersCommand,
-            AnalyzeCommand analyzeCommand,
-            NetworkCommand networkCommand,
-            ListServersCommand listServersCommand,
-            // Group 2
-            Lazy<WebUserCommand> webUserCommand,
-            RegisterCommand registerCommand,
-            UnregisterCommand unregisterCommand,
-            // Group 3
-            InfoCommand infoCommand,
-            ReloadCommand reloadCommand,
-            Lazy<ManageCommand> manageCommand,
-            DevCommand devCommand
+            ColorScheme colors,
+            LinkCommands linkCommands
     ) {
-        super("plan", "", CommandType.CONSOLE, null);
-        this.unregisterCommand = unregisterCommand;
-
-        commandsRegistered = false;
-
-        this.config = config;
-        this.inspectCommand = inspectCommand;
-        this.qInspectCommand = qInspectCommand;
-        this.searchCommand = searchCommand;
-        this.listPlayersCommand = listPlayersCommand;
-        this.analyzeCommand = analyzeCommand;
-        this.networkCommand = networkCommand;
-        this.listServersCommand = listServersCommand;
-        this.webUserCommand = webUserCommand;
-        this.registerCommand = registerCommand;
-        this.infoCommand = infoCommand;
-        this.reloadCommand = reloadCommand;
-        this.manageCommand = manageCommand;
-        this.devCommand = devCommand;
-
-        getHelpCommand().setPermission(Permissions.HELP.getPermission());
-        setDefaultCommand("inspect");
-        setColorScheme(colorScheme);
-        setInDepthHelp(locale.getArray(DeepHelpLang.PLAN));
+        this.locale = locale;
+        this.colors = colors;
+        this.linkCommands = linkCommands;
     }
 
-    public void registerCommands() {
-        if (commandsRegistered) {
-            return;
+    private void handleException(RuntimeException error, CMDSender sender) {
+        if (error instanceof IllegalArgumentException) {
+            sender.send("§c" + error.getMessage());
+        } else {
+            throw error;
         }
-
-        CommandNode[] analyticsGroup = {
-                inspectCommand,
-                qInspectCommand,
-                searchCommand,
-                listPlayersCommand,
-                analyzeCommand,
-                networkCommand,
-                listServersCommand
-        };
-        CommandNode[] webGroup = {
-                webUserCommand.get(),
-                registerCommand,
-                unregisterCommand
-        };
-        CommandNode[] manageGroup = {
-                infoCommand,
-                reloadCommand,
-                manageCommand.get(),
-                config.isTrue(PluginSettings.DEV_MODE) ? devCommand : null
-        };
-        setNodeGroups(analyticsGroup, webGroup, manageGroup);
-        commandsRegistered = true;
     }
+
+    public CommandWithSubcommands build() {
+        return CommandWithSubcommands.builder()
+                .alias("plan")
+                .colorScheme(colors)
+                .subcommand(serverCommand())
+                .subcommand(playerCommand())
+                .subcommand(playersCommand())
+                .subcommand(networkCommand())
+                .exceptionHandler(this::handleException)
+                .build();
+    }
+
+    public List<String> serverNames(CMDSender sender, Arguments arguments) {
+        return Collections.emptyList(); // TODO
+    }
+
+    private List<String> playerNames(CMDSender sender, Arguments arguments) {
+        return Collections.emptyList(); // TODO
+    }
+
+    private Subcommand serverCommand() {
+        return Subcommand.builder()
+                .aliases("server", "analyze", "a", "analyse", "analysis")
+                .optionalArgument("server", "Name, ID or UUID of a server")
+                .requirePermission("plan.server")
+                .description("View a server page")
+                .inDepthDescription("Obtain a link to the /server page of a specific server, or the current server if no arguments are given.")
+                .onTabComplete(this::serverNames)
+                .onCommand(linkCommands::onServerCommand)
+                .build();
+    }
+
+    private Subcommand serversCommand() {
+        return Subcommand.builder()
+                .aliases("servers", "serverlist", "listservers", "sl", "ls")
+                .requirePermission("plan.servers")
+                .description("List servers")
+                .inDepthDescription("List ids, names and uuids of servers in the database.")
+                .onCommand(linkCommands::onServersCommand)
+                .build();
+    }
+
+    private Subcommand playerCommand() {
+        return Subcommand.builder()
+                .aliases("player", "inspect")
+                .optionalArgument("name/uuid", "Name or UUID of a player")
+                .requirePermission("plan.player.self")
+                .description("View a player page")
+                .inDepthDescription("Obtain a link to the /player page of a specific player, or the current player.")
+                .onTabComplete(this::playerNames)
+                .onCommand(linkCommands::onPlayerCommand)
+                .build();
+    }
+
+    private Subcommand playersCommand() {
+        return Subcommand.builder()
+                .aliases("players", "pl", "playerlist", "list")
+                .requirePermission("plan.player.other")
+                .description("View players page")
+                .inDepthDescription("Obtain a link to the /players page to see a list of players.")
+                .onCommand(linkCommands::onPlayersCommand)
+                .build();
+    }
+
+    private Subcommand networkCommand() {
+        return Subcommand.builder()
+                .aliases("network", "n", "netw")
+                .requirePermission("plan.network")
+                .description("View network page")
+                .inDepthDescription("Obtain a link to the /network page, only does so on networks.")
+                .onCommand(linkCommands::onNetworkCommand)
+                .build();
+    }
+
 }

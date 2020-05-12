@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.commands;
 
+import org.apache.commons.text.TextStringBuilder;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -68,5 +70,13 @@ public class Arguments {
         List<String> copy = new ArrayList<>(args);
         if (!copy.isEmpty()) copy.remove(0);
         return new Arguments(copy);
+    }
+
+    public String concatenate(String separator) {
+        return new TextStringBuilder().appendWithSeparators(args, separator).build();
+    }
+
+    public boolean isEmpty() {
+        return args.isEmpty();
     }
 }

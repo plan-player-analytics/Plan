@@ -16,33 +16,41 @@
  */
 package com.djrapitops.plan.commands.use;
 
-import java.util.Collection;
-import java.util.function.UnaryOperator;
+import org.bukkit.command.CommandSender;
 
-public interface MessageBuilder {
+import java.util.Optional;
+import java.util.UUID;
 
-    MessageBuilder addPart(String msg);
+public class BukkitCMDSender implements CMDSender {
 
-    MessageBuilder newLine();
+    final CommandSender sender;
 
-    MessageBuilder link(String address);
-
-    MessageBuilder command(String command);
-
-    MessageBuilder hover(String text);
-
-    MessageBuilder hover(String... text);
-
-    MessageBuilder hover(Collection<String> text);
-
-    MessageBuilder indent(int spaces);
-
-    MessageBuilder tabular(CharSequence columnSeparator);
-
-    default MessageBuilder apply(UnaryOperator<MessageBuilder> operation) {
-        return operation.apply(this);
+    public BukkitCMDSender(CommandSender sender) {
+        this.sender = sender;
     }
 
-    void send();
+    @Override
+    public MessageBuilder buildMessage() {
+        return new BukkitPartBuilder(this);
+    }
 
+    @Override
+    public Optional<String> getPlayerName() {
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean hasPermission(String permission) {
+        return sender.hasPermission(permission);
+    }
+
+    @Override
+    public Optional<UUID> getUUID() {
+        return Optional.empty();
+    }
+
+    @Override
+    public void send(String msg) {
+        sender.sendMessage(msg);
+    }
 }
