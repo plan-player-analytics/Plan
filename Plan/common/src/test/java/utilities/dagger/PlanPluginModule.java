@@ -16,7 +16,7 @@
  */
 package utilities.dagger;
 
-import com.djrapitops.plan.commands.PlanCommand;
+import com.djrapitops.plan.commands.OldPlanCommand;
 import com.djrapitops.plan.gathering.importing.EmptyImportSystem;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -39,7 +39,7 @@ public interface PlanPluginModule {
 
     @Binds
     @Named("mainCommand")
-    CommandNode bindMainCommand(PlanCommand command);
+    CommandNode bindMainCommand(OldPlanCommand command);
 
     @Binds
     ImportSystem bindImportSystem(EmptyImportSystem emptyImportSystem);

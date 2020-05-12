@@ -17,6 +17,7 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.commands.PlanProxyCommand;
+import com.djrapitops.plan.commands.use.Subcommand;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
@@ -110,6 +111,11 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
     @Override
     public void onReload() {
         // Nothing to be done, systems are disabled
+    }
+
+    @Override
+    public void registerCommand(Subcommand subcommand) {
+        throw new UnsupportedOperationException();
     }
 
     @Override

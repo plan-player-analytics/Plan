@@ -17,6 +17,7 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.commands.PlanProxyCommand;
+import com.djrapitops.plan.commands.use.Subcommand;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
@@ -88,6 +89,18 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
     @Override
     public void onReload() {
         // Nothing to be done, systems are disabled
+    }
+
+    @Override
+    public void registerCommand(Subcommand command) {
+        if (command == null) {
+            logger.warn("Attempted to register a null command!");
+            return;
+        }
+        for (String name : command.getAliases()) {
+            throw new UnsupportedOperationException();
+//            getProxy().getPluginManager().registerCommand(this, new BungeeCommand(command, name));
+        }
     }
 
     @Override
