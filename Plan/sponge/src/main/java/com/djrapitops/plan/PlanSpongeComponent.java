@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.commands.PlanCommand;
+import com.djrapitops.plan.commands.OldPlanCommand;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.modules.APFModule;
 import com.djrapitops.plan.modules.PlaceholderModule;
@@ -46,7 +46,7 @@ import javax.inject.Singleton;
 })
 public interface PlanSpongeComponent {
 
-    PlanCommand planCommand();
+    OldPlanCommand planCommand();
 
     PlanSystem system();
 

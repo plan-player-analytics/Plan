@@ -41,7 +41,7 @@ public class Subcommand {
     }
 
     public static SubcommandBuilder builder() {
-        return new Builder();
+        return new Builder<>();
     }
 
     public String getPrimaryAlias() {
@@ -76,7 +76,7 @@ public class Subcommand {
         return argumentResolver;
     }
 
-    public static class Builder implements SubcommandBuilder {
+    public static class Builder<T extends SubcommandBuilder> implements SubcommandBuilder {
         private final Subcommand subcommand;
 
         private Builder() {
@@ -88,60 +88,60 @@ public class Subcommand {
         }
 
         @Override
-        public SubcommandBuilder alias(String alias) {
+        public T alias(String alias) {
             subcommand.aliases.add(alias);
             if (subcommand.primaryAlias == null) subcommand.primaryAlias = alias;
-            return this;
+            return (T) this;
         }
 
         @Override
-        public SubcommandBuilder aliases(String... aliases) {
+        public T aliases(String... aliases) {
             for (String alias : aliases) {
                 alias(alias);
             }
-            return this;
+            return (T) this;
         }
 
         @Override
-        public SubcommandBuilder requirePermission(String permission) {
+        public T requirePermission(String permission) {
             subcommand.requiredPermissions.add(permission);
-            return this;
+            return (T) this;
         }
 
         @Override
-        public SubcommandBuilder description(String description) {
+        public T description(String description) {
             subcommand.description = description;
-            return this;
+            return (T) this;
         }
 
         @Override
-        public SubcommandBuilder inDepthDescription(String... lines) {
+        public T inDepthDescription(String... lines) {
             subcommand.inDepthDescription.addAll(Arrays.asList(lines));
-            return this;
+            return (T) this;
         }
 
         @Override
-        public SubcommandBuilder requiredArgument(String name, String description) {
+        public T requiredArgument(String name, String description) {
             subcommand.arguments.add(new ArgumentDescriptor(name, description, true));
-            return this;
+            return (T) this;
         }
 
         @Override
-        public SubcommandBuilder optionalArgument(String name, String description) {
+        public T optionalArgument(String name, String description) {
             subcommand.arguments.add(new ArgumentDescriptor(name, description, false));
-            return this;
+            return (T) this;
         }
 
         @Override
-        public SubcommandBuilder onCommand(BiConsumer<CMDSender, Arguments> executor) {
+        public T onCommand(BiConsumer<CMDSender, Arguments> executor) {
             subcommand.executor = executor;
-            return this;
+            return (T) this;
         }
 
         @Override
-        public SubcommandBuilder onTabComplete(BiFunction<CMDSender, Arguments, List<String>> resolver) {
+        public T onTabComplete(BiFunction<CMDSender, Arguments, List<String>> resolver) {
             subcommand.argumentResolver = resolver;
-            return this;
+            return (T) this;
         }
 
         @Override

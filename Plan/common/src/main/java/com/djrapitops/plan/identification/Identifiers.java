@@ -52,17 +52,31 @@ public class Identifiers {
      * @throws BadRequestException If server parameter is not defined or the server is not in the database.
      */
     public UUID getServerUUID(Request request) {
-        String serverIndentifier = request.getQuery().get("server")
+        String identifier = request.getQuery().get("server")
                 .orElseThrow(() -> new BadRequestException("'server' parameter was not defined."));
 
-        Optional<UUID> parsed = UUIDUtility.parseFromString(serverIndentifier);
-        return parsed.orElseGet(() -> getServerUUIDFromName(serverIndentifier));
+        Optional<UUID> parsed = UUIDUtility.parseFromString(identifier);
+        return parsed.orElseGet(() -> getServerUUIDFromName(identifier).orElseThrow(
+                () -> new BadRequestException("Given 'server' was not found in the database: '" + identifier + "'")
+        ));
     }
 
-    private UUID getServerUUIDFromName(String serverName) {
+    /**
+     * Obtain UUID of the server.
+     *
+     * @param identifier Identifier (name or uuid string) of the server
+     * @return UUID of the server.
+     * @throws BadRequestException If the server is not in the database.
+     */
+    public Optional<UUID> getServerUUID(String identifier) {
+        Optional<UUID> parsed = UUIDUtility.parseFromString(identifier);
+        if (parsed.isPresent()) return parsed;
+        return getServerUUIDFromName(identifier);
+    }
+
+    private Optional<UUID> getServerUUIDFromName(String serverName) {
         return dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverName))
-                .map(Server::getUuid)
-                .orElseThrow(() -> new BadRequestException("Given 'server' was not found in the database: '" + serverName + "'"));
+                .map(Server::getUuid);
     }
 
     /**

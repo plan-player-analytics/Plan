@@ -31,6 +31,8 @@ public class CommandWithSubcommands extends Subcommand {
 
     private final List<Subcommand> subcommands;
     private BiConsumer<CMDSender, Arguments> fallback;
+    private BiConsumer<RuntimeException, CMDSender> exceptionHandler;
+    private ColorScheme colors;
 
     private CommandWithSubcommands() {
         subcommands = new ArrayList<>();
@@ -41,13 +43,11 @@ public class CommandWithSubcommands extends Subcommand {
     }
 
     public void onHelp(CMDSender sender, Arguments arguments) {
-        MessageBuilder message = sender.buildMessage()
-                .addPart("Header").newLine().newLine();
-        new HelpFormatter(/* TODO */new ColorScheme("§2", "§7", "§f"), getPrimaryAlias(),
-                subcommands.stream().filter(sender::hasAllPermissionsFor).collect(Collectors.toList()))
-                .addSubcommands(message);
-
-        message.newLine().addPart("Footer")
+        List<Subcommand> hasPermissionFor = subcommands.stream().filter(sender::hasAllPermissionsFor).collect(Collectors.toList());
+        sender.buildMessage()
+                .addPart("Header").newLine().newLine()
+                .apply(new HelpFormatter(colors, getPrimaryAlias(), hasPermissionFor)::addSubcommands)
+                .newLine().addPart("Footer")
                 .send();
     }
 
@@ -56,6 +56,14 @@ public class CommandWithSubcommands extends Subcommand {
             sender.send(/* TODO */"NO PERMISSION");
             return;
         }
+        try {
+            executeCommand(sender, arguments);
+        } catch (RuntimeException e) {
+            exceptionHandler.accept(e, sender);
+        }
+    }
+
+    public void executeCommand(CMDSender sender, Arguments arguments) {
         Optional<String> gotAlias = arguments.get(0);
         if (gotAlias.isPresent()) {
             String alias = gotAlias.get();
@@ -69,7 +77,7 @@ public class CommandWithSubcommands extends Subcommand {
                             continue;
                         }
                         subcommand.getExecutor().accept(sender, arguments.removeFirst());
-                        break;
+                        return;
                     }
                 }
             }
@@ -101,7 +109,7 @@ public class CommandWithSubcommands extends Subcommand {
         return options;
     }
 
-    public static class Builder extends Subcommand.Builder {
+    public static class Builder extends Subcommand.Builder<Builder> {
         private final CommandWithSubcommands command;
 
         private Builder() {
@@ -115,6 +123,11 @@ public class CommandWithSubcommands extends Subcommand {
 
         public Builder subcommand(Subcommand subcommand) {
             command.subcommands.add(subcommand);
+            return this;
+        }
+
+        public Builder subcommandOnCondition(boolean condition, Subcommand subcommand) {
+            if (condition) command.subcommands.add(subcommand);
             return this;
         }
 
@@ -136,11 +149,23 @@ public class CommandWithSubcommands extends Subcommand {
             });
         }
 
+        public Builder exceptionHandler(BiConsumer<RuntimeException, CMDSender> exceptionHandler) {
+            command.exceptionHandler = exceptionHandler;
+            return this;
+        }
+
+        public Builder colorScheme(ColorScheme colors) {
+            command.colors = colors;
+            return this;
+        }
+
         public CommandWithSubcommands build() {
-            super.build();
-            if (command.fallback == null) fallback(command::onHelp);
             onCommand(command::onCommand);
             onTabComplete(command::onTabComplete);
+            super.build();
+            if (command.fallback == null) fallback(command::onHelp);
+            if (command.exceptionHandler == null) exceptionHandler((error, sender) -> {throw error;});
+            if (command.colors == null) colorScheme(new ColorScheme("§2", "§7", "§f"));
             return command;
         }
     }

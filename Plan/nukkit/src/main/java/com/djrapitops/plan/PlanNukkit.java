@@ -17,7 +17,8 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.addons.placeholderapi.NukkitPlaceholderRegistrar;
-import com.djrapitops.plan.commands.PlanCommand;
+import com.djrapitops.plan.commands.OldPlanCommand;
+import com.djrapitops.plan.commands.use.Subcommand;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -71,7 +72,7 @@ public class PlanNukkit extends NukkitPlugin implements PlanPlugin {
             logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
-        PlanCommand command = component.planCommand();
+        OldPlanCommand command = component.planCommand();
         command.registerCommands();
         registerCommand("plan", command);
         if (system != null) {
@@ -112,6 +113,11 @@ public class PlanNukkit extends NukkitPlugin implements PlanPlugin {
     @Override
     public boolean isReloading() {
         return reloading;
+    }
+
+    @Override
+    public void registerCommand(Subcommand subcommand) {
+        throw new UnsupportedOperationException();
     }
 
     @Override

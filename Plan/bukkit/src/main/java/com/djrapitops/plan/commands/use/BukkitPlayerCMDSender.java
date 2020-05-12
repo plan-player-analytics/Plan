@@ -14,29 +14,34 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.modules.bukkit;
+package com.djrapitops.plan.commands.use;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.commands.OldPlanCommand;
-import com.djrapitops.plugin.command.CommandNode;
-import dagger.Binds;
-import dagger.Module;
+import org.bukkit.entity.Player;
 
-import javax.inject.Named;
+import java.util.Optional;
+import java.util.UUID;
 
-/**
- * Dagger module for binding Plan instance.
- *
- * @author Rsl1122
- */
-@Module
-public interface BukkitPlanModule {
+public class BukkitPlayerCMDSender extends BukkitCMDSender {
 
-    @Binds
-    PlanPlugin bindPlanPlugin(Plan plugin);
+    final Player player;
 
-    @Binds
-    @Named("mainCommand")
-    CommandNode bindMainCommand(OldPlanCommand command);
+    public BukkitPlayerCMDSender(Player player) {
+        super(player);
+        this.player = player;
+    }
+
+    @Override
+    public Optional<String> getPlayerName() {
+        return Optional.of(player.getName());
+    }
+
+    @Override
+    public boolean hasPermission(String permission) {
+        return player.hasPermission(permission);
+    }
+
+    @Override
+    public Optional<UUID> getUUID() {
+        return Optional.of(player.getUniqueId());
+    }
 }
