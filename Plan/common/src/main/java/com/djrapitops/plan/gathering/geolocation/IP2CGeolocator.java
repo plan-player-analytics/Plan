@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -75,12 +76,16 @@ public class IP2CGeolocator implements Geolocator {
         HttpURLConnection connection = null;
         try {
             connection = (HttpURLConnection) new URL("http://ip2c.org/" + address).openConnection();
+            connection.setConnectTimeout((int) TimeUnit.MINUTES.toMillis(1L));
+            connection.setReadTimeout((int) TimeUnit.MINUTES.toMillis(1L));
             connection.setUseCaches(false);
             connection.connect();
             try (
-                    InputStream in = connection.getInputStream()
+                    InputStream in = connection.getInputStream();
+                    OutputStream out = connection.getOutputStream()
             ) {
                 String answer = readAnswer(in);
+                out.close();
                 return resolveIP(answer);
             }
         } finally {
