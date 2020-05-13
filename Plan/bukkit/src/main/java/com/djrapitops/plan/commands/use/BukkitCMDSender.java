@@ -53,4 +53,9 @@ public class BukkitCMDSender implements CMDSender {
     public void send(String msg) {
         sender.sendMessage(msg);
     }
+
+    @Override
+    public ChatFormatter getFormatter() {
+        return new ConsoleChatFormatter();
+    }
 }

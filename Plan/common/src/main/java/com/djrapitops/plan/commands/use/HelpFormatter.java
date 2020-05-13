@@ -25,28 +25,44 @@ import java.util.Set;
 
 public class HelpFormatter {
 
+    private final CMDSender sender;
     private final ColorScheme colors;
     private final String mainCommand;
     private final List<Subcommand> subcommands;
 
     public HelpFormatter(
-            ColorScheme colors, String mainCommand, List<Subcommand> subcommands
+            CMDSender sender, ColorScheme colors, String mainCommand, List<Subcommand> subcommands
     ) {
+        this.sender = sender;
         this.colors = colors;
         this.mainCommand = mainCommand;
         this.subcommands = subcommands;
     }
 
     public MessageBuilder addSubcommands(MessageBuilder message) {
-        for (Subcommand subcommand : subcommands) {
-            String alias = subcommand.getPrimaryAlias();
-            message.addPart(colors.getMainColor() + mainCommand + " " + alias + "---")
-                    .hover(argumentsAndAliases(subcommand.getArguments(), subcommand.getAliases()));
-            message.addPart(colors.getSecondaryColor() + subcommand.getDescription())
-                    .hover(subcommand.getInDepthDescription());
-            message.tabular("---");
+        MessageBuilder toReturn = message;
+        String m = colors.getMainColor();
+        String s = colors.getSecondaryColor();
+        String asString = subcommands.stream()
+                .map(cmd ->
+                        m + mainCommand + " " + cmd.getPrimaryAlias() +
+                                (sender.getPlayerName().isPresent() ? "" : " " + cmd.getArgumentsAsString()) + "--" +
+                                s + cmd.getDescription() + "\n"
+                ).collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+                .toString();
+        List<String[]> table = sender.getFormatter().tableAsParts(asString, "--");
+
+        for (int i = 0; i < table.size(); i++) {
+            Subcommand subcommand = subcommands.get(i);
+            String[] row = table.get(i);
+            toReturn = toReturn.addPart(row[0])
+                    .hover(argumentsAndAliases(subcommand.getArguments(), subcommand.getAliases()))
+                    .addPart(row[1])
+                    .hover(subcommand.getInDepthDescription())
+                    .newLine();
         }
-        return message;
+
+        return toReturn;
     }
 
     private List<String> argumentsAndAliases(List<Subcommand.ArgumentDescriptor> descriptors, Set<String> aliases) {
