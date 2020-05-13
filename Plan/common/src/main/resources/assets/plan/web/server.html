@@ -1421,21 +1421,21 @@
                         type: s.type.spline,
                         tooltip: s.tooltip.twoDecimals,
                         data: json.avg_ping_series,
-                        color: json.colors.avgPing
+                        color: json.colors.avg
                     },
                     maxPing: {
                         name: s.name.maxPing,
                         type: s.type.spline,
                         tooltip: s.tooltip.zeroDecimals,
                         data: json.max_ping_series,
-                        color: json.colors.maxPing
+                        color: json.colors.max
                     },
                     minPing: {
                         name: s.name.minPing,
                         type: s.type.spline,
                         tooltip: s.tooltip.zeroDecimals,
                         data: json.min_ping_series,
-                        color: json.colors.minPing
+                        color: json.colors.min
                     }
                 };
                 lineChart('pingGraph', [series.avgPing, series.maxPing, series.minPing]);
