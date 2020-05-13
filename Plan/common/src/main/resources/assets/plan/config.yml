@@ -14,7 +14,7 @@ Plugin:
     Create_new_locale_file_on_next_enable: false
     Debug: false
     Dev: false
-    Delete_logs_after_days: 7
+    Delete_logs_after_days: 2
   Update_notifications:
     # Display update notification on the website
     Check_for_updates: true
