@@ -44,4 +44,9 @@ public class BukkitPlayerCMDSender extends BukkitCMDSender {
     public Optional<UUID> getUUID() {
         return Optional.of(player.getUniqueId());
     }
+
+    @Override
+    public ChatFormatter getFormatter() {
+        return new PlayerChatFormatter();
+    }
 }

@@ -18,7 +18,6 @@ package com.djrapitops.plan.commands.subcommands;
 
 import com.djrapitops.plan.commands.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
-import com.djrapitops.plan.commands.use.MessageBuilder;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.identification.Identifiers;
@@ -135,14 +134,18 @@ public class LinkCommands {
 
     public void onServersCommand(CMDSender sender, Arguments arguments) {
         String m = colors.getMainColor();
+        String s = colors.getSecondaryColor();
         String t = colors.getTertiaryColor();
         String serversListed = dbSystem.getDatabase()
                 .query(ServerQueries.fetchPlanServerInformationCollection())
                 .stream().sorted()
-                .map(server -> server.getId() + ":" + server.getName() + ":" + server.getUuid() + "\n")
+                .map(server -> m + server.getId() + ":" + t + server.getName() + ":" + s + server.getUuid() + "\n")
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
-        String table = ChatFormatter
-        MessageBuilder message = sender.buildMessage().addPart(t + '>' + m + " Servers; id : name : uuid").newLine();
+        sender.buildMessage()
+                .addPart(t + '>' + m + " Servers").newLine()
+                .addPart(sender.getFormatter().table(
+                        t + "id:name:uuid\n" + serversListed, ":"))
+                .send();
     }
 }

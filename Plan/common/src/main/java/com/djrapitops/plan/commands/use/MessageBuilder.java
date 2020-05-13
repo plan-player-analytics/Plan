@@ -23,6 +23,13 @@ public interface MessageBuilder {
 
     MessageBuilder addPart(String msg);
 
+    default MessageBuilder addEach(Iterable<String> iterable) {
+        for (String part : iterable) {
+            addPart(part);
+        }
+        return this;
+    }
+
     MessageBuilder newLine();
 
     MessageBuilder link(String address);
