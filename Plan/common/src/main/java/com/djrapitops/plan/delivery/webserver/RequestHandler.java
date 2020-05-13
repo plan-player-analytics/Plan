@@ -64,7 +64,7 @@ public class RequestHandler implements HttpHandler {
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
 
-    private PassBruteForceGuard bruteForceGuard;
+    private final PassBruteForceGuard bruteForceGuard;
 
     @Inject
     RequestHandler(
@@ -146,7 +146,7 @@ public class RequestHandler implements HttpHandler {
     private Request buildRequest(HttpExchange exchange) {
         String requestMethod = exchange.getRequestMethod();
         URIPath path = new URIPath(exchange.getRequestURI().getPath());
-        URIQuery query = new URIQuery(exchange.getRequestURI().getQuery());
+        URIQuery query = new URIQuery(exchange.getRequestURI().getRawQuery());
         WebUser user = getWebUser(exchange);
         Map<String, String> headers = getRequestHeaders(exchange);
         return new Request(requestMethod, path, query, user, headers);

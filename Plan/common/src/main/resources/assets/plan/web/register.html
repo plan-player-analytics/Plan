@@ -191,7 +191,7 @@
     }
 
     function checkIfRegistered(code) {
-        jsonRequest(`./auth/register?code=${encodeURI(code)}`, (json, error) => {
+        jsonRequest(`./auth/register?code=${encodeURIComponent(code)}`, (json, error) => {
             if (error) {
                 displayError('Checking registration status failed: ' + error)
             }
@@ -216,7 +216,7 @@
         if (!password || password.length < 1) {
             return displayError('You need to specify a Password');
         }
-        jsonRequest(`./auth/register?user=${encodeURI(user)}&password=${encodeURI(password)}`, (json, error) => {
+        jsonRequest(`./auth/register?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, (json, error) => {
             if (error) {
                 return displayError('Registration failed: ' + error);
             }
