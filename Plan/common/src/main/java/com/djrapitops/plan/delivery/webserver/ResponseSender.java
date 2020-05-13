@@ -45,10 +45,21 @@ public class ResponseSender {
 
     public void send() throws IOException {
         setResponseHeaders();
-        if ("bytes".equalsIgnoreCase(response.getHeaders().get("Accept-Ranges"))) {
+        if ("HEAD".equals(exchange.getRequestMethod())) {
+            sendHeadResponse();
+        } else if ("bytes".equalsIgnoreCase(response.getHeaders().get("Accept-Ranges"))) {
             sendRawBytes();
         } else {
             sendCompressed();
+        }
+    }
+
+    public void sendHeadResponse() throws IOException {
+        try {
+            exchange.getResponseHeaders().remove("Content-Length");
+            beginSend();
+        } finally {
+            exchange.getRequestBody().close();
         }
     }
 
