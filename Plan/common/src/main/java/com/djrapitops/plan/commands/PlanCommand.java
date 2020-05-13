@@ -59,6 +59,7 @@ public class PlanCommand {
                 .alias("plan")
                 .colorScheme(colors)
                 .subcommand(serverCommand())
+                .subcommand(serversCommand())
                 .subcommand(playerCommand())
                 .subcommand(playersCommand())
                 .subcommand(networkCommand())

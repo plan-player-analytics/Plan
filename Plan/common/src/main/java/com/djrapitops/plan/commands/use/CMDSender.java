@@ -44,4 +44,6 @@ public interface CMDSender {
 
     void send(String message);
 
+    ChatFormatter getFormatter();
+
 }

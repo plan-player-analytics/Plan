@@ -76,6 +76,16 @@ public class Subcommand {
         return argumentResolver;
     }
 
+    public String getArgumentsAsString() {
+        StringBuilder builder = new StringBuilder();
+        for (ArgumentDescriptor argument : getArguments()) {
+            builder.append(argument.required ? '<' + argument.name + '>' : '[' + argument.name + ']')
+                    .append(' ');
+        }
+        return builder.toString().trim();
+    }
+
+    @SuppressWarnings("unchecked")
     public static class Builder<T extends SubcommandBuilder> implements SubcommandBuilder {
         private final Subcommand subcommand;
 

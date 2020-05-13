@@ -157,7 +157,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
                 logger.warn("Attempted to register '" + name + "'-command, but it is not in plugin.yml!");
                 continue;
             }
-            registering.setExecutor(new BukkitCommand(command));
+            registering.setExecutor(new BukkitCommand(runnableFactory, command));
         }
     }
 
