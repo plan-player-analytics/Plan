@@ -17,8 +17,6 @@
 package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.SubSystem;
-import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
@@ -57,8 +55,7 @@ public class WebServer implements SubSystem {
     private final PlanFiles files;
     private final PlanConfig config;
 
-    private final ServerProperties serverProperties;
-    private Addresses addresses;
+    private final Addresses addresses;
     private final RequestHandler requestHandler;
 
     private final PluginLogger logger;
@@ -75,7 +72,6 @@ public class WebServer implements SubSystem {
             Locale locale,
             PlanFiles files,
             PlanConfig config,
-            ServerInfo serverInfo,
             Addresses addresses,
             PluginLogger logger,
             ErrorHandler errorHandler,
@@ -84,7 +80,6 @@ public class WebServer implements SubSystem {
         this.locale = locale;
         this.files = files;
         this.config = config;
-        this.serverProperties = serverInfo.getServerProperties();
         this.addresses = addresses;
 
         this.requestHandler = requestHandler;

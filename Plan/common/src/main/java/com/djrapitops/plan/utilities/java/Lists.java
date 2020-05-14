@@ -19,6 +19,7 @@ package com.djrapitops.plan.utilities.java;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
 /**
  * Methods that can be used as functional interfaces when dealing with Maps.
@@ -33,6 +34,10 @@ public class Lists {
 
     public static <V, K> List<V> create(K key) {
         return new ArrayList<>();
+    }
+
+    public static <V> Lists.Builder<V> builder(Class<V> ofType) {
+        return new Lists.Builder<>();
     }
 
     /**
@@ -84,5 +89,31 @@ public class Lists {
             mapped.add(mapper.apply(element));
         }
         return mapped;
+    }
+
+    public static class Builder<V> {
+        private final List<V> list;
+
+        private Builder() {
+            list = new ArrayList<>();
+        }
+
+        public Lists.Builder<V> add(V value) {
+            list.add(value);
+            return this;
+        }
+
+        public Lists.Builder<V> addAll(Collection<V> values) {
+            list.addAll(values);
+            return this;
+        }
+
+        public Lists.Builder<V> apply(UnaryOperator<Lists.Builder<V>> operator) {
+            return operator.apply(this);
+        }
+
+        public List<V> build() {
+            return list;
+        }
     }
 }

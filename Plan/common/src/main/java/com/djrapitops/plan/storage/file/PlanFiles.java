@@ -59,7 +59,7 @@ public class PlanFiles implements SubSystem {
     }
 
     public Path getCustomizationDirectory() {
-        return dataFolder.toPath().resolve("web");
+        return getDataDirectory().resolve("web");
     }
 
     public File getLogsFolder() {
@@ -70,6 +70,10 @@ public class PlanFiles implements SubSystem {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    public Path getLogsDirectory() {
+        return getDataDirectory().resolve("logs");
     }
 
     public File getConfigFile() {
