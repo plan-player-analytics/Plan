@@ -1,27 +1,27 @@
 Cmd - Click Me                                  || Hazme click
 Cmd - Link                                      ||   §2Link: §f
-Cmd Disable - Disabled                          || §aLos sistemas de plan estan deshabilitados. Puedes usar /planbungee reload para reiniciar el plugin.
+Cmd Disable - Disabled                          || §aLos sistemas de Plan estan deshabilitados. Puedes usar /planbungee reload para reiniciar el plugin.
 Cmd FAIL - Database not open                    || §cLa base de datos es ${0} - Por favor, prueba un poco más tarde.
 Cmd FAIL - Invalid Username                     || §cEste usuario no tiene UUID.
-Cmd FAIL - No Feature                           || §e¡Define una característica para deshabilitarlo! (currently supports ${0})
+Cmd FAIL - No Feature                           || §e¡Define una característica para deshabilitarla! (currently supports ${0})
 Cmd FAIL - No Permission                        || §cNo tienes el permiso requerido.
 Cmd FAIL - Require only one Argument            || §cArgumento único requerido ${1}
 Cmd FAIL - Requires Arguments                   || §cArgumentos requeridos (${0}) ${1}
-Cmd FAIL - Unknown Username                     || §cEste usuario no ha sido visto en el servidor.
+Cmd FAIL - Unknown Username                     || §cEste usuario no ha sido visto en el servidor
 Cmd FAIL - WebUser does not exists              || §c¡Este usuario no existe!
 Cmd FAIL - WebUser exists                       || §c¡Este usuario ya existe!
 Cmd Header - Analysis                           || > §2Resultados del análisis
 Cmd Header - Info                               || > §2Análisis del jugador
 Cmd Header - Inspect                            || > §2Jugador: §f${0}
-Cmd Header - Network                            || > §2Pagina de red
+Cmd Header - Network                            || > §2Paágina de red
 Cmd Header - Players                            || > §2Jugadores
-Cmd Header - Search                             || > §2${0} Resultador para §f${1}§2:
+Cmd Header - Search                             || > §2${0} Resultados para §f${1}§2:
 Cmd Header - Servers                            || > §2Servidores
 Cmd Header - Web Users                          || > §2${0} Usuarios web
 Cmd Info - Bungee Connection                    ||   §2Conectado al Proxy: §f${0}
-Cmd Info - Database                             ||   §2Base de datos activa: §f${0}
-Cmd Info - Reload Complete                      || §aRecarga completada.
-Cmd Info - Reload Failed                        || §cUn error ocurrio intentando recargar el plugin. Se recomienda su reseteo.
+Cmd Info - Database                             ||   §2Base de datos activas: §f${0}
+Cmd Info - Reload Complete                      || §aRecarga completada
+Cmd Info - Reload Failed                        || §cUn error ocurrió intentando recargar el plugin. Se recomienda su reseteo.
 Cmd Info - Update                               ||   §2Actualización disponible: §f${0}
 Cmd Info - Version                              ||   §2Versión: §f${0}
 Cmd Notify - No WebUser                         || Puede que no tengas un usuario web, usa /plan register <contraseña>
@@ -29,7 +29,7 @@ Cmd Notify - WebUser register                   || Nuevo usuario registrado: '${
 Cmd Qinspect - Activity Index                   ||   §2Índice de actividad: §f${0} | ${1}
 Cmd Qinspect - Deaths                           ||   §2Muertes: §f${0}
 Cmd Qinspect - Geolocation                      ||   §2Logueado desde: §f${0}
-Cmd Qinspect - Last Seen                        ||   §2última vez visto: §f${0}
+Cmd Qinspect - Last Seen                        ||   §2Última vez visto: §f${0}
 Cmd Qinspect - Longest Session                  ||   §2Sesión más larga: §f${0}
 Cmd Qinspect - Mob Kills                        ||   §2Asesinatos a mobs: §f${0}
 Cmd Qinspect - Player Kills                     ||   §2Asesinatos a jugadores: §f${0}
@@ -57,8 +57,8 @@ Command Help - /plan manage raw                 || Ver los datos JSON frescos de
 Command Help - /plan manage remove              || Borra los datos de un jugador.
 Command Help - /plan manage restore             || Restaura un anterior Backup.
 Command Help - /plan manage uninstalled         || Marca como desinstalado un servidor en la base de datos.
-Command Help - /plan network                    || Ver la pagina de la red.
-Command Help - /plan players                    || Ver la pagina de los jugadores.
+Command Help - /plan network                    || Ver la página de la red.
+Command Help - /plan players                    || Ver la página de los jugadores.
 Command Help - /plan qinspect                   || Ver información de los jugadores en el juego.
 Command Help - /plan register                   || Registrar un usuario web.
 Command Help - /plan reload                     || Resetear Plan.
@@ -166,44 +166,44 @@ HTML - LABEL_SERVER_OCCUPIED                    || Servidor ocupado.
 HTML - LABEL_SESSION_ENDED                      ||  Acabado.
 HTML - LABEL_SESSION_MEDIAN                     || Sesión media.
 HTML - LABEL_TIMES_KICKED                       || Veces echado.
-HTML - LABEL_TOTAL_PLAYERS                      || Jugadores totales.
-HTML - LABEL_TOTAL_PLAYTIME                     || Jugabilidad total.
-HTML - LABEL_UNIQUE_PLAYERS                     || Jugadores únicos.
+HTML - LABEL_TOTAL_PLAYERS                      || Jugadores totales
+HTML - LABEL_TOTAL_PLAYTIME                     || Jugabilidad total
+HTML - LABEL_UNIQUE_PLAYERS                     || Jugadores únicos
 HTML - LABEL_WEEK_DAYS                          || 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
 HTML - LINK_BACK_NETWORK                        || Página web.
-HTML - LINK_BACK_SERVER                         || Página del servidor.
+HTML - LINK_BACK_SERVER                         || Página del servidor
 HTML - LINK_CHANGELOG                           || Ver el registro de cambios.
-HTML - LINK_DISCORD                             || Soporte general en Discord.
-HTML - LINK_DOWNLOAD                            || Descarga.
-HTML - LINK_ISSUES                              || Reportar errores.
-HTML - LINK_NIGHT_MODE                          || Modo noche.
-HTML - LINK_PLAYER_PAGE                         || Pagina de jugador.
-HTML - LINK_QUICK_VIEW                          || Vista rápida.
-HTML - LINK_SERVER_ANALYSIS                     || Análisis de servidor.
+HTML - LINK_DISCORD                             || Soporte general en Discord
+HTML - LINK_DOWNLOAD                            || Descarga
+HTML - LINK_ISSUES                              || Reportar errores
+HTML - LINK_NIGHT_MODE                          || Modo noche
+HTML - LINK_PLAYER_PAGE                         || Pagina de jugador
+HTML - LINK_QUICK_VIEW                          || Vista rápida
+HTML - LINK_SERVER_ANALYSIS                     || Análisis de servidor
 HTML - LINK_WIKI                                || Plan Wiki, Tutoriales & Documentación.
-HTML - LOCAL_MACHINE                            || Máquina local.
-HTML - NAV_PLUGINS                              || Plugins.
+HTML - LOCAL_MACHINE                            || Máquina local
+HTML - NAV_PLUGINS                              || Plugins
 HTML - NEW_CALENDAR                             || Nuevo:
-HTML - NO_KILLS                                 || Sin muertes.
-HTML - OFFLINE                                  ||  Desconectado.
-HTML - ONLINE                                   ||  Conectado.
-HTML - PER_DAY                                  || / Dia.
-HTML - PLAYERS_TEXT                             || Jugadores.
-HTML - SESSION                                  || Sesión.
-HTML - SIDE_GEOLOCATIONS                        || Geolocalizaciones.
+HTML - NO_KILLS                                 || Sin muertes
+HTML - OFFLINE                                  ||  Desconectado
+HTML - ONLINE                                   ||  Conectado
+HTML - PER_DAY                                  || / Dia
+HTML - PLAYERS_TEXT                             || Jugadores
+HTML - SESSION                                  || Sesión
+HTML - SIDE_GEOLOCATIONS                        || Geolocalizaciones
 HTML - SIDE_INFORMATION                         || INFORMACIÓN
-HTML - SIDE_NETWORK_OVERVIEW                    || Vista general de red.
-HTML - SIDE_OVERVIEW                            || Vista general.
-HTML - SIDE_PERFORMANCE                         || Rendimiento.
-HTML - SIDE_PLAYER_LIST                         || Lista de jugadores.
-HTML - SIDE_PLAYERBASE                          || Base de jugadores.
-HTML - SIDE_PLAYERBASE_OVERVIEW                 || Vista general de base de jugadores.
-HTML - SIDE_PLUGINS                             || PLUGINS.
-HTML - SIDE_PVP_PVE                             || PvP y PvE.
-HTML - SIDE_SERVERS                             || Servidores.
+HTML - SIDE_NETWORK_OVERVIEW                    || Vista general de red
+HTML - SIDE_OVERVIEW                            || Vista general
+HTML - SIDE_PERFORMANCE                         || Rendimiento
+HTML - SIDE_PLAYER_LIST                         || Lista de jugadores
+HTML - SIDE_PLAYERBASE                          || Base de jugadores
+HTML - SIDE_PLAYERBASE_OVERVIEW                 || Vista general de base de jugadores
+HTML - SIDE_PLUGINS                             || PLUGINS
+HTML - SIDE_PVP_PVE                             || PvP y PvE
+HTML - SIDE_SERVERS                             || Servidores
 HTML - SIDE_SERVERS_TITLE                       || SERVERS
 HTML - SIDE_SESSIONS                            || Sesiones
-HTML - SIDE_TO_MAIN_PAGE                        || hasta la página principal.
+HTML - SIDE_TO_MAIN_PAGE                        || hasta la página principal
 HTML - TEXT_CLICK_TO_EXPAND                     || Haz clic para expandir
 HTML - TEXT_CONTRIBUTORS_CODE                   || código de contribuidor
 HTML - TEXT_CONTRIBUTORS_LOCALE                 || traductor
@@ -238,41 +238,41 @@ HTML - TITLE_GRAPH_DAY_BY_DAY                   || Día a día
 HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || Actividad online de red
 HTML - TITLE_GRAPH_PUNCHCARD                    || Tarjeta por 30 días
 HTML - TITLE_INSIGHTS                           || Ideas por 30 días
-HTML - TITLE_IS_AVAILABLE                       || esta disponible
-HTML - TITLE_LAST_24_HOURS                      || últimas 24 horas
-HTML - TITLE_LAST_30_DAYS                       || últimos 30 dias
-HTML - TITLE_LAST_7_DAYS                        || últimos 7 días
-HTML - TITLE_LAST_CONNECTED                     || última vez conectado
+HTML - TITLE_IS_AVAILABLE                       || está disponible
+HTML - TITLE_LAST_24_HOURS                      || Últimas 24 horas
+HTML - TITLE_LAST_30_DAYS                       || Últimos 30 dias
+HTML - TITLE_LAST_7_DAYS                        || Últimos 7 días
+HTML - TITLE_LAST_CONNECTED                     || Última vez conectado
 HTML - TITLE_LENGTH                             ||  Duración
 HTML - TITLE_MOST_PLAYED_WORLD                  || Mundo más jugado
 HTML - TITLE_NETWORK                            || Red
 HTML - TITLE_NETWORK_AS_NUMBERS                 || Red en números
 HTML - TITLE_NOW                                || Ahora
 HTML - TITLE_ONLINE_ACTIVITY                    || Actividad online
-HTML - TITLE_ONLINE_ACTIVITY_AS_NUMBERS         || Actividad online en numeros
-HTML - TITLE_ONLINE_ACTIVITY_OVERVIEW           || Actividad online en vista general
+HTML - TITLE_ONLINE_ACTIVITY_AS_NUMBERS         || Actividad online en números
+HTML - TITLE_ONLINE_ACTIVITY_OVERVIEW           || Vista general de la actividad online
 HTML - TITLE_PERFORMANCE_AS_NUMBERS             || Rendimiento en números
 HTML - TITLE_PING                               || Ping
 HTML - TITLE_PLAYER                             || Jugador
 HTML - TITLE_PLAYER_OVERVIEW                    || Vista general de jugador
-HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Desarrollo de base de jugador.
+HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Desarrollo de la base de jugadores
 HTML - TITLE_PVP_DEATHS                         || Asesinatos PvP recientes
 HTML - TITLE_PVP_KILLS                          || Muertes PvP recientes
-HTML - TITLE_PVP_PVE_NUMBERS                    || PvP y PvE en numeros
+HTML - TITLE_PVP_PVE_NUMBERS                    || PvP y PvE en números
 HTML - TITLE_RECENT_KILLS                       || Asesinatos recientes
 HTML - TITLE_RECENT_SESSIONS                    || Sesiones recientes
 HTML - TITLE_SEEN_NICKNAMES                     || Nicks vistos
 HTML - TITLE_SERVER                             || Servidor
 HTML - TITLE_SERVER_AS_NUMBERS                  || Servidor en números
-HTML - TITLE_SERVER_OVERVIEW                    || Servidor en vista general
+HTML - TITLE_SERVER_OVERVIEW                    || Vista general del servidor
 HTML - TITLE_SERVER_PLAYTIME                    || Jugabilidad en números
-HTML - TITLE_SERVER_PLAYTIME_30                 || Jugabilidad en 30 días
+HTML - TITLE_SERVER_PLAYTIME_30                 || Jugabilidad de 30 días
 HTML - TITLE_SESSION_START                      || Sesión iniciada
 HTML - TITLE_THEME_SELECT                       || Selección de tema
 HTML - TITLE_TITLE_PLAYER_PUNCHCARD             || Tarjeta
 HTML - TITLE_TPS                                || TPS
 HTML - TITLE_TREND                              || Tendencia
-HTML - TITLE_TRENDS                             || Tendencias por 30 días
+HTML - TITLE_TRENDS                             || Tendencias de 30 días
 HTML - TITLE_VERSION                            || Versión
 HTML - TITLE_WEEK_COMPARISON                    || Comparación semanal
 HTML - TITLE_WORLD                              || Carga de mundo
@@ -281,7 +281,7 @@ HTML - TITLE_WORST_PING                         || Peor ping
 HTML - TOTAL_ACTIVE_TEXT                        || Activos totales
 HTML - TOTAL_AFK                                || AFK total
 HTML - TOTAL_PLAYERS                            || Jugadores totales
-HTML - UNIQUE_CALENDAR                          || únicos:
+HTML - UNIQUE_CALENDAR                          || Únicos:
 HTML - UNIT_CHUNKS                              || Chunks
 HTML - UNIT_ENTITIES                            || Entidades
 HTML - UNIT_NO_DATA                             || Sin datos
@@ -331,24 +331,24 @@ Manage - Fail File not found                    || > §cNingún archivo encontra
 Manage - Fail Incorrect Database                || > §c'${0}' no es una base de datos permitida.
 Manage - Fail No Exporter                       || §eEl exportador '${0}' no existe
 Manage - Fail No Importer                       || §eEl importador '${0}' no existe
-Manage - Fail No Server                         || Ningun servidor encontrado con los parámetros dados.
+Manage - Fail No Server                         || Ningún servidor encontrado con los parámetros dados.
 Manage - Fail Same Database                     || > §c¡No se puede operar desde y para la misma base de datos!
 Manage - Fail Same server                       || No se ha podido marcar el servidor como desinstalado (Estas en el)
 Manage - Fail, Confirmation                     || > §cAñade el argumento '-a' para confirmar la ejecución: ${0}
 Manage - List Importers                         || Importadores: 
 Manage - Remind HotSwap                         || §eRecuerda cambiarte a la nueva base de datos (/plan m hotswap ${0}) & recarga el plugin.
 Manage - Start                                  || > §2Procesando datos..
-Manage - Success                                || > §a¡éxito!
+Manage - Success                                || > §a¡Éxito!
 Negative                                        || No
 Positive                                        || Si
 Today                                           || 'Hoy'
 Unavailable                                     || No disponible
 Unknown                                         || Desconocido
 Version - DEV                                   ||  Este es un lanzamiento para DEV.
-Version - Latest                                || Estas usando la versión mas reciente.
+Version - Latest                                || Estas usando la versión más reciente.
 Version - New                                   || Nuevo lanzamiento (${0}) disponible ${1}
-Version - New (old)                             || Nueva version disponible en ${0}
-Version FAIL - Read info (old)                  || Error en comprobar la nueva versión en numeros
+Version - New (old)                             || Nueva versión disponible en ${0}
+Version FAIL - Read info (old)                  || Error en comprobar el numero de la nueva versión.
 Version FAIL - Read versions.txt                || La información de la version no se ha podido cargar desde Github/versions.txt
 Web User Listing                                ||   §2${0} §7: §f${1}
 WebServer - Notify HTTP                         || WebServer: No Certificado -> Usando HTTP-server para visualización.
@@ -357,7 +357,7 @@ WebServer - Notify HTTPS User Auth              || WebServer: ¡Autorización de
 WebServer - Notify no Cert file                 || WebServer: Certificado de archivo KeyStore no encontrado: ${0}
 WebServer - Notify Using Proxy                  || WebServer: Modo Proxy HTTPS habilitado, asegurate que tu reverse-proxy está usando HTTPS y los puntos del Proxy Plan AlternativeIP.Link
 WebServer FAIL - EOF                            || WebServer: EOF leyendo el archivo de Certificado. (Comprueba que el archivo no está vacío)
-WebServer FAIL - Port Bind                      || WebServer no se ha iniciado exitósamente. ¿Esta el puerto (${0}) en uso?
+WebServer FAIL - Port Bind                      || WebServer no se ha iniciado exitosamente. ¿Esta el puerto (${0}) en uso?
 WebServer FAIL - SSL Context                    || WebServer: Inicialización de Contexto SSL erroneo.
 WebServer FAIL - Store Load                     || WebServer: Carga del Certificado SSL erronea.
 Yesterday                                       || 'Ayer'
