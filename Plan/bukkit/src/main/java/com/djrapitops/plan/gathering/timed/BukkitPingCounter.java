@@ -89,8 +89,7 @@ public class BukkitPingCounter extends AbsRunnable implements Listener {
             } catch (NoSuchMethodException | IllegalAccessException | NoSuchFieldException reflectiveEx) {
                 Logger.getGlobal().log(
                         Level.WARNING,
-                        "Plan: Reflective exception in static initializer of PingCountTimer",
-                        reflectiveEx
+                        "Plan: Could not register Ping counter due to " + reflectiveEx
                 );
             } catch (IllegalArgumentException e) {
                 Logger.getGlobal().log(
