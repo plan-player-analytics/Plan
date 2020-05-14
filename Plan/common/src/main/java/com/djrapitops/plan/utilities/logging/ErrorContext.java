@@ -48,6 +48,10 @@ public class ErrorContext {
         return lines;
     }
 
+    public void merge(ErrorContext context) {
+        this.related.addAll(context.related);
+    }
+
     public static class Builder {
         private final ErrorContext context;
 
