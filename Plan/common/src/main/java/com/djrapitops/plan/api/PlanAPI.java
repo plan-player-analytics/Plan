@@ -21,8 +21,8 @@ import com.djrapitops.plan.api.data.ServerContainer;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.identification.UUIDUtility;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -58,9 +58,9 @@ public interface PlanAPI {
                 DBSystem dbSystem,
                 UUIDUtility uuidUtility,
                 PluginLogger logger,
-                ErrorHandler errorHandler
+                ErrorLogger errorLogger
         ) {
-            set(new CommonAPI(dbSystem, uuidUtility, logger, errorHandler));
+            set(new CommonAPI(dbSystem, uuidUtility, logger, errorLogger));
         }
     }
 

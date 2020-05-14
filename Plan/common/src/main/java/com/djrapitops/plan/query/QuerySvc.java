@@ -23,9 +23,9 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.QueryAPIExecutable;
 import com.djrapitops.plan.storage.database.queries.QueryAPIQuery;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -43,7 +43,7 @@ public class QuerySvc implements QueryService {
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final PluginLogger logger;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     private final Set<Consumer<UUID>> playerRemoveSubscribers;
     private final Set<VoidFunction> clearSubscribers;
@@ -53,12 +53,12 @@ public class QuerySvc implements QueryService {
             DBSystem dbSystem,
             ServerInfo serverInfo,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.logger = logger;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         playerRemoveSubscribers = new HashSet<>();
         clearSubscribers = new HashSet<>();
@@ -108,7 +108,7 @@ public class QuerySvc implements QueryService {
                 subscriber.accept(playerUUID);
             } catch (DBOpException e) {
                 logger.warn("User of Query API (" + subscriber.getClass().getName() + ") ran into exception, failed safely:");
-                errorHandler.log(L.WARN, QueryService.class, e);
+                errorLogger.log(L.WARN, QueryService.class, e);
             }
         });
     }
@@ -119,7 +119,7 @@ public class QuerySvc implements QueryService {
                 function.apply();
             } catch (DBOpException e) {
                 logger.warn("User of Query API (" + function.getClass().getName() + ") ran into exception, failed safely:");
-                errorHandler.log(L.WARN, QueryService.class, e);
+                errorLogger.log(L.WARN, QueryService.class, e);
             }
         });
     }

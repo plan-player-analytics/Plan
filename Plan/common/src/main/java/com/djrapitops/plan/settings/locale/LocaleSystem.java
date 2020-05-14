@@ -22,9 +22,9 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.locale.lang.*;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -47,7 +47,7 @@ public class LocaleSystem implements SubSystem {
     private final PlanFiles files;
     private final PlanConfig config;
     private final PluginLogger logger;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     private final Locale locale;
 
@@ -56,12 +56,12 @@ public class LocaleSystem implements SubSystem {
             PlanFiles files,
             PlanConfig config,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.files = files;
         this.config = config;
         this.logger = logger;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
         this.locale = new Locale();
     }
 
@@ -113,7 +113,7 @@ public class LocaleSystem implements SubSystem {
             new LocaleFileWriter(writing).writeToFile(localeFile);
         } catch (IOException | IllegalStateException e) {
             logger.error("Failed to write new Locale file at " + localeFile.getAbsolutePath());
-            errorHandler.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.WARN, this.getClass(), e);
         }
         resetWriteConfigSetting();
     }
@@ -124,7 +124,7 @@ public class LocaleSystem implements SubSystem {
             config.save();
         } catch (IOException | IllegalStateException e) {
             logger.error("Failed set WriteNewLocaleFileOnEnable back to false");
-            errorHandler.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.WARN, this.getClass(), e);
         }
     }
 

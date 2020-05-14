@@ -33,11 +33,11 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.SQLiteDB;
 import com.djrapitops.plan.storage.database.queries.ServerAggregateQueries;
 import com.djrapitops.plan.storage.database.transactions.BackupCopyTransaction;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
@@ -57,7 +57,7 @@ public class ManageBackupCommand extends CommandNode {
     private final Processing processing;
     private final DBSystem dbSystem;
     private final SQLiteDB.Factory sqliteFactory;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     private final Formatter<Long> iso8601LongFormatter;
 
@@ -68,7 +68,7 @@ public class ManageBackupCommand extends CommandNode {
             DBSystem dbSystem,
             SQLiteDB.Factory sqliteFactory,
             Formatters formatters,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         super("backup", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
 
@@ -76,7 +76,7 @@ public class ManageBackupCommand extends CommandNode {
         this.processing = processing;
         this.dbSystem = dbSystem;
         this.sqliteFactory = sqliteFactory;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         this.iso8601LongFormatter = formatters.iso8601NoClockLong();
 
@@ -118,7 +118,7 @@ public class ManageBackupCommand extends CommandNode {
                 createNewBackup(args[0], database);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (Exception e) {
-                errorHandler.log(L.ERROR, ManageBackupCommand.class, e);
+                errorLogger.log(L.ERROR, ManageBackupCommand.class, e);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
             }
         });
@@ -143,7 +143,7 @@ public class ManageBackupCommand extends CommandNode {
             backupDB.init();
             backupDB.executeTransaction(new BackupCopyTransaction(copyFromDB, backupDB)).get();
         } catch (DBOpException | ExecutionException e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, this.getClass(), e);
         } catch (InterruptedException e) {
             backupDB.close();
             Thread.currentThread().interrupt();

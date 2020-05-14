@@ -34,13 +34,13 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.database.transactions.commands.RegisterWebUserTransaction;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -70,7 +70,7 @@ public class RegisterCommand extends CommandNode {
     private final UUIDUtility uuidUtility;
     private final Addresses addresses;
     private final PluginLogger logger;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public RegisterCommand(
@@ -80,7 +80,7 @@ public class RegisterCommand extends CommandNode {
             DBSystem dbSystem,
             UUIDUtility uuidUtility,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         // No Permission Requirement
         super("register", "", CommandType.ALL);
@@ -91,7 +91,7 @@ public class RegisterCommand extends CommandNode {
         this.uuidUtility = uuidUtility;
         this.logger = logger;
         this.dbSystem = dbSystem;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         setArguments("<password>", "[name]", "[lvl]");
         setShortHelp(locale.getString(CmdHelpLang.WEB_REGISTER));
@@ -128,14 +128,14 @@ public class RegisterCommand extends CommandNode {
                 registerUsingLegacy(sender, arguments);
             }
         } catch (PassEncryptUtil.CannotPerformOperationException e) {
-            errorHandler.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.WARN, this.getClass(), e);
             sender.sendMessage("§cPassword hash error.");
         } catch (NumberFormatException e) {
             throw new NumberFormatException(args[2]);
         } catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
-            errorHandler.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.WARN, this.getClass(), e);
         }
     }
 
@@ -205,7 +205,7 @@ public class RegisterCommand extends CommandNode {
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             } catch (DBOpException | ExecutionException e) {
-                errorHandler.log(L.WARN, this.getClass(), e);
+                errorLogger.log(L.WARN, this.getClass(), e);
             }
         });
     }

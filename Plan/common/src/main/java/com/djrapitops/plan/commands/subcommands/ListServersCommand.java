@@ -27,12 +27,12 @@ import com.djrapitops.plan.settings.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -49,21 +49,21 @@ public class ListServersCommand extends CommandNode {
     private final Locale locale;
     private final ColorScheme colorScheme;
     private final DBSystem dbSystem;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public ListServersCommand(
             Locale locale,
             ColorScheme colorScheme,
             DBSystem dbSystem,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         super("servers|serverlist|listservers|sl|ls", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
 
         this.locale = locale;
         this.colorScheme = colorScheme;
         this.dbSystem = dbSystem;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         setShortHelp(locale.getString(CmdHelpLang.SERVERS));
         setInDepthHelp(locale.getArray(DeepHelpLang.SERVERS));
@@ -86,7 +86,7 @@ public class ListServersCommand extends CommandNode {
             sender.sendMessage(">");
         } catch (DBOpException e) {
             sender.sendMessage("§cDatabase Exception occurred.");
-            errorHandler.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.WARN, this.getClass(), e);
         }
     }
 

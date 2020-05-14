@@ -30,11 +30,11 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.transactions.commands.SetServerAsUninstalledTransaction;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -52,7 +52,7 @@ public class ManageUninstalledCommand extends CommandNode {
     private final Locale locale;
     private final Processing processing;
     private final DBSystem dbSystem;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
     private final ServerInfo serverInfo;
 
     @Inject
@@ -61,7 +61,7 @@ public class ManageUninstalledCommand extends CommandNode {
             Processing processing,
             DBSystem dbSystem,
             ServerInfo serverInfo,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         super("uninstalled", Permissions.MANAGE.getPermission(), CommandType.ALL_WITH_ARGS);
 
@@ -69,7 +69,7 @@ public class ManageUninstalledCommand extends CommandNode {
         this.processing = processing;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_UNINSTALLED));
         setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_UNINSTALLED));
@@ -104,7 +104,7 @@ public class ManageUninstalledCommand extends CommandNode {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (DBOpException e) {
                 sender.sendMessage("§cError occurred: " + e.toString());
-                errorHandler.log(L.ERROR, this.getClass(), e);
+                errorLogger.log(L.ERROR, this.getClass(), e);
             }
         });
     }

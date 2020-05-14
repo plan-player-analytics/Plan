@@ -27,8 +27,8 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -53,7 +53,7 @@ public class ServerServerInfo extends ServerInfo {
     private final Processing processing;
     private final DBSystem dbSystem;
     private final Addresses addresses;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public ServerServerInfo(
@@ -63,7 +63,7 @@ public class ServerServerInfo extends ServerInfo {
             PlanConfig config,
             DBSystem dbSystem,
             Addresses addresses,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         super(serverProperties);
         this.serverInfoFile = serverInfoFile;
@@ -71,7 +71,7 @@ public class ServerServerInfo extends ServerInfo {
         this.dbSystem = dbSystem;
         this.addresses = addresses;
         this.config = config;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     @Override
@@ -114,7 +114,7 @@ public class ServerServerInfo extends ServerInfo {
             try {
                 server = registerServer(serverUUID);
             } catch (ExecutionException | IOException e) {
-                errorHandler.log(L.CRITICAL, this.getClass(), e);
+                errorLogger.log(L.CRITICAL, this.getClass(), e);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

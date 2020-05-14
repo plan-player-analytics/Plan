@@ -31,9 +31,9 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
@@ -62,7 +62,7 @@ public class RequestHandler implements HttpHandler {
     private final ResponseResolver responseResolver;
     private final ResponseFactory responseFactory;
     private final PluginLogger logger;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     private final PassBruteForceGuard bruteForceGuard;
 
@@ -74,7 +74,7 @@ public class RequestHandler implements HttpHandler {
             ResponseResolver responseResolver,
             ResponseFactory responseFactory,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.config = config;
         this.dbSystem = dbSystem;
@@ -82,7 +82,7 @@ public class RequestHandler implements HttpHandler {
         this.responseResolver = responseResolver;
         this.responseFactory = responseFactory;
         this.logger = logger;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         bruteForceGuard = new PassBruteForceGuard();
     }
@@ -99,7 +99,7 @@ public class RequestHandler implements HttpHandler {
         } catch (Exception e) {
             if (config.isTrue(PluginSettings.DEV_MODE)) {
                 logger.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
-                errorHandler.log(L.WARN, this.getClass(), e);
+                errorLogger.log(L.WARN, this.getClass(), e);
             }
         } finally {
             exchange.close();

@@ -19,9 +19,9 @@ package com.djrapitops.plan.processing;
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import dagger.Lazy;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
@@ -35,7 +35,7 @@ public class Processing implements SubSystem {
 
     private final Lazy<Locale> locale;
     private final PluginLogger logger;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     private ExecutorService nonCriticalExecutor;
     private ExecutorService criticalExecutor;
@@ -44,11 +44,11 @@ public class Processing implements SubSystem {
     public Processing(
             Lazy<Locale> locale,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.locale = locale;
         this.logger = logger;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
         nonCriticalExecutor = createExecutor(6, "Plan Non critical-pool-%d");
         criticalExecutor = createExecutor(2, "Plan Critical-pool-%d");
     }
@@ -58,7 +58,7 @@ public class Processing implements SubSystem {
                 new BasicThreadFactory.Builder()
                         .namingPattern(s)
                         .uncaughtExceptionHandler((thread, throwable) ->
-                                errorHandler.log(L.WARN, Processing.class, throwable)
+                                errorLogger.log(L.WARN, Processing.class, throwable)
                         ).build());
     }
 
@@ -110,14 +110,14 @@ public class Processing implements SubSystem {
 
     private <T> T exceptionHandlerNonCritical(T t, Throwable throwable) {
         if (throwable != null) {
-            errorHandler.log(L.WARN, Processing.class, throwable.getCause());
+            errorLogger.log(L.WARN, Processing.class, throwable.getCause());
         }
         return t;
     }
 
     private <T> T exceptionHandlerCritical(T t, Throwable throwable) {
         if (throwable != null) {
-            errorHandler.log(L.ERROR, Processing.class, throwable.getCause());
+            errorLogger.log(L.ERROR, Processing.class, throwable.getCause());
         }
         return t;
     }
@@ -163,7 +163,7 @@ public class Processing implements SubSystem {
             try {
                 runnable.run();
             } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
-                errorHandler.log(L.WARN, this.getClass(), e);
+                errorLogger.log(L.WARN, this.getClass(), e);
             }
         }
     }

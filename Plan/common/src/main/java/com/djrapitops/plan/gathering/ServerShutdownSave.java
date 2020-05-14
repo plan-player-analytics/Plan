@@ -25,9 +25,9 @@ import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.events.ServerShutdownTransaction;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import java.util.Map;
 import java.util.Optional;
@@ -44,21 +44,21 @@ public abstract class ServerShutdownSave {
     protected final PluginLogger logger;
     private final DBSystem dbSystem;
     private final Locale locale;
-    private final ErrorHandler errorHandler;
-    private boolean shuttingDown = false;
+    private final ErrorLogger errorLogger;
 
+    private boolean shuttingDown = false;
     private boolean startedDatabase = false;
 
     public ServerShutdownSave(
             Locale locale,
             DBSystem dbSystem,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.locale = locale;
         this.dbSystem = dbSystem;
         this.logger = logger;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     protected abstract boolean checkServerShuttingDownStatus();
@@ -90,7 +90,7 @@ public abstract class ServerShutdownSave {
             prepareSessionsForStorage(activeSessions, System.currentTimeMillis());
             return Optional.of(saveActiveSessions(activeSessions));
         } catch (DBInitException e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, this.getClass(), e);
             return Optional.empty();
         } catch (IllegalStateException ignored) {
             /* Database is not initialized */

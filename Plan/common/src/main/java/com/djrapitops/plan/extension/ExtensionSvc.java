@@ -29,9 +29,9 @@ import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.ExtensionSettings;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -55,7 +55,7 @@ public class ExtensionSvc implements ExtensionService {
     private final Processing processing;
     private final ExtensionRegister extensionRegister;
     private final PluginLogger logger;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     private final Map<String, ProviderValueGatherer> extensionGatherers;
 
@@ -67,7 +67,7 @@ public class ExtensionSvc implements ExtensionService {
             Processing processing,
             ExtensionRegister extensionRegister,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.config = config;
         this.dbSystem = dbSystem;
@@ -75,7 +75,7 @@ public class ExtensionSvc implements ExtensionService {
         this.processing = processing;
         this.extensionRegister = extensionRegister;
         this.logger = logger;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         extensionGatherers = new HashMap<>();
     }
@@ -89,7 +89,7 @@ public class ExtensionSvc implements ExtensionService {
             extensionRegister.registerBuiltInExtensions(config.getExtensionSettings().getDisabled());
         } catch (IllegalStateException failedToRegisterOne) {
             logger.warn("One or more extensions failed to register, see suppressed exceptions (They can be disabled in Plan config).");
-            errorHandler.log(L.WARN, ExtensionService.class, failedToRegisterOne);
+            errorLogger.log(L.WARN, ExtensionService.class, failedToRegisterOne);
         }
     }
 
@@ -130,7 +130,7 @@ public class ExtensionSvc implements ExtensionService {
             try {
                 pluginsConfig.createSection(pluginName);
             } catch (IOException e) {
-                errorHandler.log(L.ERROR, this.getClass(), e);
+                errorLogger.log(L.ERROR, this.getClass(), e);
                 logger.warn("Could not register DataExtension for " + pluginName + " due to " + e.toString());
                 return true;
             }
@@ -168,7 +168,7 @@ public class ExtensionSvc implements ExtensionService {
             logger.warn("Encountered unexpected error with " + gatherer.getPluginName() + " Extension: " + unexpectedError +
                     " (but failed safely) when updating value for '" + playerName +
                     "', stack trace to follow (please report this):");
-            errorHandler.log(L.WARN, gatherer.getClass(), unexpectedError);
+            errorLogger.log(L.WARN, gatherer.getClass(), unexpectedError);
         }
     }
 
@@ -179,7 +179,7 @@ public class ExtensionSvc implements ExtensionService {
                 " (failed safely) when updating value for '" + playerName +
                 "', the method was disabled temporarily (won't be called until next Plan reload)" +
                 ", stack trace to follow (please report this):");
-        errorHandler.log(L.WARN, getClass(), cause);
+        errorLogger.log(L.WARN, getClass(), cause);
     }
 
     public void updateServerValues(CallEvents event) {
@@ -208,7 +208,7 @@ public class ExtensionSvc implements ExtensionService {
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
             logger.warn("Encountered unexpected error with " + gatherer.getPluginName() + " Extension: " + unexpectedError +
                     " (failed safely) when updating value for server, stack trace to follow (please report this):");
-            errorHandler.log(L.WARN, gatherer.getClass(), unexpectedError);
+            errorLogger.log(L.WARN, gatherer.getClass(), unexpectedError);
         }
     }
 }

@@ -24,8 +24,8 @@ import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.placeholder.PlanPlaceholders;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,17 +42,17 @@ public class NukkitPlaceholderRegistrar {
 
     private final PlanPlaceholders placeholders;
     private final PlanSystem system;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public NukkitPlaceholderRegistrar(
             PlanPlaceholders placeholders,
             PlanSystem system,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.placeholders = placeholders;
         this.system = system;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     public void register() {
@@ -62,7 +62,7 @@ public class NukkitPlaceholderRegistrar {
                             try {
                                 return loader.apply(getPlayer(player), new ArrayList<>(params.getAll().values()));
                             } catch (Exception e) {
-                                errorHandler.log(L.WARN, getClass(), e);
+                                errorLogger.log(L.WARN, getClass(), e);
                                 return null;
                             }
                         }
@@ -73,7 +73,7 @@ public class NukkitPlaceholderRegistrar {
                             try {
                                 return loader.apply(new ArrayList<>(params.getAll().values()));
                             } catch (Exception e) {
-                                errorHandler.log(L.WARN, getClass(), e);
+                                errorLogger.log(L.WARN, getClass(), e);
                                 return null;
                             }
                         }

@@ -23,9 +23,9 @@ import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
@@ -59,7 +59,7 @@ public class WebServer implements SubSystem {
     private final RequestHandler requestHandler;
 
     private final PluginLogger logger;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     private int port;
     private boolean enabled = false;
@@ -74,7 +74,7 @@ public class WebServer implements SubSystem {
             PlanConfig config,
             Addresses addresses,
             PluginLogger logger,
-            ErrorHandler errorHandler,
+            ErrorLogger errorLogger,
             RequestHandler requestHandler
     ) {
         this.locale = locale;
@@ -85,7 +85,7 @@ public class WebServer implements SubSystem {
         this.requestHandler = requestHandler;
 
         this.logger = logger;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     @Override
@@ -145,7 +145,7 @@ public class WebServer implements SubSystem {
                             .namingPattern("Plan WebServer Thread-%d")
                             .uncaughtExceptionHandler((thread, throwable) -> {
                                 if (config.isTrue(PluginSettings.DEV_MODE)) {
-                                    errorHandler.log(L.WARN, WebServer.class, throwable);
+                                    errorLogger.log(L.WARN, WebServer.class, throwable);
                                 }
                             }).build()
             );
@@ -165,7 +165,7 @@ public class WebServer implements SubSystem {
             logger.error("Webserver failed to bind port: " + failedToBind.toString());
             enabled = false;
         } catch (IllegalArgumentException | IllegalStateException | IOException e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, this.getClass(), e);
             enabled = false;
         }
     }
@@ -183,7 +183,7 @@ public class WebServer implements SubSystem {
             }
         } catch (InvalidPathException e) {
             logger.error("WebServer: Could not find Keystore: " + e.getMessage());
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, this.getClass(), e);
         }
 
         char[] storepass = config.get(WebserverSettings.CERTIFICATE_STOREPASS).toCharArray();
@@ -232,7 +232,7 @@ public class WebServer implements SubSystem {
             logger.error(e.getMessage());
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
             logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_SSL_CONTEXT));
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, this.getClass(), e);
         } catch (EOFException e) {
             logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_EMPTY_FILE));
         } catch (FileNotFoundException e) {
@@ -242,10 +242,10 @@ public class WebServer implements SubSystem {
             throw e; // Pass to above error handler
         } catch (IOException e) {
             logger.error("WebServer: " + e);
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, this.getClass(), e);
         } catch (KeyStoreException | CertificateException | UnrecoverableKeyException e) {
             logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_STORE_LOAD));
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, this.getClass(), e);
         }
         return startSuccessful;
     }

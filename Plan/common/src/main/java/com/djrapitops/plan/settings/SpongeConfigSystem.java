@@ -24,8 +24,8 @@ import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.network.ServerSettingsManager;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -49,9 +49,9 @@ public class SpongeConfigSystem extends BukkitConfigSystem {
             ServerSettingsManager serverSettingsManager,
             Theme theme,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
-        super(files, config, configUpdater, serverSettingsManager, theme, logger, errorHandler);
+        super(files, config, configUpdater, serverSettingsManager, theme, logger, errorLogger);
     }
 
     @Override

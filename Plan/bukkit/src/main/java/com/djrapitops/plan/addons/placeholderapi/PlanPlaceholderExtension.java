@@ -18,9 +18,9 @@ package com.djrapitops.plan.addons.placeholderapi;
 
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.placeholder.PlanPlaceholders;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.version.VersionChecker;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
@@ -34,18 +34,18 @@ import java.util.Collections;
  */
 public class PlanPlaceholderExtension extends PlaceholderExpansion {
 
-    public final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
     private final VersionChecker versionChecker;
     private final PlanPlaceholders placeholders;
 
     public PlanPlaceholderExtension(
             PlanPlaceholders placeholders,
             PlanSystem system,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.placeholders = placeholders;
         this.versionChecker = system.getVersionChecker();
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     @Override
@@ -92,7 +92,7 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
 
             return value;
         } catch (Exception e) {
-            errorHandler.log(L.WARN, getClass(), e);
+            errorLogger.log(L.WARN, getClass(), e);
             return null;
         }
     }

@@ -24,8 +24,8 @@ import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.network.ServerSettingsManager;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -52,9 +52,9 @@ public class BukkitConfigSystem extends ConfigSystem {
             ServerSettingsManager serverSettingsManager,
             Theme theme,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
-        super(files, config, theme, logger, errorHandler);
+        super(files, config, theme, logger, errorLogger);
         this.configUpdater = configUpdater;
         this.serverSettingsManager = serverSettingsManager;
     }

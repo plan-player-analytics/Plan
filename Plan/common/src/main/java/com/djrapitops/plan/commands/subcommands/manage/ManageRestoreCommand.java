@@ -29,11 +29,11 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.SQLiteDB;
 import com.djrapitops.plan.storage.database.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
@@ -51,7 +51,7 @@ public class ManageRestoreCommand extends CommandNode {
     private final Locale locale;
     private final Processing processing;
     private final DBSystem dbSystem;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
     private final SQLiteDB.Factory sqliteFactory;
     private final PlanFiles files;
 
@@ -62,7 +62,7 @@ public class ManageRestoreCommand extends CommandNode {
             DBSystem dbSystem,
             SQLiteDB.Factory sqliteFactory,
             PlanFiles files,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         super("restore", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
 
@@ -71,7 +71,7 @@ public class ManageRestoreCommand extends CommandNode {
         this.dbSystem = dbSystem;
         this.sqliteFactory = sqliteFactory;
         this.files = files;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         setArguments("<Filename.db>", "<dbTo>", "[-a]");
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_RESTORE));
@@ -135,7 +135,7 @@ public class ManageRestoreCommand extends CommandNode {
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             } catch (Exception e) {
-                errorHandler.log(L.ERROR, this.getClass(), e);
+                errorLogger.log(L.ERROR, this.getClass(), e);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
             }
         });

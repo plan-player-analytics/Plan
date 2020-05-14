@@ -30,12 +30,12 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveWebUserTransaction;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -56,7 +56,7 @@ public class UnregisterCommand extends CommandNode {
     private final Processing processing;
     private final DBSystem dbSystem;
     private final UUIDUtility uuidUtility;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public UnregisterCommand(
@@ -64,7 +64,7 @@ public class UnregisterCommand extends CommandNode {
             Processing processing,
             DBSystem dbSystem,
             UUIDUtility uuidUtility,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         super("unregister", "", CommandType.PLAYER_OR_ARGS);
 
@@ -72,7 +72,7 @@ public class UnregisterCommand extends CommandNode {
         this.processing = processing;
         this.dbSystem = dbSystem;
         this.uuidUtility = uuidUtility;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         setShortHelp(locale.getString(CmdHelpLang.WEB_DELETE));
         setArguments("[username]");
@@ -125,7 +125,7 @@ public class UnregisterCommand extends CommandNode {
                         .get(); // Wait for completion
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (Exception e) {
-                errorHandler.log(L.ERROR, this.getClass(), e);
+                errorLogger.log(L.ERROR, this.getClass(), e);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
             }
         });

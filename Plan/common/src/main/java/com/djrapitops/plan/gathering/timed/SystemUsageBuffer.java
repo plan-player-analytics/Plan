@@ -19,9 +19,9 @@ package com.djrapitops.plan.gathering.timed;
 import com.djrapitops.plan.gathering.SystemUsage;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
 
 import javax.inject.Inject;
@@ -90,17 +90,17 @@ public class SystemUsageBuffer {
         private final PlanConfig config;
         private final SystemUsageBuffer buffer;
         private final PluginLogger logger;
-        private final ErrorHandler errorHandler;
+        private final ErrorLogger errorLogger;
 
         private Boolean gatherDisk = null;
         private boolean diskErrored = false;
 
         @Inject
-        public DiskTask(PlanConfig config, SystemUsageBuffer buffer, PluginLogger logger, ErrorHandler errorHandler) {
+        public DiskTask(PlanConfig config, SystemUsageBuffer buffer, PluginLogger logger, ErrorLogger errorLogger) {
             this.config = config;
             this.buffer = buffer;
             this.logger = logger;
-            this.errorHandler = errorHandler;
+            this.errorLogger = errorLogger;
         }
 
         @Override
@@ -111,7 +111,7 @@ public class SystemUsageBuffer {
                 buffer.freeDiskSpace = SystemUsage.getFreeDiskSpace();
             } catch (SecurityException noPermission) {
                 if (!diskErrored) {
-                    errorHandler.log(L.WARN, this.getClass(), noPermission);
+                    errorLogger.log(L.WARN, this.getClass(), noPermission);
                 }
                 diskErrored = true;
             } catch (Exception e) {

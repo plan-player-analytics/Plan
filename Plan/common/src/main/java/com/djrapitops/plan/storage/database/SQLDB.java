@@ -31,10 +31,10 @@ import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransa
 import com.djrapitops.plan.storage.database.transactions.init.OperationCriticalTransaction;
 import com.djrapitops.plan.storage.database.transactions.patches.*;
 import com.djrapitops.plan.utilities.java.ThrowableUtils;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
@@ -62,7 +62,7 @@ public abstract class SQLDB extends AbstractDatabase {
     protected final PlanConfig config;
     protected final RunnableFactory runnableFactory;
     protected final PluginLogger logger;
-    protected final ErrorHandler errorHandler;
+    protected final ErrorLogger errorLogger;
 
     private Supplier<ExecutorService> transactionExecutorServiceProvider;
     private ExecutorService transactionExecutor;
@@ -75,14 +75,14 @@ public abstract class SQLDB extends AbstractDatabase {
             PlanConfig config,
             RunnableFactory runnableFactory,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.serverUUIDSupplier = serverUUIDSupplier;
         this.locale = locale;
         this.config = config;
         this.runnableFactory = runnableFactory;
         this.logger = logger;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         devMode = config.isTrue(PluginSettings.DEV_MODE);
 
@@ -92,7 +92,7 @@ public abstract class SQLDB extends AbstractDatabase {
                     .namingPattern(nameFormat)
                     .uncaughtExceptionHandler((thread, throwable) -> {
                         if (devMode) {
-                            errorHandler.log(L.WARN, getClass(), throwable);
+                            errorLogger.log(L.WARN, getClass(), throwable);
                         }
                     }).build());
         };
@@ -261,7 +261,7 @@ public abstract class SQLDB extends AbstractDatabase {
             }
             ThrowableUtils.appendEntryPointToCause(throwable, origin);
 
-            errorHandler.log(L.ERROR, getClass(), throwable);
+            errorLogger.log(L.ERROR, getClass(), throwable);
             return CompletableFuture.completedFuture(null);
         };
     }

@@ -40,11 +40,11 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -67,7 +67,7 @@ public class QInspectCommand extends CommandNode {
     private final Processing processing;
     private final Formatters formatters;
     private final UUIDUtility uuidUtility;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public QInspectCommand(
@@ -77,7 +77,7 @@ public class QInspectCommand extends CommandNode {
             DBSystem dbSystem,
             UUIDUtility uuidUtility,
             Formatters formatters,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         super("qinspect", Permissions.QUICK_INSPECT.getPermission(), CommandType.PLAYER_OR_ARGS);
         this.config = config;
@@ -88,7 +88,7 @@ public class QInspectCommand extends CommandNode {
         this.locale = locale;
         this.dbSystem = dbSystem;
         this.uuidUtility = uuidUtility;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         setShortHelp(locale.getString(CmdHelpLang.QINSPECT));
         setInDepthHelp(locale.getArray(DeepHelpLang.QINSPECT));
@@ -130,7 +130,7 @@ public class QInspectCommand extends CommandNode {
                 sendMessages(sender, container);
             } catch (DBOpException e) {
                 sender.sendMessage("§eDatabase exception occurred: " + e.getMessage());
-                errorHandler.log(L.WARN, this.getClass(), e);
+                errorLogger.log(L.WARN, this.getClass(), e);
             }
         });
     }

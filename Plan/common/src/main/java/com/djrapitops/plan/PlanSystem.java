@@ -37,12 +37,12 @@ import com.djrapitops.plan.settings.SettingsSvc;
 import com.djrapitops.plan.settings.locale.LocaleSystem;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.version.VersionChecker;
 import com.djrapitops.plugin.benchmarking.Benchmark;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -82,7 +82,7 @@ public class PlanSystem implements SubSystem {
     private final SettingsSvc settingsService;
     private final PluginLogger logger;
     private final Timings timings;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public PlanSystem(
@@ -107,7 +107,7 @@ public class PlanSystem implements SubSystem {
             SettingsSvc settingsService,
             PluginLogger logger,
             Timings timings,
-            ErrorHandler errorHandler,
+            ErrorLogger errorLogger,
             PlanAPI.PlanAPIHolder apiHolder
     ) {
         this.files = files;
@@ -131,7 +131,7 @@ public class PlanSystem implements SubSystem {
         this.settingsService = settingsService;
         this.logger = logger;
         this.timings = timings;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         logger.log(L.INFO_COLOR,
                 "",
@@ -175,7 +175,7 @@ public class PlanSystem implements SubSystem {
         // Disables Webserver if Proxy is detected in the database
         if (serverInfo.getServer().isNotProxy()) {
             processing.submitNonCritical(new NonProxyWebserverDisableChecker(
-                    configSystem.getConfig(), webServerSystem.getAddresses(), webServerSystem, logger, errorHandler
+                    configSystem.getConfig(), webServerSystem.getAddresses(), webServerSystem, logger, errorLogger
             ));
         }
 
@@ -222,7 +222,7 @@ public class PlanSystem implements SubSystem {
                     system.disable();
                 }
             } catch (Exception e) {
-                errorHandler.log(L.WARN, this.getClass(), e);
+                errorLogger.log(L.WARN, this.getClass(), e);
             }
         }
     }
@@ -291,5 +291,9 @@ public class PlanSystem implements SubSystem {
 
     public ExtensionService getExtensionService() {
         return extensionService;
+    }
+
+    public ErrorLogger getErrorLogger() {
+        return errorLogger;
     }
 }

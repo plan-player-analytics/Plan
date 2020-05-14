@@ -31,11 +31,11 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
 import com.djrapitops.plan.storage.database.transactions.commands.RemovePlayerTransaction;
 import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
@@ -58,7 +58,7 @@ public class ManageRemoveCommand extends CommandNode {
     private final DBSystem dbSystem;
     private final QuerySvc queryService;
     private final UUIDUtility uuidUtility;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public ManageRemoveCommand(
@@ -67,7 +67,7 @@ public class ManageRemoveCommand extends CommandNode {
             DBSystem dbSystem,
             QuerySvc queryService,
             UUIDUtility uuidUtility,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         super("remove|delete", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
 
@@ -76,7 +76,7 @@ public class ManageRemoveCommand extends CommandNode {
         this.dbSystem = dbSystem;
         this.queryService = queryService;
         this.uuidUtility = uuidUtility;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         setArguments("<player>", "[-a]");
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_REMOVE));
@@ -131,7 +131,7 @@ public class ManageRemoveCommand extends CommandNode {
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             } catch (DBOpException | ExecutionException e) {
-                errorHandler.log(L.ERROR, this.getClass(), e);
+                errorLogger.log(L.ERROR, this.getClass(), e);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
             }
         });

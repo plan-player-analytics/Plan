@@ -31,11 +31,11 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
@@ -56,7 +56,7 @@ public class ManageClearCommand extends CommandNode {
     private final Processing processing;
     private final DBSystem dbSystem;
     private final QuerySvc queryService;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public ManageClearCommand(
@@ -65,7 +65,7 @@ public class ManageClearCommand extends CommandNode {
             Processing processing,
             DBSystem dbSystem,
             QuerySvc queryService,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         super("clear", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
         this.plugin = plugin;
@@ -74,7 +74,7 @@ public class ManageClearCommand extends CommandNode {
         this.processing = processing;
         this.dbSystem = dbSystem;
         this.queryService = queryService;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         setArguments("<DB>", "[-a]");
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_CLEAR));
@@ -119,7 +119,7 @@ public class ManageClearCommand extends CommandNode {
                 Thread.currentThread().interrupt();
             } catch (DBOpException | ExecutionException e) {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
-                errorHandler.log(L.ERROR, this.getClass(), e);
+                errorLogger.log(L.ERROR, this.getClass(), e);
             }
         });
     }
@@ -128,7 +128,7 @@ public class ManageClearCommand extends CommandNode {
         try {
             plugin.reloadPlugin(true);
         } catch (Exception e) {
-            errorHandler.log(L.CRITICAL, this.getClass(), e);
+            errorLogger.log(L.CRITICAL, this.getClass(), e);
             sender.sendMessage(locale.getString(CommandLang.RELOAD_FAILED));
         }
         sender.sendMessage(locale.getString(CommandLang.RELOAD_COMPLETE));

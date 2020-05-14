@@ -33,10 +33,10 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.version.VersionChecker;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.debug.DebugLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import dagger.Lazy;
 
 import javax.inject.Inject;
@@ -63,7 +63,7 @@ public class PageFactory {
     private final Lazy<Formatters> formatters;
     private final Lazy<DebugLogger> debugLogger;
     private final Lazy<Timings> timings;
-    private final Lazy<ErrorHandler> errorHandler;
+    private final Lazy<ErrorLogger> errorLogger;
 
     @Inject
     public PageFactory(
@@ -77,7 +77,7 @@ public class PageFactory {
             Lazy<Formatters> formatters,
             Lazy<DebugLogger> debugLogger,
             Lazy<Timings> timings,
-            Lazy<ErrorHandler> errorHandler
+            Lazy<ErrorLogger> errorLogger
     ) {
         this.versionChecker = versionChecker;
         this.files = files;
@@ -89,14 +89,14 @@ public class PageFactory {
         this.formatters = formatters;
         this.debugLogger = debugLogger;
         this.timings = timings;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     public DebugPage debugPage() throws IOException {
         return new DebugPage(
                 getResource("error.html"),
                 dbSystem.get().getDatabase(), serverInfo.get(), formatters.get(), versionChecker.get(),
-                debugLogger.get(), timings.get(), errorHandler.get()
+                debugLogger.get(), timings.get(), errorLogger.get()
         );
     }
 

@@ -32,12 +32,12 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import java.util.UUID;
@@ -55,7 +55,7 @@ public class InspectCommand extends CommandNode {
     private final Addresses addresses;
     private final Processing processing;
     private final UUIDUtility uuidUtility;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public InspectCommand(
@@ -65,7 +65,7 @@ public class InspectCommand extends CommandNode {
             DBSystem dbSystem,
             WebServer webServer,
             UUIDUtility uuidUtility,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         super("inspect", Permissions.INSPECT.getPermission(), CommandType.PLAYER_OR_ARGS);
         this.addresses = addresses;
@@ -76,7 +76,7 @@ public class InspectCommand extends CommandNode {
         this.dbSystem = dbSystem;
         this.webServer = webServer;
         this.uuidUtility = uuidUtility;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         setShortHelp(locale.getString(CmdHelpLang.INSPECT));
         setInDepthHelp(locale.getArray(DeepHelpLang.INSPECT));
@@ -117,7 +117,7 @@ public class InspectCommand extends CommandNode {
                 this.sendInspectMsg(sender, playerName);
             } catch (DBOpException e) {
                 sender.sendMessage("§eDatabase exception occurred: " + e.getMessage());
-                errorHandler.log(L.ERROR, this.getClass(), e);
+                errorLogger.log(L.ERROR, this.getClass(), e);
             }
         });
     }

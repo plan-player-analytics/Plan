@@ -42,7 +42,6 @@ import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransac
 import com.djrapitops.plan.storage.database.transactions.patches.RegisterDateMinimizationPatch;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
-import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import org.junit.jupiter.api.Test;
 import utilities.FieldFetcher;
 import utilities.RandomData;
@@ -131,15 +130,14 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         execute(DataStoreQueries.storeSession(session));
 
         TestPluginLogger logger = new TestPluginLogger();
-        ConsoleErrorLogger errorHandler = new ConsoleErrorLogger(logger);
         new DBCleanTask(
                 system().getConfigSystem().getConfig(),
                 new Locale(),
                 system().getDatabaseSystem(),
-                new QuerySvc(system().getDatabaseSystem(), system().getServerInfo(), logger, errorHandler),
+                new QuerySvc(system().getDatabaseSystem(), system().getServerInfo(), logger, null),
                 system().getServerInfo(),
                 logger,
-                errorHandler
+                null
         ).cleanOldPlayers(db());
 
         Collection<BaseUser> found = db().query(BaseUserQueries.fetchServerBaseUsers(serverUUID()));

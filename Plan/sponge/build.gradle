@@ -8,6 +8,7 @@ blossom {
 }
 
 dependencies {
+    compileOnly project(":common")
     compile project(path: ":common", configuration: 'shadow')
     compileOnly project(":api")
 

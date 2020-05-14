@@ -27,11 +27,11 @@ import com.djrapitops.plan.settings.locale.lang.ManageLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
@@ -50,17 +50,17 @@ public class ManageHotSwapCommand extends CommandNode {
     private final Locale locale;
     private final DBSystem dbSystem;
     private final PlanConfig config;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
-    public ManageHotSwapCommand(PlanPlugin plugin, Locale locale, DBSystem dbSystem, PlanConfig config, ErrorHandler errorHandler) {
+    public ManageHotSwapCommand(PlanPlugin plugin, Locale locale, DBSystem dbSystem, PlanConfig config, ErrorLogger errorLogger) {
         super("hotswap", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
 
         this.plugin = plugin;
         this.locale = locale;
         this.dbSystem = dbSystem;
         this.config = config;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         setArguments("<DB>");
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_HOTSWAP));
@@ -88,7 +88,7 @@ public class ManageHotSwapCommand extends CommandNode {
                 return;
             }
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, this.getClass(), e);
             sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
             return;
         }
@@ -97,7 +97,7 @@ public class ManageHotSwapCommand extends CommandNode {
             config.set(DatabaseSettings.TYPE, dbName);
             config.save();
         } catch (IOException e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, this.getClass(), e);
             return;
         }
         plugin.reloadPlugin(true);

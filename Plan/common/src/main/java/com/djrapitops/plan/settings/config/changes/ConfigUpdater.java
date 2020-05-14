@@ -18,9 +18,9 @@ package com.djrapitops.plan.settings.config.changes;
 
 import com.djrapitops.plan.settings.config.Config;
 import com.djrapitops.plan.settings.config.paths.FormatSettings;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -35,15 +35,15 @@ import java.io.IOException;
 public class ConfigUpdater {
 
     private final PluginLogger logger;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public ConfigUpdater(
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.logger = logger;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     public void applyConfigUpdate(Config config) throws IOException {
@@ -152,7 +152,7 @@ public class ConfigUpdater {
                     logger.info("Config: " + change.getAppliedMessage());
                 }
             } catch (Exception e) {
-                errorHandler.log(L.WARN, this.getClass(), new IllegalStateException("Failed to apply config update: '" + change.getAppliedMessage() + "'", e));
+                errorLogger.log(L.WARN, this.getClass(), new IllegalStateException("Failed to apply config update: '" + change.getAppliedMessage() + "'", e));
             }
         }
     }

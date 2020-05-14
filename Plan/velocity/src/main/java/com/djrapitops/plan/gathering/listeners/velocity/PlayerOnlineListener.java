@@ -34,8 +34,8 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.events.GeoInfoStoreTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
@@ -66,7 +66,7 @@ public class PlayerOnlineListener {
     private final GeolocationCache geolocationCache;
     private final SessionCache sessionCache;
     private final ServerInfo serverInfo;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public PlayerOnlineListener(
@@ -74,10 +74,11 @@ public class PlayerOnlineListener {
             Processing processing,
             DBSystem dbSystem,
             ExtensionSvc extensionService,
-            Exporter exporter, GeolocationCache geolocationCache,
+            Exporter exporter,
+            GeolocationCache geolocationCache,
             SessionCache sessionCache,
             ServerInfo serverInfo,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.config = config;
         this.processing = processing;
@@ -87,7 +88,7 @@ public class PlayerOnlineListener {
         this.geolocationCache = geolocationCache;
         this.sessionCache = sessionCache;
         this.serverInfo = serverInfo;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     @Subscribe(order = PostOrder.LAST)
@@ -95,7 +96,7 @@ public class PlayerOnlineListener {
         try {
             actOnLogin(event);
         } catch (Exception e) {
-            errorHandler.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.WARN, this.getClass(), e);
         }
     }
 
@@ -146,7 +147,7 @@ public class PlayerOnlineListener {
         try {
             actOnLogout(event);
         } catch (Exception e) {
-            errorHandler.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.WARN, this.getClass(), e);
         }
     }
 
@@ -184,7 +185,7 @@ public class PlayerOnlineListener {
         try {
             actOnServerSwitch(event);
         } catch (Exception e) {
-            errorHandler.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.WARN, this.getClass(), e);
         }
     }
 

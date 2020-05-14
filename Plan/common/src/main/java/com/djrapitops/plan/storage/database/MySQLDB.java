@@ -23,10 +23,9 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
-import com.djrapitops.plugin.benchmarking.Timings;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -59,10 +58,9 @@ public class MySQLDB extends SQLDB {
             Lazy<ServerInfo> serverInfo,
             RunnableFactory runnableFactory,
             PluginLogger pluginLogger,
-            Timings timings,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
-        super(() -> serverInfo.get().getServerUUID(), locale, config, runnableFactory, pluginLogger, errorHandler);
+        super(() -> serverInfo.get().getServerUUID(), locale, config, runnableFactory, pluginLogger, errorLogger);
     }
 
     private static synchronized void increment() {
@@ -78,7 +76,7 @@ public class MySQLDB extends SQLDB {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            errorHandler.log(L.CRITICAL, this.getClass(), e);
+            errorLogger.log(L.CRITICAL, this.getClass(), e);
         }
     }
 
@@ -166,7 +164,7 @@ public class MySQLDB extends SQLDB {
                 connection.close();
             }
         } catch (SQLException e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, this.getClass(), e);
         }
     }
 

@@ -25,8 +25,8 @@ import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.upkeep.DBKeepAliveTask;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.java.ThrowableUtils;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.PluginTask;
 import com.djrapitops.plugin.task.RunnableFactory;
 import dagger.Lazy;
@@ -58,9 +58,9 @@ public class H2DB extends SQLDB {
             Lazy<ServerInfo> serverInfo,
             RunnableFactory runnableFactory,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
-        super(() -> serverInfo.get().getServerUUID(), locale, config, runnableFactory, logger, errorHandler);
+        super(() -> serverInfo.get().getServerUUID(), locale, config, runnableFactory, logger, errorLogger);
         dbName = databaseFile.getName();
         this.databaseFile = databaseFile;
     }
@@ -102,7 +102,7 @@ public class H2DB extends SQLDB {
         try {
             // Maintains Connection.
             connectionPingTask = runnableFactory.create("DBConnectionPingTask " + getType().getName(),
-                    new DBKeepAliveTask(connection, () -> getNewConnection(databaseFile), logger, errorHandler)
+                    new DBKeepAliveTask(connection, () -> getNewConnection(databaseFile), logger, errorLogger)
             ).runTaskTimerAsynchronously(60L * 20L, 60L * 20L);
         } catch (Exception ignored) {
             // Task failed to register because plugin is being disabled
@@ -175,7 +175,7 @@ public class H2DB extends SQLDB {
         private final Lazy<ServerInfo> serverInfo;
         private final RunnableFactory runnableFactory;
         private final PluginLogger logger;
-        private final ErrorHandler errorHandler;
+        private final ErrorLogger errorLogger1;
         private final PlanFiles files;
 
         @Inject
@@ -186,7 +186,7 @@ public class H2DB extends SQLDB {
                 Lazy<ServerInfo> serverInfo,
                 RunnableFactory runnableFactory,
                 PluginLogger logger,
-                ErrorHandler errorHandler
+                ErrorLogger errorLogger1
         ) {
             this.locale = locale;
             this.config = config;
@@ -194,7 +194,7 @@ public class H2DB extends SQLDB {
             this.serverInfo = serverInfo;
             this.runnableFactory = runnableFactory;
             this.logger = logger;
-            this.errorHandler = errorHandler;
+            this.errorLogger1 = errorLogger1;
         }
 
         public H2DB usingDefaultFile() {
@@ -208,7 +208,7 @@ public class H2DB extends SQLDB {
         public H2DB usingFile(File databaseFile) {
             return new H2DB(databaseFile,
                     locale, config, serverInfo,
-                    runnableFactory, logger, errorHandler
+                    runnableFactory, logger, errorLogger1
             );
         }
 

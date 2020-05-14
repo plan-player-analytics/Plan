@@ -30,21 +30,16 @@ import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plan.storage.file.FileResource;
 import com.djrapitops.plan.storage.file.ResourceCache;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.version.VersionChecker;
 import com.djrapitops.plugin.benchmarking.Benchmark;
 import com.djrapitops.plugin.benchmarking.Timings;
-import com.djrapitops.plugin.logging.FolderTimeStampFileLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.debug.CombineDebugLogger;
 import com.djrapitops.plugin.logging.debug.DebugLogger;
 import com.djrapitops.plugin.logging.debug.MemoryDebugLogger;
-import com.djrapitops.plugin.logging.error.DefaultErrorHandler;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.plugin.logging.error.FolderTimeStampErrorFileLogger;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -60,7 +55,7 @@ public class DebugPage implements Page {
     private final VersionChecker versionChecker;
     private final CombineDebugLogger debugLogger;
     private final Timings timings;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     private final Formatter<Long> yearFormatter;
 
@@ -73,7 +68,7 @@ public class DebugPage implements Page {
             VersionChecker versionChecker,
             DebugLogger debugLogger,
             Timings timings,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.template = htmlTemplate;
 
@@ -82,7 +77,7 @@ public class DebugPage implements Page {
         this.versionChecker = versionChecker;
         this.debugLogger = (CombineDebugLogger) debugLogger;
         this.timings = timings;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         this.yearFormatter = formatters.yearLong();
     }
@@ -140,7 +135,7 @@ public class DebugPage implements Page {
             }
             content.append("</pre>");
         } catch (Exception e) {
-            errorHandler.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.WARN, this.getClass(), e);
         }
     }
 
@@ -156,7 +151,7 @@ public class DebugPage implements Page {
             }
             content.append("</pre>");
         } catch (Exception e) {
-            errorHandler.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.WARN, this.getClass(), e);
         }
     }
 
@@ -177,7 +172,7 @@ public class DebugPage implements Page {
             }
             content.append("</pre>");
         } catch (Exception e) {
-            errorHandler.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.WARN, this.getClass(), e);
         }
     }
 
@@ -256,49 +251,8 @@ public class DebugPage implements Page {
 
     private void appendLoggedErrors(StringBuilder content) {
         content.append("<pre>### Logged Errors<br>");
-
-        if (errorHandler instanceof DefaultErrorHandler) {
-            appendErrorLines(content, (DefaultErrorHandler) errorHandler);
-        } else {
-            content.append("Using incompatible ErrorHandler");
-        }
-
+        content.append("Using incompatible ErrorHandler");
         content.append("</pre>");
-    }
-
-    private void appendErrorLines(StringBuilder content, DefaultErrorHandler errorHandler) {
-        List<String> lines = errorHandler.getErrorHandler(FolderTimeStampErrorFileLogger.class)
-                .flatMap(FolderTimeStampFileLogger::getCurrentFile)
-                .map(file -> {
-                    try {
-                        return FileResource.lines(file);
-                    } catch (IOException e) {
-                        errorHandler.log(L.WARN, this.getClass(), e);
-                        return new ArrayList<String>();
-                    }
-                }).orElse(new ArrayList<>());
-        SortedMap<String, List<String>> errors = FolderTimeStampErrorFileLogger.splitByError(lines);
-
-        if (!errors.isEmpty()) {
-            List<String> errorLines = new ArrayList<>();
-            for (Map.Entry<String, List<String>> entry : errors.entrySet()) {
-                StringBuilder errorLineBuilder = new StringBuilder();
-                for (String line : entry.getValue()) {
-                    errorLineBuilder.append(line).append("<br>");
-                }
-                String error = errorLineBuilder.toString();
-                if (!errorLines.contains(error)) {
-                    errorLines.add(error);
-                }
-            }
-            for (String error : errorLines) {
-                content.append("</pre><pre>&#96;&#96;&#96;<br>")
-                        .append(error)
-                        .append("&#96;&#96;&#96;");
-            }
-        } else {
-            content.append("**No Errors logged.**<br>");
-        }
     }
 
     private void appendDebugLog(StringBuilder content) {

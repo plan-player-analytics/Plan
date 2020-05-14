@@ -19,9 +19,9 @@ package com.djrapitops.plan.identification;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.api.utility.UUIDFetcher;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,12 +42,12 @@ import java.util.UUID;
 public class UUIDUtility {
 
     private final DBSystem dbSystem;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
-    public UUIDUtility(DBSystem dbSystem, ErrorHandler errorHandler) {
+    public UUIDUtility(DBSystem dbSystem, ErrorLogger errorLogger) {
         this.dbSystem = dbSystem;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     public static Optional<UUID> parseFromString(String uuidString) {
@@ -92,7 +92,7 @@ public class UUIDUtility {
         try {
             return dbSystem.getDatabase().query(UserIdentifierQueries.fetchPlayerUUIDOf(playerName));
         } catch (DBOpException e) {
-            errorHandler.log(L.ERROR, UUIDUtility.class, e);
+            errorLogger.log(L.ERROR, UUIDUtility.class, e);
             return Optional.empty();
         }
     }

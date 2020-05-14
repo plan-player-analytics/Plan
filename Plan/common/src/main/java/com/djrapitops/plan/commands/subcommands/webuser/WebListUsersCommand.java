@@ -26,11 +26,11 @@ import com.djrapitops.plan.settings.locale.lang.ManageLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -47,21 +47,21 @@ public class WebListUsersCommand extends CommandNode {
     private final Locale locale;
     private final Processing processing;
     private final DBSystem dbSystem;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public WebListUsersCommand(
             Locale locale,
             Processing processing,
             DBSystem dbSystem,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         super("list", Permissions.MANAGE_WEB.getPerm(), CommandType.CONSOLE);
 
         this.locale = locale;
         this.processing = processing;
         this.dbSystem = dbSystem;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         setShortHelp(locale.getString(CmdHelpLang.WEB_LIST));
     }
@@ -83,7 +83,7 @@ public class WebListUsersCommand extends CommandNode {
                 }
                 sender.sendMessage(">");
             } catch (Exception e) {
-                errorHandler.log(L.ERROR, this.getClass(), e);
+                errorLogger.log(L.ERROR, this.getClass(), e);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
             }
         });

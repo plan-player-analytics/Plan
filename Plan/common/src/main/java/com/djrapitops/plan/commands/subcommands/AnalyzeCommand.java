@@ -34,12 +34,12 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -60,7 +60,7 @@ public class AnalyzeCommand extends CommandNode {
     private final ServerInfo serverInfo;
     private final WebServer webServer;
     private final DBSystem dbSystem;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public AnalyzeCommand(
@@ -71,7 +71,7 @@ public class AnalyzeCommand extends CommandNode {
             ServerInfo serverInfo,
             WebServer webServer,
             DBSystem dbSystem,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         super("analyze|analyse|analysis|a", Permissions.ANALYZE.getPermission(), CommandType.CONSOLE);
 
@@ -82,7 +82,7 @@ public class AnalyzeCommand extends CommandNode {
         this.serverInfo = serverInfo;
         this.webServer = webServer;
         this.dbSystem = dbSystem;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         setShortHelp(locale.getString(CmdHelpLang.ANALYZE));
         setInDepthHelp(locale.getArray(DeepHelpLang.ANALYZE));
@@ -106,7 +106,7 @@ public class AnalyzeCommand extends CommandNode {
                 sendLink(server, sender);
             } catch (DBOpException | ExportException e) {
                 sender.sendMessage("§cError occurred: " + e.toString());
-                errorHandler.log(L.ERROR, this.getClass(), e);
+                errorLogger.log(L.ERROR, this.getClass(), e);
             }
         });
     }

@@ -22,11 +22,11 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.settings.locale.lang.DeepHelpLang;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 
@@ -39,15 +39,15 @@ public class ReloadCommand extends CommandNode {
 
     private final PlanPlugin plugin;
     private final Locale locale;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
-    public ReloadCommand(PlanPlugin plugin, Locale locale, ErrorHandler errorHandler) {
+    public ReloadCommand(PlanPlugin plugin, Locale locale, ErrorLogger errorLogger) {
         super("reload", Permissions.RELOAD.getPermission(), CommandType.CONSOLE);
 
         this.plugin = plugin;
         this.locale = locale;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         setShortHelp(locale.getString(CmdHelpLang.RELOAD));
         setInDepthHelp(locale.getArray(DeepHelpLang.RELOAD));
@@ -60,7 +60,7 @@ public class ReloadCommand extends CommandNode {
                 plugin.reloadPlugin(true);
                 sender.sendMessage(locale.getString(CommandLang.RELOAD_COMPLETE));
             } catch (Exception e) {
-                errorHandler.log(L.CRITICAL, this.getClass(), e);
+                errorLogger.log(L.CRITICAL, this.getClass(), e);
                 sender.sendMessage(locale.getString(CommandLang.RELOAD_FAILED));
             } finally {
                 Thread thread = Thread.currentThread();

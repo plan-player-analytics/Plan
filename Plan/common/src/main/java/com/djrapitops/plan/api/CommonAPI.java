@@ -27,9 +27,9 @@ import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -51,19 +51,19 @@ public class CommonAPI implements PlanAPI {
     private final DBSystem dbSystem;
     private final UUIDUtility uuidUtility;
     private final PluginLogger logger;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public CommonAPI(
             DBSystem dbSystem,
             UUIDUtility uuidUtility,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.dbSystem = dbSystem;
         this.uuidUtility = uuidUtility;
         this.logger = logger;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
         PlanAPIHolder.set(this);
     }
 
@@ -94,7 +94,7 @@ public class CommonAPI implements PlanAPI {
         try {
             return queryDB(UserIdentifierQueries.fetchAllPlayerNames());
         } catch (DBOpException e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, this.getClass(), e);
             return new HashMap<>();
         }
     }

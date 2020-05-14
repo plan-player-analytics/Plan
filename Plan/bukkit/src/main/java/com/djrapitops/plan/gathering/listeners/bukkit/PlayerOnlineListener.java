@@ -36,8 +36,8 @@ import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.events.*;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -67,7 +67,7 @@ public class PlayerOnlineListener implements Listener {
     private final GeolocationCache geolocationCache;
     private final NicknameCache nicknameCache;
     private final SessionCache sessionCache;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
     private final Status status;
 
     @Inject
@@ -82,7 +82,7 @@ public class PlayerOnlineListener implements Listener {
             NicknameCache nicknameCache,
             SessionCache sessionCache,
             Status status,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.config = config;
         this.processing = processing;
@@ -94,7 +94,7 @@ public class PlayerOnlineListener implements Listener {
         this.nicknameCache = nicknameCache;
         this.sessionCache = sessionCache;
         this.status = status;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -107,7 +107,7 @@ public class PlayerOnlineListener implements Listener {
             dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, () -> banned));
             dbSystem.getDatabase().executeTransaction(new OperatorStatusTransaction(playerUUID, operator));
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, this.getClass(), e);
         }
     }
 
@@ -132,7 +132,7 @@ public class PlayerOnlineListener implements Listener {
 
             dbSystem.getDatabase().executeTransaction(new KickStoreTransaction(uuid));
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, this.getClass(), e);
         }
     }
 
@@ -141,7 +141,7 @@ public class PlayerOnlineListener implements Listener {
         try {
             actOnJoinEvent(event);
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, this.getClass(), e);
         }
     }
 
@@ -205,7 +205,7 @@ public class PlayerOnlineListener implements Listener {
         try {
             actOnQuitEvent(event);
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, this.getClass(), e);
         }
     }
 

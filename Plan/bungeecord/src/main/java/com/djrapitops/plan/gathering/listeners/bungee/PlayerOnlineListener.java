@@ -34,8 +34,8 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.events.GeoInfoStoreTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
@@ -63,7 +63,7 @@ public class PlayerOnlineListener implements Listener {
     private final GeolocationCache geolocationCache;
     private final SessionCache sessionCache;
     private final ServerInfo serverInfo;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public PlayerOnlineListener(
@@ -74,7 +74,7 @@ public class PlayerOnlineListener implements Listener {
             Exporter exporter, GeolocationCache geolocationCache,
             SessionCache sessionCache,
             ServerInfo serverInfo,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.config = config;
         this.processing = processing;
@@ -84,7 +84,7 @@ public class PlayerOnlineListener implements Listener {
         this.geolocationCache = geolocationCache;
         this.sessionCache = sessionCache;
         this.serverInfo = serverInfo;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -92,7 +92,7 @@ public class PlayerOnlineListener implements Listener {
         try {
             actOnLogin(event);
         } catch (Exception e) {
-            errorHandler.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.WARN, this.getClass(), e);
         }
     }
 
@@ -142,7 +142,7 @@ public class PlayerOnlineListener implements Listener {
         try {
             actOnLogout(event);
         } catch (Exception e) {
-            errorHandler.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.WARN, this.getClass(), e);
         }
     }
 
@@ -179,7 +179,7 @@ public class PlayerOnlineListener implements Listener {
         try {
             actOnServerSwitch(event);
         } catch (Exception e) {
-            errorHandler.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.WARN, this.getClass(), e);
         }
     }
 
