@@ -47,6 +47,7 @@ public class Contributors {
                 new Contributor("Eyremba", LANG),
                 new Contributor("f0rb1d (\u4f5b\u58c1\u706f)", LANG),
                 new Contributor("fuzzlemann", CODE, LANG),
+                new Contributor("itaquito", LANG),
                 new Contributor("jyhsu2000", CODE),
                 new Contributor("jvmuller", LANG),
                 new Contributor("Malachiel", LANG),
