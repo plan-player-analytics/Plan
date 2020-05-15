@@ -42,10 +42,15 @@ public class ErrorContext {
 
     public Collection<String> toLines() {
         List<String> lines = new ArrayList<>();
+        getWhatToDo().ifPresent(lines::add);
         for (Object o : related) {
             lines.add(Objects.toString(o));
         }
         return lines;
+    }
+
+    public void merge(ErrorContext context) {
+        this.related.addAll(context.related);
     }
 
     public static class Builder {

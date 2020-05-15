@@ -115,7 +115,7 @@ public class DBCleanTask extends AbsRunnable {
                 }
             }
         } catch (DBOpException e) {
-            errorLogger.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e);
             cancel();
         }
     }

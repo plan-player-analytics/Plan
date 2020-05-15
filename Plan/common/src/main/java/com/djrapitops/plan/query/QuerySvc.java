@@ -23,6 +23,7 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.QueryAPIExecutable;
 import com.djrapitops.plan.storage.database.queries.QueryAPIQuery;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -107,8 +108,9 @@ public class QuerySvc implements QueryService {
             try {
                 subscriber.accept(playerUUID);
             } catch (DBOpException e) {
-                logger.warn("User of Query API (" + subscriber.getClass().getName() + ") ran into exception, failed safely:");
-                errorLogger.log(L.WARN, QueryService.class, e);
+                errorLogger.log(L.WARN, e, ErrorContext.builder()
+                        .whatToDo("Report to this Query API user " + subscriber.getClass().getName())
+                        .related("Subscriber: " + subscriber.getClass().getName()).build());
             }
         });
     }
@@ -118,8 +120,9 @@ public class QuerySvc implements QueryService {
             try {
                 function.apply();
             } catch (DBOpException e) {
-                logger.warn("User of Query API (" + function.getClass().getName() + ") ran into exception, failed safely:");
-                errorLogger.log(L.WARN, QueryService.class, e);
+                errorLogger.log(L.WARN, e, ErrorContext.builder()
+                        .whatToDo("Report to this Query API user " + function.getClass().getName())
+                        .related("Subscriber: " + function.getClass().getName()).build());
             }
         });
     }

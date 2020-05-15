@@ -25,6 +25,7 @@ import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.events.ServerShutdownTransaction;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -90,7 +91,11 @@ public abstract class ServerShutdownSave {
             prepareSessionsForStorage(activeSessions, System.currentTimeMillis());
             return Optional.of(saveActiveSessions(activeSessions));
         } catch (DBInitException e) {
-            errorLogger.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder()
+                    .whatToDo("Find the sessions in the error file and save them manually or ignore. Report & delete the error file after.")
+                    .related("Shutdown save failed to init database.")
+                    .related(activeSessions)
+                    .build());
             return Optional.empty();
         } catch (IllegalStateException ignored) {
             /* Database is not initialized */

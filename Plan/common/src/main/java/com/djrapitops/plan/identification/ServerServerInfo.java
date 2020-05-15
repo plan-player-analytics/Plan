@@ -27,6 +27,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 
@@ -113,8 +114,11 @@ public class ServerServerInfo extends ServerInfo {
         if (!foundServer.isPresent()) {
             try {
                 server = registerServer(serverUUID);
-            } catch (ExecutionException | IOException e) {
-                errorLogger.log(L.CRITICAL, this.getClass(), e);
+            } catch (IOException e) {
+                errorLogger.log(L.CRITICAL, e, ErrorContext.builder()
+                        .whatToDo("Grant access permissions for writing to " + serverInfoFile.getConfigFilePath()).build());
+            } catch (ExecutionException e) {
+                errorLogger.log(L.CRITICAL, e, ErrorContext.builder().build());
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

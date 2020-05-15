@@ -22,6 +22,7 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.locale.lang.*;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -112,8 +113,7 @@ public class LocaleSystem implements SubSystem {
             }
             new LocaleFileWriter(writing).writeToFile(localeFile);
         } catch (IOException | IllegalStateException e) {
-            logger.error("Failed to write new Locale file at " + localeFile.getAbsolutePath());
-            errorLogger.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().whatToDo("Fix write permissions to " + localeFile.getAbsolutePath()).build());
         }
         resetWriteConfigSetting();
     }
@@ -123,8 +123,7 @@ public class LocaleSystem implements SubSystem {
             config.set(PluginSettings.WRITE_NEW_LOCALE, false);
             config.save();
         } catch (IOException | IllegalStateException e) {
-            logger.error("Failed set WriteNewLocaleFileOnEnable back to false");
-            errorLogger.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().whatToDo("Fix write permissions to " + config.getConfigFilePath()).build());
         }
     }
 

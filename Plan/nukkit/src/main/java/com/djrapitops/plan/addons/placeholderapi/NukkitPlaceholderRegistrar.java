@@ -24,12 +24,12 @@ import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.placeholder.PlanPlaceholders;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -60,9 +60,9 @@ public class NukkitPlaceholderRegistrar {
         placeholders.getPlaceholders().forEach((name, loader) ->
                 api.visitorSensitivePlaceholder(name, (player, params) -> {
                             try {
-                                return loader.apply(getPlayer(player), new ArrayList<>(params.getAll().values()));
+                                return loader.apply(getPlayer(player), params.get());
                             } catch (Exception e) {
-                                errorLogger.log(L.WARN, getClass(), e);
+                                errorLogger.log(L.WARN, e, ErrorContext.builder().related("Registering PlaceholderAPI").build());
                                 return null;
                             }
                         }
@@ -71,9 +71,9 @@ public class NukkitPlaceholderRegistrar {
         placeholders.getStaticPlaceholders().forEach((name, loader) ->
                 api.staticPlaceholder(name, params -> {
                             try {
-                                return loader.apply(new ArrayList<>(params.getAll().values()));
+                                return loader.apply(params.get());
                             } catch (Exception e) {
-                                errorLogger.log(L.WARN, getClass(), e);
+                                errorLogger.log(L.WARN, e, ErrorContext.builder().related("Registering PlaceholderAPI").build());
                                 return null;
                             }
                         }

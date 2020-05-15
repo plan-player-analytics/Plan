@@ -31,6 +31,7 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.file.ResourceCache;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.version.VersionChecker;
 import com.djrapitops.plugin.benchmarking.Benchmark;
@@ -135,7 +136,7 @@ public class DebugPage implements Page {
             }
             content.append("</pre>");
         } catch (Exception e) {
-            errorLogger.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.WARN, e, ErrorContext.builder().related("/debug page access, resource cache").build());
         }
     }
 
@@ -151,7 +152,7 @@ public class DebugPage implements Page {
             }
             content.append("</pre>");
         } catch (Exception e) {
-            errorLogger.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.WARN, e, ErrorContext.builder().related("/debug page access, JSON cache").build());
         }
     }
 
@@ -172,7 +173,7 @@ public class DebugPage implements Page {
             }
             content.append("</pre>");
         } catch (Exception e) {
-            errorLogger.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.WARN, e, ErrorContext.builder().related("/debug page access, Session cache").build());
         }
     }
 

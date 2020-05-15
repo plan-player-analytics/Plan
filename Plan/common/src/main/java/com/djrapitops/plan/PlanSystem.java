@@ -37,6 +37,7 @@ import com.djrapitops.plan.settings.SettingsSvc;
 import com.djrapitops.plan.settings.locale.LocaleSystem;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.version.VersionChecker;
 import com.djrapitops.plugin.benchmarking.Benchmark;
@@ -222,7 +223,7 @@ public class PlanSystem implements SubSystem {
                     system.disable();
                 }
             } catch (Exception e) {
-                errorLogger.log(L.WARN, this.getClass(), e);
+                errorLogger.log(L.WARN, e, ErrorContext.builder().related("Disabling PlanSystem: " + system).build());
             }
         }
     }

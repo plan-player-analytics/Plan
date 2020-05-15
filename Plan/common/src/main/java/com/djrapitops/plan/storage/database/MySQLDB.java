@@ -23,6 +23,7 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -76,7 +77,7 @@ public class MySQLDB extends SQLDB {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            errorLogger.log(L.CRITICAL, this.getClass(), e);
+            errorLogger.log(L.CRITICAL, e, ErrorContext.builder().whatToDo("Install MySQL Driver to the server").build());
         }
     }
 
@@ -164,7 +165,7 @@ public class MySQLDB extends SQLDB {
                 connection.close();
             }
         } catch (SQLException e) {
-            errorLogger.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.CRITICAL, e, ErrorContext.builder().related("Closing connection").build());
         }
     }
 

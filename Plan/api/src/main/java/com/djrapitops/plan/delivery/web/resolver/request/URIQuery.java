@@ -94,4 +94,11 @@ public final class URIQuery {
         }
         return builder.toString();
     }
+
+    @Override
+    public String toString() {
+        return "URIQuery{" +
+                "byKey=" + byKey +
+                '}';
+    }
 }

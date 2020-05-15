@@ -25,6 +25,7 @@ import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.upkeep.DBKeepAliveTask;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.java.ThrowableUtils;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -80,8 +81,8 @@ public class SQLiteDB extends SQLDB {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
-            errorLogger.log(L.CRITICAL, this.getClass(), e);
-            return null; // Should never happen.
+            errorLogger.log(L.CRITICAL, e, ErrorContext.builder().whatToDo("Install SQLite Driver to the server").build());
+            return null;
         }
 
         String dbFilePath = dbFile.getAbsolutePath();

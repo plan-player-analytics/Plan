@@ -36,6 +36,7 @@ import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.events.*;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import org.spongepowered.api.Sponge;
@@ -105,7 +106,7 @@ public class PlayerOnlineListener {
         try {
             actOnLoginEvent(event);
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 
@@ -125,7 +126,7 @@ public class PlayerOnlineListener {
             }
             dbSystem.getDatabase().executeTransaction(new KickStoreTransaction(playerUUID));
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 
@@ -143,7 +144,7 @@ public class PlayerOnlineListener {
         try {
             actOnJoinEvent(event);
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 
@@ -208,7 +209,7 @@ public class PlayerOnlineListener {
         try {
             actOnQuitEvent(event);
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 

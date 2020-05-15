@@ -23,12 +23,14 @@ import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.implementation.CallerImplementation;
 import com.djrapitops.plan.extension.implementation.ExtensionRegister;
 import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
+import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 import com.djrapitops.plan.extension.implementation.providers.gathering.ProviderValueGatherer;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.ExtensionSettings;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -88,8 +90,14 @@ public class ExtensionSvc implements ExtensionService {
         try {
             extensionRegister.registerBuiltInExtensions(config.getExtensionSettings().getDisabled());
         } catch (IllegalStateException failedToRegisterOne) {
-            logger.warn("One or more extensions failed to register, see suppressed exceptions (They can be disabled in Plan config).");
-            errorLogger.log(L.WARN, ExtensionService.class, failedToRegisterOne);
+            ErrorContext.Builder context = ErrorContext.builder()
+                    .whatToDo("Report and/or disable the failed extensions. You can find the failed extensions in the error file.");
+            for (Throwable suppressedException : failedToRegisterOne.getSuppressed()) {
+                context.related(suppressedException.getMessage());
+            }
+
+            logger.warn("One or more extensions failed to register (They can be disabled in Plan config).");
+            errorLogger.log(L.WARN, failedToRegisterOne, context.build());
         }
     }
 
@@ -130,7 +138,9 @@ public class ExtensionSvc implements ExtensionService {
             try {
                 pluginsConfig.createSection(pluginName);
             } catch (IOException e) {
-                errorLogger.log(L.ERROR, this.getClass(), e);
+                errorLogger.log(L.WARN, e, ErrorContext.builder()
+                        .whatToDo("Create 'Plugins." + pluginName + ".Enabled: true' setting manually.")
+                        .related("Section: " + pluginName).build());
                 logger.warn("Could not register DataExtension for " + pluginName + " due to " + e.toString());
                 return true;
             }
@@ -165,21 +175,23 @@ public class ExtensionSvc implements ExtensionService {
             // Try again
             updatePlayerValues(gatherer, playerUUID, playerName, event);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
-            logger.warn("Encountered unexpected error with " + gatherer.getPluginName() + " Extension: " + unexpectedError +
-                    " (but failed safely) when updating value for '" + playerName +
-                    "', stack trace to follow (please report this):");
-            errorLogger.log(L.WARN, gatherer.getClass(), unexpectedError);
+            ErrorContext.Builder context = ErrorContext.builder()
+                    .whatToDo("Report and/or disable " + gatherer.getPluginName() + " extension in the Plan config.")
+                    .related(gatherer.getPluginName())
+                    .related(event)
+                    .related("Player: " + playerName + " " + playerUUID);
+            errorLogger.log(L.WARN, unexpectedError, context.build());
         }
     }
 
     private void logFailure(String playerName, DataExtensionMethodCallException methodCallFailed) {
         Throwable cause = methodCallFailed.getCause();
-        String causeName = cause.getClass().getSimpleName();
-        logger.warn("Encountered " + causeName + " with " + methodCallFailed.getPluginName() + " Extension" +
-                " (failed safely) when updating value for '" + playerName +
-                "', the method was disabled temporarily (won't be called until next Plan reload)" +
-                ", stack trace to follow (please report this):");
-        errorLogger.log(L.WARN, getClass(), cause);
+        ErrorContext.Builder context = ErrorContext.builder()
+                .whatToDo("Report and/or disable " + methodCallFailed.getPluginName() + " extension in the Plan config.")
+                .related(methodCallFailed.getPluginName())
+                .related("Method:" + methodCallFailed.getMethod().map(MethodWrapper::getMethodName).orElse("-"))
+                .related("Player: " + playerName);
+        errorLogger.log(L.WARN, cause, context.build());
     }
 
     public void updateServerValues(CallEvents event) {
@@ -206,9 +218,12 @@ public class ExtensionSvc implements ExtensionService {
             // Try again
             updateServerValues(gatherer, event);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
-            logger.warn("Encountered unexpected error with " + gatherer.getPluginName() + " Extension: " + unexpectedError +
-                    " (failed safely) when updating value for server, stack trace to follow (please report this):");
-            errorLogger.log(L.WARN, gatherer.getClass(), unexpectedError);
+            ErrorContext.Builder context = ErrorContext.builder()
+                    .whatToDo("Report and/or disable " + gatherer.getPluginName() + " extension in the Plan config.")
+                    .related(gatherer.getPluginName())
+                    .related(event)
+                    .related("Gathering for server");
+            errorLogger.log(L.WARN, unexpectedError, context.build());
         }
     }
 }

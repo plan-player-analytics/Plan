@@ -27,6 +27,7 @@ import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.utilities.Verify;
@@ -93,7 +94,7 @@ public class WorldAliasSettings {
                 try {
                     aliasSect.save();
                 } catch (IOException e) {
-                    errorLogger.log(L.WARN, WorldAliasSettings.class, e);
+                    errorLogger.log(L.ERROR, e, ErrorContext.builder().whatToDo("Fix write permissions to " + config.get().getConfigFilePath()).build());
                 }
             });
         }

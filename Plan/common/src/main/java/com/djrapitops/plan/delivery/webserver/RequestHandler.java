@@ -31,6 +31,7 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -99,7 +100,10 @@ public class RequestHandler implements HttpHandler {
         } catch (Exception e) {
             if (config.isTrue(PluginSettings.DEV_MODE)) {
                 logger.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
-                errorLogger.log(L.WARN, this.getClass(), e);
+                errorLogger.log(L.WARN, e, ErrorContext.builder()
+                        .whatToDo("THIS ERROR IS ONLY LOGGED IN DEV MODE")
+                        .related(exchange.getRequestMethod(), exchange.getRemoteAddress(), exchange.getRequestHeaders(), exchange.getResponseHeaders(), exchange.getRequestURI())
+                        .build());
             }
         } finally {
             exchange.close();

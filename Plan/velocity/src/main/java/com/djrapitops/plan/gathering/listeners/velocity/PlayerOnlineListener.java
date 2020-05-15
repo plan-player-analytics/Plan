@@ -34,6 +34,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.events.GeoInfoStoreTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.velocitypowered.api.event.PostOrder;
@@ -96,7 +97,7 @@ public class PlayerOnlineListener {
         try {
             actOnLogin(event);
         } catch (Exception e) {
-            errorLogger.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 
@@ -147,7 +148,7 @@ public class PlayerOnlineListener {
         try {
             actOnLogout(event);
         } catch (Exception e) {
-            errorLogger.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 
@@ -185,7 +186,7 @@ public class PlayerOnlineListener {
         try {
             actOnServerSwitch(event);
         } catch (Exception e) {
-            errorLogger.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 

@@ -73,7 +73,7 @@ public class ExportScheduler {
     private void schedulePlayersPageExport() {
         long period = TimeAmount.toTicks(config.get(ExportSettings.EXPORT_PERIOD), TimeUnit.MILLISECONDS);
         taskSystem.registerTask("Players page export",
-                new ExportTask(exporter, Exporter::exportPlayersPage, logger, errorLogger)
+                new ExportTask(exporter, Exporter::exportPlayersPage, errorLogger)
         ).runTaskTimerAsynchronously(0L, period);
     }
 
@@ -89,7 +89,7 @@ public class ExportScheduler {
 
         Optional<Server> proxy = servers.stream().filter(Server::isProxy).findFirst();
         proxy.ifPresent(mainServer -> taskSystem.registerTask("Network export",
-                new ExportTask(exporter, exporter -> exporter.exportServerPage(mainServer), logger, errorLogger))
+                new ExportTask(exporter, exporter -> exporter.exportServerPage(mainServer), errorLogger))
                 .runTaskTimerAsynchronously(0L, period)
         );
 
@@ -99,7 +99,7 @@ public class ExportScheduler {
                     new ExportTask(exporter, same -> {
                         same.exportServerPage(server);
                         same.exportServerJSON(server);
-                    }, logger, errorLogger))
+                    }, errorLogger))
                     .runTaskTimerAsynchronously(offset * offsetMultiplier, period);
             offsetMultiplier++;
         }

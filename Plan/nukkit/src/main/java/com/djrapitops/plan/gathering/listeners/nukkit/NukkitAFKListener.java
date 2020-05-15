@@ -24,6 +24,7 @@ import cn.nukkit.event.player.*;
 import com.djrapitops.plan.gathering.afk.AFKTracker;
 import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 
@@ -79,7 +80,7 @@ public class NukkitAFKListener implements Listener {
 
             AFK_TRACKER.performedAction(uuid, time);
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 

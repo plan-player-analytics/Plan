@@ -31,6 +31,7 @@ import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransa
 import com.djrapitops.plan.storage.database.transactions.init.OperationCriticalTransaction;
 import com.djrapitops.plan.storage.database.transactions.patches.*;
 import com.djrapitops.plan.utilities.java.ThrowableUtils;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.L;
@@ -92,7 +93,9 @@ public abstract class SQLDB extends AbstractDatabase {
                     .namingPattern(nameFormat)
                     .uncaughtExceptionHandler((thread, throwable) -> {
                         if (devMode) {
-                            errorLogger.log(L.WARN, getClass(), throwable);
+                            errorLogger.log(L.WARN, throwable, ErrorContext.builder()
+                                    .whatToDo("THIS ERROR IS ONLY LOGGED IN DEV MODE")
+                                    .build());
                         }
                     }).build());
         };
@@ -248,10 +251,10 @@ public abstract class SQLDB extends AbstractDatabase {
             }
             transaction.executeTransaction(this);
             return CompletableFuture.completedFuture(null);
-        }, getTransactionExecutor()).handle(errorHandler(origin));
+        }, getTransactionExecutor()).handle(errorHandler(transaction, origin));
     }
 
-    private BiFunction<CompletableFuture<Object>, Throwable, CompletableFuture<Object>> errorHandler(Exception origin) {
+    private BiFunction<CompletableFuture<Object>, Throwable, CompletableFuture<Object>> errorHandler(Transaction transaction, Exception origin) {
         return (obj, throwable) -> {
             if (throwable == null) {
                 return CompletableFuture.completedFuture(null);
@@ -261,7 +264,8 @@ public abstract class SQLDB extends AbstractDatabase {
             }
             ThrowableUtils.appendEntryPointToCause(throwable, origin);
 
-            errorLogger.log(L.ERROR, getClass(), throwable);
+            errorLogger.log(L.ERROR, throwable, ErrorContext.builder()
+                    .related("Transaction: " + transaction.getClass()).build());
             return CompletableFuture.completedFuture(null);
         };
     }

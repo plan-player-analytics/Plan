@@ -18,6 +18,7 @@ package com.djrapitops.plan.utilities.logging;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.exceptions.ExceptionWithContext;
 import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.java.Lists;
@@ -76,11 +77,16 @@ public class ErrorLogger implements ErrorHandler {
         this.formatters = formatters;
     }
 
+    public <T extends ExceptionWithContext> void log(L level, T throwable) {
+        log(level, (Throwable) throwable, throwable.getContext().orElse(ErrorContext.builder().related("Missing Context").build()));
+    }
+
     public void log(L level, Throwable throwable, ErrorContext context) {
         String errorName = throwable.getClass().getSimpleName();
         String hash = hash(throwable);
         Path logsDir = files.getLogsDirectory();
         Path errorLog = logsDir.resolve(errorName + "-" + hash + ".txt");
+        mergeAdditionalContext(throwable, context);
         if (Files.exists(errorLog)) {
             logExisting(errorLog, throwable, context);
         } else {
@@ -90,6 +96,16 @@ public class ErrorLogger implements ErrorHandler {
         if (L.CRITICAL == level) {
             plugin.getPluginLogger().error("CRITICAL error triggered a plugin shutdown.");
             plugin.onDisable();
+        }
+    }
+
+    public void mergeAdditionalContext(Throwable throwable, ErrorContext context) {
+        Throwable cause = throwable.getCause();
+        while (cause != null) {
+            if (cause instanceof ExceptionWithContext) {
+                ((ExceptionWithContext) cause).getContext().ifPresent(context::merge);
+            }
+            cause = cause.getCause();
         }
     }
 
@@ -231,6 +247,13 @@ public class ErrorLogger implements ErrorHandler {
         trace.add(e.toString());
         for (StackTraceElement element : e.getStackTrace()) {
             trace.add("   " + element);
+        }
+        Throwable[] suppressed = e.getSuppressed();
+        if (suppressed.length > 0) {
+            for (Throwable suppressedThrowable : suppressed) {
+                trace.add("   Suppressed:");
+                buildReadableStacktrace(suppressedThrowable).stream().map(line -> "   " + line).forEach(trace::add);
+            }
         }
         Throwable cause = e.getCause();
         if (cause != null) {
