@@ -44,6 +44,8 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
         this.context = context;
     }
 
+    // Checkstyle.OFF: CyclomaticComplexity
+
     public static DBOpException forCause(String sql, SQLException e) {
         ErrorContext.Builder context = ErrorContext.builder();
         int errorCode = e.getErrorCode();
@@ -126,6 +128,8 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
         }
         return new DBOpException("SQL Failure: " + e.getMessage(), e, context.build());
     }
+
+    // Checkstyle.ON: CyclomaticComplexity
 
     @Override
     public Optional<ErrorContext> getContext() {
