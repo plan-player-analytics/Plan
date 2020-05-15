@@ -28,6 +28,7 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 
@@ -61,7 +62,7 @@ public class WorldChangeListener implements Listener {
             try {
                 actOnEvent(event);
             } catch (Exception e) {
-                errorLogger.log(L.ERROR, this.getClass(), e);
+                errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
             }
         }
     }

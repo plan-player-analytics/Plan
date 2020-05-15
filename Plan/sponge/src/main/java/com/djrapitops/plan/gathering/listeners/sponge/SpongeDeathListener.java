@@ -23,6 +23,7 @@ import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.processing.processors.player.MobKillProcessor;
 import com.djrapitops.plan.processing.processors.player.PlayerKillProcessor;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import org.spongepowered.api.data.key.Keys;
@@ -81,7 +82,7 @@ public class SpongeDeathListener {
                 handleKill(time, dead, killerEntity);
             }
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event, dead).build());
         }
     }
 

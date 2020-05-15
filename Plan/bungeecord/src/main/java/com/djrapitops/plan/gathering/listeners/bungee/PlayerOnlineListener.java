@@ -34,6 +34,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.events.GeoInfoStoreTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -92,7 +93,7 @@ public class PlayerOnlineListener implements Listener {
         try {
             actOnLogin(event);
         } catch (Exception e) {
-            errorLogger.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 
@@ -142,7 +143,7 @@ public class PlayerOnlineListener implements Listener {
         try {
             actOnLogout(event);
         } catch (Exception e) {
-            errorLogger.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 
@@ -179,7 +180,7 @@ public class PlayerOnlineListener implements Listener {
         try {
             actOnServerSwitch(event);
         } catch (Exception e) {
-            errorLogger.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 

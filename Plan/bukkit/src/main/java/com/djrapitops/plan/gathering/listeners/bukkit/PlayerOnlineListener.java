@@ -36,6 +36,7 @@ import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.events.*;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import org.bukkit.entity.Player;
@@ -107,7 +108,7 @@ public class PlayerOnlineListener implements Listener {
             dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, () -> banned));
             dbSystem.getDatabase().executeTransaction(new OperatorStatusTransaction(playerUUID, operator));
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event, event.getResult()).build());
         }
     }
 
@@ -132,7 +133,7 @@ public class PlayerOnlineListener implements Listener {
 
             dbSystem.getDatabase().executeTransaction(new KickStoreTransaction(uuid));
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 
@@ -141,7 +142,7 @@ public class PlayerOnlineListener implements Listener {
         try {
             actOnJoinEvent(event);
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 
@@ -205,7 +206,7 @@ public class PlayerOnlineListener implements Listener {
         try {
             actOnQuitEvent(event);
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 

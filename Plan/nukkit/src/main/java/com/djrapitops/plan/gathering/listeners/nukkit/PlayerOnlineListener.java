@@ -45,6 +45,7 @@ import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.events.*;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 
@@ -105,7 +106,7 @@ public class PlayerOnlineListener implements Listener {
             boolean operator = event.getPlayer().isOp();
             dbSystem.getDatabase().executeTransaction(new OperatorStatusTransaction(playerUUID, operator));
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 
