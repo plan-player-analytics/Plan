@@ -31,6 +31,7 @@ import com.djrapitops.plan.delivery.webserver.resolver.auth.*;
 import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import dagger.Lazy;
@@ -143,7 +144,7 @@ public class ResponseResolver {
         } catch (WebUserAuthException e) {
             throw e; // Pass along
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(request).build());
             return responseFactory.internalErrorResponse(e, request.getPath().asString());
         }
     }

@@ -92,7 +92,7 @@ public class UUIDUtility {
         try {
             return dbSystem.getDatabase().query(UserIdentifierQueries.fetchPlayerUUIDOf(playerName));
         } catch (DBOpException e) {
-            errorLogger.log(L.ERROR, UUIDUtility.class, e);
+            errorLogger.log(L.ERROR, e);
             return Optional.empty();
         }
     }

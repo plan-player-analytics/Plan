@@ -18,6 +18,7 @@ package com.djrapitops.plan.addons.placeholderapi;
 
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.placeholder.PlanPlaceholders;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.version.VersionChecker;
 import com.djrapitops.plugin.logging.L;
@@ -92,7 +93,7 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
 
             return value;
         } catch (Exception e) {
-            errorLogger.log(L.WARN, getClass(), e);
+            errorLogger.log(L.WARN, e, ErrorContext.builder().whatToDo("Report this").related("Placeholder Request", params).build());
             return null;
         }
     }

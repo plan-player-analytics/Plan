@@ -138,7 +138,9 @@ public class ExtensionSvc implements ExtensionService {
             try {
                 pluginsConfig.createSection(pluginName);
             } catch (IOException e) {
-                errorLogger.log(L.ERROR, this.getClass(), e);
+                errorLogger.log(L.WARN, e, ErrorContext.builder()
+                        .whatToDo("Create 'Plugins." + pluginName + ".Enabled: true' setting manually.")
+                        .related("Section: " + pluginName).build());
                 logger.warn("Could not register DataExtension for " + pluginName + " due to " + e.toString());
                 return true;
             }

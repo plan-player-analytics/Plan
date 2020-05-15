@@ -99,7 +99,7 @@ public class DeathEventListener implements Listener {
 
             handleKill(time, /* Not a player */ null, killerEntity);
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event, dead).build());
         }
     }
 

@@ -24,6 +24,7 @@ import com.djrapitops.plan.settings.config.paths.FormatSettings;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -86,7 +87,7 @@ public abstract class ConfigSystem implements SubSystem {
 
             checkWrongTimeZone();
         } catch (IOException e) {
-            errorLogger.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().whatToDo("Fix write permissions to " + config.getConfigFilePath()).build());
             throw new EnableException("Failed to save default config: " + e.getMessage(), e);
         }
         theme.enable();
@@ -134,7 +135,7 @@ public abstract class ConfigSystem implements SubSystem {
         try {
             config.read();
         } catch (IOException e) {
-            errorLogger.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().whatToDo("Fix read permissions to " + config.getConfigFilePath()).build());
         }
     }
 }

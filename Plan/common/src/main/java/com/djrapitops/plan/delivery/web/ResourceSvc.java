@@ -23,6 +23,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.Resource;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -145,7 +146,9 @@ public class ResourceSvc implements ResourceService {
                 return getOrWriteCustomized(fileName, source);
             }
         } catch (IOException e) {
-            errorLogger.log(L.WARN, getClass(), e.getCause());
+            errorLogger.log(L.WARN, e, ErrorContext.builder()
+                    .whatToDo("Report this or provide " + fileName + " in " + files.getCustomizationDirectory())
+                    .related("Fetching resource", "Of: " + pluginName, fileName).build());
         }
         // Return original by default
         return source.get();

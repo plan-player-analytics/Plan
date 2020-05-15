@@ -19,6 +19,7 @@ package com.djrapitops.plan.gathering.timed;
 import com.djrapitops.plan.gathering.SystemUsage;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -111,7 +112,8 @@ public class SystemUsageBuffer {
                 buffer.freeDiskSpace = SystemUsage.getFreeDiskSpace();
             } catch (SecurityException noPermission) {
                 if (!diskErrored) {
-                    errorLogger.log(L.WARN, this.getClass(), noPermission);
+                    errorLogger.log(L.WARN, noPermission, ErrorContext.builder()
+                            .whatToDo("Resolve " + noPermission.getMessage() + " via OS or JVM permissions").build());
                 }
                 diskErrored = true;
             } catch (Exception e) {

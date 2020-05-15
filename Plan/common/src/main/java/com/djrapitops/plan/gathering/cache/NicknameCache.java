@@ -99,7 +99,7 @@ public class NicknameCache implements SubSystem {
                     NicknameQueries.fetchLastSeenNicknameOfPlayer(uuid, serverInfo.getServerUUID())
             ).map(Nickname::getName);
         } catch (DBOpException e) {
-            errorLogger.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e);
         }
         return Optional.empty();
     }

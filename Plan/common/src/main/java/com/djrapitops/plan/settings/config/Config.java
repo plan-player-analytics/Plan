@@ -98,4 +98,8 @@ public class Config extends ConfigNode {
     public int hashCode() {
         return Objects.hash(super.hashCode(), configFilePath);
     }
+
+    public Path getConfigFilePath() {
+        return configFilePath;
+    }
 }

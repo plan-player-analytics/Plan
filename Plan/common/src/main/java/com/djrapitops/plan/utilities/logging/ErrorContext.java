@@ -42,6 +42,7 @@ public class ErrorContext {
 
     public Collection<String> toLines() {
         List<String> lines = new ArrayList<>();
+        getWhatToDo().ifPresent(lines::add);
         for (Object o : related) {
             lines.add(Objects.toString(o));
         }

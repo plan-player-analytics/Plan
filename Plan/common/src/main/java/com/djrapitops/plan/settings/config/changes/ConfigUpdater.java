@@ -18,6 +18,7 @@ package com.djrapitops.plan.settings.config.changes;
 
 import com.djrapitops.plan.settings.config.Config;
 import com.djrapitops.plan.settings.config.paths.FormatSettings;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -152,7 +153,9 @@ public class ConfigUpdater {
                     logger.info("Config: " + change.getAppliedMessage());
                 }
             } catch (Exception e) {
-                errorLogger.log(L.WARN, this.getClass(), new IllegalStateException("Failed to apply config update: '" + change.getAppliedMessage() + "'", e));
+                errorLogger.log(L.ERROR, e, ErrorContext.builder()
+                        .whatToDo("Fix write permissions to " + config.getConfigFilePath() + " or Report this")
+                        .related("Attempt to change: " + change.getAppliedMessage()).build());
             }
         }
     }

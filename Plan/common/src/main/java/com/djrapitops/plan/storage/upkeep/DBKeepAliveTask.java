@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.upkeep;
 
 import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -59,7 +60,8 @@ public class DBKeepAliveTask extends AbsRunnable {
             try {
                 connection = iReconnect.reconnect();
             } catch (SQLException reconnectionError) {
-                errorLogger.log(L.ERROR, this.getClass(), reconnectionError);
+                errorLogger.log(L.ERROR, reconnectionError, ErrorContext.builder()
+                        .whatToDo("Reload Plan and Report this if the issue persists").build());
                 logger.error("SQL connection maintaining task had to be closed due to exception.");
                 this.cancel();
             }
