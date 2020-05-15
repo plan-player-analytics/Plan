@@ -134,17 +134,33 @@ public class GraphJSONCreator {
                 PlayerCountQueries.newPlayerCounts(halfYearAgo, now, timeZoneOffset, serverUUID)
         );
 
-        return createUniqueAndNewJSON(lineGraphs, uniquePerDay, newPerDay);
+        return createUniqueAndNewJSON(lineGraphs, uniquePerDay, newPerDay, TimeUnit.DAYS.toMillis(1L));
     }
 
-    public String createUniqueAndNewJSON(LineGraphFactory lineGraphs, NavigableMap<Long, Integer> uniquePerDay, NavigableMap<Long, Integer> newPerDay) {
+    public String hourlyUniqueAndNewGraphJSON(UUID serverUUID) {
+        Database db = dbSystem.getDatabase();
+        LineGraphFactory lineGraphs = graphs.line();
+        long now = System.currentTimeMillis();
+        long weekAgo = now - TimeUnit.DAYS.toMillis(7L);
+        int timeZoneOffset = config.getTimeZone().getOffset(now);
+        NavigableMap<Long, Integer> uniquePerDay = db.query(
+                PlayerCountQueries.hourlyUniquePlayerCounts(weekAgo, now, timeZoneOffset, serverUUID)
+        );
+        NavigableMap<Long, Integer> newPerDay = db.query(
+                PlayerCountQueries.newPlayerCounts(weekAgo, now, timeZoneOffset, serverUUID)
+        );
+
+        return createUniqueAndNewJSON(lineGraphs, uniquePerDay, newPerDay, TimeUnit.HOURS.toMillis(1L));
+    }
+
+    public String createUniqueAndNewJSON(LineGraphFactory lineGraphs, NavigableMap<Long, Integer> uniquePerDay, NavigableMap<Long, Integer> newPerDay, long gapFillPeriod) {
         return "{\"uniquePlayers\":" +
                 lineGraphs.lineGraph(MutatorFunctions.toPoints(
-                        MutatorFunctions.addMissing(uniquePerDay, TimeUnit.DAYS.toMillis(1L), 0)
+                        MutatorFunctions.addMissing(uniquePerDay, gapFillPeriod, 0)
                 )).toHighChartsSeries() +
                 ",\"newPlayers\":" +
                 lineGraphs.lineGraph(MutatorFunctions.toPoints(
-                        MutatorFunctions.addMissing(newPerDay, TimeUnit.DAYS.toMillis(1L), 0)
+                        MutatorFunctions.addMissing(newPerDay, gapFillPeriod, 0)
                 )).toHighChartsSeries() +
                 ",\"colors\":{" +
                 "\"playersOnline\":\"" + theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE) + "\"," +
@@ -165,7 +181,23 @@ public class GraphJSONCreator {
                 PlayerCountQueries.newPlayerCounts(halfYearAgo, now, timeZoneOffset)
         );
 
-        return createUniqueAndNewJSON(lineGraphs, uniquePerDay, newPerDay);
+        return createUniqueAndNewJSON(lineGraphs, uniquePerDay, newPerDay, TimeUnit.DAYS.toMillis(1L));
+    }
+
+    public String hourlyUniqueAndNewGraphJSON() {
+        Database db = dbSystem.getDatabase();
+        LineGraphFactory lineGraphs = graphs.line();
+        long now = System.currentTimeMillis();
+        long weekAgo = now - TimeUnit.DAYS.toMillis(7L);
+        int timeZoneOffset = config.getTimeZone().getOffset(now);
+        NavigableMap<Long, Integer> uniquePerDay = db.query(
+                PlayerCountQueries.hourlyUniquePlayerCounts(weekAgo, now, timeZoneOffset)
+        );
+        NavigableMap<Long, Integer> newPerDay = db.query(
+                PlayerCountQueries.hourlyNewPlayerCounts(weekAgo, now, timeZoneOffset)
+        );
+
+        return createUniqueAndNewJSON(lineGraphs, uniquePerDay, newPerDay, TimeUnit.HOURS.toMillis(1L));
     }
 
     public String serverCalendarJSON(UUID serverUUID) {

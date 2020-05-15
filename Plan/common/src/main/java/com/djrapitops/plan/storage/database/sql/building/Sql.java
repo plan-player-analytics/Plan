@@ -79,6 +79,8 @@ public abstract class Sql {
 
     public abstract String dateToDayStamp(String sql);
 
+    public abstract String dateToHourStamp(String sql);
+
     public abstract String dateToDayOfWeek(String sql);
 
     public abstract String dateToHour(String sql);
@@ -99,6 +101,11 @@ public abstract class Sql {
         @Override
         public String dateToDayStamp(String sql) {
             return "DATE(" + sql + ')';
+        }
+
+        @Override
+        public String dateToHourStamp(String sql) {
+            return "DATE_FORMAT(" + sql + ",'%Y-%m-%d %H:00:00')";
         }
 
         @Override
@@ -131,6 +138,11 @@ public abstract class Sql {
         }
 
         @Override
+        public String dateToHourStamp(String sql) {
+            return "DATE_FORMAT(" + sql + ",'yyyy-MM-dd HH:00:00')";
+        }
+
+        @Override
         public String dateToHour(String sql) {
             return "HOUR(" + sql + ')';
         }
@@ -152,6 +164,11 @@ public abstract class Sql {
         @Override
         public String dateToDayStamp(String sql) {
             return "strftime('%Y-%m-%d'," + sql + ')';
+        }
+
+        @Override
+        public String dateToHourStamp(String sql) {
+            return "strftime('%Y-%m-%d %H:00:00'," + sql + ')';
         }
 
         @Override

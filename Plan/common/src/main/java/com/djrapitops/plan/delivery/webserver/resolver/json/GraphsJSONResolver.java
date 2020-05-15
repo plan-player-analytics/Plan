@@ -92,6 +92,8 @@ public class GraphsJSONResolver implements Resolver {
                 return DataID.GRAPH_ONLINE;
             case "uniqueAndNew":
                 return DataID.GRAPH_UNIQUE_NEW;
+            case "hourlyUniqueAndNew":
+                return DataID.GRAPH_HOURLY_UNIQUE_NEW;
             case "serverCalendar":
                 return DataID.GRAPH_CALENDAR;
             case "worldPie":
@@ -119,6 +121,8 @@ public class GraphsJSONResolver implements Resolver {
                 return graphJSON.playersOnlineGraph(serverUUID);
             case GRAPH_UNIQUE_NEW:
                 return graphJSON.uniqueAndNewGraphJSON(serverUUID);
+            case GRAPH_HOURLY_UNIQUE_NEW:
+                return graphJSON.hourlyUniqueAndNewGraphJSON(serverUUID);
             case GRAPH_CALENDAR:
                 return graphJSON.serverCalendarJSON(serverUUID);
             case GRAPH_WORLD_PIE:
@@ -142,6 +146,8 @@ public class GraphsJSONResolver implements Resolver {
                 return graphJSON.activityGraphsJSONAsMap();
             case GRAPH_UNIQUE_NEW:
                 return graphJSON.uniqueAndNewGraphJSON();
+            case GRAPH_HOURLY_UNIQUE_NEW:
+                return graphJSON.hourlyUniqueAndNewGraphJSON();
             case GRAPH_SERVER_PIE:
                 return graphJSON.serverPreferencePieJSONAsMap();
             case GRAPH_WORLD_MAP:
