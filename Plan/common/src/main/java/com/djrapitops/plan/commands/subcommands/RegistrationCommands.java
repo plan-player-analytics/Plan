@@ -133,9 +133,9 @@ public class RegistrationCommands {
     }
 
     private int getPermissionLevel(CMDSender sender) {
-        final String permAnalyze = Permissions.ANALYZE.getPerm();
-        final String permInspectOther = Permissions.INSPECT_OTHER.getPerm();
-        final String permInspect = Permissions.INSPECT.getPerm();
+        final String permAnalyze = "plan.server";
+        final String permInspectOther = "plan.player.other";
+        final String permInspect = "plan.player.self";
         if (sender.hasPermission(permAnalyze)) {
             return 0;
         }
