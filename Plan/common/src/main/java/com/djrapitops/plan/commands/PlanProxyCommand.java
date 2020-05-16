@@ -16,9 +16,6 @@
  */
 package com.djrapitops.plan.commands;
 
-import com.djrapitops.plan.commands.subcommands.WebUserCommand;
-import com.djrapitops.plan.commands.subcommands.manage.ManageRawDataCommand;
-import com.djrapitops.plan.commands.subcommands.manage.ManageUninstalledCommand;
 import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.DeepHelpLang;
@@ -26,7 +23,6 @@ import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.TreeCmdNode;
-import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -42,31 +38,20 @@ import javax.inject.Singleton;
 @Singleton
 public class PlanProxyCommand extends TreeCmdNode {
 
-    private final Lazy<WebUserCommand> webUserCommand;
-    private final ManageRawDataCommand rawDataCommand;
-    private final ManageUninstalledCommand uninstalledCommand;
-
     private boolean commandsRegistered;
 
     @Inject
     public PlanProxyCommand(
             @Named("mainCommandName") String mainCommandName,
             ColorScheme colorScheme,
-            Locale locale,
+            Locale locale
             // Group 1
             // Group 2
-            Lazy<WebUserCommand> webUserCommand,
             // Group 3
-            ManageRawDataCommand rawDataCommand,
-            ManageUninstalledCommand uninstalledCommand
     ) {
         super(mainCommandName, Permissions.MANAGE.getPermission(), CommandType.CONSOLE, null);
-        this.uninstalledCommand = uninstalledCommand;
 
         commandsRegistered = false;
-
-        this.webUserCommand = webUserCommand;
-        this.rawDataCommand = rawDataCommand;
 
         getHelpCommand().setPermission(Permissions.MANAGE.getPermission());
         setColorScheme(colorScheme);
@@ -86,11 +71,11 @@ public class PlanProxyCommand extends TreeCmdNode {
         CommandNode[] webGroup = {
                 // registerCommand,
                 // unregisterCommand,
-                webUserCommand.get()
+                // webUserCommand.get()
         };
         CommandNode[] manageGroup = {
-                rawDataCommand,
-                uninstalledCommand,
+                // rawDataCommand,
+                // uninstalledCommand,
                 //reloadCommand,
                 //disableCommand
         };

@@ -16,10 +16,7 @@
  */
 package com.djrapitops.plan.commands;
 
-import com.djrapitops.plan.commands.subcommands.Confirmation;
-import com.djrapitops.plan.commands.subcommands.LinkCommands;
-import com.djrapitops.plan.commands.subcommands.PluginStatusCommands;
-import com.djrapitops.plan.commands.subcommands.RegistrationCommands;
+import com.djrapitops.plan.commands.subcommands.*;
 import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.commands.use.CommandWithSubcommands;
@@ -46,6 +43,7 @@ public class PlanCommand {
     private final LinkCommands linkCommands;
     private final RegistrationCommands registrationCommands;
     private final PluginStatusCommands statusCommands;
+    private final DatabaseCommands databaseCommands;
     private final ErrorLogger errorLogger;
 
     @Inject
@@ -57,6 +55,7 @@ public class PlanCommand {
             LinkCommands linkCommands,
             RegistrationCommands registrationCommands,
             PluginStatusCommands statusCommands,
+            DatabaseCommands databaseCommands,
             ErrorLogger errorLogger
     ) {
         this.commandName = commandName;
@@ -66,6 +65,7 @@ public class PlanCommand {
         this.linkCommands = linkCommands;
         this.registrationCommands = registrationCommands;
         this.statusCommands = statusCommands;
+        this.databaseCommands = databaseCommands;
         this.errorLogger = errorLogger;
     }
 
@@ -89,6 +89,7 @@ public class PlanCommand {
 
                 .subcommand(registerCommand())
                 .subcommand(unregisterCommand())
+                .subcommand(webUsersCommand())
 
                 .subcommand(acceptCommand())
                 .subcommand(cancelCommand())
@@ -96,6 +97,7 @@ public class PlanCommand {
                 .subcommand(infoCommand())
                 .subcommand(reloadCommand())
                 .subcommand(disableCommand())
+                .subcommand(databaseCommand())
                 .exceptionHandler(this::handleException)
                 .build();
     }
@@ -226,6 +228,64 @@ public class PlanCommand {
                 .description("Disable the plugin")
                 .inDepthDescription("Disable the plugin until next reload/restart.")
                 .onCommand(statusCommands::onDisable)
+                .build();
+    }
+
+    private Subcommand webUsersCommand() {
+        return Subcommand.builder()
+                .aliases("webusers", "users")
+                .requirePermission("plan.register.other")
+                .description("List all web users")
+                .inDepthDescription("Lists web users as a table.")
+                .onCommand(linkCommands::onWebUsersCommand)
+                .build();
+    }
+
+    private Subcommand databaseCommand() {
+        return CommandWithSubcommands.builder()
+                .aliases("database", "db")
+                .requirePermission("plan.data.base")
+                .optionalArgument("[subcommand]", "Use the command without subcommand to see help.")
+                .description("Manage Plan database")
+                .colorScheme(colors)
+                .subcommand(backupCommand())
+                .subcommand(restoreCommand())
+                .inDepthDescription("Use different database subcommands to change the data in some way")
+                .build();
+    }
+
+    private Subcommand backupCommand() {
+        return Subcommand.builder()
+                .aliases("backup")
+                .requirePermission("plan.data.backup")
+                .optionalArgument("MySQL/SQlite/H2", "Type of the database to backup. Current database is used if not specified.")
+                .description("Backup data of a database to a file")
+                .inDepthDescription("Uses SQLite to backup one of the usable databases to a file.")
+                .onCommand(databaseCommands::onBackup)
+                .build();
+    }
+
+    private Subcommand restoreCommand() {
+        return Subcommand.builder()
+                .aliases("restore")
+                .requirePermission("plan.data.restore")
+                .requiredArgument("backup-file", "Name of the backup file (case sensitive)")
+                .optionalArgument("MySQL/SQlite/H2", "Type of the database to restore to. Current database is used if not specified.")
+                .description("Restore data from a file to a database")
+                .inDepthDescription("Uses SQLite to backup file and overwrites contents of the target database.")
+                .onCommand((sender, arguments) -> databaseCommands.onRestore(commandName, sender, arguments))
+                .build();
+    }
+
+    private Subcommand moveCommand() {
+        return Subcommand.builder()
+                .aliases("move")
+                .requirePermission("plan.data.move")
+                .requiredArgument("MySQL/SQlite/H2", "Type of the database to move data from.")
+                .requiredArgument("MySQL/SQlite/H2", "Type of the database to move data to. Can not be same as previous.")
+                .description("Move data between databases")
+                .inDepthDescription("Overwrites contents in the other database with the contents in another.")
+                .onCommand((sender, arguments) -> databaseCommands.onMove(commandName, sender, arguments))
                 .build();
     }
 }
