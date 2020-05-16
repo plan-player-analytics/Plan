@@ -30,6 +30,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
+import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plugin.command.ColorScheme;
 
 import javax.inject.Inject;
@@ -197,6 +198,30 @@ public class LinkCommands {
                 .send();
         dbSystem.getDatabase().query(ServerQueries.fetchProxyServerInformation())
                 .orElseThrow(() -> new IllegalArgumentException("Server is not connected to a network. The link redirects to server page."));
+    }
+
+    /**
+     * Implementation of webusers subcommand, used to list webusers.
+     *
+     * @param sender    Sender of command.
+     * @param arguments Given arguments.
+     */
+    public void onWebUsersCommand(CMDSender sender, Arguments arguments) {
+        ensureDatabaseIsOpen();
+        String m = colors.getMainColor();
+        String s = colors.getSecondaryColor();
+        String t = colors.getTertiaryColor();
+        String usersListed = dbSystem.getDatabase()
+                .query(WebUserQueries.fetchAllUsers())
+                .stream().sorted()
+                .map(user -> m + user.getUsername() + ":" + t + user.getLinkedTo() + ":" + s + user.getPermissionLevel() + "\n")
+                .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+                .toString();
+        sender.buildMessage()
+                .addPart(t + '>' + m + " Servers").newLine()
+                .addPart(sender.getFormatter().table(
+                        t + "username:linked to:permission level\n" + usersListed, ":"))
+                .send();
     }
 
 }
