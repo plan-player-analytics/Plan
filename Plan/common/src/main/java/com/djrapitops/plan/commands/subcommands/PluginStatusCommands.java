@@ -17,52 +17,66 @@
 package com.djrapitops.plan.commands.subcommands;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.commands.use.Arguments;
+import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.version.VersionChecker;
-import com.djrapitops.plugin.command.CommandNode;
-import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.Sender;
+import com.djrapitops.plugin.logging.L;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-/**
- * This SubCommand is used to view the version and the database type in use.
- *
- * @author Rsl1122
- */
-public class InfoCommand extends CommandNode {
+@Singleton
+public class PluginStatusCommands {
 
     private final PlanPlugin plugin;
     private final Locale locale;
     private final DBSystem dbSystem;
     private final VersionChecker versionChecker;
+    private final ErrorLogger errorLogger;
 
     @Inject
-    public InfoCommand(
+    public PluginStatusCommands(
             PlanPlugin plugin,
             Locale locale,
             DBSystem dbSystem,
-            VersionChecker versionChecker
+            VersionChecker versionChecker,
+            ErrorLogger errorLogger
     ) {
-        super("info", Permissions.INFO.getPermission(), CommandType.CONSOLE);
-
         this.plugin = plugin;
         this.locale = locale;
         this.dbSystem = dbSystem;
         this.versionChecker = versionChecker;
-
-        setShortHelp(locale.get(CmdHelpLang.INFO).toString());
+        this.errorLogger = errorLogger;
     }
 
-    @Override
-    public void onCommand(Sender sender, String commandLabel, String[] args) {
+    public void onReload(CMDSender sender, Arguments arguments) {
+        new Thread(() -> {
+            try {
+                plugin.reloadPlugin(true);
+                sender.send(locale.getString(CommandLang.RELOAD_COMPLETE));
+            } catch (Exception e) {
+                errorLogger.log(L.CRITICAL, e, ErrorContext.builder().related(sender, "reload", Thread.currentThread().getName()).build());
+                sender.send(locale.getString(CommandLang.RELOAD_FAILED));
+            } finally {
+                Thread.currentThread().interrupt();
+            }
+        }, "Plan Reload Thread").start();
+    }
+
+    public void onDisable(CMDSender sender, Arguments arguments) {
+        plugin.onDisable();
+        sender.send(locale.getString(CommandLang.DISABLE_DISABLED));
+    }
+
+    public void onInfo(CMDSender sender, Arguments arguments) {
         String yes = locale.getString(GenericLang.YES);
         String no = locale.getString(GenericLang.NO);
 
@@ -82,7 +96,6 @@ public class InfoCommand extends CommandNode {
                 "",
                 ">"
         };
-        sender.sendMessage(messages);
+        sender.send(messages);
     }
-
 }

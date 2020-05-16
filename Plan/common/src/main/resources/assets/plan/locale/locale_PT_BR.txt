@@ -19,7 +19,7 @@ Cmd Header - Search                             || > §2${0} Resultados para §f
 Cmd Header - Servers                            || > §2Servidores
 Cmd Header - Web Users                          || > §2${0} Usuários da Web
 Cmd Info - Bungee Connection                    ||   §2Conectados ao Bungee: §f${0}
-Cmd Info - Database                             ||   §2Banco de dados ativo: §f${0}
+Cmd Info - Database                             ||   §2Banco de dados atual: §f${0}
 Cmd Info - Reload Complete                      || §aReload Realizado
 Cmd Info - Reload Failed                        || §cAlguma coisa ocorreu ao recarregar o plugin, um restart é recomendável.
 Cmd Info - Update                               ||   §2Atualização Disponível: §f${0}

@@ -19,7 +19,7 @@ Cmd Header - Search                             || > §2${0} Tulosta haulle §f$
 Cmd Header - Servers                            || > §2Palvelimet
 Cmd Header - Web Users                          || > §2${0} Web Käyttäjät
 Cmd Info - Bungee Connection                    ||   §2Yhdistetty Proxyyn: §f${0}
-Cmd Info - Database                             ||   §2Aktiivinen Tietokanta: §f${0}
+Cmd Info - Database                             ||   §2Nykyinen Tietokanta: §f${0}
 Cmd Info - Reload Complete                      || §aUudelleenlataus onnistui!
 Cmd Info - Reload Failed                        || §cUudelleenlatauksessa esiintyi ongelmia. Käynnistystä uudelleen suositellaan.
 Cmd Info - Update                               ||   §2Päivitys saatavilla: §f${0}

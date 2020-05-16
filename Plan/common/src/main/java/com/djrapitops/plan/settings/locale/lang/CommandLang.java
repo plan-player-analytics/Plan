@@ -57,7 +57,7 @@ public enum CommandLang implements Lang {
 
     INFO_VERSION("Cmd Info - Version", "  §2Version: §f${0}"),
     INFO_UPDATE("Cmd Info - Update", "  §2Update Available: §f${0}"),
-    INFO_DATABASE("Cmd Info - Database", "  §2Active Database: §f${0}"),
+    INFO_DATABASE("Cmd Info - Database", "  §2Current Database: §f${0}"),
     INFO_PROXY_CONNECTION("Cmd Info - Bungee Connection", "  §2Connected to Proxy: §f${0}"),
 
     QINSPECT_ACTIVITY_INDEX("Cmd Qinspect - Activity Index", "  §2Activity Index: §f${0} | ${1}"),
