@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.commands.use;
 
-import com.djrapitops.plan.commands.Arguments;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;

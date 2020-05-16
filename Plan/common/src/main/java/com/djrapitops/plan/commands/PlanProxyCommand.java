@@ -42,9 +42,6 @@ import javax.inject.Singleton;
 @Singleton
 public class PlanProxyCommand extends TreeCmdNode {
 
-    private final NetworkCommand networkCommand;
-    private final ListServersCommand listServersCommand;
-    private final ListPlayersCommand listPlayersCommand;
     private final RegisterCommand registerCommand;
     private final UnregisterCommand unregisterCommand;
     private final Lazy<WebUserCommand> webUserCommand;
@@ -61,9 +58,6 @@ public class PlanProxyCommand extends TreeCmdNode {
             ColorScheme colorScheme,
             Locale locale,
             // Group 1
-            NetworkCommand networkCommand,
-            ListServersCommand listServersCommand,
-            ListPlayersCommand listPlayersCommand,
             // Group 2
             RegisterCommand registerCommand,
             UnregisterCommand unregisterCommand,
@@ -80,9 +74,6 @@ public class PlanProxyCommand extends TreeCmdNode {
 
         commandsRegistered = false;
 
-        this.networkCommand = networkCommand;
-        this.listServersCommand = listServersCommand;
-        this.listPlayersCommand = listPlayersCommand;
         this.registerCommand = registerCommand;
         this.webUserCommand = webUserCommand;
         this.rawDataCommand = rawDataCommand;
@@ -100,9 +91,9 @@ public class PlanProxyCommand extends TreeCmdNode {
         }
 
         CommandNode[] analyticsGroup = {
-                networkCommand,
-                listServersCommand,
-                listPlayersCommand
+                // networkCommand,
+                // listPlayersCommand,
+                // list servers
         };
         CommandNode[] webGroup = {
                 registerCommand,

@@ -42,13 +42,8 @@ import javax.inject.Singleton;
 public class OldPlanCommand extends TreeCmdNode {
 
     private final PlanConfig config;
-    private final InspectCommand inspectCommand;
     private final QInspectCommand qInspectCommand;
     private final SearchCommand searchCommand;
-    private final ListPlayersCommand listPlayersCommand;
-    private final AnalyzeCommand analyzeCommand;
-    private final NetworkCommand networkCommand;
-    private final ListServersCommand listServersCommand;
     private final Lazy<WebUserCommand> webUserCommand;
     private final RegisterCommand registerCommand;
     private final UnregisterCommand unregisterCommand;
@@ -65,13 +60,8 @@ public class OldPlanCommand extends TreeCmdNode {
             Locale locale,
             PlanConfig config,
             // Group 1
-            InspectCommand inspectCommand,
             QInspectCommand qInspectCommand,
             SearchCommand searchCommand,
-            ListPlayersCommand listPlayersCommand,
-            AnalyzeCommand analyzeCommand,
-            NetworkCommand networkCommand,
-            ListServersCommand listServersCommand,
             // Group 2
             Lazy<WebUserCommand> webUserCommand,
             RegisterCommand registerCommand,
@@ -88,13 +78,8 @@ public class OldPlanCommand extends TreeCmdNode {
         commandsRegistered = false;
 
         this.config = config;
-        this.inspectCommand = inspectCommand;
         this.qInspectCommand = qInspectCommand;
         this.searchCommand = searchCommand;
-        this.listPlayersCommand = listPlayersCommand;
-        this.analyzeCommand = analyzeCommand;
-        this.networkCommand = networkCommand;
-        this.listServersCommand = listServersCommand;
         this.webUserCommand = webUserCommand;
         this.registerCommand = registerCommand;
         this.infoCommand = infoCommand;
@@ -114,13 +99,8 @@ public class OldPlanCommand extends TreeCmdNode {
         }
 
         CommandNode[] analyticsGroup = {
-                inspectCommand,
                 qInspectCommand,
-                searchCommand,
-                listPlayersCommand,
-                analyzeCommand,
-                networkCommand,
-                listServersCommand
+                searchCommand
         };
         CommandNode[] webGroup = {
                 webUserCommand.get(),
