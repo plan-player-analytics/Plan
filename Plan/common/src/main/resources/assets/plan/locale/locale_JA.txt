@@ -37,7 +37,7 @@ Cmd Qinspect - Playtime                         ||   §2プレイ時間: §f${0}
 Cmd Qinspect - Registered                       ||   §2登録日: §f${0}
 Cmd Qinspect - Times Kicked                     ||   §2キックされた回数: §f${0}
 Cmd SUCCESS - Feature disabled                  || §a次にプラグインがリロードされるまで一時的に「${0}」を無効にしました。
-Cmd SUCCESS - WebUser register                  || §a新規ユーザー「(${0})」の登録に成功しました！次のリンクでWebパネルを見ることができます。
+Cmd SUCCESS - WebUser register                  || §a新規ユーザー「(${0})」の登録に成功しました！
 Cmd WARN - Database not open                    || §eデータベースは${0}です - 予想以上に時間がかかるかもしれません
 Cmd Web - Permission Levels                     || >\§70: 全てのページにアクセスできます\§71:「/players」と全てのプレイヤーページにアクセスできます\§72: ウェブユーザーと同じユーザー名でプレイヤーページにアクセスできます\§73+:権限を保持していません
 Command Help - /plan analyze                    || サーバーページのURLを表示します

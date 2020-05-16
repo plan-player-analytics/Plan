@@ -43,7 +43,7 @@ Cmd Qinspect - Playtime                         ||   §2游玩时间：§f${0}
 Cmd Qinspect - Registered                       ||   §2注册时间：§f${0}
 Cmd Qinspect - Times Kicked                     ||   §2踢出次数：§f${0}
 Cmd SUCCESS - Feature disabled                  || §a已在下次插件重载前暂时禁用 '${0}'。
-Cmd SUCCESS - WebUser register                  || §a已成功添加新用户（${0}）！您可以在以下链接中查看Web面板。
+Cmd SUCCESS - WebUser register                  || §a已成功添加新用户（${0}）！
 Cmd WARN - Database not open                    || §e数据库状态为 ${0} - 可能需要花费更多的时间..
 Cmd Web - Permission Levels                     || >\§70：访问所有页面\§71：访问 '/players' 及所有玩家页\§72：访问用户名与网页用户名一致的玩家页\§73+：无权限
 Command Help - /plan analyze                    || 查看服务器分析

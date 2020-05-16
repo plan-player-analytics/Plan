@@ -37,7 +37,7 @@ Cmd Qinspect - Playtime                         ||   §2Peliaika: §f${0}
 Cmd Qinspect - Registered                       ||   §2Rekisteröitynyt: §f${0}
 Cmd Qinspect - Times Kicked                     ||   §2Potkittu Pellolle: §f${0}
 Cmd SUCCESS - Feature disabled                  || §aSammutettiin '${0}' toistaiseksi, kunnes Plan ladataan uudelleen.
-Cmd SUCCESS - WebUser register                  || §aLisättiin uusi Web Käyttäjä (${0})! Voit tarkastella web-paneelia seuraavasta linkistä.
+Cmd SUCCESS - WebUser register                  || §aLisättiin uusi Web Käyttäjä (${0})!
 Cmd WARN - Database not open                    || §eTietokanta: ${0} - Tämä voi viedä hiukan aikaa..
 Cmd Web - Permission Levels                     || >\§70: Pääsy kaikille sivuille\§71: Pääsy '/players' ja pelaajien sivuille\§72: Pääsy pelaajan sivulle, jolla on sama nimi kuin Web Käyttäjällä\§73+: Ei pääsyä
 Command Help - /plan analyze                    || Katso Palvelimen sivua
