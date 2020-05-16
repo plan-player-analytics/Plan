@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.commands.use;
 
-import com.djrapitops.plan.commands.Arguments;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import org.bukkit.command.Command;

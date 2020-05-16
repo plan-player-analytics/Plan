@@ -16,8 +16,9 @@
  */
 package com.djrapitops.plan.commands.subcommands;
 
-import com.djrapitops.plan.commands.Arguments;
+import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
+import com.djrapitops.plan.commands.use.MessageBuilder;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.identification.Identifiers;
@@ -26,6 +27,7 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plugin.command.ColorScheme;
@@ -34,6 +36,11 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.UUID;
 
+/**
+ * Implementation of commands that send a link to the command sender.
+ *
+ * @author Rsl1122
+ */
 @Singleton
 public class LinkCommands {
 
@@ -68,6 +75,21 @@ public class LinkCommands {
         });
     }
 
+    private MessageBuilder linkTo(MessageBuilder builder, CMDSender sender, String address) {
+        if (sender.isPlayer()) {
+            builder.addPart(colors.getTertiaryColor() + "§l[Link]").link(address).hover(address);
+        } else {
+            builder.addPart(colors.getTertiaryColor() + address);
+        }
+        return builder;
+    }
+
+    /**
+     * Implementation of server subcommand, used to get link to server page.
+     *
+     * @param sender    Sender of command.
+     * @param arguments Given arguments.
+     */
     public void onServerCommand(CMDSender sender, Arguments arguments) {
         Server server;
         String identifier = arguments.concatenate(" ");
@@ -80,59 +102,21 @@ public class LinkCommands {
                     .orElseThrow(() -> new IllegalArgumentException("Server '" + identifier + "' was not found from the database."));
         }
 
-        String address = getAddress(sender);
-        String target = "/server/" + Html.encodeToURL(server.getName());
+        String address = getAddress(sender) + "/server/" + Html.encodeToURL(server.getName());
         sender.buildMessage()
                 .addPart(colors.getMainColor() + "View server page: ")
-                .addPart(colors.getTertiaryColor() + "§l[Link]").link(address + target).hover(address + target)
+                .apply(builder -> linkTo(builder, sender, address))
                 .send();
     }
 
-    public void onPlayerCommand(CMDSender sender, Arguments arguments) {
-        String identifier = arguments.concatenate(" ");
-        UUID playerUUID = identifiers.getPlayerUUID(identifier);
-        UUID senderUUID = sender.getUUID().orElse(null);
-        if (playerUUID == null) playerUUID = senderUUID;
-        if (playerUUID == null) {
-            throw new IllegalArgumentException("Player '" + identifier + "' was not found, they have no UUID.");
-        }
-
-        String playerName = dbSystem.getDatabase().query(UserIdentifierQueries.fetchPlayerNameOf(playerUUID))
-                .orElseThrow(() -> new IllegalArgumentException("Player '" + identifier + "' was not found in the database."));
-
-        if (sender.hasPermission("plan.player.other") || playerUUID.equals(senderUUID)) {
-            String address = getAddress(sender);
-            String target = "/player/" + Html.encodeToURL(playerName);
-            sender.buildMessage()
-                    .addPart(colors.getMainColor() + "View player page: ")
-                    .addPart(colors.getTertiaryColor() + "§l[Link]").link(address + target).hover(address + target)
-                    .send();
-        } else {
-            throw new IllegalArgumentException("Insufficient permissions: You can not view other player's pages.");
-        }
-    }
-
-    public void onPlayersCommand(CMDSender sender, Arguments arguments) {
-        String address = getAddress(sender);
-        String target = "/players";
-        sender.buildMessage()
-                .addPart(colors.getMainColor() + "View players page: ")
-                .addPart(colors.getTertiaryColor() + "§l[Link]").link(address + target).hover(address + target)
-                .send();
-    }
-
-    public void onNetworkCommand(CMDSender sender, Arguments arguments) {
-        String address = getAddress(sender);
-        String target = "/network";
-        sender.buildMessage()
-                .addPart(colors.getMainColor() + "View network page: ")
-                .addPart(colors.getTertiaryColor() + "§l[Link]").link(address + target).hover(address + target)
-                .send();
-        dbSystem.getDatabase().query(ServerQueries.fetchProxyServerInformation())
-                .orElseThrow(() -> new IllegalArgumentException("Server is not connected to a network. The link redirects to server page."));
-    }
-
+    /**
+     * Implementation of servers subcommand, used to list servers.
+     *
+     * @param sender    Sender of command.
+     * @param arguments Given arguments.
+     */
     public void onServersCommand(CMDSender sender, Arguments arguments) {
+        ensureDatabaseIsOpen();
         String m = colors.getMainColor();
         String s = colors.getSecondaryColor();
         String t = colors.getTertiaryColor();
@@ -148,4 +132,71 @@ public class LinkCommands {
                         t + "id:name:uuid\n" + serversListed, ":"))
                 .send();
     }
+
+    private void ensureDatabaseIsOpen() {
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState != Database.State.OPEN) {
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_DATABASE_NOT_OPEN, dbState.name()));
+        }
+    }
+
+    /**
+     * Implementation of player command, used to get link to player page.
+     *
+     * @param sender    Sender of command.
+     * @param arguments Given arguments.
+     */
+    public void onPlayerCommand(CMDSender sender, Arguments arguments) {
+        String identifier = arguments.concatenate(" ");
+        UUID playerUUID = identifiers.getPlayerUUID(identifier);
+        UUID senderUUID = sender.getUUID().orElse(null);
+        if (playerUUID == null) playerUUID = senderUUID;
+        if (playerUUID == null) {
+            throw new IllegalArgumentException("Player '" + identifier + "' was not found, they have no UUID.");
+        }
+
+        String playerName = dbSystem.getDatabase().query(UserIdentifierQueries.fetchPlayerNameOf(playerUUID))
+                .orElseThrow(() -> new IllegalArgumentException("Player '" + identifier + "' was not found in the database."));
+
+        if (sender.hasPermission("plan.player.other") || playerUUID.equals(senderUUID)) {
+            String address = getAddress(sender) + "/player/" + Html.encodeToURL(playerName);
+            sender.buildMessage()
+                    .addPart(colors.getMainColor() + "View player page: ")
+                    .apply(builder -> linkTo(builder, sender, address))
+                    .send();
+        } else {
+            throw new IllegalArgumentException("Insufficient permissions: You can not view other player's pages.");
+        }
+    }
+
+    /**
+     * Implementation of players subcommand, used to get link to players page.
+     *
+     * @param sender    Sender of command
+     * @param arguments Only present to fulfill Subcommand#onCommand requirements.
+     */
+    public void onPlayersCommand(CMDSender sender, Arguments arguments) {
+        String address = getAddress(sender) + "/players";
+        sender.buildMessage()
+                .addPart(colors.getMainColor() + "View players page: ")
+                .apply(builder -> linkTo(builder, sender, address))
+                .send();
+    }
+
+    /**
+     * Implementation of network subcommand, used to get link to network page.
+     *
+     * @param sender    Sender of command
+     * @param arguments Only present to fulfill Subcommand#onCommand requirements.
+     */
+    public void onNetworkCommand(CMDSender sender, Arguments arguments) {
+        String address = getAddress(sender) + "/network";
+        sender.buildMessage()
+                .addPart(colors.getMainColor() + "View network page: ")
+                .apply(builder -> linkTo(builder, sender, address))
+                .send();
+        dbSystem.getDatabase().query(ServerQueries.fetchProxyServerInformation())
+                .orElseThrow(() -> new IllegalArgumentException("Server is not connected to a network. The link redirects to server page."));
+    }
+
 }

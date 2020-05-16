@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.commands.use;
 
-import com.djrapitops.plan.commands.Arguments;
+import com.djrapitops.plan.utilities.java.TriConsumer;
 import com.djrapitops.plugin.command.ColorScheme;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class CommandWithSubcommands extends Subcommand {
 
     private final List<Subcommand> subcommands;
     private BiConsumer<CMDSender, Arguments> fallback;
-    private BiConsumer<RuntimeException, CMDSender> exceptionHandler;
+    private TriConsumer<RuntimeException, CMDSender, Arguments> exceptionHandler;
     private ColorScheme colors;
 
     private CommandWithSubcommands() {
@@ -61,7 +61,7 @@ public class CommandWithSubcommands extends Subcommand {
         try {
             executeCommand(sender, arguments);
         } catch (RuntimeException e) {
-            exceptionHandler.accept(e, sender);
+            exceptionHandler.accept(e, sender, arguments);
         }
     }
 
@@ -151,7 +151,7 @@ public class CommandWithSubcommands extends Subcommand {
             });
         }
 
-        public Builder exceptionHandler(BiConsumer<RuntimeException, CMDSender> exceptionHandler) {
+        public Builder exceptionHandler(TriConsumer<RuntimeException, CMDSender, Arguments> exceptionHandler) {
             command.exceptionHandler = exceptionHandler;
             return this;
         }
@@ -166,7 +166,7 @@ public class CommandWithSubcommands extends Subcommand {
             onTabComplete(command::onTabComplete);
             super.build();
             if (command.fallback == null) fallback(command::onHelp);
-            if (command.exceptionHandler == null) exceptionHandler((error, sender) -> {throw error;});
+            if (command.exceptionHandler == null) exceptionHandler((error, sender, arguments) -> {throw error;});
             if (command.colors == null) colorScheme(new ColorScheme("§2", "§7", "§f"));
             return command;
         }

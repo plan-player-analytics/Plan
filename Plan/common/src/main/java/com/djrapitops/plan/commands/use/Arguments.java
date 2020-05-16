@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.commands;
+package com.djrapitops.plan.commands.use;
 
 import org.apache.commons.text.TextStringBuilder;
 
@@ -78,5 +78,12 @@ public class Arguments {
 
     public boolean isEmpty() {
         return args.isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        return "Arguments{" +
+                "args=" + args +
+                '}';
     }
 }
