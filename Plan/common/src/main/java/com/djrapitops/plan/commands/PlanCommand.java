@@ -16,7 +16,9 @@
  */
 package com.djrapitops.plan.commands;
 
+import com.djrapitops.plan.commands.subcommands.Confirmation;
 import com.djrapitops.plan.commands.subcommands.LinkCommands;
+import com.djrapitops.plan.commands.subcommands.RegistrationCommands;
 import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.commands.use.CommandWithSubcommands;
@@ -37,19 +39,25 @@ public class PlanCommand {
 
     private final Locale locale;
     private final ColorScheme colors;
+    private final Confirmation confirmation;
     private final LinkCommands linkCommands;
+    private final RegistrationCommands registrationCommands;
     private final ErrorLogger errorLogger;
 
     @Inject
     public PlanCommand(
             Locale locale,
             ColorScheme colors,
+            Confirmation confirmation,
             LinkCommands linkCommands,
+            RegistrationCommands registrationCommands,
             ErrorLogger errorLogger
     ) {
         this.locale = locale;
         this.colors = colors;
+        this.confirmation = confirmation;
         this.linkCommands = linkCommands;
+        this.registrationCommands = registrationCommands;
         this.errorLogger = errorLogger;
     }
 
@@ -70,6 +78,10 @@ public class PlanCommand {
                 .subcommand(playerCommand())
                 .subcommand(playersCommand())
                 .subcommand(networkCommand())
+                .subcommand(registerCommand())
+                .subcommand(unregisterCommand())
+                .subcommand(acceptCommand())
+                .subcommand(cancelCommand())
                 .exceptionHandler(this::handleException)
                 .build();
     }
@@ -128,7 +140,7 @@ public class PlanCommand {
 
     private Subcommand networkCommand() {
         return Subcommand.builder()
-                .aliases("network", "n", "netw")
+                .aliases("network", "netw")
                 .requirePermission("plan.network")
                 .description("View network page")
                 .inDepthDescription("Obtain a link to the /network page, only does so on networks.")
@@ -136,4 +148,40 @@ public class PlanCommand {
                 .build();
     }
 
+    private Subcommand registerCommand() {
+        return Subcommand.builder()
+                .aliases("register")
+                .requirePermission("plan.register.self")
+                .optionalArgument("--code ${code}", "Code used to finalize registration.")
+                .description("Register a user for Plan website")
+                .inDepthDescription("Use without arguments to get link to register page. Use --code [code] after registration to get a user.")
+                .onCommand(registrationCommands::onRegister)
+                .onTabComplete((sender, arguments) -> arguments.isEmpty() ? Collections.singletonList("--code") : Collections.emptyList())
+                .build();
+    }
+
+    private Subcommand unregisterCommand() {
+        return Subcommand.builder()
+                .aliases("unregister")
+                .requirePermission("plan.unregister.self")
+                .optionalArgument("username", "Username of another user. If not specified linked user is used.")
+                .description("Unregister user of Plan website")
+                .inDepthDescription("Use without arguments to unregister linked user, or with username argument to unregister another user.")
+                .onCommand(((sender, arguments) -> registrationCommands.onUnregister("plan", sender, arguments)))
+                .build();
+    }
+
+    private Subcommand acceptCommand() {
+        return Subcommand.builder()
+                .aliases("accept", "yes", "y")
+                .onCommand(confirmation::onAcceptCommand)
+                .build();
+    }
+
+    private Subcommand cancelCommand() {
+        return Subcommand.builder()
+                .aliases("cancel", "deny", "no", "n")
+                .onCommand(confirmation::onCancelCommand)
+                .build();
+    }
 }

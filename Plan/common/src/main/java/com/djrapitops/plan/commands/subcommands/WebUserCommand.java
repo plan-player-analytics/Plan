@@ -42,7 +42,6 @@ public class WebUserCommand extends TreeCmdNode {
 
     @Inject
     public WebUserCommand(ColorScheme colorScheme, Locale locale, @Named("mainCommand") Lazy<CommandNode> parent,
-                          RegisterCommand registerCommand,
                           WebLevelCommand levelCommand,
                           WebListUsersCommand listUsersCommand,
                           WebCheckCommand checkCommand,
@@ -54,7 +53,6 @@ public class WebUserCommand extends TreeCmdNode {
         setShortHelp(locale.getString(CmdHelpLang.WEB));
         setInDepthHelp(locale.getArray(DeepHelpLang.WEB));
         CommandNode[] webGroup = {
-                registerCommand,
                 levelCommand,
                 listUsersCommand,
                 checkCommand,

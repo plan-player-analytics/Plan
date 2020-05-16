@@ -44,6 +44,7 @@ public class HelpFormatter {
         String m = colors.getMainColor();
         String s = colors.getSecondaryColor();
         String asString = subcommands.stream()
+                .filter(cmd -> cmd.getDescription() != null)
                 .map(cmd ->
                         m + mainCommand + " " + cmd.getPrimaryAlias() +
                                 (sender.getPlayerName().isPresent() ? "" : " " + cmd.getArgumentsAsString()) + "--" +

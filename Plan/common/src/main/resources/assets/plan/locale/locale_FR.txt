@@ -37,7 +37,7 @@ Cmd Qinspect - Playtime                         ||   §2Temps de jeu : §f${0}
 Cmd Qinspect - Registered                       ||   §2Incrit depuis : §f${0}
 Cmd Qinspect - Times Kicked                     ||   §2Nombre d'éjections : §f${0}
 Cmd SUCCESS - Feature disabled                  || §aFontionnalité '${0}' temporairement désactivée jusqu'au prochain rechargement du plugin.
-Cmd SUCCESS - WebUser register                  || §aAjout d'un nouvel utilisateur (${0}) avec succès ! Vous pouvez afficher le panneau Web dans le lien suivant.
+Cmd SUCCESS - WebUser register                  || §aAjout d'un nouvel utilisateur (${0}) avec succès !
 Cmd WARN - Database not open                    || §eLa base de données est : ${0} - Cela pourrait prendre plus de temps que prévu...
 Cmd Web - Permission Levels                     || >\§70: Accéder à toutes les pages.\§71: Accéder au '/players' et à toutes les pages des joueurs.\§72: Accéder à la page du joueur avec le même nom d'utilisateur que l'utilisateur Web.\§73+: Pas de permission.
 Command Help - /plan analyze                    || Voir la page du serveur.
