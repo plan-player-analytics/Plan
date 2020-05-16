@@ -18,7 +18,6 @@ package com.djrapitops.plan.commands;
 
 import com.djrapitops.plan.commands.subcommands.*;
 import com.djrapitops.plan.settings.Permissions;
-import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.DeepHelpLang;
 import com.djrapitops.plugin.command.ColorScheme;
@@ -40,12 +39,9 @@ import javax.inject.Singleton;
 @Singleton
 public class OldPlanCommand extends TreeCmdNode {
 
-    private final PlanConfig config;
     private final QInspectCommand qInspectCommand;
     private final SearchCommand searchCommand;
     private final Lazy<WebUserCommand> webUserCommand;
-    private final RegisterCommand registerCommand;
-    private final UnregisterCommand unregisterCommand;
     private final InfoCommand infoCommand;
     private final ReloadCommand reloadCommand;
     private final Lazy<ManageCommand> manageCommand;
@@ -56,29 +52,23 @@ public class OldPlanCommand extends TreeCmdNode {
     public OldPlanCommand(
             ColorScheme colorScheme,
             Locale locale,
-            PlanConfig config,
             // Group 1
             QInspectCommand qInspectCommand,
             SearchCommand searchCommand,
             // Group 2
             Lazy<WebUserCommand> webUserCommand,
-            RegisterCommand registerCommand,
-            UnregisterCommand unregisterCommand,
             // Group 3
             InfoCommand infoCommand,
             ReloadCommand reloadCommand,
             Lazy<ManageCommand> manageCommand
     ) {
         super("plan", "", CommandType.CONSOLE, null);
-        this.unregisterCommand = unregisterCommand;
 
         commandsRegistered = false;
 
-        this.config = config;
         this.qInspectCommand = qInspectCommand;
         this.searchCommand = searchCommand;
         this.webUserCommand = webUserCommand;
-        this.registerCommand = registerCommand;
         this.infoCommand = infoCommand;
         this.reloadCommand = reloadCommand;
         this.manageCommand = manageCommand;
@@ -99,9 +89,7 @@ public class OldPlanCommand extends TreeCmdNode {
                 searchCommand
         };
         CommandNode[] webGroup = {
-                webUserCommand.get(),
-                registerCommand,
-                unregisterCommand
+                webUserCommand.get()
         };
         CommandNode[] manageGroup = {
                 infoCommand,

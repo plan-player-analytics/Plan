@@ -68,14 +68,14 @@ public class LinkCommands {
         this.serverInfo = serverInfo;
     }
 
-    private String getAddress(CMDSender sender) {
+    String getAddress(CMDSender sender) {
         return addresses.getMainAddress().orElseGet(() -> {
             sender.send(locale.getString(CommandLang.NO_ADDRESS_NOTIFY));
             return addresses.getFallbackLocalhostAddress();
         });
     }
 
-    private MessageBuilder linkTo(MessageBuilder builder, CMDSender sender, String address) {
+    MessageBuilder linkTo(MessageBuilder builder, CMDSender sender, String address) {
         if (sender.isPlayer()) {
             builder.addPart(colors.getTertiaryColor() + "§l[Link]").link(address).hover(address);
         } else {
@@ -104,7 +104,7 @@ public class LinkCommands {
 
         String address = getAddress(sender) + "/server/" + Html.encodeToURL(server.getName());
         sender.buildMessage()
-                .addPart(colors.getMainColor() + "View server page: ")
+                .addPart(colors.getMainColor() + "Server page: ")
                 .apply(builder -> linkTo(builder, sender, address))
                 .send();
     }
@@ -161,7 +161,7 @@ public class LinkCommands {
         if (sender.hasPermission("plan.player.other") || playerUUID.equals(senderUUID)) {
             String address = getAddress(sender) + "/player/" + Html.encodeToURL(playerName);
             sender.buildMessage()
-                    .addPart(colors.getMainColor() + "View player page: ")
+                    .addPart(colors.getMainColor() + "Player page: ")
                     .apply(builder -> linkTo(builder, sender, address))
                     .send();
         } else {
@@ -178,7 +178,7 @@ public class LinkCommands {
     public void onPlayersCommand(CMDSender sender, Arguments arguments) {
         String address = getAddress(sender) + "/players";
         sender.buildMessage()
-                .addPart(colors.getMainColor() + "View players page: ")
+                .addPart(colors.getMainColor() + "Players page: ")
                 .apply(builder -> linkTo(builder, sender, address))
                 .send();
     }
@@ -192,7 +192,7 @@ public class LinkCommands {
     public void onNetworkCommand(CMDSender sender, Arguments arguments) {
         String address = getAddress(sender) + "/network";
         sender.buildMessage()
-                .addPart(colors.getMainColor() + "View network page: ")
+                .addPart(colors.getMainColor() + "Network page: ")
                 .apply(builder -> linkTo(builder, sender, address))
                 .send();
         dbSystem.getDatabase().query(ServerQueries.fetchProxyServerInformation())
