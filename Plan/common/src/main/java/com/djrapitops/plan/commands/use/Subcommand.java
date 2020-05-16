@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.commands.use;
 
-import com.djrapitops.plan.commands.Arguments;
-
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;

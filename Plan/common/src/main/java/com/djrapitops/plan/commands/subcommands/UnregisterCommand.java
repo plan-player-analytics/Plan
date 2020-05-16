@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.commands.subcommands;
 
-import com.djrapitops.plan.commands.Arguments;
+import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.identification.UUIDUtility;

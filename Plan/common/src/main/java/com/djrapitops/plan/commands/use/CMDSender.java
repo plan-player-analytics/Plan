@@ -40,6 +40,10 @@ public interface CMDSender {
         return false;
     }
 
+    default boolean isPlayer() {
+        return getPlayerName().isPresent();
+    }
+
     Optional<UUID> getUUID();
 
     void send(String message);

@@ -17,11 +17,15 @@
 package com.djrapitops.plan.commands;
 
 import com.djrapitops.plan.commands.subcommands.LinkCommands;
+import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.commands.use.CommandWithSubcommands;
 import com.djrapitops.plan.commands.use.Subcommand;
 import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.command.ColorScheme;
+import com.djrapitops.plugin.logging.L;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -34,23 +38,26 @@ public class PlanCommand {
     private final Locale locale;
     private final ColorScheme colors;
     private final LinkCommands linkCommands;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public PlanCommand(
             Locale locale,
             ColorScheme colors,
-            LinkCommands linkCommands
+            LinkCommands linkCommands,
+            ErrorLogger errorLogger
     ) {
         this.locale = locale;
         this.colors = colors;
         this.linkCommands = linkCommands;
+        this.errorLogger = errorLogger;
     }
 
-    private void handleException(RuntimeException error, CMDSender sender) {
+    private void handleException(RuntimeException error, CMDSender sender, Arguments arguments) {
         if (error instanceof IllegalArgumentException) {
             sender.send("§c" + error.getMessage());
         } else {
-            throw error;
+            errorLogger.log(L.WARN, error, ErrorContext.builder().related(sender, arguments).build());
         }
     }
 
