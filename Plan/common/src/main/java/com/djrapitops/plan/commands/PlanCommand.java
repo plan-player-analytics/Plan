@@ -18,6 +18,7 @@ package com.djrapitops.plan.commands;
 
 import com.djrapitops.plan.commands.subcommands.Confirmation;
 import com.djrapitops.plan.commands.subcommands.LinkCommands;
+import com.djrapitops.plan.commands.subcommands.PluginStatusCommands;
 import com.djrapitops.plan.commands.subcommands.RegistrationCommands;
 import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
@@ -30,6 +31,7 @@ import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.logging.L;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.List;
@@ -37,27 +39,33 @@ import java.util.List;
 @Singleton
 public class PlanCommand {
 
+    private final String commandName;
     private final Locale locale;
     private final ColorScheme colors;
     private final Confirmation confirmation;
     private final LinkCommands linkCommands;
     private final RegistrationCommands registrationCommands;
+    private final PluginStatusCommands statusCommands;
     private final ErrorLogger errorLogger;
 
     @Inject
     public PlanCommand(
+            @Named("mainCommandName") String commandName,
             Locale locale,
             ColorScheme colors,
             Confirmation confirmation,
             LinkCommands linkCommands,
             RegistrationCommands registrationCommands,
+            PluginStatusCommands statusCommands,
             ErrorLogger errorLogger
     ) {
+        this.commandName = commandName;
         this.locale = locale;
         this.colors = colors;
         this.confirmation = confirmation;
         this.linkCommands = linkCommands;
         this.registrationCommands = registrationCommands;
+        this.statusCommands = statusCommands;
         this.errorLogger = errorLogger;
     }
 
@@ -71,17 +79,23 @@ public class PlanCommand {
 
     public CommandWithSubcommands build() {
         return CommandWithSubcommands.builder()
-                .alias("plan")
+                .alias(commandName)
                 .colorScheme(colors)
                 .subcommand(serverCommand())
                 .subcommand(serversCommand())
                 .subcommand(playerCommand())
                 .subcommand(playersCommand())
                 .subcommand(networkCommand())
+
                 .subcommand(registerCommand())
                 .subcommand(unregisterCommand())
+
                 .subcommand(acceptCommand())
                 .subcommand(cancelCommand())
+
+                .subcommand(infoCommand())
+                .subcommand(reloadCommand())
+                .subcommand(disableCommand())
                 .exceptionHandler(this::handleException)
                 .build();
     }
@@ -167,7 +181,7 @@ public class PlanCommand {
                 .optionalArgument("username", "Username of another user. If not specified linked user is used.")
                 .description("Unregister user of Plan website")
                 .inDepthDescription("Use without arguments to unregister linked user, or with username argument to unregister another user.")
-                .onCommand(((sender, arguments) -> registrationCommands.onUnregister("plan", sender, arguments)))
+                .onCommand(((sender, arguments) -> registrationCommands.onUnregister(commandName, sender, arguments)))
                 .build();
     }
 
@@ -182,6 +196,36 @@ public class PlanCommand {
         return Subcommand.builder()
                 .aliases("cancel", "deny", "no", "n")
                 .onCommand(confirmation::onCancelCommand)
+                .build();
+    }
+
+    private Subcommand infoCommand() {
+        return Subcommand.builder()
+                .aliases("info")
+                .requirePermission("plan.info")
+                .description("Information about the plugin")
+                .inDepthDescription("Display the current status of the plugin.")
+                .onCommand(statusCommands::onInfo)
+                .build();
+    }
+
+    private Subcommand reloadCommand() {
+        return Subcommand.builder()
+                .aliases("reload")
+                .requirePermission("plan.reload")
+                .description("Reload the plugin")
+                .inDepthDescription("Disable and enable the plugin to reload any changes in config.")
+                .onCommand(statusCommands::onReload)
+                .build();
+    }
+
+    private Subcommand disableCommand() {
+        return Subcommand.builder()
+                .aliases("disable")
+                .requirePermission("plan.disable")
+                .description("Disable the plugin")
+                .inDepthDescription("Disable the plugin until next reload/restart.")
+                .onCommand(statusCommands::onDisable)
                 .build();
     }
 }

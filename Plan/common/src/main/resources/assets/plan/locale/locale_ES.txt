@@ -19,7 +19,7 @@ Cmd Header - Search                             || > §2${0} Resultados para §f
 Cmd Header - Servers                            || > §2Servidores
 Cmd Header - Web Users                          || > §2${0} Usuarios web
 Cmd Info - Bungee Connection                    ||   §2Conectado al Proxy: §f${0}
-Cmd Info - Database                             ||   §2Base de datos activas: §f${0}
+Cmd Info - Database                             ||   §2Base de datos actual: §f${0}
 Cmd Info - Reload Complete                      || §aRecarga completada
 Cmd Info - Reload Failed                        || §cUn error ocurrió intentando recargar el plugin. Se recomienda su reseteo.
 Cmd Info - Update                               ||   §2Actualización disponible: §f${0}

@@ -19,7 +19,7 @@ Cmd Header - Search                             || > §2${0} §f${1}§2 の結�
 Cmd Header - Servers                            || > §2サーバー
 Cmd Header - Web Users                          || > §2${0} ウェブユーザー
 Cmd Info - Bungee Connection                    ||   §2BungeeCordに接続済み: §f${0}
-Cmd Info - Database                             ||   §2動作中のデータベース: §f${0}
+Cmd Info - Database                             ||   §2現在のデータベース: §f${0}
 Cmd Info - Reload Complete                      || §aリロードが完了しました
 Cmd Info - Reload Failed                        || §cプラグインのリロード中に何らかの問題が発生しました、Bukkit/SpigotサーバーかBungeeCordの再起動をお勧めします
 Cmd Info - Update                               ||   §2利用可能なアップデート: §f${0}
