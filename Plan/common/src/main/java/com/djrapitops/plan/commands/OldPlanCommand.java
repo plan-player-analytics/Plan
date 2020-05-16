@@ -19,7 +19,6 @@ package com.djrapitops.plan.commands;
 import com.djrapitops.plan.commands.subcommands.*;
 import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.DeepHelpLang;
 import com.djrapitops.plugin.command.ColorScheme;
@@ -50,7 +49,6 @@ public class OldPlanCommand extends TreeCmdNode {
     private final InfoCommand infoCommand;
     private final ReloadCommand reloadCommand;
     private final Lazy<ManageCommand> manageCommand;
-    private final DevCommand devCommand;
 
     private boolean commandsRegistered;
 
@@ -69,8 +67,7 @@ public class OldPlanCommand extends TreeCmdNode {
             // Group 3
             InfoCommand infoCommand,
             ReloadCommand reloadCommand,
-            Lazy<ManageCommand> manageCommand,
-            DevCommand devCommand
+            Lazy<ManageCommand> manageCommand
     ) {
         super("plan", "", CommandType.CONSOLE, null);
         this.unregisterCommand = unregisterCommand;
@@ -85,7 +82,6 @@ public class OldPlanCommand extends TreeCmdNode {
         this.infoCommand = infoCommand;
         this.reloadCommand = reloadCommand;
         this.manageCommand = manageCommand;
-        this.devCommand = devCommand;
 
         getHelpCommand().setPermission(Permissions.HELP.getPermission());
         setDefaultCommand("inspect");
@@ -110,8 +106,7 @@ public class OldPlanCommand extends TreeCmdNode {
         CommandNode[] manageGroup = {
                 infoCommand,
                 reloadCommand,
-                manageCommand.get(),
-                config.isTrue(PluginSettings.DEV_MODE) ? devCommand : null
+                manageCommand.get()
         };
         setNodeGroups(analyticsGroup, webGroup, manageGroup);
         commandsRegistered = true;
