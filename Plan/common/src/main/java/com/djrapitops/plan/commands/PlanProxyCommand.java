@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.commands;
 
-import com.djrapitops.plan.commands.subcommands.DisableCommand;
-import com.djrapitops.plan.commands.subcommands.ReloadCommand;
 import com.djrapitops.plan.commands.subcommands.WebUserCommand;
 import com.djrapitops.plan.commands.subcommands.manage.ManageRawDataCommand;
 import com.djrapitops.plan.commands.subcommands.manage.ManageUninstalledCommand;
@@ -46,8 +44,6 @@ public class PlanProxyCommand extends TreeCmdNode {
 
     private final Lazy<WebUserCommand> webUserCommand;
     private final ManageRawDataCommand rawDataCommand;
-    private final ReloadCommand reloadCommand;
-    private final DisableCommand disableCommand;
     private final ManageUninstalledCommand uninstalledCommand;
 
     private boolean commandsRegistered;
@@ -62,9 +58,7 @@ public class PlanProxyCommand extends TreeCmdNode {
             Lazy<WebUserCommand> webUserCommand,
             // Group 3
             ManageRawDataCommand rawDataCommand,
-            ManageUninstalledCommand uninstalledCommand,
-            ReloadCommand reloadCommand,
-            DisableCommand disableCommand
+            ManageUninstalledCommand uninstalledCommand
     ) {
         super(mainCommandName, Permissions.MANAGE.getPermission(), CommandType.CONSOLE, null);
         this.uninstalledCommand = uninstalledCommand;
@@ -73,8 +67,6 @@ public class PlanProxyCommand extends TreeCmdNode {
 
         this.webUserCommand = webUserCommand;
         this.rawDataCommand = rawDataCommand;
-        this.reloadCommand = reloadCommand;
-        this.disableCommand = disableCommand;
 
         getHelpCommand().setPermission(Permissions.MANAGE.getPermission());
         setColorScheme(colorScheme);
@@ -99,8 +91,8 @@ public class PlanProxyCommand extends TreeCmdNode {
         CommandNode[] manageGroup = {
                 rawDataCommand,
                 uninstalledCommand,
-                reloadCommand,
-                disableCommand
+                //reloadCommand,
+                //disableCommand
         };
         setNodeGroups(analyticsGroup, webGroup, manageGroup);
         commandsRegistered = true;

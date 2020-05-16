@@ -19,7 +19,7 @@ Cmd Header - Search                             || > §2${0} Ergebnisse für §f
 Cmd Header - Servers                            || > §2Server
 Cmd Header - Web Users                          || > §2${0} Accounts
 Cmd Info - Bungee Connection                    ||   §2Verbunden mit Bungee: §f${0}
-Cmd Info - Database                             ||   §2Genutzte Datenbank: §f${0}
+Cmd Info - Database                             ||   §2Aktuelle Datenbank: §f${0}
 Cmd Info - Reload Complete                      || §aReload erfolgreich.
 Cmd Info - Reload Failed                        || §cBeim Reload ist etwas schief gelaufen. Es wird empfohlen, den Server neuzustarten.
 Cmd Info - Update                               ||   §2Update verfügbar: §f${0}

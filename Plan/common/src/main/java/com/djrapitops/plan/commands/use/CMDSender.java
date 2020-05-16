@@ -48,6 +48,12 @@ public interface CMDSender {
 
     void send(String message);
 
+    default void send(String... messages) {
+        for (String message : messages) {
+            send(message);
+        }
+    }
+
     ChatFormatter getFormatter();
 
 }

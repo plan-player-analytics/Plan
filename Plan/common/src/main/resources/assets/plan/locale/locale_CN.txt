@@ -22,7 +22,7 @@ Cmd Header - Search                             || §f»§2 玩家统计 - 搜�
 Cmd Header - Servers                            || > §2服务器
 Cmd Header - Web Users                          || > §2${0} 个网页用户
 Cmd Info - Bungee Connection                    ||   §2已连接至Bungee：§f${0}
-Cmd Info - Database                             ||   §2可用数据库：§f${0}
+Cmd Info - Database                             ||   §2当前数据库：§f${0}
 Cmd Info - Reload Complete                      || §a成功重载插件
 Cmd Info - Reload Failed                        || §c重载插件时发生错误，建议重新启动服务器。
 Cmd Info - Update                               ||   §2更新可用：§f${0}

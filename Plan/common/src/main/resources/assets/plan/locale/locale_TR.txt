@@ -19,7 +19,7 @@ Cmd Header - Search                             || > §2${0} Results for §f${1}
 Cmd Header - Servers                            || > §2Sunucular
 Cmd Header - Web Users                          || > §2${0} Web kullanıcıları
 Cmd Info - Bungee Connection                    ||   §2Bungee ye bağlan: §f${0}
-Cmd Info - Database                             ||   §2Aktif Veritabanı: §f${0}
+Cmd Info - Database                             ||   §2Mevcut veritabanı: §f${0}
 Cmd Info - Reload Complete                      || §aYeniden başlatma tamamlandı
 Cmd Info - Reload Failed                        || §cPlugini yeniden başlatırken bir şeyler ters gitti,yeniden başlatmanız tavsiye edilir.
 Cmd Info - Update                               ||   §2Güncelleme mevcut: §f${0}

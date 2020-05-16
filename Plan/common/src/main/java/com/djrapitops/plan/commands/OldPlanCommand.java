@@ -16,15 +16,12 @@
  */
 package com.djrapitops.plan.commands;
 
-import com.djrapitops.plan.commands.subcommands.*;
 import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.DeepHelpLang;
 import com.djrapitops.plugin.command.ColorScheme;
-import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.TreeCmdNode;
-import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -39,39 +36,19 @@ import javax.inject.Singleton;
 @Singleton
 public class OldPlanCommand extends TreeCmdNode {
 
-    private final QInspectCommand qInspectCommand;
-    private final SearchCommand searchCommand;
-    private final Lazy<WebUserCommand> webUserCommand;
-    private final InfoCommand infoCommand;
-    private final ReloadCommand reloadCommand;
-    private final Lazy<ManageCommand> manageCommand;
-
     private boolean commandsRegistered;
 
     @Inject
     public OldPlanCommand(
             ColorScheme colorScheme,
-            Locale locale,
+            Locale locale
             // Group 1
-            QInspectCommand qInspectCommand,
-            SearchCommand searchCommand,
             // Group 2
-            Lazy<WebUserCommand> webUserCommand,
             // Group 3
-            InfoCommand infoCommand,
-            ReloadCommand reloadCommand,
-            Lazy<ManageCommand> manageCommand
     ) {
         super("plan", "", CommandType.CONSOLE, null);
 
         commandsRegistered = false;
-
-        this.qInspectCommand = qInspectCommand;
-        this.searchCommand = searchCommand;
-        this.webUserCommand = webUserCommand;
-        this.infoCommand = infoCommand;
-        this.reloadCommand = reloadCommand;
-        this.manageCommand = manageCommand;
 
         getHelpCommand().setPermission(Permissions.HELP.getPermission());
         setDefaultCommand("inspect");
@@ -83,20 +60,6 @@ public class OldPlanCommand extends TreeCmdNode {
         if (commandsRegistered) {
             return;
         }
-
-        CommandNode[] analyticsGroup = {
-                qInspectCommand,
-                searchCommand
-        };
-        CommandNode[] webGroup = {
-                webUserCommand.get()
-        };
-        CommandNode[] manageGroup = {
-                infoCommand,
-                reloadCommand,
-                manageCommand.get()
-        };
-        setNodeGroups(analyticsGroup, webGroup, manageGroup);
         commandsRegistered = true;
     }
 }
