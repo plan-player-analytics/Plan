@@ -38,7 +38,7 @@ Cmd Qinspect - Registered                       ||   §2Registrierung: §f${0}
 Cmd Qinspect - Times Kicked                     ||   §2Kicks: §f${0}
 Cmd SUCCESS - Feature disabled                  || §a'${0}' wurde bis zum nächsten Reload des Plugins deaktiviert.
 Cmd SUCCESS - WebUser register                  || §aNeuer Account (${0}) erfolgreich hinzugefügt! Sie können das Web-Panel über den folgenden Link anzeigen.
-Cmd WARN - Database not open                    || §eDatabase is ${0} - This might take longer than expected..
+Cmd WARN - Database not open                    || §eDatenbank ist ${0} - Dies könnte länger als erwartet dauern..
 Cmd Web - Permission Levels                     || >\§70: Zugriff auf alle Seiten\§71: Zugriff auf '/players' Und alle Spielerseiten\§72: Zugriff auf alle Spielerseiten mit dem gleichen Username wie der Web-Account\§73+: Keine Berechtigung
 Command Help - /plan analyze                    || Server-Übersicht
 Command Help - /plan dev                        || Entwicklungsmodus-Befehl
@@ -79,7 +79,7 @@ Database Notify - SQLite No WAL                 || SQLite WAL wird auf dieser Se
 Disable                                         || Player Analytics ausgeschaltet.
 Disable - Processing                            || Verarbeite kritische unverarbeitete Aufgaben. (${0})
 Disable - Processing Complete                   || Verarbeitung komplett.
-Disable - Unsaved Session Save                  || Saving unfinished sessions..
+Disable - Unsaved Session Save                  || Speichere unfertige Sizungen..
 Disable - WebServer                             || Webserver deaktiviert.
 Enable                                          || Player Analytics eingeschaltet.
 Enable - Database                               || ${0}-dDatenbankverbindung hergestellt.
@@ -96,7 +96,7 @@ Enable FAIL - Wrong Database Type               || ${0} ist keine gültige Daten
 HTML - COMPARING_15_DAYS                        || Comparing 15 days
 HTML - COMPARING_60_DAYS                        || Comparing 30d ago to Now
 HTML - COMPARING_7_DAYS                         || Comparing 7 days
-HTML - DATABASE_NOT_OPEN                        || Database is not open, check db status with /plan info
+HTML - DATABASE_NOT_OPEN                        || Datenbank ist nicht offen, überprüfe den DB Status mit /plan info
 HTML - ERROR                                    || Authentifikation fehlgeschlagen
 HTML - INDEX_ACTIVE                             || Aktiv
 HTML - INDEX_INACTIVE                           || Inaktiv
@@ -104,80 +104,80 @@ HTML - INDEX_IRREGULAR                          || Unregelmäßig
 HTML - INDEX_REGULAR                            || Regelmäßig
 HTML - INDEX_VERY_ACTIVE                        || Sehr aktiv
 HTML - KILLED                                   || Getötet
-HTML - LABEL_1ST_WEAPON                         || Deadliest PvP Weapon
-HTML - LABEL_2ND_WEAPON                         || 2nd PvP Weapon
-HTML - LABEL_3RD_WEAPON                         || 3rd PvP Weapon
+HTML - LABEL_1ST_WEAPON                         || Tödlichste PvP Waffe
+HTML - LABEL_2ND_WEAPON                         || 2. PvP Waffe
+HTML - LABEL_3RD_WEAPON                         || 3. PvP Waffe
 HTML - LABEL_ACTIVITY_INDEX                     || Aktivitätsindex
 HTML - LABEL_AFK                                || AFK
-HTML - LABEL_AFK_TIME                           || AFK Time
-HTML - LABEL_AVG                                || Average
-HTML - LABEL_AVG_KDR                            || Average KDR
-HTML - LABEL_AVG_MOB_KDR                        || Average Mob KDR
-HTML - LABEL_AVG_PLAYTIME                       || Average Playtime
-HTML - LABEL_AVG_SESSION_LENGTH                 || Average Session Length
-HTML - LABEL_AVG_TPS                            || Average TPS
+HTML - LABEL_AFK_TIME                           || AFK Zeit
+HTML - LABEL_AVG                                || Durchschnitt
+HTML - LABEL_AVG_KDR                            || Durschnittliche KDR
+HTML - LABEL_AVG_MOB_KDR                        || Durschnittliche Mob KDR
+HTML - LABEL_AVG_PLAYTIME                       || Durschnittliche Spielzeit
+HTML - LABEL_AVG_SESSION_LENGTH                 || Durschnittliche Sitzungslänge
+HTML - LABEL_AVG_TPS                            || Durschnittliche TPS
 HTML - LABEL_BANNED                             || Gebannt
 HTML - LABEL_BEST_PEAK                          || Rekord
-HTML - LABEL_DAY_OF_WEEK                        || Day of the Week
+HTML - LABEL_DAY_OF_WEEK                        || Tag der Woche
 HTML - LABEL_DEATHS                             || Tode
 HTML - LABEL_DOWNTIME                           || Downtime
 HTML - LABEL_DURING_LOW_TPS                     || During Low TPS Spikes:
 HTML - LABEL_ENTITIES                           || Entitäten
 HTML - LABEL_FAVORITE_SERVER                    || Lieblingsserver
-HTML - LABEL_FIRST_SESSION_LENGTH               || First session length
+HTML - LABEL_FIRST_SESSION_LENGTH               || Erste Sitzungslänge
 HTML - LABEL_FREE_DISK_SPACE                    || Freier Festplattenspeicher
-HTML - LABEL_INACTIVE                           || Inactive
+HTML - LABEL_INACTIVE                           || Inaktiv
 HTML - LABEL_LAST_PEAK                          || Letzter Höchststand
 HTML - LABEL_LAST_SEEN                          || Zuletzt gesehen
 HTML - LABEL_LOADED_CHUNKS                      || Geladene Chunks
 HTML - LABEL_LOADED_ENTITIES                    || Geladenen Entitäten
 HTML - LABEL_LONE_JOINS                         || Lone joins
 HTML - LABEL_LONE_NEW_JOINS                     || Lone newbie joins
-HTML - LABEL_LONGEST_SESSION                    || Longest Session
+HTML - LABEL_LONGEST_SESSION                    || Längste Sizung
 HTML - LABEL_LOW_TPS                            || Low TPS Spikes
-HTML - LABEL_MAX_FREE_DISK                      || Max Free Disk
-HTML - LABEL_MIN_FREE_DISK                      || Min Free Disk
+HTML - LABEL_MAX_FREE_DISK                      || Max Freier Speicher
+HTML - LABEL_MIN_FREE_DISK                      || Min Freier Speicher
 HTML - LABEL_MOB_DEATHS                         || Tode durch Mobs
 HTML - LABEL_MOB_KDR                            || Mob KDR
 HTML - LABEL_MOB_KILLS                          || Mob Kills
-HTML - LABEL_MOST_ACTIVE_GAMEMODE               || Most Active Gamemode
+HTML - LABEL_MOST_ACTIVE_GAMEMODE               || Meist genutzter Spielmodus
 HTML - LABEL_NAME                               || Name
-HTML - LABEL_NEW                                || New
+HTML - LABEL_NEW                                || Neu
 HTML - LABEL_NEW_PLAYERS                        || Neue Spieler
 HTML - LABEL_NICKNAME                           || Nickname
-HTML - LABEL_NO_SESSION_KILLS                   || None
+HTML - LABEL_NO_SESSION_KILLS                   || Keiner
 HTML - LABEL_ONLINE_FIRST_JOIN                  || Players online on first join
 HTML - LABEL_OPERATOR                           || Operator
 HTML - LABEL_PER_PLAYER                         || / Player
-HTML - LABEL_PER_REGULAR_PLAYER                 || / Regular Player
+HTML - LABEL_PER_REGULAR_PLAYER                 || / Regulärer Spieler
 HTML - LABEL_PLAYER_DEATHS                      || Tode durch Spieler
 HTML - LABEL_PLAYER_KILLS                       || Getötete Spieler
 HTML - LABEL_PLAYERS_ONLINE                     || Spieler Online
 HTML - LABEL_PLAYTIME                           || Spielzeit
 HTML - LABEL_REGISTERED                         || Registriert
-HTML - LABEL_REGISTERED_PLAYERS                 || Registered Players
-HTML - LABEL_REGULAR                            || Regular
-HTML - LABEL_REGULAR_PLAYERS                    || Regular Players
+HTML - LABEL_REGISTERED_PLAYERS                 || Registrierte Spieler
+HTML - LABEL_REGULAR                            || Regulär
+HTML - LABEL_REGULAR_PLAYERS                    || Reguläre Spieler
 HTML - LABEL_RELATIVE_JOIN_ACTIVITY             || Relative Join Activity
 HTML - LABEL_RETENTION                          || Erhaltung neuer Spieler
 HTML - LABEL_SERVER_DOWNTIME                    || Server Downtime
 HTML - LABEL_SERVER_OCCUPIED                    || Server occupied
-HTML - LABEL_SESSION_ENDED                      ||  Session beendet
-HTML - LABEL_SESSION_MEDIAN                     || Session Durchschnitt
+HTML - LABEL_SESSION_ENDED                      ||  Sitzung beendet
+HTML - LABEL_SESSION_MEDIAN                     || Sitzungsdurchschnitt
 HTML - LABEL_TIMES_KICKED                       || Mal gekickt
-HTML - LABEL_TOTAL_PLAYERS                      || Total Players
-HTML - LABEL_TOTAL_PLAYTIME                     || Total Playtime
+HTML - LABEL_TOTAL_PLAYERS                      || Gesamte Spieler
+HTML - LABEL_TOTAL_PLAYTIME                     || Gesamte Spielzeit
 HTML - LABEL_UNIQUE_PLAYERS                     || Einzigartige Spieler
-HTML - LABEL_WEEK_DAYS                          || 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
-HTML - LINK_BACK_NETWORK                        || Network page
-HTML - LINK_BACK_SERVER                         || Server page
-HTML - LINK_CHANGELOG                           || View Changelog
-HTML - LINK_DISCORD                             || General Support on Discord
+HTML - LABEL_WEEK_DAYS                          || 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'
+HTML - LINK_BACK_NETWORK                        || Netzwerk Seite
+HTML - LINK_BACK_SERVER                         || Server Seite
+HTML - LINK_CHANGELOG                           || Zeige Changelog
+HTML - LINK_DISCORD                             || Genereller Support auf Discord
 HTML - LINK_DOWNLOAD                            || Download
-HTML - LINK_ISSUES                              || Report Issues
-HTML - LINK_NIGHT_MODE                          || Night Mode
-HTML - LINK_PLAYER_PAGE                         || Player Page
-HTML - LINK_QUICK_VIEW                          || Quick view
+HTML - LINK_ISSUES                              || Melde einen Bug
+HTML - LINK_NIGHT_MODE                          || Dark Mode
+HTML - LINK_PLAYER_PAGE                         || Spieler Seite
+HTML - LINK_QUICK_VIEW                          || Schnellansicht
 HTML - LINK_SERVER_ANALYSIS                     || Server Analyse
 HTML - LINK_WIKI                                || Plan Wiki, Tutorials & Documentation
 HTML - LOCAL_MACHINE                            || Lokale Maschine
@@ -188,73 +188,73 @@ HTML - OFFLINE                                  ||  Offline
 HTML - ONLINE                                   ||  Online
 HTML - PER_DAY                                  || / Tag
 HTML - PLAYERS_TEXT                             || Spieler
-HTML - SESSION                                  || Session
+HTML - SESSION                                  || Sitzung
 HTML - SIDE_GEOLOCATIONS                        || Geolocations
 HTML - SIDE_INFORMATION                         || INFORMATION
-HTML - SIDE_NETWORK_OVERVIEW                    || Network Overview
+HTML - SIDE_NETWORK_OVERVIEW                    || Netzwerk Übersicht
 HTML - SIDE_OVERVIEW                            || Übersicht
-HTML - SIDE_PERFORMANCE                         || Performance
+HTML - SIDE_PERFORMANCE                         || Leistung
 HTML - SIDE_PLAYER_LIST                         || Spielerliste
-HTML - SIDE_PLAYERBASE                          || Playerbase
-HTML - SIDE_PLAYERBASE_OVERVIEW                 || Playerbase Overview
+HTML - SIDE_PLAYERBASE                          || Spielerbasis
+HTML - SIDE_PLAYERBASE_OVERVIEW                 || Spielerbasis Übersicht
 HTML - SIDE_PLUGINS                             || PLUGINS
 HTML - SIDE_PVP_PVE                             || PvP & PvE
 HTML - SIDE_SERVERS                             || Server
-HTML - SIDE_SERVERS_TITLE                       || SERVERS
-HTML - SIDE_SESSIONS                            || Sessions
-HTML - SIDE_TO_MAIN_PAGE                        || to main page
-HTML - TEXT_CLICK_TO_EXPAND                     || Click to expand
-HTML - TEXT_CONTRIBUTORS_CODE                   || code contributor
-HTML - TEXT_CONTRIBUTORS_LOCALE                 || translator
-HTML - TEXT_CONTRIBUTORS_MONEY                  || Extra special thanks to those who have monetarily supported the development.
-HTML - TEXT_CONTRIBUTORS_THANKS                 || In addition following <span class="col-plan">awesome people</span> have contributed:
-HTML - TEXT_DEV_VERSION                         || This version is a DEV release.
-HTML - TEXT_DEVELOPED_BY                        || is developed by
-HTML - TEXT_FIRST_SESSION                       || First session
-HTML - TEXT_LICENSED_UNDER                      || is developed and licensed under
-HTML - TEXT_METRICS                             || bStats Metrics
+HTML - SIDE_SERVERS_TITLE                       || SERVER
+HTML - SIDE_SESSIONS                            || Sitzungen
+HTML - SIDE_TO_MAIN_PAGE                        || zur Hauptseite
+HTML - TEXT_CLICK_TO_EXPAND                     || Klicke zum erweitern
+HTML - TEXT_CONTRIBUTORS_CODE                   || Code Mitwirkender
+HTML - TEXT_CONTRIBUTORS_LOCALE                 || Übersetzer
+HTML - TEXT_CONTRIBUTORS_MONEY                  || Txtra Dank an die Leute, die das Projekt finanziell unterstützt haben.
+HTML - TEXT_CONTRIBUTORS_THANKS                 || Außerdem haben die folgenden <span class="col-plan">tollen Leute</span> mitgewirkt:
+HTML - TEXT_DEV_VERSION                         || Diese Version ist ein DEV Release.
+HTML - TEXT_DEVELOPED_BY                        || entwickelt von
+HTML - TEXT_FIRST_SESSION                       || Erste Sitzung
+HTML - TEXT_LICENSED_UNDER                      || entwickelt und lizensiert unter
+HTML - TEXT_METRICS                             || bStats Metrik
 HTML - TEXT_NO_EXTENSION_DATA                   || No Extension Data
 HTML - TEXT_NO_LOW_TPS                          || No low tps spikes
-HTML - TEXT_NO_SERVER                           || No server to display online activity for
-HTML - TEXT_NO_SERVERS                          || No servers found in the database
-HTML - TEXT_PLUGIN_INFORMATION                  || Information about the plugin
-HTML - TEXT_PREDICTED_RETENTION                 || This value is a prediction based on previous players
-HTML - TEXT_VERSION                             || A new version has been released and is now available for download.
-HTML - TITLE_30_DAYS                            || 30 days
-HTML - TITLE_30_DAYS_AGO                        || 30 days ago
+HTML - TEXT_NO_SERVER                           || Keine Server gefunden, um die Online Aktivität anzuzeigen
+HTML - TEXT_NO_SERVERS                          || Keine Server in der Datenbank gefunden
+HTML - TEXT_PLUGIN_INFORMATION                  || Informationen über das Plugin
+HTML - TEXT_PREDICTED_RETENTION                 || Dieser Wert ist eine Vorraussage, der sich auf, der auf den Spielern basiert
+HTML - TEXT_VERSION                             || Eine neue Version steht zum Download bereit
+HTML - TITLE_30_DAYS                            || 30 Tage
+HTML - TITLE_30_DAYS_AGO                        || 30 Tage vorher
 HTML - TITLE_ALL                                || Gesamt
-HTML - TITLE_ALL_TIME                           || All Time
-HTML - TITLE_AS_NUMBERS                         || as Numbers
-HTML - TITLE_AVG_PING                           || Average Ping
-HTML - TITLE_BEST_PING                          || Best Ping
+HTML - TITLE_ALL_TIME                           || Gesamte zeit
+HTML - TITLE_AS_NUMBERS                         || als Zahlen
+HTML - TITLE_AVG_PING                           || Durchschnittlicher Ping
+HTML - TITLE_BEST_PING                          || Bester Ping
 HTML - TITLE_CALENDAR                           ||  Kalender
-HTML - TITLE_CONNECTION_INFO                    || Connection Information
+HTML - TITLE_CONNECTION_INFO                    || Verbindungsinformationen
 HTML - TITLE_COUNTRY                            || Land
 HTML - TITLE_CPU_RAM                            || CPU & RAM
-HTML - TITLE_CURRENT_PLAYERBASE                 || Aktuelle Playerbase
+HTML - TITLE_CURRENT_PLAYERBASE                 || Aktuelle Spielerbasis
 HTML - TITLE_DISK                               || Festplattenspeicher
-HTML - TITLE_GRAPH_DAY_BY_DAY                   || Day by Day
-HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || Network Online Activity
-HTML - TITLE_GRAPH_PUNCHCARD                    || Lochkarte for 30 days
+HTML - TITLE_GRAPH_DAY_BY_DAY                   || Tag für Tag
+HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || Netzwerk Online Aktivität
+HTML - TITLE_GRAPH_PUNCHCARD                    || Lochkarte für 30 Tage
 HTML - TITLE_INSIGHTS                           || Insights for 30 days
-HTML - TITLE_IS_AVAILABLE                       || is Available
+HTML - TITLE_IS_AVAILABLE                       || ist Verfügbar
 HTML - TITLE_LAST_24_HOURS                      || Letzte 24 Stunden
 HTML - TITLE_LAST_30_DAYS                       || Letzte 30 Tage
 HTML - TITLE_LAST_7_DAYS                        || Letzte 7 Tage
 HTML - TITLE_LAST_CONNECTED                     || Letzte Verbindung
-HTML - TITLE_LENGTH                             ||  Length
-HTML - TITLE_MOST_PLAYED_WORLD                  || Most played World
+HTML - TITLE_LENGTH                             ||  Länge
+HTML - TITLE_MOST_PLAYED_WORLD                  || Meist gespielte Welt
 HTML - TITLE_NETWORK                            || Netzwerk
-HTML - TITLE_NETWORK_AS_NUMBERS                 || Network as Numbers
-HTML - TITLE_NOW                                || Now
-HTML - TITLE_ONLINE_ACTIVITY                    || Online Activity
-HTML - TITLE_ONLINE_ACTIVITY_AS_NUMBERS         || Online Activity as Numbers
-HTML - TITLE_ONLINE_ACTIVITY_OVERVIEW           || Online Activity Overview
-HTML - TITLE_PERFORMANCE_AS_NUMBERS             || Performance as Numbers
+HTML - TITLE_NETWORK_AS_NUMBERS                 || Netzwerk als Zahlen
+HTML - TITLE_NOW                                || Jetzt
+HTML - TITLE_ONLINE_ACTIVITY                    || Online Aktivität
+HTML - TITLE_ONLINE_ACTIVITY_AS_NUMBERS         || Online Aktivität als Zahlen
+HTML - TITLE_ONLINE_ACTIVITY_OVERVIEW           || Online Aktivitätsübersicht
+HTML - TITLE_PERFORMANCE_AS_NUMBERS             || Leistung als Zahlen
 HTML - TITLE_PING                               || Ping
-HTML - TITLE_PLAYER                             || Player
-HTML - TITLE_PLAYER_OVERVIEW                    || Player Overview
-HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Entwicklung der Playerbase
+HTML - TITLE_PLAYER                             || Spieler
+HTML - TITLE_PLAYER_OVERVIEW                    || Spieler Übersicht
+HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Entwicklung der Spielerbasis
 HTML - TITLE_PVP_DEATHS                         || Recent PvP Deaths
 HTML - TITLE_PVP_KILLS                          || Recent PvP Kills
 HTML - TITLE_PVP_PVE_NUMBERS                    || PvP & PvE as Numbers
