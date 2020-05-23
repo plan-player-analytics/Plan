@@ -1,6 +1,7 @@
 dependencies {
     compile "com.djrapitops:AbstractPluginFramework-api:$abstractPluginFrameworkVersion"
     compile project(":api")
+    compileOnly project(":extensions")
     compile project(path: ":extensions", configuration: 'shadow')
     compile "org.apache.httpcomponents:httpclient:$httpClientVersion"
     compile "org.apache.commons:commons-text:$commonsTextVersion"

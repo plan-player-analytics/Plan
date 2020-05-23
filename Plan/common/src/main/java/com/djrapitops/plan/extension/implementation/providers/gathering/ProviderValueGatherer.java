@@ -105,6 +105,7 @@ public class ProviderValueGatherer {
     }
 
     public void disableMethodFromUse(MethodWrapper<?> method) {
+        method.disable();
         dataProviders.removeProviderWithMethod(method);
     }
 

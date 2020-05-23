@@ -29,9 +29,9 @@ public class DataExtensionMethodCallException extends IllegalStateException {
 
     private final String pluginName;
     // Non serializable field due to Method not being serializable.
-    private final transient MethodWrapper method;
+    private final transient MethodWrapper<?> method;
 
-    public DataExtensionMethodCallException(Throwable cause, String pluginName, MethodWrapper method) {
+    public DataExtensionMethodCallException(Throwable cause, String pluginName, MethodWrapper<?> method) {
         super(cause);
         this.pluginName = pluginName;
         this.method = method;
@@ -41,7 +41,7 @@ public class DataExtensionMethodCallException extends IllegalStateException {
         return pluginName;
     }
 
-    public Optional<MethodWrapper> getMethod() {
+    public Optional<MethodWrapper<?>> getMethod() {
         // method is transient and might be lost if flushed to disk.
         return Optional.ofNullable(method);
     }
