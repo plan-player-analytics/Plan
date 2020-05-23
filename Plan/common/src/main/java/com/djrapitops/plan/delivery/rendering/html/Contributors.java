@@ -48,6 +48,7 @@ public class Contributors {
                 new Contributor("f0rb1d (\u4f5b\u58c1\u706f)", LANG),
                 new Contributor("Fur_xia", LANG),
                 new Contributor("fuzzlemann", CODE, LANG),
+                new Contributor("hallo1142", LANG),
                 new Contributor("itaquito", LANG),
                 new Contributor("jyhsu2000", CODE),
                 new Contributor("jvmuller", LANG),
@@ -62,7 +63,6 @@ public class Contributors {
                 new Contributor("Vankka", CODE),
                 new Contributor("yukieji", LANG),
                 new Contributor("qsefthuopq", LANG)
-                new Contributor("hallo1142", LANG)
         };
         int estimatedLength = contributors.length * 40 + 50;
         StringBuilder html = new StringBuilder(estimatedLength);
