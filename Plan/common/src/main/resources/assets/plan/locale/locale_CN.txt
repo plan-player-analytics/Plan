@@ -361,10 +361,10 @@ Version FAIL - Read versions.txt                || 无法从 Github/versions.txt
 Web User Listing                                ||   §2${0} §7：§f${1}
 WebServer - Notify HTTP                         || 网页服务器：无证书 -> 正使用 HTTP 服务器提供可视化效果。
 WebServer - Notify HTTP User Auth               || 网页服务器：已禁用用户认证！（HTTP 方式不安全）
-WebServer - Notify HTTPS User Auth              || WebServer: 用户验证已关闭! (关闭于配置文件)
+WebServer - Notify HTTPS User Auth              || 网页服务器: 用户验证已关闭! (关闭于配置文件)
 WebServer - Notify no Cert file                 || 网页服务器：未找到证书密钥存储文件：${0}
-WebServer - Notify Using Proxy                  || WebServer: 代理模式HTTPS已开启, 请确保您的反代已经配置为HTTPS模式并且Plan的Alternative_IP.Link已经指向代理
-WebServer FAIL - EOF                            || WebServer: 在读取证书文件时出现了EOF异常. (请检查证书文件完整性)
+WebServer - Notify Using Proxy                  || 网页服务器: 代理模式HTTPS已开启, 请确保您的反代已经配置为HTTPS模式并且Plan的Alternative_IP.Link已经指向代理
+WebServer FAIL - EOF                            || 网页服务器: 在读取证书文件时出现了EOF异常. (请检查证书文件完整性)
 WebServer FAIL - Port Bind                      || 未成功初始化网页服务器。端口（${0}）是否被占用？
 WebServer FAIL - SSL Context                    || 网页服务器：SSL 环境初始化失败。
 WebServer FAIL - Store Load                     || 网页服务器：SSL 证书载入失败。
