@@ -36,10 +36,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -88,9 +85,9 @@ public class ErrorLogger implements ErrorHandler {
         Path errorLog = logsDir.resolve(errorName + "-" + hash + ".txt");
         mergeAdditionalContext(throwable, context);
         if (Files.exists(errorLog)) {
-            logExisting(errorLog, throwable, context);
+            logExisting(errorLog, throwable, context, hash);
         } else {
-            logNew(errorLog, throwable, context);
+            logNew(errorLog, throwable, context, hash);
         }
         logToConsole(level, errorLog, throwable, context);
         if (L.CRITICAL == level) {
@@ -109,17 +106,17 @@ public class ErrorLogger implements ErrorHandler {
         }
     }
 
-    private void logExisting(Path errorLog, Throwable throwable, ErrorContext context) {
+    private void logExisting(Path errorLog, Throwable throwable, ErrorContext context, String hash) {
         // Read existing
         List<String> lines;
         try (Stream<String> read = Files.lines(errorLog)) {
             lines = read.collect(Collectors.toList());
         } catch (IOException e) {
-            logAfterReadError(errorLog, throwable, context);
+            logAfterReadError(errorLog, throwable, context, hash);
             return;
         }
         int occurrences = getOccurrences(lines) + 1;
-        List<String> newLines = buildNewLines(context, lines, occurrences);
+        List<String> newLines = buildNewLines(context, lines, occurrences, hash);
         overwrite(errorLog, throwable, newLines);
     }
 
@@ -132,9 +129,9 @@ public class ErrorLogger implements ErrorHandler {
         }
     }
 
-    private List<String> buildNewLines(ErrorContext context, List<String> lines, int occurrences) {
+    private List<String> buildNewLines(ErrorContext context, List<String> lines, int occurrences, String hash) {
         Lists.Builder<String> builder = Lists.builder(String.class)
-                .add("Last occurred: " + getTimeStamp() + " Occurrences: " + occurrences);
+                .add(hash + " - Last occurred: " + getTimeStamp() + " Occurrences: " + occurrences);
         // 5 contexts are enough.
         if (occurrences <= 5) {
             builder = buildContext(context, occurrences, builder);
@@ -159,14 +156,14 @@ public class ErrorLogger implements ErrorHandler {
                 .add("");
     }
 
-    private void logAfterReadError(Path errorLog, Throwable throwable, ErrorContext context) {
+    private void logAfterReadError(Path errorLog, Throwable throwable, ErrorContext context, String hash) {
         logger.error("Failed to read " + errorLog + " deleting file");
         try {
             Files.deleteIfExists(errorLog);
         } catch (IOException ioException) {
             logger.error("Failed to delete " + errorLog);
         }
-        logNew(errorLog, throwable, context);
+        logNew(errorLog, throwable, context, hash);
     }
 
     private int getOccurrences(List<String> lines) {
@@ -196,10 +193,10 @@ public class ErrorLogger implements ErrorHandler {
         );
     }
 
-    private void logNew(Path errorLog, Throwable throwable, ErrorContext context) {
+    private void logNew(Path errorLog, Throwable throwable, ErrorContext context, String hash) {
         List<String> stacktrace = buildReadableStacktrace(throwable);
         List<String> lines = Lists.builder(String.class)
-                .add("Last occurred: " + getTimeStamp() + " Occurrences: 1")
+                .add(hash + " - Last occurred: " + getTimeStamp() + " Occurrences: 1")
                 .apply(builder -> this.buildContext(context, 1, builder))
                 .add("---- Stacktrace ----")
                 .addAll(stacktrace)
@@ -245,9 +242,12 @@ public class ErrorLogger implements ErrorHandler {
     private List<String> buildReadableStacktrace(Throwable e) {
         List<String> trace = new ArrayList<>();
         trace.add(e.toString());
+        Deduplicator deduplicator = new Deduplicator();
         for (StackTraceElement element : e.getStackTrace()) {
-            trace.add("   " + element);
+            String line = element.toString();
+            deduplicator.getLine(line).ifPresent(trace::add);
         }
+        deduplicator.getLeftoverDuplicateCountLine().ifPresent(trace::add);
         Throwable[] suppressed = e.getSuppressed();
         if (suppressed.length > 0) {
             for (Throwable suppressedThrowable : suppressed) {
@@ -261,5 +261,33 @@ public class ErrorLogger implements ErrorHandler {
             trace.addAll(buildReadableStacktrace(cause));
         }
         return trace;
+    }
+
+    private static class Deduplicator {
+        private final Set<String> lines = new HashSet<>();
+        private String lastDuplicate = null;
+        private int duplicateCount = 0;
+
+        public Optional<String> getLine(String line) {
+            if (duplicateCount > 0 && !line.equals(lastDuplicate)) {
+                String returnLine = "    x " + duplicateCount;
+                duplicateCount = 0;
+                return Optional.of(returnLine);
+            } else if (line.equals(lastDuplicate)) {
+                duplicateCount++;
+                return Optional.empty();
+            } else if (lines.contains(line)) {
+                lastDuplicate = line;
+                duplicateCount = 1;
+                return Optional.empty();
+            } else {
+                lines.add(line);
+                return Optional.of("   " + line);
+            }
+        }
+
+        public Optional<String> getLeftoverDuplicateCountLine() {
+            return duplicateCount > 0 ? Optional.of("    x " + duplicateCount) : Optional.empty();
+        }
     }
 }
