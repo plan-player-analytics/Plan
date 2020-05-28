@@ -213,7 +213,7 @@ HTML - SIDE_SERVERS_TITLE                       || 服务器
 HTML - SIDE_SESSIONS                            || 时域
 HTML - SIDE_TO_MAIN_PAGE                        || 到主页面
 HTML - TEXT_CLICK_TO_EXPAND                     || 点击拓展
-HTML - TEXT_CONTRIBUTORS_CODE                   || 码农
+HTML - TEXT_CONTRIBUTORS_CODE                   || 开发者
 HTML - TEXT_CONTRIBUTORS_LOCALE                 || 译者
 HTML - TEXT_CONTRIBUTORS_MONEY                  || 特别感谢那些在经济上支持该插件发展的人.
 HTML - TEXT_CONTRIBUTORS_THANKS                 || 另外以下 <span class="col-plan">awesome people</span> 也为该插件作出了贡献:
