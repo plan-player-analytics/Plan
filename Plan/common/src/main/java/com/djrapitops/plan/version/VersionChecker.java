@@ -23,6 +23,8 @@ import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.utilities.java.Lists;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.api.utility.Version;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -47,6 +49,7 @@ public class VersionChecker implements SubSystem {
     private final Locale locale;
     private final PlanConfig config;
     private final PluginLogger logger;
+    private final ErrorLogger errorLogger;
     private final PlanPlugin plugin;
 
     private VersionInfo newVersionAvailable;
@@ -57,12 +60,14 @@ public class VersionChecker implements SubSystem {
             Locale locale,
             PlanConfig config,
             PluginLogger logger,
+            ErrorLogger errorLogger,
             PlanPlugin plugin
     ) {
         this.currentVersion = currentVersion;
         this.locale = locale;
         this.config = config;
         this.logger = logger;
+        this.errorLogger = errorLogger;
         this.plugin = plugin;
     }
 
@@ -70,7 +75,7 @@ public class VersionChecker implements SubSystem {
         return newVersionAvailable != null;
     }
 
-    private void enable0() {
+    private void checkForUpdates() {
         try {
             List<VersionInfo> versions = VersionInfoLoader.load();
             if (config.isFalse(PluginSettings.NOTIFY_ABOUT_DEV_RELEASES)) {
@@ -91,7 +96,10 @@ public class VersionChecker implements SubSystem {
                 logger.info(locale.getString(PluginLang.VERSION_NEWEST));
             }
         } catch (IOException e) {
-            logger.error(locale.getString(PluginLang.VERSION_FAIL_READ_VERSIONS));
+            errorLogger.log(L.WARN, e, ErrorContext.builder()
+                    .related(locale.getString(PluginLang.VERSION_FAIL_READ_VERSIONS))
+                    .whatToDo("Allow Plan to check for updates from Github/versions.txt or disable update check.")
+                    .build());
         }
     }
 
@@ -103,7 +111,7 @@ public class VersionChecker implements SubSystem {
         plugin.getRunnableFactory().create("VersionChecker", new AbsRunnable() {
             @Override
             public void run() {
-                enable0();
+                checkForUpdates();
             }
         }).runTaskAsynchronously();
     }
