@@ -175,7 +175,11 @@ public class ResponseFactory {
         try {
             String content = UnaryChain.of(getResource(fileName).asString())
                     .chain(theme::replaceThemeColors)
-                    .chain(locale::replaceLanguageInJavascript)
+                    .chain(resource -> {
+                        if (fileName.startsWith("vendor/") || fileName.startsWith("/vendor/"))
+                            return resource;
+                        return locale.replaceLanguageInJavascript(resource);
+                    })
                     .apply();
             return Response.builder()
                     .setMimeType(MimeType.JS)
