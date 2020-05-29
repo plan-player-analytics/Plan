@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.version;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
@@ -25,6 +26,7 @@ import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plugin.api.utility.Version;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.task.AbsRunnable;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -45,6 +47,7 @@ public class VersionChecker implements SubSystem {
     private final Locale locale;
     private final PlanConfig config;
     private final PluginLogger logger;
+    private final PlanPlugin plugin;
 
     private VersionInfo newVersionAvailable;
 
@@ -53,23 +56,21 @@ public class VersionChecker implements SubSystem {
             @Named("currentVersion") String currentVersion,
             Locale locale,
             PlanConfig config,
-            PluginLogger logger
+            PluginLogger logger,
+            PlanPlugin plugin
     ) {
         this.currentVersion = currentVersion;
         this.locale = locale;
         this.config = config;
         this.logger = logger;
+        this.plugin = plugin;
     }
 
     public boolean isNewVersionAvailable() {
         return newVersionAvailable != null;
     }
 
-    @Override
-    public void enable() {
-        if (config.isFalse(PluginSettings.CHECK_FOR_UPDATES)) {
-            return;
-        }
+    private void enable0() {
         try {
             List<VersionInfo> versions = VersionInfoLoader.load();
             if (config.isFalse(PluginSettings.NOTIFY_ABOUT_DEV_RELEASES)) {
@@ -92,6 +93,19 @@ public class VersionChecker implements SubSystem {
         } catch (IOException e) {
             logger.error(locale.getString(PluginLang.VERSION_FAIL_READ_VERSIONS));
         }
+    }
+
+    @Override
+    public void enable() {
+        if (config.isFalse(PluginSettings.CHECK_FOR_UPDATES)) {
+            return;
+        }
+        plugin.getRunnableFactory().create("VersionChecker", new AbsRunnable() {
+            @Override
+            public void run() {
+                enable0();
+            }
+        }).runTaskAsynchronously();
     }
 
     @Override
