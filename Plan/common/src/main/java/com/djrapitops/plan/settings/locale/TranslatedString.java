@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
  * @author Rsl1122
  */
 class TranslatedString {
-    private static final Pattern LINK_MATCHER = Pattern.compile("http(s|):/[\\w.\\-_%/?$#@!()&]+");
+    private static final Pattern LINK_MATCHER = Pattern.compile("http(s|)://[\\w.\\-_%/?$#@!()&=]+");
 
     private final List<TranslatedString> translating = new LinkedList<>();
 
