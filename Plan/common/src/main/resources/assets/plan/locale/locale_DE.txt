@@ -79,7 +79,7 @@ Database Notify - SQLite No WAL                 || SQLite WAL wird auf dieser Se
 Disable                                         || Player Analytics ausgeschaltet.
 Disable - Processing                            || Verarbeite kritische unverarbeitete Aufgaben. (${0})
 Disable - Processing Complete                   || Verarbeitung komplett.
-Disable - Unsaved Session Save                  || Speichere unfertige Sizungen..
+Disable - Unsaved Session Save                  || Speichere unfertige Sitzungen..
 Disable - WebServer                             || Webserver deaktiviert.
 Enable                                          || Player Analytics eingeschaltet.
 Enable - Database                               || ${0}-dDatenbankverbindung hergestellt.
@@ -133,8 +133,8 @@ HTML - LABEL_LOADED_CHUNKS                      || Geladene Chunks
 HTML - LABEL_LOADED_ENTITIES                    || Geladenen Entitäten
 HTML - LABEL_LONE_JOINS                         || Lone joins
 HTML - LABEL_LONE_NEW_JOINS                     || Lone newbie joins
-HTML - LABEL_LONGEST_SESSION                    || Längste Sizung
-HTML - LABEL_LOW_TPS                            || Low TPS Spikes
+HTML - LABEL_LONGEST_SESSION                    || Längste Sitzung
+HTML - LABEL_LOW_TPS                            || Low TPS Spitzen
 HTML - LABEL_MAX_FREE_DISK                      || Max Freier Speicher
 HTML - LABEL_MIN_FREE_DISK                      || Min Freier Speicher
 HTML - LABEL_MOB_DEATHS                         || Tode durch Mobs
@@ -214,7 +214,7 @@ HTML - TEXT_FIRST_SESSION                       || Erste Sitzung
 HTML - TEXT_LICENSED_UNDER                      || entwickelt und lizensiert unter
 HTML - TEXT_METRICS                             || bStats Metrik
 HTML - TEXT_NO_EXTENSION_DATA                   || No Extension Data
-HTML - TEXT_NO_LOW_TPS                          || No low tps spikes
+HTML - TEXT_NO_LOW_TPS                          || Keine tiefen TPS-Spitzen
 HTML - TEXT_NO_SERVER                           || Keine Server gefunden, um die Online Aktivität anzuzeigen
 HTML - TEXT_NO_SERVERS                          || Keine Server in der Datenbank gefunden
 HTML - TEXT_PLUGIN_INFORMATION                  || Informationen über das Plugin
@@ -255,36 +255,36 @@ HTML - TITLE_PING                               || Ping
 HTML - TITLE_PLAYER                             || Spieler
 HTML - TITLE_PLAYER_OVERVIEW                    || Spieler Übersicht
 HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Entwicklung der Spielerbasis
-HTML - TITLE_PVP_DEATHS                         || Recent PvP Deaths
-HTML - TITLE_PVP_KILLS                          || Recent PvP Kills
-HTML - TITLE_PVP_PVE_NUMBERS                    || PvP & PvE as Numbers
-HTML - TITLE_RECENT_KILLS                       || Recent Kills
+HTML - TITLE_PVP_DEATHS                         || Kürzlich durch PvP gestorben
+HTML - TITLE_PVP_KILLS                          || Kürzliche PvP-Kills
+HTML - TITLE_PVP_PVE_NUMBERS                    || PvP & PvE als Nummer
+HTML - TITLE_RECENT_KILLS                       || Kürzliche Kills
 HTML - TITLE_RECENT_SESSIONS                    || Letzte Sessions
 HTML - TITLE_SEEN_NICKNAMES                     || Registrierte Nicknames
 HTML - TITLE_SERVER                             || Server
-HTML - TITLE_SERVER_AS_NUMBERS                  || Server as Numbers
-HTML - TITLE_SERVER_OVERVIEW                    || Server Overview
-HTML - TITLE_SERVER_PLAYTIME                    || Server Playtime
-HTML - TITLE_SERVER_PLAYTIME_30                 || Server Playtime for 30 days
-HTML - TITLE_SESSION_START                      || Session Started
-HTML - TITLE_THEME_SELECT                       || Theme Select
-HTML - TITLE_TITLE_PLAYER_PUNCHCARD             || Punchcard
+HTML - TITLE_SERVER_AS_NUMBERS                  || Server als Nummern
+HTML - TITLE_SERVER_OVERVIEW                    || Server Übersicht
+HTML - TITLE_SERVER_PLAYTIME                    || Server Spielzeit
+HTML - TITLE_SERVER_PLAYTIME_30                 || Server Spielzeit für 30 Tage
+HTML - TITLE_SESSION_START                      || Sitzung gestartet
+HTML - TITLE_THEME_SELECT                       || Thema ausgewählt
+HTML - TITLE_TITLE_PLAYER_PUNCHCARD             || Lochkarte
 HTML - TITLE_TPS                                || TPS
 HTML - TITLE_TREND                              || Trend
-HTML - TITLE_TRENDS                             || Trends for 30 days
+HTML - TITLE_TRENDS                             || Trends für 30 Tage
 HTML - TITLE_VERSION                            || Version
-HTML - TITLE_WEEK_COMPARISON                    || Week Comparison
+HTML - TITLE_WEEK_COMPARISON                    || Wochenvergleich
 HTML - TITLE_WORLD                              || World Load
 HTML - TITLE_WORLD_PLAYTIME                     || Spielzeit in der Welt
-HTML - TITLE_WORST_PING                         || Worst Ping
+HTML - TITLE_WORST_PING                         || Schlechtester Ping
 HTML - TOTAL_ACTIVE_TEXT                        || Gesamte Aktive Spielzeit
 HTML - TOTAL_AFK                                || Gesamte AFK-Zeit
 HTML - TOTAL_PLAYERS                            || Gesamte Spieler
 HTML - UNIQUE_CALENDAR                          || Einzigartig:
 HTML - UNIT_CHUNKS                              || Chunks
 HTML - UNIT_ENTITIES                            || Entities
-HTML - UNIT_NO_DATA                             || No Data
-HTML - UNIT_THE_PLAYERS                         || Players
+HTML - UNIT_NO_DATA                             || Keine Daten
+HTML - UNIT_THE_PLAYERS                         || Spieler
 HTML - USER_AND_PASS_NOT_SPECIFIED              || User und Passwort nicht spezifiziert
 HTML - USER_DOES_NOT_EXIST                      || User existiert  nicht
 HTML - USER_PASS_MISMATCH                       || User und Password stimmen nicht überein
@@ -330,9 +330,9 @@ Manage - Fail File not found                    || > §cKeine Daten in ${0} gefu
 Manage - Fail Incorrect Database                || > §c'${0}' ist keine unterstützte Datenbank.
 Manage - Fail No Exporter                       || §eExporter '${0}' doesn't exist
 Manage - Fail No Importer                       || §eImporter '${0}' existiert nicht
-Manage - Fail No Server                         || No server found with given parameters.
+Manage - Fail No Server                         || Es wurden keine Server mit diesen Angaben gefunden.
 Manage - Fail Same Database                     || > §cKann nicht von und zu der gleichen Datenbank agieren!
-Manage - Fail Same server                       || Can not mark this server as uninstalled (You are on it)
+Manage - Fail Same server                       || Server kann nicht als uninstallier markiert werden. (Du bist da dran).
 Manage - Fail, Confirmation                     || > §cFüge '-a' zum Befehl hinzu um die Ausführung zu bestätigen: ${0}
 Manage - List Importers                         || Importer:
 Manage - Remind HotSwap                         || §eDenk dran, zur neuen Datenbank zu wechseln (/plan m hotswap ${0}) und um das Plugin neu zu laden.
