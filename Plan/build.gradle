@@ -174,11 +174,16 @@ subprojects {
             // xml.destination file("${buildDir}/jacoco/report.xml")
         }
     }
+
+    plugins.withType(JacocoPlugin) {
+        tasks["test"].finalizedBy 'jacocoTestReport'
+    }
 }
 
 sonarqube {
     properties {
         property "sonar.projectName", "Player Analytics"
         property "sonar.projectKey", "com.djrapitops:Plan"
+        property "sonar.coverage.jacoco.xmlReportPaths", "**/build/report/jacoco/test/jacocoTestReport.xml"
     }
 }
