@@ -1,7 +1,7 @@
 Cmd - Click Me                                  || Klicke hier
 Cmd - Link                                      ||   §2Link: §f
 Cmd Disable - Disabled                          || §aPlan ist nun deaktiviert. Nutze /planbungee reload um das Plugin neu zu starten.
-Cmd FAIL - Database not open                    || §cDatabase is ${0} - Please try again a bit later.
+Cmd FAIL - Database not open                    || §cDatenbank ist ${0} - Bitte versuche es später erneut.
 Cmd FAIL - Invalid Username                     || §cDieser Benutzer besitzt keine UUID.
 Cmd FAIL - No Feature                           || §eWelches Feature soll deaktiviert werden? (momentan unterstützt: ${0})
 Cmd FAIL - No Permission                        || §cDafür fehlt dir die Berechtigung.
@@ -86,16 +86,16 @@ Enable - Database                               || ${0}-dDatenbankverbindung her
 Enable - Notify Empty IP                        || IP in der server.properties ist leer & Alternative_IP ist nicht in Verwendung. Es werden falsche Links verwendet!
 Enable - Notify Geolocations disabled           || Geolocation wird nicht aufgezeichnet (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || Plan braucht einen Internetzugang um die GeoLite2 Geolocation Datenbank runterzuladen.
-Enable - Notify Webserver disabled              || WebServer wurde nicht geladen. (WebServer.DisableWebServer: true)
+Enable - Notify Webserver disabled              || Webserver wurde nicht geladen. (WebServer.DisableWebServer: true)
 Enable - WebServer                              || Webserver läuft auf PORT ${0} (${1})
 Enable FAIL - Database                          || ${0}-Datenbankverbindung fehlgeschlagen: ${1}
 Enable FAIL - Database Patch                    || Datenbank-Patch ist fehlgeschlagen. Plugin wurde deaktiviert. Wir bitten dich, uns diesen Vorfall mitzuteilen.
 Enable FAIL - GeoDB Write                       || Etwas ist beim Speichern der GeoLite2 Geolocation Datenbank fehlgeschlagen
 Enable FAIL - WebServer (Proxy)                 || Webserver ist nicht geladen!
 Enable FAIL - Wrong Database Type               || ${0} ist keine gültige Datenbank
-HTML - COMPARING_15_DAYS                        || Comparing 15 days
-HTML - COMPARING_60_DAYS                        || Comparing 30d ago to Now
-HTML - COMPARING_7_DAYS                         || Comparing 7 days
+HTML - COMPARING_15_DAYS                        || Vergleiche 15 Tage
+HTML - COMPARING_60_DAYS                        || Vergleiche 30 Tage bis Jetzt
+HTML - COMPARING_7_DAYS                         || Vergleiche 7 Tage
 HTML - DATABASE_NOT_OPEN                        || Datenbank ist nicht offen, überprüfe den DB Status mit /plan info
 HTML - ERROR                                    || Authentifikation fehlgeschlagen
 HTML - INDEX_ACTIVE                             || Aktiv
@@ -206,7 +206,7 @@ HTML - SIDE_TO_MAIN_PAGE                        || zur Hauptseite
 HTML - TEXT_CLICK_TO_EXPAND                     || Klicke zum erweitern
 HTML - TEXT_CONTRIBUTORS_CODE                   || Code Mitwirkender
 HTML - TEXT_CONTRIBUTORS_LOCALE                 || Übersetzer
-HTML - TEXT_CONTRIBUTORS_MONEY                  || Txtra Dank an die Leute, die das Projekt finanziell unterstützt haben.
+HTML - TEXT_CONTRIBUTORS_MONEY                  || Extra Dank an die Leute, die das Projekt finanziell unterstützt haben.
 HTML - TEXT_CONTRIBUTORS_THANKS                 || Außerdem haben die folgenden <span class="col-plan">tollen Leute</span> mitgewirkt:
 HTML - TEXT_DEV_VERSION                         || Diese Version ist ein DEV Release.
 HTML - TEXT_DEVELOPED_BY                        || entwickelt von
@@ -286,7 +286,7 @@ HTML - UNIT_ENTITIES                            || Entities
 HTML - UNIT_NO_DATA                             || Keine Daten
 HTML - UNIT_THE_PLAYERS                         || Spieler
 HTML - USER_AND_PASS_NOT_SPECIFIED              || User und Passwort nicht spezifiziert
-HTML - USER_DOES_NOT_EXIST                      || User existiert  nicht
+HTML - USER_DOES_NOT_EXIST                      || User existiert nicht
 HTML - USER_PASS_MISMATCH                       || User und Password stimmen nicht überein
 HTML - WITH                                     || <th>Breite
 HTML ERRORS - ACCESS_DENIED_403                 || Zugriff verweigert
@@ -306,11 +306,11 @@ In Depth Help - /plan inspect ?                 || > §2Inspect-Befehl\  Aktuali
 In Depth Help - /plan manage ?                  || > §2Manage-Befehl\  Verwalte die MySQL und SQLite Datenbank von Plan.\  §2/plan m §fListe Unterbefehle\  §2/plan m <unterbefehl> ? §fAusführliche Hilfe
 In Depth Help - /plan manage backup ?           || > §2Backup-Unterbefehl\  Erstellt eine neue SQLite Datenbank (.db file) mit dem Inhalt der aktuell aktiven Datenbank im Plugin-Ordner
 In Depth Help - /plan manage clear ?            || > §2Clear-Unterbefehl\  Entfernt ALLES aus der aktuellen Datenbank. Vorsicht!
-In Depth Help - /plan manage disable ?          || > §2Disable Subcommand\  Can disable parts of the plugin until next reload.\  Accepted arguments:\    §2kickcount §fDisables kick counts in case /kickall is used on shutdown macro.
-In Depth Help - /plan manage export ?           || > §2Export Subcommand\  Trigger export to result folders.\  Accepted Arguments:\    §2list §fList possible arguments.\    §2players §fExport /players, /player pages + /player/raw json depending on config values.\    §2server_json §fExport /server/raw JSON if enabled in config.
+In Depth Help - /plan manage disable ?          || > §2Disable-Unterbefehl\  Kann Teile des Plugins bis zum Reload deaktivieren.\  Akzeptierte Argumente:\    §2kickcount §fDeaktiviert das Kicks Zählen im Fall das /kickall benutzt wird während des Shutdowns.
+In Depth Help - /plan manage export ?           || > §2Export-Unterbefehl\  Exportiere Daten zum angegebenen Ordner.\  Akzeptierte Argumente:\    §2list §fZeige mögliche Argumente.\    §2players §fExportiert /players, /player pages + /player/raw json basierend auf den Einstellungen.\    §2server_json §fExport /server/raw JSON if enabled in config.
 In Depth Help - /plan manage import ?           || > §2Import-Unterbefehl\  Importiere Daten aus anderen Quellen.\  Akzeptierte Argumente:\    §2offline §fBukkit Spielerdaten, registriere nur Name und Datum.
 In Depth Help - /plan manage move ?             || > §2Move-Unterbefehl\  Verschiebe die Daten von SQLite zu MySQL oder andersherum\  Zieldatenbank wird vor dem Transfer geleert.
-In Depth Help - /plan manage raw ?              || > §2Raw Data Subcommand\  Displays link to raw JSON data page.\  Not available if Plan webserver is not enabled.
+In Depth Help - /plan manage raw ?              || > §2Raw Data-Unterbefehl\  Zeigt dir einen Link zu einer rohen JSON Daten Seite.\  Nicht verfügbar, wenn der Webserver deaktiviert ist.
 In Depth Help - /plan manage remove ?           || > §2Remove-Unterbefehl\  Löscht die Daten eines Spielers aus der Datenbank.
 In Depth Help - /plan manage restore ?          || > §2Restore-Unterbefehl\  Stellt ein Backup einer SQLite Datenbank (.db file) wieder her\  Die database.db kann auch von einem anderen Server zu MySQL wiederhergestellt werden.\  Zieldatenbank wird vor dem Transfer geleert.
 In Depth Help - /plan manage uninstalled ?      || > §2Uninstalled Server Subcommand\  Marks a server as uninstalled in the database.\  Can not mark the server the command is being used on as uninstalled.\  Will affect ConnectionSystem.
@@ -341,7 +341,7 @@ Manage - Success                                || > §aErfolgreich!
 Negative                                        || Nein
 Positive                                        || Ja
 Today                                           || 'Heute'
-Unavailable                                     || Unavailable
+Unavailable                                     || Nicht verfügbar
 Unknown                                         || Unbekannt
 Version - DEV                                   ||  Dies ist eine Entwicklungsversion!
 Version - Latest                                || Du verwendest die neuste Version
