@@ -78,37 +78,28 @@ public class SessionPlaceHolders implements Placeholders {
 
         placeholders.registerStatic("sessions_play_time_total",
                 () -> timeAmount.apply(database.query(SessionQueries.playtime(0L, now(), serverUUID))));
-
         placeholders.registerStatic("sessions_play_time_day",
                 () -> timeAmount.apply(database.query(SessionQueries.playtime(dayAgo(), now(), serverUUID))));
-
         placeholders.registerStatic("sessions_play_time_week",
                 () -> timeAmount.apply(database.query(SessionQueries.playtime(weekAgo(), now(), serverUUID))));
-
         placeholders.registerStatic("sessions_play_time_month",
                 () -> timeAmount.apply(database.query(SessionQueries.playtime(monthAgo(), now(), serverUUID))));
 
         placeholders.registerStatic("sessions_active_time_total",
                 () -> timeAmount.apply(database.query(SessionQueries.activePlaytime(0L, now(), serverUUID))));
-
         placeholders.registerStatic("sessions_active_time_day",
                 () -> timeAmount.apply(database.query(SessionQueries.activePlaytime(dayAgo(), now(), serverUUID))));
-
         placeholders.registerStatic("sessions_active_time_week",
                 () -> timeAmount.apply(database.query(SessionQueries.activePlaytime(weekAgo(), now(), serverUUID))));
-
         placeholders.registerStatic("sessions_active_time_month",
                 () -> timeAmount.apply(database.query(SessionQueries.activePlaytime(monthAgo(), now(), serverUUID))));
 
         placeholders.registerStatic("sessions_afk_time_total",
                 () -> timeAmount.apply(database.query(SessionQueries.afkTime(0L, now(), serverUUID))));
-
         placeholders.registerStatic("sessions_afk_time_day",
                 () -> timeAmount.apply(database.query(SessionQueries.afkTime(dayAgo(), now(), serverUUID))));
-
         placeholders.registerStatic("sessions_afk_time_week",
                 () -> timeAmount.apply(database.query(SessionQueries.afkTime(weekAgo(), now(), serverUUID))));
-
         placeholders.registerStatic("sessions_afk_time_month",
                 () -> timeAmount.apply(database.query(SessionQueries.afkTime(monthAgo(), now(), serverUUID))));
 
@@ -118,107 +109,82 @@ public class SessionPlaceHolders implements Placeholders {
 
         placeholders.registerStatic("sessions_unique_players_day",
                 () -> database.query(PlayerCountQueries.uniquePlayerCount(dayAgo(), now(), serverUUID)));
-
         placeholders.registerStatic("sessions_unique_players_today",
                 () -> database.query(PlayerCountQueries.uniquePlayerCounts(dayAgo(), now(), config.getTimeZone().getOffset(now()), serverUUID))
                         .lastEntry().getValue());
-
         placeholders.registerStatic("sessions_unique_players_week",
                 () -> database.query(PlayerCountQueries.uniquePlayerCount(weekAgo(), now(), serverUUID)));
-
         placeholders.registerStatic("sessions_unique_players_month",
                 () -> database.query(PlayerCountQueries.uniquePlayerCount(monthAgo(), now(), serverUUID)));
 
         placeholders.registerStatic("sessions_players_death_total",
                 () -> database.query(KillQueries.deathCount(0L, now(), serverUUID)));
-
         placeholders.registerStatic("sessions_players_death_day",
                 () -> database.query(KillQueries.deathCount(dayAgo(), now(), serverUUID)));
-
         placeholders.registerStatic("sessions_players_death_week",
                 () -> database.query(KillQueries.deathCount(weekAgo(), now(), serverUUID)));
-
         placeholders.registerStatic("sessions_players_death_month",
                 () -> database.query(KillQueries.deathCount(monthAgo(), now(), serverUUID)));
 
         placeholders.registerStatic("sessions_players_kill_total",
                 () -> database.query(KillQueries.playerKillCount(0L, now(), serverUUID)));
-
         placeholders.registerStatic("sessions_players_kill_day",
                 () -> database.query(KillQueries.playerKillCount(dayAgo(), now(), serverUUID)));
-
         placeholders.registerStatic("sessions_players_kill_week",
                 () -> database.query(KillQueries.playerKillCount(weekAgo(), now(), serverUUID)));
-
         placeholders.registerStatic("sessions_players_kill_month",
                 () -> database.query(KillQueries.playerKillCount(monthAgo(), now(), serverUUID)));
 
         placeholders.registerStatic("sessions_mob_kill_total",
                 () -> database.query(KillQueries.mobKillCount(0L, now(), serverUUID)));
-
         placeholders.registerStatic("sessions_mob_kill_day",
                 () -> database.query(KillQueries.mobKillCount(dayAgo(), now(), serverUUID)));
-
         placeholders.registerStatic("sessions_mob_kill_week",
                 () -> database.query(KillQueries.mobKillCount(weekAgo(), now(), serverUUID)));
-
         placeholders.registerStatic("sessions_mob_kill_month",
                 () -> database.query(KillQueries.mobKillCount(monthAgo(), now(), serverUUID)));
 
         placeholders.registerStatic("sessions_average_session_length_total",
                 () -> getPlaytime(database, 0L, now(), serverUUID, timeAmount));
-
         placeholders.registerStatic("sessions_average_session_length_day",
                 () -> getPlaytime(database, dayAgo(), now(), serverUUID, timeAmount));
-
         placeholders.registerStatic("sessions_average_session_length_week",
                 () -> getPlaytime(database, weekAgo(), now(), serverUUID, timeAmount));
-
         placeholders.registerStatic("sessions_average_session_length_month",
                 () -> getPlaytime(database, monthAgo(), now(), serverUUID, timeAmount));
 
         placeholders.registerStatic("sessions_average_unique_players_total",
                 () -> database.query(PlayerCountQueries.averageUniquePlayerCount(0L, now(), tzOffsetMs, serverUUID)));
-
         placeholders.registerStatic("sessions_average_unique_players_day",
                 () -> database.query(PlayerCountQueries.averageUniquePlayerCount(dayAgo(), now(), tzOffsetMs, serverUUID)));
-
         placeholders.registerStatic("sessions_average_unique_players_week",
                 () -> database.query(PlayerCountQueries.averageUniquePlayerCount(weekAgo(), now(), tzOffsetMs, serverUUID)));
-
         placeholders.registerStatic("sessions_average_unique_players_month",
                 () -> database.query(PlayerCountQueries.averageUniquePlayerCount(monthAgo(), now(), tzOffsetMs, serverUUID)));
 
         placeholders.registerStatic("sessions_new_players_day",
                 () -> database.query(PlayerCountQueries.newPlayerCount(dayAgo(), now(), serverUUID)));
-
         placeholders.registerStatic("sessions_new_players_week",
                 () -> database.query(PlayerCountQueries.newPlayerCount(weekAgo(), now(), serverUUID)));
-
         placeholders.registerStatic("sessions_new_players_month",
                 () -> database.query(PlayerCountQueries.newPlayerCount(monthAgo(), now(), serverUUID)));
 
         placeholders.registerStatic("ping_total",
                 () -> decimals.apply(database.query(PingQueries.averagePing(0L, now(), serverUUID))) + " ms");
-
         placeholders.registerStatic("ping_day",
                 () -> decimals.apply(database.query(PingQueries.averagePing(dayAgo(), now(), serverUUID))) + " ms");
-
         placeholders.registerStatic("ping_week",
                 () -> decimals.apply(database.query(PingQueries.averagePing(weekAgo(), now(), serverUUID))) + " ms");
-
         placeholders.registerStatic("ping_month",
                 () -> decimals.apply(database.query(PingQueries.averagePing(monthAgo(), now(), serverUUID))) + " ms");
 
         placeholders.registerStatic("sessions_peak_count",
                 () -> database.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID)).map(DateObj::getValue).orElse(0));
-
         placeholders.registerStatic("sessions_peak_date",
                 () -> database.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID)).map(year).orElse("-"));
 
         placeholders.registerStatic("sessions_recent_peak_count",
                 () -> database.query(TPSQueries.fetchPeakPlayerCount(serverUUID, now() - TimeUnit.DAYS.toMillis(2L))).map(DateObj::getValue).orElse(0));
-
         placeholders.registerStatic("sessions_recent_peak_date",
                 () -> database.query(TPSQueries.fetchPeakPlayerCount(serverUUID, now() - TimeUnit.DAYS.toMillis(2L))).map(year).orElse("-"));
     }
