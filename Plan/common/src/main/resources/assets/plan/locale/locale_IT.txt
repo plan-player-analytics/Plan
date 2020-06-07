@@ -25,7 +25,7 @@ Cmd Info - Reload Failed                        || §cErrore durante il reload d
 Cmd Info - Update                               ||   §2Aggiornamento Disponibile: §f${0}
 Cmd Info - Version                              ||   §2Versione: §f${0}
 Cmd Notify - No WebUser                         || Nessun utente web registrato, usa /plan register <password>
-Cmd Notify - WebUser register                   || Nuovi utenti web registrati: '${0}' Perm level: ${1}
+Cmd Notify - WebUser register                   || Nuovi utenti web registrati: '${0}' Livello permessi: ${1}
 Cmd Qinspect - Activity Index                   ||   §2Indice Attività: §f${0} | ${1}
 Cmd Qinspect - Deaths                           ||   §2Morti: §f${0}
 Cmd Qinspect - Geolocation                      ||   §2Loggato da: §f${0}
@@ -34,14 +34,14 @@ Cmd Qinspect - Longest Session                  ||   §2Sessione più lunga: §f
 Cmd Qinspect - Mob Kills                        ||   §2Mob Uccisi: §f${0}
 Cmd Qinspect - Player Kills                     ||   §2Giocatori Uccisi: §f${0}
 Cmd Qinspect - Playtime                         ||   §2Tempo di Gioco: §f${0}
-Cmd Qinspect - Registered                       ||   §2Reggistrato: §f${0}
-Cmd Qinspect - Times Kicked                     ||   §2Cacciato: §f${0}
+Cmd Qinspect - Registered                       ||   §2Registrato: §f${0}
+Cmd Qinspect - Times Kicked                     ||   §2Espulso: §f${0}
 Cmd SUCCESS - Feature disabled                  || §aDisabilitato temporaneamente '${0}' fino al prossimo reload del plugin.
-Cmd SUCCESS - WebUser register                  || §aAggiunto il nuovo utente (${0})! Ora è posssibile vedere il panello web nel seguente link.
+Cmd SUCCESS - WebUser register                  || §aAggiunto il nuovo utente (${0})! Ora è posssibile visitare il panello web dal seguente link.
 Cmd WARN - Database not open                    || §eDatabase è ${0} - Potrebbe volerci un pò di più tempo..
-Cmd Web - Permission Levels                     || >\§70: Accesso a tutte le pagine\§71: Accesso '/players' e tutti i dati dei giocatori\§72: Accendi alle pagine con gli stessi nomecome Webuser\§73+: Nessun permesso
+Cmd Web - Permission Levels                     || >\§70: Accesso a tutte le pagine\§71: Accesso '/players' e tutti i dati dei giocatori\§72: Accedi alle pagine dei giocatori con lo stesso username dell'Utente Web.\§73+: Nessun permesso
 Command Help - /plan analyze                    || Mostra la pagina del server
-Command Help - /plan dev                        || Commando Modalità Development
+Command Help - /plan dev                        || Commando Modalità Sviluppo
 Command Help - /plan help                       || Mostra i commandi disponibili
 Command Help - /plan info                       || Controlla la versione di Plan
 Command Help - /plan inspect                    || Mostra la pagina di un giocatore
@@ -49,10 +49,10 @@ Command Help - /plan manage                     || Gestisci il database di Plan
 Command Help - /plan manage backup              || Backup del Database
 Command Help - /plan manage clear               || Pulisci il Database
 Command Help - /plan manage disable             || Disabilita una feature temporaneamente
-Command Help - /plan manage export              || Triggera manualmente l'esportazione
+Command Help - /plan manage export              || Attiva l'esportazione manualmente
 Command Help - /plan manage hotswap             || Cambia il database rapidamente
-Command Help - /plan manage import              || Importa i dati da un altra parte
-Command Help - /plan manage move                || Muovi i dati tra i database
+Command Help - /plan manage import              || Importa i dati da un'altra parte
+Command Help - /plan manage move                || Sposta i dati tra i database
 Command Help - /plan manage raw                 || Mostra il raw JSON dei dati di un giocatore
 Command Help - /plan manage remove              || Rimuove i dati del giocatore
 Command Help - /plan manage restore             || Ripristina un backup
@@ -61,8 +61,8 @@ Command Help - /plan network                    || Mostra la pagina del network
 Command Help - /plan players                    || Mostra la pagina dei giocatori
 Command Help - /plan qinspect                   || Mostra info dei giocatori in gioco
 Command Help - /plan register                   || Registra un nuovo utente web
-Command Help - /plan reload                     || Riavvia Plan
-Command Help - /plan search                     || Cerca un nome di un giocatore
+Command Help - /plan reload                     || Ricarica Plan
+Command Help - /plan search                     || Cerca il nome di un giocatore
 Command Help - /plan servers                    || Elenca i server nel Database
 Command Help - /plan web check                  || Ispeziona un Utente Web
 Command Help - /plan web delete                 || Rimuovi un Utente Web
@@ -73,23 +73,23 @@ Command Help - /planbungee disable              || Disabilita il plugin temporan
 Database - Apply Patch                          || Applicando Patch: ${0}..
 Database - Patches Applied                      || Tutte le patch sono satte applicate al database.
 Database - Patches Applied Already              || Tutte le patch sono già state applicate.
-Database MySQL - Launch Options Error           || Le opzioni di Lancio sono eratte, usando le opzioni default (${0})
+Database MySQL - Launch Options Error           || Le opzioni di Lancio sono errate, usando le opzioni default (${0})
 Database Notify - Clean                         || Rimossi i dati di ${0} giocatorri.
-Database Notify - SQLite No WAL                 || Modalità SQLite WAL non supportato da questa versione del server, uso le impostazioni predefinite. Ciò potrebbe dare o non dare problemi.
+Database Notify - SQLite No WAL                 || Modalità SQLite WAL non supportato da questa versione del server, uso le impostazioni predefinite. Ciò potrebbe causare dei problemi.
 Disable                                         || Analisi Giocatori Disabilitato.
-Disable - Processing                            || Processando i processi critici. (${0})
-Disable - Processing Complete                   || Processo Completo.
-Disable - Unsaved Session Save                  || Salvano le sessioni..
-Disable - WebServer                             || Webserver è stato disabilitato.
+Disable - Processing                            || Elaborazione di attività critiche non elaborate. (${0})
+Disable - Processing Complete                   || Elaborazione completata.
+Disable - Unsaved Session Save                  || Salvataggio di sessioni incompiute..
+Disable - WebServer                             || Il Webserver è stato disabilitato.
 Enable                                          || Analisi Giocatori Abilitata.
-Enable - Database                               || ${0}-connession al database stabilita.
-Enable - Notify Empty IP                        || IP in server.properties è vuoto e Alternative_IP non è in uso. Correggi queste informazioni!
+Enable - Database                               || ${0}-Connessione al database stabilita.
+Enable - Notify Empty IP                        || L'IP in server.properties è vuoto e Alternative_IP non è in uso. Correggi queste informazioni!
 Enable - Notify Geolocations disabled           || Geolocalizazione non attiva. (Data.Geolocations: false)
-Enable - Notify Geolocations Internet Required  || Plan richiesta una connessione internet la prima volta per scaricare il database Geolite.
+Enable - Notify Geolocations Internet Required  || Plan Richiede l'accesso a Internet al primo avvio per scaricare il database di geolocalizzazione GeoLite2.
 Enable - Notify Webserver disabled              || WebServer non avviato. (WebServer.DisableWebServer: true)
 Enable - WebServer                              || Webserver avviato sulla PORTA ${0} (${1})
-Enable FAIL - Database                          || ${0}-Connessione Database fallita: ${1}
-Enable FAIL - Database Patch                    || Upgrade del Database fallito, plan è stato disabilitato. Segnala questo problema.
+Enable FAIL - Database                          || ${0}-Connessione al Database fallita: ${1}
+Enable FAIL - Database Patch                    || Upgrade del Database fallito, plan è stato disabilitato. Si prega di segnalare questo problema.
 Enable FAIL - GeoDB Write                       || Qualcosa è andato storto durante lo scaricamento del database GeoLite2
 Enable FAIL - WebServer (Proxy)                 || WebServer non avviato!
 Enable FAIL - Wrong Database Type               || ${0} non è un Database supportato
@@ -97,7 +97,7 @@ HTML - COMPARING_15_DAYS                        || Comparazione di 15 giorni
 HTML - COMPARING_60_DAYS                        || Comparazione di 30g fa a Ora
 HTML - COMPARING_7_DAYS                         || Comparazione di 7 giorni
 HTML - DATABASE_NOT_OPEN                        || Database non trovato, controlla il database con /plan info
-HTML - ERROR                                    || Autenticazione fallita per via di un errore
+HTML - ERROR                                    || Autenticazione fallita a causa di un errore
 HTML - INDEX_ACTIVE                             || Attivo
 HTML - INDEX_INACTIVE                           || Inattivo
 HTML - INDEX_IRREGULAR                          || Irregolare
@@ -140,7 +140,7 @@ HTML - LABEL_MIN_FREE_DISK                      || Spazio Disco libero Min
 HTML - LABEL_MOB_DEATHS                         || Mob che hanno causato la Morte
 HTML - LABEL_MOB_KDR                            || Mob KDR
 HTML - LABEL_MOB_KILLS                          || Mob uccisi
-HTML - LABEL_MOST_ACTIVE_GAMEMODE               || Il Gamemode più attivo
+HTML - LABEL_MOST_ACTIVE_GAMEMODE               || La Gamemode più attiva
 HTML - LABEL_NAME                               || Nome
 HTML - LABEL_NEW                                || Nuovi
 HTML - LABEL_NEW_PLAYERS                        || Nuovi Giocatori
@@ -172,7 +172,7 @@ HTML - LABEL_WEEK_DAYS                          || 'Lunedì', 'Martedì', 'Merco
 HTML - LINK_BACK_NETWORK                        || Pagina del Network
 HTML - LINK_BACK_SERVER                         || Pagina del Server
 HTML - LINK_CHANGELOG                           || Vedi aggiornamenti
-HTML - LINK_DISCORD                             || General Support on Discord
+HTML - LINK_DISCORD                             || Supporto generale su Discord
 HTML - LINK_DOWNLOAD                            || Download
 HTML - LINK_ISSUES                              || Segnala Problemi
 HTML - LINK_NIGHT_MODE                          || Modalità Notte
@@ -204,10 +204,10 @@ HTML - SIDE_SERVERS_TITLE                       || SERVERS
 HTML - SIDE_SESSIONS                            || Sessioni
 HTML - SIDE_TO_MAIN_PAGE                        || Ritorna alla pagina principale
 HTML - TEXT_CLICK_TO_EXPAND                     || Clicca per espendere
-HTML - TEXT_CONTRIBUTORS_CODE                   || contributore codice
+HTML - TEXT_CONTRIBUTORS_CODE                   || contributori codice
 HTML - TEXT_CONTRIBUTORS_LOCALE                 || traduttore
-HTML - TEXT_CONTRIBUTORS_MONEY                  || Un ringraziamento speciale a quelli che hanno supportato economicamente lo sviluppo.
-HTML - TEXT_CONTRIBUTORS_THANKS                 || In additione le seguenti <span class="col-plan">fantastiche persone</span> hanno contribuito:
+HTML - TEXT_CONTRIBUTORS_MONEY                  || Un ringraziamento speciale a coloro che hanno sostenuto monetariamente lo sviluppo.
+HTML - TEXT_CONTRIBUTORS_THANKS                 || Inoltre, hanno contribuito queste <span class="col-plan">fantastiche persone</span>:
 HTML - TEXT_DEV_VERSION                         || Questa versione è una versione DEV.
 HTML - TEXT_DEVELOPED_BY                        || è stato svillupato da
 HTML - TEXT_FIRST_SESSION                       || Prima sessione
@@ -218,7 +218,7 @@ HTML - TEXT_NO_LOW_TPS                          || Nennun picco basso di TPS
 HTML - TEXT_NO_SERVER                           || Nessun server con cui mostare attività
 HTML - TEXT_NO_SERVERS                          || Nessun server trovato in questo database
 HTML - TEXT_PLUGIN_INFORMATION                  || Informazioni su questo plugin
-HTML - TEXT_PREDICTED_RETENTION                 || Questo valore è una perdicazione basato sui giocatori precedenti
+HTML - TEXT_PREDICTED_RETENTION                 || Questo valore è una previsione basata sui giocatori precedenti
 HTML - TEXT_VERSION                             || Una nuova versione è stata rilasciata ed è ora disponibile da scaricare.
 HTML - TITLE_30_DAYS                            || 30 giorni
 HTML - TITLE_30_DAYS_AGO                        || 30 giorni fa
@@ -235,8 +235,8 @@ HTML - TITLE_CURRENT_PLAYERBASE                 || Playerbase Corrente
 HTML - TITLE_DISK                               || Spazio sul Disco
 HTML - TITLE_GRAPH_DAY_BY_DAY                   || Giorno Per Giorno
 HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || Attività Online Network
-HTML - TITLE_GRAPH_PUNCHCARD                    || Attività in 30 Days
-HTML - TITLE_INSIGHTS                           || Grafico in 30 days
+HTML - TITLE_GRAPH_PUNCHCARD                    || Attività in 30 giorni
+HTML - TITLE_INSIGHTS                           || Grafico in 30 giorni
 HTML - TITLE_IS_AVAILABLE                       || è Disponibile
 HTML - TITLE_LAST_24_HOURS                      || Ultime 24 ore
 HTML - TITLE_LAST_30_DAYS                       || Ultimi 30 giorni
@@ -249,8 +249,8 @@ HTML - TITLE_NETWORK_AS_NUMBERS                 || Statistiche Network
 HTML - TITLE_NOW                                || Ora
 HTML - TITLE_ONLINE_ACTIVITY                    || Attività Online
 HTML - TITLE_ONLINE_ACTIVITY_AS_NUMBERS         || Statistiche Attività Online
-HTML - TITLE_ONLINE_ACTIVITY_OVERVIEW           || Online Activity Overview
-HTML - TITLE_PERFORMANCE_AS_NUMBERS             || Performance as Numbers
+HTML - TITLE_ONLINE_ACTIVITY_OVERVIEW           || Panoramica delle attività online
+HTML - TITLE_PERFORMANCE_AS_NUMBERS             || Prestazioni come numeri
 HTML - TITLE_PING                               || Ping
 HTML - TITLE_PLAYER                             || Player
 HTML - TITLE_PLAYER_OVERVIEW                    || Statistiche Giocatore
@@ -273,7 +273,7 @@ HTML - TITLE_TPS                                || TPS
 HTML - TITLE_TREND                              || Tendenza
 HTML - TITLE_TRENDS                             || Tendenza per 30 giorni
 HTML - TITLE_VERSION                            || Versione
-HTML - TITLE_WEEK_COMPARISON                    || Comparazione settimanale
+HTML - TITLE_WEEK_COMPARISON                    || Confronto settimanale
 HTML - TITLE_WORLD                              || Caricamento Mondo
 HTML - TITLE_WORLD_PLAYTIME                     || Tempo di gioco Mondo
 HTML - TITLE_WORST_PING                         || Ping Peggiore
@@ -290,7 +290,7 @@ HTML - USER_DOES_NOT_EXIST                      || Utente non esistente
 HTML - USER_PASS_MISMATCH                       || Utente e Password non corrispondono
 HTML - WITH                                     || <th>Con
 HTML ERRORS - ACCESS_DENIED_403                 || Acccesso Bloccato
-HTML ERRORS - AUTH_FAIL_TIPS_401                || - Assicurati di registare un nuovo utente usando <b>/plan register</b><br>- Controlla che il nome e password sono corretti<br>- Nome e password sono case-sensitive<br><br>Se hai dimenticato la tua passwrod, chiedi a uno staff di rimuovere i tuoi dati e registrarti di nuovo.
+HTML ERRORS - AUTH_FAIL_TIPS_401                || - Assicurati di registare un nuovo utente usando <b>/plan register</b><br>- Controlla che il nome e password siano corretti<br>- Nome e password sono case-sensitive<br><br>Se hai dimenticato la tua passwrod, chiedi a uno staff di rimuovere i tuoi dati e registrarti di nuovo.
 HTML ERRORS - AUTHENTICATION_FAILED_401         || Autenticazione Fallita.
 HTML ERRORS - FORBIDDEN_403                     || Vietato
 HTML ERRORS - NO_SERVERS_404                    || Nessun Server online per fare la richiesta.
@@ -300,44 +300,44 @@ HTML ERRORS - PAGE_NOT_FOUND_404                || Questa pagina non esiste.
 HTML ERRORS - UNAUTHORIZED_401                  || Non Autorizzato
 HTML ERRORS - UNKNOWN_PAGE_404                  || Assicurati che stai seguendo il link usando il commando, Esempi:</p><p>/player/PlayerName<br>/server/ServerName</p>
 HTML ERRORS - UUID_404                          || UUID del Giocatore non trovato nel database.
-In Depth Help - /plan ?                         || > §2Commando Principale\  Accendi ai sottocomandi e aiuto\  §2/plan §fElenco sottocommandi e\  §2/plan <subcommand> ? §fAiuto approfondito
-In Depth Help - /plan analyze ?                 || > §2Commando Analisi\  Refreshes server page and displays link to the web page.
-In Depth Help - /plan inspect ?                 || > §2Commando Ispeziona\  Refreshes player page and displays link to the web page.
-In Depth Help - /plan manage ?                  || > §2Manage Command\  Manage MySQL and SQLite database of Plan.\  §2/plan m §fList subcommands\  §2/plan m <subcommand> ? §fIn depth help
-In Depth Help - /plan manage backup ?           || > §2Backup Subcommand\  Creates a new SQLite database (.db file) with contents of currently active database in the Plan plugin folder.
-In Depth Help - /plan manage clear ?            || > §2Clear Subcommand\  Removes everything in the active database. Use with caution.
-In Depth Help - /plan manage disable ?          || > §2Disable Subcommand\  Can disable parts of the plugin until next reload.\  Accepted arguments:\    §2kickcount §fDisables kick counts in case /kickall is used on shutdown macro.
-In Depth Help - /plan manage export ?           || > §2Export Subcommand\  Trigger export to result folders.\  Accepted Arguments:\    §2list §fList possible arguments.\    §2players §fExport /players, /player pages + /player/raw json depending on config values.\    §2server_json §fExport /server/raw JSON if enabled in config.
-In Depth Help - /plan manage import ?           || > §2Import Subcommand\  Import data from other sources.\  Accepted Arguments:\    §2offline §fBukkit player data, only register date and name.
-In Depth Help - /plan manage move ?             || > §2Move Subcommand\  Move data from SQLite to MySQL or other way around.\  Target database is cleared before transfer.
-In Depth Help - /plan manage raw ?              || > §2Raw Data Subcommand\  Displays link to raw JSON data page.\  Not available if Plan webserver is not enabled.
-In Depth Help - /plan manage remove ?           || > §2Remove Subcommand\  Remove player's data from the active database.
-In Depth Help - /plan manage restore ?          || > §2Restore Subcommand\  Restore a previous backup SQLite database (.db file)\  You can also restore database.db from another server to MySQL.\  Target database is cleared before transfer.
-In Depth Help - /plan manage uninstalled ?      || > §2Uninstalled Server Subcommand\  Marks a server as uninstalled in the database.\  Can not mark the server the command is being used on as uninstalled.\  Will affect ConnectionSystem.
-In Depth Help - /plan network ?                 || > §2Network Command\  Displays link to the network page.\  If not on a network, this page displays the server page.
-In Depth Help - /plan players ?                 || > §2Players Command\  Displays link to the players page.
-In Depth Help - /plan qinspect ?                || > §2Quick Inspect Command\  Displays some information about the player in game.
-In Depth Help - /plan reload ?                  || > §2Reload Command\  Restarts the plugin using onDisable and onEnable.\  §bDoes not support swapping jar on the fly
-In Depth Help - /plan search ?                  || > §2Search Command\  Get a list of Player names that match the given argument.\§7  Example: /plan search 123 - Finds all users with 123 in their name.
-In Depth Help - /plan servers ?                 || > §2Servers Command\  Displays list of Plan servers in the Database.\  Can be used to debug issues with database registration on a network.
-In Depth Help - /plan web ?                     || < §2Web User Manage Command.\  §2/plan web §fList subcommands\  §2/plan web <subcommand> ? §fIn Depth help
-In Depth Help - /plan web register ?            || > §2Register Subcommand\  Registers a new Web User.\  Registering a user for another player requires plan.webmanage permission.\  Passwords are hashed with PBKDF2 (64,000 iterations of SHA1) using a cryptographically-random salt.
-In Depth Help - /planbungee disable ?           || > §2Disable Command\  Runs Plan onDisable on Proxy.\  Plugin can be enabled with /planbungee reload afterwards.\  §bDoes not support swapping jar on the fly
-Manage - Confirm Overwrite                      || Data in ${0} saranno sovrascritti!
-Manage - Confirm Removal                        || Data in ${0} saranno rimossi!
+In Depth Help - /plan ?                         || > §2Comando Principale\  Accendi ai sottocomandi e aiuto\  §2/plan §fElenco sottocommandi e\  §2/plan <subcommand> ? §fAiuto approfondito
+In Depth Help - /plan analyze ?                 || > §2Comando Analisi\  Aggiorna la pagina del server e visualizza il collegamento alla pagina Web.
+In Depth Help - /plan inspect ?                 || > §2Comando Ispeziona\  Aggiorna la pagina del giocatore e visualizza il collegamento alla pagina Web.
+In Depth Help - /plan manage ?                  || > §2Comando gestione\  Gestisci database MySQL e SQLite di Plan.\  §2/plan m §fElenco dei sottocomandi\  §2/plan m <subcommand> ? §fAiuto approfondito
+In Depth Help - /plan manage backup ?           || > §2Sottocomando Backup\  Crea un nuovo database SQLite (file .db) con i contenuti del database attualmente attivo nella cartella del plugin Plan.
+In Depth Help - /plan manage clear ?            || > §2Sottocomando Clear\  Removes everything in the active database. Use with caution.
+In Depth Help - /plan manage disable ?          || > §2Sottocomando Disable\  Può disabilitare parti del plugin fino al prossimo ricaricamento.\  Argomenti accettati:\    §2kickcount §fDisabilita il conteggio espulsioni /kickall viene utilizzato sulla macro di arresto.
+In Depth Help - /plan manage export ?           || > §2Sottocomando Export\  Attiva l'esportazione nelle cartelle dei risultati.\  Argomenti Accettati:\    §2list §fLista degli argomenti disponibili.\    §2players §fEsporta /players, /player pages + /player/raw json in base ai valori nel config.\    §2server_json §fExport /server/raw JSON se abilitato nel config.
+In Depth Help - /plan manage import ?           || > §2Sottocomando Import\  Importa dati da altre fonti.\  Argomenti Accettati:\    §2offline §fDati giocatore Bukkit, solo data e nome del registro.
+In Depth Help - /plan manage move ?             || > §2Sottocomando Move\  Sposta i dati da SQLite a MySQL o viceversa.\  Il database di destinazione viene cancellato prima del trasferimento.
+In Depth Help - /plan manage raw ?              || > §2Sottocomando Raw Data\  Visualizza il collegamento alla pagina di dati JSON non elaborata.\  Non disponibile se Plan webserver non è abilitato.
+In Depth Help - /plan manage remove ?           || > §2Sottocomando Remove\  Rimuovi i dati del giocatore dal database attivo.
+In Depth Help - /plan manage restore ?          || > §2Sottocomando Restore\  Ripristina un database SQLite di backup precedente (file .db)\  È inoltre possibile ripristinare database.db da un altro server su MySQL.\  Il database di destinazione viene cancellato prima del trasferimento.
+In Depth Help - /plan manage uninstalled ?      || > §2Sottocomando server Uninstalled\  Contrassegna un server come disinstallato nel database. \ Impossibile contrassegnare il server su cui il comando viene utilizzato come disinstallato. \ Interesserà a ConnectionSystem.
+In Depth Help - /plan network ?                 || > §2Comando Network\  Visualizza il collegamento alla pagina di rete. \ Se non su una rete, questa pagina visualizza la pagina del server.
+In Depth Help - /plan players ?                 || > §2Comando Players\  Visualizza il collegamento alla pagina dei giocatori.
+In Depth Help - /plan qinspect ?                || > §2Comando Quick Inspect\  Visualizza alcune informazioni sul giocatore in gioco.
+In Depth Help - /plan reload ?                  || > §2Comando Reload\  Riavvia il plug-in usando onDisable e onEnable. \ §bNon supporta lo scambio di jar al volo
+In Depth Help - /plan search ?                  || > §2SComando Search\  Ottieni un elenco di nomi dei giocatori che corrispondono all'argomento dato. \ §7 Esempio: / plan search 123 - Trova tutti gli utenti con 123 nel loro nome.
+In Depth Help - /plan servers ?                 || > §2Comando Servers\  Visualizza l'elenco dei server Plan nel database. \ Può essere utilizzato per eseguire il debug di problemi con la registrazione del database su una rete.
+In Depth Help - /plan web ?                     || < §2Comando Web\  §2/plan web §fElenco sottocomandi\  §2/plan web <subcommand> ? §fAiuto Approfondito
+In Depth Help - /plan web register ?            || > §2Sottocomando Register\  Registra un nuovo utente Web. \ La registrazione di un utente per un altro giocatore richiede l'autorizzazione plan.webmanage. \ Le password sono codificate con PBKDF2 (64.000 iterazioni di SHA1) usando un salt crittografico casuale.
+In Depth Help - /planbungee disable ?           || > §2Comando Disable\  Esegue Plan onDisable su Proxy. \ Il plugin può essere abilitato successivamente con / planbungee reload \ §B Non supporta lo scambio di jar al volo
+Manage - Confirm Overwrite                      || Dati in ${0} saranno sovrascritti!
+Manage - Confirm Removal                        || Dati in ${0} saranno rimossi!
 Manage - Fail                                   || > §cErrore: ${0}
 Manage - Fail File not found                    || > §cNessun file trovato su ${0}
 Manage - Fail Incorrect Database                || > §c'${0}' non è un database supportato.
 Manage - Fail No Exporter                       || §eEsportatore '${0}' non essite
 Manage - Fail No Importer                       || §eImportatore '${0}' non essite
 Manage - Fail No Server                         || Nessun server trovato con i seguenti parametri.
-Manage - Fail Same Database                     || > §cImpossibile operarci dallo stesso database!
-Manage - Fail Same server                       || Impossibile rendere questo server come rimosso (Sei dentro a questo)
-Manage - Fail, Confirmation                     || > §cAggiungi l'argomento '-a' argument to confirm execution: ${0}
+Manage - Fail Same Database                     || > §cImpossibile operare da e verso lo stesso database!
+Manage - Fail Same server                       || Impossibile rimuovere questo server (Sei dentro a questo server)
+Manage - Fail, Confirmation                     || > §cAggiungi l'argomento '-a' per confermare l'esecuzione: ${0}
 Manage - List Importers                         || Importatori: 
 Manage - Remind HotSwap                         || §eRircorda di cambiare il nuovo database (/plan m hotswap ${0}) e ricaricare il plugin.
 Manage - Start                                  || > §2Processando i dati..
-Manage - Success                                || > §aSuccesso!
+Manage - Success                                || > §aCompletato!
 Negative                                        || No
 Positive                                        || Sì
 Today                                           || 'Oggi'
@@ -353,7 +353,7 @@ Web User Listing                                ||   §2${0} §7: §f${1}
 WebServer - Notify HTTP                         || WebServer: Nessun Certificato -> Uso ora server HTTP per la Visualizazione.
 WebServer - Notify HTTP User Auth               || WebServer: Autorizzazione  Utente Disabilitato! (Non sicuro su HTTP)
 WebServer - Notify no Cert file                 || WebServer: Chiave del Certfiicato non trovato: ${0}
-WebServer FAIL - Port Bind                      || WebServer non è stato abilitato. La porta (${0}) è già occupata?
+WebServer FAIL - Port Bind                      || WebServer non avviato. La porta (${0}) è già occupata?
 WebServer FAIL - SSL Context                    || WebServer: Inilizazione Contenuto SSL Fallito.
 WebServer FAIL - Store Load                     || WebServer: Caricamento Certificato SSL Fallito.
 Yesterday                                       || 'Ieri'
