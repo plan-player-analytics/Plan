@@ -129,7 +129,7 @@ public class RequestHandler implements HttpHandler {
             } else {
                 String from = exchange.getRequestURI().toASCIIString();
                 response = Response.builder()
-                        .redirectTo(StringUtils.startsWithAny(from, "/auth/", "/login") ? "/login" : "/login?from=" + from)
+                        .redirectTo(StringUtils.startsWithAny(from, "/auth/", "/login") ? "/login" : "/login?from=." + from)
                         .setHeader("Set-Cookie", "auth=expired; Path=/; Max-Age=1")
                         .build();
             }
