@@ -99,6 +99,7 @@ public class MySQLDB extends SQLDB {
                 launchOptions = "?rewriteBatchedStatements=true&useSSL=false";
                 logger.error(locale.getString(PluginLang.DB_MYSQL_LAUNCH_OPTIONS_FAIL, launchOptions));
             }
+            hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
             hikariConfig.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + launchOptions);
 
             String username = config.get(DatabaseSettings.MYSQL_USER);
