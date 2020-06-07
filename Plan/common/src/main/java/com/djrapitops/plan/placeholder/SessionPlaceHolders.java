@@ -119,6 +119,10 @@ public class SessionPlaceHolders implements Placeholders {
         placeholders.registerStatic("sessions_unique_players_day",
                 () -> database.query(PlayerCountQueries.uniquePlayerCount(dayAgo(), now(), serverUUID)));
 
+        placeholders.registerStatic("sessions_unique_players_today",
+                () -> database.query(PlayerCountQueries.uniquePlayerCounts(dayAgo(), now(), config.getTimeZone().getOffset(now()), serverUUID))
+                        .lastEntry().getValue());
+
         placeholders.registerStatic("sessions_unique_players_week",
                 () -> database.query(PlayerCountQueries.uniquePlayerCount(weekAgo(), now(), serverUUID)));
 
