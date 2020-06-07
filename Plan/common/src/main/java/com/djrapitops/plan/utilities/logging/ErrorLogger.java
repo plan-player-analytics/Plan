@@ -225,14 +225,13 @@ public class ErrorLogger implements ErrorHandler {
     private String hash(Throwable e) {
         StringBuilder seed = new StringBuilder();
         Throwable cause = e;
-        Set<String> alreadyPresent = new HashSet<>();
+        String previousLine = null;
         while (cause != null) {
             for (StackTraceElement element : cause.getStackTrace()) {
                 String asLine = element.toString();
-                if (!alreadyPresent.contains(asLine)) {
-                    seed.append(asLine);
-                }
-                alreadyPresent.add(asLine);
+                if (asLine.equals(previousLine)) continue;
+                seed.append(asLine);
+                previousLine = asLine;
             }
             cause = e.getCause();
         }
@@ -245,7 +244,7 @@ public class ErrorLogger implements ErrorHandler {
         Deduplicator deduplicator = new Deduplicator();
         for (StackTraceElement element : e.getStackTrace()) {
             String line = element.toString();
-            deduplicator.getLine(line).ifPresent(trace::add);
+            trace.addAll(deduplicator.getLines(line));
         }
         deduplicator.getLeftoverDuplicateCountLine().ifPresent(trace::add);
         Throwable[] suppressed = e.getSuppressed();
@@ -264,25 +263,25 @@ public class ErrorLogger implements ErrorHandler {
     }
 
     private static class Deduplicator {
-        private final Set<String> lines = new HashSet<>();
+        private String previousLine = null;
         private String lastDuplicate = null;
         private int duplicateCount = 0;
 
-        public Optional<String> getLine(String line) {
+        public List<String> getLines(String line) {
             if (duplicateCount > 0 && !line.equals(lastDuplicate)) {
                 String returnLine = "    x " + duplicateCount;
-                duplicateCount = 0;
-                return Optional.of(returnLine);
+                duplicateCount = 1;
+                return Arrays.asList(returnLine, "   " + line);
             } else if (line.equals(lastDuplicate)) {
                 duplicateCount++;
-                return Optional.empty();
-            } else if (lines.contains(line)) {
+                return Collections.emptyList();
+            } else if (line.equals(previousLine)) {
                 lastDuplicate = line;
-                duplicateCount = 1;
-                return Optional.empty();
+                duplicateCount = 2;
+                return Collections.emptyList();
             } else {
-                lines.add(line);
-                return Optional.of("   " + line);
+                previousLine = line;
+                return Collections.singletonList("   " + line);
             }
         }
 
