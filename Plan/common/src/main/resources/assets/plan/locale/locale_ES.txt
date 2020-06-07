@@ -1,6 +1,6 @@
 Cmd - Click Me                                  || Hazme click
 Cmd - Link                                      ||   §2Link: §f
-Cmd Disable - Disabled                          || §aLos sistemas de Plan estan deshabilitados. Puedes usar /planbungee reload para reiniciar el plugin.
+Cmd Disable - Disabled                          || §aLos sistemas de Plan estan ahora deshabilitados. Puedes usar /planbungee reload para recargar el plugin.
 Cmd FAIL - Database not open                    || §cLa base de datos es ${0} - Por favor, prueba un poco más tarde.
 Cmd FAIL - Invalid Username                     || §cEste usuario no tiene UUID.
 Cmd FAIL - No Feature                           || §e¡Define una característica para deshabilitarla! (currently supports ${0})
@@ -13,7 +13,7 @@ Cmd FAIL - WebUser exists                       || §c¡Este usuario ya existe!
 Cmd Header - Analysis                           || > §2Resultados del análisis
 Cmd Header - Info                               || > §2Análisis del jugador
 Cmd Header - Inspect                            || > §2Jugador: §f${0}
-Cmd Header - Network                            || > §2Paágina de red
+Cmd Header - Network                            || > §2Página de red
 Cmd Header - Players                            || > §2Jugadores
 Cmd Header - Search                             || > §2${0} Resultados para §f${1}§2:
 Cmd Header - Servers                            || > §2Servidores
@@ -31,45 +31,45 @@ Cmd Qinspect - Deaths                           ||   §2Muertes: §f${0}
 Cmd Qinspect - Geolocation                      ||   §2Logueado desde: §f${0}
 Cmd Qinspect - Last Seen                        ||   §2Última vez visto: §f${0}
 Cmd Qinspect - Longest Session                  ||   §2Sesión más larga: §f${0}
-Cmd Qinspect - Mob Kills                        ||   §2Asesinatos a mobs: §f${0}
-Cmd Qinspect - Player Kills                     ||   §2Asesinatos a jugadores: §f${0}
+Cmd Qinspect - Mob Kills                        ||   §2Mobs asesinados: §f${0}
+Cmd Qinspect - Player Kills                     ||   §2Jugadores asesinados: §f${0}
 Cmd Qinspect - Playtime                         ||   §2Tiempo de juego: §f${0}
 Cmd Qinspect - Registered                       ||   §2Registrado: §f${0}
-Cmd Qinspect - Times Kicked                     ||   §2Veces echado: §f${0}
+Cmd Qinspect - Times Kicked                     ||   §2Veces kickeado: §f${0}
 Cmd SUCCESS - Feature disabled                  || §aDeshabilitado '${0}' temporalmente hasta la próxima recarga del plugin.
 Cmd SUCCESS - WebUser register                  || §a¡Se ha añadido al nuevo usuario (${0}) exitosamente! Puedes ver el panel web en el siguiente link.
 Cmd WARN - Database not open                    || §eLa base de datos es ${0} - Esto puede durar más de lo esperado..
-Cmd Web - Permission Levels                     || >\§70: Acceso a todas las páginas\§71: Acceso '/players' y de todas las páginas de los jugadores\§72: Accede a la página del usuario con su nick o con su nombre web\§73+: Sin permisos.
-Command Help - /plan analyze                    || Mira la página del servidor.
-Command Help - /plan dev                        || Comando para el modo desarrollador.
-Command Help - /plan help                       || Mostrar la lista de comandos.
-Command Help - /plan info                       || Muestra la version de Plan.
-Command Help - /plan inspect                    || Ver la página de un jugador.
-Command Help - /plan manage                     || Gestiona la base de datos de un jugador.
-Command Help - /plan manage backup              || Recupera una base de datos.
-Command Help - /plan manage clear               || Borra una base de datos.
-Command Help - /plan manage disable             || Deshabilita una característica temporalmente.
-Command Help - /plan manage export              || Provoca la exportación manualmente.
-Command Help - /plan manage hotswap             || Cambia la base de datos rápidamente.
-Command Help - /plan manage import              || Importa los datos en otra parte.
-Command Help - /plan manage move                || Mueve los datos entre base de datos.
-Command Help - /plan manage raw                 || Ver los datos JSON frescos de un jugador.
-Command Help - /plan manage remove              || Borra los datos de un jugador.
-Command Help - /plan manage restore             || Restaura un anterior Backup.
-Command Help - /plan manage uninstalled         || Marca como desinstalado un servidor en la base de datos.
-Command Help - /plan network                    || Ver la página de la red.
-Command Help - /plan players                    || Ver la página de los jugadores.
-Command Help - /plan qinspect                   || Ver información de los jugadores en el juego.
-Command Help - /plan register                   || Registrar un usuario web.
-Command Help - /plan reload                     || Resetear Plan.
-Command Help - /plan search                     || Buscar el nombre de un jugador.
-Command Help - /plan servers                    || Listar los servidores en la base de datos.
-Command Help - /plan web check                  || Inspeccionar un usuario web.
-Command Help - /plan web delete                 || Eliminar un usuario web.
-Command Help - /plan web level                  || Información sobre niveles de permisos.
-Command Help - /plan web list                   || Listar usuarios web.
-Command Help - /plan webuser                    || Gestiona usuarios web.
-Command Help - /planbungee disable              || Deshabilita el plugin temporalmente.
+Cmd Web - Permission Levels                     || >\§70: Acceso a todas las páginas\§71: Acceso '/players' y a todas las páginas de los jugadores\§72: Acceso a la pagina del jugador con el mismo nombre de usuario que el usuario web\§73+: Sin permisos
+Command Help - /plan analyze                    || Mira la página del servidor
+Command Help - /plan dev                        || Comando para el modo desarrollador
+Command Help - /plan help                       || Mostrar la lista de comandos
+Command Help - /plan info                       || Muestra la version de Plan
+Command Help - /plan inspect                    || Ver la página de un jugador
+Command Help - /plan manage                     || Gestiona la base de datos de un jugador
+Command Help - /plan manage backup              || Recupera una base de datos
+Command Help - /plan manage clear               || Borra una base de datos
+Command Help - /plan manage disable             || Deshabilita una característica temporalmente
+Command Help - /plan manage export              || Provoca la exportación manualmente
+Command Help - /plan manage hotswap             || Cambia la base de datos rápidamente
+Command Help - /plan manage import              || Importa los datos en otra parte
+Command Help - /plan manage move                || Mueve los datos entre base de datos
+Command Help - /plan manage raw                 || Ver los datos JSON frescos de un jugador
+Command Help - /plan manage remove              || Borra los datos de un jugador
+Command Help - /plan manage restore             || Restaura un anterior Backup
+Command Help - /plan manage uninstalled         || Marca como desinstalado un servidor en la base de datos
+Command Help - /plan network                    || Ver la página de la red
+Command Help - /plan players                    || Ver la página de los jugadores
+Command Help - /plan qinspect                   || Ver información de los jugadores en el juego
+Command Help - /plan register                   || Registrar un usuario web
+Command Help - /plan reload                     || Resetear Plan
+Command Help - /plan search                     || Buscar el nombre de un jugador
+Command Help - /plan servers                    || Listar los servidores en la base de datos
+Command Help - /plan web check                  || Inspeccionar un usuario web
+Command Help - /plan web delete                 || Eliminar un usuario web
+Command Help - /plan web level                  || Información sobre niveles de permisos
+Command Help - /plan web list                   || Listar usuarios web
+Command Help - /plan webuser                    || Gestiona usuarios web
+Command Help - /planbungee disable              || Deshabilita el plugin temporalmente
 Database - Apply Patch                          || Aplicar parche: ${0}..
 Database - Patches Applied                      || Los parches de la base de datos se han aplicado correctamente.
 Database - Patches Applied Already              || Los parches de la base de datos ya se han aplicado anteriormente.
@@ -81,98 +81,98 @@ Disable - Processing                            || Procesando las tareas no proc
 Disable - Processing Complete                   || Procesado completado.
 Disable - Unsaved Session Save                  || Salvando sesiones incompletas..
 Disable - WebServer                             || Servidores web han sido deshabilitados.
-Enable                                          || Análisis de jugadores habilitado.
+Enable                                          || Analisis de jugadores habilitado.
 Enable - Database                               || ${0}-conexion a la base de datos establecido.
 Enable - Notify Bad IP                          || 0.0.0.0 no es una dirección válida, establece los ajustes AlternativeIP. ¡Se darán los links incorrectos!
 Enable - Notify Empty IP                        || La IP en el server.properties esta vacía y AlternativeIP no está en uso. ¡Se darán los links incorrectos!
 Enable - Notify Geolocations disabled           || La recolección por Geolocalizacion no está activada. (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || Plan requiere acceso a internet la primera vez para descargar la base de datos de GeoLite2 Geolocation.
-Enable - Notify Webserver disabled              || WebServer no ha sido iniciado. (WebServer.DisableWebServer: true)
-Enable - WebServer                              || Webserver funcionando en el puerto ${0} (${1})
+Enable - Notify Webserver disabled              || El servidor web no se ha iniciado. (WebServer.DisableWebServer: true)
+Enable - WebServer                              || Eñ servidor web esta funcionando en el puerto ${0} (${1})
 Enable FAIL - Database                          || ${0}-Conexion a la base de datos incorrecta: ${1}
 Enable FAIL - Database Patch                    || El parcheado de la base de datos ha fallado, el plugin tiene que ser deshabilitado. Por favor, reporta este error.
 Enable FAIL - GeoDB Write                       || Ha ocurrido un error al intentar descargar la base de datos GeoLite2 Geolocation.
-Enable FAIL - WebServer (Proxy)                 || ¡WebServer no ha sido iniciado!
+Enable FAIL - WebServer (Proxy)                 || ¡El servidor web no se ha iniciado!
 Enable FAIL - Wrong Database Type               || ${0} no es una base de datos sostenible.
-HTML - COMPARING_15_DAYS                        || Comparando 15 dias.
-HTML - COMPARING_60_DAYS                        || Comparando hace 30d hasta hoy.
-HTML - COMPARING_7_DAYS                         || Comparando 7 dias.
+HTML - COMPARING_15_DAYS                        || Comparando 15 dias
+HTML - COMPARING_60_DAYS                        || Comparando desde hace 30d hasta ahora
+HTML - COMPARING_7_DAYS                         || Comparando 7 dias
 HTML - DATABASE_NOT_OPEN                        || La base de datos no está abierta, mira su estado con /plan info
-HTML - ERROR                                    || La autenticación ha llevado a error.
-HTML - INDEX_ACTIVE                             || Activo.
-HTML - INDEX_INACTIVE                           || Inactivo.
-HTML - INDEX_IRREGULAR                          || Irregular.
-HTML - INDEX_REGULAR                            || Regular.
-HTML - INDEX_VERY_ACTIVE                        || Muy activo.
-HTML - KILLED                                   || Muerto.
-HTML - LABEL_1ST_WEAPON                         || Arma PvP más mortal.
-HTML - LABEL_2ND_WEAPON                         || 2ª arma PvP.
-HTML - LABEL_3RD_WEAPON                         || 3ª arma PvP.
-HTML - LABEL_ACTIVITY_INDEX                     || índice de actividad.
-HTML - LABEL_AFK                                || AFK.
-HTML - LABEL_AFK_TIME                           || Tiempo AFK.
-HTML - LABEL_AVG                                || Promedio.
-HTML - LABEL_AVG_KDR                            || KDR promedio.
-HTML - LABEL_AVG_MOB_KDR                        || KDR de mobs promedio.
-HTML - LABEL_AVG_PLAYTIME                       || Jugabilidad promedio.
-HTML - LABEL_AVG_SESSION_LENGTH                 || Duración de sesion promedio.
-HTML - LABEL_AVG_TPS                            || TPS promedio.
-HTML - LABEL_BANNED                             || Baneado.
-HTML - LABEL_BEST_PEAK                          || Mejor pico.
-HTML - LABEL_DAY_OF_WEEK                        || Dia de la semana.
-HTML - LABEL_DEATHS                             || Muertes.
-HTML - LABEL_DOWNTIME                           || Falta de tiempo.
+HTML - ERROR                                    || La autenticación ha llevado a error
+HTML - INDEX_ACTIVE                             || Activo
+HTML - INDEX_INACTIVE                           || Inactivo
+HTML - INDEX_IRREGULAR                          || Irregular
+HTML - INDEX_REGULAR                            || Regular
+HTML - INDEX_VERY_ACTIVE                        || Muy activo
+HTML - KILLED                                   || Muerto
+HTML - LABEL_1ST_WEAPON                         || Arma PvP más mortal
+HTML - LABEL_2ND_WEAPON                         || 2ª arma PvP
+HTML - LABEL_3RD_WEAPON                         || 3ª arma PvP
+HTML - LABEL_ACTIVITY_INDEX                     || Índice de actividad
+HTML - LABEL_AFK                                || AFK
+HTML - LABEL_AFK_TIME                           || Tiempo AFK
+HTML - LABEL_AVG                                || Promedio
+HTML - LABEL_AVG_KDR                            || KDR promedio
+HTML - LABEL_AVG_MOB_KDR                        || KDR de mobs promedio
+HTML - LABEL_AVG_PLAYTIME                       || Jugabilidad promedio
+HTML - LABEL_AVG_SESSION_LENGTH                 || Duración de sesion promedio
+HTML - LABEL_AVG_TPS                            || TPS promedio
+HTML - LABEL_BANNED                             || Baneado
+HTML - LABEL_BEST_PEAK                          || Mejor pico
+HTML - LABEL_DAY_OF_WEEK                        || Dia de la semana
+HTML - LABEL_DEATHS                             || Muertes
+HTML - LABEL_DOWNTIME                           || Falta de tiempo
 HTML - LABEL_DURING_LOW_TPS                     || Durante picos bajos de TPS:
 HTML - LABEL_ENTITIES                           || Entidades
-HTML - LABEL_FAVORITE_SERVER                    || Servidor favorito.
-HTML - LABEL_FIRST_SESSION_LENGTH               || Duración de primera sesion.
-HTML - LABEL_FREE_DISK_SPACE                    || Espacio libre en el disco.
-HTML - LABEL_INACTIVE                           || Inactivo.
-HTML - LABEL_LAST_PEAK                          || Último pico.
-HTML - LABEL_LAST_SEEN                          || Última vez visto.
-HTML - LABEL_LOADED_CHUNKS                      || Chunks cargados.
-HTML - LABEL_LOADED_ENTITIES                    || Entidades cargadas.
-HTML - LABEL_LONE_JOINS                         || Uniones solitarias.
-HTML - LABEL_LONE_NEW_JOINS                     || Uniones solitarias nuevas.
-HTML - LABEL_LONGEST_SESSION                    || Sesión más larga.
-HTML - LABEL_LOW_TPS                            || Picos bajos TPS.
-HTML - LABEL_MAX_FREE_DISK                      || Máximo disco libre.
-HTML - LABEL_MIN_FREE_DISK                      || Mínimo disco libre.
-HTML - LABEL_MOB_DEATHS                         || Muertes causadas por mobs.
-HTML - LABEL_MOB_KDR                            || KDR de mobs.
-HTML - LABEL_MOB_KILLS                          || Asesinatos de mobs.
-HTML - LABEL_MOST_ACTIVE_GAMEMODE               || Modo de juego mas activo.
-HTML - LABEL_NAME                               || Nombre.
-HTML - LABEL_NEW                                || Nuevo.
-HTML - LABEL_NEW_PLAYERS                        || Jugadores nuevos.
-HTML - LABEL_NICKNAME                           || Nick.
-HTML - LABEL_NO_SESSION_KILLS                   || Nada.
-HTML - LABEL_ONLINE_FIRST_JOIN                  || Jugadores en línea en primera unión.
+HTML - LABEL_FAVORITE_SERVER                    || Servidor favorito
+HTML - LABEL_FIRST_SESSION_LENGTH               || Duración de primera sesion
+HTML - LABEL_FREE_DISK_SPACE                    || Espacio libre en el disco duro
+HTML - LABEL_INACTIVE                           || Inactivo
+HTML - LABEL_LAST_PEAK                          || Último pico
+HTML - LABEL_LAST_SEEN                          || Última vez visto
+HTML - LABEL_LOADED_CHUNKS                      || Chunks cargados
+HTML - LABEL_LOADED_ENTITIES                    || Entidades cargadas
+HTML - LABEL_LONE_JOINS                         || Uniones solitarias
+HTML - LABEL_LONE_NEW_JOINS                     || Uniones solitarias nuevas
+HTML - LABEL_LONGEST_SESSION                    || Sesión más larga
+HTML - LABEL_LOW_TPS                            || Picos bajos TPS
+HTML - LABEL_MAX_FREE_DISK                      || Máximo espacio libre en el disco duro
+HTML - LABEL_MIN_FREE_DISK                      || Mínimo espacio libre en el disco duro
+HTML - LABEL_MOB_DEATHS                         || Muertes causadas por mobs
+HTML - LABEL_MOB_KDR                            || KDR de mobs
+HTML - LABEL_MOB_KILLS                          || Asesinatos de mobs
+HTML - LABEL_MOST_ACTIVE_GAMEMODE               || Modo de juego mas activo
+HTML - LABEL_NAME                               || Nombre
+HTML - LABEL_NEW                                || Nuevo
+HTML - LABEL_NEW_PLAYERS                        || Jugadores nuevos
+HTML - LABEL_NICKNAME                           || Nick
+HTML - LABEL_NO_SESSION_KILLS                   || Nada
+HTML - LABEL_ONLINE_FIRST_JOIN                  || Jugadores en línea en primera unión
 HTML - LABEL_OPERATOR                           || Operador.
-HTML - LABEL_PER_PLAYER                         || / Jugador.
-HTML - LABEL_PER_REGULAR_PLAYER                 || / Jugador normal.
-HTML - LABEL_PLAYER_DEATHS                      || Muertes causadas por jugadores.
-HTML - LABEL_PLAYER_KILLS                       || Muertes del jugador.
-HTML - LABEL_PLAYERS_ONLINE                     || Jugadores en línea.
-HTML - LABEL_PLAYTIME                           || Tiempo de juego.
-HTML - LABEL_REGISTERED                         || Registrado.
-HTML - LABEL_REGISTERED_PLAYERS                 || Jugadores registrados.
-HTML - LABEL_REGULAR                            || Normal.
-HTML - LABEL_REGULAR_PLAYERS                    || Jugadores normal.
-HTML - LABEL_RELATIVE_JOIN_ACTIVITY             || Actividad de unión relativa.
-HTML - LABEL_RETENTION                          || Retención nuevo jugador.
-HTML - LABEL_SERVER_DOWNTIME                    || Tiempo de falta de servidor.
-HTML - LABEL_SERVER_OCCUPIED                    || Servidor ocupado.
-HTML - LABEL_SESSION_ENDED                      ||  Acabado.
+HTML - LABEL_PER_PLAYER                         || / Jugador
+HTML - LABEL_PER_REGULAR_PLAYER                 || / Jugador regular
+HTML - LABEL_PLAYER_DEATHS                      || Muertes causadas por jugadores
+HTML - LABEL_PLAYER_KILLS                       || Muertes del jugador
+HTML - LABEL_PLAYERS_ONLINE                     || Jugadores en línea
+HTML - LABEL_PLAYTIME                           || Tiempo de juego
+HTML - LABEL_REGISTERED                         || Registrado
+HTML - LABEL_REGISTERED_PLAYERS                 || Jugadores registrados
+HTML - LABEL_REGULAR                            || Normal
+HTML - LABEL_REGULAR_PLAYERS                    || Jugadores normal
+HTML - LABEL_RELATIVE_JOIN_ACTIVITY             || Actividad de unión relativa
+HTML - LABEL_RETENTION                          || Retención nuevo jugador
+HTML - LABEL_SERVER_DOWNTIME                    || Tiempo de falta de servidor
+HTML - LABEL_SERVER_OCCUPIED                    || Servidor ocupado
+HTML - LABEL_SESSION_ENDED                      ||  Acabado
 HTML - LABEL_SESSION_MEDIAN                     || Sesión media.
-HTML - LABEL_TIMES_KICKED                       || Veces echado.
+HTML - LABEL_TIMES_KICKED                       || Veces kickeado
 HTML - LABEL_TOTAL_PLAYERS                      || Jugadores totales
 HTML - LABEL_TOTAL_PLAYTIME                     || Jugabilidad total
 HTML - LABEL_UNIQUE_PLAYERS                     || Jugadores únicos
 HTML - LABEL_WEEK_DAYS                          || 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
-HTML - LINK_BACK_NETWORK                        || Página web.
+HTML - LINK_BACK_NETWORK                        || Página web
 HTML - LINK_BACK_SERVER                         || Página del servidor
-HTML - LINK_CHANGELOG                           || Ver el registro de cambios.
+HTML - LINK_CHANGELOG                           || Ver el registro de cambios
 HTML - LINK_DISCORD                             || Soporte general en Discord
 HTML - LINK_DOWNLOAD                            || Descarga
 HTML - LINK_ISSUES                              || Reportar errores
@@ -180,7 +180,7 @@ HTML - LINK_NIGHT_MODE                          || Modo noche
 HTML - LINK_PLAYER_PAGE                         || Pagina de jugador
 HTML - LINK_QUICK_VIEW                          || Vista rápida
 HTML - LINK_SERVER_ANALYSIS                     || Análisis de servidor
-HTML - LINK_WIKI                                || Plan Wiki, Tutoriales & Documentación.
+HTML - LINK_WIKI                                || Plan Wiki, Tutoriales & Documentación
 HTML - LOCAL_MACHINE                            || Máquina local
 HTML - NAV_PLUGINS                              || Plugins
 HTML - NEW_CALENDAR                             || Nuevo:
@@ -302,8 +302,8 @@ HTML ERRORS - UNAUTHORIZED_401                  || No autorizado
 HTML ERRORS - UNKNOWN_PAGE_404                  || Asegurate que estas entrando por un link dado por un comando, Ejemplos:</p><p>/player/NombreJugador<br>/server/NombreServidor</p>
 HTML ERRORS - UUID_404                          || La UUID del jugador no ha sido encontrada.
 In Depth Help - /plan ?                         || > §2Comando principal\  Acceso a subcomandos y ayuda\  §2/plan §fList subcommands\  §2/plan <subcomando> ? §fPara ayuda profunda
-In Depth Help - /plan analyze ?                 || > §2Comando analisis\  Refresca pagina del servidor y proporciona el link a la página.
-In Depth Help - /plan inspect ?                 || > §2Comando inspeccionar\  Refresca la página del jugador y proporciona un link a la página.
+In Depth Help - /plan analyze ?                 || > §2Comando analisis\  Recarga la pagina del servidor y proporciona el link a la página.
+In Depth Help - /plan inspect ?                 || > §2Comando inspeccionar\  Recarga la página del jugador y proporciona un link a la página.
 In Depth Help - /plan manage ?                  || > §2Comando gestionar\  Gestiona las bases de datos de MySQL y SQLite de Plan.\  §2/plan m §fLista subcomandos\  §2/plan m <subcomando> ? §fPara ayuda profunda
 In Depth Help - /plan manage backup ?           || > §2Subcomando backup\  Crea una nueva base de datos (archivo .db) SQLite con contenidos de base de datos ya activos en la carpeta del plugin Plan.
 In Depth Help - /plan manage clear ?            || > §2Subcomando borrar\  Elimina todo de la base de datos activa. Usar con precaución.
@@ -345,19 +345,19 @@ Today                                           || 'Hoy'
 Unavailable                                     || No disponible
 Unknown                                         || Desconocido
 Version - DEV                                   ||  Este es un lanzamiento para DEV.
-Version - Latest                                || Estas usando la versión más reciente.
+Version - Latest                                || Estas usando la version más reciente.
 Version - New                                   || Nuevo lanzamiento (${0}) disponible ${1}
 Version - New (old)                             || Nueva versión disponible en ${0}
 Version FAIL - Read info (old)                  || Error en comprobar el numero de la nueva versión.
 Version FAIL - Read versions.txt                || La información de la version no se ha podido cargar desde Github/versions.txt
 Web User Listing                                ||   §2${0} §7: §f${1}
-WebServer - Notify HTTP                         || WebServer: No Certificado -> Usando HTTP-server para visualización.
-WebServer - Notify HTTP User Auth               || WebServer: ¡Autorización del usuario desactivada! (No seguro en HTTP)
-WebServer - Notify HTTPS User Auth              || WebServer: ¡Autorización del usuario desactivada! (Deshabilitada en la configuracion)
-WebServer - Notify no Cert file                 || WebServer: Certificado de archivo KeyStore no encontrado: ${0}
-WebServer - Notify Using Proxy                  || WebServer: Modo Proxy HTTPS habilitado, asegurate que tu reverse-proxy está usando HTTPS y los puntos del Proxy Plan AlternativeIP.Link
-WebServer FAIL - EOF                            || WebServer: EOF leyendo el archivo de Certificado. (Comprueba que el archivo no está vacío)
-WebServer FAIL - Port Bind                      || WebServer no se ha iniciado exitosamente. ¿Esta el puerto (${0}) en uso?
-WebServer FAIL - SSL Context                    || WebServer: Inicialización de Contexto SSL erroneo.
-WebServer FAIL - Store Load                     || WebServer: Carga del Certificado SSL erronea.
+WebServer - Notify HTTP                         || Servidor web: No Certificado -> Usando HTTP-server para visualización.
+WebServer - Notify HTTP User Auth               || Servidor web: Autorizacion del usuario desactivada! (No seguro en HTTP)
+WebServer - Notify HTTPS User Auth              || Servidor web: Autorizacion del usuario desactivada! (Deshabilitada en la configuracion)
+WebServer - Notify no Cert file                 || Servidor web: Certificado de archivo KeyStore no encontrado: ${0}
+WebServer - Notify Using Proxy                  || Servidor web: Modo Proxy HTTPS habilitado, asegurate que tu reverse-proxy está usando HTTPS y los puntos del Proxy Plan AlternativeIP.Link
+WebServer FAIL - EOF                            || Servidor web: EOF leyendo el archivo de Certificado. (Comprueba que el archivo no está vacío)
+WebServer FAIL - Port Bind                      || El servidor web no se ha iniciado exitosamente. ¿Esta el puerto (${0}) en uso?
+WebServer FAIL - SSL Context                    || Servidor web: Inicialización de Contexto SSL erroneo.
+WebServer FAIL - Store Load                     || Servidor web: Carga del Certificado SSL erronea.
 Yesterday                                       || 'Ayer'

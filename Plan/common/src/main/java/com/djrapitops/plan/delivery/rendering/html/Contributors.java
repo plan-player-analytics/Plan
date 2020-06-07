@@ -37,6 +37,7 @@ public class Contributors {
                 new Contributor("Aurelien", CODE, LANG),
                 new Contributor("BrainStone", CODE),
                 new Contributor("Catalina", LANG),
+                new Contributor("Elguerrero", LANG),
                 new Contributor("Combustible", CODE),
                 new Contributor("Creeperface01", CODE),
                 new Contributor("CyanTech", LANG),
