@@ -109,6 +109,8 @@ public class ConfigSettingKeyTest {
         settings.remove(PluginSettings.PROXY_COPY_CONFIG);
         settings.remove(DatabaseSettings.TYPE);
         settings.remove(DisplaySettings.WORLD_ALIASES);
+        settings.remove(DatabaseSettings.H2_USER);
+        settings.remove(DatabaseSettings.H2_PASS);
         return settings;
     }
 

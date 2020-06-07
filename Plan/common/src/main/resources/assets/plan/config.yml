@@ -34,6 +34,9 @@ Database:
     Database: Plan
     # Launch options to append after mysql driver address
     Launch_options: ?rewriteBatchedStatements=true&useSSL=false
+  H2:
+    User: root
+    Password: minecraft
 # -----------------------------------------------------
 # More information about SSL Certificate Settings:
 # https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/SSL-Certificate-%28HTTPS%29-Set-Up

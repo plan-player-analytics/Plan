@@ -86,8 +86,8 @@ public class H2DB extends SQLDB {
     }
 
     private Connection getConnectionFor(String dbFilePath) throws SQLException {
-        String username = config.get(DatabaseSettings.MYSQL_USER);
-        String password = config.get(DatabaseSettings.MYSQL_PASS);
+        String username = config.get(DatabaseSettings.H2_USER);
+        String password = config.get(DatabaseSettings.H2_PASS);
 
         JdbcDataSource jdbcDataSource = new JdbcDataSource();
         jdbcDataSource.setURL("jdbc:h2:file:" + dbFilePath + ";mode=MySQL;DATABASE_TO_UPPER=false");
@@ -99,6 +99,8 @@ public class H2DB extends SQLDB {
 
     private void startConnectionPingTask() {
         stopConnectionPingTask();
+        logger.warn("H2 database is going to be deprecated in version 5.2. It is recommended to move to MySQL or SQLite when possible.");
+        logger.warn("See https://github.com/plan-player-analytics/Plan/issues/1472 for details");
         try {
             // Maintains Connection.
             connectionPingTask = runnableFactory.create("DBConnectionPingTask " + getType().getName(),

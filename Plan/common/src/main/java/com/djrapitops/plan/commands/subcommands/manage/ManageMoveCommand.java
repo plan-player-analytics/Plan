@@ -91,16 +91,6 @@ public class ManageMoveCommand extends CommandNode {
             return;
         }
 
-        // Temporarily disabled due to issues
-        boolean transferH2 = fromDB == DBType.H2 || toDB == DBType.H2;
-        boolean transferMySQL = fromDB == DBType.MYSQL || toDB == DBType.MYSQL;
-
-        if (transferH2 && transferMySQL) {
-            sender.sendMessage("§cDirect transfers between H2 and MySQL are temporarily disabled due to a bug: See the issue link for workaround");
-            sender.sendLink("Link to Github Issue", "https://github.com/plan-player-analytics/Plan/issues/1111");
-            return;
-        }
-
         try {
             final Database fromDatabase = dbSystem.getActiveDatabaseByType(fromDB);
             final Database toDatabase = dbSystem.getActiveDatabaseByType(toDB);
