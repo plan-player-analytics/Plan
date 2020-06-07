@@ -38,7 +38,6 @@ import javax.inject.Singleton;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -107,6 +106,7 @@ public class MySQLDB extends SQLDB {
 
             hikariConfig.setUsername(username);
             hikariConfig.setPassword(password);
+            hikariConfig.addDataSourceProperty("connectionInitSql", "set time_zone = '+00:00'");
 
             hikariConfig.setPoolName("Plan Connection Pool-" + increment);
             increment();
@@ -139,14 +139,7 @@ public class MySQLDB extends SQLDB {
             }
         }
         if (connection.getAutoCommit()) connection.setAutoCommit(false);
-        setTimezoneToUTC(connection);
         return connection;
-    }
-
-    private void setTimezoneToUTC(Connection connection) throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-            statement.execute("set time_zone = '+00:00'");
-        }
     }
 
     @Override
