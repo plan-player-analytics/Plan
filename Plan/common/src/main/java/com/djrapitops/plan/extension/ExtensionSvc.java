@@ -172,8 +172,6 @@ public class ExtensionSvc implements ExtensionService {
         } catch (DataExtensionMethodCallException methodCallFailed) {
             logFailure(playerName, methodCallFailed);
             methodCallFailed.getMethod().ifPresent(gatherer::disableMethodFromUse);
-            // Try again
-            updatePlayerValues(gatherer, playerUUID, playerName, event);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
             ErrorContext.Builder context = ErrorContext.builder()
                     .whatToDo("Report and/or disable " + gatherer.getPluginName() + " extension in the Plan config.")
@@ -215,8 +213,6 @@ public class ExtensionSvc implements ExtensionService {
         } catch (DataExtensionMethodCallException methodCallFailed) {
             logFailure("server", methodCallFailed);
             methodCallFailed.getMethod().ifPresent(gatherer::disableMethodFromUse);
-            // Try again
-            updateServerValues(gatherer, event);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
             ErrorContext.Builder context = ErrorContext.builder()
                     .whatToDo("Report and/or disable " + gatherer.getPluginName() + " extension in the Plan config.")
