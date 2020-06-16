@@ -86,7 +86,7 @@ subprojects {
     ext.mysqlVersion = "8.0.20"
     ext.hikariVersion = "3.4.5"
     ext.slf4jVersion = "1.7.30"
-    ext.geoIpVersion = "2.13.1"
+    ext.geoIpVersion = "2.14.0"
     ext.gsonVersion = "2.8.6"
     ext.guavaVersion = "28.0-jre"
     ext.bstatsVersion = "1.4"
