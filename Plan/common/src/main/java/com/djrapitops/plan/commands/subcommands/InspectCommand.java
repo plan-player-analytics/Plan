@@ -88,6 +88,7 @@ public class InspectCommand extends CommandNode {
 
         if (playerName == null) {
             sender.sendMessage(locale.getString(CommandLang.FAIL_NO_PERMISSION));
+            return;
         }
 
         Database.State dbState = dbSystem.getDatabase().getState();

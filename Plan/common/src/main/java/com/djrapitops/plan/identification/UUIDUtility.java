@@ -65,6 +65,7 @@ public class UUIDUtility {
      * @return UUID of the player
      */
     public UUID getUUIDOf(String playerName) {
+        if (playerName == null) throw new IllegalArgumentException("Player name can not be null!");
         UUID uuid = getUUIDFromString(playerName);
         if (uuid != null) return uuid;
 
