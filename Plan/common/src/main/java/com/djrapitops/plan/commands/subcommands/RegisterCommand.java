@@ -110,13 +110,15 @@ public class RegisterCommand extends CommandNode {
             }
 
             if (args.length == 0) {
-                String url = addresses.getMainAddress().orElseGet(() -> {
-                    sender.sendMessage(locale.getString(CommandLang.NO_ADDRESS_NOTIFY));
-                    return addresses.getFallbackLocalhostAddress();
-                }) + "/register";
-                String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
-                sender.sendMessage(linkPrefix);
-                sender.sendLink("   ", locale.getString(CommandLang.LINK_CLICK_ME), url);
+                processing.submitNonCritical(() -> {
+                    String url = addresses.getMainAddress().orElseGet(() -> {
+                        sender.sendMessage(locale.getString(CommandLang.NO_ADDRESS_NOTIFY));
+                        return addresses.getFallbackLocalhostAddress();
+                    }) + "/register";
+                    String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
+                    sender.sendMessage(linkPrefix);
+                    sender.sendLink("   ", locale.getString(CommandLang.LINK_CLICK_ME), url);
+                });
                 return;
             }
 

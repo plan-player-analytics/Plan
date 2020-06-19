@@ -17,6 +17,7 @@
 package com.djrapitops.plan.commands.subcommands;
 
 import com.djrapitops.plan.delivery.webserver.Addresses;
+import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CmdHelpLang;
@@ -38,16 +39,19 @@ public class NetworkCommand extends CommandNode {
 
     private final Locale locale;
     private final Addresses addresses;
+    private final Processing processing;
 
     @Inject
     public NetworkCommand(
             Locale locale,
-            Addresses addresses
+            Addresses addresses,
+            Processing processing
     ) {
         super("network|n|netw", Permissions.ANALYZE.getPermission(), CommandType.CONSOLE);
 
         this.locale = locale;
         this.addresses = addresses;
+        this.processing = processing;
 
         setShortHelp(locale.getString(CmdHelpLang.NETWORK));
         setInDepthHelp(locale.getArray(DeepHelpLang.NETWORK));
@@ -55,7 +59,7 @@ public class NetworkCommand extends CommandNode {
 
     @Override
     public void onCommand(Sender sender, String commandLabel, String[] args) {
-        sendNetworkMsg(sender);
+        processing.submitNonCritical(() -> sendNetworkMsg(sender));
     }
 
     private void sendNetworkMsg(Sender sender) {

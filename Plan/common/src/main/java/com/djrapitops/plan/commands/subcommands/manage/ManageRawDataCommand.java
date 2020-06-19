@@ -18,6 +18,7 @@ package com.djrapitops.plan.commands.subcommands.manage;
 
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.webserver.Addresses;
+import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CmdHelpLang;
@@ -42,17 +43,20 @@ import java.util.Arrays;
 public class ManageRawDataCommand extends CommandNode {
 
     private final Locale locale;
-    private Addresses addresses;
+    private final Addresses addresses;
+    private final Processing processing;
 
     @Inject
     public ManageRawDataCommand(
             Locale locale,
-            Addresses addresses
+            Addresses addresses,
+            Processing processing
     ) {
         super("raw", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
 
         this.locale = locale;
         this.addresses = addresses;
+        this.processing = processing;
 
         setArguments("<player>");
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_RAW_DATA));
@@ -64,24 +68,26 @@ public class ManageRawDataCommand extends CommandNode {
         Verify.isTrue(args.length >= 1,
                 () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments()))));
 
-        String playerName = MiscUtils.getPlayerName(args, sender, Permissions.MANAGE);
+        processing.submitNonCritical(() -> {
+            String playerName = MiscUtils.getPlayerName(args, sender, Permissions.MANAGE);
 
-        sender.sendMessage(locale.getString(CommandLang.HEADER_INSPECT, playerName));
-        // Link
-        String address = addresses.getMainAddress().orElseGet(() -> {
-            sender.sendMessage(locale.getString(CommandLang.NO_ADDRESS_NOTIFY));
-            return addresses.getFallbackLocalhostAddress();
+            sender.sendMessage(locale.getString(CommandLang.HEADER_INSPECT, playerName));
+            // Link
+            String address = addresses.getMainAddress().orElseGet(() -> {
+                sender.sendMessage(locale.getString(CommandLang.NO_ADDRESS_NOTIFY));
+                return addresses.getFallbackLocalhostAddress();
+            });
+            String url = address + "/player/" + Html.encodeToURL(playerName) + "/raw";
+            String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
+            boolean console = !CommandUtils.isPlayer(sender);
+            if (console) {
+                sender.sendMessage(linkPrefix + url);
+            } else {
+                sender.sendMessage(linkPrefix);
+                sender.sendLink("   ", locale.getString(CommandLang.LINK_CLICK_ME), url);
+            }
+
+            sender.sendMessage(">");
         });
-        String url = address + "/player/" + Html.encodeToURL(playerName) + "/raw";
-        String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
-        boolean console = !CommandUtils.isPlayer(sender);
-        if (console) {
-            sender.sendMessage(linkPrefix + url);
-        } else {
-            sender.sendMessage(linkPrefix);
-            sender.sendLink("   ", locale.getString(CommandLang.LINK_CLICK_ME), url);
-        }
-
-        sender.sendMessage(">");
     }
 }
