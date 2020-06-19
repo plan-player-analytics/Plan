@@ -36,7 +36,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -194,7 +195,7 @@ public class ErrorLogger implements ErrorHandler {
     }
 
     private void logNew(Path errorLog, Throwable throwable, ErrorContext context, String hash) {
-        List<String> stacktrace = buildReadableStacktrace(throwable);
+        List<String> stacktrace = buildReadableStacktrace(new ArrayList<>(), throwable);
         List<String> lines = Lists.builder(String.class)
                 .add(hash + " - Last occurred: " + getTimeStamp() + " Occurrences: 1")
                 .apply(builder -> this.buildContext(context, 1, builder))
@@ -223,41 +224,46 @@ public class ErrorLogger implements ErrorHandler {
     }
 
     private String hash(Throwable e) {
-        StringBuilder seed = new StringBuilder();
+        int seed = 0;
         Throwable cause = e;
         String previousLine = null;
         while (cause != null) {
             for (StackTraceElement element : cause.getStackTrace()) {
                 String asLine = element.toString();
                 if (asLine.equals(previousLine)) continue;
-                seed.append(asLine);
+                if (seed == 0) {
+                    seed = asLine.hashCode();
+                } else {
+                    seed *= asLine.hashCode();
+                }
                 previousLine = asLine;
             }
             cause = e.getCause();
         }
-        return DigestUtils.sha256Hex(seed.toString()).substring(0, 10);
+        return DigestUtils.sha256Hex(Integer.toString(seed)).substring(0, 10);
     }
 
-    private List<String> buildReadableStacktrace(Throwable e) {
-        List<String> trace = new ArrayList<>();
+    private List<String> buildReadableStacktrace(List<String> trace, Throwable e) {
         trace.add(e.toString());
         Deduplicator deduplicator = new Deduplicator();
         for (StackTraceElement element : e.getStackTrace()) {
             String line = element.toString();
-            trace.addAll(deduplicator.getLines(line));
+            deduplicator.addLines(trace, line);
         }
-        deduplicator.getLeftoverDuplicateCountLine().ifPresent(trace::add);
+        deduplicator.addLeftoverDuplicateCountLine(trace);
         Throwable[] suppressed = e.getSuppressed();
         if (suppressed.length > 0) {
             for (Throwable suppressedThrowable : suppressed) {
                 trace.add("   Suppressed:");
-                buildReadableStacktrace(suppressedThrowable).stream().map(line -> "   " + line).forEach(trace::add);
+                for (String line : buildReadableStacktrace(new ArrayList<>(), suppressedThrowable)) {
+                    trace.add("   " + line);
+                }
             }
         }
         Throwable cause = e.getCause();
         if (cause != null) {
             trace.add("Caused by:");
-            trace.addAll(buildReadableStacktrace(cause));
+            buildReadableStacktrace(trace, cause);
         }
         return trace;
     }
@@ -267,26 +273,27 @@ public class ErrorLogger implements ErrorHandler {
         private String lastDuplicate = null;
         private int duplicateCount = 0;
 
-        public List<String> getLines(String line) {
+        public void addLines(List<String> trace, String line) {
             if (duplicateCount > 0 && !line.equals(lastDuplicate)) {
                 String returnLine = "    x " + duplicateCount;
                 duplicateCount = 1;
-                return Arrays.asList(returnLine, "   " + line);
+                trace.add(returnLine);
+                trace.add("   " + line);
             } else if (line.equals(lastDuplicate)) {
                 duplicateCount++;
-                return Collections.emptyList();
             } else if (line.equals(previousLine)) {
                 lastDuplicate = line;
                 duplicateCount = 2;
-                return Collections.emptyList();
             } else {
                 previousLine = line;
-                return Collections.singletonList("   " + line);
+                trace.add("   " + line);
             }
         }
 
-        public Optional<String> getLeftoverDuplicateCountLine() {
-            return duplicateCount > 0 ? Optional.of("    x " + duplicateCount) : Optional.empty();
+        public void addLeftoverDuplicateCountLine(List<String> trace) {
+            if (duplicateCount > 0) {
+                trace.add("    x " + duplicateCount);
+            }
         }
     }
 }
