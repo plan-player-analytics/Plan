@@ -27,6 +27,7 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
+import java.util.UUID;
 
 /**
  * Placeholder expansion used to provide data from Plan on Bukkit.
@@ -82,8 +83,9 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player player, String params) {
+        UUID uuid = player != null ? player.getUniqueId() : null;
         try {
-            String value = placeholders.onPlaceholderRequest(player.getUniqueId(), params, Collections.emptyList());
+            String value = placeholders.onPlaceholderRequest(uuid, params, Collections.emptyList());
 
             if ("true".equals(value)) { //hack
                 value = PlaceholderAPIPlugin.booleanTrue();
@@ -93,7 +95,7 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
 
             return value;
         } catch (Exception e) {
-            errorLogger.log(L.WARN, e, ErrorContext.builder().whatToDo("Report this").related("Placeholder Request", params).build());
+            errorLogger.log(L.WARN, e, ErrorContext.builder().whatToDo("Report this").related("Placeholder Request", params, uuid).build());
             return null;
         }
     }
