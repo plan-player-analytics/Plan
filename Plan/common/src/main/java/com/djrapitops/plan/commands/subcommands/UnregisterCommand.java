@@ -116,19 +116,24 @@ public class UnregisterCommand extends CommandNode {
                     return;
                 }
                 User presentUser = found.get();
-                if (!Objects.equals(playerUUID, presentUser.getLinkedToUUID()) && sender.hasPermission(Permissions.MANAGE_WEB.getPerm())) {
+                boolean linkedToSender = Objects.equals(playerUUID, presentUser.getLinkedToUUID());
+                if (linkedToSender || sender.hasPermission(Permissions.MANAGE_WEB.getPerm())) {
+                    deleteUser(sender, database, username);
+                } else {
                     sender.sendMessage("§c" + locale.getString(CommandLang.USER_NOT_LINKED));
-                    return;
                 }
-                sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
-                database.executeTransaction(new RemoveWebUserTransaction(username))
-                        .get(); // Wait for completion
-                sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (Exception e) {
                 errorLogger.log(L.ERROR, this.getClass(), e);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
             }
         });
+    }
+
+    private void deleteUser(Sender sender, Database database, String username) throws InterruptedException, java.util.concurrent.ExecutionException {
+        sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
+        database.executeTransaction(new RemoveWebUserTransaction(username))
+                .get(); // Wait for completion
+        sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
     }
 
 }
