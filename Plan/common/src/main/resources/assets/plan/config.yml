@@ -33,7 +33,7 @@ Database:
     Password: minecraft
     Database: Plan
     # Launch options to append after mysql driver address
-    Launch_options: ?rewriteBatchedStatements=true&useSSL=false
+    Launch_options: "?rewriteBatchedStatements=true&useSSL=false&serverTimezone=UTC"
   H2:
     User: root
     Password: minecraft
