@@ -30,6 +30,8 @@ import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -44,10 +46,7 @@ import org.apache.commons.text.TextStringBuilder;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * HttpHandler for WebServer request management.
@@ -57,6 +56,7 @@ import java.util.Optional;
 @Singleton
 public class RequestHandler implements HttpHandler {
 
+    private final Locale locale;
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final Addresses addresses;
@@ -66,9 +66,11 @@ public class RequestHandler implements HttpHandler {
     private final ErrorLogger errorLogger;
 
     private final PassBruteForceGuard bruteForceGuard;
+    private List<String> ipWhitelist = null;
 
     @Inject
     RequestHandler(
+            Locale locale,
             PlanConfig config,
             DBSystem dbSystem,
             Addresses addresses,
@@ -77,6 +79,7 @@ public class RequestHandler implements HttpHandler {
             PluginLogger logger,
             ErrorLogger errorLogger
     ) {
+        this.locale = locale;
         this.config = config;
         this.dbSystem = dbSystem;
         this.addresses = addresses;
@@ -111,6 +114,11 @@ public class RequestHandler implements HttpHandler {
     }
 
     public Response getResponse(HttpExchange exchange) {
+        if (ipWhitelist == null) {
+            ipWhitelist = config.get(WebserverSettings.IP_WHITELIST)
+                    ? config.get(WebserverSettings.WHITELIST)
+                    : Collections.emptyList();
+        }
         String accessor = exchange.getRemoteAddress().getAddress().getHostAddress();
         Request request = null;
         Response response;
@@ -118,6 +126,9 @@ public class RequestHandler implements HttpHandler {
             request = buildRequest(exchange);
             if (bruteForceGuard.shouldPreventRequest(accessor)) {
                 response = responseFactory.failedLoginAttempts403();
+            } else if (!ipWhitelist.isEmpty() && !ipWhitelist.contains(accessor)) {
+                response = responseFactory.ipWhitelist403(accessor);
+                logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_IP_WHITELIST_BLOCK, accessor, exchange.getRequestURI().toString()));
             } else {
                 response = responseResolver.getResponse(request);
             }

@@ -349,6 +349,15 @@ public class ResponseFactory {
                 .build();
     }
 
+    public Response ipWhitelist403(String accessor) {
+        return Response.builder()
+                .setMimeType(MimeType.HTML)
+                .setContent("<h1>403 Forbidden</h1>" +
+                        "<p>IP-whitelist enabled, \"" + accessor + "\" is not on the list!</p>")
+                .setStatus(403)
+                .build();
+    }
+
     public Response basicAuth() {
         try {
             String tips = "<br>- Ensure you have registered a user with <b>/plan register</b><br>"
