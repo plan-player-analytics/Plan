@@ -225,8 +225,9 @@ public class PlanCommand {
         return Subcommand.builder()
                 .aliases("disable")
                 .requirePermission("plan.disable")
-                .description("Disable the plugin")
-                .inDepthDescription("Disable the plugin until next reload/restart.")
+                .optionalArgument("feature", "Name of the feature to disable: kickcount")
+                .description("Disable the plugin or part of it")
+                .inDepthDescription("Disable the plugin or part of it until next reload/restart.")
                 .onCommand(statusCommands::onDisable)
                 .build();
     }

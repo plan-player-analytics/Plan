@@ -121,7 +121,7 @@ public class PlayerOnlineListener {
     public void onKick(KickPlayerEvent event) {
         try {
             UUID playerUUID = event.getTargetEntity().getUniqueId();
-            if (!status.areKicksCounted() || SpongeAFKListener.AFK_TRACKER.isAfk(playerUUID)) {
+            if (status.areKicksNotCounted() || SpongeAFKListener.AFK_TRACKER.isAfk(playerUUID)) {
                 return;
             }
             dbSystem.getDatabase().executeTransaction(new KickStoreTransaction(playerUUID));
