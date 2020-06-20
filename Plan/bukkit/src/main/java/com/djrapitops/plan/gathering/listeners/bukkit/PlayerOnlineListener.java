@@ -123,7 +123,7 @@ public class PlayerOnlineListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerKick(PlayerKickEvent event) {
         try {
-            if (!status.areKicksCounted() || event.isCancelled()) {
+            if (status.areKicksNotCounted() || event.isCancelled()) {
                 return;
             }
             UUID uuid = event.getPlayer().getUniqueId();
