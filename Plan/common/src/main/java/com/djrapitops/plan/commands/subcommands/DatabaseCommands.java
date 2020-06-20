@@ -22,6 +22,8 @@ import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.Identifiers;
+import com.djrapitops.plan.identification.Server;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.query.QuerySvc;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
@@ -30,9 +32,11 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.SQLiteDB;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemovePlayerTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.SetServerAsUninstalledTransaction;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -56,6 +60,7 @@ public class DatabaseCommands {
     private final DBSystem dbSystem;
     private final SQLiteDB.Factory sqliteFactory;
     private final QuerySvc queryService;
+    private final ServerInfo serverInfo;
     private final Identifiers identifiers;
     private final PluginStatusCommands statusCommands;
     private final ErrorLogger errorLogger;
@@ -71,6 +76,7 @@ public class DatabaseCommands {
             DBSystem dbSystem,
             SQLiteDB.Factory sqliteFactory,
             QuerySvc queryService,
+            ServerInfo serverInfo,
             Formatters formatters,
             Identifiers identifiers,
             PluginStatusCommands statusCommands,
@@ -83,6 +89,7 @@ public class DatabaseCommands {
         this.dbSystem = dbSystem;
         this.sqliteFactory = sqliteFactory;
         this.queryService = queryService;
+        this.serverInfo = serverInfo;
         this.identifiers = identifiers;
         this.statusCommands = statusCommands;
         this.errorLogger = errorLogger;
@@ -358,5 +365,29 @@ public class DatabaseCommands {
             sender.send(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
             errorLogger.log(L.ERROR, e, ErrorContext.builder().related(sender, database.getType().getName(), playerToRemove).build());
         }
+    }
+
+    private void ensureDatabaseIsOpen() {
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState != Database.State.OPEN) {
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_DATABASE_NOT_OPEN, dbState.name()));
+        }
+    }
+
+    public void onUninstalled(CMDSender sender, Arguments arguments) {
+        ensureDatabaseIsOpen();
+        String identifier = arguments.concatenate(" ");
+        Server server = dbSystem.getDatabase()
+                .query(ServerQueries.fetchServerMatchingIdentifier(identifier))
+                .filter(s -> !s.isProxy())
+                .orElseThrow(() -> new IllegalArgumentException("Server '" + identifier + "' was not found from the database."));
+
+        if (server.getUuid().equals(serverInfo.getServerUUID())) {
+            throw new IllegalArgumentException(locale.getString(ManageLang.UNINSTALLING_SAME_SERVER));
+        }
+
+        dbSystem.getDatabase().executeTransaction(new SetServerAsUninstalledTransaction(server.getUuid()));
+        sender.send(locale.getString(ManageLang.PROGRESS_SUCCESS));
+        sender.send("§aIf the server is still installed, it will automatically set itself as installed in the database.");
     }
 }

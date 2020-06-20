@@ -253,6 +253,7 @@ public class PlanCommand {
                 .subcommand(moveCommand())
                 .subcommand(clearCommand())
                 .subcommand(removeCommand())
+                .subcommand(uninstalled())
                 .inDepthDescription("Use different database subcommands to change the data in some way")
                 .build();
     }
@@ -311,6 +312,17 @@ public class PlanCommand {
                 .description("Remove player's data from Current database.")
                 .inDepthDescription("Removes all data linked to a player from the Current database.")
                 .onCommand((sender, arguments) -> databaseCommands.onRemove(commandName, sender, arguments))
+                .build();
+    }
+
+    private Subcommand uninstalled() {
+        return Subcommand.builder()
+                .aliases("uninstalled")
+                .requirePermission("plan.data.uninstalled")
+                .requiredArgument("server", "Name, ID or UUID of a server")
+                .description("Set a server as uninstalled in the database.")
+                .inDepthDescription("Marks a server in Plan database as uninstalled so that it will not show up in server queries.")
+                .onCommand(databaseCommands::onUninstalled)
                 .build();
     }
 }
