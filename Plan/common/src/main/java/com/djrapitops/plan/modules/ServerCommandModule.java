@@ -14,21 +14,20 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan;
+package com.djrapitops.plan.modules;
 
-/**
- * Identifiers for different Debug channels.
- *
- * @author Rsl1122
- */
-public class DebugChannels {
+import dagger.Module;
+import dagger.Provides;
 
-    private DebugChannels() {
-        /* Static variable class */
+import javax.inject.Named;
+
+@Module
+public class ServerCommandModule {
+
+    @Provides
+    @Named("mainCommandName")
+    String provideMainCommandName() {
+        return "plan";
     }
-
-    public static final String IMPORTING = "Importing";
-    public static final String SQL = "SQL";
-    public static final String DATA_EXTENSIONS = "DataExtensions";
 
 }
