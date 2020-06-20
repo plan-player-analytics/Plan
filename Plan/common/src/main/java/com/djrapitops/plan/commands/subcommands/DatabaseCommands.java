@@ -21,6 +21,7 @@ import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.exceptions.database.DBOpException;
+import com.djrapitops.plan.query.QuerySvc;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.settings.locale.lang.ManageLang;
@@ -29,6 +30,7 @@ import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.SQLiteDB;
 import com.djrapitops.plan.storage.database.transactions.BackupCopyTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -38,6 +40,7 @@ import com.djrapitops.plugin.logging.L;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 
 @Singleton
@@ -49,6 +52,8 @@ public class DatabaseCommands {
     private final PlanFiles files;
     private final DBSystem dbSystem;
     private final SQLiteDB.Factory sqliteFactory;
+    private final QuerySvc queryService;
+    private final PluginStatusCommands statusCommands;
     private final ErrorLogger errorLogger;
 
     private final Formatter<Long> timestamp;
@@ -61,7 +66,9 @@ public class DatabaseCommands {
             PlanFiles files,
             DBSystem dbSystem,
             SQLiteDB.Factory sqliteFactory,
+            QuerySvc queryService,
             Formatters formatters,
+            PluginStatusCommands statusCommands,
             ErrorLogger errorLogger
     ) {
         this.locale = locale;
@@ -70,6 +77,8 @@ public class DatabaseCommands {
         this.files = files;
         this.dbSystem = dbSystem;
         this.sqliteFactory = sqliteFactory;
+        this.queryService = queryService;
+        this.statusCommands = statusCommands;
         this.errorLogger = errorLogger;
 
         this.timestamp = formatters.iso8601NoClockLong();
@@ -238,6 +247,59 @@ public class DatabaseCommands {
         } catch (Exception e) {
             errorLogger.log(L.ERROR, e, ErrorContext.builder().related(sender, fromDB.getName() + "->" + toDB.getName()).build());
             sender.send(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
+        }
+    }
+
+
+    public void onClear(String mainCommand, CMDSender sender, Arguments arguments) {
+        DBType fromDB = arguments.get(0).flatMap(DBType::getForName)
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite/H2>"))));
+
+        if (sender.isPlayer()) {
+            sender.buildMessage()
+                    .addPart(colors.getMainColor() + "You are about to remove all Plan-data in " + fromDB.getName()).newLine()
+                    .addPart("Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept")
+                    .addPart(" ")
+                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel")
+                    .send();
+        } else {
+            sender.buildMessage()
+                    .addPart(colors.getMainColor() + "You are about to remove all Plan-data in " + fromDB.getName()).newLine()
+                    .addPart("Confirm: ").addPart("§a/" + mainCommand + " accept")
+                    .addPart(" ")
+                    .addPart("§c/" + mainCommand + " cancel")
+                    .send();
+        }
+
+        confirmation.confirm(sender, choice -> {
+            if (choice) {
+                performClear(sender, fromDB);
+            } else {
+                sender.send(colors.getMainColor() + "Cancelled. No data was changed.");
+            }
+        });
+    }
+
+    private void performClear(CMDSender sender, DBType fromDB) {
+        try {
+            Database fromDatabase = dbSystem.getActiveDatabaseByType(fromDB);
+            fromDatabase.init();
+
+            sender.send("Removing Plan-data from " + fromDB.getName() + "..");
+
+            fromDatabase.executeTransaction(new RemoveEverythingTransaction())
+                    .get(); // Wait for completion
+            queryService.dataCleared();
+            sender.send(locale.getString(ManageLang.PROGRESS_SUCCESS));
+
+            // Reload plugin to register the server into the database
+            // Otherwise errors will start.
+            statusCommands.onReload(sender, new Arguments(Collections.emptyList()));
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (DBOpException | ExecutionException e) {
+            sender.send(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(sender, fromDB.getName()).build());
         }
     }
 }
