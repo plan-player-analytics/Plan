@@ -250,6 +250,7 @@ public class PlanCommand {
                 .colorScheme(colors)
                 .subcommand(backupCommand())
                 .subcommand(restoreCommand())
+                .subcommand(moveCommand())
                 .inDepthDescription("Use different database subcommands to change the data in some way")
                 .build();
     }
