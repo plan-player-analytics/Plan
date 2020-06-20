@@ -252,6 +252,7 @@ public class PlanCommand {
                 .subcommand(restoreCommand())
                 .subcommand(moveCommand())
                 .subcommand(clearCommand())
+                .subcommand(removeCommand())
                 .inDepthDescription("Use different database subcommands to change the data in some way")
                 .build();
     }
@@ -299,6 +300,17 @@ public class PlanCommand {
                 .description("Remove ALL Plan data from a database")
                 .inDepthDescription("Clears all Plan tables, removing all Plan-data in the process.")
                 .onCommand((sender, arguments) -> databaseCommands.onClear(commandName, sender, arguments))
+                .build();
+    }
+
+    private Subcommand removeCommand() {
+        return Subcommand.builder()
+                .aliases("remove")
+                .requirePermission("plan.data.remove")
+                .requiredArgument("name/uuid", "Identifier for a player that will be removed from current database.")
+                .description("Remove player's data from Current database.")
+                .inDepthDescription("Removes all data linked to a player from the Current database.")
+                .onCommand((sender, arguments) -> databaseCommands.onRemove(commandName, sender, arguments))
                 .build();
     }
 }

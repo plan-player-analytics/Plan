@@ -28,6 +28,7 @@ public class Confirmation {
     }
 
     public void confirm(CMDSender sender, Consumer<Boolean> confirmation) {
+        if (awaiting.getIfPresent(sender) != null) onCancel(sender);
         awaiting.put(sender, confirmation);
     }
 
