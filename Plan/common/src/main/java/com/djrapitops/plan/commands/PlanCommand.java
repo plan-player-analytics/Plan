@@ -251,6 +251,7 @@ public class PlanCommand {
                 .subcommand(backupCommand())
                 .subcommand(restoreCommand())
                 .subcommand(moveCommand())
+                .subcommand(clearCommand())
                 .inDepthDescription("Use different database subcommands to change the data in some way")
                 .build();
     }
@@ -287,6 +288,17 @@ public class PlanCommand {
                 .description("Move data between databases")
                 .inDepthDescription("Overwrites contents in the other database with the contents in another.")
                 .onCommand((sender, arguments) -> databaseCommands.onMove(commandName, sender, arguments))
+                .build();
+    }
+
+    private Subcommand clearCommand() {
+        return Subcommand.builder()
+                .aliases("clear")
+                .requirePermission("plan.data.clear")
+                .requiredArgument("MySQL/SQlite/H2", "Type of the database to remove data from.")
+                .description("Remove ALL Plan data from a database")
+                .inDepthDescription("Clears all Plan tables, removing all Plan-data in the process.")
+                .onCommand((sender, arguments) -> databaseCommands.onClear(commandName, sender, arguments))
                 .build();
     }
 }
