@@ -21,6 +21,7 @@ import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.exceptions.database.DBOpException;
+import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.query.QuerySvc;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
@@ -31,6 +32,7 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.SQLiteDB;
 import com.djrapitops.plan.storage.database.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.RemovePlayerTransaction;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -41,6 +43,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.util.Collections;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 @Singleton
@@ -53,6 +56,7 @@ public class DatabaseCommands {
     private final DBSystem dbSystem;
     private final SQLiteDB.Factory sqliteFactory;
     private final QuerySvc queryService;
+    private final Identifiers identifiers;
     private final PluginStatusCommands statusCommands;
     private final ErrorLogger errorLogger;
 
@@ -68,6 +72,7 @@ public class DatabaseCommands {
             SQLiteDB.Factory sqliteFactory,
             QuerySvc queryService,
             Formatters formatters,
+            Identifiers identifiers,
             PluginStatusCommands statusCommands,
             ErrorLogger errorLogger
     ) {
@@ -78,6 +83,7 @@ public class DatabaseCommands {
         this.dbSystem = dbSystem;
         this.sqliteFactory = sqliteFactory;
         this.queryService = queryService;
+        this.identifiers = identifiers;
         this.statusCommands = statusCommands;
         this.errorLogger = errorLogger;
 
@@ -300,6 +306,57 @@ public class DatabaseCommands {
         } catch (DBOpException | ExecutionException e) {
             sender.send(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
             errorLogger.log(L.ERROR, e, ErrorContext.builder().related(sender, fromDB.getName()).build());
+        }
+    }
+
+    public void onRemove(String mainCommand, CMDSender sender, Arguments arguments) {
+        String identifier = arguments.concatenate(" ");
+        UUID playerUUID = identifiers.getPlayerUUID(identifier);
+        if (playerUUID == null) {
+            throw new IllegalArgumentException("Player '" + identifier + "' was not found, they have no UUID.");
+        }
+
+        Database database = dbSystem.getDatabase();
+
+        if (sender.isPlayer()) {
+            sender.buildMessage()
+                    .addPart(colors.getMainColor() + "You are about to remove data of " + playerUUID + " from " + database.getType().getName()).newLine()
+                    .addPart("Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept")
+                    .addPart(" ")
+                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel")
+                    .send();
+        } else {
+            sender.buildMessage()
+                    .addPart(colors.getMainColor() + "You are about to remove data of " + playerUUID + " from " + database.getType().getName()).newLine()
+                    .addPart("Confirm: ").addPart("§a/" + mainCommand + " accept")
+                    .addPart(" ")
+                    .addPart("§c/" + mainCommand + " cancel")
+                    .send();
+        }
+
+        confirmation.confirm(sender, choice -> {
+            if (choice) {
+                performRemoval(sender, database, playerUUID);
+            } else {
+                sender.send(colors.getMainColor() + "Cancelled. No data was changed.");
+            }
+        });
+    }
+
+    private void performRemoval(CMDSender sender, Database database, UUID playerToRemove) {
+        try {
+            sender.send("Removing data of " + playerToRemove + " from " + database.getType().getName() + "..");
+
+            queryService.playerRemoved(playerToRemove);
+            database.executeTransaction(new RemovePlayerTransaction(playerToRemove))
+                    .get(); // Wait for completion
+
+            sender.send(locale.getString(ManageLang.PROGRESS_SUCCESS));
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (DBOpException | ExecutionException e) {
+            sender.send(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(sender, database.getType().getName(), playerToRemove).build());
         }
     }
 }
