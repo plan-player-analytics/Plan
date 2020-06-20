@@ -20,6 +20,7 @@ import com.djrapitops.plan.commands.OldPlanCommand;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.modules.APFModule;
 import com.djrapitops.plan.modules.PlaceholderModule;
+import com.djrapitops.plan.modules.ServerCommandModule;
 import com.djrapitops.plan.modules.SystemObjectProvidingModule;
 import com.djrapitops.plan.modules.sponge.SpongePlanModule;
 import com.djrapitops.plan.modules.sponge.SpongeServerPropertiesModule;
@@ -41,6 +42,7 @@ import javax.inject.Singleton;
         APFModule.class,
         PlaceholderModule.class,
 
+        ServerCommandModule.class,
         SpongeSuperClassBindingModule.class,
         SpongeServerPropertiesModule.class
 })
