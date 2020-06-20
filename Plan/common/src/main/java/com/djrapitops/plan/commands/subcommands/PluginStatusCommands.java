@@ -19,6 +19,7 @@ package com.djrapitops.plan.commands.subcommands;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
+import com.djrapitops.plan.gathering.listeners.Status;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
@@ -32,6 +33,7 @@ import com.djrapitops.plugin.logging.L;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 
 @Singleton
 public class PluginStatusCommands {
@@ -39,6 +41,7 @@ public class PluginStatusCommands {
     private final PlanPlugin plugin;
     private final Locale locale;
     private final DBSystem dbSystem;
+    private final Status status;
     private final VersionChecker versionChecker;
     private final ErrorLogger errorLogger;
 
@@ -47,12 +50,14 @@ public class PluginStatusCommands {
             PlanPlugin plugin,
             Locale locale,
             DBSystem dbSystem,
+            Status status,
             VersionChecker versionChecker,
             ErrorLogger errorLogger
     ) {
         this.plugin = plugin;
         this.locale = locale;
         this.dbSystem = dbSystem;
+        this.status = status;
         this.versionChecker = versionChecker;
         this.errorLogger = errorLogger;
     }
@@ -72,8 +77,19 @@ public class PluginStatusCommands {
     }
 
     public void onDisable(CMDSender sender, Arguments arguments) {
-        plugin.onDisable();
-        sender.send(locale.getString(CommandLang.DISABLE_DISABLED));
+        if (arguments.isEmpty()) {
+            plugin.onDisable();
+            sender.send(locale.getString(CommandLang.DISABLE_DISABLED));
+            return;
+        }
+
+        Optional<String> kickCountDisable = arguments.get(0).filter("kickcount"::equalsIgnoreCase);
+        if (kickCountDisable.isPresent()) {
+            status.setCountKicks(false);
+            sender.send(locale.getString(CommandLang.FEATURE_DISABLED, "Kick Counting"));
+        } else {
+            sender.send(locale.getString(CommandLang.FAIL_NO_SUCH_FEATURE, "'kickcount'"));
+        }
     }
 
     public void onInfo(CMDSender sender, Arguments arguments) {
