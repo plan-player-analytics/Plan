@@ -44,6 +44,7 @@ public class PlanCommand {
     private final RegistrationCommands registrationCommands;
     private final PluginStatusCommands statusCommands;
     private final DatabaseCommands databaseCommands;
+    private final DataUtilityCommands dataUtilityCommands;
     private final ErrorLogger errorLogger;
 
     @Inject
@@ -56,6 +57,7 @@ public class PlanCommand {
             RegistrationCommands registrationCommands,
             PluginStatusCommands statusCommands,
             DatabaseCommands databaseCommands,
+            DataUtilityCommands dataUtilityCommands,
             ErrorLogger errorLogger
     ) {
         this.commandName = commandName;
@@ -66,6 +68,7 @@ public class PlanCommand {
         this.registrationCommands = registrationCommands;
         this.statusCommands = statusCommands;
         this.databaseCommands = databaseCommands;
+        this.dataUtilityCommands = dataUtilityCommands;
         this.errorLogger = errorLogger;
     }
 
@@ -98,6 +101,8 @@ public class PlanCommand {
                 .subcommand(reloadCommand())
                 .subcommand(disableCommand())
                 .subcommand(databaseCommand())
+
+                .subcommand(export())
                 .exceptionHandler(this::handleException)
                 .build();
     }
@@ -183,7 +188,7 @@ public class PlanCommand {
                 .optionalArgument("username", "Username of another user. If not specified linked user is used.")
                 .description("Unregister user of Plan website")
                 .inDepthDescription("Use without arguments to unregister linked user, or with username argument to unregister another user.")
-                .onCommand(((sender, arguments) -> registrationCommands.onUnregister(commandName, sender, arguments)))
+                .onCommand((sender, arguments) -> registrationCommands.onUnregister(commandName, sender, arguments))
                 .build();
     }
 
@@ -324,6 +329,17 @@ public class PlanCommand {
                 .description("Set a server as uninstalled in the database.")
                 .inDepthDescription("Marks a server in Plan database as uninstalled so that it will not show up in server queries.")
                 .onCommand(databaseCommands::onUninstalled)
+                .build();
+    }
+
+    private Subcommand export() {
+        return Subcommand.builder()
+                .aliases("export")
+                .requirePermission("plan.data.export")
+                .optionalArgument("export kind", "players/server_json")
+                .description("Export html or json files manually.")
+                .inDepthDescription("Performs an export to export location defined in the config.")
+                .onCommand(dataUtilityCommands::onExport)
                 .build();
     }
 }
