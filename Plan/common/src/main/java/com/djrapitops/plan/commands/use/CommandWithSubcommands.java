@@ -124,7 +124,9 @@ public class CommandWithSubcommands extends Subcommand {
         }
 
         public Builder subcommand(Subcommand subcommand) {
-            command.subcommands.add(subcommand);
+            if (subcommand != null) {
+                command.subcommands.add(subcommand);
+            }
             return this;
         }
 

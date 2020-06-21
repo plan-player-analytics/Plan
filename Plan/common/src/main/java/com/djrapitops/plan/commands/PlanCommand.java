@@ -21,6 +21,7 @@ import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.commands.use.CommandWithSubcommands;
 import com.djrapitops.plan.commands.use.Subcommand;
+import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -40,6 +41,7 @@ public class PlanCommand {
     private final Locale locale;
     private final ColorScheme colors;
     private final Confirmation confirmation;
+    private final ImportSystem importSystem;
     private final LinkCommands linkCommands;
     private final RegistrationCommands registrationCommands;
     private final PluginStatusCommands statusCommands;
@@ -53,6 +55,7 @@ public class PlanCommand {
             Locale locale,
             ColorScheme colors,
             Confirmation confirmation,
+            ImportSystem importSystem,
             LinkCommands linkCommands,
             RegistrationCommands registrationCommands,
             PluginStatusCommands statusCommands,
@@ -64,6 +67,7 @@ public class PlanCommand {
         this.locale = locale;
         this.colors = colors;
         this.confirmation = confirmation;
+        this.importSystem = importSystem;
         this.linkCommands = linkCommands;
         this.registrationCommands = registrationCommands;
         this.statusCommands = statusCommands;
@@ -104,6 +108,7 @@ public class PlanCommand {
                 .subcommand(databaseCommand())
 
                 .subcommand(exportCommand())
+                .subcommand(importCommand())
                 .exceptionHandler(this::handleException)
                 .build();
     }
@@ -344,6 +349,18 @@ public class PlanCommand {
                 .build();
     }
 
+    private Subcommand importCommand() {
+        List<String> importerNames = importSystem.getImporterNames();
+        if (importerNames.isEmpty()) return null;
+        return Subcommand.builder()
+                .aliases("import")
+                .requirePermission("plan.data.import")
+                .optionalArgument("import kind", importerNames.toString())
+                .description("Import data.")
+                .inDepthDescription("Performs an import to load data into the database.")
+                .onCommand(dataUtilityCommands::onImport)
+                .build();
+    }
 
     private Subcommand jsonCommand() {
         return Subcommand.builder()

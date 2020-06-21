@@ -20,6 +20,8 @@ import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.delivery.export.Exporter;
 import com.djrapitops.plan.exceptions.ExportException;
+import com.djrapitops.plan.gathering.importing.ImportSystem;
+import com.djrapitops.plan.gathering.importing.importers.Importer;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -34,6 +36,7 @@ import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQuerie
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -45,6 +48,7 @@ public class DataUtilityCommands {
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final Exporter exporter;
+    private final ImportSystem importSystem;
     private final Processing processing;
 
     @Inject
@@ -54,6 +58,7 @@ public class DataUtilityCommands {
             DBSystem dbSystem,
             ServerInfo serverInfo,
             Exporter exporter,
+            ImportSystem importSystem,
             Processing processing
     ) {
         this.locale = locale;
@@ -61,6 +66,7 @@ public class DataUtilityCommands {
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.exporter = exporter;
+        this.importSystem = importSystem;
         this.processing = processing;
     }
 
@@ -148,4 +154,29 @@ public class DataUtilityCommands {
             sender.send(" §c✕: §f" + failed);
         }
     }
+
+    public void onImport(CMDSender sender, Arguments arguments) {
+        String importKind = arguments.get(0)
+                .orElseThrow(() -> new IllegalArgumentException("Accepts following as import kind: " + importSystem.getImporterNames()));
+
+        ensureDatabaseIsOpen();
+
+        findAndProcessImporter(sender, importKind);
+    }
+
+    private void findAndProcessImporter(CMDSender sender, String importKind) {
+        Optional<Importer> foundImporter = importSystem.getImporter(importKind);
+        if (foundImporter.isPresent()) {
+            Importer importer = foundImporter.get();
+            processing.submitNonCritical(() -> {
+                sender.send(locale.getString(ManageLang.PROGRESS_START));
+                importer.processImport();
+                sender.send(locale.getString(ManageLang.PROGRESS_SUCCESS));
+            });
+        } else {
+            sender.send(locale.getString(ManageLang.FAIL_IMPORTER_NOT_FOUND, importKind));
+        }
+    }
+
+
 }
