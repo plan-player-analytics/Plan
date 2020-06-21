@@ -224,4 +224,26 @@ public class LinkCommands {
                 .send();
     }
 
+    public void onJson(CMDSender sender, Arguments arguments) {
+        String identifier = arguments.concatenate(" ");
+        UUID playerUUID = identifiers.getPlayerUUID(identifier);
+        UUID senderUUID = sender.getUUID().orElse(null);
+        if (playerUUID == null) playerUUID = senderUUID;
+        if (playerUUID == null) {
+            throw new IllegalArgumentException("Player '" + identifier + "' was not found, they have no UUID.");
+        }
+
+        String playerName = dbSystem.getDatabase().query(UserIdentifierQueries.fetchPlayerNameOf(playerUUID))
+                .orElseThrow(() -> new IllegalArgumentException("Player '" + identifier + "' was not found in the database."));
+
+        if (sender.hasPermission("plan.json.other") || playerUUID.equals(senderUUID)) {
+            String address = getAddress(sender) + "/player/" + Html.encodeToURL(playerName) + "/raw";
+            sender.buildMessage()
+                    .addPart(colors.getMainColor() + "Player json: ")
+                    .apply(builder -> linkTo(builder, sender, address))
+                    .send();
+        } else {
+            throw new IllegalArgumentException("Insufficient permissions: You can not view other player's json.");
+        }
+    }
 }
