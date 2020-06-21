@@ -89,6 +89,7 @@ public class PlanCommand {
                 .subcommand(playerCommand())
                 .subcommand(playersCommand())
                 .subcommand(networkCommand())
+                .subcommand(jsonCommand())
 
                 .subcommand(registerCommand())
                 .subcommand(unregisterCommand())
@@ -102,7 +103,7 @@ public class PlanCommand {
                 .subcommand(disableCommand())
                 .subcommand(databaseCommand())
 
-                .subcommand(export())
+                .subcommand(exportCommand())
                 .exceptionHandler(this::handleException)
                 .build();
     }
@@ -259,7 +260,7 @@ public class PlanCommand {
                 .subcommand(moveCommand())
                 .subcommand(clearCommand())
                 .subcommand(removeCommand())
-                .subcommand(uninstalled())
+                .subcommand(uninstalledCommand())
                 .inDepthDescription("Use different database subcommands to change the data in some way")
                 .build();
     }
@@ -321,7 +322,7 @@ public class PlanCommand {
                 .build();
     }
 
-    private Subcommand uninstalled() {
+    private Subcommand uninstalledCommand() {
         return Subcommand.builder()
                 .aliases("uninstalled")
                 .requirePermission("plan.data.uninstalled")
@@ -332,7 +333,7 @@ public class PlanCommand {
                 .build();
     }
 
-    private Subcommand export() {
+    private Subcommand exportCommand() {
         return Subcommand.builder()
                 .aliases("export")
                 .requirePermission("plan.data.export")
@@ -340,6 +341,18 @@ public class PlanCommand {
                 .description("Export html or json files manually.")
                 .inDepthDescription("Performs an export to export location defined in the config.")
                 .onCommand(dataUtilityCommands::onExport)
+                .build();
+    }
+
+
+    private Subcommand jsonCommand() {
+        return Subcommand.builder()
+                .aliases("json")
+                .requirePermission("plan.json.self")
+                .requiredArgument("name/uuid", "Name or UUID of a player")
+                .description("View json of Player's raw data.")
+                .inDepthDescription("Allows you to download a player's data in json format. All of it.")
+                .onCommand(linkCommands::onJson)
                 .build();
     }
 }
