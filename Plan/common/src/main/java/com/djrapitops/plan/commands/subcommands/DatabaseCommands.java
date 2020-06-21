@@ -25,6 +25,8 @@ import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.query.QuerySvc;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.settings.locale.lang.ManageLang;
@@ -46,6 +48,7 @@ import com.djrapitops.plugin.logging.L;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -57,6 +60,7 @@ public class DatabaseCommands {
     private final Confirmation confirmation;
     private final ColorScheme colors;
     private final PlanFiles files;
+    private final PlanConfig config;
     private final DBSystem dbSystem;
     private final SQLiteDB.Factory sqliteFactory;
     private final QuerySvc queryService;
@@ -73,6 +77,7 @@ public class DatabaseCommands {
             Confirmation confirmation,
             ColorScheme colors,
             PlanFiles files,
+            PlanConfig config,
             DBSystem dbSystem,
             SQLiteDB.Factory sqliteFactory,
             QuerySvc queryService,
@@ -86,6 +91,7 @@ public class DatabaseCommands {
         this.confirmation = confirmation;
         this.colors = colors;
         this.files = files;
+        this.config = config;
         this.dbSystem = dbSystem;
         this.sqliteFactory = sqliteFactory;
         this.queryService = queryService;
@@ -389,5 +395,27 @@ public class DatabaseCommands {
         dbSystem.getDatabase().executeTransaction(new SetServerAsUninstalledTransaction(server.getUuid()));
         sender.send(locale.getString(ManageLang.PROGRESS_SUCCESS));
         sender.send("§aIf the server is still installed, it will automatically set itself as installed in the database.");
+    }
+
+    public void onHotswap(CMDSender sender, Arguments arguments) {
+        DBType toDB = arguments.get(0).flatMap(DBType::getForName)
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite/H2>"))));
+
+        try {
+            Database database = dbSystem.getActiveDatabaseByType(toDB);
+            database.init();
+
+            if (database.getState() == Database.State.CLOSED) {
+                return;
+            }
+
+            config.set(DatabaseSettings.TYPE, toDB.getName());
+            config.save();
+        } catch (DBOpException | IOException e) {
+            errorLogger.log(L.WARN, e, ErrorContext.builder().related(toDB).build());
+            sender.send(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
+            return;
+        }
+        statusCommands.onReload(sender, new Arguments(Collections.emptyList()));
     }
 }
