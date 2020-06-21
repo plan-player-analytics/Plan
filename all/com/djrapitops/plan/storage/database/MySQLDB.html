@@ -167,7 +167,7 @@ extends <a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html"
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;com.djrapitops.plan.storage.database.<a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html" title="class in com.djrapitops.plan.storage.database">SQLDB</a></h3>
-<code><a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html#config">config</a>, <a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html#errorHandler">errorHandler</a>, <a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html#locale">locale</a>, <a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html#logger">logger</a>, <a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html#runnableFactory">runnableFactory</a></code></li>
+<code><a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html#config">config</a>, <a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html#errorLogger">errorLogger</a>, <a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html#locale">locale</a>, <a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html#logger">logger</a>, <a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html#runnableFactory">runnableFactory</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="fields.inherited.from.class.com.djrapitops.plan.storage.database.AbstractDatabase">
@@ -190,13 +190,12 @@ extends <a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html"
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/storage/database/MySQLDB.html#MySQLDB-com.djrapitops.plan.settings.locale.Locale-com.djrapitops.plan.settings.config.PlanConfig-dagger.Lazy-com.djrapitops.plugin.task.RunnableFactory-com.djrapitops.plugin.logging.console.PluginLogger-com.djrapitops.plugin.benchmarking.Timings-com.djrapitops.plugin.logging.error.ErrorHandler-">MySQLDB</a></span>(<a href="../../../../../com/djrapitops/plan/settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/storage/database/MySQLDB.html#MySQLDB-com.djrapitops.plan.settings.locale.Locale-com.djrapitops.plan.settings.config.PlanConfig-dagger.Lazy-com.djrapitops.plugin.task.RunnableFactory-com.djrapitops.plugin.logging.console.PluginLogger-com.djrapitops.plan.utilities.logging.ErrorLogger-">MySQLDB</a></span>(<a href="../../../../../com/djrapitops/plan/settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
        <a href="../../../../../com/djrapitops/plan/settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
        dagger.Lazy&lt;<a href="../../../../../com/djrapitops/plan/identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&gt;&nbsp;serverInfo,
        com.djrapitops.plugin.task.RunnableFactory&nbsp;runnableFactory,
        com.djrapitops.plugin.logging.console.PluginLogger&nbsp;pluginLogger,
-       com.djrapitops.plugin.benchmarking.Timings&nbsp;timings,
-       com.djrapitops.plugin.logging.error.ErrorHandler&nbsp;errorHandler)</code>&nbsp;</td>
+       <a href="../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="class in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -305,7 +304,7 @@ extends <a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html"
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="MySQLDB-com.djrapitops.plan.settings.locale.Locale-com.djrapitops.plan.settings.config.PlanConfig-dagger.Lazy-com.djrapitops.plugin.task.RunnableFactory-com.djrapitops.plugin.logging.console.PluginLogger-com.djrapitops.plugin.benchmarking.Timings-com.djrapitops.plugin.logging.error.ErrorHandler-">
+<a name="MySQLDB-com.djrapitops.plan.settings.locale.Locale-com.djrapitops.plan.settings.config.PlanConfig-dagger.Lazy-com.djrapitops.plugin.task.RunnableFactory-com.djrapitops.plugin.logging.console.PluginLogger-com.djrapitops.plan.utilities.logging.ErrorLogger-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -317,8 +316,7 @@ public&nbsp;MySQLDB(<a href="../../../../../com/djrapitops/plan/settings/locale/
                        dagger.Lazy&lt;<a href="../../../../../com/djrapitops/plan/identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&gt;&nbsp;serverInfo,
                        com.djrapitops.plugin.task.RunnableFactory&nbsp;runnableFactory,
                        com.djrapitops.plugin.logging.console.PluginLogger&nbsp;pluginLogger,
-                       com.djrapitops.plugin.benchmarking.Timings&nbsp;timings,
-                       com.djrapitops.plugin.logging.error.ErrorHandler&nbsp;errorHandler)</pre>
+                       <a href="../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="class in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</pre>
 </li>
 </ul>
 </li>

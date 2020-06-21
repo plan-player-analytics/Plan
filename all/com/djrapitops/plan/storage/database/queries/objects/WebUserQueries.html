@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -109,7 +109,7 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public class <span class="typeNameLabel">WebUserQueries</span>
 extends java.lang.Object</pre>
-<div class="block">Queries for <a href="../../../../../../../com/djrapitops/plan/delivery/domain/WebUser.html" title="class in com.djrapitops.plan.delivery.domain"><code>WebUser</code></a> objects.</div>
+<div class="block">Queries for web user objects.</div>
 </li>
 </ul>
 </div>
@@ -129,14 +129,20 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.List&lt;<a href="../../../../../../../com/djrapitops/plan/delivery/domain/WebUser.html" title="class in com.djrapitops.plan.delivery.domain">WebUser</a>&gt;&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/objects/WebUserQueries.html#fetchAllPlanWebUsers--">fetchAllPlanWebUsers</a></span>()</code>
-<div class="block">Query database for all Plan WebUsers.</div>
-</td>
+<td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.List&lt;<a href="../../../../../../../com/djrapitops/plan/delivery/domain/auth/User.html" title="class in com.djrapitops.plan.delivery.domain.auth">User</a>&gt;&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/objects/WebUserQueries.html#fetchAllUsers--">fetchAllUsers</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Optional&lt;<a href="../../../../../../../com/djrapitops/plan/delivery/domain/WebUser.html" title="class in com.djrapitops.plan.delivery.domain">WebUser</a>&gt;&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/objects/WebUserQueries.html#fetchWebUser-java.lang.String-">fetchWebUser</a></span>(java.lang.String&nbsp;called)</code>&nbsp;</td>
+<td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Optional&lt;<a href="../../../../../../../com/djrapitops/plan/delivery/domain/auth/User.html" title="class in com.djrapitops.plan.delivery.domain.auth">User</a>&gt;&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/objects/WebUserQueries.html#fetchUser-java.lang.String-">fetchUser</a></span>(java.lang.String&nbsp;username)</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Optional&lt;<a href="../../../../../../../com/djrapitops/plan/delivery/domain/auth/User.html" title="class in com.djrapitops.plan.delivery.domain.auth">User</a>&gt;&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/objects/WebUserQueries.html#fetchUser-java.util.UUID-">fetchUser</a></span>(java.util.UUID&nbsp;linkedToUUID)</code>&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Optional&lt;<a href="../../../../../../../com/djrapitops/plan/delivery/domain/auth/User.html" title="class in com.djrapitops.plan.delivery.domain.auth">User</a>&gt;&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/objects/WebUserQueries.html#fetchUserLinkedTo-java.lang.String-">fetchUserLinkedTo</a></span>(java.lang.String&nbsp;playerName)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -160,27 +166,40 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="fetchAllPlanWebUsers--">
+<a name="fetchUser-java.lang.String-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>fetchAllPlanWebUsers</h4>
-<pre>public static&nbsp;<a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.List&lt;<a href="../../../../../../../com/djrapitops/plan/delivery/domain/WebUser.html" title="class in com.djrapitops.plan.delivery.domain">WebUser</a>&gt;&gt;&nbsp;fetchAllPlanWebUsers()</pre>
-<div class="block">Query database for all Plan WebUsers.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>List of Plan WebUsers.</dd>
-</dl>
+<h4>fetchUser</h4>
+<pre>public static&nbsp;<a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Optional&lt;<a href="../../../../../../../com/djrapitops/plan/delivery/domain/auth/User.html" title="class in com.djrapitops.plan.delivery.domain.auth">User</a>&gt;&gt;&nbsp;fetchUser(java.lang.String&nbsp;username)</pre>
 </li>
 </ul>
-<a name="fetchWebUser-java.lang.String-">
+<a name="fetchUserLinkedTo-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>fetchUserLinkedTo</h4>
+<pre>public static&nbsp;<a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Optional&lt;<a href="../../../../../../../com/djrapitops/plan/delivery/domain/auth/User.html" title="class in com.djrapitops.plan.delivery.domain.auth">User</a>&gt;&gt;&nbsp;fetchUserLinkedTo(java.lang.String&nbsp;playerName)</pre>
+</li>
+</ul>
+<a name="fetchUser-java.util.UUID-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>fetchUser</h4>
+<pre>public static&nbsp;<a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Optional&lt;<a href="../../../../../../../com/djrapitops/plan/delivery/domain/auth/User.html" title="class in com.djrapitops.plan.delivery.domain.auth">User</a>&gt;&gt;&nbsp;fetchUser(java.util.UUID&nbsp;linkedToUUID)</pre>
+</li>
+</ul>
+<a name="fetchAllUsers--">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>fetchWebUser</h4>
-<pre>public static&nbsp;<a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Optional&lt;<a href="../../../../../../../com/djrapitops/plan/delivery/domain/WebUser.html" title="class in com.djrapitops.plan.delivery.domain">WebUser</a>&gt;&gt;&nbsp;fetchWebUser(java.lang.String&nbsp;called)</pre>
+<h4>fetchAllUsers</h4>
+<pre>public static&nbsp;<a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.List&lt;<a href="../../../../../../../com/djrapitops/plan/delivery/domain/auth/User.html" title="class in com.djrapitops.plan.delivery.domain.auth">User</a>&gt;&gt;&nbsp;fetchAllUsers()</pre>
 </li>
 </ul>
 </li>

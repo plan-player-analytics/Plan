@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6};
+var methods = {"i0":6,"i1":6,"i2":6,"i3":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -100,7 +100,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>@Singleton
- @Component(modules={<a href="../../../com/djrapitops/plan/modules/nukkit/NukkitPlanModule.html" title="interface in com.djrapitops.plan.modules.nukkit">NukkitPlanModule.class</a>,<a href="../../../com/djrapitops/plan/modules/SystemObjectProvidingModule.html" title="class in com.djrapitops.plan.modules">SystemObjectProvidingModule.class</a>,<a href="../../../com/djrapitops/plan/modules/APFModule.html" title="class in com.djrapitops.plan.modules">APFModule.class</a>,<a href="../../../com/djrapitops/plan/modules/nukkit/NukkitServerPropertiesModule.html" title="class in com.djrapitops.plan.modules.nukkit">NukkitServerPropertiesModule.class</a>,<a href="../../../com/djrapitops/plan/modules/nukkit/NukkitSuperClassBindingModule.html" title="interface in com.djrapitops.plan.modules.nukkit">NukkitSuperClassBindingModule.class</a>})
+ @Component(modules={<a href="../../../com/djrapitops/plan/modules/nukkit/NukkitPlanModule.html" title="interface in com.djrapitops.plan.modules.nukkit">NukkitPlanModule.class</a>,<a href="../../../com/djrapitops/plan/modules/SystemObjectProvidingModule.html" title="class in com.djrapitops.plan.modules">SystemObjectProvidingModule.class</a>,<a href="../../../com/djrapitops/plan/modules/APFModule.html" title="class in com.djrapitops.plan.modules">APFModule.class</a>,<a href="../../../com/djrapitops/plan/modules/PlaceholderModule.html" title="interface in com.djrapitops.plan.modules">PlaceholderModule.class</a>,<a href="../../../com/djrapitops/plan/modules/nukkit/NukkitServerPropertiesModule.html" title="class in com.djrapitops.plan.modules.nukkit">NukkitServerPropertiesModule.class</a>,<a href="../../../com/djrapitops/plan/modules/nukkit/NukkitSuperClassBindingModule.html" title="interface in com.djrapitops.plan.modules.nukkit">NukkitSuperClassBindingModule.class</a>})
 public interface <span class="typeNameLabel">PlanNukkitComponent</span></pre>
 <div class="block">Dagger Component that constructs the plugin systems running on Nukkit.</div>
 </li>
@@ -141,14 +141,18 @@ public interface <span class="typeNameLabel">PlanNukkitComponent</span></pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code><a href="../../../com/djrapitops/plan/addons/placeholderapi/NukkitPlaceholderRegistrar.html" title="class in com.djrapitops.plan.addons.placeholderapi">NukkitPlaceholderRegistrar</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/djrapitops/plan/PlanNukkitComponent.html#placeholders--">placeholders</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../com/djrapitops/plan/commands/PlanCommand.html" title="class in com.djrapitops.plan.commands">PlanCommand</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/djrapitops/plan/PlanNukkitComponent.html#planCommand--">planCommand</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../com/djrapitops/plan/gathering/ServerShutdownSave.html" title="class in com.djrapitops.plan.gathering">ServerShutdownSave</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/djrapitops/plan/PlanNukkitComponent.html#serverShutdownSave--">serverShutdownSave</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="../../../com/djrapitops/plan/PlanSystem.html" title="class in com.djrapitops.plan">PlanSystem</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/djrapitops/plan/PlanNukkitComponent.html#system--">system</a></span>()</code>&nbsp;</td>
 </tr>
@@ -188,10 +192,19 @@ public interface <span class="typeNameLabel">PlanNukkitComponent</span></pre>
 <a name="serverShutdownSave--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>serverShutdownSave</h4>
 <pre><a href="../../../com/djrapitops/plan/gathering/ServerShutdownSave.html" title="class in com.djrapitops.plan.gathering">ServerShutdownSave</a>&nbsp;serverShutdownSave()</pre>
+</li>
+</ul>
+<a name="placeholders--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>placeholders</h4>
+<pre><a href="../../../com/djrapitops/plan/addons/placeholderapi/NukkitPlaceholderRegistrar.html" title="class in com.djrapitops.plan.addons.placeholderapi">NukkitPlaceholderRegistrar</a>&nbsp;placeholders()</pre>
 </li>
 </ul>
 </li>

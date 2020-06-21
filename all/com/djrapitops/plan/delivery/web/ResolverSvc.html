@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -177,10 +177,16 @@ implements <a href="../../../../../com/djrapitops/plan/delivery/web/ResolverServ
 </td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>java.util.List&lt;<a href="../../../../../com/djrapitops/plan/delivery/web/resolver/Resolver.html" title="interface in com.djrapitops.plan.delivery.web.resolver">Resolver</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/delivery/web/ResolverSvc.html#getResolvers-java.lang.String-">getResolvers</a></span>(java.lang.String&nbsp;target)</code>
+<div class="block">Obtain all Resolvers that match the target.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/delivery/web/ResolverSvc.html#register--">register</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/delivery/web/ResolverSvc.html#registerResolver-java.lang.String-java.lang.String-com.djrapitops.plan.delivery.web.resolver.Resolver-">registerResolver</a></span>(java.lang.String&nbsp;pluginName,
                 java.lang.String&nbsp;start,
@@ -188,7 +194,7 @@ implements <a href="../../../../../com/djrapitops/plan/delivery/web/ResolverServ
 <div class="block">Register a new resolver.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/delivery/web/ResolverSvc.html#registerResolverForMatches-java.lang.String-java.util.regex.Pattern-com.djrapitops.plan.delivery.web.resolver.Resolver-">registerResolverForMatches</a></span>(java.lang.String&nbsp;pluginName,
                           java.util.regex.Pattern&nbsp;pattern,
@@ -319,6 +325,29 @@ public&nbsp;ResolverSvc()</pre>
 <dd><code>target</code> - "/example/target"</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Resolver if registered or empty.</dd>
+</dl>
+</li>
+</ul>
+<a name="getResolvers-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getResolvers</h4>
+<pre>public&nbsp;java.util.List&lt;<a href="../../../../../com/djrapitops/plan/delivery/web/resolver/Resolver.html" title="interface in com.djrapitops.plan.delivery.web.resolver">Resolver</a>&gt;&nbsp;getResolvers(java.lang.String&nbsp;target)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../com/djrapitops/plan/delivery/web/ResolverService.html#getResolvers-java.lang.String-">ResolverService</a></code></span></div>
+<div class="block">Obtain all Resolvers that match the target.
+ <p>
+ If first returns Optional.empty next one should be used.
+ <p>
+ Requires Capability PAGE_EXTENSION_RESOLVERS_LIST.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../../com/djrapitops/plan/delivery/web/ResolverService.html#getResolvers-java.lang.String-">getResolvers</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../com/djrapitops/plan/delivery/web/ResolverService.html" title="interface in com.djrapitops.plan.delivery.web">ResolverService</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>target</code> - "/example/target"</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>List of Resolvers if registered or empty list.</dd>
 </dl>
 </li>
 </ul>

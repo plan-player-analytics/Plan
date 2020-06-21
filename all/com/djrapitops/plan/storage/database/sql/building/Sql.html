@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":9,"i6":9,"i7":9};
+var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":9,"i7":9,"i8":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -237,6 +237,10 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/sql/building/Sql.html#UNION_ALL">UNION_ALL</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/sql/building/Sql.html#WHERE">WHERE</a></span></code>&nbsp;</td>
 </tr>
 </table>
@@ -289,21 +293,25 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>abstract java.lang.String</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/sql/building/Sql.html#epochSecondToDate-java.lang.String-">epochSecondToDate</a></span>(java.lang.String&nbsp;sql)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/sql/building/Sql.html#dateToHourStamp-java.lang.String-">dateToHourStamp</a></span>(java.lang.String&nbsp;sql)</code>&nbsp;</td>
 </tr>
 <tr id="i5" class="rowColor">
+<td class="colFirst"><code>abstract java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/sql/building/Sql.html#epochSecondToDate-java.lang.String-">epochSecondToDate</a></span>(java.lang.String&nbsp;sql)</code>&nbsp;</td>
+</tr>
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>static long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/sql/building/Sql.html#getDayEpochMs-int-">getDayEpochMs</a></span>(int&nbsp;day)</code>
 <div class="block">Turn day of week to epoch ms.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/sql/building/Sql.html#setStringOrNull-java.sql.PreparedStatement-int-java.lang.String-">setStringOrNull</a></span>(java.sql.PreparedStatement&nbsp;statement,
                int&nbsp;index,
                java.lang.String&nbsp;value)</code>&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/sql/building/Sql.html#varchar-int-">varchar</a></span>(int&nbsp;length)</code>&nbsp;</td>
 </tr>
@@ -537,6 +545,19 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
+<a name="UNION_ALL">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>UNION_ALL</h4>
+<pre>public static final&nbsp;java.lang.String UNION_ALL</pre>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../../../../constant-values.html#com.djrapitops.plan.storage.database.sql.building.Sql.UNION_ALL">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
 <a name="AND">
 <!--   -->
 </a>
@@ -682,6 +703,15 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>dateToDayStamp</h4>
 <pre>public abstract&nbsp;java.lang.String&nbsp;dateToDayStamp(java.lang.String&nbsp;sql)</pre>
+</li>
+</ul>
+<a name="dateToHourStamp-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>dateToHourStamp</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;dateToHourStamp(java.lang.String&nbsp;sql)</pre>
 </li>
 </ul>
 <a name="dateToDayOfWeek-java.lang.String-">

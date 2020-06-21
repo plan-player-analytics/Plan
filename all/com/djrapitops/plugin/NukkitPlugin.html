@@ -17,8 +17,8 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var methods = {"i0":10,"i1":42,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -147,22 +147,18 @@ implements com.djrapitops.plugin.APFPlugin</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/djrapitops/plugin/NukkitPlugin.html#debugLogger">debugLogger</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>protected com.djrapitops.plugin.logging.error.DefaultErrorHandler</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/djrapitops/plugin/NukkitPlugin.html#errorHandler">errorHandler</a></span></code>&nbsp;</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code>protected com.djrapitops.plugin.logging.console.PluginLogger</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/djrapitops/plugin/NukkitPlugin.html#logger">logger</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/djrapitops/plugin/NukkitPlugin.html#reloading">reloading</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected com.djrapitops.plugin.task.RunnableFactory</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/djrapitops/plugin/NukkitPlugin.html#runnableFactory">runnableFactory</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected com.djrapitops.plugin.benchmarking.Timings</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/djrapitops/plugin/NukkitPlugin.html#timings">timings</a></span></code>&nbsp;</td>
 </tr>
@@ -200,7 +196,7 @@ implements com.djrapitops.plugin.APFPlugin</pre>
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
@@ -211,7 +207,9 @@ implements com.djrapitops.plugin.APFPlugin</pre>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>com.djrapitops.plugin.logging.error.ErrorHandler</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/djrapitops/plugin/NukkitPlugin.html#getErrorHandler--">getErrorHandler</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/djrapitops/plugin/NukkitPlugin.html#getErrorHandler--">getErrorHandler</a></span>()</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
+</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>com.djrapitops.plugin.logging.console.PluginLogger</code></td>
@@ -320,15 +318,6 @@ implements com.djrapitops.plugin.APFPlugin</pre>
 <li class="blockList">
 <h4>debugLogger</h4>
 <pre>protected final&nbsp;com.djrapitops.plugin.logging.debug.CombineDebugLogger debugLogger</pre>
-</li>
-</ul>
-<a name="errorHandler">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>errorHandler</h4>
-<pre>protected final&nbsp;com.djrapitops.plugin.logging.error.DefaultErrorHandler errorHandler</pre>
 </li>
 </ul>
 <a name="timings">
@@ -563,7 +552,9 @@ implements com.djrapitops.plugin.APFPlugin</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getErrorHandler</h4>
-<pre>public&nbsp;com.djrapitops.plugin.logging.error.ErrorHandler&nbsp;getErrorHandler()</pre>
+<pre>@Deprecated
+public&nbsp;com.djrapitops.plugin.logging.error.ErrorHandler&nbsp;getErrorHandler()</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>getErrorHandler</code>&nbsp;in interface&nbsp;<code>com.djrapitops.plugin.IPlugin</code></dd>

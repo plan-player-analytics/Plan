@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":6,"i2":10,"i3":10};
+var methods = {"i0":6,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -142,8 +142,8 @@ extends com.djrapitops.plugin.task.AbsRunnable</pre>
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>protected com.djrapitops.plugin.logging.error.ErrorHandler</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.html#errorHandler">errorHandler</a></span></code>&nbsp;</td>
+<td class="colFirst"><code>protected <a href="../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="class in com.djrapitops.plan.utilities.logging">ErrorLogger</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.html#errorLogger">errorLogger</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected com.djrapitops.plugin.logging.console.PluginLogger</code></td>
@@ -164,9 +164,8 @@ extends com.djrapitops.plugin.task.AbsRunnable</pre>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.html#TPSCounter-boolean-com.djrapitops.plugin.logging.console.PluginLogger-com.djrapitops.plugin.logging.error.ErrorHandler-">TPSCounter</a></span>(boolean&nbsp;gatherDiskSpace,
-          com.djrapitops.plugin.logging.console.PluginLogger&nbsp;logger,
-          com.djrapitops.plugin.logging.error.ErrorHandler&nbsp;errorHandler)</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.html#TPSCounter-com.djrapitops.plugin.logging.console.PluginLogger-com.djrapitops.plan.utilities.logging.ErrorLogger-">TPSCounter</a></span>(com.djrapitops.plugin.logging.console.PluginLogger&nbsp;logger,
+          <a href="../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="class in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -184,20 +183,12 @@ extends com.djrapitops.plugin.task.AbsRunnable</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>protected long</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.html#getFreeDiskSpace--">getFreeDiskSpace</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i1" class="rowColor">
 <td class="colFirst"><code>abstract void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.html#pulse--">pulse</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.html#run--">run</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.html#warmUp--">warmUp</a></span>()</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -237,13 +228,13 @@ extends com.djrapitops.plugin.task.AbsRunnable</pre>
 <pre>protected final&nbsp;com.djrapitops.plugin.logging.console.PluginLogger logger</pre>
 </li>
 </ul>
-<a name="errorHandler">
+<a name="errorLogger">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>errorHandler</h4>
-<pre>protected final&nbsp;com.djrapitops.plugin.logging.error.ErrorHandler errorHandler</pre>
+<h4>errorLogger</h4>
+<pre>protected final&nbsp;<a href="../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="class in com.djrapitops.plan.utilities.logging">ErrorLogger</a> errorLogger</pre>
 </li>
 </ul>
 </li>
@@ -254,15 +245,14 @@ extends com.djrapitops.plugin.task.AbsRunnable</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="TPSCounter-boolean-com.djrapitops.plugin.logging.console.PluginLogger-com.djrapitops.plugin.logging.error.ErrorHandler-">
+<a name="TPSCounter-com.djrapitops.plugin.logging.console.PluginLogger-com.djrapitops.plan.utilities.logging.ErrorLogger-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>TPSCounter</h4>
-<pre>public&nbsp;TPSCounter(boolean&nbsp;gatherDiskSpace,
-                  com.djrapitops.plugin.logging.console.PluginLogger&nbsp;logger,
-                  com.djrapitops.plugin.logging.error.ErrorHandler&nbsp;errorHandler)</pre>
+<pre>public&nbsp;TPSCounter(com.djrapitops.plugin.logging.console.PluginLogger&nbsp;logger,
+                  <a href="../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="class in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</pre>
 </li>
 </ul>
 </li>
@@ -273,15 +263,6 @@ extends com.djrapitops.plugin.task.AbsRunnable</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="warmUp--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>warmUp</h4>
-<pre>public&nbsp;void&nbsp;warmUp()</pre>
-</li>
-</ul>
 <a name="run--">
 <!--   -->
 </a>
@@ -294,19 +275,10 @@ extends com.djrapitops.plugin.task.AbsRunnable</pre>
 <a name="pulse--">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>pulse</h4>
 <pre>public abstract&nbsp;void&nbsp;pulse()</pre>
-</li>
-</ul>
-<a name="getFreeDiskSpace--">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>getFreeDiskSpace</h4>
-<pre>protected&nbsp;long&nbsp;getFreeDiskSpace()</pre>
 </li>
 </ul>
 </li>

@@ -142,7 +142,7 @@ extends <a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.h
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;com.djrapitops.plan.gathering.timed.<a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.html" title="class in com.djrapitops.plan.gathering.timed">TPSCounter</a></h3>
-<code><a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.html#errorHandler">errorHandler</a>, <a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.html#logger">logger</a></code></li>
+<code><a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.html#errorLogger">errorLogger</a>, <a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.html#logger">logger</a></code></li>
 </ul>
 </li>
 </ul>
@@ -158,12 +158,12 @@ extends <a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.h
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/gathering/timed/ServerTPSCounter.html#ServerTPSCounter-com.djrapitops.plan.gathering.ServerSensor-com.djrapitops.plan.settings.config.PlanConfig-com.djrapitops.plan.storage.database.DBSystem-com.djrapitops.plan.identification.ServerInfo-com.djrapitops.plugin.logging.console.PluginLogger-com.djrapitops.plugin.logging.error.ErrorHandler-">ServerTPSCounter</a></span>(<a href="../../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;<a href="../../../../../com/djrapitops/plan/gathering/timed/ServerTPSCounter.html" title="type parameter in ServerTPSCounter">W</a>&gt;&nbsp;serverSensor,
-                <a href="../../../../../com/djrapitops/plan/settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/gathering/timed/ServerTPSCounter.html#ServerTPSCounter-com.djrapitops.plan.gathering.ServerSensor-com.djrapitops.plan.gathering.timed.SystemUsageBuffer-com.djrapitops.plan.storage.database.DBSystem-com.djrapitops.plan.identification.ServerInfo-com.djrapitops.plugin.logging.console.PluginLogger-com.djrapitops.plan.utilities.logging.ErrorLogger-">ServerTPSCounter</a></span>(<a href="../../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;<a href="../../../../../com/djrapitops/plan/gathering/timed/ServerTPSCounter.html" title="type parameter in ServerTPSCounter">W</a>&gt;&nbsp;serverSensor,
+                <a href="../../../../../com/djrapitops/plan/gathering/timed/SystemUsageBuffer.html" title="class in com.djrapitops.plan.gathering.timed">SystemUsageBuffer</a>&nbsp;systemUsage,
                 <a href="../../../../../com/djrapitops/plan/storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
                 <a href="../../../../../com/djrapitops/plan/identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
                 com.djrapitops.plugin.logging.console.PluginLogger&nbsp;logger,
-                com.djrapitops.plugin.logging.error.ErrorHandler&nbsp;errorHandler)</code>&nbsp;</td>
+                <a href="../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="class in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -194,7 +194,7 @@ extends <a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.h
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.djrapitops.plan.gathering.timed.<a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.html" title="class in com.djrapitops.plan.gathering.timed">TPSCounter</a></h3>
-<code><a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.html#getFreeDiskSpace--">getFreeDiskSpace</a>, <a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.html#run--">run</a>, <a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.html#warmUp--">warmUp</a></code></li>
+<code><a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.html#run--">run</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.djrapitops.plugin.task.AbsRunnable">
@@ -224,7 +224,7 @@ extends <a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.h
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="ServerTPSCounter-com.djrapitops.plan.gathering.ServerSensor-com.djrapitops.plan.settings.config.PlanConfig-com.djrapitops.plan.storage.database.DBSystem-com.djrapitops.plan.identification.ServerInfo-com.djrapitops.plugin.logging.console.PluginLogger-com.djrapitops.plugin.logging.error.ErrorHandler-">
+<a name="ServerTPSCounter-com.djrapitops.plan.gathering.ServerSensor-com.djrapitops.plan.gathering.timed.SystemUsageBuffer-com.djrapitops.plan.storage.database.DBSystem-com.djrapitops.plan.identification.ServerInfo-com.djrapitops.plugin.logging.console.PluginLogger-com.djrapitops.plan.utilities.logging.ErrorLogger-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -232,11 +232,11 @@ extends <a href="../../../../../com/djrapitops/plan/gathering/timed/TPSCounter.h
 <h4>ServerTPSCounter</h4>
 <pre>@Inject
 public&nbsp;ServerTPSCounter(<a href="../../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;<a href="../../../../../com/djrapitops/plan/gathering/timed/ServerTPSCounter.html" title="type parameter in ServerTPSCounter">W</a>&gt;&nbsp;serverSensor,
-                                <a href="../../../../../com/djrapitops/plan/settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
+                                <a href="../../../../../com/djrapitops/plan/gathering/timed/SystemUsageBuffer.html" title="class in com.djrapitops.plan.gathering.timed">SystemUsageBuffer</a>&nbsp;systemUsage,
                                 <a href="../../../../../com/djrapitops/plan/storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
                                 <a href="../../../../../com/djrapitops/plan/identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
                                 com.djrapitops.plugin.logging.console.PluginLogger&nbsp;logger,
-                                com.djrapitops.plugin.logging.error.ErrorHandler&nbsp;errorHandler)</pre>
+                                <a href="../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="class in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</pre>
 </li>
 </ul>
 </li>

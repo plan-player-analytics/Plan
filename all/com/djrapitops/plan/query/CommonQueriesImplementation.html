@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -143,16 +143,22 @@ implements <a href="../../../../com/djrapitops/plan/query/CommonQueries.html" ti
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>long</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/djrapitops/plan/query/CommonQueriesImplementation.html#fetchCurrentSessionPlaytime-java.util.UUID-">fetchCurrentSessionPlaytime</a></span>(java.util.UUID&nbsp;playerUUID)</code>
+<div class="block">Get playtime of current online session.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/djrapitops/plan/query/CommonQueriesImplementation.html#fetchLastSeen-java.util.UUID-java.util.UUID-">fetchLastSeen</a></span>(java.util.UUID&nbsp;playerUUID,
              java.util.UUID&nbsp;serverUUID)</code>
 <div class="block">Fetch last seen Epoch ms for a player on a server.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/djrapitops/plan/query/CommonQueriesImplementation.html#fetchNameOf-java.util.UUID-">fetchNameOf</a></span>(java.util.UUID&nbsp;playerUUID)</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/djrapitops/plan/query/CommonQueriesImplementation.html#fetchPlaytime-java.util.UUID-java.util.UUID-long-long-">fetchPlaytime</a></span>(java.util.UUID&nbsp;playerUUID,
              java.util.UUID&nbsp;serverUUID,
@@ -161,11 +167,11 @@ implements <a href="../../../../com/djrapitops/plan/query/CommonQueries.html" ti
 <div class="block">Fetch playtime of a player on a server.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>java.util.Set&lt;java.util.UUID&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/djrapitops/plan/query/CommonQueriesImplementation.html#fetchServerUUIDs--">fetchServerUUIDs</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>java.util.Optional&lt;java.util.UUID&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/djrapitops/plan/query/CommonQueriesImplementation.html#fetchUUIDOf-java.lang.String-">fetchUUIDOf</a></span>(java.lang.String&nbsp;playerName)</code>&nbsp;</td>
 </tr>
@@ -215,6 +221,27 @@ implements <a href="../../../../com/djrapitops/plan/query/CommonQueries.html" ti
 <dd><code>before</code> - Data before this Epoch ms should be fetched</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Milliseconds the player has played with the defined parameters.</dd>
+</dl>
+</li>
+</ul>
+<a name="fetchCurrentSessionPlaytime-java.util.UUID-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>fetchCurrentSessionPlaytime</h4>
+<pre>public&nbsp;long&nbsp;fetchCurrentSessionPlaytime(java.util.UUID&nbsp;playerUUID)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../com/djrapitops/plan/query/CommonQueries.html#fetchCurrentSessionPlaytime-java.util.UUID-">CommonQueries</a></code></span></div>
+<div class="block">Get playtime of current online session.
+ <p>
+ Requires Capability QUERY_API_ACTIVE_SESSION_PLAYTIME</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../com/djrapitops/plan/query/CommonQueries.html#fetchCurrentSessionPlaytime-java.util.UUID-">fetchCurrentSessionPlaytime</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/djrapitops/plan/query/CommonQueries.html" title="interface in com.djrapitops.plan.query">CommonQueries</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>playerUUID</code> - UUID of the player.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Milliseconds the player has played during current online session. 0 if player is offline.</dd>
 </dl>
 </li>
 </ul>

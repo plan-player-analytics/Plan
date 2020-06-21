@@ -155,12 +155,16 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/djrapitops/plan/utilities/PassEncryptUtil.html#createHash-java.lang.String-">createHash</a></span>(java.lang.String&nbsp;password)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/djrapitops/plan/utilities/PassEncryptUtil.html#createHash-java.lang.String-">createHash</a></span>(java.lang.String&nbsp;password)</code>
+<div class="block">Create a hash of password + salt.</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/djrapitops/plan/utilities/PassEncryptUtil.html#verifyPassword-java.lang.String-java.lang.String-">verifyPassword</a></span>(java.lang.String&nbsp;password,
-              java.lang.String&nbsp;correctHash)</code>&nbsp;</td>
+              java.lang.String&nbsp;correctHash)</code>
+<div class="block">Verify that a password matches a hash.</div>
+</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -190,11 +194,15 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>createHash</h4>
-<pre>public static&nbsp;java.lang.String&nbsp;createHash(java.lang.String&nbsp;password)
-                                   throws <a href="../../../../com/djrapitops/plan/utilities/PassEncryptUtil.CannotPerformOperationException.html" title="class in com.djrapitops.plan.utilities">PassEncryptUtil.CannotPerformOperationException</a></pre>
+<pre>public static&nbsp;java.lang.String&nbsp;createHash(java.lang.String&nbsp;password)</pre>
+<div class="block">Create a hash of password + salt.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>password</code> - Password</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Hash + salt</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../../com/djrapitops/plan/utilities/PassEncryptUtil.CannotPerformOperationException.html" title="class in com.djrapitops.plan.utilities">PassEncryptUtil.CannotPerformOperationException</a></code></dd>
+<dd><code><a href="../../../../com/djrapitops/plan/utilities/PassEncryptUtil.CannotPerformOperationException.html" title="class in com.djrapitops.plan.utilities">PassEncryptUtil.CannotPerformOperationException</a></code> - If the hash creation fails</dd>
 </dl>
 </li>
 </ul>
@@ -205,13 +213,17 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>verifyPassword</h4>
 <pre>public static&nbsp;boolean&nbsp;verifyPassword(java.lang.String&nbsp;password,
-                                     java.lang.String&nbsp;correctHash)
-                              throws <a href="../../../../com/djrapitops/plan/utilities/PassEncryptUtil.CannotPerformOperationException.html" title="class in com.djrapitops.plan.utilities">PassEncryptUtil.CannotPerformOperationException</a>,
-                                     <a href="../../../../com/djrapitops/plan/utilities/PassEncryptUtil.InvalidHashException.html" title="class in com.djrapitops.plan.utilities">PassEncryptUtil.InvalidHashException</a></pre>
+                                     java.lang.String&nbsp;correctHash)</pre>
+<div class="block">Verify that a password matches a hash.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>password</code> - Password</dd>
+<dd><code>correctHash</code> - hash created with <a href="../../../../com/djrapitops/plan/utilities/PassEncryptUtil.html#createHash-java.lang.String-"><code>createHash(String)</code></a></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if match</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../../com/djrapitops/plan/utilities/PassEncryptUtil.CannotPerformOperationException.html" title="class in com.djrapitops.plan.utilities">PassEncryptUtil.CannotPerformOperationException</a></code></dd>
-<dd><code><a href="../../../../com/djrapitops/plan/utilities/PassEncryptUtil.InvalidHashException.html" title="class in com.djrapitops.plan.utilities">PassEncryptUtil.InvalidHashException</a></code></dd>
+<dd><code><a href="../../../../com/djrapitops/plan/utilities/PassEncryptUtil.CannotPerformOperationException.html" title="class in com.djrapitops.plan.utilities">PassEncryptUtil.CannotPerformOperationException</a></code> - If hashing fails</dd>
+<dd><code><a href="../../../../com/djrapitops/plan/utilities/PassEncryptUtil.InvalidHashException.html" title="class in com.djrapitops.plan.utilities">PassEncryptUtil.InvalidHashException</a></code> - If the hash is missing details.</dd>
 </dl>
 </li>
 </ul>

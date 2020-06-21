@@ -153,7 +153,7 @@ extends <a href="../../../com/djrapitops/plan/TaskSystem.html" title="class in c
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../com/djrapitops/plan/BungeeTaskSystem.html#BungeeTaskSystem-com.djrapitops.plan.PlanBungee-com.djrapitops.plan.settings.config.PlanConfig-com.djrapitops.plugin.task.RunnableFactory-com.djrapitops.plan.gathering.timed.ProxyTPSCounter-com.djrapitops.plan.gathering.timed.BungeePingCounter-com.djrapitops.plan.storage.upkeep.LogsFolderCleanTask-com.djrapitops.plan.settings.upkeep.NetworkConfigStoreTask-com.djrapitops.plan.storage.upkeep.DBCleanTask-com.djrapitops.plan.delivery.webserver.cache.JSONCache.CleanTask-com.djrapitops.plan.extension.ExtensionServerMethodCallerTask-">BungeeTaskSystem</a></span>(<a href="../../../com/djrapitops/plan/PlanBungee.html" title="class in com.djrapitops.plan">PlanBungee</a>&nbsp;plugin,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../com/djrapitops/plan/BungeeTaskSystem.html#BungeeTaskSystem-com.djrapitops.plan.PlanBungee-com.djrapitops.plan.settings.config.PlanConfig-com.djrapitops.plugin.task.RunnableFactory-com.djrapitops.plan.gathering.timed.ProxyTPSCounter-com.djrapitops.plan.gathering.timed.BungeePingCounter-com.djrapitops.plan.storage.upkeep.LogsFolderCleanTask-com.djrapitops.plan.settings.upkeep.NetworkConfigStoreTask-com.djrapitops.plan.storage.upkeep.DBCleanTask-com.djrapitops.plan.delivery.webserver.cache.JSONCache.CleanTask-com.djrapitops.plan.extension.ExtensionServerMethodCallerTask-com.djrapitops.plan.gathering.timed.SystemUsageBuffer.RamAndCpuTask-com.djrapitops.plan.gathering.timed.SystemUsageBuffer.DiskTask-">BungeeTaskSystem</a></span>(<a href="../../../com/djrapitops/plan/PlanBungee.html" title="class in com.djrapitops.plan">PlanBungee</a>&nbsp;plugin,
                 <a href="../../../com/djrapitops/plan/settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
                 com.djrapitops.plugin.task.RunnableFactory&nbsp;runnableFactory,
                 <a href="../../../com/djrapitops/plan/gathering/timed/ProxyTPSCounter.html" title="class in com.djrapitops.plan.gathering.timed">ProxyTPSCounter</a>&nbsp;tpsCounter,
@@ -162,7 +162,9 @@ extends <a href="../../../com/djrapitops/plan/TaskSystem.html" title="class in c
                 <a href="../../../com/djrapitops/plan/settings/upkeep/NetworkConfigStoreTask.html" title="class in com.djrapitops.plan.settings.upkeep">NetworkConfigStoreTask</a>&nbsp;networkConfigStoreTask,
                 <a href="../../../com/djrapitops/plan/storage/upkeep/DBCleanTask.html" title="class in com.djrapitops.plan.storage.upkeep">DBCleanTask</a>&nbsp;dbCleanTask,
                 <a href="../../../com/djrapitops/plan/delivery/webserver/cache/JSONCache.CleanTask.html" title="class in com.djrapitops.plan.delivery.webserver.cache">JSONCache.CleanTask</a>&nbsp;jsonCacheCleanTask,
-                <a href="../../../com/djrapitops/plan/extension/ExtensionServerMethodCallerTask.html" title="class in com.djrapitops.plan.extension">ExtensionServerMethodCallerTask</a>&nbsp;extensionServerMethodCallerTask)</code>&nbsp;</td>
+                <a href="../../../com/djrapitops/plan/extension/ExtensionServerMethodCallerTask.html" title="class in com.djrapitops.plan.extension">ExtensionServerMethodCallerTask</a>&nbsp;extensionServerMethodCallerTask,
+                <a href="../../../com/djrapitops/plan/gathering/timed/SystemUsageBuffer.RamAndCpuTask.html" title="class in com.djrapitops.plan.gathering.timed">SystemUsageBuffer.RamAndCpuTask</a>&nbsp;ramAndCpuTask,
+                <a href="../../../com/djrapitops/plan/gathering/timed/SystemUsageBuffer.DiskTask.html" title="class in com.djrapitops.plan.gathering.timed">SystemUsageBuffer.DiskTask</a>&nbsp;diskTask)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -214,7 +216,7 @@ extends <a href="../../../com/djrapitops/plan/TaskSystem.html" title="class in c
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="BungeeTaskSystem-com.djrapitops.plan.PlanBungee-com.djrapitops.plan.settings.config.PlanConfig-com.djrapitops.plugin.task.RunnableFactory-com.djrapitops.plan.gathering.timed.ProxyTPSCounter-com.djrapitops.plan.gathering.timed.BungeePingCounter-com.djrapitops.plan.storage.upkeep.LogsFolderCleanTask-com.djrapitops.plan.settings.upkeep.NetworkConfigStoreTask-com.djrapitops.plan.storage.upkeep.DBCleanTask-com.djrapitops.plan.delivery.webserver.cache.JSONCache.CleanTask-com.djrapitops.plan.extension.ExtensionServerMethodCallerTask-">
+<a name="BungeeTaskSystem-com.djrapitops.plan.PlanBungee-com.djrapitops.plan.settings.config.PlanConfig-com.djrapitops.plugin.task.RunnableFactory-com.djrapitops.plan.gathering.timed.ProxyTPSCounter-com.djrapitops.plan.gathering.timed.BungeePingCounter-com.djrapitops.plan.storage.upkeep.LogsFolderCleanTask-com.djrapitops.plan.settings.upkeep.NetworkConfigStoreTask-com.djrapitops.plan.storage.upkeep.DBCleanTask-com.djrapitops.plan.delivery.webserver.cache.JSONCache.CleanTask-com.djrapitops.plan.extension.ExtensionServerMethodCallerTask-com.djrapitops.plan.gathering.timed.SystemUsageBuffer.RamAndCpuTask-com.djrapitops.plan.gathering.timed.SystemUsageBuffer.DiskTask-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -230,7 +232,9 @@ public&nbsp;BungeeTaskSystem(<a href="../../../com/djrapitops/plan/PlanBungee.ht
                                 <a href="../../../com/djrapitops/plan/settings/upkeep/NetworkConfigStoreTask.html" title="class in com.djrapitops.plan.settings.upkeep">NetworkConfigStoreTask</a>&nbsp;networkConfigStoreTask,
                                 <a href="../../../com/djrapitops/plan/storage/upkeep/DBCleanTask.html" title="class in com.djrapitops.plan.storage.upkeep">DBCleanTask</a>&nbsp;dbCleanTask,
                                 <a href="../../../com/djrapitops/plan/delivery/webserver/cache/JSONCache.CleanTask.html" title="class in com.djrapitops.plan.delivery.webserver.cache">JSONCache.CleanTask</a>&nbsp;jsonCacheCleanTask,
-                                <a href="../../../com/djrapitops/plan/extension/ExtensionServerMethodCallerTask.html" title="class in com.djrapitops.plan.extension">ExtensionServerMethodCallerTask</a>&nbsp;extensionServerMethodCallerTask)</pre>
+                                <a href="../../../com/djrapitops/plan/extension/ExtensionServerMethodCallerTask.html" title="class in com.djrapitops.plan.extension">ExtensionServerMethodCallerTask</a>&nbsp;extensionServerMethodCallerTask,
+                                <a href="../../../com/djrapitops/plan/gathering/timed/SystemUsageBuffer.RamAndCpuTask.html" title="class in com.djrapitops.plan.gathering.timed">SystemUsageBuffer.RamAndCpuTask</a>&nbsp;ramAndCpuTask,
+                                <a href="../../../com/djrapitops/plan/gathering/timed/SystemUsageBuffer.DiskTask.html" title="class in com.djrapitops.plan.gathering.timed">SystemUsageBuffer.DiskTask</a>&nbsp;diskTask)</pre>
 </li>
 </ul>
 </li>

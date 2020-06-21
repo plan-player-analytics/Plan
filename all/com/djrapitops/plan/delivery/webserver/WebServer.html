@@ -133,12 +133,12 @@ implements <a href="../../../../../com/djrapitops/plan/SubSystem.html" title="in
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/delivery/webserver/WebServer.html#WebServer-com.djrapitops.plan.settings.locale.Locale-com.djrapitops.plan.storage.file.PlanFiles-com.djrapitops.plan.settings.config.PlanConfig-com.djrapitops.plan.identification.ServerInfo-com.djrapitops.plugin.logging.console.PluginLogger-com.djrapitops.plugin.logging.error.ErrorHandler-com.djrapitops.plan.delivery.webserver.RequestHandler-">WebServer</a></span>(<a href="../../../../../com/djrapitops/plan/settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/delivery/webserver/WebServer.html#WebServer-com.djrapitops.plan.settings.locale.Locale-com.djrapitops.plan.storage.file.PlanFiles-com.djrapitops.plan.settings.config.PlanConfig-com.djrapitops.plan.delivery.webserver.Addresses-com.djrapitops.plugin.logging.console.PluginLogger-com.djrapitops.plan.utilities.logging.ErrorLogger-com.djrapitops.plan.delivery.webserver.RequestHandler-">WebServer</a></span>(<a href="../../../../../com/djrapitops/plan/settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
          <a href="../../../../../com/djrapitops/plan/storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
          <a href="../../../../../com/djrapitops/plan/settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
-         <a href="../../../../../com/djrapitops/plan/identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
+         <a href="../../../../../com/djrapitops/plan/delivery/webserver/Addresses.html" title="class in com.djrapitops.plan.delivery.webserver">Addresses</a>&nbsp;addresses,
          com.djrapitops.plugin.logging.console.PluginLogger&nbsp;logger,
-         com.djrapitops.plugin.logging.error.ErrorHandler&nbsp;errorHandler,
+         <a href="../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="class in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
          <a href="../../../../../com/djrapitops/plan/delivery/webserver/RequestHandler.html" title="class in com.djrapitops.plan.delivery.webserver">RequestHandler</a>&nbsp;requestHandler)</code>&nbsp;</td>
 </tr>
 </table>
@@ -169,8 +169,8 @@ implements <a href="../../../../../com/djrapitops/plan/SubSystem.html" title="in
 </td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/delivery/webserver/WebServer.html#getAccessAddress--">getAccessAddress</a></span>()</code>&nbsp;</td>
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/delivery/webserver/WebServer.html#getPort--">getPort</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
@@ -210,7 +210,7 @@ implements <a href="../../../../../com/djrapitops/plan/SubSystem.html" title="in
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="WebServer-com.djrapitops.plan.settings.locale.Locale-com.djrapitops.plan.storage.file.PlanFiles-com.djrapitops.plan.settings.config.PlanConfig-com.djrapitops.plan.identification.ServerInfo-com.djrapitops.plugin.logging.console.PluginLogger-com.djrapitops.plugin.logging.error.ErrorHandler-com.djrapitops.plan.delivery.webserver.RequestHandler-">
+<a name="WebServer-com.djrapitops.plan.settings.locale.Locale-com.djrapitops.plan.storage.file.PlanFiles-com.djrapitops.plan.settings.config.PlanConfig-com.djrapitops.plan.delivery.webserver.Addresses-com.djrapitops.plugin.logging.console.PluginLogger-com.djrapitops.plan.utilities.logging.ErrorLogger-com.djrapitops.plan.delivery.webserver.RequestHandler-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -220,9 +220,9 @@ implements <a href="../../../../../com/djrapitops/plan/SubSystem.html" title="in
 public&nbsp;WebServer(<a href="../../../../../com/djrapitops/plan/settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
                          <a href="../../../../../com/djrapitops/plan/storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
                          <a href="../../../../../com/djrapitops/plan/settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
-                         <a href="../../../../../com/djrapitops/plan/identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
+                         <a href="../../../../../com/djrapitops/plan/delivery/webserver/Addresses.html" title="class in com.djrapitops.plan.delivery.webserver">Addresses</a>&nbsp;addresses,
                          com.djrapitops.plugin.logging.console.PluginLogger&nbsp;logger,
-                         com.djrapitops.plugin.logging.error.ErrorHandler&nbsp;errorHandler,
+                         <a href="../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="class in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
                          <a href="../../../../../com/djrapitops/plan/delivery/webserver/RequestHandler.html" title="class in com.djrapitops.plan.delivery.webserver">RequestHandler</a>&nbsp;requestHandler)</pre>
 </li>
 </ul>
@@ -303,13 +303,13 @@ public&nbsp;WebServer(<a href="../../../../../com/djrapitops/plan/settings/local
 <pre>public&nbsp;boolean&nbsp;isAuthRequired()</pre>
 </li>
 </ul>
-<a name="getAccessAddress--">
+<a name="getPort--">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>getAccessAddress</h4>
-<pre>public&nbsp;java.lang.String&nbsp;getAccessAddress()</pre>
+<h4>getPort</h4>
+<pre>public&nbsp;int&nbsp;getPort()</pre>
 </li>
 </ul>
 </li>

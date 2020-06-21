@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -134,7 +134,8 @@ implements <a href="../../../../../com/djrapitops/plan/SubSystem.html" title="in
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/delivery/webserver/WebServerSystem.html#WebServerSystem-com.djrapitops.plan.delivery.webserver.WebServer-">WebServerSystem</a></span>(<a href="../../../../../com/djrapitops/plan/delivery/webserver/WebServer.html" title="class in com.djrapitops.plan.delivery.webserver">WebServer</a>&nbsp;webServer)</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/delivery/webserver/WebServerSystem.html#WebServerSystem-com.djrapitops.plan.delivery.webserver.Addresses-com.djrapitops.plan.delivery.webserver.WebServer-">WebServerSystem</a></span>(<a href="../../../../../com/djrapitops/plan/delivery/webserver/Addresses.html" title="class in com.djrapitops.plan.delivery.webserver">Addresses</a>&nbsp;addresses,
+               <a href="../../../../../com/djrapitops/plan/delivery/webserver/WebServer.html" title="class in com.djrapitops.plan.delivery.webserver">WebServer</a>&nbsp;webServer)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -164,6 +165,10 @@ implements <a href="../../../../../com/djrapitops/plan/SubSystem.html" title="in
 </td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="../../../../../com/djrapitops/plan/delivery/webserver/Addresses.html" title="class in com.djrapitops.plan.delivery.webserver">Addresses</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/delivery/webserver/WebServerSystem.html#getAddresses--">getAddresses</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/djrapitops/plan/delivery/webserver/WebServer.html" title="class in com.djrapitops.plan.delivery.webserver">WebServer</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/delivery/webserver/WebServerSystem.html#getWebServer--">getWebServer</a></span>()</code>&nbsp;</td>
 </tr>
@@ -189,14 +194,15 @@ implements <a href="../../../../../com/djrapitops/plan/SubSystem.html" title="in
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="WebServerSystem-com.djrapitops.plan.delivery.webserver.WebServer-">
+<a name="WebServerSystem-com.djrapitops.plan.delivery.webserver.Addresses-com.djrapitops.plan.delivery.webserver.WebServer-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>WebServerSystem</h4>
 <pre>@Inject
-public&nbsp;WebServerSystem(<a href="../../../../../com/djrapitops/plan/delivery/webserver/WebServer.html" title="class in com.djrapitops.plan.delivery.webserver">WebServer</a>&nbsp;webServer)</pre>
+public&nbsp;WebServerSystem(<a href="../../../../../com/djrapitops/plan/delivery/webserver/Addresses.html" title="class in com.djrapitops.plan.delivery.webserver">Addresses</a>&nbsp;addresses,
+                               <a href="../../../../../com/djrapitops/plan/delivery/webserver/WebServer.html" title="class in com.djrapitops.plan.delivery.webserver">WebServer</a>&nbsp;webServer)</pre>
 </li>
 </ul>
 </li>
@@ -240,10 +246,19 @@ public&nbsp;WebServerSystem(<a href="../../../../../com/djrapitops/plan/delivery
 <a name="getWebServer--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getWebServer</h4>
 <pre>public&nbsp;<a href="../../../../../com/djrapitops/plan/delivery/webserver/WebServer.html" title="class in com.djrapitops.plan.delivery.webserver">WebServer</a>&nbsp;getWebServer()</pre>
+</li>
+</ul>
+<a name="getAddresses--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getAddresses</h4>
+<pre>public&nbsp;<a href="../../../../../com/djrapitops/plan/delivery/webserver/Addresses.html" title="class in com.djrapitops.plan.delivery.webserver">Addresses</a>&nbsp;getAddresses()</pre>
 </li>
 </ul>
 </li>

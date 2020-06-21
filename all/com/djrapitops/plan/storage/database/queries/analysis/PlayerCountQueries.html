@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -143,22 +143,56 @@ extends java.lang.Object</pre>
                         java.util.UUID&nbsp;serverUUID)</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.NavigableMap&lt;java.lang.Long,java.lang.Integer&gt;&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/analysis/PlayerCountQueries.html#hourlyNewPlayerCounts-long-long-long-">hourlyNewPlayerCounts</a></span>(long&nbsp;after,
+                     long&nbsp;before,
+                     long&nbsp;timeZoneOffset)</code>
+<div class="block">Fetch a EpochMs - Count map of new players on a server.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.NavigableMap&lt;java.lang.Long,java.lang.Integer&gt;&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/analysis/PlayerCountQueries.html#hourlyNewPlayerCounts-long-long-long-java.util.UUID-">hourlyNewPlayerCounts</a></span>(long&nbsp;after,
+                     long&nbsp;before,
+                     long&nbsp;timeZoneOffset,
+                     java.util.UUID&nbsp;serverUUID)</code>
+<div class="block">Fetch a EpochMs - Count map of new players on a server.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.NavigableMap&lt;java.lang.Long,java.lang.Integer&gt;&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/analysis/PlayerCountQueries.html#hourlyUniquePlayerCounts-long-long-long-">hourlyUniquePlayerCounts</a></span>(long&nbsp;after,
+                        long&nbsp;before,
+                        long&nbsp;timeZoneOffset)</code>
+<div class="block">Fetch a EpochMs - Count map of unique players on ALL servers.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.NavigableMap&lt;java.lang.Long,java.lang.Integer&gt;&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/analysis/PlayerCountQueries.html#hourlyUniquePlayerCounts-long-long-long-java.util.UUID-">hourlyUniquePlayerCounts</a></span>(long&nbsp;after,
+                        long&nbsp;before,
+                        long&nbsp;timeZoneOffset,
+                        java.util.UUID&nbsp;serverUUID)</code>
+<div class="block">Fetch a EpochMs - Count map of unique players on a server.</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.lang.Integer&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/analysis/PlayerCountQueries.html#newPlayerCount-long-long-">newPlayerCount</a></span>(long&nbsp;after,
               long&nbsp;before)</code>&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.lang.Integer&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/analysis/PlayerCountQueries.html#newPlayerCount-long-long-java.util.UUID-">newPlayerCount</a></span>(long&nbsp;after,
               long&nbsp;before,
               java.util.UUID&nbsp;serverUUID)</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.util.UUID,java.lang.Integer&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/analysis/PlayerCountQueries.html#newPlayerCounts-long-long-">newPlayerCounts</a></span>(long&nbsp;after,
                long&nbsp;before)</code>&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.NavigableMap&lt;java.lang.Long,java.lang.Integer&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/analysis/PlayerCountQueries.html#newPlayerCounts-long-long-long-">newPlayerCounts</a></span>(long&nbsp;after,
                long&nbsp;before,
@@ -166,7 +200,7 @@ extends java.lang.Object</pre>
 <div class="block">Fetch a EpochMs - Count map of new players on a server.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.NavigableMap&lt;java.lang.Long,java.lang.Integer&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/analysis/PlayerCountQueries.html#newPlayerCounts-long-long-long-java.util.UUID-">newPlayerCounts</a></span>(long&nbsp;after,
                long&nbsp;before,
@@ -175,35 +209,35 @@ extends java.lang.Object</pre>
 <div class="block">Fetch a EpochMs - Count map of new players on a server.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.lang.Integer&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/analysis/PlayerCountQueries.html#operators-java.util.UUID-">operators</a></span>(java.util.UUID&nbsp;serverUUID)</code>&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.lang.Integer&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/analysis/PlayerCountQueries.html#retainedPlayerCount-long-long-java.util.UUID-">retainedPlayerCount</a></span>(long&nbsp;after,
                    long&nbsp;before,
                    java.util.UUID&nbsp;serverUUID)</code>&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.lang.Integer&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/analysis/PlayerCountQueries.html#uniquePlayerCount-long-long-">uniquePlayerCount</a></span>(long&nbsp;after,
                  long&nbsp;before)</code>
 <div class="block">Fetch uniquePlayer count for ALL servers.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.lang.Integer&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/analysis/PlayerCountQueries.html#uniquePlayerCount-long-long-java.util.UUID-">uniquePlayerCount</a></span>(long&nbsp;after,
                  long&nbsp;before,
                  java.util.UUID&nbsp;serverUUID)</code>&nbsp;</td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.util.UUID,java.lang.Integer&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/analysis/PlayerCountQueries.html#uniquePlayerCounts-long-long-">uniquePlayerCounts</a></span>(long&nbsp;after,
                   long&nbsp;before)</code>&nbsp;</td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.NavigableMap&lt;java.lang.Long,java.lang.Integer&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/analysis/PlayerCountQueries.html#uniquePlayerCounts-long-long-long-">uniquePlayerCounts</a></span>(long&nbsp;after,
                   long&nbsp;before,
@@ -211,7 +245,7 @@ extends java.lang.Object</pre>
 <div class="block">Fetch a EpochMs - Count map of unique players on ALL servers.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.NavigableMap&lt;java.lang.Long,java.lang.Integer&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/storage/database/queries/analysis/PlayerCountQueries.html#uniquePlayerCounts-long-long-long-java.util.UUID-">uniquePlayerCounts</a></span>(long&nbsp;after,
                   long&nbsp;before,
@@ -303,6 +337,28 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
+<a name="hourlyUniquePlayerCounts-long-long-long-java.util.UUID-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>hourlyUniquePlayerCounts</h4>
+<pre>public static&nbsp;<a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.NavigableMap&lt;java.lang.Long,java.lang.Integer&gt;&gt;&nbsp;hourlyUniquePlayerCounts(long&nbsp;after,
+                                                                                                       long&nbsp;before,
+                                                                                                       long&nbsp;timeZoneOffset,
+                                                                                                       java.util.UUID&nbsp;serverUUID)</pre>
+<div class="block">Fetch a EpochMs - Count map of unique players on a server.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>after</code> - After epoch ms</dd>
+<dd><code>before</code> - Before epoch ms</dd>
+<dd><code>timeZoneOffset</code> - Offset from <code>TimeZone.getOffset(long)</code>, applied to the dates before grouping.</dd>
+<dd><code>serverUUID</code> - UUID of the Plan server</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Map: Epoch ms (Start of day at 0 AM, no offset) - How many unique players played that day</dd>
+</dl>
+</li>
+</ul>
 <a name="uniquePlayerCounts-long-long-long-">
 <!--   -->
 </a>
@@ -312,6 +368,26 @@ extends java.lang.Object</pre>
 <pre>public static&nbsp;<a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.NavigableMap&lt;java.lang.Long,java.lang.Integer&gt;&gt;&nbsp;uniquePlayerCounts(long&nbsp;after,
                                                                                                  long&nbsp;before,
                                                                                                  long&nbsp;timeZoneOffset)</pre>
+<div class="block">Fetch a EpochMs - Count map of unique players on ALL servers.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>after</code> - After epoch ms</dd>
+<dd><code>before</code> - Before epoch ms</dd>
+<dd><code>timeZoneOffset</code> - Offset from <code>TimeZone.getOffset(long)</code>, applied to the dates before grouping.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Map: Epoch ms (Start of day at 0 AM, no offset) - How many unique players played that day</dd>
+</dl>
+</li>
+</ul>
+<a name="hourlyUniquePlayerCounts-long-long-long-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>hourlyUniquePlayerCounts</h4>
+<pre>public static&nbsp;<a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.NavigableMap&lt;java.lang.Long,java.lang.Integer&gt;&gt;&nbsp;hourlyUniquePlayerCounts(long&nbsp;after,
+                                                                                                       long&nbsp;before,
+                                                                                                       long&nbsp;timeZoneOffset)</pre>
 <div class="block">Fetch a EpochMs - Count map of unique players on ALL servers.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -388,6 +464,28 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
+<a name="hourlyNewPlayerCounts-long-long-long-java.util.UUID-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>hourlyNewPlayerCounts</h4>
+<pre>public static&nbsp;<a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.NavigableMap&lt;java.lang.Long,java.lang.Integer&gt;&gt;&nbsp;hourlyNewPlayerCounts(long&nbsp;after,
+                                                                                                    long&nbsp;before,
+                                                                                                    long&nbsp;timeZoneOffset,
+                                                                                                    java.util.UUID&nbsp;serverUUID)</pre>
+<div class="block">Fetch a EpochMs - Count map of new players on a server.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>after</code> - After epoch ms</dd>
+<dd><code>before</code> - Before epoch ms</dd>
+<dd><code>timeZoneOffset</code> - Offset from <code>TimeZone.getOffset(long)</code>, applied to the dates before grouping.</dd>
+<dd><code>serverUUID</code> - UUID of the Plan server</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Map: Epoch ms (Start of day at 0 AM, no offset) - How many new players joined that day</dd>
+</dl>
+</li>
+</ul>
 <a name="newPlayerCounts-long-long-long-">
 <!--   -->
 </a>
@@ -397,6 +495,26 @@ extends java.lang.Object</pre>
 <pre>public static&nbsp;<a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.NavigableMap&lt;java.lang.Long,java.lang.Integer&gt;&gt;&nbsp;newPlayerCounts(long&nbsp;after,
                                                                                               long&nbsp;before,
                                                                                               long&nbsp;timeZoneOffset)</pre>
+<div class="block">Fetch a EpochMs - Count map of new players on a server.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>after</code> - After epoch ms</dd>
+<dd><code>before</code> - Before epoch ms</dd>
+<dd><code>timeZoneOffset</code> - Offset from <code>TimeZone.getOffset(long)</code>, applied to the dates before grouping.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Map: Epoch ms (Start of day at 0 AM, no offset) - How many new players joined that day</dd>
+</dl>
+</li>
+</ul>
+<a name="hourlyNewPlayerCounts-long-long-long-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>hourlyNewPlayerCounts</h4>
+<pre>public static&nbsp;<a href="../../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.NavigableMap&lt;java.lang.Long,java.lang.Integer&gt;&gt;&nbsp;hourlyNewPlayerCounts(long&nbsp;after,
+                                                                                                    long&nbsp;before,
+                                                                                                    long&nbsp;timeZoneOffset)</pre>
 <div class="block">Fetch a EpochMs - Count map of new players on a server.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>

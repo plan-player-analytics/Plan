@@ -159,7 +159,8 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/delivery/export/NetworkPageExporter.html#exportJSON-java.nio.file.Path-com.djrapitops.plan.identification.Server-">exportJSON</a></span>(java.nio.file.Path&nbsp;toDirectory,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/delivery/export/NetworkPageExporter.html#exportJSON-com.djrapitops.plan.delivery.export.ExportPaths-java.nio.file.Path-com.djrapitops.plan.identification.Server-">exportJSON</a></span>(<a href="../../../../../com/djrapitops/plan/delivery/export/ExportPaths.html" title="class in com.djrapitops.plan.delivery.export">ExportPaths</a>&nbsp;exportPaths,
+          java.nio.file.Path&nbsp;toDirectory,
           <a href="../../../../../com/djrapitops/plan/identification/Server.html" title="class in com.djrapitops.plan.identification">Server</a>&nbsp;server)</code>
 <div class="block">Perform export for a network page json payload.</div>
 </td>
@@ -228,18 +229,20 @@ public&nbsp;NetworkPageExporter(<a href="../../../../../com/djrapitops/plan/stor
 </dl>
 </li>
 </ul>
-<a name="exportJSON-java.nio.file.Path-com.djrapitops.plan.identification.Server-">
+<a name="exportJSON-com.djrapitops.plan.delivery.export.ExportPaths-java.nio.file.Path-com.djrapitops.plan.identification.Server-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>exportJSON</h4>
-<pre>public&nbsp;void&nbsp;exportJSON(java.nio.file.Path&nbsp;toDirectory,
+<pre>public&nbsp;void&nbsp;exportJSON(<a href="../../../../../com/djrapitops/plan/delivery/export/ExportPaths.html" title="class in com.djrapitops.plan.delivery.export">ExportPaths</a>&nbsp;exportPaths,
+                       java.nio.file.Path&nbsp;toDirectory,
                        <a href="../../../../../com/djrapitops/plan/identification/Server.html" title="class in com.djrapitops.plan.identification">Server</a>&nbsp;server)
                 throws java.io.IOException</pre>
 <div class="block">Perform export for a network page json payload.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>exportPaths</code> - </dd>
 <dd><code>toDirectory</code> - Path to Export directory</dd>
 <dd><code>server</code> - Server to export as Network page, <a href="../../../../../com/djrapitops/plan/identification/Server.html#isProxy--"><code>Server.isProxy()</code></a> assumed true.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>

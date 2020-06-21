@@ -1,6 +1,5 @@
 com.djrapitops.plan
 com.djrapitops.plan.addons.placeholderapi
-com.djrapitops.plan.addons.placeholderapi.placeholders
 com.djrapitops.plan.api
 com.djrapitops.plan.api.data
 com.djrapitops.plan.api.events
@@ -14,6 +13,7 @@ com.djrapitops.plan.data.plugin
 com.djrapitops.plan.data.store.containers
 com.djrapitops.plan.delivery
 com.djrapitops.plan.delivery.domain
+com.djrapitops.plan.delivery.domain.auth
 com.djrapitops.plan.delivery.domain.container
 com.djrapitops.plan.delivery.domain.keys
 com.djrapitops.plan.delivery.domain.mutators
@@ -42,6 +42,7 @@ com.djrapitops.plan.delivery.webserver
 com.djrapitops.plan.delivery.webserver.auth
 com.djrapitops.plan.delivery.webserver.cache
 com.djrapitops.plan.delivery.webserver.resolver
+com.djrapitops.plan.delivery.webserver.resolver.auth
 com.djrapitops.plan.delivery.webserver.resolver.json
 com.djrapitops.plan.exceptions
 com.djrapitops.plan.exceptions.connection
@@ -83,6 +84,7 @@ com.djrapitops.plan.modules.bungee
 com.djrapitops.plan.modules.nukkit
 com.djrapitops.plan.modules.sponge
 com.djrapitops.plan.modules.velocity
+com.djrapitops.plan.placeholder
 com.djrapitops.plan.processing
 com.djrapitops.plan.processing.processors.player
 com.djrapitops.plan.query
@@ -116,6 +118,7 @@ com.djrapitops.plan.utilities.analysis
 com.djrapitops.plan.utilities.comparators
 com.djrapitops.plan.utilities.html.icon
 com.djrapitops.plan.utilities.java
+com.djrapitops.plan.utilities.logging
 com.djrapitops.plan.version
 com.djrapitops.plugin
 com.djrapitops.plugin.command.nukkit

@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -48,7 +48,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li>Prev&nbsp;Class</li>
-<li><a href="../../../../../com/djrapitops/plan/utilities/java/Maps.html" title="class in com.djrapitops.plan.utilities.java"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../com/djrapitops/plan/utilities/java/Lists.Builder.html" title="class in com.djrapitops.plan.utilities.java"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../index.html?com/djrapitops/plan/utilities/java/Lists.html" target="_top">Frames</a></li>
@@ -72,7 +72,7 @@ var activeTableTab = "activeTableTab";
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
@@ -116,6 +116,25 @@ extends java.lang.Object</pre>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="nested.class.summary">
+<!--   -->
+</a>
+<h3>Nested Class Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Nested Class Summary table, listing nested classes, and an explanation">
+<caption><span>Nested Classes</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Class and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/utilities/java/Lists.Builder.html" title="class in com.djrapitops.plan.utilities.java">Lists.Builder</a>&lt;<a href="../../../../../com/djrapitops/plan/utilities/java/Lists.Builder.html" title="type parameter in Lists.Builder">V</a>&gt;</span></code>&nbsp;</td>
+</tr>
+</table>
+</li>
+</ul>
 <!-- ========== METHOD SUMMARY =========== -->
 <ul class="blockList">
 <li class="blockList"><a name="method.summary">
@@ -129,24 +148,28 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>static &lt;V&gt;&nbsp;<a href="../../../../../com/djrapitops/plan/utilities/java/Lists.Builder.html" title="class in com.djrapitops.plan.utilities.java">Lists.Builder</a>&lt;V&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/utilities/java/Lists.html#builder-java.lang.Class-">builder</a></span>(java.lang.Class&lt;V&gt;&nbsp;ofType)</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>static &lt;V,K&gt;&nbsp;java.util.List&lt;V&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/utilities/java/Lists.html#create-K-">create</a></span>(K&nbsp;key)</code>&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>static &lt;T extends V,V&gt;<br>java.util.List&lt;T&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/utilities/java/Lists.html#filter-java.util.Collection-java.util.function.Predicate-">filter</a></span>(java.util.Collection&lt;T&gt;&nbsp;original,
       java.util.function.Predicate&lt;V&gt;&nbsp;keep)</code>
 <div class="block">Efficient replacement for List#stream().filter(keep).collect(Collectors.toList()).</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static &lt;A,B&gt;&nbsp;java.util.List&lt;B&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/utilities/java/Lists.html#map-java.util.Collection-java.util.function.Function-">map</a></span>(java.util.Collection&lt;A&gt;&nbsp;original,
    java.util.function.Function&lt;A,B&gt;&nbsp;mapper)</code>
 <div class="block">Efficient replacement for List#stream().map(mapper).collect(Collectors.toList()).</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>static &lt;A,B&gt;&nbsp;java.util.Set&lt;B&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/utilities/java/Lists.html#mapUnique-java.util.Collection-java.util.function.Function-">mapUnique</a></span>(java.util.Collection&lt;A&gt;&nbsp;original,
          java.util.function.Function&lt;A,B&gt;&nbsp;mapper)</code>
@@ -184,6 +207,15 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>create</h4>
 <pre>public static&nbsp;&lt;V,K&gt;&nbsp;java.util.List&lt;V&gt;&nbsp;create(K&nbsp;key)</pre>
+</li>
+</ul>
+<a name="builder-java.lang.Class-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>builder</h4>
+<pre>public static&nbsp;&lt;V&gt;&nbsp;<a href="../../../../../com/djrapitops/plan/utilities/java/Lists.Builder.html" title="class in com.djrapitops.plan.utilities.java">Lists.Builder</a>&lt;V&gt;&nbsp;builder(java.lang.Class&lt;V&gt;&nbsp;ofType)</pre>
 </li>
 </ul>
 <a name="filter-java.util.Collection-java.util.function.Predicate-">
@@ -277,7 +309,7 @@ extends java.lang.Object</pre>
 <div class="subNav">
 <ul class="navList">
 <li>Prev&nbsp;Class</li>
-<li><a href="../../../../../com/djrapitops/plan/utilities/java/Maps.html" title="class in com.djrapitops.plan.utilities.java"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../com/djrapitops/plan/utilities/java/Lists.Builder.html" title="class in com.djrapitops.plan.utilities.java"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../index.html?com/djrapitops/plan/utilities/java/Lists.html" target="_top">Frames</a></li>
@@ -301,7 +333,7 @@ extends java.lang.Object</pre>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>

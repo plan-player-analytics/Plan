@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -133,19 +133,35 @@ extends java.lang.Object</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/djrapitops/plan/utilities/MiscUtils.html#close-java.lang.AutoCloseable...-">close</a></span>(java.lang.AutoCloseable...&nbsp;close)</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code>static long</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/djrapitops/plan/utilities/MiscUtils.html#dayAgo--">dayAgo</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/djrapitops/plan/utilities/MiscUtils.html#getPlayerName-java.lang.String:A-com.djrapitops.plugin.command.Sender-">getPlayerName</a></span>(java.lang.String[]&nbsp;args,
              com.djrapitops.plugin.command.Sender&nbsp;sender)</code>
 <div class="block">Get a players name that matches the given arguments or name of the sender.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/djrapitops/plan/utilities/MiscUtils.html#getPlayerName-java.lang.String:A-com.djrapitops.plugin.command.Sender-com.djrapitops.plan.settings.Permissions-">getPlayerName</a></span>(java.lang.String[]&nbsp;args,
              com.djrapitops.plugin.command.Sender&nbsp;sender,
              <a href="../../../../com/djrapitops/plan/settings/Permissions.html" title="enum in com.djrapitops.plan.settings">Permissions</a>&nbsp;perm)</code>
 <div class="block">Used by the inspect command.</div>
 </td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>static long</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/djrapitops/plan/utilities/MiscUtils.html#monthAgo--">monthAgo</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>static long</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/djrapitops/plan/utilities/MiscUtils.html#now--">now</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>static long</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/djrapitops/plan/utilities/MiscUtils.html#weekAgo--">weekAgo</a></span>()</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -210,10 +226,46 @@ extends java.lang.Object</pre>
 <a name="close-java.lang.AutoCloseable...-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>close</h4>
 <pre>public static&nbsp;void&nbsp;close(java.lang.AutoCloseable...&nbsp;close)</pre>
+</li>
+</ul>
+<a name="now--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>now</h4>
+<pre>public static&nbsp;long&nbsp;now()</pre>
+</li>
+</ul>
+<a name="dayAgo--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>dayAgo</h4>
+<pre>public static&nbsp;long&nbsp;dayAgo()</pre>
+</li>
+</ul>
+<a name="weekAgo--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>weekAgo</h4>
+<pre>public static&nbsp;long&nbsp;weekAgo()</pre>
+</li>
+</ul>
+<a name="monthAgo--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>monthAgo</h4>
+<pre>public static&nbsp;long&nbsp;monthAgo()</pre>
 </li>
 </ul>
 </li>

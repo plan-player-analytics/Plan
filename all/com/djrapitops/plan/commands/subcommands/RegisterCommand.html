@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10};
+var methods = {"i0":10,"i1":10,"i2":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -139,12 +139,13 @@ extends com.djrapitops.plugin.command.CommandNode</pre>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/commands/subcommands/RegisterCommand.html#RegisterCommand-com.djrapitops.plan.settings.locale.Locale-com.djrapitops.plan.processing.Processing-com.djrapitops.plan.storage.database.DBSystem-com.djrapitops.plan.delivery.webserver.WebServer-com.djrapitops.plugin.logging.console.PluginLogger-com.djrapitops.plugin.logging.error.ErrorHandler-">RegisterCommand</a></span>(<a href="../../../../../com/djrapitops/plan/settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/commands/subcommands/RegisterCommand.html#RegisterCommand-com.djrapitops.plan.settings.locale.Locale-com.djrapitops.plan.processing.Processing-com.djrapitops.plan.delivery.webserver.Addresses-com.djrapitops.plan.storage.database.DBSystem-com.djrapitops.plan.identification.UUIDUtility-com.djrapitops.plugin.logging.console.PluginLogger-com.djrapitops.plan.utilities.logging.ErrorLogger-">RegisterCommand</a></span>(<a href="../../../../../com/djrapitops/plan/settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
                <a href="../../../../../com/djrapitops/plan/processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
+               <a href="../../../../../com/djrapitops/plan/delivery/webserver/Addresses.html" title="class in com.djrapitops.plan.delivery.webserver">Addresses</a>&nbsp;addresses,
                <a href="../../../../../com/djrapitops/plan/storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
-               <a href="../../../../../com/djrapitops/plan/delivery/webserver/WebServer.html" title="class in com.djrapitops.plan.delivery.webserver">WebServer</a>&nbsp;webServer,
+               <a href="../../../../../com/djrapitops/plan/identification/UUIDUtility.html" title="class in com.djrapitops.plan.identification">UUIDUtility</a>&nbsp;uuidUtility,
                com.djrapitops.plugin.logging.console.PluginLogger&nbsp;logger,
-               com.djrapitops.plugin.logging.error.ErrorHandler&nbsp;errorHandler)</code>&nbsp;</td>
+               <a href="../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="class in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -166,6 +167,16 @@ extends com.djrapitops.plugin.command.CommandNode</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/commands/subcommands/RegisterCommand.html#onCommand-com.djrapitops.plugin.command.Sender-java.lang.String-java.lang.String:A-">onCommand</a></span>(com.djrapitops.plugin.command.Sender&nbsp;sender,
          java.lang.String&nbsp;commandLabel,
          java.lang.String[]&nbsp;args)</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/commands/subcommands/RegisterCommand.html#registerUsingCode-com.djrapitops.plugin.command.Sender-java.lang.String-">registerUsingCode</a></span>(com.djrapitops.plugin.command.Sender&nbsp;sender,
+                 java.lang.String&nbsp;code)</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/commands/subcommands/RegisterCommand.html#registerUsingLegacy-com.djrapitops.plugin.command.Sender-com.djrapitops.plan.commands.Arguments-">registerUsingLegacy</a></span>(com.djrapitops.plugin.command.Sender&nbsp;sender,
+                   <a href="../../../../../com/djrapitops/plan/commands/Arguments.html" title="class in com.djrapitops.plan.commands">Arguments</a>&nbsp;arguments)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -196,7 +207,7 @@ extends com.djrapitops.plugin.command.CommandNode</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="RegisterCommand-com.djrapitops.plan.settings.locale.Locale-com.djrapitops.plan.processing.Processing-com.djrapitops.plan.storage.database.DBSystem-com.djrapitops.plan.delivery.webserver.WebServer-com.djrapitops.plugin.logging.console.PluginLogger-com.djrapitops.plugin.logging.error.ErrorHandler-">
+<a name="RegisterCommand-com.djrapitops.plan.settings.locale.Locale-com.djrapitops.plan.processing.Processing-com.djrapitops.plan.delivery.webserver.Addresses-com.djrapitops.plan.storage.database.DBSystem-com.djrapitops.plan.identification.UUIDUtility-com.djrapitops.plugin.logging.console.PluginLogger-com.djrapitops.plan.utilities.logging.ErrorLogger-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -205,10 +216,11 @@ extends com.djrapitops.plugin.command.CommandNode</pre>
 <pre>@Inject
 public&nbsp;RegisterCommand(<a href="../../../../../com/djrapitops/plan/settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
                                <a href="../../../../../com/djrapitops/plan/processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
+                               <a href="../../../../../com/djrapitops/plan/delivery/webserver/Addresses.html" title="class in com.djrapitops.plan.delivery.webserver">Addresses</a>&nbsp;addresses,
                                <a href="../../../../../com/djrapitops/plan/storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
-                               <a href="../../../../../com/djrapitops/plan/delivery/webserver/WebServer.html" title="class in com.djrapitops.plan.delivery.webserver">WebServer</a>&nbsp;webServer,
+                               <a href="../../../../../com/djrapitops/plan/identification/UUIDUtility.html" title="class in com.djrapitops.plan.identification">UUIDUtility</a>&nbsp;uuidUtility,
                                com.djrapitops.plugin.logging.console.PluginLogger&nbsp;logger,
-                               com.djrapitops.plugin.logging.error.ErrorHandler&nbsp;errorHandler)</pre>
+                               <a href="../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="class in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</pre>
 </li>
 </ul>
 </li>
@@ -222,7 +234,7 @@ public&nbsp;RegisterCommand(<a href="../../../../../com/djrapitops/plan/settings
 <a name="onCommand-com.djrapitops.plugin.command.Sender-java.lang.String-java.lang.String:A-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>onCommand</h4>
 <pre>public&nbsp;void&nbsp;onCommand(com.djrapitops.plugin.command.Sender&nbsp;sender,
@@ -232,6 +244,26 @@ public&nbsp;RegisterCommand(<a href="../../../../../com/djrapitops/plan/settings
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>onCommand</code>&nbsp;in class&nbsp;<code>com.djrapitops.plugin.command.CommandNode</code></dd>
 </dl>
+</li>
+</ul>
+<a name="registerUsingCode-com.djrapitops.plugin.command.Sender-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>registerUsingCode</h4>
+<pre>public&nbsp;void&nbsp;registerUsingCode(com.djrapitops.plugin.command.Sender&nbsp;sender,
+                              java.lang.String&nbsp;code)</pre>
+</li>
+</ul>
+<a name="registerUsingLegacy-com.djrapitops.plugin.command.Sender-com.djrapitops.plan.commands.Arguments-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>registerUsingLegacy</h4>
+<pre>public&nbsp;void&nbsp;registerUsingLegacy(com.djrapitops.plugin.command.Sender&nbsp;sender,
+                                <a href="../../../../../com/djrapitops/plan/commands/Arguments.html" title="class in com.djrapitops.plan.commands">Arguments</a>&nbsp;arguments)</pre>
 </li>
 </ul>
 </li>

@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -139,7 +139,7 @@ extends java.lang.Object</pre>
            dagger.Lazy&lt;<a href="../../../../../../com/djrapitops/plan/delivery/formatting/Formatters.html" title="class in com.djrapitops.plan.delivery.formatting">Formatters</a>&gt;&nbsp;formatters,
            dagger.Lazy&lt;com.djrapitops.plugin.logging.debug.DebugLogger&gt;&nbsp;debugLogger,
            dagger.Lazy&lt;com.djrapitops.plugin.benchmarking.Timings&gt;&nbsp;timings,
-           dagger.Lazy&lt;com.djrapitops.plugin.logging.error.ErrorHandler&gt;&nbsp;errorHandler)</code>&nbsp;</td>
+           dagger.Lazy&lt;<a href="../../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="class in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&gt;&nbsp;errorLogger)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -185,18 +185,26 @@ extends java.lang.Object</pre>
                  java.lang.Throwable&nbsp;error)</code>&nbsp;</td>
 </tr>
 <tr id="i6" class="altColor">
+<td class="colFirst"><code><a href="../../../../../../com/djrapitops/plan/delivery/rendering/pages/Page.html" title="interface in com.djrapitops.plan.delivery.rendering.pages">Page</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/delivery/rendering/pages/PageFactory.html#loginPage--">loginPage</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../../com/djrapitops/plan/delivery/rendering/pages/NetworkPage.html" title="class in com.djrapitops.plan.delivery.rendering.pages">NetworkPage</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/delivery/rendering/pages/PageFactory.html#networkPage--">networkPage</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="../../../../../../com/djrapitops/plan/delivery/rendering/pages/PlayerPage.html" title="class in com.djrapitops.plan.delivery.rendering.pages">PlayerPage</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/delivery/rendering/pages/PageFactory.html#playerPage-java.util.UUID-">playerPage</a></span>(java.util.UUID&nbsp;playerUUID)</code>&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../../com/djrapitops/plan/delivery/rendering/pages/PlayersPage.html" title="class in com.djrapitops.plan.delivery.rendering.pages">PlayersPage</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/delivery/rendering/pages/PageFactory.html#playersPage--">playersPage</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
+<td class="colFirst"><code><a href="../../../../../../com/djrapitops/plan/delivery/rendering/pages/Page.html" title="interface in com.djrapitops.plan.delivery.rendering.pages">Page</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/delivery/rendering/pages/PageFactory.html#registerPage--">registerPage</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../../com/djrapitops/plan/delivery/rendering/pages/Page.html" title="interface in com.djrapitops.plan.delivery.rendering.pages">Page</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/delivery/rendering/pages/PageFactory.html#serverPage-java.util.UUID-">serverPage</a></span>(java.util.UUID&nbsp;serverUUID)</code>
 <div class="block">Create a server page.</div>
@@ -241,7 +249,7 @@ public&nbsp;PageFactory(dagger.Lazy&lt;<a href="../../../../../../com/djrapitops
                            dagger.Lazy&lt;<a href="../../../../../../com/djrapitops/plan/delivery/formatting/Formatters.html" title="class in com.djrapitops.plan.delivery.formatting">Formatters</a>&gt;&nbsp;formatters,
                            dagger.Lazy&lt;com.djrapitops.plugin.logging.debug.DebugLogger&gt;&nbsp;debugLogger,
                            dagger.Lazy&lt;com.djrapitops.plugin.benchmarking.Timings&gt;&nbsp;timings,
-                           dagger.Lazy&lt;com.djrapitops.plugin.logging.error.ErrorHandler&gt;&nbsp;errorHandler)</pre>
+                           dagger.Lazy&lt;<a href="../../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="class in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&gt;&nbsp;errorLogger)</pre>
 </li>
 </ul>
 </li>
@@ -381,11 +389,39 @@ public&nbsp;PageFactory(dagger.Lazy&lt;<a href="../../../../../../com/djrapitops
 <a name="getResource-java.lang.String-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getResource</h4>
 <pre>public&nbsp;java.lang.String&nbsp;getResource(java.lang.String&nbsp;name)
                              throws java.io.IOException</pre>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.io.IOException</code></dd>
+</dl>
+</li>
+</ul>
+<a name="loginPage--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>loginPage</h4>
+<pre>public&nbsp;<a href="../../../../../../com/djrapitops/plan/delivery/rendering/pages/Page.html" title="interface in com.djrapitops.plan.delivery.rendering.pages">Page</a>&nbsp;loginPage()
+               throws java.io.IOException</pre>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.io.IOException</code></dd>
+</dl>
+</li>
+</ul>
+<a name="registerPage--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>registerPage</h4>
+<pre>public&nbsp;<a href="../../../../../../com/djrapitops/plan/delivery/rendering/pages/Page.html" title="interface in com.djrapitops.plan.delivery.rendering.pages">Page</a>&nbsp;registerPage()
+                  throws java.io.IOException</pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.io.IOException</code></dd>

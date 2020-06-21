@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10};
+var methods = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -128,7 +128,8 @@ extends java.lang.Object</pre>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/delivery/webserver/ResponseSender.html#ResponseSender-com.sun.net.httpserver.HttpExchange-com.djrapitops.plan.delivery.web.resolver.Response-">ResponseSender</a></span>(com.sun.net.httpserver.HttpExchange&nbsp;exchange,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/delivery/webserver/ResponseSender.html#ResponseSender-com.djrapitops.plan.delivery.webserver.Addresses-com.sun.net.httpserver.HttpExchange-com.djrapitops.plan.delivery.web.resolver.Response-">ResponseSender</a></span>(<a href="../../../../../com/djrapitops/plan/delivery/webserver/Addresses.html" title="class in com.djrapitops.plan.delivery.webserver">Addresses</a>&nbsp;addresses,
+              com.sun.net.httpserver.HttpExchange&nbsp;exchange,
               <a href="../../../../../com/djrapitops/plan/delivery/web/resolver/Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a>&nbsp;response)</code>&nbsp;</td>
 </tr>
 </table>
@@ -149,6 +150,10 @@ extends java.lang.Object</pre>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/delivery/webserver/ResponseSender.html#send--">send</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/delivery/webserver/ResponseSender.html#sendHeadResponse--">sendHeadResponse</a></span>()</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -172,13 +177,14 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="ResponseSender-com.sun.net.httpserver.HttpExchange-com.djrapitops.plan.delivery.web.resolver.Response-">
+<a name="ResponseSender-com.djrapitops.plan.delivery.webserver.Addresses-com.sun.net.httpserver.HttpExchange-com.djrapitops.plan.delivery.web.resolver.Response-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>ResponseSender</h4>
-<pre>public&nbsp;ResponseSender(com.sun.net.httpserver.HttpExchange&nbsp;exchange,
+<pre>public&nbsp;ResponseSender(<a href="../../../../../com/djrapitops/plan/delivery/webserver/Addresses.html" title="class in com.djrapitops.plan.delivery.webserver">Addresses</a>&nbsp;addresses,
+                      com.sun.net.httpserver.HttpExchange&nbsp;exchange,
                       <a href="../../../../../com/djrapitops/plan/delivery/web/resolver/Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a>&nbsp;response)</pre>
 </li>
 </ul>
@@ -193,11 +199,25 @@ extends java.lang.Object</pre>
 <a name="send--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>send</h4>
 <pre>public&nbsp;void&nbsp;send()
           throws java.io.IOException</pre>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.io.IOException</code></dd>
+</dl>
+</li>
+</ul>
+<a name="sendHeadResponse--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>sendHeadResponse</h4>
+<pre>public&nbsp;void&nbsp;sendHeadResponse()
+                      throws java.io.IOException</pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.io.IOException</code></dd>

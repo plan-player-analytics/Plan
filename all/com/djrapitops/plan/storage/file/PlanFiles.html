@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -215,16 +215,20 @@ implements <a href="../../../../../com/djrapitops/plan/SubSystem.html" title="in
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/storage/file/PlanFiles.html#getLocaleFile--">getLocaleFile</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i9" class="rowColor">
+<td class="colFirst"><code>java.nio.file.Path</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/storage/file/PlanFiles.html#getLogsDirectory--">getLogsDirectory</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>java.io.File</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/storage/file/PlanFiles.html#getLogsFolder--">getLogsFolder</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/djrapitops/plan/storage/file/Resource.html" title="interface in com.djrapitops.plan.storage.file">Resource</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/storage/file/PlanFiles.html#getResourceFromJar-java.lang.String-">getResourceFromJar</a></span>(java.lang.String&nbsp;resourceName)</code>
 <div class="block">Get a file in the jar as a <a href="../../../../../com/djrapitops/plan/storage/file/Resource.html" title="interface in com.djrapitops.plan.storage.file"><code>Resource</code></a>.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/djrapitops/plan/storage/file/Resource.html" title="interface in com.djrapitops.plan.storage.file">Resource</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/storage/file/PlanFiles.html#getResourceFromPluginFolder-java.lang.String-">getResourceFromPluginFolder</a></span>(java.lang.String&nbsp;resourceName)</code>
 <div class="block">Get a file from plugin folder as a <a href="../../../../../com/djrapitops/plan/storage/file/Resource.html" title="interface in com.djrapitops.plan.storage.file"><code>Resource</code></a>.</div>
@@ -321,6 +325,15 @@ public&nbsp;PlanFiles(<a href="../../../../../com/djrapitops/plan/PlanPlugin.htm
 <li class="blockList">
 <h4>getLogsFolder</h4>
 <pre>public&nbsp;java.io.File&nbsp;getLogsFolder()</pre>
+</li>
+</ul>
+<a name="getLogsDirectory--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getLogsDirectory</h4>
+<pre>public&nbsp;java.nio.file.Path&nbsp;getLogsDirectory()</pre>
 </li>
 </ul>
 <a name="getConfigFile--">

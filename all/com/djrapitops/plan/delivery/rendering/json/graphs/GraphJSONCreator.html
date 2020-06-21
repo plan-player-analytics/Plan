@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -167,9 +167,10 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html#createUniqueAndNewJSON-com.djrapitops.plan.delivery.rendering.json.graphs.line.LineGraphFactory-java.util.NavigableMap-java.util.NavigableMap-">createUniqueAndNewJSON</a></span>(<a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/line/LineGraphFactory.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs.line">LineGraphFactory</a>&nbsp;lineGraphs,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html#createUniqueAndNewJSON-com.djrapitops.plan.delivery.rendering.json.graphs.line.LineGraphFactory-java.util.NavigableMap-java.util.NavigableMap-long-">createUniqueAndNewJSON</a></span>(<a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/line/LineGraphFactory.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs.line">LineGraphFactory</a>&nbsp;lineGraphs,
                       java.util.NavigableMap&lt;java.lang.Long,java.lang.Integer&gt;&nbsp;uniquePerDay,
-                      java.util.NavigableMap&lt;java.lang.Long,java.lang.Integer&gt;&nbsp;newPerDay)</code>&nbsp;</td>
+                      java.util.NavigableMap&lt;java.lang.Long,java.lang.Integer&gt;&nbsp;newPerDay,
+                      long&nbsp;gapFillPeriod)</code>&nbsp;</td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>java.util.Map&lt;java.lang.String,java.lang.Object&gt;</code></td>
@@ -181,37 +182,45 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html#performanceGraphJSON-java.util.UUID-">performanceGraphJSON</a></span>(java.util.UUID&nbsp;serverUUID)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html#hourlyUniqueAndNewGraphJSON--">hourlyUniqueAndNewGraphJSON</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html#pingGraphsJSON-java.util.UUID-">pingGraphsJSON</a></span>(java.util.UUID&nbsp;serverUUID)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html#hourlyUniqueAndNewGraphJSON-java.util.UUID-">hourlyUniqueAndNewGraphJSON</a></span>(java.util.UUID&nbsp;serverUUID)</code>&nbsp;</td>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html#playersOnlineGraph-java.util.UUID-">playersOnlineGraph</a></span>(java.util.UUID&nbsp;serverUUID)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html#performanceGraphJSON-java.util.UUID-">performanceGraphJSON</a></span>(java.util.UUID&nbsp;serverUUID)</code>&nbsp;</td>
 </tr>
 <tr id="i10" class="altColor">
-<td class="colFirst"><code>java.util.Map&lt;java.lang.String,java.lang.Object&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html#punchCardJSONAsMap-java.util.UUID-">punchCardJSONAsMap</a></span>(java.util.UUID&nbsp;serverUUID)</code>&nbsp;</td>
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html#pingGraphsJSON-java.util.UUID-">pingGraphsJSON</a></span>(java.util.UUID&nbsp;serverUUID)</code>&nbsp;</td>
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html#serverCalendarJSON-java.util.UUID-">serverCalendarJSON</a></span>(java.util.UUID&nbsp;serverUUID)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html#playersOnlineGraph-java.util.UUID-">playersOnlineGraph</a></span>(java.util.UUID&nbsp;serverUUID)</code>&nbsp;</td>
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code>java.util.Map&lt;java.lang.String,java.lang.Object&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html#serverPreferencePieJSONAsMap--">serverPreferencePieJSONAsMap</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html#punchCardJSONAsMap-java.util.UUID-">punchCardJSONAsMap</a></span>(java.util.UUID&nbsp;serverUUID)</code>&nbsp;</td>
 </tr>
 <tr id="i13" class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html#serverCalendarJSON-java.util.UUID-">serverCalendarJSON</a></span>(java.util.UUID&nbsp;serverUUID)</code>&nbsp;</td>
+</tr>
+<tr id="i14" class="altColor">
+<td class="colFirst"><code>java.util.Map&lt;java.lang.String,java.lang.Object&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html#serverPreferencePieJSONAsMap--">serverPreferencePieJSONAsMap</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>java.util.Map&lt;java.lang.String,java.lang.Object&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html#serverWorldPieJSONAsMap-java.util.UUID-">serverWorldPieJSONAsMap</a></span>(java.util.UUID&nbsp;serverUUID)</code>&nbsp;</td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html#uniqueAndNewGraphJSON--">uniqueAndNewGraphJSON</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html#uniqueAndNewGraphJSON-java.util.UUID-">uniqueAndNewGraphJSON</a></span>(java.util.UUID&nbsp;serverUUID)</code>&nbsp;</td>
 </tr>
@@ -285,7 +294,16 @@ public&nbsp;GraphJSONCreator(<a href="../../../../../../../com/djrapitops/plan/s
 <pre>public&nbsp;java.lang.String&nbsp;uniqueAndNewGraphJSON(java.util.UUID&nbsp;serverUUID)</pre>
 </li>
 </ul>
-<a name="createUniqueAndNewJSON-com.djrapitops.plan.delivery.rendering.json.graphs.line.LineGraphFactory-java.util.NavigableMap-java.util.NavigableMap-">
+<a name="hourlyUniqueAndNewGraphJSON-java.util.UUID-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>hourlyUniqueAndNewGraphJSON</h4>
+<pre>public&nbsp;java.lang.String&nbsp;hourlyUniqueAndNewGraphJSON(java.util.UUID&nbsp;serverUUID)</pre>
+</li>
+</ul>
+<a name="createUniqueAndNewJSON-com.djrapitops.plan.delivery.rendering.json.graphs.line.LineGraphFactory-java.util.NavigableMap-java.util.NavigableMap-long-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -293,7 +311,8 @@ public&nbsp;GraphJSONCreator(<a href="../../../../../../../com/djrapitops/plan/s
 <h4>createUniqueAndNewJSON</h4>
 <pre>public&nbsp;java.lang.String&nbsp;createUniqueAndNewJSON(<a href="../../../../../../../com/djrapitops/plan/delivery/rendering/json/graphs/line/LineGraphFactory.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs.line">LineGraphFactory</a>&nbsp;lineGraphs,
                                                java.util.NavigableMap&lt;java.lang.Long,java.lang.Integer&gt;&nbsp;uniquePerDay,
-                                               java.util.NavigableMap&lt;java.lang.Long,java.lang.Integer&gt;&nbsp;newPerDay)</pre>
+                                               java.util.NavigableMap&lt;java.lang.Long,java.lang.Integer&gt;&nbsp;newPerDay,
+                                               long&nbsp;gapFillPeriod)</pre>
 </li>
 </ul>
 <a name="uniqueAndNewGraphJSON--">
@@ -303,6 +322,15 @@ public&nbsp;GraphJSONCreator(<a href="../../../../../../../com/djrapitops/plan/s
 <li class="blockList">
 <h4>uniqueAndNewGraphJSON</h4>
 <pre>public&nbsp;java.lang.String&nbsp;uniqueAndNewGraphJSON()</pre>
+</li>
+</ul>
+<a name="hourlyUniqueAndNewGraphJSON--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>hourlyUniqueAndNewGraphJSON</h4>
+<pre>public&nbsp;java.lang.String&nbsp;hourlyUniqueAndNewGraphJSON()</pre>
 </li>
 </ul>
 <a name="serverCalendarJSON-java.util.UUID-">
