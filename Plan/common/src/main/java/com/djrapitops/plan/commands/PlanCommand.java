@@ -263,6 +263,7 @@ public class PlanCommand {
                 .subcommand(backupCommand())
                 .subcommand(restoreCommand())
                 .subcommand(moveCommand())
+                .subcommand(hotswapCommand())
                 .subcommand(clearCommand())
                 .subcommand(removeCommand())
                 .subcommand(uninstalledCommand())
@@ -302,6 +303,17 @@ public class PlanCommand {
                 .description("Move data between databases")
                 .inDepthDescription("Overwrites contents in the other database with the contents in another.")
                 .onCommand((sender, arguments) -> databaseCommands.onMove(commandName, sender, arguments))
+                .build();
+    }
+
+    private Subcommand hotswapCommand() {
+        return Subcommand.builder()
+                .aliases("hotswap")
+                .requirePermission("plan.data.hotswap")
+                .requiredArgument("MySQL/SQlite/H2", "Type of the database to start using.")
+                .description("Move data between databases")
+                .inDepthDescription("Reloads the plugin with the other database and changes the config to match.")
+                .onCommand(databaseCommands::onHotswap)
                 .build();
     }
 
