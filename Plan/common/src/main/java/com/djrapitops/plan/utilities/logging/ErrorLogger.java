@@ -238,7 +238,7 @@ public class ErrorLogger implements ErrorHandler {
                 }
                 previousLine = asLine;
             }
-            cause = e.getCause();
+            cause = cause.getCause();
         }
         return DigestUtils.sha256Hex(Integer.toString(seed)).substring(0, 10);
     }

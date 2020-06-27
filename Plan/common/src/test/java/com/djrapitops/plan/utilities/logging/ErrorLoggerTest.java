@@ -116,9 +116,10 @@ class ErrorLoggerTest {
         );
 
         List<String> lines = getLines(error.getClass().getSimpleName());
-        assertTrue(lines.contains("java.lang.IllegalStateException"), () -> "Did not contain 'java.lang.IllegalStateException', " + lines);
-        assertTrue(lines.contains("caused by: java.lang.IllegalArgumentException"), () -> "Did not contain 'caused by: java.lang.IllegalArgumentException', " + lines);
-        assertTrue(lines.contains("caused by: java.lang.NullPointerException"), () -> "Did not contain 'caused by: java.lang.NullPointerException', " + lines);
+        assertTrue(lines.contains("java.lang.IllegalStateException: java.lang.IllegalArgumentException: java.lang.NullPointerException"), () -> "Did not contain 'java.lang.IllegalStateException: java.lang.IllegalArgumentException: java.lang.NullPointerException', " + lines);
+        assertTrue(lines.contains("Caused by:"), () -> "Did not contain 'Caused by:', " + lines);
+        assertTrue(lines.contains("java.lang.IllegalArgumentException: java.lang.NullPointerException"), () -> "Did not contain 'java.lang.IllegalArgumentException: java.lang.NullPointerException', " + lines);
+        assertTrue(lines.contains("java.lang.NullPointerException"), () -> "Did not contain 'caused by: java.lang.NullPointerException', " + lines);
     }
 
     @Test
