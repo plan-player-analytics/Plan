@@ -120,4 +120,24 @@ class ErrorLoggerTest {
         assertTrue(lines.contains("caused by: java.lang.IllegalArgumentException"), () -> "Did not contain 'caused by: java.lang.IllegalArgumentException', " + lines);
         assertTrue(lines.contains("caused by: java.lang.NullPointerException"), () -> "Did not contain 'caused by: java.lang.NullPointerException', " + lines);
     }
+
+    @Test
+    void errorWithSuppressedIsLogged() throws IOException {
+        IllegalStateException error = new IllegalStateException();
+        error.addSuppressed(new IllegalArgumentException());
+        error.addSuppressed(new NullPointerException());
+
+        assertTimeoutPreemptively(Duration.ofMillis(500), () ->
+                UNDER_TEST.log(L.WARN, error, ErrorContext.builder()
+                        .whatToDo("Succeed the test")
+                        .related("Test object")
+                        .build())
+        );
+
+        List<String> lines = getLines(error.getClass().getSimpleName());
+        assertTrue(lines.contains("java.lang.IllegalStateException"), () -> "Did not contain 'java.lang.IllegalStateException', " + lines);
+        assertTrue(lines.contains("   Suppressed:"), () -> "Did not contain '   Suppressed:', " + lines);
+        assertTrue(lines.contains("   java.lang.IllegalArgumentException"), () -> "Did not contain '   java.lang.IllegalArgumentException', " + lines);
+        assertTrue(lines.contains("   java.lang.NullPointerException"), () -> "Did not contain '   java.lang.NullPointerException', " + lines);
+    }
 }
