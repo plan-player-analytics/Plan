@@ -137,4 +137,40 @@ public class ServerQueries {
             }
         };
     }
+
+    public static Query<List<Server>> findMatchingServers(String identifier) {
+        String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME +
+                " WHERE (LOWER(" + ServerTable.SERVER_UUID + ") LIKE LOWER(%?%)" +
+                OR + "LOWER(" + ServerTable.NAME + ") LIKE LOWER(%?%)" +
+                OR + ServerTable.SERVER_ID + "=?" +
+                OR + ServerTable.SERVER_ID + "=?)" +
+                AND + ServerTable.INSTALLED + "=?" +
+                " LIMIT 1";
+        return new QueryStatement<List<Server>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, identifier);
+                statement.setString(2, identifier);
+                statement.setInt(3, NumberUtils.isParsable(identifier) ? Integer.parseInt(identifier) : -1);
+                String id = identifier.startsWith("Server ") ? identifier.substring(7) : identifier;
+                statement.setInt(4, NumberUtils.isParsable(id) ? Integer.parseInt(id) : -1);
+                statement.setBoolean(5, true);
+            }
+
+            @Override
+            public List<Server> processResults(ResultSet set) throws SQLException {
+                List<Server> matches = new ArrayList<>();
+                while (set.next()) {
+                    matches.add(new Server(
+                            set.getInt(ServerTable.SERVER_ID),
+                            UUID.fromString(set.getString(ServerTable.SERVER_UUID)),
+                            set.getString(ServerTable.NAME),
+                            set.getString(ServerTable.WEB_ADDRESS),
+                            set.getInt(ServerTable.MAX_PLAYERS)
+                    ));
+                }
+                return matches;
+            }
+        };
+    }
 }

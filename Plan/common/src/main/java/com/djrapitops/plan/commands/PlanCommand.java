@@ -22,7 +22,11 @@ import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.commands.use.CommandWithSubcommands;
 import com.djrapitops.plan.commands.use.Subcommand;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.command.ColorScheme;
@@ -42,6 +46,7 @@ public class PlanCommand {
     private final ColorScheme colors;
     private final Confirmation confirmation;
     private final ImportSystem importSystem;
+    private final DBSystem dbSystem;
     private final LinkCommands linkCommands;
     private final RegistrationCommands registrationCommands;
     private final PluginStatusCommands statusCommands;
@@ -56,6 +61,7 @@ public class PlanCommand {
             ColorScheme colors,
             Confirmation confirmation,
             ImportSystem importSystem,
+            DBSystem dbSystem,
             LinkCommands linkCommands,
             RegistrationCommands registrationCommands,
             PluginStatusCommands statusCommands,
@@ -68,6 +74,7 @@ public class PlanCommand {
         this.colors = colors;
         this.confirmation = confirmation;
         this.importSystem = importSystem;
+        this.dbSystem = dbSystem;
         this.linkCommands = linkCommands;
         this.registrationCommands = registrationCommands;
         this.statusCommands = statusCommands;
@@ -114,7 +121,9 @@ public class PlanCommand {
     }
 
     public List<String> serverNames(CMDSender sender, Arguments arguments) {
-        return Collections.emptyList(); // TODO
+        String asString = arguments.concatenate(" ");
+        List<Server> servers = dbSystem.getDatabase().query(ServerQueries.findMatchingServers(asString));
+        return Lists.map(servers, Server::getIdentifiableName);
     }
 
     private List<String> playerNames(CMDSender sender, Arguments arguments) {
