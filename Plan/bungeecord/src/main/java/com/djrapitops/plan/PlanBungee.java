@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.commands.PlanProxyCommand;
+import com.djrapitops.plan.command.use.BungeeCommand;
 import com.djrapitops.plan.commands.use.Subcommand;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -66,9 +66,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
             logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
-        PlanProxyCommand command = component.planCommand();
-        command.registerCommands();
-        registerCommand("planbungee", command);
+        registerCommand(component.planCommand().build());
         if (system != null) {
             system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
         }
@@ -98,8 +96,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
             return;
         }
         for (String name : command.getAliases()) {
-            throw new UnsupportedOperationException();
-//            getProxy().getPluginManager().registerCommand(this, new BungeeCommand(command, name));
+            getProxy().getPluginManager().registerCommand(this, new BungeeCommand(runnableFactory, command, name));
         }
     }
 
