@@ -26,6 +26,7 @@ import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -127,7 +128,8 @@ public class PlanCommand {
     }
 
     private List<String> playerNames(CMDSender sender, Arguments arguments) {
-        return Collections.emptyList(); // TODO
+        String asString = arguments.concatenate(" ");
+        return dbSystem.getDatabase().query(UserIdentifierQueries.fetchMatchingPlayerNames(asString));
     }
 
     private Subcommand serverCommand() {
