@@ -93,7 +93,7 @@ public class PlanCommand {
     }
 
     public CommandWithSubcommands build() {
-        return CommandWithSubcommands.builder()
+        CommandWithSubcommands command = CommandWithSubcommands.builder()
                 .alias(commandName)
                 .colorScheme(colors)
                 .subcommand(serverCommand())
@@ -119,6 +119,12 @@ public class PlanCommand {
                 .subcommand(importCommand())
                 .exceptionHandler(this::handleException)
                 .build();
+        if (!"plan".equalsIgnoreCase(commandName)) {
+            command.getAliases().add("planbungee");
+            command.getAliases().add("planvelocity");
+            command.getAliases().add("planproxy");
+        }
+        return command;
     }
 
     public List<String> serverNames(CMDSender sender, Arguments arguments) {

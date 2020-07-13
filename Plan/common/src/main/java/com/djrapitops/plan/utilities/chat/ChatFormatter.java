@@ -1,3 +1,19 @@
+/*
+ *  This file is part of Player Analytics (Plan).
+ *
+ *  Plan is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Plan is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.djrapitops.plan.utilities.chat;
 
 import org.apache.commons.lang3.StringUtils;
@@ -45,15 +61,7 @@ public class ChatFormatter {
         for (String line : lines) {
             table.add(StringUtils.split(line, separator, columns));
         }
-        int[] biggestWidth = new int[columns];
-        for (String[] line : table) {
-            for (int i = 0; i < line.length; i++) {
-                int width = getPxMessageWidth(line[i]);
-                if (biggestWidth[i] < width) {
-                    biggestWidth[i] = width;
-                }
-            }
-        }
+        int[] biggestWidth = getBiggestWidthsForColumns(columns, table);
 
         for (String[] line : table) {
             StringBuilder lineBuilder = new StringBuilder();
@@ -70,6 +78,21 @@ public class ChatFormatter {
         }
         return returnMessage.toString();
     }
+
+    private static int[] getBiggestWidthsForColumns(int columns, List<String[]> table) {
+        int[] biggestWidth = new int[columns];
+        for (String[] line : table) {
+            for (int i = 0; i < line.length; i++) {
+                int width = getPxMessageWidth(line[i]);
+                if (biggestWidth[i] < width) {
+                    biggestWidth[i] = width;
+                }
+            }
+        }
+        return biggestWidth;
+    }
+
+    // Checkstyle.OFF: CyclomaticComplexity
 
     public static String getLastStyle(String message) {
         boolean wasColorChar = false;
@@ -132,6 +155,8 @@ public class ChatFormatter {
         }
         return (color == ' ' ? "§" + color : "") + (k ? "§k" : "") + (l ? "§l" : "") + (m ? "§m" : "") + (n ? "§n" : "") + (o ? "§o" : "");
     }
+
+    // Checkstyle.ON: CyclomaticComplexity
 
     public static String center(String message) {
         if (message == null) return null;
