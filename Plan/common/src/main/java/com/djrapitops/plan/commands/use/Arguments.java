@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.commands.use;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.TextStringBuilder;
 
 import java.util.ArrayList;
@@ -24,13 +25,17 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Utility for managing command arguments.
+ * Command argument mutation and access utility.
  *
  * @author Rsl1122
  */
 public class Arguments {
 
     private final List<String> args;
+
+    public Arguments(String argumentsAsString) {
+        this(StringUtils.split(argumentsAsString, ' '));
+    }
 
     public Arguments(String[] args) {
         this.args = Arrays.asList(args);
