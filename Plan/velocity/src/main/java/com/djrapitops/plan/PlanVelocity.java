@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.commands.PlanProxyCommand;
 import com.djrapitops.plan.commands.use.Subcommand;
+import com.djrapitops.plan.commands.use.VelocityCommand;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
@@ -93,9 +93,8 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
             logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
-        PlanProxyCommand command = component.planCommand();
-        command.registerCommands();
-        registerCommand("planvelocity", command);
+
+        registerCommand(component.planCommand().build());
         if (system != null) {
             system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
         }
@@ -114,8 +113,15 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
     }
 
     @Override
-    public void registerCommand(Subcommand subcommand) {
-        throw new UnsupportedOperationException();
+    public void registerCommand(Subcommand command) {
+        if (command == null) {
+            logger.warn("Attempted to register a null command!");
+            return;
+        }
+        getProxy().getCommandManager().register(
+                new VelocityCommand(runnableFactory, command),
+                command.getAliases().toArray(new String[0])
+        );
     }
 
     @Override
