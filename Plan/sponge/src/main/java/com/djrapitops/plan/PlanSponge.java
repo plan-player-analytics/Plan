@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.commands.OldPlanCommand;
+import com.djrapitops.plan.commands.use.SpongeCommand;
 import com.djrapitops.plan.commands.use.Subcommand;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
@@ -30,6 +30,8 @@ import org.bstats.sponge.Metrics2;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.CommandManager;
+import org.spongepowered.api.command.CommandMapping;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
@@ -39,6 +41,9 @@ import org.spongepowered.api.plugin.Plugin;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Plugin(
         id = "plan",
@@ -68,6 +73,8 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
     private PlanSystem system;
     private Locale locale;
     private ServerShutdownSave serverShutdownSave;
+
+    private final Map<String, CommandMapping> commands = new HashMap<>();
 
     @Listener
     public void onServerStart(GameStartedServerEvent event) {
@@ -108,9 +115,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
             logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
-        OldPlanCommand command = component.planCommand();
-        command.registerCommands();
-        registerCommand("plan", command);
+        registerCommand(component.planCommand().build());
         if (system != null) {
             system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
         }
@@ -149,8 +154,22 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
     }
 
     @Override
-    public void registerCommand(Subcommand subcommand) {
-        throw new UnsupportedOperationException();
+    public void registerCommand(Subcommand command) {
+        if (command == null) {
+            logger.warn("Attempted to register a null command!");
+            return;
+        }
+        for (String name : command.getAliases()) {
+            CommandManager commandManager = Sponge.getCommandManager();
+
+            CommandMapping registered = commands.get(name);
+            if (registered != null) {
+                commandManager.removeMapping(registered);
+            }
+
+            Optional<CommandMapping> register = commandManager.register(this, new SpongeCommand(runnableFactory, command), name);
+            register.ifPresent(commandMapping -> commands.put(name, commandMapping));
+        }
     }
 
     @Override
