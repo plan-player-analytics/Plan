@@ -16,47 +16,33 @@
  */
 package com.djrapitops.plan.commands.use;
 
-import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.text.Text;
+import com.velocitypowered.api.proxy.Player;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public class SpongeCMDSender implements CMDSender {
+public class VelocityPlayerCMDSender extends VelocityCMDSender {
 
-    final CommandSource source;
+    private final Player player;
 
-    public SpongeCMDSender(CommandSource source) {
-        this.source = source;
-    }
+    public VelocityPlayerCMDSender(Player player) {
+        super(player);
 
-    @Override
-    public MessageBuilder buildMessage() {
-        return null;/*TODO*/
+        this.player = player;
     }
 
     @Override
     public Optional<String> getPlayerName() {
-        return Optional.empty();
-    }
-
-    @Override
-    public boolean hasPermission(String permission) {
-        return source.hasPermission(permission);
+        return Optional.of(player.getUsername());
     }
 
     @Override
     public Optional<UUID> getUUID() {
-        return Optional.empty();
-    }
-
-    @Override
-    public void send(String text) {
-        source.sendMessage(Text.of(text));
+        return Optional.of(player.getUniqueId());
     }
 
     @Override
     public ChatFormatter getFormatter() {
-        return new ConsoleChatFormatter();
+        return new PlayerChatFormatter();
     }
 }

@@ -16,23 +16,23 @@
  */
 package com.djrapitops.plan.commands.use;
 
-import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.text.Text;
+import com.velocitypowered.api.command.CommandSource;
+import net.kyori.text.TextComponent;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public class SpongeCMDSender implements CMDSender {
+public class VelocityCMDSender implements CMDSender {
 
-    final CommandSource source;
+    final CommandSource commandSource;
 
-    public SpongeCMDSender(CommandSource source) {
-        this.source = source;
+    public VelocityCMDSender(CommandSource commandSource) {
+        this.commandSource = commandSource;
     }
 
     @Override
     public MessageBuilder buildMessage() {
-        return null;/*TODO*/
+        return null; /*TODO*/
     }
 
     @Override
@@ -42,7 +42,7 @@ public class SpongeCMDSender implements CMDSender {
 
     @Override
     public boolean hasPermission(String permission) {
-        return source.hasPermission(permission);
+        return commandSource.hasPermission(permission);
     }
 
     @Override
@@ -51,8 +51,8 @@ public class SpongeCMDSender implements CMDSender {
     }
 
     @Override
-    public void send(String text) {
-        source.sendMessage(Text.of(text));
+    public void send(String message) {
+        commandSource.sendMessage(TextComponent.of(message));
     }
 
     @Override
