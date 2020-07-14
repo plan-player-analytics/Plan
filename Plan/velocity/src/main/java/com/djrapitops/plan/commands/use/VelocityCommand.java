@@ -41,7 +41,7 @@ public class VelocityCommand implements Command {
             public void run() {
                 command.getExecutor().accept(getSender(source), new Arguments(args));
             }
-        });
+        }).runTaskAsynchronously();
     }
 
     private CMDSender getSender(CommandSource source) {
