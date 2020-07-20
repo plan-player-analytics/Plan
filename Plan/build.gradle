@@ -73,7 +73,7 @@ subprojects {
     ext.paperVersion = "1.13.2-R0.1-SNAPSHOT"
     ext.spongeVersion = "7.1.0"
     ext.nukkitVersion = "1.0-SNAPSHOT"
-    ext.bungeeVersion = "1.16-R0.2"
+    ext.bungeeVersion = "1.16-R0.3"
     ext.velocityVersion = "1.0-SNAPSHOT"
     ext.redisBungeeVersion = "0.3.8-SNAPSHOT"
 
