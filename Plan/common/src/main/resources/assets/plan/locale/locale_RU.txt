@@ -1,5 +1,5 @@
 API - css+                                      || PageExtension: ${0} добавил таблицы стилей в ${1}, ${2}
-API - js+                                       || PageExtension: ${0} добавил JavaScript (ы) к ${1}, ${2}
+API - js+                                       || PageExtension: ${0} добавил JavaScript(ы) к ${1}, ${2}
 Cmd - Click Me                                  || Нажми на меня
 Cmd - Link                                      ||   §2Ссылка: §f
 Cmd Disable - Disabled                          || §aPlan сейчас отключен. Вы всё еще можете использовать /planbungee reload для перезагрузки плагина.
@@ -362,6 +362,8 @@ Web User Listing                                ||   §2${0} §7: §f${1}
 WebServer - Notify HTTP                         || Веб-сервер: Нет сертификата -> Использование HTTP-сервера для визуализации.
 WebServer - Notify HTTP User Auth               || Веб-сервер: авторизация пользователя отключена! (Не защищен через HTTP)
 WebServer - Notify HTTPS User Auth              || Веб-сервер: авторизация пользователя отключена! (Отключено в конфиге)
+Webserver - Notify IP Whitelist                 || Веб-сервер: Белый список IP адресов включён.
+Webserver - Notify IP Whitelist Block           || Веб-сервер: ${0} было отказано в доступе к '${1}'. (не в белом списке)
 WebServer - Notify no Cert file                 || Веб-сервер: файл хранилища ключей сертификата не найден: ${0}
 WebServer - Notify Using Proxy                  || Веб-сервер: HTTPS в режиме прокси включен, убедитесь, что ваш обратный прокси-сервер выполняет маршрутизацию с использованием HTTPS, и Plan Alternative_IP.Link указывает на прокси
 WebServer FAIL - EOF                            || Веб-сервер: EOF при чтении файла сертификата. (Убедитесь, что файл не пустой)
