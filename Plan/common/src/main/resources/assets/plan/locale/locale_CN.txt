@@ -220,7 +220,7 @@ HTML - TEXT_CONTRIBUTORS_THANKS                 || 另外以下 <span class="col
 HTML - TEXT_DEV_VERSION                         || 该版本为开发版本.
 HTML - TEXT_DEVELOPED_BY                        || 的开发者为
 HTML - TEXT_FIRST_SESSION                       || 第一时域
-HTML - TEXT_LICENSED_UNDER                      || 开发和授权于
+HTML - TEXT_LICENSED_UNDER                      || Player Analytics开发和授权于
 HTML - TEXT_METRICS                             || bStats统计
 HTML - TEXT_NO_EXTENSION_DATA                   || 没有拓展数据
 HTML - TEXT_NO_LOW_TPS                          || 无tps低峰

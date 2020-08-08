@@ -211,7 +211,7 @@ HTML - TEXT_CONTRIBUTORS_THANKS                 || 加えて、以下の<span cl
 HTML - TEXT_DEV_VERSION                         || このバージョンは開発版です
 HTML - TEXT_DEVELOPED_BY                        || 開発者:
 HTML - TEXT_FIRST_SESSION                       || 初参加
-HTML - TEXT_LICENSED_UNDER                      || は以下のライセンスの下、開発されています
+HTML - TEXT_LICENSED_UNDER                      || 「Player Analytics」は以下のライセンスの下、開発されています
 HTML - TEXT_METRICS                             || 「bStats Metrics」が有効になっています
 HTML - TEXT_NO_EXTENSION_DATA                   || 「Extension Data」が存在しません
 HTML - TEXT_NO_LOW_TPS                          || TPSの低下が存在しません

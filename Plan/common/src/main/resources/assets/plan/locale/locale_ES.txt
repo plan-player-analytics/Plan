@@ -212,7 +212,7 @@ HTML - TEXT_CONTRIBUTORS_THANKS                 || Sobre todo las siguientes <sp
 HTML - TEXT_DEV_VERSION                         || Esta versión es para DEV..
 HTML - TEXT_DEVELOPED_BY                        || esta desarrollado por
 HTML - TEXT_FIRST_SESSION                       || Primera sesión
-HTML - TEXT_LICENSED_UNDER                      || esta desarrollado y licenciado por
+HTML - TEXT_LICENSED_UNDER                      || Player Analytics esta desarrollado y licenciado por
 HTML - TEXT_METRICS                             || bStats Metrics
 HTML - TEXT_NO_EXTENSION_DATA                   || Sin extensión de datos.
 HTML - TEXT_NO_LOW_TPS                          || Sin picos bajos TPS.

@@ -211,7 +211,7 @@ HTML - TEXT_CONTRIBUTORS_THANKS                 || Myös seuraavat <span class="
 HTML - TEXT_DEV_VERSION                         || Tämä versio on KEHITYS versio.
 HTML - TEXT_DEVELOPED_BY                        || on kehittänyt
 HTML - TEXT_FIRST_SESSION                       || First session
-HTML - TEXT_LICENSED_UNDER                      || kehitetään ja käyttää lisenssiä
+HTML - TEXT_LICENSED_UNDER                      || Player Analytics kehitetään ja käyttää lisenssiä
 HTML - TEXT_METRICS                             || bStats Metrics
 HTML - TEXT_NO_EXTENSION_DATA                   || Ei dataa lisäosista
 HTML - TEXT_NO_LOW_TPS                          || Ei matalan TPS:n piikkejä

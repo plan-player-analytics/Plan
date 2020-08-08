@@ -220,7 +220,7 @@ HTML - TEXT_CONTRIBUTORS_THANKS                 || Кроме того, данн
 HTML - TEXT_DEV_VERSION                         || Эта версия является DEV релизом.
 HTML - TEXT_DEVELOPED_BY                        || разработан
 HTML - TEXT_FIRST_SESSION                       || Первая сессия
-HTML - TEXT_LICENSED_UNDER                      || разработан и лицензирован под
+HTML - TEXT_LICENSED_UNDER                      || Player Analytics разработан и лицензирован под
 HTML - TEXT_METRICS                             || bStats Metrics
 HTML - TEXT_NO_EXTENSION_DATA                   || Нет данных об расширениях
 HTML - TEXT_NO_LOW_TPS                          || Нет низких TPS

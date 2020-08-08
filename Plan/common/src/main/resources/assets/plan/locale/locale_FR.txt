@@ -212,7 +212,7 @@ HTML - TEXT_CONTRIBUTORS_THANKS                 || En outre, ces <span class="co
 HTML - TEXT_DEV_VERSION                         || Cette version est une version de développement.
 HTML - TEXT_DEVELOPED_BY                        || est développé par
 HTML - TEXT_FIRST_SESSION                       || Première session
-HTML - TEXT_LICENSED_UNDER                      || est développé et fait l'objet d'une licence en vertu de
+HTML - TEXT_LICENSED_UNDER                      || Player Analytics est développé et fait l'objet d'une licence en vertu de
 HTML - TEXT_METRICS                             || Métriques bStats
 HTML - TEXT_NO_EXTENSION_DATA                   || Pas de données d'extension
 HTML - TEXT_NO_LOW_TPS                          || Pas de pics de TPS bas

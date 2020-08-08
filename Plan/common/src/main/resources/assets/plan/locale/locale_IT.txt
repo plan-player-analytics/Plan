@@ -211,7 +211,7 @@ HTML - TEXT_CONTRIBUTORS_THANKS                 || Inoltre, hanno contribuito qu
 HTML - TEXT_DEV_VERSION                         || Questa versione è una versione DEV.
 HTML - TEXT_DEVELOPED_BY                        || è stato svillupato da
 HTML - TEXT_FIRST_SESSION                       || Prima sessione
-HTML - TEXT_LICENSED_UNDER                      || è stato svillpato e licenziato sotto
+HTML - TEXT_LICENSED_UNDER                      || Player Analytics è stato svillpato e licenziato sotto
 HTML - TEXT_METRICS                             || Metriche bStats
 HTML - TEXT_NO_EXTENSION_DATA                   || Nessun dato estensione
 HTML - TEXT_NO_LOW_TPS                          || Nennun picco basso di TPS
