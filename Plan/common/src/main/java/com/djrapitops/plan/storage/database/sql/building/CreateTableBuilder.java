@@ -60,6 +60,9 @@ public class CreateTableBuilder {
         finalizeColumn();
         columnBuilder = new StringBuilder();
         columnBuilder.append(column).append(" ").append(type);
+        if (dbType == DBType.MYSQL && type.contains("varchar(")) {
+            columnBuilder.append(" CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci");
+        }
         return this;
     }
 
