@@ -65,12 +65,34 @@ public class BukkitPingCounter extends AbsRunnable implements Listener {
     //the server is pinging the client every 40 Ticks (2 sec) - so check it then
     //https://github.com/bergerkiller/CraftSource/blob/master/net.minecraft.server/PlayerConnection.java#L178
 
-    private static final boolean PING_METHOD_AVAILABLE;
+    private static boolean PING_METHOD_AVAILABLE;
 
-    private static final MethodHandle PING_FIELD;
-    private static final MethodHandle GET_HANDLE_METHOD;
+    private static MethodHandle PING_FIELD;
+    private static MethodHandle GET_HANDLE_METHOD;
 
-    static {
+    @Inject
+    public BukkitPingCounter(
+            PlanConfig config,
+            DBSystem dbSystem,
+            ServerInfo serverInfo,
+            RunnableFactory runnableFactory
+    ) {
+        BukkitPingCounter.loadPingMethodDetails();
+        this.config = config;
+        this.dbSystem = dbSystem;
+        this.serverInfo = serverInfo;
+        this.runnableFactory = runnableFactory;
+        playerHistory = new HashMap<>();
+    }
+
+    private final Map<UUID, List<DateObj<Integer>>> playerHistory;
+
+    private final PlanConfig config;
+    private final DBSystem dbSystem;
+    private final ServerInfo serverInfo;
+    private final RunnableFactory runnableFactory;
+
+    private static void loadPingMethodDetails() {
         PING_METHOD_AVAILABLE = isPingMethodAvailable();
 
         MethodHandle localHandle = null;
@@ -101,27 +123,6 @@ public class BukkitPingCounter extends AbsRunnable implements Listener {
 
         GET_HANDLE_METHOD = localHandle;
         PING_FIELD = localPing;
-    }
-
-    private final Map<UUID, List<DateObj<Integer>>> playerHistory;
-
-    private final PlanConfig config;
-    private final DBSystem dbSystem;
-    private final ServerInfo serverInfo;
-    private final RunnableFactory runnableFactory;
-
-    @Inject
-    public BukkitPingCounter(
-            PlanConfig config,
-            DBSystem dbSystem,
-            ServerInfo serverInfo,
-            RunnableFactory runnableFactory
-    ) {
-        this.config = config;
-        this.dbSystem = dbSystem;
-        this.serverInfo = serverInfo;
-        this.runnableFactory = runnableFactory;
-        playerHistory = new HashMap<>();
     }
 
     private static boolean isPingMethodAvailable() {
