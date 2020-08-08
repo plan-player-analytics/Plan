@@ -124,6 +124,11 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
                         .whatToDo("Report this, there is an SQL Constraint Violation.");
                 break;
             // Custom rules based on reported errors
+            case 11:
+            case 14:
+                context.related("SQLite file is corrupt.")
+                        .whatToDo("SQLite database is corrupt, restore database.db, .db-shm & .db-wal files from a backup, or repair the database: https://wordpress.semnaitik.com/repair-sqlite-database/.");
+                break;
             case 1142:
                 context.related("Missing privilege")
                         .whatToDo("Grant the required privileges to your MySQL user (often 'REFERENCES' privilege is missing).");
