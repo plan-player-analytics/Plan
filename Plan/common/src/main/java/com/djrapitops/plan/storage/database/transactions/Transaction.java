@@ -21,6 +21,7 @@ import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.*;
@@ -37,7 +38,7 @@ public abstract class Transaction {
     // SQLite version on 1.8.8 does not support savepoints, see createSavePoint() method
     private static final AtomicBoolean SUPPORTS_SAVE_POINTS = new AtomicBoolean(true);
     // Limit for Deadlock attempts.
-    private static final int ATTEMPT_LIMIT = 3;
+    private static final int ATTEMPT_LIMIT = 5;
 
     private SQLDB db;
     protected DBType dbType;
@@ -87,7 +88,8 @@ public abstract class Transaction {
         int errorCode = statementFail.getErrorCode();
         boolean mySQLDeadlock = dbType == DBType.MYSQL && errorCode == 1213;
         boolean h2Deadlock = dbType == DBType.H2 && errorCode == 40001;
-        boolean deadlocked = mySQLDeadlock || h2Deadlock || statementFail instanceof SQLTransactionRollbackException;
+        boolean deadlocked = mySQLDeadlock || h2Deadlock
+                || statementFail instanceof SQLTransactionRollbackException;
         if (deadlocked && attempts < ATTEMPT_LIMIT) {
             executeTransaction(db); // Recurse to attempt again.
             return;
@@ -96,7 +98,9 @@ public abstract class Transaction {
             failMsg += " (Attempted " + attempts + " times)";
         }
 
-        throw new DBOpException(failMsg + rollbackStatusMsg, statementFail);
+        throw new DBOpException(failMsg + rollbackStatusMsg, statementFail, ErrorContext.builder()
+                .related("Attempts: " + attempts)
+                .build());
     }
 
     private String rollbackTransaction() {

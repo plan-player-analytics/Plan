@@ -128,6 +128,9 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
                 context.related("Missing privilege")
                         .whatToDo("Grant the required privileges to your MySQL user (often 'REFERENCES' privilege is missing).");
                 break;
+            case 1213:
+                context.related("Deadlock");
+                break;
             default:
                 context.related("Unknown SQL Error code");
         }
