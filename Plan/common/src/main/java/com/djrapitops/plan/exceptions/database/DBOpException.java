@@ -123,6 +123,11 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
                 context.related("Constraint Violation")
                         .whatToDo("Report this, there is an SQL Constraint Violation.");
                 break;
+            // Custom rules based on reported errors
+            case 1142:
+                context.related("Missing privilege")
+                        .whatToDo("Grant the required privileges to your MySQL user (often 'REFERENCES' privilege is missing).");
+                break;
             default:
                 context.related("Unknown SQL Error code");
         }
