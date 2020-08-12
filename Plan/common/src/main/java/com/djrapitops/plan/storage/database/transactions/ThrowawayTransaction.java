@@ -29,6 +29,6 @@ public abstract class ThrowawayTransaction extends Transaction {
 
     @Override
     protected boolean shouldBeExecuted() {
-        return getDBState() != Database.State.CLOSING;
+        return getDBState() != Database.State.CLOSING && dbIsNotUnderHeavyLoad();
     }
 }

@@ -301,4 +301,12 @@ public abstract class SQLDB extends AbstractDatabase {
     public void setTransactionExecutorServiceProvider(Supplier<ExecutorService> transactionExecutorServiceProvider) {
         this.transactionExecutorServiceProvider = transactionExecutorServiceProvider;
     }
+
+    public RunnableFactory getRunnableFactory() {
+        return runnableFactory;
+    }
+
+    public PluginLogger getLogger() {
+        return logger;
+    }
 }

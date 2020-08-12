@@ -22,10 +22,13 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.*;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -68,6 +71,15 @@ public abstract class Transaction {
 
         attempts++; // Keeps track how many attempts have been made to avoid infinite recursion.
 
+        if (db.isUnderHeavyLoad()) {
+            try {
+                Thread.sleep(db.getHeavyLoadDelayMs());
+                Thread.yield();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
         try {
             initializeTransaction(db);
             performOperations();
@@ -94,6 +106,22 @@ public abstract class Transaction {
             executeTransaction(db); // Recurse to attempt again.
             return;
         }
+
+        if (dbType == DBType.MYSQL && errorCode == 1205) {
+            if (!db.isUnderHeavyLoad()) {
+                db.getLogger().warn("Database appears to be under heavy load. Dropping some unimportant transactions and adding short pauses for next 10 minutes.");
+                db.getRunnableFactory().create("Increase load", new AbsRunnable() {
+                    @Override
+                    public void run() {
+                        db.assumeNoMoreHeavyLoad();
+                    }
+                }).runTaskLaterAsynchronously(TimeAmount.toTicks(10, TimeUnit.MINUTES));
+            }
+            db.increaseHeavyLoadDelay();
+            executeTransaction(db); // Recurse to attempt again.
+            return;
+        }
+
         if (attempts >= ATTEMPT_LIMIT) {
             failMsg += " (Attempted " + attempts + " times)";
         }
@@ -219,5 +247,9 @@ public abstract class Transaction {
 
     public boolean wasSuccessful() {
         return success;
+    }
+
+    public boolean dbIsNotUnderHeavyLoad() {
+        return !db.isUnderHeavyLoad();
     }
 }
