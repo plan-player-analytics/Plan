@@ -16,9 +16,15 @@
  */
 package com.djrapitops.plan.exceptions.database;
 
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+
 public class FatalDBException extends DBOpException {
 
     public FatalDBException(String message) {
         super(message);
+    }
+
+    public FatalDBException(String message, DBOpException cause) {
+        super(message + cause.getMessage(), cause.getCause(), cause.getContext().orElse(ErrorContext.builder().build()));
     }
 }

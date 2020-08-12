@@ -21,7 +21,7 @@ package com.djrapitops.plan.exceptions;
  *
  * @author Rsl1122
  */
-public class EnableException extends Exception {
+public class EnableException extends IllegalStateException {
 
     public EnableException(String message, Throwable cause) {
         super(message, cause);

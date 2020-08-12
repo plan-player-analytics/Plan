@@ -51,6 +51,7 @@ public class ErrorContext {
 
     public void merge(ErrorContext context) {
         this.related.addAll(context.related);
+        if (this.whatToDo == null && context.whatToDo != null) this.whatToDo = context.whatToDo;
     }
 
     public static class Builder {

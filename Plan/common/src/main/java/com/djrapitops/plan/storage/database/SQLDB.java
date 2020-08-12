@@ -42,10 +42,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -259,13 +256,20 @@ public abstract class SQLDB extends AbstractDatabase {
             if (throwable == null) {
                 return CompletableFuture.completedFuture(null);
             }
-            if (throwable instanceof FatalDBException) {
+            if (throwable.getCause() instanceof FatalDBException) {
+                logger.error("Database failed to open, " + transaction.getClass().getName() + " failed to be executed.");
+                FatalDBException actual = (FatalDBException) throwable.getCause();
+                Optional<String> whatToDo = actual.getContext().flatMap(ErrorContext::getWhatToDo);
+                whatToDo.ifPresent(message -> logger.error("What to do: " + message));
+                if (!whatToDo.isPresent()) logger.error("Error msg: " + actual.getMessage());
                 setState(State.CLOSED);
             }
             ThrowableUtils.appendEntryPointToCause(throwable, origin);
 
-            errorLogger.log(L.ERROR, throwable, ErrorContext.builder()
-                    .related("Transaction: " + transaction.getClass()).build());
+            errorLogger.log(getState() == State.CLOSED ? L.CRITICAL : L.ERROR, throwable, ErrorContext.builder()
+                    .related("Transaction: " + transaction.getClass())
+                    .related("DB State: " + getState())
+                    .build());
             return CompletableFuture.completedFuture(null);
         };
     }
