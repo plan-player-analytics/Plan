@@ -67,9 +67,6 @@ class GeolocationTest {
         GeolocationTest.tempDir = tempDir;
         IP_STORE = GeolocationTest.tempDir.resolve("GeoLite2-Country.mmdb").toFile();
 
-        TEST_DATA.put("8.8.8.8", "United States"); // California, US
-        TEST_DATA.put("8.8.4.4", "United States"); // California, US
-        TEST_DATA.put("4.4.2.2", "United States"); // Colorado, US
         TEST_DATA.put("156.53.159.86", "United States"); // Oregon, US
         TEST_DATA.put("208.67.222.222", "United States"); // California, US
         TEST_DATA.put("208.67.220.220", "United States"); // California, US
