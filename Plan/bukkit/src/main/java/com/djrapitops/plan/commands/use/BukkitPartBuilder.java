@@ -95,7 +95,7 @@ class BukkitPartBuilder implements MessageBuilder {
 
     @Override
     public MessageBuilder tabular(CharSequence charSequence) {
-        sender.getFormatter().table(charSequence.toString(), ":");
+        addPart(sender.getFormatter().table(charSequence.toString(), ":"));
         return this;
     }
 
