@@ -86,12 +86,16 @@ class BukkitPartBuilder implements MessageBuilder {
     }
 
     @Override
-    public MessageBuilder indent(int i) {
+    public MessageBuilder indent(int amount) {
+        for (int i = 0; i < amount; i++) {
+            part.append(" ");
+        }
         return this;
     }
 
     @Override
     public MessageBuilder tabular(CharSequence charSequence) {
+        sender.getFormatter().table(charSequence.toString(), ":");
         return this;
     }
 
