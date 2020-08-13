@@ -16,73 +16,76 @@
  */
 package com.djrapitops.plan.commands.use;
 
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.action.TextActions;
+import net.kyori.text.TextComponent;
+import net.kyori.text.event.ClickEvent;
+import net.kyori.text.event.HoverEvent;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Collection;
 
-public class SpongeMessageBuilder implements MessageBuilder {
+public class VelocityMessageBuilder implements MessageBuilder {
 
-    private final SpongeCMDSender sender;
-    private final Text.Builder builder;
+    private final VelocityCMDSender sender;
+    private final TextComponent.Builder builder;
 
-    public SpongeMessageBuilder(SpongeCMDSender sender) {
+    public VelocityMessageBuilder(VelocityCMDSender sender) {
         this.sender = sender;
-        builder = Text.builder();
+        builder = TextComponent.builder();
     }
 
     @Override
-    public MessageBuilder addPart(String s) {
-        builder.append(Text.of(s));
+    public MessageBuilder addPart(String content) {
+        builder.content(content);
         return this;
     }
 
     @Override
     public MessageBuilder newLine() {
-        builder.append(Text.of('\n'));
+        builder.content("\n");
         return this;
     }
 
     @Override
     public MessageBuilder link(String url) {
-        try {
-            builder.onClick(TextActions.openUrl(new URL(url)));
-        } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("'" + url + "' is not a valid URL");
-        }
+        builder.clickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
         return this;
     }
 
     @Override
     public MessageBuilder command(String command) {
-        builder.onClick(TextActions.runCommand(command.charAt(0) == '/' ? command.substring(1) : command));
+        builder.clickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
         return this;
     }
 
     @Override
-    public MessageBuilder hover(String message) {
-        builder.onHover(TextActions.showText(Text.of(message)));
+    public MessageBuilder hover(String s) {
+        builder.hoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.of(s)));
         return this;
     }
 
     @Override
     public MessageBuilder hover(String... strings) {
-        builder.onHover(TextActions.showText(Text.of((Object[]) strings)));
+        TextComponent.Builder hoverText = TextComponent.builder();
+        for (String string : strings) {
+            hoverText.content(string);
+        }
+        builder.hoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverText.build()));
         return this;
     }
 
     @Override
     public MessageBuilder hover(Collection<String> collection) {
-        builder.onHover(TextActions.showText(Text.of(collection.toArray())));
+        TextComponent.Builder hoverText = TextComponent.builder();
+        for (String string : collection) {
+            hoverText.content(string);
+        }
+        builder.hoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverText.build()));
         return this;
     }
 
     @Override
     public MessageBuilder indent(int amount) {
         for (int i = 0; i < amount; i++) {
-            builder.append(Text.of(' '));
+            builder.content(" ");
         }
         return this;
     }
@@ -95,6 +98,6 @@ public class SpongeMessageBuilder implements MessageBuilder {
 
     @Override
     public void send() {
-        sender.source.sendMessage(builder.build());
+        sender.commandSource.sendMessage(builder.build());
     }
 }
