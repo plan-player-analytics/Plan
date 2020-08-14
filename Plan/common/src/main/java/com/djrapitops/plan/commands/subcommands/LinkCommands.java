@@ -78,11 +78,10 @@ public class LinkCommands {
 
     MessageBuilder linkTo(MessageBuilder builder, CMDSender sender, String address) {
         if (sender.supportsChatEvents()) {
-            builder.addPart(colors.getTertiaryColor() + "§l[Link]").link(address).hover(address);
+            return builder.addPart(colors.getTertiaryColor() + "§l[Link]").link(address).hover(address);
         } else {
-            builder.addPart(colors.getTertiaryColor() + address);
+            return builder.addPart(colors.getTertiaryColor() + address);
         }
-        return builder;
     }
 
     /**

@@ -200,14 +200,14 @@ public class RegistrationCommands {
         if (sender.supportsChatEvents()) {
             sender.buildMessage()
                     .addPart(colors.getMainColor() + "You are about to unregister '" + presentUser.getUsername() + "' linked to " + presentUser.getLinkedTo()).newLine()
-                    .addPart("Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept")
+                    .addPart(colors.getTertiaryColor() + "Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept").hover("Accept")
                     .addPart(" ")
-                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel")
+                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel").hover("Cancel")
                     .send();
         } else {
             sender.buildMessage()
                     .addPart(colors.getMainColor() + "You are about to unregister '" + presentUser.getUsername() + "' linked to " + presentUser.getLinkedTo()).newLine()
-                    .addPart("Confirm: ").addPart("§a/" + mainCommand + " accept")
+                    .addPart(colors.getTertiaryColor() + "Confirm: ").addPart("§a/" + mainCommand + " accept")
                     .addPart(" ")
                     .addPart("§c/" + mainCommand + " cancel")
                     .send();
