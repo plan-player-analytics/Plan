@@ -32,7 +32,7 @@ public class VelocityCMDSender implements CMDSender {
 
     @Override
     public MessageBuilder buildMessage() {
-        return null; /*TODO*/
+        return new VelocityMessageBuilder(this);
     }
 
     @Override

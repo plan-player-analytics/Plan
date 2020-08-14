@@ -48,5 +48,8 @@ public class BungeePlayerCMDSender extends BungeeCMDSender {
         return new PlayerChatFormatter();
     }
 
-
+    @Override
+    public boolean supportsChatEvents() {
+        return true;
+    }
 }
