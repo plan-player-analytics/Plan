@@ -31,7 +31,7 @@ public class NukkitCMDSender implements CMDSender {
 
     @Override
     public MessageBuilder buildMessage() {
-        return null; /*TODO*/
+        return new NukkitMessageBuilder(this);
     }
 
     @Override
