@@ -45,11 +45,11 @@ public class CommandWithSubcommands extends Subcommand {
     public void onHelp(CMDSender sender, Arguments arguments) {
         List<Subcommand> hasPermissionFor = subcommands.stream().filter(sender::hasAllPermissionsFor).collect(Collectors.toList());
         sender.buildMessage()
-                .addPart("Header")
+                .addPart("Header" /*TODO*/)
                 .newLine().newLine()
                 .apply(new HelpFormatter(sender, colors, getPrimaryAlias(), hasPermissionFor)::addSubcommands)
                 .newLine().newLine()
-                .addPart("Footer")
+                .addPart("Footer" /*TODO*/)
                 .send();
     }
 
