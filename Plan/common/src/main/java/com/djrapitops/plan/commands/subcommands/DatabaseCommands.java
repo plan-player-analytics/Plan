@@ -167,7 +167,7 @@ public class DatabaseCommands {
 
         if (toDB.getState() != Database.State.OPEN) toDB.init();
 
-        if (sender.isPlayer()) {
+        if (sender.supportsChatEvents()) {
             sender.buildMessage()
                     .addPart(colors.getMainColor() + "You are about to overwrite data in Plan " + toDB.getType().getName() + " with data in " + backupDBFile.toPath()).newLine()
                     .addPart("Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept")
@@ -219,7 +219,7 @@ public class DatabaseCommands {
             throw new IllegalArgumentException(locale.getString(ManageLang.FAIL_SAME_DB));
         }
 
-        if (sender.isPlayer()) {
+        if (sender.supportsChatEvents()) {
             sender.buildMessage()
                     .addPart(colors.getMainColor() + "You are about to overwrite data in Plan " + toDB.getName() + " with data in " + fromDB.getName()).newLine()
                     .addPart("Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept")
@@ -274,7 +274,7 @@ public class DatabaseCommands {
         DBType fromDB = arguments.get(0).flatMap(DBType::getForName)
                 .orElseThrow(() -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite/H2>"))));
 
-        if (sender.isPlayer()) {
+        if (sender.supportsChatEvents()) {
             sender.buildMessage()
                     .addPart(colors.getMainColor() + "You are about to remove all Plan-data in " + fromDB.getName()).newLine()
                     .addPart("Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept")
@@ -331,7 +331,7 @@ public class DatabaseCommands {
 
         Database database = dbSystem.getDatabase();
 
-        if (sender.isPlayer()) {
+        if (sender.supportsChatEvents()) {
             sender.buildMessage()
                     .addPart(colors.getMainColor() + "You are about to remove data of " + playerUUID + " from " + database.getType().getName()).newLine()
                     .addPart("Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept")

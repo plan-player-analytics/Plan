@@ -45,4 +45,9 @@ public class VelocityPlayerCMDSender extends VelocityCMDSender {
     public ChatFormatter getFormatter() {
         return new PlayerChatFormatter();
     }
+
+    @Override
+    public boolean supportsChatEvents() {
+        return true;
+    }
 }
