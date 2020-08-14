@@ -272,9 +272,9 @@ public class PlanCommand {
 
     private Subcommand databaseCommand() {
         return CommandWithSubcommands.builder()
-                .aliases("database", "db")
+                .aliases("db", "database")
                 .requirePermission("plan.data.base")
-                .optionalArgument("[subcommand]", "Use the command without subcommand to see help.")
+                .optionalArgument("subcommand", "Use the command without subcommand to see help.")
                 .description("Manage Plan database")
                 .colorScheme(colors)
                 .subcommand(backupCommand())

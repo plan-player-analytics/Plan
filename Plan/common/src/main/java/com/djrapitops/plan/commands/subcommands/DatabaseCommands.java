@@ -170,14 +170,14 @@ public class DatabaseCommands {
         if (sender.supportsChatEvents()) {
             sender.buildMessage()
                     .addPart(colors.getMainColor() + "You are about to overwrite data in Plan " + toDB.getType().getName() + " with data in " + backupDBFile.toPath()).newLine()
-                    .addPart("Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept")
+                    .addPart(colors.getTertiaryColor() + "Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept").hover("Accept")
                     .addPart(" ")
-                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel")
+                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel").hover("Cancel")
                     .send();
         } else {
             sender.buildMessage()
                     .addPart(colors.getMainColor() + "You are about to overwrite data in Plan " + toDB.getType().getName() + " with data in " + backupDBFile.toPath()).newLine()
-                    .addPart("Confirm: ").addPart("§a/" + mainCommand + " accept")
+                    .addPart(colors.getTertiaryColor() + "Confirm: ").addPart("§a/" + mainCommand + " accept")
                     .addPart(" ")
                     .addPart("§c/" + mainCommand + " cancel")
                     .send();
@@ -222,14 +222,14 @@ public class DatabaseCommands {
         if (sender.supportsChatEvents()) {
             sender.buildMessage()
                     .addPart(colors.getMainColor() + "You are about to overwrite data in Plan " + toDB.getName() + " with data in " + fromDB.getName()).newLine()
-                    .addPart("Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept")
+                    .addPart(colors.getTertiaryColor() + "Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept").hover("Accept")
                     .addPart(" ")
-                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel")
+                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel").hover("Cancel")
                     .send();
         } else {
             sender.buildMessage()
                     .addPart(colors.getMainColor() + "You are about to overwrite data in Plan " + toDB.getName() + " with data in " + fromDB.getName()).newLine()
-                    .addPart("Confirm: ").addPart("§a/" + mainCommand + " accept")
+                    .addPart(colors.getTertiaryColor() + "Confirm: ").addPart("§a/" + mainCommand + " accept")
                     .addPart(" ")
                     .addPart("§c/" + mainCommand + " cancel")
                     .send();
@@ -277,14 +277,14 @@ public class DatabaseCommands {
         if (sender.supportsChatEvents()) {
             sender.buildMessage()
                     .addPart(colors.getMainColor() + "You are about to remove all Plan-data in " + fromDB.getName()).newLine()
-                    .addPart("Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept")
+                    .addPart(colors.getTertiaryColor() + "Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept").hover("Accept")
                     .addPart(" ")
-                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel")
+                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel").hover("Cancel")
                     .send();
         } else {
             sender.buildMessage()
                     .addPart(colors.getMainColor() + "You are about to remove all Plan-data in " + fromDB.getName()).newLine()
-                    .addPart("Confirm: ").addPart("§a/" + mainCommand + " accept")
+                    .addPart(colors.getTertiaryColor() + "Confirm: ").addPart("§a/" + mainCommand + " accept")
                     .addPart(" ")
                     .addPart("§c/" + mainCommand + " cancel")
                     .send();
@@ -334,14 +334,14 @@ public class DatabaseCommands {
         if (sender.supportsChatEvents()) {
             sender.buildMessage()
                     .addPart(colors.getMainColor() + "You are about to remove data of " + playerUUID + " from " + database.getType().getName()).newLine()
-                    .addPart("Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept")
+                    .addPart(colors.getTertiaryColor() + "Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept").hover("Accept")
                     .addPart(" ")
-                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel")
+                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel").hover("Cancel")
                     .send();
         } else {
             sender.buildMessage()
                     .addPart(colors.getMainColor() + "You are about to remove data of " + playerUUID + " from " + database.getType().getName()).newLine()
-                    .addPart("Confirm: ").addPart("§a/" + mainCommand + " accept")
+                    .addPart(colors.getTertiaryColor() + "Confirm: ").addPart("§a/" + mainCommand + " accept")
                     .addPart(" ")
                     .addPart("§c/" + mainCommand + " cancel")
                     .send();

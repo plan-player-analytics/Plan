@@ -47,37 +47,50 @@ public class HelpFormatter {
                 .filter(cmd -> cmd.getDescription() != null)
                 .map(cmd ->
                         m + mainCommand + " " + cmd.getPrimaryAlias() +
-                                (sender.getPlayerName().isPresent() ? "" : " " + cmd.getArgumentsAsString()) + "--" +
+                                (sender.supportsChatEvents() ? "" : " " + cmd.getArgumentsAsString()) + "***" +
                                 s + cmd.getDescription() + "\n"
                 ).collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
-        List<String[]> table = sender.getFormatter().tableAsParts(asString, "--");
+        List<String[]> table = sender.getFormatter().tableAsParts(asString, "***");
 
         for (int i = 0; i < table.size(); i++) {
-            Subcommand subcommand = subcommands.get(i);
+            Subcommand cmd = subcommands.get(i);
+            if (cmd.getDescription() == null) continue;
+
             String[] row = table.get(i);
-            toReturn = toReturn.addPart(row[0])
-                    .hover(argumentsAndAliases(subcommand.getArguments(), subcommand.getAliases()))
-                    .addPart(row[1])
-                    .hover(subcommand.getInDepthDescription())
-                    .newLine();
+
+            if (sender.isPlayer()) {
+                toReturn = toReturn.addPart(m + "/");
+            }
+
+            if (sender.supportsChatEvents()) {
+                toReturn = toReturn.addPart(row[0])
+                        .hover(argumentsAndAliases(cmd, cmd.getArguments(), cmd.getAliases()))
+                        .addPart(row[1])
+                        .hover(cmd.getInDepthDescription())
+                        .newLine();
+            } else {
+                toReturn = toReturn.addPart(row[0])
+                        .addPart(row[1])
+                        .newLine();
+            }
         }
 
         return toReturn;
     }
 
-    private List<String> argumentsAndAliases(List<Subcommand.ArgumentDescriptor> descriptors, Set<String> aliases) {
+    private List<String> argumentsAndAliases(Subcommand subcommand, List<Subcommand.ArgumentDescriptor> descriptors, Set<String> aliases) {
         List<String> lines = new ArrayList<>();
-        lines.add(colors.getTertiaryColor() + "Arguments:");
+        lines.add(colors.getMainColor() + subcommand.getPrimaryAlias() + colors.getTertiaryColor() + " Arguments:" + (descriptors.isEmpty() ? " none" : ""));
         for (Subcommand.ArgumentDescriptor descriptor : descriptors) {
             if (descriptor.isRequired()) {
-                lines.add("  " + colors.getMainColor() + "§l<" + descriptor.getName() + ">§r " + colors.getSecondaryColor() + descriptor.getDescription());
+                lines.add(colors.getMainColor() + "§l<" + descriptor.getName() + ">§r " + colors.getSecondaryColor() + descriptor.getDescription());
             } else {
-                lines.add("  " + colors.getMainColor() + "[" + descriptor.getName() + "] " + colors.getSecondaryColor() + descriptor.getDescription());
+                lines.add(colors.getMainColor() + "[" + descriptor.getName() + "] " + colors.getSecondaryColor() + descriptor.getDescription());
             }
         }
-        lines.add(colors.getTertiaryColor() + "Aliases:" + new TextStringBuilder().appendWithSeparators(aliases, " | ").toString());
+        lines.add("");
+        lines.add(colors.getTertiaryColor() + "Aliases: " + new TextStringBuilder().appendWithSeparators(aliases, ", ").toString());
         return lines;
     }
-
 }
