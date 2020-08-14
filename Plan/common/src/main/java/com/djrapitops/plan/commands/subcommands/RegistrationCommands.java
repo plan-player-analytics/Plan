@@ -197,7 +197,7 @@ public class RegistrationCommands {
             throw new IllegalArgumentException(locale.getString(CommandLang.USER_NOT_LINKED));
         }
 
-        if (sender.isPlayer()) {
+        if (sender.supportsChatEvents()) {
             sender.buildMessage()
                     .addPart(colors.getMainColor() + "You are about to unregister '" + presentUser.getUsername() + "' linked to " + presentUser.getLinkedTo()).newLine()
                     .addPart("Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept")

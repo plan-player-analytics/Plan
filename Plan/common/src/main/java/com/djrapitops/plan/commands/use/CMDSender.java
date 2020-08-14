@@ -44,6 +44,10 @@ public interface CMDSender {
         return getPlayerName().isPresent();
     }
 
+    default boolean supportsChatEvents() {
+        return false;
+    }
+
     Optional<UUID> getUUID();
 
     void send(String message);

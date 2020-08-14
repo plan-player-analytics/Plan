@@ -49,4 +49,9 @@ public class BukkitPlayerCMDSender extends BukkitCMDSender {
     public ChatFormatter getFormatter() {
         return new PlayerChatFormatter();
     }
+
+    @Override
+    public boolean supportsChatEvents() {
+        return true;
+    }
 }

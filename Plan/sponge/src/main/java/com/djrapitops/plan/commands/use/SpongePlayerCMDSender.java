@@ -45,4 +45,9 @@ public class SpongePlayerCMDSender extends SpongeCMDSender {
     public ChatFormatter getFormatter() {
         return new PlayerChatFormatter();
     }
+
+    @Override
+    public boolean supportsChatEvents() {
+        return true;
+    }
 }
