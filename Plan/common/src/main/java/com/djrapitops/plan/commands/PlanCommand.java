@@ -98,9 +98,10 @@ public class PlanCommand {
                 .colorScheme(colors)
                 .subcommand(serverCommand())
                 .subcommand(serversCommand())
+                .subcommand(networkCommand())
                 .subcommand(playerCommand())
                 .subcommand(playersCommand())
-                .subcommand(networkCommand())
+                .subcommand(searchCommand())
                 .subcommand(jsonCommand())
 
                 .subcommand(registerCommand())
@@ -179,6 +180,16 @@ public class PlanCommand {
                 .description("View players page")
                 .inDepthDescription("Obtain a link to the /players page to see a list of players.")
                 .onCommand(linkCommands::onPlayersCommand)
+                .build();
+    }
+
+    private Subcommand searchCommand() {
+        return Subcommand.builder()
+                .aliases("search")
+                .requirePermission("plan.search")
+                .description("Search for a player name")
+                .inDepthDescription("List all matching player names to given part of a name.")
+                .onCommand(dataUtilityCommands::onSearch)
                 .build();
     }
 
