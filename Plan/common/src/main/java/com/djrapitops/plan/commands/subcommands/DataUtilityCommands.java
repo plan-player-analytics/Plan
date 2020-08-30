@@ -35,9 +35,7 @@ import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQuerie
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 @Singleton
@@ -178,5 +176,26 @@ public class DataUtilityCommands {
         }
     }
 
+    public void onSearch(CMDSender sender, Arguments arguments) {
+        String searchingFor = arguments.concatenate(" ");
+        if (searchingFor.trim().isEmpty()) {
+            throw new IllegalArgumentException("The search string can not be empty" /* TODO */);
+        }
+
+        ensureDatabaseIsOpen();
+        List<String> names = dbSystem.getDatabase().query(UserIdentifierQueries.fetchMatchingPlayerNames(searchingFor));
+        Collections.sort(names);
+
+        sender.send(locale.getString(CommandLang.HEADER_SEARCH, names.isEmpty() ? 0 : names.size(), searchingFor));
+
+        StringBuilder asTableString = new StringBuilder();
+        int i = 0;
+        for (String name : names) {
+            asTableString.append(name).append(i != 0 && i % 5 == 0 ? '\n' : "::");
+            i++;
+        }
+
+        sender.send(sender.getFormatter().table(asTableString.toString(), "::"));
+    }
 
 }
