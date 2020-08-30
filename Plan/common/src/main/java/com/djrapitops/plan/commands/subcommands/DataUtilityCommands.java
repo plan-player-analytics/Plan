@@ -18,19 +18,32 @@ package com.djrapitops.plan.commands.subcommands;
 
 import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
+import com.djrapitops.plan.delivery.domain.DateHolder;
+import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
+import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
+import com.djrapitops.plan.delivery.domain.mutators.GeoInfoMutator;
+import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.delivery.export.Exporter;
+import com.djrapitops.plan.delivery.formatting.Formatter;
+import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.exceptions.ExportException;
+import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.gathering.importing.importers.Importer;
+import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
+import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
+import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.locale.lang.ManageLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
 
 import javax.inject.Inject;
@@ -45,6 +58,8 @@ public class DataUtilityCommands {
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
+    private final Identifiers identifiers;
+    private final Formatters formatters;
     private final Exporter exporter;
     private final ImportSystem importSystem;
     private final Processing processing;
@@ -55,6 +70,8 @@ public class DataUtilityCommands {
             PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
+            Identifiers identifiers,
+            Formatters formatters,
             Exporter exporter,
             ImportSystem importSystem,
             Processing processing
@@ -63,6 +80,8 @@ public class DataUtilityCommands {
         this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
+        this.identifiers = identifiers;
+        this.formatters = formatters;
         this.exporter = exporter;
         this.importSystem = importSystem;
         this.processing = processing;
@@ -196,6 +215,61 @@ public class DataUtilityCommands {
         }
 
         sender.send(sender.getFormatter().table(asTableString.toString(), "::"));
+    }
+
+    public void onInGame(CMDSender sender, Arguments arguments) {
+        String identifier = arguments.concatenate(" ");
+        UUID playerUUID = identifiers.getPlayerUUID(identifier);
+        UUID senderUUID = sender.getUUID().orElse(null);
+        if (playerUUID == null) playerUUID = senderUUID;
+        if (playerUUID == null) {
+            throw new IllegalArgumentException("Player '" + identifier + "' was not found, they have no UUID.");
+        }
+
+        PlayerContainer player = dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
+        if (!player.getValue(PlayerKeys.REGISTERED).isPresent()) {
+            throw new IllegalArgumentException("Player '" + identifier + "' was not found in the database.");
+        }
+
+        if (sender.hasPermission("plan.ingame.other") || playerUUID.equals(senderUUID)) {
+            sendInGameMessages(sender, player);
+        } else {
+            throw new IllegalArgumentException("Insufficient permissions: You can not view other player's information.");
+        }
+    }
+
+    private void sendInGameMessages(CMDSender sender, PlayerContainer player) {
+        long now = System.currentTimeMillis();
+
+        com.djrapitops.plan.delivery.formatting.Formatter<DateHolder> timestamp = formatters.year();
+        Formatter<Long> length = formatters.timeAmount();
+
+        String playerName = player.getValue(PlayerKeys.NAME).orElse(locale.getString(GenericLang.UNKNOWN));
+
+        ActivityIndex activityIndex = player.getActivityIndex(now, config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD));
+        Long registered = player.getValue(PlayerKeys.REGISTERED).orElse(0L);
+        Long lastSeen = player.getValue(PlayerKeys.LAST_SEEN).orElse(0L);
+        List<GeoInfo> geoInfo = player.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>());
+        Optional<GeoInfo> mostRecentGeoInfo = new GeoInfoMutator(geoInfo).mostRecent();
+        String geolocation = mostRecentGeoInfo.isPresent() ? mostRecentGeoInfo.get().getGeolocation() : "-";
+        SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);
+
+        String table = locale.getString(CommandLang.HEADER_INSPECT, playerName) + '\n' +
+                locale.getString(CommandLang.QINSPECT_ACTIVITY_INDEX, activityIndex.getFormattedValue(formatters.decimals()), activityIndex.getGroup()) + '\n' +
+                locale.getString(CommandLang.QINSPECT_REGISTERED, timestamp.apply(() -> registered)) + '\n' +
+                locale.getString(CommandLang.QINSPECT_LAST_SEEN, timestamp.apply(() -> lastSeen)) + '\n' +
+                locale.getString(CommandLang.QINSPECT_GEOLOCATION, geolocation) + '\n' +
+                locale.getString(CommandLang.QINSPECT_TIMES_KICKED, player.getValue(PlayerKeys.KICK_COUNT).orElse(0)) + '\n' +
+                '\n' +
+                locale.getString(CommandLang.QINSPECT_PLAYTIME, length.apply(sessionsMutator.toPlaytime())) + '\n' +
+                locale.getString(CommandLang.QINSPECT_ACTIVE_PLAYTIME, length.apply(sessionsMutator.toActivePlaytime())) + '\n' +
+                locale.getString(CommandLang.QINSPECT_AFK_PLAYTIME, length.apply(sessionsMutator.toAfkTime())) + '\n' +
+                locale.getString(CommandLang.QINSPECT_LONGEST_SESSION, length.apply(sessionsMutator.toLongestSessionLength())) + '\n' +
+                '\n' +
+                locale.getString(CommandLang.QINSPECT_PLAYER_KILLS, sessionsMutator.toPlayerKillCount()) + '\n' +
+                locale.getString(CommandLang.QINSPECT_MOB_KILLS, sessionsMutator.toMobKillCount()) + '\n' +
+                locale.getString(CommandLang.QINSPECT_DEATHS, sessionsMutator.toDeathCount());
+        sender.send(sender.getFormatter().table(table, ":"));
     }
 
 }

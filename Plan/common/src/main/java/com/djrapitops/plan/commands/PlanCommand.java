@@ -102,6 +102,7 @@ public class PlanCommand {
                 .subcommand(playerCommand())
                 .subcommand(playersCommand())
                 .subcommand(searchCommand())
+                .subcommand(inGameCommand())
                 .subcommand(jsonCommand())
 
                 .subcommand(registerCommand())
@@ -161,6 +162,16 @@ public class PlanCommand {
                 .build();
     }
 
+    private Subcommand networkCommand() {
+        return Subcommand.builder()
+                .aliases("network", "netw")
+                .requirePermission("plan.network")
+                .description("View network page")
+                .inDepthDescription("Obtain a link to the /network page, only does so on networks.")
+                .onCommand(linkCommands::onNetworkCommand)
+                .build();
+    }
+
     private Subcommand playerCommand() {
         return Subcommand.builder()
                 .aliases("player", "inspect")
@@ -186,6 +197,7 @@ public class PlanCommand {
     private Subcommand searchCommand() {
         return Subcommand.builder()
                 .aliases("search")
+                .requiredArgument("name/uuid", "Name or UUID of a player")
                 .requirePermission("plan.search")
                 .description("Search for a player name")
                 .inDepthDescription("List all matching player names to given part of a name.")
@@ -193,13 +205,14 @@ public class PlanCommand {
                 .build();
     }
 
-    private Subcommand networkCommand() {
+    private Subcommand inGameCommand() {
         return Subcommand.builder()
-                .aliases("network", "netw")
-                .requirePermission("plan.network")
-                .description("View network page")
-                .inDepthDescription("Obtain a link to the /network page, only does so on networks.")
-                .onCommand(linkCommands::onNetworkCommand)
+                .aliases("ingame", "qinspect")
+                .optionalArgument("name/uuid", "Name or UUID of a player")
+                .requirePermission("plan.ingame.self")
+                .description("View player info in game")
+                .inDepthDescription("Give information about a single player in game.")
+                .onCommand(dataUtilityCommands::onInGame)
                 .build();
     }
 
