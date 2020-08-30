@@ -51,15 +51,27 @@ public class Confirmation {
     public void onConfirm(CMDSender sender) {
         Consumer<Boolean> found = awaiting.getIfPresent(sender);
         if (found == null) throw new IllegalArgumentException("Confirmation expired, use the command again" /* TODO */);
-        found.accept(true);
-        awaiting.invalidate(sender);
+        try {
+            found.accept(true);
+        } catch (RuntimeException e) {
+            sender.send("The accepted action errored upon execution: " + e /* TODO */);
+            throw e;
+        } finally {
+            awaiting.invalidate(sender);
+        }
     }
 
     public void onCancel(CMDSender sender) {
         Consumer<Boolean> found = awaiting.getIfPresent(sender);
         if (found == null) throw new IllegalArgumentException("Confirmation expired, use the command again" /* TODO */);
-        found.accept(false);
-        awaiting.invalidate(sender);
+        try {
+            found.accept(false);
+        } catch (RuntimeException e) {
+            sender.send("The denied action errored upon execution: " + e /* TODO */);
+            throw e;
+        } finally {
+            awaiting.invalidate(sender);
+        }
     }
 
     public void onAcceptCommand(CMDSender sender, Arguments arguments) {
