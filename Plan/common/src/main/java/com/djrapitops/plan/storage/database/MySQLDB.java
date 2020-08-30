@@ -35,7 +35,6 @@ import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Objects;
@@ -49,7 +48,7 @@ public class MySQLDB extends SQLDB {
 
     private static int increment = 1;
 
-    protected DataSource dataSource;
+    protected HikariDataSource dataSource;
 
     @Inject
     public MySQLDB(
@@ -128,9 +127,7 @@ public class MySQLDB extends SQLDB {
         Connection connection = dataSource.getConnection();
         if (!connection.isValid(5)) {
             connection.close();
-            if (dataSource instanceof HikariDataSource) {
-                ((HikariDataSource) dataSource).close();
-            }
+            if (dataSource != null) dataSource.close();
             try {
                 setupDataSource();
                 // get new connection after restarting pool
@@ -147,9 +144,7 @@ public class MySQLDB extends SQLDB {
     public void close() {
         super.close();
 
-        if (dataSource instanceof HikariDataSource) {
-            ((HikariDataSource) dataSource).close();
-        }
+        if (dataSource != null) dataSource.close();
     }
 
     @Override
