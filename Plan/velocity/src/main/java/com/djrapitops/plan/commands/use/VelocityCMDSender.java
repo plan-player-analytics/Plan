@@ -19,6 +19,7 @@ package com.djrapitops.plan.commands.use;
 import com.velocitypowered.api.command.CommandSource;
 import net.kyori.text.TextComponent;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -58,5 +59,18 @@ public class VelocityCMDSender implements CMDSender {
     @Override
     public ChatFormatter getFormatter() {
         return new ConsoleChatFormatter();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VelocityCMDSender that = (VelocityCMDSender) o;
+        return commandSource.equals(that.commandSource);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(commandSource);
     }
 }

@@ -18,6 +18,7 @@ package com.djrapitops.plan.commands.use;
 
 import org.bukkit.entity.Player;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -53,5 +54,19 @@ public class BukkitPlayerCMDSender extends BukkitCMDSender {
     @Override
     public boolean supportsChatEvents() {
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        BukkitPlayerCMDSender that = (BukkitPlayerCMDSender) o;
+        return player.equals(that.player);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), player);
     }
 }

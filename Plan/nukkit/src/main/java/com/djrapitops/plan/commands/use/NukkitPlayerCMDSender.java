@@ -18,6 +18,7 @@ package com.djrapitops.plan.commands.use;
 
 import cn.nukkit.Player;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -43,5 +44,19 @@ public class NukkitPlayerCMDSender extends NukkitCMDSender {
     @Override
     public ChatFormatter getFormatter() {
         return new PlayerChatFormatter();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        NukkitPlayerCMDSender that = (NukkitPlayerCMDSender) o;
+        return player.equals(that.player);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), player);
     }
 }
