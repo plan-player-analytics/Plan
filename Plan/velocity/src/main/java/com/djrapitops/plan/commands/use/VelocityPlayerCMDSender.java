@@ -18,6 +18,7 @@ package com.djrapitops.plan.commands.use;
 
 import com.velocitypowered.api.proxy.Player;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -49,5 +50,19 @@ public class VelocityPlayerCMDSender extends VelocityCMDSender {
     @Override
     public boolean supportsChatEvents() {
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        VelocityPlayerCMDSender that = (VelocityPlayerCMDSender) o;
+        return player.equals(that.player);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), player);
     }
 }

@@ -18,6 +18,7 @@ package com.djrapitops.plan.commands.use;
 
 import org.bukkit.command.CommandSender;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -57,5 +58,18 @@ public class BukkitCMDSender implements CMDSender {
     @Override
     public ChatFormatter getFormatter() {
         return new ConsoleChatFormatter();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BukkitCMDSender that = (BukkitCMDSender) o;
+        return sender.equals(that.sender);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sender);
     }
 }

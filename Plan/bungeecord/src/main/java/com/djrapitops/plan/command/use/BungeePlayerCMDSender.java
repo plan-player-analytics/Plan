@@ -20,6 +20,7 @@ import com.djrapitops.plan.commands.use.ChatFormatter;
 import com.djrapitops.plan.commands.use.PlayerChatFormatter;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -51,5 +52,19 @@ public class BungeePlayerCMDSender extends BungeeCMDSender {
     @Override
     public boolean supportsChatEvents() {
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        BungeePlayerCMDSender that = (BungeePlayerCMDSender) o;
+        return player.equals(that.player);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), player);
     }
 }
