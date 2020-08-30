@@ -23,6 +23,7 @@ import com.djrapitops.plan.commands.use.MessageBuilder;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -62,5 +63,18 @@ public class BungeeCMDSender implements CMDSender {
     @Override
     public ChatFormatter getFormatter() {
         return new ConsoleChatFormatter();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BungeeCMDSender that = (BungeeCMDSender) o;
+        return sender.equals(that.sender);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sender);
     }
 }

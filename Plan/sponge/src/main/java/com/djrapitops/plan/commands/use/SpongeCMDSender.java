@@ -19,6 +19,7 @@ package com.djrapitops.plan.commands.use;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Text;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -58,5 +59,18 @@ public class SpongeCMDSender implements CMDSender {
     @Override
     public ChatFormatter getFormatter() {
         return new ConsoleChatFormatter();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SpongeCMDSender that = (SpongeCMDSender) o;
+        return source.equals(that.source);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(source);
     }
 }
