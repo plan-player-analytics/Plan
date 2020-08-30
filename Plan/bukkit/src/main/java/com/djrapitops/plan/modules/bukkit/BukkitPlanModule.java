@@ -18,12 +18,8 @@ package com.djrapitops.plan.modules.bukkit;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.commands.OldPlanCommand;
-import com.djrapitops.plugin.command.CommandNode;
 import dagger.Binds;
 import dagger.Module;
-
-import javax.inject.Named;
 
 /**
  * Dagger module for binding Plan instance.
@@ -35,8 +31,4 @@ public interface BukkitPlanModule {
 
     @Binds
     PlanPlugin bindPlanPlugin(Plan plugin);
-
-    @Binds
-    @Named("mainCommand")
-    CommandNode bindMainCommand(OldPlanCommand command);
 }

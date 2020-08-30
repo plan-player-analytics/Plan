@@ -18,7 +18,7 @@ package utilities.dagger;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSystem;
-import com.djrapitops.plan.commands.OldPlanCommand;
+import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.modules.APFModule;
 import com.djrapitops.plan.modules.PlaceholderModule;
 import com.djrapitops.plan.modules.SystemObjectProvidingModule;
@@ -43,7 +43,7 @@ import javax.inject.Singleton;
         PluginSuperClassBindingModule.class
 })
 public interface PlanPluginComponent {
-    OldPlanCommand planCommand();
+    PlanCommand planCommand();
 
     PlanSystem system();
 
