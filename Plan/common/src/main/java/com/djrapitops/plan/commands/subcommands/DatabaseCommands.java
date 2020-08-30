@@ -245,12 +245,12 @@ public class DatabaseCommands {
     }
 
     private void performMove(CMDSender sender, DBType fromDB, DBType toDB) {
-        Database fromDatabase = dbSystem.getActiveDatabaseByType(fromDB);
-        Database toDatabase = dbSystem.getActiveDatabaseByType(toDB);
-        fromDatabase.init();
-        toDatabase.init();
-
         try {
+            Database fromDatabase = dbSystem.getActiveDatabaseByType(fromDB);
+            Database toDatabase = dbSystem.getActiveDatabaseByType(toDB);
+            fromDatabase.init();
+            toDatabase.init();
+
             sender.send("Writing to " + toDB.getName() + "..");
 
             fromDatabase.executeTransaction(new BackupCopyTransaction(fromDatabase, toDatabase)).get();
