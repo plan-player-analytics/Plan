@@ -40,26 +40,26 @@ Cmd SUCCESS - Feature disabled                  || §aSammutettiin '${0}' toista
 Cmd SUCCESS - WebUser register                  || §aLisättiin uusi Web Käyttäjä (${0})!
 Cmd WARN - Database not open                    || §eTietokanta: ${0} - Tämä voi viedä hiukan aikaa..
 Cmd Web - Permission Levels                     || >\§70: Pääsy kaikille sivuille\§71: Pääsy '/players' ja pelaajien sivuille\§72: Pääsy pelaajan sivulle, jolla on sama nimi kuin Web Käyttäjällä\§73+: Ei pääsyä
-Command Help - /plan analyze                    || Katso Palvelimen sivua
+Command Help - /plan server                     || Katso Palvelimen sivua
 Command Help - /plan dev                        || Kehitys komento
 Command Help - /plan help                       || Komentojen lista
-Command Help - /plan info                       || Tarkista Plan versio
-Command Help - /plan inspect                    || Katso Pelaajan sivua
+Command Help - /plan info                       || Information about the plugin
+Command Help - /plan player                     || Katso Pelaajan sivua
 Command Help - /plan manage                     || Hallitse Plan tietokantaa
 Command Help - /plan manage backup              || Varmuuskopioi tietokanta
 Command Help - /plan manage clear               || Tyhjennä tietokanta
 Command Help - /plan manage disable             || Sammuta osa toistaiseksi
 Command Help - /plan manage export              || Vie manuaalisesti
-Command Help - /plan manage hotswap             || Vaihda tietokantaa lennosta
+Command Help - /plan db hotswap             || Vaihda tietokantaa lennosta
 Command Help - /plan manage import              || Tuo tietoa muualta
-Command Help - /plan manage move                || Siirrä tietoa tietokantojen välillä
+Command Help - /plan db move                || Siirrä tietoa tietokantojen välillä
 Command Help - /plan manage raw                 || Tarkastele pelaajan tietoja JSON:na
 Command Help - /plan manage remove              || Poista pelaajan tiedot
 Command Help - /plan manage restore             || Palauta teitokannan varmuuskopio
 Command Help - /plan manage uninstalled         || Merkkaa palvelin poistetuksi tietokantaan.
 Command Help - /plan network                    || Katso Verkoston sivua
 Command Help - /plan players                    || Katso Pelaajat sivua
-Command Help - /plan qinspect                   || Katso pelaajan tietoja pelissä
+Command Help - /plan ingame                   || Katso pelaajan tietoja pelissä
 Command Help - /plan register                   || Rekisteröi Web Käyttäjä
 Command Help - /plan reload                     || Käynnistä Plan uudelleen
 Command Help - /plan search                     || Etsi pelaajan nimeä
@@ -316,7 +316,7 @@ In Depth Help - /plan manage restore ?          || > §2Palautus Alikomento\  Pa
 In Depth Help - /plan manage uninstalled ?      || > §2Uninstalled Server Subcommand\  Marks a server as uninstalled in the database.\  Can not mark the server the command is being used on as uninstalled.\  Will affect ConnectionSystem.
 In Depth Help - /plan network ?                 || > §2Verkosto Komento\  Näyttää linkin verkosto sivulle.\  Jos palvelin ei ole verkostossa, näyttää tämä sivu palvelimen sivun.
 In Depth Help - /plan players ?                 || > §2Pelaajat Komento\  Näyttää linkin pelaajan sivulle.
-In Depth Help - /plan qinspect ?                || > §2Pika-tutkimus Komento\  Näyttää tietoja pelaajasta pelin sisällä.
+In Depth Help - /plan ingame                    || Näyttää tietoja pelaajasta pelin sisällä.
 In Depth Help - /plan reload ?                  || > §2Uudelleenlataus Komento\  Käynnistää Plan:in uudelleen.\  §bEi tue jar:in vaihtoa lennosta
 In Depth Help - /plan search ?                  || > §2Haku Komento\  Hae pelaajannimiä jollain hakusanalla.\§7  Esim: /plan search 123 - Etsii kaikki pelaajat joilla on 123 nimessään.
 In Depth Help - /plan servers ?                 || > §2Palvelimet Komento\  Näyttää tietokannassa olevat Plan palvelimet.\  Voidaan käyttää yhteys ongelmien tutkimiseen.

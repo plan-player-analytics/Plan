@@ -22,7 +22,7 @@ import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.settings.locale.Message;
-import com.djrapitops.plan.settings.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.settings.locale.lang.HelpLang;
 import com.djrapitops.plan.settings.locale.lang.Lang;
 import com.djrapitops.plan.utilities.java.Lists;
 import org.junit.jupiter.api.Test;
@@ -99,9 +99,9 @@ class ComparatorTest {
     @Test
     void localeEntryComparator() {
         Map<Lang, Message> messageMap = new HashMap<>();
-        messageMap.put(CmdHelpLang.SERVERS, new Message(RandomData.randomString(10)));
-        messageMap.put(CmdHelpLang.ANALYZE, new Message(RandomData.randomString(10)));
-        messageMap.put(CmdHelpLang.MANAGE_RESTORE, new Message(RandomData.randomString(10)));
+        messageMap.put(HelpLang.SERVERS, new Message(RandomData.randomString(10)));
+        messageMap.put(HelpLang.SERVER, new Message(RandomData.randomString(10)));
+        messageMap.put(HelpLang.DB_RESTORE, new Message(RandomData.randomString(10)));
 
         List<Lang> result = messageMap.entrySet().stream()
                 .sorted(new LocaleEntryComparator())
@@ -109,9 +109,9 @@ class ComparatorTest {
                 .collect(Collectors.toList());
 
         List<Lang> expected = Arrays.asList(
-                CmdHelpLang.ANALYZE,
-                CmdHelpLang.MANAGE_RESTORE,
-                CmdHelpLang.SERVERS
+                HelpLang.SERVER,
+                HelpLang.DB_RESTORE,
+                HelpLang.SERVERS
         );
         assertEquals(expected, result);
     }

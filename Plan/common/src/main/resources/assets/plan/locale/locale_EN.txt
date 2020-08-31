@@ -40,26 +40,26 @@ Cmd SUCCESS - Feature disabled                  || §aDisabled '${0}' temporaril
 Cmd SUCCESS - WebUser register                  || §aAdded a new user (${0}) successfully!
 Cmd WARN - Database not open                    || §eDatabase is ${0} - This might take longer than expected..
 Cmd Web - Permission Levels                     || >\§70: Access all pages\§71: Access '/players' and all player pages\§72: Access player page with the same username as the webuser\§73+: No permissions
-Command Help - /plan analyze                    || View the Server Page
+Command Help - /plan server                     || View the Server Page
 Command Help - /plan dev                        || Development mode command
 Command Help - /plan help                       || Show command list
-Command Help - /plan info                       || Check the version of Plan
-Command Help - /plan inspect                    || View a Player Page
+Command Help - /plan info                       || Information about the plugin
+Command Help - /plan player                     || View a Player Page
 Command Help - /plan manage                     || Manage Plan Database
 Command Help - /plan manage backup              || Backup a Database
 Command Help - /plan manage clear               || Clear a Database
 Command Help - /plan manage disable             || Disable a feature temporarily
 Command Help - /plan manage export              || Trigger export manually
-Command Help - /plan manage hotswap             || Change Database quickly
+Command Help - /plan db hotswap             || Change Database quickly
 Command Help - /plan manage import              || Import data from elsewhere
-Command Help - /plan manage move                || Move data between Databases
+Command Help - /plan db move                || Move data between Databases
 Command Help - /plan manage raw                 || View raw JSON of player data
 Command Help - /plan manage remove              || Remove Player's data
 Command Help - /plan manage restore             || Restore a previous Backup
 Command Help - /plan manage uninstalled         || Mark a server as uninstalled in the database.
 Command Help - /plan network                    || View the Network Page
 Command Help - /plan players                    || View the Players Page
-Command Help - /plan qinspect                   || View Player info in game
+Command Help - /plan ingame                   || View Player info in game
 Command Help - /plan register                   || Register a Web User
 Command Help - /plan reload                     || Restart Plan
 Command Help - /plan search                     || Search for a player name
@@ -316,7 +316,7 @@ In Depth Help - /plan manage restore ?          || > §2Restore Subcommand\  Res
 In Depth Help - /plan manage uninstalled ?      || > §2Uninstalled Server Subcommand\  Marks a server as uninstalled in the database.\  Can not mark the server the command is being used on as uninstalled.\  Will affect ConnectionSystem.
 In Depth Help - /plan network ?                 || > §2Network Command\  Displays link to the network page.\  If not on a network, this page displays the server page.
 In Depth Help - /plan players ?                 || > §2Players Command\  Displays link to the players page.
-In Depth Help - /plan qinspect ?                || > §2Quick Inspect Command\  Displays some information about the player in game.
+In Depth Help - /plan ingame                    || Displays some information about the player in game.
 In Depth Help - /plan reload ?                  || > §2Reload Command\  Restarts the plugin using onDisable and onEnable.\  §bDoes not support swapping jar on the fly
 In Depth Help - /plan search ?                  || > §2Search Command\  Get a list of Player names that match the given argument.\§7  Example: /plan search 123 - Finds all users with 123 in their name.
 In Depth Help - /plan servers ?                 || > §2Servers Command\  Displays list of Plan servers in the Database.\  Can be used to debug issues with database registration on a network.
