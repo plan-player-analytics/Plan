@@ -191,7 +191,7 @@ public class RegistrationCommands {
         }
         User presentUser = found.get();
         boolean ownsTheUser = Objects.equals(playerUUID, presentUser.getLinkedToUUID());
-        if (!(ownsTheUser || sender.hasPermission(Permissions.MANAGE_WEB.getPerm()))) {
+        if (!(ownsTheUser || sender.hasPermission(Permissions.UNREGISTER_OTHER.getPerm()))) {
             throw new IllegalArgumentException(locale.getString(CommandLang.USER_NOT_LINKED));
         }
 
