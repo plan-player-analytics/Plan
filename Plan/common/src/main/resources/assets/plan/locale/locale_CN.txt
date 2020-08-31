@@ -46,26 +46,26 @@ Cmd SUCCESS - Feature disabled                  || §a已在下次插件重载�
 Cmd SUCCESS - WebUser register                  || §a已成功添加新用户（${0}）！
 Cmd WARN - Database not open                    || §e数据库状态为 ${0} - 可能需要花费更多的时间..
 Cmd Web - Permission Levels                     || >\§70：访问所有页面\§71：访问 '/players' 及所有玩家页\§72：访问用户名与网页用户名一致的玩家页\§73+：无权限
-Command Help - /plan analyze                    || 查看服务器分析
+Command Help - /plan server                     || 查看服务器分析
 Command Help - /plan dev                        || 开发模式命令
 Command Help - /plan help                       || 查看命令列表。
-Command Help - /plan info                       || 查看计划版本
-Command Help - /plan inspect                    || 检视玩家数据
+Command Help - /plan info                       || Information about the plugin
+Command Help - /plan player                     || 检视玩家数据
 Command Help - /plan manage                     || 数据库管理命令
 Command Help - /plan manage backup              || 备份数据库至 .db 文件
 Command Help - /plan manage clear               || 从数据库中清空所有数据
 Command Help - /plan manage disable             || 暂时禁用功能
 Command Help - /plan manage export              || 手动导出
-Command Help - /plan manage hotswap             || 热插拔数据库并重启插件
+Command Help - /plan db hotswap             || 热插拔数据库并重启插件
 Command Help - /plan manage import              || 从插件中导入数据
-Command Help - /plan manage move                || 在数据库间移动数据
+Command Help - /plan db move                || 在数据库间移动数据
 Command Help - /plan manage raw                 || 查看玩家数据的raw JSON
 Command Help - /plan manage remove              || 从活跃数据库中移除玩家数据
 Command Help - /plan manage restore             || 恢复数据库
 Command Help - /plan manage uninstalled         || 在数据库中将一个服务器标记为未安装.
 Command Help - /plan network                    || 查看全服网络页面
 Command Help - /plan players                    || 列出所有已缓存玩家名单
-Command Help - /plan qinspect                   || 在游戏内检视玩家数据
+Command Help - /plan ingame                   || 在游戏内检视玩家数据
 Command Help - /plan register                   || 注册网页用户
 Command Help - /plan reload                     || 重新启动插件（重载配置）
 Command Help - /plan search                     || 搜索玩家
@@ -325,7 +325,7 @@ In Depth Help - /plan manage restore ?          || > §2恢复命令\  从先前
 In Depth Help - /plan manage uninstalled ?      || > §2卸载服务器的子命令\  在数据库中将一个服务器视为未安装。\  Can not mark the server the command is being used on as uninstalled.\  将会影响连接系统。
 In Depth Help - /plan network ?                 || > §2全服网络命令\  显示到全服网络页的链接。\  若不在群组全服网络上，此页面将显示为服务器页面。
 In Depth Help - /plan players ?                 || > §2玩家命令\  显示到玩家页的链接。
-In Depth Help - /plan qinspect ?                || §2快速检视命令\§f  用于获取游戏内关于检视的信息。\§7  相比检视网页有着更少的信息。\§7  别名：/plan qi
+In Depth Help - /plan ingame                    || 相比检视网页有着更少的信息。
 In Depth Help - /plan reload ?                  || > §2重载命令\  使用 onDisable 与 onEnable 重新载入插件。\  §b不支持运行时热切换插件
 In Depth Help - /plan search ?                  || §2搜索命令\§f  用于获取匹配特定参数的玩家名列表。\§7  示例：/plan search 123 - 搜索名称中包含 123 的所有玩家。
 In Depth Help - /plan servers ?                 || > §2服务器命令\  显示数据库中的计划服务器列表。\  可用于调试在全服网络上数据库注册的问题。

@@ -25,6 +25,7 @@ import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
+import com.djrapitops.plan.settings.locale.lang.HelpLang;
 import com.djrapitops.plan.settings.locale.lang.ManageLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -133,16 +134,13 @@ public class RegistrationCommands {
     }
 
     private int getPermissionLevel(CMDSender sender) {
-        final String permAnalyze = "plan.server";
-        final String permInspectOther = "plan.player.other";
-        final String permInspect = "plan.player.self";
-        if (sender.hasPermission(permAnalyze)) {
+        if (sender.hasPermission(Permissions.SERVER)) {
             return 0;
         }
-        if (sender.hasPermission(permInspectOther)) {
+        if (sender.hasPermission(Permissions.PLAYER_OTHER)) {
             return 1;
         }
-        if (sender.hasPermission(permInspect)) {
+        if (sender.hasPermission(Permissions.PLAYER_SELF)) {
             return 2;
         }
         return 100;
@@ -169,7 +167,7 @@ public class RegistrationCommands {
     }
 
     public void onUnregister(String mainCommand, CMDSender sender, Arguments arguments) {
-        Optional<String> givenUsername = arguments.get(0).filter(arg -> sender.hasPermission("plan.unregister.other"));
+        Optional<String> givenUsername = arguments.get(0).filter(arg -> sender.hasPermission(Permissions.UNREGISTER_OTHER));
 
         Database database = dbSystem.getDatabase();
         UUID playerUUID = sender.getUUID().orElse(null);
@@ -182,7 +180,7 @@ public class RegistrationCommands {
             }
             username = found.get().getUsername();
         } else if (!givenUsername.isPresent()) {
-            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, "<username>"));
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, "<" + locale.getString(HelpLang.ARG_USERNAME) + ">"));
         } else {
             username = givenUsername.get();
         }

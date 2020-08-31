@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.commands.use;
 
+import com.djrapitops.plan.settings.Permissions;
+
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,6 +28,10 @@ public interface CMDSender {
     Optional<String> getPlayerName();
 
     boolean hasPermission(String permission);
+
+    default boolean hasPermission(Permissions permission) {
+        return hasPermission(permission.get());
+    }
 
     default boolean hasAllPermissionsFor(Subcommand subcommand) {
         return !isMissingPermissionsFor(subcommand);
