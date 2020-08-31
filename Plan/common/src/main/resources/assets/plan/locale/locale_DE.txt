@@ -40,26 +40,26 @@ Cmd SUCCESS - Feature disabled                  || §a'${0}' wurde bis zum näch
 Cmd SUCCESS - WebUser register                  || §aNeuer Account (${0}) erfolgreich hinzugefügt!
 Cmd WARN - Database not open                    || §eDatenbank ist ${0} - Dies könnte länger als erwartet dauern..
 Cmd Web - Permission Levels                     || >\§70: Zugriff auf alle Seiten\§71: Zugriff auf '/players' Und alle Spielerseiten\§72: Zugriff auf alle Spielerseiten mit dem gleichen Username wie der Web-Account\§73+: Keine Berechtigung
-Command Help - /plan analyze                    || Server-Übersicht
+Command Help - /plan server                     || Server-Übersicht
 Command Help - /plan dev                        || Entwicklungsmodus-Befehl
 Command Help - /plan help                       || Zeigt eine Befehlsliste an
-Command Help - /plan info                       || Zeigt die Version von Plan an
-Command Help - /plan inspect                    || Zeigt eine Spielerseite an
+Command Help - /plan info                       || Information about the plugin
+Command Help - /plan player                     || Zeigt eine Spielerseite an
 Command Help - /plan manage                     || Verwaltet die Plan-Datenbank
 Command Help - /plan manage backup              || Erstellt ein Backup der Datenbank
 Command Help - /plan manage clear               || Datenbank leeren
 Command Help - /plan manage disable             || Schalte eine Funktion temporär aus
 Command Help - /plan manage export              || Trigger export manually
-Command Help - /plan manage hotswap             || Ändere die Datenbank schnell
+Command Help - /plan db hotswap             || Ändere die Datenbank schnell
 Command Help - /plan manage import              || Daten importieren
-Command Help - /plan manage move                || Bewege die Daten zwischen den Datenbanken
+Command Help - /plan db move                || Bewege die Daten zwischen den Datenbanken
 Command Help - /plan manage raw                 || View raw JSON of player data
 Command Help - /plan manage remove              || Entferne die Daten eines Spielers
 Command Help - /plan manage restore             || Spiele ein Backup ein
 Command Help - /plan manage uninstalled         || Mark a server as uninstalled in the database.
 Command Help - /plan network                    || Netzwerk-Seite
 Command Help - /plan players                    || Spieler-Seite
-Command Help - /plan qinspect                   || Zeigt die Spielerinfo im Spiel
+Command Help - /plan ingame                   || Zeigt die Spielerinfo im Spiel
 Command Help - /plan register                   || Registriere einen Account
 Command Help - /plan reload                     || Plan neuladen
 Command Help - /plan search                     || Nach einem Spieler suchen
@@ -316,7 +316,7 @@ In Depth Help - /plan manage restore ?          || > §2Restore-Unterbefehl\  St
 In Depth Help - /plan manage uninstalled ?      || > §2Uninstalled Server Subcommand\  Marks a server as uninstalled in the database.\  Can not mark the server the command is being used on as uninstalled.\  Will affect ConnectionSystem.
 In Depth Help - /plan network ?                 || > §2Netzwerk-Befehl\  Erstellt einen Link zur Netzwerkseite.  Wenn du in einem Netzwerk bist, wird die Serverseite angezeigt.
 In Depth Help - /plan players ?                 || > §2Spieler-Befehl\  Erstellt einen Link zur Spielerseite.
-In Depth Help - /plan qinspect ?                || > §2Schnell-Untersuchungs-Befehl\  Zeigt einige Informationen zu einem Spieler im Spiel.
+In Depth Help - /plan ingame                    || Zeigt einige Informationen zu einem Spieler im Spiel.
 In Depth Help - /plan reload ?                  || > §2Reload-Befehl\  Restartet das plugin mit onDisable and onEnable.\  §bDamit kann NICHT die jar getauscht werden
 In Depth Help - /plan search ?                  || > §2Such-Befehl\  Erstellt eine Liste mit Spielernamen, die mit der Suche übereinstimmen.\§7  Beispiel: /plan search 123 - Gibt alle Spieler mit 123 im Namen aus.
 In Depth Help - /plan servers ?                 || > §2Server-Command\  Zeigt eine Liste mit allen Servern in der datenbank.\  Kann verwendet werden, um Probleme mit Registrierungen in der Datenbank in einem Netzwerk zu beheben.

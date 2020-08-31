@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.commands.use;
 
+import com.djrapitops.plan.settings.Permissions;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -29,6 +30,10 @@ public interface SubcommandBuilder {
     SubcommandBuilder aliases(String... aliases);
 
     SubcommandBuilder requirePermission(String permission);
+
+    default SubcommandBuilder requirePermission(Permissions permission) {
+        return requirePermission(permission.get());
+    }
 
     SubcommandBuilder description(String description);
 

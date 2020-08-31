@@ -40,26 +40,26 @@ Cmd SUCCESS - Feature disabled                  || §aFontionnalité '${0}' temp
 Cmd SUCCESS - WebUser register                  || §aAjout d'un nouvel utilisateur (${0}) avec succès !
 Cmd WARN - Database not open                    || §eLa base de données est : ${0} - Cela pourrait prendre plus de temps que prévu...
 Cmd Web - Permission Levels                     || >\§70: Accéder à toutes les pages.\§71: Accéder au '/players' et à toutes les pages des joueurs.\§72: Accéder à la page du joueur avec le même nom d'utilisateur que l'utilisateur Web.\§73+: Pas de permission.
-Command Help - /plan analyze                    || Voir la page du serveur.
+Command Help - /plan server                     || Voir la page du serveur.
 Command Help - /plan dev                        || Commande du mode de développement.
 Command Help - /plan help                       || Visualiser la liste des commandes.
-Command Help - /plan info                       || Visualiser la version de Plan.
-Command Help - /plan inspect                    || Visualiser la page d'un joueur.
+Command Help - /plan info                       || Information about the plugin
+Command Help - /plan player                     || Visualiser la page d'un joueur.
 Command Help - /plan manage                     || Gérer la base de données de Plan.
 Command Help - /plan manage backup              || Sauvegarder une base de données.
 Command Help - /plan manage clear               || Effacer une base de données.
 Command Help - /plan manage disable             || Désactiver temporairement une fonctionnalité.
 Command Help - /plan manage export              || Déclencher l'exportation manuelle.
-Command Help - /plan manage hotswap             || Changer rapidement de base de données.
+Command Help - /plan db hotswap             || Changer rapidement de base de données.
 Command Help - /plan manage import              || Importer des données externes.
-Command Help - /plan manage move                || Déplacer des données entre des bases de données.
+Command Help - /plan db move                || Déplacer des données entre des bases de données.
 Command Help - /plan manage raw                 || Visualiser le JSON brut des données du joueur.
 Command Help - /plan manage remove              || Supprimer les données d'un joueur.
 Command Help - /plan manage restore             || Restaurer une sauvegarde précédente.
 Command Help - /plan manage uninstalled         || Mark a server as uninstalled in the database.
 Command Help - /plan network                    || Visualiser la page du réseau.
 Command Help - /plan players                    || Visualiser la page des joueurs.
-Command Help - /plan qinspect                   || Visualiser les informations d'un joueur (en jeu).
+Command Help - /plan ingame                   || Visualiser les informations d'un joueur (en jeu).
 Command Help - /plan register                   || Enregistrer un utilisateur Web.
 Command Help - /plan reload                     || Recharger Plan.
 Command Help - /plan search                     || Rechercher un joueur.
@@ -317,7 +317,7 @@ In Depth Help - /plan manage restore ?          || > §2Sous-commande de restaur
 In Depth Help - /plan manage uninstalled ?      || > §2Sous-commande de serveur désinstallé\  Marque un serveur comme désinstallé dans la base de données.\  Impossible de marquer le serveur sur lequel la commande est utilisée comme désinstallé.\  Influencera le ConnectionSystem.
 In Depth Help - /plan network ?                 || > §2Sous-commande du réseau\  Affiche le lien vers la page du réseau.\  S'il ne s'agit pas d'un réseau, elle affiche la page du serveur.
 In Depth Help - /plan players ?                 || > §2Commande des joueurs\  Affiche un lien vers la page des joueurs.
-In Depth Help - /plan qinspect ?                || > §2Commande d'inspection rapide\  Affiche des informations sur un joueur en jeu.
+In Depth Help - /plan ingame                    || Affiche des informations sur un joueur en jeu.
 In Depth Help - /plan reload ?                  || > §2Commande de rechargement\  Redémarre le plugin en utilisant onDisable et onEnable.\  §bNe supporte pas l'échange de .jar à la volée (sans redémarrage complet)
 In Depth Help - /plan search ?                  || > §2Commande de recherches\  Obtient une liste des joueurs correspondant à l'argument donné.\§7  Exemple: /plan search 123 - Recherche tous les utilisateurs dont le nom comporte '123'.
 In Depth Help - /plan servers ?                 || > §2Commande des serveurs\  Affiche la liste des serveurs de Plan présents dans la base de données.\  Peut être utilisé pour résoudre les problèmes d'enregistrement de base de données sur un réseau.

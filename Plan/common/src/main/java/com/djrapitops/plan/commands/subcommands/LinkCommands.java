@@ -24,6 +24,7 @@ import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -235,7 +236,7 @@ public class LinkCommands {
         String playerName = dbSystem.getDatabase().query(UserIdentifierQueries.fetchPlayerNameOf(playerUUID))
                 .orElseThrow(() -> new IllegalArgumentException("Player '" + identifier + "' was not found in the database."));
 
-        if (sender.hasPermission("plan.json.other") || playerUUID.equals(senderUUID)) {
+        if (sender.hasPermission(Permissions.JSON_OTHER) || playerUUID.equals(senderUUID)) {
             String address = getAddress(sender) + "/player/" + Html.encodeToURL(playerName) + "/raw";
             sender.buildMessage()
                     .addPart(colors.getMainColor() + "Player json: ")

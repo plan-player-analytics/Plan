@@ -40,26 +40,26 @@ Cmd SUCCESS - Feature disabled                  || §a次にプラグインが�
 Cmd SUCCESS - WebUser register                  || §a新規ユーザー「(${0})」の登録に成功しました！
 Cmd WARN - Database not open                    || §eデータベースは${0}です - 予想以上に時間がかかるかもしれません
 Cmd Web - Permission Levels                     || >\§70: 全てのページにアクセスできます\§71:「/players」と全てのプレイヤーページにアクセスできます\§72: ウェブユーザーと同じユーザー名でプレイヤーページにアクセスできます\§73+:権限を保持していません
-Command Help - /plan analyze                    || サーバーページのURLを表示します
+Command Help - /plan server                     || サーバーページのURLを表示します
 Command Help - /plan dev                        || 開発モードコマンド
 Command Help - /plan help                       || コマンドリストを表示します
-Command Help - /plan info                       || 「Plan」のバージョンを表示します
-Command Help - /plan inspect                    || 「プレイヤー」のURLを表示します
+Command Help - /plan info                       || Information about the plugin
+Command Help - /plan player                     || 「プレイヤー」のURLを表示します
 Command Help - /plan manage                     || 「Plan」のデータベースを管理します
 Command Help - /plan manage backup              || データベースをバックアップします
 Command Help - /plan manage clear               || データベースを消去します
 Command Help - /plan manage disable             || 機能を一時的に無効にします
 Command Help - /plan manage export              || 手動でデータのエクスポートを行います
-Command Help - /plan manage hotswap             || データベースを高速で変更します
+Command Help - /plan db hotswap             || データベースを高速で変更します
 Command Help - /plan manage import              || 他の場所からデータをインポートします
-Command Help - /plan manage move                || データベース間でデータを移動します
+Command Help - /plan db move                || データベース間でデータを移動します
 Command Help - /plan manage raw                 || プレイヤーデータのJSONファイルを直接表示ます
 Command Help - /plan manage remove              || プレイヤーのデータを削除します
 Command Help - /plan manage restore             || 以前のバックアップから復元します
 Command Help - /plan manage uninstalled         || 指定されたサーバーをデータベースからアンインストールします
 Command Help - /plan network                    || 「ネットワーク」のページのURLを表示します
 Command Help - /plan players                    || 「プレイヤー」のページのURLを表示します
-Command Help - /plan qinspect                   || プレイヤー情報をゲーム内で表示します
+Command Help - /plan ingame                   || プレイヤー情報をゲーム内で表示します
 Command Help - /plan register                   || ウェブユーザーを登録します
 Command Help - /plan reload                     || 「Plan」を再起動します
 Command Help - /plan search                     || プレイヤー名を検索します
@@ -316,7 +316,7 @@ In Depth Help - /plan manage restore ?          || > §2復元補助コマンド
 In Depth Help - /plan manage uninstalled ?      || > §2サーバーアンインストール補助コマンド\  指定されたサーバーをデータベースからアンインストールします\  コマンドが実行されているサーバーをアンインストールするサーバーとしてマークすることはできません\  サーバーの接続システムに影響します
 In Depth Help - /plan network ?                 || > §2ネットワークコマンド\  「ネットワーク」のページのURLを表示します\  BungeeCordのネットワーク上にない場合は、このページにサーバーページが表示されます。
 In Depth Help - /plan players ?                 || > §2プレイヤーコマンド\  「プレイヤー」のページのURLを表示します
-In Depth Help - /plan qinspect ?                || > §2クイック検査コマンド\  ゲーム内にいるプレイヤーに関する情報を表示します。
+In Depth Help - /plan ingame                    || ゲーム内にいるプレイヤーに関する情報を表示します。
 In Depth Help - /plan reload ?                  || > §2リロードコマンド\ 「onDisable」と「onEnable」を使ってプラグインを再起動します。\  §bその状態で「Swapping jar」は対応していません
 In Depth Help - /plan search ?                  || > §2検索コマンド\  与えられた引数に一致するプレイヤー名のリストを取得します\§7  例: /plan search 123 - 名前に「123」を含むすべてのユーザーを検索します
 In Depth Help - /plan servers ?                 || > §2サーバーコマンド\  データベース内の「Plan」サーバーのリストを表示します\  BungeeCordネットワークのデータベースにサーバーを登録する際の問題をデバッグするために使用できます

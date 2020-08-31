@@ -23,7 +23,10 @@ import com.djrapitops.plan.commands.use.CommandWithSubcommands;
 import com.djrapitops.plan.commands.use.Subcommand;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.identification.Server;
+import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.DeepHelpLang;
+import com.djrapitops.plan.settings.locale.lang.HelpLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
@@ -143,10 +146,10 @@ public class PlanCommand {
     private Subcommand serverCommand() {
         return Subcommand.builder()
                 .aliases("server", "analyze", "a", "analyse", "analysis")
-                .optionalArgument("server", "Name, ID or UUID of a server")
-                .requirePermission("plan.server")
-                .description("View a server page")
-                .inDepthDescription("Obtain a link to the /server page of a specific server, or the current server if no arguments are given.")
+                .optionalArgument(locale.getString(HelpLang.ARG_SERVER), locale.getString(HelpLang.DESC_ARG_SERVER_IDENTIFIER))
+                .requirePermission(Permissions.SERVER)
+                .description(locale.getString(HelpLang.SERVER))
+                .inDepthDescription(locale.getString(DeepHelpLang.SERVER))
                 .onTabComplete(this::serverNames)
                 .onCommand(linkCommands::onServerCommand)
                 .build();
@@ -155,9 +158,9 @@ public class PlanCommand {
     private Subcommand serversCommand() {
         return Subcommand.builder()
                 .aliases("servers", "serverlist", "listservers", "sl", "ls")
-                .requirePermission("plan.servers")
-                .description("List servers")
-                .inDepthDescription("List ids, names and uuids of servers in the database.")
+                .requirePermission(Permissions.SERVERS)
+                .description(locale.getString(HelpLang.SERVERS))
+                .inDepthDescription(locale.getString(DeepHelpLang.SERVERS))
                 .onCommand(linkCommands::onServersCommand)
                 .build();
     }
@@ -165,9 +168,9 @@ public class PlanCommand {
     private Subcommand networkCommand() {
         return Subcommand.builder()
                 .aliases("network", "netw")
-                .requirePermission("plan.network")
-                .description("View network page")
-                .inDepthDescription("Obtain a link to the /network page, only does so on networks.")
+                .requirePermission(Permissions.NETWORK)
+                .description(locale.getString(HelpLang.NETWORK))
+                .inDepthDescription(locale.getString(DeepHelpLang.NETWORK))
                 .onCommand(linkCommands::onNetworkCommand)
                 .build();
     }
@@ -175,10 +178,10 @@ public class PlanCommand {
     private Subcommand playerCommand() {
         return Subcommand.builder()
                 .aliases("player", "inspect")
-                .optionalArgument("name/uuid", "Name or UUID of a player")
-                .requirePermission("plan.player.self")
-                .description("View a player page")
-                .inDepthDescription("Obtain a link to the /player page of a specific player, or the current player.")
+                .optionalArgument(locale.getString(HelpLang.ARG_NAME_UUID), locale.getString(HelpLang.DESC_ARG_PLAYER_IDENTIFIER))
+                .requirePermission(Permissions.PLAYER_SELF)
+                .description(locale.getString(HelpLang.PLAYER))
+                .inDepthDescription(locale.getString(DeepHelpLang.PLAYER))
                 .onTabComplete(this::playerNames)
                 .onCommand(linkCommands::onPlayerCommand)
                 .build();
@@ -187,9 +190,9 @@ public class PlanCommand {
     private Subcommand playersCommand() {
         return Subcommand.builder()
                 .aliases("players", "pl", "playerlist", "list")
-                .requirePermission("plan.player.other")
-                .description("View players page")
-                .inDepthDescription("Obtain a link to the /players page to see a list of players.")
+                .requirePermission(Permissions.PLAYER_OTHER)
+                .description(locale.getString(HelpLang.PLAYERS))
+                .inDepthDescription(locale.getString(DeepHelpLang.PLAYERS))
                 .onCommand(linkCommands::onPlayersCommand)
                 .build();
     }
@@ -197,10 +200,10 @@ public class PlanCommand {
     private Subcommand searchCommand() {
         return Subcommand.builder()
                 .aliases("search")
-                .requiredArgument("name/uuid", "Name or UUID of a player")
-                .requirePermission("plan.search")
-                .description("Search for a player name")
-                .inDepthDescription("List all matching player names to given part of a name.")
+                .requiredArgument(locale.getString(HelpLang.ARG_NAME_UUID), locale.getString(HelpLang.DESC_ARG_PLAYER_IDENTIFIER))
+                .requirePermission(Permissions.SEARCH)
+                .description(locale.getString(HelpLang.SEARCH))
+                .inDepthDescription(locale.getString(DeepHelpLang.SEARCH))
                 .onCommand(dataUtilityCommands::onSearch)
                 .build();
     }
@@ -208,10 +211,10 @@ public class PlanCommand {
     private Subcommand inGameCommand() {
         return Subcommand.builder()
                 .aliases("ingame", "qinspect")
-                .optionalArgument("name/uuid", "Name or UUID of a player")
-                .requirePermission("plan.ingame.self")
-                .description("View player info in game")
-                .inDepthDescription("Give information about a single player in game.")
+                .optionalArgument(locale.getString(HelpLang.ARG_NAME_UUID), locale.getString(HelpLang.DESC_ARG_PLAYER_IDENTIFIER))
+                .requirePermission(Permissions.INGAME_SELF)
+                .description(locale.getString(HelpLang.INGAME))
+                .inDepthDescription(locale.getString(DeepHelpLang.INGAME))
                 .onCommand(dataUtilityCommands::onInGame)
                 .build();
     }
@@ -219,10 +222,10 @@ public class PlanCommand {
     private Subcommand registerCommand() {
         return Subcommand.builder()
                 .aliases("register")
-                .requirePermission("plan.register.self")
-                .optionalArgument("--code ${code}", "Code used to finalize registration.")
-                .description("Register a user for Plan website")
-                .inDepthDescription("Use without arguments to get link to register page. Use --code [code] after registration to get a user.")
+                .requirePermission(Permissions.REGISTER_SELF)
+                .optionalArgument("--code " + locale.getString(HelpLang.ARG_CODE), locale.getString(HelpLang.DESC_ARG_CODE))
+                .description(locale.getString(HelpLang.REGISTER))
+                .inDepthDescription(locale.getString(DeepHelpLang.REGISTER))
                 .onCommand(registrationCommands::onRegister)
                 .onTabComplete((sender, arguments) -> arguments.isEmpty() ? Collections.singletonList("--code") : Collections.emptyList())
                 .build();
@@ -231,10 +234,10 @@ public class PlanCommand {
     private Subcommand unregisterCommand() {
         return Subcommand.builder()
                 .aliases("unregister")
-                .requirePermission("plan.unregister.self")
-                .optionalArgument("username", "Username of another user. If not specified linked user is used.")
-                .description("Unregister user of Plan website")
-                .inDepthDescription("Use without arguments to unregister linked user, or with username argument to unregister another user.")
+                .requirePermission(Permissions.UNREGISTER_SELF)
+                .optionalArgument(locale.getString(HelpLang.ARG_USERNAME), locale.getString(HelpLang.DESC_ARG_USERNAME))
+                .description(locale.getString(HelpLang.UNREGISTER))
+                .inDepthDescription(locale.getString(DeepHelpLang.UNREGISTER))
                 .onCommand((sender, arguments) -> registrationCommands.onUnregister(commandName, sender, arguments))
                 .build();
     }
@@ -256,9 +259,9 @@ public class PlanCommand {
     private Subcommand infoCommand() {
         return Subcommand.builder()
                 .aliases("info")
-                .requirePermission("plan.info")
-                .description("Information about the plugin")
-                .inDepthDescription("Display the current status of the plugin.")
+                .requirePermission(Permissions.INFO)
+                .description(locale.getString(HelpLang.INFO))
+                .inDepthDescription(locale.getString(DeepHelpLang.INFO))
                 .onCommand(statusCommands::onInfo)
                 .build();
     }
@@ -266,9 +269,9 @@ public class PlanCommand {
     private Subcommand reloadCommand() {
         return Subcommand.builder()
                 .aliases("reload")
-                .requirePermission("plan.reload")
-                .description("Reload the plugin")
-                .inDepthDescription("Disable and enable the plugin to reload any changes in config.")
+                .requirePermission(Permissions.RELOAD)
+                .description(locale.getString(HelpLang.RELOAD))
+                .inDepthDescription(locale.getString(DeepHelpLang.RELOAD))
                 .onCommand(statusCommands::onReload)
                 .build();
     }
@@ -276,20 +279,20 @@ public class PlanCommand {
     private Subcommand disableCommand() {
         return Subcommand.builder()
                 .aliases("disable")
-                .requirePermission("plan.disable")
-                .optionalArgument("feature", "Name of the feature to disable: kickcount")
-                .description("Disable the plugin or part of it")
-                .inDepthDescription("Disable the plugin or part of it until next reload/restart.")
+                .requirePermission(Permissions.DISABLE)
+                .optionalArgument(locale.getString(HelpLang.ARG_FEATURE), locale.getString(HelpLang.DESC_ARG_FEATURE, "kickcount"))
+                .description(locale.getString(HelpLang.DISABLE))
+                .inDepthDescription(locale.getString(DeepHelpLang.DISABLE))
                 .onCommand(statusCommands::onDisable)
                 .build();
     }
 
     private Subcommand webUsersCommand() {
         return Subcommand.builder()
-                .aliases("webusers", "users")
-                .requirePermission("plan.register.other")
-                .description("List all web users")
-                .inDepthDescription("Lists web users as a table.")
+                .aliases("users", "webusers")
+                .requirePermission(Permissions.USERS)
+                .description(locale.getString(HelpLang.USERS))
+                .inDepthDescription(locale.getString(DeepHelpLang.USERS))
                 .onCommand(linkCommands::onWebUsersCommand)
                 .build();
     }
@@ -297,9 +300,7 @@ public class PlanCommand {
     private Subcommand databaseCommand() {
         return CommandWithSubcommands.builder()
                 .aliases("db", "database")
-                .requirePermission("plan.data.base")
-                .optionalArgument("subcommand", "Use the command without subcommand to see help.")
-                .description("Manage Plan database")
+                .optionalArgument(locale.getString(HelpLang.ARG_SUBCOMMAND), locale.getString(HelpLang.DESC_ARG_SUBCOMMAND))
                 .colorScheme(colors)
                 .subcommand(backupCommand())
                 .subcommand(restoreCommand())
@@ -308,17 +309,19 @@ public class PlanCommand {
                 .subcommand(clearCommand())
                 .subcommand(removeCommand())
                 .subcommand(uninstalledCommand())
-                .inDepthDescription("Use different database subcommands to change the data in some way")
+                .requirePermission(Permissions.DATA_BASE)
+                .description(locale.getString(HelpLang.DB))
+                .inDepthDescription(locale.getString(DeepHelpLang.DB))
                 .build();
     }
 
     private Subcommand backupCommand() {
         return Subcommand.builder()
                 .aliases("backup")
-                .requirePermission("plan.data.backup")
-                .optionalArgument("MySQL/SQlite/H2", "Type of the database to backup. Current database is used if not specified.")
-                .description("Backup data of a database to a file")
-                .inDepthDescription("Uses SQLite to backup one of the usable databases to a file.")
+                .requirePermission(Permissions.DATA_BACKUP)
+                .optionalArgument("MySQL/SQlite/H2", locale.getString(HelpLang.DESC_ARG_DB_BACKUP))
+                .description(locale.getString(HelpLang.DB_BACKUP))
+                .inDepthDescription(locale.getString(DeepHelpLang.DB_BACKUP))
                 .onCommand(databaseCommands::onBackup)
                 .build();
     }
@@ -326,11 +329,11 @@ public class PlanCommand {
     private Subcommand restoreCommand() {
         return Subcommand.builder()
                 .aliases("restore")
-                .requirePermission("plan.data.restore")
-                .requiredArgument("backup-file", "Name of the backup file (case sensitive)")
-                .optionalArgument("MySQL/SQlite/H2", "Type of the database to restore to. Current database is used if not specified.")
-                .description("Restore data from a file to a database")
-                .inDepthDescription("Uses SQLite to backup file and overwrites contents of the target database.")
+                .requirePermission(Permissions.DATA_RESTORE)
+                .requiredArgument(locale.getString(HelpLang.ARG_BACKUP_FILE), locale.getString(HelpLang.DESC_ARG_BACKUP_FILE))
+                .optionalArgument("MySQL/SQlite/H2", locale.getString(HelpLang.DESC_ARG_DB_RESTORE))
+                .description(locale.getString(HelpLang.DB_RESTORE))
+                .inDepthDescription(locale.getString(DeepHelpLang.DB_RESTORE))
                 .onCommand((sender, arguments) -> databaseCommands.onRestore(commandName, sender, arguments))
                 .build();
     }
@@ -338,11 +341,11 @@ public class PlanCommand {
     private Subcommand moveCommand() {
         return Subcommand.builder()
                 .aliases("move")
-                .requirePermission("plan.data.move")
-                .requiredArgument("MySQL/SQlite/H2", "Type of the database to move data from.")
-                .requiredArgument("MySQL/SQlite/H2", "Type of the database to move data to. Can not be same as previous.")
-                .description("Move data between databases")
-                .inDepthDescription("Overwrites contents in the other database with the contents in another.")
+                .requirePermission(Permissions.DATA_MOVE)
+                .requiredArgument("MySQL/SQlite/H2", locale.getString(HelpLang.DESC_ARG_DB_MOVE_FROM))
+                .requiredArgument("MySQL/SQlite/H2", locale.getString(HelpLang.DESC_ARG_DB_MOVE_TO))
+                .description(locale.getString(HelpLang.DB_MOVE))
+                .inDepthDescription(locale.getString(DeepHelpLang.DB_MOVE))
                 .onCommand((sender, arguments) -> databaseCommands.onMove(commandName, sender, arguments))
                 .build();
     }
@@ -350,10 +353,10 @@ public class PlanCommand {
     private Subcommand hotswapCommand() {
         return Subcommand.builder()
                 .aliases("hotswap")
-                .requirePermission("plan.data.hotswap")
-                .requiredArgument("MySQL/SQlite/H2", "Type of the database to start using.")
-                .description("Move data between databases")
-                .inDepthDescription("Reloads the plugin with the other database and changes the config to match.")
+                .requirePermission(Permissions.DATA_HOTSWAP)
+                .requiredArgument("MySQL/SQlite/H2", locale.getString(HelpLang.DESC_ARG_DB_HOTSWAP))
+                .description(locale.getString(HelpLang.DB_HOTSWAP))
+                .inDepthDescription(locale.getString(DeepHelpLang.DB_HOTSWAP))
                 .onCommand(databaseCommands::onHotswap)
                 .build();
     }
@@ -361,10 +364,10 @@ public class PlanCommand {
     private Subcommand clearCommand() {
         return Subcommand.builder()
                 .aliases("clear")
-                .requirePermission("plan.data.clear")
-                .requiredArgument("MySQL/SQlite/H2", "Type of the database to remove data from.")
-                .description("Remove ALL Plan data from a database")
-                .inDepthDescription("Clears all Plan tables, removing all Plan-data in the process.")
+                .requirePermission(Permissions.DATA_CLEAR)
+                .requiredArgument("MySQL/SQlite/H2", locale.getString(HelpLang.DESC_ARG_DB_REMOVE))
+                .description(locale.getString(HelpLang.DB_CLEAR))
+                .inDepthDescription(locale.getString(DeepHelpLang.DB_CLEAR))
                 .onCommand((sender, arguments) -> databaseCommands.onClear(commandName, sender, arguments))
                 .build();
     }
@@ -372,10 +375,10 @@ public class PlanCommand {
     private Subcommand removeCommand() {
         return Subcommand.builder()
                 .aliases("remove")
-                .requirePermission("plan.data.remove")
-                .requiredArgument("name/uuid", "Identifier for a player that will be removed from current database.")
-                .description("Remove player's data from Current database.")
-                .inDepthDescription("Removes all data linked to a player from the Current database.")
+                .requirePermission(Permissions.DATA_REMOVE_PLAYER)
+                .requiredArgument(locale.getString(HelpLang.ARG_NAME_UUID), locale.getString(HelpLang.DESC_ARG_PLAYER_IDENTIFIER_REMOVE))
+                .description(locale.getString(HelpLang.DB_REMOVE))
+                .inDepthDescription(locale.getString(DeepHelpLang.DB_REMOVE))
                 .onCommand((sender, arguments) -> databaseCommands.onRemove(commandName, sender, arguments))
                 .build();
     }
@@ -383,10 +386,10 @@ public class PlanCommand {
     private Subcommand uninstalledCommand() {
         return Subcommand.builder()
                 .aliases("uninstalled")
-                .requirePermission("plan.data.uninstalled")
-                .requiredArgument("server", "Name, ID or UUID of a server")
-                .description("Set a server as uninstalled in the database.")
-                .inDepthDescription("Marks a server in Plan database as uninstalled so that it will not show up in server queries.")
+                .requirePermission(Permissions.DATA_REMOVE_SERVER)
+                .requiredArgument(locale.getString(HelpLang.ARG_SERVER), locale.getString(HelpLang.DESC_ARG_SERVER_IDENTIFIER))
+                .description(locale.getString(HelpLang.DB_UNINSTALLED))
+                .inDepthDescription(locale.getString(DeepHelpLang.DB_UNINSTALLED))
                 .onCommand(databaseCommands::onUninstalled)
                 .build();
     }
@@ -394,10 +397,10 @@ public class PlanCommand {
     private Subcommand exportCommand() {
         return Subcommand.builder()
                 .aliases("export")
-                .requirePermission("plan.data.export")
-                .optionalArgument("export kind", "players/server_json")
-                .description("Export html or json files manually.")
-                .inDepthDescription("Performs an export to export location defined in the config.")
+                .requirePermission(Permissions.DATA_EXPORT)
+                .optionalArgument(locale.getString(HelpLang.ARG_EXPORT_KIND), "players/server_json")
+                .description(locale.getString(HelpLang.EXPORT))
+                .inDepthDescription(locale.getString(DeepHelpLang.EXPORT))
                 .onCommand(dataUtilityCommands::onExport)
                 .build();
     }
@@ -407,21 +410,21 @@ public class PlanCommand {
         if (importerNames.isEmpty()) return null;
         return Subcommand.builder()
                 .aliases("import")
-                .requirePermission("plan.data.import")
-                .optionalArgument("import kind", importerNames.toString())
-                .description("Import data.")
-                .inDepthDescription("Performs an import to load data into the database.")
+                .requirePermission(Permissions.DATA_IMPORT)
+                .optionalArgument(locale.getString(HelpLang.ARG_IMPORT_KIND), importerNames.toString())
+                .description(locale.getString(HelpLang.IMPORT))
+                .inDepthDescription(locale.getString(DeepHelpLang.IMPORT))
                 .onCommand(dataUtilityCommands::onImport)
                 .build();
     }
 
     private Subcommand jsonCommand() {
         return Subcommand.builder()
-                .aliases("json")
-                .requirePermission("plan.json.self")
-                .requiredArgument("name/uuid", "Name or UUID of a player")
-                .description("View json of Player's raw data.")
-                .inDepthDescription("Allows you to download a player's data in json format. All of it.")
+                .aliases("json", "raw")
+                .requirePermission(Permissions.JSON_SELF)
+                .optionalArgument(locale.getString(HelpLang.ARG_NAME_UUID), locale.getString(HelpLang.DESC_ARG_PLAYER_IDENTIFIER))
+                .description(locale.getString(HelpLang.JSON))
+                .inDepthDescription(locale.getString(DeepHelpLang.JSON))
                 .onCommand(linkCommands::onJson)
                 .build();
     }

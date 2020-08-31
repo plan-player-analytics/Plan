@@ -40,26 +40,26 @@ Cmd SUCCESS - Feature disabled                  || §aKapatıldı '${0}' Plugin 
 Cmd SUCCESS - WebUser register                  || §aYeni kullanıcı (${0}) başarıyla eklendi!
 Cmd WARN - Database not open                    || §eDatabase is ${0} - This might take longer than expected..
 Cmd Web - Permission Levels                     || >\§70: Access all pages\§71: Access '/players' and all player pages\§72: Access player page with the same username as the webuser\§73+: No permissions  
-Command Help - /plan analyze                    || Sunucu Sayfasını gösterir
+Command Help - /plan server                     || Sunucu Sayfasını gösterir
 Command Help - /plan dev                        || Geliştirme modu komutu
 Command Help - /plan help                       || Komut listesini gösterir
-Command Help - /plan info                       || Pluginin sürümünü gösterir
-Command Help - /plan inspect                    || Oyunucunun sayfasını gösterir
+Command Help - /plan info                       || Information about the plugin
+Command Help - /plan player                     || Oyunucunun sayfasını gösterir
 Command Help - /plan manage                     || Plan Veritabanını Yönet
 Command Help - /plan manage backup              || Veritabanını yedekler
 Command Help - /plan manage clear               || Veritabanını temizler
 Command Help - /plan manage disable             || Bir özelliği geçici olarak devre dışı bırakır
 Command Help - /plan manage export              || Trigger export manually
-Command Help - /plan manage hotswap             || Veritabının hızlıca değiştirir
+Command Help - /plan db hotswap             || Veritabının hızlıca değiştirir
 Command Help - /plan manage import              || Başka bir yerden veri alır
-Command Help - /plan manage move                || Veriyi Veritabanları arasında taşır
+Command Help - /plan db move                || Veriyi Veritabanları arasında taşır
 Command Help - /plan manage raw                 || View raw JSON of player data
 Command Help - /plan manage remove              || Oyuncu bilgilerini siler
 Command Help - /plan manage restore             || Önceki bir Yedeği geri yükler
 Command Help - /plan manage uninstalled         || Mark a server as uninstalled in the database.
 Command Help - /plan network                    || Network sayfasını görüntüler
 Command Help - /plan players                    || Oyuncu sayfasını görüntüler
-Command Help - /plan qinspect                   || Oyuncu bilgilerini oyun içi gösterir
+Command Help - /plan ingame                   || Oyuncu bilgilerini oyun içi gösterir
 Command Help - /plan register                   || Web kullanıcısna kayıt yapar
 Command Help - /plan reload                     || Plugini yeniden başlatır
 Command Help - /plan search                     || Bir oyuncu adı arar
@@ -316,7 +316,7 @@ In Depth Help - /plan manage restore ?          || > §2Onarım Alt Komutu\  Ön
 In Depth Help - /plan manage uninstalled ?      || > §2Uninstalled Server Subcommand\  Marks a server as uninstalled in the database.\  Can not mark the server the command is being used on as uninstalled.\  Will affect ConnectionSystem.
 In Depth Help - /plan network ?                 || > §2Network Komutu\ Ağ sayfasının bağlantısını görüntüler.\ Networkte değilse, bu sayfa sunucu sayfasını görüntüler.
 In Depth Help - /plan players ?                 || > §2Oyuncu Komutu\  Oyuncular sayfasına olan bağlantıyı verir.
-In Depth Help - /plan qinspect ?                || > §2Hızlı Denetim Komutu\  Oyun içindeyken oyuncu hakkında bilgi verir.
+In Depth Help - /plan ingame                    || Oyun içindeyken oyuncu hakkında bilgi verir.
 In Depth Help - /plan reload ?                  || > §2Yeniden Başlatma Komutu\  Restarts the plugin using onDisable and onEnable.\  §bDoes not support swapping jar on the fly
 In Depth Help - /plan search ?                  || > §2Arama Komutu\  Verilen argümanla eşleşen Oyuncu isimlerinin bir listesini alın.\§7  Örnek: /plan search 123 - 123 adındaki tüm kullanıcıları adında bulur.
 In Depth Help - /plan servers ?                 || > §2Sunucu Komutu\  Veritabanındaki Plan sunucularının listesini görüntüler.\  Networkteki veritabanı kaydıyla ilgili sorunları çözmek için kullanılabilir.

@@ -69,7 +69,7 @@ public class LocaleSystem implements SubSystem {
     public static Map<String, Lang> getIdentifiers() {
         Lang[][] lang = new Lang[][]{
                 CommandLang.values(),
-                CmdHelpLang.values(),
+                HelpLang.values(),
                 DeepHelpLang.values(),
                 PluginLang.values(),
                 ManageLang.values(),
