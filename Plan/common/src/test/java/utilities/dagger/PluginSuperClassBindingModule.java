@@ -36,6 +36,7 @@ import dagger.Provides;
 import org.mockito.Mockito;
 import utilities.mocks.TestProcessing;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import static org.mockito.Mockito.when;
@@ -114,6 +115,13 @@ public class PluginSuperClassBindingModule {
         when(mock.getEntityCount(Mockito.any())).thenCallRealMethod();
         when(mock.getTPS()).thenCallRealMethod();
         return mock;
+    }
+
+    @Provides
+    @Singleton
+    @Named("mainCommandName")
+    String provideMainCommandName() {
+        return "plan";
     }
 
 }
