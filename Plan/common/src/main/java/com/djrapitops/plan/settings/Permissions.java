@@ -53,18 +53,6 @@ public enum Permissions {
     JSON_SELF("plan.json.self"),
     JSON_OTHER("plan.json.other"),
 
-    HELP("plan.?"),
-
-    INSPECT("plan.inspect.base"),
-    QUICK_INSPECT("plan.qinspect.base"),
-    INSPECT_OTHER("plan.inspect.other"),
-    QUICK_INSPECT_OTHER("plan.qinspect.other"),
-
-    ANALYZE("plan.analyze"),
-
-    MANAGE("plan.manage"),
-    MANAGE_WEB("plan.webmanage"),
-
     IGNORE_COMMAND_USE("plan.ignore.commanduse"),
     IGNORE_AFK("plan.ignore.afk");
 

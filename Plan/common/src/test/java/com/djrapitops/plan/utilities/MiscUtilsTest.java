@@ -35,7 +35,7 @@ class MiscUtilsTest {
 
     private Sender mockAPlayerSender(String name, boolean hasPermission) {
         Sender sender = Mockito.mock(Sender.class);
-        when(sender.hasPermission(Permissions.INSPECT_OTHER.getPermission())).thenReturn(hasPermission);
+        when(sender.hasPermission(Permissions.PLAYER_OTHER.getPermission())).thenReturn(hasPermission);
         when(sender.getName()).thenReturn(name);
         when(sender.getSenderType()).thenReturn(SenderType.PLAYER);
         return sender;
