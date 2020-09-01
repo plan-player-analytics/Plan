@@ -1,5 +1,5 @@
 Cmd - Click Me                                  || Cliquez ici
-Cmd - Link                                      ||   §2Lien : §f
+Cmd - Link                                      || Lien
 Cmd Disable - Disabled                          || §aLes systèmes de Plan sont maintenant désactivés. Vous pouvez toujours exécuter la commande '/planbungee reload' pour les redémarrer.
 Cmd FAIL - Database not open                    || §cLa base de données est : ${0} - Merci de réessayer plus tard.
 Cmd FAIL - Invalid Username                     || §cCet utilisateur ne possède pas d'UUID.

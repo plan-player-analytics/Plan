@@ -1,7 +1,7 @@
 API - css+                                      || PageExtension: ${0} added stylesheet(s) to ${1}, ${2}
 API - js+                                       || PageExtension: ${0} added javascript(s) to ${1}, ${2}
 Cmd - Click Me                                  || 请点击此处
-Cmd - Link                                      || §7 •§2 链接：§f
+Cmd - Link                                      || •链接
 Cmd Disable - Disabled                          || §a现已禁用计划系统。您仍可使用 /planbungee reload 重启插件。
 Cmd FAIL - Database not open                    || §c数据库状态为 ${0} - 请稍后再试.
 Cmd FAIL - Invalid Username                     || §c[数据统计] 此玩家不存在。
