@@ -29,6 +29,7 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
+import com.djrapitops.plan.settings.locale.lang.HelpLang;
 import com.djrapitops.plan.settings.locale.lang.ManageLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.DBType;
@@ -124,7 +125,7 @@ public class DatabaseCommands {
         try {
             String timeStamp = timestamp.apply(System.currentTimeMillis());
             String fileName = dbName + "-backup-" + timeStamp;
-            sender.send("Creating a backup file '" + fileName + ".db' with contents of " + dbName);
+            sender.send(locale.getString(CommandLang.DB_BACKUP_CREATE, fileName, dbName));
             toDB = sqliteFactory.usingFileCalled(fileName);
             toDB.init();
             toDB.executeTransaction(new BackupCopyTransaction(fromDB, toDB)).get();
@@ -142,7 +143,7 @@ public class DatabaseCommands {
 
     public void onRestore(String mainCommand, CMDSender sender, Arguments arguments) {
         String backupDbName = arguments.get(0)
-                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, 1, "<backup-file>")));
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, 1, "<" + locale.getString(HelpLang.ARG_BACKUP_FILE) + ">")));
 
         boolean containsDBFileExtension = backupDbName.endsWith(".db");
         File backupDBFile = files.getFileFromPluginFolder(backupDbName + (containsDBFileExtension ? "" : ".db"));
@@ -169,15 +170,16 @@ public class DatabaseCommands {
 
         if (sender.supportsChatEvents()) {
             sender.buildMessage()
-                    .addPart(colors.getMainColor() + "You are about to overwrite data in Plan " + toDB.getType().getName() + " with data in " + backupDBFile.toPath()).newLine()
-                    .addPart(colors.getTertiaryColor() + "Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept").hover("Accept")
+                    .addPart(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_OVERWRITE_DB, toDB.getType().getName(), backupDBFile.toPath().toString())).newLine()
+                    .addPart(colors.getTertiaryColor() + locale.getString(CommandLang.CONFIRM))
+                    .addPart("§2§l[\u2714]").command("/" + mainCommand + " accept").hover(locale.getString(CommandLang.CONFIRM_ACCEPT))
                     .addPart(" ")
-                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel").hover("Cancel")
+                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel").hover(locale.getString(CommandLang.CONFIRM_DENY))
                     .send();
         } else {
             sender.buildMessage()
-                    .addPart(colors.getMainColor() + "You are about to overwrite data in Plan " + toDB.getType().getName() + " with data in " + backupDBFile.toPath()).newLine()
-                    .addPart(colors.getTertiaryColor() + "Confirm: ").addPart("§a/" + mainCommand + " accept")
+                    .addPart(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_OVERWRITE_DB, toDB.getType().getName(), backupDBFile.toPath().toString())).newLine()
+                    .addPart(colors.getTertiaryColor() + locale.getString(CommandLang.CONFIRM)).addPart("§a/" + mainCommand + " accept")
                     .addPart(" ")
                     .addPart("§c/" + mainCommand + " cancel")
                     .send();
@@ -187,7 +189,7 @@ public class DatabaseCommands {
             if (choice) {
                 performRestore(sender, backupDBFile, toDB);
             } else {
-                sender.send(colors.getMainColor() + "Cancelled. No data was changed.");
+                sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED));
             }
         });
     }
@@ -197,7 +199,7 @@ public class DatabaseCommands {
             SQLiteDB fromDB = sqliteFactory.usingFile(backupDBFile);
             fromDB.init();
 
-            sender.send("Writing to " + toDB.getType().getName() + "..");
+            sender.send(locale.getString(CommandLang.DB_WRITE, toDB.getType().getName()));
             toDB.executeTransaction(new BackupCopyTransaction(fromDB, toDB)).get();
             sender.send(locale.getString(ManageLang.PROGRESS_SUCCESS));
         } catch (InterruptedException e) {
@@ -221,15 +223,16 @@ public class DatabaseCommands {
 
         if (sender.supportsChatEvents()) {
             sender.buildMessage()
-                    .addPart(colors.getMainColor() + "You are about to overwrite data in Plan " + toDB.getName() + " with data in " + fromDB.getName()).newLine()
-                    .addPart(colors.getTertiaryColor() + "Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept").hover("Accept")
+                    .addPart(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_OVERWRITE_DB, toDB.getName(), fromDB.getName())).newLine()
+                    .addPart(colors.getTertiaryColor() + locale.getString(CommandLang.CONFIRM))
+                    .addPart("§2§l[\u2714]").command("/" + mainCommand + " accept").hover(locale.getString(CommandLang.CONFIRM_ACCEPT))
                     .addPart(" ")
-                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel").hover("Cancel")
+                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel").hover(locale.getString(CommandLang.CONFIRM_DENY))
                     .send();
         } else {
             sender.buildMessage()
-                    .addPart(colors.getMainColor() + "You are about to overwrite data in Plan " + toDB.getName() + " with data in " + fromDB.getName()).newLine()
-                    .addPart(colors.getTertiaryColor() + "Confirm: ").addPart("§a/" + mainCommand + " accept")
+                    .addPart(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_OVERWRITE_DB, toDB.getName(), fromDB.getName())).newLine()
+                    .addPart(colors.getTertiaryColor() + locale.getString(CommandLang.CONFIRM)).addPart("§a/" + mainCommand + " accept")
                     .addPart(" ")
                     .addPart("§c/" + mainCommand + " cancel")
                     .send();
@@ -239,7 +242,7 @@ public class DatabaseCommands {
             if (choice) {
                 performMove(sender, fromDB, toDB);
             } else {
-                sender.send(colors.getMainColor() + "Cancelled. No data was changed.");
+                sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED));
             }
         });
     }
@@ -251,7 +254,7 @@ public class DatabaseCommands {
             fromDatabase.init();
             toDatabase.init();
 
-            sender.send("Writing to " + toDB.getName() + "..");
+            sender.send(locale.getString(CommandLang.DB_WRITE, toDB.getName()));
 
             fromDatabase.executeTransaction(new BackupCopyTransaction(fromDatabase, toDatabase)).get();
 
@@ -276,15 +279,16 @@ public class DatabaseCommands {
 
         if (sender.supportsChatEvents()) {
             sender.buildMessage()
-                    .addPart(colors.getMainColor() + "You are about to remove all Plan-data in " + fromDB.getName()).newLine()
-                    .addPart(colors.getTertiaryColor() + "Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept").hover("Accept")
+                    .addPart(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CLEAR_DB, fromDB.getName())).newLine()
+                    .addPart(colors.getTertiaryColor() + locale.getString(CommandLang.CONFIRM))
+                    .addPart("§2§l[\u2714]").command("/" + mainCommand + " accept").hover(locale.getString(CommandLang.CONFIRM_ACCEPT))
                     .addPart(" ")
-                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel").hover("Cancel")
+                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel").hover(locale.getString(CommandLang.CONFIRM_DENY))
                     .send();
         } else {
             sender.buildMessage()
-                    .addPart(colors.getMainColor() + "You are about to remove all Plan-data in " + fromDB.getName()).newLine()
-                    .addPart(colors.getTertiaryColor() + "Confirm: ").addPart("§a/" + mainCommand + " accept")
+                    .addPart(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CLEAR_DB, fromDB.getName())).newLine()
+                    .addPart(colors.getTertiaryColor() + locale.getString(CommandLang.CONFIRM)).addPart("§a/" + mainCommand + " accept")
                     .addPart(" ")
                     .addPart("§c/" + mainCommand + " cancel")
                     .send();
@@ -294,7 +298,7 @@ public class DatabaseCommands {
             if (choice) {
                 performClear(sender, fromDB);
             } else {
-                sender.send(colors.getMainColor() + "Cancelled. No data was changed.");
+                sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED));
             }
         });
     }
@@ -304,7 +308,7 @@ public class DatabaseCommands {
             Database fromDatabase = dbSystem.getActiveDatabaseByType(fromDB);
             fromDatabase.init();
 
-            sender.send("Removing Plan-data from " + fromDB.getName() + "..");
+            sender.send(locale.getString(CommandLang.DB_REMOVAL, fromDB.getName()));
 
             fromDatabase.executeTransaction(new RemoveEverythingTransaction())
                     .get(); // Wait for completion
@@ -326,22 +330,23 @@ public class DatabaseCommands {
         String identifier = arguments.concatenate(" ");
         UUID playerUUID = identifiers.getPlayerUUID(identifier);
         if (playerUUID == null) {
-            throw new IllegalArgumentException("Player '" + identifier + "' was not found, they have no UUID.");
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_PLAYER_NOT_FOUND, identifier));
         }
 
         Database database = dbSystem.getDatabase();
 
         if (sender.supportsChatEvents()) {
             sender.buildMessage()
-                    .addPart(colors.getMainColor() + "You are about to remove data of " + playerUUID + " from " + database.getType().getName()).newLine()
-                    .addPart(colors.getTertiaryColor() + "Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept").hover("Accept")
+                    .addPart(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_REMOVE_PLAYER_DB, playerUUID, database.getType().getName())).newLine()
+                    .addPart(colors.getTertiaryColor() + locale.getString(CommandLang.CONFIRM))
+                    .addPart("§2§l[\u2714]").command("/" + mainCommand + " accept").hover(locale.getString(CommandLang.CONFIRM_ACCEPT))
                     .addPart(" ")
-                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel").hover("Cancel")
+                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel").hover(locale.getString(CommandLang.CONFIRM_DENY))
                     .send();
         } else {
             sender.buildMessage()
-                    .addPart(colors.getMainColor() + "You are about to remove data of " + playerUUID + " from " + database.getType().getName()).newLine()
-                    .addPart(colors.getTertiaryColor() + "Confirm: ").addPart("§a/" + mainCommand + " accept")
+                    .addPart(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_REMOVE_PLAYER_DB, playerUUID, database.getType().getName())).newLine()
+                    .addPart(colors.getTertiaryColor() + locale.getString(CommandLang.CONFIRM)).addPart("§a/" + mainCommand + " accept")
                     .addPart(" ")
                     .addPart("§c/" + mainCommand + " cancel")
                     .send();
@@ -351,14 +356,14 @@ public class DatabaseCommands {
             if (choice) {
                 performRemoval(sender, database, playerUUID);
             } else {
-                sender.send(colors.getMainColor() + "Cancelled. No data was changed.");
+                sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED));
             }
         });
     }
 
     private void performRemoval(CMDSender sender, Database database, UUID playerToRemove) {
         try {
-            sender.send("Removing data of " + playerToRemove + " from " + database.getType().getName() + "..");
+            sender.send(locale.getString(CommandLang.DB_REMOVAL_PLAYER, playerToRemove, database.getType().getName()));
 
             queryService.playerRemoved(playerToRemove);
             database.executeTransaction(new RemovePlayerTransaction(playerToRemove))
@@ -386,7 +391,7 @@ public class DatabaseCommands {
         Server server = dbSystem.getDatabase()
                 .query(ServerQueries.fetchServerMatchingIdentifier(identifier))
                 .filter(s -> !s.isProxy())
-                .orElseThrow(() -> new IllegalArgumentException("Server '" + identifier + "' was not found from the database."));
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_SERVER_NOT_FOUND, identifier)));
 
         if (server.getUuid().equals(serverInfo.getServerUUID())) {
             throw new IllegalArgumentException(locale.getString(ManageLang.UNINSTALLING_SAME_SERVER));
@@ -394,7 +399,7 @@ public class DatabaseCommands {
 
         dbSystem.getDatabase().executeTransaction(new SetServerAsUninstalledTransaction(server.getUuid()));
         sender.send(locale.getString(ManageLang.PROGRESS_SUCCESS));
-        sender.send("§aIf the server is still installed, it will automatically set itself as installed in the database.");
+        sender.send(locale.getString(CommandLang.DB_UNINSTALLED));
     }
 
     public void onHotswap(CMDSender sender, Arguments arguments) {
