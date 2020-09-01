@@ -188,7 +188,7 @@ public class DatabaseCommands {
             if (choice) {
                 performRestore(sender, backupDBFile, toDB);
             } else {
-                sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED));
+                sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED_DATA));
             }
         });
     }
@@ -241,7 +241,7 @@ public class DatabaseCommands {
             if (choice) {
                 performMove(sender, fromDB, toDB);
             } else {
-                sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED));
+                sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED_DATA));
             }
         });
     }
@@ -297,7 +297,7 @@ public class DatabaseCommands {
             if (choice) {
                 performClear(sender, fromDB);
             } else {
-                sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED));
+                sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED_DATA));
             }
         });
     }
@@ -355,7 +355,7 @@ public class DatabaseCommands {
             if (choice) {
                 performRemoval(sender, database, playerUUID);
             } else {
-                sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED));
+                sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED_DATA));
             }
         });
     }
