@@ -72,7 +72,7 @@ public enum CommandLang implements Lang {
     LINK_REGISTER("Cmd - Link Register", "Register page: "),
 
     HEADER_HELP("Cmd Header - Help", "> §2/${0} Help"),
-    FOOTER_HELP("Cmd Footer - Help", "> §7Hover over command or arguments to learn more about them."),
+    FOOTER_HELP("Cmd Footer - Help", "§7Hover over command or arguments to learn more about them."),
     HEADER_SEARCH("Cmd Header - Search", "> §2${0} Results for §f${1}§2:"),
     HEADER_ANALYSIS("Cmd Header - Analysis", "> §2Analysis Results"),
     HEADER_INFO("Cmd Header - Info", "> §2Player Analytics"),
