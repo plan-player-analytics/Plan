@@ -22,6 +22,10 @@ package com.djrapitops.plan.settings.locale.lang;
  * @author Rsl1122
  */
 public enum CommandLang implements Lang {
+    CONFIRM_EXPIRED("Cmd Confirm - Expired", "Confirmation expired, use the command again"),
+    CONFIRM_FAIL_ACCEPT("Cmd Confirm - Fail on accept", "The accepted action errored upon execution: ${0}"),
+    CONFIRM_FAIL_DENY("Cmd Confirm - Fail on deny", "The denied action errored upon execution: ${0}"),
+
     FAIL_REQ_ARGS("Cmd FAIL - Requires Arguments", "§cArguments required (${0}) ${1}"),
     FAIL_REQ_ONE_ARG("Cmd FAIL - Require only one Argument", "§cSingle Argument required ${1}"),
     FAIL_NO_PERMISSION("Cmd FAIL - No Permission", "§cYou do not have the required permission."),

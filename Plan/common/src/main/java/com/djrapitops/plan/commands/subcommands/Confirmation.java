@@ -19,6 +19,7 @@ package com.djrapitops.plan.commands.subcommands;
 import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
@@ -50,11 +51,11 @@ public class Confirmation {
 
     public void onConfirm(CMDSender sender) {
         Consumer<Boolean> found = awaiting.getIfPresent(sender);
-        if (found == null) throw new IllegalArgumentException("Confirmation expired, use the command again" /* TODO */);
+        if (found == null) throw new IllegalArgumentException(locale.getString(CommandLang.CONFIRM_EXPIRED));
         try {
             found.accept(true);
         } catch (RuntimeException e) {
-            sender.send("The accepted action errored upon execution: " + e /* TODO */);
+            sender.send(locale.getString(CommandLang.CONFIRM_FAIL_ACCEPT, e));
             throw e;
         } finally {
             awaiting.invalidate(sender);
@@ -63,11 +64,11 @@ public class Confirmation {
 
     public void onCancel(CMDSender sender) {
         Consumer<Boolean> found = awaiting.getIfPresent(sender);
-        if (found == null) throw new IllegalArgumentException("Confirmation expired, use the command again" /* TODO */);
+        if (found == null) throw new IllegalArgumentException(locale.getString(CommandLang.CONFIRM_EXPIRED));
         try {
             found.accept(false);
         } catch (RuntimeException e) {
-            sender.send("The denied action errored upon execution: " + e /* TODO */);
+            sender.send(locale.getString(CommandLang.CONFIRM_FAIL_DENY, e));
             throw e;
         } finally {
             awaiting.invalidate(sender);
