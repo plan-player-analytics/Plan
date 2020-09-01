@@ -72,7 +72,6 @@ public class LocaleSystem implements SubSystem {
                 HelpLang.values(),
                 DeepHelpLang.values(),
                 PluginLang.values(),
-                ManageLang.values(),
                 GenericLang.values(),
                 HtmlLang.values(),
                 ErrorPageLang.values(),
