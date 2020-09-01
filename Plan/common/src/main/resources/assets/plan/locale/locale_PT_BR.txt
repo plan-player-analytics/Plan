@@ -1,6 +1,6 @@
 Cmd - Click Me                                  || Clique aqui
 Cmd - Link                                      || Link
-Cmd Disable - Disabled                          || §aO sistema do Plan agora está desativado. Você pode usar /planbungee reload para reiniciar o plugin.
+Cmd Disable - Disabled                          || §aO sistema do Plan agora está desativado. Você pode usar reload para reiniciar o plugin.
 Cmd FAIL - Database not open                    || §cDatabase is ${0} - Please try again a bit later.
 Cmd FAIL - Invalid Username                     || §cEsse usuário não tem uma UUID.
 Cmd FAIL - No Feature                           || §eDefina um recurso para desativar! (atualmente suporta ${0})
@@ -322,7 +322,7 @@ In Depth Help - /plan search ?                  || > §2Comando Search\  Pega um
 In Depth Help - /plan servers ?                 || > §2Comando Servers\  Mostra uma lista de servidores do banco de dados.\  Podem ser usados para depurar problemas com registros no banco de dados da network.
 In Depth Help - /plan web ?                     || > §2Comando de Gerenciado do Usuário Web.\  §2/plan web §fLista subcomandos\  §2/plan web <subcomando> ? §fConsulta mais detalhada
 In Depth Help - /plan web register ?            || > §2Subcomando Register\  Registra um novo usuário web.\  Registrando um usuário web para outro jogador precisa da permissão plan.webmanage.\  Senhas são criptografadas com PBKDF2 (64,000 iterações de SHA1) sendo totalmente aleatórias.
-In Depth Help - /planbungee disable ?           || > §2Comando Disable\  Executa onDisable no PlanBungee.\  O plugin pode ser ativado com /planbungee reload.\  §bNão suporta a troca de JAR (caso seja isso, precisa reiniciar o servidor)
+In Depth Help - /planbungee disable ?           || > §2Comando Disable\  Executa onDisable no PlanBungee.\  O plugin pode ser ativado com reload.\  §bNão suporta a troca de JAR (caso seja isso, precisa reiniciar o servidor)
 Manage - Confirm Overwrite                      || Dados em ${0} serão sobrescritos!
 Manage - Confirm Removal                        || Dados em ${0} serão removidos!
 Manage - Fail                                   || > §cAlguma coisa deu errado: ${0}

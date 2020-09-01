@@ -1,6 +1,6 @@
 Cmd - Click Me                                  || Cliccami
 Cmd - Link                                      || Link
-Cmd Disable - Disabled                          || §aPlan è stato disabilitato. Puoi usare /planbungee reload per riavviare il plugin.
+Cmd Disable - Disabled                          || §aPlan è stato disabilitato. Puoi usare reload per riavviare il plugin.
 Cmd FAIL - Database not open                    || §cDatabase è ${0} - Riprova più tardi.
 Cmd FAIL - Invalid Username                     || §cQuesto Utente non ha un UUID.
 Cmd FAIL - No Feature                           || §eDefinisci una feature da disabilitate! (Feature Supportate ${0})

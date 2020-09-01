@@ -1,6 +1,6 @@
 Cmd - Click Me                                  || Klicke hier
 Cmd - Link                                      || Link
-Cmd Disable - Disabled                          || §aPlan ist nun deaktiviert. Nutze /planbungee reload um das Plugin neu zu starten.
+Cmd Disable - Disabled                          || §aPlan ist nun deaktiviert. Nutze reload um das Plugin neu zu starten.
 Cmd FAIL - Database not open                    || §cDatenbank ist ${0} - Bitte versuche es später erneut.
 Cmd FAIL - Invalid Username                     || §cDieser Benutzer besitzt keine UUID.
 Cmd FAIL - No Feature                           || §eWelches Feature soll deaktiviert werden? (momentan unterstützt: ${0})
@@ -322,7 +322,7 @@ In Depth Help - /plan search ?                  || > §2Such-Befehl\  Erstellt e
 In Depth Help - /plan servers ?                 || > §2Server-Command\  Zeigt eine Liste mit allen Servern in der datenbank.\  Kann verwendet werden, um Probleme mit Registrierungen in der Datenbank in einem Netzwerk zu beheben.
 In Depth Help - /plan web ?                     || > §2Account-Verwaltungs-Befehl.\  §2/plan web §fListe Unterbefehle\  §2/plan web <unterbefehl> ? §fAusfürliche Hilfe
 In Depth Help - /plan web register ?            || > §2Registrierungs-Unterbefehl\  Registriert einen neuen Account.\  Um einen Account für einen anderen Usernamen als den eigenen zu erstellen wird plan.webmanage Berechtigung benötigt.\  Passwörter werden mit PBKDF2 (64,000 iterations of SHA1) gehashed dazu wird ein cryptographically-random salt verwendet.
-In Depth Help - /planbungee disable ?           || > §2Deaktivierungs-Befehl\  Führt onDisable auf PlanBungee aus.\  Plugin kann mit /planbungee reload wieder geladen werden.\  §bDabei kann NICHT die jar ausgetauscht werden.
+In Depth Help - /planbungee disable ?           || > §2Deaktivierungs-Befehl\  Führt onDisable auf PlanBungee aus.\  Plugin kann mit reload wieder geladen werden.\  §bDabei kann NICHT die jar ausgetauscht werden.
 Manage - Confirm Overwrite                      || Daten in ${0} werden überschrieben!
 Manage - Confirm Removal                        || Daten in ${0} werden gelöscht!
 Manage - Fail                                   || > §cEtwas ist schiefgelaufen: ${0}
