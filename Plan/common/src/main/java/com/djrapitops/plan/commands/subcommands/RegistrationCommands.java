@@ -89,7 +89,7 @@ public class RegistrationCommands {
         if (arguments.isEmpty()) {
             String address = linkCommands.getAddress(sender) + "/register";
             sender.buildMessage()
-                    .addPart(colors.getMainColor() + "Register page: ")
+                    .addPart(colors.getMainColor() + locale.getString(CommandLang.LINK_REGISTER))
                     .apply(builder -> linkCommands.linkTo(builder, sender, address))
                     .send();
         } else {
@@ -117,7 +117,7 @@ public class RegistrationCommands {
                 .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, 1, "<password>")));
         String passwordHash = PassEncryptUtil.createHash(password);
         int permissionLevel = arguments.getInteger(2)
-                .filter(arg -> sender.hasPermission("plan.register.other")) // argument only allowed with plan.webmanage
+                .filter(arg -> sender.hasPermission(Permissions.REGISTER_OTHER)) // argument only allowed with register other permission
                 .orElseGet(() -> getPermissionLevel(sender));
 
         if (sender.getUUID().isPresent() && sender.getPlayerName().isPresent()) {
@@ -196,15 +196,16 @@ public class RegistrationCommands {
 
         if (sender.supportsChatEvents()) {
             sender.buildMessage()
-                    .addPart(colors.getMainColor() + "You are about to unregister '" + presentUser.getUsername() + "' linked to " + presentUser.getLinkedTo()).newLine()
-                    .addPart(colors.getTertiaryColor() + "Confirm: ").addPart("§2§l[\u2714]").command("/" + mainCommand + " accept").hover("Accept")
+                    .addPart(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_UNREGISTER, presentUser.getUsername(), presentUser.getLinkedTo())).newLine()
+                    .addPart(colors.getTertiaryColor() + locale.getString(CommandLang.CONFIRM))
+                    .addPart("§2§l[\u2714]").command("/" + mainCommand + " accept").hover(locale.getString(CommandLang.CONFIRM_ACCEPT))
                     .addPart(" ")
-                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel").hover("Cancel")
+                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel").hover(locale.getString(CommandLang.CONFIRM_DENY))
                     .send();
         } else {
             sender.buildMessage()
-                    .addPart(colors.getMainColor() + "You are about to unregister '" + presentUser.getUsername() + "' linked to " + presentUser.getLinkedTo()).newLine()
-                    .addPart(colors.getTertiaryColor() + "Confirm: ").addPart("§a/" + mainCommand + " accept")
+                    .addPart(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_UNREGISTER, presentUser.getUsername(), presentUser.getLinkedTo())).newLine()
+                    .addPart(colors.getTertiaryColor() + locale.getString(CommandLang.CONFIRM)).addPart("§a/" + mainCommand + " accept")
                     .addPart(" ")
                     .addPart("§c/" + mainCommand + " cancel")
                     .send();
@@ -213,7 +214,7 @@ public class RegistrationCommands {
         confirmation.confirm(sender, choice -> {
             if (choice) {
                 try {
-                    sender.send(colors.getMainColor() + "Unregistering '" + presentUser.getUsername() + "'..");
+                    sender.send(colors.getMainColor() + locale.getString(CommandLang.UNREGISTER, presentUser.getUsername()));
                     database.executeTransaction(new RemoveWebUserTransaction(username))
                             .get(); // Wait for completion
                     sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
@@ -223,7 +224,7 @@ public class RegistrationCommands {
                     errorLogger.log(L.WARN, e, ErrorContext.builder().related("unregister command", sender, sender.getPlayerName().orElse("console"), arguments).build());
                 }
             } else {
-                sender.send(colors.getMainColor() + "Cancelled. '" + presentUser.getUsername() + "' was not unregistered.");
+                sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED_UNREGISTER, presentUser.getUsername()));
             }
         });
     }

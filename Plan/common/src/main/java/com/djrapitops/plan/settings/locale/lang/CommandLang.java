@@ -31,7 +31,9 @@ public enum CommandLang implements Lang {
     CONFIRM_OVERWRITE_DB("Cmd Confirm - overwriting db", "You are about to overwrite data in Plan ${0} with data in ${1}"),
     CONFIRM_CLEAR_DB("Cmd Confirm - clearing db", "You are about to remove all Plan-data in ${0}"),
     CONFIRM_REMOVE_PLAYER_DB("Cmd Confirm - remove player db", "You are about to remove data of ${0} from ${1}"),
-    CONFIRM_CANCELLED("Cmd Confirm - cancelled, no data change", "Cancelled. No data was changed."),
+    CONFIRM_UNREGISTER("Cmd Confirm - unregister", "You are about to unregister '${0}' linked to ${1}"),
+    CONFIRM_CANCELLED_DATA("Cmd Confirm - cancelled, no data change", "Cancelled. No data was changed."),
+    CONFIRM_CANCELLED_UNREGISTER("Cmd Confirm - cancelled, unregister", "Cancelled. '${0}' was not unregistered"),
 
     FAIL_PLAYER_NOT_FOUND("Cmd FAIL - No player", "Player '${0}' was not found, they have no UUID."),
     FAIL_PLAYER_NOT_FOUND_REGISTER("Cmd FAIL - No player register", "Player '${0}' was not found in the database."),
@@ -67,6 +69,7 @@ public enum CommandLang implements Lang {
     LINK_PLAYERS("Cmd - Link Players", "Players page: "),
     LINK_NETWORK("Cmd - Link Network", "Network page: "),
     LINK_JSON("Cmd - Link Player JSON", "Player json: "),
+    LINK_REGISTER("Cmd - Link Register", "Register page: "),
 
     HEADER_SEARCH("Cmd Header - Search", "> §2${0} Results for §f${1}§2:"),
     HEADER_ANALYSIS("Cmd Header - Analysis", "> §2Analysis Results"),
@@ -102,6 +105,7 @@ public enum CommandLang implements Lang {
     DB_REMOVAL("Cmd db - removal", "Removing Plan-data from ${0}.."),
     DB_REMOVAL_PLAYER("Cmd db - removal player", "Removing data of ${0} from ${1}.."),
     DB_UNINSTALLED("Cmd db - server uninstalled", "§aIf the server is still installed, it will automatically set itself as installed in the database."),
+    UNREGISTER("Cmd unregister - unregistering", "Unregistering '${0}'.."),
 
     DISABLE_DISABLED("Cmd Disable - Disabled", "§aPlan systems are now disabled. You can still use /planbungee reload to restart the plugin."),
 
