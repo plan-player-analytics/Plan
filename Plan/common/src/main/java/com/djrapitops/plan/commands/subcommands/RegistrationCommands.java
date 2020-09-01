@@ -26,7 +26,6 @@ import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.settings.locale.lang.HelpLang;
-import com.djrapitops.plan.settings.locale.lang.ManageLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
@@ -217,7 +216,7 @@ public class RegistrationCommands {
                     sender.send(colors.getMainColor() + "Unregistering '" + presentUser.getUsername() + "'..");
                     database.executeTransaction(new RemoveWebUserTransaction(username))
                             .get(); // Wait for completion
-                    sender.send(locale.getString(ManageLang.PROGRESS_SUCCESS));
+                    sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 } catch (ExecutionException e) {

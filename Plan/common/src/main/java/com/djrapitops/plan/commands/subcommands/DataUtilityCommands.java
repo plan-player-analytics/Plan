@@ -34,13 +34,14 @@ import com.djrapitops.plan.gathering.importing.importers.Importer;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
+import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
-import com.djrapitops.plan.settings.locale.lang.ManageLang;
+import com.djrapitops.plan.settings.locale.lang.HelpLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
@@ -96,7 +97,7 @@ public class DataUtilityCommands {
 
     public void onExport(CMDSender sender, Arguments arguments) {
         String exportKind = arguments.get(0)
-                .orElseThrow(() -> new IllegalArgumentException("Accepts following as export kind: players, server_json"));
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_ACCEPTS_ARGUMENTS, locale.getString(HelpLang.ARG_EXPORT_KIND), "players, server_json")));
 
         ensureDatabaseIsOpen();
 
@@ -109,7 +110,7 @@ public class DataUtilityCommands {
         } else if ("server_json".endsWith(exportArg)) {
             return this::exportServerJSON;
         }
-        throw new IllegalArgumentException(locale.getString(ManageLang.FAIL_EXPORTER_NOT_FOUND, exportArg));
+        throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_EXPORTER_NOT_FOUND, exportArg));
     }
 
     private void exportServerJSON(CMDSender sender) {
@@ -118,14 +119,17 @@ public class DataUtilityCommands {
         }
         processing.submitNonCritical(() -> {
             try {
-                sender.send(locale.getString(ManageLang.PROGRESS_START));
+                sender.send(locale.getString(CommandLang.PROGRESS_START));
                 if (exporter.exportServerJSON(serverInfo.getServer())) {
-                    sender.send(locale.getString(ManageLang.PROGRESS_SUCCESS));
+                    sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
                 } else {
-                    sender.send(locale.get(ManageLang.PROGRESS_FAIL).toString("see '" + ExportSettings.SERVER_JSON.getPath() + "' in config.yml"));
+                    sender.send(locale.getString(
+                            CommandLang.PROGRESS_FAIL,
+                            locale.getString(CommandLang.FAIL_SEE_CONFIG_SETTING, ExportSettings.SERVER_JSON.getPath())
+                    ));
                 }
             } catch (ExportException e) {
-                sender.send(locale.get(ManageLang.PROGRESS_FAIL).toString(e.getMessage()));
+                sender.send(locale.get(CommandLang.PROGRESS_FAIL).toString(e.getMessage()));
             }
         });
     }
@@ -145,13 +149,13 @@ public class DataUtilityCommands {
     }
 
     private void performExport(CMDSender sender, boolean exportPlayerJSON, boolean exportPlayerHTML) {
-        sender.send(locale.getString(ManageLang.PROGRESS_START));
+        sender.send(locale.getString(CommandLang.PROGRESS_START));
 
         Map<UUID, String> players = dbSystem.getDatabase().query(UserIdentifierQueries.fetchAllPlayerNames());
-        int size = players.size();
+        int outOf = players.size();
         int failed = 0;
 
-        int i = 1;
+        int current = 1;
         for (Map.Entry<UUID, String> entry : players.entrySet()) {
             try {
                 if (exportPlayerJSON) exporter.exportPlayerJSON(entry.getKey(), entry.getValue());
@@ -159,22 +163,22 @@ public class DataUtilityCommands {
             } catch (ExportException e) {
                 failed++;
             }
-            i++;
-            if (i % 1000 == 0) {
-                sender.send(i + " / " + size + " processed..");
+            current++;
+            if (current % 1000 == 0) {
+                sender.send(locale.getString(CommandLang.PROGRESS, current, outOf));
             }
         }
-        sender.send(locale.getString(ManageLang.PROGRESS_SUCCESS));
+        sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
         if (failed != 0) {
-            sender.send(locale.getString(ManageLang.PROGRESS_FAIL));
-            sender.send(" §2✔: §f" + (i - failed));
+            sender.send(locale.getString(CommandLang.PROGRESS_FAIL));
+            sender.send(" §2✔: §f" + (current - failed));
             sender.send(" §c✕: §f" + failed);
         }
     }
 
     public void onImport(CMDSender sender, Arguments arguments) {
         String importKind = arguments.get(0)
-                .orElseThrow(() -> new IllegalArgumentException("Accepts following as import kind: " + importSystem.getImporterNames()));
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_ACCEPTS_ARGUMENTS, locale.getString(HelpLang.ARG_IMPORT_KIND), importSystem.getImporterNames().toString())));
 
         ensureDatabaseIsOpen();
 
@@ -186,19 +190,19 @@ public class DataUtilityCommands {
         if (foundImporter.isPresent()) {
             Importer importer = foundImporter.get();
             processing.submitNonCritical(() -> {
-                sender.send(locale.getString(ManageLang.PROGRESS_START));
+                sender.send(locale.getString(CommandLang.PROGRESS_START));
                 importer.processImport();
-                sender.send(locale.getString(ManageLang.PROGRESS_SUCCESS));
+                sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
             });
         } else {
-            sender.send(locale.getString(ManageLang.FAIL_IMPORTER_NOT_FOUND, importKind));
+            sender.send(locale.getString(CommandLang.FAIL_IMPORTER_NOT_FOUND, importKind));
         }
     }
 
     public void onSearch(CMDSender sender, Arguments arguments) {
         String searchingFor = arguments.concatenate(" ");
         if (searchingFor.trim().isEmpty()) {
-            throw new IllegalArgumentException("The search string can not be empty" /* TODO */);
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_EMPTY_SEARCH_STRING));
         }
 
         ensureDatabaseIsOpen();
@@ -223,18 +227,18 @@ public class DataUtilityCommands {
         UUID senderUUID = sender.getUUID().orElse(null);
         if (playerUUID == null) playerUUID = senderUUID;
         if (playerUUID == null) {
-            throw new IllegalArgumentException("Player '" + identifier + "' was not found, they have no UUID.");
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_PLAYER_NOT_FOUND, identifier));
         }
 
         PlayerContainer player = dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
         if (!player.getValue(PlayerKeys.REGISTERED).isPresent()) {
-            throw new IllegalArgumentException("Player '" + identifier + "' was not found in the database.");
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_PLAYER_NOT_FOUND_REGISTER, identifier));
         }
 
-        if (sender.hasPermission("plan.ingame.other") || playerUUID.equals(senderUUID)) {
+        if (sender.hasPermission(Permissions.INGAME_OTHER) || playerUUID.equals(senderUUID)) {
             sendInGameMessages(sender, player);
         } else {
-            throw new IllegalArgumentException("Insufficient permissions: You can not view other player's information.");
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_NO_PERMISSION) + " (" + Permissions.INGAME_OTHER.get() + ')');
         }
     }
 
@@ -255,20 +259,20 @@ public class DataUtilityCommands {
         SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);
 
         String table = locale.getString(CommandLang.HEADER_INSPECT, playerName) + '\n' +
-                locale.getString(CommandLang.QINSPECT_ACTIVITY_INDEX, activityIndex.getFormattedValue(formatters.decimals()), activityIndex.getGroup()) + '\n' +
-                locale.getString(CommandLang.QINSPECT_REGISTERED, timestamp.apply(() -> registered)) + '\n' +
-                locale.getString(CommandLang.QINSPECT_LAST_SEEN, timestamp.apply(() -> lastSeen)) + '\n' +
-                locale.getString(CommandLang.QINSPECT_GEOLOCATION, geolocation) + '\n' +
-                locale.getString(CommandLang.QINSPECT_TIMES_KICKED, player.getValue(PlayerKeys.KICK_COUNT).orElse(0)) + '\n' +
+                locale.getString(CommandLang.INGAME_ACTIVITY_INDEX, activityIndex.getFormattedValue(formatters.decimals()), activityIndex.getGroup()) + '\n' +
+                locale.getString(CommandLang.INGAME_REGISTERED, timestamp.apply(() -> registered)) + '\n' +
+                locale.getString(CommandLang.INGAME_LAST_SEEN, timestamp.apply(() -> lastSeen)) + '\n' +
+                locale.getString(CommandLang.INGAME_GEOLOCATION, geolocation) + '\n' +
+                locale.getString(CommandLang.INGAME_TIMES_KICKED, player.getValue(PlayerKeys.KICK_COUNT).orElse(0)) + '\n' +
                 '\n' +
-                locale.getString(CommandLang.QINSPECT_PLAYTIME, length.apply(sessionsMutator.toPlaytime())) + '\n' +
-                locale.getString(CommandLang.QINSPECT_ACTIVE_PLAYTIME, length.apply(sessionsMutator.toActivePlaytime())) + '\n' +
-                locale.getString(CommandLang.QINSPECT_AFK_PLAYTIME, length.apply(sessionsMutator.toAfkTime())) + '\n' +
-                locale.getString(CommandLang.QINSPECT_LONGEST_SESSION, length.apply(sessionsMutator.toLongestSessionLength())) + '\n' +
+                locale.getString(CommandLang.INGAME_PLAYTIME, length.apply(sessionsMutator.toPlaytime())) + '\n' +
+                locale.getString(CommandLang.INGAME_ACTIVE_PLAYTIME, length.apply(sessionsMutator.toActivePlaytime())) + '\n' +
+                locale.getString(CommandLang.INGAME_AFK_PLAYTIME, length.apply(sessionsMutator.toAfkTime())) + '\n' +
+                locale.getString(CommandLang.INGAME_LONGEST_SESSION, length.apply(sessionsMutator.toLongestSessionLength())) + '\n' +
                 '\n' +
-                locale.getString(CommandLang.QINSPECT_PLAYER_KILLS, sessionsMutator.toPlayerKillCount()) + '\n' +
-                locale.getString(CommandLang.QINSPECT_MOB_KILLS, sessionsMutator.toMobKillCount()) + '\n' +
-                locale.getString(CommandLang.QINSPECT_DEATHS, sessionsMutator.toDeathCount());
+                locale.getString(CommandLang.INGAME_PLAYER_KILLS, sessionsMutator.toPlayerKillCount()) + '\n' +
+                locale.getString(CommandLang.INGAME_MOB_KILLS, sessionsMutator.toMobKillCount()) + '\n' +
+                locale.getString(CommandLang.INGAME_DEATHS, sessionsMutator.toDeathCount());
         sender.send(sender.getFormatter().table(table, ":"));
     }
 
