@@ -25,7 +25,16 @@ public enum CommandLang implements Lang {
     CONFIRM_EXPIRED("Cmd Confirm - Expired", "Confirmation expired, use the command again"),
     CONFIRM_FAIL_ACCEPT("Cmd Confirm - Fail on accept", "The accepted action errored upon execution: ${0}"),
     CONFIRM_FAIL_DENY("Cmd Confirm - Fail on deny", "The denied action errored upon execution: ${0}"),
+    CONFIRM("Cmd Confirm - confirmation", "Confirm: "),
+    CONFIRM_ACCEPT("Cmd Confirm - accept", "Accept"),
+    CONFIRM_DENY("Cmd Confirm - deny", "Cancel"),
+    CONFIRM_OVERWRITE_DB("Cmd Confirm - overwriting db", "You are about to overwrite data in Plan ${0} with data in ${1}"),
+    CONFIRM_CLEAR_DB("Cmd Confirm - clearing db", "You are about to remove all Plan-data in ${0}"),
+    CONFIRM_REMOVE_PLAYER_DB("Cmd Confirm - remove player db", "You are about to remove data of ${0} from ${1}"),
+    CONFIRM_CANCELLED("Cmd Confirm - cancelled, no data change", "Cancelled. No data was changed."),
 
+    FAIL_PLAYER_NOT_FOUND("Cmd FAIL - No player", "Player '${0}' was not found, they have no UUID."),
+    FAIL_SERVER_NOT_FOUND("Cmd FAIL - No server", "Server '${0}' was not found from the database."),
     FAIL_REQ_ARGS("Cmd FAIL - Requires Arguments", "§cArguments required (${0}) ${1}"),
     FAIL_REQ_ONE_ARG("Cmd FAIL - Require only one Argument", "§cSingle Argument required ${1}"),
     FAIL_NO_PERMISSION("Cmd FAIL - No Permission", "§cYou do not have the required permission."),
@@ -76,6 +85,12 @@ public enum CommandLang implements Lang {
     QINSPECT_PLAYER_KILLS("Cmd Qinspect - Player Kills", "  §2Player Kills: §f${0}"),
     QINSPECT_MOB_KILLS("Cmd Qinspect - Mob Kills", "  §2Mob Kills: §f${0}"),
     QINSPECT_DEATHS("Cmd Qinspect - Deaths", "  §2Deaths: §f${0}"),
+
+    DB_BACKUP_CREATE("Cmd db - creating backup", "Creating a backup file '${0}.db' with contents of ${1}"),
+    DB_WRITE("Cmd db - write", "Writing to ${0}.."),
+    DB_REMOVAL("Cmd db - removal", "Removing Plan-data from ${0}.."),
+    DB_REMOVAL_PLAYER("Cmd db - removal player", "Removing data of ${0} from ${1}.."),
+    DB_UNINSTALLED("Cmd db - server uninstalled", "§aIf the server is still installed, it will automatically set itself as installed in the database."),
 
     DISABLE_DISABLED("Cmd Disable - Disabled", "§aPlan systems are now disabled. You can still use /planbungee reload to restart the plugin."),
 
