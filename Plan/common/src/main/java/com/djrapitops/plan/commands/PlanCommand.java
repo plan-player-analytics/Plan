@@ -96,7 +96,7 @@ public class PlanCommand {
     }
 
     public CommandWithSubcommands build() {
-        CommandWithSubcommands command = CommandWithSubcommands.builder()
+        CommandWithSubcommands command = CommandWithSubcommands.builder(locale)
                 .alias(commandName)
                 .colorScheme(colors)
                 .subcommand(serverCommand())
@@ -298,7 +298,7 @@ public class PlanCommand {
     }
 
     private Subcommand databaseCommand() {
-        return CommandWithSubcommands.builder()
+        return CommandWithSubcommands.builder(locale)
                 .aliases("db", "database")
                 .optionalArgument(locale.getString(HelpLang.ARG_SUBCOMMAND), locale.getString(HelpLang.DESC_ARG_SUBCOMMAND))
                 .colorScheme(colors)
