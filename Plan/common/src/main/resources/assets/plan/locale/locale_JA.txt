@@ -1,6 +1,6 @@
 Cmd - Click Me                                  || ここをクリック
 Cmd - Link                                      || リンク
-Cmd Disable - Disabled                          || §a「Plan」は無効になりました。「/planbungee reload」コマンドを使ってプラグインを再起動できます
+Cmd Disable - Disabled                          || §a「Plan」は無効になりました。「reload」コマンドを使ってプラグインを再起動できます
 Cmd FAIL - Database not open                    || §cデータベースは${0}です - しばらくしてからもう一度お試し下さい
 Cmd FAIL - Invalid Username                     || §cこのユーザーはUUIDを所持していません
 Cmd FAIL - No Feature                           || §eこの機能は現在使用されていません！ (現在、「${0}」をサポートしています)
@@ -322,7 +322,7 @@ In Depth Help - /plan search ?                  || > §2検索コマンド\  与
 In Depth Help - /plan servers ?                 || > §2サーバーコマンド\  データベース内の「Plan」サーバーのリストを表示します\  BungeeCordネットワークのデータベースにサーバーを登録する際の問題をデバッグするために使用できます
 In Depth Help - /plan web ?                     || < §2ウェブユーザー管理コマンド\  §2/plan web §f補助コマンドの一覧を表示します\  §2/plan web <subcommand> ? §f詳細なヘルプを表示します
 In Depth Help - /plan web register ?            || > §2登録コマンド\  新しいウェブユーザーを登録します。\  プレイヤーが他のプレイヤーをユーザー登録するには「plan.webmanage」権限が必要です\  パスワードはPBKDF2(64,000回のSHA1の繰り返し)でソルト(暗号論)をかけてハッシュされます。
-In Depth Help - /planbungee disable ?           || > §2無効化コマンド\  BungeeCordの「Plan」で「onDisable」を実行します\  あとで「/planbungee reload」を使ってプラグインを有効にすることができます\  §bその状態で「Swapping jar」は対応していません
+In Depth Help - /planbungee disable ?           || > §2無効化コマンド\  BungeeCordの「Plan」で「onDisable」を実行します\  あとで「reload」を使ってプラグインを有効にすることができます\  §bその状態で「Swapping jar」は対応していません
 Manage - Confirm Overwrite                      || ${0}のデータは上書きされます!
 Manage - Confirm Removal                        || ${0}のデータは削除されます!
 Manage - Fail                                   || > §c何かがうまくいきませんでした: ${0}

@@ -2,7 +2,7 @@ API - css+                                      || PageExtension: ${0} added sty
 API - js+                                       || PageExtension: ${0} added javascript(s) to ${1}, ${2}
 Cmd - Click Me                                  || 请点击此处
 Cmd - Link                                      || •链接
-Cmd Disable - Disabled                          || §a现已禁用计划系统。您仍可使用 /planbungee reload 重启插件。
+Cmd Disable - Disabled                          || §a现已禁用计划系统。您仍可使用 reload 重启插件。
 Cmd FAIL - Database not open                    || §c数据库状态为 ${0} - 请稍后再试.
 Cmd FAIL - Invalid Username                     || §c[数据统计] 此玩家不存在。
 Cmd FAIL - No Feature                           || §e请设置要禁用的功能！（当前支持 ${0}）
@@ -331,7 +331,7 @@ In Depth Help - /plan search ?                  || §2搜索命令\§f  用于�
 In Depth Help - /plan servers ?                 || > §2服务器命令\  显示数据库中的计划服务器列表。\  可用于调试在全服网络上数据库注册的问题。
 In Depth Help - /plan web ?                     || < §2网页用户管理命令。\  §2/plan web §f列出子命令\  §2/plan web <子命令> ? §f详细帮助
 In Depth Help - /plan web register ?            || > §2注册命令\  注册一位新的网页用户。\  为其他用户注册需要 plan.webmanage 权限。\  密码通过使用随机密码盐的 PBKDF2 哈希方法加密（重复 64000 次 SHA1）。
-In Depth Help - /planbungee disable ?           || > §2禁用命令\  在 PlanBungee 上运行 onDisable。\  插件之后需要运行 /planbungee reload 以重新启用。\  §b不支持运行时热切换插件
+In Depth Help - /planbungee disable ?           || > §2禁用命令\  在 PlanBungee 上运行 onDisable。\  插件之后需要运行 reload 以重新启用。\  §b不支持运行时热切换插件
 Manage - Confirm Overwrite                      || 数据库 ${0} 中的数据将被覆盖！
 Manage - Confirm Removal                        || 数据库 ${0} 中的数据将被移除！
 Manage - Fail                                   || > §c[数据统计] 处理数据时发生错误！ ${0}

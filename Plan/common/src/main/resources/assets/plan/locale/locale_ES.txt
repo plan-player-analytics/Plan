@@ -1,6 +1,6 @@
 Cmd - Click Me                                  || Hazme click
 Cmd - Link                                      || Link
-Cmd Disable - Disabled                          || §aLos sistemas de Plan estan ahora deshabilitados. Puedes usar /planbungee reload para recargar el plugin.
+Cmd Disable - Disabled                          || §aLos sistemas de Plan estan ahora deshabilitados. Puedes usar reload para recargar el plugin.
 Cmd FAIL - Database not open                    || §cLa base de datos es ${0} - Por favor, prueba un poco más tarde.
 Cmd FAIL - Invalid Username                     || §cEste usuario no tiene UUID.
 Cmd FAIL - No Feature                           || §e¡Define una característica para deshabilitarla! (currently supports ${0})

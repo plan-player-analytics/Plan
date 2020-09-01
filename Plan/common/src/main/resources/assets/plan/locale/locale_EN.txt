@@ -1,6 +1,6 @@
 Cmd - Click Me                                  || Click me
 Cmd - Link                                      || Link
-Cmd Disable - Disabled                          || §aPlan systems are now disabled. You can still use /planbungee reload to restart the plugin.
+Cmd Disable - Disabled                          || §aPlan systems are now disabled. You can still use reload to restart the plugin.
 Cmd FAIL - Database not open                    || §cDatabase is ${0} - Please try again a bit later.
 Cmd FAIL - Invalid Username                     || §cUser does not have an UUID.
 Cmd FAIL - No Feature                           || §eDefine a feature to disable! (currently supports ${0})
@@ -322,7 +322,7 @@ In Depth Help - /plan search ?                  || > §2Search Command\  Get a l
 In Depth Help - /plan servers ?                 || > §2Servers Command\  Displays list of Plan servers in the Database.\  Can be used to debug issues with database registration on a network.
 In Depth Help - /plan web ?                     || < §2Web User Manage Command.\  §2/plan web §fList subcommands\  §2/plan web <subcommand> ? §fIn Depth help
 In Depth Help - /plan web register ?            || > §2Register Subcommand\  Registers a new Web User.\  Registering a user for another player requires plan.webmanage permission.\  Passwords are hashed with PBKDF2 (64,000 iterations of SHA1) using a cryptographically-random salt.
-In Depth Help - /planbungee disable ?           || > §2Disable Command\  Runs Plan onDisable on Proxy servers.\  Plugin can be enabled with /planbungee reload afterwards.\  §bDoes not support swapping jar on the fly
+In Depth Help - /planbungee disable ?           || > §2Disable Command\  Runs Plan onDisable on Proxy servers.\  Plugin can be enabled with reload afterwards.\  §bDoes not support swapping jar on the fly
 Manage - Confirm Overwrite                      || Data in ${0} will be overwritten!
 Manage - Confirm Removal                        || Data in ${0} will be removed!
 Manage - Fail                                   || > §cSomething went wrong: ${0}
