@@ -30,7 +30,6 @@ import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.settings.locale.lang.HelpLang;
-import com.djrapitops.plan.settings.locale.lang.ManageLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.Database;
@@ -110,14 +109,14 @@ public class DatabaseCommands {
                 .toLowerCase();
 
         if (!DBType.exists(dbName)) {
-            throw new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, dbName));
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_INCORRECT_DB, dbName));
         }
 
         Database fromDB = dbSystem.getActiveDatabaseByName(dbName);
         if (fromDB.getState() != Database.State.OPEN) fromDB.init();
 
         performBackup(sender, arguments, dbName, fromDB);
-        sender.send(locale.getString(ManageLang.PROGRESS_SUCCESS));
+        sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
     }
 
     public void performBackup(CMDSender sender, Arguments arguments, String dbName, Database fromDB) {
@@ -149,21 +148,21 @@ public class DatabaseCommands {
         File backupDBFile = files.getFileFromPluginFolder(backupDbName + (containsDBFileExtension ? "" : ".db"));
 
         if (!backupDBFile.exists()) {
-            throw new IllegalArgumentException(locale.getString(ManageLang.FAIL_FILE_NOT_FOUND, backupDBFile.getAbsolutePath()));
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_FILE_NOT_FOUND, backupDBFile.getAbsolutePath()));
         }
 
         String dbName = arguments.get(1)
                 .orElse(dbSystem.getDatabase().getType().getName())
                 .toLowerCase();
         if (!DBType.exists(dbName)) {
-            throw new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, dbName));
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_INCORRECT_DB, dbName));
         }
 
         Database toDB = dbSystem.getActiveDatabaseByName(dbName);
 
         // Check against restoring from database.db as it is active database
         if (backupDbName.contains("database") && toDB instanceof SQLiteDB) {
-            throw new IllegalArgumentException(locale.getString(ManageLang.FAIL_SAME_DB));
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_SAME_DB));
         }
 
         if (toDB.getState() != Database.State.OPEN) toDB.init();
@@ -201,24 +200,24 @@ public class DatabaseCommands {
 
             sender.send(locale.getString(CommandLang.DB_WRITE, toDB.getType().getName()));
             toDB.executeTransaction(new BackupCopyTransaction(fromDB, toDB)).get();
-            sender.send(locale.getString(ManageLang.PROGRESS_SUCCESS));
+            sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (DBOpException | ExecutionException e) {
             errorLogger.log(L.ERROR, e, ErrorContext.builder().related(backupDBFile, toDB.getType(), toDB.getState()).build());
-            sender.send(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
+            sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
         }
     }
 
     public void onMove(String mainCommand, CMDSender sender, Arguments arguments) {
         DBType fromDB = arguments.get(0).flatMap(DBType::getForName)
-                .orElseThrow(() -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite/H2>"))));
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite/H2>"))));
 
         DBType toDB = arguments.get(1).flatMap(DBType::getForName)
-                .orElseThrow(() -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite/H2>"))));
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite/H2>"))));
 
         if (fromDB == toDB) {
-            throw new IllegalArgumentException(locale.getString(ManageLang.FAIL_SAME_DB));
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_SAME_DB));
         }
 
         if (sender.supportsChatEvents()) {
@@ -258,24 +257,24 @@ public class DatabaseCommands {
 
             fromDatabase.executeTransaction(new BackupCopyTransaction(fromDatabase, toDatabase)).get();
 
-            sender.send(locale.getString(ManageLang.PROGRESS_SUCCESS));
+            sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
 
             boolean movingToCurrentDB = toDatabase.getType() == dbSystem.getDatabase().getType();
             if (movingToCurrentDB) {
-                sender.send(locale.getString(ManageLang.HOTSWAP_REMINDER, toDatabase.getType().getConfigName()));
+                sender.send(locale.getString(CommandLang.HOTSWAP_REMINDER, toDatabase.getType().getConfigName()));
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (Exception e) {
             errorLogger.log(L.ERROR, e, ErrorContext.builder().related(sender, fromDB.getName() + "->" + toDB.getName()).build());
-            sender.send(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
+            sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
         }
     }
 
 
     public void onClear(String mainCommand, CMDSender sender, Arguments arguments) {
         DBType fromDB = arguments.get(0).flatMap(DBType::getForName)
-                .orElseThrow(() -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite/H2>"))));
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite/H2>"))));
 
         if (sender.supportsChatEvents()) {
             sender.buildMessage()
@@ -313,7 +312,7 @@ public class DatabaseCommands {
             fromDatabase.executeTransaction(new RemoveEverythingTransaction())
                     .get(); // Wait for completion
             queryService.dataCleared();
-            sender.send(locale.getString(ManageLang.PROGRESS_SUCCESS));
+            sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
 
             // Reload plugin to register the server into the database
             // Otherwise errors will start.
@@ -321,7 +320,7 @@ public class DatabaseCommands {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (DBOpException | ExecutionException e) {
-            sender.send(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
+            sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
             errorLogger.log(L.ERROR, e, ErrorContext.builder().related(sender, fromDB.getName()).build());
         }
     }
@@ -369,11 +368,11 @@ public class DatabaseCommands {
             database.executeTransaction(new RemovePlayerTransaction(playerToRemove))
                     .get(); // Wait for completion
 
-            sender.send(locale.getString(ManageLang.PROGRESS_SUCCESS));
+            sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (DBOpException | ExecutionException e) {
-            sender.send(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
+            sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
             errorLogger.log(L.ERROR, e, ErrorContext.builder().related(sender, database.getType().getName(), playerToRemove).build());
         }
     }
@@ -394,17 +393,17 @@ public class DatabaseCommands {
                 .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_SERVER_NOT_FOUND, identifier)));
 
         if (server.getUuid().equals(serverInfo.getServerUUID())) {
-            throw new IllegalArgumentException(locale.getString(ManageLang.UNINSTALLING_SAME_SERVER));
+            throw new IllegalArgumentException(locale.getString(CommandLang.UNINSTALLING_SAME_SERVER));
         }
 
         dbSystem.getDatabase().executeTransaction(new SetServerAsUninstalledTransaction(server.getUuid()));
-        sender.send(locale.getString(ManageLang.PROGRESS_SUCCESS));
+        sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
         sender.send(locale.getString(CommandLang.DB_UNINSTALLED));
     }
 
     public void onHotswap(CMDSender sender, Arguments arguments) {
         DBType toDB = arguments.get(0).flatMap(DBType::getForName)
-                .orElseThrow(() -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite/H2>"))));
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite/H2>"))));
 
         try {
             Database database = dbSystem.getActiveDatabaseByType(toDB);
@@ -418,7 +417,7 @@ public class DatabaseCommands {
             config.save();
         } catch (DBOpException | IOException e) {
             errorLogger.log(L.WARN, e, ErrorContext.builder().related(toDB).build());
-            sender.send(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
+            sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
             return;
         }
         statusCommands.onReload(sender, new Arguments(Collections.emptyList()));
