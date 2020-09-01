@@ -289,7 +289,7 @@ public class PlanCommand {
 
     private Subcommand webUsersCommand() {
         return Subcommand.builder()
-                .aliases("users", "webusers")
+                .aliases("users", "webusers", "web")
                 .requirePermission(Permissions.USERS)
                 .description(locale.getString(HelpLang.USERS))
                 .inDepthDescription(locale.getString(DeepHelpLang.USERS))
