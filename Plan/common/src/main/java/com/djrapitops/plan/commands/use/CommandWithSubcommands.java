@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.commands.use;
 
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.utilities.java.TriConsumer;
 import com.djrapitops.plugin.command.ColorScheme;
 
@@ -34,28 +36,31 @@ public class CommandWithSubcommands extends Subcommand {
     private TriConsumer<RuntimeException, CMDSender, Arguments> exceptionHandler;
     private ColorScheme colors;
 
-    private CommandWithSubcommands() {
+    private final Locale locale;
+
+    private CommandWithSubcommands(Locale locale) {
+        this.locale = locale;
         subcommands = new ArrayList<>();
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public static Builder builder(Locale locale) {
+        return new Builder(locale);
     }
 
     public void onHelp(CMDSender sender, Arguments arguments) {
         List<Subcommand> hasPermissionFor = subcommands.stream().filter(sender::hasAllPermissionsFor).collect(Collectors.toList());
         sender.buildMessage()
-                .addPart("Header" /*TODO*/)
+                .addPart(locale.getString(CommandLang.HEADER_HELP, getPrimaryAlias()))
                 .newLine().newLine()
                 .apply(new HelpFormatter(sender, colors, getPrimaryAlias(), hasPermissionFor)::addSubcommands)
                 .newLine().newLine()
-                .addPart("Footer" /*TODO*/)
+                .addPart(locale.getString(CommandLang.FOOTER_HELP))
                 .send();
     }
 
     public void onCommand(CMDSender sender, Arguments arguments) {
         if (sender.isMissingPermissionsFor(this)) {
-            sender.send(/* TODO */"NO PERMISSION");
+            sender.send(locale.getString(CommandLang.FAIL_NO_PERMISSION) + " " + getRequiredPermissions());
             return;
         }
         try {
@@ -75,7 +80,7 @@ public class CommandWithSubcommands extends Subcommand {
                 for (Subcommand subcommand : subcommands) {
                     if (subcommand.getAliases().contains(alias)) {
                         if (sender.isMissingPermissionsFor(subcommand)) {
-                            sender.send(/* TODO */"NO PERMISSION");
+                            sender.send(locale.getString(CommandLang.FAIL_NO_PERMISSION) + " " + subcommand.getRequiredPermissions());
                             continue;
                         }
                         subcommand.getExecutor().accept(sender, arguments.removeFirst());
@@ -114,8 +119,8 @@ public class CommandWithSubcommands extends Subcommand {
     public static class Builder extends Subcommand.Builder<Builder> {
         private final CommandWithSubcommands command;
 
-        private Builder() {
-            this(new CommandWithSubcommands());
+        private Builder(Locale locale) {
+            this(new CommandWithSubcommands(locale));
         }
 
         private Builder(CommandWithSubcommands command) {
