@@ -1,5 +1,5 @@
 Cmd - Click Me                                  || Klikkaa minua
-Cmd - Link                                      ||   §2Linkki: §f
+Cmd - Link                                      || Linkki
 Cmd Disable - Disabled                          || §aPlan on nyt poissa päältä. Voit käyttää /planbungee reload komentoa uudelleenkäynnistykseen.
 Cmd FAIL - Database not open                    || §cTietokanta: ${0} - Yritä uudelleen myöhemmin.
 Cmd FAIL - Invalid Username                     || §cPelaajalla ei löytynyt UUID:ta.

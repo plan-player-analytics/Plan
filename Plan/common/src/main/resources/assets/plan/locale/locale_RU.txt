@@ -1,7 +1,7 @@
 API - css+                                      || PageExtension: ${0} добавил таблицы стилей в ${1}, ${2}
 API - js+                                       || PageExtension: ${0} добавил JavaScript(ы) к ${1}, ${2}
 Cmd - Click Me                                  || Нажми на меня
-Cmd - Link                                      ||   §2Ссылка: §f
+Cmd - Link                                      || Ссылка
 Cmd Disable - Disabled                          || §aPlan сейчас отключен. Вы всё еще можете использовать /planbungee reload для перезагрузки плагина.
 Cmd FAIL - Database not open                    || §cБаза данных ${0} - Пожалуйста попробуйте снова немного позже.
 Cmd FAIL - Invalid Username                     || §cПользователь не имеет UUID.

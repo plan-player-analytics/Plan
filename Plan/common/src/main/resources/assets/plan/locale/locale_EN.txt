@@ -1,5 +1,5 @@
 Cmd - Click Me                                  || Click me
-Cmd - Link                                      ||   §2Link: §f
+Cmd - Link                                      || Link
 Cmd Disable - Disabled                          || §aPlan systems are now disabled. You can still use /planbungee reload to restart the plugin.
 Cmd FAIL - Database not open                    || §cDatabase is ${0} - Please try again a bit later.
 Cmd FAIL - Invalid Username                     || §cUser does not have an UUID.

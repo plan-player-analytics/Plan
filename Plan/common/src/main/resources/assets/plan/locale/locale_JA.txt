@@ -1,5 +1,5 @@
 Cmd - Click Me                                  || ここをクリック
-Cmd - Link                                      ||   §2リンク: §f
+Cmd - Link                                      || リンク
 Cmd Disable - Disabled                          || §a「Plan」は無効になりました。「/planbungee reload」コマンドを使ってプラグインを再起動できます
 Cmd FAIL - Database not open                    || §cデータベースは${0}です - しばらくしてからもう一度お試し下さい
 Cmd FAIL - Invalid Username                     || §cこのユーザーはUUIDを所持していません

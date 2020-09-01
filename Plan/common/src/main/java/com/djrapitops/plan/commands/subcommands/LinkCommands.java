@@ -79,7 +79,7 @@ public class LinkCommands {
 
     MessageBuilder linkTo(MessageBuilder builder, CMDSender sender, String address) {
         if (sender.supportsChatEvents()) {
-            return builder.addPart(colors.getTertiaryColor() + "§l[Link]").link(address).hover(address);
+            return builder.addPart(colors.getTertiaryColor() + "§l[" + locale.getString(CommandLang.LINK) + "]").link(address).hover(address);
         } else {
             return builder.addPart(colors.getTertiaryColor() + address);
         }
@@ -100,12 +100,12 @@ public class LinkCommands {
             server = dbSystem.getDatabase()
                     .query(ServerQueries.fetchServerMatchingIdentifier(identifier))
                     .filter(s -> !s.isProxy())
-                    .orElseThrow(() -> new IllegalArgumentException("Server '" + identifier + "' was not found from the database."));
+                    .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_SERVER_NOT_FOUND, identifier)));
         }
 
         String address = getAddress(sender) + "/server/" + Html.encodeToURL(server.getName());
         sender.buildMessage()
-                .addPart(colors.getMainColor() + "Server page: ")
+                .addPart(colors.getMainColor() + locale.getString(CommandLang.LINK_SERVER))
                 .apply(builder -> linkTo(builder, sender, address))
                 .send();
     }
@@ -124,13 +124,13 @@ public class LinkCommands {
         String serversListed = dbSystem.getDatabase()
                 .query(ServerQueries.fetchPlanServerInformationCollection())
                 .stream().sorted()
-                .map(server -> m + server.getId() + ":" + t + server.getName() + ":" + s + server.getUuid() + "\n")
+                .map(server -> m + server.getId() + "::" + t + server.getName() + "::" + s + server.getUuid() + "\n")
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
         sender.buildMessage()
-                .addPart(t + '>' + m + " Servers").newLine()
+                .addPart(t + locale.getString(CommandLang.HEADER_SERVERS)).newLine()
                 .addPart(sender.getFormatter().table(
-                        t + "id:name:uuid\n" + serversListed, ":"))
+                        t + locale.getString(CommandLang.HEADER_SERVER_LIST) + '\n' + serversListed, "::"))
                 .send();
     }
 
@@ -153,20 +153,20 @@ public class LinkCommands {
         UUID senderUUID = sender.getUUID().orElse(null);
         if (playerUUID == null) playerUUID = senderUUID;
         if (playerUUID == null) {
-            throw new IllegalArgumentException("Player '" + identifier + "' was not found, they have no UUID.");
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_PLAYER_NOT_FOUND, identifier));
         }
 
         String playerName = dbSystem.getDatabase().query(UserIdentifierQueries.fetchPlayerNameOf(playerUUID))
-                .orElseThrow(() -> new IllegalArgumentException("Player '" + identifier + "' was not found in the database."));
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_PLAYER_NOT_FOUND_REGISTER, identifier)));
 
-        if (sender.hasPermission("plan.player.other") || playerUUID.equals(senderUUID)) {
+        if (sender.hasPermission(Permissions.PLAYER_OTHER) || playerUUID.equals(senderUUID)) {
             String address = getAddress(sender) + "/player/" + Html.encodeToURL(playerName);
             sender.buildMessage()
-                    .addPart(colors.getMainColor() + "Player page: ")
+                    .addPart(colors.getMainColor() + locale.getString(CommandLang.LINK_PLAYER))
                     .apply(builder -> linkTo(builder, sender, address))
                     .send();
         } else {
-            throw new IllegalArgumentException("Insufficient permissions: You can not view other player's pages.");
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_NO_PERMISSION) + " (" + Permissions.PLAYER_OTHER.get() + ')');
         }
     }
 
@@ -179,7 +179,7 @@ public class LinkCommands {
     public void onPlayersCommand(CMDSender sender, Arguments arguments) {
         String address = getAddress(sender) + "/players";
         sender.buildMessage()
-                .addPart(colors.getMainColor() + "Players page: ")
+                .addPart(colors.getMainColor() + locale.getString(CommandLang.LINK_PLAYERS))
                 .apply(builder -> linkTo(builder, sender, address))
                 .send();
     }
@@ -193,11 +193,11 @@ public class LinkCommands {
     public void onNetworkCommand(CMDSender sender, Arguments arguments) {
         String address = getAddress(sender) + "/network";
         sender.buildMessage()
-                .addPart(colors.getMainColor() + "Network page: ")
+                .addPart(colors.getMainColor() + locale.getString(CommandLang.LINK_NETWORK))
                 .apply(builder -> linkTo(builder, sender, address))
                 .send();
         dbSystem.getDatabase().query(ServerQueries.fetchProxyServerInformation())
-                .orElseThrow(() -> new IllegalArgumentException("Server is not connected to a network. The link redirects to server page."));
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.NOTIFY_NO_NETWORK)));
     }
 
     /**
@@ -214,13 +214,13 @@ public class LinkCommands {
         String usersListed = dbSystem.getDatabase()
                 .query(WebUserQueries.fetchAllUsers())
                 .stream().sorted()
-                .map(user -> m + user.getUsername() + ":" + t + user.getLinkedTo() + ":" + s + user.getPermissionLevel() + "\n")
+                .map(user -> m + user.getUsername() + "::" + t + user.getLinkedTo() + "::" + s + user.getPermissionLevel() + "\n")
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
         sender.buildMessage()
-                .addPart(t + '>' + m + " Servers").newLine()
+                .addPart(t + locale.getString(CommandLang.HEADER_WEB_USERS)).newLine()
                 .addPart(sender.getFormatter().table(
-                        t + "username:linked to:permission level\n" + usersListed, ":"))
+                        t + locale.getString(CommandLang.HEADER_WEB_USER_LIST) + '\n' + usersListed, "::"))
                 .send();
     }
 
@@ -230,20 +230,20 @@ public class LinkCommands {
         UUID senderUUID = sender.getUUID().orElse(null);
         if (playerUUID == null) playerUUID = senderUUID;
         if (playerUUID == null) {
-            throw new IllegalArgumentException("Player '" + identifier + "' was not found, they have no UUID.");
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_PLAYER_NOT_FOUND, identifier));
         }
 
         String playerName = dbSystem.getDatabase().query(UserIdentifierQueries.fetchPlayerNameOf(playerUUID))
-                .orElseThrow(() -> new IllegalArgumentException("Player '" + identifier + "' was not found in the database."));
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_PLAYER_NOT_FOUND_REGISTER, identifier)));
 
         if (sender.hasPermission(Permissions.JSON_OTHER) || playerUUID.equals(senderUUID)) {
             String address = getAddress(sender) + "/player/" + Html.encodeToURL(playerName) + "/raw";
             sender.buildMessage()
-                    .addPart(colors.getMainColor() + "Player json: ")
+                    .addPart(colors.getMainColor() + locale.getString(CommandLang.LINK_JSON))
                     .apply(builder -> linkTo(builder, sender, address))
                     .send();
         } else {
-            throw new IllegalArgumentException("Insufficient permissions: You can not view other player's json.");
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_NO_PERMISSION) + " (" + Permissions.JSON_OTHER.get() + ')');
         }
     }
 }

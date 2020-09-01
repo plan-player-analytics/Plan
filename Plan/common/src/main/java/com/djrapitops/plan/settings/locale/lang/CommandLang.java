@@ -61,7 +61,12 @@ public enum CommandLang implements Lang {
     WEB_PERMISSION_LEVELS("Cmd Web - Permission Levels", ">\\§70: Access all pages\\§71: Access '/players' and all player pages\\§72: Access player page with the same username as the webuser\\§73+: No permissions"),
 
     LINK_CLICK_ME("Cmd - Click Me", "Click me"),
-    LINK_PREFIX("Cmd - Link", "  §2Link: §f"),
+    LINK("Cmd - Link", "Link"),
+    LINK_SERVER("Cmd - Link Server", "Server page: "),
+    LINK_PLAYER("Cmd - Link Player", "Player page: "),
+    LINK_PLAYERS("Cmd - Link Players", "Players page: "),
+    LINK_NETWORK("Cmd - Link Network", "Network page: "),
+    LINK_JSON("Cmd - Link Player JSON", "Player json: "),
 
     HEADER_SEARCH("Cmd Header - Search", "> §2${0} Results for §f${1}§2:"),
     HEADER_ANALYSIS("Cmd Header - Analysis", "> §2Analysis Results"),
@@ -71,6 +76,8 @@ public enum CommandLang implements Lang {
     HEADER_PLAYERS("Cmd Header - Players", "> §2Players"),
     HEADER_WEB_USERS("Cmd Header - Web Users", "> §2${0} Web Users"),
     HEADER_NETWORK("Cmd Header - Network", "> §2Network Page"),
+    HEADER_SERVER_LIST("Cmd Header - server list", "id::name::uuid"),
+    HEADER_WEB_USER_LIST("Cmd Header - web user list", "username::linked to::permission level"),
 
     INFO_VERSION("Cmd Info - Version", "  §2Version: §f${0}"),
     INFO_UPDATE("Cmd Info - Update", "  §2Update Available: §f${0}"),
@@ -98,6 +105,7 @@ public enum CommandLang implements Lang {
 
     DISABLE_DISABLED("Cmd Disable - Disabled", "§aPlan systems are now disabled. You can still use /planbungee reload to restart the plugin."),
 
+    NOTIFY_NO_NETWORK("Cmd network - No network", "Server is not connected to a network. The link redirects to server page."),
     RELOAD_COMPLETE("Cmd Info - Reload Complete", "§aReload Complete"),
     RELOAD_FAILED("Cmd Info - Reload Failed", "§cSomething went wrong during reload of the plugin, a restart is recommended."),
     NO_ADDRESS_NOTIFY("Cmd Notify - No Address", "§eNo address was available - using localhost as fallback. Set up 'Alternative_IP' settings."),
