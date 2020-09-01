@@ -201,7 +201,15 @@ public abstract class SQLDB extends AbstractDatabase {
             runnableFactory.create("Database Index Creation", new AbsRunnable() {
                 @Override
                 public void run() {
-                    executeTransaction(new CreateIndexTransaction());
+                    if (getState() == State.CLOSED || getState() == State.CLOSING) {
+                        cancel();
+                        return;
+                    }
+                    try {
+                        executeTransaction(new CreateIndexTransaction());
+                    } catch (DBOpException e) {
+                        errorLogger.log(L.WARN, e);
+                    }
                 }
             }).runTaskLaterAsynchronously(TimeAmount.toTicks(1, TimeUnit.MINUTES));
         } catch (Exception ignore) {
