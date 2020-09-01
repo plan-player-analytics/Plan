@@ -1,6 +1,6 @@
 Cmd - Click Me                                  || Klikkaa minua
 Cmd - Link                                      || Linkki
-Cmd Disable - Disabled                          || §aPlan on nyt poissa päältä. Voit käyttää /planbungee reload komentoa uudelleenkäynnistykseen.
+Cmd Disable - Disabled                          || §aPlan on nyt poissa päältä. Voit käyttää reload komentoa uudelleenkäynnistykseen.
 Cmd FAIL - Database not open                    || §cTietokanta: ${0} - Yritä uudelleen myöhemmin.
 Cmd FAIL - Invalid Username                     || §cPelaajalla ei löytynyt UUID:ta.
 Cmd FAIL - No Feature                           || §eValitse sammutettava osa! (tällähetkellä tuetut: ${0})
@@ -322,7 +322,7 @@ In Depth Help - /plan search ?                  || > §2Haku Komento\  Hae pelaa
 In Depth Help - /plan servers ?                 || > §2Palvelimet Komento\  Näyttää tietokannassa olevat Plan palvelimet.\  Voidaan käyttää yhteys ongelmien tutkimiseen.
 In Depth Help - /plan web ?                     || < §2Web Käyttäjähallinto Komento.\  §2/plan web §fList alikomentos\  §2/plan web <alikomento> ? §fYksityiskohtainen apu
 In Depth Help - /plan web register ?            || > §2Rekisteröinti Alikomento\  Rekisteröi uuden Web Käyttäjän.\  Toiselle pelaajalle käyttäjän rekisteröinti vaatii plan.webmanage permission.\  Salasanat salataan PBKDF2 (64,000 iterations of SHA1) algoritmilla.
-In Depth Help - /planbungee disable ?           || > §2Sammutus Komento\  Sammuttaa PlanBungee:n.\  /planbungee reload käynnistää Plan:in uudelleen.\  §bEi tue jar:in vaihtoa lennossa
+In Depth Help - /planbungee disable ?           || > §2Sammutus Komento\  Sammuttaa PlanBungee:n.\  reload käynnistää Plan:in uudelleen.\  §bEi tue jar:in vaihtoa lennossa
 Manage - Confirm Overwrite                      || Tiedot ${0}:ssa ylikirjoitetaan!
 Manage - Confirm Removal                        || Tiedot ${0}:ssa poistetaan!
 Manage - Fail                                   || > §cJokin meni vikaan: ${0}

@@ -1,6 +1,6 @@
 Cmd - Click Me                                  || Cliquez ici
 Cmd - Link                                      || Lien
-Cmd Disable - Disabled                          || §aLes systèmes de Plan sont maintenant désactivés. Vous pouvez toujours exécuter la commande '/planbungee reload' pour les redémarrer.
+Cmd Disable - Disabled                          || §aLes systèmes de Plan sont maintenant désactivés. Vous pouvez toujours exécuter la commande 'reload' pour les redémarrer.
 Cmd FAIL - Database not open                    || §cLa base de données est : ${0} - Merci de réessayer plus tard.
 Cmd FAIL - Invalid Username                     || §cCet utilisateur ne possède pas d'UUID.
 Cmd FAIL - No Feature                           || §eDéfinir une fonctionnalité à désactiver ! (supporte actuellement ${0})
@@ -323,7 +323,7 @@ In Depth Help - /plan search ?                  || > §2Commande de recherches\ 
 In Depth Help - /plan servers ?                 || > §2Commande des serveurs\  Affiche la liste des serveurs de Plan présents dans la base de données.\  Peut être utilisé pour résoudre les problèmes d'enregistrement de base de données sur un réseau.
 In Depth Help - /plan web ?                     || < §2Commande de la gestion d'utilisateurs Web\  §2/plan web §fListe des sous-commandes\  §2/plan web <subcommand> ? §fAide en profondeure
 In Depth Help - /plan web register ?            || > §2Commande d'enregistrement\  Enregistre un nouvel utilisateur Web.\  L'enregistrement d'un utilisateur pour un autre joueur nécessite l'autorisation 'plan.webmanage'.\  Les mots de passe sont hachés avec PBKDF2 (64000 itérations de SHA1) en utilisant 'un sel cryptographiquement aléatoire'.
-In Depth Help - /planbungee disable ?           || > §2Commande de désactivation\  Lance onDisable pour PlanBungee.\  Le plugin peut être activé par la suite en exécutant la commande /planbungee reload.\  §bNe supporte pas l'échange de .jar à la volée (sans redémarrage complet)
+In Depth Help - /planbungee disable ?           || > §2Commande de désactivation\  Lance onDisable pour PlanBungee.\  Le plugin peut être activé par la suite en exécutant la commande reload.\  §bNe supporte pas l'échange de .jar à la volée (sans redémarrage complet)
 Manage - Confirm Overwrite                      || Les données ${0} seront écrasées !
 Manage - Confirm Removal                        || Les données ${0} seront supprimées !
 Manage - Fail                                   || > §cUne erreur est survenue : ${0}.

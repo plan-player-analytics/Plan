@@ -1,6 +1,6 @@
 Cmd - Click Me                                  || Tıkla bana
 Cmd - Link                                      || Link
-Cmd Disable - Disabled                          || §aPlan sistemi şuanda kapandı. Plugini yeniden başlatmak için /planbungee komutunu kullanabilirsin.
+Cmd Disable - Disabled                          || §aPlan sistemi şuanda kapandı. Plugini yeniden başlatmak için reload komutunu kullanabilirsin.
 Cmd FAIL - Database not open                    || §cDatabase is ${0} - Please try again a bit later.
 Cmd FAIL - Invalid Username                     || §cKullanıcının Bir UUID si yok.
 Cmd FAIL - No Feature                           || §eDevre dışı bırakılacak özelliği seçin! (Şuanda desteklenen ${0})
@@ -322,7 +322,7 @@ In Depth Help - /plan search ?                  || > §2Arama Komutu\  Verilen a
 In Depth Help - /plan servers ?                 || > §2Sunucu Komutu\  Veritabanındaki Plan sunucularının listesini görüntüler.\  Networkteki veritabanı kaydıyla ilgili sorunları çözmek için kullanılabilir.
 In Depth Help - /plan web ?                     || < §2Web Kullanıcısı Yönetim Paneli Komutu.\  §2/plan web §fList subcommands\  §2/plan web <subcommand> ? §fIn Depth help
 In Depth Help - /plan web register ?            || > §2Kayıt Alt Komutu\  Yeni bir Web Kullanıcısı kaydeder.\  Bir kullanıcıyı başka bir oyuncuya kaydetmek plan.webmanage izni gerektirir.\  Şifreler, kriptografik olarak rasgele bir sıra kullanılarak PBKDF2 (64.000 iterasyon SHA1) ile karıştırıldı.
-In Depth Help - /planbungee disable ?           || > §2Devre Dışı Komutu\  Runs onDisable on PlanBungee.\  Plugin can be enabled with /planbungee reload afterwards.\  §bDoes not support swapping jar on the fly
+In Depth Help - /planbungee disable ?           || > §2Devre Dışı Komutu\  Runs onDisable on PlanBungee.\  Plugin can be enabled with reload afterwards.\  §bDoes not support swapping jar on the fly
 Manage - Confirm Overwrite                      || ${0} içindeki verilen üzerinden yazılacak!
 Manage - Confirm Removal                        || ${0} İçindeki Veri Silinecek!
 Manage - Fail                                   || > §cBirşey yanlış gidiyor: ${0}

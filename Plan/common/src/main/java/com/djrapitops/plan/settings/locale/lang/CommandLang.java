@@ -109,7 +109,7 @@ public enum CommandLang implements Lang {
     DB_UNINSTALLED("Cmd db - server uninstalled", "§aIf the server is still installed, it will automatically set itself as installed in the database."),
     UNREGISTER("Cmd unregister - unregistering", "Unregistering '${0}'.."),
 
-    DISABLE_DISABLED("Cmd Disable - Disabled", "§aPlan systems are now disabled. You can still use /planbungee reload to restart the plugin."),
+    DISABLE_DISABLED("Cmd Disable - Disabled", "§aPlan systems are now disabled. You can still use reload to restart the plugin."),
 
     NOTIFY_NO_NETWORK("Cmd network - No network", "Server is not connected to a network. The link redirects to server page."),
     RELOAD_COMPLETE("Cmd Info - Reload Complete", "§aReload Complete"),
