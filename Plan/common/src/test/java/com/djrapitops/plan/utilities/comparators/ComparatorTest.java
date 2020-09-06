@@ -109,8 +109,8 @@ class ComparatorTest {
                 .collect(Collectors.toList());
 
         List<Lang> expected = Arrays.asList(
-                HelpLang.SERVER,
                 HelpLang.DB_RESTORE,
+                HelpLang.SERVER,
                 HelpLang.SERVERS
         );
         assertEquals(expected, result);
