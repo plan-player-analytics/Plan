@@ -265,7 +265,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         assertEquals(new HashSet<>(Arrays.asList(expected)), result);
     }
 
-    @RepeatedTest(3)
+    @RepeatedTest(value = 3, name = "Players table and Player page playtimes match {currentRepetition}/{totalRepetitions}")
     default void playersTableAndPlayerPagePlaytimeMatches() {
         prepareForSessionSave();
         List<Session> player1Sessions = RandomData.randomSessions(serverUUID(), worlds, playerUUID, player2UUID);
@@ -285,7 +285,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         assertEquals(expected, got);
     }
 
-    @RepeatedTest(3)
+    @RepeatedTest(value = 3, name = "Players table and player page Activity Index calculations match {currentRepetition}/{totalRepetitions}")
     default void playersTableAndPlayerPageActivityIndexMatches() {
         prepareForSessionSave();
         List<Session> player1Sessions = RandomData.randomSessions(serverUUID(), worlds, playerUUID, player2UUID);

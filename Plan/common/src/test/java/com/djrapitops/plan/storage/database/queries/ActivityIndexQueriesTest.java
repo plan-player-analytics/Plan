@@ -72,7 +72,7 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
 //        assertEquals(expected, groupings);
 //    }
 
-    @RepeatedTest(3)
+    @RepeatedTest(value = 3, name = "Activity Index calculations match {currentRepetition}/{totalRepetitions}")
     default void activityIndexCalculationsMatch() {
         storeSessions(session -> true);
 
@@ -118,7 +118,7 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
         });
     }
 
-    @RepeatedTest(3)
+    @RepeatedTest(value = 3, name = "Activity Index calculations match with missing data {currentRepetition}/{totalRepetitions}")
     default void activityIndexCalculationsMatchWithMissingData() {
         long keepAfter = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7L);
         storeSessions(session -> session.getDate() >= keepAfter && session.getUnsafe(SessionKeys.END) >= keepAfter);
@@ -165,7 +165,7 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
         });
     }
 
-    @RepeatedTest(3)
+    @RepeatedTest(value = 3, name = "Network Activity Index calculations match {currentRepetition}/{totalRepetitions}")
     default void networkActivityIndexCalculationsMatch() {
         storeSessions(session -> true);
 
