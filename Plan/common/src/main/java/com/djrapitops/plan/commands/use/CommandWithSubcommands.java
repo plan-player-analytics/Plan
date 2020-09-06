@@ -47,14 +47,29 @@ public class CommandWithSubcommands extends Subcommand {
         return new Builder(locale);
     }
 
+    private List<Subcommand> getPermittedSubcommands(CMDSender sender) {
+        return subcommands.stream().filter(sender::hasAllPermissionsFor).collect(Collectors.toList());
+    }
+
     public void onHelp(CMDSender sender, Arguments arguments) {
-        List<Subcommand> hasPermissionFor = subcommands.stream().filter(sender::hasAllPermissionsFor).collect(Collectors.toList());
+        List<Subcommand> hasPermissionFor = getPermittedSubcommands(sender);
         sender.buildMessage()
                 .addPart(locale.getString(CommandLang.HEADER_HELP, getPrimaryAlias()))
                 .newLine().newLine()
                 .apply(new HelpFormatter(sender, colors, getPrimaryAlias(), hasPermissionFor)::addSubcommands)
                 .newLine().newLine()
-                .addPart(locale.getString(CommandLang.FOOTER_HELP))
+                .addPart(locale.getString(CommandLang.FOOTER_HELP, getPrimaryAlias()))
+                .send();
+    }
+
+    public void onInDepthHelp(CMDSender sender, Arguments arguments) {
+        List<Subcommand> hasPermissionFor = getPermittedSubcommands(sender);
+        sender.buildMessage()
+                .addPart(locale.getString(CommandLang.HEADER_HELP, getPrimaryAlias()))
+                .newLine().newLine()
+                .apply(new HelpFormatter(sender, colors, getPrimaryAlias(), hasPermissionFor)::addInDepthSubcommands)
+                .newLine().newLine()
+                .addPart(locale.getString(CommandLang.FOOTER_HELP, getPrimaryAlias()))
                 .send();
     }
 
@@ -76,6 +91,10 @@ public class CommandWithSubcommands extends Subcommand {
             String alias = gotAlias.get();
             if ("help".equals(alias)) {
                 onHelp(sender, arguments);
+                return;
+            } else if ("?".equals(alias)) {
+                onInDepthHelp(sender, arguments);
+                return;
             } else {
                 for (Subcommand subcommand : subcommands) {
                     if (subcommand.getAliases().contains(alias)) {

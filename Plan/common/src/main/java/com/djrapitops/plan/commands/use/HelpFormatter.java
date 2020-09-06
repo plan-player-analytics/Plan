@@ -78,6 +78,43 @@ public class HelpFormatter {
         return toReturn;
     }
 
+    public MessageBuilder addInDepthSubcommands(MessageBuilder message) {
+        MessageBuilder toReturn = message;
+        String m = colors.getMainColor();
+        String s = colors.getSecondaryColor();
+        String asString = subcommands.stream()
+                .filter(cmd -> cmd.getDescription() != null)
+                .map(cmd -> {
+                            TextStringBuilder builder = new TextStringBuilder(
+                                    m + mainCommand + " " + cmd.getPrimaryAlias()
+                            );
+                            for (String description : cmd.getInDepthDescription()) {
+                                builder.append("***").append(s).append(description).append('\n');
+                            }
+
+                            for (Subcommand.ArgumentDescriptor argument : cmd.getArguments()) {
+                                builder.append("***").append(m).append(argument.isRequired() ? '<' + argument.getName() + '>' : '[' + argument.getName() + ']')
+                                        .append(s).append(" ").append(argument.getDescription()).append('\n');
+                            }
+                            return builder.toString();
+                        }
+                ).collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+                .toString();
+        List<String[]> table = sender.getFormatter().tableAsParts(asString, "***");
+
+        for (String[] row : table) {
+            if (sender.isPlayer()) {
+                toReturn = toReturn.addPart(m + "/");
+            }
+
+            toReturn = toReturn.addPart(row[0]);
+            if (row.length > 1) toReturn = toReturn.addPart(row[1]);
+            toReturn = toReturn.newLine();
+        }
+
+        return toReturn;
+    }
+
     private List<String> argumentsAndAliases(Subcommand subcommand, List<Subcommand.ArgumentDescriptor> descriptors, Set<String> aliases) {
         List<String> lines = new ArrayList<>();
         lines.add(colors.getMainColor() + subcommand.getPrimaryAlias() + colors.getTertiaryColor() + " Arguments:" + (descriptors.isEmpty() ? " none" : ""));
