@@ -46,19 +46,19 @@ public class VelocityMessageBuilder implements MessageBuilder {
 
     @Override
     public MessageBuilder link(String url) {
-        builder.clickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
+        builder.clickEvent(ClickEvent.openUrl(url));
         return this;
     }
 
     @Override
     public MessageBuilder command(String command) {
-        builder.clickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
+        builder.clickEvent(ClickEvent.runCommand(command));
         return this;
     }
 
     @Override
     public MessageBuilder hover(String s) {
-        builder.hoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.of(s)));
+        builder.hoverEvent(HoverEvent.showText(TextComponent.of(s)));
         return this;
     }
 
@@ -68,7 +68,7 @@ public class VelocityMessageBuilder implements MessageBuilder {
         for (String string : strings) {
             hoverText.content(string);
         }
-        builder.hoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverText.build()));
+        builder.hoverEvent(HoverEvent.showText(hoverText.build()));
         return this;
     }
 
@@ -78,7 +78,7 @@ public class VelocityMessageBuilder implements MessageBuilder {
         for (String string : collection) {
             hoverText.content(string);
         }
-        builder.hoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverText.build()));
+        builder.hoverEvent(HoverEvent.showText(hoverText.build()));
         return this;
     }
 
