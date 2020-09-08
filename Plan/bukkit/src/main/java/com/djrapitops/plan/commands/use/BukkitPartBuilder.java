@@ -102,7 +102,7 @@ class BukkitPartBuilder implements MessageBuilder {
     @Override
     public void send() {
         if (sender != null) {
-            sender.sender.sendMessage(part.create());
+            sender.sender.spigot().sendMessage(part.create());
         } else if (previous != null) {
             previous.part.append(part.create());
             previous.send();
