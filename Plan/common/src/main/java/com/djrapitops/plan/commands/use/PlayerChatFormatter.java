@@ -20,7 +20,6 @@ public class PlayerChatFormatter extends ChatFormatter {
 
     @Override
     public int getWidth(String part) {
-        // TODO refactor
         return com.djrapitops.plan.utilities.chat.ChatFormatter.getPxMessageWidth(part);
     }
 }
