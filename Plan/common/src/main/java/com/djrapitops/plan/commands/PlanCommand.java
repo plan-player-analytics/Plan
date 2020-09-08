@@ -21,6 +21,7 @@ import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.commands.use.CommandWithSubcommands;
 import com.djrapitops.plan.commands.use.Subcommand;
+import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.settings.Permissions;
@@ -28,8 +29,11 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.settings.locale.lang.HelpLang;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
+import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
+import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -39,13 +43,14 @@ import com.djrapitops.plugin.logging.L;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Singleton
 public class PlanCommand {
 
     private final String commandName;
+    private final PlanFiles files;
     private final Locale locale;
     private final ColorScheme colors;
     private final Confirmation confirmation;
@@ -61,6 +66,7 @@ public class PlanCommand {
     @Inject
     public PlanCommand(
             @Named("mainCommandName") String commandName,
+            PlanFiles files,
             Locale locale,
             ColorScheme colors,
             Confirmation confirmation,
@@ -74,6 +80,7 @@ public class PlanCommand {
             ErrorLogger errorLogger
     ) {
         this.commandName = commandName;
+        this.files = files;
         this.locale = locale;
         this.colors = colors;
         this.confirmation = confirmation;
@@ -150,8 +157,8 @@ public class PlanCommand {
                 .requirePermission(Permissions.SERVER)
                 .description(locale.getString(HelpLang.SERVER))
                 .inDepthDescription(locale.getString(DeepHelpLang.SERVER))
-                .onTabComplete(this::serverNames)
                 .onCommand(linkCommands::onServerCommand)
+                .onTabComplete(this::serverNames)
                 .build();
     }
 
@@ -182,8 +189,8 @@ public class PlanCommand {
                 .requirePermission(Permissions.PLAYER_SELF)
                 .description(locale.getString(HelpLang.PLAYER))
                 .inDepthDescription(locale.getString(DeepHelpLang.PLAYER))
-                .onTabComplete(this::playerNames)
                 .onCommand(linkCommands::onPlayerCommand)
+                .onTabComplete(this::playerNames)
                 .build();
     }
 
@@ -216,6 +223,7 @@ public class PlanCommand {
                 .description(locale.getString(HelpLang.INGAME))
                 .inDepthDescription(locale.getString(DeepHelpLang.INGAME))
                 .onCommand(dataUtilityCommands::onInGame)
+                .onTabComplete(this::playerNames)
                 .build();
     }
 
@@ -239,7 +247,19 @@ public class PlanCommand {
                 .description(locale.getString(HelpLang.UNREGISTER))
                 .inDepthDescription(locale.getString(DeepHelpLang.UNREGISTER))
                 .onCommand((sender, arguments) -> registrationCommands.onUnregister(commandName, sender, arguments))
+                .onTabComplete(this::webUserNames)
                 .build();
+    }
+
+    private List<String> webUserNames(CMDSender sender, Arguments arguments) {
+        if (!sender.hasPermission(Permissions.UNREGISTER_OTHER)) {
+            return Collections.emptyList();
+        }
+
+        String username = arguments.concatenate(" ");
+        return dbSystem.getDatabase().query(WebUserQueries.matchUsers(username))
+                .stream().map(User::getUsername)
+                .collect(Collectors.toList());
     }
 
     private Subcommand acceptCommand() {
@@ -284,7 +304,9 @@ public class PlanCommand {
                 .description(locale.getString(HelpLang.DISABLE))
                 .inDepthDescription(locale.getString(DeepHelpLang.DISABLE))
                 .onCommand(statusCommands::onDisable)
-                .build();
+                .onTabComplete((sender, arguments) ->
+                        arguments.isEmpty() ? Collections.singletonList("kickcount") : Collections.emptyList()
+                ).build();
     }
 
     private Subcommand webUsersCommand() {
@@ -323,7 +345,9 @@ public class PlanCommand {
                 .description(locale.getString(HelpLang.DB_BACKUP))
                 .inDepthDescription(locale.getString(DeepHelpLang.DB_BACKUP))
                 .onCommand(databaseCommands::onBackup)
-                .build();
+                .onTabComplete((sender, arguments) ->
+                        arguments.isEmpty() ? DBType.names() : Collections.emptyList()
+                ).build();
     }
 
     private Subcommand restoreCommand() {
@@ -335,7 +359,29 @@ public class PlanCommand {
                 .description(locale.getString(HelpLang.DB_RESTORE))
                 .inDepthDescription(locale.getString(DeepHelpLang.DB_RESTORE))
                 .onCommand((sender, arguments) -> databaseCommands.onRestore(commandName, sender, arguments))
+                .onTabComplete(this::getBackupFilenames)
                 .build();
+    }
+
+    private List<String> getBackupFilenames(CMDSender sender, Arguments arguments) {
+        if (arguments.get(1).isPresent()) {
+            return DBType.names();
+        }
+        Optional<String> firstArgument = arguments.get(0);
+        if (!firstArgument.isPresent()) {
+            return Arrays.stream(files.getDataFolder().list())
+                    .filter(Objects::nonNull)
+                    .filter(fileName -> fileName.endsWith(".db")
+                            && !fileName.equalsIgnoreCase("database.db"))
+                    .collect(Collectors.toList());
+        }
+        String part = firstArgument.get();
+        return Arrays.stream(files.getDataFolder().list())
+                .filter(Objects::nonNull)
+                .filter(fileName -> fileName.startsWith(part)
+                        && fileName.endsWith(".db")
+                        && !fileName.equalsIgnoreCase("database.db"))
+                .collect(Collectors.toList());
     }
 
     private Subcommand moveCommand() {
@@ -347,6 +393,7 @@ public class PlanCommand {
                 .description(locale.getString(HelpLang.DB_MOVE))
                 .inDepthDescription(locale.getString(DeepHelpLang.DB_MOVE))
                 .onCommand((sender, arguments) -> databaseCommands.onMove(commandName, sender, arguments))
+                .onTabComplete((sender, arguments) -> DBType.names())
                 .build();
     }
 
@@ -358,7 +405,9 @@ public class PlanCommand {
                 .description(locale.getString(HelpLang.DB_HOTSWAP))
                 .inDepthDescription(locale.getString(DeepHelpLang.DB_HOTSWAP))
                 .onCommand(databaseCommands::onHotswap)
-                .build();
+                .onTabComplete((sender, arguments) ->
+                        arguments.isEmpty() ? DBType.names() : Collections.emptyList()
+                ).build();
     }
 
     private Subcommand clearCommand() {
@@ -369,7 +418,9 @@ public class PlanCommand {
                 .description(locale.getString(HelpLang.DB_CLEAR))
                 .inDepthDescription(locale.getString(DeepHelpLang.DB_CLEAR))
                 .onCommand((sender, arguments) -> databaseCommands.onClear(commandName, sender, arguments))
-                .build();
+                .onTabComplete((sender, arguments) ->
+                        arguments.isEmpty() ? DBType.names() : Collections.emptyList()
+                ).build();
     }
 
     private Subcommand removeCommand() {
@@ -380,6 +431,7 @@ public class PlanCommand {
                 .description(locale.getString(HelpLang.DB_REMOVE))
                 .inDepthDescription(locale.getString(DeepHelpLang.DB_REMOVE))
                 .onCommand((sender, arguments) -> databaseCommands.onRemove(commandName, sender, arguments))
+                .onTabComplete(this::playerNames)
                 .build();
     }
 
@@ -391,6 +443,7 @@ public class PlanCommand {
                 .description(locale.getString(HelpLang.DB_UNINSTALLED))
                 .inDepthDescription(locale.getString(DeepHelpLang.DB_UNINSTALLED))
                 .onCommand(databaseCommands::onUninstalled)
+                .onTabComplete(this::serverNames)
                 .build();
     }
 
@@ -402,7 +455,9 @@ public class PlanCommand {
                 .description(locale.getString(HelpLang.EXPORT))
                 .inDepthDescription(locale.getString(DeepHelpLang.EXPORT))
                 .onCommand(dataUtilityCommands::onExport)
-                .build();
+                .onTabComplete((sender, arguments) ->
+                        arguments.isEmpty() ? Arrays.asList("players", "server_json") : Collections.emptyList()
+                ).build();
     }
 
     private Subcommand importCommand() {
@@ -415,7 +470,9 @@ public class PlanCommand {
                 .description(locale.getString(HelpLang.IMPORT))
                 .inDepthDescription(locale.getString(DeepHelpLang.IMPORT))
                 .onCommand(dataUtilityCommands::onImport)
-                .build();
+                .onTabComplete((sender, arguments) ->
+                        arguments.isEmpty() ? importerNames : Collections.emptyList()
+                ).build();
     }
 
     private Subcommand jsonCommand() {
@@ -426,6 +483,7 @@ public class PlanCommand {
                 .description(locale.getString(HelpLang.JSON))
                 .inDepthDescription(locale.getString(DeepHelpLang.JSON))
                 .onCommand(linkCommands::onJson)
+                .onTabComplete(this::playerNames)
                 .build();
     }
 }
