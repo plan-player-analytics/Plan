@@ -139,9 +139,11 @@ public class ServerQueries {
     }
 
     public static Query<List<Server>> findMatchingServers(String identifier) {
+        if (identifier.isEmpty()) return db -> Collections.emptyList();
+
         String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME +
-                " WHERE (LOWER(" + ServerTable.SERVER_UUID + ") LIKE LOWER(%?%)" +
-                OR + "LOWER(" + ServerTable.NAME + ") LIKE LOWER(%?%)" +
+                " WHERE (LOWER(" + ServerTable.SERVER_UUID + ") LIKE LOWER(?)" +
+                OR + "LOWER(" + ServerTable.NAME + ") LIKE LOWER(?)" +
                 OR + ServerTable.SERVER_ID + "=?" +
                 OR + ServerTable.SERVER_ID + "=?)" +
                 AND + ServerTable.INSTALLED + "=?" +
@@ -149,8 +151,8 @@ public class ServerQueries {
         return new QueryStatement<List<Server>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, identifier);
-                statement.setString(2, identifier);
+                statement.setString(1, '%' + identifier + '%');
+                statement.setString(2, '%' + identifier + '%');
                 statement.setInt(3, NumberUtils.isParsable(identifier) ? Integer.parseInt(identifier) : -1);
                 String id = identifier.startsWith("Server ") ? identifier.substring(7) : identifier;
                 statement.setInt(4, NumberUtils.isParsable(id) ? Integer.parseInt(id) : -1);
