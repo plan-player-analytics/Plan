@@ -116,12 +116,16 @@ public class CommandWithSubcommands extends Subcommand {
         Optional<String> gotAlias = arguments.get(0);
         List<String> options = new ArrayList<>();
         if (gotAlias.isPresent()) {
+            subcommandsLoop:
             for (Subcommand subcommand : subcommands) {
                 if (sender.isMissingPermissionsFor(subcommand)) {
                     continue;
                 }
                 for (String alias : subcommand.getAliases()) {
-                    if (alias.startsWith(gotAlias.get())) {
+                    if (alias.equals(gotAlias.get())) {
+                        options.addAll(subcommand.getArgumentResolver().apply(sender, arguments.removeFirst()));
+                        break subcommandsLoop;
+                    } else if (alias.startsWith(gotAlias.get())) {
                         options.add(alias);
                     }
                 }
