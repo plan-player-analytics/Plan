@@ -16,20 +16,30 @@
  */
 package com.djrapitops.plan.commands.use;
 
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-public class BukkitCommand implements CommandExecutor {
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+public class BukkitCommand implements CommandExecutor, TabCompleter {
 
     private final RunnableFactory runnableFactory;
+    private final ErrorLogger errorLogger;
     private final Subcommand command;
 
-    public BukkitCommand(RunnableFactory runnableFactory, Subcommand command) {
+    public BukkitCommand(RunnableFactory runnableFactory, ErrorLogger errorLogger, Subcommand command) {
         this.runnableFactory = runnableFactory;
+        this.errorLogger = errorLogger;
         this.command = command;
     }
 
@@ -38,13 +48,38 @@ public class BukkitCommand implements CommandExecutor {
         runnableFactory.create("", new AbsRunnable() {
             @Override
             public void run() {
-                if (sender instanceof Player) {
-                    command.getExecutor().accept(new BukkitPlayerCMDSender((Player) sender), new Arguments(args));
-                } else {
-                    command.getExecutor().accept(new BukkitCMDSender(sender), new Arguments(args));
+                try {
+                    if (sender instanceof Player) {
+                        command.getExecutor().accept(new BukkitPlayerCMDSender((Player) sender), new Arguments(args));
+                    } else {
+                        command.getExecutor().accept(new BukkitCMDSender(sender), new Arguments(args));
+                    }
+                } catch (Exception e) {
+                    errorLogger.log(L.ERROR, e, ErrorContext.builder()
+                            .related(sender.getClass())
+                            .related(label + " " + Arrays.toString(args))
+                            .build());
                 }
             }
         }).runTaskAsynchronously();
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+        try {
+            if (sender instanceof Player) {
+                return command.getArgumentResolver().apply(new BukkitPlayerCMDSender((Player) sender), new Arguments(args));
+            } else {
+                return command.getArgumentResolver().apply(new BukkitCMDSender(sender), new Arguments(args));
+            }
+        } catch (Exception e) {
+            errorLogger.log(L.ERROR, e, ErrorContext.builder()
+                    .related(sender.getClass())
+                    .related("tab completion")
+                    .related(label + " " + Arrays.toString(args))
+                    .build());
+            return Collections.emptyList();
+        }
     }
 }
