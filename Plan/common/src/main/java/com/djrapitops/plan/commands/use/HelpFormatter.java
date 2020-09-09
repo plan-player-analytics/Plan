@@ -93,7 +93,7 @@ public class HelpFormatter {
                             }
 
                             for (Subcommand.ArgumentDescriptor argument : cmd.getArguments()) {
-                                builder.append("***").append(m).append(argument.isRequired() ? '<' + argument.getName() + '>' : '[' + argument.getName() + ']')
+                                builder.append(" ***").append(m).append(argument.isRequired() ? '<' + argument.getName() + '>' : '[' + argument.getName() + ']')
                                         .append(s).append(" ").append(argument.getDescription()).append('\n');
                             }
                             return builder.toString();
