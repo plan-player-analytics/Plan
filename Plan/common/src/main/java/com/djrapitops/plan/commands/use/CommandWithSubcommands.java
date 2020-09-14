@@ -59,6 +59,7 @@ public class CommandWithSubcommands extends Subcommand {
                 .apply(new HelpFormatter(sender, colors, getPrimaryAlias(), hasPermissionFor)::addSubcommands)
                 .newLine().newLine()
                 .addPart(locale.getString(CommandLang.FOOTER_HELP, getPrimaryAlias()))
+                .hover("")
                 .send();
     }
 
@@ -70,6 +71,7 @@ public class CommandWithSubcommands extends Subcommand {
                 .apply(new HelpFormatter(sender, colors, getPrimaryAlias(), hasPermissionFor)::addInDepthSubcommands)
                 .newLine().newLine()
                 .addPart(locale.getString(CommandLang.FOOTER_HELP, getPrimaryAlias()))
+                .hover("")
                 .send();
     }
 
