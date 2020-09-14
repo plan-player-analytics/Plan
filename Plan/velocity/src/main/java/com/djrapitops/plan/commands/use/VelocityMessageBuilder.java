@@ -19,6 +19,7 @@ package com.djrapitops.plan.commands.use;
 import net.kyori.text.TextComponent;
 import net.kyori.text.event.ClickEvent;
 import net.kyori.text.event.HoverEvent;
+import org.apache.commons.text.TextStringBuilder;
 
 import java.util.Collection;
 
@@ -73,11 +74,9 @@ public class VelocityMessageBuilder implements MessageBuilder {
     }
 
     @Override
-    public MessageBuilder hover(Collection<String> collection) {
+    public MessageBuilder hover(Collection<String> lines) {
         TextComponent.Builder hoverText = TextComponent.builder();
-        for (String string : collection) {
-            hoverText.content(string);
-        }
+        hoverText.content(new TextStringBuilder().appendWithSeparators(lines, "\n").build());
         builder.hoverEvent(HoverEvent.showText(hoverText.build()));
         return this;
     }

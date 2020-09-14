@@ -19,6 +19,7 @@ package com.djrapitops.plan.commands.use;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
+import org.apache.commons.text.TextStringBuilder;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -78,9 +79,7 @@ class BukkitPartBuilder implements MessageBuilder {
     @Override
     public MessageBuilder hover(Collection<String> lines) {
         ComponentBuilder hoverMsg = new ComponentBuilder("");
-        for (String line : lines) {
-            hoverMsg.append(line + "\n");
-        }
+        hoverMsg.append(new TextStringBuilder().appendWithSeparators(lines, "\n").build());
         part.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverMsg.create()));
         return this;
     }
