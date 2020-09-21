@@ -34,7 +34,7 @@ public class Arguments {
     private final List<String> args;
 
     public Arguments(String argumentsAsString) {
-        this(StringUtils.split(argumentsAsString, ' '));
+        this(StringUtils.splitByWholeSeparatorPreserveAllTokens(argumentsAsString, " "));
     }
 
     public Arguments(String[] args) {
