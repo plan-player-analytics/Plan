@@ -23,8 +23,9 @@ import com.djrapitops.plugin.task.RunnableFactory;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.TabExecutor;
 
-public class BungeeCommand extends Command {
+public class BungeeCommand extends Command implements TabExecutor {
 
     private final RunnableFactory runnableFactory;
     private final Subcommand command;
@@ -52,5 +53,14 @@ public class BungeeCommand extends Command {
                 }
             }
         }).runTaskAsynchronously();
+    }
+
+    @Override
+    public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
+        if (sender instanceof ProxiedPlayer) {
+            return command.getArgumentResolver().apply(new BungeePlayerCMDSender((ProxiedPlayer) sender), new Arguments(args));
+        } else {
+            return command.getArgumentResolver().apply(new BungeeCMDSender(sender), new Arguments(args));
+        }
     }
 }
