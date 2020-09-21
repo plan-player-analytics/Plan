@@ -82,7 +82,7 @@ public class Arguments {
     }
 
     public boolean isEmpty() {
-        return args.isEmpty();
+        return args.isEmpty() || args.get(0).isEmpty();
     }
 
     @Override
