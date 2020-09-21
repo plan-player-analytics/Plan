@@ -16,10 +16,12 @@
  */
 package com.djrapitops.plan.commands.use;
 
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import org.spongepowered.api.command.CommandCallable;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.source.RconSource;
@@ -29,28 +31,38 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 public class SpongeCommand implements CommandCallable {
 
     private final RunnableFactory runnableFactory;
+    private final ErrorLogger errorLogger;
     private final Subcommand command;
 
     public SpongeCommand(
             RunnableFactory runnableFactory,
-            Subcommand command
+            ErrorLogger errorLogger, Subcommand command
     ) {
         this.runnableFactory = runnableFactory;
+        this.errorLogger = errorLogger;
         this.command = command;
     }
 
     @Override
-    public CommandResult process(CommandSource source, String arguments) throws CommandException {
+    public CommandResult process(CommandSource source, String arguments) {
         runnableFactory.create("", new AbsRunnable() {
             @Override
             public void run() {
-                command.getExecutor().accept(getSender(source), new Arguments(arguments));
+                try {
+                    command.getExecutor().accept(getSender(source), new Arguments(arguments));
+                } catch (Exception e) {
+                    errorLogger.log(L.ERROR, e, ErrorContext.builder()
+                            .related(source.getClass())
+                            .related(arguments)
+                            .build());
+                }
             }
         }).runTaskAsynchronously();
         return CommandResult.success();
@@ -65,9 +77,18 @@ public class SpongeCommand implements CommandCallable {
     }
 
     @Override
-    public List<String> getSuggestions(CommandSource source, String arguments, @Nullable Location<World> targetPosition) throws CommandException {
-        return command.getArgumentResolver()
-                .apply(getSender(source), new Arguments(arguments));
+    public List<String> getSuggestions(CommandSource source, String arguments, @Nullable Location<World> targetPosition) {
+        try {
+            return command.getArgumentResolver()
+                    .apply(getSender(source), new Arguments(arguments));
+        } catch (Exception e) {
+            errorLogger.log(L.ERROR, e, ErrorContext.builder()
+                    .related(source.getClass())
+                    .related("tab completion")
+                    .related(arguments)
+                    .build());
+            return Collections.emptyList();
+        }
     }
 
     @Override

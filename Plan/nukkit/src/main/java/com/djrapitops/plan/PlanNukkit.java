@@ -26,11 +26,14 @@ import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plugin.NukkitPlugin;
 import com.djrapitops.plugin.benchmarking.Benchmark;
 import com.djrapitops.plugin.command.ColorScheme;
+import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.task.AbsRunnable;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -121,7 +124,14 @@ public class PlanNukkit extends NukkitPlugin implements PlanPlugin {
         runnableFactory.create("", new AbsRunnable() {
             @Override
             public void run() {
-                command.getExecutor().accept(sender, new Arguments(args));
+                try {
+                    command.getExecutor().accept(sender, new Arguments(args));
+                } catch (Exception e) {
+                    system.getErrorLogger().log(L.ERROR, e, ErrorContext.builder()
+                            .related(sender.getClass())
+                            .related(label + " " + Arrays.toString(args))
+                            .build());
+                }
             }
         }).runTaskAsynchronously();
         return true;

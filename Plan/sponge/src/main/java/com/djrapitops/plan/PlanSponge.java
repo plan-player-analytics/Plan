@@ -167,7 +167,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
                 commandManager.removeMapping(registered);
             }
 
-            Optional<CommandMapping> register = commandManager.register(this, new SpongeCommand(runnableFactory, command), name);
+            Optional<CommandMapping> register = commandManager.register(this, new SpongeCommand(runnableFactory, system.getErrorLogger(), command), name);
             register.ifPresent(commandMapping -> commands.put(name, commandMapping));
         }
     }

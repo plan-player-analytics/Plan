@@ -16,21 +16,28 @@
  */
 package com.djrapitops.plan.commands.use;
 
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.velocitypowered.api.command.Command;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class VelocityCommand implements Command {
 
     private final RunnableFactory runnableFactory;
+    private final ErrorLogger errorLogger;
     private final Subcommand command;
 
-    public VelocityCommand(RunnableFactory runnableFactory, Subcommand command) {
+    public VelocityCommand(RunnableFactory runnableFactory, ErrorLogger errorLogger, Subcommand command) {
         this.runnableFactory = runnableFactory;
+        this.errorLogger = errorLogger;
         this.command = command;
     }
 
@@ -39,7 +46,14 @@ public class VelocityCommand implements Command {
         runnableFactory.create("", new AbsRunnable() {
             @Override
             public void run() {
-                command.getExecutor().accept(getSender(source), new Arguments(args));
+                try {
+                    command.getExecutor().accept(getSender(source), new Arguments(args));
+                } catch (Exception e) {
+                    errorLogger.log(L.ERROR, e, ErrorContext.builder()
+                            .related(source.getClass())
+                            .related(Arrays.toString(args))
+                            .build());
+                }
             }
         }).runTaskAsynchronously();
     }
@@ -54,6 +68,15 @@ public class VelocityCommand implements Command {
 
     @Override
     public List<String> suggest(CommandSource source, String[] currentArgs) {
-        return command.getArgumentResolver().apply(getSender(source), new Arguments(currentArgs));
+        try {
+            return command.getArgumentResolver().apply(getSender(source), new Arguments(currentArgs));
+        } catch (Exception e) {
+            errorLogger.log(L.ERROR, e, ErrorContext.builder()
+                    .related(source.getClass())
+                    .related("tab completion")
+                    .related(Arrays.toString(currentArgs))
+                    .build());
+            return Collections.emptyList();
+        }
     }
 }

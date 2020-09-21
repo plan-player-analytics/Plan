@@ -17,7 +17,11 @@
 package com.djrapitops.plan.command.use;
 
 import com.djrapitops.plan.commands.use.Arguments;
+import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.commands.use.Subcommand;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import net.md_5.bungee.api.CommandSender;
@@ -25,20 +29,33 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 public class BungeeCommand extends Command implements TabExecutor {
 
     private final RunnableFactory runnableFactory;
+    private final ErrorLogger errorLogger;
     private final Subcommand command;
 
     public BungeeCommand(
             RunnableFactory runnableFactory,
-            Subcommand command,
+            ErrorLogger errorLogger, Subcommand command,
             String name
     ) {
         super(name);
         this.runnableFactory = runnableFactory;
+        this.errorLogger = errorLogger;
 
         this.command = command;
+    }
+
+    private CMDSender getSender(CommandSender sender) {
+        if (sender instanceof ProxiedPlayer) {
+            return new BungeePlayerCMDSender((ProxiedPlayer) sender);
+        } else {
+            return new BungeeCMDSender(sender);
+        }
     }
 
     @Override
@@ -46,10 +63,13 @@ public class BungeeCommand extends Command implements TabExecutor {
         runnableFactory.create("", new AbsRunnable() {
             @Override
             public void run() {
-                if (sender instanceof ProxiedPlayer) {
-                    command.getExecutor().accept(new BungeePlayerCMDSender((ProxiedPlayer) sender), new Arguments(args));
-                } else {
-                    command.getExecutor().accept(new BungeeCMDSender(sender), new Arguments(args));
+                try {
+                    command.getExecutor().accept(getSender(sender), new Arguments(args));
+                } catch (Exception e) {
+                    errorLogger.log(L.ERROR, e, ErrorContext.builder()
+                            .related(sender.getClass())
+                            .related(Arrays.toString(args))
+                            .build());
                 }
             }
         }).runTaskAsynchronously();
@@ -57,10 +77,15 @@ public class BungeeCommand extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
-        if (sender instanceof ProxiedPlayer) {
-            return command.getArgumentResolver().apply(new BungeePlayerCMDSender((ProxiedPlayer) sender), new Arguments(args));
-        } else {
-            return command.getArgumentResolver().apply(new BungeeCMDSender(sender), new Arguments(args));
+        try {
+            return command.getArgumentResolver().apply(getSender(sender), new Arguments(args));
+        } catch (Exception e) {
+            errorLogger.log(L.ERROR, e, ErrorContext.builder()
+                    .related(sender.getClass())
+                    .related("tab completion")
+                    .related(Arrays.toString(args))
+                    .build());
+            return Collections.emptyList();
         }
     }
 }

@@ -119,7 +119,7 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
             return;
         }
         getProxy().getCommandManager().register(
-                new VelocityCommand(runnableFactory, command),
+                new VelocityCommand(runnableFactory, system.getErrorLogger(), command),
                 command.getAliases().toArray(new String[0])
         );
     }
