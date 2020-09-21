@@ -21,20 +21,14 @@ import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.commands.use.CommandWithSubcommands;
 import com.djrapitops.plan.commands.use.Subcommand;
-import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
-import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.settings.locale.lang.HelpLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.DBType;
-import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
-import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
-import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.command.ColorScheme;
@@ -43,24 +37,29 @@ import com.djrapitops.plugin.logging.L;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Singleton
 public class PlanCommand {
 
     private final String commandName;
-    private final PlanFiles files;
-    private final Locale locale;
     private final ColorScheme colors;
     private final Confirmation confirmation;
-    private final ImportSystem importSystem;
-    private final DBSystem dbSystem;
+    private final TabCompleteCache tabCompleteCache;
+
     private final LinkCommands linkCommands;
     private final RegistrationCommands registrationCommands;
     private final PluginStatusCommands statusCommands;
     private final DatabaseCommands databaseCommands;
     private final DataUtilityCommands dataUtilityCommands;
+
+    private final PlanFiles files;
+    private final Locale locale;
+    private final ImportSystem importSystem;
+    private final DBSystem dbSystem;
     private final ErrorLogger errorLogger;
 
     @Inject
@@ -70,6 +69,7 @@ public class PlanCommand {
             Locale locale,
             ColorScheme colors,
             Confirmation confirmation,
+            TabCompleteCache tabCompleteCache,
             ImportSystem importSystem,
             DBSystem dbSystem,
             LinkCommands linkCommands,
@@ -84,6 +84,7 @@ public class PlanCommand {
         this.locale = locale;
         this.colors = colors;
         this.confirmation = confirmation;
+        this.tabCompleteCache = tabCompleteCache;
         this.importSystem = importSystem;
         this.dbSystem = dbSystem;
         this.linkCommands = linkCommands;
@@ -141,13 +142,12 @@ public class PlanCommand {
 
     public List<String> serverNames(CMDSender sender, Arguments arguments) {
         String asString = arguments.concatenate(" ");
-        List<Server> servers = dbSystem.getDatabase().query(ServerQueries.findMatchingServers(asString));
-        return Lists.map(servers, Server::getIdentifiableName);
+        return tabCompleteCache.getMatchingServerIdentifiers(asString);
     }
 
     private List<String> playerNames(CMDSender sender, Arguments arguments) {
         String asString = arguments.concatenate(" ");
-        return dbSystem.getDatabase().query(UserIdentifierQueries.fetchMatchingPlayerNames(asString));
+        return tabCompleteCache.getMatchingPlayerIdentifiers(asString);
     }
 
     private Subcommand serverCommand() {
@@ -257,9 +257,7 @@ public class PlanCommand {
         }
 
         String username = arguments.concatenate(" ");
-        return dbSystem.getDatabase().query(WebUserQueries.matchUsers(username))
-                .stream().map(User::getUsername)
-                .collect(Collectors.toList());
+        return tabCompleteCache.getMatchingUserIdentifiers(username);
     }
 
     private Subcommand acceptCommand() {
@@ -369,19 +367,10 @@ public class PlanCommand {
         }
         Optional<String> firstArgument = arguments.get(0);
         if (!firstArgument.isPresent()) {
-            return Arrays.stream(files.getDataFolder().list())
-                    .filter(Objects::nonNull)
-                    .filter(fileName -> fileName.endsWith(".db")
-                            && !fileName.equalsIgnoreCase("database.db"))
-                    .collect(Collectors.toList());
+            return tabCompleteCache.getMatchingPlayerIdentifiers(null);
         }
         String part = firstArgument.get();
-        return Arrays.stream(files.getDataFolder().list())
-                .filter(Objects::nonNull)
-                .filter(fileName -> fileName.startsWith(part)
-                        && fileName.endsWith(".db")
-                        && !fileName.equalsIgnoreCase("database.db"))
-                .collect(Collectors.toList());
+        return tabCompleteCache.getMatchingPlayerIdentifiers(part);
     }
 
     private Subcommand moveCommand() {
