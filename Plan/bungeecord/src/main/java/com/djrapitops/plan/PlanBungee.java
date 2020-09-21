@@ -96,7 +96,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
             return;
         }
         for (String name : command.getAliases()) {
-            getProxy().getPluginManager().registerCommand(this, new BungeeCommand(runnableFactory, command, name));
+            getProxy().getPluginManager().registerCommand(this, new BungeeCommand(runnableFactory, system.getErrorLogger(), command, name));
         }
     }
 

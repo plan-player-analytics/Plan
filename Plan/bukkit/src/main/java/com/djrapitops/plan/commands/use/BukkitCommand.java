@@ -43,17 +43,21 @@ public class BukkitCommand implements CommandExecutor, TabCompleter {
         this.command = command;
     }
 
+    private CMDSender getSender(CommandSender sender) {
+        if (sender instanceof Player) {
+            return new BukkitPlayerCMDSender((Player) sender);
+        } else {
+            return new BukkitCMDSender(sender);
+        }
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         runnableFactory.create("", new AbsRunnable() {
             @Override
             public void run() {
                 try {
-                    if (sender instanceof Player) {
-                        command.getExecutor().accept(new BukkitPlayerCMDSender((Player) sender), new Arguments(args));
-                    } else {
-                        command.getExecutor().accept(new BukkitCMDSender(sender), new Arguments(args));
-                    }
+                    command.getExecutor().accept(getSender(sender), new Arguments(args));
                 } catch (Exception e) {
                     errorLogger.log(L.ERROR, e, ErrorContext.builder()
                             .related(sender.getClass())
@@ -68,11 +72,7 @@ public class BukkitCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         try {
-            if (sender instanceof Player) {
-                return command.getArgumentResolver().apply(new BukkitPlayerCMDSender((Player) sender), new Arguments(args));
-            } else {
-                return command.getArgumentResolver().apply(new BukkitCMDSender(sender), new Arguments(args));
-            }
+            return command.getArgumentResolver().apply(getSender(sender), new Arguments(args));
         } catch (Exception e) {
             errorLogger.log(L.ERROR, e, ErrorContext.builder()
                     .related(sender.getClass())
