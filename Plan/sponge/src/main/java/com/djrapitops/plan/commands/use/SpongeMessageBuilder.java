@@ -18,6 +18,7 @@ package com.djrapitops.plan.commands.use;
 
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
+import plan.org.apache.commons.text.TextStringBuilder;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -27,16 +28,23 @@ public class SpongeMessageBuilder implements MessageBuilder {
 
     private final SpongeCMDSender sender;
     private final Text.Builder builder;
+    private final SpongeMessageBuilder previous;
 
     public SpongeMessageBuilder(SpongeCMDSender sender) {
+        this(sender, null);
+    }
+
+    SpongeMessageBuilder(SpongeCMDSender sender, SpongeMessageBuilder previous) {
         this.sender = sender;
-        builder = Text.builder();
+        this.builder = Text.builder();
+        this.previous = previous;
     }
 
     @Override
     public MessageBuilder addPart(String s) {
-        builder.append(Text.of(s));
-        return this;
+        SpongeMessageBuilder newBuilder = new SpongeMessageBuilder(sender, this);
+        newBuilder.builder.append(Text.of(s));
+        return newBuilder;
     }
 
     @Override
@@ -57,7 +65,7 @@ public class SpongeMessageBuilder implements MessageBuilder {
 
     @Override
     public MessageBuilder command(String command) {
-        builder.onClick(TextActions.runCommand(command.charAt(0) == '/' ? command.substring(1) : command));
+        builder.onClick(TextActions.runCommand(command.charAt(0) == '/' ? command : '/' + command));
         return this;
     }
 
@@ -68,14 +76,14 @@ public class SpongeMessageBuilder implements MessageBuilder {
     }
 
     @Override
-    public MessageBuilder hover(String... strings) {
-        builder.onHover(TextActions.showText(Text.of((Object[]) strings)));
+    public MessageBuilder hover(String... lines) {
+        builder.onHover(TextActions.showText(Text.of(new TextStringBuilder().appendWithSeparators(lines, "\n"))));
         return this;
     }
 
     @Override
-    public MessageBuilder hover(Collection<String> collection) {
-        builder.onHover(TextActions.showText(Text.of(collection.toArray())));
+    public MessageBuilder hover(Collection<String> lines) {
+        builder.onHover(TextActions.showText(Text.of(new TextStringBuilder().appendWithSeparators(lines, "\n"))));
         return this;
     }
 
@@ -95,6 +103,11 @@ public class SpongeMessageBuilder implements MessageBuilder {
 
     @Override
     public void send() {
-        sender.source.sendMessage(builder.build());
+        if (previous == null) {
+            sender.source.sendMessage(builder.build());
+        } else {
+            previous.builder.append(builder.build());
+            previous.send();
+        }
     }
 }
