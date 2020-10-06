@@ -136,6 +136,7 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
             case 1213:
                 context.related("Deadlock");
                 break;
+            case 1267:
             case 1366:
                 context.related("Incorrect character encoding in MySQL")
                         .whatToDo("Convert your MySQL database and tables to use uft8mb4: https://www.a2hosting.com/kb/developer-corner/mysql/convert-mysql-database-utf-8");
