@@ -46,7 +46,7 @@ public class HelpFormatter {
         String asString = subcommands.stream()
                 .map(cmd ->
                         m + mainCommand + " " + cmd.getPrimaryAlias() +
-                                (sender.supportsChatEvents() ? "" : " " + cmd.getArgumentsAsString()) + "***" +
+                                (sender.supportsChatEvents() ? " " : " " + cmd.getArgumentsAsString()) + "***" +
                                 s + cmd.getDescription() + "\n"
                 ).collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();

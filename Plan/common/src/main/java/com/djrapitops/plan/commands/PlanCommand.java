@@ -136,6 +136,7 @@ public class PlanCommand {
             command.getAliases().add("planbungee");
             command.getAliases().add("planvelocity");
             command.getAliases().add("planproxy");
+            command.getAliases().add("planp");
         }
         return command;
     }
@@ -367,10 +368,10 @@ public class PlanCommand {
         }
         Optional<String> firstArgument = arguments.get(0);
         if (!firstArgument.isPresent()) {
-            return tabCompleteCache.getMatchingPlayerIdentifiers(null);
+            return tabCompleteCache.getMatchingBackupFilenames(null);
         }
         String part = firstArgument.get();
-        return tabCompleteCache.getMatchingPlayerIdentifiers(part);
+        return tabCompleteCache.getMatchingBackupFilenames(part);
     }
 
     private Subcommand moveCommand() {

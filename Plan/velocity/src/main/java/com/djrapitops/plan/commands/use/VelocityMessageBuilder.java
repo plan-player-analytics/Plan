@@ -26,7 +26,7 @@ import java.util.Collection;
 public class VelocityMessageBuilder implements MessageBuilder {
 
     private final VelocityCMDSender sender;
-    private final TextComponent.Builder builder;
+    private TextComponent.Builder builder;
 
     public VelocityMessageBuilder(VelocityCMDSender sender) {
         this.sender = sender;
@@ -35,31 +35,31 @@ public class VelocityMessageBuilder implements MessageBuilder {
 
     @Override
     public MessageBuilder addPart(String content) {
-        builder.content(content);
+        builder = builder.append(content);
         return this;
     }
 
     @Override
     public MessageBuilder newLine() {
-        builder.content("\n");
+        builder = builder.append("\n");
         return this;
     }
 
     @Override
     public MessageBuilder link(String url) {
-        builder.clickEvent(ClickEvent.openUrl(url));
+        builder = builder.clickEvent(ClickEvent.openUrl(url));
         return this;
     }
 
     @Override
     public MessageBuilder command(String command) {
-        builder.clickEvent(ClickEvent.runCommand(command));
+        builder = builder.clickEvent(ClickEvent.runCommand(command));
         return this;
     }
 
     @Override
     public MessageBuilder hover(String s) {
-        builder.hoverEvent(HoverEvent.showText(TextComponent.of(s)));
+        builder = builder.hoverEvent(HoverEvent.showText(TextComponent.of(s)));
         return this;
     }
 
@@ -67,32 +67,31 @@ public class VelocityMessageBuilder implements MessageBuilder {
     public MessageBuilder hover(String... strings) {
         TextComponent.Builder hoverText = TextComponent.builder();
         for (String string : strings) {
-            hoverText.content(string);
+            hoverText.append(string);
         }
-        builder.hoverEvent(HoverEvent.showText(hoverText.build()));
+        builder = builder.hoverEvent(HoverEvent.showText(hoverText.build()));
         return this;
     }
 
     @Override
     public MessageBuilder hover(Collection<String> lines) {
         TextComponent.Builder hoverText = TextComponent.builder();
-        hoverText.content(new TextStringBuilder().appendWithSeparators(lines, "\n").build());
-        builder.hoverEvent(HoverEvent.showText(hoverText.build()));
+        hoverText.append(new TextStringBuilder().appendWithSeparators(lines, "\n").build());
+        builder = builder.hoverEvent(HoverEvent.showText(hoverText.build()));
         return this;
     }
 
     @Override
     public MessageBuilder indent(int amount) {
         for (int i = 0; i < amount; i++) {
-            builder.content(" ");
+            builder = builder.append(" ");
         }
         return this;
     }
 
     @Override
     public MessageBuilder tabular(CharSequence charSequence) {
-        addPart(sender.getFormatter().table(charSequence.toString(), ":"));
-        return this;
+        return addPart(sender.getFormatter().table(charSequence.toString(), ":"));
     }
 
     @Override

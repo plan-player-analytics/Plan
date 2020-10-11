@@ -42,8 +42,7 @@ public class NukkitMessageBuilder implements MessageBuilder {
 
     @Override
     public MessageBuilder link(String link) {
-        addPart(link);
-        return this;
+        return addPart(link);
     }
 
     @Override
