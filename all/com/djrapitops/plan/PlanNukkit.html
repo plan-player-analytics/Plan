@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -192,18 +192,29 @@ implements <a href="../../../com/djrapitops/plan/PlanPlugin.html" title="interfa
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/djrapitops/plan/PlanNukkit.html#isReloading--">isReloading</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/djrapitops/plan/PlanNukkit.html#onCommand-cn.nukkit.command.CommandSender-cn.nukkit.command.Command-java.lang.String-java.lang.String:A-">onCommand</a></span>(cn.nukkit.command.CommandSender&nbsp;actualSender,
+         cn.nukkit.command.Command&nbsp;actualCommand,
+         java.lang.String&nbsp;label,
+         java.lang.String[]&nbsp;args)</code>&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/djrapitops/plan/PlanNukkit.html#onDisable--">onDisable</a></span>()</code>
 <div class="block">Disables the plugin.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/djrapitops/plan/PlanNukkit.html#onEnable--">onEnable</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/djrapitops/plan/PlanNukkit.html#onReload--">onReload</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/djrapitops/plan/PlanNukkit.html#registerCommand-com.djrapitops.plan.commands.use.Subcommand-">registerCommand</a></span>(<a href="../../../com/djrapitops/plan/commands/use/Subcommand.html" title="class in com.djrapitops.plan.commands.use">Subcommand</a>&nbsp;command)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -211,7 +222,7 @@ implements <a href="../../../com/djrapitops/plan/PlanPlugin.html" title="interfa
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.djrapitops.plugin.<a href="../../../com/djrapitops/plugin/NukkitPlugin.html" title="class in com.djrapitops.plugin">NukkitPlugin</a></h3>
-<code><a href="../../../com/djrapitops/plugin/NukkitPlugin.html#getDebugLogger--">getDebugLogger</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#getErrorHandler--">getErrorHandler</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#getPluginLogger--">getPluginLogger</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#getRunnableFactory--">getRunnableFactory</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#getTimings--">getTimings</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#isNewVersionAvailable-java.lang.String-">isNewVersionAvailable</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#onCommand-cn.nukkit.command.CommandSender-cn.nukkit.command.Command-java.lang.String-java.lang.String:A-">onCommand</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#registerCommand-java.lang.String-com.djrapitops.plugin.command.CommandNode-">registerCommand</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#registerListener-cn.nukkit.event.Listener...-">registerListener</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#reloadPlugin-boolean-">reloadPlugin</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#setDebugLoggers-com.djrapitops.plugin.logging.debug.DebugLogger...-">setDebugLoggers</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#setErrorHandlers-com.djrapitops.plugin.logging.error.ErrorHandler...-">setErrorHandlers</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#setReloading-boolean-">setReloading</a></code></li>
+<code><a href="../../../com/djrapitops/plugin/NukkitPlugin.html#getDebugLogger--">getDebugLogger</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#getErrorHandler--">getErrorHandler</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#getPluginLogger--">getPluginLogger</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#getRunnableFactory--">getRunnableFactory</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#getTimings--">getTimings</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#isNewVersionAvailable-java.lang.String-">isNewVersionAvailable</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#registerCommand-java.lang.String-com.djrapitops.plugin.command.CommandNode-">registerCommand</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#registerListener-cn.nukkit.event.Listener...-">registerListener</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#reloadPlugin-boolean-">reloadPlugin</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#setDebugLoggers-com.djrapitops.plugin.logging.debug.DebugLogger...-">setDebugLoggers</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#setErrorHandlers-com.djrapitops.plugin.logging.error.ErrorHandler...-">setErrorHandlers</a>, <a href="../../../com/djrapitops/plugin/NukkitPlugin.html#setReloading-boolean-">setReloading</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.cn.nukkit.plugin.PluginBase">
@@ -320,6 +331,24 @@ implements <a href="../../../com/djrapitops/plan/PlanPlugin.html" title="interfa
 </dl>
 </li>
 </ul>
+<a name="onCommand-cn.nukkit.command.CommandSender-cn.nukkit.command.Command-java.lang.String-java.lang.String:A-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>onCommand</h4>
+<pre>public&nbsp;boolean&nbsp;onCommand(cn.nukkit.command.CommandSender&nbsp;actualSender,
+                         cn.nukkit.command.Command&nbsp;actualCommand,
+                         java.lang.String&nbsp;label,
+                         java.lang.String[]&nbsp;args)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>onCommand</code>&nbsp;in interface&nbsp;<code>cn.nukkit.command.CommandExecutor</code></dd>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../com/djrapitops/plugin/NukkitPlugin.html#onCommand-cn.nukkit.command.CommandSender-cn.nukkit.command.Command-java.lang.String-java.lang.String:A-">onCommand</a></code>&nbsp;in class&nbsp;<code><a href="../../../com/djrapitops/plugin/NukkitPlugin.html" title="class in com.djrapitops.plugin">NukkitPlugin</a></code></dd>
+</dl>
+</li>
+</ul>
 <a name="getVersion--">
 <!--   -->
 </a>
@@ -364,6 +393,19 @@ implements <a href="../../../com/djrapitops/plan/PlanPlugin.html" title="interfa
 <dd><code>isReloading</code>&nbsp;in interface&nbsp;<code>com.djrapitops.plugin.IPlugin</code></dd>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code><a href="../../../com/djrapitops/plugin/NukkitPlugin.html#isReloading--">isReloading</a></code>&nbsp;in class&nbsp;<code><a href="../../../com/djrapitops/plugin/NukkitPlugin.html" title="class in com.djrapitops.plugin">NukkitPlugin</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="registerCommand-com.djrapitops.plan.commands.use.Subcommand-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>registerCommand</h4>
+<pre>public&nbsp;void&nbsp;registerCommand(<a href="../../../com/djrapitops/plan/commands/use/Subcommand.html" title="class in com.djrapitops.plan.commands.use">Subcommand</a>&nbsp;command)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../com/djrapitops/plan/PlanPlugin.html#registerCommand-com.djrapitops.plan.commands.use.Subcommand-">registerCommand</a></code>&nbsp;in interface&nbsp;<code><a href="../../../com/djrapitops/plan/PlanPlugin.html" title="interface in com.djrapitops.plan">PlanPlugin</a></code></dd>
 </dl>
 </li>
 </ul>

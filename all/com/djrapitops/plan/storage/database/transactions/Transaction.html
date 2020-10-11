@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":6,"i8":10,"i9":10,"i10":10,"i11":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":6,"i9":10,"i10":10,"i11":10,"i12":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -179,54 +179,58 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>protected boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/storage/database/transactions/Transaction.html#execute-com.djrapitops.plan.storage.database.transactions.Executable-">execute</a></span>(<a href="../../../../../../com/djrapitops/plan/storage/database/transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;executable)</code>&nbsp;</td>
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/storage/database/transactions/Transaction.html#dbIsNotUnderHeavyLoad--">dbIsNotUnderHeavyLoad</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>protected boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/storage/database/transactions/Transaction.html#execute-java.lang.String-">execute</a></span>(java.lang.String&nbsp;sql)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/storage/database/transactions/Transaction.html#execute-com.djrapitops.plan.storage.database.transactions.Executable-">execute</a></span>(<a href="../../../../../../com/djrapitops/plan/storage/database/transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;executable)</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code>protected void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/storage/database/transactions/Transaction.html#executeOther-com.djrapitops.plan.storage.database.transactions.Transaction-">executeOther</a></span>(<a href="../../../../../../com/djrapitops/plan/storage/database/transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a>&nbsp;transaction)</code>&nbsp;</td>
+<td class="colFirst"><code>protected boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/storage/database/transactions/Transaction.html#execute-java.lang.String-">execute</a></span>(java.lang.String&nbsp;sql)</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/storage/database/transactions/Transaction.html#executeSwallowingExceptions-java.lang.String...-">executeSwallowingExceptions</a></span>(java.lang.String...&nbsp;statements)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/storage/database/transactions/Transaction.html#executeOther-com.djrapitops.plan.storage.database.transactions.Transaction-">executeOther</a></span>(<a href="../../../../../../com/djrapitops/plan/storage/database/transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a>&nbsp;transaction)</code>&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/storage/database/transactions/Transaction.html#executeSwallowingExceptions-java.lang.String...-">executeSwallowingExceptions</a></span>(java.lang.String...&nbsp;statements)</code>&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/storage/database/transactions/Transaction.html#executeTransaction-com.djrapitops.plan.storage.database.SQLDB-">executeTransaction</a></span>(<a href="../../../../../../com/djrapitops/plan/storage/database/SQLDB.html" title="class in com.djrapitops.plan.storage.database">SQLDB</a>&nbsp;db)</code>&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>protected <a href="../../../../../../com/djrapitops/plan/storage/database/Database.State.html" title="enum in com.djrapitops.plan.storage.database">Database.State</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/storage/database/transactions/Transaction.html#getDBState--">getDBState</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>protected java.util.UUID</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/storage/database/transactions/Transaction.html#getServerUUID--">getServerUUID</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>protected abstract void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/storage/database/transactions/Transaction.html#performOperations--">performOperations</a></span>()</code>
 <div class="block">Implement this method for transaction execution.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/storage/database/transactions/Transaction.html#query-com.djrapitops.plan.storage.database.queries.Query-">query</a></span>(<a href="../../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;T&gt;&nbsp;query)</code>&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>protected boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/storage/database/transactions/Transaction.html#shouldBeExecuted--">shouldBeExecuted</a></span>()</code>
 <div class="block">Override this method for conditional execution.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/storage/database/transactions/Transaction.html#toString--">toString</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/djrapitops/plan/storage/database/transactions/Transaction.html#wasSuccessful--">wasSuccessful</a></span>()</code>&nbsp;</td>
 </tr>
@@ -419,10 +423,19 @@ extends java.lang.Object</pre>
 <a name="wasSuccessful--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>wasSuccessful</h4>
 <pre>public&nbsp;boolean&nbsp;wasSuccessful()</pre>
+</li>
+</ul>
+<a name="dbIsNotUnderHeavyLoad--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>dbIsNotUnderHeavyLoad</h4>
+<pre>public&nbsp;boolean&nbsp;dbIsNotUnderHeavyLoad()</pre>
 </li>
 </ul>
 </li>

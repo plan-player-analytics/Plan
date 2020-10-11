@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":6,"i4":10,"i5":10,"i6":10,"i7":10,"i8":6,"i9":10,"i10":6};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":6,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":6,"i11":10,"i12":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -239,34 +239,42 @@ extends <a href="../../../../../com/djrapitops/plan/storage/database/AbstractDat
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html#getConnection--">getConnection</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
+<td class="colFirst"><code>com.djrapitops.plugin.logging.console.PluginLogger</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html#getLogger--">getLogger</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>com.djrapitops.plugin.task.RunnableFactory</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html#getRunnableFactory--">getRunnableFactory</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>java.util.function.Supplier&lt;java.util.UUID&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html#getServerUUIDSupplier--">getServerUUIDSupplier</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html#hashCode--">hashCode</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html#init--">init</a></span>()</code>
 <div class="block">Initializes the Database.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html#query-com.djrapitops.plan.storage.database.queries.Query-">query</a></span>(<a href="../../../../../com/djrapitops/plan/storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;T&gt;&nbsp;query)</code>
 <div class="block">Execute an SQL Query statement to get a result.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>abstract void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html#returnToPool-java.sql.Connection-">returnToPool</a></span>(java.sql.Connection&nbsp;connection)</code>&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html#setTransactionExecutorServiceProvider-java.util.function.Supplier-">setTransactionExecutorServiceProvider</a></span>(java.util.function.Supplier&lt;java.util.concurrent.ExecutorService&gt;&nbsp;transactionExecutorServiceProvider)</code>&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>abstract void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/storage/database/SQLDB.html#setupDataSource--">setupDataSource</a></span>()</code>
 <div class="block">Set up the source for connections.</div>
@@ -278,7 +286,7 @@ extends <a href="../../../../../com/djrapitops/plan/storage/database/AbstractDat
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.djrapitops.plan.storage.database.<a href="../../../../../com/djrapitops/plan/storage/database/AbstractDatabase.html" title="class in com.djrapitops.plan.storage.database">AbstractDatabase</a></h3>
-<code><a href="../../../../../com/djrapitops/plan/storage/database/AbstractDatabase.html#getState--">getState</a>, <a href="../../../../../com/djrapitops/plan/storage/database/AbstractDatabase.html#setState-com.djrapitops.plan.storage.database.Database.State-">setState</a></code></li>
+<code><a href="../../../../../com/djrapitops/plan/storage/database/AbstractDatabase.html#assumeNoMoreHeavyLoad--">assumeNoMoreHeavyLoad</a>, <a href="../../../../../com/djrapitops/plan/storage/database/AbstractDatabase.html#getHeavyLoadDelayMs--">getHeavyLoadDelayMs</a>, <a href="../../../../../com/djrapitops/plan/storage/database/AbstractDatabase.html#getState--">getState</a>, <a href="../../../../../com/djrapitops/plan/storage/database/AbstractDatabase.html#increaseHeavyLoadDelay--">increaseHeavyLoadDelay</a>, <a href="../../../../../com/djrapitops/plan/storage/database/AbstractDatabase.html#isUnderHeavyLoad--">isUnderHeavyLoad</a>, <a href="../../../../../com/djrapitops/plan/storage/database/AbstractDatabase.html#setState-com.djrapitops.plan.storage.database.Database.State-">setState</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -518,10 +526,28 @@ extends <a href="../../../../../com/djrapitops/plan/storage/database/AbstractDat
 <a name="setTransactionExecutorServiceProvider-java.util.function.Supplier-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>setTransactionExecutorServiceProvider</h4>
 <pre>public&nbsp;void&nbsp;setTransactionExecutorServiceProvider(java.util.function.Supplier&lt;java.util.concurrent.ExecutorService&gt;&nbsp;transactionExecutorServiceProvider)</pre>
+</li>
+</ul>
+<a name="getRunnableFactory--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getRunnableFactory</h4>
+<pre>public&nbsp;com.djrapitops.plugin.task.RunnableFactory&nbsp;getRunnableFactory()</pre>
+</li>
+</ul>
+<a name="getLogger--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getLogger</h4>
+<pre>public&nbsp;com.djrapitops.plugin.logging.console.PluginLogger&nbsp;getLogger()</pre>
 </li>
 </ul>
 </li>

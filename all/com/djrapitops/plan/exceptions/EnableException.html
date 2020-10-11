@@ -98,7 +98,17 @@
 <li>java.lang.Exception</li>
 <li>
 <ul class="inheritance">
+<li>java.lang.RuntimeException</li>
+<li>
+<ul class="inheritance">
+<li>java.lang.IllegalStateException</li>
+<li>
+<ul class="inheritance">
 <li>com.djrapitops.plan.exceptions.EnableException</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -116,7 +126,7 @@
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">EnableException</span>
-extends java.lang.Exception</pre>
+extends java.lang.IllegalStateException</pre>
 <div class="block">Thrown when something goes wrong with Plan initialization.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>

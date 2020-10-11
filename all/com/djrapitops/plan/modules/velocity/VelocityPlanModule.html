@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6};
+var methods = {"i0":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -121,10 +121,6 @@ public interface <span class="typeNameLabel">VelocityPlanModule</span></pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>com.djrapitops.plugin.command.CommandNode</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/modules/velocity/VelocityPlanModule.html#provideMainCommand-com.djrapitops.plan.commands.PlanProxyCommand-">provideMainCommand</a></span>(<a href="../../../../../com/djrapitops/plan/commands/PlanProxyCommand.html" title="class in com.djrapitops.plan.commands">PlanProxyCommand</a>&nbsp;command)</code>&nbsp;</td>
-</tr>
-<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/djrapitops/plan/PlanPlugin.html" title="interface in com.djrapitops.plan">PlanPlugin</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/djrapitops/plan/modules/velocity/VelocityPlanModule.html#providePlanPlugin-com.djrapitops.plan.PlanVelocity-">providePlanPlugin</a></span>(<a href="../../../../../com/djrapitops/plan/PlanVelocity.html" title="class in com.djrapitops.plan">PlanVelocity</a>&nbsp;plugin)</code>&nbsp;</td>
 </tr>
@@ -146,22 +142,11 @@ public interface <span class="typeNameLabel">VelocityPlanModule</span></pre>
 <a name="providePlanPlugin-com.djrapitops.plan.PlanVelocity-">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>providePlanPlugin</h4>
 <pre>@Binds
 <a href="../../../../../com/djrapitops/plan/PlanPlugin.html" title="interface in com.djrapitops.plan">PlanPlugin</a>&nbsp;providePlanPlugin(<a href="../../../../../com/djrapitops/plan/PlanVelocity.html" title="class in com.djrapitops.plan">PlanVelocity</a>&nbsp;plugin)</pre>
-</li>
-</ul>
-<a name="provideMainCommand-com.djrapitops.plan.commands.PlanProxyCommand-">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>provideMainCommand</h4>
-<pre>@Binds
- @Named(value="mainCommand")
-com.djrapitops.plugin.command.CommandNode&nbsp;provideMainCommand(<a href="../../../../../com/djrapitops/plan/commands/PlanProxyCommand.html" title="class in com.djrapitops.plan.commands">PlanProxyCommand</a>&nbsp;command)</pre>
 </li>
 </ul>
 </li>

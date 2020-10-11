@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10};
+var methods = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -47,8 +47,8 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../com/djrapitops/plan/commands/Arguments.html" title="class in com.djrapitops.plan.commands"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../com/djrapitops/plan/commands/PlanProxyCommand.html" title="class in com.djrapitops.plan.commands"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li>Prev&nbsp;Class</li>
+<li><a href="../../../../com/djrapitops/plan/commands/TabCompleteCache.html" title="class in com.djrapitops.plan.commands"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?com/djrapitops/plan/commands/PlanCommand.html" target="_top">Frames</a></li>
@@ -98,17 +98,7 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>com.djrapitops.plugin.command.CommandNode</li>
-<li>
-<ul class="inheritance">
-<li>com.djrapitops.plugin.command.TreeCmdNode</li>
-<li>
-<ul class="inheritance">
 <li>com.djrapitops.plan.commands.PlanCommand</li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -119,10 +109,7 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>@Singleton
 public class <span class="typeNameLabel">PlanCommand</span>
-extends com.djrapitops.plugin.command.TreeCmdNode</pre>
-<div class="block">TreeCommand for the /plan command, and all SubCommands.
- <p>
- Uses the Abstract Plugin Framework for easier command management.</div>
+extends java.lang.Object</pre>
 </li>
 </ul>
 </div>
@@ -141,23 +128,20 @@ extends com.djrapitops.plugin.command.TreeCmdNode</pre>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/djrapitops/plan/commands/PlanCommand.html#PlanCommand-com.djrapitops.plugin.command.ColorScheme-com.djrapitops.plan.settings.locale.Locale-com.djrapitops.plan.settings.config.PlanConfig-com.djrapitops.plan.commands.subcommands.InspectCommand-com.djrapitops.plan.commands.subcommands.QInspectCommand-com.djrapitops.plan.commands.subcommands.SearchCommand-com.djrapitops.plan.commands.subcommands.ListPlayersCommand-com.djrapitops.plan.commands.subcommands.AnalyzeCommand-com.djrapitops.plan.commands.subcommands.NetworkCommand-com.djrapitops.plan.commands.subcommands.ListServersCommand-dagger.Lazy-com.djrapitops.plan.commands.subcommands.RegisterCommand-com.djrapitops.plan.commands.subcommands.UnregisterCommand-com.djrapitops.plan.commands.subcommands.InfoCommand-com.djrapitops.plan.commands.subcommands.ReloadCommand-dagger.Lazy-com.djrapitops.plan.commands.subcommands.DevCommand-">PlanCommand</a></span>(com.djrapitops.plugin.command.ColorScheme&nbsp;colorScheme,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/djrapitops/plan/commands/PlanCommand.html#PlanCommand-java.lang.String-com.djrapitops.plan.storage.file.PlanFiles-com.djrapitops.plan.settings.locale.Locale-com.djrapitops.plugin.command.ColorScheme-com.djrapitops.plan.commands.subcommands.Confirmation-com.djrapitops.plan.commands.TabCompleteCache-com.djrapitops.plan.gathering.importing.ImportSystem-com.djrapitops.plan.storage.database.DBSystem-com.djrapitops.plan.commands.subcommands.LinkCommands-com.djrapitops.plan.commands.subcommands.RegistrationCommands-com.djrapitops.plan.commands.subcommands.PluginStatusCommands-com.djrapitops.plan.commands.subcommands.DatabaseCommands-com.djrapitops.plan.commands.subcommands.DataUtilityCommands-com.djrapitops.plan.utilities.logging.ErrorLogger-">PlanCommand</a></span>(java.lang.String&nbsp;commandName,
+           <a href="../../../../com/djrapitops/plan/storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
            <a href="../../../../com/djrapitops/plan/settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
-           <a href="../../../../com/djrapitops/plan/settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
-           <a href="../../../../com/djrapitops/plan/commands/subcommands/InspectCommand.html" title="class in com.djrapitops.plan.commands.subcommands">InspectCommand</a>&nbsp;inspectCommand,
-           <a href="../../../../com/djrapitops/plan/commands/subcommands/QInspectCommand.html" title="class in com.djrapitops.plan.commands.subcommands">QInspectCommand</a>&nbsp;qInspectCommand,
-           <a href="../../../../com/djrapitops/plan/commands/subcommands/SearchCommand.html" title="class in com.djrapitops.plan.commands.subcommands">SearchCommand</a>&nbsp;searchCommand,
-           <a href="../../../../com/djrapitops/plan/commands/subcommands/ListPlayersCommand.html" title="class in com.djrapitops.plan.commands.subcommands">ListPlayersCommand</a>&nbsp;listPlayersCommand,
-           <a href="../../../../com/djrapitops/plan/commands/subcommands/AnalyzeCommand.html" title="class in com.djrapitops.plan.commands.subcommands">AnalyzeCommand</a>&nbsp;analyzeCommand,
-           <a href="../../../../com/djrapitops/plan/commands/subcommands/NetworkCommand.html" title="class in com.djrapitops.plan.commands.subcommands">NetworkCommand</a>&nbsp;networkCommand,
-           <a href="../../../../com/djrapitops/plan/commands/subcommands/ListServersCommand.html" title="class in com.djrapitops.plan.commands.subcommands">ListServersCommand</a>&nbsp;listServersCommand,
-           dagger.Lazy&lt;<a href="../../../../com/djrapitops/plan/commands/subcommands/WebUserCommand.html" title="class in com.djrapitops.plan.commands.subcommands">WebUserCommand</a>&gt;&nbsp;webUserCommand,
-           <a href="../../../../com/djrapitops/plan/commands/subcommands/RegisterCommand.html" title="class in com.djrapitops.plan.commands.subcommands">RegisterCommand</a>&nbsp;registerCommand,
-           <a href="../../../../com/djrapitops/plan/commands/subcommands/UnregisterCommand.html" title="class in com.djrapitops.plan.commands.subcommands">UnregisterCommand</a>&nbsp;unregisterCommand,
-           <a href="../../../../com/djrapitops/plan/commands/subcommands/InfoCommand.html" title="class in com.djrapitops.plan.commands.subcommands">InfoCommand</a>&nbsp;infoCommand,
-           <a href="../../../../com/djrapitops/plan/commands/subcommands/ReloadCommand.html" title="class in com.djrapitops.plan.commands.subcommands">ReloadCommand</a>&nbsp;reloadCommand,
-           dagger.Lazy&lt;<a href="../../../../com/djrapitops/plan/commands/subcommands/ManageCommand.html" title="class in com.djrapitops.plan.commands.subcommands">ManageCommand</a>&gt;&nbsp;manageCommand,
-           <a href="../../../../com/djrapitops/plan/commands/subcommands/DevCommand.html" title="class in com.djrapitops.plan.commands.subcommands">DevCommand</a>&nbsp;devCommand)</code>&nbsp;</td>
+           com.djrapitops.plugin.command.ColorScheme&nbsp;colors,
+           <a href="../../../../com/djrapitops/plan/commands/subcommands/Confirmation.html" title="class in com.djrapitops.plan.commands.subcommands">Confirmation</a>&nbsp;confirmation,
+           <a href="../../../../com/djrapitops/plan/commands/TabCompleteCache.html" title="class in com.djrapitops.plan.commands">TabCompleteCache</a>&nbsp;tabCompleteCache,
+           <a href="../../../../com/djrapitops/plan/gathering/importing/ImportSystem.html" title="class in com.djrapitops.plan.gathering.importing">ImportSystem</a>&nbsp;importSystem,
+           <a href="../../../../com/djrapitops/plan/storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
+           <a href="../../../../com/djrapitops/plan/commands/subcommands/LinkCommands.html" title="class in com.djrapitops.plan.commands.subcommands">LinkCommands</a>&nbsp;linkCommands,
+           <a href="../../../../com/djrapitops/plan/commands/subcommands/RegistrationCommands.html" title="class in com.djrapitops.plan.commands.subcommands">RegistrationCommands</a>&nbsp;registrationCommands,
+           <a href="../../../../com/djrapitops/plan/commands/subcommands/PluginStatusCommands.html" title="class in com.djrapitops.plan.commands.subcommands">PluginStatusCommands</a>&nbsp;statusCommands,
+           <a href="../../../../com/djrapitops/plan/commands/subcommands/DatabaseCommands.html" title="class in com.djrapitops.plan.commands.subcommands">DatabaseCommands</a>&nbsp;databaseCommands,
+           <a href="../../../../com/djrapitops/plan/commands/subcommands/DataUtilityCommands.html" title="class in com.djrapitops.plan.commands.subcommands">DataUtilityCommands</a>&nbsp;dataUtilityCommands,
+           <a href="../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="class in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -175,24 +159,15 @@ extends com.djrapitops.plugin.command.TreeCmdNode</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/djrapitops/plan/commands/PlanCommand.html#registerCommands--">registerCommands</a></span>()</code>&nbsp;</td>
+<td class="colFirst"><code><a href="../../../../com/djrapitops/plan/commands/use/CommandWithSubcommands.html" title="class in com.djrapitops.plan.commands.use">CommandWithSubcommands</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/djrapitops/plan/commands/PlanCommand.html#build--">build</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>java.util.List&lt;java.lang.String&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/djrapitops/plan/commands/PlanCommand.html#serverNames-com.djrapitops.plan.commands.use.CMDSender-com.djrapitops.plan.commands.use.Arguments-">serverNames</a></span>(<a href="../../../../com/djrapitops/plan/commands/use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
+           <a href="../../../../com/djrapitops/plan/commands/use/Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&nbsp;arguments)</code>&nbsp;</td>
 </tr>
 </table>
-<ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.com.djrapitops.plugin.command.TreeCmdNode">
-<!--   -->
-</a>
-<h3>Methods inherited from class&nbsp;com.djrapitops.plugin.command.TreeCmdNode</h3>
-<code>getColorScheme, getCommandString, getHelpCommand, getNodeGroups, onCommand, setColorScheme, setDefaultCommand, setNodeGroups</code></li>
-</ul>
-<ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.com.djrapitops.plugin.command.CommandNode">
-<!--   -->
-</a>
-<h3>Methods inherited from class&nbsp;com.djrapitops.plugin.command.CommandNode</h3>
-<code>getAliases, getArguments, getCommandType, getInDepthHelp, getName, getOnHover, getPermission, getShortHelp, setArguments, setInDepthHelp, setOnHover, setPermission, setShortHelp</code></li>
-</ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -214,30 +189,28 @@ extends com.djrapitops.plugin.command.TreeCmdNode</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="PlanCommand-com.djrapitops.plugin.command.ColorScheme-com.djrapitops.plan.settings.locale.Locale-com.djrapitops.plan.settings.config.PlanConfig-com.djrapitops.plan.commands.subcommands.InspectCommand-com.djrapitops.plan.commands.subcommands.QInspectCommand-com.djrapitops.plan.commands.subcommands.SearchCommand-com.djrapitops.plan.commands.subcommands.ListPlayersCommand-com.djrapitops.plan.commands.subcommands.AnalyzeCommand-com.djrapitops.plan.commands.subcommands.NetworkCommand-com.djrapitops.plan.commands.subcommands.ListServersCommand-dagger.Lazy-com.djrapitops.plan.commands.subcommands.RegisterCommand-com.djrapitops.plan.commands.subcommands.UnregisterCommand-com.djrapitops.plan.commands.subcommands.InfoCommand-com.djrapitops.plan.commands.subcommands.ReloadCommand-dagger.Lazy-com.djrapitops.plan.commands.subcommands.DevCommand-">
+<a name="PlanCommand-java.lang.String-com.djrapitops.plan.storage.file.PlanFiles-com.djrapitops.plan.settings.locale.Locale-com.djrapitops.plugin.command.ColorScheme-com.djrapitops.plan.commands.subcommands.Confirmation-com.djrapitops.plan.commands.TabCompleteCache-com.djrapitops.plan.gathering.importing.ImportSystem-com.djrapitops.plan.storage.database.DBSystem-com.djrapitops.plan.commands.subcommands.LinkCommands-com.djrapitops.plan.commands.subcommands.RegistrationCommands-com.djrapitops.plan.commands.subcommands.PluginStatusCommands-com.djrapitops.plan.commands.subcommands.DatabaseCommands-com.djrapitops.plan.commands.subcommands.DataUtilityCommands-com.djrapitops.plan.utilities.logging.ErrorLogger-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>PlanCommand</h4>
 <pre>@Inject
-public&nbsp;PlanCommand(com.djrapitops.plugin.command.ColorScheme&nbsp;colorScheme,
+public&nbsp;PlanCommand(@Named(value="mainCommandName")
+                           java.lang.String&nbsp;commandName,
+                           <a href="../../../../com/djrapitops/plan/storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
                            <a href="../../../../com/djrapitops/plan/settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
-                           <a href="../../../../com/djrapitops/plan/settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
-                           <a href="../../../../com/djrapitops/plan/commands/subcommands/InspectCommand.html" title="class in com.djrapitops.plan.commands.subcommands">InspectCommand</a>&nbsp;inspectCommand,
-                           <a href="../../../../com/djrapitops/plan/commands/subcommands/QInspectCommand.html" title="class in com.djrapitops.plan.commands.subcommands">QInspectCommand</a>&nbsp;qInspectCommand,
-                           <a href="../../../../com/djrapitops/plan/commands/subcommands/SearchCommand.html" title="class in com.djrapitops.plan.commands.subcommands">SearchCommand</a>&nbsp;searchCommand,
-                           <a href="../../../../com/djrapitops/plan/commands/subcommands/ListPlayersCommand.html" title="class in com.djrapitops.plan.commands.subcommands">ListPlayersCommand</a>&nbsp;listPlayersCommand,
-                           <a href="../../../../com/djrapitops/plan/commands/subcommands/AnalyzeCommand.html" title="class in com.djrapitops.plan.commands.subcommands">AnalyzeCommand</a>&nbsp;analyzeCommand,
-                           <a href="../../../../com/djrapitops/plan/commands/subcommands/NetworkCommand.html" title="class in com.djrapitops.plan.commands.subcommands">NetworkCommand</a>&nbsp;networkCommand,
-                           <a href="../../../../com/djrapitops/plan/commands/subcommands/ListServersCommand.html" title="class in com.djrapitops.plan.commands.subcommands">ListServersCommand</a>&nbsp;listServersCommand,
-                           dagger.Lazy&lt;<a href="../../../../com/djrapitops/plan/commands/subcommands/WebUserCommand.html" title="class in com.djrapitops.plan.commands.subcommands">WebUserCommand</a>&gt;&nbsp;webUserCommand,
-                           <a href="../../../../com/djrapitops/plan/commands/subcommands/RegisterCommand.html" title="class in com.djrapitops.plan.commands.subcommands">RegisterCommand</a>&nbsp;registerCommand,
-                           <a href="../../../../com/djrapitops/plan/commands/subcommands/UnregisterCommand.html" title="class in com.djrapitops.plan.commands.subcommands">UnregisterCommand</a>&nbsp;unregisterCommand,
-                           <a href="../../../../com/djrapitops/plan/commands/subcommands/InfoCommand.html" title="class in com.djrapitops.plan.commands.subcommands">InfoCommand</a>&nbsp;infoCommand,
-                           <a href="../../../../com/djrapitops/plan/commands/subcommands/ReloadCommand.html" title="class in com.djrapitops.plan.commands.subcommands">ReloadCommand</a>&nbsp;reloadCommand,
-                           dagger.Lazy&lt;<a href="../../../../com/djrapitops/plan/commands/subcommands/ManageCommand.html" title="class in com.djrapitops.plan.commands.subcommands">ManageCommand</a>&gt;&nbsp;manageCommand,
-                           <a href="../../../../com/djrapitops/plan/commands/subcommands/DevCommand.html" title="class in com.djrapitops.plan.commands.subcommands">DevCommand</a>&nbsp;devCommand)</pre>
+                           com.djrapitops.plugin.command.ColorScheme&nbsp;colors,
+                           <a href="../../../../com/djrapitops/plan/commands/subcommands/Confirmation.html" title="class in com.djrapitops.plan.commands.subcommands">Confirmation</a>&nbsp;confirmation,
+                           <a href="../../../../com/djrapitops/plan/commands/TabCompleteCache.html" title="class in com.djrapitops.plan.commands">TabCompleteCache</a>&nbsp;tabCompleteCache,
+                           <a href="../../../../com/djrapitops/plan/gathering/importing/ImportSystem.html" title="class in com.djrapitops.plan.gathering.importing">ImportSystem</a>&nbsp;importSystem,
+                           <a href="../../../../com/djrapitops/plan/storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
+                           <a href="../../../../com/djrapitops/plan/commands/subcommands/LinkCommands.html" title="class in com.djrapitops.plan.commands.subcommands">LinkCommands</a>&nbsp;linkCommands,
+                           <a href="../../../../com/djrapitops/plan/commands/subcommands/RegistrationCommands.html" title="class in com.djrapitops.plan.commands.subcommands">RegistrationCommands</a>&nbsp;registrationCommands,
+                           <a href="../../../../com/djrapitops/plan/commands/subcommands/PluginStatusCommands.html" title="class in com.djrapitops.plan.commands.subcommands">PluginStatusCommands</a>&nbsp;statusCommands,
+                           <a href="../../../../com/djrapitops/plan/commands/subcommands/DatabaseCommands.html" title="class in com.djrapitops.plan.commands.subcommands">DatabaseCommands</a>&nbsp;databaseCommands,
+                           <a href="../../../../com/djrapitops/plan/commands/subcommands/DataUtilityCommands.html" title="class in com.djrapitops.plan.commands.subcommands">DataUtilityCommands</a>&nbsp;dataUtilityCommands,
+                           <a href="../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="class in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</pre>
 </li>
 </ul>
 </li>
@@ -248,13 +221,23 @@ public&nbsp;PlanCommand(com.djrapitops.plugin.command.ColorScheme&nbsp;colorSche
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="registerCommands--">
+<a name="build--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>build</h4>
+<pre>public&nbsp;<a href="../../../../com/djrapitops/plan/commands/use/CommandWithSubcommands.html" title="class in com.djrapitops.plan.commands.use">CommandWithSubcommands</a>&nbsp;build()</pre>
+</li>
+</ul>
+<a name="serverNames-com.djrapitops.plan.commands.use.CMDSender-com.djrapitops.plan.commands.use.Arguments-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>registerCommands</h4>
-<pre>public&nbsp;void&nbsp;registerCommands()</pre>
+<h4>serverNames</h4>
+<pre>public&nbsp;java.util.List&lt;java.lang.String&gt;&nbsp;serverNames(<a href="../../../../com/djrapitops/plan/commands/use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
+                                                    <a href="../../../../com/djrapitops/plan/commands/use/Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&nbsp;arguments)</pre>
 </li>
 </ul>
 </li>
@@ -284,8 +267,8 @@ public&nbsp;PlanCommand(com.djrapitops.plugin.command.ColorScheme&nbsp;colorSche
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../com/djrapitops/plan/commands/Arguments.html" title="class in com.djrapitops.plan.commands"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../com/djrapitops/plan/commands/PlanProxyCommand.html" title="class in com.djrapitops.plan.commands"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li>Prev&nbsp;Class</li>
+<li><a href="../../../../com/djrapitops/plan/commands/TabCompleteCache.html" title="class in com.djrapitops.plan.commands"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?com/djrapitops/plan/commands/PlanCommand.html" target="_top">Frames</a></li>

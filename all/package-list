@@ -4,10 +4,10 @@ com.djrapitops.plan.api
 com.djrapitops.plan.api.data
 com.djrapitops.plan.api.events
 com.djrapitops.plan.capability
+com.djrapitops.plan.command.use
 com.djrapitops.plan.commands
 com.djrapitops.plan.commands.subcommands
-com.djrapitops.plan.commands.subcommands.manage
-com.djrapitops.plan.commands.subcommands.webuser
+com.djrapitops.plan.commands.use
 com.djrapitops.plan.data.element
 com.djrapitops.plan.data.plugin
 com.djrapitops.plan.data.store.containers
@@ -115,6 +115,7 @@ com.djrapitops.plan.storage.file
 com.djrapitops.plan.storage.upkeep
 com.djrapitops.plan.utilities
 com.djrapitops.plan.utilities.analysis
+com.djrapitops.plan.utilities.chat
 com.djrapitops.plan.utilities.comparators
 com.djrapitops.plan.utilities.html.icon
 com.djrapitops.plan.utilities.java
