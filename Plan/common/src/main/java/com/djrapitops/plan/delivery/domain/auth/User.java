@@ -111,7 +111,9 @@ public class User implements Comparable<User> {
     }
 
     @Override
-    public int compareTo(User o) {
-        return Integer.compare(o.permissionLevel, this.permissionLevel);
+    public int compareTo(User other) {
+        int comparison = Integer.compare(this.permissionLevel, other.permissionLevel);
+        if (comparison == 0) comparison = String.CASE_INSENSITIVE_ORDER.compare(this.username, other.username);
+        return comparison;
     }
 }

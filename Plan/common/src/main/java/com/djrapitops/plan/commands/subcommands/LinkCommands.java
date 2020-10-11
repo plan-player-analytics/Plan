@@ -19,6 +19,7 @@ package com.djrapitops.plan.commands.subcommands;
 import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.commands.use.MessageBuilder;
+import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.identification.Identifiers;
@@ -36,6 +37,7 @@ import com.djrapitops.plugin.command.ColorScheme;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -211,17 +213,21 @@ public class LinkCommands {
         String m = colors.getMainColor();
         String s = colors.getSecondaryColor();
         String t = colors.getTertiaryColor();
-        String usersListed = dbSystem.getDatabase()
-                .query(WebUserQueries.fetchAllUsers())
-                .stream().sorted()
-                .map(user -> m + user.getUsername() + "::" + t + user.getLinkedTo() + "::" + s + user.getPermissionLevel() + "\n")
-                .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
-                .toString();
-        sender.buildMessage()
-                .addPart(t + locale.getString(CommandLang.HEADER_WEB_USERS)).newLine()
-                .addPart(sender.getFormatter().table(
-                        t + locale.getString(CommandLang.HEADER_WEB_USER_LIST) + '\n' + usersListed, "::"))
-                .send();
+        List<User> users = dbSystem.getDatabase()
+                .query(WebUserQueries.fetchAllUsers());
+        if (users.isEmpty()) {
+            sender.send(t + locale.getString(CommandLang.HEADER_WEB_USERS, 0));
+        } else {
+            String usersListed = users.stream().sorted()
+                    .map(user -> m + user.getUsername() + "::" + t + user.getLinkedTo() + "::" + s + user.getPermissionLevel() + "\n")
+                    .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+                    .toString();
+            sender.buildMessage()
+                    .addPart(t + locale.getString(CommandLang.HEADER_WEB_USERS, users.size())).newLine()
+                    .addPart(sender.getFormatter().table(
+                            t + locale.getString(CommandLang.HEADER_WEB_USER_LIST) + '\n' + usersListed, "::"))
+                    .send();
+        }
     }
 
     public void onJson(CMDSender sender, Arguments arguments) {

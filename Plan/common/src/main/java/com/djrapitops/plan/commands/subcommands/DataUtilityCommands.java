@@ -273,7 +273,7 @@ public class DataUtilityCommands {
                 locale.getString(CommandLang.INGAME_PLAYER_KILLS, sessionsMutator.toPlayerKillCount()) + '\n' +
                 locale.getString(CommandLang.INGAME_MOB_KILLS, sessionsMutator.toMobKillCount()) + '\n' +
                 locale.getString(CommandLang.INGAME_DEATHS, sessionsMutator.toDeathCount());
-        sender.send(sender.getFormatter().table(table, ":"));
+        sender.send(sender.getFormatter().table(table, ": "));
     }
 
 }

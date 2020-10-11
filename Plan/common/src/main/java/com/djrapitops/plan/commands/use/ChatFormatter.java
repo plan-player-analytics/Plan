@@ -31,7 +31,7 @@ public abstract class ChatFormatter {
         List<String[]> rows = new ArrayList<>();
         Maximum.ForInteger rowWidth = new Maximum.ForInteger(0);
         for (String line : lines) {
-            String[] row = StringUtils.split(line, separator);
+            String[] row = line.split(separator);
             rowWidth.add(row.length);
             rows.add(row);
         }
