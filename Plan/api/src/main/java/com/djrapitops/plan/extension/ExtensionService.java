@@ -70,7 +70,7 @@ public interface ExtensionService {
     void unregister(DataExtension extension);
 
     class Holder {
-        static ExtensionService service;
+        volatile static ExtensionService service;
 
         private Holder() {
             /* Static variable holder */

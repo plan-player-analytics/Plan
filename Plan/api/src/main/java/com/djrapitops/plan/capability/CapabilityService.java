@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.capability;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
 /**
@@ -64,6 +64,6 @@ public interface CapabilityService {
     }
 
     class ListHolder {
-        static List<Consumer<Boolean>> ENABLE_LISTENERS = new ArrayList<>();
+        volatile static List<Consumer<Boolean>> ENABLE_LISTENERS = new CopyOnWriteArrayList<>();
     }
 }

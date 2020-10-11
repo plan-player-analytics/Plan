@@ -149,7 +149,7 @@ public interface QueryService {
     }
 
     class Holder {
-        static QueryService service;
+        volatile static QueryService service;
 
         private Holder() {
             /* Static variable holder */

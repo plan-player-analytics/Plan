@@ -88,7 +88,7 @@ public interface ResolverService {
     List<Resolver> getResolvers(String target);
 
     class Holder {
-        static ResolverService service;
+        volatile static ResolverService service;
 
         private Holder() {
             /* Static variable holder */

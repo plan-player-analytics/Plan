@@ -102,7 +102,7 @@ public interface ResourceService {
     }
 
     class Holder {
-        static ResourceService service;
+        volatile static ResourceService service;
 
         private Holder() {
             /* Static variable holder */

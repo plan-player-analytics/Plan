@@ -65,7 +65,7 @@ public interface SettingsService {
     List<String> getStringList(String path, Supplier<List<String>> defaultValue);
 
     class Holder {
-        static SettingsService service;
+        volatile static SettingsService service;
 
         private Holder() {
             /* Static variable holder */
