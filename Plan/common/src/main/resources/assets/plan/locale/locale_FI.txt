@@ -1,22 +1,81 @@
+API - css+                                      || PageExtension: ${0} added stylesheet(s) to ${1}, ${2}
+API - js+                                       || PageExtension: ${0} added javascript(s) to ${1}, ${2}
 Cmd - Click Me                                  || Klikkaa minua
 Cmd - Link                                      || Linkki
+Cmd - Link Network                              || Network page: 
+Cmd - Link Player                               || Player page: 
+Cmd - Link Player JSON                          || Player json: 
+Cmd - Link Players                              || Players page: 
+Cmd - Link Register                             || Register page: 
+Cmd - Link Server                               || Server page: 
+CMD Arg - backup-file                           || Name of the backup file (case sensitive)
+CMD Arg - code                                  || Code used to finalize registration.
+CMD Arg - db type backup                        || Type of the database to backup. Current database is used if not specified.
+CMD Arg - db type clear                         || Type of the database to remove all data from.
+CMD Arg - db type hotswap                       || Type of the database to start using.
+CMD Arg - db type move from                     || Type of the database to move data from.
+CMD Arg - db type move to                       || Type of the database to move data to. Can not be same as previous.
+CMD Arg - db type restore                       || Type of the database to restore to. Current database is used if not specified.
+CMD Arg - feature                               || Name of the feature to disable: ${0}
+CMD Arg - player identifier                     || Name or UUID of a player
+CMD Arg - player identifier remove              || Identifier for a player that will be removed from current database.
+CMD Arg - server identifier                     || Name, ID or UUID of a server
+CMD Arg - subcommand                            || Use the command without subcommand to see help.
+CMD Arg - username                              || Username of another user. If not specified player linked user is used.
+CMD Arg Name - backup-file                      || backup-file
+CMD Arg Name - code                             || ${code}
+CMD Arg Name - export kind                      || export kind
+CMD Arg Name - feature                          || feature
+CMD Arg Name - import kind                      || import kind
+CMD Arg Name - name or uuid                     || name/uuid
+CMD Arg Name - server                           || server
+CMD Arg Name - subcommand                       || subcommand
+CMD Arg Name - username                         || username
+Cmd Confirm - accept                            || Accept
+Cmd Confirm - cancelled, no data change         || Cancelled. No data was changed.
+Cmd Confirm - cancelled, unregister             || Cancelled. '${0}' was not unregistered
+Cmd Confirm - clearing db                       || You are about to remove all Plan-data in ${0}
+Cmd Confirm - confirmation                      || Confirm: 
+Cmd Confirm - deny                              || Cancel
+Cmd Confirm - Expired                           || Confirmation expired, use the command again
+Cmd Confirm - Fail on accept                    || The accepted action errored upon execution: ${0}
+Cmd Confirm - Fail on deny                      || The denied action errored upon execution: ${0}
+Cmd Confirm - overwriting db                    || You are about to overwrite data in Plan ${0} with data in ${1}
+Cmd Confirm - remove player db                  || You are about to remove data of ${0} from ${1}
+Cmd Confirm - unregister                        || You are about to unregister '${0}' linked to ${1}
+Cmd db - creating backup                        || Creating a backup file '${0}.db' with contents of ${1}
+Cmd db - removal                                || Removing Plan-data from ${0}..
+Cmd db - removal player                         || Removing data of ${0} from ${1}..
+Cmd db - server uninstalled                     || §aIf the server is still installed, it will automatically set itself as installed in the database.
+Cmd db - write                                  || Writing to ${0}..
 Cmd Disable - Disabled                          || §aPlan on nyt poissa päältä. Voit käyttää reload komentoa uudelleenkäynnistykseen.
+Cmd FAIL - Accepts only these arguments         || Accepts following as ${0}: ${1}
 Cmd FAIL - Database not open                    || §cTietokanta: ${0} - Yritä uudelleen myöhemmin.
+Cmd FAIL - Empty search string                  || The search string can not be empty
 Cmd FAIL - Invalid Username                     || §cPelaajalla ei löytynyt UUID:ta.
 Cmd FAIL - No Feature                           || §eValitse sammutettava osa! (tällähetkellä tuetut: ${0})
 Cmd FAIL - No Permission                        || §cSinulla ei ole lupaa.
+Cmd FAIL - No player                            || Player '${0}' was not found, they have no UUID.
+Cmd FAIL - No player register                   || Player '${0}' was not found in the database.
+Cmd FAIL - No server                            || Server '${0}' was not found from the database.
 Cmd FAIL - Require only one Argument            || §cAnna ainakin yksi muuttuja ${1}
 Cmd FAIL - Requires Arguments                   || §cMääritä enemmän muuttujia (${0}) ${1}
+Cmd FAIL - see config                           || see '${0}' in config.yml
 Cmd FAIL - Unknown Username                     || §cPelaajaa ei ole nähty tällä palvelimella.
+Cmd FAIL - Users not linked                     || User is not linked to your account and you don't have permission to remove other user's accounts.
 Cmd FAIL - WebUser does not exists              || §cKäyttäjää ei ole olemassa!
 Cmd FAIL - WebUser exists                       || §cKäyttäjä on jo olemassa!
+Cmd Footer - Help                               || §7Hover over command or arguments or use '/${0} ?' to learn more about them.
 Cmd Header - Analysis                           || > §2Analyysin tulokset
+Cmd Header - Help                               || > §2/${0} Help
 Cmd Header - Info                               || > §2Player Analytics
 Cmd Header - Inspect                            || > §2Pelaaja: §f${0}
 Cmd Header - Network                            || > §2Verkoston Sivu
 Cmd Header - Players                            || > §2Pelaajat
 Cmd Header - Search                             || > §2${0} Tulosta haulle §f${1}§2:
+Cmd Header - server list                        || id::name::uuid
 Cmd Header - Servers                            || > §2Palvelimet
+Cmd Header - web user list                      || username::linked to::permission level
 Cmd Header - Web Users                          || > §2${0} Web Käyttäjät
 Cmd Info - Bungee Connection                    ||   §2Yhdistetty Proxyyn: §f${0}
 Cmd Info - Database                             ||   §2Nykyinen Tietokanta: §f${0}
@@ -24,9 +83,13 @@ Cmd Info - Reload Complete                      || §aUudelleenlataus onnistui!
 Cmd Info - Reload Failed                        || §cUudelleenlatauksessa esiintyi ongelmia. Käynnistystä uudelleen suositellaan.
 Cmd Info - Update                               ||   §2Päivitys saatavilla: §f${0}
 Cmd Info - Version                              ||   §2Versio: §f${0}
+Cmd network - No network                        || Server is not connected to a network. The link redirects to server page.
+Cmd Notify - No Address                         || §eNo address was available - using localhost as fallback. Set up 'Alternative_IP' settings.
 Cmd Notify - No WebUser                         || Sinulla ei ehkä ole Web Käyttäjää, käytä /plan register <salasana>-komentoa
 Cmd Notify - WebUser register                   || Rekisteröitiin uusi Web Käyttäjä: '${0}' Lupa taso: ${1}
+Cmd Qinspect - Active Playtime                  ||   §2Active Playtime: §f${0}
 Cmd Qinspect - Activity Index                   ||   §2Aktiivisuus Indeksi: §f${0} | ${1}
+Cmd Qinspect - AFK Playtime                     ||   §2AFK Time: §f${0}
 Cmd Qinspect - Deaths                           ||   §2Kuolemat: §f${0}
 Cmd Qinspect - Geolocation                      ||   §2Kirjautui sisään maasta: §f${0}
 Cmd Qinspect - Last Seen                        ||   §2Viimeksi nähty: §f${0}
@@ -38,38 +101,33 @@ Cmd Qinspect - Registered                       ||   §2Rekisteröitynyt: §f${0
 Cmd Qinspect - Times Kicked                     ||   §2Potkittu Pellolle: §f${0}
 Cmd SUCCESS - Feature disabled                  || §aSammutettiin '${0}' toistaiseksi, kunnes Plan ladataan uudelleen.
 Cmd SUCCESS - WebUser register                  || §aLisättiin uusi Web Käyttäjä (${0})!
+Cmd unregister - unregistering                  || Unregistering '${0}'..
 Cmd WARN - Database not open                    || §eTietokanta: ${0} - Tämä voi viedä hiukan aikaa..
 Cmd Web - Permission Levels                     || >\§70: Pääsy kaikille sivuille\§71: Pääsy '/players' ja pelaajien sivuille\§72: Pääsy pelaajan sivulle, jolla on sama nimi kuin Web Käyttäjällä\§73+: Ei pääsyä
-Command Help - /plan server                     || Katso Palvelimen sivua
-Command Help - /plan dev                        || Kehitys komento
-Command Help - /plan help                       || Komentojen lista
+Command Help - /plan db                         || Manage Plan database
+Command Help - /plan db backup                  || Backup data of a database to a file
+Command Help - /plan db clear                   || Remove ALL Plan data from a database
+Command Help - /plan db hotswap                 || Vaihda tietokantaa lennosta
+Command Help - /plan db move                    || Siirrä tietoa tietokantojen välillä
+Command Help - /plan db remove                  || Remove player's data from Current database
+Command Help - /plan db restore                 || Restore data from a file to a database
+Command Help - /plan db uninstalled             || Set a server as uninstalled in the database.
+Command Help - /plan disable                    || Disable the plugin or part of it
+Command Help - /plan export                     || Export html or json files manually
+Command Help - /plan import                     || Import data
 Command Help - /plan info                       || Information about the plugin
-Command Help - /plan player                     || Katso Pelaajan sivua
-Command Help - /plan manage                     || Hallitse Plan tietokantaa
-Command Help - /plan manage backup              || Varmuuskopioi tietokanta
-Command Help - /plan manage clear               || Tyhjennä tietokanta
-Command Help - /plan manage disable             || Sammuta osa toistaiseksi
-Command Help - /plan manage export              || Vie manuaalisesti
-Command Help - /plan db hotswap             || Vaihda tietokantaa lennosta
-Command Help - /plan manage import              || Tuo tietoa muualta
-Command Help - /plan db move                || Siirrä tietoa tietokantojen välillä
-Command Help - /plan manage raw                 || Tarkastele pelaajan tietoja JSON:na
-Command Help - /plan manage remove              || Poista pelaajan tiedot
-Command Help - /plan manage restore             || Palauta teitokannan varmuuskopio
-Command Help - /plan manage uninstalled         || Merkkaa palvelin poistetuksi tietokantaan.
+Command Help - /plan ingame                     || Katso pelaajan tietoja pelissä
+Command Help - /plan json                       || View json of Player's raw data.
 Command Help - /plan network                    || Katso Verkoston sivua
+Command Help - /plan player                     || Katso Pelaajan sivua
 Command Help - /plan players                    || Katso Pelaajat sivua
-Command Help - /plan ingame                   || Katso pelaajan tietoja pelissä
 Command Help - /plan register                   || Rekisteröi Web Käyttäjä
 Command Help - /plan reload                     || Käynnistä Plan uudelleen
 Command Help - /plan search                     || Etsi pelaajan nimeä
+Command Help - /plan server                     || Katso Palvelimen sivua
 Command Help - /plan servers                    || Listaa tietokannassa olevat palvelimet
-Command Help - /plan web check                  || Tarkista Web Käyttäjän tiedot
-Command Help - /plan web delete                 || Poista Web Käyttäjä
-Command Help - /plan web level                  || Tietoa Web lupatasoista
-Command Help - /plan web list                   || Listaa Web Käyttäjät
-Command Help - /plan webuser                    || Halliste Web Käyttäjiä
-Command Help - /planbungee disable              || Sammuta Plan toistaiseksi
+Command Help - /plan unregister                 || Unregister a user of Plan website
+Command Help - /plan users                      || List all web users
 Database - Apply Patch                          || Muutetaan Tietokantaa: ${0}..
 Database - Patches Applied                      || Tietokannan muutokset suoritettu onnistuneesti.
 Database - Patches Applied Already              || Kaikki tietokannan muutokset oli jo tehty.
@@ -83,6 +141,7 @@ Disable - Unsaved Session Save                  || Tallennetaan päättymättöm
 Disable - WebServer                             || Web palvelin on sammutettu.
 Enable                                          || Player Analytics Käynnistetty.
 Enable - Database                               || ${0}-tietokanta yhteys luotu.
+Enable - Notify Bad IP                          || 0.0.0.0 is not a valid address, set up Alternative_IP settings. Incorrect links might be given!
 Enable - Notify Empty IP                        || IP server.properties tiedostossa on tyhjä & Alternative_IP ei ole käytössä. Linkit ovat virheellisiä!
 Enable - Notify Geolocations disabled           || Sijaintien keräys ei ole päällä. (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || Plan Vaatii internetin ensimmäisellä käynnistyskerralla GeoLite2 tietokannan lataamiseen.
@@ -98,6 +157,7 @@ HTML - COMPARING_60_DAYS                        || Verrataan 30 päivää sitten
 HTML - COMPARING_7_DAYS                         || Verrataan 7 päivää
 HTML - DATABASE_NOT_OPEN                        || Tietokanta ei ole auki, tarkista tietokannan status /plan info komennolla
 HTML - ERROR                                    || Todennus epäonnistui virheen vuoksi
+HTML - EXPIRED_COOKIE                           || User cookie has expired
 HTML - INDEX_ACTIVE                             || Aktiivinen
 HTML - INDEX_INACTIVE                           || Inaktiivinen
 HTML - INDEX_IRREGULAR                          || Epäsäännöllinen
@@ -184,6 +244,7 @@ HTML - LOCAL_MACHINE                            || Paikallinen laite
 HTML - NAV_PLUGINS                              || Lisäosat
 HTML - NEW_CALENDAR                             || Uudet:
 HTML - NO_KILLS                                 || Ei Tappoja
+HTML - NO_USER_PRESENT                          || User cookie not present
 HTML - OFFLINE                                  ||  Ei Paikalla
 HTML - ONLINE                                   ||  Paikalla
 HTML - PER_DAY                                  || / Päivä
@@ -300,29 +361,30 @@ HTML ERRORS - PAGE_NOT_FOUND_404                || Sivua ei ole olemassa.
 HTML ERRORS - UNAUTHORIZED_401                  || Todennusta ei suoritettu loppuun.
 HTML ERRORS - UNKNOWN_PAGE_404                  || Varmista menneeesi komennon antamaan osoitteeseen, Esim:</p><p>/player/PelaajanNimi<br>/server/PalvelimenNimi</p>
 HTML ERRORS - UUID_404                          || Pelaajan UUID:ta ei löytynyt tietokannasta.
-In Depth Help - /plan ?                         || > §2Pääkomento\  Käytä alikomentoja ja apua\  §2/plan §fListaa alikomennot\  §2/plan <alikomento> ? §fYksityiskohtainen apu
-In Depth Help - /plan analyze ?                 || > §2Analyysi Komento\  Päivittää palvelin sivun ja näyttää linkin sivustolle.
-In Depth Help - /plan inspect ?                 || > §2Tutkimus Komento\  Päivittää pelaajan sivun ja näyttää linkin sivustolle
-In Depth Help - /plan manage ?                  || > §2Hallinto Komento\  Hallitse Plan MySQL and SQLite tietokantoja.\  §2/plan m §fListaa alikomennot\  §2/plan m <alikomento> ? §fYksityiskohtainen apu
-In Depth Help - /plan manage backup ?           || > §2Varmuuskopio Alikomento\  Luo uuden SQLite tietokannan (.db file) nykyisen tietokannan tiedoilla Plan plugins kansioon..
-In Depth Help - /plan manage clear ?            || > §2Poisto Alikomento\  Poistaa kaiken aktiivisesta tietokannasta. Käytä varoen
-In Depth Help - /plan manage disable ?          || > §2Sammutus Alikomento\  Sammuttaa osia pluginista.\  Hyväksytyt muuttujat:\    §2kickcount §fLopettaa potkujen laskun jos /kickall käytetään sammutus makrossa.
-In Depth Help - /plan manage export ?           || > §2Viemis Alikomento\  Vie tuloksia tiedostoihin.\  Hyväksytyt muuttujat:\    §2list §fListaa muuttujat.\    §2players §fVie /players, /player pages + /player/raw json asetuksista riippuen.\    §2server_json §fVie /server sivun json asetuksista riippuen.
-In Depth Help - /plan manage import ?           || > §2Tuonti Alikomento\  Tuo tietoa muualta.\  Hyväksytyt muuttujat:\    §2offline §fBukkitin pelaajatiedot, rekisteröitymispäivä ja nimi.
-In Depth Help - /plan manage move ?             || > §2Siirto Alikomento\  Siirrä tietoa SQLite ja MySQL tietokantojen välillä.\  Kohde tietokanta tyhjennetään ennen siirtoa.
-In Depth Help - /plan manage raw ?              || > §2Raakadata Komento\  Näyttää linkin JSON sivulle.\  Ei saatavilla jos web palvelin on poissa käytöstä.
-In Depth Help - /plan manage remove ?           || > §2Poisto Alikomento\  Poistaa pelaajan tiedot aktiivisesta tietokannasta.
-In Depth Help - /plan manage restore ?          || > §2Palautus Alikomento\  Palauta edellinen varmuuskopio SQLite tietokanta (.db tiedosto)\  Voit myös palauttaa database.db tiedoston toiselta palvelimelta MySQL-tietokantan.\  Kohde tietokanta tyhjennetään ennen siirtoa.
-In Depth Help - /plan manage uninstalled ?      || > §2Uninstalled Server Subcommand\  Marks a server as uninstalled in the database.\  Can not mark the server the command is being used on as uninstalled.\  Will affect ConnectionSystem.
-In Depth Help - /plan network ?                 || > §2Verkosto Komento\  Näyttää linkin verkosto sivulle.\  Jos palvelin ei ole verkostossa, näyttää tämä sivu palvelimen sivun.
-In Depth Help - /plan players ?                 || > §2Pelaajat Komento\  Näyttää linkin pelaajan sivulle.
+In Depth Help - /plan db                        || Use different database subcommands to change the data in some way
+In Depth Help - /plan db backup                 || Uses SQLite to backup the target database to a file.
+In Depth Help - /plan db clear                  || Clears all Plan tables, removing all Plan-data in the process.
+In Depth Help - /plan db hotswap                || Reloads the plugin with the other database and changes the config to match.
+In Depth Help - /plan db move                   || Overwrites contents in the other database with the contents in another.
+In Depth Help - /plan db remove                 || Removes all data linked to a player from the Current database.
+In Depth Help - /plan db restore                || Uses SQLite backup file and overwrites contents of the target database.
+In Depth Help - /plan db uninstalled            || Marks a server in Plan database as uninstalled so that it will not show up in server queries.
+In Depth Help - /plan disable                   || Disable the plugin or part of it until next reload/restart.
+In Depth Help - /plan export                    || Performs an export to export location defined in the config.
+In Depth Help - /plan import                    || Performs an import to load data into the database.
+In Depth Help - /plan info                      || Display the current status of the plugin.
 In Depth Help - /plan ingame                    || Näyttää tietoja pelaajasta pelin sisällä.
-In Depth Help - /plan reload ?                  || > §2Uudelleenlataus Komento\  Käynnistää Plan:in uudelleen.\  §bEi tue jar:in vaihtoa lennosta
-In Depth Help - /plan search ?                  || > §2Haku Komento\  Hae pelaajannimiä jollain hakusanalla.\§7  Esim: /plan search 123 - Etsii kaikki pelaajat joilla on 123 nimessään.
-In Depth Help - /plan servers ?                 || > §2Palvelimet Komento\  Näyttää tietokannassa olevat Plan palvelimet.\  Voidaan käyttää yhteys ongelmien tutkimiseen.
-In Depth Help - /plan web ?                     || < §2Web Käyttäjähallinto Komento.\  §2/plan web §fList alikomentos\  §2/plan web <alikomento> ? §fYksityiskohtainen apu
-In Depth Help - /plan web register ?            || > §2Rekisteröinti Alikomento\  Rekisteröi uuden Web Käyttäjän.\  Toiselle pelaajalle käyttäjän rekisteröinti vaatii plan.webmanage permission.\  Salasanat salataan PBKDF2 (64,000 iterations of SHA1) algoritmilla.
-In Depth Help - /planbungee disable ?           || > §2Sammutus Komento\  Sammuttaa PlanBungee:n.\  reload käynnistää Plan:in uudelleen.\  §bEi tue jar:in vaihtoa lennossa
+In Depth Help - /plan json                      || Allows you to download a player's data in json format. All of it.
+In Depth Help - /plan network                   || Obtain a link to the /network page, only does so on networks.
+In Depth Help - /plan player                    || Obtain a link to the /player page of a specific player, or the current player.
+In Depth Help - /plan players                   || Obtain a link to the /players page to see a list of players.
+In Depth Help - /plan register                  || Use without arguments to get link to register page. Use --code [code] after registration to get a user.
+In Depth Help - /plan reload                    || Disable and enable the plugin to reload any changes in config.
+In Depth Help - /plan search                    || List all matching player names to given part of a name.
+In Depth Help - /plan server                    || Obtain a link to the /server page of a specific server, or the current server if no arguments are given.
+In Depth Help - /plan servers                   || List ids, names and uuids of servers in the database.
+In Depth Help - /plan unregister                || Use without arguments to unregister player linked user, or with username argument to unregister another user.
+In Depth Help - /plan users                     || Lists web users as a table.
 Manage - Confirm Overwrite                      || Tiedot ${0}:ssa ylikirjoitetaan!
 Manage - Confirm Removal                        || Tiedot ${0}:ssa poistetaan!
 Manage - Fail                                   || > §cJokin meni vikaan: ${0}
@@ -335,6 +397,7 @@ Manage - Fail Same Database                     || > §cEi voi käyttää samaa 
 Manage - Fail Same server                       || Ei voi merkitä tätä palvelinta poistetuksi (Olet siellä)
 Manage - Fail, Confirmation                     || > §cLisää '-a' vahvistaaksesi: ${0}
 Manage - List Importers                         || Tuojat:
+Manage - Progress                               || ${0} / ${1} processed..
 Manage - Remind HotSwap                         || §eMuista vaihtaa tietokantaa (/plan m hotswap ${0}) & käynnistä Plan uudelleen.
 Manage - Start                                  || > §2Prosessoidaan tietoa..
 Manage - Success                                || > §aOnnistui!
@@ -352,7 +415,12 @@ Version FAIL - Read versions.txt                || Uuden version tarkistus epäo
 Web User Listing                                ||   §2${0} §7: §f${1}
 WebServer - Notify HTTP                         || Web Palvelin: Ei Sertifikaattia -> Käytetään HTTP-Palvelinta.
 WebServer - Notify HTTP User Auth               || Web Palvelin: Käyttäjien varmennus ei käytössä! (Ei turvallista HTTP-protokollalla)
+WebServer - Notify HTTPS User Auth              || WebServer: User Authorization Disabled! (Disabled in config)
+Webserver - Notify IP Whitelist                 || Webserver: IP Whitelist is enabled.
+Webserver - Notify IP Whitelist Block           || Webserver: ${0} was denied access to '${1}'. (not whitelisted)
 WebServer - Notify no Cert file                 || Web Palvelin: Sertifikaatti AvainKirjasto tiedostoa ei löytynyt: ${0}
+WebServer - Notify Using Proxy                  || WebServer: Proxy-mode HTTPS enabled, make sure that your reverse-proxy is routing using HTTPS and Plan Alternative_IP.Link points to the Proxy
+WebServer FAIL - EOF                            || WebServer: EOF when reading Certificate file. (Check that the file is not empty)
 WebServer FAIL - Port Bind                      || Web Palvelin ei käynnistynyt. Onko portti (${0}) käytössä?
 WebServer FAIL - SSL Context                    || Web Palvelin: SSL Kontekstin käynnistys ei onnistunut.
 WebServer FAIL - Store Load                     || Web Palvelin: SSL Sertifikaatin lataus ei onnistunut.
