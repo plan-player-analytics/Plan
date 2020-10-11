@@ -44,7 +44,7 @@ public class MiscUtils {
      * @return Player name.
      */
     public static String getPlayerName(String[] args, Sender sender) {
-        return getPlayerName(args, sender, Permissions.INSPECT_OTHER);
+        return getPlayerName(args, sender, Permissions.PLAYER_OTHER);
     }
 
     /**

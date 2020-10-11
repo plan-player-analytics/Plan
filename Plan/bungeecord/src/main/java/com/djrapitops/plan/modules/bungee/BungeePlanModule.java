@@ -18,12 +18,8 @@ package com.djrapitops.plan.modules.bungee;
 
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.commands.PlanProxyCommand;
-import com.djrapitops.plugin.command.CommandNode;
 import dagger.Binds;
 import dagger.Module;
-
-import javax.inject.Named;
 
 /**
  * Dagger module for binding PlanBungee instance.
@@ -36,7 +32,4 @@ public interface BungeePlanModule {
     @Binds
     PlanPlugin bindPlanPlugin(PlanBungee plugin);
 
-    @Binds
-    @Named("mainCommand")
-    CommandNode bindMainCommand(PlanProxyCommand command);
 }

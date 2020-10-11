@@ -27,6 +27,6 @@ public class BungeeCommandModule {
     @Provides
     @Named("mainCommandName")
     String provideMainCommandName() {
-        return "planbungee";
+        return "planproxy";
     }
 }

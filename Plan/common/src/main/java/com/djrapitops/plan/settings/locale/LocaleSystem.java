@@ -69,10 +69,9 @@ public class LocaleSystem implements SubSystem {
     public static Map<String, Lang> getIdentifiers() {
         Lang[][] lang = new Lang[][]{
                 CommandLang.values(),
-                CmdHelpLang.values(),
+                HelpLang.values(),
                 DeepHelpLang.values(),
                 PluginLang.values(),
-                ManageLang.values(),
                 GenericLang.values(),
                 HtmlLang.values(),
                 ErrorPageLang.values(),
@@ -130,6 +129,17 @@ public class LocaleSystem implements SubSystem {
     private Optional<Locale> loadSettingLocale() {
         try {
             String setting = config.get(PluginSettings.LOCALE);
+            if ("write-all".equalsIgnoreCase(setting)) {
+                for (LangCode code : LangCode.values()) {
+                    if (code == LangCode.CUSTOM) continue;
+                    Locale locale = Locale.forLangCode(code, files);
+                    new LocaleFileWriter(locale).writeToFile(
+                            files.getDataDirectory().resolve("locale_" + code.name() + ".txt").toFile()
+                    );
+                }
+
+                return Optional.empty();
+            }
             if (!"default".equalsIgnoreCase(setting)) {
                 return Optional.of(Locale.forLangCodeString(files, setting));
             }

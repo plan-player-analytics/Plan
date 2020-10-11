@@ -1,22 +1,81 @@
+API - css+                                      || PageExtension: ${0} added stylesheet(s) to ${1}, ${2}
+API - js+                                       || PageExtension: ${0} added javascript(s) to ${1}, ${2}
 Cmd - Click Me                                  || Klikni na mě
 Cmd - Link                                      ||   §2Odkaz: §f
+Cmd - Link Network                              || Network page: 
+Cmd - Link Player                               || Player page: 
+Cmd - Link Player JSON                          || Player json: 
+Cmd - Link Players                              || Players page: 
+Cmd - Link Register                             || Register page: 
+Cmd - Link Server                               || Server page: 
+CMD Arg - backup-file                           || Name of the backup file (case sensitive)
+CMD Arg - code                                  || Code used to finalize registration.
+CMD Arg - db type backup                        || Type of the database to backup. Current database is used if not specified.
+CMD Arg - db type clear                         || Type of the database to remove all data from.
+CMD Arg - db type hotswap                       || Type of the database to start using.
+CMD Arg - db type move from                     || Type of the database to move data from.
+CMD Arg - db type move to                       || Type of the database to move data to. Can not be same as previous.
+CMD Arg - db type restore                       || Type of the database to restore to. Current database is used if not specified.
+CMD Arg - feature                               || Name of the feature to disable: ${0}
+CMD Arg - player identifier                     || Name or UUID of a player
+CMD Arg - player identifier remove              || Identifier for a player that will be removed from current database.
+CMD Arg - server identifier                     || Name, ID or UUID of a server
+CMD Arg - subcommand                            || Use the command without subcommand to see help.
+CMD Arg - username                              || Username of another user. If not specified player linked user is used.
+CMD Arg Name - backup-file                      || backup-file
+CMD Arg Name - code                             || ${code}
+CMD Arg Name - export kind                      || export kind
+CMD Arg Name - feature                          || feature
+CMD Arg Name - import kind                      || import kind
+CMD Arg Name - name or uuid                     || name/uuid
+CMD Arg Name - server                           || server
+CMD Arg Name - subcommand                       || subcommand
+CMD Arg Name - username                         || username
+Cmd Confirm - accept                            || Accept
+Cmd Confirm - cancelled, no data change         || Cancelled. No data was changed.
+Cmd Confirm - cancelled, unregister             || Cancelled. '${0}' was not unregistered
+Cmd Confirm - clearing db                       || You are about to remove all Plan-data in ${0}
+Cmd Confirm - confirmation                      || Confirm: 
+Cmd Confirm - deny                              || Cancel
+Cmd Confirm - Expired                           || Confirmation expired, use the command again
+Cmd Confirm - Fail on accept                    || The accepted action errored upon execution: ${0}
+Cmd Confirm - Fail on deny                      || The denied action errored upon execution: ${0}
+Cmd Confirm - overwriting db                    || You are about to overwrite data in Plan ${0} with data in ${1}
+Cmd Confirm - remove player db                  || You are about to remove data of ${0} from ${1}
+Cmd Confirm - unregister                        || You are about to unregister '${0}' linked to ${1}
+Cmd db - creating backup                        || Creating a backup file '${0}.db' with contents of ${1}
+Cmd db - removal                                || Removing Plan-data from ${0}..
+Cmd db - removal player                         || Removing data of ${0} from ${1}..
+Cmd db - server uninstalled                     || §aIf the server is still installed, it will automatically set itself as installed in the database.
+Cmd db - write                                  || Writing to ${0}..
 Cmd Disable - Disabled                          || §aPlan systémy jsou nyní vypnuty. Můžete stále použít /planbungee reload pro restart pluginu.
+Cmd FAIL - Accepts only these arguments         || Accepts following as ${0}: ${1}
 Cmd FAIL - Database not open                    || §cDatabáze je ${0} - Zkuste to znovu později.
+Cmd FAIL - Empty search string                  || The search string can not be empty
 Cmd FAIL - Invalid Username                     || §cUživatel nemá UUID.
 Cmd FAIL - No Feature                           || §eDefinujte funkci k vypnutí! (aktuálně podporuje ${0})
 Cmd FAIL - No Permission                        || §cNa toto nemáte potřebná práva.
+Cmd FAIL - No player                            || Player '${0}' was not found, they have no UUID.
+Cmd FAIL - No player register                   || Player '${0}' was not found in the database.
+Cmd FAIL - No server                            || Server '${0}' was not found from the database.
 Cmd FAIL - Require only one Argument            || §cJe zapotřebí jednotný argument ${1}
 Cmd FAIL - Requires Arguments                   || §cPotřebné argumenty (${0}) ${1}
+Cmd FAIL - see config                           || see '${0}' in config.yml
 Cmd FAIL - Unknown Username                     || §cUživatel nebyl viděn na tomto serveru
+Cmd FAIL - Users not linked                     || User is not linked to your account and you don't have permission to remove other user's accounts.
 Cmd FAIL - WebUser does not exists              || §cUživatel neexistuje!
 Cmd FAIL - WebUser exists                       || §cUživatel již existuje!
+Cmd Footer - Help                               || §7Hover over command or arguments or use '/${0} ?' to learn more about them.
 Cmd Header - Analysis                           || > §2Výsledky Analýzy
+Cmd Header - Help                               || > §2/${0} Help
 Cmd Header - Info                               || > §2Analýza Hráčů
 Cmd Header - Inspect                            || > §2Hráč: §f${0}
 Cmd Header - Network                            || > §2Stránka Sítě
 Cmd Header - Players                            || > §2Hráčů
 Cmd Header - Search                             || > §2${0} Výsledky pro §f${1}§2:
+Cmd Header - server list                        || id::name::uuid
 Cmd Header - Servers                            || > §2Servery
+Cmd Header - web user list                      || username::linked to::permission level
 Cmd Header - Web Users                          || > §2${0} Web uživatelé
 Cmd Info - Bungee Connection                    ||   §2Připojen na Proxy: §f${0}
 Cmd Info - Database                             ||   §2Aktivní databáze: §f${0}
@@ -24,9 +83,13 @@ Cmd Info - Reload Complete                      || §aReload Dokončen
 Cmd Info - Reload Failed                        || §cNěco se pokazilo při reloadu pluginu, doporučejem restart serveru.
 Cmd Info - Update                               ||   §2Dostupná aktualizace: §f${0}
 Cmd Info - Version                              ||   §2Verze: §f${0}
+Cmd network - No network                        || Server is not connected to a network. The link redirects to server page.
+Cmd Notify - No Address                         || §eNo address was available - using localhost as fallback. Set up 'Alternative_IP' settings.
 Cmd Notify - No WebUser                         || Pravděpodobně nemáte uživatele webu, použijte /plan register <heslo>
 Cmd Notify - WebUser register                   || Registrován nový uživatel: '${0}' Úroveň práv: ${1}
+Cmd Qinspect - Active Playtime                  ||   §2Active Playtime: §f${0}
 Cmd Qinspect - Activity Index                   ||   §2Index Aktivity: §f${0} | ${1}
+Cmd Qinspect - AFK Playtime                     ||   §2AFK Time: §f${0}
 Cmd Qinspect - Deaths                           ||   §2Smrti: §f${0}
 Cmd Qinspect - Geolocation                      ||   §2Přihlášen z: §f${0}
 Cmd Qinspect - Last Seen                        ||   §2Naposledy viděn: §f${0}
@@ -38,38 +101,33 @@ Cmd Qinspect - Registered                       ||   §2Registrován: §f${0}
 Cmd Qinspect - Times Kicked                     ||   §2Počet vykopnutí: §f${0}
 Cmd SUCCESS - Feature disabled                  || §aDočasně vypnuto '${0}' do dalšího reloadu pluginu.
 Cmd SUCCESS - WebUser register                  || §aÚspěšně přidán nový uživatel (${0})! Můžete zobrazit web panel na následujícím odkazu.
+Cmd unregister - unregistering                  || Unregistering '${0}'..
 Cmd WARN - Database not open                    || §eDatabáze je ${0} - Toto může trvat déle..
 Cmd Web - Permission Levels                     || >\§70: Přístup ke všem stránkám\§71: Přístup k '/players' a všem hráčským stránkám\§72: Přístup k hráčské stránce se stejným jménem jako web uživatel\§73+: Žádná práva
-Command Help - /plan analyze                    || Zobrazit Server stránku
-Command Help - /plan dev                        || Příkaz pro vývojový mód
-Command Help - /plan help                       || Ukázat seznam příkazů
+Command Help - /plan db                         || Manage Plan database
+Command Help - /plan db backup                  || Backup data of a database to a file
+Command Help - /plan db clear                   || Remove ALL Plan data from a database
+Command Help - /plan db hotswap                 || Change Database quickly
+Command Help - /plan db move                    || Move data between databases
+Command Help - /plan db remove                  || Remove player's data from Current database
+Command Help - /plan db restore                 || Restore data from a file to a database
+Command Help - /plan db uninstalled             || Set a server as uninstalled in the database.
+Command Help - /plan disable                    || Disable the plugin or part of it
+Command Help - /plan export                     || Export html or json files manually
+Command Help - /plan import                     || Import data
 Command Help - /plan info                       || Zjistit verzi Plan
-Command Help - /plan inspect                    || Zobrazit stránku Hráče
-Command Help - /plan manage                     || Spravovat Plan databázi
-Command Help - /plan manage backup              || Zálohovat databázi
-Command Help - /plan manage clear               || Smazat databázi
-Command Help - /plan manage disable             || Dočasně vypne funkci
-Command Help - /plan manage export              || Spustit export manuálně
-Command Help - /plan manage hotswap             || Rychlá změna databáze
-Command Help - /plan manage import              || Import dat odjinud
-Command Help - /plan manage move                || Přesun dat mezi databázemi
-Command Help - /plan manage raw                 || Ukázat čistý JSON hráčských dat
-Command Help - /plan manage remove              || Smazat data Hráče
-Command Help - /plan manage restore             || Obnovit předchozí zálohu
-Command Help - /plan manage uninstalled         || Označit server jako odinstalován v databázi.
+Command Help - /plan ingame                     || View Player info in game
+Command Help - /plan json                       || View json of Player's raw data.
 Command Help - /plan network                    || Ukázat stránku sítě
+Command Help - /plan player                     || View a Player Page
 Command Help - /plan players                    || Ukázat stránku hráčů
-Command Help - /plan qinspect                   || Ukázat hráčské info ve hře
 Command Help - /plan register                   || Registrovat web uživatele
 Command Help - /plan reload                     || Restart Plan
 Command Help - /plan search                     || Hledat se jménem hráče
+Command Help - /plan server                     || View the Server Page
 Command Help - /plan servers                    || Seznam serverů v databázi
-Command Help - /plan web check                  || Kontrola uživatele webu
-Command Help - /plan web delete                 || Smazání uživatele webu
-Command Help - /plan web level                  || Informace o úrovních práv
-Command Help - /plan web list                   || Seznam uživatelů webu
-Command Help - /plan webuser                    || Správa uživatelů webu
-Command Help - /planbungee disable              || Dočasně vypnout plugin
+Command Help - /plan unregister                 || Unregister a user of Plan website
+Command Help - /plan users                      || List all web users
 Database - Apply Patch                          || Aplikuji patch: ${0}..
 Database - Patches Applied                      || Všechny databáze byly úspěšně patchnuty.
 Database - Patches Applied Already              || Všechny databáze již jsou patchnuty.
@@ -83,6 +141,7 @@ Disable - Unsaved Session Save                  || Ukládání nedokončeného s
 Disable - WebServer                             || Webserver je již vypnutý.
 Enable                                          || Player Analytics zapnuty.
 Enable - Database                               || ${0}-připojení k databázi navázáno.
+Enable - Notify Bad IP                          || 0.0.0.0 is not a valid address, set up Alternative_IP settings. Incorrect links might be given!
 Enable - Notify Empty IP                        || IP v server.properties je prázdné & Alternative_IP se nepoužívá. Mohou být poskytnuty špatné odkazy!
 Enable - Notify Geolocations disabled           || Sbírání geolokace není aktivní. (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || Plan potřebuje internetové připojení pro první start ke stažení GeoLite2 Geolocation databáze.
@@ -98,6 +157,7 @@ HTML - COMPARING_60_DAYS                        || Srovnání 30d zpět do Dnes
 HTML - COMPARING_7_DAYS                         || Srovnání 7 dnů
 HTML - DATABASE_NOT_OPEN                        || Databáze není otevřené, ověřte status databáze s /plan info
 HTML - ERROR                                    || Autentifikace neuspěšná kvůli chybě
+HTML - EXPIRED_COOKIE                           || User cookie has expired
 HTML - INDEX_ACTIVE                             || Aktivní
 HTML - INDEX_INACTIVE                           || Neaktivní
 HTML - INDEX_IRREGULAR                          || Nepravidelný
@@ -184,6 +244,7 @@ HTML - LOCAL_MACHINE                            || Lokální stroj
 HTML - NAV_PLUGINS                              || Pluginy
 HTML - NEW_CALENDAR                             || Nové:
 HTML - NO_KILLS                                 || Žádné zabití
+HTML - NO_USER_PRESENT                          || User cookie not present
 HTML - OFFLINE                                  ||  Offline
 HTML - ONLINE                                   ||  Online
 HTML - PER_DAY                                  || / Den
@@ -300,29 +361,30 @@ HTML ERRORS - PAGE_NOT_FOUND_404                || Stránka neexistuje.
 HTML ERRORS - UNAUTHORIZED_401                  || Neautorizováno
 HTML ERRORS - UNKNOWN_PAGE_404                  || Ujistěte se, že přistupujete na odkaz poskytnutý příkazem, Příklad:</p><p>/player/PlayerName<br>/server/ServerName</p>
 HTML ERRORS - UUID_404                          || Hráčské UUID nebylo nalezeno v databázi.
-In Depth Help - /plan ?                         || > §2Hlavní příkazy\  Přístup k subpříkazům a pomoci\  §2/plan §fList subcommands\  §2/plan <subcommand> ? §fpodrobná pomoc
-In Depth Help - /plan analyze ?                 || > §2Analytické příkazy\  Obnoví stránku serveru a ukáže odkaz na web stránku.
-In Depth Help - /plan inspect ?                 || > §2Inspekční příkazy\  Obnoví stránku hráče a ukáže odkaz na web stránku.
-In Depth Help - /plan manage ?                  || > §2Správní příkazy\  Spravovat MySQL a SQLite databázi Plan.\  §2/plan m §fList subcommands\  §2/plan m <subcommand> ? §fpodrobná pomoc
-In Depth Help - /plan manage backup ?           || > §2Zálohové příkazy\  Vytvoří novou SQLite databázi (.db soubor) s obsahem aktuálně aktivní databáze v Plan plugin složce.
-In Depth Help - /plan manage clear ?            || > §2Čistící příkazy\  Smaže vše v aktivní databázi. Používejte opatrně.
-In Depth Help - /plan manage disable ?          || > §2Vypnout subpříkaz\  Může vypnout části pluginu do dalšího reloadu.\  Akceptované argumenty:\    §2kickcount §fVypne počet vykopnutí v případě použití /kickall příkazu.
-In Depth Help - /plan manage export ?           || > §2Export subpříkaz\  Spustí export do následné složky.\  Akceptované argumenty:\    §2list §fSeznam možných argumentů.\    §2players §fExport /players, /player pages + /player/raw json záležící na nastavení configu.\    §2server_json §fExport /server/raw JSON pokud je zapnuto v configu.
-In Depth Help - /plan manage import ?           || > §2Import subpříkaz\  Import dat z jiných zdrojů.\  Akceptované argumenty:\    §2offline §fBukkit hráčská data, pouze registruje datum a jméno.
-In Depth Help - /plan manage move ?             || > §2Přesun subpříkaz\  Přesun dat z SQLite d MySQL či naopak.\  Cílená databáze musí být smazána před přesunutím.
-In Depth Help - /plan manage raw ?              || > §2Přesun čistých dat subpříkaz\  Zobrazí odkaz k čisté JSON data stránce.\  Nedostupné pokud je Plan webserver vypnutý.
-In Depth Help - /plan manage remove ?           || > §2Mazací subpříkaz\  Smazání dat hráče z aktivní databáze.
-In Depth Help - /plan manage restore ?          || > §2Obnovovací subpříkaz\  Obnova předchozí zálohy SQLite databáze (.db soubor)\  Také můžete obnovit database.db z ostatních serverů na MySQL.\  Cílená databáze musí být vyčištěna před přesunem.
-In Depth Help - /plan manage uninstalled ?      || > §2Odinstalovaný server subpříkaz\  Označí server jako odinstalován z databáze.\  Nelze označit server, pokud je příkaz použit na serveru označeném k odinstalaci.\  Ovlivní ConnectionSystem.
-In Depth Help - /plan network ?                 || > §2Síťový příkaz\  Ukáže odkaz na stránku sítě.\  Pokud ne na síti, tato stránka ukáže server stránku.
-In Depth Help - /plan players ?                 || > §2Hráčské příkazy\  Ukáže odkaz k hráčské stránce..
-In Depth Help - /plan qinspect ?                || > §2Rychlý inspekční příkaz\  Ukáže některé informace o hráči ve hře..
-In Depth Help - /plan reload ?                  || > §2Reload příkaz\  Restartuje plugin použitím onDisable a onEnable.\  §bNepodporuje přehazování jar souborů za pochodu
-In Depth Help - /plan search ?                  || > §2Vyhledávací příkaz\  Získání seznamu hráčských jmen které souhlasí s argumentem.\§7  Příklad: /plan search 123 - najde všechny hráče s 123 ve jméně.
-In Depth Help - /plan servers ?                 || > §2Server příkaz\  Ukáže seznam Plan serverů v databázi.\  Může být použito k debugu chyb s registrací databáze na síti.
-In Depth Help - /plan web ?                     || < §2Správa web uživatelů příkaz.\  §2/plan web §fList subcommands\  §2/plan web <subcommand> ? §fPodrobná pomoc
-In Depth Help - /plan web register ?            || > §2Registrování subpříkaz\  Registrace nového uživatele webu.\  Registruje nového uživatele pro jiného hráče potřebuje plan.webmanage práva.\  Hesla jsou hashnutá s PBKDF2 (64,000 opakování z SHA1) za použití cryptografické-náhody.
-In Depth Help - /planbungee disable ?           || > §2Vypínací příkaz\  Spustí Plan onDisable na Proxy serverech.\  Plugin může být zapnut s /planbungee reload později.\  §bNepodporuje přehazování jar za pochodu
+In Depth Help - /plan db                        || Use different database subcommands to change the data in some way
+In Depth Help - /plan db backup                 || Uses SQLite to backup the target database to a file.
+In Depth Help - /plan db clear                  || Clears all Plan tables, removing all Plan-data in the process.
+In Depth Help - /plan db hotswap                || Reloads the plugin with the other database and changes the config to match.
+In Depth Help - /plan db move                   || Overwrites contents in the other database with the contents in another.
+In Depth Help - /plan db remove                 || Removes all data linked to a player from the Current database.
+In Depth Help - /plan db restore                || Uses SQLite backup file and overwrites contents of the target database.
+In Depth Help - /plan db uninstalled            || Marks a server in Plan database as uninstalled so that it will not show up in server queries.
+In Depth Help - /plan disable                   || Disable the plugin or part of it until next reload/restart.
+In Depth Help - /plan export                    || Performs an export to export location defined in the config.
+In Depth Help - /plan import                    || Performs an import to load data into the database.
+In Depth Help - /plan info                      || Display the current status of the plugin.
+In Depth Help - /plan ingame                    || Displays some information about the player in game.
+In Depth Help - /plan json                      || Allows you to download a player's data in json format. All of it.
+In Depth Help - /plan network                   || Obtain a link to the /network page, only does so on networks.
+In Depth Help - /plan player                    || Obtain a link to the /player page of a specific player, or the current player.
+In Depth Help - /plan players                   || Obtain a link to the /players page to see a list of players.
+In Depth Help - /plan register                  || Use without arguments to get link to register page. Use --code [code] after registration to get a user.
+In Depth Help - /plan reload                    || Disable and enable the plugin to reload any changes in config.
+In Depth Help - /plan search                    || List all matching player names to given part of a name.
+In Depth Help - /plan server                    || Obtain a link to the /server page of a specific server, or the current server if no arguments are given.
+In Depth Help - /plan servers                   || List ids, names and uuids of servers in the database.
+In Depth Help - /plan unregister                || Use without arguments to unregister player linked user, or with username argument to unregister another user.
+In Depth Help - /plan users                     || Lists web users as a table.
 Manage - Confirm Overwrite                      || Data v ${0} budou přepsána!
 Manage - Confirm Removal                        || Data v ${0} budou smazána!
 Manage - Fail                                   || > §cNěco se pokazilo: ${0}
@@ -335,6 +397,7 @@ Manage - Fail Same Database                     || > §cNelze spravovat z a do s
 Manage - Fail Same server                       || Nelze označit tento server jako odinstalován (Jste na něm)
 Manage - Fail, Confirmation                     || > §cPřidejte '-a' argument k potvrzení provedení: ${0}
 Manage - List Importers                         || Importery:
+Manage - Progress                               || ${0} / ${1} processed..
 Manage - Remind HotSwap                         || §eNezapomeňte přehodit na novou databázi (/plan m hotswap ${0}) & reload pluginu.
 Manage - Start                                  || > §2Zpracovávám data..
 Manage - Success                                || > §aÚspěch!
@@ -352,7 +415,12 @@ Version FAIL - Read versions.txt                || Verze informací nemůže bý
 Web User Listing                                ||   §2${0} §7: §f${1}
 WebServer - Notify HTTP                         || WebServer: Není certifikát -> Používám HTTP-server pro visualizaci.
 WebServer - Notify HTTP User Auth               || WebServer: Autorizace uživatelů vypnutá! (Není bezpečné skrz HTTP)
+WebServer - Notify HTTPS User Auth              || WebServer: User Authorization Disabled! (Disabled in config)
+Webserver - Notify IP Whitelist                 || Webserver: IP Whitelist is enabled.
+Webserver - Notify IP Whitelist Block           || Webserver: ${0} was denied access to '${1}'. (not whitelisted)
 WebServer - Notify no Cert file                 || WebServer: Certifikační KeyStore soubor nenalezen: ${0}
+WebServer - Notify Using Proxy                  || WebServer: Proxy-mode HTTPS enabled, make sure that your reverse-proxy is routing using HTTPS and Plan Alternative_IP.Link points to the Proxy
+WebServer FAIL - EOF                            || WebServer: EOF when reading Certificate file. (Check that the file is not empty)
 WebServer FAIL - Port Bind                      || WebServer nebyl úspěšně spuštěn. Je port (${0}) již používán?
 WebServer FAIL - SSL Context                    || WebServer: SSL Context spuštění selhalo.
 WebServer FAIL - Store Load                     || WebServer: SSL Certificate načítání selhalo.

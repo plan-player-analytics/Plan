@@ -28,7 +28,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class User {
+public class User implements Comparable<User> {
 
     private final String username;
     private final String linkedTo;
@@ -108,5 +108,12 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(username, linkedTo, linkedToUUID, passwordHash, permissionLevel, permissions);
+    }
+
+    @Override
+    public int compareTo(User other) {
+        int comparison = Integer.compare(this.permissionLevel, other.permissionLevel);
+        if (comparison == 0) comparison = String.CASE_INSENSITIVE_ORDER.compare(this.username, other.username);
+        return comparison;
     }
 }
