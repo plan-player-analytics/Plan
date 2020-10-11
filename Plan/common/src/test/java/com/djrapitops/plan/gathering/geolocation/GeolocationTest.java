@@ -86,7 +86,7 @@ class GeolocationTest {
         assertTrue(config.isTrue(DataGatheringSettings.GEOLOCATIONS));
 
         GeoLite2Geolocator geoLite2Geolocator = new GeoLite2Geolocator(files, config);
-        underTest = new GeolocationCache(new Locale(), config, geoLite2Geolocator, new IP2CGeolocator(), new TestPluginLogger(), TestRunnableFactory.forSameThread());
+        underTest = new GeolocationCache(new Locale(), config, geoLite2Geolocator, new TestPluginLogger(), TestRunnableFactory.forSameThread());
         underTest.enable();
 
         assertTrue(underTest.canGeolocate());

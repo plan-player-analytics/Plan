@@ -52,7 +52,6 @@ public class GeolocationCache implements SubSystem {
     private final Cache<String, String> cache;
 
     private final Geolocator geoLite2Geolocator;
-    private final Geolocator ip2cGeolocator;
 
     private Geolocator inUseGeolocator;
 
@@ -61,14 +60,12 @@ public class GeolocationCache implements SubSystem {
             Locale locale,
             PlanConfig config,
             GeoLite2Geolocator geoLite2Geolocator,
-            IP2CGeolocator ip2cGeolocator,
             PluginLogger logger,
             RunnableFactory runnableFactory
     ) {
         this.locale = locale;
         this.config = config;
         this.geoLite2Geolocator = geoLite2Geolocator;
-        this.ip2cGeolocator = ip2cGeolocator;
         this.logger = logger;
         this.runnableFactory = runnableFactory;
 
@@ -84,7 +81,6 @@ public class GeolocationCache implements SubSystem {
                 @Override
                 public void run() {
                     if (inUseGeolocator == null) tryToPrepareGeoLite2();
-                    if (inUseGeolocator == null) tryToPrepareIP2CGeolocator();
                     if (inUseGeolocator == null) logger.error("Failed to enable geolocation.");
                 }
             }).runTaskAsynchronously();
@@ -97,24 +93,12 @@ public class GeolocationCache implements SubSystem {
         return inUseGeolocator != null;
     }
 
-    private void tryToPrepareIP2CGeolocator() {
-        logger.warn("Fallback: using IP2C for Geolocation (doesn't support IPv6).");
-        try {
-            ip2cGeolocator.prepare();
-            inUseGeolocator = ip2cGeolocator;
-        } catch (PreparationException e) {
-            logger.warn(e.getMessage());
-        } catch (IOException e) {
-            logger.error("Fallback to IP2C failed: " + e.getMessage());
-        }
-    }
-
     public void tryToPrepareGeoLite2() {
         try {
             geoLite2Geolocator.prepare();
             inUseGeolocator = geoLite2Geolocator;
         } catch (PreparationException e) {
-            logger.info(e.getMessage());
+            logger.warn(e.getMessage());
         } catch (UnknownHostException e) {
             logger.error(locale.getString(PluginLang.ENABLE_NOTIFY_GEOLOCATIONS_INTERNET_REQUIRED));
         } catch (IOException e) {
