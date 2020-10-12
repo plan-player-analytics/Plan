@@ -19,6 +19,7 @@ package com.djrapitops.plan.commands.use;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.text.TextStringBuilder;
 
 import java.util.Arrays;
@@ -43,7 +44,8 @@ class BukkitPartBuilder implements MessageBuilder {
     @Override
     public MessageBuilder addPart(String text) {
         BukkitPartBuilder nextPart = new BukkitPartBuilder(this);
-        nextPart.part.appendLegacy(text);
+        // appendLegacy cannot be used as it was added after 1.8
+        nextPart.part.append(TextComponent.fromLegacyText(text));
         return nextPart;
     }
 
