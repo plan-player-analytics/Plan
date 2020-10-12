@@ -16,6 +16,9 @@ dependencies {
 shadowJar {
     configurations = [project.configurations.compile]
 
+    relocate('org.apache', 'plan.org.apache') {
+        exclude 'org/apache/logging/**'
+    }
     relocate 'dagger', 'plan.dagger'
     relocate 'com.mysql.jdbc', 'plan.com.mysql.jdbc'
     relocate 'com.mysql.cj', 'plan.com.mysql.cj'

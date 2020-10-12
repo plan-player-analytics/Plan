@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.commands.use;
 
+import org.apache.commons.text.TextStringBuilder;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
-import plan.org.apache.commons.text.TextStringBuilder;
 
 import java.net.MalformedURLException;
 import java.net.URL;
