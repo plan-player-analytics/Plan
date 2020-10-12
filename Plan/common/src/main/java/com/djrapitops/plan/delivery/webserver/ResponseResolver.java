@@ -113,6 +113,7 @@ public class ResponseResolver {
 
     public void registerPages() {
         String plugin = "Plan";
+        resolverService.registerResolver(plugin, "/robots.txt", (NoAuthResolver) request -> Optional.of(responseFactory.robotsResponse()));
         resolverService.registerResolver(plugin, "/debug", debugPageResolver);
         resolverService.registerResolver(plugin, "/players", playersPageResolver);
         resolverService.registerResolver(plugin, "/player", playerPageResolver);

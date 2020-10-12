@@ -98,6 +98,7 @@ public class RequestHandler implements HttpHandler {
             response.getHeaders().putIfAbsent("Access-Control-Allow-Origin", config.get(WebserverSettings.CORS_ALLOW_ORIGIN));
             response.getHeaders().putIfAbsent("Access-Control-Allow-Methods", "GET, OPTIONS");
             response.getHeaders().putIfAbsent("Access-Control-Allow-Credentials", "true");
+            response.getHeaders().putIfAbsent("X-Robots-Tag", "noindex, nofollow");
             ResponseSender sender = new ResponseSender(addresses, exchange, response);
             sender.send();
         } catch (Exception e) {
