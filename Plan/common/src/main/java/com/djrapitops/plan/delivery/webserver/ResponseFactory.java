@@ -257,7 +257,7 @@ public class ResponseFactory {
     public Response robotsResponse() {
         try {
             return Response.builder()
-                    .setMimeType(MimeType.FAVICON)
+                    .setMimeType("text/plain")
                     .setContent(getResource("robots.txt"))
                     .build();
         } catch (UncheckedIOException e) {
