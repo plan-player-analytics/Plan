@@ -254,6 +254,17 @@ public class ResponseFactory {
         }
     }
 
+    public Response robotsResponse() {
+        try {
+            return Response.builder()
+                    .setMimeType("text/plain")
+                    .setContent(getResource("robots.txt"))
+                    .build();
+        } catch (UncheckedIOException e) {
+            return forInternalError(e, "Could not read robots.txt");
+        }
+    }
+
     public Response pageNotFound404() {
         return notFound404(locale.getString(ErrorPageLang.UNKNOWN_PAGE_404));
     }
