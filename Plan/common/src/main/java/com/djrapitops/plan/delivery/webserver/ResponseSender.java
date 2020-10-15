@@ -45,7 +45,7 @@ public class ResponseSender {
 
     public void send() throws IOException {
         setResponseHeaders();
-        if ("HEAD".equals(exchange.getRequestMethod())) {
+        if ("HEAD".equals(exchange.getRequestMethod()) || response.getCode() == 204) {
             sendHeadResponse();
         } else if ("bytes".equalsIgnoreCase(response.getHeaders().get("Accept-Ranges"))) {
             sendRawBytes();
@@ -91,7 +91,9 @@ public class ResponseSender {
     }
 
     private void beginSend() throws IOException {
-        exchange.sendResponseHeaders(response.getCode(), 0);
+        // Return a content length of -1 for HTTP code 204 (No content)
+        // and HEAD requests to avoid warning messages.
+        exchange.sendResponseHeaders(response.getCode(), (response.getCode() == 204 || "HEAD".equals(exchange.getRequestMethod())) ? -1 : 0);
     }
 
     private void sendRawBytes() throws IOException {
