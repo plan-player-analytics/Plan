@@ -37,7 +37,7 @@ import java.util.Optional;
 @Singleton
 public class QueryJSONResolver implements Resolver {
 
-    private QueryFilters filters;
+    private final QueryFilters filters;
 
     @Inject
     public QueryJSONResolver(

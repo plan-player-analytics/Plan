@@ -31,7 +31,7 @@ import java.util.*;
 @Singleton
 public class QueryFilters {
 
-    private Map<String, Filter> filters;
+    private final Map<String, Filter> filters;
 
     @Inject
     public QueryFilters(Set<Filter> filters) {

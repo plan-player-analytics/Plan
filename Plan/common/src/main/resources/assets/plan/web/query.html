@@ -137,7 +137,8 @@
                                                 data-toggle="dropdown" id="filterDropdown" type="button">
                                             <i class="fa fa-plus"></i> Add a filter..
                                         </button>
-                                        <div aria-labelledby="filterDropdown" class="dropdown-menu">
+                                        <div aria-labelledby="filterDropdown" class="dropdown-menu"
+                                             id="filter-dropdown">
                                             <a class="dropdown-item" id="dropdown-loading">Loading filters..</a>
                                         </div>
                                     </div>
@@ -300,14 +301,6 @@
 <script src="./vendor/jquery/jquery.min.js"></script>
 <script src="./vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-<!-- Core plugin JavaScript-->
-<script src="./vendor/jquery-easing/jquery.easing.min.js"></script>
-
-<!-- Page level plugins -->
-<script src="./vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="./vendor/datatables/dataTables.bootstrap4.min.js"></script>
-<script src='./vendor/momentjs/moment.js'></script>
-
 <!-- Custom scripts for all pages-->
 <script src="./js/sb-admin-2.js"></script>
 <script src="./js/xmlhttprequests.js"></script>
@@ -317,16 +310,16 @@
 <script src='./js/query.js'></script>
 
 <script id="mainScript">
-    var filters = [];
+    const filters = [];
     jsonRequest("./v1/filters", function (json, error) {
+        openPage();
         filters.push(...json.filters);
-        console.log(filters);
 
-        var filterElements = [];
-        for (var i = 0; i < filters.length; i++) {
-            filterElements.push(createFilterSelector('#filters', i, filters[i]));
+        let filterElements = '';
+        for (let i = 0; i < filters.length; i++) {
+            filterElements += createFilterSelector('#filters', i, filters[i]);
         }
-        $('#dropdown-loading').replaceWith(filterElements);
+        document.getElementById('filter-dropdown').innerHTML = filterElements;
     });
 </script>
 

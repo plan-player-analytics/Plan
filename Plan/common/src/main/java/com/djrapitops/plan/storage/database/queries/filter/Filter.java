@@ -51,11 +51,11 @@ public interface Filter {
     }
 
     class Result {
-        private Result previous;
+        private final Result previous;
 
-        private String filterKind;
-        private int resultSize;
-        private Set<UUID> currentUUIDs;
+        private final String filterKind;
+        private final int resultSize;
+        private final Set<UUID> currentUUIDs;
 
         private Result(Result previous, String filterKind, Set<UUID> currentUUIDs) {
             this.previous = previous;

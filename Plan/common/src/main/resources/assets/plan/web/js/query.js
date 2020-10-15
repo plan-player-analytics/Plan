@@ -1,10 +1,10 @@
-var filterCount = 0;
+let filterCount = 0;
 
 /* {
     id: "DOM id",
     options...
 }*/
-var filterQuery = [];
+const filterQuery = [];
 
 function addFilter(parentSelector, filterIndex) {
     const id = "f" + filterCount;
@@ -59,20 +59,20 @@ function createBetweenSelector(id, label, options) {
         `<div id="${id}" class="mt-2 input-group input-row">` +
         `<div class="col-3"><div class="input-group mb-2">` +
         `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-calendar"></i></div></div>` +
-        `<input id="${id}-afterdate" onkeyup="setFilterOption('${id}', '${id}-afterdate', 'afterDate', 'isValidDate', 'correctDate')" class="form-control" placeholder="${query.afterDate}" type="text">` +
+        `<input id="${id}-afterdate" onkeyup="setFilterOption('${id}', '${id}-afterdate', 'afterDate', isValidDate, correctDate)" class="form-control" placeholder="${query.afterDate}" type="text">` +
         `</div></div>` +
         `<div class="col-2"><div class="input-group mb-2">` +
         `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-clock"></i></div></div>` +
-        `<input id="${id}-aftertime" onkeyup="setFilterOption('${id}', '${id}-aftertime', 'afterTime', 'isValidTime', 'correctTime')" class="form-control" placeholder="${query.afterTime}" type="text">` +
+        `<input id="${id}-aftertime" onkeyup="setFilterOption('${id}', '${id}-aftertime', 'afterTime', isValidTime, correctTime)" class="form-control" placeholder="${query.afterTime}" type="text">` +
         `</div></div>` +
         `<div class="col-auto"><label class="mt-2 mb-0" for="inlineFormCustomSelectPref">&</label></div>` +
         `<div class="col-3"><div class="input-group mb-2">` +
         `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-calendar"></i></div></div>` +
-        `<input id="${id}-beforedate" onkeyup="setFilterOption('${id}', '${id}-beforedate', 'beforeDate', 'isValidDate', 'correctDate')" class="form-control" placeholder="${query.beforeDate}" type="text">` +
+        `<input id="${id}-beforedate" onkeyup="setFilterOption('${id}', '${id}-beforedate', 'beforeDate', isValidDate, correctDate)" class="form-control" placeholder="${query.beforeDate}" type="text">` +
         `</div></div>` +
         `<div class="col-2"><div class="input-group mb-2">` +
         `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-clock"></i></div></div>` +
-        `<input id="${id}-beforetime" onkeyup="setFilterOption('${id}', '${id}-beforetime', 'beforeTime', 'isValidTime', 'correctTime')" class="form-control" placeholder="${query.beforeTime}" type="text">` +
+        `<input id="${id}-beforetime" onkeyup="setFilterOption('${id}', '${id}-beforetime', 'beforeTime', isValidTime, correctTime)" class="form-control" placeholder="${query.beforeTime}" type="text">` +
         `</div></div>` +
         `</div>`
     );
@@ -105,12 +105,12 @@ function correctDate(value) {
 
 function isValidTime(value) {
     if (!value) return true;
-    const regex = /^[0-2][0-9]\:[0-5][0-9]$/;
+    const regex = /^[0-2][0-9]:[0-5][0-9]$/;
     return regex.test(value);
 }
 
 function correctTime(value) {
-    const d = value.match(/^(\d{2})\:?(\d{2})$/);
+    const d = value.match(/^(\d{2}):?(\d{2})$/);
     if (!d) return value;
     let hour = d[1];
     while (hour > 23) hour--;
@@ -134,10 +134,10 @@ function setFilterOption(
 
     console.log(element, value, id, elementId);
 
-    value = window[correctionFunction].apply(element, [value]);
+    value = correctionFunction.apply(element, [value]);
     element.val(value);
 
-    const isValid = window[isValidFunction].apply(element, [value]);
+    const isValid = isValidFunction.apply(element, [value]);
     if (isValid) {
         element.removeClass("is-invalid");
         query[propertyName] = value;
