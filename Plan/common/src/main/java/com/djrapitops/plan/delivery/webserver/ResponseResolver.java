@@ -158,7 +158,7 @@ public class ResponseResolver {
     private Response tryToGetResponse(Request request) {
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             // https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS
-            return Response.builder().setStatus(204).setContent(new byte[0]).build();
+            return Response.builder().setStatus(204).build();
         }
 
         Optional<WebUser> user = request.getUser();
