@@ -1539,7 +1539,12 @@
                 $('#calendar').text('');
                 onlineActivityCalendar('#calendar', json.data, json.firstDay);
                 $('#online-calendar-tab').click(function () {
-                    $('#calendar').fullCalendar('render');
+                    // Wrapping this in a 0ms setTimeout waits for all other event handlers
+                    // to finish. We need this because if the calendar is rendered
+                    // immediately, it renders for a width of 0.
+                    setTimeout(function() {
+                        window.calendars.online_activity.render();
+                    }, 0);
                 });
             } else if (error) {
                 $('#calendar').text("Failed to load calendar data: " + error)

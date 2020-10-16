@@ -56,7 +56,7 @@ $('.nav-tabs a.nav-link').click(event => {
     const uriHash = (window.location.hash).split("&");
     if (!uriHash) return;
     const currentTab = uriHash[0];
-    const originalTargetId = event.target.href.split('#')[1];
+    const originalTargetId = event.currentTarget.href.split('#')[1];
     window.location.hash = currentTab + '&' + originalTargetId;
 });
 

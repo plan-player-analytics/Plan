@@ -1196,3 +1196,20 @@ div.scrollbar {
     color: #FFFFFF;
     text-shadow: 0 0 8px #000;
 }
+
+/*
+Adding a translation, even though it doesn't visually
+impact the page, causes child elements with a
+position of "fixed" to be based on this element
+instead of any other parent elements. For example,
+if a child element to this element had `top: 0`
+and `left: 0`, then it would align with the top
+left of this element instead of another parent or the document body.
+See this StackOverflow answer: https://stackoverflow.com/a/20830413
+
+We use this to properly align the popover when there are more
+than 3 events in one day on the sessions calendar.
+ */
+#sessions-overview {
+    transform: translateX(0);
+}
