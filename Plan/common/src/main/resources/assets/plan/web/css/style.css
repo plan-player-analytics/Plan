@@ -1213,3 +1213,16 @@ than 3 events in one day on the sessions calendar.
 #sessions-overview {
     transform: translateX(0);
 }
+/*
+When the sidebar is visible, it offsets the popovers by its width.
+ The rules below fix that by applying a negative margin.
+ */
+body .fc-popover {
+    margin-left: -14rem;
+}
+body.sidebar-hidden .fc-popover {
+    margin-left: 0 !important;
+}
+body.sidebar-hidden .navbar-nav {
+    display: none;
+}

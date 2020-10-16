@@ -68,16 +68,16 @@ function reduceSidebar() {
         return;
     }
 
-    const $sidebar = $('.sidebar');
+    const $body = $('body')
     const closeModal = $('.sidebar-close-modal');
     if ($(window).width() < 1350) {
-        if (!$sidebar.hasClass('hidden')) $sidebar.addClass('hidden');
+        if (!$body.hasClass('sidebar-hidden')) $body.addClass('sidebar-hidden');
         if (!closeModal.hasClass('hidden')) closeModal.addClass('hidden');
 
         // Close any open menu accordions when window is resized
         $('.sidebar .collapse').collapse('hide');
-    } else if ($(window).width() > 1400 && $sidebar.hasClass('hidden')) {
-        $sidebar.removeClass('hidden');
+    } else if ($(window).width() > 1400 && $body.hasClass('sidebar-hidden')) {
+        $body.removeClass('sidebar-hidden');
         if (!closeModal.hasClass('hidden')) closeModal.addClass('hidden');
     }
     oldWidth = newWidth;
@@ -87,7 +87,7 @@ reduceSidebar();
 $(window).resize(reduceSidebar);
 
 function toggleSidebar() {
-    $('.sidebar').toggleClass('hidden');
+    $('body').toggleClass('sidebar-hidden');
     $('.sidebar .collapse').collapse('hide');
 
     const closeModal = $('.sidebar-close-modal');
