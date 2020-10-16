@@ -864,7 +864,13 @@ div.scrollbar {
     color: #333;
 }
 
-.bg-plan {
+.bg-plan,
+#sessionCalendar .fc-dayGridDay-button,
+#sessionCalendar .fc-dayGridWeek-button,
+#sessionCalendar .fc-dayGridMonth-button,
+#sessionCalendar .fc-today-button,
+#sessionCalendar .fc-prev-button,
+#sessionCalendar .fc-next-button {
     background-color: #368F17;
     color: #fff;
 }
@@ -1213,6 +1219,7 @@ than 3 events in one day on the sessions calendar.
 #sessions-overview {
     transform: translateX(0);
 }
+
 /*
 When the sidebar is visible, it offsets the popovers by its width.
  The rules below fix that by applying a negative margin.
@@ -1220,9 +1227,11 @@ When the sidebar is visible, it offsets the popovers by its width.
 body .fc-popover {
     margin-left: -14rem;
 }
+
 body.sidebar-hidden .fc-popover {
     margin-left: 0 !important;
 }
+
 body.sidebar-hidden .navbar-nav {
     display: none;
 }

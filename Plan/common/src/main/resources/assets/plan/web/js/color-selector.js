@@ -218,6 +218,7 @@
                 '.collapse-item:hover,.nav-link.active {background-color: #606270 !important;}' +
                 '.nav-tabs .nav-link.active {background-color: #44475a !important;border-color:#6272a4 #6272a4 #44475a !important;}' +
                 '.fc-today {background:#646e8c !important}' +
+                '.fc-popover-body,.fc-popover-header {background-color: #44475a;color: #eee8d5;}' +
                 nightModeColors +
                 '</style>');
             // Turn bright tables to dark
