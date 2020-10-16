@@ -174,7 +174,7 @@ function onlineActivityCalendar(id, event_data, firstDay) {
         headerToolbar: {
             left: 'title',
             center: '',
-            right: 'dayGridMonth today prev,next'
+            right: 'today prev,next'
         }
     });
 
