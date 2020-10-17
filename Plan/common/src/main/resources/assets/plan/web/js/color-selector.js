@@ -19,6 +19,7 @@
 
     // Function for changing color
     function setColor(nextColor) {
+        $('body').removeClass('theme-' + currentColor).addClass('theme-' + nextColor);
         if (!nextColor || nextColor == currentColor) {
             return;
         }
