@@ -10,12 +10,8 @@
         'brown', 'grey', 'blue-grey'];
 
     const selectedColor = window.localStorage.getItem('themeColor');
-    const themeDefaultColor = 'plan';
+    const themeDefaultColor = '${defaultTheme}';
     let currentColor = 'plan';
-
-    if (selectedColor === null) {
-        window.localStorage.setItem('themeColor', currentColor);
-    }
 
     // Function for changing color
     function setColor(nextColor) {
@@ -71,7 +67,11 @@
     // Change the color of the theme
     setColor(selectedColor ? selectedColor : themeDefaultColor);
 
-    let nightMode = window.localStorage.getItem('nightMode') == 'true';
+    if (selectedColor === null) {
+        window.localStorage.setItem('themeColor', currentColor);
+    }
+
+    let nightMode = window.localStorage.getItem('nightMode') ? window.localStorage.getItem('nightMode') == 'true' : '${defaultTheme}' == 'night';
 
     const saturationReduction = 0.70;
 
