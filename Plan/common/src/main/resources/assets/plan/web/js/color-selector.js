@@ -15,6 +15,9 @@
 
     // Function for changing color
     function setColor(nextColor) {
+        if (selectedColor === null) {
+            window.localStorage.setItem('themeColor', currentColor);
+        }
         $('body').removeClass('theme-' + currentColor).addClass('theme-' + nextColor);
         if (!nextColor || nextColor == currentColor) {
             return;
@@ -67,11 +70,7 @@
     // Change the color of the theme
     setColor(selectedColor ? selectedColor : themeDefaultColor);
 
-    if (selectedColor === null) {
-        window.localStorage.setItem('themeColor', currentColor);
-    }
-
-    let nightMode = window.localStorage.getItem('nightMode') ? window.localStorage.getItem('nightMode') == 'true' : '${defaultTheme}' == 'night';
+    let nightMode = window.localStorage.getItem('nightMode') == 'true' || '${defaultTheme}' == 'night';
 
     const saturationReduction = 0.70;
 
