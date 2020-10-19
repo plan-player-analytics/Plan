@@ -51,13 +51,26 @@ for (let tab of tabs) {
 
 window.addEventListener('hashchange', openPage);
 
+//Sidebar navigation tabs
+$('#accordionSidebar .nav-item a').click(event => {
+    if(history.replaceState) {
+        event.preventDefault();
+        history.replaceState(undefined, undefined, '#' + event.currentTarget.href.split('#')[1]);
+        openPage();
+    }
+});
+
 // Persistent Bootstrap tabs
 $('.nav-tabs a.nav-link').click(event => {
     const uriHash = (window.location.hash).split("&");
     if (!uriHash) return;
     const currentTab = uriHash[0];
     const originalTargetId = event.currentTarget.href.split('#')[1];
-    window.location.hash = currentTab + '&' + originalTargetId;
+    if(history.replaceState) {
+        event.preventDefault();
+        history.replaceState(undefined, undefined, currentTab + '&' + originalTargetId);
+        openPage();
+    } else window.location.hash = currentTab + '&' + originalTargetId;
 });
 
 let oldWidth = null;
