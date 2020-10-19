@@ -33,6 +33,7 @@ public class Contributors {
     public static String generateContributorHtml() {
         Contributor[] contributors = new Contributor[]{
                 new Contributor("aidn5", CODE),
+                new Contributor("Antonok", CODE),
                 new Contributor("Argetan", CODE),
                 new Contributor("Aurelien", CODE, LANG),
                 new Contributor("BrainStone", CODE),
