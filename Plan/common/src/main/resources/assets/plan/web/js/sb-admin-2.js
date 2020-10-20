@@ -52,8 +52,8 @@ for (let tab of tabs) {
 window.addEventListener('hashchange', openPage);
 
 //Sidebar navigation tabs
-$('#accordionSidebar .nav-item a').click(event => {
-    if(history.replaceState) {
+$('#accordionSidebar .nav-button, #accordionSidebar .nav-button a').click(event => {
+    if (history.replaceState) {
         event.preventDefault();
         history.replaceState(undefined, undefined, '#' + event.currentTarget.href.split('#')[1]);
         openPage();
