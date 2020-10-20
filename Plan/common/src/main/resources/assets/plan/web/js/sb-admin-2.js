@@ -52,8 +52,8 @@ for (let tab of tabs) {
 window.addEventListener('hashchange', openPage);
 
 //Sidebar navigation tabs
-$('#accordionSidebar .nav-button, #accordionSidebar .nav-button a').click(event => {
-    if (history.replaceState) {
+$('#accordionSidebar .nav-item a').click(event => {
+    if (history.replaceState && event.currentTarget.href.split('#')[1].length > 0) {
         event.preventDefault();
         history.replaceState(undefined, undefined, '#' + event.currentTarget.href.split('#')[1]);
         openPage();
@@ -66,7 +66,7 @@ $('.nav-tabs a.nav-link').click(event => {
     if (!uriHash) return;
     const currentTab = uriHash[0];
     const originalTargetId = event.currentTarget.href.split('#')[1];
-    if(history.replaceState) {
+    if (history.replaceState) {
         event.preventDefault();
         history.replaceState(undefined, undefined, currentTab + '&' + originalTargetId);
         openPage();
