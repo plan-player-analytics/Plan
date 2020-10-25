@@ -112,18 +112,3 @@ function toggleSidebar() {
 }
 
 $('.sidebar-toggler,.sidebar-close-modal').on('click', toggleSidebar);
-
-// Scroll to top button appear
-$(document).on('scroll', () => {
-    const scrollDistance = $(this).scrollTop();
-    if (scrollDistance > 100) {
-        $('.scroll-to-top').fadeIn();
-    } else {
-        $('.scroll-to-top').fadeOut();
-    }
-});
-
-$('.scroll-to-top').on('click', 'a.scroll-to-top', event => {
-    window.scrollTo(0, 0); // Scroll to top
-    event.preventDefault();
-});
