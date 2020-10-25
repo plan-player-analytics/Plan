@@ -32,6 +32,7 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.Resource;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -143,8 +144,8 @@ public class NetworkPageExporter extends FileExporter {
         export(toDirectory.resolve("data").resolve(jsonResourceName),
                 // Replace ../player in urls to fix player page links
                 StringUtils.replaceEach(found.get().getAsString(),
-                        new String[]{"../player", "./player"},
-                        new String[]{relativePlayerLink, relativePlayerLink}
+                        new String[]{StringEscapeUtils.escapeJson("../player"), StringEscapeUtils.escapeJson("./player")},
+                        new String[]{StringEscapeUtils.escapeJson(relativePlayerLink), StringEscapeUtils.escapeJson(relativePlayerLink)}
                 )
         );
         exportPaths.put("./v1/" + resource, toRelativePathFromRoot("data/" + jsonResourceName));
