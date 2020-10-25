@@ -108,7 +108,7 @@ public class RegistrationCommands {
         if (user.isPresent()) {
             registerUser(user.get(), sender, getPermissionLevel(sender));
         } else {
-            throw new IllegalArgumentException(locale.getString(FailReason.USER_DOES_NOT_EXIST));
+            throw new IllegalArgumentException(locale.getString(FailReason.USER_INFORMATION_NOT_FOUND));
         }
     }
 
