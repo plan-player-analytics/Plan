@@ -255,7 +255,7 @@ public class DatabaseCommands {
 
             sender.send(locale.getString(CommandLang.DB_WRITE, toDB.getName()));
 
-            fromDatabase.executeTransaction(new BackupCopyTransaction(fromDatabase, toDatabase)).get();
+            toDatabase.executeTransaction(new BackupCopyTransaction(fromDatabase, toDatabase)).get();
 
             sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
 
