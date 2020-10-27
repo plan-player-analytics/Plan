@@ -135,7 +135,7 @@ subprojects {
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.0"   // JUnit 5
         testCompile "org.junit.jupiter:junit-jupiter-params:5.7.0"   // JUnit 5, parameterized tests
         testCompile "org.mockito:mockito-core:3.6.0"                // Mockito Core
-        testCompile "org.mockito:mockito-junit-jupiter:3.5.15"       // Mockito JUnit 5 Extension
+        testCompile "org.mockito:mockito-junit-jupiter:3.6.0"       // Mockito JUnit 5 Extension
         testCompile "org.seleniumhq.selenium:selenium-java:3.141.59" // Selenium (Browser tests)
         testCompile "com.jayway.awaitility:awaitility:1.7.0"         // Awaitility (Concurrent wait conditions)
 
