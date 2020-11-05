@@ -66,12 +66,7 @@ public class ServerServerInfo extends ServerInfo {
     }
 
     @Override
-    public void enable() throws EnableException {
-        super.enable();
-    }
-
-    @Override
-    protected void loadServerInfo() throws EnableException {
+    protected void loadServerInfo() {
         Optional<Server> loaded = fromFile.load(null);
         server = loaded.orElseGet(this::registerNew);
         processing.submitNonCritical(this::updateStorage);

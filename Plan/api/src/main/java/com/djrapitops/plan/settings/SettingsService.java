@@ -66,7 +66,7 @@ public interface SettingsService {
     List<String> getStringList(String path, Supplier<List<String>> defaultValue);
 
     class Holder {
-        volatile static AtomicReference<SettingsService> service = new AtomicReference<>();
+        static volatile AtomicReference<SettingsService> service = new AtomicReference<>();
 
         private Holder() {
             /* Static variable holder */

@@ -49,7 +49,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -185,7 +184,7 @@ public class DatabaseCommands {
         }
 
         confirmation.confirm(sender, choice -> {
-            if (choice) {
+            if (Boolean.TRUE.equals(choice)) {
                 performRestore(sender, backupDBFile, toDB);
             } else {
                 sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED_DATA));
@@ -238,7 +237,7 @@ public class DatabaseCommands {
         }
 
         confirmation.confirm(sender, choice -> {
-            if (choice) {
+            if (Boolean.TRUE.equals(choice)) {
                 performMove(sender, fromDB, toDB);
             } else {
                 sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED_DATA));
@@ -294,7 +293,7 @@ public class DatabaseCommands {
         }
 
         confirmation.confirm(sender, choice -> {
-            if (choice) {
+            if (Boolean.TRUE.equals(choice)) {
                 performClear(sender, fromDB);
             } else {
                 sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED_DATA));
@@ -316,7 +315,7 @@ public class DatabaseCommands {
 
             // Reload plugin to register the server into the database
             // Otherwise errors will start.
-            statusCommands.onReload(sender, new Arguments(Collections.emptyList()));
+            statusCommands.onReload(sender);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (DBOpException | ExecutionException e) {
@@ -352,7 +351,7 @@ public class DatabaseCommands {
         }
 
         confirmation.confirm(sender, choice -> {
-            if (choice) {
+            if (Boolean.TRUE.equals(choice)) {
                 performRemoval(sender, database, playerUUID);
             } else {
                 sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED_DATA));
@@ -420,6 +419,6 @@ public class DatabaseCommands {
             sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
             return;
         }
-        statusCommands.onReload(sender, new Arguments(Collections.emptyList()));
+        statusCommands.onReload(sender);
     }
 }

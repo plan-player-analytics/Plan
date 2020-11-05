@@ -29,14 +29,15 @@ import java.util.Optional;
  */
 public class DBOpException extends IllegalStateException implements ExceptionWithContext {
 
-    private ErrorContext context;
+    private final ErrorContext context;
 
     public DBOpException(String message) {
         super(message);
+        this.context = null;
     }
 
     public DBOpException(String message, Throwable cause) {
-        super(message, cause);
+        this(message, cause, null);
     }
 
     public DBOpException(String message, Throwable cause, ErrorContext context) {

@@ -32,7 +32,7 @@ public abstract class TPSCounter extends AbsRunnable {
     protected final PluginLogger logger;
     protected final ErrorLogger errorLogger;
 
-    public TPSCounter(
+    protected TPSCounter(
             PluginLogger logger,
             ErrorLogger errorLogger
     ) {

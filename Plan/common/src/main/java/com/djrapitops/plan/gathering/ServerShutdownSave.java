@@ -50,7 +50,7 @@ public abstract class ServerShutdownSave {
     private boolean shuttingDown = false;
     private boolean startedDatabase = false;
 
-    public ServerShutdownSave(
+    protected ServerShutdownSave(
             Locale locale,
             DBSystem dbSystem,
             PluginLogger logger,

@@ -62,7 +62,7 @@ public class PluginStatusCommands {
         this.errorLogger = errorLogger;
     }
 
-    public void onReload(CMDSender sender, Arguments arguments) {
+    public void onReload(CMDSender sender) {
         new Thread(() -> {
             try {
                 plugin.reloadPlugin(true);
@@ -92,7 +92,7 @@ public class PluginStatusCommands {
         }
     }
 
-    public void onInfo(CMDSender sender, Arguments arguments) {
+    public void onInfo(CMDSender sender) {
         String yes = locale.getString(GenericLang.YES);
         String no = locale.getString(GenericLang.NO);
 

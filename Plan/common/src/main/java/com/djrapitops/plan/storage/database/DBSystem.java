@@ -33,7 +33,7 @@ import java.util.Set;
  * @author Rsl1122
  */
 @Singleton
-public abstract class DBSystem implements SubSystem {
+public class DBSystem implements SubSystem {
 
     protected final Locale locale;
     private final SQLiteDB.Factory sqLiteFactory;
@@ -87,7 +87,7 @@ public abstract class DBSystem implements SubSystem {
     }
 
     @Override
-    public void enable() throws EnableException {
+    public void enable() {
         try {
             db.init();
             logger.info(locale.getString(PluginLang.ENABLED_DATABASE, db.getType().getName()));

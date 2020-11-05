@@ -31,20 +31,20 @@ public abstract class Setting<T> {
     protected final String path;
     private final Predicate<T> validator;
 
-    public Setting(String path, Class<T> type) {
+    protected Setting(String path, Class<T> type) {
         this(path, type, Setting::nullValidator);
     }
 
-    public Setting(String path, Class<T> type, Predicate<T> validator) {
+    protected Setting(String path, Class<T> type, Predicate<T> validator) {
         // null validator has to be called before the actual validator to avoid possible null errors.
         this(path, Type.ofClass(type), ((Predicate<T>) Setting::nullValidator).and(validator));
     }
 
-    public Setting(String path, Type<T> type) {
+    protected Setting(String path, Type<T> type) {
         this(path, type, Setting::nullValidator);
     }
 
-    public Setting(String path, Type<T> type, Predicate<T> validator) {
+    protected Setting(String path, Type<T> type, Predicate<T> validator) {
         this.path = path;
         this.validator = validator;
     }

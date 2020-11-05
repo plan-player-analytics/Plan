@@ -212,7 +212,7 @@ public class RegistrationCommands {
         }
 
         confirmation.confirm(sender, choice -> {
-            if (choice) {
+            if (Boolean.TRUE.equals(choice)) {
                 try {
                     sender.send(colors.getMainColor() + locale.getString(CommandLang.UNREGISTER, presentUser.getUsername()));
                     database.executeTransaction(new RemoveWebUserTransaction(username))

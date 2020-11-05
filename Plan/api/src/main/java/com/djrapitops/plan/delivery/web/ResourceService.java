@@ -103,7 +103,7 @@ public interface ResourceService {
     }
 
     class Holder {
-        volatile static AtomicReference<ResourceService> service = new AtomicReference<>();
+        static volatile AtomicReference<ResourceService> service = new AtomicReference<>();
 
         private Holder() {
             /* Static variable holder */

@@ -63,7 +63,7 @@ public class CommandWithSubcommands extends Subcommand {
                 .send();
     }
 
-    public void onInDepthHelp(CMDSender sender, Arguments arguments) {
+    public void onInDepthHelp(CMDSender sender) {
         List<Subcommand> hasPermissionFor = getPermittedSubcommands(sender);
         sender.buildMessage()
                 .addPart(locale.getString(CommandLang.HEADER_HELP, getPrimaryAlias()))
@@ -95,7 +95,7 @@ public class CommandWithSubcommands extends Subcommand {
                 onHelp(sender, arguments);
                 return;
             } else if ("?".equals(alias)) {
-                onInDepthHelp(sender, arguments);
+                onInDepthHelp(sender);
                 return;
             } else {
                 for (Subcommand subcommand : subcommands) {
@@ -193,9 +193,10 @@ public class CommandWithSubcommands extends Subcommand {
             return this;
         }
 
+        @Override
         public CommandWithSubcommands build() {
-            onCommand(command::onCommand);
-            onTabComplete(command::onTabComplete);
+            super.onCommand(command::onCommand);
+            super.onTabComplete(command::onTabComplete);
             super.build();
             if (command.fallback == null) fallback(command::onHelp);
             if (command.exceptionHandler == null) exceptionHandler((error, sender, arguments) -> {throw error;});

@@ -134,7 +134,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
                 system().getConfigSystem().getConfig(),
                 new Locale(),
                 system().getDatabaseSystem(),
-                new QuerySvc(system().getDatabaseSystem(), system().getServerInfo(), logger, null),
+                new QuerySvc(system().getDatabaseSystem(), system().getServerInfo(), null),
                 system().getServerInfo(),
                 logger,
                 null

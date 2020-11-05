@@ -32,6 +32,10 @@ public class ActiveCookieStore {
             .expireAfterWrite(2, TimeUnit.HOURS)
             .build();
 
+    private ActiveCookieStore() {
+        // Hide static cache constructor
+    }
+
     public static Optional<User> checkCookie(String cookie) {
         return Optional.ofNullable(USERS_BY_COOKIE.getIfPresent(cookie));
     }

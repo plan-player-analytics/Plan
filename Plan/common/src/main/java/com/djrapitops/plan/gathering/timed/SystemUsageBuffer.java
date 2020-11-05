@@ -107,7 +107,7 @@ public class SystemUsageBuffer {
         @Override
         public void run() {
             if (gatherDisk == null) gatherDisk = config.get(DataGatheringSettings.DISK_SPACE);
-            if (!gatherDisk) return;
+            if (Boolean.FALSE.equals(gatherDisk)) return;
             try {
                 buffer.freeDiskSpace = SystemUsage.getFreeDiskSpace();
             } catch (SecurityException noPermission) {

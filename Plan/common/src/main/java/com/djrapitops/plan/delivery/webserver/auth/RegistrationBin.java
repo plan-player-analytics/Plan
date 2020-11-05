@@ -38,6 +38,10 @@ public class RegistrationBin {
             .expireAfterAccess(15, TimeUnit.MINUTES)
             .build();
 
+    private RegistrationBin() {
+        // Hide static cache constructor
+    }
+
     public static String addInfoForRegistration(String username, String password) {
         String hash = PassEncryptUtil.createHash(password);
         String code = DigestUtils.sha256Hex(username + password + System.currentTimeMillis()).substring(0, 12);

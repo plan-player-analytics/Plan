@@ -89,7 +89,7 @@ public class PlanFiles implements SubSystem {
     }
 
     @Override
-    public void enable() throws EnableException {
+    public void enable() {
         ResourceCache.invalidateAll();
         ResourceCache.cleanUp();
         Verify.isTrue((dataFolder.exists() && dataFolder.isDirectory()) || dataFolder.mkdirs(),

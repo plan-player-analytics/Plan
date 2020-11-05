@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
  *
  * @author Rsl1122
  */
-public class BungeeSystemTest {
+class BungeeSystemTest {
 
     private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 

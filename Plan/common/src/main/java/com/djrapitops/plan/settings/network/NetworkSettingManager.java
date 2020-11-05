@@ -93,7 +93,7 @@ public class NetworkSettingManager implements SubSystem {
     }
 
     @Override
-    public void enable() throws EnableException {
+    public void enable() {
         serverSettingsFolder = createServerSettingsFolder();
 
         watcher = prepareFileWatcher();
@@ -119,9 +119,9 @@ public class NetworkSettingManager implements SubSystem {
     private FileWatcher prepareFileWatcher() {
         FileWatcher fileWatcher = new FileWatcher(serverSettingsFolder, errorLogger);
 
-        File[] files = getConfigFiles();
-        if (files != null) {
-            for (File file : files) {
+        File[] configFiles = getConfigFiles();
+        if (configFiles != null) {
+            for (File file : configFiles) {
                 addFileToWatchList(fileWatcher, file);
             }
         }
@@ -153,7 +153,7 @@ public class NetworkSettingManager implements SubSystem {
         }).runTaskTimerAsynchronously(checkPeriod, checkPeriod);
     }
 
-    private File createServerSettingsFolder() throws EnableException {
+    private File createServerSettingsFolder() {
         try {
             File serverConfigFolder = files.getFileFromPluginFolder("serverConfiguration");
             Files.createDirectories(serverConfigFolder.toPath());

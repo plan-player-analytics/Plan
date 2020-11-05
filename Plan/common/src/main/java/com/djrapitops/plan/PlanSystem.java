@@ -23,7 +23,6 @@ import com.djrapitops.plan.delivery.web.ResolverSvc;
 import com.djrapitops.plan.delivery.web.ResourceSvc;
 import com.djrapitops.plan.delivery.webserver.NonProxyWebserverDisableChecker;
 import com.djrapitops.plan.delivery.webserver.WebServerSystem;
-import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.extension.ExtensionService;
 import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.gathering.cache.CacheSystem;
@@ -150,7 +149,7 @@ public class PlanSystem implements SubSystem {
     }
 
     @Override
-    public void enable() throws EnableException {
+    public void enable() {
         extensionService.register();
         resolverService.register();
         resourceService.register();
@@ -184,7 +183,7 @@ public class PlanSystem implements SubSystem {
         enabled = true;
     }
 
-    private void enableSystems(SubSystem... systems) throws EnableException {
+    private void enableSystems(SubSystem... systems) {
         for (SubSystem system : systems) {
             logger.debug("Enabling: " + system.getClass().getSimpleName());
             timings.start("subsystem-enable");

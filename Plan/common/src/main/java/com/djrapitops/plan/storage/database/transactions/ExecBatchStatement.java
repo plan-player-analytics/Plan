@@ -26,7 +26,7 @@ import java.sql.SQLException;
  */
 public abstract class ExecBatchStatement extends ExecStatement {
 
-    public ExecBatchStatement(String sql) {
+    protected ExecBatchStatement(String sql) {
         super(sql);
     }
 

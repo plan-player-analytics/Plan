@@ -40,7 +40,7 @@ import static org.mockito.Mockito.*;
  * @author Rsl1122
  */
 @ExtendWith(MockitoExtension.class)
-public class NukkitAFKListenerTest {
+class NukkitAFKListenerTest {
 
     private static NukkitAFKListener underTest;
     private static ErrorLogger errorLogger;

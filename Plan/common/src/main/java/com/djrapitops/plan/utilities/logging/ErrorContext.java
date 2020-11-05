@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.utilities.logging;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -23,7 +24,7 @@ import java.util.*;
  *
  * @author Rsl1122
  */
-public class ErrorContext {
+public class ErrorContext implements Serializable {
 
     private final List<Object> related;
     private String whatToDo;

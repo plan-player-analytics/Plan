@@ -26,9 +26,7 @@ import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.settings.locale.lang.HelpLang;
-import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.DBType;
-import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.command.ColorScheme;
@@ -56,22 +54,18 @@ public class PlanCommand {
     private final DatabaseCommands databaseCommands;
     private final DataUtilityCommands dataUtilityCommands;
 
-    private final PlanFiles files;
     private final Locale locale;
     private final ImportSystem importSystem;
-    private final DBSystem dbSystem;
     private final ErrorLogger errorLogger;
 
     @Inject
     public PlanCommand(
             @Named("mainCommandName") String commandName,
-            PlanFiles files,
             Locale locale,
             ColorScheme colors,
             Confirmation confirmation,
             TabCompleteCache tabCompleteCache,
             ImportSystem importSystem,
-            DBSystem dbSystem,
             LinkCommands linkCommands,
             RegistrationCommands registrationCommands,
             PluginStatusCommands statusCommands,
@@ -80,13 +74,11 @@ public class PlanCommand {
             ErrorLogger errorLogger
     ) {
         this.commandName = commandName;
-        this.files = files;
         this.locale = locale;
         this.colors = colors;
         this.confirmation = confirmation;
         this.tabCompleteCache = tabCompleteCache;
         this.importSystem = importSystem;
-        this.dbSystem = dbSystem;
         this.linkCommands = linkCommands;
         this.registrationCommands = registrationCommands;
         this.statusCommands = statusCommands;

@@ -27,6 +27,7 @@ import com.djrapitops.plan.storage.file.PlanFiles;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -90,5 +91,20 @@ public class ServerFileLoader extends Config implements ServerLoader {
         } catch (IOException e) {
             throw new EnableException("Failed to write ServerInfoFile.yml: " + e.getMessage());
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        ServerFileLoader that = (ServerFileLoader) o;
+        return Objects.equals(files, that.files) &&
+                Objects.equals(config, that.config);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), files, config);
     }
 }

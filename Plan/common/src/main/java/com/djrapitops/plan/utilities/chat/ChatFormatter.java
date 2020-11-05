@@ -30,6 +30,10 @@ public class ChatFormatter {
     private static final int CENTER_PX = 154;
     private static final int MAX_PX = 260;
 
+    private ChatFormatter() {
+        // Hide utility class constructor
+    }
+
     public static String leftPad(String message, int spaces) {
         StringBuilder returnMessage = new StringBuilder();
 

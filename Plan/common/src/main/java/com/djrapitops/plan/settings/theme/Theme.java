@@ -70,7 +70,7 @@ public class Theme implements SubSystem {
     }
 
     @Override
-    public void enable() throws EnableException {
+    public void enable() {
         try {
             themeConfig = new ThemeConfig(files, config, logger);
             themeConfig.save();

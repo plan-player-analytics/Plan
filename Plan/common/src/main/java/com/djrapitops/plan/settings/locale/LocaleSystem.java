@@ -132,8 +132,8 @@ public class LocaleSystem implements SubSystem {
             if ("write-all".equalsIgnoreCase(setting)) {
                 for (LangCode code : LangCode.values()) {
                     if (code == LangCode.CUSTOM) continue;
-                    Locale locale = Locale.forLangCode(code, files);
-                    new LocaleFileWriter(locale).writeToFile(
+                    Locale writing = Locale.forLangCode(code, files);
+                    new LocaleFileWriter(writing).writeToFile(
                             files.getDataDirectory().resolve("locale_" + code.name() + ".txt").toFile()
                     );
                 }

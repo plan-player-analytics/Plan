@@ -71,7 +71,7 @@ public class Subcommand {
     }
 
     public BiFunction<CMDSender, Arguments, List<String>> getArgumentResolver() {
-        return argumentResolver != null ? argumentResolver : ((sender, arguments) -> Collections.emptyList());
+        return argumentResolver != null ? argumentResolver : ((sender, args) -> Collections.emptyList());
     }
 
     public String getArgumentsAsString() {

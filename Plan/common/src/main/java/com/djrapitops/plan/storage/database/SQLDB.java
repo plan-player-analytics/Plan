@@ -67,7 +67,7 @@ public abstract class SQLDB extends AbstractDatabase {
 
     private final boolean devMode;
 
-    public SQLDB(
+    protected SQLDB(
             Supplier<UUID> serverUUIDSupplier,
             Locale locale,
             PlanConfig config,

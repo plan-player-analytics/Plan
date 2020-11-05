@@ -16,6 +16,9 @@
  */
 package com.djrapitops.plan.delivery.rendering.html;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 import static com.djrapitops.plan.delivery.rendering.html.Contributors.For.CODE;
 import static com.djrapitops.plan.delivery.rendering.html.Contributors.For.LANG;
 
@@ -109,6 +112,22 @@ public class Contributors {
                 html.append(contribution.toHtml());
             }
             html.append("</li>");
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Contributor that = (Contributor) o;
+            return name.equals(that.name) &&
+                    Arrays.equals(contributed, that.contributed);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = Objects.hash(name);
+            result = 31 * result + Arrays.hashCode(contributed);
+            return result;
         }
 
         @Override

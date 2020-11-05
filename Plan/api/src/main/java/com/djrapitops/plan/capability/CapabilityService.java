@@ -65,8 +65,12 @@ public interface CapabilityService {
     }
 
     class ListHolder {
-        volatile static AtomicReference<List<Consumer<Boolean>>> ENABLE_LISTENERS = new AtomicReference<>(
+        static volatile AtomicReference<List<Consumer<Boolean>>> ENABLE_LISTENERS = new AtomicReference<>(
                 new CopyOnWriteArrayList<>()
         );
+
+        private ListHolder() {
+            // Hide constructor
+        }
     }
 }

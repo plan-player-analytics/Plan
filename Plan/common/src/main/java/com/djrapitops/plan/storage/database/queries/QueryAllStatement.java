@@ -26,11 +26,11 @@ import java.sql.SQLException;
  * @author Rsl1122
  */
 public abstract class QueryAllStatement<T> extends QueryStatement<T> {
-    public QueryAllStatement(String sql) {
+    protected QueryAllStatement(String sql) {
         super(sql);
     }
 
-    public QueryAllStatement(String sql, int fetchSize) {
+    protected QueryAllStatement(String sql, int fetchSize) {
         super(sql, fetchSize);
     }
 

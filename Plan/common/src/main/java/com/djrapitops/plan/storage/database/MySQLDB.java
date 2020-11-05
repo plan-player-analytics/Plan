@@ -127,7 +127,7 @@ public class MySQLDB extends SQLDB {
         Connection connection = dataSource.getConnection();
         if (!connection.isValid(5)) {
             connection.close();
-            if (dataSource != null) dataSource.close();
+            dataSource.close();
             try {
                 setupDataSource();
                 // get new connection after restarting pool

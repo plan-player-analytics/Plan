@@ -31,7 +31,7 @@ public abstract class AbstractDatabase implements Database {
     private State state;
     private final AtomicInteger heavyLoadDelayMs = new AtomicInteger(0);
 
-    public AbstractDatabase() {
+    protected AbstractDatabase() {
         state = State.CLOSED;
         accessLock = new DBAccessLock(this);
     }

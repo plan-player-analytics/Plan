@@ -58,7 +58,6 @@ public class DeathEventListener implements Listener {
         this.errorLogger = errorLogger;
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDeath(EntityDeathEvent event) {
         long time = System.currentTimeMillis();

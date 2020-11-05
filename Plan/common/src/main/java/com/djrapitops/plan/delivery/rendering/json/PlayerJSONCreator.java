@@ -268,9 +268,9 @@ public class PlayerJSONCreator {
     }
 
     public static class Nickname {
-        private final String nickname;
-        private final String server;
-        private final String date;
+        final String nickname;
+        final String server;
+        final String date;
 
         public Nickname(String nickname, String server, String date) {
             this.nickname = nickname;
@@ -297,8 +297,8 @@ public class PlayerJSONCreator {
     }
 
     public static class ConnectionInfo {
-        private final String geolocation;
-        private final String date;
+        final String geolocation;
+        final String date;
 
         public ConnectionInfo(String geolocation, String date) {
             this.geolocation = geolocation;

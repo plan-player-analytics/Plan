@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
  *
  * @author Rsl1122
  */
-public class VelocityPingCounterTest {
+class VelocityPingCounterTest {
 
     private PlanVelocity plugin;
     private Player player;

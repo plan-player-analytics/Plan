@@ -150,7 +150,7 @@ public interface QueryService {
     }
 
     class Holder {
-        volatile static AtomicReference<QueryService> service = new AtomicReference<>();
+        static volatile AtomicReference<QueryService> service = new AtomicReference<>();
 
         private Holder() {
             /* Static variable holder */

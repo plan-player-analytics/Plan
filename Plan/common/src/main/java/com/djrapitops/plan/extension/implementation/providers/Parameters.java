@@ -84,6 +84,7 @@ public interface Parameters {
             return serverUUID;
         }
 
+        @Override
         public UUID getPlayerUUID() {
             return playerUUID;
         }

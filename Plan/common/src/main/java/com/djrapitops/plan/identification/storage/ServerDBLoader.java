@@ -62,7 +62,7 @@ public class ServerDBLoader implements ServerLoader {
         try {
             dbSystem.getDatabase().executeTransaction(
                     new StoreServerInformationTransaction(server)
-            ).get(); // Wait until transaction has completed;
+            ).get(); // Wait until transaction has completed
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (ExecutionException e) {

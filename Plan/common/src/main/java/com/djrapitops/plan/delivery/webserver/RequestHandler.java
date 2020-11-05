@@ -116,7 +116,7 @@ public class RequestHandler implements HttpHandler {
 
     public Response getResponse(HttpExchange exchange) {
         if (ipWhitelist == null) {
-            ipWhitelist = config.get(WebserverSettings.IP_WHITELIST)
+            ipWhitelist = config.isTrue(WebserverSettings.IP_WHITELIST)
                     ? config.get(WebserverSettings.WHITELIST)
                     : Collections.emptyList();
         }

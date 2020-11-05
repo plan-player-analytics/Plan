@@ -89,7 +89,7 @@ public interface ResolverService {
     List<Resolver> getResolvers(String target);
 
     class Holder {
-        volatile static AtomicReference<ResolverService> service = new AtomicReference<>();
+        static volatile AtomicReference<ResolverService> service = new AtomicReference<>();
 
         private Holder() {
             /* Static variable holder */

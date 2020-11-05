@@ -105,7 +105,7 @@ public class WebServer implements SubSystem {
             } else {
                 logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_PORT_BIND, port));
             }
-        } else if (config.get(WebserverSettings.IP_WHITELIST)) {
+        } else if (config.isTrue(WebserverSettings.IP_WHITELIST)) {
             logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_IP_WHITELIST));
         }
 

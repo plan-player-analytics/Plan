@@ -40,6 +40,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test to check that configs contain all values required to run the plugin.
+ * <p>
+ * TODO Move public utility methods to an utility to make this class package private
  *
  * @author Rsl1122
  */

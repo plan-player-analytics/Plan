@@ -26,7 +26,6 @@ import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -43,7 +42,6 @@ public class QuerySvc implements QueryService {
 
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
-    private final PluginLogger logger;
     private final ErrorLogger errorLogger;
 
     private final Set<Consumer<UUID>> playerRemoveSubscribers;
@@ -53,12 +51,10 @@ public class QuerySvc implements QueryService {
     public QuerySvc(
             DBSystem dbSystem,
             ServerInfo serverInfo,
-            PluginLogger logger,
             ErrorLogger errorLogger
     ) {
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
-        this.logger = logger;
         this.errorLogger = errorLogger;
 
         playerRemoveSubscribers = new HashSet<>();

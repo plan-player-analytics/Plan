@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.commands.subcommands;
 
-import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
@@ -75,11 +74,11 @@ public class Confirmation {
         }
     }
 
-    public void onAcceptCommand(CMDSender sender, Arguments arguments) {
+    public void onAcceptCommand(CMDSender sender) {
         onConfirm(sender);
     }
 
-    public void onCancelCommand(CMDSender sender, Arguments arguments) {
+    public void onCancelCommand(CMDSender sender) {
         onCancel(sender);
     }
 }

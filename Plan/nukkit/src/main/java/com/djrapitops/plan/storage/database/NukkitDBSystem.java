@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.storage.database;
 
-import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -53,7 +52,7 @@ public class NukkitDBSystem extends DBSystem {
     }
 
     @Override
-    public void enable() throws EnableException {
+    public void enable() {
         String dbType = config.get(DatabaseSettings.TYPE).toLowerCase().trim();
         db = getActiveDatabaseByName(dbType);
         super.enable();

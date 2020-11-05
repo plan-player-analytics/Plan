@@ -92,6 +92,7 @@ class TranslatedString {
             this.translating = translating;
         }
 
+        @Override
         public void translate(String replace, String with) {
             translating = StringUtils.replace(translating, replace, with);
         }

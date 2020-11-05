@@ -24,7 +24,6 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -45,7 +44,6 @@ public class ExportScheduler {
     private final TaskSystem taskSystem;
 
     private final Exporter exporter;
-    private final PluginLogger logger;
     private final ErrorLogger errorLogger;
 
     @Inject
@@ -54,14 +52,12 @@ public class ExportScheduler {
             DBSystem dbSystem,
             TaskSystem taskSystem,
             Exporter exporter,
-            PluginLogger logger,
             ErrorLogger errorLogger
     ) {
         this.config = config;
         this.dbSystem = dbSystem;
         this.taskSystem = taskSystem;
         this.exporter = exporter;
-        this.logger = logger;
         this.errorLogger = errorLogger;
     }
 
@@ -89,7 +85,7 @@ public class ExportScheduler {
 
         Optional<Server> proxy = servers.stream().filter(Server::isProxy).findFirst();
         proxy.ifPresent(mainServer -> taskSystem.registerTask("Network export",
-                new ExportTask(exporter, exporter -> exporter.exportServerPage(mainServer), errorLogger))
+                new ExportTask(exporter, same -> same.exportServerPage(mainServer), errorLogger))
                 .runTaskTimerAsynchronously(0L, period)
         );
 

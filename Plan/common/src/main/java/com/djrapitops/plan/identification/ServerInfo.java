@@ -35,7 +35,7 @@ public abstract class ServerInfo implements SubSystem {
     protected Server server;
     protected final ServerProperties serverProperties;
 
-    public ServerInfo(ServerProperties serverProperties) {
+    protected ServerInfo(ServerProperties serverProperties) {
         this.serverProperties = serverProperties;
     }
 

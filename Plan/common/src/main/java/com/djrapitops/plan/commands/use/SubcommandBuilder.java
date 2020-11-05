@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 public interface SubcommandBuilder {
 
@@ -48,6 +49,10 @@ public interface SubcommandBuilder {
     SubcommandBuilder optionalArgument(String name, String description);
 
     SubcommandBuilder onCommand(BiConsumer<CMDSender, Arguments> executor);
+
+    default SubcommandBuilder onCommand(Consumer<CMDSender> executor) {
+        return onCommand((sender, arguments) -> executor.accept(sender));
+    }
 
     SubcommandBuilder onTabComplete(BiFunction<CMDSender, Arguments, List<String>> resolver);
 

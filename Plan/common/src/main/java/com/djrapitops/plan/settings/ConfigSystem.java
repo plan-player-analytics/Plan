@@ -49,7 +49,7 @@ public abstract class ConfigSystem implements SubSystem {
     protected final PluginLogger logger;
     protected final ErrorLogger errorLogger;
 
-    public ConfigSystem(
+    protected ConfigSystem(
             PlanFiles files,
             PlanConfig config,
             Theme theme,
@@ -72,7 +72,7 @@ public abstract class ConfigSystem implements SubSystem {
     }
 
     @Override
-    public void enable() throws EnableException {
+    public void enable() {
         try {
             copyDefaults();
             config.reorder(Arrays.asList(

@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.settings;
 
-import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.config.ConfigReader;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
@@ -59,7 +58,7 @@ public class ProxyConfigSystem extends ConfigSystem {
     }
 
     @Override
-    public void enable() throws EnableException {
+    public void enable() {
         super.enable();
         networkSettingManager.enable();
     }
