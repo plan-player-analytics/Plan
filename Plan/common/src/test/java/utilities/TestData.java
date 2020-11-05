@@ -37,27 +37,27 @@ public class TestData {
         /* Utility class */
     }
 
-    private static UUID playerUUID = TestConstants.PLAYER_ONE_UUID;
-    private static UUID player2UUID = TestConstants.PLAYER_TWO_UUID;
-    private static UUID serverUUID = TestConstants.SERVER_UUID;
-    private static UUID server2UUID = TestConstants.SERVER_TWO_UUID;
-    private static String playerName = TestConstants.PLAYER_ONE_NAME;
-    private static String player2Name = TestConstants.PLAYER_TWO_NAME;
+    private static final UUID playerUUID = TestConstants.PLAYER_ONE_UUID;
+    private static final UUID player2UUID = TestConstants.PLAYER_TWO_UUID;
+    private static final UUID serverUUID = TestConstants.SERVER_UUID;
+    private static final UUID server2UUID = TestConstants.SERVER_TWO_UUID;
+    private static final String playerName = TestConstants.PLAYER_ONE_NAME;
+    private static final String player2Name = TestConstants.PLAYER_TWO_NAME;
 
-    private static String[] serverWorldNames = new String[]{
+    private static final String[] serverWorldNames = new String[]{
             TestConstants.WORLD_ONE_NAME, "World Two", "world"
     };
-    private static String[] server2WorldNames = new String[]{
+    private static final String[] server2WorldNames = new String[]{
             "Foo", "Bar", "Z"
     };
 
-    private static long playerFirstJoin = 1234500L;
-    private static long playerSecondJoin = 234000L;
+    private static final long playerFirstJoin = 1234500L;
+    private static final long playerSecondJoin = 234000L;
 
-    private static List<Session> playerSessions = createSessionsForPlayer(playerUUID);
-    private static List<Session> player2Sessions = createSessionsForPlayer(player2UUID);
+    private static final List<Session> playerSessions = createSessionsForPlayer(playerUUID);
+    private static final List<Session> player2Sessions = createSessionsForPlayer(player2UUID);
 
-    private static List<GeoInfo> playerGeoInfo = createGeoInfoForPlayer();
+    private static final List<GeoInfo> playerGeoInfo = createGeoInfoForPlayer();
 
     private static List<GeoInfo> createGeoInfoForPlayer() {
         List<GeoInfo> geoInfos = new ArrayList<>();
@@ -96,8 +96,8 @@ public class TestData {
         return new Transaction() {
             @Override
             protected void performOperations() {
-                executeOther(new StoreServerInformationTransaction(new Server(-1, serverUUID, "Server 1", "", 20)));
-                executeOther(new StoreServerInformationTransaction(new Server(-1, server2UUID, "Server 2", "", 50)));
+                executeOther(new StoreServerInformationTransaction(new Server(serverUUID, "Server 1", "")));
+                executeOther(new StoreServerInformationTransaction(new Server(server2UUID, "Server 2", "")));
 
                 for (String worldName : serverWorldNames) {
                     executeOther(new WorldNameStoreTransaction(serverUUID, worldName));

@@ -36,7 +36,7 @@ public class Version10Patch extends Patch {
     @Override
     protected void applyPatch() {
         Optional<Server> server = query(ServerQueries.fetchServerMatchingIdentifier(getServerUUID()));
-        serverID = server.map(Server::getId)
+        serverID = server.flatMap(Server::getId)
                 .orElseThrow(() -> new IllegalStateException("Server UUID was not registered, try rebooting the plugin."));
 
         alterTablesToV10();

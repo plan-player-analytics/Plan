@@ -65,8 +65,7 @@ public class ServerQueries {
                             set.getInt(ServerTable.SERVER_ID),
                             serverUUID,
                             set.getString(ServerTable.NAME),
-                            set.getString(ServerTable.WEB_ADDRESS),
-                            set.getInt(ServerTable.MAX_PLAYERS)));
+                            set.getString(ServerTable.WEB_ADDRESS)));
                 }
                 return servers;
             }
@@ -107,8 +106,7 @@ public class ServerQueries {
                             set.getInt(ServerTable.SERVER_ID),
                             UUID.fromString(set.getString(ServerTable.SERVER_UUID)),
                             set.getString(ServerTable.NAME),
-                            set.getString(ServerTable.WEB_ADDRESS),
-                            set.getInt(ServerTable.MAX_PLAYERS)
+                            set.getString(ServerTable.WEB_ADDRESS)
                     ));
                 }
                 return Optional.empty();
@@ -167,8 +165,7 @@ public class ServerQueries {
                             set.getInt(ServerTable.SERVER_ID),
                             UUID.fromString(set.getString(ServerTable.SERVER_UUID)),
                             set.getString(ServerTable.NAME),
-                            set.getString(ServerTable.WEB_ADDRESS),
-                            set.getInt(ServerTable.MAX_PLAYERS)
+                            set.getString(ServerTable.WEB_ADDRESS)
                     ));
                 }
                 return matches;

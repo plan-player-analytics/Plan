@@ -77,7 +77,7 @@ public class TabCompleteCache implements SubSystem {
         for (Map.Entry<UUID, Server> server : serverNames.entrySet()) {
             serverIdentifiers.add(server.getKey().toString());
             serverIdentifiers.add(server.getValue().getIdentifiableName());
-            serverIdentifiers.add(Integer.toString(server.getValue().getId()));
+            server.getValue().getId().ifPresent(id -> serverIdentifiers.add(Integer.toString(id)));
         }
     }
 

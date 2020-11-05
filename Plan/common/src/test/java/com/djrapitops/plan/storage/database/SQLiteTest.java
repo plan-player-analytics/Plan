@@ -91,7 +91,7 @@ public class SQLiteTest implements DatabaseTest,
         db().executeTransaction(new CreateTablesTransaction());
         db().executeTransaction(new RemoveEverythingTransaction());
 
-        db().executeTransaction(new StoreServerInformationTransaction(new Server(-1, serverUUID(), "ServerName", "", 20)));
+        db().executeTransaction(new StoreServerInformationTransaction(new Server(serverUUID(), "ServerName", "")));
         assertEquals(serverUUID(), ((SQLDB) db()).getServerUUIDSupplier().get());
     }
 

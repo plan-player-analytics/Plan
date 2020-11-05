@@ -109,7 +109,7 @@ class ShutdownSaveTest {
         UUID playerUUID = TestConstants.PLAYER_ONE_UUID;
         String worldName = TestConstants.WORLD_ONE_NAME;
 
-        database.executeTransaction(new StoreServerInformationTransaction(new Server(-1, serverUUID, "-", "", 0)));
+        database.executeTransaction(new StoreServerInformationTransaction(new Server(serverUUID, "-", "")));
         database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 0L, TestConstants.PLAYER_ONE_NAME));
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, worldName))
                 .get();
