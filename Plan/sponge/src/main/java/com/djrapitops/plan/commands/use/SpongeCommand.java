@@ -108,7 +108,7 @@ public class SpongeCommand implements CommandCallable {
 
     @Override
     public Optional<Text> getHelp(CommandSource source) {
-        return Optional.of(Text.of(command.getDescription()));
+        return Optional.ofNullable(command.getDescription()).map(Text::of);
     }
 
     @Override
