@@ -18,6 +18,7 @@ package com.djrapitops.plan.capability;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 /**
@@ -49,7 +50,7 @@ public interface CapabilityService {
      * @param isEnabledListener The boolean given to the method tells if Plan has enabled successfully.
      */
     default void registerEnableListener(Consumer<Boolean> isEnabledListener) {
-        ListHolder.ENABLE_LISTENERS.add(isEnabledListener);
+        ListHolder.ENABLE_LISTENERS.get().add(isEnabledListener);
     }
 
     /**
@@ -64,6 +65,8 @@ public interface CapabilityService {
     }
 
     class ListHolder {
-        volatile static List<Consumer<Boolean>> ENABLE_LISTENERS = new CopyOnWriteArrayList<>();
+        volatile static AtomicReference<List<Consumer<Boolean>>> ENABLE_LISTENERS = new AtomicReference<>(
+                new CopyOnWriteArrayList<>()
+        );
     }
 }

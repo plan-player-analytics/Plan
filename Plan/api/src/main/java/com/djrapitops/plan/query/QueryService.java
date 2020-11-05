@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 /**
@@ -40,7 +41,7 @@ public interface QueryService {
      * @throws IllegalStateException If Plan is installed, but not enabled.
      */
     static QueryService getInstance() {
-        return Optional.ofNullable(Holder.service)
+        return Optional.ofNullable(Holder.service.get())
                 .orElseThrow(() -> new IllegalStateException("QueryService has not been initialised yet."));
     }
 
@@ -149,14 +150,14 @@ public interface QueryService {
     }
 
     class Holder {
-        volatile static QueryService service;
+        volatile static AtomicReference<QueryService> service = new AtomicReference<>();
 
         private Holder() {
             /* Static variable holder */
         }
 
         static void set(QueryService service) {
-            Holder.service = service;
+            Holder.service.set(service);
         }
     }
 

@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.web.resolver.Resolver;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
 /**
@@ -34,7 +35,7 @@ import java.util.regex.Pattern;
 public interface ResolverService {
 
     static ResolverService getInstance() {
-        return Optional.ofNullable(ResolverService.Holder.service)
+        return Optional.ofNullable(ResolverService.Holder.service.get())
                 .orElseThrow(() -> new IllegalStateException("ResolverService has not been initialised yet."));
     }
 
@@ -88,14 +89,14 @@ public interface ResolverService {
     List<Resolver> getResolvers(String target);
 
     class Holder {
-        volatile static ResolverService service;
+        volatile static AtomicReference<ResolverService> service = new AtomicReference<>();
 
         private Holder() {
             /* Static variable holder */
         }
 
         static void set(ResolverService service) {
-            ResolverService.Holder.service = service;
+            ResolverService.Holder.service.set(service);
         }
     }
 }

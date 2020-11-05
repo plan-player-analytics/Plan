@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 public class CapabilitySvc implements CapabilityService {
 
     public static void notifyAboutEnable(boolean isEnabled) {
-        for (Consumer<Boolean> enableListener : CapabilityService.ListHolder.ENABLE_LISTENERS) {
+        for (Consumer<Boolean> enableListener : CapabilityService.ListHolder.ENABLE_LISTENERS.get()) {
             enableListener.accept(isEnabled);
         }
     }
