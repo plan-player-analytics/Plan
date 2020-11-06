@@ -49,7 +49,7 @@ class BukkitPartBuilder implements MessageBuilder {
         BukkitPartBuilder nextPart = new BukkitPartBuilder(this);
         try {
             nextPart.part.appendLegacy(text);
-        } catch (NoSuchMethodError oldVersion_1_8) {
+        } catch (NoSuchMethodError oldVersion) { // not supported in 1.8
             nextPart.part.append(ChatColor.translateAlternateColorCodes('§', text));
         }
         return nextPart;
@@ -113,7 +113,7 @@ class BukkitPartBuilder implements MessageBuilder {
         } else if (previous != null) {
             try {
                 previous.part.append(part.create());
-            } catch (NoSuchMethodError oldVersion_1_8) {
+            } catch (NoSuchMethodError oldVersion) { // not supported in 1.8
                 sendOld();
                 return;
             }
