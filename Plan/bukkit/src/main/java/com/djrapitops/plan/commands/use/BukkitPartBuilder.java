@@ -22,6 +22,8 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.apache.commons.text.TextStringBuilder;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -133,6 +135,11 @@ class BukkitPartBuilder implements MessageBuilder {
         }
 
         // CommandSender#spigot#sendMessage(BaseComponent[]) is not supported on 1.8
-        current.sender.sender.sendMessage(BaseComponent.toLegacyText(components.toArray(new BaseComponent[0])));
+        CommandSender commandSender = current.sender.sender;
+        if (commandSender instanceof Player) {
+            ((Player) commandSender).spigot().sendMessage(components.toArray(new BaseComponent[0]));
+        } else {
+            commandSender.sendMessage(BaseComponent.toLegacyText(components.toArray(new BaseComponent[0])));
+        }
     }
 }
