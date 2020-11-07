@@ -16,15 +16,18 @@
  */
 package com.djrapitops.plan.modules;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.settings.config.ExtensionSettings;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.LocaleSystem;
+import com.djrapitops.plan.storage.file.JarResource;
 import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
+import java.io.File;
 import java.util.function.Predicate;
 
 /**
@@ -52,6 +55,19 @@ public class SystemObjectProvidingModule {
     @Named("isExtensionEnabled")
     Predicate<String> provideExtensionEnabledConfigCheck(PlanConfig config) {
         return config.getExtensionSettings()::isEnabled;
+    }
+
+    @Provides
+    @Singleton
+    JarResource.StreamFunction provideJarStreamFunction(PlanPlugin plugin) {
+        return plugin::getResource;
+    }
+
+    @Provides
+    @Singleton
+    @Named("dataFolder")
+    File provideDataFolder(PlanPlugin plugin) {
+        return plugin.getDataFolder();
     }
 
 }

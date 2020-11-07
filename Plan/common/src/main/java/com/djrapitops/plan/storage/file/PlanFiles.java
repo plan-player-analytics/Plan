@@ -16,12 +16,12 @@
  */
 package com.djrapitops.plan.storage.file;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
@@ -38,15 +38,18 @@ import java.util.Optional;
 @Singleton
 public class PlanFiles implements SubSystem {
 
-    protected final PlanPlugin plugin;
+    protected final JarResource.StreamFunction getResourceStream;
 
     private final File dataFolder;
     private final File configFile;
 
     @Inject
-    public PlanFiles(PlanPlugin plugin) {
-        this.dataFolder = plugin.getDataFolder();
-        this.plugin = plugin;
+    public PlanFiles(
+            @Named("dataFolder") File dataFolder,
+            JarResource.StreamFunction getResourceStream
+    ) {
+        this.dataFolder = dataFolder;
+        this.getResourceStream = getResourceStream;
         this.configFile = getFileFromPluginFolder("config.yml");
     }
 
@@ -114,7 +117,7 @@ public class PlanFiles implements SubSystem {
      * @return a {@link Resource} for accessing the resource.
      */
     public Resource getResourceFromJar(String resourceName) {
-        return new JarResource("assets/plan/" + resourceName, () -> plugin.getResource("assets/plan/" + resourceName));
+        return new JarResource("assets/plan/" + resourceName, getResourceStream);
     }
 
     /**

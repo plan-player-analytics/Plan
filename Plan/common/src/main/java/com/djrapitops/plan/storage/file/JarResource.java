@@ -41,6 +41,10 @@ public class JarResource implements Resource {
         this.streamSupplier = streamSupplier;
     }
 
+    public JarResource(String resourceName, StreamFunction streamFunction) {
+        this(resourceName, () -> streamFunction.get(resourceName));
+    }
+
     @Override
     public InputStream asInputStream() throws IOException {
         InputStream stream = streamSupplier.get();
@@ -96,7 +100,11 @@ public class JarResource implements Resource {
         return resourceName;
     }
 
-    interface StreamSupplier {
+    public interface StreamSupplier {
         InputStream get() throws IOException;
+    }
+
+    public interface StreamFunction {
+        InputStream get(String value) throws IOException;
     }
 }
