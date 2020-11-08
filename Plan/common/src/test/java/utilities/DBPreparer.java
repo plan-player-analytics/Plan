@@ -34,11 +34,15 @@ import java.util.Optional;
 
 public class DBPreparer {
 
-    private final PlanSystem system;
+    private final Dependencies dependencies;
     private final int testPortNumber;
 
     public DBPreparer(PlanSystem system, int testPortNumber) {
-        this.system = system;
+        this(new PlanSystemAsDependencies(system), testPortNumber);
+    }
+
+    public DBPreparer(Dependencies dependencies, int testPortNumber) {
+        this.dependencies = dependencies;
         this.testPortNumber = testPortNumber;
     }
 
@@ -53,12 +57,12 @@ public class DBPreparer {
     }
 
     private SQLDB prepareDBByName(String dbName) throws EnableException {
-        PlanConfig config = system.getConfigSystem().getConfig();
+        PlanConfig config = dependencies.config();
         config.set(WebserverSettings.PORT, testPortNumber);
         config.set(DatabaseSettings.TYPE, dbName);
-        system.enable();
 
-        DBSystem dbSystem = system.getDatabaseSystem();
+        DBSystem dbSystem = dependencies.dbSystem();
+        dbSystem.enable();
         SQLDB db = (SQLDB) dbSystem.getActiveDatabaseByName(dbName);
         db.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
         db.init();
@@ -91,7 +95,7 @@ public class DBPreparer {
     }
 
     public Optional<Database> prepareMySQL() throws EnableException {
-        PlanConfig config = system.getConfigSystem().getConfig();
+        PlanConfig config = dependencies.config();
         Optional<String> formattedDB = setUpMySQLSettings(config);
         if (formattedDB.isPresent()) {
             String formattedDatabase = formattedDB.get();
@@ -107,5 +111,30 @@ public class DBPreparer {
             return Optional.of(mysql);
         }
         return Optional.empty();
+    }
+
+    public interface Dependencies {
+        PlanConfig config();
+
+        DBSystem dbSystem();
+    }
+
+    @Deprecated
+    static class PlanSystemAsDependencies implements Dependencies {
+        private final PlanSystem system;
+
+        PlanSystemAsDependencies(PlanSystem system) {
+            this.system = system;
+        }
+
+        @Override
+        public PlanConfig config() {
+            return system.getConfigSystem().getConfig();
+        }
+
+        @Override
+        public DBSystem dbSystem() {
+            return system.getDatabaseSystem();
+        }
     }
 }

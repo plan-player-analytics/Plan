@@ -37,7 +37,11 @@ public class BukkitCommand implements CommandExecutor, TabCompleter {
     private final ErrorLogger errorLogger;
     private final Subcommand command;
 
-    public BukkitCommand(RunnableFactory runnableFactory, ErrorLogger errorLogger, Subcommand command) {
+    public BukkitCommand(
+            RunnableFactory runnableFactory,
+            ErrorLogger errorLogger,
+            Subcommand command
+    ) {
         this.runnableFactory = runnableFactory;
         this.errorLogger = errorLogger;
         this.command = command;

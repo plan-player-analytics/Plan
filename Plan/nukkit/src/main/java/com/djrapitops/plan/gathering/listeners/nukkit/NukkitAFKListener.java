@@ -50,7 +50,10 @@ public class NukkitAFKListener implements Listener {
     private final ErrorLogger errorLogger;
 
     @Inject
-    public NukkitAFKListener(PlanConfig config, ErrorLogger errorLogger) {
+    public NukkitAFKListener(
+            PlanConfig config,
+            ErrorLogger errorLogger
+    ) {
         this.errorLogger = errorLogger;
         this.ignorePermissionInfo = new HashMap<>();
 

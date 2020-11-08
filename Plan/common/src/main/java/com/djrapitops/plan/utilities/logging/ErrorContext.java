@@ -81,4 +81,12 @@ public class ErrorContext implements Serializable {
             return context;
         }
     }
+
+    @Override
+    public String toString() {
+        return "ErrorContext{" +
+                "related=" + related +
+                ", whatToDo='" + whatToDo + '\'' +
+                '}';
+    }
 }

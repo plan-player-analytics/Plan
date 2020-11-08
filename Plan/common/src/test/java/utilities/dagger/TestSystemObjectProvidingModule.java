@@ -14,31 +14,27 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.modules;
+package utilities.dagger;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.settings.config.ExtensionSettings;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.LocaleSystem;
 import com.djrapitops.plan.storage.file.JarResource;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plan.utilities.logging.PluginErrorLogger;
 import dagger.Module;
 import dagger.Provides;
+import utilities.TestResources;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.File;
+import java.io.FileInputStream;
+import java.nio.file.Path;
 import java.util.function.Predicate;
 
-/**
- * Module for binding object instances found inside other systems.
- *
- * @author Rsl1122
- */
 @Module
-public class SystemObjectProvidingModule {
+public class TestSystemObjectProvidingModule {
 
     @Provides
     @Singleton
@@ -61,21 +57,26 @@ public class SystemObjectProvidingModule {
 
     @Provides
     @Singleton
-    JarResource.StreamFunction provideJarStreamFunction(PlanPlugin plugin) {
-        return plugin::getResource;
+    JarResource.StreamFunction provideJarStreamFunction(@Named("tempDir") Path tempDir) {
+        return resource -> {
+            File copyTo = tempDir.resolve(resource).toFile();
+            TestResources.copyResourceIntoFile(copyTo, "/" + resource);
+            return new FileInputStream(copyTo);
+        };
     }
 
     @Provides
     @Singleton
     @Named("dataFolder")
-    File provideDataFolder(PlanPlugin plugin) {
-        return plugin.getDataFolder();
+    File provideDataFolder(@Named("tempDir") Path tempDir) {
+        return tempDir.toFile();
     }
 
     @Provides
     @Singleton
-    ErrorLogger provideErrorLogger(PluginErrorLogger errorLogger) {
-        return errorLogger;
+    ErrorLogger provideErrorLogger() {
+        return (level, throwable, context) -> {
+            throw new AssertionError("Test had an Exception: " + level.name() + " " + throwable.toString() + " " + context, throwable);
+        };
     }
-
 }

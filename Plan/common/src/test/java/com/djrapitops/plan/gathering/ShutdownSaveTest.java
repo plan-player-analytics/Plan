@@ -66,12 +66,14 @@ class ShutdownSaveTest {
 
     @BeforeEach
     void setupShutdownSaveObject(@TempDir Path temporaryFolder) throws Exception {
-        PlanPluginComponent pluginComponent = DaggerPlanPluginComponent.builder().plan(
-                PlanPluginMocker.setUp()
-                        .withDataFolder(temporaryFolder.resolve("ShutdownSaveTest").toFile())
-                        .withLogging()
-                        .getPlanMock()
-        ).build();
+        PlanPluginComponent pluginComponent = DaggerPlanPluginComponent.builder()
+                .bindTemporaryDirectory(temporaryFolder)
+                .plan(
+                        PlanPluginMocker.setUp()
+                                .withDataFolder(temporaryFolder.resolve("ShutdownSaveTest").toFile())
+                                .withLogging()
+                                .getPlanMock()
+                ).build();
         PlanSystem system = pluginComponent.system();
 
         database = system.getDatabaseSystem().getSqLiteFactory().usingFileCalled("test");

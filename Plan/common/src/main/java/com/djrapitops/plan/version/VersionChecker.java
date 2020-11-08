@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.version;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
@@ -29,6 +28,7 @@ import com.djrapitops.plugin.api.utility.Version;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -49,8 +49,8 @@ public class VersionChecker implements SubSystem {
     private final Locale locale;
     private final PlanConfig config;
     private final PluginLogger logger;
+    private final RunnableFactory runnableFactory;
     private final ErrorLogger errorLogger;
-    private final PlanPlugin plugin;
 
     private VersionInfo newVersionAvailable;
 
@@ -60,15 +60,15 @@ public class VersionChecker implements SubSystem {
             Locale locale,
             PlanConfig config,
             PluginLogger logger,
-            ErrorLogger errorLogger,
-            PlanPlugin plugin
+            RunnableFactory runnableFactory,
+            ErrorLogger errorLogger
     ) {
         this.currentVersion = currentVersion;
         this.locale = locale;
         this.config = config;
         this.logger = logger;
+        this.runnableFactory = runnableFactory;
         this.errorLogger = errorLogger;
-        this.plugin = plugin;
     }
 
     public boolean isNewVersionAvailable() {
@@ -108,7 +108,7 @@ public class VersionChecker implements SubSystem {
         if (config.isFalse(PluginSettings.CHECK_FOR_UPDATES)) {
             return;
         }
-        plugin.getRunnableFactory().create("VersionChecker", new AbsRunnable() {
+        runnableFactory.create("VersionChecker", new AbsRunnable() {
             @Override
             public void run() {
                 checkForUpdates();

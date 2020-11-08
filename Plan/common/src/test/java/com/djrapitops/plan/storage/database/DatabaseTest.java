@@ -131,11 +131,11 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
         TestPluginLogger logger = new TestPluginLogger();
         new DBCleanTask(
-                system().getConfigSystem().getConfig(),
+                config(),
                 new Locale(),
-                system().getDatabaseSystem(),
-                new QuerySvc(system().getDatabaseSystem(), system().getServerInfo(), null),
-                system().getServerInfo(),
+                dbSystem(),
+                new QuerySvc(dbSystem(), serverInfo(), null),
+                serverInfo(),
                 logger,
                 null
         ).cleanOldPlayers(db());
@@ -173,7 +173,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void configIsStoredInTheDatabase() {
-        PlanConfig config = system().getConfigSystem().getConfig();
+        PlanConfig config = config();
 
         db().executeTransaction(new StoreConfigTransaction(serverUUID(), config, System.currentTimeMillis()));
 
@@ -187,7 +187,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         configIsStoredInTheDatabase();
         long savedMs = System.currentTimeMillis();
 
-        PlanConfig config = system().getConfigSystem().getConfig();
+        PlanConfig config = config();
 
         db().executeTransaction(new StoreConfigTransaction(serverUUID(), config, System.currentTimeMillis()));
 
@@ -256,7 +256,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         String testSQL = SELECT + sql.dateToDayStamp(sql.epochSecondToDate(Long.toString((time + offset) / 1000))) + " as date";
 
         System.out.println(testSQL);
-        String expected = system().getDeliveryUtilities().getFormatters().iso8601NoClockLong().apply(time);
+        String expected = deliveryUtilities().getFormatters().iso8601NoClockLong().apply(time);
         String result = db.query(new QueryAllStatement<String>(testSQL) {
             @Override
             public String processResults(ResultSet set) throws SQLException {

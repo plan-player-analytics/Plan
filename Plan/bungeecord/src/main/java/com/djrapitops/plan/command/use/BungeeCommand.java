@@ -41,8 +41,8 @@ public class BungeeCommand extends Command implements TabExecutor {
 
     public BungeeCommand(
             RunnableFactory runnableFactory,
-            ErrorLogger errorLogger, Subcommand command,
-            String name
+            ErrorLogger errorLogger,
+            Subcommand command, String name
     ) {
         super(name);
         this.runnableFactory = runnableFactory;

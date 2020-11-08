@@ -49,7 +49,7 @@ class ErrorLoggerTest {
         PluginMockComponent component = new PluginMockComponent(dir);
         SYSTEM = component.getPlanSystem();
         SYSTEM.enable();
-        UNDER_TEST = SYSTEM.getErrorLogger();
+        UNDER_TEST = component.getPluginErrorLogger();
         LOGS_DIR = SYSTEM.getPlanFiles().getLogsDirectory();
     }
 
