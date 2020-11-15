@@ -2,14 +2,14 @@ API - css+                                      || PageExtension: ${0} added sty
 API - js+                                       || PageExtension: ${0} added javascript(s) to ${1}, ${2}
 Cmd - Click Me                                  || ここをクリック
 Cmd - Link                                      || リンク
-Cmd - Link Network                              || Network page: 
-Cmd - Link Player                               || Player page: 
-Cmd - Link Player JSON                          || Player json: 
-Cmd - Link Players                              || Players page: 
-Cmd - Link Register                             || Register page: 
-Cmd - Link Server                               || Server page: 
-CMD Arg - backup-file                           || Name of the backup file (case sensitive)
-CMD Arg - code                                  || Code used to finalize registration.
+Cmd - Link Network                              || ネットワークページ: 
+Cmd - Link Player                               || プレイヤーページ: 
+Cmd - Link Player JSON                          || プレイヤーのjson: 
+Cmd - Link Players                              || プレイヤーページ: 
+Cmd - Link Register                             || 登録ページ: 
+Cmd - Link Server                               || サーバーページ: 
+CMD Arg - backup-file                           || バックアップファイル名 (大文字と小文字は区別されます)
+CMD Arg - code                                  || このコードは登録を確定させるために必要です
 CMD Arg - db type backup                        || Type of the database to backup. Current database is used if not specified.
 CMD Arg - db type clear                         || Type of the database to remove all data from.
 CMD Arg - db type hotswap                       || Type of the database to start using.
@@ -55,12 +55,12 @@ Cmd FAIL - Empty search string                  || The search string can not be 
 Cmd FAIL - Invalid Username                     || §cこのユーザーはUUIDを所持していません
 Cmd FAIL - No Feature                           || §eこの機能は現在使用されていません！ (現在、「${0}」をサポートしています)
 Cmd FAIL - No Permission                        || §cあなたには実行する権限がありません
-Cmd FAIL - No player                            || Player '${0}' was not found, they have no UUID.
+Cmd FAIL - No player                            || プレイヤー「'${0}'」はUUIDが無いため見つけることができませんでした
 Cmd FAIL - No player register                   || Player '${0}' was not found in the database.
 Cmd FAIL - No server                            || Server '${0}' was not found from the database.
 Cmd FAIL - Require only one Argument            || §c一つの引数「${1}」が必要です
 Cmd FAIL - Requires Arguments                   || §c引数「(${0}) ${1}」が必要です
-Cmd FAIL - see config                           || see '${0}' in config.yml
+Cmd FAIL - see config                           || 「config.yml」内の'${0}'を参照してください
 Cmd FAIL - Unknown Username                     || §c入力されたユーザーはBukkit/Spigotサーバー上にいません
 Cmd FAIL - Users not linked                     || User is not linked to your account and you don't have permission to remove other user's accounts.
 Cmd FAIL - WebUser does not exists              || §c入力されたユーザーは存在しません!
